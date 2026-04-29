@@ -39,7 +39,7 @@ Now that you have gone through with your first run, lets dig deeper to understan
 </details>
 
 
-<h2 id="cli">CLI</h2>
+<h2> CLI</h2>
 
 The CLI suite is an extremely powerful tool. Often, new features will first appear in the CLI and then will be slowly implemented onto the GUI. Hence, getting a hang of the CLI is very advantageous.
 
@@ -155,13 +155,13 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp your_app.apk
 ```
 
 > [!NOTE]
-> Morphe also supports `.apkm` files (split APK bundles). If you pass an `.apkm` file, Morphe will automatically merge the splits before patching.
+> Morphe also supports `.apkm`, `.xapk`, and `.apks` files (split APK bundles). If you pass one of these, Morphe will automatically merge the splits into a single APK before patching.
 
 
 #### 4. `-o`, `--out`:
 Required: No
 
-Default: Same directory as the APK, with `-patched` appended (e.g. `your_app-patched.apk`)
+Default: `<apk-name>-patched.apk` in the current working directory
 
 Specify a custom output path for the patched APK.
 ```
@@ -271,9 +271,12 @@ Required: No
 
 Default: -
 
-Automatically install the patched APK to a connected ADB device after patching. If no serial is provided, it installs to the first connected device. You can optionally specify a device serial.
+Automatically install the patched APK to a connected ADB device after patching.
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i your_app.apk
+```
+If no serial is provided, it installs to the first connected device. You can optionally specify a device serial.
+```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i SERIAL123 your_app.apk
 ```
 
@@ -405,7 +408,7 @@ Required: No
 Default: -
 
 > [!WARNING]
-> **Deprecated.** apktool is no longer used. This flag has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
+> **Deprecated.** AAPT2 was only used through apktool, which has been replaced by ARSCLib — this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --custom-aapt2-binary /path/to/aapt2 your_app.apk
 ```
@@ -417,7 +420,7 @@ Required: No
 Default: `false`
 
 > [!WARNING]
-> **Deprecated.** apktool is no longer used. This flag has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
+> **Deprecated.** apktool has been replaced by ARSCLib — this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --force-apktool your_app.apk
 ```
@@ -453,6 +456,9 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --bytecode-mode FULL you
 
 > [!TIP]
 > If a patched app crashes at startup or has odd missing-class errors, switch to `STRIP_SAFE` or `FULL` and see if it fixes things.
+
+> [!NOTE]
+> On Windows, Morphe currently forces bytecode mode to `FULL` regardless of what you pass to this flag (workaround for a platform-specific issue). The flag still works as expected on macOS and Linux.
 
 
 #### 26. `--verify-with-sdk`:
@@ -1027,7 +1033,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -e "Patch name" -Ostring
 This sets `stringKey` to the string `"1"` instead of the integer `1`.
 
 
-<h2 id="gui">GUI</h2>
+<h2> GUI</h2>
 
 Are you tired of memorizing flags? Is your terminal history just 47 variations of the same command, 
 each one slightly more wrong than the last? Do you find yourself copy-pasting from the documentation above and STILL somehow misspelling 
