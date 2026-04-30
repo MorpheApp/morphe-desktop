@@ -21,6 +21,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.HorizontalScrollbar
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.ui.text.style.TextOverflow
@@ -372,6 +373,17 @@ fun HomeScreenContent(
                                     onRetry = onRetry
                                 )
                             }
+                        }
+
+                        // Show scrollbar only when content overflows
+                        if (scrollState.maxValue > 0) {
+                            VerticalScrollbar(
+                                modifier = Modifier
+                                    .align(Alignment.CenterEnd)
+                                    .fillMaxHeight(),
+                                adapter = rememberScrollbarAdapter(scrollState),
+                                style = morpheScrollbarStyle()
+                            )
                         }
                     }
                 }

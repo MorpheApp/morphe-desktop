@@ -244,26 +244,76 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                 DragOverlay()
             }
 
-            // Error/warning snackbar
+            // Error/warning bar
             uiState.error?.let { error ->
                 val mono = LocalMorpheFont.current
                 val isUnsupportedWarning = error.contains("not supported in Quick Patch")
-                val containerColor = if (isUnsupportedWarning) accents.warning.copy(alpha = 0.15f) else MaterialTheme.colorScheme.errorContainer
-                val contentColor = if (isUnsupportedWarning) accents.warning else MaterialTheme.colorScheme.onErrorContainer
-                Snackbar(
+                val accentColor = if (isUnsupportedWarning) accents.warning else MaterialTheme.colorScheme.error
+                val barBg = MaterialTheme.colorScheme.surface
+                val borderCol = accentColor.copy(alpha = 0.4f)
+
+                Row(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(horizontal = 24.dp, vertical = 20.dp),
-                    action = {
-                        TextButton(onClick = { viewModel.clearError() }) {
-                            Text("Dismiss", color = contentColor.copy(alpha = 0.8f), fontFamily = mono, fontSize = 12.sp)
+                        .padding(horizontal = 24.dp, vertical = 20.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(corners.small))
+                        .border(1.dp, borderCol, RoundedCornerShape(corners.small))
+                        .background(barBg)
+                        .drawBehind {
+                            drawRect(
+                                color = accentColor,
+                                size = androidx.compose.ui.geometry.Size(3.dp.toPx(), size.height)
+                            )
                         }
-                    },
-                    containerColor = containerColor,
-                    contentColor = contentColor,
-                    shape = RoundedCornerShape(corners.small)
+                        .padding(start = 3.dp)
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(error, fontFamily = mono, fontSize = 12.sp, lineHeight = 16.sp, modifier = Modifier.padding(vertical = 4.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .background(accentColor, RoundedCornerShape(1.dp))
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        text = error,
+                        fontFamily = mono,
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(Modifier.width(12.dp))
+
+                    // Dismiss — same hover pattern as the close button
+                    val dismissHover = remember { MutableInteractionSource() }
+                    val isDismissHovered by dismissHover.collectIsHoveredAsState()
+                    val dismissBg by animateColorAsState(
+                        if (isDismissHovered) accentColor.copy(alpha = 0.12f)
+                        else Color.Transparent,
+                        animationSpec = tween(150)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .height(28.dp)
+                            .hoverable(dismissHover)
+                            .clip(RoundedCornerShape(corners.small))
+                            .background(dismissBg)
+                            .clickable { viewModel.clearError() }
+                            .padding(horizontal = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "DISMISS",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = if (isDismissHovered) accentColor
+                                    else accentColor.copy(alpha = 0.7f),
+                            letterSpacing = 1.sp
+                        )
+                    }
                 }
             }
         }
@@ -479,21 +529,15 @@ private fun ReadyContent(
 
     val enabledPatches = compatiblePatches.filter { it.isEnabled }
     val disabledPatches = compatiblePatches.filter { !it.isEnabled }
-    var isPatchListExpanded by remember { mutableStateOf(false) }
     var patchSearchQuery by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(1f))
-
-        // APK info card — bordered box with accent stripe
+        // ── APK info card — bordered box with accent stripe ──
         Box(
             modifier = Modifier
-                .widthIn(max = 640.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(corners.medium))
                 .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
@@ -634,24 +678,23 @@ private fun ReadyContent(
                     }
                 }
 
-                // ── Info row: architectures, package, minSdk ──
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .drawBehind {
-                            drawLine(
-                                color = borderColor,
-                                start = Offset(20.dp.toPx(), 0f),
-                                end = Offset(size.width - 20.dp.toPx(), 0f),
-                                strokeWidth = 1f
-                            )
-                        }
-                        .padding(horizontal = 20.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    // Architectures
-                    if (apkInfo.architectures.isNotEmpty()) {
+                // ── Architectures row ──
+                if (apkInfo.architectures.isNotEmpty()) {
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .drawBehind {
+                                drawLine(
+                                    color = borderColor,
+                                    start = Offset(20.dp.toPx(), 0f),
+                                    end = Offset(size.width - 20.dp.toPx(), 0f),
+                                    strokeWidth = 1f
+                                )
+                            }
+                            .padding(horizontal = 20.dp, vertical = 10.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         val deviceState by DeviceMonitor.state.collectAsState()
                         val deviceArch = deviceState.selectedDevice?.architecture
                         val hasMultipleArchs = apkInfo.architectures.size > 1
@@ -691,10 +734,25 @@ private fun ReadyContent(
                             }
                         }
                     }
+                }
 
-                    // MinSdk
-                    if (apkInfo.minSdk != null) {
-                        Spacer(Modifier.width(4.dp))
+                // ── Min SDK row ──
+                if (apkInfo.minSdk != null) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .drawBehind {
+                                drawLine(
+                                    color = borderColor,
+                                    start = Offset(20.dp.toPx(), 0f),
+                                    end = Offset(size.width - 20.dp.toPx(), 0f),
+                                    strokeWidth = 1f
+                                )
+                            }
+                            .padding(horizontal = 20.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         Text(
                             text = "MIN SDK",
                             fontSize = 9.sp,
@@ -712,28 +770,39 @@ private fun ReadyContent(
                         )
                     }
                 }
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
 
-                // ── Patches summary — collapsible ──
-                if (compatiblePatches.isNotEmpty()) {
-                    val chevronRotation by animateFloatAsState(
-                        if (isPatchListExpanded) 180f else 0f,
-                        animationSpec = tween(200)
-                    )
-
-                    // Summary header — clickable to expand
+        // ── Patches card — always visible, fills remaining vertical space ──
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .clip(RoundedCornerShape(corners.medium))
+                .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                if (compatiblePatches.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(20.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No compatible patches for this app",
+                            fontSize = 11.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                } else {
+                    // Header — patch counts (no longer collapsible)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .drawBehind {
-                                drawLine(
-                                    color = borderColor,
-                                    start = Offset(20.dp.toPx(), 0f),
-                                    end = Offset(size.width - 20.dp.toPx(), 0f),
-                                    strokeWidth = 1f
-                                )
-                            }
-                            .clickable { isPatchListExpanded = !isPatchListExpanded }
-                            .padding(horizontal = 20.dp, vertical = 10.dp),
+                            .padding(horizontal = 20.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -768,127 +837,155 @@ private fun ReadyContent(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                             )
                         }
-                        Spacer(Modifier.weight(1f))
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = if (isPatchListExpanded) "Collapse" else "Expand",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            modifier = Modifier
-                                .size(18.dp)
-                                .graphicsLayer { rotationZ = chevronRotation }
-                        )
                     }
 
-                    // Expanded patch list
-                    AnimatedVisibility(
-                        visible = isPatchListExpanded,
-                        enter = expandVertically(tween(200)) + fadeIn(tween(200)),
-                        exit = shrinkVertically(tween(200)) + fadeOut(tween(200))
+                    // Divider
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(borderColor)
+                    )
+
+                    // Body: search + chips, scrollable
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 20.dp, vertical = 14.dp)
                     ) {
-                        Column(
+                        val muted = MaterialTheme.colorScheme.onSurfaceVariant
+                        val searchInteraction = remember { MutableInteractionSource() }
+                        val isSearchFocused by searchInteraction.collectIsFocusedAsState()
+                        val searchBorder by animateColorAsState(
+                            if (isSearchFocused) MaterialTheme.colorScheme.outline.copy(alpha = 0.35f)
+                            else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
+                            animationSpec = tween(150)
+                        )
+
+                        BasicTextField(
+                            value = patchSearchQuery,
+                            onValueChange = { patchSearchQuery = it },
+                            singleLine = true,
+                            interactionSource = searchInteraction,
+                            textStyle = MaterialTheme.typography.bodySmall.copy(
+                                fontFamily = mono,
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurface
+                            ),
+                            cursorBrush = SolidColor(accents.primary),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp)
-                                .padding(bottom = 14.dp)
-                        ) {
-                            // Search bar
-                            OutlinedTextField(
-                                value = patchSearchQuery,
-                                onValueChange = { patchSearchQuery = it },
-                                placeholder = {
-                                    Text("Search patches…", fontSize = 11.sp, fontFamily = mono)
-                                },
-                                leadingIcon = {
+                                .height(32.dp)
+                                .clip(RoundedCornerShape(corners.small))
+                                .border(1.dp, searchBorder, RoundedCornerShape(corners.small)),
+                            decorationBox = { innerTextField ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
                                     Icon(
-                                        Icons.Default.Search, null,
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                                        Icons.Default.Search,
+                                        contentDescription = null,
+                                        tint = muted.copy(alpha = 0.55f),
                                         modifier = Modifier.size(14.dp)
                                     )
-                                },
-                                trailingIcon = {
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Box(modifier = Modifier.weight(1f)) {
+                                        if (patchSearchQuery.isEmpty()) {
+                                            Text(
+                                                "Search patches…",
+                                                fontSize = 11.sp,
+                                                fontFamily = mono,
+                                                color = muted.copy(alpha = 0.4f)
+                                            )
+                                        }
+                                        innerTextField()
+                                    }
                                     if (patchSearchQuery.isNotEmpty()) {
-                                        IconButton(onClick = { patchSearchQuery = "" }) {
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .clip(RoundedCornerShape(corners.small))
+                                                .clickable { patchSearchQuery = "" },
+                                            contentAlignment = Alignment.Center
+                                        ) {
                                             Icon(
-                                                Icons.Default.Clear, "Clear",
-                                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                Icons.Default.Clear,
+                                                contentDescription = "Clear",
+                                                tint = muted.copy(alpha = 0.5f),
                                                 modifier = Modifier.size(12.dp)
                                             )
                                         }
                                     }
-                                },
-                                singleLine = true,
-                                textStyle = LocalTextStyle.current.copy(fontSize = 11.sp, fontFamily = mono),
-                                shape = RoundedCornerShape(corners.small),
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = accents.primary,
-                                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
-                                )
+                                }
+                            }
+                        )
+
+                        Spacer(Modifier.height(12.dp))
+
+                        val filteredPatches = if (patchSearchQuery.isBlank()) {
+                            compatiblePatches
+                        } else {
+                            compatiblePatches.filter {
+                                it.name.contains(patchSearchQuery, ignoreCase = true) ||
+                                it.description.contains(patchSearchQuery, ignoreCase = true)
+                            }
+                        }
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            filteredPatches.forEach { patch ->
+                                val isEnabled = patch.isEnabled
+                                val chipBorder = if (isEnabled) accents.primary.copy(alpha = 0.5f)
+                                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
+                                val chipBg = if (isEnabled) accents.primary.copy(alpha = 0.08f)
+                                    else Color.Transparent
+                                val chipTextColor = if (isEnabled) accents.primary
+                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
+
+                                Box(
+                                    modifier = Modifier
+                                        .border(1.dp, chipBorder, RoundedCornerShape(corners.small))
+                                        .background(chipBg, RoundedCornerShape(corners.small))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = patch.name,
+                                        fontSize = 10.sp,
+                                        fontWeight = if (isEnabled) FontWeight.Medium else FontWeight.Normal,
+                                        fontFamily = mono,
+                                        color = chipTextColor,
+                                        maxLines = 1
+                                    )
+                                }
+                            }
+                        }
+
+                        if (filteredPatches.isEmpty() && patchSearchQuery.isNotBlank()) {
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = "No patches matching \"$patchSearchQuery\"",
+                                fontSize = 11.sp,
+                                fontFamily = mono,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                             )
-
-                            Spacer(Modifier.height(10.dp))
-
-                            // Filter patches by search
-                            val filteredPatches = if (patchSearchQuery.isBlank()) {
-                                compatiblePatches
-                            } else {
-                                compatiblePatches.filter {
-                                    it.name.contains(patchSearchQuery, ignoreCase = true) ||
-                                    it.description.contains(patchSearchQuery, ignoreCase = true)
-                                }
-                            }
-
-                            // Chips in flow layout
-                            FlowRow(
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                verticalArrangement = Arrangement.spacedBy(6.dp),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                filteredPatches.forEach { patch ->
-                                    val isEnabled = patch.isEnabled
-                                    val chipBorder = if (isEnabled) accents.primary.copy(alpha = 0.5f)
-                                        else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
-                                    val chipBg = if (isEnabled) accents.primary.copy(alpha = 0.08f)
-                                        else Color.Transparent
-                                    val chipTextColor = if (isEnabled) accents.primary
-                                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
-
-                                    Box(
-                                        modifier = Modifier
-                                            .border(1.dp, chipBorder, RoundedCornerShape(corners.small))
-                                            .background(chipBg, RoundedCornerShape(corners.small))
-                                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    ) {
-                                        Text(
-                                            text = patch.name,
-                                            fontSize = 10.sp,
-                                            fontWeight = if (isEnabled) FontWeight.Medium else FontWeight.Normal,
-                                            fontFamily = mono,
-                                            color = chipTextColor,
-                                            maxLines = 1
-                                        )
-                                    }
-                                }
-                            }
-
-                            if (filteredPatches.isEmpty() && patchSearchQuery.isNotBlank()) {
-                                Spacer(Modifier.height(8.dp))
-                                Text(
-                                    text = "No patches matching \"$patchSearchQuery\"",
-                                    fontSize = 11.sp,
-                                    fontFamily = mono,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                                )
-                            }
                         }
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Patch button
+        // Patch button — full width
         val patchHover = remember { MutableInteractionSource() }
         val isPatchHovered by patchHover.collectIsHoveredAsState()
         val patchBg by animateColorAsState(
@@ -898,9 +995,8 @@ private fun ReadyContent(
 
         Box(
             modifier = Modifier
-                .widthIn(max = 480.dp)
                 .fillMaxWidth()
-                .height(46.dp)
+                .height(48.dp)
                 .hoverable(patchHover)
                 .clip(RoundedCornerShape(corners.small))
                 .background(patchBg, RoundedCornerShape(corners.small))
@@ -927,8 +1023,6 @@ private fun ReadyContent(
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
             textAlign = TextAlign.Center
         )
-
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
@@ -1043,13 +1137,6 @@ private fun CompletedContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Success indicator
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .background(accents.secondary, RoundedCornerShape(2.dp))
-        )
-        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = "PATCHING COMPLETE",
             fontSize = 13.sp,
@@ -1083,33 +1170,31 @@ private fun CompletedContent(
                     .fillMaxWidth()
                     .padding(start = 3.dp)
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(horizontal = 20.dp, vertical = 14.dp)
                 ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "OUTPUT FILE",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            letterSpacing = 1.5.sp
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = outputFile.name,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                    Text(
+                        text = "OUTPUT FILE",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        letterSpacing = 1.5.sp
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = outputFile.name,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                     if (outputFile.exists()) {
+                        Spacer(Modifier.height(6.dp))
                         Text(
                             text = formatFileSize(outputFile.length()),
                             fontSize = 12.sp,
@@ -1132,19 +1217,27 @@ private fun CompletedContent(
                                 strokeWidth = 1f
                             )
                         }
-                        .padding(horizontal = 20.dp, vertical = 10.dp),
+                        .padding(horizontal = 20.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val folderHover = remember { MutableInteractionSource() }
                     val isFolderHovered by folderHover.collectIsHoveredAsState()
-                    val folderColor by animateColorAsState(
-                        if (isFolderHovered) accents.primary else accents.primary.copy(alpha = 0.6f),
+                    val folderBg by animateColorAsState(
+                        if (isFolderHovered) accents.primary.copy(alpha = 0.1f)
+                        else Color.Transparent,
                         animationSpec = tween(150)
                     )
                     Box(
                         modifier = Modifier
+                            .fillMaxWidth()
                             .hoverable(folderHover)
                             .clip(RoundedCornerShape(corners.small))
+                            .background(folderBg, RoundedCornerShape(corners.small))
+                            .border(
+                                1.dp,
+                                accents.primary.copy(alpha = if (isFolderHovered) 0.5f else 0.3f),
+                                RoundedCornerShape(corners.small)
+                            )
                             .clickable {
                                 try {
                                     val folder = outputFile.parentFile
@@ -1153,14 +1246,16 @@ private fun CompletedContent(
                                     }
                                 } catch (_: Exception) {}
                             }
-                            .padding(vertical = 2.dp)
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "OPEN FOLDER →",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = mono,
-                            color = folderColor,
+                            color = if (isFolderHovered) accents.primary
+                                    else accents.primary.copy(alpha = 0.7f),
                             letterSpacing = 0.5.sp
                         )
                     }

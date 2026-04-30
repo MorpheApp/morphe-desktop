@@ -14,6 +14,8 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -41,6 +43,7 @@ import app.morphe.gui.data.repository.ConfigRepository
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
@@ -137,7 +140,7 @@ fun ResultScreenContent(outputPath: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         // Header row
         Row(
@@ -315,6 +318,7 @@ fun ResultScreenContent(outputPath: String) {
 
                         Box(
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .hoverable(folderHover)
                                 .clip(RoundedCornerShape(corners.small))
                                 .background(folderBg, RoundedCornerShape(corners.small))
@@ -331,7 +335,8 @@ fun ResultScreenContent(outputPath: String) {
                                         }
                                     } catch (_: Exception) {}
                                 }
-                                .padding(horizontal = 14.dp, vertical = 8.dp)
+                                .padding(horizontal = 14.dp, vertical = 8.dp),
+                            contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "OPEN FOLDER →",
@@ -432,6 +437,17 @@ fun ResultScreenContent(outputPath: String) {
             }
 
             Spacer(Modifier.height(8.dp))
+            }
+
+            // Show scrollbar only when content overflows
+            if (scrollState.maxValue > 0) {
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(scrollState),
+                    style = morpheScrollbarStyle()
+                )
             }
         }
     }

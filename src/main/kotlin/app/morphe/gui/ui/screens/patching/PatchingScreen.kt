@@ -14,9 +14,11 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -39,6 +41,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import app.morphe.gui.data.model.PatchConfig
 import org.koin.core.parameter.parametersOf
 import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.result.ResultScreen
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
@@ -95,7 +98,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         // Header row
         Row(
@@ -260,21 +263,33 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
         }
 
         // Log output
-        LazyColumn(
-            state = listState,
+        Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .clip(RoundedCornerShape(corners.medium))
                 .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f)),
-            contentPadding = PaddingValues(12.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f))
         ) {
-            items(uiState.logs, key = { it.id }) { entry ->
-                LogEntryRow(entry, mono)
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                items(uiState.logs, key = { it.id }) { entry ->
+                    LogEntryRow(entry, mono)
+                }
             }
+
+            VerticalScrollbar(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(listState),
+                style = morpheScrollbarStyle()
+            )
         }
 
         // Bottom action bar
