@@ -398,7 +398,7 @@ private fun PatchesVersionBadge(
                 .clip(RoundedCornerShape(corners.small))
                 .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.1f), RoundedCornerShape(corners.small))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 12.dp),
+                .padding(start = 12.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -553,9 +553,16 @@ private fun ReadyContent(
     val enabledPatches = compatiblePatches.filter { it.isEnabled }
     val disabledPatches = compatiblePatches.filter { !it.isEnabled }
     var patchSearchQuery by remember { mutableStateOf("") }
+    // Patches list is collapsed by default — the chip flow can grow long enough
+    // to overwhelm the simplified flow's "just hit PATCH" intent. Users who
+    // want to inspect or search expand it manually.
+    var patchesExpanded by remember { mutableStateOf(false) }
 
+    val readyScrollState = rememberScrollState()
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(readyScrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // ── APK info card — bordered box with accent stripe ──
@@ -658,6 +665,12 @@ private fun ReadyContent(
                 val statusDetail = statusDisplay?.detail
 
                 if (statusText != null) {
+                    // Modifier order matters: putting the outer padding BEFORE
+                    // background insets the tinted strip 20dp from each card
+                    // edge, lining up with the divider stroke above. We then
+                    // clip the background to a small rounded shape and apply
+                    // inner padding so the dot + text sit nicely inset from
+                    // the strip's edges.
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -669,8 +682,10 @@ private fun ReadyContent(
                                     strokeWidth = 1f
                                 )
                             }
-                            .background(accentColor.copy(alpha = 0.04f))
-                            .padding(horizontal = 20.dp, vertical = 10.dp),
+                            .padding(horizontal = 20.dp, vertical = 8.dp)
+                            .clip(RoundedCornerShape(corners.small))
+                            .background(accentColor.copy(alpha = 0.06f))
+                            .padding(horizontal = 14.dp, vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
@@ -797,11 +812,18 @@ private fun ReadyContent(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ── Patches card — always visible, fills remaining vertical space ──
+        // ── Patches card. Collapsed by default — header alone, intrinsic
+        // height. When expanded, gains a bounded body so the chip flow
+        // doesn't dominate a short window; the body's own scroll handles
+        // long patch lists. ──
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .then(
+                    if (patchesExpanded) {
+                        Modifier.heightIn(min = 280.dp, max = 520.dp)
+                    } else Modifier
+                )
                 .clip(RoundedCornerShape(corners.medium))
                 .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
                 .background(MaterialTheme.colorScheme.surface)
@@ -821,10 +843,17 @@ private fun ReadyContent(
                         )
                     }
                 } else {
-                    // Header — patch counts (no longer collapsible)
+                    // Header — clickable to toggle the patch chip body. Tap
+                    // anywhere on the row to expand/collapse; a chevron at
+                    // the trailing edge indicates the current state.
+                    val chevronRotation by animateFloatAsState(
+                        targetValue = if (patchesExpanded) 180f else 0f,
+                        animationSpec = tween(200),
+                    )
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .clickable { patchesExpanded = !patchesExpanded }
                             .padding(horizontal = 20.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -860,24 +889,43 @@ private fun ReadyContent(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                             )
                         }
+                        Spacer(Modifier.weight(1f))
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = if (patchesExpanded) "Collapse patches" else "Expand patches",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            modifier = Modifier
+                                .size(18.dp)
+                                .graphicsLayer { rotationZ = chevronRotation },
+                        )
                     }
 
-                    // Divider
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(borderColor)
-                    )
-
-                    // Body: search + chips, scrollable
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState())
-                            .padding(horizontal = 20.dp, vertical = 14.dp)
+                    AnimatedVisibility(
+                        visible = patchesExpanded,
+                        // Weight here threads the bounded patches-card height
+                        // down to the body's verticalScroll. Without it, the
+                        // inner Column → AnimatedVisibility chain measures
+                        // unbounded vertically and verticalScroll throws
+                        // "scrollable measured with infinity".
+                        modifier = Modifier.weight(1f),
                     ) {
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            // Divider
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(1.dp)
+                                    .background(borderColor)
+                            )
+
+                            // Body: search + chips, scrollable
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(horizontal = 20.dp, vertical = 14.dp)
+                            ) {
                         val muted = MaterialTheme.colorScheme.onSurfaceVariant
                         val searchInteraction = remember { MutableInteractionSource() }
                         val isSearchFocused by searchInteraction.collectIsFocusedAsState()
@@ -1001,7 +1049,9 @@ private fun ReadyContent(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                             )
                         }
-                    }
+                            } // close body Column
+                        } // close AnimatedVisibility wrapper Column
+                    } // close AnimatedVisibility
                 }
             }
         }

@@ -620,19 +620,26 @@ class QuickPatchViewModel(
     }
 
     /**
-     * Reset to start over.
+     * Reset to start over. Preserves the already-loaded patches metadata so
+     * the patches version badge (and its LATEST chip) stays correct without
+     * a re-fetch — losing `latestPatchesVersion` or `patchSourceName` here
+     * would cause the LATEST chip to silently disappear after the user
+     * removes the loaded APK.
      */
     fun reset() {
         patchingJob?.cancel()
         patchingJob = null
         _uiState.value = QuickPatchUiState(
-            // Preserve already-loaded patches data
             isDefaultSource = isDefaultSource,
             isLoadingPatches = false,
             supportedApps = cachedSupportedApps,
             patchesVersion = _uiState.value.patchesVersion,
+            latestPatchesVersion = _uiState.value.latestPatchesVersion,
+            patchSourceName = _uiState.value.patchSourceName,
+            isOffline = _uiState.value.isOffline,
             updateInfo = _uiState.value.updateInfo,
             dismissedUpdateVersion = _uiState.value.dismissedUpdateVersion,
+            updateBannerSessionDismissed = _uiState.value.updateBannerSessionDismissed,
         )
     }
 
