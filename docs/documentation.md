@@ -6,11 +6,9 @@ and then come back here.
 
 Now that you have gone through with your first run, lets dig deeper to understand how the magic happens and how you can make it even better!
 
-<details open>
-<summary><h2 id="table-of-contents">Table of contents</h2></summary>
+<h2 id="table-of-contents">Table of contents</h2>
 
 - [Prerequisites](#prerequisites)
-
 - [CLI](#cli)
   - [General flags](#general-flags)
   - [patch](#subcommand-1-patch)
@@ -24,19 +22,14 @@ Now that you have gone through with your first run, lets dig deeper to understan
 - [GUI](#gui)
 - [Building](#building)
 
-</details>
 
-
-<details open>
-<summary><h2 id="prerequisites">Prerequisites</h2></summary>
+<h2 id="prerequisites">Prerequisites</h2>
 
 1. [Required] Java Runtime Environment 21 or above ([Azul Zulu JRE](https://www.azul.com/downloads/?version=java-21-lts&package=jre#zulu), [Temurin](https://adoptium.net/temurin/releases?version=21&os=any&arch=any) or [OpenJDK](https://jdk.java.net/archive/)).
 2. [Required] Morphe Desktop jar file (morphe-desktop-*-all.jar). You can download the most recent stable version of Morphe Desktop from [here](https://github.com/MorpheApp/morphe-cli/releases/latest).
 3. [Required] Patches mpp file (patches-*.mpp). You can download the latest stable patch file from [here](https://github.com/MorpheApp/morphe-patches/releases/latest).
 4. [Required] Desired app file (app.apk). You can download your apk from [APK Mirror](https://www.apkmirror.com/).
 5. [Optional] [Android Debug Bridge (ADB)](https://developer.android.com/studio/command-line/adb) Only if you want to install the patched APK file on your device directly from your computer.
-
-</details>
 
 
 <h2> CLI</h2>
@@ -45,7 +38,7 @@ The CLI suite is an extremely powerful tool. Often, new features will first appe
 
 The CLI has some general flags but is mainly divided into 5 main sub-commands (and they all lived in harmony, until the fire nation attacked. Caught that reference?):
 
-![img.png](images/documentation/cli_overview.png)
+![img.png](images/readme/cli_overview.png)
 
 ### General flags:
 

@@ -107,15 +107,15 @@ Unlike the CLI, the GUI is much user-friendly and straight forward to understand
 ##### Steps:
 1. Double-click on the downloaded morphe-desktop-*-all.jar. It should open like this:
 
-![Morphe GUI Home Screen](docs/images/home_screen.png)
+![Morphe GUI Home Screen](docs/images/readme/home_screen.png)
 
 2. All you need to do here drag and drop your apk/apkm into the application. Once done, click on the 'Patch' button to begin patching:
 
-![Morphe GUI App Selected](docs/images/app_selected.png)
+![Morphe GUI App Selected](docs/images/readme/app_selected.png)
 
 3. This should start the patching process and you should be able to see something like this:
 
-![Morphe GUI Patching](docs/images/patching.png)
+![Morphe GUI Patching](docs/images/readme/patching.png)
 
 > [!NOTE]
 > If you run into any issues or errors, please head over to the [documentation](/docs/documentation.md).
@@ -123,7 +123,7 @@ Unlike the CLI, the GUI is much user-friendly and straight forward to understand
 
 4. Once the patching is done, you will see the completed screen. You can now copy the apk over to your device and install it. If you happen to have ADB enabled, you can also directly install it via the application.
 
-![Morphe GUI Success](docs/images/success.png)
+![Morphe GUI Success](docs/images/readme/success.png)
 
 Bravo! That should be your first successful patch. If you run into issues or want to tinker around more, please head to the [documentation](docs/documentation.md).
 
