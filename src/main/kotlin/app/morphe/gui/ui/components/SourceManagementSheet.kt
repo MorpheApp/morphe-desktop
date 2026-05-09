@@ -95,7 +95,7 @@ fun SourceManagementSheet(
             ) {
                 Text(
                     text = if (!enabled) "Disabled while patching"
-                           else "Enable any combination — patches from all enabled sources are unioned.",
+                           else "Enable/Disable any combination. Patches from all enabled sources are unioned.",
                     fontSize = 11.sp,
                     fontFamily = mono,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f)
