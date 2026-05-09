@@ -40,8 +40,11 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.util.AdbManager
+import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
+import kotlinx.coroutines.launch
 import app.morphe.patcher.apk.ApkSigner
 import java.awt.Desktop
 import java.awt.FileDialog
@@ -276,6 +279,18 @@ fun SettingsDialog(
                     enabled = !isPatching,
                     expanded = collapsibleSectionStates["STRIP LIBS"] == true,
                     onExpandedChange = { onCollapsibleSectionToggle("STRIP LIBS", it) }
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Patched App Runtime Logs ──
+                PatchedAppRuntimeLogsSection(
+                    mono = mono,
+                    accentColor = accents.primary,
+                    borderColor = borderColor,
+                    enabled = !isPatching,
+                    expanded = collapsibleSectionStates["RUNTIME LOGS"] == true,
+                    onExpandedChange = { onCollapsibleSectionToggle("RUNTIME LOGS", it) }
                 )
 
                 SettingsDivider(borderColor)
@@ -3117,4 +3132,161 @@ private fun resolveGitHubUrl(input: String): String? {
     }
 
     return null
+}
+
+// ── Patched App Runtime Logs Section ──
+
+private sealed interface RuntimeLogsStatus {
+    data object Idle : RuntimeLogsStatus
+    data object Clearing : RuntimeLogsStatus
+    data object Saving : RuntimeLogsStatus
+    data object Cleared : RuntimeLogsStatus
+    data class Saved(val file: File, val lineCount: Int) : RuntimeLogsStatus
+    data class Error(val message: String) : RuntimeLogsStatus
+}
+
+@Composable
+private fun PatchedAppRuntimeLogsSection(
+    mono: androidx.compose.ui.text.font.FontFamily,
+    accentColor: Color,
+    borderColor: Color,
+    enabled: Boolean = true,
+    expanded: Boolean = false,
+    onExpandedChange: (Boolean) -> Unit = {}
+) {
+    val monitorState by DeviceMonitor.state.collectAsState()
+    val selectedDevice = monitorState.selectedDevice
+    val scope = rememberCoroutineScope()
+    val adbManager = remember { AdbManager() }
+    var status by remember { mutableStateOf<RuntimeLogsStatus>(RuntimeLogsStatus.Idle) }
+
+    val isWorking = status is RuntimeLogsStatus.Clearing || status is RuntimeLogsStatus.Saving
+    val deviceReady = selectedDevice?.isReady == true
+    val canAct = enabled && deviceReady && !isWorking
+
+    CollapsibleSection(
+        title = "PATCHED APP RUNTIME LOGS",
+        mono = mono,
+        expanded = expanded,
+        onExpandedChange = onExpandedChange
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(
+                text = "Capture logs from your phone after a patched app crashes or misbehaves. Clear before reproducing the bug, then save the filtered output to attach to a bug report.",
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            )
+
+            // Device row
+            if (deviceReady) {
+                Text(
+                    text = "Device: ${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+            } else {
+                Text(
+                    text = "No device connected. Plug in your phone with USB debugging enabled.",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                )
+            }
+
+            ActionButton(
+                label = if (status is RuntimeLogsStatus.Clearing) "CLEARING…" else "CLEAR DEVICE LOGS",
+                icon = Icons.Default.DeleteSweep,
+                mono = mono,
+                borderColor = borderColor,
+                enabled = canAct,
+                onClick = {
+                    val device = selectedDevice ?: return@ActionButton
+                    status = RuntimeLogsStatus.Clearing
+                    scope.launch {
+                        val result = adbManager.clearLogcat(device.id)
+                        status = result.fold(
+                            onSuccess = { RuntimeLogsStatus.Cleared },
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to clear logs") }
+                        )
+                    }
+                }
+            )
+
+            ActionButton(
+                label = if (status is RuntimeLogsStatus.Saving) "SAVING…" else "SAVE DEVICE LOGS",
+                icon = Icons.Default.Save,
+                mono = mono,
+                borderColor = borderColor,
+                contentColor = accentColor,
+                enabled = canAct,
+                onClick = {
+                    val device = selectedDevice ?: return@ActionButton
+                    status = RuntimeLogsStatus.Saving
+                    scope.launch {
+                        val timestamp = SimpleDateFormat("yyyy-MM-dd-HHmmss", java.util.Locale.US).format(java.util.Date())
+                        val outFile = File(FileUtils.getLogsDir(), "device-logcat-$timestamp.txt")
+                        val result = adbManager.captureLogcat(device.id, outFile)
+                        status = result.fold(
+                            onSuccess = { count -> RuntimeLogsStatus.Saved(outFile, count) },
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to save logs") }
+                        )
+                    }
+                }
+            )
+
+            // Status line
+            when (val s = status) {
+                RuntimeLogsStatus.Idle, RuntimeLogsStatus.Clearing, RuntimeLogsStatus.Saving -> Unit
+                RuntimeLogsStatus.Cleared -> Text(
+                    text = "Logs cleared on device.",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = accentColor.copy(alpha = 0.85f)
+                )
+                is RuntimeLogsStatus.Saved -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = if (s.lineCount == 0)
+                            "Nothing captured yet. Run the patched app on your phone, then save again."
+                        else
+                            "Saved ${s.lineCount} line(s) to ${s.file.name}",
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = if (s.lineCount == 0) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                                else accentColor.copy(alpha = 0.85f)
+                    )
+                    if (s.lineCount > 0) {
+                        val cornersLocal = LocalMorpheCorners.current
+                        Text(
+                            text = "OPEN LOGS",
+                            fontSize = 10.sp,
+                            fontFamily = mono,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.5.sp,
+                            color = accentColor,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(cornersLocal.small))
+                                .clickable {
+                                    try {
+                                        if (Desktop.isDesktopSupported()) {
+                                            Desktop.getDesktop().open(s.file.parentFile)
+                                        }
+                                    } catch (e: Exception) {
+                                        Logger.error("Failed to reveal logs folder", e)
+                                    }
+                                }
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+                is RuntimeLogsStatus.Error -> Text(
+                    text = s.message,
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
 }
