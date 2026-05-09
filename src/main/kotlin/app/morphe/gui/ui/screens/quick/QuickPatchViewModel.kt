@@ -65,6 +65,12 @@ class QuickPatchViewModel(
         cachedAllPatchFiles.takeIf { it.isNotEmpty() }
             ?: listOfNotNull(cachedPatchesFile)
 
+    /** Snapshot of the most recent multi-source load. Used by the QuickPatchScreen
+     *  header to render the same SourcesCountPill as Expert mode (no click action
+     *  in Quick Patch — sources are managed only from Expert mode). */
+    fun getResolvedSourcesSnapshot(): EnabledSourcesLoader.Result? = cachedSourcesResult
+    private var cachedSourcesResult: EnabledSourcesLoader.Result? = null
+
     init {
         // Load patches on startup to get dynamic app info
         loadPatchesAndSupportedApps()
@@ -179,6 +185,7 @@ class QuickPatchViewModel(
                 val firstResolved = result.resolved.firstOrNull { it.patchFile != null }
                 cachedPatchesFile = firstResolved?.patchFile
                 cachedAllPatchFiles = result.resolved.mapNotNull { it.patchFile }
+                cachedSourcesResult = result
 
                 Logger.info(
                     "Quick mode: Loaded ${supportedApps.size} supported apps from " +

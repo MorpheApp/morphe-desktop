@@ -71,7 +71,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.ui.components.SourceLedState
 import app.morphe.gui.ui.components.SourceManagementSheet
+import app.morphe.gui.ui.components.SourcesCountPill
+import app.morphe.gui.ui.components.sourceLedState
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import kotlinx.coroutines.launch
@@ -782,100 +785,9 @@ private fun MultiSourceHintBanner(
     }
 }
 
-/** Per-source LED state surfaced in [SourcesCountPill]. */
-internal enum class SourceLedState { DISABLED, STABLE_LATEST, OLDER, DEV }
-
-/** Single unified header pill that replaces the previous patches-version + add-source
- *  pair. Renders one LED per source (color-coded by state) plus the count and a
- *  trailing "+" affordance. Click opens [SourceManagementSheet]; per-source
- *  navigation to PatchesScreen happens via the rows inside the sheet. */
-@Composable
-private fun SourcesCountPill(
-    sourceStates: List<SourceLedState>,
-    onClick: () -> Unit,
-) {
-    val corners = LocalMorpheCorners.current
-    val dimens = LocalMorpheDimens.current
-    val mono = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    val hoverInteraction = remember { MutableInteractionSource() }
-    val isHovered by hoverInteraction.collectIsHoveredAsState()
-    val borderColor by animateColorAsState(
-        if (isHovered) accents.primary.copy(alpha = 0.4f)
-        else MaterialTheme.colorScheme.outline.copy(alpha = 0.10f),
-        animationSpec = tween(200)
-    )
-    val tint = if (isHovered) accents.primary else homeMutedTextColor(0.5f)
-    val count = sourceStates.size.coerceAtLeast(1)
-    val label = if (count == 1) "1 SOURCE" else "$count SOURCES"
-    Row(
-        modifier = Modifier
-            .height(dimens.controlHeight)
-            .clip(RoundedCornerShape(corners.small))
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-            .background(MaterialTheme.colorScheme.surface)
-            .hoverable(hoverInteraction)
-            .pointerHoverIcon(PointerIcon.Hand)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Text(
-            text = label,
-            fontSize = 9.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = mono,
-            letterSpacing = 1.5.sp,
-            color = tint,
-        )
-        if (sourceStates.isNotEmpty()) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(3.dp),
-            ) {
-                sourceStates.forEach { state -> SourceLed(state = state, accents = accents) }
-            }
-        }
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Manage patch sources",
-            tint = tint,
-            modifier = Modifier.size(12.dp)
-        )
-    }
-}
-
-@Composable
-private fun SourceLed(state: SourceLedState, accents: app.morphe.gui.ui.theme.MorpheAccentColors) {
-    val color = when (state) {
-        SourceLedState.DISABLED -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-        SourceLedState.STABLE_LATEST -> accents.primary
-        SourceLedState.OLDER -> accents.warning
-        SourceLedState.DEV -> Color(0xFFFFD43B)
-    }
-    Box(
-        modifier = Modifier
-            .size(6.dp)
-            .background(color, shape = androidx.compose.foundation.shape.CircleShape)
-    )
-}
-
-/** Map a [PatchSource] + its resolved channel to a UI LED state. */
-internal fun sourceLedState(
-    source: app.morphe.gui.data.model.PatchSource,
-    channel: app.morphe.gui.util.EnabledSourcesLoader.Channel?,
-): SourceLedState {
-    if (!source.enabled) return SourceLedState.DISABLED
-    return when (channel) {
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_LATEST -> SourceLedState.STABLE_LATEST
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_OLDER -> SourceLedState.OLDER
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_LATEST,
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_OLDER -> SourceLedState.DEV
-        // No load yet — assume latest until we know otherwise.
-        null, app.morphe.gui.util.EnabledSourcesLoader.Channel.UNKNOWN -> SourceLedState.STABLE_LATEST
-    }
-}
+// SourcesCountPill, SourceLed, SourceLedState, sourceLedState moved to
+// gui/ui/components/SourcesPill.kt for reuse across modes (Quick Patch uses
+// a non-clickable variant).
 
 @Composable
 private fun PatchesLoadingIndicator() {

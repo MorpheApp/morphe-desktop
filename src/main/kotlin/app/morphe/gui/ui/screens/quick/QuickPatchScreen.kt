@@ -44,8 +44,11 @@ import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.ui.components.OfflineBanner
+import app.morphe.gui.ui.components.SourceLedState
+import app.morphe.gui.ui.components.SourcesCountPill
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.sourceLedState
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.ChecksumStatus
@@ -83,6 +86,18 @@ class QuickPatchScreen : Screen {
 @Composable
 fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // Sources pill data (read-only in Quick Patch — sources are managed only in Expert mode).
+    val patchSourceManager: PatchSourceManager = koinInject()
+    val allSources by patchSourceManager.allSources.collectAsState()
+    val sourceStates: List<SourceLedState> = run {
+        val snapshot = viewModel.getResolvedSourcesSnapshot()
+        val channelsBySource = snapshot
+            ?.resolved
+            ?.associate { it.source.id to it.channel }
+            ?: emptyMap()
+        allSources.map { src -> sourceLedState(src, channelsBySource[src.id]) }
+    }
 
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -140,14 +155,13 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                             .align(Alignment.Center)
                             .padding(start = centerSidePadding, end = centerSidePadding)
                     ) {
-                        PatchesVersionBadge(
-                            patchesVersion = uiState.patchesVersion,
-                            isLoading = uiState.isLoadingPatches,
-                            patchSourceName = uiState.patchSourceName,
-                            latestLabel = if (uiState.patchesVersion != null &&
-                                              uiState.patchesVersion == uiState.latestPatchesVersion) {
-                                "LATEST STABLE"
-                            } else null
+                        // Same pill as Expert mode but non-clickable (onClick = null).
+                        // Sources are managed from Expert mode only; here it's purely
+                        // informational so the user sees how many sources are active
+                        // and what channel each is on.
+                        SourcesCountPill(
+                            sourceStates = sourceStates,
+                            onClick = null,
                         )
                     }
 
