@@ -2430,6 +2430,7 @@ private fun ThemePreference.toDisplayName(): String {
         ThemePreference.CATPPUCCIN -> "Catppuccin"
         ThemePreference.SAKURA -> "Sakura"
         ThemePreference.MATCHA -> "Matcha"
+        ThemePreference.DEEPSPACE -> "Deepspace"
         ThemePreference.SYSTEM -> "System"
     }
 }
@@ -2443,6 +2444,7 @@ private fun ThemePreference.iconSymbol(): String {
         ThemePreference.CATPPUCCIN -> "🐱"
         ThemePreference.SAKURA -> "🌸"
         ThemePreference.MATCHA -> "🍵"
+        ThemePreference.DEEPSPACE -> "✦"
         ThemePreference.SYSTEM -> "⚙"
     }
 }
@@ -2456,6 +2458,7 @@ private fun ThemePreference.accentColor(): Color {
         ThemePreference.CATPPUCCIN -> Color(0xFFCBA6F7)
         ThemePreference.SAKURA -> Color(0xFFB43A67)
         ThemePreference.MATCHA -> Color(0xFF4C7A35)
+        ThemePreference.DEEPSPACE -> Color(0xFF00D9FF)
         ThemePreference.SYSTEM -> MorpheColors.Blue
     }
 }

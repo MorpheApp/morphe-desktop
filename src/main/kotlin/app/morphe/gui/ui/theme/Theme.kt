@@ -95,6 +95,14 @@ private val MatchaAccents = MorpheAccentColors(
     warning = Color(0xFFB77833),   // Toasted ochre
 )
 
+/** Deepspace — high-saturation cyan on near-black. Cyberdeck/dev-tool aesthetic. */
+private val DeepspaceAccents = MorpheAccentColors(
+    primary = Color(0xFF00D9FF),   // Electric cyan — primary
+    secondary = Color(0xFF79E3A5), // Mint green — stable / success
+    tertiary = Color(0xFF7AB7FF),  // Cool blue — structural
+    warning = Color(0xFFFFB347),   // Warm amber — older / warning
+)
+
 // ════════════════════════════════════════════════════════════════════
 //  CORNER / SHAPE STYLE SYSTEM
 // ════════════════════════════════════════════════════════════════════
@@ -266,6 +274,25 @@ private val MatchaColorScheme = lightColorScheme(
     onError = Color.White
 )
 
+// ── Deepspace ──
+// Cyberdeck dev-tool aesthetic: electric cyan + mint on near-black blue.
+private val DeepspaceColorScheme = darkColorScheme(
+    primary = Color(0xFF00D9FF),       // Electric cyan
+    secondary = Color(0xFF79E3A5),     // Mint green
+    tertiary = Color(0xFF7AB7FF),      // Cool blue
+    background = Color(0xFF0D1117),    // Near-black blue
+    surface = Color(0xFF14191F),       // Slightly raised
+    surfaceVariant = Color(0xFF1B2128), // Card surfaces
+    onPrimary = Color(0xFF001A22),     // Deep cyan-black for high contrast on cyan
+    onSecondary = Color(0xFF0A2317),   // Deep green-black on mint
+    onTertiary = Color(0xFF051628),    // Deep blue-black
+    onBackground = Color(0xFFD6DEEB),  // Warm light text
+    onSurface = Color(0xFFD6DEEB),
+    onSurfaceVariant = Color(0xFF8E97A6), // Muted text
+    error = Color(0xFFFF6B6B),
+    onError = Color(0xFF1E0707),
+)
+
 // ════════════════════════════════════════════════════════════════════
 //  THEME PREFERENCE
 // ════════════════════════════════════════════════════════════════════
@@ -278,11 +305,12 @@ enum class ThemePreference {
     CATPPUCCIN,
     SAKURA,
     MATCHA,
+    DEEPSPACE,
     SYSTEM;
 
     /** Whether this theme uses dark color scheme (for resource qualifiers). */
     fun isDark(): Boolean = when (this) {
-        DARK, AMOLED, NORD, CATPPUCCIN -> true
+        DARK, AMOLED, NORD, CATPPUCCIN, DEEPSPACE -> true
         LIGHT, SAKURA, MATCHA -> false
         SYSTEM -> false // caller should check isSystemInDarkTheme()
     }
@@ -311,6 +339,7 @@ fun MorpheTheme(
         ThemePreference.CATPPUCCIN -> CatppuccinMochaColorScheme
         ThemePreference.SAKURA -> SakuraColorScheme
         ThemePreference.MATCHA -> MatchaColorScheme
+        ThemePreference.DEEPSPACE -> DeepspaceColorScheme
         ThemePreference.SYSTEM -> {
             if (isSystemInDarkTheme()) MorpheDarkColorScheme else MorpheLightColorScheme
         }
@@ -326,6 +355,7 @@ fun MorpheTheme(
         ThemePreference.CATPPUCCIN -> CatppuccinAccents
         ThemePreference.SAKURA -> SakuraAccents
         ThemePreference.MATCHA -> MatchaAccents
+        ThemePreference.DEEPSPACE -> DeepspaceAccents
         ThemePreference.SYSTEM -> if (isSystemInDarkTheme()) DarkAccents else LightAccents
     }
 

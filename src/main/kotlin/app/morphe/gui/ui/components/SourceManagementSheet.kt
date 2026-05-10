@@ -50,6 +50,15 @@ import java.io.File
  *
  * Caller wires actions to [PatchSourceManager] / [ConfigRepository] equivalents.
  */
+/**
+ * How rows in the management sheet behave:
+ * - [MULTI_TOGGLE]: each source has an enable Switch. Used by Expert mode where
+ *   patches from all enabled sources are unioned.
+ * - [SINGLE_SELECT]: each row is a radio. Used by Quick Patch mode where exactly
+ *   one source is "active" at a time.
+ */
+enum class SourceSheetMode { MULTI_TOGGLE, SINGLE_SELECT }
+
 @Composable
 fun SourceManagementSheet(
     sources: List<PatchSource>,
@@ -64,6 +73,12 @@ fun SourceManagementSheet(
     sourceVersions: Map<String, String?> = emptyMap(),
     /** sourceId → channel classification of the resolved release. Drives the badge. */
     sourceChannels: Map<String, app.morphe.gui.util.EnabledSourcesLoader.Channel?> = emptyMap(),
+    /** Selection semantics. Defaults to multi-toggle (Expert mode). */
+    mode: SourceSheetMode = SourceSheetMode.MULTI_TOGGLE,
+    /** sourceId of the currently picked source — only used when [mode] is SINGLE_SELECT. */
+    activeSourceId: String? = null,
+    /** Called when the user picks a source — only used when [mode] is SINGLE_SELECT. */
+    onSelectSingle: (sourceId: String) -> Unit = {},
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -94,8 +109,12 @@ fun SourceManagementSheet(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = if (!enabled) "Disabled while patching"
-                           else "Enable/Disable any combination. Patches from all enabled sources are unioned.",
+                    text = when {
+                        !enabled -> "Disabled while patching"
+                        mode == SourceSheetMode.SINGLE_SELECT ->
+                            "Pick which source Quick Patch uses. Multi-source is available in Expert mode."
+                        else -> "Enable/Disable any combination. Patches from all enabled sources are unioned."
+                    },
                     fontSize = 11.sp,
                     fontFamily = mono,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f)
@@ -112,6 +131,9 @@ fun SourceManagementSheet(
                         borderColor = borderColor,
                         mono = mono,
                         enabled = enabled,
+                        mode = mode,
+                        isActiveSelection = source.id == activeSourceId,
+                        onSelectSingle = { onSelectSingle(source.id) },
                         onToggleEnabled = { newVal -> onToggleEnabled(source.id, newVal) },
                         onEdit = { editingSource = source },
                         onRemove = { onRemove(source.id) },
@@ -196,29 +218,35 @@ private fun SourceRow(
     onEdit: () -> Unit,
     onRemove: () -> Unit,
     onOpenPatches: () -> Unit,
+    mode: SourceSheetMode,
+    isActiveSelection: Boolean,
+    onSelectSingle: () -> Unit,
 ) {
     val corners = LocalMorpheCorners.current
     val hoverInteraction = remember(source.id) { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
     val isEnabled = source.enabled
     val isDefault = !source.deletable
-    // Card click works regardless of enable state — clicking opens patches for
-    // the source (useful for inspecting a disabled source). Only disabled when
-    // the whole sheet is disabled (e.g. patching in progress).
-    val canOpen = enabled
+    // Card click works regardless of enable state. In MULTI_TOGGLE mode it opens
+    // patches for the source (PatchesScreen). In SINGLE_SELECT mode it picks the
+    // source as the active one for Quick Patch. Disabled only while patching.
+    val canInteract = enabled
+    // For visual highlight: in MULTI mode highlight when source is enabled; in
+    // SINGLE_SELECT highlight when this row is the picked one.
+    val isHighlighted = if (mode == SourceSheetMode.SINGLE_SELECT) isActiveSelection else isEnabled
 
     val animatedBorder by animateColorAsState(
         targetValue = when {
-            isHovered && canOpen -> accentColor.copy(alpha = if (isEnabled) 0.7f else 0.45f)
-            isEnabled -> accentColor.copy(alpha = 0.35f)
+            isHovered && canInteract -> accentColor.copy(alpha = if (isHighlighted) 0.7f else 0.45f)
+            isHighlighted -> accentColor.copy(alpha = 0.35f)
             else -> borderColor
         },
         animationSpec = tween(150)
     )
     val animatedBg by animateColorAsState(
         targetValue = when {
-            isHovered && canOpen -> accentColor.copy(alpha = if (isEnabled) 0.12f else 0.05f)
-            isEnabled -> accentColor.copy(alpha = 0.06f)
+            isHovered && canInteract -> accentColor.copy(alpha = if (isHighlighted) 0.12f else 0.05f)
+            isHighlighted -> accentColor.copy(alpha = 0.06f)
             else -> Color.Transparent
         },
         animationSpec = tween(150)
@@ -232,16 +260,16 @@ private fun SourceRow(
             .background(animatedBg)
             .hoverable(hoverInteraction)
             .then(
-                if (canOpen) Modifier
+                if (canInteract) Modifier
                     .pointerHoverIcon(PointerIcon.Hand)
-                    .clickable(onClick = onOpenPatches)
+                    .clickable(onClick = if (mode == SourceSheetMode.SINGLE_SELECT) onSelectSingle else onOpenPatches)
                 else Modifier
             )
             .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            // LED indicator — glows when enabled, dim when off
-            LedIndicator(isOn = isEnabled, isHot = isHovered && canOpen, accentColor = accentColor)
+            // LED indicator — glows when enabled (MULTI) or selected (SINGLE).
+            LedIndicator(isOn = isHighlighted, isHot = isHovered && canInteract, accentColor = accentColor)
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -320,16 +348,27 @@ private fun SourceRow(
                 }
                 Spacer(Modifier.width(4.dp))
             }
-            Switch(
-                checked = isEnabled,
-                onCheckedChange = onToggleEnabled,
-                enabled = enabled,
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = accentColor.copy(alpha = 0.5f),
-                    checkedThumbColor = accentColor,
-                ),
-                modifier = Modifier.scale(0.8f)
-            )
+            when (mode) {
+                SourceSheetMode.MULTI_TOGGLE -> Switch(
+                    checked = isEnabled,
+                    onCheckedChange = onToggleEnabled,
+                    enabled = enabled,
+                    colors = SwitchDefaults.colors(
+                        checkedTrackColor = accentColor.copy(alpha = 0.5f),
+                        checkedThumbColor = accentColor,
+                    ),
+                    modifier = Modifier.scale(0.8f)
+                )
+                SourceSheetMode.SINGLE_SELECT -> RadioButton(
+                    selected = isActiveSelection,
+                    onClick = onSelectSingle,
+                    enabled = enabled,
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = accentColor,
+                        unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    ),
+                )
+            }
         }
     }
 }

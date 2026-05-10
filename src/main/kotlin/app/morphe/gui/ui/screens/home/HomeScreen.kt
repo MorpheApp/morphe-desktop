@@ -7,7 +7,11 @@ package app.morphe.gui.ui.screens.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -22,6 +26,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.ui.text.style.TextOverflow
@@ -81,6 +87,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import app.morphe.gui.ui.screens.home.components.ApkInfoCard
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
+import app.morphe.gui.ui.screens.home.components.SupportedAppListRow
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.screens.patches.PatchesScreen
@@ -202,7 +209,17 @@ fun HomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            val useSplitLayout = maxWidth >= 720.dp
+            // Side-by-side layout: drop zone / APK info on the left, vertical
+            // supported-apps list on the right. Falls back to top/bottom on
+            // narrower windows. Hysteresis (switch up at 920dp, down at 880dp)
+            // prevents flicker when the user resizes near the threshold.
+            var splitLayoutState by remember { mutableStateOf(maxWidth >= 900.dp) }
+            splitLayoutState = when {
+                maxWidth >= 920.dp -> true
+                maxWidth < 880.dp -> false
+                else -> splitLayoutState
+            }
+            val useSplitLayout = splitLayoutState
             val isCompact = maxWidth < 500.dp
             val isSmall = maxHeight < 600.dp
             val padding = if (isCompact) 16.dp else 24.dp
@@ -445,22 +462,12 @@ fun HomeScreenContent(
                         }
                     }
 
-                    // ── Scrollable body ──
-                    BoxWithConstraints(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                    ) {
-                        val bodyMaxHeight = this.maxHeight
-                        val scrollState = rememberScrollState()
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .verticalScroll(scrollState)
-                                .heightIn(min = bodyMaxHeight),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = if (pinSupportedAppsToBottom) Arrangement.SpaceBetween else Arrangement.Top
-                        ) {
+                    // ── Body ──
+                    if (useSplitLayout) {
+                        // Side-by-side: drop zone / APK info on the left,
+                        // vertical supported-apps list on the right. The list pane
+                        // owns its own scroll; the rest stays static.
+                        Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
                             if (uiState.showUpdateBanner) {
                                 UpdateBanner(
                                     info = uiState.updateInfo!!,
@@ -468,67 +475,155 @@ fun HomeScreenContent(
                                     onDismissForVersion = { viewModel.dismissUpdateForVersion() },
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(start = padding, end = padding, top = 8.dp)
+                                        .padding(start = padding, end = padding, top = 8.dp),
                                 )
                             }
-
                             if (uiState.showMultiSourceHint) {
                                 MultiSourceHintBanner(
                                     onDismiss = { viewModel.dismissMultiSourceHint() },
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(start = padding, end = padding, top = 8.dp)
+                                        .padding(start = padding, end = padding, top = 8.dp),
                                 )
                             }
-
-                            // ── Main workspace area ──
-                            Box(
+                            Row(
                                 modifier = Modifier
+                                    .weight(1f)
                                     .fillMaxWidth()
-                                    .padding(padding),
-                                contentAlignment = Alignment.Center
+                                    .padding(
+                                        start = padding,
+                                        // Reduced right padding — push the apps
+                                        // list further toward the screen edge.
+                                        // Reduced right padding — scrollbar sits
+                                        // close to the screen edge.
+                                        end = 4.dp,
+                                        top = padding,
+                                        bottom = padding,
+                                    ),
+                                horizontalArrangement = Arrangement.spacedBy(padding),
                             ) {
-                                MiddleContent(
-                                    uiState = uiState,
-                                    isCompact = isCompact,
-                                    patchesLoaded = patchesLoaded,
-                                    onClearClick = onClearClick,
-                                    onChangeClick = onChangeClick,
-                                    onContinueClick = onContinueClick
-                                )
-                            }
-
-                            // ── Supported apps ──
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(
-                                    start = padding,
-                                    end = padding,
-                                    bottom = if (isSmall) 8.dp else 16.dp
-                                )
-                            ) {
-                                SupportedAppsSection(
-                                    isCompact = isCompact,
-                                    maxWidth = outerMaxWidth,
-                                    isLoading = uiState.isLoadingPatches,
-                                    isDefaultSource = uiState.isDefaultSource,
+                                // Left: APK info / drop zone. Content centers vertically
+                                // when it fits, scrolls when it doesn't, so the CONTINUE
+                                // button is never clipped off the bottom.
+                                BoxWithConstraints(
+                                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                                ) {
+                                    val viewport = this.maxHeight
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .verticalScroll(rememberScrollState())
+                                            .heightIn(min = viewport),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                    ) {
+                                        MiddleContent(
+                                            uiState = uiState,
+                                            isCompact = isCompact,
+                                            patchesLoaded = patchesLoaded,
+                                            onClearClick = onClearClick,
+                                            onChangeClick = onChangeClick,
+                                            onContinueClick = onContinueClick,
+                                            patchSourceNames = patchSourcesForSelectedApk,
+                                        )
+                                    }
+                                }
+                                SupportedAppsListPane(
                                     supportedApps = uiState.supportedApps,
+                                    sourceNamesByPackage = sourceNamesByPackage,
+                                    isLoading = uiState.isLoadingPatches,
                                     loadError = uiState.patchLoadError,
                                     onRetry = onRetry,
-                                    sourceNamesByPackage = sourceNamesByPackage,
+                                    isCompact = isCompact,
+                                    modifier = Modifier
+                                        .weight(1.2f)
+                                        .fillMaxHeight(),
                                 )
                             }
                         }
-
-                        // Show scrollbar only when content overflows
-                        if (scrollState.maxValue > 0) {
-                            VerticalScrollbar(
+                    } else {
+                        // ── Scrollable top/bottom body (narrow windows) ──
+                        BoxWithConstraints(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                        ) {
+                            val bodyMaxHeight = this.maxHeight
+                            val scrollState = rememberScrollState()
+                            Column(
                                 modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .fillMaxHeight(),
-                                adapter = rememberScrollbarAdapter(scrollState),
-                                style = morpheScrollbarStyle()
-                            )
+                                    .fillMaxWidth()
+                                    .verticalScroll(scrollState)
+                                    .heightIn(min = bodyMaxHeight),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = if (pinSupportedAppsToBottom) Arrangement.SpaceBetween else Arrangement.Top,
+                            ) {
+                                if (uiState.showUpdateBanner) {
+                                    UpdateBanner(
+                                        info = uiState.updateInfo!!,
+                                        onDismissForSession = { viewModel.dismissUpdateForSession() },
+                                        onDismissForVersion = { viewModel.dismissUpdateForVersion() },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = padding, end = padding, top = 8.dp),
+                                    )
+                                }
+                                if (uiState.showMultiSourceHint) {
+                                    MultiSourceHintBanner(
+                                        onDismiss = { viewModel.dismissMultiSourceHint() },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = padding, end = padding, top = 8.dp),
+                                    )
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(padding),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    MiddleContent(
+                                        uiState = uiState,
+                                        isCompact = isCompact,
+                                        patchesLoaded = patchesLoaded,
+                                        onClearClick = onClearClick,
+                                        onChangeClick = onChangeClick,
+                                        onContinueClick = onContinueClick,
+                                        patchSourceNames = patchSourcesForSelectedApk,
+                                    )
+                                }
+
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.padding(
+                                        start = padding,
+                                        end = padding,
+                                        bottom = if (isSmall) 8.dp else 16.dp,
+                                    ),
+                                ) {
+                                    SupportedAppsSection(
+                                        isCompact = isCompact,
+                                        maxWidth = outerMaxWidth,
+                                        isLoading = uiState.isLoadingPatches,
+                                        isDefaultSource = uiState.isDefaultSource,
+                                        supportedApps = uiState.supportedApps,
+                                        loadError = uiState.patchLoadError,
+                                        onRetry = onRetry,
+                                        sourceNamesByPackage = sourceNamesByPackage,
+                                    )
+                                }
+                            }
+
+                            if (scrollState.maxValue > 0) {
+                                VerticalScrollbar(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .fillMaxHeight(),
+                                    adapter = rememberScrollbarAdapter(scrollState),
+                                    style = morpheScrollbarStyle(),
+                                )
+                            }
                         }
                     }
                 }
@@ -1170,8 +1265,211 @@ private fun AnalyzingSection(isCompact: Boolean = false) {
 // ════════════════════════════════════════════════════════════════════
 
 /**
- * Bottom section — horizontal scrolling cards.
+ * Vertical-list variant of the supported-apps display used in the side-by-side
+ * layout. Search field at top, scrollable LazyColumn of [SupportedAppListRow]
+ * below. Single-expand semantics — clicking a row expands it and collapses any
+ * previously-expanded one.
  */
+@Composable
+private fun SupportedAppsListPane(
+    supportedApps: List<SupportedApp>,
+    sourceNamesByPackage: Map<String, List<String>>,
+    isLoading: Boolean,
+    loadError: String?,
+    onRetry: () -> Unit,
+    isCompact: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+
+    var searchQuery by remember { mutableStateOf("") }
+    var expandedPackage by remember { mutableStateOf<String?>(null) }
+
+    val filtered = if (searchQuery.isBlank()) supportedApps
+    else supportedApps.filter {
+        it.displayName.contains(searchQuery, ignoreCase = true) ||
+        it.packageName.contains(searchQuery, ignoreCase = true)
+    }
+
+    // Collapse if the currently expanded app filters out.
+    LaunchedEffect(searchQuery, filtered) {
+        if (expandedPackage != null && filtered.none { it.packageName == expandedPackage }) {
+            expandedPackage = null
+        }
+    }
+
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+      val paneMaxHeight = maxHeight
+      Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .align(Alignment.Center),
+      ) {
+        // ── Header row: SUPPORTED APPS · count ──
+        // end = 12.dp matches the LazyColumn's right padding so "X apps"
+        // visually aligns with the right edge of the cards.
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 8.dp),
+        ) {
+            Text(
+                text = "SUPPORTED APPS",
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = mono,
+                letterSpacing = 1.5.sp,
+                color = homeMutedTextColor(0.4f),
+            )
+            Spacer(Modifier.weight(1f))
+            if (!isLoading && supportedApps.isNotEmpty()) {
+                Text(
+                    text = "${supportedApps.size} apps",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = homeMutedTextColor(0.4f),
+                )
+            }
+        }
+
+        // ── Search field ──
+        if (supportedApps.size > 4) {
+            // Match the LazyColumn's right padding so the field aligns with cards.
+            // Dp.Unspecified disables the default 340dp cap so the field fills
+            // the pane width like the cards below it.
+            Box(modifier = Modifier.fillMaxWidth().padding(end = 12.dp)) {
+                SlimSearchField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    mono = mono,
+                    corners = corners,
+                    accents = accents,
+                    maxWidth = Dp.Unspecified,
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+
+        when {
+            isLoading -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    repeat(4) { idx ->
+                        SkeletonAppRow(
+                            corners = corners,
+                            // Slight stagger: each row pulses 120ms after the previous
+                            // so the skeleton list feels alive instead of lock-step.
+                            staggerOffsetMs = idx * 120,
+                        )
+                    }
+                }
+            }
+            loadError != null -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                ) {
+                    Text(
+                        text = "LOAD FAILED",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.error,
+                        letterSpacing = 1.sp,
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = loadError,
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = homeMutedTextColor(0.6f),
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    OutlinedButton(
+                        onClick = onRetry,
+                        shape = RoundedCornerShape(corners.small),
+                    ) {
+                        Text(
+                            "RETRY",
+                            fontFamily = mono,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.5.sp,
+                        )
+                    }
+                }
+            }
+            filtered.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = if (searchQuery.isBlank()) "No supported apps"
+                               else "No apps match \"$searchQuery\"",
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = homeMutedTextColor(0.5f),
+                    )
+                }
+            }
+            else -> {
+                val listState = rememberLazyListState()
+                // Cap the list at the pane's available height (minus a rough
+                // header+search allowance) so it scrolls when there are many
+                // apps but wraps tight + lets the Column center when few.
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = (paneMaxHeight - 80.dp).coerceAtLeast(120.dp)),
+                ) {
+                    androidx.compose.foundation.lazy.LazyColumn(
+                        state = listState,
+                        // Scrollbar is 6dp wide and sits at the Box's right edge.
+                        // 6 (scrollbar width) + 6 (visible gap) = 12dp keeps content
+                        // fully clear of the scrollbar with breathing room.
+                        modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        items(items = filtered, key = { it.packageName }) { app ->
+                            SupportedAppListRow(
+                                app = app,
+                                isExpanded = expandedPackage == app.packageName,
+                                onClick = {
+                                    expandedPackage = if (expandedPackage == app.packageName) null
+                                                      else app.packageName
+                                },
+                                patchSourceNames = sourceNamesByPackage[app.packageName] ?: emptyList(),
+                            )
+                        }
+                    }
+                    // Wrap the scrollbar in a matchParentSize Box so it
+                    // tracks the LazyColumn's wrapped height WITHOUT forcing
+                    // the outer Box to fill its heightIn(max=…) cap. Then
+                    // align CenterEnd + wrap width to keep it pinned at the
+                    // right edge at its natural 6dp thickness.
+                    Box(
+                        modifier = Modifier.matchParentSize(),
+                        contentAlignment = Alignment.CenterEnd,
+                    ) {
+                        VerticalScrollbar(
+                            modifier = Modifier.fillMaxHeight(),
+                            adapter = rememberScrollbarAdapter(listState),
+                            style = morpheScrollbarStyle(),
+                        )
+                    }
+                }
+            }
+        }
+      }
+    }
+}
+
 @Composable
 private fun SupportedAppsSection(
     isCompact: Boolean = false,
@@ -2097,7 +2395,8 @@ private fun SlimSearchField(
     onValueChange: (String) -> Unit,
     mono: androidx.compose.ui.text.font.FontFamily,
     corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
-    accents: app.morphe.gui.ui.theme.MorpheAccentColors
+    accents: app.morphe.gui.ui.theme.MorpheAccentColors,
+    maxWidth: Dp = 340.dp,
 ) {
     val dimens = LocalMorpheDimens.current
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
@@ -2122,7 +2421,7 @@ private fun SlimSearchField(
         ),
         cursorBrush = SolidColor(accents.primary),
         modifier = Modifier
-            .widthIn(max = 340.dp)
+            .widthIn(max = maxWidth)
             .fillMaxWidth()
             .height(dimens.controlHeight)
             .clip(RoundedCornerShape(corners.small))
@@ -2269,5 +2568,83 @@ private fun openFilePicker(): File? {
         File(directory, file)
     } else {
         null
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  LOADING SKELETON — ghost row that mimics SupportedAppListRow's shape
+// ════════════════════════════════════════════════════════════════════
+
+@Composable
+private fun SkeletonAppRow(
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    staggerOffsetMs: Int,
+) {
+    val infinite = rememberInfiniteTransition(label = "skeletonPulse")
+    val alpha by infinite.animateFloat(
+        initialValue = 0.06f,
+        targetValue = 0.16f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900, delayMillis = staggerOffsetMs),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "skeletonAlpha",
+    )
+    val baseColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+    val cardBg = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)
+    val outline = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .background(cardBg)
+            .border(1.dp, outline, RoundedCornerShape(corners.medium))
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        // Row 1: avatar + name/package bars
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(baseColor),
+            )
+            Spacer(Modifier.width(10.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Box(
+                    modifier = Modifier
+                        .height(10.dp)
+                        .width(140.dp)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(baseColor),
+                )
+                Box(
+                    modifier = Modifier
+                        .height(8.dp)
+                        .width(180.dp)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(baseColor.copy(alpha = alpha * 0.6f)),
+                )
+            }
+        }
+        // Row 2: chip placeholders
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Box(
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(110.dp)
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(baseColor),
+            )
+            Box(
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(130.dp)
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(baseColor.copy(alpha = alpha * 0.7f)),
+            )
+        }
     }
 }

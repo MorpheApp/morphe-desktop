@@ -43,12 +43,12 @@ import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import app.morphe.gui.ui.components.OfflineBanner
-import app.morphe.gui.ui.components.SourceLedState
-import app.morphe.gui.ui.components.SourcesCountPill
+import app.morphe.gui.ui.components.SourceManagementSheet
+import app.morphe.gui.ui.components.SourceSheetMode
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
-import app.morphe.gui.ui.components.sourceLedState
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.ChecksumStatus
@@ -87,16 +87,19 @@ class QuickPatchScreen : Screen {
 fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // Sources pill data (read-only in Quick Patch — sources are managed only in Expert mode).
+    // Source picker state — Quick Patch is single-source by design. The picker
+    // uses the same SourceManagementSheet as Expert mode but in SINGLE_SELECT
+    // mode (radio behavior). Users can also add/edit/remove sources from here,
+    // matching morphe-manager which doesn't gate source management on expert mode.
     val patchSourceManager: PatchSourceManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
-    val sourceStates: List<SourceLedState> = run {
-        val snapshot = viewModel.getResolvedSourcesSnapshot()
-        val channelsBySource = snapshot
-            ?.resolved
-            ?.associate { it.source.id to it.channel }
-            ?: emptyMap()
-        allSources.map { src -> sourceLedState(src, channelsBySource[src.id]) }
+    val pickerScope = rememberCoroutineScope()
+    var showSourcePicker by remember { mutableStateOf(false) }
+    var activeSourceId by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(uiState.patchSourceName, allSources) {
+        // Resolve the current active source's id by name for radio selection.
+        activeSourceId = allSources.firstOrNull { it.name == uiState.patchSourceName }?.id
+            ?: patchSourceManager.getActiveSource().id
     }
 
     val corners = LocalMorpheCorners.current
@@ -107,6 +110,26 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     var leadingWidthPx by remember { mutableIntStateOf(0) }
     var trailingWidthPx by remember { mutableIntStateOf(0) }
     val centerSidePadding = with(density) { maxOf(leadingWidthPx, trailingWidthPx).toDp() } + 16.dp
+
+    if (showSourcePicker) {
+        SourceManagementSheet(
+            sources = allSources,
+            mode = SourceSheetMode.SINGLE_SELECT,
+            activeSourceId = activeSourceId,
+            onSelectSingle = { id ->
+                showSourcePicker = false
+                pickerScope.launch { patchSourceManager.switchSource(id) }
+            },
+            onToggleEnabled = { _, _ -> /* no-op in SINGLE_SELECT mode */ },
+            onAdd = { src -> pickerScope.launch { patchSourceManager.addSource(src) } },
+            onEdit = { src -> pickerScope.launch { patchSourceManager.updateSource(src) } },
+            onRemove = { id -> pickerScope.launch { patchSourceManager.removeSource(id) } },
+            onOpenPatches = { /* unused in SINGLE_SELECT mode */ },
+            onDismiss = { showSourcePicker = false },
+            enabled = uiState.phase != QuickPatchPhase.DOWNLOADING &&
+                      uiState.phase != QuickPatchPhase.PATCHING,
+        )
+    }
 
     FullScreenDropZone(
         isDragHovering = uiState.isDragHovering,
@@ -149,19 +172,23 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         BrandingLogo()
                     }
 
-                    // Patches version badge — centered
+                    // Patches version badge — centered. Click opens the source-management
+                    // sheet in SINGLE_SELECT mode so the user can pick which source Quick
+                    // Patch uses (and add/edit/remove sources too).
                     Box(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(start = centerSidePadding, end = centerSidePadding)
                     ) {
-                        // Same pill as Expert mode but non-clickable (onClick = null).
-                        // Sources are managed from Expert mode only; here it's purely
-                        // informational so the user sees how many sources are active
-                        // and what channel each is on.
-                        SourcesCountPill(
-                            sourceStates = sourceStates,
-                            onClick = null,
+                        PatchesVersionBadge(
+                            patchesVersion = uiState.patchesVersion,
+                            isLoading = uiState.isLoadingPatches,
+                            patchSourceName = uiState.patchSourceName,
+                            latestLabel = if (uiState.patchesVersion != null &&
+                                              uiState.patchesVersion == uiState.latestPatchesVersion) {
+                                "LATEST STABLE"
+                            } else null,
+                            onClick = { showSourcePicker = true },
                         )
                     }
 
@@ -375,10 +402,12 @@ private fun PatchesVersionBadge(
     isLoading: Boolean,
     patchSourceName: String? = null,
     latestLabel: String? = null,
+    onClick: (() -> Unit)? = null,
 ) {
     val mono = LocalMorpheFont.current
     val corners = LocalMorpheCorners.current
     val accents = LocalMorpheAccents.current
+    val interactive = onClick != null
 
     if (isLoading) {
         Row(
@@ -412,7 +441,13 @@ private fun PatchesVersionBadge(
                 .clip(RoundedCornerShape(corners.small))
                 .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.1f), RoundedCornerShape(corners.small))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(start = 12.dp, end = 4.dp),
+                .then(
+                    if (interactive) Modifier
+                        .pointerHoverIcon(androidx.compose.ui.input.pointer.PointerIcon.Hand)
+                        .clickable(onClick = onClick!!)
+                    else Modifier
+                )
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

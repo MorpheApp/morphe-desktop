@@ -157,16 +157,17 @@ class QuickPatchViewModel(
             _uiState.value = _uiState.value.copy(isLoadingPatches = true, patchLoadError = null)
 
             try {
-                val enabled = patchSourceManager.getEnabledRepositories()
-                if (enabled.isEmpty()) {
-                    _uiState.value = _uiState.value.copy(
-                        isLoadingPatches = false,
-                        patchLoadError = "No patch sources enabled."
-                    )
-                    return@launch
-                }
+                // Quick Patch is intentionally single-source — multi-source belongs in
+                // Expert mode. The user picks WHICH single source via the source-picker
+                // sheet, which calls patchSourceManager.switchSource and updates
+                // activePatchSourceId. Quick Patch loads only that source regardless of
+                // Expert's enabled flags — the two modes operate independently.
+                val activeSource = patchSourceManager.getActiveSource()
+                val activeRepo = patchSourceManager.getRepositoryForSource(activeSource)
+                val pair: Pair<app.morphe.gui.data.model.PatchSource, app.morphe.gui.data.repository.PatchRepository?> =
+                    activeSource to activeRepo
 
-                val result = EnabledSourcesLoader.loadAll(enabled, patchService)
+                val result = EnabledSourcesLoader.loadAll(listOf(pair), patchService)
 
                 if (!result.anyLoaded) {
                     val firstError = result.resolved.firstNotNullOfOrNull { it.error }
