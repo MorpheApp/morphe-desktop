@@ -1,3 +1,10 @@
+# [1.9.0-dev.1](https://github.com/MorpheApp/morphe-cli/compare/v1.8.1...v1.9.0-dev.1) (2026-05-11)
+
+
+### Features
+
+* Add setting menu to save patched app crash logs to file ([#143](https://github.com/MorpheApp/morphe-cli/issues/143)) ([90836b5](https://github.com/MorpheApp/morphe-cli/commit/90836b5cedbd6d0642a819abde7c33901a7e81a1))
+
 ## [1.8.1](https://github.com/MorpheApp/morphe-cli/compare/v1.8.0...v1.8.1) (2026-05-11)
 
 
