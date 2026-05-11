@@ -238,6 +238,83 @@ class AdbManager {
     }
 
     /**
+     * Clear the device's logcat buffers (main + crash).
+     * Crash buffer clear is best-effort — older devices may not have it.
+     */
+    suspend fun clearLogcat(deviceId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext Result.failure(
+            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+        )
+
+        try {
+            val main = ProcessBuilder(adb, "-s", deviceId, "logcat", "-c")
+                .redirectErrorStream(true)
+                .start()
+            val mainOutput = main.inputStream.bufferedReader().readText()
+            if (main.waitFor() != 0) {
+                return@withContext Result.failure(AdbException("Failed to clear logs: $mainOutput"))
+            }
+
+            // Best-effort: also clear the crash buffer. Ignore failure.
+            try {
+                val crash = ProcessBuilder(adb, "-s", deviceId, "logcat", "-b", "crash", "-c")
+                    .redirectErrorStream(true)
+                    .start()
+                crash.inputStream.bufferedReader().readText()
+                crash.waitFor()
+            } catch (_: Exception) { /* older devices may not have crash buffer */ }
+
+            Logger.info("Cleared logcat on $deviceId")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Logger.error("Error clearing logcat", e)
+            Result.failure(AdbException("Failed to clear logs: ${e.message}"))
+        }
+    }
+
+    /**
+     * Capture a logcat snapshot from the device, filtered to lines that contain
+     * "morphe:" or "AndroidRuntime", and write them to [outputFile].
+     * Returns the number of lines written.
+     */
+    suspend fun captureLogcat(deviceId: String, outputFile: File): Result<Int> = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext Result.failure(
+            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+        )
+
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "logcat", "-d", "-b", "main,crash")
+                .redirectErrorStream(true)
+                .start()
+
+            val kept = mutableListOf<String>()
+            process.inputStream.bufferedReader().useLines { lines ->
+                lines.forEach { line ->
+                    if (line.contains("morphe:", ignoreCase = true) || line.contains("AndroidRuntime")) {
+                        kept += line
+                    }
+                }
+            }
+            val exitCode = process.waitFor()
+            if (exitCode != 0) {
+                return@withContext Result.failure(AdbException("logcat exited with code $exitCode"))
+            }
+
+            if (kept.isEmpty()) {
+                Logger.info("No matching logcat lines on $deviceId — skipping file write")
+            } else {
+                outputFile.parentFile?.mkdirs()
+                outputFile.writeText(kept.joinToString("\n") + "\n")
+                Logger.info("Captured ${kept.size} logcat line(s) to ${outputFile.absolutePath}")
+            }
+            Result.success(kept.size)
+        } catch (e: Exception) {
+            Logger.error("Error capturing logcat", e)
+            Result.failure(AdbException("Failed to capture logs: ${e.message}"))
+        }
+    }
+
+    /**
      * Parse output from 'adb devices -l' command.
      * Example line: "XXXXXXXX device usb:1-1 product:flame model:Pixel_4 device:flame transport_id:1"
      */
