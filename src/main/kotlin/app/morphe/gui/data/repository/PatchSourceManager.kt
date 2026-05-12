@@ -121,15 +121,22 @@ class PatchSourceManager(
 
     /**
      * Get the PatchRepository for a specific source.
-     * Returns null for LOCAL sources (no GitHub API needed).
+     * Returns null for LOCAL sources (no remote API needed).
      */
     fun getRepositoryForSource(source: PatchSource): PatchRepository? {
         if (source.type == PatchSourceType.LOCAL) return null
 
         return repositories.getOrPut(source.id) {
             val repoPath = extractRepoPath(source)
-            Logger.info("Creating PatchRepository for source '${source.name}' (repo=$repoPath)")
-            PatchRepository(httpClient, repoPath)
+            // DEFAULT inherits GitHub behaviour (morphe-patches lives on
+            // github.com); GITLAB uses the GitLab API surface; everything
+            // else is GitHub.
+            val provider = when (source.type) {
+                PatchSourceType.GITLAB -> PatchSourceType.GITLAB
+                else -> PatchSourceType.GITHUB
+            }
+            Logger.info("Creating PatchRepository for source '${source.name}' (repo=$repoPath, provider=$provider)")
+            PatchRepository(httpClient, repoPath, provider)
         }
     }
 
@@ -141,14 +148,17 @@ class PatchSourceManager(
     }
 
     /**
-     * Extract "owner/repo" from a PatchSource's URL.
-     * e.g. "https://github.com/MorpheApp/morphe-patches" -> "MorpheApp/morphe-patches"
+     * Extract "owner/repo" from a PatchSource's URL. Works for both GitHub
+     * and GitLab hosts. Falls back to the built-in default repo when no URL
+     * is configured (e.g. for the DEFAULT source on first launch).
      */
     private fun extractRepoPath(source: PatchSource): String {
         val url = source.url ?: return "MorpheApp/morphe-patches"
         return url
             .removePrefix("https://github.com/")
             .removePrefix("http://github.com/")
+            .removePrefix("https://gitlab.com/")
+            .removePrefix("http://gitlab.com/")
             .removeSuffix("/")
             .removeSuffix(".git")
     }

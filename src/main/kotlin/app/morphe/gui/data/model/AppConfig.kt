@@ -106,7 +106,9 @@ data class PatchSource (
     val id: String,
     val name: String,
     val type: PatchSourceType,
-    val url: String? = null, // For DEFAULT (morphe) and GITHUB (other source) type
+    // For DEFAULT (morphe), GITHUB and GITLAB sources: the canonical
+    // "https://{host}/{owner}/{repo}" URL.
+    val url: String? = null,
     val filePath: String? = null, // For local files
     val deletable: Boolean = true,
     // Multi-source enablement. Default true so old configs migrate to "all enabled"
@@ -116,7 +118,7 @@ data class PatchSource (
 
 @Serializable
 enum class PatchSourceType{
-    DEFAULT, GITHUB, LOCAL
+    DEFAULT, GITHUB, GITLAB, LOCAL
 }
 
 enum class PatchChannel {

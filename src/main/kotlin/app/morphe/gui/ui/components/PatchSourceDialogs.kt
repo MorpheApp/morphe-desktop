@@ -91,7 +91,10 @@ internal fun AddPatchSourceDialog(
                         ) {
                             Text(
                                 text = when (type) {
-                                    PatchSourceType.GITHUB -> "GITHUB"
+                                    // The "REMOTE" tab covers both GitHub and
+                                    // GitLab — the resolver picks the right
+                                    // provider from the URL the user pastes.
+                                    PatchSourceType.GITHUB -> "REMOTE"
                                     PatchSourceType.LOCAL -> "LOCAL FILE"
                                     else -> ""
                                 },
@@ -124,14 +127,14 @@ internal fun AddPatchSourceDialog(
                             SlimTextField(
                                 value = url,
                                 onValueChange = { url = it; error = null },
-                                placeholder = "github.com/owner/repo",
+                                placeholder = "github.com/owner/repo or gitlab.com/owner/repo",
                                 mono = mono,
                                 accents = accents,
                                 corners = corners,
                                 modifier = Modifier.fillMaxWidth(),
                             )
                             Text(
-                                "Accepts GitHub URL or morphe.software/add-source link",
+                                "Accepts GitHub, GitLab, or morphe.software/add-source link",
                                 fontFamily = mono,
                                 fontSize = 9.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
@@ -196,15 +199,18 @@ internal fun AddPatchSourceDialog(
                     if (name.isBlank()) { error = "Name is required"; return@Button }
                     when (sourceType) {
                         PatchSourceType.GITHUB -> {
-                            val resolvedUrl = resolveGitHubUrl(url.trim())
-                            if (resolvedUrl == null) {
-                                error = "Enter a valid GitHub URL or Morphe source link"; return@Button
+                            // sourceType is the UI's "REMOTE" mode placeholder;
+                            // the actual provider (GITHUB vs GITLAB) is decided
+                            // by the resolver based on the URL the user pasted.
+                            val resolved = resolveRemoteSourceUrl(url.trim())
+                            if (resolved == null) {
+                                error = "Enter a valid GitHub or GitLab URL"; return@Button
                             }
                             onAdd(PatchSource(
                                 id = UUID.randomUUID().toString(),
                                 name = name.trim(),
-                                type = sourceType,
-                                url = resolvedUrl,
+                                type = resolved.provider,
+                                url = resolved.canonicalUrl,
                                 deletable = true
                             ))
                             return@Button
@@ -317,12 +323,12 @@ internal fun EditPatchSourceDialog(
                 }
 
                 when (source.type) {
-                    PatchSourceType.GITHUB -> {
+                    PatchSourceType.GITHUB, PatchSourceType.GITLAB -> {
                         LabeledField(label = "REPOSITORY URL", mono = mono) {
                             SlimTextField(
                                 value = url,
                                 onValueChange = { url = it; error = null },
-                                placeholder = "github.com/owner/repo",
+                                placeholder = "github.com/owner/repo or gitlab.com/owner/repo",
                                 mono = mono,
                                 accents = accents,
                                 corners = corners,
@@ -379,14 +385,18 @@ internal fun EditPatchSourceDialog(
                 onClick = {
                     if (name.isBlank()) { error = "Name is required"; return@Button }
                     when (source.type) {
-                        PatchSourceType.GITHUB -> {
-                            val resolvedUrl = resolveGitHubUrl(url.trim())
-                            if (resolvedUrl == null) {
-                                error = "Enter a valid GitHub URL or Morphe source link"; return@Button
+                        PatchSourceType.GITHUB, PatchSourceType.GITLAB -> {
+                            // Re-resolve on save so the user can switch hosts
+                            // by editing the URL (e.g. github → gitlab). The
+                            // provider type updates with the detected host.
+                            val resolved = resolveRemoteSourceUrl(url.trim())
+                            if (resolved == null) {
+                                error = "Enter a valid GitHub or GitLab URL"; return@Button
                             }
                             onSave(source.copy(
                                 name = name.trim(),
-                                url = resolvedUrl
+                                type = resolved.provider,
+                                url = resolved.canonicalUrl,
                             ))
                             return@Button
                         }
@@ -441,31 +451,74 @@ internal fun EditPatchSourceDialog(
  * Accepts: full https://github.com/owner/repo URL, morphe.software/add-source?github=owner/repo
  * link, or short form owner/repo. Returns the normalized URL or null.
  */
-internal fun resolveGitHubUrl(input: String): String? {
+/**
+ * Result of parsing a user-entered remote source URL. The detected
+ * [provider] tells the rest of the pipeline (PatchRepository et al.)
+ * which API surface to talk to.
+ */
+internal data class ResolvedRemoteSource(
+    val canonicalUrl: String,
+    val provider: PatchSourceType, // GITHUB or GITLAB only
+)
+
+/**
+ * Parse any reasonable user input for a remote patch source and produce
+ * a canonical "https://{host}/{owner}/{repo}" URL plus the detected
+ * provider type. Returns null for inputs we can't confidently classify.
+ *
+ * Accepted inputs:
+ *  - Full URL: `https://github.com/owner/repo[/...]` or `https://gitlab.com/owner/repo[/...]`
+ *  - Bare host path: `github.com/owner/repo`, `gitlab.com/owner/repo`
+ *  - Deep-link: `morphe.software/add-source?github=owner/repo` or `?gitlab=owner/repo`
+ *  - Bare `owner/repo` — defaults to GitHub for backwards compatibility
+ *    with the previous behavior.
+ */
+internal fun resolveRemoteSourceUrl(input: String): ResolvedRemoteSource? {
     val trimmed = input.trim()
     if (trimmed.isBlank()) return null
 
+    // Deep-link: morphe.software/add-source?github=owner/repo or ?gitlab=owner/repo
     if (trimmed.contains("morphe.software/add-source")) {
-        val match = Regex("[?&]github=([^&]+)").find(trimmed)
-        val repoPath = match?.groupValues?.get(1) ?: return null
-        val clean = repoPath.trimEnd('/')
-        return if (clean.contains('/') && clean.split('/').size == 2) {
-            "https://github.com/$clean"
-        } else null
+        Regex("[?&]github=([^&]+)").find(trimmed)?.let { match ->
+            return buildRemoteSource(match.groupValues[1], PatchSourceType.GITHUB)
+        }
+        Regex("[?&]gitlab=([^&]+)").find(trimmed)?.let { match ->
+            return buildRemoteSource(match.groupValues[1], PatchSourceType.GITLAB)
+        }
+        return null
     }
 
     if (trimmed.contains("github.com/")) {
-        val match = Regex("github\\.com/([^/]+/[^/]+)").find(trimmed)
-        return if (match != null) {
-            "https://github.com/${match.groupValues[1].trimEnd('/')}"
-        } else null
+        val match = Regex("github\\.com/([^/]+/[^/?#]+)").find(trimmed) ?: return null
+        return buildRemoteSource(match.groupValues[1], PatchSourceType.GITHUB)
     }
 
+    if (trimmed.contains("gitlab.com/")) {
+        val match = Regex("gitlab\\.com/([^/]+/[^/?#]+)").find(trimmed) ?: return null
+        return buildRemoteSource(match.groupValues[1], PatchSourceType.GITLAB)
+    }
+
+    // Bare "owner/repo" — assume GitHub for backwards compatibility with
+    // the historical default.
     if (trimmed.matches(Regex("[\\w.-]+/[\\w.-]+"))) {
-        return "https://github.com/$trimmed"
+        return buildRemoteSource(trimmed, PatchSourceType.GITHUB)
     }
 
     return null
+}
+
+private fun buildRemoteSource(rawPath: String, provider: PatchSourceType): ResolvedRemoteSource? {
+    val clean = rawPath.trimEnd('/').removeSuffix(".git")
+    if (!clean.contains('/') || clean.split('/').size != 2) return null
+    val host = when (provider) {
+        PatchSourceType.GITHUB -> "github.com"
+        PatchSourceType.GITLAB -> "gitlab.com"
+        else -> return null
+    }
+    return ResolvedRemoteSource(
+        canonicalUrl = "https://$host/$clean",
+        provider = provider,
+    )
 }
 
 // LabeledField, SlimTextField, DialogActionButton moved to SlimInputs.kt for

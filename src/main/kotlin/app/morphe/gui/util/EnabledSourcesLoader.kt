@@ -119,7 +119,12 @@ object EnabledSourcesLoader {
     ): ResolvedSource = withContext(Dispatchers.IO) {
         when (source.type) {
             PatchSourceType.LOCAL -> resolveLocal(source)
-            PatchSourceType.DEFAULT, PatchSourceType.GITHUB -> resolveGithub(source, repo, preferredVersion)
+            // GitHub / GitLab / built-in default all flow through the same
+            // remote-fetch path. The PatchRepository instance itself knows
+            // which API to talk to based on the source's provider type.
+            PatchSourceType.DEFAULT,
+            PatchSourceType.GITHUB,
+            PatchSourceType.GITLAB -> resolveRemote(source, repo, preferredVersion)
         }
     }
 
@@ -140,7 +145,7 @@ object EnabledSourcesLoader {
         )
     }
 
-    private suspend fun resolveGithub(
+    private suspend fun resolveRemote(
         source: PatchSource,
         repo: PatchRepository?,
         preferredVersion: String?,

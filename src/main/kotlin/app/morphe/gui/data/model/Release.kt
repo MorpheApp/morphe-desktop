@@ -13,7 +13,10 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Release(
-    val id: Long,
+    // Default 0L: GitHub always returns a numeric release id, but GitLab's
+    // release list keys releases by tag_name instead — and we never read
+    // `id` anywhere, so a fallback keeps the model provider-agnostic.
+    val id: Long = 0L,
     @SerialName("tag_name")
     val tagName: String,
     val name: String? = null,
@@ -46,13 +49,17 @@ data class Release(
 
 @Serializable
 data class ReleaseAsset(
-    val id: Long,
+    // Defaults: GitLab release links don't expose all of these consistently.
+    // None of these fields are required for selection / download — they're
+    // surfaced in UI ("12 MB · application/zip") at best, so a missing
+    // value just renders as "0 B" / "application/octet-stream".
+    val id: Long = 0L,
     val name: String,
     @SerialName("browser_download_url")
     val downloadUrl: String,
-    val size: Long,
+    val size: Long = 0L,
     @SerialName("content_type")
-    val contentType: String
+    val contentType: String = "application/octet-stream",
 ) {
     /**
      * Check if this is a patch file (.mpp)

@@ -300,6 +300,7 @@ private fun SourceRow(
                         text = when (source.type) {
                             PatchSourceType.DEFAULT -> source.url?.removePrefix("https://github.com/") ?: "Built-in"
                             PatchSourceType.GITHUB -> source.url?.removePrefix("https://github.com/") ?: "GitHub"
+                            PatchSourceType.GITLAB -> source.url?.removePrefix("https://gitlab.com/") ?: "GitLab"
                             PatchSourceType.LOCAL -> source.filePath?.let { File(it).name } ?: "Local file"
                         },
                         fontSize = 10.sp,
