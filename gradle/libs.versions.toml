@@ -34,6 +34,9 @@ apk-parser = "2.6.10"
 # Testing
 mockk = "1.14.9"
 
+# Logging
+slf4j = "2.0.18"
+
 # Libraries
 about-libraries = "14.1.0"
 
@@ -80,6 +83,9 @@ apk-parser = { module = "net.dongliu:apk-parser", version.ref = "apk-parser" }
 # Testing
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+# Logging
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j" }
 
 # About Libraries
 about-libraries-core = { group = "com.mikepenz", name = "aboutlibraries-compose-core", version.ref = "about-libraries" }
