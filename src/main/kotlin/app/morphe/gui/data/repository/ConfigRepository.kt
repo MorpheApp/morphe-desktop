@@ -36,6 +36,10 @@ class ConfigRepository {
     suspend fun loadConfig(): AppConfig = withContext(Dispatchers.IO) {
         cachedConfig?.let { return@withContext it }
 
+        // One-time migration from the legacy per-OS app-data path to the
+        // unified morphe-data location. Runs once and is a no-op thereafter.
+        ConfigMigration.runIfNeeded()
+
         val configFile = FileUtils.getConfigFile()
 
         try {

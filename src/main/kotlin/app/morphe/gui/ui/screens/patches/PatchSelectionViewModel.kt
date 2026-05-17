@@ -477,17 +477,16 @@ class PatchSelectionViewModel(
     fun createPatchConfig(continueOnError: Boolean = false): PatchConfig {
         saveCurrentSelection()
 
+        // Delegate to the shared engine helper — same path the CLI computes.
+        // Passing apkName as the display name preserves the friendly label
+        // (e.g. "Youtube") instead of falling back to the filename.
         val inputFile = File(apkPath)
-        val appFolderName = apkName.replace(" ", "-")
-        val baseOutputDir = defaultOutputDirectory?.let { File(it) } ?: inputFile.parentFile
-        val outputDir = File(baseOutputDir, appFolderName)
-        outputDir.mkdirs()
-
-        val version = extractVersionFromFilename(inputFile.name) ?: "patched"
-        val patchesVersion = extractPatchesVersion(File(actualPatchesFilePath).name)
-        val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
-        val outputFileName = "${appFolderName}-Morphe-${version}${patchesSuffix}.apk"
-        val outputPath = File(outputDir, outputFileName).absolutePath
+        val outputPath = app.morphe.engine.util.ApkOutputNaming.outputApkPath(
+            inputApk = inputFile,
+            patchesFile = File(actualPatchesFilePath),
+            baseOutputDir = defaultOutputDirectory?.let { File(it) },
+            appDisplayName = apkName,
+        ).absolutePath
 
         // Flatten across bundles: the engine takes a single flat enable/disable
         // list and dedups identical patches at apply time, so the union of
@@ -535,15 +534,14 @@ class PatchSelectionViewModel(
         return selected.toList() to disabled.toList()
     }
 
-    private fun extractVersionFromFilename(fileName: String): String? = try {
-        val afterPackage = fileName.substringAfter("_")
-        afterPackage.substringBefore("-").takeIf { it.isNotEmpty() }
-    } catch (e: Exception) { null }
+    // Delegate to the shared engine helper so GUI and CLI agree on filename
+    // parsing. Returning these as instance methods (not direct calls) keeps
+    // existing call sites in this file unchanged.
+    private fun extractVersionFromFilename(fileName: String): String? =
+        app.morphe.engine.util.ApkOutputNaming.extractApkVersionFromFilename(fileName)
 
-    private fun extractPatchesVersion(patchesFileName: String): String? {
-        val regex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
-        return regex.find(patchesFileName)?.groupValues?.get(1)
-    }
+    private fun extractPatchesVersion(patchesFileName: String): String? =
+        app.morphe.engine.util.ApkOutputNaming.extractPatchesVersion(patchesFileName)
 
     /**
      * Generate a preview of the CLI command that will be executed.

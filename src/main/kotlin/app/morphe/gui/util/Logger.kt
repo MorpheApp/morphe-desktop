@@ -14,7 +14,10 @@ import java.util.*
 
 /**
  * Simple file logger with rotation support.
- * Logs to ~/.morphe-gui/logs/morphe-gui.log
+ *
+ * Log file location: `<MorpheData.root>/logs/morphe-gui.log` — JAR-adjacent
+ * `morphe-data/logs/` for shipped jars, `~/morphe/logs/` for IDE/dev runs.
+ * See [app.morphe.engine.MorpheData] for the full resolution + fallback rules.
  */
 object Logger {
 

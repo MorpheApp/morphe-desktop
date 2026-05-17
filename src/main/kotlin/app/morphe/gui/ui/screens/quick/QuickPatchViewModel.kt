@@ -442,18 +442,16 @@ class QuickPatchViewModel(
                 progress = 0.4f
             )
 
-            // Generate output path
+            // Generate output path via the shared engine helper — same path
+            // the CLI and Expert mode compute. Passing apkInfo.displayName
+            // as the display name preserves the friendly label.
             val appConfig = configRepository.loadConfig()
-            val baseName = apkInfo.displayName.replace(" ", "-")
-            val baseOutputDir = appConfig.defaultOutputDirectory?.let { File(it) }
-                ?: apkFile.parentFile
-                ?: File(System.getProperty("user.home"))
-            val outputDir = File(baseOutputDir, baseName).also { it.mkdirs() }
-            val patchesVersion = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
-                .find(patchFile.name)?.groupValues?.get(1)
-            val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
-            val outputFileName = "$baseName-Morphe-${apkInfo.versionName}${patchesSuffix}.apk"
-            val outputPath = File(outputDir, outputFileName).absolutePath
+            val outputPath = app.morphe.engine.util.ApkOutputNaming.outputApkPath(
+                inputApk = apkFile,
+                patchesFile = patchFile,
+                baseOutputDir = appConfig.defaultOutputDirectory?.let { File(it) },
+                appDisplayName = apkInfo.displayName,
+            ).absolutePath
 
             // Resolve keystore: use saved path, or derive from output APK location
             val resolvedKeystorePath = appConfig.keystorePath

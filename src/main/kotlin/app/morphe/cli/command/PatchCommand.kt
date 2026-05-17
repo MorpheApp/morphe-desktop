@@ -9,6 +9,7 @@
 package app.morphe.cli.command
 
 import app.morphe.cli.command.model.*
+import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.isWindows
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
@@ -237,7 +238,8 @@ internal object PatchCommand : Callable<Int> {
 
     @CommandLine.Option(
         names = ["--purge"],
-        description = ["Purge temporary files directory after patching."],
+        description = ["Delete THIS run's scratch files after patching. " +
+            "Does not affect cached patches, other sessions, or config."],
         showDefaultValue = ALWAYS,
     )
     private var purge: Boolean = false
@@ -413,13 +415,23 @@ internal object PatchCommand : Callable<Int> {
 
         // region Setup
 
-        val outputFilePath =
-            outputFilePath ?: File("").absoluteFile.resolve(
-                "${apk.nameWithoutExtension}-patched.apk",
+        // Default output uses the unified scheme shared with the GUI:
+        //   <input.parent>/<appLabel>/<appLabel>-Morphe-{apkVer}-patches-{patchesVer}.apk
+        // The folder name uses the APK's human-friendly label (e.g. "Youtube")
+        // when readable from the manifest, falling back to the filename for
+        // corrupt or unparseable APKs. GUI populates this from apkInfo;
+        // CLI parses the APK here so both surfaces produce identical paths.
+        // Users who want the legacy `./<name>-patched.apk` layout pass --out.
+        val outputFilePath = outputFilePath ?: run {
+            val displayName = app.morphe.engine.util.ApkOutputNaming.resolveAppDisplayName(apk)
+            app.morphe.engine.util.ApkOutputNaming.outputApkPath(
+                inputApk = apk,
+                patchesFile = bundles.firstOrNull()?.patchesFile,
+                appDisplayName = displayName,
             )
+        }
 
-        val temporaryFilesPath =
-            temporaryFilesPath ?: File("").absoluteFile.resolve("morphe-temporary-files")
+        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
         val keystoreFilePath =
             keyStoreFilePath ?: outputFilePath.parentFile
@@ -481,6 +493,13 @@ internal object PatchCommand : Callable<Int> {
                 e.message ?: "Failed to resolve patch URL"
             )
         }
+
+        // Per-session scratch dir. Hoisted out of the patching `try` block so
+        // the `finally` block can reference it for --purge scope (Phase 6).
+        // Naming matches the GUI's FileUtils.createPatchingTempDir() so the
+        // tmp/ folder shows consistent siblings across CLI + GUI sessions.
+        val patcherTemporaryFilesPath =
+            temporaryFilesPath.resolve("patching-${System.currentTimeMillis()}").also { it.mkdirs() }
 
         try {
             logger.info("Loading patches...")
@@ -568,7 +587,8 @@ internal object PatchCommand : Callable<Int> {
 
             // endregion
 
-            val patcherTemporaryFilesPath = temporaryFilesPath.resolve("patcher")
+            // (patcherTemporaryFilesPath is declared above the outer try
+            // block so it's visible to --purge in the finally clause.)
 
             // We need to check for apkm (like reddit), xapk and apks formats here
 
@@ -934,8 +954,14 @@ internal object PatchCommand : Callable<Int> {
             }
 
             if (purge) {
-                logger.info("Purging temporary files")
-                purge(temporaryFilesPath)
+                // Scope: only THIS session's tmp subfolder. Cached patches,
+                // logs, config, and other in-flight sessions (CLI or GUI) are
+                // never touched.
+                if (patcherTemporaryFilesPath.deleteRecursively()) {
+                    logger.info("Purged this session's temp files: ${patcherTemporaryFilesPath.name}")
+                } else {
+                    logger.warning("Failed to purge ${patcherTemporaryFilesPath.path}")
+                }
             }
 
             // Clean up merged apk if we created one from apkm, xapk or apks
@@ -1052,15 +1078,6 @@ internal object PatchCommand : Callable<Int> {
         }
     }
 
-    private fun purge(resourceCachePath: File) {
-        val result =
-            if (resourceCachePath.deleteRecursively()) {
-                "Purged resource cache directory"
-            } else {
-                "Failed to purge resource cache directory"
-            }
-        logger.info(result)
-    }
 }
 
 private class PatchFailedException(message: String, cause: Throwable) : Exception(message, cause)

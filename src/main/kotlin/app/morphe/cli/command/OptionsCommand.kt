@@ -1,6 +1,7 @@
 package app.morphe.cli.command
 
 import app.morphe.cli.command.model.PatchBundle
+import app.morphe.engine.MorpheData
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.cli.command.model.findMatchingBundle
@@ -72,7 +73,7 @@ internal object OptionsCommand : Callable<Int> {
     private val json = Json { prettyPrint = true }
 
     override fun call(): Int {
-        val temporaryFilesPath = temporaryFilesPath ?: File("").absoluteFile.resolve("morphe-temporary-files")
+        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
         try {
             // Since we could have many URLs, we resolve each of them separately

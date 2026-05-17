@@ -1,5 +1,6 @@
 package app.morphe.cli.command
 
+import app.morphe.engine.MorpheData
 import app.morphe.patcher.patch.PackageName
 import app.morphe.patcher.patch.VersionMap
 import app.morphe.patcher.patch.loadPatchesFromJar
@@ -83,7 +84,7 @@ internal class ListCompatibleVersions : Runnable {
                 appendLine(versions.buildVersionsString().prependIndent("\t"))
             }
 
-        val temporaryFilesPath = temporaryFilesPath ?: File("").absoluteFile.resolve("morphe-temporary-files")
+        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
         try {
             patchesFiles = PatchFileResolver.resolve(
