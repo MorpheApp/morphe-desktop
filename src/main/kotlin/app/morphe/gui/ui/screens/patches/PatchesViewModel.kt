@@ -250,7 +250,12 @@ class PatchesViewModel(
     private fun checkCachedPatches(release: Release): File? {
         val asset = patchRepository.findPatchAsset(release) ?: return null
         val patchesDir = patchRepository.getCacheDir()
-        val cachedFile = File(patchesDir, asset.name)
+        // Match the version-prefixed filename PatchRepository.downloadPatches writes.
+        // Looking up by bare asset.name would falsely "find" the latest version's
+        // file for every other version's check (since maintainers commonly reuse
+        // the asset filename across releases) — that was the cause of the
+        // "latest stable shows SELECT after Clear Cache" bug.
+        val cachedFile = File(patchesDir, PatchRepository.cachedFileName(release, asset))
 
         // Verify file exists and size matches (size check acts as basic integrity verification)
         return if (cachedFile.exists() && cachedFile.length() == asset.size) {

@@ -34,6 +34,28 @@ class PatchRepository(
 
     companion object {
         private const val CACHE_TTL_MS = 5 * 60 * 1000L // 5 minutes
+
+        /**
+         * Per-release filename used in the disk cache.
+         *
+         * Many patch source maintainers (including MorpheApp/morphe-patches)
+         * name their `.mpp` release asset the SAME string across versions,
+         * e.g. `morphe-patches.mpp`. Storing them by their bare asset name
+         * means each new download overwrites the previous version — only ONE
+         * file ever lives in the cache. Worse, the size-match check made
+         * `checkCachedPatches` return a "hit" for the latest version (whose
+         * size happened to match the on-disk file) while older versions
+         * correctly returned a miss — so the patches-screen UI showed
+         * SELECT for the latest and DOWNLOAD for everything else, even
+         * right after a Clear Cache.
+         *
+         * Prepending the release tag (`v1.5.0__morphe-patches.mpp`) gives
+         * each version its own file. Cache hits are now per-version exactly.
+         * The double-underscore is a deliberate visual delimiter — easier
+         * to eyeball when grepping the cache directory than a single dash.
+         */
+        fun cachedFileName(release: Release, asset: ReleaseAsset): String =
+            "${release.tagName}__${asset.name}"
     }
 
     // In-memory cache so multiple callers don't re-fetch from the remote API
@@ -104,7 +126,7 @@ class PatchRepository(
 
         val patchesDir = File(FileUtils.getPatchesDir(), repoPath.replace("/", "-"))
         patchesDir.mkdirs()
-        val targetFile = File(patchesDir, asset.name)
+        val targetFile = File(patchesDir, cachedFileName(release, asset))
 
         // Cache hit rules:
         //  - If we know the asset's expected size (GitHub provides it),
