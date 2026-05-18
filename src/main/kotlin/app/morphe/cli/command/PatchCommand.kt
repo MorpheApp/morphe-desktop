@@ -433,9 +433,7 @@ internal object PatchCommand : Callable<Int> {
 
         val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
-        val keystoreFilePath =
-            keyStoreFilePath ?: outputFilePath.parentFile
-                .resolve("${outputFilePath.nameWithoutExtension}.keystore")
+        val keystoreFilePath = keyStoreFilePath ?: MorpheData.defaultKeystoreFile
 
         val installer = if (deviceSerial != null) {
             val deviceSerial = deviceSerial!!.ifEmpty { null }

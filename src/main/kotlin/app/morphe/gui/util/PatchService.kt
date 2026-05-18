@@ -150,11 +150,22 @@ class PatchService {
 
                 val engineResult = PatchEngine.patch(config, onProgress)
 
+                val failureReason = if (engineResult.success) null else {
+                    // Prefer a specific failed-patch error, else the last failed
+                    // step's error (rebuild/sign), else a generic fallback.
+                    engineResult.failedPatches.firstOrNull()?.let { fp ->
+                        "${fp.name}: ${fp.error.lineSequence().first()}"
+                    }
+                        ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }
+                            ?.let { "${it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }} failed: ${it.error}" }
+                        ?: "Patching failed for an unknown reason"
+                }
                 Result.success(PatchResult(
                     success = engineResult.success,
                     outputPath = engineResult.outputPath,
                     appliedPatches = engineResult.appliedPatches,
                     failedPatches = engineResult.failedPatches.map { it.name },
+                    failureReason = failureReason,
                 ))
             } finally {
                 tempCopies.forEach { runCatching { it.delete() } }
@@ -260,5 +271,9 @@ data class PatchResult(
     val success: Boolean,
     val outputPath: String,
     val appliedPatches: List<String>,
-    val failedPatches: List<String>
+    val failedPatches: List<String>,
+    // Human-readable reason for [success == false]. Populated from the first
+    // failed patch's error or — when patching succeeded but a later step
+    // (rebuild, sign) blew up — that step's error. Null on success.
+    val failureReason: String? = null,
 )

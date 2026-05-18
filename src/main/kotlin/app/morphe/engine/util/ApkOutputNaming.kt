@@ -25,10 +25,22 @@ object ApkOutputNaming {
     /**
      * Extract APK version from an APKMirror-style filename:
      * `<package>_<version>-<build>.apk` → returns `<version>`.
-     * Returns null for filenames that don't follow this convention.
+     * Also handles the same convention with .apkm/.xapk/.apks extensions —
+     * `<package>_<version>.apkm` → returns `<version>`. Returns null for
+     * filenames that don't follow this convention.
      */
     fun extractApkVersionFromFilename(fileName: String): String? = try {
-        val afterPackage = fileName.substringAfter("_")
+        // Strip the bundle extension first so it doesn't leak into the version.
+        // File.nameWithoutExtension handles single extensions cleanly; we list
+        // the .apk-family ones explicitly because filenames like
+        // `soundcloud_2026.04.27.apkm` have multiple "extensions" in a row
+        // (the version dots look like extensions to nameWithoutExtension).
+        val withoutExt = fileName
+            .removeSuffix(".apk")
+            .removeSuffix(".apkm")
+            .removeSuffix(".xapk")
+            .removeSuffix(".apks")
+        val afterPackage = withoutExt.substringAfter("_")
         afterPackage.substringBefore("-").takeIf { it.isNotEmpty() }
     } catch (e: Exception) {
         null
@@ -44,21 +56,16 @@ object ApkOutputNaming {
         patchesVersionRegex.find(patchesFileName)?.groupValues?.get(1)
 
     /**
-     * Resolve the human-friendly app label from an APK file using apk-parser.
-     * Returns null when parsing fails (corrupt APK) or when the manifest has
-     * no label. Callers should fall back to filename in that case.
-     *
-     * This is the same path the GUI uses to populate `apkInfo.displayName`
-     * — running it here lets the CLI produce the same friendly folder names
-     * without each caller having to roll its own.
+     * Resolve the human-friendly app label from an APK file via ARSCLib
+     * (engine [ApkManifestReader]). Returns null when:
+     *  - the manifest can't be read at all (corrupt APK)
+     *  - the manifest has no label
+     *  - the label is stored as a resource reference (`@string/app_name`)
+     *    instead of a literal string — common for big apps. Callers should
+     *    fall back to a supported-apps lookup or filename in that case.
      */
-    fun resolveAppDisplayName(apkFile: File): String? = try {
-        net.dongliu.apk.parser.ApkFile(apkFile).use { apk ->
-            apk.apkMeta?.label?.takeIf { it.isNotBlank() }
-        }
-    } catch (e: Exception) {
-        null
-    }
+    fun resolveAppDisplayName(apkFile: File): String? =
+        ApkManifestReader.read(apkFile)?.applicationLabel?.takeIf { it.isNotBlank() }
 
     /**
      * Compute the unified output APK path. Layout:

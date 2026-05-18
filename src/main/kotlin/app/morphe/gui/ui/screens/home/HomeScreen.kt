@@ -88,6 +88,7 @@ import org.koin.compose.koinInject
 import app.morphe.gui.ui.screens.home.components.ApkInfoCard
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.screens.home.components.SupportedAppListRow
+import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.screens.patches.PatchesScreen
@@ -157,8 +158,14 @@ fun HomeScreenContent(
             sources = allSources,
             sourceVersions = versions,
             sourceChannels = channels,
+            isLoading = uiState.isLoadingPatches,
             onToggleEnabled = { id, enabled ->
-                coroutineScope.launch { patchSourceManager.setSourceEnabled(id, enabled) }
+                coroutineScope.launch {
+                    patchSourceManager.setSourceEnabled(id, enabled)
+                    // Re-resolve releases + reload patches so badges, versions,
+                    // and the union app list reflect the new enabled set.
+                    viewModel.retryLoadPatches()
+                }
             },
             onAdd = { source ->
                 coroutineScope.launch { patchSourceManager.addSource(source) }
@@ -185,17 +192,6 @@ fun HomeScreenContent(
             onDismiss = { showSourceManagementSheet = false },
             enabled = !uiState.isAnalyzing,
         )
-    }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(uiState.error) {
-        uiState.error?.let { error ->
-            snackbarHostState.showSnackbar(
-                message = error,
-                duration = SnackbarDuration.Short
-            )
-            viewModel.clearError()
-        }
     }
 
     // Full screen drop zone wrapper
@@ -640,11 +636,19 @@ fun HomeScreenContent(
                     )
                 }
 
-                // Snackbar host
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                )
+                // Error/warning bar — custom Morphe-styled, avoids Material3
+                // SnackbarHost (whose internal SnackbarKt invocation path the
+                // shadow `minimize` analyzer can't trace, causing runtime
+                // NoClassDefFoundError in the packaged jar).
+                uiState.error?.let { error ->
+                    MorpheErrorBar(
+                        message = error,
+                        onDismiss = { viewModel.clearError() },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(horizontal = 24.dp, vertical = 20.dp)
+                    )
+                }
 
                 // Drag overlay
                 if (uiState.isDragHovering) {

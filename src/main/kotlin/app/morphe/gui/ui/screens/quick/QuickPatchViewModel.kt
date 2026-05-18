@@ -11,6 +11,7 @@ import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.model.SupportedApp
+import app.morphe.engine.MorpheData
 import app.morphe.engine.UpdateInfo
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
@@ -22,7 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import net.dongliu.apk.parser.ApkFile
+import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FileUtils
@@ -281,10 +282,14 @@ class QuickPatchViewModel(
         }
 
         return try {
-            ApkFile(apkToParse).use { apk ->
-                val meta = apk.apkMeta
-                val packageName = meta.packageName
-                val versionName = meta.versionName ?: "Unknown"
+            // ARSCLib manifest reader (engine) — replaces apk-parser. Same
+            // library morphe-patcher uses; handles split APKs cleanly.
+            val manifest = ApkManifestReader.read(apkToParse)
+                ?: throw IllegalStateException("ARSCLib couldn't read manifest")
+
+            run {
+                val packageName = manifest.packageName
+                val versionName = manifest.versionName ?: "Unknown"
 
                 // Check if supported using dynamic data
                 val dynamicAppInfo = cachedSupportedApps.find { it.packageName == packageName }
@@ -302,7 +307,7 @@ class QuickPatchViewModel(
                     }
 
                     if (packageName !in supportedPackages) {
-                        val appName = SupportedApp.resolveDisplayName(packageName, meta.label)
+                        val appName = SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
                         val supportedNames = cachedSupportedApps.map { it.displayName }
                             .ifEmpty { listOf("YouTube", "YouTube Music", "Reddit") }
                             .joinToString(", ")
@@ -316,7 +321,7 @@ class QuickPatchViewModel(
 
                 // Get display name and recommended version from dynamic data, fallback to constants
                 val displayName = dynamicAppInfo?.displayName
-                    ?: SupportedApp.resolveDisplayName(packageName, meta.label)
+                    ?: SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
 
                 val recommendedVersion = dynamicAppInfo?.recommendedVersion
 
@@ -351,7 +356,7 @@ class QuickPatchViewModel(
 
                 // Extract architectures — scan the original file (bundles have splits with native libs)
                 val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
-                val minSdk = meta.minSdkVersion?.toIntOrNull()
+                val minSdk = manifest.minSdkVersion
 
                 Logger.info("Quick mode: Analyzed $displayName v$versionName (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
 
@@ -453,13 +458,18 @@ class QuickPatchViewModel(
                 appDisplayName = apkInfo.displayName,
             ).absolutePath
 
-            // Resolve keystore: use saved path, or derive from output APK location
-            val resolvedKeystorePath = appConfig.keystorePath
-                ?: File(outputPath).let { out ->
-                    out.resolveSibling(out.nameWithoutExtension + ".keystore").absolutePath
-                }.also { path ->
-                    configRepository.setKeystorePath(path)
-                }
+            // Resolve keystore — see PatchingViewModel for the full rationale.
+            // User-configured: use it; fail loudly if missing.
+            // Default: shared MorpheData keystore, auto-created on first sign.
+            val userKeystore = appConfig.keystorePath?.let { File(it) }
+            if (userKeystore != null && !userKeystore.exists()) {
+                val msg = "Configured keystore not found: ${userKeystore.absolutePath}. " +
+                    "Restore the file, pick another in Settings, or clear the setting to use Morphe's default."
+                _uiState.value = _uiState.value.copy(phase = QuickPatchPhase.READY, error = msg)
+                Logger.error("Quick patching aborted: $msg")
+                return@launch
+            }
+            val resolvedKeystorePath = (userKeystore ?: MorpheData.defaultKeystoreFile).absolutePath
 
             // Use PatchService for direct library patching (no CLI subprocess)
             // exclusiveMode = false means the library's patch.use field determines defaults

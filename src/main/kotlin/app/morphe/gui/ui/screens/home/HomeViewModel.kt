@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.dongliu.apk.parser.ApkFile
+import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
@@ -420,69 +420,203 @@ class HomeViewModel(
         }
 
         return try {
-            ApkFile(apkToParse).use { apk ->
-                val meta = apk.apkMeta
+            // ARSCLib reader (in engine) — same library morphe-patcher uses.
+            // Handles split APKs cleanly because we only read direct string
+            // attributes (no resource resolution that crashes apk-parser on
+            // cross-split references).
+            val manifest = ApkManifestReader.read(apkToParse)
+                ?: throw IllegalStateException("ARSCLib couldn't read manifest")
 
-                val packageName = meta.packageName
-                val versionName = meta.versionName ?: "Unknown"
-                val minSdk = meta.minSdkVersion?.toIntOrNull()
+            val packageName = manifest.packageName
+            val versionName = manifest.versionName ?: "Unknown"
+            val minSdk = manifest.minSdkVersion
 
-                // Check if package is supported - first check dynamic, then fallback to hardcoded
-                val dynamicSupportedApp = _uiState.value.supportedApps.find { it.packageName == packageName }
-                val isSupported = dynamicSupportedApp != null ||
-                    packageName in listOf(
-                        app.morphe.gui.data.constants.AppConstants.YouTube.PACKAGE_NAME,
-                        app.morphe.gui.data.constants.AppConstants.YouTubeMusic.PACKAGE_NAME
-                    )
-
-                if (!isSupported) {
-                    Logger.warn("Unsupported package: $packageName — no compatible patches found")
-                }
-
-                // Get app display name - prefer dynamic, fallback to hardcoded, then package name
-                val appName = dynamicSupportedApp?.displayName
-                    ?: SupportedApp.resolveDisplayName(packageName, meta.label)
-
-                // Resolve the version against the supported app's stable +
-                // experimental version lists.
-                val versionResolution = if (dynamicSupportedApp != null) {
-                    app.morphe.gui.util.resolveVersionStatus(versionName, dynamicSupportedApp)
-                } else {
-                    app.morphe.gui.util.VersionResolution(VersionStatus.UNKNOWN, null)
-                }
-                val suggestedVersion = versionResolution.suggestedVersion
-                val versionStatus = versionResolution.status
-
-                // Get supported architectures from native libraries
-                // For split bundles, scan the original bundle (splits contain the native libs, not base.apk)
-                val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
-
-                // TODO: Re-enable when checksums are provided via .mpp files
-                val checksumStatus = app.morphe.gui.util.ChecksumStatus.NotConfigured
-
-                Logger.info("Parsed APK: $packageName v$versionName (recommended=$suggestedVersion, minSdk=$minSdk, archs=$architectures)")
-
-                ApkInfo(
-                    fileName = file.name,
-                    filePath = file.absolutePath,
-                    fileSize = file.length(),
-                    formattedSize = formatFileSize(file.length()),
-                    appName = appName,
-                    packageName = packageName,
-                    versionName = versionName,
-                    architectures = architectures,
-                    minSdk = minSdk,
-                    suggestedVersion = suggestedVersion,
-                    versionStatus = versionStatus,
-                    checksumStatus = checksumStatus,
-                    isUnsupportedApp = !isSupported
+            // Check if package is supported — first check dynamic, then fall back to hardcoded.
+            val dynamicSupportedApp = _uiState.value.supportedApps.find { it.packageName == packageName }
+            val isSupported = dynamicSupportedApp != null ||
+                packageName in listOf(
+                    app.morphe.gui.data.constants.AppConstants.YouTube.PACKAGE_NAME,
+                    app.morphe.gui.data.constants.AppConstants.YouTubeMusic.PACKAGE_NAME
                 )
+
+            if (!isSupported) {
+                Logger.warn("Unsupported package: $packageName — no compatible patches found")
             }
+
+            // Display name: prefer supported app's name. Fall back to ARSCLib's
+            // literal label (null for resource-referenced labels like SoundCloud's
+            // `@string/app_name`). Last resort: derived from package.
+            val appName = dynamicSupportedApp?.displayName
+                ?: SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
+
+            val versionResolution = if (dynamicSupportedApp != null) {
+                app.morphe.gui.util.resolveVersionStatus(versionName, dynamicSupportedApp)
+            } else {
+                app.morphe.gui.util.VersionResolution(VersionStatus.UNKNOWN, null)
+            }
+            val suggestedVersion = versionResolution.suggestedVersion
+            val versionStatus = versionResolution.status
+
+            // Get supported architectures from native libraries.
+            // For split bundles, scan the original bundle (splits hold native libs, not base.apk).
+            val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
+
+            // TODO: Re-enable when checksums are provided via .mpp files
+            val checksumStatus = app.morphe.gui.util.ChecksumStatus.NotConfigured
+
+            Logger.info("Parsed APK: $packageName v$versionName (recommended=$suggestedVersion, minSdk=$minSdk, archs=$architectures)")
+
+            ApkInfo(
+                fileName = file.name,
+                filePath = file.absolutePath,
+                fileSize = file.length(),
+                formattedSize = formatFileSize(file.length()),
+                appName = appName,
+                packageName = packageName,
+                versionName = versionName,
+                architectures = architectures,
+                minSdk = minSdk,
+                suggestedVersion = suggestedVersion,
+                versionStatus = versionStatus,
+                checksumStatus = checksumStatus,
+                isUnsupportedApp = !isSupported
+            )
         } catch (e: Exception) {
-            Logger.error("Failed to parse APK manifest", e)
-            null
+            // apk-parser commonly chokes on split-APK base.apks whose resource
+            // references point into other splits (SoundCloud and similar). The
+            // base.apk is structurally valid — Android installs it fine, the
+            // patcher merges + patches it fine — but apk-parser can't resolve
+            // cross-split references from an isolated file.
+            //
+            // Fall back to a "limited info" parse: extract package/version from
+            // the filename (APKMirror naming convention), fuzzy-match supported
+            // apps by display name, and let the user proceed to patching
+            // regardless. ApkInfo.hasLimitedInfo=true so the UI can warn that
+            // card details may be approximate.
+            Logger.warn(
+                "Full APK manifest parse failed for ${file.name}: ${e.message}. " +
+                    "Falling back to limited-info mode (filename heuristics + fuzzy match)."
+            )
+            parseApkManifestMinimal(file, isBundleFormat)
         } finally {
             if (isBundleFormat) apkToParse.delete()
+        }
+    }
+
+    /**
+     * Fallback parser when full manifest parsing fails (typically split APKs with
+     * cross-split resource references). Recovers what it can from the filename and
+     * the bundle's native libs, fuzzy-matches against the supported-apps list, and
+     * sets [ApkInfo.hasLimitedInfo] = true so the UI can warn the user.
+     *
+     * Patching still works regardless — the patcher merges splits first and reads
+     * the manifest from the merged APK via its own (working) reader.
+     */
+    private fun parseApkManifestMinimal(file: File, isBundleFormat: Boolean): ApkInfo? {
+        val (packageFromName, versionFromName) = parseFromApkMirrorFilename(file.name)
+        val supportedApps = _uiState.value.supportedApps
+
+        // Match against supported apps: by exact package first, then fuzzy name
+        // on the filename's leading token (handles "soundcloud_..." → "SoundCloud").
+        val matched = packageFromName
+            ?.let { pkg -> supportedApps.firstOrNull { it.packageName == pkg } }
+            ?: fuzzyMatchSupportedApp(file.name, supportedApps)
+
+        val packageName = packageFromName ?: matched?.packageName.orEmpty()
+        val displayName = matched?.displayName
+            ?: packageFromName?.substringAfterLast('.', "")
+                ?.replaceFirstChar { it.uppercase() }
+                ?.takeIf { it.isNotBlank() }
+            ?: file.nameWithoutExtension
+
+        val versionResolution = if (matched != null && versionFromName != null) {
+            app.morphe.gui.util.resolveVersionStatus(versionFromName, matched)
+        } else {
+            app.morphe.gui.util.VersionResolution(VersionStatus.UNKNOWN, null)
+        }
+
+        // Architectures scan is independent of manifest parsing — still reliable.
+        val architectures = FileUtils.extractArchitectures(file)
+
+        Logger.info(
+            "Limited-info parse for ${file.name}: package=$packageName, " +
+                "version=${versionFromName ?: "unknown"}, matched=${matched?.displayName ?: "none"}"
+        )
+
+        return ApkInfo(
+            fileName = file.name,
+            filePath = file.absolutePath,
+            fileSize = file.length(),
+            formattedSize = formatFileSize(file.length()),
+            appName = displayName,
+            packageName = packageName,
+            versionName = versionFromName ?: "Unknown",
+            architectures = architectures,
+            minSdk = null,
+            suggestedVersion = versionResolution.suggestedVersion,
+            versionStatus = versionResolution.status,
+            checksumStatus = app.morphe.gui.util.ChecksumStatus.NotConfigured,
+            isUnsupportedApp = matched == null,
+            hasLimitedInfo = true,
+        )
+    }
+
+    /**
+     * Best-effort package + version extraction from APKMirror-style filenames:
+     *   com.google.android.youtube_19.20.30-12345.apk
+     *   → ("com.google.android.youtube", "19.20.30")
+     *
+     * Returns (null, null) when the filename doesn't look like a package_version
+     * pattern. The version-only path also tries a generic semver / date regex
+     * against the whole filename for files like `soundcloud_2026.04.27.apkm`.
+     */
+    private fun parseFromApkMirrorFilename(filename: String): Pair<String?, String?> {
+        val noExt = filename.substringBeforeLast('.')
+        val splitOnUnderscore = noExt.split('_', limit = 2)
+
+        val packageCandidate = splitOnUnderscore.getOrNull(0)
+        val afterUnderscore = splitOnUnderscore.getOrNull(1)
+
+        // A package name has at least one dot + only lowercase/digits/underscore in
+        // each segment. Filters out "soundcloud" while accepting "com.foo.bar".
+        val looksLikePackage = packageCandidate != null &&
+            packageCandidate.contains('.') &&
+            packageCandidate.split('.').all { segment ->
+                segment.isNotEmpty() && segment.all { c -> c.isLowerCase() || c.isDigit() || c == '_' }
+            }
+
+        val packageName = if (looksLikePackage) packageCandidate else null
+
+        // Version: prefer the token right after "_" (APKMirror convention), else
+        // scan the whole filename for a semver / date pattern.
+        val versionAfterUnderscore = afterUnderscore?.substringBefore('-')?.takeIf { it.isNotBlank() }
+        val version = versionAfterUnderscore
+            ?: Regex("""\d+\.\d+\.\d+(?:-dev\.\d+)?""").find(noExt)?.value
+            ?: Regex("""\d+\.\d+(?:\.\d+)?""").find(noExt)?.value
+
+        return packageName to version
+    }
+
+    /**
+     * Fuzzy-match the filename's leading token against supported apps' display names.
+     * Used when APKMirror-style filename inference fails to give us a package name.
+     * Examples:
+     *   "soundcloud_2026.04.27.apkm" → leading token "soundcloud" → matches "SoundCloud"
+     *   "YouTube Music_4.81.apkm"    → leading token "youtube music" → matches "YouTube Music"
+     */
+    private fun fuzzyMatchSupportedApp(
+        filename: String,
+        supportedApps: List<app.morphe.gui.data.model.SupportedApp>,
+    ): app.morphe.gui.data.model.SupportedApp? {
+        val noExt = filename.substringBeforeLast('.').lowercase()
+        val leadingToken = noExt
+            .substringBefore('_')
+            .substringBefore('-')
+            .replace(" ", "")
+        if (leadingToken.isBlank()) return null
+        return supportedApps.firstOrNull { app ->
+            val name = app.displayName.lowercase().replace(" ", "")
+            name == leadingToken || name.startsWith(leadingToken) || leadingToken.startsWith(name)
         }
     }
 
@@ -570,7 +704,12 @@ data class ApkInfo(
     val suggestedVersion: String? = null,
     val versionStatus: VersionStatus = VersionStatus.UNKNOWN,
     val checksumStatus: app.morphe.gui.util.ChecksumStatus = app.morphe.gui.util.ChecksumStatus.NotConfigured,
-    val isUnsupportedApp: Boolean = false
+    val isUnsupportedApp: Boolean = false,
+    /** True when full manifest parsing failed and we fell back to filename heuristics
+     *  + fuzzy supported-app matching. Most fields are still populated but may be
+     *  less accurate. UI should surface a banner letting the user know they can
+     *  still proceed but card info is approximate. */
+    val hasLimitedInfo: Boolean = false
 )
 
 data class ApkValidationResult(

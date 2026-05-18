@@ -73,6 +73,10 @@ fun SourceManagementSheet(
     sourceVersions: Map<String, String?> = emptyMap(),
     /** sourceId → channel classification of the resolved release. Drives the badge. */
     sourceChannels: Map<String, app.morphe.gui.util.EnabledSourcesLoader.Channel?> = emptyMap(),
+    /** True while patches are being (re)loaded. Drives the per-row spinner shown
+     *  in place of the version/badge for enabled sources whose data isn't yet
+     *  in [sourceVersions]. */
+    isLoading: Boolean = false,
     /** Selection semantics. Defaults to multi-toggle (Expert mode). */
     mode: SourceSheetMode = SourceSheetMode.MULTI_TOGGLE,
     /** sourceId of the currently picked source — only used when [mode] is SINGLE_SELECT. */
@@ -127,6 +131,7 @@ fun SourceManagementSheet(
                         source = source,
                         version = sourceVersions[source.id],
                         channel = sourceChannels[source.id],
+                        isLoading = isLoading,
                         accentColor = accents.primary,
                         borderColor = borderColor,
                         mono = mono,
@@ -210,6 +215,7 @@ private fun SourceRow(
     source: PatchSource,
     version: String?,
     channel: app.morphe.gui.util.EnabledSourcesLoader.Channel?,
+    isLoading: Boolean,
     accentColor: Color,
     borderColor: Color,
     mono: androidx.compose.ui.text.font.FontFamily,
@@ -325,6 +331,27 @@ private fun SourceRow(
                             color = accentColor.copy(alpha = 0.9f)
                         )
                         ChannelBadge(channel = channel, mono = mono)
+                    } else if (isEnabled && isLoading) {
+                        Text(
+                            text = "·",
+                            fontSize = 10.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                        )
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(14.dp),
+                            strokeWidth = 1.5.dp,
+                            color = accentColor,
+                        )
+                        Spacer(Modifier.width(2.dp))
+                        Text(
+                            text = "RESOLVING...",
+                            fontSize = 9.sp,
+                            fontFamily = mono,
+                            fontWeight = FontWeight.Bold,
+                            color = accentColor.copy(alpha = 0.8f),
+                            letterSpacing = 1.sp,
+                        )
                     }
                 }
             }

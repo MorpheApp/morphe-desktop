@@ -44,6 +44,7 @@ import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.SourceManagementSheet
 import app.morphe.gui.ui.components.SourceSheetMode
@@ -303,75 +304,15 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
 
             // Error/warning bar
             uiState.error?.let { error ->
-                val mono = LocalMorpheFont.current
                 val isUnsupportedWarning = error.contains("not supported in Quick Patch")
-                val accentColor = if (isUnsupportedWarning) accents.warning else MaterialTheme.colorScheme.error
-                val barBg = MaterialTheme.colorScheme.surface
-                val borderCol = accentColor.copy(alpha = 0.4f)
-
-                Row(
+                MorpheErrorBar(
+                    message = error,
+                    onDismiss = { viewModel.clearError() },
+                    isWarning = isUnsupportedWarning,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(horizontal = 24.dp, vertical = 20.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(corners.small))
-                        .border(1.dp, borderCol, RoundedCornerShape(corners.small))
-                        .background(barBg)
-                        .drawBehind {
-                            drawRect(
-                                color = accentColor,
-                                size = androidx.compose.ui.geometry.Size(3.dp.toPx(), size.height)
-                            )
-                        }
-                        .padding(start = 3.dp)
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(accentColor, RoundedCornerShape(1.dp))
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    Text(
-                        text = error,
-                        fontFamily = mono,
-                        fontSize = 12.sp,
-                        lineHeight = 16.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Spacer(Modifier.width(12.dp))
-
-                    // Dismiss — same hover pattern as the close button
-                    val dismissHover = remember { MutableInteractionSource() }
-                    val isDismissHovered by dismissHover.collectIsHoveredAsState()
-                    val dismissBg by animateColorAsState(
-                        if (isDismissHovered) accentColor.copy(alpha = 0.12f)
-                        else Color.Transparent,
-                        animationSpec = tween(150)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .height(28.dp)
-                            .hoverable(dismissHover)
-                            .clip(RoundedCornerShape(corners.small))
-                            .background(dismissBg)
-                            .clickable { viewModel.clearError() }
-                            .padding(horizontal = 12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "DISMISS",
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = if (isDismissHovered) accentColor
-                                    else accentColor.copy(alpha = 0.7f),
-                            letterSpacing = 1.sp
-                        )
-                    }
-                }
+                )
             }
         }
     }

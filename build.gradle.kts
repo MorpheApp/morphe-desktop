@@ -109,9 +109,7 @@ dependencies {
     implementation(libs.jna)
     implementation(libs.jna.platform)
 
-    // -- APK Parsing (GUI) -------------------------------------------------
-    implementation(libs.apk.parser)
-
+    // -- License attribution UI (About / Licenses screen) -----------------
     implementation(libs.about.libraries.core)
     implementation(libs.about.libraries.m3)
 
@@ -216,6 +214,8 @@ tasks {
             exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-swing"))
             // JNA uses reflection + native loading for DWM title bar tinting
             exclude(dependency("net.java.dev.jna:.*"))
+            // Skiko uses ServiceLoader for native registration. Same class of problem as Ktor / Koin / JNA above.
+            exclude(dependency("org.jetbrains.skiko:.*"))
         }
 
         mergeServiceFiles()

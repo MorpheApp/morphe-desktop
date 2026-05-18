@@ -29,11 +29,14 @@ import java.util.logging.Logger
  *   logs/                                        # app logs
  *   config.json                                  # GUI preferences + sources
  *   tmp/patching-{timestamp}/                    # per-session patcher scratch
+ *   morphe.keystore                              # shared default signing key
  * ```
  *
- * Keystores are deliberately NOT under this root — both CLI and GUI default
- * keystores to "next to the output APK," which is friendly for carrying the
- * APK + keystore as a pair, and was already consistent across surfaces.
+ * A single shared keystore is intentional: Android refuses updates whose
+ * signatures don't match the installed app, so per-app or per-output-APK
+ * keystores would break "re-patch and reinstall over the old version." A
+ * user who wants their own signing identity can point at a custom keystore
+ * in Settings, which overrides this default.
  *
  * All paths are computed lazily so the JVM is fully bootstrapped (classloader,
  * security manager, etc.) before we probe for the JAR location. The
@@ -57,6 +60,13 @@ object MorpheData {
 
     /** GUI's persisted preferences (theme, enabled sources, etc.). */
     val configFile: File get() = File(root, "config.json")
+
+    /**
+     * Default shared keystore. The patcher library creates it on first sign
+     * if missing; subsequent signs reuse the same identity so patched apps
+     * can be updated on-device without reinstalling.
+     */
+    val defaultKeystoreFile: File get() = File(root, "morphe.keystore")
 
     /**
      * Reason the primary (JAR-adjacent) location was rejected. Drives the
