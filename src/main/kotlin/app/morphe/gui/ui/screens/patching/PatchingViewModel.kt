@@ -63,7 +63,7 @@ class PatchingViewModel(
             //    every patch session so all Morphe-patched apps share one
             //    signing identity.
             val appConfig = configRepository.loadConfig()
-            val userKeystore = appConfig.keystorePath?.let { File(it) }
+            val userKeystore = appConfig.resolvedKeystorePath()
             if (userKeystore != null && !userKeystore.exists()) {
                 val msg = "Configured keystore not found: ${userKeystore.absolutePath}. " +
                     "Restore the file, pick another in Settings, or clear the setting to use Morphe's default."

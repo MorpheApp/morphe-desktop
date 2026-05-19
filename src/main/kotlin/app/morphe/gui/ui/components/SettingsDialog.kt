@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.gui.data.constants.AppConstants
@@ -1812,10 +1813,12 @@ private fun SigningSection(
             }
         }
 
-        // Warning if keystore path set but file doesn't exist
+        // Warning if keystore path set but file doesn't exist. Patching will
+        // refuse to start with this configured (see PatchingViewModel) — user
+        // must restore the file, pick another, or reset to use Morphe's default.
         if (keystorePath != null && !keystoreExists) {
             Text(
-                text = "Keystore not found — will be created on next patch",
+                text = "Keystore not found — patching will fail until you restore it, pick another, or reset",
                 fontSize = 10.sp,
                 fontFamily = mono,
                 color = Color(0xFFE0A030)
@@ -1832,7 +1835,8 @@ private fun SigningSection(
             )
         }
 
-        // Full path tooltip
+        // Either: full path tooltip when user-configured,
+        // or: "using default" hint when not.
         if (keystorePath != null) {
             Text(
                 text = keystorePath,
@@ -1840,6 +1844,15 @@ private fun SigningSection(
                 fontFamily = mono,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
                 maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        } else {
+            Text(
+                text = "Using Morphe's default keystore at ${MorpheData.defaultKeystoreFile.absolutePath}",
+                fontSize = 9.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
         }

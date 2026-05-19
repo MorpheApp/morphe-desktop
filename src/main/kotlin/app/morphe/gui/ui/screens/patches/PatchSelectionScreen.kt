@@ -120,7 +120,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     var keystoreEntryPassword by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
         val config = configRepository.loadConfig()
-        keystorePath = config.keystorePath
+        keystorePath = config.resolvedKeystorePath()?.absolutePath
         keystorePassword = config.keystorePassword
         keystoreAlias = config.keystoreAlias
         keystoreEntryPassword = config.keystoreEntryPassword

@@ -454,14 +454,14 @@ class QuickPatchViewModel(
             val outputPath = app.morphe.engine.util.ApkOutputNaming.outputApkPath(
                 inputApk = apkFile,
                 patchesFile = patchFile,
-                baseOutputDir = appConfig.defaultOutputDirectory?.let { File(it) },
+                baseOutputDir = appConfig.resolvedDefaultOutputDirectory(),
                 appDisplayName = apkInfo.displayName,
             ).absolutePath
 
             // Resolve keystore — see PatchingViewModel for the full rationale.
             // User-configured: use it; fail loudly if missing.
             // Default: shared MorpheData keystore, auto-created on first sign.
-            val userKeystore = appConfig.keystorePath?.let { File(it) }
+            val userKeystore = appConfig.resolvedKeystorePath()
             if (userKeystore != null && !userKeystore.exists()) {
                 val msg = "Configured keystore not found: ${userKeystore.absolutePath}. " +
                     "Restore the file, pick another in Settings, or clear the setting to use Morphe's default."

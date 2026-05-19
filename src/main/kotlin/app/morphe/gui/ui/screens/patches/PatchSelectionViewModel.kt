@@ -90,7 +90,9 @@ class PatchSelectionViewModel(
     private fun loadStripLibsPreference() {
         screenModelScope.launch {
             val config = configRepository.loadConfig()
-            defaultOutputDirectory = config.defaultOutputDirectory
+            // Store the resolved absolute path so the lookup at line ~487 can
+            // pass it straight into File(...) without re-resolving.
+            defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
             _uiState.value = _uiState.value.copy(
                 stripLibsStatus = computeStripLibsStatus(apkArchitectures, config.keepArchitectures)
             )

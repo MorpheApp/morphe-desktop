@@ -45,8 +45,24 @@ import java.util.logging.Logger
 object MorpheData {
     private val logger = Logger.getLogger(MorpheData::class.java.name)
 
+    private val resolution: Resolution by lazy { resolveRoot() }
+
     /** Root: JAR-adjacent `morphe-data/`, with fallback to `~/morphe/`. */
-    val root: File by lazy { resolveRoot() }
+    val root: File get() = resolution.root
+
+    /**
+     * Anchor for portable relative paths in `config.json`. This is the
+     * **JAR's containing directory** — i.e. `root.parentFile` in the happy
+     * (JAR-adjacent) case. Null in fallback / IDE mode because there's no
+     * portable bundle then.
+     *
+     * Paths the user picks (output directory, keystore) that live under this
+     * anchor are stored in config as anchor-relative, so the whole bundle
+     * (JAR + `morphe-data/` + sibling folders) survives being moved.
+     */
+    val bundleRoot: File? get() = resolution.bundleRoot
+
+    private data class Resolution(val root: File, val bundleRoot: File?)
 
     /** Downloaded `.mpp` patch files, organized by source. */
     val patchesDir: File by lazy { File(root, "patches").also { it.mkdirs() } }
@@ -80,11 +96,12 @@ object MorpheData {
         EXCEPTION("Exception while resolving JAR location"),
     }
 
-    private fun resolveRoot(): File {
+    private fun resolveRoot(): Resolution {
         val (jarAdjacent, fallbackReason) = tryJarAdjacent()
         if (jarAdjacent != null) {
             logger.info("Morphe data root: ${jarAdjacent.absolutePath} (JAR-adjacent)")
-            return jarAdjacent.also { it.mkdirs() }
+            jarAdjacent.mkdirs()
+            return Resolution(root = jarAdjacent, bundleRoot = jarAdjacent.parentFile)
         }
         val fallback = userHomeFallback()
         // WARNING level — users debugging "I can't find my patches" or "config
@@ -93,7 +110,9 @@ object MorpheData {
             "Morphe data root falling back to ${fallback.absolutePath} — " +
                 "primary (JAR-adjacent) unavailable: ${fallbackReason?.message ?: "unknown"}"
         )
-        return fallback.also { it.mkdirs() }
+        fallback.mkdirs()
+        // No portable bundle concept in fallback mode — paths stay absolute.
+        return Resolution(root = fallback, bundleRoot = null)
     }
 
     /**

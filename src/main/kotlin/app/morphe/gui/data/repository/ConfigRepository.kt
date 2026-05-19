@@ -5,6 +5,7 @@
 
 package app.morphe.gui.data.repository
 
+import app.morphe.engine.util.PortablePaths
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.PatchChannel
@@ -192,7 +193,7 @@ class ConfigRepository {
      */
     suspend fun setDefaultOutputDirectory(path: String?) {
         val current = loadConfig()
-        saveConfig(current.copy(defaultOutputDirectory = path))
+        saveConfig(current.copy(defaultOutputDirectory = path?.let(PortablePaths::storableForm)))
     }
 
     /**
@@ -234,7 +235,7 @@ class ConfigRepository {
      */
     suspend fun setKeystorePath(path: String?) {
         val current = loadConfig()
-        saveConfig(current.copy(keystorePath = path))
+        saveConfig(current.copy(keystorePath = path?.let(PortablePaths::storableForm)))
     }
 
     /**
@@ -248,7 +249,7 @@ class ConfigRepository {
     ) {
         val current = loadConfig()
         saveConfig(current.copy(
-            keystorePath = path,
+            keystorePath = path?.let(PortablePaths::storableForm),
             keystorePassword = password,
             keystoreAlias = alias,
             keystoreEntryPassword = entryPassword

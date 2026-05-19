@@ -80,8 +80,11 @@ fun SettingsButton(
         if (showSettingsDialog) {
             val config = configRepository.loadConfig()
             autoCleanupTempFiles = config.autoCleanupTempFiles
-            defaultOutputDirectory = config.defaultOutputDirectory
-            keystorePath = config.keystorePath
+            // Display the resolved absolute form even though storage may be
+            // bundle-relative — users expect to see a real filesystem path in
+            // the field, not a cryptic basename.
+            defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
+            keystorePath = config.resolvedKeystorePath()?.absolutePath
             keystorePassword = config.keystorePassword
             keystoreAlias = config.keystoreAlias
             keystoreEntryPassword = config.keystoreEntryPassword

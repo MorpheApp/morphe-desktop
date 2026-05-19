@@ -7,9 +7,11 @@ package app.morphe.gui.data.model
 
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
+import app.morphe.engine.util.PortablePaths
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import kotlinx.serialization.Serializable
+import java.io.File
 
 /**
  * Application configuration stored in config.json
@@ -99,6 +101,20 @@ data class AppConfig(
             PatchChannel.STABLE
         }
     }
+
+    /**
+     * Resolved live [File] for [defaultOutputDirectory]. Goes through
+     * [PortablePaths.resolve] so a stored relative value is anchored to the
+     * bundle, not the JVM's CWD. Use this instead of `File(...)` at call sites.
+     */
+    fun resolvedDefaultOutputDirectory(): File? =
+        defaultOutputDirectory?.let(PortablePaths::resolve)
+
+    /**
+     * Resolved live [File] for [keystorePath]. See [resolvedDefaultOutputDirectory].
+     */
+    fun resolvedKeystorePath(): File? =
+        keystorePath?.let(PortablePaths::resolve)
 }
 
 @Serializable
