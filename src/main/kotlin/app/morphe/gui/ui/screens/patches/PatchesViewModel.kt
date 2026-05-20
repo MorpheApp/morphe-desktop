@@ -9,7 +9,7 @@ import app.morphe.cli.command.model.toPatchBundle
 import app.morphe.patcher.patch.loadPatchesFromJar
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import app.morphe.gui.data.model.Release
+import app.morphe.engine.model.Release
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import app.morphe.gui.util.Logger
-import app.morphe.gui.data.model.ReleaseAsset
+import app.morphe.engine.model.ReleaseAsset
 import java.io.File
 
 class PatchesViewModel(
@@ -81,9 +81,11 @@ class PatchesViewModel(
                     val stableReleases = releases.filter { !it.isDevRelease() }
                     val devReleases = releases.filter { it.isDevRelease() }
 
-                    // Check config for previously selected version
-                    val config = configRepository.loadConfig()
-                    val savedVersion = config.lastPatchesVersion
+                    // Check config for previously selected version FOR THIS SOURCE
+                    val activeSourceId = patchSourceManager?.getActiveSource()?.id
+                    val savedVersion = activeSourceId?.let {
+                        configRepository.getLastPatchesVersionsBySource()[it]
+                    }
 
                     // Find the saved release, or fall back to latest stable
                     val initialRelease = if (savedVersion != null) {
@@ -134,8 +136,10 @@ class PatchesViewModel(
                                 parseVersionParts(version)
                                     .fold(0L) { acc, part -> acc * 10000 + part }
                             }
-                        val config = configRepository.loadConfig()
-                        val savedVersion = config.lastPatchesVersion
+                        val activeSourceId = patchSourceManager?.getActiveSource()?.id
+                        val savedVersion = activeSourceId?.let {
+                            configRepository.getLastPatchesVersionsBySource()[it]
+                        }
 
                         // Pre-select the saved version, or fall back to the first (most recent)
                         val initialRelease = if (savedVersion != null) {
@@ -246,7 +250,12 @@ class PatchesViewModel(
     private fun checkCachedPatches(release: Release): File? {
         val asset = patchRepository.findPatchAsset(release) ?: return null
         val patchesDir = patchRepository.getCacheDir()
-        val cachedFile = File(patchesDir, asset.name)
+        // Match the version-prefixed filename PatchRepository.downloadPatches writes.
+        // Looking up by bare asset.name would falsely "find" the latest version's
+        // file for every other version's check (since maintainers commonly reuse
+        // the asset filename across releases) — that was the cause of the
+        // "latest stable shows SELECT after Clear Cache" bug.
+        val cachedFile = File(patchesDir, PatchRepository.cachedFileName(release, asset))
 
         // Verify file exists and size matches (size check acts as basic integrity verification)
         return if (cachedFile.exists() && cachedFile.length() == asset.size) {
@@ -297,9 +306,13 @@ class PatchesViewModel(
                     )
                     Logger.info("Patches downloaded: ${patchFile.absolutePath}")
 
-                    // Save the selected version to config so HomeScreen can pick it up
-                    configRepository.setLastPatchesVersion(release.tagName)
-                    Logger.info("Saved selected patches version to config: ${release.tagName}")
+                    // Save the selected version PER SOURCE so HomeScreen can pick it up
+                    // without contaminating other enabled sources.
+                    val activeSourceId = patchSourceManager?.getActiveSource()?.id
+                    if (activeSourceId != null) {
+                        configRepository.setLastPatchesVersionForSource(activeSourceId, release.tagName)
+                        Logger.info("Saved selected patches version for source '$activeSourceId': ${release.tagName}")
+                    }
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
@@ -323,8 +336,11 @@ class PatchesViewModel(
     fun confirmSelection() {
         val release = _uiState.value.selectedRelease ?: return
         screenModelScope.launch {
-            configRepository.setLastPatchesVersion(release.tagName)
-            Logger.info("Confirmed patches selection: ${release.tagName}")
+            val activeSourceId = patchSourceManager?.getActiveSource()?.id
+            if (activeSourceId != null) {
+                configRepository.setLastPatchesVersionForSource(activeSourceId, release.tagName)
+                Logger.info("Confirmed patches selection for source '$activeSourceId': ${release.tagName}")
+            }
         }
     }
 

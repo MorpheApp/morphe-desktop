@@ -79,15 +79,25 @@ import java.io.File
 data class PatchSelectionScreen(
     val apkPath: String,
     val apkName: String,
+    /** Primary .mpp file path. Always non-null. In multi-source mode, the first
+     *  enabled source's file. Used for legacy/single-source code paths and as
+     *  the default when [patchesFilePaths] is empty. */
     val patchesFilePath: String,
     val packageName: String,
-    val apkArchitectures: List<String> = emptyList()
+    val apkArchitectures: List<String> = emptyList(),
+    /** All enabled-source .mpp file paths. Single-element in single-source mode.
+     *  Used by the patching pipeline to feed the engine the union of patches. */
+    val patchesFilePaths: List<String> = emptyList(),
+    /** Parallel to [patchesFilePaths] — display name per source. Drives badging
+     *  in the patch list. Empty disables badging (legacy single-source). */
+    val patchSourceNames: List<String> = emptyList(),
 ) : Screen {
 
     @Composable
     override fun Content() {
+        val effectiveList = patchesFilePaths.takeIf { it.isNotEmpty() } ?: listOf(patchesFilePath)
         val viewModel = koinScreenModel<PatchSelectionViewModel> {
-            parametersOf(apkPath, apkName, patchesFilePath, packageName, apkArchitectures)
+            parametersOf(apkPath, apkName, patchesFilePath, packageName, apkArchitectures, effectiveList, patchSourceNames)
         }
         PatchSelectionScreenContent(viewModel = viewModel)
     }
@@ -110,7 +120,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     var keystoreEntryPassword by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
         val config = configRepository.loadConfig()
-        keystorePath = config.keystorePath
+        keystorePath = config.resolvedKeystorePath()?.absolutePath
         keystorePassword = config.keystorePassword
         keystoreAlias = config.keystoreAlias
         keystoreEntryPassword = config.keystoreEntryPassword
@@ -350,19 +360,34 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
         )
 
-        // Selection-mode chips: Your Defaults · Patch Defaults · All · None
+        // Global selection-mode chips: only meaningful when there's exactly
+        // ONE bundle. Multi-bundle moves these chips INTO each bundle box
+        // so each source can be managed independently. The deprecated
+        // applySaved/applyDefaults/selectAll/deselectAll methods loop over
+        // bundles — for a single bundle, they're equivalent to the per-
+        // bundle methods.
+        val isSingleBundle = uiState.bundles.size == 1
         AnimatedVisibility(
-            visible = !uiState.isLoading && uiState.allPatches.isNotEmpty(),
+            visible = !uiState.isLoading && isSingleBundle && uiState.bundles.firstOrNull()?.patches?.isNotEmpty() == true,
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
+            val activeBundleId = uiState.bundles.firstOrNull()?.bundleId
             SelectionModeChips(
                 hasSavedSelection = uiState.hasSavedSelection,
-                activeMode = uiState.activeSelectionMode,
-                onApplySaved = { viewModel.applySavedDefaults() },
-                onApplyDefaults = { viewModel.applyPatchDefaults() },
-                onApplyAll = { viewModel.selectAll() },
-                onApplyNone = { viewModel.deselectAll() },
+                activeMode = activeBundleId?.let { uiState.selectionModeFor(it) } ?: SelectionMode.CUSTOM,
+                onApplySaved = {
+                    activeBundleId?.let { viewModel.applySavedDefaultsInBundle(it) }
+                },
+                onApplyDefaults = {
+                    activeBundleId?.let { viewModel.applyPatchDefaultsInBundle(it) }
+                },
+                onApplyAll = {
+                    activeBundleId?.let { viewModel.selectAllInBundle(it) }
+                },
+                onApplyNone = {
+                    activeBundleId?.let { viewModel.deselectAllInBundle(it) }
+                },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
             )
         }
@@ -394,14 +419,44 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 }
             }
 
-            uiState.filteredPatches.isEmpty() && !uiState.isLoading -> {
+            // Global empty state — when EVERY loaded bundle has zero patches
+            // compatible with this APK. None of the enabled sources contribute
+            // anything for this app's package; rendering empty bundle boxes
+            // would be pure noise.
+            !uiState.isLoading && uiState.bundles.all { it.patches.isEmpty() } -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (uiState.searchQuery.isNotBlank()) "No patches match your search"
-                               else "No patches found",
+                        text = if (uiState.bundles.isEmpty()) "No patches found"
+                               else "None of your enabled sources have patches for this app",
+                        fontSize = 12.sp,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                }
+            }
+
+            // Global "no matches for search" empty state — only fires when
+            // EVERY bundle that HAS patches has been filtered to empty by
+            // the active search. Bundles with 0 patches for this app are
+            // hidden separately above, so we only consider non-empty sources.
+            uiState.searchQuery.isNotBlank() && run {
+                val nonEmptySourceIds = uiState.bundles
+                    .filter { it.patches.isNotEmpty() }
+                    .map { it.bundleId }.toSet()
+                uiState.filteredBundles
+                    .filter { it.bundleId in nonEmptySourceIds }
+                    .all { it.patches.isEmpty() }
+            } -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No patches match your search",
                         fontSize = 12.sp,
                         fontFamily = mono,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
@@ -410,8 +465,15 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             }
 
             else -> {
-                // Patch list
+                // Patch list — single-bundle renders flat (no box chrome),
+                // multi-bundle renders per-bundle collapsible boxes.
                 val lazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
+
+                // Expand/collapse state for multi-bundle, keyed by bundleId.
+                // Default: all bundles expanded. Uses plain `remember` — state
+                // resets if the user backs out and re-enters the screen, which
+                // is acceptable since "show me everything" is the right default.
+                val collapsedBundles = remember { mutableStateListOf<String>() }
 
                 Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
                     LazyColumn(
@@ -420,9 +482,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        // Strip-libs status banner. Purely informational — the user
-                        // configures their keep-list in Settings, and this banner
-                        // reports what will happen to native libs for the current APK.
                         val showBanner = uiState.stripLibsStatus !is StripLibsStatus.NoNativeLibs
                         if (showBanner) {
                             item(key = "strip_libs_banner") {
@@ -430,21 +489,66 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             }
                         }
 
-                        items(
-                            items = uiState.filteredPatches,
-                            key = { it.uniqueId }
-                        ) { patch ->
-                            PatchListItem(
-                                patch = patch,
-                                isSelected = uiState.selectedPatches.contains(patch.uniqueId),
-                                onToggle = { viewModel.togglePatch(patch.uniqueId) },
-                                getOptionValue = { optionKey, default ->
-                                    viewModel.getOptionValue(patch.name, optionKey, default)
-                                },
-                                onOptionValueChange = { optionKey, value ->
-                                    viewModel.setOptionValue(patch.name, optionKey, value)
+                        if (isSingleBundle) {
+                            // ── Flat rendering (single bundle, no chrome) ──
+                            val bundle = uiState.filteredBundles.firstOrNull() ?: return@LazyColumn
+                            val bundleId = bundle.bundleId
+                            val selectedInBundle = uiState.selectedByBundle[bundleId].orEmpty()
+                            items(
+                                items = bundle.patches,
+                                key = { it.uniqueId }
+                            ) { patch ->
+                                PatchListItem(
+                                    patch = patch,
+                                    isSelected = selectedInBundle.contains(patch.uniqueId),
+                                    onToggle = { viewModel.togglePatch(bundleId, patch.uniqueId) },
+                                    sourceName = null,
+                                    getOptionValue = { optionKey, default ->
+                                        viewModel.getOptionValue(patch.name, optionKey, default)
+                                    },
+                                    onOptionValueChange = { optionKey, value ->
+                                        viewModel.setOptionValue(patch.name, optionKey, value)
+                                    }
+                                )
+                            }
+                        } else {
+                            // ── Per-bundle collapsible boxes (multi-bundle) ──
+                            // Hide bundles whose pre-filter patches list is empty
+                            // (i.e. the bundle has NO patches compatible with this
+                            // APK at all). Bundles that loaded patches but are
+                            // currently empty due to an active search still
+                            // render — their box shows "no matches in this bundle".
+                            val bundlesById = uiState.bundles.associateBy { it.bundleId }
+                            val visibleBundles = uiState.filteredBundles.filter { fb ->
+                                bundlesById[fb.bundleId]?.patches?.isNotEmpty() == true
+                            }
+                            visibleBundles.forEach { bundle ->
+                                item(key = "bundle-${bundle.bundleId}") {
+                                    BundleBox(
+                                        bundle = bundle,
+                                        selectedInBundle = uiState.selectedByBundle[bundle.bundleId].orEmpty(),
+                                        selectionMode = uiState.selectionModeFor(bundle.bundleId),
+                                        hasSavedForBundle = uiState.savedSelectedByBundle?.containsKey(bundle.bundleId) == true,
+                                        expanded = bundle.bundleId !in collapsedBundles,
+                                        searchActive = uiState.searchQuery.isNotBlank(),
+                                        onExpandToggle = {
+                                            if (bundle.bundleId in collapsedBundles) collapsedBundles.remove(bundle.bundleId)
+                                            else collapsedBundles.add(bundle.bundleId)
+                                        },
+                                        onTogglePatch = { patchId -> viewModel.togglePatch(bundle.bundleId, patchId) },
+                                        onSelectAll = { viewModel.selectAllInBundle(bundle.bundleId) },
+                                        onDeselectAll = { viewModel.deselectAllInBundle(bundle.bundleId) },
+                                        onApplyDefaults = { viewModel.applyPatchDefaultsInBundle(bundle.bundleId) },
+                                        onApplySaved = { viewModel.applySavedDefaultsInBundle(bundle.bundleId) },
+                                        getOptionValue = { patchName, optionKey, default ->
+                                            viewModel.getOptionValue(patchName, optionKey, default)
+                                        },
+                                        onOptionValueChange = { patchName, optionKey, value ->
+                                            viewModel.setOptionValue(patchName, optionKey, value)
+                                        },
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
 
@@ -660,6 +764,7 @@ private fun PatchListItem(
     patch: Patch,
     isSelected: Boolean,
     onToggle: () -> Unit,
+    sourceName: String? = null,
     getOptionValue: (optionKey: String, default: String?) -> String = { _, d -> d ?: "" },
     onOptionValueChange: (optionKey: String, value: String) -> Unit = { _, _ -> }
 ) {
@@ -746,6 +851,32 @@ private fun PatchListItem(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
                     )
+
+                    if (sourceName != null) {
+                        Box(
+                            modifier = Modifier
+                                .border(
+                                    1.dp,
+                                    accents.primary.copy(alpha = 0.3f),
+                                    RoundedCornerShape(corners.small)
+                                )
+                                .background(
+                                    accents.primary.copy(alpha = 0.06f),
+                                    RoundedCornerShape(corners.small)
+                                )
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = sourceName.uppercase(),
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = mono,
+                                letterSpacing = 0.5.sp,
+                                color = accents.primary,
+                                maxLines = 1,
+                            )
+                        }
+                    }
 
                     if (patch.compatiblePackages.isNotEmpty()) {
                         val genericSegments = setOf("com", "org", "net", "android", "google", "apps", "app", "www")
@@ -1604,3 +1735,152 @@ private data class BannerDisplay(
     val stripChips: List<String> = emptyList(),
     val notInApkChips: List<String> = emptyList()
 )
+
+// ────────────────────────────────────────────────────────────────────────────
+//  Per-bundle collapsible box (multi-bundle view)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Collapsible box containing one bundle's patches. Each box has its own
+ * header (bundle name, count, expand chevron, "Your Defaults" chip),
+ * per-bundle control buttons (Select all / Deselect / Defaults / Saved),
+ * and the patches list itself.
+ *
+ * In search-active state, the box stays visible even if [BundlePatches.patches]
+ * is empty — it renders a "no matches in this bundle" inline empty state so
+ * the structural grouping stays stable while the user iterates on the query.
+ */
+@Composable
+private fun BundleBox(
+    bundle: BundlePatches,
+    selectedInBundle: Set<String>,
+    selectionMode: SelectionMode,
+    hasSavedForBundle: Boolean,
+    expanded: Boolean,
+    searchActive: Boolean,
+    onExpandToggle: () -> Unit,
+    onTogglePatch: (String) -> Unit,
+    onSelectAll: () -> Unit,
+    onDeselectAll: () -> Unit,
+    onApplyDefaults: () -> Unit,
+    onApplySaved: () -> Unit,
+    getOptionValue: (patchName: String, optionKey: String, default: String?) -> String,
+    onOptionValueChange: (patchName: String, optionKey: String, value: String) -> Unit,
+) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+
+    val enabledCount = selectedInBundle.size
+    val totalCount = bundle.patches.size
+
+    val outlineColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.20f)
+    val bgColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.35f)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .background(bgColor)
+            .border(1.dp, outlineColor, RoundedCornerShape(corners.medium))
+    ) {
+        // ── Header ──
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onExpandToggle() }
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            // Chevron
+            Text(
+                text = if (expanded) "▼" else "▶",
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),
+                fontFamily = mono,
+            )
+            Text(
+                text = bundle.bundleName,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false),
+            )
+            // Count chip — "Your Defaults" badge lives in SelectionModeChips
+            // below so we don't duplicate the signal here.
+            Text(
+                text = "$enabledCount / $totalCount",
+                fontSize = 10.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
+                letterSpacing = 0.5.sp,
+            )
+            Spacer(Modifier.weight(1f))
+        }
+
+        // ── Body (controls + patches) ──
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                // Per-bundle control row — REUSES the same SelectionModeChips
+                // composable the single-bundle path uses, so icons, hover
+                // states, "Your Defaults" badge, and full-width layout match
+                // exactly. Callbacks scope each action to THIS bundle.
+                SelectionModeChips(
+                    hasSavedSelection = hasSavedForBundle,
+                    activeMode = selectionMode,
+                    onApplySaved = onApplySaved,
+                    onApplyDefaults = onApplyDefaults,
+                    onApplyAll = onSelectAll,
+                    onApplyNone = onDeselectAll,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                )
+
+                // Patches inside this bundle. Note: this is a regular Column,
+                // NOT a LazyColumn — bundles aren't typically huge enough
+                // (tens of patches) to justify lazy rendering, and nesting
+                // LazyColumns inside a LazyColumn is unsupported.
+                if (bundle.patches.isEmpty() && searchActive) {
+                    Text(
+                        text = "No matches in this bundle",
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp, vertical = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        bundle.patches.forEach { patch ->
+                            PatchListItem(
+                                patch = patch,
+                                isSelected = selectedInBundle.contains(patch.uniqueId),
+                                onToggle = { onTogglePatch(patch.uniqueId) },
+                                // Bundle context is implicit from the box header
+                                sourceName = null,
+                                getOptionValue = { optionKey, default ->
+                                    getOptionValue(patch.name, optionKey, default)
+                                },
+                                onOptionValueChange = { optionKey, value ->
+                                    onOptionValueChange(patch.name, optionKey, value)
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

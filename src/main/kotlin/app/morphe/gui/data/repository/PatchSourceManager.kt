@@ -5,6 +5,8 @@
 
 package app.morphe.gui.data.repository
 
+import app.morphe.engine.patches.PatchProvider
+import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.util.Logger
@@ -28,9 +30,22 @@ class PatchSourceManager(
     private var cachedActiveRepo: PatchRepository? = null
     private var cachedActiveSource: PatchSource? = null
 
-    // Incremented on every source switch so Compose can key on it
+    // Snapshot of currently-enabled sources for sync access. Updated on initialize()
+    // and whenever setSourceEnabled / addSource / removeSource fires.
+    private var cachedEnabledSources: List<PatchSource> = emptyList()
+
+    // Incremented on every source switch / enable change so Compose can key on it
     private val _sourceVersion = MutableStateFlow(0)
     val sourceVersion: StateFlow<Int> = _sourceVersion.asStateFlow()
+
+    // Observable list of enabled sources for UI
+    private val _enabledSources = MutableStateFlow<List<PatchSource>>(emptyList())
+    val enabledSources: StateFlow<List<PatchSource>> = _enabledSources.asStateFlow()
+
+    // Observable list of ALL sources (enabled + disabled) — drives the
+    // SourceManagementSheet which needs to render every source with a toggle.
+    private val _allSources = MutableStateFlow<List<PatchSource>>(emptyList())
+    val allSources: StateFlow<List<PatchSource>> = _allSources.asStateFlow()
 
     /**
      * Load the active source from config and cache its PatchRepository.
@@ -40,7 +55,9 @@ class PatchSourceManager(
         val source = configRepository.getActivePatchSource()
         cachedActiveSource = source
         cachedActiveRepo = getRepositoryForSource(source)
+        refreshEnabledSources()
         Logger.info("PatchSourceManager initialized with source '${source.name}' (type=${source.type})")
+        Logger.info("Enabled sources: ${cachedEnabledSources.joinToString { it.name }}")
     }
 
     /**
@@ -90,9 +107,23 @@ class PatchSourceManager(
      * Falls back to default repo if not yet initialized and source is not LOCAL.
      */
     fun getActiveRepositorySync(): PatchRepository {
-        return cachedActiveRepo ?: PatchRepository(httpClient).also {
+        return cachedActiveRepo ?: defaultMorpheRepository().also {
             if (!isLocalSource()) cachedActiveRepo = it
         }
+    }
+
+    /**
+     * Build the fallback PatchRepository pointed at the built-in Morphe
+     * repo (`MorpheApp/morphe-patches` on GitHub). Used when the active
+     * source isn't yet known.
+     */
+    private fun defaultMorpheRepository(): PatchRepository {
+        val remote = RemotePatchSourceFactory.build(
+            PatchProvider.GITHUB,
+            "MorpheApp/morphe-patches",
+            httpClient,
+        )
+        return PatchRepository(remote)
     }
 
     /**
@@ -106,15 +137,22 @@ class PatchSourceManager(
 
     /**
      * Get the PatchRepository for a specific source.
-     * Returns null for LOCAL sources (no GitHub API needed).
+     * Returns null for LOCAL sources (no remote API needed).
      */
     fun getRepositoryForSource(source: PatchSource): PatchRepository? {
         if (source.type == PatchSourceType.LOCAL) return null
 
         return repositories.getOrPut(source.id) {
             val repoPath = extractRepoPath(source)
-            Logger.info("Creating PatchRepository for source '${source.name}' (repo=$repoPath)")
-            PatchRepository(httpClient, repoPath)
+            // Map the GUI's persisted source type to the engine's provider
+            // enum. DEFAULT inherits GitHub (Morphe Patches lives there).
+            val provider = when (source.type) {
+                PatchSourceType.GITLAB -> PatchProvider.GITLAB
+                else -> PatchProvider.GITHUB
+            }
+            Logger.info("Creating PatchRepository for source '${source.name}' (repo=$repoPath, provider=$provider)")
+            val remote = RemotePatchSourceFactory.build(provider, repoPath, httpClient)
+            PatchRepository(remote)
         }
     }
 
@@ -126,14 +164,17 @@ class PatchSourceManager(
     }
 
     /**
-     * Extract "owner/repo" from a PatchSource's URL.
-     * e.g. "https://github.com/MorpheApp/morphe-patches" -> "MorpheApp/morphe-patches"
+     * Extract "owner/repo" from a PatchSource's URL. Works for both GitHub
+     * and GitLab hosts. Falls back to the built-in default repo when no URL
+     * is configured (e.g. for the DEFAULT source on first launch).
      */
     private fun extractRepoPath(source: PatchSource): String {
         val url = source.url ?: return "MorpheApp/morphe-patches"
         return url
             .removePrefix("https://github.com/")
             .removePrefix("http://github.com/")
+            .removePrefix("https://gitlab.com/")
+            .removePrefix("http://gitlab.com/")
             .removeSuffix("/")
             .removeSuffix(".git")
     }
@@ -152,5 +193,70 @@ class PatchSourceManager(
     fun notifyCacheCleared() {
         cachedActiveRepo?.clearCache()
         _sourceVersion.value++
+    }
+
+    // ── Multi-source API ──────────────────────────────────────────────────────
+
+    /**
+     * Snapshot of currently-enabled sources, in config order. Synchronous.
+     */
+    fun getEnabledSourcesSync(): List<PatchSource> = cachedEnabledSources
+
+    /**
+     * Pair each enabled source with its [PatchRepository]. The repo is null for LOCAL
+     * sources — callers should use [PatchSource.filePath] directly in that case.
+     */
+    fun getEnabledRepositories(): List<Pair<PatchSource, PatchRepository?>> =
+        cachedEnabledSources.map { it to getRepositoryForSource(it) }
+
+    /**
+     * Toggle enablement of a source. Persists, refreshes the cached snapshot, and
+     * bumps [sourceVersion] so consumers reload. Default-source safety net is
+     * applied at the [ConfigRepository] layer.
+     */
+    suspend fun setSourceEnabled(id: String, enabled: Boolean) {
+        configRepository.setPatchSourceEnabled(id, enabled)
+        refreshEnabledSources()
+        _sourceVersion.value++
+        Logger.info("Source '$id' enabled=$enabled. Enabled now: ${cachedEnabledSources.joinToString { it.name }}")
+    }
+
+    /**
+     * Add a new source. Persists and refreshes the cached snapshot.
+     */
+    suspend fun addSource(source: PatchSource) {
+        configRepository.addPatchSource(source)
+        refreshEnabledSources()
+        _sourceVersion.value++
+    }
+
+    /**
+     * Remove a source by id. Refuses non-deletable (default) sources. Drops the
+     * cached repo for that id so a re-add doesn't reuse stale state.
+     */
+    suspend fun removeSource(id: String) {
+        configRepository.removePatchSource(id)
+        repositories.remove(id)
+        refreshEnabledSources()
+        _sourceVersion.value++
+    }
+
+    /**
+     * Update an existing source (e.g. rename). Refuses non-deletable sources.
+     */
+    suspend fun updateSource(updated: PatchSource) {
+        configRepository.updatePatchSource(updated)
+        // Drop the cached repo so the new url/name is picked up on next access.
+        repositories.remove(updated.id)
+        refreshEnabledSources()
+        _sourceVersion.value++
+    }
+
+    private suspend fun refreshEnabledSources() {
+        val all = configRepository.loadConfig().patchSource
+        val enabled = all.filter { it.enabled }
+        cachedEnabledSources = enabled
+        _enabledSources.value = enabled
+        _allSources.value = all
     }
 }

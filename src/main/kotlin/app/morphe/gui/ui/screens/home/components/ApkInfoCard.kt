@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,7 +46,10 @@ import app.morphe.gui.util.toColor
 fun ApkInfoCard(
     apkInfo: ApkInfo,
     onClearClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    /** Names of enabled sources whose patches target [apkInfo.packageName]. When
+     *  more than one, surfaces the multi-source provenance directly on the card. */
+    patchSourceNames: List<String> = emptyList(),
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -151,6 +155,46 @@ fun ApkInfoCard(
                         tint = if (isCloseHovered) MaterialTheme.colorScheme.error
                                else homeCardMutedTextColor(0.5f),
                         modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+
+            // ── Limited-info warning ──
+            // Surfaced when full manifest parsing failed (typically split APKs
+            // like SoundCloud where base.apk references resources living in
+            // other splits). Patching still works because the patcher merges
+            // splits first — this banner just tells the user the card details
+            // are approximate.
+            if (apkInfo.hasLimitedInfo) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawBehind {
+                            drawLine(
+                                color = borderColor,
+                                start = Offset(20.dp.toPx(), 0f),
+                                end = Offset(size.width - 20.dp.toPx(), 0f),
+                                strokeWidth = 1f
+                            )
+                        }
+                        .background(accents.warning.copy(alpha = 0.06f))
+                        .padding(start = 23.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null,
+                        tint = accents.warning,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text =
+                            "Couldn't fully read this APK's manifest (common for split bundles). " +
+                            "Details below are approximate, patching should still work.",
+                        fontSize = 11.sp,
+                        color = accents.warning,
+                        lineHeight = 14.sp,
                     )
                 }
             }
@@ -281,6 +325,66 @@ fun ApkInfoCard(
                                 fontFamily = mono,
                                 color = if (dimmed) tagColor.copy(alpha = 0.35f) else tagColor
                             )
+                        }
+                    }
+                }
+            }
+
+            // ── Patch sources providing patches for this app ──
+            if (patchSourceNames.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawBehind {
+                            drawLine(
+                                color = borderColor,
+                                start = Offset(20.dp.toPx(), 0f),
+                                end = Offset(size.width - 20.dp.toPx(), 0f),
+                                strokeWidth = 1f
+                            )
+                        }
+                        .padding(start = 23.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "FROM",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        letterSpacing = 1.5.sp
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                    androidx.compose.foundation.layout.FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        patchSourceNames.forEach { name ->
+                            Box(
+                                modifier = Modifier
+                                    .border(
+                                        1.dp,
+                                        accents.primary.copy(alpha = 0.3f),
+                                        RoundedCornerShape(corners.small),
+                                    )
+                                    .background(
+                                        accents.primary.copy(alpha = 0.06f),
+                                        RoundedCornerShape(corners.small),
+                                    )
+                                    .padding(horizontal = 8.dp, vertical = 3.dp)
+                            ) {
+                                Text(
+                                    text = name,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = mono,
+                                    letterSpacing = 0.3.sp,
+                                    color = accents.primary,
+                                    maxLines = 1,
+                                )
+                            }
                         }
                     }
                 }

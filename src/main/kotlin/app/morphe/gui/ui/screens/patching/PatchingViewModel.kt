@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import app.morphe.engine.MorpheData
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
 import java.io.File
@@ -52,18 +53,30 @@ class PatchingViewModel(
             addLog("Output: ${File(config.outputApkPath).name}", LogLevel.INFO)
             addLog("Patches: ${config.enabledPatches.size} enabled", LogLevel.INFO)
 
-            // Resolve keystore: use saved path, or derive from output APK location
+            // Resolve keystore. Two modes:
+            //  - User configured one in Settings → use it; fail loudly if the
+            //    file is missing (don't silently swap in our default — that
+            //    would produce APKs signed by a different identity than the
+            //    user picked, breaking on-device updates without explanation).
+            //  - Otherwise → use the shared MorpheData default keystore. The
+            //    patcher library creates it on first sign if missing; reused
+            //    every patch session so all Morphe-patched apps share one
+            //    signing identity.
             val appConfig = configRepository.loadConfig()
-            val resolvedKeystorePath = appConfig.keystorePath
-                ?: File(config.outputApkPath).let { out ->
-                    out.resolveSibling(out.nameWithoutExtension + ".keystore").absolutePath
-                }.also { path ->
-                    configRepository.setKeystorePath(path)
-                }
+            val userKeystore = appConfig.resolvedKeystorePath()
+            if (userKeystore != null && !userKeystore.exists()) {
+                val msg = "Configured keystore not found: ${userKeystore.absolutePath}. " +
+                    "Restore the file, pick another in Settings, or clear the setting to use Morphe's default."
+                addLog(msg, LogLevel.ERROR)
+                _uiState.value = _uiState.value.copy(status = PatchingStatus.FAILED, error = msg)
+                Logger.error("Patching aborted: $msg")
+                return@launch
+            }
+            val resolvedKeystorePath = (userKeystore ?: MorpheData.defaultKeystoreFile).absolutePath
 
             // Use PatchService for direct library patching
             val result = patchService.patch(
-                patchesFilePath = config.patchesFilePath,
+                patchesFilePaths = config.patchesFilePaths,
                 inputApkPath = config.inputApkPath,
                 outputApkPath = config.outputApkPath,
                 enabledPatches = config.enabledPatches,
@@ -107,17 +120,16 @@ class PatchingViewModel(
                         )
                         Logger.info("Patching completed: ${config.outputApkPath}")
                     } else {
-                        val failedMsg = if (patchResult.failedPatches.isNotEmpty()) {
-                            "Failed patches: ${patchResult.failedPatches.joinToString(", ")}"
-                        } else {
-                            "Patching failed"
-                        }
-                        addLog(failedMsg, LogLevel.ERROR)
+                        val reason = patchResult.failureReason
+                            ?: if (patchResult.failedPatches.isNotEmpty())
+                                "Failed patches: ${patchResult.failedPatches.joinToString(", ")}"
+                            else "Patching failed for an unknown reason"
+                        addLog(reason, LogLevel.ERROR)
                         _uiState.value = _uiState.value.copy(
                             status = PatchingStatus.FAILED,
-                            error = "Patching failed. Check logs for details."
+                            error = reason,
                         )
-                        Logger.error("Patching failed: ${patchResult.failedPatches}")
+                        Logger.error("Patching failed: $reason")
                     }
                 },
                 onFailure = { e ->

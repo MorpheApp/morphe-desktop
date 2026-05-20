@@ -84,7 +84,8 @@ enum class PatchOptionType {
 data class PatchConfig(
     val inputApkPath: String,
     val outputApkPath: String,
-    val patchesFilePath: String,
+    /** One or more .mpp file paths. Multiple = union of patches across sources. */
+    val patchesFilePaths: List<String>,
     val enabledPatches: List<String> = emptyList(),
     val disabledPatches: List<String> = emptyList(),
     val patchOptions: Map<String, String> = emptyMap(),

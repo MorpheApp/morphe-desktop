@@ -22,7 +22,29 @@ import app.morphe.gui.util.PatchService
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import app.morphe.patcher.resource.CpuArchitecture
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import java.io.File
+
+/**
+ * Per-bundle view of one source's contribution to the patches-selection screen.
+ *
+ * - [bundleId] is an internal handle stable for the screen lifetime; the screen
+ *   uses it as a map key for selection state and the LazyColumn item key.
+ * - [bundleName] is the display label AND the persistence key (matches the
+ *   `sourceName` slot inside [PatchPreferencesRepository]). Renaming a source
+ *   carries its saved selection with it.
+ * - [patches] holds the patches from this bundle ALONE — no cross-bundle dedup.
+ *   When two sources ship an identical patch (same name/body/options), each
+ *   bundle still has its own entry here, and the user toggles them
+ *   independently. The patcher dedups at apply time so this doesn't double-apply.
+ */
+data class BundlePatches(
+    val bundleId: String,
+    val bundleName: String,
+    val patches: List<Patch>,
+)
 
 class PatchSelectionViewModel(
     private val apkPath: String,
@@ -35,19 +57,29 @@ class PatchSelectionViewModel(
     private val configRepository: ConfigRepository,
     private val preferencesRepository: PatchPreferencesRepository,
     private val patchSourceName: String,
-    private val localPatchFilePath: String? = null
+    private val localPatchFilePath: String? = null,
+    /** All enabled-source .mpp file paths. Single-element in single-source mode. */
+    private val patchesFilePaths: List<String> = listOf(patchesFilePath),
+    /** Parallel to [patchesFilePaths] — display name of each source. Used as the
+     *  per-bundle label AND persistence key. */
+    private val patchSourceNames: List<String> = emptyList(),
 ) : ScreenModel {
 
-    // Actual path to use - may differ from patchesFilePath if we had to re-download
+    // Actual path to use for the primary file — may differ from patchesFilePath
+    // if we had to re-download (cache cleared, etc.)
     private var actualPatchesFilePath: String = patchesFilePath
+    // All resolved file paths — drives multi-source patching when invoking the engine.
+    private var actualPatchesFilePaths: List<String> = patchesFilePaths
 
     // User-configured output folder; null means save next to the input APK.
     private var defaultOutputDirectory: String? = null
 
-    private val _uiState = MutableStateFlow(PatchSelectionUiState(
-        apkArchitectures = apkArchitectures,
-        stripLibsStatus = computeStripLibsStatus(apkArchitectures, ANDROID_ARCHITECTURES)
-    ))
+    private val _uiState = MutableStateFlow(
+        PatchSelectionUiState(
+            apkArchitectures = apkArchitectures,
+            stripLibsStatus = computeStripLibsStatus(apkArchitectures, ANDROID_ARCHITECTURES),
+        )
+    )
     val uiState: StateFlow<PatchSelectionUiState> = _uiState.asStateFlow()
 
     init {
@@ -58,7 +90,9 @@ class PatchSelectionViewModel(
     private fun loadStripLibsPreference() {
         screenModelScope.launch {
             val config = configRepository.loadConfig()
-            defaultOutputDirectory = config.defaultOutputDirectory
+            // Store the resolved absolute path so the lookup at line ~487 can
+            // pass it straight into File(...) without re-resolving.
+            defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
             _uiState.value = _uiState.value.copy(
                 stripLibsStatus = computeStripLibsStatus(apkArchitectures, config.keepArchitectures)
             )
@@ -67,6 +101,9 @@ class PatchSelectionViewModel(
 
     fun getApkPath(): String = apkPath
     fun getPatchesFilePath(): String = actualPatchesFilePath
+    fun getApkName(): String = apkName
+
+    // ── Loading ──────────────────────────────────────────────────────────────
 
     fun loadPatches() {
         screenModelScope.launch {
@@ -77,175 +114,275 @@ class PatchSelectionViewModel(
             if (!patchesFile.exists()) {
                 Logger.info("Patches file not found at $patchesFilePath, attempting to download...")
 
-                // Try to extract version from the filename and find a matching release
-                // Filename format: morphe-patches-x.x.x.mpp or similar
                 val downloadResult = downloadMissingPatches(patchesFile.name)
                 if (downloadResult.isFailure) {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = "Patches file missing and could not be downloaded: ${downloadResult.exceptionOrNull()?.message}"
+                        error = "Patches file missing and could not be downloaded: ${downloadResult.exceptionOrNull()?.message}",
                     )
                     return@launch
                 }
                 actualPatchesFilePath = downloadResult.getOrNull()!!.absolutePath
+                // Mirror the swap into the multi-paths list so the union load uses
+                // the freshly-downloaded file rather than the missing one.
+                actualPatchesFilePaths = actualPatchesFilePaths.map {
+                    if (it == patchesFilePath) actualPatchesFilePath else it
+                }
             }
 
-            // Load patches using PatchService (direct library call)
-            val patchesResult = patchService.listPatches(actualPatchesFilePath, packageName.ifEmpty { null })
+            val patchesResult = loadFromAllPaths()
 
             patchesResult.fold(
-                onSuccess = { patches ->
-                    // Deduplicate by uniqueId in case of true duplicates
-                    val deduplicatedPatches = patches.distinctBy { it.uniqueId }
+                onSuccess = { bundles ->
+                    Logger.info(
+                        "Loaded ${bundles.size} bundle(s), " +
+                            "${bundles.sumOf { it.patches.size }} total patches for $packageName"
+                    )
 
-                    Logger.info("Loaded ${deduplicatedPatches.size} patches for $packageName")
-
-                    // Compute the .mpp's default selection (patches with use=true)
-                    val defaultSelected = deduplicatedPatches
-                        .filter { it.isEnabled }
-                        .map { it.uniqueId }
-                        .toSet()
-
-                    // If a saved selection exists for this source+package, silently apply it.
-                    // Otherwise fall back to .mpp defaults.
-                    val savedBundle = preferencesRepository.get(patchSourceName, packageName)
-                    val (initialSelected, savedOptions) = if (savedBundle != null) {
-                        val byName = deduplicatedPatches.associateBy { it.name }
-                        val selected = savedBundle.patches
-                            .filter { (_, entry) -> entry.enabled }
-                            .keys
-                            .mapNotNull { byName[it]?.uniqueId }
+                    // For each bundle, derive its default selection (use=true) and
+                    // its saved selection (if any). Persistence is per-bundle
+                    // keyed by bundleName — single load per bundle.
+                    val defaultsByBundle = bundles.associate { bundle ->
+                        bundle.bundleId to bundle.patches
+                            .filter { it.isEnabled }
+                            .map { it.uniqueId }
                             .toSet()
-                        // Materialize saved option values into the patchOptionValues map
-                        // (which is keyed "patchName.optionKey" → string).
-                        val opts = mutableMapOf<String, String>()
-                        for ((patchName, entry) in savedBundle.patches) {
-                            for ((optKey, jsonValue) in entry.options) {
-                                opts["$patchName.$optKey"] = jsonValue.toString().trim('"')
+                    }
+                    val savedByBundle = mutableMapOf<String, Set<String>>()
+                    val initialOptions = mutableMapOf<String, String>()
+                    var anyBundleHasSaved = false
+                    for (bundle in bundles) {
+                        val saved = preferencesRepository.get(bundle.bundleName, packageName)
+                        if (saved != null) {
+                            anyBundleHasSaved = true
+                            val byName = bundle.patches.associateBy { it.name }
+                            val selected = saved.patches
+                                .filter { (_, entry) -> entry.enabled }
+                                .keys
+                                .mapNotNull { byName[it]?.uniqueId }
+                                .toSet()
+                            savedByBundle[bundle.bundleId] = selected
+                            // Materialize saved option values ("patchName.optionKey" → string).
+                            // Options are per-patch-name so they're naturally global here;
+                            // identical patches in two bundles share option values, which
+                            // is fine — same option means same thing.
+                            for ((patchName, entry) in saved.patches) {
+                                for ((optKey, jsonValue) in entry.options) {
+                                    initialOptions["$patchName.$optKey"] = jsonValue.toString().trim('"')
+                                }
                             }
                         }
-                        Logger.info("Applied saved patch preferences for $patchSourceName / $packageName")
-                        selected to opts.toMap()
-                    } else {
-                        defaultSelected to emptyMap<String, String>()
                     }
 
-                    val savedSelectedIds: Set<String>? = if (savedBundle != null) {
-                        val byName = deduplicatedPatches.associateBy { it.name }
-                        savedBundle.patches
-                            .filter { (_, entry) -> entry.enabled }
-                            .keys
-                            .mapNotNull { byName[it]?.uniqueId }
-                            .toSet()
-                    } else null
+                    // Initial selection for each bundle: saved if present, else .mpp defaults.
+                    val initialSelectedByBundle = bundles.associate { bundle ->
+                        bundle.bundleId to (savedByBundle[bundle.bundleId]
+                            ?: defaultsByBundle[bundle.bundleId].orEmpty())
+                    }
+
+                    if (anyBundleHasSaved) {
+                        Logger.info("Applied saved patch preferences for $packageName " +
+                            "(${savedByBundle.size}/${bundles.size} bundle(s))")
+                    }
 
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        allPatches = deduplicatedPatches,
-                        filteredPatches = deduplicatedPatches,
-                        selectedPatches = initialSelected,
-                        patchOptionValues = savedOptions,
-                        hasSavedSelection = savedBundle != null,
-                        savedSelectedIds = savedSelectedIds
+                        bundles = bundles,
+                        filteredBundles = bundles,
+                        selectedByBundle = initialSelectedByBundle,
+                        savedSelectedByBundle = if (savedByBundle.isNotEmpty()) savedByBundle else null,
+                        hasSavedSelection = anyBundleHasSaved,
+                        patchOptionValues = initialOptions,
                     )
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = "Failed to list patches: ${e.message}"
+                        error = "Failed to list patches: ${e.message}",
                     )
                     Logger.error("Failed to list patches", e)
-                }
+                },
             )
         }
     }
 
-    fun togglePatch(patchId: String) {
-        val current = _uiState.value.selectedPatches
-        val newSelection = if (current.contains(patchId)) {
-            current - patchId
-        } else {
-            current + patchId
-        }
-        _uiState.value = _uiState.value.copy(selectedPatches = newSelection)
-    }
-
-    fun selectAll() {
-        val allIds = _uiState.value.allPatches.map { it.uniqueId }.toSet()
-        _uiState.value = _uiState.value.copy(selectedPatches = allIds)
-    }
-
-    fun deselectAll() {
-        _uiState.value = _uiState.value.copy(selectedPatches = emptySet())
-    }
-
     /**
-     * Reset the selection to the .mpp's per-patch `use=true/false` defaults.
+     * Load patches from every resolved enabled-source file in parallel. Returns
+     * one [BundlePatches] entry per source — NO cross-bundle dedup. Bundles
+     * whose load failed are dropped; the call fails only when ALL bundles fail.
      */
-    fun applyPatchDefaults() {
-        val defaults = _uiState.value.allPatches
-            .filter { it.isEnabled }
-            .map { it.uniqueId }
-            .toSet()
-        _uiState.value = _uiState.value.copy(selectedPatches = defaults)
-    }
-
-    /**
-     * Apply the user's previously-saved selection for this source+package, if any.
-     * No-op if no saved selection exists.
-     */
-    fun applySavedDefaults() {
-        screenModelScope.launch {
-            val saved = preferencesRepository.get(patchSourceName, packageName) ?: return@launch
-            val byName = _uiState.value.allPatches.associateBy { it.name }
-            val selected = saved.patches
-                .filter { (_, entry) -> entry.enabled }
-                .keys
-                .mapNotNull { byName[it]?.uniqueId }
-                .toSet()
-            val opts = mutableMapOf<String, String>()
-            for ((patchName, entry) in saved.patches) {
-                for ((optKey, jsonValue) in entry.options) {
-                    opts["$patchName.$optKey"] = jsonValue.toString().trim('"')
-                }
+    private suspend fun loadFromAllPaths(): Result<List<BundlePatches>> = coroutineScope {
+        val pkgFilter = packageName.ifEmpty { null }
+        val perFile = actualPatchesFilePaths.mapIndexed { idx, path ->
+            async {
+                val result = patchService.listPatches(path, pkgFilter)
+                Triple(idx, path, result)
             }
-            _uiState.value = _uiState.value.copy(
-                selectedPatches = selected,
-                patchOptionValues = opts
+        }.awaitAll()
+
+        val bundles: List<BundlePatches> = perFile.mapNotNull { (idx, path, result) ->
+            val patches = result.getOrNull() ?: return@mapNotNull null
+            val displayName = patchSourceNames.getOrNull(idx)
+                ?: File(path).nameWithoutExtension
+            BundlePatches(
+                bundleId = "bundle-$idx-${File(path).nameWithoutExtension}",
+                bundleName = displayName,
+                patches = patches,
             )
         }
+
+        if (bundles.isEmpty()) {
+            val firstError = perFile.firstNotNullOfOrNull { (_, _, r) -> r.exceptionOrNull() }
+            return@coroutineScope if (firstError != null) Result.failure(firstError)
+                                  else Result.success(emptyList())
+        }
+        Result.success(bundles)
     }
+
+    // ── Legacy flat API (shims) ─────────────────────────────────────────────
+    //
+    // These shim methods keep the existing PatchSelectionScreen rendering
+    // compiling while the per-bundle UI is built out in a follow-up commit.
+    // Once the screen renders collapsible bundle boxes, these can be deleted.
+    //
+    // Behavior is best-effort: `togglePatch(patchId)` toggles in EVERY bundle
+    // that contains the patch (so old single-list UI matches old behavior:
+    // one click flips state everywhere). `selectAll`/`deselectAll`/etc. apply
+    // across all bundles in one go.
+
+    @Deprecated("Per-bundle UI: use togglePatch(bundleId, patchId)")
+    fun togglePatch(patchId: String) {
+        val state = _uiState.value
+        val newMap = state.selectedByBundle.toMutableMap()
+        for (bundle in state.bundles) {
+            if (bundle.patches.none { it.uniqueId == patchId }) continue
+            val cur = newMap[bundle.bundleId].orEmpty()
+            newMap[bundle.bundleId] = if (patchId in cur) cur - patchId else cur + patchId
+        }
+        _uiState.value = state.copy(selectedByBundle = newMap)
+    }
+
+    @Deprecated("Per-bundle UI: use selectAllInBundle")
+    fun selectAll() {
+        val state = _uiState.value
+        _uiState.value = state.copy(
+            selectedByBundle = state.bundles.associate { bundle ->
+                bundle.bundleId to bundle.patches.map { it.uniqueId }.toSet()
+            }
+        )
+    }
+
+    @Deprecated("Per-bundle UI: use deselectAllInBundle")
+    fun deselectAll() {
+        val state = _uiState.value
+        _uiState.value = state.copy(
+            selectedByBundle = state.bundles.associate { it.bundleId to emptySet() }
+        )
+    }
+
+    @Deprecated("Per-bundle UI: use applyPatchDefaultsInBundle")
+    fun applyPatchDefaults() {
+        val state = _uiState.value
+        _uiState.value = state.copy(
+            selectedByBundle = state.bundles.associate { bundle ->
+                bundle.bundleId to bundle.patches.filter { it.isEnabled }
+                    .map { it.uniqueId }.toSet()
+            }
+        )
+    }
+
+    @Deprecated("Per-bundle UI: use applySavedDefaultsInBundle")
+    fun applySavedDefaults() {
+        val saved = _uiState.value.savedSelectedByBundle ?: return
+        _uiState.value = _uiState.value.copy(selectedByBundle = saved)
+    }
+
+    @Deprecated("Per-bundle UI: sourceName is implicit from the bundle context")
+    fun getSourceNameFor(patchId: String): String? {
+        val bundles = _uiState.value.bundles
+        if (bundles.size <= 1) return null
+        return bundles.firstOrNull { it.patches.any { p -> p.uniqueId == patchId } }
+            ?.bundleName
+    }
+
+    // ── Per-bundle selection methods ────────────────────────────────────────
+
+    fun togglePatch(bundleId: String, patchId: String) {
+        val current = _uiState.value.selectedByBundle
+        val bundleSet = current[bundleId].orEmpty()
+        val newSet = if (patchId in bundleSet) bundleSet - patchId else bundleSet + patchId
+        _uiState.value = _uiState.value.copy(
+            selectedByBundle = current + (bundleId to newSet),
+        )
+    }
+
+    fun selectAllInBundle(bundleId: String) {
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        val all = bundle.patches.map { it.uniqueId }.toSet()
+        _uiState.value = _uiState.value.copy(
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to all),
+        )
+    }
+
+    fun deselectAllInBundle(bundleId: String) {
+        _uiState.value = _uiState.value.copy(
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to emptySet()),
+        )
+    }
+
+    /** Reset this bundle's selection to its .mpp `use=true/false` defaults. */
+    fun applyPatchDefaultsInBundle(bundleId: String) {
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        val defaults = bundle.patches.filter { it.isEnabled }.map { it.uniqueId }.toSet()
+        _uiState.value = _uiState.value.copy(
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to defaults),
+        )
+    }
+
+    /** Restore this bundle's saved selection. No-op if no saved state for this bundle. */
+    fun applySavedDefaultsInBundle(bundleId: String) {
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        val saved = _uiState.value.savedSelectedByBundle?.get(bundleId) ?: return
+        _uiState.value = _uiState.value.copy(
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to saved),
+        )
+    }
+
+    // ── Filter / search ─────────────────────────────────────────────────────
 
     fun setSearchQuery(query: String) {
-        val filtered = if (query.isBlank()) {
-            _uiState.value.allPatches
-        } else {
-            _uiState.value.allPatches.filter {
-                it.name.contains(query, ignoreCase = true) ||
-                it.description.contains(query, ignoreCase = true)
-            }
-        }
         _uiState.value = _uiState.value.copy(
             searchQuery = query,
-            filteredPatches = filtered
+            filteredBundles = computeFilteredBundles(query, _uiState.value.showOnlySelected),
         )
     }
 
     fun setShowOnlySelected(show: Boolean) {
-        val filtered = if (show) {
-            _uiState.value.allPatches.filter { _uiState.value.selectedPatches.contains(it.uniqueId) }
-        } else if (_uiState.value.searchQuery.isNotBlank()) {
-            _uiState.value.allPatches.filter {
-                it.name.contains(_uiState.value.searchQuery, ignoreCase = true) ||
-                it.description.contains(_uiState.value.searchQuery, ignoreCase = true)
-            }
-        } else {
-            _uiState.value.allPatches
-        }
         _uiState.value = _uiState.value.copy(
             showOnlySelected = show,
-            filteredPatches = filtered
+            filteredBundles = computeFilteredBundles(_uiState.value.searchQuery, show),
         )
+    }
+
+    /**
+     * Per-bundle filter — preserves bundle grouping, so a bundle that has zero
+     * matches still appears in [PatchSelectionUiState.filteredBundles] with an
+     * empty `patches` list. The UI uses that to render the "no matches in this
+     * bundle" empty state inside the box.
+     */
+    private fun computeFilteredBundles(query: String, showOnlySelected: Boolean): List<BundlePatches> {
+        val q = query.trim()
+        return _uiState.value.bundles.map { bundle ->
+            val selectedInBundle = _uiState.value.selectedByBundle[bundle.bundleId].orEmpty()
+            val patches = bundle.patches.filter { patch ->
+                val matchesSearch = q.isBlank() ||
+                    patch.name.contains(q, ignoreCase = true) ||
+                    patch.description.contains(q, ignoreCase = true)
+                val matchesSelection = !showOnlySelected || patch.uniqueId in selectedInBundle
+                matchesSearch && matchesSelection
+            }
+            bundle.copy(patches = patches)
+        }
     }
 
     fun clearError() {
@@ -261,106 +398,103 @@ class PatchSelectionViewModel(
     }
 
     /**
-     * Set a patch option value. Key format: "patchName.optionKey"
+     * Set a patch option value. Key format: "patchName.optionKey". Options are
+     * keyed by patch name, so identical patches across bundles share option
+     * values — intentional, since the patch IS the same patch.
      */
     fun setOptionValue(patchName: String, optionKey: String, value: String) {
         val key = "$patchName.$optionKey"
         val current = _uiState.value.patchOptionValues.toMutableMap()
-        if (value.isBlank()) {
-            current.remove(key)
-        } else {
-            current[key] = value
-        }
+        if (value.isBlank()) current.remove(key) else current[key] = value
         _uiState.value = _uiState.value.copy(patchOptionValues = current)
     }
 
-    /**
-     * Get a patch option value. Returns the user-set value, or the default if not set.
-     */
     fun getOptionValue(patchName: String, optionKey: String, default: String?): String {
         val key = "$patchName.$optionKey"
         return _uiState.value.patchOptionValues[key] ?: default ?: ""
     }
 
-    /**
-     * Count of patches that are disabled by default (from .mpp metadata).
-     */
-    fun getDefaultDisabledCount(): Int {
-        return _uiState.value.allPatches.count { !it.isEnabled }
-    }
+    /** Total count of patches across all bundles that ship disabled by default. */
+    fun getDefaultDisabledCount(): Int =
+        _uiState.value.bundles.sumOf { bundle -> bundle.patches.count { !it.isEnabled } }
+
+    // ── Persistence ─────────────────────────────────────────────────────────
 
     /**
-     * Persist the current selection + option values as the user's saved preference
-     * for this source+package. Called from createPatchConfig (auto-save on Patch click).
+     * Persist each bundle's current selection + option values under its own
+     * source name. Called from createPatchConfig (auto-save on Patch click).
      */
     private fun saveCurrentSelection() {
         val state = _uiState.value
-        val enabledNames = state.allPatches
-            .filter { state.selectedPatches.contains(it.uniqueId) }
-            .map { it.name }
-            .toSet()
-        val disabledNames = state.allPatches
-            .filter { !state.selectedPatches.contains(it.uniqueId) }
-            .map { it.name }
-            .toSet()
-
-        // Group "patchName.optionKey" -> JsonElement under each patch name.
-        val grouped = mutableMapOf<String, MutableMap<String, kotlinx.serialization.json.JsonElement>>()
+        // Group "patchName.optionKey" -> JsonElement under each patch name, ONCE.
+        // (Option values are global by design — see setOptionValue.)
+        val groupedOptions = mutableMapOf<String, MutableMap<String, kotlinx.serialization.json.JsonElement>>()
         for ((compoundKey, value) in state.patchOptionValues) {
             val dotIdx = compoundKey.indexOf('.')
             if (dotIdx <= 0) continue
             val patchName = compoundKey.substring(0, dotIdx)
             val optKey = compoundKey.substring(dotIdx + 1)
-            grouped.getOrPut(patchName) { mutableMapOf() }[optKey] =
+            groupedOptions.getOrPut(patchName) { mutableMapOf() }[optKey] =
                 kotlinx.serialization.json.JsonPrimitive(value)
         }
 
         screenModelScope.launch {
-            preferencesRepository.save(
-                sourceName = patchSourceName,
-                packageName = packageName,
-                enabledPatchNames = enabledNames,
-                disabledPatchNames = disabledNames,
-                options = grouped
-            )
-            // After saving, the live selection IS the saved selection — so update
-            // the snapshot so the "YOUR DEFAULTS" chip stays highlighted post-patch.
+            for (bundle in state.bundles) {
+                val selected = state.selectedByBundle[bundle.bundleId].orEmpty()
+                val enabledNames = bundle.patches
+                    .filter { selected.contains(it.uniqueId) }
+                    .map { it.name }
+                    .toSet()
+                val disabledNames = bundle.patches
+                    .filterNot { selected.contains(it.uniqueId) }
+                    .map { it.name }
+                    .toSet()
+
+                // Only save options for patches actually in this bundle — avoids
+                // bleeding bundle A's option into bundle B's preferences.
+                val patchNamesInBundle = bundle.patches.mapNotNull { it.name }.toSet()
+                val scopedOptions = groupedOptions.filterKeys { it in patchNamesInBundle }
+
+                preferencesRepository.save(
+                    sourceName = bundle.bundleName,
+                    packageName = packageName,
+                    enabledPatchNames = enabledNames,
+                    disabledPatchNames = disabledNames,
+                    options = scopedOptions,
+                )
+            }
+
+            // After saving, the live selection IS the saved selection — refresh
+            // the snapshot so the per-bundle "Your Defaults" chips stay
+            // highlighted post-patch.
             _uiState.value = _uiState.value.copy(
                 hasSavedSelection = true,
-                savedSelectedIds = state.selectedPatches
+                savedSelectedByBundle = state.selectedByBundle,
             )
         }
     }
 
+    // ── Patcher integration ─────────────────────────────────────────────────
+
     fun createPatchConfig(continueOnError: Boolean = false): PatchConfig {
-        // Auto-save the current selection as the user's "Your Defaults" before patching.
         saveCurrentSelection()
 
+        // Delegate to the shared engine helper — same path the CLI computes.
+        // Passing apkName as the display name preserves the friendly label
+        // (e.g. "Youtube") instead of falling back to the filename.
         val inputFile = File(apkPath)
-        val appFolderName = apkName.replace(" ", "-")
-        val baseOutputDir = defaultOutputDirectory?.let { File(it) } ?: inputFile.parentFile
-        val outputDir = File(baseOutputDir, appFolderName)
-        outputDir.mkdirs()
+        val outputPath = app.morphe.engine.util.ApkOutputNaming.outputApkPath(
+            inputApk = inputFile,
+            patchesFile = File(actualPatchesFilePath),
+            baseOutputDir = defaultOutputDirectory?.let { File(it) },
+            appDisplayName = apkName,
+        ).absolutePath
 
-        // Extract version from APK filename and patches version for output name
-        val version = extractVersionFromFilename(inputFile.name) ?: "patched"
-        val patchesVersion = extractPatchesVersion(File(actualPatchesFilePath).name)
-        val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
-        val outputFileName = "${appFolderName}-Morphe-${version}${patchesSuffix}.apk"
-        val outputPath = File(outputDir, outputFileName).absolutePath
+        // Flatten across bundles: the engine takes a single flat enable/disable
+        // list and dedups identical patches at apply time, so the union of
+        // selected patches across bundles is the right input.
+        val (selectedPatchNames, disabledPatchNames) = flattenSelection()
 
-        // Convert unique IDs back to patch names for CLI
-        val selectedPatchNames = _uiState.value.allPatches
-            .filter { _uiState.value.selectedPatches.contains(it.uniqueId) }
-            .map { it.name }
-
-        val disabledPatchNames = _uiState.value.allPatches
-            .filter { !_uiState.value.selectedPatches.contains(it.uniqueId) }
-            .map { it.name }
-
-        // Only ship a non-empty keepArchitectures set when the current status actually
-        // prescribes stripping. All other states (no native libs, universal, keep-all,
-        // fallback) → empty set → patcher leaves native libs untouched.
         val keepArches = (uiState.value.stripLibsStatus as? StripLibsStatus.WillStrip)
             ?.keeping
             ?.mapNotNull { CpuArchitecture.valueOfOrNull(it) }
@@ -370,33 +504,46 @@ class PatchSelectionViewModel(
         return PatchConfig(
             inputApkPath = apkPath,
             outputApkPath = outputPath,
-            patchesFilePath = actualPatchesFilePath,
+            patchesFilePaths = actualPatchesFilePaths,
             enabledPatches = selectedPatchNames,
             disabledPatches = disabledPatchNames,
             patchOptions = _uiState.value.patchOptionValues,
             useExclusiveMode = true,
             keepArchitectures = keepArches,
-            continueOnError = continueOnError
+            continueOnError = continueOnError,
         )
     }
 
-    private fun extractVersionFromFilename(fileName: String): String? {
-        // Extract version from APKMirror format: com.google.android.youtube_20.40.45-xxx
-        return try {
-            val afterPackage = fileName.substringAfter("_")
-            afterPackage.substringBefore("-").takeIf { it.isNotEmpty() }
-        } catch (e: Exception) {
-            null
+    /**
+     * Flatten per-bundle selection into the patcher's flat (enabled, disabled)
+     * pair of patch-name lists. `.distinct()` is belt-and-suspenders — the
+     * engine deduplicates again at apply time.
+     */
+    private fun flattenSelection(): Pair<List<String>, List<String>> {
+        val state = _uiState.value
+        val selected = mutableSetOf<String>()
+        val disabled = mutableSetOf<String>()
+        for (bundle in state.bundles) {
+            val bundleSelected = state.selectedByBundle[bundle.bundleId].orEmpty()
+            for (patch in bundle.patches) {
+                if (patch.uniqueId in bundleSelected) selected.add(patch.name)
+                else disabled.add(patch.name)
+            }
         }
+        // A patch enabled in any bundle wins over its disabled-in-another counterpart
+        // (engine dedup means the patch is one entity at apply time).
+        disabled.removeAll(selected)
+        return selected.toList() to disabled.toList()
     }
 
-    private fun extractPatchesVersion(patchesFileName: String): String? {
-        // Extract version from patches filename: morphe-patches-1.13.0-dev.11.mpp -> 1.13.0-dev.11
-        val regex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
-        return regex.find(patchesFileName)?.groupValues?.get(1)
-    }
+    // Delegate to the shared engine helper so GUI and CLI agree on filename
+    // parsing. Returning these as instance methods (not direct calls) keeps
+    // existing call sites in this file unchanged.
+    private fun extractVersionFromFilename(fileName: String): String? =
+        app.morphe.engine.util.ApkOutputNaming.extractApkVersionFromFilename(fileName)
 
-    fun getApkName(): String = apkName
+    private fun extractPatchesVersion(patchesFileName: String): String? =
+        app.morphe.engine.util.ApkOutputNaming.extractPatchesVersion(patchesFileName)
 
     /**
      * Generate a preview of the CLI command that will be executed.
@@ -408,7 +555,7 @@ class PatchSelectionViewModel(
         keystorePath: String? = null,
         keystorePassword: String? = null,
         keystoreAlias: String? = null,
-        keystoreEntryPassword: String? = null
+        keystoreEntryPassword: String? = null,
     ): String {
         val inputFile = File(apkPath)
         val patchesFile = File(actualPatchesFilePath)
@@ -418,23 +565,13 @@ class PatchSelectionViewModel(
         val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
         val outputFileName = "${appFolderName}-Morphe-${version}${patchesSuffix}.apk"
 
-        val selectedPatchNames = _uiState.value.allPatches
-            .filter { _uiState.value.selectedPatches.contains(it.uniqueId) }
-            .map { it.name }
+        val (selectedPatchNames, disabledPatchNames) = flattenSelection()
 
-        val disabledPatchNames = _uiState.value.allPatches
-            .filter { !_uiState.value.selectedPatches.contains(it.uniqueId) }
-            .map { it.name }
-
-        // Use whichever produces fewer flags
         val useExclusive = selectedPatchNames.size <= disabledPatchNames.size
 
-        // striplibs flag: only when the computed status prescribes actual stripping
         val striplibsArg = (uiState.value.stripLibsStatus as? StripLibsStatus.WillStrip)
-            ?.keeping
-            ?.joinToString(",")
+            ?.keeping?.joinToString(",")
 
-        // Keystore flags (only if custom keystore is set)
         val hasCustomKeystore = keystorePath != null
 
         return if (cleanMode) {
@@ -447,24 +584,12 @@ class PatchSelectionViewModel(
                           --force \
                     """.trimIndent()
                 )
-
-                if (continueOnError) {
-                    appendLine("  --continue-on-error \\")
-                }
-
-                if (useExclusive) {
-                    appendLine("  --exclusive \\")
-                }
-
-                striplibsArg?.let {
-                    appendLine("  --striplibs $it \\")
-                }
-
+                if (continueOnError) appendLine("  --continue-on-error \\")
+                if (useExclusive) appendLine("  --exclusive \\")
+                striplibsArg?.let { appendLine("  --striplibs $it \\") }
                 if (hasCustomKeystore) {
                     appendLine("  --keystore \"$keystorePath\" \\")
-                    keystorePassword?.let {
-                        appendLine("  --keystore-password \"$it\" \\")
-                    }
+                    keystorePassword?.let { appendLine("  --keystore-password \"$it\" \\") }
                     if (keystoreAlias != null && keystoreAlias != DEFAULT_KEYSTORE_ALIAS) {
                         appendLine("  --keystore-entry-alias \"$keystoreAlias\" \\")
                     }
@@ -472,15 +597,12 @@ class PatchSelectionViewModel(
                         appendLine("  --keystore-entry-password \"$keystoreEntryPassword\" \\")
                     }
                 }
-
                 val flagPatches = if (useExclusive) selectedPatchNames else disabledPatchNames
                 val flag = if (useExclusive) "-e" else "-d"
-
                 flagPatches.forEachIndexed { index, patch ->
                     val suffix = if (index == flagPatches.lastIndex) "" else " \\"
                     appendLine("  $flag \"$patch\"$suffix")
                 }
-
                 append("  ${inputFile.name}")
             }
         } else {
@@ -504,93 +626,124 @@ class PatchSelectionViewModel(
     /**
      * Download patches file if it's missing (e.g., after cache clear).
      * For LOCAL sources, uses the local file directly.
-     * Tries to find a release matching the expected filename, or falls back to latest stable.
      */
     private suspend fun downloadMissingPatches(expectedFilename: String): Result<File> {
-        // LOCAL source: use the local file directly instead of downloading
         if (localPatchFilePath != null) {
             val localFile = File(localPatchFilePath)
-            return if (localFile.exists()) {
-                Result.success(localFile)
-            } else {
-                Result.failure(Exception("Local patch file not found: ${localFile.name}"))
-            }
+            return if (localFile.exists()) Result.success(localFile)
+            else Result.failure(Exception("Local patch file not found: ${localFile.name}"))
         }
 
-        // Try to extract version from filename (e.g., "morphe-patches-1.9.0.mpp" -> "1.9.0")
         val versionRegex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
         val versionMatch = versionRegex.find(expectedFilename)
         val expectedVersion = versionMatch?.groupValues?.get(1)
 
         Logger.info("Looking for patches version: ${expectedVersion ?: "latest"}")
 
-        // Fetch releases
         val releasesResult = patchRepository.fetchReleases()
         if (releasesResult.isFailure) {
-            return Result.failure(releasesResult.exceptionOrNull()
-                ?: Exception("Failed to fetch releases"))
+            return Result.failure(
+                releasesResult.exceptionOrNull() ?: Exception("Failed to fetch releases")
+            )
         }
-
         val releases = releasesResult.getOrNull() ?: emptyList()
-        if (releases.isEmpty()) {
-            return Result.failure(Exception("No releases found"))
-        }
+        if (releases.isEmpty()) return Result.failure(Exception("No releases found"))
 
-        // Find matching release by version, or use latest stable
         val targetRelease = if (expectedVersion != null) {
             releases.find { it.tagName.contains(expectedVersion) }
-                ?: releases.firstOrNull { !it.isDevRelease() }  // Fallback to latest stable
+                ?: releases.firstOrNull { !it.isDevRelease() }
         } else {
-            releases.firstOrNull { !it.isDevRelease() }  // Latest stable
-        }
-
-        if (targetRelease == null) {
-            return Result.failure(Exception("No suitable release found"))
-        }
+            releases.firstOrNull { !it.isDevRelease() }
+        } ?: return Result.failure(Exception("No suitable release found"))
 
         Logger.info("Downloading patches from release: ${targetRelease.tagName}")
-
-        // Download the patches
         return patchRepository.downloadPatches(targetRelease)
     }
-
 }
+
+// ── State / supporting types ────────────────────────────────────────────────
 
 data class PatchSelectionUiState(
     val isLoading: Boolean = false,
-    val allPatches: List<Patch> = emptyList(),
-    val filteredPatches: List<Patch> = emptyList(),
-    val selectedPatches: Set<String> = emptySet(),
+    /** Per-bundle patches. Each bundle is one source's contribution — NO cross-bundle dedup. */
+    val bundles: List<BundlePatches> = emptyList(),
+    /** Same shape as [bundles] but each bundle's patches list is post-filter. A bundle with
+     *  zero matches stays in the list with `patches = emptyList()` so the UI can render
+     *  the "no matches in this bundle" empty state inside the box. */
+    val filteredBundles: List<BundlePatches> = emptyList(),
+    /** bundleId → set of patch uniqueIds enabled in that bundle. Independent across bundles. */
+    val selectedByBundle: Map<String, Set<String>> = emptyMap(),
+    /** Snapshot of each bundle's saved selection. Null = no saved state for any bundle. */
+    val savedSelectedByBundle: Map<String, Set<String>>? = null,
+    /** True when at least ONE bundle has a saved selection. Drives the per-box "Your Defaults"
+     *  chip visibility — but per-box highlighting still uses [selectionModeFor]. */
+    val hasSavedSelection: Boolean = false,
     val searchQuery: String = "",
     val showOnlySelected: Boolean = false,
     val error: String? = null,
     val apkArchitectures: List<String> = emptyList(),
     val stripLibsStatus: StripLibsStatus = StripLibsStatus.NoNativeLibs,
+    /** "patchName.optionKey" → value. Options keyed by patch name, so identical patches
+     *  across bundles share option values (intentional — same patch means same option). */
     val patchOptionValues: Map<String, String> = emptyMap(),
-    val hasSavedSelection: Boolean = false,
-    /** Snapshot of the saved-bundle's selected uniqueIds — used to highlight the
-     *  Your Defaults chip whenever the live selection happens to match. Null when
-     *  no saved selection exists. */
-    val savedSelectedIds: Set<String>? = null
 ) {
-    val selectedCount: Int get() = selectedPatches.size
-    val totalCount: Int get() = allPatches.size
+    /** Total count of patches enabled across all bundles. Patches identical across bundles
+     *  are counted once per bundle they're enabled in — matches what the user toggled. */
+    val selectedCount: Int get() = selectedByBundle.values.sumOf { it.size }
+
+    /** Total count of patches across all bundles. */
+    val totalCount: Int get() = bundles.sumOf { it.patches.size }
+
+    // ── Legacy flat shims ────────────────────────────────────────────────
+    //
+    // These let the existing PatchSelectionScreen render against the new
+    // per-bundle state without changes. Deleted once the screen renders
+    // collapsible bundle boxes.
+
+    @Deprecated("Use bundles directly")
+    val allPatches: List<Patch> get() = bundles.flatMap { it.patches }
+
+    @Deprecated("Use filteredBundles directly")
+    val filteredPatches: List<Patch> get() = filteredBundles.flatMap { it.patches }
+
+    @Deprecated("Use selectedByBundle directly")
+    val selectedPatches: Set<String>
+        get() = selectedByBundle.values.flatten().toSet()
+
+    /** Snapshot of saved selection as a flat uniqueId set, for the legacy chip. Null when no bundle has saved state. */
+    @Deprecated("Use savedSelectedByBundle directly")
+    val savedSelectedIds: Set<String>?
+        get() = savedSelectedByBundle?.values?.flatten()?.toSet()
 
     /**
-     * Which preset (if any) the current selection matches. Drives chip highlighting:
-     * the chip whose mode equals `activeSelectionMode` gets the accent border + tint.
-     * SAVED is checked first so when the saved set happens to also be ALL or DEFAULTS,
-     * we still attribute the highlight to the user's saved preference.
+     * Legacy global selection mode — collapsed from per-bundle modes. Used
+     * only by the temporary flat-rendering path. Returns:
+     *   - SAVED if EVERY bundle is in SAVED mode
+     *   - DEFAULTS if EVERY bundle is in DEFAULTS mode
+     *   - ALL / NONE similarly
+     *   - CUSTOM otherwise (bundles disagree)
      */
+    @Deprecated("Per-bundle UI: use selectionModeFor(bundleId)")
     val activeSelectionMode: SelectionMode get() {
-        if (allPatches.isEmpty()) return SelectionMode.CUSTOM
-        val all = allPatches.map { it.uniqueId }.toSet()
-        val defaults = allPatches.filter { it.isEnabled }.map { it.uniqueId }.toSet()
+        if (bundles.isEmpty()) return SelectionMode.CUSTOM
+        val modes = bundles.map { selectionModeFor(it.bundleId) }.distinct()
+        return if (modes.size == 1) modes.single() else SelectionMode.CUSTOM
+    }
+
+    /** Which preset (if any) the SPECIFIED bundle's selection matches. Each box renders
+     *  its own chip highlighting independently. */
+    fun selectionModeFor(bundleId: String): SelectionMode {
+        val bundle = bundles.firstOrNull { it.bundleId == bundleId } ?: return SelectionMode.CUSTOM
+        if (bundle.patches.isEmpty()) return SelectionMode.CUSTOM
+        val selected = selectedByBundle[bundleId].orEmpty()
+        val all = bundle.patches.map { it.uniqueId }.toSet()
+        val defaults = bundle.patches.filter { it.isEnabled }.map { it.uniqueId }.toSet()
+        val saved = savedSelectedByBundle?.get(bundleId)
         return when {
-            savedSelectedIds != null && selectedPatches == savedSelectedIds -> SelectionMode.SAVED
-            selectedPatches.isEmpty() -> SelectionMode.NONE
-            selectedPatches == all -> SelectionMode.ALL
-            selectedPatches == defaults -> SelectionMode.DEFAULTS
+            saved != null && selected == saved -> SelectionMode.SAVED
+            selected.isEmpty() -> SelectionMode.NONE
+            selected == all -> SelectionMode.ALL
+            selected == defaults -> SelectionMode.DEFAULTS
             else -> SelectionMode.CUSTOM
         }
     }
@@ -627,7 +780,7 @@ sealed class StripLibsStatus {
     data class WillStrip(
         val keeping: List<String>,
         val stripping: List<String>,
-        val notInApk: List<String>
+        val notInApk: List<String>,
     ) : StripLibsStatus()
 }
 
@@ -640,7 +793,7 @@ sealed class StripLibsStatus {
  */
 internal fun computeStripLibsStatus(
     apkArches: List<String>,
-    userKeep: Set<String>
+    userKeep: Set<String>,
 ): StripLibsStatus {
     if (apkArches.isEmpty()) return StripLibsStatus.NoNativeLibs
     if (apkArches.size == 1 && apkArches[0].equals("universal", ignoreCase = true)) {
@@ -657,7 +810,7 @@ internal fun computeStripLibsStatus(
         else -> StripLibsStatus.WillStrip(
             keeping = apkArches.filter { it in overlap },
             stripping = apkArches.filter { it !in overlap },
-            notInApk = notInApk
+            notInApk = notInApk,
         )
     }
 }

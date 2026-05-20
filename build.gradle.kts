@@ -49,6 +49,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     google()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
     maven {
         // A repository must be specified for some reason. "registry" is a dummy.
         url = uri("https://maven.pkg.github.com/MorpheApp/registry")
@@ -85,8 +86,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.kotlinx.serialization.json)
-//    testImplementation(libs.kotlin.test)
-//}
 
     // -- Networking (GUI) --------------------------------------------------
     implementation(libs.ktor.client.core)
@@ -94,6 +93,7 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
+    implementation(libs.slf4j.nop)
 
     // -- DI / Navigation (GUI) ---------------------------------------------
     implementation(platform(libs.koin.bom))
@@ -109,9 +109,7 @@ dependencies {
     implementation(libs.jna)
     implementation(libs.jna.platform)
 
-    // -- APK Parsing (GUI) -------------------------------------------------
-    implementation(libs.apk.parser)
-
+    // -- License attribution UI (About / Licenses screen) -----------------
     implementation(libs.about.libraries.core)
     implementation(libs.about.libraries.m3)
 
@@ -209,12 +207,15 @@ tasks {
             exclude(dependency("app.morphe:morphe-patcher"))
             // Ktor uses ServiceLoader
             exclude(dependency("io.ktor:.*"))
+            exclude(dependency("org.slf4j:.*"))
             // Koin uses reflection
             exclude(dependency("io.insert-koin:.*"))
             // Coroutines Swing provides Dispatchers.Main via ServiceLoader
             exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-swing"))
             // JNA uses reflection + native loading for DWM title bar tinting
             exclude(dependency("net.java.dev.jna:.*"))
+            // Skiko uses ServiceLoader for native registration. Same class of problem as Ktor / Koin / JNA above.
+            exclude(dependency("org.jetbrains.skiko:.*"))
         }
 
         mergeServiceFiles()

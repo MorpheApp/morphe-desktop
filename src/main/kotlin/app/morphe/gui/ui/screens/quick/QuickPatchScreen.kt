@@ -43,7 +43,11 @@ import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.OfflineBanner
+import app.morphe.gui.ui.components.SourceManagementSheet
+import app.morphe.gui.ui.components.SourceSheetMode
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
@@ -84,6 +88,21 @@ class QuickPatchScreen : Screen {
 fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     val uiState by viewModel.uiState.collectAsState()
 
+    // Source picker state — Quick Patch is single-source by design. The picker
+    // uses the same SourceManagementSheet as Expert mode but in SINGLE_SELECT
+    // mode (radio behavior). Users can also add/edit/remove sources from here,
+    // matching morphe-manager which doesn't gate source management on expert mode.
+    val patchSourceManager: PatchSourceManager = koinInject()
+    val allSources by patchSourceManager.allSources.collectAsState()
+    val pickerScope = rememberCoroutineScope()
+    var showSourcePicker by remember { mutableStateOf(false) }
+    var activeSourceId by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(uiState.patchSourceName, allSources) {
+        // Resolve the current active source's id by name for radio selection.
+        activeSourceId = allSources.firstOrNull { it.name == uiState.patchSourceName }?.id
+            ?: patchSourceManager.getActiveSource().id
+    }
+
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
@@ -92,6 +111,26 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     var leadingWidthPx by remember { mutableIntStateOf(0) }
     var trailingWidthPx by remember { mutableIntStateOf(0) }
     val centerSidePadding = with(density) { maxOf(leadingWidthPx, trailingWidthPx).toDp() } + 16.dp
+
+    if (showSourcePicker) {
+        SourceManagementSheet(
+            sources = allSources,
+            mode = SourceSheetMode.SINGLE_SELECT,
+            activeSourceId = activeSourceId,
+            onSelectSingle = { id ->
+                showSourcePicker = false
+                pickerScope.launch { patchSourceManager.switchSource(id) }
+            },
+            onToggleEnabled = { _, _ -> /* no-op in SINGLE_SELECT mode */ },
+            onAdd = { src -> pickerScope.launch { patchSourceManager.addSource(src) } },
+            onEdit = { src -> pickerScope.launch { patchSourceManager.updateSource(src) } },
+            onRemove = { id -> pickerScope.launch { patchSourceManager.removeSource(id) } },
+            onOpenPatches = { /* unused in SINGLE_SELECT mode */ },
+            onDismiss = { showSourcePicker = false },
+            enabled = uiState.phase != QuickPatchPhase.DOWNLOADING &&
+                      uiState.phase != QuickPatchPhase.PATCHING,
+        )
+    }
 
     FullScreenDropZone(
         isDragHovering = uiState.isDragHovering,
@@ -134,7 +173,9 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         BrandingLogo()
                     }
 
-                    // Patches version badge — centered
+                    // Patches version badge — centered. Click opens the source-management
+                    // sheet in SINGLE_SELECT mode so the user can pick which source Quick
+                    // Patch uses (and add/edit/remove sources too).
                     Box(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -147,7 +188,8 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                             latestLabel = if (uiState.patchesVersion != null &&
                                               uiState.patchesVersion == uiState.latestPatchesVersion) {
                                 "LATEST STABLE"
-                            } else null
+                            } else null,
+                            onClick = { showSourcePicker = true },
                         )
                     }
 
@@ -262,75 +304,15 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
 
             // Error/warning bar
             uiState.error?.let { error ->
-                val mono = LocalMorpheFont.current
                 val isUnsupportedWarning = error.contains("not supported in Quick Patch")
-                val accentColor = if (isUnsupportedWarning) accents.warning else MaterialTheme.colorScheme.error
-                val barBg = MaterialTheme.colorScheme.surface
-                val borderCol = accentColor.copy(alpha = 0.4f)
-
-                Row(
+                MorpheErrorBar(
+                    message = error,
+                    onDismiss = { viewModel.clearError() },
+                    isWarning = isUnsupportedWarning,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(horizontal = 24.dp, vertical = 20.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(corners.small))
-                        .border(1.dp, borderCol, RoundedCornerShape(corners.small))
-                        .background(barBg)
-                        .drawBehind {
-                            drawRect(
-                                color = accentColor,
-                                size = androidx.compose.ui.geometry.Size(3.dp.toPx(), size.height)
-                            )
-                        }
-                        .padding(start = 3.dp)
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(accentColor, RoundedCornerShape(1.dp))
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    Text(
-                        text = error,
-                        fontFamily = mono,
-                        fontSize = 12.sp,
-                        lineHeight = 16.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Spacer(Modifier.width(12.dp))
-
-                    // Dismiss — same hover pattern as the close button
-                    val dismissHover = remember { MutableInteractionSource() }
-                    val isDismissHovered by dismissHover.collectIsHoveredAsState()
-                    val dismissBg by animateColorAsState(
-                        if (isDismissHovered) accentColor.copy(alpha = 0.12f)
-                        else Color.Transparent,
-                        animationSpec = tween(150)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .height(28.dp)
-                            .hoverable(dismissHover)
-                            .clip(RoundedCornerShape(corners.small))
-                            .background(dismissBg)
-                            .clickable { viewModel.clearError() }
-                            .padding(horizontal = 12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "DISMISS",
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = if (isDismissHovered) accentColor
-                                    else accentColor.copy(alpha = 0.7f),
-                            letterSpacing = 1.sp
-                        )
-                    }
-                }
+                )
             }
         }
     }
@@ -361,10 +343,12 @@ private fun PatchesVersionBadge(
     isLoading: Boolean,
     patchSourceName: String? = null,
     latestLabel: String? = null,
+    onClick: (() -> Unit)? = null,
 ) {
     val mono = LocalMorpheFont.current
     val corners = LocalMorpheCorners.current
     val accents = LocalMorpheAccents.current
+    val interactive = onClick != null
 
     if (isLoading) {
         Row(
@@ -398,7 +382,13 @@ private fun PatchesVersionBadge(
                 .clip(RoundedCornerShape(corners.small))
                 .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.1f), RoundedCornerShape(corners.small))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(start = 12.dp, end = 4.dp),
+                .then(
+                    if (interactive) Modifier
+                        .pointerHoverIcon(androidx.compose.ui.input.pointer.PointerIcon.Hand)
+                        .clickable(onClick = onClick!!)
+                    else Modifier
+                )
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

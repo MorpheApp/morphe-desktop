@@ -77,7 +77,7 @@ class PatchService {
      * Delegates to PatchEngine for the actual pipeline.
      */
     suspend fun patch(
-        patchesFilePath: String,
+        patchesFilePaths: List<String>,
         inputApkPath: String,
         outputApkPath: String,
         enabledPatches: List<String> = emptyList(),
@@ -93,23 +93,29 @@ class PatchService {
         onProgress: (String) -> Unit = {}
     ): Result<PatchResult> = withContext(Dispatchers.IO) {
         try {
-            val patchFile = File(patchesFilePath)
+            if (patchesFilePaths.isEmpty()) {
+                return@withContext Result.failure(Exception("No patches files supplied"))
+            }
+            val patchFiles = patchesFilePaths.map { File(it) }
             val inputApk = File(inputApkPath)
             val outputFile = File(outputApkPath)
 
-            if (!patchFile.exists()) {
-                return@withContext Result.failure(Exception("Patches file not found"))
+            patchFiles.firstOrNull { !it.exists() }?.let {
+                return@withContext Result.failure(Exception("Patches file not found: ${it.name}"))
             }
             if (!inputApk.exists()) {
                 return@withContext Result.failure(Exception("Input APK not found"))
             }
 
-            // Load patches (copy to temp to avoid Windows file lock)
+            // Load patches (copy each to temp to avoid Windows file lock)
             onProgress("Loading patches...")
-            val patchTempCopy = File.createTempFile("morphe-patches-", ".mpp")
+            val tempCopies = patchFiles.map { src ->
+                val tmp = File.createTempFile("morphe-patches-", ".mpp")
+                src.copyTo(tmp, overwrite = true)
+                tmp
+            }
             try {
-                patchFile.copyTo(patchTempCopy, overwrite = true)
-                val loadedPatches = loadPatchesFromJar(setOf(patchTempCopy))
+                val loadedPatches = loadPatchesFromJar(tempCopies.toSet())
 
                 // Convert GUI's flat "patchName.optionKey" -> value map
                 // to engine's Map<patchName, Map<optionKey, value>> format
@@ -144,14 +150,25 @@ class PatchService {
 
                 val engineResult = PatchEngine.patch(config, onProgress)
 
+                val failureReason = if (engineResult.success) null else {
+                    // Prefer a specific failed-patch error, else the last failed
+                    // step's error (rebuild/sign), else a generic fallback.
+                    engineResult.failedPatches.firstOrNull()?.let { fp ->
+                        "${fp.name}: ${fp.error.lineSequence().first()}"
+                    }
+                        ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }
+                            ?.let { "${it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }} failed: ${it.error}" }
+                        ?: "Patching failed for an unknown reason"
+                }
                 Result.success(PatchResult(
                     success = engineResult.success,
                     outputPath = engineResult.outputPath,
                     appliedPatches = engineResult.appliedPatches,
                     failedPatches = engineResult.failedPatches.map { it.name },
+                    failureReason = failureReason,
                 ))
             } finally {
-                patchTempCopy.delete()
+                tempCopies.forEach { runCatching { it.delete() } }
             }
         } catch (e: Exception) {
             Logger.error("Patching failed", e)
@@ -160,24 +177,58 @@ class PatchService {
     }
 
     /**
-     * Convert library Patch to GUI Patch model.
+     * Convert a set of already-loaded library patches into GUI patches.
+     * Used by EnabledSourcesLoader / MultiSourceLoader paths so we don't have to
+     * re-open the .mpp file just to convert.
      */
+    fun convertToGuiPatches(loaded: Set<LibraryPatch<*>>): List<Patch> =
+        loaded.map { it.toGuiPatch() }
+
+    /**
+     * Convert library Patch to GUI Patch model.
+     *
+     * Reads BOTH the new [compatibility] API and the deprecated [compatiblePackages]
+     * field — some forks (e.g. hoo-dles) compiled their patches against the older
+     * patcher API and only declare compatibility via the legacy field. Without the
+     * fallback, those patches would convert to a GUI Patch with empty
+     * compatiblePackages, which means SupportedAppExtractor under-counts apps and
+     * the per-source attribution map misses entire sources.
+     */
+    @Suppress("DEPRECATION")
     private fun LibraryPatch<*>.toGuiPatch(): Patch {
+        // Primary: new compatibility API (typed, with experimental flag, display name).
+        val fromNewApi: List<CompatiblePackage> = this.compatibility
+            ?.mapNotNull { compatibility ->
+                val packageName = compatibility.packageName ?: return@mapNotNull null
+                val (experimental, stable) = compatibility.targets.partition { it.isExperimental }
+                CompatiblePackage(
+                    name = packageName,
+                    displayName = compatibility.name,
+                    versions = stable.mapNotNull { it.version },
+                    experimentalVersions = experimental.mapNotNull { it.version }
+                )
+            }
+            ?: emptyList()
+
+        // Fallback: legacy compatiblePackages field (Set<Pair<packageName, versions?>>).
+        // No display name or experimental flag in the legacy schema — those stay null/empty.
+        val fromLegacyApi: List<CompatiblePackage> = if (fromNewApi.isEmpty()) {
+            this.compatiblePackages
+                ?.map { (pkgName, versions) ->
+                    CompatiblePackage(
+                        name = pkgName,
+                        displayName = null,
+                        versions = versions?.toList() ?: emptyList(),
+                        experimentalVersions = emptyList(),
+                    )
+                }
+                ?: emptyList()
+        } else emptyList()
+
         return Patch(
             name = this.name ?: "Unknown",
             description = this.description ?: "",
-            compatiblePackages = this.compatibility
-                ?.mapNotNull { compatibility ->
-                    val packageName = compatibility.packageName ?: return@mapNotNull null
-                    val (experimental, stable) = compatibility.targets.partition { it.isExperimental }
-                    CompatiblePackage(
-                        name = packageName,
-                        displayName = compatibility.name,
-                        versions = stable.mapNotNull { it.version },
-                        experimentalVersions = experimental.mapNotNull { it.version }
-                    )
-                }
-                ?: emptyList(),
+            compatiblePackages = fromNewApi.ifEmpty { fromLegacyApi },
             options = this.options.values.map { opt ->
                 PatchOption(
                     key = opt.key,
@@ -220,5 +271,9 @@ data class PatchResult(
     val success: Boolean,
     val outputPath: String,
     val appliedPatches: List<String>,
-    val failedPatches: List<String>
+    val failedPatches: List<String>,
+    // Human-readable reason for [success == false]. Populated from the first
+    // failed patch's error or — when patching succeeded but a later step
+    // (rebuild, sign) blew up — that step's error. Null on success.
+    val failureReason: String? = null,
 )

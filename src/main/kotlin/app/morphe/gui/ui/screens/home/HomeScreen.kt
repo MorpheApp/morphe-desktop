@@ -7,7 +7,11 @@ package app.morphe.gui.ui.screens.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -22,6 +26,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,12 +36,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +51,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +65,7 @@ import app.morphe.morphe_cli.generated.resources.Res
 import app.morphe.morphe_cli.generated.resources.morphe_dark
 import app.morphe.morphe_cli.generated.resources.morphe_light
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalThemeState
@@ -65,10 +76,19 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import app.morphe.gui.data.model.SupportedApp
+import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.ui.components.SourceLedState
+import app.morphe.gui.ui.components.SourceManagementSheet
+import app.morphe.gui.ui.components.SourcesCountPill
+import app.morphe.gui.ui.components.sourceLedState
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import app.morphe.gui.ui.screens.home.components.ApkInfoCard
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
+import app.morphe.gui.ui.screens.home.components.SupportedAppListRow
+import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.screens.patches.PatchesScreen
@@ -98,20 +118,80 @@ fun HomeScreenContent(
     val navigator = LocalNavigator.currentOrThrow
     val uiState by viewModel.uiState.collectAsState()
 
+    val patchSourceManager: PatchSourceManager = koinInject()
+    val allSources by patchSourceManager.allSources.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+    // Two-flag pattern for smooth navigation in/out of the sheet:
+    //  - showSourceManagementSheet: actually visible right now
+    //  - pendingReopenSheet: user navigated away from the sheet via a row click;
+    //    we should reopen it once they pop back AND the screen transition settles.
+    // rememberSaveable on both so they survive Voyager's push/pop teardown.
+    var showSourceManagementSheet by rememberSaveable { mutableStateOf(false) }
+    var pendingReopenSheet by rememberSaveable { mutableStateOf(false) }
+
+    // Re-show the sheet after the pop animation finishes, NOT immediately on
+    // re-entry. Without the delay the sheet flashes in mid-transition.
+    LaunchedEffect(Unit) {
+        if (pendingReopenSheet) {
+            kotlinx.coroutines.delay(220)
+            showSourceManagementSheet = true
+            pendingReopenSheet = false
+        }
+    }
+
     val navStackSize = navigator.items.size
     LaunchedEffect(navStackSize) {
         viewModel.refreshPatchesIfNeeded()
     }
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(uiState.error) {
-        uiState.error?.let { error ->
-            snackbarHostState.showSnackbar(
-                message = error,
-                duration = SnackbarDuration.Short
-            )
-            viewModel.clearError()
-        }
+    if (showSourceManagementSheet) {
+        val snapshot = viewModel.getResolvedSourcesSnapshot()
+        val versions: Map<String, String?> = snapshot
+            ?.resolved
+            ?.associate { it.source.id to it.resolvedVersion }
+            ?: emptyMap()
+        val channels: Map<String, app.morphe.gui.util.EnabledSourcesLoader.Channel?> = snapshot
+            ?.resolved
+            ?.associate { it.source.id to it.channel }
+            ?: emptyMap()
+        SourceManagementSheet(
+            sources = allSources,
+            sourceVersions = versions,
+            sourceChannels = channels,
+            isLoading = uiState.isLoadingPatches,
+            onToggleEnabled = { id, enabled ->
+                coroutineScope.launch {
+                    patchSourceManager.setSourceEnabled(id, enabled)
+                    // Re-resolve releases + reload patches so badges, versions,
+                    // and the union app list reflect the new enabled set.
+                    viewModel.retryLoadPatches()
+                }
+            },
+            onAdd = { source ->
+                coroutineScope.launch { patchSourceManager.addSource(source) }
+            },
+            onEdit = { updated ->
+                coroutineScope.launch { patchSourceManager.updateSource(updated) }
+            },
+            onRemove = { id ->
+                coroutineScope.launch { patchSourceManager.removeSource(id) }
+            },
+            onOpenPatches = { sourceId ->
+                // Hide sheet immediately so it doesn't ride the push animation.
+                // Mark it as pending-reopen so it returns smoothly after pop.
+                showSourceManagementSheet = false
+                pendingReopenSheet = true
+                coroutineScope.launch {
+                    patchSourceManager.switchSource(sourceId)
+                    navigator.push(PatchesScreen(
+                        apkPath = uiState.apkInfo?.filePath ?: "",
+                        apkName = uiState.apkInfo?.appName ?: "Select APK first"
+                    ))
+                }
+            },
+            onDismiss = { showSourceManagementSheet = false },
+            enabled = !uiState.isAnalyzing,
+        )
     }
 
     // Full screen drop zone wrapper
@@ -125,7 +205,17 @@ fun HomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            val useSplitLayout = maxWidth >= 720.dp
+            // Side-by-side layout: drop zone / APK info on the left, vertical
+            // supported-apps list on the right. Falls back to top/bottom on
+            // narrower windows. Hysteresis (switch up at 920dp, down at 880dp)
+            // prevents flicker when the user resizes near the threshold.
+            var splitLayoutState by remember { mutableStateOf(maxWidth >= 900.dp) }
+            splitLayoutState = when {
+                maxWidth >= 920.dp -> true
+                maxWidth < 880.dp -> false
+                else -> splitLayoutState
+            }
+            val useSplitLayout = splitLayoutState
             val isCompact = maxWidth < 500.dp
             val isSmall = maxHeight < 600.dp
             val padding = if (isCompact) 16.dp else 24.dp
@@ -148,7 +238,9 @@ fun HomeScreenContent(
                                 apkName = uiState.apkInfo!!.appName,
                                 patchesFilePath = patchesFile.absolutePath,
                                 packageName = uiState.apkInfo!!.packageName,
-                                apkArchitectures = uiState.apkInfo!!.architectures
+                                apkArchitectures = uiState.apkInfo!!.architectures,
+                                patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
+                                patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
                             ))
                         }
                     },
@@ -178,6 +270,50 @@ fun HomeScreenContent(
                 }
             }
 
+            val resolvedSnapshot = viewModel.getResolvedSourcesSnapshot()
+            val versionsBySource: Map<String, String?> = resolvedSnapshot
+                ?.resolved
+                ?.associate { it.source.id to it.resolvedVersion }
+                ?: emptyMap()
+            val channelsBySource: Map<String, app.morphe.gui.util.EnabledSourcesLoader.Channel?> =
+                resolvedSnapshot
+                    ?.resolved
+                    ?.associate { it.source.id to it.channel }
+                    ?: emptyMap()
+            // Source names whose patches target the currently-selected APK's package.
+            // Used by ApkInfoCard's "FROM" row to surface multi-source provenance.
+            val patchSourcesForSelectedApk: List<String> = uiState.apkInfo?.let { info ->
+                val snapshot = resolvedSnapshot ?: return@let null
+                snapshot.guiPatchesBySource.entries
+                    .filter { (_, patches) ->
+                        patches.any { p -> p.compatiblePackages.any { it.name == info.packageName } }
+                    }
+                    .mapNotNull { (sourceId, _) ->
+                        allSources.firstOrNull { it.id == sourceId }?.name
+                    }
+            } ?: emptyList()
+
+            // Per-package source attribution map used by the supported-apps cards.
+            // Built once per recomposition so each card just looks up its own list.
+            val sourceNamesByPackage: Map<String, List<String>> = if (resolvedSnapshot == null) {
+                emptyMap()
+            } else {
+                val sourceIdToName = allSources.associate { it.id to it.name }
+                val accum = mutableMapOf<String, MutableList<String>>()
+                resolvedSnapshot.guiPatchesBySource.forEach { (sourceId, patches) ->
+                    val name = sourceIdToName[sourceId] ?: return@forEach
+                    val packages = patches.flatMap { it.compatiblePackages.map { p -> p.name } }
+                        .filter { it.isNotBlank() }
+                        .toSet()
+                    packages.forEach { pkg ->
+                        accum.getOrPut(pkg) { mutableListOf() }.add(name)
+                    }
+                }
+                accum
+            }
+            val sourceStates: List<SourceLedState> = allSources.map { src ->
+                sourceLedState(src, channelsBySource[src.id])
+            }
             val headerContent: @Composable ColumnScope.() -> Unit = {
                 if (useHorizontalHeader) {
                     HeaderBar(
@@ -186,6 +322,8 @@ fun HomeScreenContent(
                         onChangePatchesClick = onChangePatchesClick,
                         onRetry = onRetry,
                         onUpdateChannelChanged = { viewModel.refreshUpdateCheck() },
+                        onManageSourcesClick = { showSourceManagementSheet = true },
+                        sourceStates = sourceStates,
                     )
                 } else {
                     Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 16.dp))
@@ -237,7 +375,8 @@ fun HomeScreenContent(
                         patchesLoaded = patchesLoaded,
                         onClearClick = onClearClick,
                         onChangeClick = onChangeClick,
-                        onContinueClick = onContinueClick
+                        onContinueClick = onContinueClick,
+                        patchSourceNames = patchSourcesForSelectedApk,
                     )
                 }
             }
@@ -258,7 +397,8 @@ fun HomeScreenContent(
                         isDefaultSource = uiState.isDefaultSource,
                         supportedApps = uiState.supportedApps,
                         loadError = uiState.patchLoadError,
-                        onRetry = onRetry
+                        onRetry = onRetry,
+                        sourceNamesByPackage = sourceNamesByPackage,
                     )
                 }
             }
@@ -273,6 +413,8 @@ fun HomeScreenContent(
                             onChangePatchesClick = onChangePatchesClick,
                             onRetry = onRetry,
                             onUpdateChannelChanged = { viewModel.refreshUpdateCheck() },
+                            onManageSourcesClick = { showSourceManagementSheet = true },
+                            sourceStates = sourceStates,
                         )
                     } else {
                         Column(
@@ -316,22 +458,12 @@ fun HomeScreenContent(
                         }
                     }
 
-                    // ── Scrollable body ──
-                    BoxWithConstraints(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                    ) {
-                        val bodyMaxHeight = this.maxHeight
-                        val scrollState = rememberScrollState()
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .verticalScroll(scrollState)
-                                .heightIn(min = bodyMaxHeight),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = if (pinSupportedAppsToBottom) Arrangement.SpaceBetween else Arrangement.Top
-                        ) {
+                    // ── Body ──
+                    if (useSplitLayout) {
+                        // Side-by-side: drop zone / APK info on the left,
+                        // vertical supported-apps list on the right. The list pane
+                        // owns its own scroll; the rest stays static.
+                        Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
                             if (uiState.showUpdateBanner) {
                                 UpdateBanner(
                                     info = uiState.updateInfo!!,
@@ -339,57 +471,156 @@ fun HomeScreenContent(
                                     onDismissForVersion = { viewModel.dismissUpdateForVersion() },
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(start = padding, end = padding, top = 8.dp)
+                                        .padding(start = padding, end = padding, top = 8.dp),
                                 )
                             }
-
-                            // ── Main workspace area ──
-                            Box(
+                            if (uiState.showMultiSourceHint) {
+                                MultiSourceHintBanner(
+                                    onDismiss = { viewModel.dismissMultiSourceHint() },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = padding, end = padding, top = 8.dp),
+                                )
+                            }
+                            Row(
                                 modifier = Modifier
+                                    .weight(1f)
                                     .fillMaxWidth()
-                                    .padding(padding),
-                                contentAlignment = Alignment.Center
+                                    // Small cute padding for small cute space
+                                    // between the HeaderBar's bottom
+                                    // divider and the actual body section.
+                                    .padding(
+                                        start = if (isCompact) 12.dp else 10.dp,
+                                        end = padding,
+                                        top = 4.dp,
+                                        bottom = padding,
+                                    ),
+                                horizontalArrangement = Arrangement.spacedBy(padding),
                             ) {
-                                MiddleContent(
-                                    uiState = uiState,
-                                    isCompact = isCompact,
-                                    patchesLoaded = patchesLoaded,
-                                    onClearClick = onClearClick,
-                                    onChangeClick = onChangeClick,
-                                    onContinueClick = onContinueClick
-                                )
-                            }
-
-                            // ── Supported apps ──
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(
-                                    start = padding,
-                                    end = padding,
-                                    bottom = if (isSmall) 8.dp else 16.dp
-                                )
-                            ) {
-                                SupportedAppsSection(
-                                    isCompact = isCompact,
-                                    maxWidth = outerMaxWidth,
-                                    isLoading = uiState.isLoadingPatches,
-                                    isDefaultSource = uiState.isDefaultSource,
+                                // Left: browse/discover supported apps (wizard step 1).
+                                SupportedAppsListPane(
                                     supportedApps = uiState.supportedApps,
+                                    sourceNamesByPackage = sourceNamesByPackage,
+                                    isLoading = uiState.isLoadingPatches,
                                     loadError = uiState.patchLoadError,
-                                    onRetry = onRetry
+                                    onRetry = onRetry,
+                                    isCompact = isCompact,
+                                    modifier = Modifier
+                                        .weight(1.2f)
+                                        .fillMaxHeight(),
                                 )
+                                // Right: APK info / drop zone (wizard step 2 — pick the
+                                // APK you want patched). Content centers vertically when
+                                // it fits, scrolls when it doesn't, so the CONTINUE
+                                // button is never clipped off the bottom.
+                                BoxWithConstraints(
+                                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                                ) {
+                                    val viewport = this.maxHeight
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .verticalScroll(rememberScrollState())
+                                            .heightIn(min = viewport),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                    ) {
+                                        MiddleContent(
+                                            uiState = uiState,
+                                            isCompact = isCompact,
+                                            patchesLoaded = patchesLoaded,
+                                            onClearClick = onClearClick,
+                                            onChangeClick = onChangeClick,
+                                            onContinueClick = onContinueClick,
+                                            patchSourceNames = patchSourcesForSelectedApk,
+                                        )
+                                    }
+                                }
                             }
                         }
-
-                        // Show scrollbar only when content overflows
-                        if (scrollState.maxValue > 0) {
-                            VerticalScrollbar(
+                    } else {
+                        // ── Scrollable top/bottom body (narrow windows) ──
+                        BoxWithConstraints(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                        ) {
+                            val bodyMaxHeight = this.maxHeight
+                            val scrollState = rememberScrollState()
+                            Column(
                                 modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .fillMaxHeight(),
-                                adapter = rememberScrollbarAdapter(scrollState),
-                                style = morpheScrollbarStyle()
-                            )
+                                    .fillMaxWidth()
+                                    .verticalScroll(scrollState)
+                                    .heightIn(min = bodyMaxHeight),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = if (pinSupportedAppsToBottom) Arrangement.SpaceBetween else Arrangement.Top,
+                            ) {
+                                if (uiState.showUpdateBanner) {
+                                    UpdateBanner(
+                                        info = uiState.updateInfo!!,
+                                        onDismissForSession = { viewModel.dismissUpdateForSession() },
+                                        onDismissForVersion = { viewModel.dismissUpdateForVersion() },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = padding, end = padding, top = 8.dp),
+                                    )
+                                }
+                                if (uiState.showMultiSourceHint) {
+                                    MultiSourceHintBanner(
+                                        onDismiss = { viewModel.dismissMultiSourceHint() },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = padding, end = padding, top = 8.dp),
+                                    )
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(padding),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    MiddleContent(
+                                        uiState = uiState,
+                                        isCompact = isCompact,
+                                        patchesLoaded = patchesLoaded,
+                                        onClearClick = onClearClick,
+                                        onChangeClick = onChangeClick,
+                                        onContinueClick = onContinueClick,
+                                        patchSourceNames = patchSourcesForSelectedApk,
+                                    )
+                                }
+
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.padding(
+                                        start = padding,
+                                        end = padding,
+                                        bottom = if (isSmall) 8.dp else 16.dp,
+                                    ),
+                                ) {
+                                    SupportedAppsSection(
+                                        isCompact = isCompact,
+                                        maxWidth = outerMaxWidth,
+                                        isLoading = uiState.isLoadingPatches,
+                                        isDefaultSource = uiState.isDefaultSource,
+                                        supportedApps = uiState.supportedApps,
+                                        loadError = uiState.patchLoadError,
+                                        onRetry = onRetry,
+                                        sourceNamesByPackage = sourceNamesByPackage,
+                                    )
+                                }
+                            }
+
+                            if (scrollState.maxValue > 0) {
+                                VerticalScrollbar(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .fillMaxHeight(),
+                                    adapter = rememberScrollbarAdapter(scrollState),
+                                    style = morpheScrollbarStyle(),
+                                )
+                            }
                         }
                     }
                 }
@@ -405,11 +636,19 @@ fun HomeScreenContent(
                     )
                 }
 
-                // Snackbar host
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                )
+                // Error/warning bar — custom Morphe-styled, avoids Material3
+                // SnackbarHost (whose internal SnackbarKt invocation path the
+                // shadow `minimize` analyzer can't trace, causing runtime
+                // NoClassDefFoundError in the packaged jar).
+                uiState.error?.let { error ->
+                    MorpheErrorBar(
+                        message = error,
+                        onDismiss = { viewModel.clearError() },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(horizontal = 24.dp, vertical = 20.dp)
+                    )
+                }
 
                 // Drag overlay
                 if (uiState.isDragHovering) {
@@ -437,7 +676,9 @@ private fun handleContinue(
                 apkName = info.appName,
                 patchesFilePath = patchesFile.absolutePath,
                 packageName = info.packageName,
-                apkArchitectures = info.architectures
+                apkArchitectures = info.architectures,
+                patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
+                patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
             ))
         }
     }
@@ -454,6 +695,8 @@ private fun HeaderBar(
     onChangePatchesClick: () -> Unit,
     onRetry: () -> Unit,
     onUpdateChannelChanged: () -> Unit = {},
+    onManageSourcesClick: () -> Unit = {},
+    sourceStates: List<SourceLedState> = emptyList(),
 ) {
     val mono = LocalMorpheFont.current
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
@@ -495,20 +738,12 @@ private fun HeaderBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                if (!uiState.isLoadingPatches && uiState.patchesVersion != null) {
-                    PatchesVersionInline(
-                        patchesVersion = uiState.patchesVersion!!,
-                        latestLabel = uiState.latestPatchesLabel,
-                        onChangePatchesClick = onChangePatchesClick,
-                        patchSourceName = uiState.patchSourceName
-                    )
-                } else if (uiState.isLoadingPatches) {
+                if (uiState.isLoadingPatches) {
                     PatchesLoadingIndicator()
-                } else if (uiState.patchLoadError != null) {
-                    PatchesVersionInline(
-                        patchesVersion = "NOT LOADED",
-                        latestLabel = null,
-                        onChangePatchesClick = onChangePatchesClick
+                } else {
+                    SourcesCountPill(
+                        sourceStates = sourceStates,
+                        onClick = onManageSourcesClick,
                     )
                 }
 
@@ -612,6 +847,48 @@ private fun PatchesVersionInline(
     }
 }
 
+/** One-time intro banner shown when the user first sees multi-source mode.
+ *  Persists dismissal in ConfigRepository so it never reappears once dismissed. */
+@Composable
+private fun MultiSourceHintBanner(
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(corners.small))
+            .border(1.dp, accents.primary.copy(alpha = 0.3f), RoundedCornerShape(corners.small))
+            .background(accents.primary.copy(alpha = 0.06f))
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Text(
+            text = "MULTIPLE SOURCES ACTIVE — patches from every enabled source are unioned. Manage from the SOURCES button above.",
+            fontSize = 11.sp,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+            letterSpacing = 0.2.sp,
+            modifier = Modifier.weight(1f),
+        )
+        IconButton(onClick = onDismiss, modifier = Modifier.size(24.dp)) {
+            Icon(
+                imageVector = Icons.Default.Clear,
+                contentDescription = "Dismiss",
+                tint = accents.primary,
+                modifier = Modifier.size(14.dp),
+            )
+        }
+    }
+}
+
+// SourcesCountPill, SourceLed, SourceLedState, sourceLedState moved to
+// gui/ui/components/SourcesPill.kt for reuse across modes (Quick Patch uses
+// a non-clickable variant).
+
 @Composable
 private fun PatchesLoadingIndicator() {
     val mono = LocalMorpheFont.current
@@ -680,7 +957,8 @@ private fun MiddleContent(
     patchesLoaded: Boolean,
     onClearClick: () -> Unit,
     onChangeClick: () -> Unit,
-    onContinueClick: () -> Unit
+    onContinueClick: () -> Unit,
+    patchSourceNames: List<String> = emptyList(),
 ) {
     when {
         uiState.isAnalyzing -> {
@@ -693,7 +971,8 @@ private fun MiddleContent(
                 isCompact = isCompact,
                 onClearClick = onClearClick,
                 onChangeClick = onChangeClick,
-                onContinueClick = onContinueClick
+                onContinueClick = onContinueClick,
+                patchSourceNames = patchSourceNames,
             )
         }
         else -> {
@@ -817,7 +1096,8 @@ private fun ApkSelectedSection(
     isCompact: Boolean,
     onClearClick: () -> Unit,
     onChangeClick: () -> Unit,
-    onContinueClick: () -> Unit
+    onContinueClick: () -> Unit,
+    patchSourceNames: List<String> = emptyList(),
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -834,7 +1114,8 @@ private fun ApkSelectedSection(
         ApkInfoCard(
             apkInfo = apkInfo,
             onClearClick = onClearClick,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            patchSourceNames = patchSourceNames,
         )
 
         Spacer(modifier = Modifier.height(if (isCompact) 16.dp else 20.dp))
@@ -989,8 +1270,219 @@ private fun AnalyzingSection(isCompact: Boolean = false) {
 // ════════════════════════════════════════════════════════════════════
 
 /**
- * Bottom section — horizontal scrolling cards.
+ * Vertical-list variant of the supported-apps display used in the side-by-side
+ * layout. Search field at top, scrollable LazyColumn of [SupportedAppListRow]
+ * below. Single-expand semantics — clicking a row expands it and collapses any
+ * previously-expanded one.
  */
+@Composable
+private fun SupportedAppsListPane(
+    supportedApps: List<SupportedApp>,
+    sourceNamesByPackage: Map<String, List<String>>,
+    isLoading: Boolean,
+    loadError: String?,
+    onRetry: () -> Unit,
+    isCompact: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+
+    var searchQuery by remember { mutableStateOf("") }
+    var expandedPackage by remember { mutableStateOf<String?>(null) }
+
+    val filtered = if (searchQuery.isBlank()) supportedApps
+    else supportedApps.filter {
+        it.displayName.contains(searchQuery, ignoreCase = true) ||
+        it.packageName.contains(searchQuery, ignoreCase = true)
+    }
+
+    // Collapse if the currently expanded app filters out.
+    LaunchedEffect(searchQuery, filtered) {
+        if (expandedPackage != null && filtered.none { it.packageName == expandedPackage }) {
+            expandedPackage = null
+        }
+    }
+
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+      val paneMaxHeight = maxHeight
+      Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .align(Alignment.Center),
+      ) {
+        // ── Header row: SUPPORTED APPS · count ──
+        // end = 12.dp matches the LazyColumn's right padding so "X apps"
+        // visually aligns with the right edge of the cards.
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 4.dp),
+        ) {
+            Text(
+                text = "SUPPORTED APPS",
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = mono,
+                letterSpacing = 1.5.sp,
+                color = homeMutedTextColor(0.4f),
+            )
+            Spacer(Modifier.weight(1f))
+            if (!isLoading && supportedApps.isNotEmpty()) {
+                Text(
+                    text = "${supportedApps.size} apps",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = homeMutedTextColor(0.4f),
+                )
+            }
+        }
+
+        // ── Search field ──
+        if (supportedApps.size > 4) {
+            // Match the LazyColumn's right padding so the field aligns with cards.
+            // Dp.Unspecified disables the default 340dp cap so the field fills
+            // the pane width like the cards below it.
+            Box(modifier = Modifier.fillMaxWidth().padding(end = 12.dp)) {
+                SlimSearchField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    mono = mono,
+                    corners = corners,
+                    accents = accents,
+                    maxWidth = Dp.Unspecified,
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+
+        when {
+            isLoading -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    repeat(4) { idx ->
+                        SkeletonAppRow(
+                            corners = corners,
+                            // Slight stagger: each row pulses 120ms after the previous
+                            // so the skeleton list feels alive instead of lock-step.
+                            staggerOffsetMs = idx * 120,
+                        )
+                    }
+                }
+            }
+            loadError != null -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                ) {
+                    Text(
+                        text = "LOAD FAILED",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.error,
+                        letterSpacing = 1.sp,
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = loadError,
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = homeMutedTextColor(0.6f),
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    OutlinedButton(
+                        onClick = onRetry,
+                        shape = RoundedCornerShape(corners.small),
+                    ) {
+                        Text(
+                            "RETRY",
+                            fontFamily = mono,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.5.sp,
+                        )
+                    }
+                }
+            }
+            filtered.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = if (searchQuery.isBlank()) "No supported apps"
+                               else "No apps match \"$searchQuery\"",
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = homeMutedTextColor(0.5f),
+                    )
+                }
+            }
+            else -> {
+                val listState = rememberLazyListState()
+                // Cap the list at the pane's available height (minus a header
+                // + optional search allowance) so it scrolls when there are
+                // many apps but wraps tight + lets the Column center when few.
+                // Tight estimate: header ~22dp; search field (only shown when
+                // >4 apps) ~46dp. Anything over-budgeted leaves dead space
+                // above the list when content fills, so be precise.
+                val headerSearchAllowance =
+                    if (supportedApps.size > 4) 68.dp else 22.dp
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(
+                            max = (paneMaxHeight - headerSearchAllowance)
+                                .coerceAtLeast(120.dp)
+                        ),
+                ) {
+                    androidx.compose.foundation.lazy.LazyColumn(
+                        state = listState,
+                        // Scrollbar is 6dp wide and sits at the Box's right edge.
+                        // 6 (scrollbar width) + 6 (visible gap) = 12dp keeps content
+                        // fully clear of the scrollbar with breathing room.
+                        modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        items(items = filtered, key = { it.packageName }) { app ->
+                            SupportedAppListRow(
+                                app = app,
+                                isExpanded = expandedPackage == app.packageName,
+                                onClick = {
+                                    expandedPackage = if (expandedPackage == app.packageName) null
+                                                      else app.packageName
+                                },
+                                patchSourceNames = sourceNamesByPackage[app.packageName] ?: emptyList(),
+                            )
+                        }
+                    }
+                    // Wrap the scrollbar in a matchParentSize Box so it
+                    // tracks the LazyColumn's wrapped height WITHOUT forcing
+                    // the outer Box to fill its heightIn(max=…) cap. Then
+                    // align CenterEnd + wrap width to keep it pinned at the
+                    // right edge at its natural 6dp thickness.
+                    Box(
+                        modifier = Modifier.matchParentSize(),
+                        contentAlignment = Alignment.CenterEnd,
+                    ) {
+                        VerticalScrollbar(
+                            modifier = Modifier.fillMaxHeight(),
+                            adapter = rememberScrollbarAdapter(listState),
+                            style = morpheScrollbarStyle(),
+                        )
+                    }
+                }
+            }
+        }
+      }
+    }
+}
+
 @Composable
 private fun SupportedAppsSection(
     isCompact: Boolean = false,
@@ -999,7 +1491,10 @@ private fun SupportedAppsSection(
     isDefaultSource: Boolean = true,
     supportedApps: List<SupportedApp> = emptyList(),
     loadError: String? = null,
-    onRetry: () -> Unit = {}
+    onRetry: () -> Unit = {},
+    /** packageName → source display names contributing patches. Used to badge
+     *  cards with their source attribution in multi-source mode. */
+    sourceNamesByPackage: Map<String, List<String>> = emptyMap(),
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -1114,65 +1609,13 @@ private fun SupportedAppsSection(
                 }
 
                 if (supportedApps.size > 4) {
-                    if (isDefaultSource) {
-                        // Default search field for Morphe-source patches.
-                        OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { searchQuery = it },
-                            placeholder = {
-                                Text(
-                                    "Filter apps…",
-                                    fontSize = 11.sp,
-                                    fontFamily = mono,
-                                    color = homeMutedTextColor(0.4f)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.Search,
-                                    contentDescription = null,
-                                    tint = homeMutedTextColor(0.6f),
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            },
-                            trailingIcon = {
-                                if (searchQuery.isNotEmpty()) {
-                                    IconButton(onClick = { searchQuery = "" }) {
-                                        Icon(
-                                            Icons.Default.Clear,
-                                            contentDescription = "Clear",
-                                            tint = homeMutedTextColor(0.5f),
-                                            modifier = Modifier.size(14.dp)
-                                        )
-                                    }
-                                }
-                            },
-                            singleLine = true,
-                            textStyle = MaterialTheme.typography.bodySmall.copy(
-                                fontFamily = mono,
-                                fontSize = 11.sp
-                            ),
-                            shape = RoundedCornerShape(corners.small),
-                            modifier = Modifier
-                                .widthIn(max = 260.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f),
-                                unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
-                                cursorColor = accents.primary
-                            )
-                        )
-                    } else {
-                        // Slim, elongated search field for third-party patches.
-                        // Uses BasicTextField + a custom decoration so we can break
-                        // out of OutlinedTextField's 56dp minimum height.
-                        SlimSearchField(
-                            value = searchQuery,
-                            onValueChange = { searchQuery = it },
-                            mono = mono,
-                            corners = corners,
-                            accents = accents
-                        )
-                    }
+                    SlimSearchField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        mono = mono,
+                        corners = corners,
+                        accents = accents
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
@@ -1208,6 +1651,7 @@ private fun SupportedAppsSection(
                         onClose = { selectedApp = null },
                         isDefaultSource = isDefaultSource,
                         useVerticalLayout = useVerticalLayout,
+                        sourceNamesByPackage = sourceNamesByPackage,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = if (isCompact) 8.dp else 16.dp)
@@ -1424,7 +1868,8 @@ private fun SupportedAppsMasterDetail(
     onClose: () -> Unit,
     isDefaultSource: Boolean,
     useVerticalLayout: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sourceNamesByPackage: Map<String, List<String>> = emptyMap(),
 ) {
     val cardSpacing = 10.dp
 
@@ -1446,7 +1891,8 @@ private fun SupportedAppsMasterDetail(
                         app = app,
                         isSelected = app.packageName == selectedApp?.packageName,
                         onClick = { onSelect(app) },
-                        isDefaultSource = isDefaultSource
+                        isDefaultSource = isDefaultSource,
+                        patchSourceNames = sourceNamesByPackage[app.packageName] ?: emptyList(),
                     )
                 }
             }
@@ -1481,7 +1927,8 @@ private fun SupportedAppVerticalCard(
     isSelected: Boolean,
     onClick: () -> Unit,
     isDefaultSource: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    patchSourceNames: List<String> = emptyList(),
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -1490,7 +1937,9 @@ private fun SupportedAppVerticalCard(
     // ── Dimensions ──
     val collapsedWidth = 188.dp
     val expandedExtraWidth = 320.dp
-    val cardHeight = if (isDefaultSource) 250.dp else 190.dp
+    // Uniform height across all cards — every card shows the EXPERIMENTAL row
+    // (with "—" when none) so they line up visually in the row.
+    val cardHeight = 250.dp
 
     // ── Animations ──
     val animatedExtraWidth by animateDpAsState(
@@ -1600,19 +2049,17 @@ private fun SupportedAppVerticalCard(
                 nullLabel = "Any version"
             )
 
-            // Experimental row only for default (Morphe) patch sources.
-            // Third-party patches don't get experimental support here.
-            if (isDefaultSource) {
-                Spacer(modifier = Modifier.height(12.dp))
-                VersionWithDownload(
-                    channelLabel = "EXPERIMENTAL LATEST",
-                    channelColor = accents.warning,
-                    version = latestExperimental,
-                    downloadUrl = if (hasExperimental) app.experimentalDownloadUrl else null,
-                    mono = mono,
-                    corners = corners
-                )
-            }
+            // Always show the EXPERIMENTAL row — when the app has no experimental
+            // version, VersionWithDownload renders "—" via its nullLabel default.
+            Spacer(modifier = Modifier.height(12.dp))
+            VersionWithDownload(
+                channelLabel = "EXPERIMENTAL LATEST",
+                channelColor = accents.warning,
+                version = if (hasExperimental) latestExperimental else null,
+                downloadUrl = if (hasExperimental) app.experimentalDownloadUrl else null,
+                mono = mono,
+                corners = corners
+            )
         }
 
         // ════════════════════════════════════════════════
@@ -1627,11 +2074,20 @@ private fun SupportedAppVerticalCard(
                     .background(borderColor)
             )
 
-            Column(
+            // Right-panel content can overflow the fixed cardHeight when an app
+            // has lots of versions or sources. Wrap in a Box with a scrollable
+            // Column + vertical scrollbar so users can reach everything.
+            val rightPanelScroll = rememberScrollState()
+            Box(
                 modifier = Modifier
                     .width((animatedExtraWidth - 1.dp).coerceAtLeast(0.dp))
                     .fillMaxHeight()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
+            ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rightPanelScroll)
+                    .padding(start = 16.dp, end = 22.dp, top = 16.dp, bottom = 16.dp)
             ) {
                 // ── Package name + close ──
                 Row(
@@ -1686,6 +2142,61 @@ private fun SupportedAppVerticalCard(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // ── PATCHES FROM (sources contributing patches for this app) ──
+                // Always shown for visual consistency. Renders "—" if no source
+                // attribution data is available for this app.
+                Text(
+                    text = "PATCHES FROM",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = accents.primary.copy(alpha = 0.85f),
+                    letterSpacing = 1.2.sp
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                if (patchSourceNames.isNotEmpty()) {
+                    @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        patchSourceNames.forEach { name ->
+                            Box(
+                                modifier = Modifier
+                                    .border(
+                                        1.dp,
+                                        accents.primary.copy(alpha = 0.3f),
+                                        RoundedCornerShape(corners.small),
+                                    )
+                                    .background(
+                                        accents.primary.copy(alpha = 0.06f),
+                                        RoundedCornerShape(corners.small),
+                                    )
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    text = name,
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = mono,
+                                    letterSpacing = 0.3.sp,
+                                    color = accents.primary,
+                                    maxLines = 1,
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    Text(
+                        text = "—",
+                        fontSize = 10.sp,
+                        fontFamily = mono,
+                        color = homeMutedTextColor(0.35f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(14.dp))
+
                 // ── ALSO STABLE tags ──
                 Text(
                     text = "ALSO STABLE",
@@ -1730,53 +2241,64 @@ private fun SupportedAppVerticalCard(
                     )
                 }
 
-                if (isDefaultSource) {
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    // ── EXPERIMENTAL tags (Morphe-source patches only) ──
-                    Text(
-                        text = "EXPERIMENTAL",
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = mono,
-                        color = accents.warning.copy(alpha = 0.85f),
-                        letterSpacing = 1.2.sp
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    if (app.experimentalVersions.isNotEmpty()) {
-                        @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            app.experimentalVersions.take(8).forEach { version ->
-                                VersionPill(
-                                    version = version,
-                                    color = accents.warning,
-                                    mono = mono,
-                                    corners = corners
-                                )
-                            }
-                            if (app.experimentalVersions.size > 8) {
-                                Text(
-                                    text = "+${app.experimentalVersions.size - 8}",
-                                    fontSize = 10.sp,
-                                    fontFamily = mono,
-                                    color = homeMutedTextColor(0.5f),
-                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
-                                )
-                            }
+                // ── EXPERIMENTAL tags ──
+                // Always shown for visual consistency across cards. Renders "—"
+                // when this app has no experimental versions in the loaded patches.
+                Spacer(modifier = Modifier.height(14.dp))
+                Text(
+                    text = "EXPERIMENTAL",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = accents.warning.copy(alpha = 0.85f),
+                    letterSpacing = 1.2.sp
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                if (app.experimentalVersions.isNotEmpty()) {
+                    @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        app.experimentalVersions.take(8).forEach { version ->
+                            VersionPill(
+                                version = version,
+                                color = accents.warning,
+                                mono = mono,
+                                corners = corners
+                            )
                         }
-                    } else {
-                        Text(
-                            text = "none",
-                            fontSize = 10.sp,
-                            fontFamily = mono,
-                            color = homeMutedTextColor(0.35f)
-                        )
+                        if (app.experimentalVersions.size > 8) {
+                            Text(
+                                text = "+${app.experimentalVersions.size - 8}",
+                                fontSize = 10.sp,
+                                fontFamily = mono,
+                                color = homeMutedTextColor(0.5f),
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                            )
+                        }
                     }
+                } else {
+                    Text(
+                        text = "—",
+                        fontSize = 10.sp,
+                        fontFamily = mono,
+                        color = homeMutedTextColor(0.35f)
+                    )
                 }
+            }
+            // Vertical scrollbar — only shows when content overflows.
+            if (rightPanelScroll.maxValue > 0) {
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight()
+                        .padding(vertical = 6.dp),
+                    adapter = rememberScrollbarAdapter(rightPanelScroll),
+                    style = morpheScrollbarStyle()
+                )
+            }
             }
         }
     }
@@ -1886,8 +2408,10 @@ private fun SlimSearchField(
     onValueChange: (String) -> Unit,
     mono: androidx.compose.ui.text.font.FontFamily,
     corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
-    accents: app.morphe.gui.ui.theme.MorpheAccentColors
+    accents: app.morphe.gui.ui.theme.MorpheAccentColors,
+    maxWidth: Dp = 340.dp,
 ) {
+    val dimens = LocalMorpheDimens.current
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -1910,9 +2434,9 @@ private fun SlimSearchField(
         ),
         cursorBrush = SolidColor(accents.primary),
         modifier = Modifier
-            .widthIn(max = 360.dp)
+            .widthIn(max = maxWidth)
             .fillMaxWidth()
-            .height(34.dp)
+            .height(dimens.controlHeight)
             .clip(RoundedCornerShape(corners.small))
             .border(1.dp, borderColor, RoundedCornerShape(corners.small)),
         decorationBox = { innerTextField ->
@@ -2057,5 +2581,83 @@ private fun openFilePicker(): File? {
         File(directory, file)
     } else {
         null
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  LOADING SKELETON — ghost row that mimics SupportedAppListRow's shape
+// ════════════════════════════════════════════════════════════════════
+
+@Composable
+private fun SkeletonAppRow(
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    staggerOffsetMs: Int,
+) {
+    val infinite = rememberInfiniteTransition(label = "skeletonPulse")
+    val alpha by infinite.animateFloat(
+        initialValue = 0.06f,
+        targetValue = 0.16f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900, delayMillis = staggerOffsetMs),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "skeletonAlpha",
+    )
+    val baseColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+    val cardBg = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)
+    val outline = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .background(cardBg)
+            .border(1.dp, outline, RoundedCornerShape(corners.medium))
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        // Row 1: avatar + name/package bars
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(baseColor),
+            )
+            Spacer(Modifier.width(10.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Box(
+                    modifier = Modifier
+                        .height(10.dp)
+                        .width(140.dp)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(baseColor),
+                )
+                Box(
+                    modifier = Modifier
+                        .height(8.dp)
+                        .width(180.dp)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(baseColor.copy(alpha = alpha * 0.6f)),
+                )
+            }
+        }
+        // Row 2: chip placeholders
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Box(
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(110.dp)
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(baseColor),
+            )
+            Box(
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(130.dp)
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(baseColor.copy(alpha = alpha * 0.7f)),
+            )
+        }
     }
 }

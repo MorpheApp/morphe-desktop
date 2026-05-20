@@ -5,17 +5,21 @@
 
 package app.morphe.gui.util
 
+import app.morphe.engine.MorpheData
 import java.io.File
-import java.nio.file.Paths
 import java.util.zip.ZipFile
 
 /**
  * Platform-agnostic file utilities.
  * Handles app directories, temp files, and cross-platform path operations.
+ *
+ * Directory paths delegate to [MorpheData] (the engine-level single source of
+ * truth) so the GUI, CLI, and any future surface all agree on where data
+ * lives. The previous per-OS app-data folders (`%APPDATA%/morphe-gui`,
+ * `~/Library/Application Support/morphe-gui`, `~/.config/morphe-gui`) are
+ * superseded by `MorpheData.root` — see `unified-data-location-plan.md`.
  */
 object FileUtils {
-
-    private const val APP_NAME = "morphe-gui"
 
     /**
      * All modern Android architectures. Obsolete architectures such as Mips are not included.
@@ -25,64 +29,25 @@ object FileUtils {
     private val EXTENSION_APK_BUNDLES = setOf("apkm", "xapk", "apks")
     private val EXTENSION_APK_ANY = EXTENSION_APK_BUNDLES + "apk"
 
-    /**
-     * Get the app data directory based on OS.
-     * - Windows: %APPDATA%/morphe-gui
-     * - macOS: ~/Library/Application Support/morphe-gui
-     * - Linux: ~/.config/morphe-gui
-     */
-    fun getAppDataDir(): File {
-        val osName = System.getProperty("os.name").lowercase()
-        val userHome = System.getProperty("user.home")
+    /** Returns the unified Morphe data root. Was: per-OS app-data folder. */
+    fun getAppDataDir(): File = MorpheData.root
 
-        val appDataPath = when {
-            osName.contains("win") -> {
-                val appData = System.getenv("APPDATA") ?: Paths.get(userHome, "AppData", "Roaming").toString()
-                Paths.get(appData, APP_NAME)
-            }
-            osName.contains("mac") -> {
-                Paths.get(userHome, "Library", "Application Support", APP_NAME)
-            }
-            else -> {
-                // Linux and others
-                Paths.get(userHome, ".config", APP_NAME)
-            }
-        }
+    /** Returns the patches cache directory. */
+    fun getPatchesDir(): File = MorpheData.patchesDir
 
-        return appDataPath.toFile().also { it.mkdirs() }
-    }
+    /** Returns the logs directory. */
+    fun getLogsDir(): File = MorpheData.logsDir
+
+    /** Returns the GUI config file path. */
+    fun getConfigFile(): File = MorpheData.configFile
+
+    /** Returns the patcher-scratch directory shared with the CLI. */
+    fun getTempDir(): File = MorpheData.tmpDir
 
     /**
-     * Get the patches cache directory.
-     */
-    fun getPatchesDir(): File {
-        return File(getAppDataDir(), "patches").also { it.mkdirs() }
-    }
-
-    /**
-     * Get the logs directory.
-     */
-    fun getLogsDir(): File {
-        return File(getAppDataDir(), "logs").also { it.mkdirs() }
-    }
-
-    /**
-     * Get the config file path.
-     */
-    fun getConfigFile(): File {
-        return File(getAppDataDir(), "config.json")
-    }
-
-    /**
-     * Get the app temp directory for patching operations.
-     */
-    fun getTempDir(): File {
-        val systemTemp = System.getProperty("java.io.tmpdir")
-        return File(systemTemp, APP_NAME).also { it.mkdirs() }
-    }
-
-    /**
-     * Create a unique temp directory for a patching session.
+     * Create a unique temp directory for a patching session. Session-scoped
+     * timestamp keeps concurrent CLI/GUI patches from stepping on each other
+     * (see Phase 6 of the unified-data-location plan).
      */
     fun createPatchingTempDir(): File {
         val timestamp = System.currentTimeMillis()

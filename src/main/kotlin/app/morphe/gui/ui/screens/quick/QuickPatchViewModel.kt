@@ -11,6 +11,7 @@ import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.model.SupportedApp
+import app.morphe.engine.MorpheData
 import app.morphe.engine.UpdateInfo
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
@@ -22,8 +23,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import net.dongliu.apk.parser.ApkFile
+import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.util.ChecksumStatus
+import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
@@ -55,6 +57,20 @@ class QuickPatchViewModel(
     private var cachedPatches: List<Patch> = emptyList()
     private var cachedSupportedApps: List<SupportedApp> = emptyList()
     private var cachedPatchesFile: File? = null
+    /** All successfully-resolved patch files across enabled sources. Single-element
+     *  in single-source mode. Used by the patching call to feed the engine the
+     *  union of patches when multiple sources are enabled. */
+    private var cachedAllPatchFiles: List<File> = emptyList()
+
+    private fun currentResolvedPatchFiles(): List<File> =
+        cachedAllPatchFiles.takeIf { it.isNotEmpty() }
+            ?: listOfNotNull(cachedPatchesFile)
+
+    /** Snapshot of the most recent multi-source load. Used by the QuickPatchScreen
+     *  header to render the same SourcesCountPill as Expert mode (no click action
+     *  in Quick Patch — sources are managed only from Expert mode). */
+    fun getResolvedSourcesSnapshot(): EnabledSourcesLoader.Result? = cachedSourcesResult
+    private var cachedSourcesResult: EnabledSourcesLoader.Result? = null
 
     init {
         // Load patches on startup to get dynamic app info
@@ -132,168 +148,79 @@ class QuickPatchViewModel(
     }
 
     /**
-     * Load patches from GitHub and extract supported apps dynamically.
+     * Load patches from all enabled sources via [EnabledSourcesLoader] and build
+     * the union supported-apps list. Single-source case (default) produces output
+     * equivalent to the pre-multi-source flow.
      */
     private fun loadPatchesAndSupportedApps() {
         loadJob?.cancel()
         loadJob = screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoadingPatches = true, patchLoadError = null)
 
-            // LOCAL source: skip GitHub entirely, load directly from the .mpp file
-            if (localPatchFilePath != null) {
-                val localFile = File(localPatchFilePath)
-                if (localFile.exists()) {
-                    loadPatchesFromFile(localFile, localFile.nameWithoutExtension, isOffline = false)
-                } else {
+            try {
+                // Quick Patch is intentionally single-source — multi-source belongs in
+                // Expert mode. The user picks WHICH single source via the source-picker
+                // sheet, which calls patchSourceManager.switchSource and updates
+                // activePatchSourceId. Quick Patch loads only that source regardless of
+                // Expert's enabled flags — the two modes operate independently.
+                val activeSource = patchSourceManager.getActiveSource()
+                val activeRepo = patchSourceManager.getRepositoryForSource(activeSource)
+                val pair: Pair<app.morphe.gui.data.model.PatchSource, app.morphe.gui.data.repository.PatchRepository?> =
+                    activeSource to activeRepo
+
+                val result = EnabledSourcesLoader.loadAll(listOf(pair), patchService)
+
+                if (!result.anyLoaded) {
+                    val firstError = result.resolved.firstNotNullOfOrNull { it.error }
+                        ?: result.loaded.perSource.firstNotNullOfOrNull { it.error?.message }
+                        ?: "Could not load any patches"
                     _uiState.value = _uiState.value.copy(
                         isLoadingPatches = false,
-                        patchLoadError = "Local patch file not found: ${localFile.name}"
+                        patchLoadError = firstError
                     )
-                }
-                return@launch
-            }
-
-            try {
-                // Fetch releases
-                val releasesResult = patchRepository.fetchReleases()
-                val releases = releasesResult.getOrNull()
-
-                if (releases.isNullOrEmpty()) {
-                    // Try to fall back to cached .mpp file when offline
-                    val config = configRepository.loadConfig()
-                    val offlinePatchFile = findCachedPatchFile(config.lastPatchesVersion)
-                    if (offlinePatchFile != null) {
-                        loadPatchesFromFile(offlinePatchFile, versionFromFilename(offlinePatchFile))
-                        return@launch
-                    }
-                    Logger.warn("Quick mode: Could not fetch releases")
-                    _uiState.value = _uiState.value.copy(isLoadingPatches = false, patchLoadError = "Could not fetch releases. Check your internet connection.")
                     return@launch
                 }
 
-                // Quick mode always uses the latest stable release
-                val release = releases.firstOrNull { !it.isDevRelease() }
-
-                if (release == null) {
-                    Logger.warn("Quick mode: No suitable release found")
-                    _uiState.value = _uiState.value.copy(isLoadingPatches = false, patchLoadError = "No suitable release found")
-                    return@launch
-                }
-
-                // Download patches
-                val patchFileResult = patchRepository.downloadPatches(release)
-                val patchFile = patchFileResult.getOrNull()
-
-                if (patchFile == null) {
-                    Logger.warn("Quick mode: Could not download patches")
-                    _uiState.value = _uiState.value.copy(isLoadingPatches = false, patchLoadError = "Could not download patches")
-                    return@launch
-                }
-
-                cachedPatchesFile = patchFile
-
-                // Load patches using PatchService (direct library call)
-                val patchesResult = patchService.listPatches(patchFile.absolutePath)
-                val patches = patchesResult.getOrNull()
-
-                if (patches.isNullOrEmpty()) {
-                    Logger.warn("Quick mode: Could not load patches: ${patchesResult.exceptionOrNull()?.message}")
-                    _uiState.value = _uiState.value.copy(isLoadingPatches = false, patchLoadError = "Could not load patches")
-                    return@launch
-                }
-
-                cachedPatches = patches
-
-                // Extract supported apps dynamically
-                val supportedApps = SupportedAppExtractor.extractSupportedApps(patches)
+                val supportedApps = SupportedAppExtractor.extractSupportedApps(result.unionGuiPatches)
+                cachedPatches = result.unionGuiPatches
                 cachedSupportedApps = supportedApps
+                val firstResolved = result.resolved.firstOrNull { it.patchFile != null }
+                cachedPatchesFile = firstResolved?.patchFile
+                cachedAllPatchFiles = result.resolved.mapNotNull { it.patchFile }
+                cachedSourcesResult = result
 
-                Logger.info("Quick mode: Loaded ${supportedApps.size} supported apps: ${supportedApps.map { "${it.displayName} (${it.recommendedVersion})" }}")
+                Logger.info(
+                    "Quick mode: Loaded ${supportedApps.size} supported apps from " +
+                            "${result.resolved.count { it.patchFile != null }} source(s)"
+                )
+
+                // Multi-source: only flag offline when EVERY resolved source is offline.
+                val resolvedSources = result.resolved.filter { it.patchFile != null }
+                val isOffline = resolvedSources.isNotEmpty() && resolvedSources.all { it.isOffline }
+                val displayVersion = firstResolved?.resolvedVersion
+                val sourceName = if (result.resolved.size == 1) {
+                    firstResolved?.source?.name ?: patchSourceManager.getActiveSourceName()
+                } else {
+                    "${result.resolved.count { it.patchFile != null }} sources"
+                }
 
                 _uiState.value = _uiState.value.copy(
                     isLoadingPatches = false,
                     supportedApps = supportedApps,
-                    patchesVersion = release.tagName,
-                    latestPatchesVersion = release.tagName,
-                    patchSourceName = patchSourceManager.getActiveSourceName(),
+                    patchesVersion = displayVersion,
+                    latestPatchesVersion = displayVersion,
+                    patchSourceName = sourceName,
                     patchLoadError = null,
-                    isOffline = false
+                    isOffline = isOffline
                 )
             } catch (e: Exception) {
                 Logger.error("Quick mode: Failed to load patches", e)
-                // Try to fall back to cached .mpp file
-                val config = configRepository.loadConfig()
-                val offlinePatchFile = findCachedPatchFile(config.lastPatchesVersion)
-                if (offlinePatchFile != null) {
-                    try {
-                        loadPatchesFromFile(offlinePatchFile, versionFromFilename(offlinePatchFile))
-                        return@launch
-                    } catch (inner: Exception) {
-                        Logger.error("Quick mode: Failed to load cached patches fallback", inner)
-                    }
-                }
-                _uiState.value = _uiState.value.copy(isLoadingPatches = false, patchLoadError = "Failed to load patches: ${e.message}")
+                _uiState.value = _uiState.value.copy(
+                    isLoadingPatches = false,
+                    patchLoadError = "Failed to load patches: ${e.message}"
+                )
             }
         }
-    }
-
-    /**
-     * Find any cached .mpp file when offline.
-     * Searches the per-source cache directory.
-     */
-    private fun findCachedPatchFile(savedVersion: String?): File? {
-        val patchesDir = patchRepository.getCacheDir()
-        val patchFiles = patchesDir.listFiles { file ->
-            val ext = file.extension.lowercase()
-            ext == "mpp" || ext == "jar"
-        }?.filter { it.length() > 0 } ?: return null
-
-        if (patchFiles.isEmpty()) return null
-
-        return if (savedVersion != null) {
-            patchFiles.firstOrNull { it.name.contains(savedVersion, ignoreCase = true) }
-                ?: patchFiles.maxByOrNull { it.lastModified() }
-        } else {
-            patchFiles.maxByOrNull { it.lastModified() }
-        }
-    }
-
-    private fun versionFromFilename(file: File): String {
-        val name = file.nameWithoutExtension
-        val match = Regex("""v?(\d+\.\d+\.\d+[^\s]*)""").find(name)
-        return match?.value ?: name
-    }
-
-    /**
-     * Load patches from a local .mpp file (offline fallback).
-     */
-    private suspend fun loadPatchesFromFile(patchFile: File, version: String, isOffline: Boolean = true) {
-        cachedPatchesFile = patchFile
-
-        val patchesResult = patchService.listPatches(patchFile.absolutePath)
-        val patches = patchesResult.getOrNull()
-
-        if (patches.isNullOrEmpty()) {
-            _uiState.value = _uiState.value.copy(
-                isLoadingPatches = false,
-                patchLoadError = "Could not load patches: ${patchesResult.exceptionOrNull()?.message}"
-            )
-            return
-        }
-
-        cachedPatches = patches
-        val supportedApps = SupportedAppExtractor.extractSupportedApps(patches)
-        cachedSupportedApps = supportedApps
-        Logger.info("Quick mode: Loaded ${supportedApps.size} supported apps from ${if (isOffline) "cached" else "local"} patches: ${patchFile.name}")
-
-        _uiState.value = _uiState.value.copy(
-            isLoadingPatches = false,
-            supportedApps = supportedApps,
-            patchesVersion = version,
-            patchSourceName = patchSourceManager.getActiveSourceName(),
-            patchLoadError = null,
-            isOffline = isOffline
-        )
     }
 
     /**
@@ -355,10 +282,14 @@ class QuickPatchViewModel(
         }
 
         return try {
-            ApkFile(apkToParse).use { apk ->
-                val meta = apk.apkMeta
-                val packageName = meta.packageName
-                val versionName = meta.versionName ?: "Unknown"
+            // ARSCLib manifest reader (engine) — replaces apk-parser. Same
+            // library morphe-patcher uses; handles split APKs cleanly.
+            val manifest = ApkManifestReader.read(apkToParse)
+                ?: throw IllegalStateException("ARSCLib couldn't read manifest")
+
+            run {
+                val packageName = manifest.packageName
+                val versionName = manifest.versionName ?: "Unknown"
 
                 // Check if supported using dynamic data
                 val dynamicAppInfo = cachedSupportedApps.find { it.packageName == packageName }
@@ -376,7 +307,7 @@ class QuickPatchViewModel(
                     }
 
                     if (packageName !in supportedPackages) {
-                        val appName = SupportedApp.resolveDisplayName(packageName, meta.label)
+                        val appName = SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
                         val supportedNames = cachedSupportedApps.map { it.displayName }
                             .ifEmpty { listOf("YouTube", "YouTube Music", "Reddit") }
                             .joinToString(", ")
@@ -390,7 +321,7 @@ class QuickPatchViewModel(
 
                 // Get display name and recommended version from dynamic data, fallback to constants
                 val displayName = dynamicAppInfo?.displayName
-                    ?: SupportedApp.resolveDisplayName(packageName, meta.label)
+                    ?: SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
 
                 val recommendedVersion = dynamicAppInfo?.recommendedVersion
 
@@ -425,7 +356,7 @@ class QuickPatchViewModel(
 
                 // Extract architectures — scan the original file (bundles have splits with native libs)
                 val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
-                val minSdk = meta.minSdkVersion?.toIntOrNull()
+                val minSdk = manifest.minSdkVersion
 
                 Logger.info("Quick mode: Analyzed $displayName v$versionName (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
 
@@ -516,31 +447,34 @@ class QuickPatchViewModel(
                 progress = 0.4f
             )
 
-            // Generate output path
+            // Generate output path via the shared engine helper — same path
+            // the CLI and Expert mode compute. Passing apkInfo.displayName
+            // as the display name preserves the friendly label.
             val appConfig = configRepository.loadConfig()
-            val baseName = apkInfo.displayName.replace(" ", "-")
-            val baseOutputDir = appConfig.defaultOutputDirectory?.let { File(it) }
-                ?: apkFile.parentFile
-                ?: File(System.getProperty("user.home"))
-            val outputDir = File(baseOutputDir, baseName).also { it.mkdirs() }
-            val patchesVersion = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
-                .find(patchFile.name)?.groupValues?.get(1)
-            val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
-            val outputFileName = "$baseName-Morphe-${apkInfo.versionName}${patchesSuffix}.apk"
-            val outputPath = File(outputDir, outputFileName).absolutePath
+            val outputPath = app.morphe.engine.util.ApkOutputNaming.outputApkPath(
+                inputApk = apkFile,
+                patchesFile = patchFile,
+                baseOutputDir = appConfig.resolvedDefaultOutputDirectory(),
+                appDisplayName = apkInfo.displayName,
+            ).absolutePath
 
-            // Resolve keystore: use saved path, or derive from output APK location
-            val resolvedKeystorePath = appConfig.keystorePath
-                ?: File(outputPath).let { out ->
-                    out.resolveSibling(out.nameWithoutExtension + ".keystore").absolutePath
-                }.also { path ->
-                    configRepository.setKeystorePath(path)
-                }
+            // Resolve keystore — see PatchingViewModel for the full rationale.
+            // User-configured: use it; fail loudly if missing.
+            // Default: shared MorpheData keystore, auto-created on first sign.
+            val userKeystore = appConfig.resolvedKeystorePath()
+            if (userKeystore != null && !userKeystore.exists()) {
+                val msg = "Configured keystore not found: ${userKeystore.absolutePath}. " +
+                    "Restore the file, pick another in Settings, or clear the setting to use Morphe's default."
+                _uiState.value = _uiState.value.copy(phase = QuickPatchPhase.READY, error = msg)
+                Logger.error("Quick patching aborted: $msg")
+                return@launch
+            }
+            val resolvedKeystorePath = (userKeystore ?: MorpheData.defaultKeystoreFile).absolutePath
 
             // Use PatchService for direct library patching (no CLI subprocess)
             // exclusiveMode = false means the library's patch.use field determines defaults
             val patchResult = patchService.patch(
-                patchesFilePath = patchFile.absolutePath,
+                patchesFilePaths = currentResolvedPatchFiles().map { it.absolutePath },
                 inputApkPath = apkFile.absolutePath,
                 outputApkPath = outputPath,
                 enabledPatches = emptyList(),

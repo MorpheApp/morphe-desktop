@@ -1,10 +1,12 @@
 package app.morphe.cli.command
 
 import app.morphe.cli.command.model.PatchBundle
+import app.morphe.engine.MorpheData
+import app.morphe.engine.patches.LoadedBundle
+import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.cli.command.model.findMatchingBundle
 import app.morphe.cli.command.model.mergeWithBundle
 import app.morphe.cli.command.model.withUpdatedBundle
-import app.morphe.patcher.patch.loadPatchesFromJar
 import kotlinx.serialization.json.Json
 import picocli.CommandLine
 import picocli.CommandLine.Command
@@ -71,14 +73,19 @@ internal object OptionsCommand : Callable<Int> {
     private val json = Json { prettyPrint = true }
 
     override fun call(): Int {
-        val temporaryFilesPath = temporaryFilesPath ?: File("").absoluteFile.resolve("morphe-temporary-files")
+        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
         try {
-            patchesFiles = PatchFileResolver.resolve(
-                patchesFiles,
-                prerelease,
-                temporaryFilesPath
-            )
+            // Since we could have many URLs, we resolve each of them separately
+            patchesFiles = patchesFiles.map { file ->
+                val resolved = PatchFileResolver.resolve(
+                    setOf(file),
+                    prerelease,
+                    temporaryFilesPath,
+                    CliHttpClient.instance
+                )
+                resolved.single()
+            }.toSet()
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(
                 spec.commandLine(),
@@ -87,51 +94,64 @@ internal object OptionsCommand : Callable<Int> {
         }
 
         return try {
-            logger.info("Loading patches")
+            logger.info("Loading patches...")
 
-            val patches = loadPatchesFromJar(patchesFiles)
+            // Load each bundle separately so we produce one JSON entry per .mpp
+            // matches the shape PatchCommand expects when reading --options-file.
+            val loadedBundles: List<LoadedBundle> = PatchBundleLoader.loadEach(patchesFiles)
 
-            val filtered = packageName?.let { pkg ->
-                patches.filter { patch ->
-                    patch.compatiblePackages?.any { (name, _) -> name == pkg } ?: true
-                }.toSet()
-            } ?: patches
-
-            // Read existing bundles list if the file already exists
-            val existingBundles: List<PatchBundle>? = if (outputFile.exists()) {
+            // Read existing bundles list if the file already exists.
+            val existingBundles: List<PatchBundle> = if (outputFile.exists())
+            {
                 try {
                     Json.decodeFromString<List<PatchBundle>>(outputFile.readText())
                 } catch (e: Exception) {
-                    logger.warning("Could not parse existing file, creating fresh: ${e.message}")
-                    null
+                    logger.warning(
+                        "Could not parse existing file, creating fresh: ${e.message}"
+                    )
+                    emptyList()
                 }
-            } else null
+            } else emptyList()
 
-            // Find the bundle matching the current .mpp file(s), merge with it (or create fresh)
-            val existingBundle = existingBundles?.findMatchingBundle(patchesFiles)
-            val updatedBundle = filtered.mergeWithBundle(
-                existing = existingBundle,
-                sourceFiles = patchesFiles,
-            )
+            // For each bundle: apply optional package filter, find its matching JSON
+            // entry (by source filename), merge, splice updated entry back into the running list.
+            var updatedBundles = existingBundles
+            loadedBundles.forEach { lb ->
+                val filtered = packageName?.let { pkg ->
+                    lb.patches.filter { patch ->
+                        patch.compatiblePackages?.any { (name, _) -> name == pkg } ?: true
+                    }.toSet()
+                } ?: lb.patches
 
-            // Replace the matching entry in the list (or start a new list)
-            val updatedBundles = existingBundles?.withUpdatedBundle(updatedBundle)
-                ?: listOf(updatedBundle)
+                val existingBundle = updatedBundles.findMatchingBundle(setOf(lb.sourceFile))
+                val updatedBundle = filtered.mergeWithBundle(
+                    existing = existingBundle,
+                    sourceFiles = setOf(lb.sourceFile),
+                )
+                updatedBundles = updatedBundles.withUpdatedBundle(updatedBundle)
+
+                // Per-bundle log line so users can see what changed for each .mpp
+                if (existingBundle != null) {
+                    val existingNames = existingBundle.patches.keys.map { it.lowercase() }.toSet()
+                    val newNames = updatedBundle.patches.keys.map { it.lowercase() }.toSet()
+                    val added = newNames - existingNames
+                    val removed = existingNames - newNames
+                    val kept = newNames.intersect(existingNames)
+
+                    logger.info(
+                        "Updated bundle for ${lb.sourceFile.name}: ${kept.size} preserved, ${added.size} added, ${removed.size} removed"
+                    )
+                } else {
+                    logger.info(
+                        "Created new bundle for ${lb.sourceFile.name} with ${updatedBundle.patches.size} patches"
+                    )
+                }
+            }
 
             outputFile.absoluteFile.parentFile?.mkdirs()
             outputFile.writeText(json.encodeToString(updatedBundles))
 
-            if (existingBundle != null) {
-                val existingNames = existingBundle.patches.keys.map { it.lowercase() }.toSet()
-                val newNames = updatedBundle.patches.keys.map { it.lowercase() }.toSet()
-                val added = newNames - existingNames
-                val removed = existingNames - newNames
-                val kept = newNames.intersect(existingNames)
-                logger.info("Updated bundle in options file at ${outputFile.path}")
-                logger.info("  ${kept.size} patches preserved, ${added.size} added, ${removed.size} removed")
-            } else {
-                logger.info("Created new bundle in options file at ${outputFile.path} with ${updatedBundle.patches.size} patches")
-            }
+            logger.info("Options file saved to ${outputFile.path}")
 
             EXIT_CODE_SUCCESS
         } catch (e: Exception) {

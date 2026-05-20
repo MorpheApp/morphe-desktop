@@ -93,7 +93,9 @@ val appModule = module {
             get(),
             get(),
             psm.getActiveSourceName(),
-            psm.getLocalFilePath()
+            psm.getLocalFilePath(),
+            params.get(),
+            params.get(),
         )
     }
     factory { params ->

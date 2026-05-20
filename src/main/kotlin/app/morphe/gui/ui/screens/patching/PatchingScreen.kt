@@ -18,8 +18,11 @@ import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -31,9 +34,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import java.io.File
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -360,6 +368,7 @@ private fun FailureBottomBar(
     val hasTempFiles = remember { FileUtils.hasTempFiles() }
     val tempFilesSize = remember { FileUtils.getTempDirSize() }
     val logFile = remember { Logger.getLogFile() }
+    var showLogViewer by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -427,6 +436,32 @@ private fun FailureBottomBar(
                     )
                 }
 
+                val viewHover = remember { MutableInteractionSource() }
+                val isViewHovered by viewHover.collectIsHoveredAsState()
+                val viewBg by animateColorAsState(
+                    if (isViewHovered) accents.primary.copy(alpha = 0.1f) else Color.Transparent,
+                    animationSpec = tween(150)
+                )
+                Box(
+                    modifier = Modifier
+                        .hoverable(viewHover)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(viewBg)
+                        .clickable { showLogViewer = true }
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "VIEW",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = accents.primary,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(4.dp))
+
                 val openHover = remember { MutableInteractionSource() }
                 val isOpenHovered by openHover.collectIsHoveredAsState()
                 val openBg by animateColorAsState(
@@ -450,14 +485,24 @@ private fun FailureBottomBar(
                         .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = "OPEN",
+                        text = "REVEAL",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = mono,
-                        color = accents.primary,
+                        color = accents.primary.copy(alpha = 0.7f),
                         letterSpacing = 0.5.sp
                     )
                 }
+            }
+
+            if (showLogViewer) {
+                LogFileViewerDialog(
+                    file = logFile,
+                    corners = corners,
+                    mono = mono,
+                    borderColor = borderColor,
+                    onDismiss = { showLogViewer = false }
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -670,5 +715,156 @@ private fun getStatusColor(status: PatchingStatus): Color {
         PatchingStatus.FAILED -> MaterialTheme.colorScheme.error
         PatchingStatus.CANCELLED -> MaterialTheme.colorScheme.error
         else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+    }
+}
+
+@Composable
+private fun LogFileViewerDialog(
+    file: File,
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+    onDismiss: () -> Unit,
+) {
+    val accents = LocalMorpheAccents.current
+    val clipboard = LocalClipboardManager.current
+
+    // Read file once on open. Logs are line-oriented text, typically well
+    // under a few MB; if a single patching session ever produces something
+    // pathologically large we'd notice and tail it then.
+    val content = remember(file) {
+        runCatching { file.readText() }.getOrElse { e ->
+            "Failed to read log file: ${e.message}"
+        }
+    }
+    var copied by remember { mutableStateOf(false) }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp)
+                .clip(RoundedCornerShape(corners.medium))
+                .background(MaterialTheme.colorScheme.surface)
+                .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Header
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawBehind {
+                            drawLine(
+                                color = borderColor,
+                                start = Offset(0f, size.height),
+                                end = Offset(size.width, size.height),
+                                strokeWidth = 1f
+                            )
+                        }
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "LOG FILE",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            letterSpacing = 2.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            text = file.absolutePath,
+                            fontSize = 10.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                            maxLines = 1
+                        )
+                    }
+
+                    val copyHover = remember { MutableInteractionSource() }
+                    val isCopyHovered by copyHover.collectIsHoveredAsState()
+                    val copyBg by animateColorAsState(
+                        if (isCopyHovered) accents.primary.copy(alpha = 0.1f) else Color.Transparent,
+                        animationSpec = tween(150)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .hoverable(copyHover)
+                            .clip(RoundedCornerShape(corners.small))
+                            .background(copyBg)
+                            .clickable {
+                                clipboard.setText(AnnotatedString(content))
+                                copied = true
+                            }
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = if (copied) "COPIED" else "COPY ALL",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = if (copied) accents.secondary else accents.primary,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+
+                    Spacer(Modifier.width(4.dp))
+
+                    val closeHover = remember { MutableInteractionSource() }
+                    val isCloseHovered by closeHover.collectIsHoveredAsState()
+                    val closeBg by animateColorAsState(
+                        if (isCloseHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f) else Color.Transparent,
+                        animationSpec = tween(150)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .hoverable(closeHover)
+                            .clip(RoundedCornerShape(corners.small))
+                            .background(closeBg)
+                            .clickable { onDismiss() }
+                            .padding(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+
+                // Log content — read-only, selectable, monospace.
+                val scrollState = rememberScrollState()
+                Box(modifier = Modifier.fillMaxSize()) {
+                    SelectionContainer(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = content,
+                            fontSize = 11.sp,
+                            fontFamily = mono,
+                            lineHeight = 16.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+                        )
+                    }
+
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(scrollState),
+                        style = morpheScrollbarStyle()
+                    )
+                }
+            }
+        }
     }
 }

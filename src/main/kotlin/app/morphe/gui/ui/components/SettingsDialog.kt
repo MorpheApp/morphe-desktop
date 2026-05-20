@@ -30,12 +30,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.ui.theme.LocalMorpheAccents
+import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.MorpheColors
@@ -94,12 +96,6 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     allowCacheClear: Boolean = true,
     isPatching: Boolean = false,
-    patchSources: List<PatchSource> = emptyList(),
-    activePatchSourceId: String = "",
-    onActivePatchSourceChange: (String) -> Unit = {},
-    onAddPatchSource: (PatchSource) -> Unit = {},
-    onEditPatchSource: (PatchSource) -> Unit = {},
-    onRemovePatchSource: (String) -> Unit = {},
     onCacheCleared: () -> Unit = {},
     keystorePath: String? = null,
     keystorePassword: String? = null,
@@ -123,8 +119,6 @@ fun SettingsDialog(
     var showLicensesDialog by remember { mutableStateOf(false) }
     var cacheCleared by remember { mutableStateOf(false) }
     var cacheClearFailed by remember { mutableStateOf(false) }
-    var showAddSourceDialog by remember { mutableStateOf(false) }
-    var editingSource by remember { mutableStateOf<PatchSource?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -291,27 +285,6 @@ fun SettingsDialog(
                     enabled = !isPatching,
                     expanded = collapsibleSectionStates["RUNTIME LOGS"] == true,
                     onExpandedChange = { onCollapsibleSectionToggle("RUNTIME LOGS", it) }
-                )
-
-                SettingsDivider(borderColor)
-
-                // ── Patch Sources ──
-                PatchSourcesSection(
-                    sources = patchSources,
-                    activeSourceId = activePatchSourceId,
-                    onActiveChange = { id ->
-                        onActivePatchSourceChange(id)
-                        onDismiss()
-                    },
-                    onRemove = onRemovePatchSource,
-                    onEdit = { source -> editingSource = source },
-                    onAddClick = { showAddSourceDialog = true },
-                    mono = mono,
-                    accentColor = accents.primary,
-                    borderColor = borderColor,
-                    enabled = !isPatching,
-                    expanded = collapsibleSectionStates["PATCH SOURCES"] == true,
-                    onExpandedChange = { onCollapsibleSectionToggle("PATCH SOURCES", it) }
                 )
 
                 SettingsDivider(borderColor)
@@ -490,29 +463,8 @@ fun SettingsDialog(
         )
     }
 
-    if (showAddSourceDialog) {
-        AddPatchSourceDialog(
-            onDismiss = { showAddSourceDialog = false },
-            onAdd = { source ->
-                onAddPatchSource(source)
-                showAddSourceDialog = false
-            }
-        )
-    }
-
     if (showLicensesDialog) {
         LicensesDialog(onDismiss = { showLicensesDialog = false })
-    }
-
-    editingSource?.let { source ->
-        EditPatchSourceDialog(
-            source = source,
-            onDismiss = { editingSource = null },
-            onSave = { updated ->
-                onEditPatchSource(updated)
-                editingSource = null
-            }
-        )
     }
 }
 
@@ -1507,6 +1459,7 @@ private fun OutputFolderSection(
     enabled: Boolean = true
 ) {
     val corners = LocalMorpheCorners.current
+    val dimens = LocalMorpheDimens.current
     val alpha = if (enabled) 1f else 0.4f
     val outputDir = defaultOutputDirectory?.let { File(it) }
     val outputDirExists = outputDir?.isDirectory == true
@@ -1526,7 +1479,7 @@ private fun OutputFolderSection(
         Spacer(Modifier.height(8.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+            modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
@@ -1605,15 +1558,30 @@ private fun OutputFolderSection(
             )
         }
 
+        // Stored form first (mirrors config.json), absolute resolution second.
+        // Hides the second line entirely when storage IS absolute, repeating
+        // the same path twice would make no sense now, innit.
         if (defaultOutputDirectory != null) {
+            val stored = app.morphe.engine.util.PortablePaths.storableForm(defaultOutputDirectory)
+            val isBundleRelative = stored != defaultOutputDirectory
             Text(
-                text = defaultOutputDirectory,
+                text = stored,
                 fontSize = 9.sp,
                 fontFamily = mono,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            if (isBundleRelative) {
+                Text(
+                    text = "Resolves to: $defaultOutputDirectory",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
@@ -1665,545 +1633,6 @@ private fun ActionButton(
     }
 }
 
-// ── Patch Sources Section ──
-
-@Composable
-private fun PatchSourcesSection(
-    sources: List<PatchSource>,
-    activeSourceId: String,
-    onActiveChange: (String) -> Unit,
-    onRemove: (String) -> Unit,
-    onEdit: (PatchSource) -> Unit,
-    onAddClick: () -> Unit,
-    mono: androidx.compose.ui.text.font.FontFamily,
-    accentColor: Color,
-    borderColor: Color,
-    enabled: Boolean = true,
-    expanded: Boolean = false,
-    onExpandedChange: (Boolean) -> Unit = {}
-) {
-    val corners = LocalMorpheCorners.current
-    val alpha = if (enabled) 1f else 0.4f
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        CollapsibleSection(
-            title = "PATCH SOURCES",
-            mono = mono,
-            expanded = expanded,
-            onExpandedChange = onExpandedChange
-        ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(
-            text = if (!enabled) "Disabled while patching" else "Select where patches are loaded from",
-            fontSize = 11.sp,
-            fontFamily = mono,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        sources.forEach { source ->
-            val isActive = source.id == activeSourceId
-            val hoverInteraction = remember(source.id) { MutableInteractionSource() }
-            val isHovered by hoverInteraction.collectIsHoveredAsState()
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(corners.medium))
-                    .border(
-                        1.dp,
-                        when {
-                            isActive -> accentColor.copy(alpha = 0.4f)
-                            isHovered -> MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-                            else -> borderColor
-                        },
-                        RoundedCornerShape(corners.medium)
-                    )
-                    .background(
-                        if (isActive) accentColor.copy(alpha = 0.08f)
-                        else Color.Transparent
-                    )
-                    .hoverable(hoverInteraction)
-                    .then(if (enabled) Modifier.clickable { onActiveChange(source.id) } else Modifier)
-                    .padding(horizontal = 12.dp, vertical = 10.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Active indicator dot
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .background(
-                                if (isActive) accentColor
-                                else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f),
-                                RoundedCornerShape(1.dp)
-                            )
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = source.name,
-                            fontSize = 12.sp,
-                            fontWeight = if (isActive) FontWeight.SemiBold else FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = when (source.type) {
-                                PatchSourceType.DEFAULT -> "Default"
-                                PatchSourceType.GITHUB -> source.url?.removePrefix("https://github.com/") ?: "GitHub"
-                                PatchSourceType.LOCAL -> source.filePath?.let { File(it).name } ?: "Local file"
-                            },
-                            fontSize = 10.sp,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    if (source.deletable && enabled) {
-                        IconButton(
-                            onClick = { onEdit(source) },
-                            modifier = Modifier.size(24.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                                modifier = Modifier.size(14.dp)
-                            )
-                        }
-                        Spacer(Modifier.width(2.dp))
-                        IconButton(
-                            onClick = { onRemove(source.id) },
-                            modifier = Modifier.size(24.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Remove",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                                modifier = Modifier.size(14.dp)
-                            )
-                        }
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        // Add source
-        OutlinedButton(
-            onClick = onAddClick,
-            enabled = enabled,
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(corners.small),
-            border = BorderStroke(1.dp, borderColor),
-            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null,
-                modifier = Modifier.size(14.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                "ADD SOURCE",
-                fontFamily = mono,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 10.sp,
-                letterSpacing = 0.5.sp
-            )
-        }
-        } // inner Column
-        } // CollapsibleSection
-    }
-}
-
-// ── Add / Edit Source Dialogs ──
-
-@Composable
-private fun AddPatchSourceDialog(
-    onDismiss: () -> Unit,
-    onAdd: (PatchSource) -> Unit
-) {
-    val corners = LocalMorpheCorners.current
-    val mono = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    var name by remember { mutableStateOf("") }
-    var sourceType by remember { mutableStateOf(PatchSourceType.GITHUB) }
-    var url by remember { mutableStateOf("") }
-    var filePath by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf<String?>(null) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(corners.medium),
-        containerColor = MaterialTheme.colorScheme.surface,
-        title = {
-            Text(
-                "ADD SOURCE",
-                fontFamily = mono,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                letterSpacing = 1.sp
-            )
-        },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.widthIn(min = 300.dp)
-            ) {
-                // Type toggle
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    listOf(PatchSourceType.GITHUB, PatchSourceType.LOCAL).forEach { type ->
-                        val isSelected = sourceType == type
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(corners.small))
-                                .border(
-                                    1.dp,
-                                    if (isSelected) accents.primary.copy(alpha = 0.5f)
-                                    else MaterialTheme.colorScheme.outline.copy(alpha = 0.12f),
-                                    RoundedCornerShape(corners.small)
-                                )
-                                .background(
-                                    if (isSelected) accents.primary.copy(alpha = 0.08f)
-                                    else Color.Transparent
-                                )
-                                .clickable { sourceType = type }
-                                .padding(horizontal = 14.dp, vertical = 7.dp)
-                        ) {
-                            Text(
-                                text = when (type) {
-                                    PatchSourceType.GITHUB -> "GITHUB"
-                                    PatchSourceType.LOCAL -> "LOCAL FILE"
-                                    else -> ""
-                                },
-                                fontSize = 10.sp,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                fontFamily = mono,
-                                letterSpacing = 0.5.sp,
-                                color = if (isSelected) accents.primary
-                                        else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it; error = null },
-                    label = { Text("Name", fontFamily = mono, fontSize = 11.sp) },
-                    placeholder = { Text("My Custom Patches", fontFamily = mono, fontSize = 11.sp) },
-                    singleLine = true,
-                    textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(corners.small)
-                )
-
-                when (sourceType) {
-                    PatchSourceType.GITHUB -> {
-                        OutlinedTextField(
-                            value = url,
-                            onValueChange = { url = it; error = null },
-                            label = { Text("Repository URL", fontFamily = mono, fontSize = 11.sp) },
-                            placeholder = { Text("github.com/owner/repo", fontFamily = mono, fontSize = 10.sp) },
-                            singleLine = true,
-                            textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(corners.small)
-                        )
-                        Text(
-                            "Accepts GitHub URL or morphe.software/add-source link",
-                            fontFamily = mono,
-                            fontSize = 9.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            letterSpacing = 0.3.sp
-                        )
-                    }
-                    PatchSourceType.LOCAL -> {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            OutlinedTextField(
-                                value = filePath,
-                                onValueChange = { filePath = it; error = null },
-                                label = { Text(".mpp file", fontFamily = mono, fontSize = 11.sp) },
-                                singleLine = true,
-                                textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-                                modifier = Modifier.weight(1f),
-                                shape = RoundedCornerShape(corners.small),
-                                readOnly = true
-                            )
-                            OutlinedButton(
-                                onClick = {
-                                    val dialog = FileDialog(null as Frame?, "Select .mpp file", FileDialog.LOAD).apply {
-                                        setFilenameFilter { _, n -> n.endsWith(".mpp", ignoreCase = true) }
-                                        isVisible = true
-                                    }
-                                    if (dialog.directory != null && dialog.file != null) {
-                                        filePath = File(dialog.directory, dialog.file).absolutePath
-                                        if (name.isBlank()) name = dialog.file.removeSuffix(".mpp")
-                                        error = null
-                                    }
-                                },
-                                shape = RoundedCornerShape(corners.small)
-                            ) {
-                                Text(
-                                    "BROWSE",
-                                    fontFamily = mono,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 10.sp,
-                                    letterSpacing = 0.5.sp
-                                )
-                            }
-                        }
-                    }
-                    else -> {}
-                }
-
-                error?.let {
-                    Text(
-                        text = it,
-                        fontSize = 11.sp,
-                        fontFamily = mono,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    if (name.isBlank()) { error = "Name is required"; return@Button }
-                    when (sourceType) {
-                        PatchSourceType.GITHUB -> {
-                            val trimmedUrl = url.trim()
-                            val resolvedUrl = resolveGitHubUrl(trimmedUrl)
-                            if (resolvedUrl == null) {
-                                error = "Enter a valid GitHub URL or Morphe source link"; return@Button
-                            }
-                            onAdd(PatchSource(
-                                id = UUID.randomUUID().toString(),
-                                name = name.trim(),
-                                type = sourceType,
-                                url = resolvedUrl,
-                                deletable = true
-                            ))
-                            return@Button
-                        }
-                        PatchSourceType.LOCAL -> {
-                            if (filePath.isBlank() || !File(filePath).exists()) {
-                                error = "Select a valid .mpp file"; return@Button
-                            }
-                        }
-                        else -> {}
-                    }
-                    onAdd(PatchSource(
-                        id = UUID.randomUUID().toString(),
-                        name = name.trim(),
-                        type = sourceType,
-                        url = null,
-                        filePath = if (sourceType == PatchSourceType.LOCAL) filePath.trim() else null,
-                        deletable = true
-                    ))
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = accents.primary),
-                shape = RoundedCornerShape(corners.small)
-            ) {
-                Text(
-                    "ADD",
-                    fontFamily = mono,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 11.sp,
-                    letterSpacing = 0.5.sp
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    "CANCEL",
-                    fontFamily = mono,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 11.sp,
-                    letterSpacing = 0.5.sp
-                )
-            }
-        }
-    )
-}
-
-@Composable
-private fun EditPatchSourceDialog(
-    source: PatchSource,
-    onDismiss: () -> Unit,
-    onSave: (PatchSource) -> Unit
-) {
-    val corners = LocalMorpheCorners.current
-    val mono = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    var name by remember { mutableStateOf(source.name) }
-    var url by remember { mutableStateOf(source.url ?: "") }
-    var filePath by remember { mutableStateOf(source.filePath ?: "") }
-    var error by remember { mutableStateOf<String?>(null) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(corners.medium),
-        containerColor = MaterialTheme.colorScheme.surface,
-        title = {
-            Text(
-                "EDIT SOURCE",
-                fontFamily = mono,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                letterSpacing = 1.sp
-            )
-        },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.widthIn(min = 300.dp)
-            ) {
-                // Type indicator
-                Text(
-                    text = when (source.type) {
-                        PatchSourceType.GITHUB -> "GITHUB REPOSITORY"
-                        PatchSourceType.LOCAL -> "LOCAL FILE"
-                        else -> ""
-                    },
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = mono,
-                    color = accents.primary,
-                    letterSpacing = 1.sp
-                )
-
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it; error = null },
-                    label = { Text("Name", fontFamily = mono, fontSize = 11.sp) },
-                    singleLine = true,
-                    textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(corners.small)
-                )
-
-                when (source.type) {
-                    PatchSourceType.GITHUB -> {
-                        OutlinedTextField(
-                            value = url,
-                            onValueChange = { url = it; error = null },
-                            label = { Text("Repository URL", fontFamily = mono, fontSize = 11.sp) },
-                            singleLine = true,
-                            textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(corners.small)
-                        )
-                    }
-                    PatchSourceType.LOCAL -> {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            OutlinedTextField(
-                                value = filePath,
-                                onValueChange = { filePath = it; error = null },
-                                label = { Text(".mpp file", fontFamily = mono, fontSize = 11.sp) },
-                                singleLine = true,
-                                textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-                                modifier = Modifier.weight(1f),
-                                shape = RoundedCornerShape(corners.small),
-                                readOnly = true
-                            )
-                            OutlinedButton(
-                                onClick = {
-                                    val dialog = FileDialog(null as Frame?, "Select .mpp file", FileDialog.LOAD).apply {
-                                        setFilenameFilter { _, n -> n.endsWith(".mpp", ignoreCase = true) }
-                                        isVisible = true
-                                    }
-                                    if (dialog.directory != null && dialog.file != null) {
-                                        filePath = File(dialog.directory, dialog.file).absolutePath
-                                        error = null
-                                    }
-                                },
-                                shape = RoundedCornerShape(corners.small)
-                            ) {
-                                Text(
-                                    "BROWSE",
-                                    fontFamily = mono,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 10.sp,
-                                    letterSpacing = 0.5.sp
-                                )
-                            }
-                        }
-                    }
-                    else -> {}
-                }
-
-                error?.let {
-                    Text(text = it, fontSize = 11.sp, fontFamily = mono, color = MaterialTheme.colorScheme.error)
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    if (name.isBlank()) { error = "Name is required"; return@Button }
-                    when (source.type) {
-                        PatchSourceType.GITHUB -> {
-                            val resolvedUrl = resolveGitHubUrl(url.trim())
-                            if (resolvedUrl == null) {
-                                error = "Enter a valid GitHub URL or Morphe source link"; return@Button
-                            }
-                            onSave(source.copy(
-                                name = name.trim(),
-                                url = resolvedUrl
-                            ))
-                            return@Button
-                        }
-                        PatchSourceType.LOCAL -> {
-                            if (filePath.isBlank() || !File(filePath).exists()) {
-                                error = "Select a valid .mpp file"; return@Button
-                            }
-                        }
-                        else -> {}
-                    }
-                    onSave(source.copy(
-                        name = name.trim(),
-                        filePath = if (source.type == PatchSourceType.LOCAL) filePath.trim() else source.filePath
-                    ))
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = accents.primary),
-                shape = RoundedCornerShape(corners.small)
-            ) {
-                Text(
-                    "SAVE",
-                    fontFamily = mono,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 11.sp,
-                    letterSpacing = 0.5.sp
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    "CANCEL",
-                    fontFamily = mono,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 11.sp,
-                    letterSpacing = 0.5.sp
-                )
-            }
-        }
-    )
-}
 
 // ── Strip Libs Section ──
 
@@ -2282,6 +1711,8 @@ private fun SigningSection(
     onExpandedChange: (Boolean) -> Unit = {}
 ) {
     val corners = LocalMorpheCorners.current
+    val dimens = LocalMorpheDimens.current
+    val accents = LocalMorpheAccents.current
     val alpha = if (enabled) 1f else 0.4f
 
     var localPassword by remember(keystorePassword) { mutableStateOf(keystorePassword ?: "") }
@@ -2315,7 +1746,7 @@ private fun SigningSection(
 
         // Keystore path row
         Row(
-            modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+            modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
@@ -2397,10 +1828,12 @@ private fun SigningSection(
             }
         }
 
-        // Warning if keystore path set but file doesn't exist
+        // Warning if keystore path set but file doesn't exist. Patching will
+        // refuse to start with this configured (see PatchingViewModel) — user
+        // must restore the file, pick another, or reset to use Morphe's default.
         if (keystorePath != null && !keystoreExists) {
             Text(
-                text = "Keystore not found — will be created on next patch",
+                text = "Keystore not found — patching will fail until you restore it, pick another, or reset",
                 fontSize = 10.sp,
                 fontFamily = mono,
                 color = Color(0xFFE0A030)
@@ -2417,98 +1850,144 @@ private fun SigningSection(
             )
         }
 
-        // Full path tooltip
+        // Either: stored form (relative when inside the bundle, absolute otherwise)
+        // with a "Resolves to: ..." subtitle when relative. Mirrors config.json
+        // so users can see which paths follow the bundle vs which are pinned.
+        // Or: "using default" hint when no user-configured path is set.
         if (keystorePath != null) {
+            val stored = app.morphe.engine.util.PortablePaths.storableForm(keystorePath)
+            val isBundleRelative = stored != keystorePath
             Text(
-                text = keystorePath,
+                text = stored,
                 fontSize = 9.sp,
                 fontFamily = mono,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            if (isBundleRelative) {
+                Text(
+                    text = "Resolves to: $keystorePath",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        } else {
+            // Mirror the storage form treatment used for user-configured paths above.
+            // The default keystore lives in the bundle (`morphe-data/`) in the happy case,
+            // so the storable form will be relative.
+            // Verb is conditional on file existence. Patcher creates the file on first sign,
+            // so on a fresh install the hint accurately says "Will create..."
+            // instead of making up claims like "Using..." an absent file.
+            val defaultAbs = MorpheData.defaultKeystoreFile.absolutePath
+            val defaultStored = app.morphe.engine.util.PortablePaths.storableForm(defaultAbs)
+            val isBundleRelative = defaultStored != defaultAbs
+            val verb = if (MorpheData.defaultKeystoreFile.exists()) "Using"
+                       else "Will create"
+            Text(
+                text = "$verb Morphe's default keystore at $defaultStored",
+                fontSize = 9.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (isBundleRelative) {
+                Text(
+                    text = "Resolves to: $defaultAbs",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
 
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(8.dp))
 
-        // Keystore password
-        OutlinedTextField(
-            value = localPassword,
-            onValueChange = {
-                localPassword = it
-                onCredentialsChange(it.ifEmpty { null }, localAlias, localEntryPassword)
-            },
-            label = { Text("Keystore password", fontFamily = mono, fontSize = 10.sp) },
-            singleLine = true,
-            enabled = enabled,
-            visualTransformation = if (showPassword) androidx.compose.ui.text.input.VisualTransformation.None
-                                   else androidx.compose.ui.text.input.PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(
-                    onClick = { showPassword = !showPassword },
-                    modifier = Modifier.size(20.dp)
-                ) {
-                    Icon(
-                        imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                        contentDescription = if (showPassword) "Hide" else "Show",
-                        modifier = Modifier.size(14.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    )
-                }
-            },
-            textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(corners.small)
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            LabeledField(label = "KEYSTORE PASSWORD", mono = mono) {
+                SlimTextField(
+                    value = localPassword,
+                    onValueChange = {
+                        localPassword = it
+                        onCredentialsChange(it.ifEmpty { null }, localAlias, localEntryPassword)
+                    },
+                    placeholder = "",
+                    mono = mono,
+                    accents = accents,
+                    corners = corners,
+                    enabled = enabled,
+                    visualTransformation = if (showPassword) androidx.compose.ui.text.input.VisualTransformation.None
+                                           else androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
+                    trailing = {
+                        IconButton(
+                            onClick = { showPassword = !showPassword },
+                            modifier = Modifier.size(24.dp),
+                        ) {
+                            Icon(
+                                imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = if (showPassword) "Hide" else "Show",
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            )
+                        }
+                    },
+                )
+            }
 
-        Spacer(Modifier.height(4.dp))
+            LabeledField(label = "KEY ALIAS", mono = mono) {
+                SlimTextField(
+                    value = localAlias,
+                    onValueChange = {
+                        localAlias = it
+                        onCredentialsChange(localPassword.ifEmpty { null }, it, localEntryPassword)
+                    },
+                    placeholder = "",
+                    mono = mono,
+                    accents = accents,
+                    corners = corners,
+                    enabled = enabled,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
 
-        // Key alias
-        OutlinedTextField(
-            value = localAlias,
-            onValueChange = {
-                localAlias = it
-                onCredentialsChange(localPassword.ifEmpty { null }, it, localEntryPassword)
-            },
-            label = { Text("Key alias", fontFamily = mono, fontSize = 10.sp) },
-            singleLine = true,
-            enabled = enabled,
-            textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(corners.small)
-        )
-
-        Spacer(Modifier.height(4.dp))
-
-        // Key entry password
-        OutlinedTextField(
-            value = localEntryPassword,
-            onValueChange = {
-                localEntryPassword = it
-                onCredentialsChange(localPassword.ifEmpty { null }, localAlias, it)
-            },
-            label = { Text("Key password", fontFamily = mono, fontSize = 10.sp) },
-            singleLine = true,
-            enabled = enabled,
-            visualTransformation = if (showEntryPassword) androidx.compose.ui.text.input.VisualTransformation.None
-                                   else androidx.compose.ui.text.input.PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(
-                    onClick = { showEntryPassword = !showEntryPassword },
-                    modifier = Modifier.size(20.dp)
-                ) {
-                    Icon(
-                        imageVector = if (showEntryPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                        contentDescription = if (showEntryPassword) "Hide" else "Show",
-                        modifier = Modifier.size(14.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    )
-                }
-            },
-            textStyle = LocalTextStyle.current.copy(fontFamily = mono, fontSize = 12.sp),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(corners.small)
-        )
+            LabeledField(label = "KEY PASSWORD", mono = mono) {
+                SlimTextField(
+                    value = localEntryPassword,
+                    onValueChange = {
+                        localEntryPassword = it
+                        onCredentialsChange(localPassword.ifEmpty { null }, localAlias, it)
+                    },
+                    placeholder = "",
+                    mono = mono,
+                    accents = accents,
+                    corners = corners,
+                    enabled = enabled,
+                    visualTransformation = if (showEntryPassword) androidx.compose.ui.text.input.VisualTransformation.None
+                                           else androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
+                    trailing = {
+                        IconButton(
+                            onClick = { showEntryPassword = !showEntryPassword },
+                            modifier = Modifier.size(24.dp),
+                        ) {
+                            Icon(
+                                imageVector = if (showEntryPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = if (showEntryPassword) "Hide" else "Show",
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            )
+                        }
+                    },
+                )
+            }
+        }
 
         // Verify credentials button
         var verifyResult by remember { mutableStateOf<String?>(null) }
@@ -2539,7 +2018,7 @@ private fun SigningSection(
                     }
                 },
                 enabled = enabled,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(
                     1.dp,
@@ -2549,7 +2028,7 @@ private fun SigningSection(
                         else -> borderColor
                     }
                 ),
-                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
@@ -2635,14 +2114,14 @@ private fun SigningSection(
                     }
                 },
                 enabled = enabled,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(
                     1.dp, if (generateSuccess)
                         MorpheColors.Teal.copy(alpha = 0.4f)
                     else accentColor.copy(alpha = 0.3f)
                 ),
-                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -3027,6 +2506,7 @@ private fun ThemePreference.toDisplayName(): String {
         ThemePreference.CATPPUCCIN -> "Catppuccin"
         ThemePreference.SAKURA -> "Sakura"
         ThemePreference.MATCHA -> "Matcha"
+        ThemePreference.DEEPSPACE -> "Deepspace"
         ThemePreference.SYSTEM -> "System"
     }
 }
@@ -3040,6 +2520,7 @@ private fun ThemePreference.iconSymbol(): String {
         ThemePreference.CATPPUCCIN -> "🐱"
         ThemePreference.SAKURA -> "🌸"
         ThemePreference.MATCHA -> "🍵"
+        ThemePreference.DEEPSPACE -> "✦"
         ThemePreference.SYSTEM -> "⚙"
     }
 }
@@ -3053,6 +2534,7 @@ private fun ThemePreference.accentColor(): Color {
         ThemePreference.CATPPUCCIN -> Color(0xFFCBA6F7)
         ThemePreference.SAKURA -> Color(0xFFB43A67)
         ThemePreference.MATCHA -> Color(0xFF4C7A35)
+        ThemePreference.DEEPSPACE -> Color(0xFF00D9FF)
         ThemePreference.SYSTEM -> MorpheColors.Blue
     }
 }
@@ -3095,44 +2577,6 @@ private fun clearAllCache(): Boolean {
     }
 }
 
-/**
- * Resolves a URL to a GitHub repository URL.
- * Supports:
- * - Direct GitHub URLs: https://github.com/owner/repo
- * - Morphe source links: https://morphe.software/add-source?github=owner/repo
- * - Short form: owner/repo (assumed GitHub)
- * Returns a normalized https://github.com/owner/repo URL, or null if invalid.
- */
-private fun resolveGitHubUrl(input: String): String? {
-    val trimmed = input.trim()
-    if (trimmed.isBlank()) return null
-
-    // Morphe source link: morphe.software/add-source?github=owner/repo
-    if (trimmed.contains("morphe.software/add-source")) {
-        val match = Regex("[?&]github=([^&]+)").find(trimmed)
-        val repoPath = match?.groupValues?.get(1) ?: return null
-        val clean = repoPath.trimEnd('/')
-        return if (clean.contains('/') && clean.split('/').size == 2) {
-            "https://github.com/$clean"
-        } else null
-    }
-
-    // Direct GitHub URL: https://github.com/owner/repo
-    if (trimmed.contains("github.com/")) {
-        // Extract owner/repo from full URL
-        val match = Regex("github\\.com/([^/]+/[^/]+)").find(trimmed)
-        return if (match != null) {
-            "https://github.com/${match.groupValues[1].trimEnd('/')}"
-        } else null
-    }
-
-    // Short form: owner/repo
-    if (trimmed.matches(Regex("[\\w.-]+/[\\w.-]+"))) {
-        return "https://github.com/$trimmed"
-    }
-
-    return null
-}
 
 // ── Patched App Runtime Logs Section ──
 

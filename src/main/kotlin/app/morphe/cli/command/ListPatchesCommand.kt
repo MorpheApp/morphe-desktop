@@ -8,6 +8,7 @@
 
 package app.morphe.cli.command
 
+import app.morphe.engine.MorpheData
 import app.morphe.patcher.patch.Package
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.loadPatchesFromJar
@@ -181,13 +182,14 @@ internal object ListPatchesCommand : Runnable {
             } ?: withUniversalPatches
 
 
-        val temporaryFilesPath = temporaryFilesPath ?: File("").absoluteFile.resolve("morphe-temporary-files")
+        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
         try {
             patchesFiles = PatchFileResolver.resolve(
                 patchesFiles,
                 prerelease,
-                temporaryFilesPath
+                temporaryFilesPath,
+                CliHttpClient.instance
             )
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(
