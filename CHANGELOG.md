@@ -1,3 +1,10 @@
+# [1.9.0-dev.2](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0-dev.1...v1.9.0-dev.2) (2026-05-20)
+
+
+### Features
+
+* Apply patches from multiple patch bundles, add GUI patch source selector  ([#145](https://github.com/MorpheApp/morphe-cli/issues/145)) ([44ed6c6](https://github.com/MorpheApp/morphe-cli/commit/44ed6c6efe5d7f97624557056b2caca23278eebf))
+
 # [1.9.0-dev.1](https://github.com/MorpheApp/morphe-cli/compare/v1.8.1...v1.9.0-dev.1) (2026-05-11)
 
 
