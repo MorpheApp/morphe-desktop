@@ -297,6 +297,14 @@ class ConfigRepository {
     }
 
     /**
+     * Update whether Morphe auto-starts the ADB daemon at GUI launch.
+     */
+    suspend fun setAutoStartAdb(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(autoStartAdb = enabled))
+    }
+
+    /**
      * Mark the multi-source upgrade hint as dismissed. One-shot — never resets.
      */
     suspend fun setMultiSourceHintDismissed() {

@@ -51,6 +51,21 @@ val LocalModeState = staticCompositionLocalOf<ModeState> {
     error("No ModeState provided")
 }
 
+/**
+ * Auto-start ADB preference. Exposed as a composition local so the
+ * SettingsDialog (writer) and DeviceIndicator + install buttons (readers)
+ * can react without prop-drilling through Voyager screens. App-level
+ * lifecycle (start/stop the daemon when this flips) is handled in [App.kt].
+ */
+data class AdbPreferenceState(
+    val enabled: Boolean,
+    val onChange: (Boolean) -> Unit,
+)
+
+val LocalAdbPreference = staticCompositionLocalOf<AdbPreferenceState> {
+    error("No AdbPreferenceState provided")
+}
+
 @Composable
 fun App(
     initialSimplifiedMode: Boolean = true
@@ -76,6 +91,7 @@ private fun AppContent(
 
     var themePreference by remember { mutableStateOf(ThemePreference.SYSTEM) }
     var isSimplifiedMode by remember { mutableStateOf(initialSimplifiedMode) }
+    var autoStartAdb by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
 
     // Initialize PatchSourceManager and load config on startup
@@ -84,6 +100,7 @@ private fun AppContent(
         val config = configRepository.loadConfig()
         themePreference = config.getThemePreference()
         isSimplifiedMode = config.useSimplifiedMode
+        autoStartAdb = config.autoStartAdb
         isLoading = false
     }
 
@@ -105,6 +122,23 @@ private fun AppContent(
         }
     }
 
+    // Callback for the auto-start ADB toggle. Persists the preference AND
+    // applies the change immediately: ON spins up DeviceMonitor (which
+    // explicitly start-server's adb and records ownership); OFF cancels
+    // polling and kill-server's the daemon if Morphe owns it.
+    val onAutoStartAdbChange: (Boolean) -> Unit = { enabled ->
+        autoStartAdb = enabled
+        scope.launch {
+            configRepository.setAutoStartAdb(enabled)
+            if (enabled) {
+                DeviceMonitor.startMonitoring()
+            } else {
+                DeviceMonitor.stopMonitoringAndKillIfOwned()
+            }
+            Logger.info("Auto-start ADB ${if (enabled) "enabled" else "disabled"}")
+        }
+    }
+
     val themeState = ThemeState(
         current = themePreference,
         onChange = onThemeChange
@@ -115,9 +149,24 @@ private fun AppContent(
         onChange = onModeChange
     )
 
-    // Start/stop DeviceMonitor with app lifecycle
+    val adbPreferenceState = AdbPreferenceState(
+        enabled = autoStartAdb,
+        onChange = onAutoStartAdbChange
+    )
+
+    // Initial DeviceMonitor start. Gated on autoStartAdb so users who left
+    // the toggle OFF don't spawn an unwanted adb daemon at launch. Runs once
+    // after config finishes loading. Subsequent live toggles go through
+    // [onAutoStartAdbChange], not this effect.
+    LaunchedEffect(isLoading, autoStartAdb) {
+        if (!isLoading && autoStartAdb) {
+            DeviceMonitor.startMonitoring()
+        }
+    }
+    // On Compose teardown (window close → exitApplication), cancel polling.
+    // The kill-if-owned half runs from the JVM shutdown hook in [GuiMain.kt]
+    // so it works even when the user quits via Cmd+Q without disposing.
     DisposableEffect(Unit) {
-        DeviceMonitor.startMonitoring()
         onDispose {
             DeviceMonitor.stopMonitoring()
         }
@@ -126,7 +175,8 @@ private fun AppContent(
     MorpheTheme(themePreference = themePreference) {
         CompositionLocalProvider(
             LocalThemeState provides themeState,
-            LocalModeState provides modeState
+            LocalModeState provides modeState,
+            LocalAdbPreference provides adbPreferenceState
         ) {
             // Tint the OS title bar (Windows DWM caption color, macOS traffic
             // light contrast) to match the active theme's surface color.

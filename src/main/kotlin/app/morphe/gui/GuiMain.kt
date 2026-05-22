@@ -18,6 +18,8 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import app.morphe.gui.data.model.AppConfig
+import app.morphe.gui.util.DeviceMonitor
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
 import app.morphe.gui.util.FileUtils
@@ -32,6 +34,18 @@ fun launchGui(args: Array<String>) = application {
         args.contains("--quick") || args.contains("-q") -> true
         args.contains("--full") || args.contains("-f") -> false
         else -> loadConfigSync().useSimplifiedMode
+    }
+
+    // Belt-and-braces: on any JVM-normal exit path (window close, Cmd+Q,
+    // SIGTERM), kill the ADB daemon if Morphe spawned it. Compose's
+    // DisposableEffect already cancels polling; this hook covers shutdown
+    // routes where Compose teardown doesn't reach the suspend kill call.
+    remember {
+        Runtime.getRuntime().addShutdownHook(Thread {
+            runCatching {
+                runBlocking { DeviceMonitor.stopMonitoringAndKillIfOwned() }
+            }
+        })
     }
 
     val windowState = rememberWindowState(

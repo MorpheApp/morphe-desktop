@@ -8,6 +8,8 @@ package app.morphe.gui.util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.net.InetSocketAddress
+import java.net.Socket
 
 /**
  * Manages ADB (Android Debug Bridge) operations for installing APKs.
@@ -16,6 +18,49 @@ import java.io.File
 class AdbManager {
 
     private var adbPath: String? = null
+
+    /**
+     * Set to true once [startServer] confirms Morphe was the process that
+     * spawned the ADB daemon (vs. attaching to one that was already running —
+     * Android Studio, scrcpy, a prior shell session). Gates [killServerIfOwned]
+     * so we never nuke a daemon someone else is depending on.
+     *
+     * Updated on every [startServer] call: if we attach to a pre-existing
+     * daemon and that daemon later dies + our next [startServer] tick
+     * respawns it, ownership flips from false → true. Without that, the
+     * polling loop's implicit respawns would leak a daemon Morphe is
+     * actively maintaining.
+     */
+    @Volatile
+    var weStartedDaemon: Boolean = false
+        private set
+
+    /**
+     * One-shot log dedup for the "we attached to a pre-existing daemon"
+     * message — without this, the polling loop would log it every 5s.
+     * Reset by [killServerIfOwned] so a re-attach after a kill cycle
+     * re-logs once.
+     */
+    @Volatile
+    private var loggedAttachOnce: Boolean = false
+
+    /**
+     * Cheap probe to check if the ADB daemon is listening on its conventional
+     * loopback port (5037). Used by [startServer] to detect ownership without
+     * relying on adb's stderr output (which varies across versions and can be
+     * suppressed when invoked programmatically).
+     *
+     * Short timeout keeps the polling loop snappy; localhost connects in <1ms
+     * when alive, refuses immediately when down.
+     */
+    private fun isDaemonAlive(): Boolean = try {
+        Socket().use { socket ->
+            socket.connect(InetSocketAddress("127.0.0.1", 5037), 250)
+        }
+        true
+    } catch (_: Exception) {
+        false
+    }
 
     /**
      * Find ADB binary in common locations or PATH.
@@ -105,6 +150,102 @@ class AdbManager {
      * Check if ADB is available.
      */
     suspend fun isAdbAvailable(): Boolean = findAdb() != null
+
+    /**
+     * Ensure the ADB daemon is running, and record whether Morphe was the
+     * process that spawned the *current* daemon. Idempotent and cheap — safe
+     * to call on every poll tick.
+     *
+     * Detection is a TCP probe of 127.0.0.1:5037 (adb's conventional listen
+     * port). Before: alive? After invoking `adb start-server`: alive?
+     *   - was-down + now-up → we own it (set [weStartedDaemon] = true).
+     *   - was-up           → no-op; ownership flag unchanged.
+     *
+     * Re-detection on every call matters: if Morphe initially attached to a
+     * pre-existing daemon (flag = false) and that daemon dies mid-session,
+     * the *next* tick's call will spawn a fresh one and flip the flag to
+     * true — so a subsequent [killServerIfOwned] correctly tears it down.
+     */
+    suspend fun startServer(): Result<Unit> = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext Result.failure(
+            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+        )
+
+        try {
+            if (isDaemonAlive()) {
+                // Daemon already up — Morphe is attaching, not spawning.
+                // Don't touch the ownership flag (a prior tick may have set
+                // it to true and the daemon is still ours).
+                if (!weStartedDaemon && !loggedAttachOnce) {
+                    Logger.info("ADB daemon was already running — leaving it alone on shutdown")
+                    loggedAttachOnce = true
+                }
+                return@withContext Result.success(Unit)
+            }
+
+            // Daemon is down. Spawn it.
+            val process = ProcessBuilder(adb, "start-server")
+                .redirectErrorStream(true)
+                .start()
+            process.inputStream.bufferedReader().readText() // drain so the child exits cleanly
+            val exitCode = process.waitFor()
+            if (exitCode != 0) {
+                return@withContext Result.failure(
+                    AdbException("adb start-server exited with code $exitCode")
+                )
+            }
+
+            if (isDaemonAlive()) {
+                if (!weStartedDaemon) {
+                    Logger.info("ADB daemon spawned by Morphe — will kill on shutdown")
+                }
+                weStartedDaemon = true
+                loggedAttachOnce = false
+            } else {
+                Logger.warn("adb start-server returned success but port 5037 is still closed")
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Logger.error("Failed to start ADB server", e)
+            Result.failure(AdbException("Failed to start ADB server: ${e.message}"))
+        }
+    }
+
+    /**
+     * Kill the ADB server, but only if [weStartedDaemon] — i.e. Morphe was
+     * the one that spawned it. Refusing to kill a daemon we attached to
+     * keeps Android Studio / scrcpy / other concurrent users alive.
+     *
+     * Clears [weStartedDaemon] on success so repeated calls are idempotent.
+     */
+    suspend fun killServerIfOwned(): Result<Boolean> = withContext(Dispatchers.IO) {
+        if (!weStartedDaemon) {
+            Logger.debug("Skipping adb kill-server — daemon wasn't started by Morphe")
+            return@withContext Result.success(false)
+        }
+        val adb = findAdb() ?: return@withContext Result.success(false)
+
+        try {
+            val process = ProcessBuilder(adb, "kill-server")
+                .redirectErrorStream(true)
+                .start()
+            val output = process.inputStream.bufferedReader().readText()
+            val exitCode = process.waitFor()
+            if (exitCode != 0) {
+                Logger.warn("adb kill-server exited with code $exitCode: $output")
+                return@withContext Result.failure(
+                    AdbException("adb kill-server exited with code $exitCode")
+                )
+            }
+            weStartedDaemon = false
+            loggedAttachOnce = false  // next attach (if any) re-logs once
+            Logger.info("ADB daemon killed by Morphe")
+            Result.success(true)
+        } catch (e: Exception) {
+            Logger.error("Failed to kill ADB server", e)
+            Result.failure(AdbException("Failed to kill ADB server: ${e.message}"))
+        }
+    }
 
     /**
      * Get list of connected devices.

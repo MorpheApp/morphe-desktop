@@ -76,6 +76,12 @@ data class AppConfig(
     // after upgrading to multi-source builds. Flips to true once the user dismisses
     // the banner, never resets.
     val multiSourceHintDismissed: Boolean = false,
+    // Whether Morphe should auto-start the ADB daemon at GUI launch to monitor
+    // connected devices. Default OFF — many users never push patched APKs to a
+    // device, so spawning a long-lived adb server unprompted is unwanted noise.
+    // When ON, DeviceMonitor polls devices; if Morphe was the one that started
+    // the daemon, it's killed on toggle-OFF and on window close.
+    val autoStartAdb: Boolean = false,
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {
