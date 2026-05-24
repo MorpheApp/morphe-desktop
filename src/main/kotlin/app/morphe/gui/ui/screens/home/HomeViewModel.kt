@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import app.morphe.engine.util.ApkManifestReader
@@ -29,6 +30,8 @@ import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.SupportedAppExtractor
 import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.data.repository.ActiveMode
+import app.morphe.gui.util.humanizePatchLoadError
 import java.io.File
 
 class HomeViewModel(
@@ -68,9 +71,6 @@ class HomeViewModel(
             ?: emptyList()
 
     init {
-        // Auto-fetch patches on startup
-        loadPatchesAndSupportedApps()
-
         // Background CLI update check — non-blocking, banner only.
         screenModelScope.launch {
             val config = configRepository.loadConfig()
@@ -85,9 +85,30 @@ class HomeViewModel(
             )
         }
 
+        // Load patches whenever EXPERT becomes the active mode. StateFlow
+        // emits its current value on subscribe, so this also covers the
+        // "VM was just created while EXPERT is active" case — replaces the
+        // unconditional init-block load that used to fire even when the
+        // user was actually in Quick mode (we don't construct HomeVM in
+        // pure Quick sessions today, but Voyager keeps it alive across
+        // mode switches, so the gate prevents wasted reloads on return).
+        screenModelScope.launch {
+            patchSourceManager.activeMode.collect { mode ->
+                if (mode == ActiveMode.EXPERT) {
+                    loadPatchesAndSupportedApps()
+                }
+            }
+        }
+
         // Observe source changes — drop(1) to skip the initial value
         screenModelScope.launch {
             patchSourceManager.sourceVersion.drop(1).collect {
+                // Skip when Quick mode is active — QuickPatchViewModel will
+                // handle the reload for its (single) active source. Without
+                // this gate both VMs fire parallel loads on every cache
+                // clear, doubling network traffic and tripling the
+                // cancellation cascade surface on slow connections.
+                if (patchSourceManager.activeMode.value != ActiveMode.EXPERT) return@collect
                 Logger.info("HomeVM: Source changed, reloading patches...")
                 patchRepository = patchSourceManager.getActiveRepositorySync()
                 localPatchFilePath = patchSourceManager.getLocalFilePath()
@@ -250,11 +271,17 @@ class HomeViewModel(
                     patchLoadError = null
                 )
                 reanalyzeSelectedApk()
+            } catch (e: CancellationException) {
+                // Cancellation is normal coroutine bookkeeping (a newer load
+                // superseded this one, or the screen left composition). Do NOT
+                // write UI state — otherwise a stale "Job was cancelled" can
+                // clobber the in-flight successor's loading/success state.
+                throw e
             } catch (e: Exception) {
                 Logger.error("Failed to load patches and supported apps", e)
                 _uiState.value = _uiState.value.copy(
                     isLoadingPatches = false,
-                    patchLoadError = e.message ?: "Unknown error"
+                    patchLoadError = humanizePatchLoadError(e),
                 )
             }
         }

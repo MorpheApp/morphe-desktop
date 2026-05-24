@@ -6,6 +6,7 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -106,12 +108,22 @@ fun SourceManagementSheet(
             )
         },
         text = {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .widthIn(min = 360.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            // Hoisted so the scrollbar can share the same state as the
+            // scrolling Column. The scrollbar renders only when the
+            // content actually overflows (maxValue > 0) — keeps the
+            // dialog clean for the common case of a handful of sources.
+            val scrollState = rememberScrollState()
+            Box {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .widthIn(min = 360.dp)
+                        // Reserve space so rows don't get covered by the
+                        // scrollbar when it appears, plus a bit of breathing
+                        // room so the scrollbar isn't flush against the rows.
+                        .padding(end = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                 Text(
                     text = when {
                         !enabled -> "Disabled while patching"
@@ -168,6 +180,18 @@ fun SourceManagementSheet(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 10.sp,
                         letterSpacing = 0.5.sp
+                    )
+                }
+                }
+
+                if (scrollState.maxValue > 0) {
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight()
+                            .padding(vertical = 4.dp),
+                        adapter = rememberScrollbarAdapter(scrollState),
+                        style = morpheScrollbarStyle()
                     )
                 }
             }

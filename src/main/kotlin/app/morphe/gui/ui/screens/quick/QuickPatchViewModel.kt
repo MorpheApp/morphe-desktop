@@ -17,6 +17,7 @@ import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,6 +32,8 @@ import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.SupportedAppExtractor
 import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.util.humanizePatchLoadError
+import app.morphe.gui.data.repository.ActiveMode
 import java.io.File
 
 /**
@@ -73,9 +76,6 @@ class QuickPatchViewModel(
     private var cachedSourcesResult: EnabledSourcesLoader.Result? = null
 
     init {
-        // Load patches on startup to get dynamic app info
-        loadPatchesAndSupportedApps()
-
         // Background CLI update check — non-blocking, banner only.
         screenModelScope.launch {
             val info = updateCheckRepository.getUpdateInfo()
@@ -86,9 +86,29 @@ class QuickPatchViewModel(
             )
         }
 
+        // Load patches whenever QUICK becomes the active mode. StateFlow
+        // replays the current value on subscribe, so this covers the
+        // "VM was just constructed while QUICK is active" case (replacing
+        // the old unconditional init-block load) AND the "user switched
+        // back to Quick after being in Expert" case.
+        screenModelScope.launch {
+            patchSourceManager.activeMode.collect { mode ->
+                if (mode == ActiveMode.QUICK) {
+                    loadPatchesAndSupportedApps()
+                }
+            }
+        }
+
         // Observe source changes
         screenModelScope.launch {
             patchSourceManager.sourceVersion.drop(1).collect {
+                // Skip when Expert mode is active — HomeViewModel will handle
+                // the multi-source reload. QuickVM still lives in memory
+                // (it's `remember`-scoped to App.kt) but staying silent here
+                // halves the parallel HTTP traffic and removes the duplicate
+                // request for the active source that BOTH VMs would otherwise
+                // fire simultaneously.
+                if (patchSourceManager.activeMode.value != ActiveMode.QUICK) return@collect
                 Logger.info("QuickVM: Source changed, reloading patches...")
                 patchRepository = patchSourceManager.getActiveRepositorySync()
                 localPatchFilePath = patchSourceManager.getLocalFilePath()
@@ -213,11 +233,16 @@ class QuickPatchViewModel(
                     patchLoadError = null,
                     isOffline = isOffline
                 )
+            } catch (e: CancellationException) {
+                // See HomeViewModel for the rationale: never overwrite UI
+                // state from a cancelled load — the cancellation race would
+                // clobber a successor's progress with a stale error.
+                throw e
             } catch (e: Exception) {
                 Logger.error("Quick mode: Failed to load patches", e)
                 _uiState.value = _uiState.value.copy(
                     isLoadingPatches = false,
-                    patchLoadError = "Failed to load patches: ${e.message}"
+                    patchLoadError = humanizePatchLoadError(e),
                 )
             }
         }

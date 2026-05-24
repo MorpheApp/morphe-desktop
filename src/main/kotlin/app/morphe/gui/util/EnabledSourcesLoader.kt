@@ -9,10 +9,11 @@ import app.morphe.engine.MultiSourceLoader
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.PatchRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -72,9 +73,22 @@ object EnabledSourcesLoader {
         enabled: List<Pair<PatchSource, PatchRepository?>>,
         patchService: PatchService,
         preferredVersionsBySource: Map<String, String> = emptyMap(),
-    ): Result = coroutineScope {
+    ): Result = supervisorScope {
+        // supervisorScope (not coroutineScope) so a single source's failure
+        // doesn't cancel the other in-flight resolves. Each async catches its
+        // own exceptions and returns a failed ResolvedSource — failures
+        // become data, not control flow. Cancellation still propagates from
+        // the caller (e.g. ViewModel cancelling its loadJob).
         val resolved = enabled.map { (source, repo) ->
-            async(Dispatchers.IO) { resolve(source, repo, preferredVersionsBySource[source.id]) }
+            async(Dispatchers.IO) {
+                try {
+                    resolve(source, repo, preferredVersionsBySource[source.id])
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    ResolvedSource(source = source, error = e.message ?: e.javaClass.simpleName)
+                }
+            }
         }.awaitAll()
 
         val inputs = resolved.mapNotNull { res ->

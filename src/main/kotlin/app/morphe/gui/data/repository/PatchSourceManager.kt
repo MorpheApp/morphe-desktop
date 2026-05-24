@@ -16,6 +16,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
+ * Which top-level UI mode is currently visible. Used by [PatchSourceManager]
+ * to gate per-VM patch loading so only the visible mode's VM does the work.
+ */
+enum class ActiveMode { QUICK, EXPERT }
+
+/**
  * Manages PatchRepository instances for different patch sources.
  * Creates and caches a PatchRepository per GitHub-based source.
  * Emits [sourceVersion] whenever the active source changes so the UI can react.
@@ -46,6 +52,25 @@ class PatchSourceManager(
     // SourceManagementSheet which needs to render every source with a toggle.
     private val _allSources = MutableStateFlow<List<PatchSource>>(emptyList())
     val allSources: StateFlow<List<PatchSource>> = _allSources.asStateFlow()
+
+    /**
+     * Which mode's ViewModel is currently driving the UI. Used by both
+     * [HomeViewModel] (EXPERT) and [QuickPatchViewModel] (QUICK) to skip
+     * patch-loading when they're not visible — both VMs can be alive
+     * simultaneously (QuickVM is `remember`-scoped to App.kt; HomeVM is
+     * created by Voyager when the Navigator branch composes), and without
+     * this gate they'd race to download the same sources twice on every
+     * cache clear / source toggle.
+     */
+    private val _activeMode = MutableStateFlow(ActiveMode.QUICK)
+    val activeMode: StateFlow<ActiveMode> = _activeMode.asStateFlow()
+
+    fun setActiveMode(mode: ActiveMode) {
+        if (_activeMode.value != mode) {
+            Logger.info("PatchSourceManager: active mode → $mode")
+            _activeMode.value = mode
+        }
+    }
 
     /**
      * Load the active source from config and cache its PatchRepository.

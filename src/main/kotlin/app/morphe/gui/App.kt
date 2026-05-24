@@ -22,6 +22,7 @@ import app.morphe.gui.ui.components.SakuraPetals
 import app.morphe.gui.util.applyTitleBarTint
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.di.appModule
@@ -84,6 +85,11 @@ private fun AppContent(
         val config = configRepository.loadConfig()
         themePreference = config.getThemePreference()
         isSimplifiedMode = config.useSimplifiedMode
+        // Publish the initial active mode BEFORE the VMs subscribe so their
+        // activeMode listener fires with the correct value on first emit.
+        patchSourceManager.setActiveMode(
+            if (isSimplifiedMode) ActiveMode.QUICK else ActiveMode.EXPERT
+        )
         isLoading = false
     }
 
@@ -99,6 +105,13 @@ private fun AppContent(
     // Callback for changing mode
     val onModeChange: (Boolean) -> Unit = { simplified ->
         isSimplifiedMode = simplified
+        // Update the manager immediately so the now-visible mode's VM
+        // starts reacting to source changes and the now-hidden one stops —
+        // prevents duplicate parallel loads and the cancellation cascade
+        // that comes with them.
+        patchSourceManager.setActiveMode(
+            if (simplified) ActiveMode.QUICK else ActiveMode.EXPERT
+        )
         scope.launch {
             configRepository.setUseSimplifiedMode(simplified)
             Logger.info("Mode changed to: ${if (simplified) "Simplified" else "Full"}")
