@@ -15,6 +15,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -294,6 +296,7 @@ private fun ExpandedBody(
     // "Other stable" = supported versions other than the recommended latest.
     val otherStable = app.supportedVersions.filter { it != app.recommendedVersion }
     val maxPills = 16
+    val uriHandler = LocalUriHandler.current
 
     Column(
         modifier = Modifier
@@ -332,7 +335,16 @@ private fun ExpandedBody(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 otherStable.take(maxPills).forEach { v ->
-                    Pill(text = v, color = accents.secondary, mono = mono, cornerSmall = cornerSmall)
+                    // URL is a pure function of package + version — compute
+                    // per pill rather than pre-storing all of them on the model.
+                    val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
+                    Pill(
+                        text = v,
+                        color = accents.secondary,
+                        mono = mono,
+                        cornerSmall = cornerSmall,
+                        onClick = url?.let { { uriHandler.openUri(it) } },
+                    )
                 }
                 if (otherStable.size > maxPills) {
                     Text(
@@ -353,7 +365,14 @@ private fun ExpandedBody(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 app.experimentalVersions.take(maxPills).forEach { v ->
-                    Pill(text = v, color = accents.warning, mono = mono, cornerSmall = cornerSmall)
+                    val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
+                    Pill(
+                        text = v,
+                        color = accents.warning,
+                        mono = mono,
+                        cornerSmall = cornerSmall,
+                        onClick = url?.let { { uriHandler.openUri(it) } },
+                    )
                 }
                 if (app.experimentalVersions.size > maxPills) {
                     Text(
@@ -394,20 +413,54 @@ private fun Pill(
     textColor: Color = color,
     borderAlpha: Float = 0.3f,
     backgroundAlpha: Float = 0.06f,
+    // When non-null, the pill becomes a tappable download link: gets a hand
+    // cursor, an OpenInNew icon, a subtle hover lift, and fires onClick on tap.
+    // detectTapGestures (not .clickable) so scroll wheel / two-finger gestures
+    // pass through on Linux/Skiko — same reason as the apps-cards Row.
+    onClick: (() -> Unit)? = null,
 ) {
+    val hoverSource = remember { MutableInteractionSource() }
+    val isHovered by hoverSource.collectIsHoveredAsState()
+    val isInteractive = onClick != null
+    val hoveredLift = if (isInteractive && isHovered) 0.20f else 0f
+    val effectiveBorderAlpha = (borderAlpha + hoveredLift).coerceAtMost(0.85f)
+    val effectiveBackgroundAlpha = (backgroundAlpha + hoveredLift / 2f).coerceAtMost(0.30f)
+
     Box(
         modifier = Modifier
-            .border(1.dp, color.copy(alpha = borderAlpha), RoundedCornerShape(cornerSmall))
-            .background(color.copy(alpha = backgroundAlpha), RoundedCornerShape(cornerSmall))
+            .hoverable(hoverSource)
+            .then(
+                if (isInteractive) Modifier
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .pointerInput(onClick) {
+                        detectTapGestures(onTap = { onClick?.invoke() })
+                    }
+                else Modifier
+            )
+            .border(1.dp, color.copy(alpha = effectiveBorderAlpha), RoundedCornerShape(cornerSmall))
+            .background(color.copy(alpha = effectiveBackgroundAlpha), RoundedCornerShape(cornerSmall))
             .padding(horizontal = 6.dp, vertical = 2.dp),
     ) {
-        Text(
-            text = text,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = mono,
-            color = textColor,
-            maxLines = 1,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                text = text,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = mono,
+                color = textColor,
+                maxLines = 1,
+            )
+            if (isInteractive) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                    contentDescription = "Open download page",
+                    tint = textColor.copy(alpha = if (isHovered) 0.9f else 0.5f),
+                    modifier = Modifier.size(9.dp),
+                )
+            }
+        }
     }
 }
