@@ -107,6 +107,8 @@ fun SettingsDialog(
     onKeepArchitecturesChange: (Set<String>) -> Unit = {},
     updateChannelPreference: app.morphe.gui.data.model.UpdateChannelPreference = app.morphe.gui.data.model.UpdateChannelPreference.STABLE,
     onUpdateChannelChange: (app.morphe.gui.data.model.UpdateChannelPreference) -> Unit = {},
+    autoStartAdb: Boolean = false,
+    onAutoStartAdbChange: (Boolean) -> Unit = {},
     collapsibleSectionStates: Map<String, Boolean> = emptyMap(),
     onCollapsibleSectionToggle: (id: String, expanded: Boolean) -> Unit = { _, _ -> }
 ) {
@@ -273,6 +275,20 @@ fun SettingsDialog(
                     enabled = !isPatching,
                     expanded = collapsibleSectionStates["STRIP LIBS"] == true,
                     onExpandedChange = { onCollapsibleSectionToggle("STRIP LIBS", it) }
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Auto-start ADB ──
+                SettingToggleRow(
+                    label = "Auto-start ADB",
+                    description = "Spawn the ADB daemon on launch so connected devices are monitored. " +
+                        "When off, Morphe never starts the server, and install/push features are disabled.",
+                    checked = autoStartAdb,
+                    onCheckedChange = onAutoStartAdbChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching
                 )
 
                 SettingsDivider(borderColor)

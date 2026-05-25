@@ -5,6 +5,7 @@
 
 package app.morphe.gui.ui.components
 
+import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.LocalModeState
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -60,6 +61,7 @@ fun SettingsButton(
     val corners = LocalMorpheCorners.current
     val themeState = LocalThemeState.current
     val modeState = LocalModeState.current
+    val adbPreference = LocalAdbPreference.current
     val configRepository: ConfigRepository = koinInject()
     val patchSourceManager: PatchSourceManager = koinInject()
     val updateCheckRepository: UpdateCheckRepository = koinInject()
@@ -194,6 +196,8 @@ fun SettingsButton(
                     }
                 }
             },
+            autoStartAdb = adbPreference.enabled,
+            onAutoStartAdbChange = { adbPreference.onChange(it) },
             collapsibleSectionStates = collapsibleSectionStates,
             onCollapsibleSectionToggle = { id, expanded ->
                 collapsibleSectionStates = collapsibleSectionStates + (id to expanded)
