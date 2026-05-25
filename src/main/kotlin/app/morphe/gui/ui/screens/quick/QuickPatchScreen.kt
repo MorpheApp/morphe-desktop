@@ -43,7 +43,9 @@ import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.input.pointer.pointerInput
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.SourceManagementSheet
@@ -1692,10 +1694,16 @@ private fun SupportedAppsRow(
                         .fillMaxWidth()
                         .then(if (useScrolling) Modifier.horizontalScroll(cardsScrollState) else Modifier)
                         .height(IntrinsicSize.Max)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) { focusManager.clearFocus() },
+                        // detectTapGestures (not .clickable) so scroll-wheel /
+                        // two-finger gestures over this Row aren't swallowed.
+                        // .clickable wraps the modifier chain in a pointer-input
+                        // node that consumes scroll events on Linux/Skiko,
+                        // breaking both the inner horizontalScroll and the
+                        // outer page-level verticalScroll. Taps still clear
+                        // the search-bar focus.
+                        .pointerInput(Unit) {
+                            detectTapGestures(onTap = { focusManager.clearFocus() })
+                        },
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     filteredApps.forEach { app ->
