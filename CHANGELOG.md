@@ -1,3 +1,10 @@
+# [1.9.0-dev.3](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0-dev.2...v1.9.0-dev.3) (2026-05-25)
+
+
+### Bug Fixes
+
+* Close adb when app closes ([#153](https://github.com/MorpheApp/morphe-cli/issues/153)) ([a43de5a](https://github.com/MorpheApp/morphe-cli/commit/a43de5a61ee30b7484b534cb6cc74e03bb297fa1))
+
 # [1.9.0-dev.2](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0-dev.1...v1.9.0-dev.2) (2026-05-20)
 
 
