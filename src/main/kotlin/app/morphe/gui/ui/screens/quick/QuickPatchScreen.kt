@@ -39,6 +39,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import app.morphe.morphe_cli.generated.resources.Res
 import app.morphe.morphe_cli.generated.resources.morphe_dark
 import app.morphe.morphe_cli.generated.resources.morphe_light
+import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
@@ -1191,6 +1192,8 @@ private fun CompletedContent(
     val scope = rememberCoroutineScope()
     val adbManager = remember { AdbManager() }
     val monitorState by DeviceMonitor.state.collectAsState()
+    val adbPreference = LocalAdbPreference.current
+    val isAdbDisabledByUser = !adbPreference.enabled
     var isInstalling by remember { mutableStateOf(false) }
     var installError by remember { mutableStateOf<String?>(null) }
     var installSuccess by remember { mutableStateOf(false) }
@@ -1328,8 +1331,44 @@ private fun CompletedContent(
             }
         }
 
-        // ADB install
-        if (monitorState.isAdbAvailable == true) {
+        // ADB install — when the user has the toggle off, render a compact
+        // "ADB OFF" hint with an inline enable button rather than hiding the
+        // affordance entirely (otherwise users wonder where install went).
+        if (isAdbDisabledByUser) {
+            Spacer(modifier = Modifier.height(12.dp))
+            val enableHover = remember { MutableInteractionSource() }
+            val enableHovered by enableHover.collectIsHoveredAsState()
+            Box(
+                modifier = Modifier
+                    .widthIn(max = 480.dp)
+                    .fillMaxWidth()
+                    .height(38.dp)
+                    .hoverable(enableHover)
+                    .clip(RoundedCornerShape(corners.small))
+                    .border(
+                        1.dp,
+                        if (enableHovered) accents.primary.copy(alpha = 0.5f)
+                        else accents.primary.copy(alpha = 0.25f),
+                        RoundedCornerShape(corners.small)
+                    )
+                    .background(
+                        if (enableHovered) accents.primary.copy(alpha = 0.08f)
+                        else Color.Transparent,
+                        RoundedCornerShape(corners.small)
+                    )
+                    .clickable { adbPreference.onChange(true) },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "ADB OFF · ENABLE TO INSTALL",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = accents.primary,
+                    letterSpacing = 0.5.sp
+                )
+            }
+        } else if (monitorState.isAdbAvailable == true) {
             Spacer(modifier = Modifier.height(12.dp))
 
             val readyDevices = monitorState.devices.filter { it.isReady }

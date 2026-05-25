@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material.icons.filled.UsbOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheCorners
@@ -42,8 +44,10 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
+    val adbPreference = LocalAdbPreference.current
     val monitorState by DeviceMonitor.state.collectAsState()
 
+    val isAdbDisabledByUser = !adbPreference.enabled
     val isAdbAvailable = monitorState.isAdbAvailable
     val readyDevices = monitorState.devices.filter { it.isReady }
     val unauthorizedDevices = monitorState.devices.filter { it.status == DeviceStatus.UNAUTHORIZED }
@@ -55,6 +59,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
     val isHovered by hoverInteraction.collectIsHoveredAsState()
 
     val dotColor = when {
+        isAdbDisabledByUser -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f)
         isAdbAvailable == false -> MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
         selectedDevice != null && selectedDevice.isReady -> accents.secondary
         unauthorizedDevices.isNotEmpty() -> accents.warning
@@ -94,6 +99,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                 )
 
                 val displayText = when {
+                    isAdbDisabledByUser -> "ADB OFF"
                     isAdbAvailable == null -> "Checking…"
                     isAdbAvailable == false -> "No ADB"
                     selectedDevice != null -> {
@@ -110,6 +116,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                     fontWeight = FontWeight.Medium,
                     fontFamily = mono,
                     color = when {
+                        isAdbDisabledByUser -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                         isAdbAvailable == false -> MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                         selectedDevice != null -> MaterialTheme.colorScheme.onSurface
                         unauthorizedDevices.isNotEmpty() -> accents.warning
@@ -138,6 +145,67 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
         ) {
             when {
+                isAdbDisabledByUser -> {
+                    DropdownMenuItem(
+                        text = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PowerSettingsNew,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                )
+                                Column {
+                                    Text(
+                                        text = "ADB is off",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontFamily = mono,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = "Morphe is not monitoring connected devices",
+                                        fontSize = 10.sp,
+                                        fontFamily = mono,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                    )
+                                }
+                            }
+                        },
+                        onClick = { showPopup = false }
+                    )
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    DropdownMenuItem(
+                        text = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PowerSettingsNew,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = accents.primary
+                                )
+                                Text(
+                                    text = "Enable ADB",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = mono,
+                                    color = accents.primary
+                                )
+                            }
+                        },
+                        onClick = {
+                            adbPreference.onChange(true)
+                            showPopup = false
+                        }
+                    )
+                }
+
                 isAdbAvailable == false -> {
                     DropdownMenuItem(
                         text = {

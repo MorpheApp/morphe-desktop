@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.repository.ConfigRepository
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -85,6 +86,8 @@ fun ResultScreenContent(outputPath: String) {
 
     // ADB state from DeviceMonitor
     val monitorState by DeviceMonitor.state.collectAsState()
+    val adbPreference = LocalAdbPreference.current
+    val isAdbDisabledByUser = !adbPreference.enabled
     var isInstalling by remember { mutableStateOf(false) }
     var installProgress by remember { mutableStateOf("") }
     var installError by remember { mutableStateOf<String?>(null) }
@@ -352,7 +355,14 @@ fun ResultScreenContent(outputPath: String) {
             }
 
             // ADB Install section
-            if (monitorState.isAdbAvailable == true) {
+            if (isAdbDisabledByUser) {
+                AdbDisabledHint(
+                    corners = corners,
+                    mono = mono,
+                    borderColor = borderColor,
+                    onEnableClick = { adbPreference.onChange(true) }
+                )
+            } else if (monitorState.isAdbAvailable == true) {
                 AdbInstallSection(
                     devices = monitorState.devices,
                     selectedDevice = monitorState.selectedDevice,
@@ -393,8 +403,10 @@ fun ResultScreenContent(outputPath: String) {
                 )
             }
 
-            // ADB help text
-            if (monitorState.isAdbAvailable == false) {
+            // ADB help text — only when the toggle is ON but the binary is
+            // missing. When the toggle is OFF, AdbDisabledHint above carries
+            // the explanation; suppress the duplicate "ADB not found" text.
+            if (!isAdbDisabledByUser && monitorState.isAdbAvailable == false) {
                 Text(
                     text = "ADB not found. Install Android SDK Platform Tools to enable direct installation.",
                     fontSize = 10.sp,
@@ -864,6 +876,87 @@ private fun CleanupSection(
                 tint = accents.secondary,
                 modifier = Modifier.size(18.dp)
             )
+        }
+    }
+}
+
+/**
+ * Replaces [AdbInstallSection] when the user has the auto-start ADB toggle off.
+ * Mirrors the bordered card layout so the result screen doesn't collapse —
+ * but the install button is replaced with a clearly-disabled "ENABLE ADB"
+ * hint that flips the toggle in one click.
+ */
+@Composable
+private fun AdbDisabledHint(
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+    onEnableClick: () -> Unit,
+) {
+    val accents = LocalMorpheAccents.current
+    val hover = remember { MutableInteractionSource() }
+    val isHovered by hover.collectIsHoveredAsState()
+
+    Box(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
+            Text(
+                text = "ADB INSTALL",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                letterSpacing = 1.5.sp
+            )
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = "ADB is off. Install-on-device is disabled.",
+                fontSize = 12.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "Enable ADB in Settings to push patched APKs directly.",
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),
+            )
+            Spacer(Modifier.height(14.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(36.dp)
+                    .hoverable(hover)
+                    .clip(RoundedCornerShape(corners.small))
+                    .border(
+                        1.dp,
+                        if (isHovered) accents.primary.copy(alpha = 0.5f)
+                        else accents.primary.copy(alpha = 0.25f),
+                        RoundedCornerShape(corners.small)
+                    )
+                    .background(
+                        if (isHovered) accents.primary.copy(alpha = 0.08f)
+                        else Color.Transparent
+                    )
+                    .clickable(onClick = onEnableClick),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "ENABLE ADB",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = accents.primary,
+                    letterSpacing = 1.sp
+                )
+            }
         }
     }
 }
