@@ -1,3 +1,10 @@
+# [1.9.0-dev.4](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0-dev.3...v1.9.0-dev.4) (2026-05-26)
+
+
+### Bug Fixes
+
+* Multi patch source minor network times out ([#155](https://github.com/MorpheApp/morphe-cli/issues/155)) ([06e5788](https://github.com/MorpheApp/morphe-cli/commit/06e57889c460cfa334af67c2910dbcb8633191f8))
+
 # [1.9.0-dev.3](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0-dev.2...v1.9.0-dev.3) (2026-05-25)
 
 
