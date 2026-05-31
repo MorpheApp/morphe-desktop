@@ -1,3 +1,10 @@
+## [1.9.1-dev.2](https://github.com/MorpheApp/morphe-cli/compare/v1.9.1-dev.1...v1.9.1-dev.2) (2026-05-31)
+
+
+### Bug Fixes
+
+* Update dependencies ([83d3969](https://github.com/MorpheApp/morphe-cli/commit/83d39692541ca81b7bb555dfd60a001fbb97b3f1))
+
 ## [1.9.1-dev.1](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0...v1.9.1-dev.1) (2026-05-31)
 
 
