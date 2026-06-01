@@ -1,6 +1,6 @@
 # 💻 Documentation and guides of Morphe CLI
 
-This documentation contains topics around [Morphe CLI](https://github.com/MorpheApp/morphes-cli).
+This documentation contains topics around [Morphe CLI](https://github.com/MorpheApp/morphe-cli).
 
 ## 📖 Table of contents
 
