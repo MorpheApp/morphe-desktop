@@ -29,7 +29,7 @@ kotlinx-serialization = "1.11.0"
 jna = "5.18.1"
 
 # Testing
-mockk = "1.14.9"
+mockk = "1.14.11"
 
 # Logging
 slf4j = "2.0.18"
