@@ -22,7 +22,7 @@ koin-bom = "4.2.1"
 voyager = "1.1.0-beta03"
 
 # Async / Serialization
-coroutines = "1.10.2"
+coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
 
 # JNA (Windows DWM title bar tinting)
