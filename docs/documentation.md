@@ -11,6 +11,7 @@ Now that you have gone through with your first run, lets dig deeper to understan
 - [Prerequisites](#prerequisites)
 - [CLI](#cli)
   - [General flags](#general-flags)
+  - [Where Morphe stores its files](#where-files-stored)
   - [patch](#subcommand-1-patch)
   - [list-patches](#subcommand-2-list-patches)
   - [list-versions](#subcommand-3-list-versions)
@@ -34,9 +35,8 @@ Now that you have gone through with your first run, lets dig deeper to understan
 
 <h2> CLI</h2>
 
-The CLI suite is an extremely powerful tool. Often, new features will first appear in the CLI and then will be slowly implemented onto the GUI. Hence, getting a hang of the CLI is very advantageous.
-
-The CLI has some general flags but is mainly divided into 5 main sub-commands (and they all lived in harmony, until the fire nation attacked. Caught that reference?):
+The CLI suite is an extremely powerful tool.
+It has some general flags but is mainly divided into 5 main sub-commands (and they all lived in harmony, until the fire nation attacked. Caught that reference?):
 
 ![img.png](images/documentation/cli/cli_overview.png)
 
@@ -56,6 +56,21 @@ Shows the current version of the morphe-desktop.jar
 java -jar morphe-desktop-*-all.jar --version
 ```
 
+<h3 id="where-files-stored">Where Morphe stores its files</h3>
+
+Morphe keeps its runtime data: cached patch files, logs, scratch space for patching, and the default signing keystore in a single **`morphe-data/`** folder. By default this folder is created **next to the JAR** you run, so it survives upgrades and is easy to find. If that location isn't writable (e.g. running from an IDE, or from a read-only install path), Morphe falls back to **`~/morphe/`**. The startup logs print which one is in use (look for `Morphe data root: ...`).
+
+```
+morphe-data/
+  patches/         # .mpp files downloaded from GitHub URLs
+  logs/            # application logs
+  tmp/             # per-run scratch space + cached .mpp URL downloads
+  morphe.keystore  # shared default signing key (see --keystore)
+  config.json      # GUI preferences
+```
+
+Several flag defaults below — notably `--temporary-files-path` and `--keystore` — point inside this folder.
+
 <h3 id="subcommand-1-patch">Subcommand 1: <code>patch</code></h3>
 
 This is the most fundamental sub-command. Add the `patch` keyword to run this sub-command.
@@ -65,38 +80,38 @@ java -jar morphe-desktop-*-all.jar patch [flag/s]
 
 Here is a quick lookup for all the flags under this subcommand:
 
-| Flag                           | Description                                                   |
-|--------------------------------|---------------------------------------------------------------|
-| `-p`, `--patches`              | Paths to .mpp files or GitHub repo URLs                       |
-| `--prerelease`                 | Fetch latest dev pre-release instead of stable release        |
-| *(positional arg)*             | APK file to patch                                             |
-| `-o`, `--out`                  | Path to save the patched APK to                               |
-| `-e`, `--enable`               | Enable a patch by name                                        |
-| `--ei`                         | Enable a patch by index                                       |
-| `-d`, `--disable`              | Disable a patch by name                                       |
-| `--di`                         | Disable a patch by index                                      |
-| `-O`, `--options`              | Set patch option values (e.g. `-Okey=value`)                  |
-| `--exclusive`                  | Disable all patches except explicitly enabled ones            |
-| `-f`, `--force`                | Skip APK version compatibility check                          |
-| `-i`, `--install`              | Install to ADB device (optional serial)                       |
-| `--mount`                      | Install by mounting over existing app (requires root)         |
-| `--keystore`                   | Path to keystore file for signing                             |
-| `--keystore-password`          | Keystore password                                             |
-| `--keystore-entry-alias`       | Alias of the key pair in the keystore                         |
-| `--keystore-entry-password`    | Password for the keystore entry                               |
-| `--signer`                     | Signer name in the APK signature                              |
-| `--unsigned`                   | Skip signing the final APK                                    |
-| `-t`, `--temporary-files-path` | Path to store temp files                                      |
-| `--purge`                      | Delete temp files after patching                              |
-| `--custom-aapt2-binary`        | Deprecated. No effect, will be removed in a future release    |
-| `--force-apktool`              | Deprecated. No effect, will be removed in a future release    |
-| `--striplibs`                  | Architectures to keep, comma-separated (e.g. `arm64-v8a,x86`) |
-| `--bytecode-mode`              | Bytecode mode: `FULL`, `STRIP_SAFE`, or `STRIP_FAST`          |
-| `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK               |
-| `--continue-on-error`          | Continue patching if a patch fails                            |
-| `--options-file`               | Path to options JSON file                                     |
-| `--options-update`             | Auto-update options JSON file after patching                  |
-| `-r`, `--result-file`          | Path to save patching result JSON                             |
+| Flag                           | Description                                                           |
+|--------------------------------|-----------------------------------------------------------------------|
+| `-p`, `--patches`              | Paths to .mpp files or GitHub repo URLs (repeatable — one per bundle) |
+| `--prerelease`                 | Fetch latest dev pre-release instead of stable release                |
+| *(positional arg)*             | APK file to patch                                                     |
+| `-o`, `--out`                  | Path to save the patched APK to                                       |
+| `-e`, `--enable`               | Enable a patch by name                                                |
+| `--ei`                         | Enable a patch by index                                               |
+| `-d`, `--disable`              | Disable a patch by name                                               |
+| `--di`                         | Disable a patch by index                                              |
+| `-O`, `--options`              | Set patch option values (e.g. `-Okey=value`)                          |
+| `--exclusive`                  | Disable all patches except explicitly enabled ones                    |
+| `-f`, `--force`                | Skip APK version compatibility check                                  |
+| `-i`, `--install`              | Install to ADB device (optional serial)                               |
+| `--mount`                      | Install by mounting over existing app (requires root)                 |
+| `--keystore`                   | Path to keystore file for signing                                     |
+| `--keystore-password`          | Keystore password                                                     |
+| `--keystore-entry-alias`       | Alias of the key pair in the keystore                                 |
+| `--keystore-entry-password`    | Password for the keystore entry                                       |
+| `--signer`                     | Signer name in the APK signature                                      |
+| `--unsigned`                   | Skip signing the final APK                                            |
+| `-t`, `--temporary-files-path` | Path to store temp files                                              |
+| `--purge`                      | Delete temp files after patching                                      |
+| `--custom-aapt2-binary`        | Deprecated. No effect, will be removed in a future release            |
+| `--force-apktool`              | Deprecated. No effect, will be removed in a future release            |
+| `--striplibs`                  | Architectures to keep, comma-separated (e.g. `arm64-v8a,x86`)         |
+| `--bytecode-mode`              | Bytecode mode: `FULL`, `STRIP_SAFE`, or `STRIP_FAST`                  |
+| `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                       |
+| `--continue-on-error`          | Continue patching if a patch fails                                    |
+| `--options-file`               | Path to options JSON file                                             |
+| `--options-update`             | Auto-update options JSON file after patching                          |
+| `-r`, `--result-file`          | Path to save patching result JSON                                     |
 
 > [!NOTE]
 > The examples used for each flag below only show the usage of that specific flag, but in practice, you'll almost always combine multiple flags together to customize your patching. Here's an example of a more complete command:
@@ -110,7 +125,7 @@ Required: Yes
 
 Default: -
 
-This flag is used to specify the patch file to patch your apk. You can pass local .mpp file paths or a GitHub repository URL. When a URL is provided, Morphe will automatically download the .mpp file from the latest release and cache it for future runs.
+This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths or a GitHub repository URL, and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a URL is provided, Morphe automatically downloads the `.mpp` file from the latest release and caches it for future runs.
 ```
 java -jar morphe-desktop-*-all.jar patch --patches patches-*.mpp your_app.apk
 ```
@@ -124,6 +139,23 @@ Or a specific release URL:
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches/releases/tag/v1.0.0 your_app.apk
 ```
+
+<h5 id="using-multiple-bundles">Using multiple patch bundles</h5>
+
+`-p` can be repeated to combine several `.mpp` bundles in a single run:
+```
+java -jar morphe-desktop-*-all.jar patch -p patches-a.mpp -p patches-b.mpp your_app.apk
+```
+
+The **name-based** selection flags (`-e`, `-d`, `-O`) apply to the bundle they follow. Each `-p` starts a new bundle, and the selections after it belong to that bundle until the next `-p`:
+```
+java -jar morphe-desktop-*-all.jar patch \
+  -p patches-a.mpp -e "A patch from bundle A" \
+  -p patches-b.mpp -d "A patch from bundle B" \
+  your_app.apk
+```
+
+**Index-based** selections (`--ei`/`--di`) are the exception. Their numbers refer to the combined list across all supplied bundles, not a single one. Run `list-patches` with the same set of `-p` files to see the combined numbering.
 
 
 #### 2. `--prerelease`:
@@ -154,7 +186,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp your_app.apk
 #### 4. `-o`, `--out`:
 Required: No
 
-Default: `<apk-name>-patched.apk` in the current working directory
+Default: a subfolder named after the app, created next to the input APK — `<app>/<app>-Morphe-<appVersion>-patches-<patchesVersion>.apk`
 
 Specify a custom output path for the patched APK.
 ```
@@ -300,20 +332,23 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i --mount your_app.apk
 #### 14. `--keystore`:
 Required: No
 
-Default: Auto-generated keystore next to the output APK
+Default: the shared `morphe-data/morphe.keystore` (see [Where Morphe stores its files](#where-files-stored))
 
-Path to a keystore file containing a private key and certificate pair to sign the patched APK with. If not specified, Morphe generates a new keystore automatically.
+Path to a keystore file containing a private key and certificate pair to sign the patched APK with. If not specified, Morphe uses a single shared keystore in its data folder — auto-creating it on the first run and reusing it afterwards. Reusing one keystore is intentional: Android only lets you update an installed app with an APK signed by the **same** key, so a stable keystore means you can re-patch and reinstall over a previous build.
 ```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore /path/to/keystore.jks your_app.apk
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore /path/to/keystore.bks your_app.apk
 ```
+
+> [!NOTE]
+> The patcher signs using **BKS** keystores. If you point `--keystore` at a **PKCS12** (`.p12`/`.pfx`) or **JKS** (`.jks`) file, Morphe auto-detects the format from the file's contents (not its extension) and converts a BKS copy to sign with. Your original keystore file is never modified.
 
 
 #### 15. `--keystore-password`:
 Required: No
 
-Default: `"Morphe"`
+Default: empty (no password)
 
-Password to open the keystore file.
+Password to open the **keystore file** itself. Different from the key *entry* password (`--keystore-entry-password`). Morphe's auto-generated default keystore has an empty store password, so you typically only need this flag when supplying your own keystore that was created with one.
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore keystore.jks --keystore-password "mypassword" your_app.apk
 ```
@@ -369,7 +404,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --unsigned your_app.apk
 #### 20. `-t`, `--temporary-files-path`:
 Required: No
 
-Default: `morphe-temporary-files/` in the current working directory
+Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
 
 Path to a directory where Morphe stores temporary files during patching. This is also where downloaded .mpp files are cached when using URLs with `--patches`.
 ```
@@ -572,7 +607,7 @@ java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/Mor
 #### 3. `-t`, `--temporary-files-path`:
 Required: No
 
-Default: `morphe-temporary-files/` in the current working directory
+Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
 
 Path to a directory where Morphe stores temporary files, including cached .mpp downloads when using URLs with `--patches`.
 ```
@@ -715,7 +750,7 @@ java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/Mo
 #### 3. `-t`, `--temporary-files-path`:
 Required: No
 
-Default: `morphe-temporary-files/` in the current working directory
+Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
 
 Path to a directory where Morphe stores temporary files, including cached .mpp downloads when using URLs with `--patches`.
 ```
@@ -791,7 +826,7 @@ java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheAp
 #### 3. `-t`, `--temporary-files-path`:
 Required: No
 
-Default: `morphe-temporary-files/` in the current working directory
+Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
 
 Path to a directory where Morphe stores temporary files, including cached .mpp downloads when using URLs with `--patches`.
 ```
