@@ -38,7 +38,7 @@ The CLI suite is an extremely powerful tool. Often, new features will first appe
 
 The CLI has some general flags but is mainly divided into 5 main sub-commands (and they all lived in harmony, until the fire nation attacked. Caught that reference?):
 
-![img.png](images/readme/cli_overview.png)
+![img.png](images/documentation/cli/cli_overview.png)
 
 ### General flags:
 
