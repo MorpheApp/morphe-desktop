@@ -149,13 +149,17 @@ java -jar morphe-desktop-*-all.jar patch -p patches-a.mpp -p patches-b.mpp your_
 
 The **name-based** selection flags (`-e`, `-d`, `-O`) apply to the bundle they follow. Each `-p` starts a new bundle, and the selections after it belong to that bundle until the next `-p`:
 ```
-java -jar morphe-desktop-*-all.jar patch \
-  -p patches-a.mpp -e "A patch from bundle A" \
-  -p patches-b.mpp -d "A patch from bundle B" \
-  your_app.apk
+java -jar morphe-desktop-*-all.jar patch -p patches-a.mpp -e "A patch from bundle A" -p patches-b.mpp -d "A patch from bundle B" your_app.apk
 ```
 
-**Index-based** selections (`--ei`/`--di`) are the exception. Their numbers refer to the combined list across all supplied bundles, not a single one. Run `list-patches` with the same set of `-p` files to see the combined numbering.
+**Index-based** selections (`--ei`/`--di`) are the exception. Their numbers refer to the combined list across all supplied bundles, not a single one. Run `list-patches` with the same set of `-p` files to see the combined numbering:
+```
+java -jar morphe-desktop-*-all.jar list-patches -p patches-a.mpp -p patches-b.mpp
+```
+Then enable/disable by those combined indices. The index points to a patch no matter which bundle it came from, so its position relative to each `-p` doesn't matter:
+```
+java -jar morphe-desktop-*-all.jar patch -p patches-a.mpp -p patches-b.mpp --ei 57 --di 12 your_app.apk
+```
 
 
 #### 2. `--prerelease`:
