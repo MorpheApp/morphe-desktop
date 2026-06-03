@@ -21,6 +21,13 @@ Now that you have gone through with your first run, lets dig deeper to understan
     - [uninstall](#utility-uninstall)
   - [Value Types Reference](#value-types-reference)
 - [GUI](#gui)
+  - [The two modes](#gui-modes)
+  - [The window at a glance](#gui-window)
+  - [Quick mode](#gui-quick)
+  - [Expert mode](#gui-expert)
+  - [Settings](#gui-settings)
+  - [Tools](#gui-tools)
+  - [Installing to a device](#gui-adb)
 - [Building](#building)
 
 
@@ -69,7 +76,7 @@ morphe-data/
   config.json      # GUI preferences
 ```
 
-Several flag defaults below — notably `--temporary-files-path` and `--keystore` — point inside this folder.
+Several flag defaults below: notably `--temporary-files-path` and `--keystore` point inside this folder.
 
 <h3 id="subcommand-1-patch">Subcommand 1: <code>patch</code></h3>
 
@@ -80,38 +87,38 @@ java -jar morphe-desktop-*-all.jar patch [flag/s]
 
 Here is a quick lookup for all the flags under this subcommand:
 
-| Flag                           | Description                                                           |
-|--------------------------------|-----------------------------------------------------------------------|
-| `-p`, `--patches`              | Paths to .mpp files or GitHub repo URLs (repeatable — one per bundle) |
-| `--prerelease`                 | Fetch latest dev pre-release instead of stable release                |
-| *(positional arg)*             | APK file to patch                                                     |
-| `-o`, `--out`                  | Path to save the patched APK to                                       |
-| `-e`, `--enable`               | Enable a patch by name                                                |
-| `--ei`                         | Enable a patch by index                                               |
-| `-d`, `--disable`              | Disable a patch by name                                               |
-| `--di`                         | Disable a patch by index                                              |
-| `-O`, `--options`              | Set patch option values (e.g. `-Okey=value`)                          |
-| `--exclusive`                  | Disable all patches except explicitly enabled ones                    |
-| `-f`, `--force`                | Skip APK version compatibility check                                  |
-| `-i`, `--install`              | Install to ADB device (optional serial)                               |
-| `--mount`                      | Install by mounting over existing app (requires root)                 |
-| `--keystore`                   | Path to keystore file for signing                                     |
-| `--keystore-password`          | Keystore password                                                     |
-| `--keystore-entry-alias`       | Alias of the key pair in the keystore                                 |
-| `--keystore-entry-password`    | Password for the keystore entry                                       |
-| `--signer`                     | Signer name in the APK signature                                      |
-| `--unsigned`                   | Skip signing the final APK                                            |
-| `-t`, `--temporary-files-path` | Path to store temp files                                              |
-| `--purge`                      | Delete temp files after patching                                      |
-| `--custom-aapt2-binary`        | Deprecated. No effect, will be removed in a future release            |
-| `--force-apktool`              | Deprecated. No effect, will be removed in a future release            |
-| `--striplibs`                  | Architectures to keep, comma-separated (e.g. `arm64-v8a,x86`)         |
-| `--bytecode-mode`              | Bytecode mode: `FULL`, `STRIP_SAFE`, or `STRIP_FAST`                  |
-| `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                       |
-| `--continue-on-error`          | Continue patching if a patch fails                                    |
-| `--options-file`               | Path to options JSON file                                             |
-| `--options-update`             | Auto-update options JSON file after patching                          |
-| `-r`, `--result-file`          | Path to save patching result JSON                                     |
+| Flag                           | Description                                                                    |
+|--------------------------------|--------------------------------------------------------------------------------|
+| `-p`, `--patches`              | Paths to .mpp files or GitHub or GitLab repo URLs (repeatable, one per bundle) |
+| `--prerelease`                 | Fetch latest dev pre-release instead of stable release                         |
+| *(positional arg)*             | APK file to patch                                                              |
+| `-o`, `--out`                  | Path to save the patched APK to                                                |
+| `-e`, `--enable`               | Enable a patch by name                                                         |
+| `--ei`                         | Enable a patch by index                                                        |
+| `-d`, `--disable`              | Disable a patch by name                                                        |
+| `--di`                         | Disable a patch by index                                                       |
+| `-O`, `--options`              | Set patch option values (e.g. `-Okey=value`)                                   |
+| `--exclusive`                  | Disable all patches except explicitly enabled ones                             |
+| `-f`, `--force`                | Skip APK version compatibility check                                           |
+| `-i`, `--install`              | Install to ADB device (optional serial)                                        |
+| `--mount`                      | Install by mounting over existing app (requires root)                          |
+| `--keystore`                   | Path to keystore file for signing                                              |
+| `--keystore-password`          | Keystore password                                                              |
+| `--keystore-entry-alias`       | Alias of the key pair in the keystore                                          |
+| `--keystore-entry-password`    | Password for the keystore entry                                                |
+| `--signer`                     | Signer name in the APK signature                                               |
+| `--unsigned`                   | Skip signing the final APK                                                     |
+| `-t`, `--temporary-files-path` | Path to store temp files                                                       |
+| `--purge`                      | Delete temp files after patching                                               |
+| `--custom-aapt2-binary`        | Deprecated. No effect, will be removed in a future release                     |
+| `--force-apktool`              | Deprecated. No effect, will be removed in a future release                     |
+| `--striplibs`                  | Architectures to keep, comma-separated (e.g. `arm64-v8a,x86`)                  |
+| `--bytecode-mode`              | Bytecode mode: `FULL`, `STRIP_SAFE`, or `STRIP_FAST`                           |
+| `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                |
+| `--continue-on-error`          | Continue patching if a patch fails                                             |
+| `--options-file`               | Path to options JSON file                                                      |
+| `--options-update`             | Auto-update options JSON file after patching                                   |
+| `-r`, `--result-file`          | Path to save patching result JSON                                              |
 
 > [!NOTE]
 > The examples used for each flag below only show the usage of that specific flag, but in practice, you'll almost always combine multiple flags together to customize your patching. Here's an example of a more complete command:
@@ -125,14 +132,15 @@ Required: Yes
 
 Default: -
 
-This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths or a GitHub repository URL, and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a URL is provided, Morphe automatically downloads the `.mpp` file from the latest release and caches it for future runs.
+This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths or a GitHub or GitLab repository URL, and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a URL is provided, Morphe automatically downloads the `.mpp` file from the latest release and caches it for future runs.
 ```
 java -jar morphe-desktop-*-all.jar patch --patches patches-*.mpp your_app.apk
 ```
 
-You can also pass a GitHub repo URL:
+You can also pass a GitHub or GitLab repo URL:
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches your_app.apk
+java -jar morphe-desktop-*-all.jar patch --patches https://gitlab.com/MorpheApp/morphe-patches your_app.apk
 ```
 
 Or a specific release URL:
@@ -167,7 +175,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches --prerelease your_app.apk
 ```
@@ -190,7 +198,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp your_app.apk
 #### 4. `-o`, `--out`:
 Required: No
 
-Default: a subfolder named after the app, created next to the input APK — `<app>/<app>-Morphe-<appVersion>-patches-<patchesVersion>.apk`
+Default: a subfolder named after the app, created next to the input APK – `<app>/<app>-Morphe-<appVersion>-patches-<patchesVersion>.apk`
 
 Specify a custom output path for the patched APK.
 ```
@@ -338,7 +346,7 @@ Required: No
 
 Default: the shared `morphe-data/morphe.keystore` (see [Where Morphe stores its files](#where-files-stored))
 
-Path to a keystore file containing a private key and certificate pair to sign the patched APK with. If not specified, Morphe uses a single shared keystore in its data folder — auto-creating it on the first run and reusing it afterwards. Reusing one keystore is intentional: Android only lets you update an installed app with an APK signed by the **same** key, so a stable keystore means you can re-patch and reinstall over a previous build.
+Path to a keystore file containing a private key and certificate pair to sign the patched APK with. If not specified, Morphe uses a single shared keystore in its data folder – auto-creating it on the first run and reusing it afterwards. Reusing one keystore is intentional: Android only lets you update an installed app with an APK signed by the **same** key, so a stable keystore means you can re-patch and reinstall over a previous build.
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore /path/to/keystore.bks your_app.apk
 ```
@@ -433,7 +441,7 @@ Required: No
 Default: -
 
 > [!WARNING]
-> **Deprecated.** AAPT2 was only used through apktool, which has been replaced by ARSCLib — this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
+> **Deprecated.** AAPT2 was only used through apktool, which has been replaced by ARSCLib – this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --custom-aapt2-binary /path/to/aapt2 your_app.apk
 ```
@@ -445,7 +453,7 @@ Required: No
 Default: `false`
 
 > [!WARNING]
-> **Deprecated.** apktool has been replaced by ARSCLib — this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
+> **Deprecated.** apktool has been replaced by ARSCLib – this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --force-apktool your_app.apk
 ```
@@ -572,7 +580,7 @@ Here is a quick lookup for all the flags under this subcommand:
 
 | Flag                             | Description                                            |
 |----------------------------------|--------------------------------------------------------|
-| `--patches`                      | Paths to .mpp files or GitHub repo URLs                |
+| `--patches`                      | Paths to .mpp files or GitHub or GitLab repo URLs      |
 | `--prerelease`                   | Fetch latest dev pre-release instead of stable release |
 | `-t`, `--temporary-files-path`   | Path to store temporary files                          |
 | `--out`                          | Write patch list to a file instead of stdout           |
@@ -590,7 +598,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to .mpp patch files or GitHub repository URLs to list patches from. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
+One or more paths to .mpp patch files or GitHub or GitLab repository URLs to list patches from. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches
@@ -602,7 +610,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches --prerelease
 ```
@@ -721,7 +729,7 @@ Here is a quick lookup for all the flags under this subcommand:
 
 | Flag                           | Description                                            |
 |--------------------------------|--------------------------------------------------------|
-| `--patches`                    | Paths to .mpp files or GitHub repo URLs                |
+| `--patches`                    | Paths to .mpp files or GitHub or GitLab repo URLs      |
 | `--prerelease`                 | Fetch latest dev pre-release instead of stable release |
 | `-t`, `--temporary-files-path` | Path to store temporary files                          |
 | `-f`, `--filter-package-names` | Filter by package names                                |
@@ -733,7 +741,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to .mpp patch files or GitHub repository URLs. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
+One or more paths to .mpp patch files or GitHub or GitLab repository URLs. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches
@@ -745,7 +753,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches --prerelease
 ```
@@ -797,7 +805,7 @@ Here is a quick lookup for all the flags under this subcommand:
 
 | Flag                           | Description                                            |
 |--------------------------------|--------------------------------------------------------|
-| `-p`, `--patches`              | Paths to .mpp files or GitHub repo URLs                |
+| `-p`, `--patches`              | Paths to .mpp files or GitHub or GitLab repo URLs      |
 | `--prerelease`                 | Fetch latest dev pre-release instead of stable release |
 | `-t`, `--temporary-files-path` | Path to store temporary files                          |
 | `-o`, `--out`                  | Path to the output JSON file                           |
@@ -809,7 +817,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to .mpp patch files or GitHub repository URLs to generate options from. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
+One or more paths to .mpp patch files or GitHub or GitLab repository URLs to generate options from. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
 ```
 java -jar morphe-desktop-*-all.jar options-create -p patches.mpp -o options.json
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches -o options.json
@@ -821,7 +829,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
 ```
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches --prerelease -o options.json
 ```
@@ -1066,7 +1074,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -e "Patch name" -Ostring
 This sets `stringKey` to the string `"1"` instead of the integer `1`.
 
 
-<h2> GUI</h2>
+<h2 id="gui">GUI</h2>
 
 Are you tired of memorizing flags? Is your terminal history just 47 variations of the same command, 
 each one slightly more wrong than the last? Do you find yourself copy-pasting from the documentation above and STILL somehow misspelling 
@@ -1077,10 +1085,268 @@ The GUI, also known as "" is the window you get when you double-click the jar fi
 error message for 20 minutes because you forgot a quote somewhere, and you have no idea where. So let's
 learn how to practically use it.
 
-First off, that entire CLI section you just scrolled through? All those flags, the keystore nonsense, 
-the options JSON workflow? Forget it. All of it.
+First off, that entire CLI section you just scrolled through? All those flags? Forget it. All of it.
 
 In your [first run](../README.md#first-run), you would've encountered the non-expert mode of the GUI.
-This mode is for beginners and quick patches. 
+This mode is for beginners and quick patching. However, there is an even better mode where you could do much more:
 
-Coming soon.
+<h3 id="gui-modes">The two modes</h3>
+
+The GUI runs in one of two modes, and the difference is how much it asks of you:
+
+| Mode | Who it's for | What you control |
+|------|--------------|------------------|
+| **Quick** (default) | First-timers, fast patches | Just the APK — Morphe picks the patch source and the default patch set |
+| **Expert** | Power users | Everything: patch source & version, individual patches & their options, native-lib stripping, signing, and a live CLI-command preview |
+
+On first launch you're in **Quick** mode. Switch anytime in **Settings → Expert mode**; Morphe remembers your choice for next time.
+
+<p align="center">
+  <img src="images/documentation/gui/modes/quick-home.png" width="45%" alt="Quick mode home" />
+  <img src="images/documentation/gui/modes/expert-home.png" width="45%" alt="Expert mode home" />
+</p>
+
+> [!NOTE]
+> The rest of this section focuses on **Expert mode** — that's where the GUI matches (and visualizes) everything the CLI can do. For the fast path, the [first-run guide](../README.md#first-run) walks through Quick mode end to end.
+
+
+<h3 id="gui-window">The window at a glance</h3>
+
+Every screen shares a top bar in the upper-right corner:
+
+![Top bar](images/documentation/gui/topbar.png)
+
+| Control | What it does |
+|---------|--------------|
+| **Device indicator** | Shows the connected ADB device (or "No devices connected"). Click to choose the target device for installs. |
+| **Tools** (wrench) | One-off actions + reference info — see [Tools](#gui-tools). |
+| **Settings** (gear) | All your preferences — see [Settings](#gui-settings). |
+
+
+<h3 id="gui-quick">Quick mode</h3>
+
+Quick mode is the beginner path, covered step-by-step in the [first-run guide](../README.md#first-run): drop an APK, click **Patch**, watch it run, then install or open the result. Morphe chooses the patch source and the default patch set for you — there's nothing else to configure. When you want finer control, turn on Expert mode in Settings.
+
+
+<h3 id="gui-expert">Expert mode — the full flow</h3>
+
+Expert mode is a five-screen pipeline: **Home → Patch source → Patch selection → Patching → Result**. The arrow in the top-left steps you back at any point. Each screen below lists its controls (and the CLI flag it maps to, where there is one), then explains the details.
+
+<h4 id="gui-expert-home">1. Home — pick your APK</h4>
+
+| Control | What it does | CLI equivalent |
+|---------|--------------|----------------|
+| Drag & drop / **BROWSE FILES** | Choose the APK to patch (`.apk`, `.apkm`, `.xapk`, `.apks`) | positional `<apk>` argument |
+| **SUPPORTED APPS** list | The apps your patches target, each tagged with a recommended version | informational — compare with [`list-versions`](#subcommand-3-list-versions) |
+| **CHANGE APK** | Swap the selected file | — |
+| **CONTINUE** / **CONTINUE ANYWAY** | Proceed to patch selection | `--force` (when it reads *ANYWAY*) |
+
+Drop an APK anywhere on the window (the zone reads **DROP APK HERE** → **RELEASE TO DROP**) or use **BROWSE FILES**. Split-APK bundles (`.apkm` / `.xapk` / `.apks`) are merged into a single APK automatically.
+
+The **SUPPORTED APPS** list shows what the loaded patches can target, each with a version tag — **STABLE LATEST**, **EXPERIMENTAL LATEST**, **ALSO STABLE**, **EXPERIMENTAL** — so you know which APK version to download. Search it if it's long.
+
+Once an APK is dropped, Morphe reads its metadata (**ANALYZING** / "Reading app metadata…") and shows an info card with the app name, package, and version, plus **CHANGE APK** and **CONTINUE**.
+
+![Home — empty](images/documentation/gui/expert/home-empty.png)
+
+![Home — APK selected](images/documentation/gui/expert/home-apk-selected.png)
+
+> [!TIP]
+> Grab the recommended version from the SUPPORTED APPS list (or [`list-versions`](#subcommand-3-list-versions)) before downloading from [APKMirror](https://www.apkmirror.com/). Matching versions means more patches apply.
+
+> [!WARNING]
+> If your APK's version doesn't match what the patches expect, the button changes to **CONTINUE ANYWAY**. Proceeding is the GUI's equivalent of the CLI's `--force` — incompatible patches are skipped, and the ones that do apply may or may not work. Newer-than-recommended versions are usually the riskiest.
+
+![Home — version mismatch](images/documentation/gui/expert/home-version-warning.png)
+
+<h4 id="gui-expert-source">2. Choose a patch source &amp; version</h4>
+
+| Control | What it does | CLI equivalent |
+|---------|--------------|----------------|
+| Release list (**LATEST** / **STABLE** / **DEV** / **CACHED**) + **DOWNLOAD** / **SELECT** | Pick and fetch a patch release | `-p <repo-url>` (+ `--prerelease` for **DEV**) |
+| **PATCH NOTES** | Read a release's changelog | — |
+| **LOCAL PATCH FILE → BROWSE** | Use a `.mpp` already on disk | `-p <file.mpp>` |
+| **EXPORT JSON** | Save an `options.json` for this bundle | [`options-create`](#subcommand-4-options-create) / `--options-file` |
+
+Morphe fetches the available releases from your configured source and tags them: **LATEST**, **STABLE**, **DEV** (pre-release), and **CACHED** (already downloaded). Pick one and **DOWNLOAD** / **SELECT** it. Expand **PATCH NOTES** to read the changelog first. Already have a `.mpp`? **LOCAL PATCH FILE → BROWSE** points straight at it.
+
+![Patch source & releases](images/documentation/gui/expert/patches-releases.png)
+
+> [!NOTE]
+> **EXPORT JSON** writes an options file describing every patch and its settings — the same artifact the CLI's [`options-create`](#subcommand-4-options-create) produces. Edit it and feed it back via `--options-file` for repeatable, scriptable runs.
+
+<h5 id="gui-expert-sources">Managing patch sources</h5>
+
+The sources Morphe fetches from are configurable — add community sources (GitHub / GitLab repos, or `morphe.software/add-source` links), remove them, or refresh them. Adding more than one source is the GUI counterpart to passing several `-p` URLs on the CLI: their patches show up together, grouped by bundle, on the next screen.
+
+![Source management](images/documentation/gui/expert/sources-management.png)
+
+<h4 id="gui-expert-selection">3. Select patches</h4>
+
+The heart of Expert mode — the full patch list from your selected bundle(s), with a running **"N of M selected"** count.
+
+| Control | What it does | CLI equivalent |
+|---------|--------------|----------------|
+| Patch toggle | Enable / disable a patch | `-e` / `-d` (or `--ei` / `--di`) |
+| Search | Filter the list | — |
+| Options editor | Edit a patch's option values | `-O key=value` |
+| **PATCH DEFAULTS** / **YOUR DEFAULTS** | Whether you've changed a patch's options | — |
+| Strip-libs summary | Which native-lib architectures will be kept | `--striplibs` (set in [Settings](#gui-settings)) |
+| **COMMAND PREVIEW** (**COPY** / **EXPAND** / **COMPACT**) | The exact CLI command for your selections | — (it *is* the CLI command) |
+| **PATCH (N)** | Start patching the N selected patches | runs the `patch` command |
+
+- **Toggling & search** — flip patches on/off; search filters the list (you'll see *No patches match your search*). If you added multiple sources, patches are grouped per bundle (*No matches in this bundle* when a filter empties one).
+- **Options** — patches with configurable options show an options count; expand to edit. Values are typed — see the [Value Types Reference](#value-types-reference) for how strings / booleans / lists are formatted. **PATCH DEFAULTS** means untouched; **YOUR DEFAULTS** means you've customized it.
+- **Strip libs** — a summary chip shows whether native libs will be stripped (**STRIPPING NATIVE LIBS** / **NO STRIPPING NEEDED** / **NO NATIVE LIBS**); change the kept architectures under Settings → Strip Libs.
+- **Command preview** — the exact CLI invocation your choices produce. **COPY** it to reproduce this run in a terminal or drop it into a script; **EXPAND** / **COMPACT** toggles full vs. condensed.
+
+![Patch selection](images/documentation/gui/expert/patch-selection.png)
+
+![Patch options editor](images/documentation/gui/expert/patch-options.png)
+
+![Command preview](images/documentation/gui/expert/command-preview.png)
+
+> [!TIP]
+> The Command Preview is the best way to *learn* the CLI: configure a patch visually, copy the command, and you've got a reproducible one-liner — handy for scripting or sharing exactly what you ran.
+
+<h4 id="gui-expert-patching">4. Patching</h4>
+
+| Control | What it does | CLI equivalent |
+|---------|--------------|----------------|
+| Live log + **N/total** counter | Streams progress | (same output the CLI prints) |
+| **COPY ALL** | Copy the full log | — |
+| **LOG FILE → REVEAL / VIEW** | Open the saved log on disk | — |
+| **CANCEL** | Stop the run | — |
+
+Morphe runs the pipeline and streams the same log lines the CLI prints, with a **patched/total** counter. The log is also saved to disk (`morphe-data/logs/`, reachable via Tools → Open Logs). On failure you'll see **PATCHING FAILED** with the error in the log; on success, **PATCHING COMPLETED — LOADING RESULT…** advances to the result screen. **CANCEL** stops mid-run.
+
+![Patching](images/documentation/gui/expert/patching.png)
+
+![Patching failed](images/documentation/gui/expert/patching-failed.png)
+
+> [!TIP]
+> If a patch fails, the saved log has the full stack trace — **LOG FILE → VIEW**, or Tools → Open Logs. It's exactly what to attach to a bug report.
+
+<h4 id="gui-expert-result">5. Result — install &amp; finish</h4>
+
+| Control | What it does | CLI equivalent |
+|---------|--------------|----------------|
+| **OUTPUT FILE** / **OPEN FOLDER →** | Locate the patched APK | output path is set by `-o` / `--out` |
+| **ADB INSTALL** (+ device picker) | Install straight to a device | `-i` / [`utility install`](#utility-install) |
+| **PATCH ANOTHER** | Start over with a new APK | — |
+| **TEMPORARY FILES → CLEAN UP** | Free this run's scratch space | `--purge` |
+
+- **OUTPUT FILE / OPEN FOLDER →** — the finished APK and a button to reveal it in your file manager.
+- **ADB INSTALL** — with a device connected and ADB enabled, install directly. Pick a device (**SELECT A DEVICE**), wait for **READY**, install; you'll see **INSTALLED ON &lt;device&gt;** on success or **RETRY** on failure. Device states include **UNAUTH** (accept the USB-debugging prompt on the phone) and **UNKNOWN**. If ADB is off you'll see **ENABLE ADB** (turn on Auto-start ADB in Settings).
+- **PATCH ANOTHER** restarts the flow; **TEMPORARY FILES → CLEAN UP** frees this run's scratch space (it shows how much).
+
+![Result](images/documentation/gui/expert/result.png)
+
+![ADB install](images/documentation/gui/expert/result-adb.png)
+
+> [!NOTE]
+> ADB is optional. Without it, just grab the APK from the output folder and install it however you like.
+
+
+<h3 id="gui-settings">Settings</h3>
+
+The gear icon opens Settings — Morphe's persistent preferences. Think of it as the GUI's equivalent of the CLI flag set: most settings map directly to a `patch` flag.
+
+| Setting | What it does | Default | CLI equivalent |
+|---------|--------------|---------|----------------|
+| **Theme** | App color scheme: Light, Dark, AMOLED, System | System | — |
+| **Expert mode** | Switch between Quick and Expert | Off (Quick) | — |
+| **Auto-cleanup temp files** | Delete scratch files after patching | On | `--purge` |
+| **Auto-start ADB** | Start the ADB daemon on launch so devices are monitored | Off | enables `-i` / install features |
+| **Update channel** | Stable or Dev app updates | Smart (Dev on dev builds, else Stable) | `--prerelease` (loosely) |
+| **Output folder** | Default location for patched APKs | The input APK's folder | `-o` / `--out` |
+| **Signing** | Keystore + credentials used to sign | Shared `morphe.keystore`, alias `Morphe`, key password `Morphe`, store password empty | `--keystore`, `--keystore-password`, `--keystore-entry-alias`, `--keystore-entry-password` |
+| **Strip Libs** | Native-lib architectures to keep | Keep all | `--striplibs` |
+| **Patched app runtime logs** | Capture logcat from a device after a patched app misbehaves | — | — |
+
+![Settings](images/documentation/gui/settings/overview.png)
+
+A couple of toggles worth expanding on:
+
+- **Auto-start ADB** — when off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe.
+- **Update channel** — *Dev* surfaces pre-releases; *Stable* only stable ones. If you've never chosen, Morphe defaults smartly (Dev when you're running a dev build).
+
+<h4 id="gui-settings-signing">Signing</h4>
+
+This is the GUI face of the `--keystore*` flags. Morphe signs every patched APK so it's installable; by default it uses a single shared keystore in its data folder (see [Where Morphe stores its files](#where-files-stored)) and reuses it across runs — Android only lets you update an installed app with an APK signed by the **same** key, so a stable keystore keeps re-patches installable over old builds.
+
+| Control | What it does |
+|---------|--------------|
+| Keystore path + **BROWSE** | Point at your own keystore file |
+| **RESET** | Revert to Morphe's auto-generated default keystore |
+| **KEYSTORE PASSWORD** | Password for the keystore file (default: empty) |
+| **KEY ALIAS** | The key entry's alias (default: `Morphe`) |
+| **KEY PASSWORD** | The key entry's password (default: `Morphe`) |
+| **VERIFY CREDENTIALS** | Check the keystore opens with the entered alias/passwords |
+| **GENERATE KEYSTORE** | Create a fresh keystore |
+| **EXPORT** | Save a copy of the keystore elsewhere |
+
+![Signing settings](images/documentation/gui/settings/signing.png)
+
+> [!WARNING]
+> If Morphe can't find the configured keystore it warns *"Keystore not found — patching will fail until you restore it, pick another, or reset."* Use **RESET** to fall back to the default, or **BROWSE** to a valid one.
+
+> [!NOTE]
+> The signer only loads **BKS** keystores today. Support for pointing at **PKCS12** (`.p12` / `.pfx`) or **JKS** (`.jks`) keystores — auto-converted to BKS, original untouched — is coming in an upcoming release. (Same note as the CLI [`--keystore`](#subcommand-1-patch) flag.)
+
+<h4 id="gui-settings-striplibs">Strip Libs</h4>
+
+Choose which native-library architectures to keep in the patched APK; everything else is stripped, shrinking the file. This sets the default the Patch selection screen reports, and maps to the CLI's `--striplibs`.
+
+| Architecture | Use it for |
+|--------------|------------|
+| `arm64-v8a` | ARM 64-bit — most modern phones |
+| `armeabi-v7a` | ARM 32-bit — older phones |
+| `x86_64` | Intel 64-bit — emulators / Chromebooks |
+| `x86` | Intel 32-bit — legacy emulators |
+
+![Strip libs settings](images/documentation/gui/settings/strip-libs.png)
+
+> [!WARNING]
+> Only strip architectures your device doesn't use. If you keep just `arm64-v8a` and install on a 32-bit device (or the wrong emulator), the app won't run. When unsure, keep your phone's architecture (almost always `arm64-v8a`).
+
+<h4 id="gui-settings-runtimelogs">Patched app runtime logs</h4>
+
+A debugging aid: capture logcat from a connected device after a patched app crashes or misbehaves, to attach to a bug report. **CLEAR DEVICE LOGS** wipes logcat before you reproduce the issue; **SAVE DEVICE LOGS** then pulls the filtered output to a file. Both require a connected, ADB-authorized device.
+
+
+<h3 id="gui-tools">Tools</h3>
+
+The wrench icon opens Tools — one-off actions and reference info, kept out of Settings so a destructive action doesn't sit next to your preferences.
+
+| Action | What it does |
+|--------|--------------|
+| **OPEN LOGS** | Open the logs folder (`morphe-data/logs/`) |
+| **OPEN APP DATA** | Open Morphe's data folder — the `morphe-data/` directory (see [Where Morphe stores its files](#where-files-stored)) |
+| **CLEAR CACHE** | Delete downloaded patches and logs (they re-download as needed) |
+| **VIEW LICENSES** | Browse the open-source licenses of Morphe's dependencies |
+| Version | The running app version is shown at the bottom |
+
+![Tools](images/documentation/gui/tools/dialog.png)
+
+> [!NOTE]
+> **CLEAR CACHE** asks for confirmation, then removes downloaded `.mpp` files and logs from `morphe-data/`. Nothing irreversible — patches re-download on the next run.
+
+![Licenses browser](images/documentation/gui/tools/licenses.png)
+
+
+<h3 id="gui-adb">Installing to a device (ADB)</h3>
+
+Morphe can push patched APKs straight to your phone over ADB:
+
+1. Enable **Auto-start ADB** in Settings (off by default).
+2. Connect your phone via USB with **USB debugging** enabled, and accept the authorization prompt on the device.
+3. The **device indicator** in the top bar shows it; click to pick a device if several are connected.
+4. After patching, use **ADB INSTALL** on the Result screen.
+
+![Device indicator](images/documentation/gui/adb/device-indicator.png)
+
+Device states you may see: **READY** (good to go), **UNAUTH** (accept the USB-debugging prompt on the phone), **UNKNOWN** (reconnect / check the cable), and **No devices connected**.
+
+> [!NOTE]
+> ADB is entirely optional — it only powers install-to-device. You can always patch without it and install the output APK manually.
