@@ -58,6 +58,7 @@ import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.DeviceIndicator
 import app.morphe.gui.ui.components.MorpheSwitch
 import app.morphe.gui.ui.components.SettingsButton
+import app.morphe.gui.ui.components.ToolsButton
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.components.getErrorType
 import app.morphe.gui.ui.components.getFriendlyErrorMessage
@@ -322,8 +323,9 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
 
             DeviceIndicator()
             Spacer(modifier = Modifier.width(6.dp))
+            ToolsButton(allowCacheClear = false)
+            Spacer(modifier = Modifier.width(6.dp))
             SettingsButton(
-                allowCacheClear = false,
                 onDismiss = { viewModel.refreshStripLibsStatus() }
             )
         }
