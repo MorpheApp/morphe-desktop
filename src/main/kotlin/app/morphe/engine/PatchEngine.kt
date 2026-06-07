@@ -8,6 +8,7 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.patcher.Patcher
 import app.morphe.patcher.PatcherConfig
 import app.morphe.patcher.apk.ApkMerger
@@ -244,32 +245,17 @@ object PatchEngine {
                     }
 
                     try {
-                        fun signApk(details: ApkUtils.KeyStoreDetails) {
+                        signWithLegacyFallback(
+                            primary = keystoreDetails,
+                            allowLegacyFallback = config.keystoreDetails == null,
+                            logger = logger,
+                        ) { details ->
                             ApkUtils.signApk(
                                 rebuiltApk,
                                 tempOutput,
                                 config.signerName,
                                 details,
                             )
-                        }
-
-                        try {
-                            signApk(keystoreDetails)
-                        } catch (e: Exception) {
-                            // Retry with legacy keystore defaults.
-                            if (config.keystoreDetails == null && keystoreDetails.keyStore.exists()) {
-                                logger.info("Using legacy keystore credentials")
-
-                                val legacyKeystoreDetails = ApkUtils.KeyStoreDetails(
-                                    keystoreDetails.keyStore,
-                                    null,
-                                    Config.LEGACY_KEYSTORE_ALIAS,
-                                    Config.LEGACY_KEYSTORE_PASSWORD,
-                                )
-                                signApk(legacyKeystoreDetails)
-                            } else {
-                                throw e
-                            }
                         }
                         stepResults.add(StepResult(PatchStep.SIGNING, true))
                     } catch (e: Exception) {
