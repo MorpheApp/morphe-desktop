@@ -1,3 +1,12 @@
+## [1.9.1](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0...v1.9.1) (2026-06-08)
+
+
+### Bug Fixes
+
+* signing improvements ([#160](https://github.com/MorpheApp/morphe-cli/issues/160)) ([166f940](https://github.com/MorpheApp/morphe-cli/commit/166f9409b1cbe00af7663545c41548ead2c189c5))
+* Update dependencies ([83d3969](https://github.com/MorpheApp/morphe-cli/commit/83d39692541ca81b7bb555dfd60a001fbb97b3f1))
+* Update to latest ARSCLib ([f62a179](https://github.com/MorpheApp/morphe-cli/commit/f62a1793601fcfc489f54c558265115530ab6b8d))
+
 ## [1.9.1-dev.3](https://github.com/MorpheApp/morphe-cli/compare/v1.9.1-dev.2...v1.9.1-dev.3) (2026-06-02)
 
 
