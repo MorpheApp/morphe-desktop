@@ -5,6 +5,7 @@
 
 package app.morphe.gui.util
 
+import app.morphe.engine.util.SignatureIdentity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -452,6 +453,55 @@ class AdbManager {
         } catch (e: Exception) {
             Logger.error("Error capturing logcat", e)
             Result.failure(AdbException("Failed to capture logs: ${e.message}"))
+        }
+    }
+
+    // ── Patched-app recall: device-side queries ──────────────────────────────
+
+    /** Package names installed on [deviceId] (`pm list packages`). */
+    suspend fun listInstalledPackages(deviceId: String): Result<Set<String>> = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext Result.failure(AdbException("ADB not found"))
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "shell", "pm", "list", "packages")
+                .redirectErrorStream(true).start()
+            val out = process.inputStream.bufferedReader().readText()
+            process.waitFor()
+            if (process.exitValue() != 0) return@withContext Result.failure(AdbException("pm list packages failed"))
+            val packages = out.lineSequence()
+                .map { it.trim() }
+                .filter { it.startsWith("package:") }
+                .map { it.removePrefix("package:").trim() }
+                .filter { it.isNotBlank() }
+                .toSet()
+            Result.success(packages)
+        } catch (e: Exception) {
+            Result.failure(AdbException("pm list packages failed: ${e.message}"))
+        }
+    }
+
+    /**
+     * Installed `versionName` and signing-cert id of [pkg] on [deviceId] from a
+     * single `dumpsys package` call. Returns `(versionName, signatureId)` (either
+     * may be null if absent/unparseable), or null if the package isn't dumpable.
+     */
+    suspend fun getInstalledPackageInfo(deviceId: String, pkg: String): Pair<String?, String?>? =
+        withContext(Dispatchers.IO) {
+            val out = dumpsysPackage(deviceId, pkg) ?: return@withContext null
+            val version = Regex("""versionName=(\S+)""").find(out)?.groupValues?.get(1)
+            val signatureId = SignatureIdentity.parseDeviceSignatureId(out)
+            version to signatureId
+        }
+
+    private suspend fun dumpsysPackage(deviceId: String, pkg: String): String? = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext null
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "shell", "dumpsys", "package", pkg)
+                .redirectErrorStream(true).start()
+            val out = process.inputStream.bufferedReader().readText()
+            process.waitFor()
+            out.ifBlank { null }
+        } catch (e: Exception) {
+            null
         }
     }
 

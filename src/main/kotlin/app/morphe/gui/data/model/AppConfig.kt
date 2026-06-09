@@ -82,6 +82,9 @@ data class AppConfig(
     // When ON, DeviceMonitor polls devices; if Morphe was the one that started
     // the daemon, it's killed on toggle-OFF and on window close.
     val autoStartAdb: Boolean = false,
+    // Which home apps tab the user last viewed ("ALL" or "YOURS"), restored on
+    // next launch. Stored as a string so this data layer stays free of UI enums.
+    val homeAppListFilter: String = "ALL",
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {

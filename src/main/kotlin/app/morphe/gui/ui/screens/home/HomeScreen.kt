@@ -85,11 +85,19 @@ import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.screens.home.components.ApkInfoCard
+import app.morphe.gui.ui.screens.home.components.AppListFilter
+import app.morphe.gui.ui.screens.home.components.AppListFilterChips
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
+import app.morphe.gui.ui.screens.home.components.MorpheDialogButton
+import app.morphe.gui.ui.screens.home.components.MorpheDialogCard
+import app.morphe.gui.ui.screens.home.components.MorpheDialogText
+import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
+import app.morphe.gui.ui.screens.home.components.PatchedUpdatesBanner
 import app.morphe.gui.ui.screens.home.components.SupportedAppListRow
+import app.morphe.gui.ui.screens.home.components.YourAppRow
 import app.morphe.gui.ui.components.MorpheErrorBar
-import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.screens.patches.PatchesScreen
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
@@ -117,6 +125,217 @@ fun HomeScreenContent(
 ) {
     val navigator = LocalNavigator.currentOrThrow
     val uiState by viewModel.uiState.collectAsState()
+
+    // Device install-state is polled (adb), not streamed — so re-query each time
+    // Home (re)appears. Without this, an app installed on another screen (or while
+    // away) shows stale "NOT ON THIS DEVICE" until the next full reload.
+    LaunchedEffect(Unit) { viewModel.refreshDeviceInfo() }
+
+    // One-click repatch: a patched-app row's "Re-patch" action. Jump straight to
+    // patch selection with the input APK + the record's saved selection, using
+    // the CURRENT resolved sources (so it repatches against current bundle versions).
+    var repatchMissingRecord by remember { mutableStateOf<app.morphe.engine.model.PatchedAppRecord?>(null) }
+    // Launch patch selection for a record with explicit patch files (re-patch uses
+    // the current resolved set; Update passes freshly-resolved latest files).
+    fun launchPatch(
+        record: app.morphe.engine.model.PatchedAppRecord,
+        apkPath: String,
+        patchFilePaths: List<String>,
+        sourceNames: List<String>,
+    ) {
+        if (patchFilePaths.isEmpty()) return // patches not loaded yet
+        navigator.push(
+            PatchSelectionScreen(
+                apkPath = apkPath,
+                apkName = record.displayName,
+                patchesFilePath = patchFilePaths.first(),
+                packageName = record.packageName,
+                patchesFilePaths = patchFilePaths,
+                patchSourceNames = sourceNames,
+                initialSelectionByBundle = record.patchSelectionByBundle,
+                initialPatchOptions = record.patchOptionValues,
+            )
+        )
+    }
+
+    fun repatchWithApk(record: app.morphe.engine.model.PatchedAppRecord, apkPath: String) {
+        launchPatch(
+            record, apkPath,
+            viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
+            viewModel.getAllResolvedPatchSourceNames(),
+        )
+    }
+    val onRepatch: (String) -> Unit = onRepatch@{ pkg ->
+        val record = viewModel.getPatchedRecord(pkg) ?: return@onRepatch
+        if (java.io.File(record.inputApkPath).exists()) {
+            repatchWithApk(record, record.inputApkPath)
+        } else {
+            repatchMissingRecord = record
+        }
+    }
+
+    // Explicit "Forget" recovery action — removes a record from the history.
+    var forgetConfirm by remember { mutableStateOf<app.morphe.engine.model.PatchedAppRecord?>(null) }
+    val onForget: (String) -> Unit = { pkg -> forgetConfirm = viewModel.getPatchedRecord(pkg) }
+    forgetConfirm?.let { record ->
+        MorpheDialogCard(onDismiss = { forgetConfirm = null }, title = "Forget ${record.displayName}?") {
+            MorpheDialogText(
+                "This removes ${record.displayName} from your patched-app history. " +
+                    "It doesn't touch any files — re-patching the app adds it back."
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MorpheDialogButton("CANCEL", MaterialTheme.colorScheme.onSurfaceVariant, filled = false) {
+                    forgetConfirm = null
+                }
+                MorpheDialogButton("FORGET", Color(0xFFE0504D), filled = true) {
+                    viewModel.forgetPatchedApp(record.packageName)
+                    forgetConfirm = null
+                }
+            }
+        }
+    }
+
+    repatchMissingRecord?.let { record ->
+        MorpheDialogCard(onDismiss = { repatchMissingRecord = null }, title = "Original APK not found") {
+            MorpheDialogText(
+                "The input APK for ${record.displayName} is no longer at:\n" +
+                    "${record.inputApkPath}\n\nSelect the APK again to re-patch with your saved settings."
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MorpheDialogButton("CANCEL", MaterialTheme.colorScheme.onSurfaceVariant, filled = false) {
+                    repatchMissingRecord = null
+                }
+                MorpheDialogButton("SELECT APK…", LocalMorpheAccents.current.primary, filled = true) {
+                    val fd = FileDialog(null as Frame?, "Select APK to re-patch", FileDialog.LOAD)
+                    fd.isVisible = true
+                    val picked = fd.file?.let { File(fd.directory, it) }
+                    repatchMissingRecord = null
+                    if (picked != null && picked.exists()) repatchWithApk(record, picked.absolutePath)
+                }
+            }
+        }
+    }
+
+    // Phase 7 — tap a "Your apps" row to see the full recall breakdown.
+    var detailRecord by remember { mutableStateOf<PatchedAppRecord?>(null) }
+    val onShowDetail: (PatchedAppRecord) -> Unit = { detailRecord = it }
+    val onUpdate: (String) -> Unit = { pkg ->
+        viewModel.getPatchedRecord(pkg)?.let { viewModel.prepareUpdate(it) }
+    }
+    detailRecord?.let { record ->
+        val updateInfo = remember(record) { viewModel.recallUpdateInfo(record) }
+        PatchedAppDetailDialog(
+            record = record,
+            state = uiState.patchedStates[record.packageName] ?: PatchedAppState.PATCHED,
+            deviceInfo = uiState.deviceAppInfo[record.packageName],
+            updateInfo = updateInfo,
+            onDismiss = { detailRecord = null },
+            onRepatch = { onRepatch(record.packageName) },
+            onUpdate = { viewModel.prepareUpdate(record) },
+            onForget = { onForget(record.packageName) },
+            onOpenFolder = {
+                runCatching {
+                    val parent = java.io.File(record.outputApkPath).parentFile
+                    if (parent != null && parent.exists()) java.awt.Desktop.getDesktop().open(parent)
+                }
+            },
+            onInstall = { viewModel.installPatchedApp(record.packageName) },
+            installing = uiState.installingPackage == record.packageName,
+        )
+    }
+
+    // ── Update flow (Phase 7, issue 2c): resolve latest → maybe pick a newer APK ──
+    val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+    when (val prep = uiState.updatePrep) {
+        is UpdatePrep.Preparing -> MorpheDialogCard(
+            onDismiss = { viewModel.clearUpdatePrep() },
+            title = "Preparing update…",
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp,
+                    color = LocalMorpheAccents.current.primary,
+                )
+                Spacer(Modifier.width(12.dp))
+                MorpheDialogText("Resolving the latest patches…")
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MorpheDialogButton("CANCEL", MaterialTheme.colorScheme.onSurfaceVariant, filled = false) {
+                    viewModel.clearUpdatePrep()
+                }
+            }
+        }
+        is UpdatePrep.Failed -> MorpheDialogCard(
+            onDismiss = { viewModel.clearUpdatePrep() },
+            title = "Update failed",
+        ) {
+            MorpheDialogText(prep.message)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MorpheDialogButton("OK", LocalMorpheAccents.current.primary, filled = true) {
+                    viewModel.clearUpdatePrep()
+                }
+            }
+        }
+        is UpdatePrep.Ready -> {
+            val record = viewModel.getPatchedRecord(prep.packageName)
+            if (record == null) {
+                viewModel.clearUpdatePrep()
+            } else {
+                // Patch with the latest files using either an existing or a picked APK.
+                fun launchWith(apkPath: String) {
+                    viewModel.clearUpdatePrep()
+                    if (File(apkPath).exists()) {
+                        launchPatch(record, apkPath, prep.patchFilePaths, prep.sourceNames)
+                    } else {
+                        val fd = FileDialog(null as Frame?, "Select APK to patch", FileDialog.LOAD)
+                        fd.isVisible = true
+                        fd.file?.let { File(fd.directory, it) }?.takeIf { it.exists() }
+                            ?.let { launchPatch(record, it.absolutePath, prep.patchFilePaths, prep.sourceNames) }
+                    }
+                }
+                if (!prep.needsNewerApk) {
+                    // APK still satisfies the latest patches → patch straight away.
+                    LaunchedEffect(prep) { launchWith(record.inputApkPath) }
+                } else {
+                    val targetV = prep.targetVersion?.removePrefix("v") ?: "newer"
+                    MorpheDialogCard(
+                        onDismiss = { viewModel.clearUpdatePrep() },
+                        title = "Update ${record.displayName}",
+                    ) {
+                        val usedV = record.apkVersion.removePrefix("v")
+                        MorpheDialogText(
+                            if (prep.currentSupported) {
+                                "The latest patches add support for a newer app version (v$targetV). " +
+                                    "You can grab it, or keep using your v$usedV — your call."
+                            } else {
+                                "Your v$usedV is no longer supported by the latest patches. " +
+                                    "Get v$targetV to keep patching."
+                            }
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                            MorpheDialogButton("USE MY APK", LocalMorpheAccents.current.secondary, filled = false) {
+                                launchWith(record.inputApkPath)
+                            }
+                            MorpheDialogButton("GET v$targetV", LocalMorpheAccents.current.primary, filled = true) {
+                                val url = prep.downloadUrl
+                                val r = record
+                                val files = prep.patchFilePaths
+                                val names = prep.sourceNames
+                                viewModel.clearUpdatePrep()
+                                if (url != null) uriHandler.openUri(url)
+                                val fd = FileDialog(null as Frame?, "Select the v$targetV APK", FileDialog.LOAD)
+                                fd.isVisible = true
+                                fd.file?.let { File(fd.directory, it) }?.takeIf { it.exists() }
+                                    ?.let { launchPatch(r, it.absolutePath, files, names) }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        null -> {}
+    }
 
     val patchSourceManager: PatchSourceManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
@@ -205,21 +424,13 @@ fun HomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            // Side-by-side layout: drop zone / APK info on the left, vertical
-            // supported-apps list on the right. Falls back to top/bottom on
-            // narrower windows. Hysteresis (switch up at 920dp, down at 880dp)
-            // prevents flicker when the user resizes near the threshold.
-            var splitLayoutState by remember { mutableStateOf(maxWidth >= 900.dp) }
-            splitLayoutState = when {
-                maxWidth >= 920.dp -> true
-                maxWidth < 880.dp -> false
-                else -> splitLayoutState
-            }
-            val useSplitLayout = splitLayoutState
-            val isCompact = maxWidth < 500.dp
+            // Single side-by-side layout: APK drop zone on one side, supported-apps
+            // list on the other. The window enforces a minimum width wide enough for
+            // it (see GuiMain), so there's no narrow/stacked variant to maintain.
+            // isSmall is kept for spacing only (short windows), not a separate layout.
+            val isCompact = false
             val isSmall = maxHeight < 600.dp
-            val padding = if (isCompact) 16.dp else 24.dp
-            val outerMaxWidth = maxWidth
+            val padding = 24.dp
 
             // Version warning dialog state
             var showVersionWarningDialog by remember { mutableStateOf(false) }
@@ -248,8 +459,6 @@ fun HomeScreenContent(
                 )
             }
 
-            val useHorizontalHeader = maxWidth >= 600.dp
-            val pinSupportedAppsToBottom = useHorizontalHeader && maxHeight >= 760.dp
             val patchesLoaded = !uiState.isLoadingPatches && viewModel.getCachedPatchesFile() != null
             val onChangePatchesClick: () -> Unit = {
                 navigator.push(PatchesScreen(
@@ -314,8 +523,9 @@ fun HomeScreenContent(
             val sourceStates: List<SourceLedState> = allSources.map { src ->
                 sourceLedState(src, channelsBySource[src.id])
             }
-            val headerContent: @Composable ColumnScope.() -> Unit = {
-                if (useHorizontalHeader) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    // ── Pinned header (not scrollable) ──
                     HeaderBar(
                         uiState = uiState,
                         isSmall = isSmall,
@@ -325,145 +535,10 @@ fun HomeScreenContent(
                         onManageSourcesClick = { showSourceManagementSheet = true },
                         sourceStates = sourceStates,
                     )
-                } else {
-                    Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 16.dp))
-                    BrandingSection(isCompact = isCompact)
 
-                    if (!uiState.isLoadingPatches && uiState.patchesVersion != null) {
-                        Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                        PatchesVersionCard(
-                            patchesVersion = uiState.patchesVersion!!,
-                            latestLabel = uiState.latestPatchesLabel,
-                            onChangePatchesClick = onChangePatchesClick,
-                            patchSourceName = uiState.patchSourceName,
-                            isCompact = isCompact
-                        )
-                    } else if (uiState.isLoadingPatches) {
-                        Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                        PatchesLoadingIndicator()
-                    } else if (uiState.patchLoadError != null) {
-                        Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                        PatchesVersionCard(
-                            patchesVersion = "NOT LOADED",
-                            latestLabel = null,
-                            onChangePatchesClick = onChangePatchesClick,
-                            isCompact = isCompact
-                        )
-                    }
-
-                    if (uiState.isOffline && !uiState.isLoadingPatches) {
-                        Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                        OfflineBanner(
-                            onRetry = onRetry,
-                            modifier = Modifier
-                                .padding(horizontal = if (isCompact) 8.dp else 16.dp)
-                        )
-                    }
-                }
-            }
-
-            val workspaceContent: @Composable (Modifier) -> Unit = { modifier ->
-                Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    MiddleContent(
-                        uiState = uiState,
-                        isCompact = isCompact,
-                        patchesLoaded = patchesLoaded,
-                        onClearClick = onClearClick,
-                        onChangeClick = onChangeClick,
-                        onContinueClick = onContinueClick,
-                        patchSourceNames = patchSourcesForSelectedApk,
-                    )
-                }
-            }
-
-            val supportedAppsContent: @Composable () -> Unit = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(
-                        start = padding,
-                        end = padding,
-                        bottom = if (isSmall) 8.dp else 16.dp
-                    )
-                ) {
-                    SupportedAppsSection(
-                        isCompact = isCompact,
-                        maxWidth = this@BoxWithConstraints.maxWidth,
-                        isLoading = uiState.isLoadingPatches,
-                        isDefaultSource = uiState.isDefaultSource,
-                        supportedApps = uiState.supportedApps,
-                        loadError = uiState.patchLoadError,
-                        onRetry = onRetry,
-                        sourceNamesByPackage = sourceNamesByPackage,
-                    )
-                }
-            }
-
-            Box(modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    // ── Pinned header (not scrollable) ──
-                    if (useHorizontalHeader) {
-                        HeaderBar(
-                            uiState = uiState,
-                            isSmall = isSmall,
-                            onChangePatchesClick = onChangePatchesClick,
-                            onRetry = onRetry,
-                            onUpdateChannelChanged = { viewModel.refreshUpdateCheck() },
-                            onManageSourcesClick = { showSourceManagementSheet = true },
-                            sourceStates = sourceStates,
-                        )
-                    } else {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 16.dp))
-                            BrandingSection(isCompact = isCompact)
-
-                            if (!uiState.isLoadingPatches && uiState.patchesVersion != null) {
-                                Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                                PatchesVersionCard(
-                                    patchesVersion = uiState.patchesVersion!!,
-                                    latestLabel = uiState.latestPatchesLabel,
-                                    onChangePatchesClick = onChangePatchesClick,
-                                    isCompact = isCompact
-                                )
-                            } else if (uiState.isLoadingPatches) {
-                                Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                                PatchesLoadingIndicator()
-                            } else if (uiState.patchLoadError != null) {
-                                Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                                PatchesVersionCard(
-                                    patchesVersion = "NOT LOADED",
-                                    latestLabel = null,
-                                    onChangePatchesClick = onChangePatchesClick,
-                                    isCompact = isCompact
-                                )
-                            }
-
-                            // Offline banner
-                            if (uiState.isOffline && !uiState.isLoadingPatches) {
-                                Spacer(modifier = Modifier.height(if (isSmall) 8.dp else 12.dp))
-                                OfflineBanner(
-                                    onRetry = onRetry,
-                                    modifier = Modifier
-                                        .widthIn(max = 400.dp)
-                                        .padding(horizontal = if (isCompact) 8.dp else 16.dp)
-                                )
-                            }
-                        }
-                    }
-
-                    // ── Body ──
-                    if (useSplitLayout) {
-                        // Side-by-side: drop zone / APK info on the left,
-                        // vertical supported-apps list on the right. The list pane
-                        // owns its own scroll; the rest stays static.
-                        Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    // ── Body: drop zone / APK info on one side, supported-apps
+                    // list on the other. The list pane owns its own scroll. ──
+                    Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
                             if (uiState.showUpdateBanner) {
                                 UpdateBanner(
                                     info = uiState.updateInfo!!,
@@ -500,6 +575,18 @@ fun HomeScreenContent(
                                 // Left: browse/discover supported apps (wizard step 1).
                                 SupportedAppsListPane(
                                     supportedApps = uiState.supportedApps,
+                                    patchedStates = uiState.patchedStates,
+                                    patchedRecords = uiState.patchedRecords,
+                                    deviceAppInfo = uiState.deviceAppInfo,
+                                    updateInfoByPackage = uiState.updateInfoByPackage,
+                                    onRepatch = onRepatch,
+                                    onForget = onForget,
+                                    onUpdate = onUpdate,
+                                    onInstall = { viewModel.installPatchedApp(it) },
+                                    installingPackage = uiState.installingPackage,
+                                    onShowDetail = onShowDetail,
+                                    filter = uiState.appListFilter,
+                                    onFilterChange = { viewModel.setAppListFilter(it) },
                                     sourceNamesByPackage = sourceNamesByPackage,
                                     isLoading = uiState.isLoadingPatches,
                                     loadError = uiState.patchLoadError,
@@ -537,103 +624,7 @@ fun HomeScreenContent(
                                     }
                                 }
                             }
-                        }
-                    } else {
-                        // ── Scrollable top/bottom body (narrow windows) ──
-                        BoxWithConstraints(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth(),
-                        ) {
-                            val bodyMaxHeight = this.maxHeight
-                            val scrollState = rememberScrollState()
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .verticalScroll(scrollState)
-                                    .heightIn(min = bodyMaxHeight),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = if (pinSupportedAppsToBottom) Arrangement.SpaceBetween else Arrangement.Top,
-                            ) {
-                                if (uiState.showUpdateBanner) {
-                                    UpdateBanner(
-                                        info = uiState.updateInfo!!,
-                                        onDismissForSession = { viewModel.dismissUpdateForSession() },
-                                        onDismissForVersion = { viewModel.dismissUpdateForVersion() },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(start = padding, end = padding, top = 8.dp),
-                                    )
-                                }
-                                if (uiState.showMultiSourceHint) {
-                                    MultiSourceHintBanner(
-                                        onDismiss = { viewModel.dismissMultiSourceHint() },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(start = padding, end = padding, top = 8.dp),
-                                    )
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(padding),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    MiddleContent(
-                                        uiState = uiState,
-                                        isCompact = isCompact,
-                                        patchesLoaded = patchesLoaded,
-                                        onClearClick = onClearClick,
-                                        onChangeClick = onChangeClick,
-                                        onContinueClick = onContinueClick,
-                                        patchSourceNames = patchSourcesForSelectedApk,
-                                    )
-                                }
-
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.padding(
-                                        start = padding,
-                                        end = padding,
-                                        bottom = if (isSmall) 8.dp else 16.dp,
-                                    ),
-                                ) {
-                                    SupportedAppsSection(
-                                        isCompact = isCompact,
-                                        maxWidth = outerMaxWidth,
-                                        isLoading = uiState.isLoadingPatches,
-                                        isDefaultSource = uiState.isDefaultSource,
-                                        supportedApps = uiState.supportedApps,
-                                        loadError = uiState.patchLoadError,
-                                        onRetry = onRetry,
-                                        sourceNamesByPackage = sourceNamesByPackage,
-                                    )
-                                }
-                            }
-
-                            if (scrollState.maxValue > 0) {
-                                VerticalScrollbar(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterEnd)
-                                        .fillMaxHeight(),
-                                    adapter = rememberScrollbarAdapter(scrollState),
-                                    style = morpheScrollbarStyle(),
-                                )
-                            }
-                        }
                     }
-                }
-
-                // Top bar — only floated when not using horizontal header
-                if (!useHorizontalHeader) {
-                    TopBarRow(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = padding, end = padding),
-                        allowCacheClear = true,
-                        onUpdateChannelChanged = { viewModel.refreshUpdateCheck() },
-                    )
                 }
 
                 // Error/warning bar — custom Morphe-styled, avoids Material3
@@ -1278,6 +1269,18 @@ private fun AnalyzingSection(isCompact: Boolean = false) {
 @Composable
 private fun SupportedAppsListPane(
     supportedApps: List<SupportedApp>,
+    patchedStates: Map<String, PatchedAppState> = emptyMap(),
+    patchedRecords: List<PatchedAppRecord> = emptyList(),
+    deviceAppInfo: Map<String, DeviceAppInfo> = emptyMap(),
+    updateInfoByPackage: Map<String, RecallUpdateInfo> = emptyMap(),
+    onRepatch: (String) -> Unit = {},
+    onForget: (String) -> Unit = {},
+    onUpdate: (String) -> Unit = {},
+    onInstall: (String) -> Unit = {},
+    installingPackage: String? = null,
+    onShowDetail: (PatchedAppRecord) -> Unit = {},
+    filter: AppListFilter = AppListFilter.ALL,
+    onFilterChange: (AppListFilter) -> Unit = {},
     sourceNamesByPackage: Map<String, List<String>>,
     isLoading: Boolean,
     loadError: String?,
@@ -1297,6 +1300,12 @@ private fun SupportedAppsListPane(
         it.displayName.contains(searchQuery, ignoreCase = true) ||
         it.packageName.contains(searchQuery, ignoreCase = true)
     }
+    val filteredRecords = if (searchQuery.isBlank()) patchedRecords
+    else patchedRecords.filter {
+        it.displayName.contains(searchQuery, ignoreCase = true) ||
+        it.packageName.contains(searchQuery, ignoreCase = true)
+    }
+    val activeCount = if (filter == AppListFilter.YOURS) patchedRecords.size else supportedApps.size
 
     // Collapse if the currently expanded app filters out.
     LaunchedEffect(searchQuery, filtered) {
@@ -1313,34 +1322,22 @@ private fun SupportedAppsListPane(
             .wrapContentHeight()
             .align(Alignment.Center),
       ) {
-        // ── Header row: SUPPORTED APPS · count ──
-        // end = 12.dp matches the LazyColumn's right padding so "X apps"
-        // visually aligns with the right edge of the cards.
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 4.dp),
-        ) {
-            Text(
-                text = "SUPPORTED APPS",
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = mono,
-                letterSpacing = 1.5.sp,
-                color = homeMutedTextColor(0.4f),
-            )
-            Spacer(Modifier.weight(1f))
-            if (!isLoading && supportedApps.isNotEmpty()) {
-                Text(
-                    text = "${supportedApps.size} apps",
-                    fontSize = 9.sp,
-                    fontFamily = mono,
-                    color = homeMutedTextColor(0.4f),
-                )
-            }
+        // ── On-open update notice: jumps to "Your apps" where each is badged ──
+        val updateCount = patchedStates.values.count { it == PatchedAppState.PATCHED_WITH_UPDATES }
+        if (filter == AppListFilter.ALL && updateCount > 0) {
+            PatchedUpdatesBanner(updateCount) { onFilterChange(AppListFilter.YOURS) }
         }
 
+        // ── Filter: ALL APPS · YOUR APPS ──
+        AppListFilterChips(
+            filter = filter,
+            onSelect = onFilterChange,
+            allCount = supportedApps.size,
+            yourCount = patchedRecords.size,
+        )
+
         // ── Search field ──
-        if (supportedApps.size > 4) {
+        if (activeCount > 4) {
             // Match the LazyColumn's right padding so the field aligns with cards.
             // Dp.Unspecified disables the default 340dp cap so the field fills
             // the pane width like the cards below it.
@@ -1357,7 +1354,24 @@ private fun SupportedAppsListPane(
             Spacer(modifier = Modifier.height(10.dp))
         }
 
-        when {
+        if (filter == AppListFilter.YOURS) {
+            YourAppsListBody(
+                patchedRecords = patchedRecords,
+                filteredRecords = filteredRecords,
+                searchQuery = searchQuery,
+                patchedStates = patchedStates,
+                deviceAppInfo = deviceAppInfo,
+                updateInfoByPackage = updateInfoByPackage,
+                onShowDetail = onShowDetail,
+                onRepatch = onRepatch,
+                onUpdate = onUpdate,
+                onForget = onForget,
+                onInstall = onInstall,
+                installingPackage = installingPackage,
+                paneMaxHeight = paneMaxHeight,
+                showSearch = activeCount > 4,
+            )
+        } else when {
             isLoading -> {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
@@ -1458,6 +1472,8 @@ private fun SupportedAppsListPane(
                                                       else app.packageName
                                 },
                                 patchSourceNames = sourceNamesByPackage[app.packageName] ?: emptyList(),
+                                patchedState = patchedStates[app.packageName] ?: PatchedAppState.NEVER_PATCHED,
+                                deviceInfo = deviceAppInfo[app.packageName],
                             )
                         }
                     }
@@ -1483,186 +1499,103 @@ private fun SupportedAppsListPane(
     }
 }
 
+/**
+ * "Your apps" list body — the patched-app history (Phase 7). Same scroll/scrollbar
+ * treatment as the supported-apps list, but rows are [YourAppRow]s sourced from the
+ * records (not the supported-apps list), so apps patched via a since-removed source
+ * still appear. Tapping a row opens the detail dialog.
+ */
 @Composable
-private fun SupportedAppsSection(
-    isCompact: Boolean = false,
-    maxWidth: Dp = 800.dp,
-    isLoading: Boolean = false,
-    isDefaultSource: Boolean = true,
-    supportedApps: List<SupportedApp> = emptyList(),
-    loadError: String? = null,
-    onRetry: () -> Unit = {},
-    /** packageName → source display names contributing patches. Used to badge
-     *  cards with their source attribution in multi-source mode. */
-    sourceNamesByPackage: Map<String, List<String>> = emptyMap(),
+private fun YourAppsListBody(
+    patchedRecords: List<PatchedAppRecord>,
+    filteredRecords: List<PatchedAppRecord>,
+    searchQuery: String,
+    patchedStates: Map<String, PatchedAppState>,
+    deviceAppInfo: Map<String, DeviceAppInfo>,
+    updateInfoByPackage: Map<String, RecallUpdateInfo>,
+    onShowDetail: (PatchedAppRecord) -> Unit,
+    onRepatch: (String) -> Unit,
+    onUpdate: (String) -> Unit,
+    onForget: (String) -> Unit,
+    onInstall: (String) -> Unit,
+    installingPackage: String?,
+    paneMaxHeight: Dp,
+    showSearch: Boolean,
 ) {
-    val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    val useVerticalLayout = maxWidth < 400.dp
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = "SUPPORTED APPS",
-            fontSize = if (isCompact) 10.sp else 11.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = mono,
-            color = homeMutedTextColor(0.7f),
-            letterSpacing = 3.sp
+    when {
+        patchedRecords.isEmpty() -> YourAppsEmptyHint(
+            title = "NO PATCHED APPS YET",
+            subtitle = "Patch an app and it shows up here.",
+            mono = mono,
         )
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-        Text(
-            text = if (isDefaultSource) "Download the exact version from APKMirror and drop it here."
-                   else "Drop the APK for a supported app here.",
-            fontSize = if (isCompact) 10.sp else 11.sp,
-            fontFamily = mono,
-            fontWeight = FontWeight.Normal,
-            color = homeMutedTextColor(0.5f),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .widthIn(max = if (useVerticalLayout) 280.dp else 500.dp)
-                .padding(horizontal = 16.dp)
+        filteredRecords.isEmpty() -> YourAppsEmptyHint(
+            title = "NO MATCHES",
+            subtitle = "Nothing matches \"$searchQuery\".",
+            mono = mono,
         )
-
-        Spacer(modifier = Modifier.height(if (isCompact) 12.dp else 16.dp))
-
-        when {
-            isLoading -> {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(32.dp)
+        else -> {
+            val listState = rememberLazyListState()
+            val headerSearchAllowance = if (showSearch) 80.dp else 34.dp
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = (paneMaxHeight - headerSearchAllowance).coerceAtLeast(120.dp)),
+            ) {
+                androidx.compose.foundation.lazy.LazyColumn(
+                    state = listState,
+                    modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        strokeWidth = 2.dp
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "Loading patches...",
-                        fontSize = 11.sp,
-                        fontFamily = mono,
-                        color = homeMutedTextColor(0.5f)
-                    )
-                }
-            }
-            loadError != null -> {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "LOAD FAILED",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = mono,
-                        color = MaterialTheme.colorScheme.error,
-                        letterSpacing = 1.sp
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = loadError,
-                        fontSize = 11.sp,
-                        fontFamily = mono,
-                        color = homeMutedTextColor(0.6f),
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    OutlinedButton(
-                        onClick = onRetry,
-                        shape = RoundedCornerShape(corners.small),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
-                    ) {
-                        Text(
-                            "RETRY",
-                            fontFamily = mono,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 11.sp,
-                            letterSpacing = 1.sp
+                    items(items = filteredRecords, key = { it.packageName }) { record ->
+                        YourAppRow(
+                            record = record,
+                            state = patchedStates[record.packageName] ?: PatchedAppState.PATCHED,
+                            deviceInfo = deviceAppInfo[record.packageName],
+                            updateInfo = updateInfoByPackage[record.packageName],
+                            onClick = { onShowDetail(record) },
+                            onRepatch = { onRepatch(record.packageName) },
+                            onUpdate = { onUpdate(record.packageName) },
+                            onForget = { onForget(record.packageName) },
+                            onInstall = { onInstall(record.packageName) },
+                            installing = installingPackage == record.packageName,
                         )
                     }
                 }
-            }
-            supportedApps.isEmpty() -> {
-                Text(
-                    text = "No supported apps found",
-                    fontSize = 11.sp,
-                    fontFamily = mono,
-                    color = homeMutedTextColor(0.5f)
-                )
-            }
-            else -> {
-                val focusManager = LocalFocusManager.current
-                var searchQuery by remember { mutableStateOf("") }
-                val filteredApps = if (searchQuery.isBlank()) supportedApps
-                else supportedApps.filter {
-                    it.displayName.contains(searchQuery, ignoreCase = true) ||
-                    it.packageName.contains(searchQuery, ignoreCase = true)
-                }
-
-                if (supportedApps.size > 4) {
-                    SlimSearchField(
-                        value = searchQuery,
-                        onValueChange = { searchQuery = it },
-                        mono = mono,
-                        corners = corners,
-                        accents = accents
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-
-                var selectedApp by remember { mutableStateOf<SupportedApp?>(null) }
-                // Clear selection if the selected app is filtered out
-                LaunchedEffect(searchQuery, filteredApps) {
-                    if (selectedApp != null && filteredApps.none { it.packageName == selectedApp?.packageName }) {
-                        selectedApp = null
-                    }
-                }
-
-                if (filteredApps.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 120.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No matching apps",
-                            fontSize = 11.sp,
-                            fontFamily = mono,
-                            color = homeMutedTextColor(0.3f)
-                        )
-                    }
-                } else {
-                    SupportedAppsMasterDetail(
-                        apps = filteredApps,
-                        selectedApp = selectedApp,
-                        onSelect = { app ->
-                            selectedApp = if (selectedApp?.packageName == app.packageName) null else app
-                        },
-                        onClose = { selectedApp = null },
-                        isDefaultSource = isDefaultSource,
-                        useVerticalLayout = useVerticalLayout,
-                        sourceNamesByPackage = sourceNamesByPackage,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = if (isCompact) 8.dp else 16.dp)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) { focusManager.clearFocus() }
+                Box(modifier = Modifier.matchParentSize(), contentAlignment = Alignment.CenterEnd) {
+                    VerticalScrollbar(
+                        modifier = Modifier.fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(listState),
+                        style = morpheScrollbarStyle(),
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun YourAppsEmptyHint(title: String, subtitle: String, mono: androidx.compose.ui.text.font.FontFamily) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+    ) {
+        Text(
+            text = title,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            letterSpacing = 1.sp,
+            color = homeMutedTextColor(0.55f),
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            text = subtitle,
+            fontSize = 11.sp,
+            fontFamily = mono,
+            color = homeMutedTextColor(0.4f),
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
@@ -1692,89 +1625,6 @@ private fun homeMutedTextColor(alpha: Float): Color {
 @Composable
 private fun homeAccentTextColor(accent: Color): Color {
     return accent
-}
-
-@Composable
-private fun PatchesVersionCard(
-    patchesVersion: String,
-    latestLabel: String?,
-    onChangePatchesClick: () -> Unit,
-    patchSourceName: String? = null,
-    isCompact: Boolean = false,
-    modifier: Modifier = Modifier
-) {
-    val corners = LocalMorpheCorners.current
-    val mono = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    val hoverInteraction = remember { MutableInteractionSource() }
-    val isHovered by hoverInteraction.collectIsHoveredAsState()
-    val borderColor by animateColorAsState(
-        if (isHovered) accents.primary.copy(alpha = 0.4f)
-        else MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
-        animationSpec = tween(200)
-    )
-
-    Box(
-        modifier = modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(corners.medium))
-                .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                .background(MaterialTheme.colorScheme.surface)
-                .hoverable(hoverInteraction)
-                .clickable(onClick = onChangePatchesClick)
-        ) {
-            // Source name + version + badge — single row
-            Row(
-                modifier = Modifier
-                    .padding(vertical = if (isCompact) 8.dp else 10.dp)
-                    .padding(start = 12.dp, end = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = patchSourceName?.uppercase() ?: "PATCHES",
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                    letterSpacing = 1.5.sp
-                )
-                Text(
-                    text = " · ",
-                    fontSize = 10.sp,
-                    fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f)
-                )
-                Text(
-                    text = patchesVersion,
-                    fontSize = if (isCompact) 12.sp else 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = mono,
-                    color = accents.primary
-                )
-                if (latestLabel != null) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .background(accents.secondary.copy(alpha = 0.1f), RoundedCornerShape(corners.small))
-                            .border(1.dp, accents.secondary.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = latestLabel,
-                            fontSize = 8.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = accents.secondary,
-                            letterSpacing = 1.sp
-                        )
-                    }
-                }
-            }
-        }
-    }
 }
 
 @Composable

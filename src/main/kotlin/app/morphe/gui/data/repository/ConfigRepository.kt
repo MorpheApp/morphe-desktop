@@ -313,6 +313,13 @@ class ConfigRepository {
         saveConfig(current.copy(multiSourceHintDismissed = true))
     }
 
+    /** Persist which home apps tab ("ALL"/"YOURS") the user is viewing. */
+    suspend fun setHomeAppListFilter(value: String) {
+        val current = loadConfig()
+        if (current.homeAppListFilter == value) return
+        saveConfig(current.copy(homeAppListFilter = value))
+    }
+
     /**
      * Toggle enablement of a patch source. Safety net: if disabling would leave zero
      * enabled sources, the default source is force-enabled (mirrors morphe-manager
