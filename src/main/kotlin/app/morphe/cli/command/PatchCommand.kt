@@ -15,9 +15,8 @@ import app.morphe.engine.isWindows
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
-import app.morphe.engine.PatchEngine.Config.Companion.LEGACY_KEYSTORE_ALIAS
-import app.morphe.engine.PatchEngine.Config.Companion.LEGACY_KEYSTORE_PASSWORD
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.library.installation.installer.*
@@ -867,33 +866,18 @@ internal object PatchCommand : Callable<Int> {
                     patchingResult.addStepResult(
                         PatchingStep.SIGNING,
                         {
-                            fun signApk(alias: String, password: String) {
-                                ApkUtils.signApk(
-                                    patchedApkFile,
-                                    outputFilePath,
-                                    signer,
-                                    ApkUtils.KeyStoreDetails(
-                                        keystoreFilePath,
-                                        keyStorePassword,
-                                        alias,
-                                        password,
-                                    )
-                                )
-                            }
-                            try {
-                                signApk(keyStoreEntryAlias, keyStoreEntryPassword)
-                            } catch (e: Exception){
-                                // Retry with legacy keystore defaults.
-                                if (keyStoreEntryAlias == DEFAULT_KEYSTORE_ALIAS &&
-                                    keyStoreEntryPassword == DEFAULT_KEYSTORE_PASSWORD &&
-                                    keystoreFilePath.exists()
-                                ) {
-                                    logger.info("Using legacy keystore credentials")
-
-                                    signApk(LEGACY_KEYSTORE_ALIAS, LEGACY_KEYSTORE_PASSWORD)
-                                } else {
-                                    throw e
-                                }
+                            signWithLegacyFallback(
+                                primary = ApkUtils.KeyStoreDetails(
+                                    keystoreFilePath,
+                                    keyStorePassword,
+                                    keyStoreEntryAlias,
+                                    keyStoreEntryPassword,
+                                ),
+                                allowLegacyFallback = keyStoreEntryAlias == DEFAULT_KEYSTORE_ALIAS &&
+                                    keyStoreEntryPassword == DEFAULT_KEYSTORE_PASSWORD,
+                                logger = logger,
+                            ) { details ->
+                                ApkUtils.signApk(patchedApkFile, outputFilePath, signer, details)
                             }
                         }
                     )

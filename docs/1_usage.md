@@ -54,6 +54,12 @@ You can combine the option `-e`, `-d`, `--ei`, `--di` and `--exclusive`. Here is
 java -jar morphe-cli.jar patch --patches patches.mpp --exclusive -e "Patch name" --ei 123 input.apk
 ```
 
+You can also use multiple MPP files. Enable/disable and other bundle specific arguments are applied to the last `--patches` argument:
+  
+ ```bash 
+ java -jar morphe-cli.jar patch --patches patches-a.mpp -e "patch a" --patches patches-b.mpp -e "patch b" input.apk 
+ ``` 
+
 
 > [!TIP]
 > You can use the option `-i` to automatically install the patched app after patching.
