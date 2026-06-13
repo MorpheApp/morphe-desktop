@@ -297,6 +297,22 @@ class ConfigRepository {
     }
 
     /**
+     * Persist a new source ordering given the ids in their desired order. Order
+     * only affects the app display-name tiebreak (first source wins) and UI
+     * presentation order — not which patches load — so any source, default
+     * included, may be reordered. Ignores the call unless [orderedIds] is a
+     * permutation of the existing sources (guards against a stale UI snapshot
+     * dropping or duplicating a source).
+     */
+    suspend fun reorderPatchSources(orderedIds: List<String>) {
+        val current = loadConfig()
+        val byId = current.patchSource.associateBy { it.id }
+        if (orderedIds.size != current.patchSource.size || orderedIds.toSet() != byId.keys) return
+        val reordered = orderedIds.map { byId.getValue(it) }
+        saveConfig(current.copy(patchSource = reordered))
+    }
+
+    /**
      * Update whether Morphe auto-starts the ADB daemon at GUI launch.
      */
     suspend fun setAutoStartAdb(enabled: Boolean) {
@@ -319,6 +335,7 @@ class ConfigRepository {
         if (current.homeAppListFilter == value) return
         saveConfig(current.copy(homeAppListFilter = value))
     }
+
 
     /**
      * Toggle enablement of a patch source. Safety net: if disabling would leave zero

@@ -395,6 +395,14 @@ fun HomeScreenContent(
             onRemove = { id ->
                 coroutineScope.launch { patchSourceManager.removeSource(id) }
             },
+            onReorder = { orderedIds ->
+                coroutineScope.launch {
+                    patchSourceManager.reorderSources(orderedIds)
+                    // Reload so the union app list + display-name tiebreak reflect
+                    // the new source priority.
+                    viewModel.retryLoadPatches()
+                }
+            },
             onOpenPatches = { sourceId ->
                 // Hide sheet immediately so it doesn't ride the push animation.
                 // Mark it as pending-reopen so it returns smoothly after pop.

@@ -268,7 +268,10 @@ class HomeViewModel(
         if (!device.isReady || _uiState.value.installingPackage != null) return
         _uiState.value = _uiState.value.copy(installingPackage = packageName)
         screenModelScope.launch {
-            val result = adbManager.installApk(record.outputApkPath, device.id)
+            // Always record a non-Play installer so the Play Store won't clobber
+            // the patched app with an official update.
+            val installer = adbManager.resolveSpoofInstaller(device.id)
+            val result = adbManager.installApk(record.outputApkPath, device.id, installerPackage = installer)
             _uiState.value = _uiState.value.copy(
                 installingPackage = null,
                 error = result.exceptionOrNull()?.let { "Install failed: ${it.message}" } ?: _uiState.value.error,
