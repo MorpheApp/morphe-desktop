@@ -854,7 +854,7 @@ internal object PatchCommand : Callable<Int> {
 
             // region Save.
 
-            inputApk.copyTo(temporaryFilesPath.resolve(inputApk.name), overwrite = true).apply {
+            inputApk.copyTo(patcherTemporaryFilesPath.resolve(inputApk.name), overwrite = true).apply {
                 patchingResult.addStepResult(
                     PatchingStep.REBUILDING,
                     {

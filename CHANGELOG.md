@@ -1,3 +1,10 @@
+## [1.9.2-dev.1](https://github.com/MorpheApp/morphe-cli/compare/v1.9.1...v1.9.2-dev.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* CLI --purge command does not cleanup temp APK ([#169](https://github.com/MorpheApp/morphe-cli/issues/169)) ([6163e9c](https://github.com/MorpheApp/morphe-cli/commit/6163e9c29070e5013274792437d05f8ed2c20853))
+
 ## [1.9.1](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0...v1.9.1) (2026-06-08)
 
 
