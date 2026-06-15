@@ -39,6 +39,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import app.morphe.morphe_cli.generated.resources.Res
 import app.morphe.morphe_cli.generated.resources.morphe_dark
 import app.morphe.morphe_cli.generated.resources.morphe_light
+import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp
@@ -1192,6 +1193,7 @@ private fun CompletedContent(
     val outputFile = File(outputPath)
     val scope = rememberCoroutineScope()
     val adbManager = remember { AdbManager() }
+    val configRepository: ConfigRepository = koinInject()
     val monitorState by DeviceMonitor.state.collectAsState()
     val adbPreference = LocalAdbPreference.current
     val isAdbDisabledByUser = !adbPreference.enabled
@@ -1444,7 +1446,23 @@ private fun CompletedContent(
                                         deviceId = device.id
                                     )
                                     result.fold(
-                                        onSuccess = { installSuccess = true },
+                                        onSuccess = {
+                                            installSuccess = true
+                                            // Parity with ResultScreen: auto-route links when opted in.
+                                            val config = configRepository.loadConfig()
+                                            if (config.autoRouteLinksAfterInstall) {
+                                                val record = PatchedAppStore.shared.getAll()
+                                                    .firstOrNull { it.outputApkPath == outputPath }
+                                                record?.let {
+                                                    adbManager.setLinkHandling(
+                                                        deviceId = device.id,
+                                                        patchedPackage = it.installedPackageName,
+                                                        stockPackage = if (config.disableStockLinksAfterInstall) it.packageName else null,
+                                                        enable = true,
+                                                    )
+                                                }
+                                            }
+                                        },
                                         onFailure = { installError = it.message }
                                     )
                                     isInstalling = false

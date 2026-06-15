@@ -272,9 +272,52 @@ class HomeViewModel(
             // the patched app with an official update.
             val installer = adbManager.resolveSpoofInstaller(device.id)
             val result = adbManager.installApk(record.outputApkPath, device.id, installerPackage = installer)
+
+            // Mirror ResultScreen: if the user opted into auto-routing links,
+            // point the patched app at its web links right after a good install.
+            if (result.isSuccess) {
+                val config = configRepository.loadConfig()
+                if (config.autoRouteLinksAfterInstall) {
+                    adbManager.setLinkHandling(
+                        deviceId = device.id,
+                        patchedPackage = record.installedPackageName,
+                        stockPackage = if (config.disableStockLinksAfterInstall) record.packageName else null,
+                        enable = true,
+                    )
+                }
+            }
+
             _uiState.value = _uiState.value.copy(
                 installingPackage = null,
                 error = result.exceptionOrNull()?.let { "Install failed: ${it.message}" } ?: _uiState.value.error,
+            )
+            refreshDeviceInfo()
+        }
+    }
+
+    /**
+     * Uninstall the patched app for [packageName] from the selected device. When
+     * [alsoForget] is true, the recall record is removed afterward (uninstall +
+     * delete history); otherwise the record is kept (uninstall + keep history) so
+     * the card stays as a not-installed entry the user can re-install/re-patch.
+     *
+     * Removing through Morphe (vs the launcher) keeps our device-state tracking
+     * accurate — [refreshDeviceInfo] runs on completion so the card flips to
+     * not-installed immediately.
+     */
+    fun uninstallPatchedApp(packageName: String, alsoForget: Boolean) {
+        val record = patchedRecordsByPackage[packageName] ?: return
+        val device = DeviceMonitor.state.value.selectedDevice ?: return
+        if (!device.isReady || _uiState.value.uninstallingPackage != null) return
+        _uiState.value = _uiState.value.copy(uninstallingPackage = packageName)
+        screenModelScope.launch {
+            val result = adbManager.uninstallApk(record.installedPackageName, device.id)
+            if (result.isSuccess && alsoForget) {
+                patchedAppStore.delete(packageName)
+            }
+            _uiState.value = _uiState.value.copy(
+                uninstallingPackage = null,
+                error = result.exceptionOrNull()?.let { "Uninstall failed: ${it.message}" } ?: _uiState.value.error,
             )
             refreshDeviceInfo()
         }
@@ -1193,6 +1236,8 @@ data class HomeUiState(
     val updatePrep: UpdatePrep? = null,
     /** Package currently being installed to the device from its stored output APK. */
     val installingPackage: String? = null,
+    /** Package currently being uninstalled from the device. */
+    val uninstallingPackage: String? = null,
     /** Per-package device install info (optional layer; empty when no device connected). */
     val deviceAppInfo: Map<String, DeviceAppInfo> = emptyMap(),
     val patchesVersion: String? = null,

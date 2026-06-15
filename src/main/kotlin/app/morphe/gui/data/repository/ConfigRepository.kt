@@ -205,6 +205,22 @@ class ConfigRepository {
     }
 
     /**
+     * Update the "route links to patched app after install" setting.
+     */
+    suspend fun setAutoRouteLinksAfterInstall(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(autoRouteLinksAfterInstall = enabled))
+    }
+
+    /**
+     * Update the "also disable stock app's links" sub-setting.
+     */
+    suspend fun setDisableStockLinksAfterInstall(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(disableStockLinksAfterInstall = enabled))
+    }
+
+    /**
      * Update simplified mode setting.
      */
     suspend fun setUseSimplifiedMode(enabled: Boolean) {

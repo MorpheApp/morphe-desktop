@@ -55,7 +55,9 @@ import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.DeviceStatus
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
+import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.util.ApkManifestReader
+import app.morphe.gui.data.model.SupportedApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.awt.Desktop
@@ -112,6 +114,26 @@ fun ResultScreenContent(outputPath: String) {
             adbManager.listInstalledPackages(device.id).getOrNull()?.contains(pkg) == true
     }
 
+    // Link-handling ("open with") state. The stock package — needed only for the
+    // optional "stop stock from opening links" half — comes from the recall
+    // record for this output (which stores original + renamed package names).
+    var stockPackage by remember { mutableStateOf<String?>(null) }
+    var disableStockLinks by remember { mutableStateOf(false) }
+    var isApplyingLinks by remember { mutableStateOf(false) }
+    var linkProgress by remember { mutableStateOf("") }
+    var linkError by remember { mutableStateOf<String?>(null) }
+    var linkSuccess by remember { mutableStateOf(false) }
+    var autoRouteLinks by remember { mutableStateOf(false) }
+    LaunchedEffect(outputPath, outputPackage) {
+        stockPackage = withContext(Dispatchers.IO) {
+            runCatching {
+                val records = PatchedAppStore.shared.getAll()
+                records.firstOrNull { it.outputApkPath == outputPath }?.packageName
+                    ?: outputPackage?.let { pkg -> records.firstOrNull { it.installedPackageName == pkg }?.packageName }
+            }.getOrNull()
+        }
+    }
+
     // Cleanup state
     var hasTempFiles by remember { mutableStateOf(false) }
     var tempFilesSize by remember { mutableStateOf(0L) }
@@ -121,6 +143,8 @@ fun ResultScreenContent(outputPath: String) {
     LaunchedEffect(Unit) {
         val config = configRepository.loadConfig()
         autoCleanupEnabled = config.autoCleanupTempFiles
+        autoRouteLinks = config.autoRouteLinksAfterInstall
+        disableStockLinks = config.disableStockLinksAfterInstall
         hasTempFiles = FileUtils.hasTempFiles()
         tempFilesSize = FileUtils.getTempDirSize()
 
@@ -160,6 +184,46 @@ fun ResultScreenContent(outputPath: String) {
             )
 
             isInstalling = false
+        }
+    }
+
+    fun applyLinkHandling(enable: Boolean) {
+        val device = monitorState.selectedDevice ?: return
+        val patched = outputPackage ?: return
+        scope.launch {
+            isApplyingLinks = true
+            linkError = null
+            val result = adbManager.setLinkHandling(
+                deviceId = device.id,
+                patchedPackage = patched,
+                stockPackage = if (disableStockLinks) stockPackage else null,
+                enable = enable,
+                onProgress = { linkProgress = it },
+            )
+            result.fold(
+                onSuccess = { outcome ->
+                    linkSuccess = enable
+                    linkProgress = when {
+                        !enable -> "Default link handling restored"
+                        outcome.stockChanged -> "Links routed to patched app, stock disabled"
+                        else -> "Links routed to patched app"
+                    }
+                },
+                onFailure = { e ->
+                    linkError = (e as? AdbException)?.message ?: e.message ?: "Unknown error"
+                }
+            )
+            isApplyingLinks = false
+        }
+    }
+
+    // Auto-route links once, right after a successful install, when the global
+    // setting is on. outputPackage is required (the apply no-ops without it).
+    LaunchedEffect(installSuccess, autoRouteLinks, outputPackage) {
+        if (installSuccess && autoRouteLinks && outputPackage != null &&
+            !linkSuccess && !isApplyingLinks && linkError == null
+        ) {
+            applyLinkHandling(enable = true)
         }
     }
 
@@ -279,6 +343,30 @@ fun ResultScreenContent(outputPath: String) {
                     },
                     onDismissError = { installError = null }
                 )
+
+                // Link handling ("open with"). Only meaningful once the patched
+                // app is on the device, so gate on a successful install (or the
+                // app already being present) + a ready, selected device.
+                val device = monitorState.selectedDevice
+                if (outputPackage != null && device?.isReady == true && (installSuccess || alreadyInstalled)) {
+                    LinkHandlingSection(
+                        patchedPackage = outputPackage!!,
+                        stockPackage = stockPackage?.takeIf { it != outputPackage },
+                        disableStockLinks = disableStockLinks,
+                        onToggleDisableStock = { disableStockLinks = it },
+                        isApplying = isApplyingLinks,
+                        progress = linkProgress,
+                        error = linkError,
+                        success = linkSuccess,
+                        selectedDeviceName = device.displayName,
+                        corners = corners,
+                        mono = mono,
+                        borderColor = borderColor,
+                        onApply = { applyLinkHandling(enable = true) },
+                        onRestore = { applyLinkHandling(enable = false) },
+                        onDismissError = { linkError = null },
+                    )
+                }
             }
 
             // Cleanup section
@@ -653,6 +741,222 @@ private fun AdbInstallSection(
                 }
             }
         }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  LINK HANDLING ("OPEN WITH") SECTION
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Route the patched app's web links to it (and optionally stop the stock app
+ * from grabbing them). Shown only once the patched app is installed on a ready
+ * device. The stock-disable checkbox appears only when a rename patch was used
+ * (a distinct [stockPackage]); on-device, [AdbManager.setLinkHandling] still
+ * verifies the stock app is actually installed before touching it.
+ */
+@Composable
+private fun LinkHandlingSection(
+    patchedPackage: String,
+    stockPackage: String?,
+    disableStockLinks: Boolean,
+    onToggleDisableStock: (Boolean) -> Unit,
+    isApplying: Boolean,
+    progress: String,
+    error: String?,
+    success: Boolean,
+    selectedDeviceName: String?,
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+    onApply: () -> Unit,
+    onRestore: () -> Unit,
+    onDismissError: () -> Unit,
+) {
+    val accents = LocalMorpheAccents.current
+    Box(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Text(
+                text = "LINK HANDLING",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                letterSpacing = 1.5.sp
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Open supported web links in the patched app instead of the browser.",
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),
+            )
+
+            // Optional OFF half — only when a rename was used so stock + patched coexist.
+            if (stockPackage != null) {
+                Spacer(Modifier.height(12.dp))
+                val stockName = SupportedApp.getDisplayName(stockPackage)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(corners.small))
+                        .clickable(enabled = !isApplying) { onToggleDisableStock(!disableStockLinks) }
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Checkbox(
+                        checked = disableStockLinks,
+                        onCheckedChange = { onToggleDisableStock(it) },
+                        enabled = !isApplying,
+                        colors = CheckboxDefaults.colors(checkedColor = accents.secondary),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Also stop $stockName from opening these links",
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
+
+            when {
+                error != null -> {
+                    Text(
+                        text = error,
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    SecondaryActionChip(text = "DISMISS", corners = corners, mono = mono, onClick = onDismissError)
+                }
+
+                isApplying -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            strokeWidth = 2.dp,
+                            color = accents.primary
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Text(
+                            text = progress.ifEmpty { "Applying..." }.uppercase(),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = accents.primary,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+
+                success -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = accents.secondary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = progress.ifEmpty { "Links routed to patched app" }.uppercase(),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = accents.secondary,
+                            letterSpacing = 0.5.sp,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        SecondaryActionChip(text = "RESTORE", corners = corners, mono = mono, onClick = onRestore)
+                    }
+                }
+
+                else -> {
+                    val hover = remember { MutableInteractionSource() }
+                    val isHovered by hover.collectIsHoveredAsState()
+                    val bg by animateColorAsState(
+                        if (isHovered) accents.secondary.copy(alpha = 0.9f) else accents.secondary,
+                        animationSpec = tween(150)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(38.dp)
+                            .hoverable(hover)
+                            .clip(RoundedCornerShape(corners.small))
+                            .background(bg, RoundedCornerShape(corners.small))
+                            .clickable(onClick = onApply),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "OPEN LINKS WITH PATCHED APP",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = Color.White,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Small bordered text button used for secondary actions (Dismiss/Restore). */
+@Composable
+private fun SecondaryActionChip(
+    text: String,
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    onClick: () -> Unit,
+) {
+    val hover = remember { MutableInteractionSource() }
+    val isHovered by hover.collectIsHoveredAsState()
+    Box(
+        modifier = Modifier
+            .hoverable(hover)
+            .clip(RoundedCornerShape(corners.small))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isHovered) 0.3f else 0.12f),
+                RoundedCornerShape(corners.small)
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurface,
+            letterSpacing = 0.5.sp
+        )
     }
 }
 

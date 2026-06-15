@@ -85,6 +85,14 @@ data class AppConfig(
     // Which home apps tab the user last viewed ("ALL" or "YOURS"), restored on
     // next launch. Stored as a string so this data layer stays free of UI enums.
     val homeAppListFilter: String = "ALL",
+    // After an ADB install, automatically route the patched app's web links to it
+    // ("open with"). Default OFF — it changes how the device opens links, so it's
+    // opt-in. See AppLinkCommands / AdbManager.setLinkHandling.
+    val autoRouteLinksAfterInstall: Boolean = false,
+    // When auto-routing links, also stop the stock app from opening those links
+    // (only applies when a rename patch was used and stock is installed). Default
+    // OFF — it reaches into a stock app's behavior.
+    val disableStockLinksAfterInstall: Boolean = false,
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {

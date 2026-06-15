@@ -91,6 +91,10 @@ fun SettingsDialog(
     onUpdateChannelChange: (app.morphe.gui.data.model.UpdateChannelPreference) -> Unit = {},
     autoStartAdb: Boolean = false,
     onAutoStartAdbChange: (Boolean) -> Unit = {},
+    autoRouteLinksAfterInstall: Boolean = false,
+    onAutoRouteLinksChange: (Boolean) -> Unit = {},
+    disableStockLinksAfterInstall: Boolean = false,
+    onDisableStockLinksChange: (Boolean) -> Unit = {},
     collapsibleSectionStates: Map<String, Boolean> = emptyMap(),
     onCollapsibleSectionToggle: (id: String, expanded: Boolean) -> Unit = { _, _ -> }
 ) {
@@ -268,6 +272,34 @@ fun SettingsDialog(
                     mono = mono,
                     enabled = !isPatching
                 )
+
+                SettingsDivider(borderColor)
+
+                // ── Link handling ("open with") ──
+                SettingToggleRow(
+                    label = "Route links to patched app",
+                    description = "After installing via ADB, make the patched app open its supported web links instead of the browser or the stock/default app.",
+                    checked = autoRouteLinksAfterInstall,
+                    onCheckedChange = onAutoRouteLinksChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching
+                )
+                AnimatedVisibility(visible = autoRouteLinksAfterInstall) {
+                    Column {
+                        Spacer(Modifier.height(12.dp))
+                        SettingToggleRow(
+                            label = "Disable stock app's links",
+                            description = "Also stop the original app from opening these links (only when a " +
+                                "rename patch was used and the stock app is installed). Reversible.",
+                            checked = disableStockLinksAfterInstall,
+                            onCheckedChange = onDisableStockLinksChange,
+                            accentColor = accents.primary,
+                            mono = mono,
+                            enabled = !isPatching
+                        )
+                    }
+                }
 
                 SettingsDivider(borderColor)
 

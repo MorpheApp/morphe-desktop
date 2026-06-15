@@ -195,6 +195,57 @@ fun HomeScreenContent(
         }
     }
 
+    // "Uninstall" — removes the patched app from the connected device. The dialog
+    // offers the keep-history vs delete-history choice via a checkbox.
+    var uninstallConfirm by remember { mutableStateOf<app.morphe.engine.model.PatchedAppRecord?>(null) }
+    var uninstallAlsoForget by remember { mutableStateOf(false) }
+    val onUninstall: (String) -> Unit = { pkg ->
+        uninstallAlsoForget = false
+        uninstallConfirm = viewModel.getPatchedRecord(pkg)
+    }
+    uninstallConfirm?.let { record ->
+        MorpheDialogCard(
+            onDismiss = { uninstallConfirm = null },
+            title = "Uninstall ${record.displayName}?",
+        ) {
+            MorpheDialogText(
+                "This removes ${record.displayName} from the connected device. " +
+                    "The patched APK on disk and your history are kept unless you choose otherwise below."
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
+                    .clickable { uninstallAlsoForget = !uninstallAlsoForget }
+                    .padding(vertical = 4.dp),
+            ) {
+                Checkbox(
+                    checked = uninstallAlsoForget,
+                    onCheckedChange = { uninstallAlsoForget = it },
+                    colors = CheckboxDefaults.colors(checkedColor = Color(0xFFE0504D)),
+                    modifier = Modifier.size(20.dp),
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    "Also remove from Your Apps",
+                    fontSize = 12.sp,
+                    fontFamily = LocalMorpheFont.current,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MorpheDialogButton("CANCEL", MaterialTheme.colorScheme.onSurfaceVariant, filled = false) {
+                    uninstallConfirm = null
+                }
+                MorpheDialogButton("UNINSTALL", Color(0xFFE0504D), filled = true) {
+                    viewModel.uninstallPatchedApp(record.packageName, alsoForget = uninstallAlsoForget)
+                    uninstallConfirm = null
+                }
+            }
+        }
+    }
+
     repatchMissingRecord?.let { record ->
         MorpheDialogCard(onDismiss = { repatchMissingRecord = null }, title = "Original APK not found") {
             MorpheDialogText(
@@ -240,7 +291,9 @@ fun HomeScreenContent(
                 }
             },
             onInstall = { viewModel.installPatchedApp(record.packageName) },
+            onUninstall = { onUninstall(record.packageName) },
             installing = uiState.installingPackage == record.packageName,
+            uninstalling = uiState.uninstallingPackage == record.packageName,
         )
     }
 
@@ -592,6 +645,8 @@ fun HomeScreenContent(
                                     onUpdate = onUpdate,
                                     onInstall = { viewModel.installPatchedApp(it) },
                                     installingPackage = uiState.installingPackage,
+                                    onUninstall = onUninstall,
+                                    uninstallingPackage = uiState.uninstallingPackage,
                                     onShowDetail = onShowDetail,
                                     filter = uiState.appListFilter,
                                     onFilterChange = { viewModel.setAppListFilter(it) },
@@ -1286,6 +1341,8 @@ private fun SupportedAppsListPane(
     onUpdate: (String) -> Unit = {},
     onInstall: (String) -> Unit = {},
     installingPackage: String? = null,
+    onUninstall: (String) -> Unit = {},
+    uninstallingPackage: String? = null,
     onShowDetail: (PatchedAppRecord) -> Unit = {},
     filter: AppListFilter = AppListFilter.ALL,
     onFilterChange: (AppListFilter) -> Unit = {},
@@ -1376,6 +1433,8 @@ private fun SupportedAppsListPane(
                 onForget = onForget,
                 onInstall = onInstall,
                 installingPackage = installingPackage,
+                onUninstall = onUninstall,
+                uninstallingPackage = uninstallingPackage,
                 paneMaxHeight = paneMaxHeight,
                 showSearch = activeCount > 4,
             )
@@ -1527,6 +1586,8 @@ private fun YourAppsListBody(
     onForget: (String) -> Unit,
     onInstall: (String) -> Unit,
     installingPackage: String?,
+    onUninstall: (String) -> Unit,
+    uninstallingPackage: String?,
     paneMaxHeight: Dp,
     showSearch: Boolean,
 ) {
@@ -1567,6 +1628,8 @@ private fun YourAppsListBody(
                             onForget = { onForget(record.packageName) },
                             onInstall = { onInstall(record.packageName) },
                             installing = installingPackage == record.packageName,
+                            onUninstall = { onUninstall(record.packageName) },
+                            uninstalling = uninstallingPackage == record.packageName,
                         )
                     }
                 }

@@ -219,7 +219,9 @@ fun YourAppRow(
     onUpdate: () -> Unit,
     onForget: () -> Unit,
     onInstall: () -> Unit = {},
+    onUninstall: () -> Unit = {},
     installing: Boolean = false,
+    uninstalling: Boolean = false,
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -363,6 +365,15 @@ fun YourAppRow(
                 )
             }
             DetailActionPill("RE-PATCH", Icons.Default.Refresh, accents.primary, mono, corners.small, onClick = onRepatch)
+            // Only offer uninstall when the app is actually on the connected device.
+            if (deviceInfo?.installed == true) {
+                DetailActionPill(
+                    if (uninstalling) "UNINSTALLING…" else "UNINSTALL",
+                    Icons.Default.Delete,
+                    Color(0xFFE0504D), mono, corners.small,
+                    onClick = if (uninstalling) ({}) else onUninstall,
+                )
+            }
             DetailActionPill(
                 "FORGET", Icons.Default.Delete,
                 MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f), mono, corners.small,
@@ -389,7 +400,9 @@ fun PatchedAppDetailDialog(
     onForget: () -> Unit,
     onOpenFolder: () -> Unit,
     onInstall: () -> Unit = {},
+    onUninstall: () -> Unit = {},
     installing: Boolean = false,
+    uninstalling: Boolean = false,
 ) {
     val mono = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
@@ -592,6 +605,17 @@ fun PatchedAppDetailDialog(
                     }
                     WideActionButton("RE-PATCH", repatchSub, Icons.Default.Refresh, accents.primary, mono, corners.small) {
                         onDismiss(); onRepatch()
+                    }
+                }
+                // Uninstall from the connected device — only when it's actually installed.
+                if (deviceInfo?.installed == true) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                        WideActionButton(
+                            if (uninstalling) "UNINSTALLING…" else "UNINSTALL",
+                            "remove from device", Icons.Default.Delete,
+                            Color(0xFFE0504D), mono, corners.small,
+                            onClick = if (uninstalling) ({}) else ({ onDismiss(); onUninstall() }),
+                        )
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
