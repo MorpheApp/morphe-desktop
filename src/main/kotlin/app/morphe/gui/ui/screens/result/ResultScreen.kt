@@ -55,6 +55,9 @@ import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.DeviceStatus
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
+import app.morphe.engine.util.ApkManifestReader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.awt.Desktop
 import java.io.File
 
@@ -93,6 +96,22 @@ fun ResultScreenContent(outputPath: String) {
     var installError by remember { mutableStateOf<String?>(null) }
     var installSuccess by remember { mutableStateOf(false) }
 
+    // Whether the patched package is already on the selected device → show "Update"
+    // instead of "Install" (the install itself already reinstalls with -r).
+    var outputPackage by remember { mutableStateOf<String?>(null) }
+    var alreadyInstalled by remember { mutableStateOf(false) }
+    LaunchedEffect(outputPath) {
+        outputPackage = withContext(Dispatchers.IO) {
+            runCatching { ApkManifestReader.read(outputFile)?.packageName }.getOrNull()
+        }
+    }
+    LaunchedEffect(monitorState.selectedDevice?.id, monitorState.selectedDevice?.isReady, outputPackage) {
+        val device = monitorState.selectedDevice
+        val pkg = outputPackage
+        alreadyInstalled = device != null && device.isReady && pkg != null &&
+            adbManager.listInstalledPackages(device.id).getOrNull()?.contains(pkg) == true
+    }
+
     // Cleanup state
     var hasTempFiles by remember { mutableStateOf(false) }
     var tempFilesSize by remember { mutableStateOf(0L) }
@@ -118,18 +137,22 @@ fun ResultScreenContent(outputPath: String) {
         scope.launch {
             isInstalling = true
             installError = null
-            installProgress = "Installing on ${device.displayName}..."
+            installProgress = "${if (alreadyInstalled) "Updating" else "Installing"} on ${device.displayName}..."
 
+            // Always record a non-Play installer so the Play Store won't clobber
+            // the patched app with an official update.
+            val installer = adbManager.resolveSpoofInstaller(device.id)
             val result = adbManager.installApk(
                 apkPath = outputPath,
                 deviceId = device.id,
+                installerPackage = installer,
                 onProgress = { installProgress = it }
             )
 
             result.fold(
                 onSuccess = {
                     installSuccess = true
-                    installProgress = "Installation successful!"
+                    installProgress = if (alreadyInstalled) "Update successful!" else "Installation successful!"
                 },
                 onFailure = { exception ->
                     installError = (exception as? AdbException)?.message ?: exception.message ?: "Unknown error"
@@ -225,134 +248,7 @@ fun ResultScreenContent(outputPath: String) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
             ) {
-            // Output file info
-            Box(
-                modifier = Modifier
-                    .widthIn(max = 520.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(corners.medium))
-                    .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                    .background(MaterialTheme.colorScheme.surface)
-            ) {
-                // Teal left stripe
-                Box(
-                    modifier = Modifier
-                        .width(3.dp)
-                        .fillMaxHeight()
-                        .background(accents.secondary)
-                        .align(Alignment.CenterStart)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 3.dp)
-                ) {
-                    // File name (first line) + size (second line)
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 16.dp)
-                    ) {
-                        Text(
-                            text = "OUTPUT FILE",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            letterSpacing = 1.5.sp
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = outputFile.name,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        if (outputFile.exists()) {
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                text = formatFileSize(outputFile.length()),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = mono,
-                                color = accents.secondary
-                            )
-                        }
-                        Spacer(Modifier.height(2.dp))
-                        Text(
-                            text = outputFile.parent ?: "",
-                            fontSize = 10.sp,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-
-                    // Open folder button row
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .drawBehind {
-                                drawLine(
-                                    color = borderColor,
-                                    start = Offset(20.dp.toPx(), 0f),
-                                    end = Offset(size.width - 20.dp.toPx(), 0f),
-                                    strokeWidth = 1f
-                                )
-                            }
-                            .padding(horizontal = 20.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val folderHover = remember { MutableInteractionSource() }
-                        val isFolderHovered by folderHover.collectIsHoveredAsState()
-                        val folderColor by animateColorAsState(
-                            if (isFolderHovered) accents.primary else accents.primary.copy(alpha = 0.7f),
-                            animationSpec = tween(150)
-                        )
-                        val folderBg by animateColorAsState(
-                            if (isFolderHovered) accents.primary.copy(alpha = 0.1f) else Color.Transparent,
-                            animationSpec = tween(150)
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .hoverable(folderHover)
-                                .clip(RoundedCornerShape(corners.small))
-                                .background(folderBg, RoundedCornerShape(corners.small))
-                                .border(
-                                    1.dp,
-                                    accents.primary.copy(alpha = if (isFolderHovered) 0.5f else 0.3f),
-                                    RoundedCornerShape(corners.small)
-                                )
-                                .clickable {
-                                    try {
-                                        val folder = outputFile.parentFile
-                                        if (folder != null && Desktop.isDesktopSupported()) {
-                                            Desktop.getDesktop().open(folder)
-                                        }
-                                    } catch (_: Exception) {}
-                                }
-                                .padding(horizontal = 14.dp, vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "OPEN FOLDER →",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = mono,
-                                color = folderColor,
-                                letterSpacing = 0.5.sp
-                            )
-                        }
-                    }
-                }
-            }
+            OutputFileCard(outputFile = outputFile, corners = corners, mono = mono, borderColor = borderColor)
 
             // ADB Install section
             if (isAdbDisabledByUser) {
@@ -366,6 +262,7 @@ fun ResultScreenContent(outputPath: String) {
                 AdbInstallSection(
                     devices = monitorState.devices,
                     selectedDevice = monitorState.selectedDevice,
+                    alreadyInstalled = alreadyInstalled,
                     isInstalling = isInstalling,
                     installProgress = installProgress,
                     installError = installError,
@@ -419,34 +316,7 @@ fun ResultScreenContent(outputPath: String) {
 
             // Patch Another button
             Spacer(Modifier.height(4.dp))
-
-            val patchAnotherHover = remember { MutableInteractionSource() }
-            val isPatchAnotherHovered by patchAnotherHover.collectIsHoveredAsState()
-            val patchAnotherBg by animateColorAsState(
-                if (isPatchAnotherHovered) accents.primary.copy(alpha = 0.9f) else accents.primary,
-                animationSpec = tween(150)
-            )
-
-            Box(
-                modifier = Modifier
-                    .widthIn(max = 520.dp)
-                    .fillMaxWidth()
-                    .height(42.dp)
-                    .hoverable(patchAnotherHover)
-                    .clip(RoundedCornerShape(corners.small))
-                    .background(patchAnotherBg, RoundedCornerShape(corners.small))
-                    .clickable { navigator.popUntilRoot() },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "PATCH ANOTHER",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = mono,
-                    color = Color.White,
-                    letterSpacing = 1.sp
-                )
-            }
+            PatchAnotherButton(corners = corners, mono = mono)
 
             Spacer(Modifier.height(8.dp))
             }
@@ -473,6 +343,7 @@ fun ResultScreenContent(outputPath: String) {
 private fun AdbInstallSection(
     devices: List<AdbDevice>,
     selectedDevice: AdbDevice?,
+    alreadyInstalled: Boolean = false,
     isInstalling: Boolean,
     installProgress: String,
     installError: String?,
@@ -768,7 +639,7 @@ private fun AdbInstallSection(
                         ) {
                             Text(
                                 text = if (selectedDevice != null)
-                                    "INSTALL ON ${selectedDevice.displayName.uppercase()}"
+                                    "${if (alreadyInstalled) "UPDATE" else "INSTALL"} ON ${selectedDevice.displayName.uppercase()}"
                                 else
                                     "SELECT A DEVICE",
                                 fontSize = 11.sp,
@@ -967,5 +838,178 @@ private fun formatFileSize(bytes: Long): String {
         bytes < 1024 * 1024 -> "%.1f KB".format(bytes / 1024.0)
         bytes < 1024 * 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
         else -> "%.2f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
+    }
+}
+
+@Composable
+private fun OutputFileCard(
+    outputFile: File,
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+) {
+    val accents = LocalMorpheAccents.current
+    Box(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        // Teal left stripe
+        Box(
+            modifier = Modifier
+                .width(3.dp)
+                .fillMaxHeight()
+                .background(accents.secondary)
+                .align(Alignment.CenterStart)
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 3.dp)
+        ) {
+            // File name (first line) + size (second line)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
+            ) {
+                Text(
+                    text = "OUTPUT FILE",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                    letterSpacing = 1.5.sp
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = outputFile.name,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (outputFile.exists()) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = formatFileSize(outputFile.length()),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = accents.secondary
+                    )
+                }
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = outputFile.parent ?: "",
+                    fontSize = 10.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            // Open folder button row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .drawBehind {
+                        drawLine(
+                            color = borderColor,
+                            start = Offset(20.dp.toPx(), 0f),
+                            end = Offset(size.width - 20.dp.toPx(), 0f),
+                            strokeWidth = 1f
+                        )
+                    }
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val folderHover = remember { MutableInteractionSource() }
+                val isFolderHovered by folderHover.collectIsHoveredAsState()
+                val folderColor by animateColorAsState(
+                    if (isFolderHovered) accents.primary else accents.primary.copy(alpha = 0.7f),
+                    animationSpec = tween(150)
+                )
+                val folderBg by animateColorAsState(
+                    if (isFolderHovered) accents.primary.copy(alpha = 0.1f) else Color.Transparent,
+                    animationSpec = tween(150)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .hoverable(folderHover)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(folderBg, RoundedCornerShape(corners.small))
+                        .border(
+                            1.dp,
+                            accents.primary.copy(alpha = if (isFolderHovered) 0.5f else 0.3f),
+                            RoundedCornerShape(corners.small)
+                        )
+                        .clickable {
+                            try {
+                                val folder = outputFile.parentFile
+                                if (folder != null && Desktop.isDesktopSupported()) {
+                                    Desktop.getDesktop().open(folder)
+                                }
+                            } catch (_: Exception) {}
+                        }
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "OPEN FOLDER →",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = folderColor,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PatchAnotherButton(
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+) {
+    val navigator = LocalNavigator.currentOrThrow
+    val accents = LocalMorpheAccents.current
+    val patchAnotherHover = remember { MutableInteractionSource() }
+    val isPatchAnotherHovered by patchAnotherHover.collectIsHoveredAsState()
+    val patchAnotherBg by animateColorAsState(
+        if (isPatchAnotherHovered) accents.primary.copy(alpha = 0.9f) else accents.primary,
+        animationSpec = tween(150)
+    )
+
+    Box(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .fillMaxWidth()
+            .height(42.dp)
+            .hoverable(patchAnotherHover)
+            .clip(RoundedCornerShape(corners.small))
+            .background(patchAnotherBg, RoundedCornerShape(corners.small))
+            .clickable { navigator.popUntilRoot() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "PATCH ANOTHER",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = Color.White,
+            letterSpacing = 1.sp
+        )
     }
 }

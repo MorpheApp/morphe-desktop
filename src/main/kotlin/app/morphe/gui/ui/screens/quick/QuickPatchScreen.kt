@@ -128,6 +128,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
             onAdd = { src -> pickerScope.launch { patchSourceManager.addSource(src) } },
             onEdit = { src -> pickerScope.launch { patchSourceManager.updateSource(src) } },
             onRemove = { id -> pickerScope.launch { patchSourceManager.removeSource(id) } },
+            onReorder = { orderedIds -> pickerScope.launch { patchSourceManager.reorderSources(orderedIds) } },
             onOpenPatches = { /* unused in SINGLE_SELECT mode */ },
             onDismiss = { showSourcePicker = false },
             enabled = uiState.phase != QuickPatchPhase.DOWNLOADING &&

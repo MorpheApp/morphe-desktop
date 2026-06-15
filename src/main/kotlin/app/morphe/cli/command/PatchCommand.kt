@@ -212,13 +212,13 @@ internal object PatchCommand : Callable<Int> {
         description = ["Alias of the private key and certificate pair keystore entry."],
         showDefaultValue = ALWAYS,
     )
-    private var keyStoreEntryAlias = PatchEngine.Config.DEFAULT_KEYSTORE_ALIAS
+    private var keyStoreEntryAlias = DEFAULT_KEYSTORE_ALIAS
 
     @CommandLine.Option(
         names = ["--keystore-entry-password"],
         description = ["Password of the keystore entry."],
     )
-    private var keyStoreEntryPassword = PatchEngine.Config.DEFAULT_KEYSTORE_PASSWORD
+    private var keyStoreEntryPassword = DEFAULT_KEYSTORE_PASSWORD
 
     @CommandLine.Option(
         names = ["--signer"],
@@ -432,7 +432,38 @@ internal object PatchCommand : Callable<Int> {
 
         val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
-        val keystoreFilePath = keyStoreFilePath ?: MorpheData.defaultKeystoreFile
+        // Resolve and possibly convert the keystore. The patcher only loads BKS,
+        // but users frequently pass PKCS12 (Android Studio default) or JKS (older
+        // projects, URV exports). KeystoreImporter sniffs by magic bytes (not
+        // extension — URV ships the same bytes under multiple suffixes), short-
+        // circuits when already BKS so existing setups are zero-risk, and writes
+        // converted bytes to a separate file so the user's source is never mutated.
+        val keystoreFilePath = run {
+            val source = keyStoreFilePath ?: return@run MorpheData.defaultKeystoreFile
+            if (!source.exists()) return@run source  // patcher will produce a clearer error
+            val importResult = app.morphe.engine.util.KeystoreImporter.ensureBks(
+                source = source,
+                convertedOutput = MorpheData.importedKeystoreFile,
+                alias = keyStoreEntryAlias,
+                password = keyStoreEntryPassword,
+            )
+            when (importResult) {
+                is app.morphe.engine.util.KeystoreImporter.Result.AlreadyBks -> importResult.file
+                is app.morphe.engine.util.KeystoreImporter.Result.Converted -> {
+                    logger.info(
+                        "Converted ${importResult.sourceFormat.displayName} keystore → BKS: ${importResult.file.absolutePath}"
+                    )
+                    importResult.file
+                }
+                is app.morphe.engine.util.KeystoreImporter.Result.Failed -> {
+                    logger.severe("Keystore conversion failed: ${importResult.reason}")
+                    importResult.cause?.let { logger.severe(it.stackTraceToString()) }
+                    throw IllegalArgumentException(
+                        "Could not use keystore '${source.absolutePath}': ${importResult.reason}"
+                    )
+                }
+            }
+        }
 
         val installer = if (deviceSerial != null) {
             val deviceSerial = deviceSerial!!.ifEmpty { null }

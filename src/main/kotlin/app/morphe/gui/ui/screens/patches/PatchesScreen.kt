@@ -48,6 +48,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.DeviceIndicator
 import app.morphe.gui.ui.components.SettingsButton
+import app.morphe.gui.ui.components.ToolsButton
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.components.getErrorType
 import app.morphe.gui.ui.components.getFriendlyErrorMessage
@@ -221,7 +222,9 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
 
             DeviceIndicator()
             Spacer(modifier = Modifier.width(6.dp))
-            SettingsButton(allowCacheClear = true)
+            ToolsButton(allowCacheClear = true)
+            Spacer(modifier = Modifier.width(6.dp))
+            SettingsButton()
         }
 
         // ── Content area ──

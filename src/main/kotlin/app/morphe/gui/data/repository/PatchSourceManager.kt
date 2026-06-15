@@ -267,6 +267,16 @@ class PatchSourceManager(
     }
 
     /**
+     * Persist a new source ordering. Order affects only the display-name
+     * tiebreak and UI presentation, not which patches load.
+     */
+    suspend fun reorderSources(orderedIds: List<String>) {
+        configRepository.reorderPatchSources(orderedIds)
+        refreshEnabledSources()
+        _sourceVersion.value++
+    }
+
+    /**
      * Update an existing source (e.g. rename). Refuses non-deletable sources.
      */
     suspend fun updateSource(updated: PatchSource) {

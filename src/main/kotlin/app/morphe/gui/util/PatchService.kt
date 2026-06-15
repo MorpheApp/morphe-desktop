@@ -166,6 +166,8 @@ class PatchService {
                     appliedPatches = engineResult.appliedPatches,
                     failedPatches = engineResult.failedPatches.map { it.name },
                     failureReason = failureReason,
+                    packageName = engineResult.packageName,
+                    packageVersion = engineResult.packageVersion,
                 ))
             } finally {
                 tempCopies.forEach { runCatching { it.delete() } }
@@ -276,4 +278,8 @@ data class PatchResult(
     // failed patch's error or — when patching succeeded but a later step
     // (rebuild, sign) blew up — that step's error. Null on success.
     val failureReason: String? = null,
+    // Surfaced from the engine so callers (e.g. patched-app history) can record
+    // what was actually patched. Empty when the patcher didn't report them.
+    val packageName: String = "",
+    val packageVersion: String = "",
 )

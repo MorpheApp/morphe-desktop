@@ -36,7 +36,6 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
@@ -48,7 +47,6 @@ import app.morphe.gui.ui.theme.LocalThemeState
 @Composable
 fun SettingsButton(
     modifier: Modifier = Modifier,
-    allowCacheClear: Boolean = true,
     isPatching: Boolean = false,
     onDismiss: () -> Unit = {},
     /**
@@ -63,7 +61,6 @@ fun SettingsButton(
     val modeState = LocalModeState.current
     val adbPreference = LocalAdbPreference.current
     val configRepository: ConfigRepository = koinInject()
-    val patchSourceManager: PatchSourceManager = koinInject()
     val updateCheckRepository: UpdateCheckRepository = koinInject()
     val scope = rememberCoroutineScope()
 
@@ -150,11 +147,7 @@ fun SettingsButton(
                 showSettingsDialog = false
                 onDismiss()
             },
-            allowCacheClear = allowCacheClear,
             isPatching = isPatching,
-            onCacheCleared = {
-                patchSourceManager.notifyCacheCleared()
-            },
             keystorePath = keystorePath,
             keystorePassword = keystorePassword,
             keystoreAlias = keystoreAlias,
@@ -222,8 +215,8 @@ fun TopBarRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         DeviceIndicator()
+        ToolsButton(allowCacheClear = allowCacheClear)
         SettingsButton(
-            allowCacheClear = allowCacheClear,
             isPatching = isPatching,
             onUpdateChannelChanged = onUpdateChannelChanged,
         )
