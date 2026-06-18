@@ -67,6 +67,7 @@ dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
     implementation(libs.morphe.library)
+    implementation(libs.jadb)
     implementation(libs.picocli)
 
     // -- Compose Desktop ---------------------------------------------------
