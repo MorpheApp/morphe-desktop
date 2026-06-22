@@ -42,6 +42,14 @@ object FileUtils {
     fun getConfigFile(): File = MorpheData.configFile
 
     /** Returns the patcher-scratch directory shared with the CLI. */
+    // TODO: This points at morphe-data/tmp, but the GUI's actual patching scratch
+    //  goes to the system temp dir (PatchEngine uses Files.createTempDirectory
+    //  when no tempDir is passed, and PatchService never passes one). So the
+    //  cleanup/size helpers below (getTempDirSize, hasTempFiles, cleanupAllTempDirs)
+    //  under-report — they miss the real per-run patching scratch. Either route GUI
+    //  patching through this dir (createPatchingTempDir is currently dead code) or
+    //  point these helpers at the actual system-temp location. Part of the
+    //  unified-data-location cleanup.
     fun getTempDir(): File = MorpheData.tmpDir
 
     /**
