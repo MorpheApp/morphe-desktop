@@ -620,7 +620,7 @@ internal object PatchCommand : Callable<Int> {
 
             // We need to check for apkm (like reddit), xapk and apks formats here
 
-            val inputApk = if (apk.extension.lowercase() in  setOf("apkm", "xapk", "apks")) {
+            val inputApk = if (app.morphe.engine.util.BundleFormats.isBundle(apk)) {
 
                 logger.info("Merging split APK bundle")
 

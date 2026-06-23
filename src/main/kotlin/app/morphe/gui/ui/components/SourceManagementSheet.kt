@@ -642,14 +642,14 @@ private fun ChannelBadge(
     mono: androidx.compose.ui.text.font.FontFamily,
 ) {
     val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
-    val (label, color) = when (channel) {
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_LATEST -> "STABLE LATEST" to accents.secondary
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_OLDER -> "STABLE OLDER" to accents.warning
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_LATEST -> "DEV LATEST" to androidx.compose.ui.graphics.Color(0xFFFFD43B)
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_OLDER -> "DEV OLDER" to accents.warning
-        else -> "STABLE LATEST" to accents.secondary
+    val label = when (channel) {
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_LATEST -> "STABLE LATEST"
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_OLDER -> "STABLE OLDER"
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_LATEST -> "DEV LATEST"
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_OLDER -> "DEV OLDER"
+        else -> "STABLE LATEST"
     }
+    val color = app.morphe.gui.ui.theme.channelColor(channel)
     Box(
         modifier = Modifier
             .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(corners.small))

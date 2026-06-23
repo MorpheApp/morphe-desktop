@@ -25,7 +25,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
@@ -36,11 +35,10 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.MorpheAccentColors
 import app.morphe.gui.util.EnabledSourcesLoader
 
 /** Per-source LED state surfaced in [SourcesCountPill]. */
-enum class SourceLedState { DISABLED, STABLE_LATEST, OLDER, DEV }
+enum class SourceLedState { DISABLED, STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER }
 
 /**
  * Header pill showing source count + per-source channel LEDs + trailing "+".
@@ -98,7 +96,7 @@ fun SourcesCountPill(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(3.dp),
             ) {
-                sourceStates.forEach { state -> SourceLed(state = state, accents = accents) }
+                sourceStates.forEach { state -> SourceLed(state = state) }
             }
         }
         if (interactive) {
@@ -113,12 +111,13 @@ fun SourcesCountPill(
 }
 
 @Composable
-private fun SourceLed(state: SourceLedState, accents: MorpheAccentColors) {
+private fun SourceLed(state: SourceLedState) {
     val color = when (state) {
         SourceLedState.DISABLED -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-        SourceLedState.STABLE_LATEST -> accents.primary
-        SourceLedState.OLDER -> accents.warning
-        SourceLedState.DEV -> Color(0xFFFFD43B)
+        SourceLedState.STABLE_LATEST -> app.morphe.gui.ui.theme.channelColor(EnabledSourcesLoader.Channel.STABLE_LATEST)
+        SourceLedState.STABLE_OLDER -> app.morphe.gui.ui.theme.channelColor(EnabledSourcesLoader.Channel.STABLE_OLDER)
+        SourceLedState.DEV_LATEST -> app.morphe.gui.ui.theme.channelColor(EnabledSourcesLoader.Channel.DEV_LATEST)
+        SourceLedState.DEV_OLDER -> app.morphe.gui.ui.theme.channelColor(EnabledSourcesLoader.Channel.DEV_OLDER)
     }
     Box(
         modifier = Modifier
@@ -135,9 +134,9 @@ fun sourceLedState(
     if (!source.enabled) return SourceLedState.DISABLED
     return when (channel) {
         EnabledSourcesLoader.Channel.STABLE_LATEST -> SourceLedState.STABLE_LATEST
-        EnabledSourcesLoader.Channel.STABLE_OLDER -> SourceLedState.OLDER
-        EnabledSourcesLoader.Channel.DEV_LATEST,
-        EnabledSourcesLoader.Channel.DEV_OLDER -> SourceLedState.DEV
+        EnabledSourcesLoader.Channel.STABLE_OLDER -> SourceLedState.STABLE_OLDER
+        EnabledSourcesLoader.Channel.DEV_LATEST -> SourceLedState.DEV_LATEST
+        EnabledSourcesLoader.Channel.DEV_OLDER -> SourceLedState.DEV_OLDER
         // No load yet — assume latest until we know otherwise.
         null, EnabledSourcesLoader.Channel.UNKNOWN -> SourceLedState.STABLE_LATEST
     }

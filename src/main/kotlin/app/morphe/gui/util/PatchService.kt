@@ -172,7 +172,14 @@ class PatchService {
             } finally {
                 tempCopies.forEach { runCatching { it.delete() } }
             }
-        } catch (e: Exception) {
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // Catch Throwable, not just Exception: a mismatched patch bundle can
+            // throw java.lang.Error (e.g. NoSuchMethodError when two sources ship
+            // the same class compiled against different patcher versions). Those
+            // are Errors, not Exceptions, so catch(Exception) would let them escape and the UI
+            // would hang on "Loading patches" forever instead of surfacing a failure.
             Logger.error("Patching failed", e)
             Result.failure(e)
         }

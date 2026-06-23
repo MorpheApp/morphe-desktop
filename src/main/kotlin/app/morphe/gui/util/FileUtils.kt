@@ -26,7 +26,7 @@ object FileUtils {
      */
     val ANDROID_ARCHITECTURES = setOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
 
-    private val EXTENSION_APK_BUNDLES = setOf("apkm", "xapk", "apks")
+    private val EXTENSION_APK_BUNDLES = app.morphe.engine.util.BundleFormats.EXTENSIONS
     private val EXTENSION_APK_ANY = EXTENSION_APK_BUNDLES + "apk"
 
     /** Returns the unified Morphe data root. Was: per-OS app-data folder. */
