@@ -1,3 +1,40 @@
+# [1.10.0-dev.3](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.2...v1.10.0-dev.3) (2026-06-23)
+
+
+### Bug Fixes
+
+* Handle GUI patching xapk / apks, add distinct patch-source channel colors, improve patch loading errors ([#180](https://github.com/MorpheApp/morphe-cli/issues/180)) ([d8245f0](https://github.com/MorpheApp/morphe-cli/commit/d8245f081b507cac74b06e16120e4271ce0e1f96))
+
+# [1.10.0-dev.2](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.1...v1.10.0-dev.2) (2026-06-23)
+
+
+### Features
+
+* route links through patched app + uninstall from "Your Apps" section's cards ([#179](https://github.com/MorpheApp/morphe-cli/issues/179)) ([1626ce5](https://github.com/MorpheApp/morphe-cli/commit/1626ce5ffe3300de2299443ed9b7587ebd1cdcb6))
+
+# [1.10.0-dev.1](https://github.com/MorpheApp/morphe-cli/compare/v1.9.2-dev.1...v1.10.0-dev.1) (2026-06-15)
+
+
+### Features
+
+* "your apps" section + settings and tools split + re-orderable patch sources + block play store updates for patched apps ([#176](https://github.com/MorpheApp/morphe-cli/issues/176)) ([d865abd](https://github.com/MorpheApp/morphe-cli/commit/d865abdbbe2258cf24476add02a361b05f3fdf7e))
+
+## [1.9.2-dev.1](https://github.com/MorpheApp/morphe-cli/compare/v1.9.1...v1.9.2-dev.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* CLI --purge command does not cleanup temp APK ([#169](https://github.com/MorpheApp/morphe-cli/issues/169)) ([6163e9c](https://github.com/MorpheApp/morphe-cli/commit/6163e9c29070e5013274792437d05f8ed2c20853))
+
+## [1.9.1](https://github.com/MorpheApp/morphe-cli/compare/v1.9.0...v1.9.1) (2026-06-08)
+
+
+### Bug Fixes
+
+* signing improvements ([#160](https://github.com/MorpheApp/morphe-cli/issues/160)) ([166f940](https://github.com/MorpheApp/morphe-cli/commit/166f9409b1cbe00af7663545c41548ead2c189c5))
+* Update dependencies ([83d3969](https://github.com/MorpheApp/morphe-cli/commit/83d39692541ca81b7bb555dfd60a001fbb97b3f1))
+* Update to latest ARSCLib ([f62a179](https://github.com/MorpheApp/morphe-cli/commit/f62a1793601fcfc489f54c558265115530ab6b8d))
+
 ## [1.9.1-dev.3](https://github.com/MorpheApp/morphe-cli/compare/v1.9.1-dev.2...v1.9.1-dev.3) (2026-06-02)
 
 

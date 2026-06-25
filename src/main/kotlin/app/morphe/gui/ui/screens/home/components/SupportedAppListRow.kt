@@ -37,7 +37,10 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import app.morphe.gui.ui.screens.home.PatchedAppState
+import app.morphe.gui.ui.theme.MorpheColors
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,6 +67,11 @@ fun SupportedAppListRow(
     /** Source display names whose patches target [app.packageName]. Rendered as
      *  the FROM chips inside the expanded body. Empty hides the FROM section. */
     patchSourceNames: List<String> = emptyList(),
+    /** Recall state — renders a badge in the header for PATCHED / APK_MISSING. */
+    patchedState: PatchedAppState = PatchedAppState.NEVER_PATCHED,
+    /** Optional device-layer info (installed? + version). Null = no device / not patched.
+     *  Recall ACTIONS (Re-patch/Forget) live on the "Your apps" card, not here. */
+    deviceInfo: app.morphe.gui.ui.screens.home.DeviceAppInfo? = null,
     modifier: Modifier = Modifier,
 ) {
     val corners = LocalMorpheCorners.current
@@ -145,6 +153,10 @@ fun SupportedAppListRow(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
+            if (patchedState != PatchedAppState.NEVER_PATCHED) {
+                Spacer(Modifier.width(8.dp))
+                PatchedStateBadge(patchedState, mono)
+            }
         }
 
         // ── Row 2: STABLE LATEST + EXPERIMENTAL LATEST chips ──
@@ -183,14 +195,70 @@ fun SupportedAppListRow(
             exit = shrinkVertically(animationSpec = tween(180), shrinkTowards = Alignment.Top) +
                     fadeOut(animationSpec = tween(120)),
         ) {
-            ExpandedBody(
-                app = app,
-                patchSourceNames = patchSourceNames,
-                accents = accents,
-                mono = mono,
-                cornerSmall = corners.small,
-            )
+            Column {
+                ExpandedBody(
+                    app = app,
+                    patchSourceNames = patchSourceNames,
+                    accents = accents,
+                    mono = mono,
+                    cornerSmall = corners.small,
+                )
+                deviceInfo?.let { DeviceInfoLine(it, mono) }
+            }
         }
+    }
+}
+
+/** Optional device-layer line: whether the app is installed on the connected device. */
+@Composable
+private fun DeviceInfoLine(info: app.morphe.gui.ui.screens.home.DeviceAppInfo, mono: FontFamily) {
+    val version = info.installedVersion?.let { " · v${it.removePrefix("v")}" } ?: ""
+    val (text, color) = when {
+        !info.installed -> "NOT ON THIS DEVICE" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f)
+        // Installed but signed by a different cert → replaced/re-signed outside Morphe.
+        info.signedByMorphe == false -> "ON DEVICE$version · NOT MORPHE-SIGNED" to Color(0xFFE0504D) // red
+        else -> "ON DEVICE$version" to MorpheColors.Teal // ours, or signature undetermined
+    }
+    Text(
+        text = text,
+        fontSize = 9.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = mono,
+        color = color,
+        letterSpacing = 0.5.sp,
+        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 2.dp, bottom = 4.dp),
+    )
+}
+
+/**
+ * Small recall badge shown in the row header. Renders nothing for
+ * [PatchedAppState.NEVER_PATCHED] (callers gate on that before calling).
+ */
+@Composable
+internal fun PatchedStateBadge(state: PatchedAppState, mono: FontFamily) {
+    val (label, color) = when (state) {
+        PatchedAppState.PATCHED -> "PATCHED" to MorpheColors.Teal
+        PatchedAppState.PATCHED_WITH_UPDATES -> "UPDATE AVAILABLE" to MorpheColors.Blue
+        PatchedAppState.MODIFIED_EXTERNALLY -> "MODIFIED" to Color(0xFFE0504D) // red
+        PatchedAppState.APK_MISSING -> "APK MISSING" to Color(0xFFE0A030) // amber
+        PatchedAppState.NEVER_PATCHED -> return
+    }
+    val corners = LocalMorpheCorners.current
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(corners.small))
+            .background(color.copy(alpha = 0.12f))
+            .border(1.dp, color.copy(alpha = 0.4f), RoundedCornerShape(corners.small))
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+    ) {
+        Text(
+            text = label,
+            fontSize = 8.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = color,
+            letterSpacing = 0.5.sp,
+        )
     }
 }
 

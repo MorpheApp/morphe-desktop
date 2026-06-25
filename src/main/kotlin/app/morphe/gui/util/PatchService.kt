@@ -166,11 +166,20 @@ class PatchService {
                     appliedPatches = engineResult.appliedPatches,
                     failedPatches = engineResult.failedPatches.map { it.name },
                     failureReason = failureReason,
+                    packageName = engineResult.packageName,
+                    packageVersion = engineResult.packageVersion,
                 ))
             } finally {
                 tempCopies.forEach { runCatching { it.delete() } }
             }
-        } catch (e: Exception) {
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // Catch Throwable, not just Exception: a mismatched patch bundle can
+            // throw java.lang.Error (e.g. NoSuchMethodError when two sources ship
+            // the same class compiled against different patcher versions). Those
+            // are Errors, not Exceptions, so catch(Exception) would let them escape and the UI
+            // would hang on "Loading patches" forever instead of surfacing a failure.
             Logger.error("Patching failed", e)
             Result.failure(e)
         }
@@ -276,4 +285,8 @@ data class PatchResult(
     // failed patch's error or — when patching succeeded but a later step
     // (rebuild, sign) blew up — that step's error. Null on success.
     val failureReason: String? = null,
+    // Surfaced from the engine so callers (e.g. patched-app history) can record
+    // what was actually patched. Empty when the patcher didn't report them.
+    val packageName: String = "",
+    val packageVersion: String = "",
 )

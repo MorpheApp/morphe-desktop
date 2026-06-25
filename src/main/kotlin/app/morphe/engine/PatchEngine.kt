@@ -8,6 +8,7 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.BundleFormats
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.patcher.Patcher
 import app.morphe.patcher.PatcherConfig
@@ -100,9 +101,11 @@ object PatchEngine {
         val failedPatches = mutableListOf<FailedPatch>()
 
         try {
-            // 1. Handle APKM format (split APK bundle)
-            val actualInputApk = if (config.inputApk.extension.equals("apkm", ignoreCase = true)) {
-                onProgress("Converting APKM to APK...")
+            // 1. Handle split-APK bundles (.apkm/.xapk/.apks) — merge splits into
+            // a single APK. ApkMerger is format-agnostic (it just extracts the
+            // .apk entries from the zip), so all three formats go through here.
+            val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
+                onProgress("Merging split APKs...")
                 val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
                 ApkMerger(logger.toMorpheLogger()).merge(
                     inputFile = config.inputApk,

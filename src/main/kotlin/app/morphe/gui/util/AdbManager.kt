@@ -5,6 +5,8 @@
 
 package app.morphe.gui.util
 
+import app.morphe.engine.util.AppLinkCommands
+import app.morphe.engine.util.SignatureIdentity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -12,12 +14,23 @@ import java.net.InetSocketAddress
 import java.net.Socket
 
 /**
- * Manages ADB (Android Debug Bridge) operations for installing APKs.
- * Works across macOS, Linux, and Windows.
+ * Manages ADB (Android Debug Bridge) operations for installing APKs. Works across macOS, Linux, and Windows.
  */
 class AdbManager {
 
     private var adbPath: String? = null
+
+    private companion object {
+        /* Popular store packages. The spoof installer is the first one NOT on the device — see [resolveSpoofInstaller]. */
+        val SPOOF_STORE_CANDIDATES = listOf(
+            "com.amazon.venezia",              // Amazon Appstore
+            "com.sec.android.app.samsungapps", // Samsung Galaxy Store
+            "com.huawei.appmarket",            // Huawei AppGallery
+            "com.apkpure.aegon",               // APKPure
+            "com.aurora.store",                // Aurora Store
+            "org.fdroid.fdroid",               // F-Droid
+        )
+    }
 
     /**
      * Set to true once [startServer] confirms Morphe was the process that
@@ -283,10 +296,23 @@ class AdbManager {
     /**
      * Install an APK on the specified device (or default device if only one connected).
      */
+    /**
+     * Pick an installer-source package to spoof for [deviceId]: the most-popular
+     * store NOT installed on the device, so nothing real tries to manage the app
+     * (and the Play Store won't auto-update it). Falls back to Amazon if all present.
+     */
+    suspend fun resolveSpoofInstaller(deviceId: String): String {
+        val installed = listInstalledPackages(deviceId).getOrNull() ?: emptySet()
+        return SPOOF_STORE_CANDIDATES.firstOrNull { it !in installed } ?: SPOOF_STORE_CANDIDATES.first()
+    }
+
     suspend fun installApk(
         apkPath: String,
         deviceId: String? = null,
         allowDowngrade: Boolean = true,
+        /** Set the recorded installer package (`pm install -i`). A non-Play value
+         *  stops the Play Store from auto-updating (and clobbering) the patched app. */
+        installerPackage: String? = null,
         onProgress: (String) -> Unit = {}
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
@@ -333,48 +359,99 @@ class AdbManager {
             )
         }
 
-        // Build install command
-        val command = mutableListOf(adb)
-        command.add("-s")
-        command.add(targetDevice.id)
-        command.add("install")
-        command.add("-r") // Replace existing
-        if (allowDowngrade) {
-            command.add("-d") // Allow downgrade
+        // Build + run the install, factored so we can transparently retry
+        // without installer attribution. Stricter Android builds could reject an
+        // `-i` pointing at a store the user doesn't have; if that's what failed,
+        // we'd rather install without Play-update blocking than not install at
+        // all. (Validated on Android 12 that an absent `-i` is accepted; this is
+        // a safety net for versions we haven't tested.)
+        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
+            val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
+            if (allowDowngrade) command.add("-d") // Allow downgrade
+            if (withInstaller && !installerPackage.isNullOrBlank()) {
+                command.add("-i") // Record installer source (blocks Play auto-update)
+                command.add(installerPackage)
+            }
+            command.add(apkPath)
+
+            onProgress("Installing on ${targetDevice.displayName}...")
+            Logger.info("Running: ${command.joinToString(" ")}")
+
+            return try {
+                val process = ProcessBuilder(command)
+                    .redirectErrorStream(true)
+                    .start()
+
+                // Read output in real-time
+                val output = StringBuilder()
+                process.inputStream.bufferedReader().forEachLine { line ->
+                    output.appendLine(line)
+                    onProgress(line)
+                    Logger.debug("ADB: $line")
+                }
+
+                val exitCode = process.waitFor()
+                val outputStr = output.toString()
+
+                if (exitCode == 0 && outputStr.contains("Success")) {
+                    Logger.info("APK installed successfully")
+                    Result.success(Unit)
+                } else {
+                    val errorMessage = parseInstallError(outputStr)
+                    Logger.error("Installation failed: $errorMessage")
+                    Result.failure(AdbException(errorMessage))
+                }
+            } catch (e: Exception) {
+                Logger.error("Error installing APK", e)
+                Result.failure(AdbException("Installation failed: ${e.message}"))
+            }
         }
-        command.add(apkPath)
 
-        onProgress("Installing on ${targetDevice.displayName}...")
-        Logger.info("Running: ${command.joinToString(" ")}")
+        val withInstaller = !installerPackage.isNullOrBlank()
+        val first = attemptInstall(withInstaller = withInstaller)
+        if (first.isFailure && withInstaller) {
+            Logger.info("Install with '-i $installerPackage' failed; retrying without installer attribution")
+            attemptInstall(withInstaller = false)
+        } else {
+            first
+        }
+    }
 
+    /**
+     * Uninstall [packageName] from [deviceId]. Used by the "Your apps" cards so a
+     * patched app can be removed through Morphe (keeping our recall state accurate)
+     * instead of from the launcher behind our back.
+     *
+     * Treats "package not installed" as success — the desired end state (app gone)
+     * already holds, so the caller can refresh and move on.
+     */
+    suspend fun uninstallApk(
+        packageName: String,
+        deviceId: String,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext Result.failure(
+            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+        )
         try {
-            val process = ProcessBuilder(command)
+            val process = ProcessBuilder(adb, "-s", deviceId, "uninstall", packageName)
                 .redirectErrorStream(true)
                 .start()
-
-            // Read output in real-time
-            val reader = process.inputStream.bufferedReader()
-            val output = StringBuilder()
-            reader.forEachLine { line ->
-                output.appendLine(line)
-                onProgress(line)
-                Logger.debug("ADB: $line")
-            }
-
+            val output = process.inputStream.bufferedReader().readText().trim()
             val exitCode = process.waitFor()
-            val outputStr = output.toString()
+            Logger.info("uninstall $packageName on $deviceId -> exit $exitCode: $output")
 
-            if (exitCode == 0 && outputStr.contains("Success")) {
-                Logger.info("APK installed successfully")
-                Result.success(Unit)
-            } else {
-                val errorMessage = parseInstallError(outputStr)
-                Logger.error("Installation failed: $errorMessage")
-                Result.failure(AdbException(errorMessage))
+            when {
+                exitCode == 0 && output.contains("Success") -> Result.success(Unit)
+                // Already gone is the end state we wanted.
+                output.contains("not installed", ignoreCase = true) ||
+                    output.contains("DELETE_FAILED_INTERNAL_ERROR", ignoreCase = true) &&
+                    listInstalledPackages(deviceId).getOrNull()?.contains(packageName) == false ->
+                    Result.success(Unit)
+                else -> Result.failure(AdbException("Uninstall failed: ${output.ifBlank { "exit $exitCode" }}"))
             }
         } catch (e: Exception) {
-            Logger.error("Error installing APK", e)
-            Result.failure(AdbException("Installation failed: ${e.message}"))
+            Logger.error("Error uninstalling $packageName", e)
+            Result.failure(AdbException("Uninstall failed: ${e.message}"))
         }
     }
 
@@ -452,6 +529,155 @@ class AdbManager {
         } catch (e: Exception) {
             Logger.error("Error capturing logcat", e)
             Result.failure(AdbException("Failed to capture logs: ${e.message}"))
+        }
+    }
+
+    // ── Link handling ("open with") ──────────────────────────────────────────
+
+    /**
+     * Route the patched app's declared web links to it, and optionally stop the
+     * stock app from handling those same links. Reverse with [enable] = false.
+     *
+     * The OFF half (stock) only runs when [stockPackage] is a real, different,
+     * *installed* package — i.e. a rename patch was used and stock is present.
+     * Otherwise it's skipped (reported via [LinkHandlingResult.stockChanged]),
+     * never silently no-op'd.
+     *
+     * Commands come from [AppLinkCommands] so the CLI and GUI share one source
+     * of truth; here we just execute them through `adb -s <serial> shell`.
+     *
+     * Must be called AFTER the patched app is installed — the package has to
+     * exist on the device for `pm set-app-links-*` to take effect.
+     */
+    suspend fun setLinkHandling(
+        deviceId: String,
+        patchedPackage: String,
+        stockPackage: String? = null,
+        enable: Boolean = true,
+        onProgress: (String) -> Unit = {},
+    ): Result<LinkHandlingResult> = withContext(Dispatchers.IO) {
+        findAdb() ?: return@withContext Result.failure(
+            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+        )
+
+        // Stock OFF only applies to a genuinely different, installed package.
+        val installed = listInstalledPackages(deviceId).getOrNull() ?: emptySet()
+        val stockEligible = !stockPackage.isNullOrBlank() &&
+            stockPackage != patchedPackage &&
+            stockPackage in installed
+
+        onProgress(
+            if (enable) "Routing links to $patchedPackage..."
+            else "Restoring default link handling..."
+        )
+
+        val patchedCommands = if (enable) AppLinkCommands.enablePatched(patchedPackage)
+        else AppLinkCommands.restorePatched(patchedPackage)
+        runShellCommands(deviceId, patchedCommands).onFailure {
+            return@withContext Result.failure(it)
+        }
+
+        var stockChanged = false
+        if (stockEligible) {
+            val stockCommands = if (enable) AppLinkCommands.disableStock(stockPackage!!)
+            else AppLinkCommands.restoreStock(stockPackage!!)
+            onProgress(
+                if (enable) "Disabling links in $stockPackage..."
+                else "Re-enabling links in $stockPackage..."
+            )
+            runShellCommands(deviceId, stockCommands).onFailure {
+                return@withContext Result.failure(it)
+            }
+            stockChanged = true
+        }
+
+        Logger.info(
+            "Link handling ${if (enable) "enabled" else "restored"} for $patchedPackage" +
+                (if (stockChanged) " (stock $stockPackage toggled)" else "")
+        )
+        Result.success(LinkHandlingResult(patchedChanged = true, stockChanged = stockChanged))
+    }
+
+    /**
+     * Run a sequence of `adb -s <serial> shell <argv>` commands, stopping at the
+     * first failure. `pm set-app-links-*` print nothing on success and exit 0; a
+     * non-zero exit (or "Error"/"Failure" in output) is treated as a failure.
+     */
+    private suspend fun runShellCommands(
+        deviceId: String,
+        commands: List<List<String>>,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext Result.failure(AdbException("ADB not found"))
+        for (argv in commands) {
+            try {
+                val process = ProcessBuilder(listOf(adb, "-s", deviceId, "shell") + argv)
+                    .redirectErrorStream(true)
+                    .start()
+                val output = process.inputStream.bufferedReader().readText().trim()
+                val exitCode = process.waitFor()
+                Logger.debug("ADB shell ${argv.joinToString(" ")} -> exit $exitCode${if (output.isNotBlank()) ": $output" else ""}")
+                if (exitCode != 0 ||
+                    output.contains("Error", ignoreCase = true) ||
+                    output.contains("Failure", ignoreCase = true)
+                ) {
+                    return@withContext Result.failure(
+                        AdbException("Command failed (pm ${argv.getOrNull(1) ?: ""}): ${output.ifBlank { "exit $exitCode" }}")
+                    )
+                }
+            } catch (e: Exception) {
+                Logger.error("Error running adb shell ${argv.joinToString(" ")}", e)
+                return@withContext Result.failure(AdbException("Failed to run command: ${e.message}"))
+            }
+        }
+        Result.success(Unit)
+    }
+
+    // ── Patched-app recall: device-side queries ──────────────────────────────
+
+    /** Package names installed on [deviceId] (`pm list packages`). */
+    suspend fun listInstalledPackages(deviceId: String): Result<Set<String>> = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext Result.failure(AdbException("ADB not found"))
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "shell", "pm", "list", "packages")
+                .redirectErrorStream(true).start()
+            val out = process.inputStream.bufferedReader().readText()
+            process.waitFor()
+            if (process.exitValue() != 0) return@withContext Result.failure(AdbException("pm list packages failed"))
+            val packages = out.lineSequence()
+                .map { it.trim() }
+                .filter { it.startsWith("package:") }
+                .map { it.removePrefix("package:").trim() }
+                .filter { it.isNotBlank() }
+                .toSet()
+            Result.success(packages)
+        } catch (e: Exception) {
+            Result.failure(AdbException("pm list packages failed: ${e.message}"))
+        }
+    }
+
+    /**
+     * Installed `versionName` and signing-cert id of [pkg] on [deviceId] from a
+     * single `dumpsys package` call. Returns `(versionName, signatureId)` (either
+     * may be null if absent/unparseable), or null if the package isn't dumpable.
+     */
+    suspend fun getInstalledPackageInfo(deviceId: String, pkg: String): Pair<String?, String?>? =
+        withContext(Dispatchers.IO) {
+            val out = dumpsysPackage(deviceId, pkg) ?: return@withContext null
+            val version = Regex("""versionName=(\S+)""").find(out)?.groupValues?.get(1)
+            val signatureId = SignatureIdentity.parseDeviceSignatureId(out)
+            version to signatureId
+        }
+
+    private suspend fun dumpsysPackage(deviceId: String, pkg: String): String? = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext null
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "shell", "dumpsys", "package", pkg)
+                .redirectErrorStream(true).start()
+            val out = process.inputStream.bufferedReader().readText()
+            process.waitFor()
+            out.ifBlank { null }
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -595,6 +821,15 @@ enum class DeviceStatus {
     OFFLINE,     // Device offline
     UNKNOWN      // Unknown status
 }
+
+/**
+ * Outcome of [AdbManager.setLinkHandling]. [stockChanged] is false when the
+ * stock-app OFF step was skipped (no rename, or stock not installed).
+ */
+data class LinkHandlingResult(
+    val patchedChanged: Boolean,
+    val stockChanged: Boolean,
+)
 
 open class AdbException(message: String) : Exception(message)
 

@@ -12,13 +12,20 @@ import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.engine.MorpheData
+import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.UpdateChecker
 import app.morphe.engine.UpdateInfo
+import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.util.ApkOutputNaming
+import app.morphe.engine.util.FileChecksum
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +51,7 @@ class QuickPatchViewModel(
     private val patchService: PatchService,
     private val configRepository: ConfigRepository,
     private val updateCheckRepository: UpdateCheckRepository,
+    private val patchedAppStore: PatchedAppStore = PatchedAppStore.shared,
 ) : ScreenModel {
 
     private var patchRepository: PatchRepository = patchSourceManager.getActiveRepositorySync()
@@ -526,6 +534,7 @@ class QuickPatchViewModel(
                             statusMessage = "Patching complete! Applied ${result.appliedPatches.size} patches."
                         )
                         Logger.info("Quick mode: Patching completed - $outputPath (${result.appliedPatches.size} patches)")
+                        recordPatchedApp(result, apkFile.absolutePath, outputPath, apkInfo.displayName)
                     } else {
                         val errorMsg = if (result.failedPatches.isNotEmpty()) {
                             "Patching had failures: ${result.failedPatches.joinToString(", ")}"
@@ -551,6 +560,55 @@ class QuickPatchViewModel(
     /**
      * Parse progress from CLI output.
      */
+    /**
+     * Record this quick-mode patch in the shared patched-app history.
+     * Best-effort: a write failure must never disrupt the success UX. Quick mode
+     * uses the default patch set, so no per-bundle selection is captured.
+     */
+    private suspend fun recordPatchedApp(
+        result: app.morphe.gui.util.PatchResult,
+        inputApkPath: String,
+        outputApkPath: String,
+        displayName: String,
+    ) {
+        try {
+            val pkg = result.packageName
+            if (pkg.isEmpty()) return
+            val (sha, size) = withContext(Dispatchers.IO) {
+                FileChecksum.fingerprintOrNull(outputApkPath)
+            }
+            val manifest = withContext(Dispatchers.IO) {
+                runCatching { ApkManifestReader.read(java.io.File(outputApkPath)) }.getOrNull()
+            }
+            val sources = currentResolvedPatchFiles().map { f ->
+                PatchedAppRecord.PatchedSourceSnapshot(
+                    sourceId = f.nameWithoutExtension,
+                    sourceName = f.nameWithoutExtension,
+                    version = ApkOutputNaming.extractPatchesVersion(f.name) ?: "unknown",
+                )
+            }
+            patchedAppStore.upsert(
+                PatchedAppRecord(
+                    packageName = pkg,
+                    currentPackageName = manifest?.packageName,
+                    displayName = displayName.ifEmpty { pkg },
+                    // Prefer the manifest's versionName (e.g. "21.20.400") over the numeric
+                    // versionCode so update-detection version comparisons work.
+                    apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: result.packageVersion,
+                    inputApkPath = inputApkPath,
+                    outputApkPath = outputApkPath,
+                    outputApkSha256 = sha,
+                    outputApkSize = size,
+                    sourcesSnapshot = sources,
+                    patchedAt = System.currentTimeMillis(),
+                    patchedWithMorpheVersion = UpdateChecker.currentVersion() ?: "unknown",
+                )
+            )
+        } catch (e: Exception) {
+            Logger.error("Failed to record patched app (quick mode)", e)
+        }
+    }
+
     private fun parseProgress(line: String) {
         // Pattern: "Executing patch X of Y"
         val executingPattern = Regex("""(?:Executing|Applying)\s+patch\s+(\d+)\s+of\s+(\d+)""", RegexOption.IGNORE_CASE)

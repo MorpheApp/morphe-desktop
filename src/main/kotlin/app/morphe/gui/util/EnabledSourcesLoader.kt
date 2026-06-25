@@ -43,6 +43,13 @@ object EnabledSourcesLoader {
         val source: PatchSource,
         val patchFile: File? = null,
         val resolvedVersion: String? = null,
+        /**
+         * Newest available release tag in the resolved channel (stable/dev),
+         * regardless of what's currently downloaded — lets the UI flag "a newer
+         * patch file is available" without the user having to select it first.
+         * Null when unknown (offline / cache fallback).
+         */
+        val latestAvailableVersion: String? = null,
         val isOffline: Boolean = false,
         val error: String? = null,
         val channel: Channel = Channel.UNKNOWN,
@@ -216,6 +223,8 @@ object EnabledSourcesLoader {
             source = source,
             patchFile = patchFile,
             resolvedVersion = release.tagName,
+            // Latest in the resolved channel — what an "update" would move to.
+            latestAvailableVersion = if (release.isDevRelease()) latestDevTag else latestStableTag,
             isOffline = false,
             channel = channel,
         )

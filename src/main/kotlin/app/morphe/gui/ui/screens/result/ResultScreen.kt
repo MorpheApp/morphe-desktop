@@ -55,6 +55,11 @@ import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.DeviceStatus
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
+import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.util.ApkManifestReader
+import app.morphe.gui.data.model.SupportedApp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.awt.Desktop
 import java.io.File
 
@@ -93,6 +98,42 @@ fun ResultScreenContent(outputPath: String) {
     var installError by remember { mutableStateOf<String?>(null) }
     var installSuccess by remember { mutableStateOf(false) }
 
+    // Whether the patched package is already on the selected device → show "Update"
+    // instead of "Install" (the install itself already reinstalls with -r).
+    var outputPackage by remember { mutableStateOf<String?>(null) }
+    var alreadyInstalled by remember { mutableStateOf(false) }
+    LaunchedEffect(outputPath) {
+        outputPackage = withContext(Dispatchers.IO) {
+            runCatching { ApkManifestReader.read(outputFile)?.packageName }.getOrNull()
+        }
+    }
+    LaunchedEffect(monitorState.selectedDevice?.id, monitorState.selectedDevice?.isReady, outputPackage) {
+        val device = monitorState.selectedDevice
+        val pkg = outputPackage
+        alreadyInstalled = device != null && device.isReady && pkg != null &&
+            adbManager.listInstalledPackages(device.id).getOrNull()?.contains(pkg) == true
+    }
+
+    // Link-handling ("open with") state. The stock package — needed only for the
+    // optional "stop stock from opening links" half — comes from the recall
+    // record for this output (which stores original + renamed package names).
+    var stockPackage by remember { mutableStateOf<String?>(null) }
+    var disableStockLinks by remember { mutableStateOf(false) }
+    var isApplyingLinks by remember { mutableStateOf(false) }
+    var linkProgress by remember { mutableStateOf("") }
+    var linkError by remember { mutableStateOf<String?>(null) }
+    var linkSuccess by remember { mutableStateOf(false) }
+    var autoRouteLinks by remember { mutableStateOf(false) }
+    LaunchedEffect(outputPath, outputPackage) {
+        stockPackage = withContext(Dispatchers.IO) {
+            runCatching {
+                val records = PatchedAppStore.shared.getAll()
+                records.firstOrNull { it.outputApkPath == outputPath }?.packageName
+                    ?: outputPackage?.let { pkg -> records.firstOrNull { it.installedPackageName == pkg }?.packageName }
+            }.getOrNull()
+        }
+    }
+
     // Cleanup state
     var hasTempFiles by remember { mutableStateOf(false) }
     var tempFilesSize by remember { mutableStateOf(0L) }
@@ -102,6 +143,8 @@ fun ResultScreenContent(outputPath: String) {
     LaunchedEffect(Unit) {
         val config = configRepository.loadConfig()
         autoCleanupEnabled = config.autoCleanupTempFiles
+        autoRouteLinks = config.autoRouteLinksAfterInstall
+        disableStockLinks = config.disableStockLinksAfterInstall
         hasTempFiles = FileUtils.hasTempFiles()
         tempFilesSize = FileUtils.getTempDirSize()
 
@@ -118,18 +161,22 @@ fun ResultScreenContent(outputPath: String) {
         scope.launch {
             isInstalling = true
             installError = null
-            installProgress = "Installing on ${device.displayName}..."
+            installProgress = "${if (alreadyInstalled) "Updating" else "Installing"} on ${device.displayName}..."
 
+            // Always record a non-Play installer so the Play Store won't clobber
+            // the patched app with an official update.
+            val installer = adbManager.resolveSpoofInstaller(device.id)
             val result = adbManager.installApk(
                 apkPath = outputPath,
                 deviceId = device.id,
+                installerPackage = installer,
                 onProgress = { installProgress = it }
             )
 
             result.fold(
                 onSuccess = {
                     installSuccess = true
-                    installProgress = "Installation successful!"
+                    installProgress = if (alreadyInstalled) "Update successful!" else "Installation successful!"
                 },
                 onFailure = { exception ->
                     installError = (exception as? AdbException)?.message ?: exception.message ?: "Unknown error"
@@ -137,6 +184,46 @@ fun ResultScreenContent(outputPath: String) {
             )
 
             isInstalling = false
+        }
+    }
+
+    fun applyLinkHandling(enable: Boolean) {
+        val device = monitorState.selectedDevice ?: return
+        val patched = outputPackage ?: return
+        scope.launch {
+            isApplyingLinks = true
+            linkError = null
+            val result = adbManager.setLinkHandling(
+                deviceId = device.id,
+                patchedPackage = patched,
+                stockPackage = if (disableStockLinks) stockPackage else null,
+                enable = enable,
+                onProgress = { linkProgress = it },
+            )
+            result.fold(
+                onSuccess = { outcome ->
+                    linkSuccess = enable
+                    linkProgress = when {
+                        !enable -> "Default link handling restored"
+                        outcome.stockChanged -> "Links routed to patched app, stock disabled"
+                        else -> "Links routed to patched app"
+                    }
+                },
+                onFailure = { e ->
+                    linkError = (e as? AdbException)?.message ?: e.message ?: "Unknown error"
+                }
+            )
+            isApplyingLinks = false
+        }
+    }
+
+    // Auto-route links once, right after a successful install, when the global
+    // setting is on. outputPackage is required (the apply no-ops without it).
+    LaunchedEffect(installSuccess, autoRouteLinks, outputPackage) {
+        if (installSuccess && autoRouteLinks && outputPackage != null &&
+            !linkSuccess && !isApplyingLinks && linkError == null
+        ) {
+            applyLinkHandling(enable = true)
         }
     }
 
@@ -225,134 +312,7 @@ fun ResultScreenContent(outputPath: String) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
             ) {
-            // Output file info
-            Box(
-                modifier = Modifier
-                    .widthIn(max = 520.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(corners.medium))
-                    .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                    .background(MaterialTheme.colorScheme.surface)
-            ) {
-                // Teal left stripe
-                Box(
-                    modifier = Modifier
-                        .width(3.dp)
-                        .fillMaxHeight()
-                        .background(accents.secondary)
-                        .align(Alignment.CenterStart)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 3.dp)
-                ) {
-                    // File name (first line) + size (second line)
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 16.dp)
-                    ) {
-                        Text(
-                            text = "OUTPUT FILE",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            letterSpacing = 1.5.sp
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = outputFile.name,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        if (outputFile.exists()) {
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                text = formatFileSize(outputFile.length()),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = mono,
-                                color = accents.secondary
-                            )
-                        }
-                        Spacer(Modifier.height(2.dp))
-                        Text(
-                            text = outputFile.parent ?: "",
-                            fontSize = 10.sp,
-                            fontFamily = mono,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-
-                    // Open folder button row
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .drawBehind {
-                                drawLine(
-                                    color = borderColor,
-                                    start = Offset(20.dp.toPx(), 0f),
-                                    end = Offset(size.width - 20.dp.toPx(), 0f),
-                                    strokeWidth = 1f
-                                )
-                            }
-                            .padding(horizontal = 20.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val folderHover = remember { MutableInteractionSource() }
-                        val isFolderHovered by folderHover.collectIsHoveredAsState()
-                        val folderColor by animateColorAsState(
-                            if (isFolderHovered) accents.primary else accents.primary.copy(alpha = 0.7f),
-                            animationSpec = tween(150)
-                        )
-                        val folderBg by animateColorAsState(
-                            if (isFolderHovered) accents.primary.copy(alpha = 0.1f) else Color.Transparent,
-                            animationSpec = tween(150)
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .hoverable(folderHover)
-                                .clip(RoundedCornerShape(corners.small))
-                                .background(folderBg, RoundedCornerShape(corners.small))
-                                .border(
-                                    1.dp,
-                                    accents.primary.copy(alpha = if (isFolderHovered) 0.5f else 0.3f),
-                                    RoundedCornerShape(corners.small)
-                                )
-                                .clickable {
-                                    try {
-                                        val folder = outputFile.parentFile
-                                        if (folder != null && Desktop.isDesktopSupported()) {
-                                            Desktop.getDesktop().open(folder)
-                                        }
-                                    } catch (_: Exception) {}
-                                }
-                                .padding(horizontal = 14.dp, vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "OPEN FOLDER →",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = mono,
-                                color = folderColor,
-                                letterSpacing = 0.5.sp
-                            )
-                        }
-                    }
-                }
-            }
+            OutputFileCard(outputFile = outputFile, corners = corners, mono = mono, borderColor = borderColor)
 
             // ADB Install section
             if (isAdbDisabledByUser) {
@@ -366,6 +326,7 @@ fun ResultScreenContent(outputPath: String) {
                 AdbInstallSection(
                     devices = monitorState.devices,
                     selectedDevice = monitorState.selectedDevice,
+                    alreadyInstalled = alreadyInstalled,
                     isInstalling = isInstalling,
                     installProgress = installProgress,
                     installError = installError,
@@ -382,6 +343,30 @@ fun ResultScreenContent(outputPath: String) {
                     },
                     onDismissError = { installError = null }
                 )
+
+                // Link handling ("open with"). Only meaningful once the patched
+                // app is on the device, so gate on a successful install (or the
+                // app already being present) + a ready, selected device.
+                val device = monitorState.selectedDevice
+                if (outputPackage != null && device?.isReady == true && (installSuccess || alreadyInstalled)) {
+                    LinkHandlingSection(
+                        patchedPackage = outputPackage!!,
+                        stockPackage = stockPackage?.takeIf { it != outputPackage },
+                        disableStockLinks = disableStockLinks,
+                        onToggleDisableStock = { disableStockLinks = it },
+                        isApplying = isApplyingLinks,
+                        progress = linkProgress,
+                        error = linkError,
+                        success = linkSuccess,
+                        selectedDeviceName = device.displayName,
+                        corners = corners,
+                        mono = mono,
+                        borderColor = borderColor,
+                        onApply = { applyLinkHandling(enable = true) },
+                        onRestore = { applyLinkHandling(enable = false) },
+                        onDismissError = { linkError = null },
+                    )
+                }
             }
 
             // Cleanup section
@@ -419,34 +404,7 @@ fun ResultScreenContent(outputPath: String) {
 
             // Patch Another button
             Spacer(Modifier.height(4.dp))
-
-            val patchAnotherHover = remember { MutableInteractionSource() }
-            val isPatchAnotherHovered by patchAnotherHover.collectIsHoveredAsState()
-            val patchAnotherBg by animateColorAsState(
-                if (isPatchAnotherHovered) accents.primary.copy(alpha = 0.9f) else accents.primary,
-                animationSpec = tween(150)
-            )
-
-            Box(
-                modifier = Modifier
-                    .widthIn(max = 520.dp)
-                    .fillMaxWidth()
-                    .height(42.dp)
-                    .hoverable(patchAnotherHover)
-                    .clip(RoundedCornerShape(corners.small))
-                    .background(patchAnotherBg, RoundedCornerShape(corners.small))
-                    .clickable { navigator.popUntilRoot() },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "PATCH ANOTHER",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = mono,
-                    color = Color.White,
-                    letterSpacing = 1.sp
-                )
-            }
+            PatchAnotherButton(corners = corners, mono = mono)
 
             Spacer(Modifier.height(8.dp))
             }
@@ -473,6 +431,7 @@ fun ResultScreenContent(outputPath: String) {
 private fun AdbInstallSection(
     devices: List<AdbDevice>,
     selectedDevice: AdbDevice?,
+    alreadyInstalled: Boolean = false,
     isInstalling: Boolean,
     installProgress: String,
     installError: String?,
@@ -768,7 +727,7 @@ private fun AdbInstallSection(
                         ) {
                             Text(
                                 text = if (selectedDevice != null)
-                                    "INSTALL ON ${selectedDevice.displayName.uppercase()}"
+                                    "${if (alreadyInstalled) "UPDATE" else "INSTALL"} ON ${selectedDevice.displayName.uppercase()}"
                                 else
                                     "SELECT A DEVICE",
                                 fontSize = 11.sp,
@@ -782,6 +741,222 @@ private fun AdbInstallSection(
                 }
             }
         }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  LINK HANDLING ("OPEN WITH") SECTION
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Route the patched app's web links to it (and optionally stop the stock app
+ * from grabbing them). Shown only once the patched app is installed on a ready
+ * device. The stock-disable checkbox appears only when a rename patch was used
+ * (a distinct [stockPackage]); on-device, [AdbManager.setLinkHandling] still
+ * verifies the stock app is actually installed before touching it.
+ */
+@Composable
+private fun LinkHandlingSection(
+    patchedPackage: String,
+    stockPackage: String?,
+    disableStockLinks: Boolean,
+    onToggleDisableStock: (Boolean) -> Unit,
+    isApplying: Boolean,
+    progress: String,
+    error: String?,
+    success: Boolean,
+    selectedDeviceName: String?,
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+    onApply: () -> Unit,
+    onRestore: () -> Unit,
+    onDismissError: () -> Unit,
+) {
+    val accents = LocalMorpheAccents.current
+    Box(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Text(
+                text = "LINK HANDLING",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                letterSpacing = 1.5.sp
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Open supported web links in the patched app instead of the browser.",
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),
+            )
+
+            // Optional OFF half — only when a rename was used so stock + patched coexist.
+            if (stockPackage != null) {
+                Spacer(Modifier.height(12.dp))
+                val stockName = SupportedApp.getDisplayName(stockPackage)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(corners.small))
+                        .clickable(enabled = !isApplying) { onToggleDisableStock(!disableStockLinks) }
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Checkbox(
+                        checked = disableStockLinks,
+                        onCheckedChange = { onToggleDisableStock(it) },
+                        enabled = !isApplying,
+                        colors = CheckboxDefaults.colors(checkedColor = accents.secondary),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Also stop $stockName from opening these links",
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
+
+            when {
+                error != null -> {
+                    Text(
+                        text = error,
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    SecondaryActionChip(text = "DISMISS", corners = corners, mono = mono, onClick = onDismissError)
+                }
+
+                isApplying -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            strokeWidth = 2.dp,
+                            color = accents.primary
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Text(
+                            text = progress.ifEmpty { "Applying..." }.uppercase(),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = accents.primary,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+
+                success -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = accents.secondary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = progress.ifEmpty { "Links routed to patched app" }.uppercase(),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = accents.secondary,
+                            letterSpacing = 0.5.sp,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        SecondaryActionChip(text = "RESTORE", corners = corners, mono = mono, onClick = onRestore)
+                    }
+                }
+
+                else -> {
+                    val hover = remember { MutableInteractionSource() }
+                    val isHovered by hover.collectIsHoveredAsState()
+                    val bg by animateColorAsState(
+                        if (isHovered) accents.secondary.copy(alpha = 0.9f) else accents.secondary,
+                        animationSpec = tween(150)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(38.dp)
+                            .hoverable(hover)
+                            .clip(RoundedCornerShape(corners.small))
+                            .background(bg, RoundedCornerShape(corners.small))
+                            .clickable(onClick = onApply),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "OPEN LINKS WITH PATCHED APP",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mono,
+                            color = Color.White,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Small bordered text button used for secondary actions (Dismiss/Restore). */
+@Composable
+private fun SecondaryActionChip(
+    text: String,
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    onClick: () -> Unit,
+) {
+    val hover = remember { MutableInteractionSource() }
+    val isHovered by hover.collectIsHoveredAsState()
+    Box(
+        modifier = Modifier
+            .hoverable(hover)
+            .clip(RoundedCornerShape(corners.small))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isHovered) 0.3f else 0.12f),
+                RoundedCornerShape(corners.small)
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurface,
+            letterSpacing = 0.5.sp
+        )
     }
 }
 
@@ -967,5 +1142,178 @@ private fun formatFileSize(bytes: Long): String {
         bytes < 1024 * 1024 -> "%.1f KB".format(bytes / 1024.0)
         bytes < 1024 * 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
         else -> "%.2f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
+    }
+}
+
+@Composable
+private fun OutputFileCard(
+    outputFile: File,
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+) {
+    val accents = LocalMorpheAccents.current
+    Box(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        // Teal left stripe
+        Box(
+            modifier = Modifier
+                .width(3.dp)
+                .fillMaxHeight()
+                .background(accents.secondary)
+                .align(Alignment.CenterStart)
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 3.dp)
+        ) {
+            // File name (first line) + size (second line)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
+            ) {
+                Text(
+                    text = "OUTPUT FILE",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                    letterSpacing = 1.5.sp
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = outputFile.name,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (outputFile.exists()) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = formatFileSize(outputFile.length()),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = accents.secondary
+                    )
+                }
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = outputFile.parent ?: "",
+                    fontSize = 10.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            // Open folder button row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .drawBehind {
+                        drawLine(
+                            color = borderColor,
+                            start = Offset(20.dp.toPx(), 0f),
+                            end = Offset(size.width - 20.dp.toPx(), 0f),
+                            strokeWidth = 1f
+                        )
+                    }
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val folderHover = remember { MutableInteractionSource() }
+                val isFolderHovered by folderHover.collectIsHoveredAsState()
+                val folderColor by animateColorAsState(
+                    if (isFolderHovered) accents.primary else accents.primary.copy(alpha = 0.7f),
+                    animationSpec = tween(150)
+                )
+                val folderBg by animateColorAsState(
+                    if (isFolderHovered) accents.primary.copy(alpha = 0.1f) else Color.Transparent,
+                    animationSpec = tween(150)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .hoverable(folderHover)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(folderBg, RoundedCornerShape(corners.small))
+                        .border(
+                            1.dp,
+                            accents.primary.copy(alpha = if (isFolderHovered) 0.5f else 0.3f),
+                            RoundedCornerShape(corners.small)
+                        )
+                        .clickable {
+                            try {
+                                val folder = outputFile.parentFile
+                                if (folder != null && Desktop.isDesktopSupported()) {
+                                    Desktop.getDesktop().open(folder)
+                                }
+                            } catch (_: Exception) {}
+                        }
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "OPEN FOLDER →",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = folderColor,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PatchAnotherButton(
+    corners: app.morphe.gui.ui.theme.MorpheCornerStyle,
+    mono: androidx.compose.ui.text.font.FontFamily,
+) {
+    val navigator = LocalNavigator.currentOrThrow
+    val accents = LocalMorpheAccents.current
+    val patchAnotherHover = remember { MutableInteractionSource() }
+    val isPatchAnotherHovered by patchAnotherHover.collectIsHoveredAsState()
+    val patchAnotherBg by animateColorAsState(
+        if (isPatchAnotherHovered) accents.primary.copy(alpha = 0.9f) else accents.primary,
+        animationSpec = tween(150)
+    )
+
+    Box(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .fillMaxWidth()
+            .height(42.dp)
+            .hoverable(patchAnotherHover)
+            .clip(RoundedCornerShape(corners.small))
+            .background(patchAnotherBg, RoundedCornerShape(corners.small))
+            .clickable { navigator.popUntilRoot() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "PATCH ANOTHER",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = Color.White,
+            letterSpacing = 1.sp
+        )
     }
 }

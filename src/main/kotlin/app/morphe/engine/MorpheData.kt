@@ -85,6 +85,16 @@ object MorpheData {
     val defaultKeystoreFile: File get() = File(root, "morphe.keystore")
 
     /**
+     * Destination for keystores the user imports in non-BKS formats
+     * (PKCS12 / JKS). The original source file is left untouched; we write
+     * the BKS-converted bytes here and point the user's keystore config
+     * at this path. Distinct from [defaultKeystoreFile] so the import flow
+     * doesn't clobber the auto-generated default — clearing the configured
+     * path reverts patching to that default.
+     */
+    val importedKeystoreFile: File get() = File(root, "imported.keystore")
+
+    /**
      * Reason the primary (JAR-adjacent) location was rejected. Drives the
      * fallback log message so a user reporting "where's my cache?" can
      * tell from logs alone which branch ran.

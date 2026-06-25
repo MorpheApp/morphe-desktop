@@ -5,6 +5,7 @@
 
 package app.morphe.gui.data.model
 
+import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.serialization.Serializable
 
@@ -91,5 +92,16 @@ data class PatchConfig(
     val patchOptions: Map<String, String> = emptyMap(),
     val useExclusiveMode: Boolean = false,
     val keepArchitectures: Set<CpuArchitecture> = emptySet(),
-    val continueOnError: Boolean = false
+    val continueOnError: Boolean = false,
+
+    // ── Recall metadata ──
+    // Carried from the selection screen down to the patching screen so the
+    // success path can record a PatchedAppRecord (see PatchedAppStore). All
+    // default-empty, so callers that don't populate them still work.
+    val packageName: String = "",
+    val appDisplayName: String = "",
+    /** Source name → set of selected patch unique ids. */
+    val patchSelectionByBundle: Map<String, Set<String>> = emptyMap(),
+    /** Sources + versions enabled at patch time (drives "update available"). */
+    val sourcesSnapshot: List<PatchedAppRecord.PatchedSourceSnapshot> = emptyList(),
 )

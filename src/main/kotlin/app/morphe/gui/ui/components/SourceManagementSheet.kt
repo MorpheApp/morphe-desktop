@@ -10,6 +10,7 @@ import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -21,7 +22,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DragIndicator
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,9 +35,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +52,7 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import java.io.File
+import kotlin.math.roundToInt
 
 /**
  * Multi-source management sheet, summoned from the home header `+` button.
@@ -61,6 +71,10 @@ import java.io.File
  */
 enum class SourceSheetMode { MULTI_TOGGLE, SINGLE_SELECT }
 
+/** 4-way move cursor shown over a source's drag handle so the grab affordance
+ *  reads as "draggable", distinct from the plain hand used elsewhere. */
+private val DragMoveCursor = PointerIcon(java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR))
+
 @Composable
 fun SourceManagementSheet(
     sources: List<PatchSource>,
@@ -70,6 +84,9 @@ fun SourceManagementSheet(
     onRemove: (id: String) -> Unit,
     onOpenPatches: (sourceId: String) -> Unit,
     onDismiss: () -> Unit,
+    /** Persist a new source ordering (ids in desired order). Order affects only
+     *  the display-name tiebreak + UI presentation, not which patches load. */
+    onReorder: (orderedIds: List<String>) -> Unit = {},
     enabled: Boolean = true,
     /** sourceId → resolved version label (e.g. "v1.27.0-dev.2"). Empty when not loaded. */
     sourceVersions: Map<String, String?> = emptyMap(),
@@ -93,6 +110,42 @@ fun SourceManagementSheet(
 
     var showAddDialog by remember { mutableStateOf(false) }
     var editingSource by remember { mutableStateOf<PatchSource?>(null) }
+
+    // ── Drag-to-reorder state ──────────────────────────────────────────────
+    // workingOrder is the live ordering the UI renders from; it reseeds only
+    // when the actual id sequence from config changes (List equals is
+    // structural), so a drag we just persisted doesn't get clobbered mid-flight.
+    val density = LocalDensity.current
+    val rowSpacingPx = with(density) { 8.dp.toPx() }
+    val sourcesById = remember(sources) { sources.associateBy { it.id } }
+    // Stable identity (no remember key) so the drag gesture's captured reference
+    // never goes stale. We instead adopt external order/membership changes via the
+    // effect below — but only while idle, so an in-flight drag is never clobbered.
+    var workingOrder by remember { mutableStateOf(sources.map { it.id }) }
+    val rowHeights = remember { mutableStateMapOf<String, Int>() }
+    var draggingId by remember { mutableStateOf<String?>(null) }
+    // Raw total cursor displacement since grab — never mutated mid-drag, so no
+    // drift accumulates. Visual offset is derived by subtracting the layout
+    // shift already applied via reordering (see dragOffsetY below).
+    var dragDeltaY by remember { mutableStateOf(0f) }
+    var dragStartIndex by remember { mutableStateOf(0) }
+    // Pull in source add/remove/rename/external-reorder — but never mid-drag, and
+    // only when the id sequence actually changed (keyed on the id list), so the
+    // order we just persisted from a drag doesn't trigger a snap-back.
+    LaunchedEffect(sources.map { it.id }) {
+        if (draggingId == null) workingOrder = sources.map { it.id }
+    }
+    val canReorder = enabled && sources.size > 1
+    val orderedSources = workingOrder.mapNotNull { sourcesById[it] }
+
+    fun commitMove(id: String, up: Boolean) {
+        val i = workingOrder.indexOf(id)
+        val target = if (up) i - 1 else i + 1
+        if (i < 0 || target !in workingOrder.indices) return
+        val next = workingOrder.toMutableList().apply { add(target, removeAt(i)) }
+        workingOrder = next
+        onReorder(next)
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -138,7 +191,45 @@ fun SourceManagementSheet(
 
                 Spacer(Modifier.height(4.dp))
 
-                sources.forEach { source ->
+                orderedSources.forEachIndexed { index, source ->
+                  // Key by source id (not list position) so a mid-drag reorder
+                  // moves the same composable instead of rebinding slots — which
+                  // would otherwise cancel the in-flight drag gesture.
+                  key(source.id) {
+                    val isDragging = source.id == draggingId
+                    // One slot's pitch (row height + inter-row spacing). Rows vary
+                    // slightly; the dragged row's own height is a fine unit and,
+                    // crucially, the same value drives both the target-index pick
+                    // and the visual offset, so they stay in lockstep.
+                    val slotPitch = ((rowHeights[source.id] ?: 0) + rowSpacingPx).coerceAtLeast(1f)
+                    val dragHandleModifier = if (canReorder) {
+                        Modifier.pointerInput(source.id, canReorder) {
+                            detectDragGestures(
+                                onDragStart = {
+                                    draggingId = source.id
+                                    dragDeltaY = 0f
+                                    dragStartIndex = workingOrder.indexOf(source.id)
+                                },
+                                onDragEnd = { draggingId = null; dragDeltaY = 0f; onReorder(workingOrder) },
+                                onDragCancel = { draggingId = null; dragDeltaY = 0f },
+                                onDrag = { change, dragAmount ->
+                                    change.consume()
+                                    dragDeltaY += dragAmount.y
+                                    val curIdx = workingOrder.indexOf(source.id)
+                                    val desired = (dragStartIndex + (dragDeltaY / slotPitch).roundToInt())
+                                        .coerceIn(0, workingOrder.lastIndex)
+                                    if (desired != curIdx) {
+                                        workingOrder = workingOrder.toMutableList()
+                                            .apply { add(desired, removeAt(curIdx)) }
+                                    }
+                                }
+                            )
+                        }
+                    } else Modifier
+                    // Cursor displacement minus the layout shift already realised by
+                    // reordering = the residual the row must translate to sit under
+                    // the cursor. No running subtraction, so nothing drifts.
+                    val dragOffsetY = if (isDragging) dragDeltaY - (index - dragStartIndex) * slotPitch else 0f
                     SourceRow(
                         source = source,
                         version = sourceVersions[source.id],
@@ -155,7 +246,18 @@ fun SourceManagementSheet(
                         onEdit = { editingSource = source },
                         onRemove = { onRemove(source.id) },
                         onOpenPatches = { onOpenPatches(source.id) },
+                        canReorder = canReorder,
+                        position = index + 1,
+                        canMoveUp = index > 0,
+                        canMoveDown = index < orderedSources.lastIndex,
+                        onMoveUp = { commitMove(source.id, up = true) },
+                        onMoveDown = { commitMove(source.id, up = false) },
+                        dragHandleModifier = dragHandleModifier,
+                        isDragging = isDragging,
+                        dragOffsetY = dragOffsetY,
+                        onMeasured = { h -> rowHeights[source.id] = h },
                     )
+                  }
                 }
 
                 Spacer(Modifier.height(2.dp))
@@ -251,6 +353,16 @@ private fun SourceRow(
     mode: SourceSheetMode,
     isActiveSelection: Boolean,
     onSelectSingle: () -> Unit,
+    canReorder: Boolean,
+    position: Int,
+    canMoveUp: Boolean,
+    canMoveDown: Boolean,
+    onMoveUp: () -> Unit,
+    onMoveDown: () -> Unit,
+    dragHandleModifier: Modifier,
+    isDragging: Boolean,
+    dragOffsetY: Float,
+    onMeasured: (heightPx: Int) -> Unit,
 ) {
     val corners = LocalMorpheCorners.current
     val hoverInteraction = remember(source.id) { MutableInteractionSource() }
@@ -284,10 +396,17 @@ private fun SourceRow(
 
     Box(
         modifier = Modifier
+            .zIndex(if (isDragging) 1f else 0f)
+            .graphicsLayer { translationY = dragOffsetY }
+            .onSizeChanged { onMeasured(it.height) }
             .fillMaxWidth()
             .clip(RoundedCornerShape(corners.medium))
-            .border(1.dp, animatedBorder, RoundedCornerShape(corners.medium))
-            .background(animatedBg)
+            .border(
+                1.dp,
+                if (isDragging) accentColor.copy(alpha = 0.7f) else animatedBorder,
+                RoundedCornerShape(corners.medium)
+            )
+            .background(if (isDragging) accentColor.copy(alpha = 0.10f) else animatedBg)
             .hoverable(hoverInteraction)
             .then(
                 if (canInteract) Modifier
@@ -298,6 +417,33 @@ private fun SourceRow(
             .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            if (canReorder) {
+                // Drag handle — the only grab point; the rest of the row stays
+                // click-to-open. Position number sits beside it for orientation.
+                Box(
+                    modifier = Modifier
+                        .pointerHoverIcon(DragMoveCursor)
+                        .then(dragHandleModifier)
+                        .size(18.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DragIndicator,
+                        contentDescription = "Drag to reorder",
+                        tint = if (isDragging) accentColor
+                               else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        modifier = Modifier.size(15.dp)
+                    )
+                }
+                Text(
+                    text = position.toString(),
+                    fontSize = 10.sp,
+                    fontFamily = mono,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                    modifier = Modifier.padding(start = 3.dp, end = 7.dp)
+                )
+            }
             // LED indicator — glows when enabled (MULTI) or selected (SINGLE).
             LedIndicator(isOn = isHighlighted, isHot = isHovered && canInteract, accentColor = accentColor)
             Spacer(Modifier.width(10.dp))
@@ -380,6 +526,17 @@ private fun SourceRow(
                 }
             }
 
+            // Precise fallback to dragging — nudge one slot at a time.
+            if (canReorder) {
+                ReorderArrows(
+                    canMoveUp = canMoveUp,
+                    canMoveDown = canMoveDown,
+                    onMoveUp = onMoveUp,
+                    onMoveDown = onMoveDown,
+                    accentColor = accentColor,
+                )
+                Spacer(Modifier.width(2.dp))
+            }
             // Edit + delete are hidden for default; toggle is always shown
             if (!isDefault && enabled) {
                 IconButton(onClick = onEdit, modifier = Modifier.size(28.dp)) {
@@ -426,20 +583,73 @@ private fun SourceRow(
 }
 
 
+/**
+ * Compact vertical up/down nudge control — a keyboard-free, precise fallback to
+ * drag reordering. Arrows dim out at the list ends.
+ */
+@Composable
+private fun ReorderArrows(
+    canMoveUp: Boolean,
+    canMoveDown: Boolean,
+    onMoveUp: () -> Unit,
+    onMoveDown: () -> Unit,
+    accentColor: Color,
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        ReorderArrow(Icons.Default.KeyboardArrowUp, "Move up", canMoveUp, accentColor, onMoveUp)
+        ReorderArrow(Icons.Default.KeyboardArrowDown, "Move down", canMoveDown, accentColor, onMoveDown)
+    }
+}
+
+@Composable
+private fun ReorderArrow(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    description: String,
+    active: Boolean,
+    accentColor: Color,
+    onClick: () -> Unit,
+) {
+    val interaction = remember { MutableInteractionSource() }
+    val isHovered by interaction.collectIsHoveredAsState()
+    Box(
+        modifier = Modifier
+            .size(width = 18.dp, height = 13.dp)
+            .then(
+                if (active) Modifier
+                    .hoverable(interaction)
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .clickable(onClick = onClick)
+                else Modifier
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = description,
+            tint = when {
+                !active -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
+                isHovered -> accentColor
+                else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            },
+            modifier = Modifier.size(15.dp)
+        )
+    }
+}
+
 @Composable
 private fun ChannelBadge(
     channel: app.morphe.gui.util.EnabledSourcesLoader.Channel?,
     mono: androidx.compose.ui.text.font.FontFamily,
 ) {
     val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
-    val (label, color) = when (channel) {
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_LATEST -> "STABLE LATEST" to accents.secondary
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_OLDER -> "STABLE OLDER" to accents.warning
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_LATEST -> "DEV LATEST" to androidx.compose.ui.graphics.Color(0xFFFFD43B)
-        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_OLDER -> "DEV OLDER" to accents.warning
-        else -> "STABLE LATEST" to accents.secondary
+    val label = when (channel) {
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_LATEST -> "STABLE LATEST"
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_OLDER -> "STABLE OLDER"
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_LATEST -> "DEV LATEST"
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_OLDER -> "DEV OLDER"
+        else -> "STABLE LATEST"
     }
+    val color = app.morphe.gui.ui.theme.channelColor(channel)
     Box(
         modifier = Modifier
             .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(corners.small))

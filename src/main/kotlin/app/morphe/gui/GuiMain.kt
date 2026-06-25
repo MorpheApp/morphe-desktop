@@ -78,7 +78,10 @@ fun launchGui(args: Array<String>) = application {
         state = windowState,
         icon = appIcon
     ) {
-        window.minimumSize = java.awt.Dimension(600, 400)
+        // Min width keeps the single side-by-side Home layout viable — there is no
+        // narrow/stacked variant to fall back to (intentionally removed; one layout
+        // to maintain). 900 is the floor at which the two panes still read well.
+        window.minimumSize = java.awt.Dimension(900, 500)
 
         // macOS: hide the OS-drawn title bar so a Compose-rendered colored
         // band can take its place. Traffic lights stay where the OS draws
