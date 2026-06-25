@@ -453,7 +453,7 @@ It has some general flags but is mainly divided into 5 main sub-commands (and th
 
 <h3 id="general-flags">General flags</h3>
 
-#### 1. `-h`, `--help`:
+#### `-h`, `--help`:
 
 Shows all the general flags and sub commands available.
 
@@ -461,7 +461,7 @@ Shows all the general flags and sub commands available.
 java -jar morphe-desktop-*-all.jar --help
 ```
 
-#### 2. `-V`, `--version`:
+#### `-V`, `--version`:
 
 Shows the current version of the morphe-desktop.jar
 
@@ -518,7 +518,7 @@ Here is a quick lookup for all the flags under this subcommand:
 > java -jar morphe-desktop-*-all.jar patch -p patches.mpp -o your_app_patched.apk --striplibs arm64-v8a --force --continue-on-error -d "change package name" -d "spoof signature" "your_app.apk"
 > ```
 
-#### 1. `-p`, `--patches`:
+#### `-p`, `--patches`:
 
 Required: Yes
 
@@ -569,7 +569,7 @@ Then enable/disable by those combined indices. The index points to a patch no ma
 java -jar morphe-desktop-*-all.jar patch -p patches-a.mpp -p patches-b.mpp --ei 57 --di 12 your_app.apk
 ```
 
-#### 2. `--prerelease`:
+#### `--prerelease`:
 
 Required: No
 
@@ -581,7 +581,7 @@ When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pr
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches --prerelease your_app.apk
 ```
 
-#### 3. Positional argument (APK file):
+#### Positional argument (APK file):
 
 Required: Yes
 
@@ -596,7 +596,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp your_app.apk
 > [!NOTE]
 > Morphe also supports `.apkm`, `.xapk`, and `.apks` files (split APK bundles). If you pass one of these, Morphe will automatically merge the splits into a single APK before patching.
 
-#### 4. `-o`, `--out`:
+#### `-o`, `--out`:
 
 Required: No
 
@@ -608,7 +608,7 @@ Specify a custom output path for the patched APK.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -o /path/to/output.apk your_app.apk
 ```
 
-#### 5. `-e`, `--enable`:
+#### `-e`, `--enable`:
 
 Required: No
 
@@ -620,7 +620,7 @@ Enable a specific patch by its exact name. Can be used multiple times to enable 
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -e "Patch name" -e "Another patch" your_app.apk
 ```
 
-#### 6. `--ei`:
+#### `--ei`:
 
 Required: No
 
@@ -632,7 +632,7 @@ Enable a specific patch by its index number. Can be used multiple times. Use `li
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --ei 1 --ei 5 your_app.apk
 ```
 
-#### 7. `-d`, `--disable`:
+#### `-d`, `--disable`:
 
 Required: No
 
@@ -644,7 +644,7 @@ Disable a specific patch by its exact name. Can be used multiple times.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -d "Patch name" your_app.apk
 ```
 
-#### 8. `--di`:
+#### `--di`:
 
 Required: No
 
@@ -663,7 +663,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --di 456 your_app.apk
 > java -jar morphe-desktop-*-all.jar patch -p patches.mpp --exclusive -e "Patch name" --ei 123 your_app.apk
 > ```
 
-#### 9. `-O`, `--options`:
+#### `-O`, `--options`:
 
 Required: No
 
@@ -686,7 +686,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -e "Patch name" -Okey1 y
 >
 > Common types: `string`, `true`/`false`, `123` (integer), `1.0` (double), `[item1,item2]` (list)
 
-#### 10. `--exclusive`:
+#### `--exclusive`:
 
 Required: No
 
@@ -698,7 +698,7 @@ Disable all patches except the ones you explicitly enable with `-e` or `--ei`. U
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --exclusive -e "Patch name" your_app.apk
 ```
 
-#### 11. `-f`, `--force`:
+#### `-f`, `--force`:
 
 Required: No
 
@@ -714,7 +714,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --force your_app.apk
 > Patches are built for specific app versions.
 > If you're using versions that are newer or older than the recommended ones, Morphe will skip all the incompatible patches (which is almost all of them since the version don't match) by default. **Use `--force` to apply them anyway** - they may still work fine, especially on recent versions.
 
-#### 12. `-i`, `--install`:
+#### `-i`, `--install`:
 
 Required: No
 
@@ -739,7 +739,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i SERIAL123 your_app.ap
 > adb shell exit
 > ```
 
-#### 13. `--mount`:
+#### `--mount`:
 
 Required: No
 
@@ -758,7 +758,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i --mount your_app.apk
 > adb shell su -c exit
 > ```
 
-#### 14. `--keystore`:
+#### `--keystore`:
 
 Required: No
 
@@ -773,7 +773,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore /path/to/keys
 > [!NOTE]
 > The patcher signs using **BKS** keystores. If you point `--keystore` at a **PKCS12** (`.p12`/`.pfx`) or **JKS** (`.jks`) file, Morphe auto-detects the format from the file's contents (not its extension) and converts a BKS copy to sign with. Your original keystore file is never modified.
 
-#### 15. `--keystore-password`:
+#### `--keystore-password`:
 
 Required: No
 
@@ -788,7 +788,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore keystore.jks 
 > [!NOTE]
 > The CLI and the Morphe Manager Android app share the same keystore defaults (alias `"Morphe"`, password `"Morphe"`), so a keystore generated by either tool works in the other without extra flags.
 
-#### 16. `--keystore-entry-alias`:
+#### `--keystore-entry-alias`:
 
 Required: No
 
@@ -800,7 +800,7 @@ The alias of the private key entry inside the keystore.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore keystore.jks --keystore-entry-alias "my-alias" your_app.apk
 ```
 
-#### 17. `--keystore-entry-password`:
+#### `--keystore-entry-password`:
 
 Required: No
 
@@ -812,7 +812,7 @@ Password for the specific keystore entry.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore keystore.jks --keystore-entry-password "mypassword" your_app.apk
 ```
 
-#### 18. `--signer`:
+#### `--signer`:
 
 Required: No
 
@@ -824,7 +824,7 @@ The name of the signer embedded in the APK signature.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --signer "My Signer" your_app.apk
 ```
 
-#### 19. `--unsigned`:
+#### `--unsigned`:
 
 Required: No
 
@@ -836,7 +836,7 @@ Skip signing the patched APK entirely. The output APK will not be signed and can
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --unsigned your_app.apk
 ```
 
-#### 20. `-t`, `--temporary-files-path`:
+#### `-t`, `--temporary-files-path`:
 
 Required: No
 
@@ -848,7 +848,7 @@ Path to a directory where Morphe stores temporary files during patching. This is
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -t /tmp/morphe-temp your_app.apk
 ```
 
-#### 21. `--purge`:
+#### `--purge`:
 
 Required: No
 
@@ -860,7 +860,7 @@ Delete the temporary files directory after patching is complete.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --purge your_app.apk
 ```
 
-#### 22. `--striplibs`:
+#### `--striplibs`:
 
 Required: No
 
@@ -872,7 +872,7 @@ Comma-separated list of native library architectures to **keep**. All other arch
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --striplibs arm64-v8a,armeabi-v7a your_app.apk
 ```
 
-#### 23. `--bytecode-mode`:
+#### `--bytecode-mode`:
 
 Required: No
 
@@ -897,7 +897,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --bytecode-mode FULL you
 > [!NOTE]
 > On Windows, Morphe currently forces bytecode mode to `FULL` regardless of what you pass to this flag (workaround for a platform-specific issue). The flag still works as expected on macOS and Linux.
 
-#### 24. `--verify-with-sdk`:
+#### `--verify-with-sdk`:
 
 Required: No
 
@@ -922,7 +922,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --verify-with-sdk your_a
 >
 > If none of those resolve to a real SDK, Morphe errors out with a hint to either set one of the env vars or supply a path explicitly.
 
-#### 25. `--continue-on-error`:
+#### `--continue-on-error`:
 
 Required: No
 
@@ -934,7 +934,7 @@ By default, patching stops on the first patch failure. This flag lets Morphe con
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --continue-on-error your_app.apk
 ```
 
-#### 26. `--options-file`:
+#### `--options-file`:
 
 Required: No
 
@@ -952,7 +952,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --options-file options.j
 > [!TIP]
 > The options file is great for repeatable patching. Generate it once (either with `options-create` or by letting `--options-file` auto-generate it), tweak it, and reuse it every time you patch.
 
-#### 27. `--options-update`:
+#### `--options-update`:
 
 Required: No
 
@@ -964,7 +964,7 @@ Automatically update the options JSON file after patching to reflect the current
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --options-file options.json --options-update your_app.apk
 ```
 
-#### 28. `-r`, `--result-file`:
+#### `-r`, `--result-file`:
 
 Required: No
 
@@ -1003,7 +1003,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `-i`, `--index`                  | Show patch index                                       |
 | `-f`, `--filter-package-name`    | Filter patches by package name                         |
 
-#### 1. `--patches`:
+#### `--patches`:
 
 Required: Yes
 
@@ -1016,7 +1016,7 @@ java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches
 ```
 
-#### 2. `--prerelease`:
+#### `--prerelease`:
 
 Required: No
 
@@ -1028,7 +1028,7 @@ When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pr
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches --prerelease
 ```
 
-#### 3. `-t`, `--temporary-files-path`:
+#### `-t`, `--temporary-files-path`:
 
 Required: No
 
@@ -1040,7 +1040,7 @@ Path to a directory where Morphe stores temporary files, including cached .mpp d
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches -t /tmp/morphe-temp
 ```
 
-#### 4. `--out`:
+#### `--out`:
 
 Required: No
 
@@ -1052,7 +1052,7 @@ Write the patch list to a file instead of printing to stdout. Useful in environm
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --out patches-list.txt
 ```
 
-#### 5. `-d`, `--with-descriptions`:
+#### `-d`, `--with-descriptions`:
 
 Required: No
 
@@ -1064,7 +1064,7 @@ Show the description of each patch. Enabled by default - use `--with-description
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --with-descriptions=false
 ```
 
-#### 6. `-p`, `--with-packages`:
+#### `-p`, `--with-packages`:
 
 Required: No
 
@@ -1076,7 +1076,7 @@ Show the packages each patch is compatible with.
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --with-packages
 ```
 
-#### 7. `-v`, `--with-versions`:
+#### `-v`, `--with-versions`:
 
 Required: No
 
@@ -1088,7 +1088,7 @@ Show the compatible app versions for each patch. Requires `--with-packages` to b
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --with-packages --with-versions
 ```
 
-#### 8. `-o`, `--with-options`:
+#### `-o`, `--with-options`:
 
 Required: No
 
@@ -1100,7 +1100,7 @@ Show the configurable options for each patch, including their keys, types, defau
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --with-options
 ```
 
-#### 9. `-u`, `--with-universal-patches`:
+#### `-u`, `--with-universal-patches`:
 
 Required: No
 
@@ -1112,7 +1112,7 @@ Include patches that are compatible with any app (universal patches). Use `--wit
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --with-universal-patches=false
 ```
 
-#### 10. `-i`, `--index`:
+#### `-i`, `--index`:
 
 Required: No
 
@@ -1124,7 +1124,7 @@ Show the index of each patch. The index can be used with `--ei` and `--di` in th
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp
 ```
 
-#### 11. `-f`, `--filter-package-name`:
+#### `-f`, `--filter-package-name`:
 
 Required: No
 
@@ -1157,7 +1157,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `-f`, `--filter-package-names` | Filter by package names                                |
 | `-u`, `--count-unused-patches` | Include unused patches in the version count            |
 
-#### 1. `--patches`:
+#### `--patches`:
 
 Required: Yes
 
@@ -1170,7 +1170,7 @@ java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches
 ```
 
-#### 2. `--prerelease`:
+#### `--prerelease`:
 
 Required: No
 
@@ -1182,7 +1182,7 @@ When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pr
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches --prerelease
 ```
 
-#### 3. `-t`, `--temporary-files-path`:
+#### `-t`, `--temporary-files-path`:
 
 Required: No
 
@@ -1194,7 +1194,7 @@ Path to a directory where Morphe stores temporary files, including cached .mpp d
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches -t /tmp/morphe-temp
 ```
 
-#### 4. `-f`, `--filter-package-names`:
+#### `-f`, `--filter-package-names`:
 
 Required: No
 
@@ -1206,7 +1206,7 @@ Only show versions for the specified package names. Can be used to check version
 java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp -f com.google.android.youtube
 ```
 
-#### 5. `-u`, `--count-unused-patches`:
+#### `-u`, `--count-unused-patches`:
 
 Required: No
 
@@ -1239,7 +1239,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `-o`, `--out`                  | Path to the output JSON file                           |
 | `-f`, `--filter-package-name`  | Filter patches by package name                         |
 
-#### 1. `-p`, `--patches`:
+#### `-p`, `--patches`:
 
 Required: Yes
 
@@ -1252,7 +1252,7 @@ java -jar morphe-desktop-*-all.jar options-create -p patches.mpp -o options.json
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches -o options.json
 ```
 
-#### 2. `--prerelease`:
+#### `--prerelease`:
 
 Required: No
 
@@ -1264,7 +1264,7 @@ When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pr
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches --prerelease -o options.json
 ```
 
-#### 3. `-t`, `--temporary-files-path`:
+#### `-t`, `--temporary-files-path`:
 
 Required: No
 
@@ -1276,7 +1276,7 @@ Path to a directory where Morphe stores temporary files, including cached .mpp d
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches -t /tmp/morphe-temp -o options.json
 ```
 
-#### 4. `-o`, `--out`:
+#### `-o`, `--out`:
 
 Required: Yes
 
@@ -1291,7 +1291,7 @@ java -jar morphe-desktop-*-all.jar options-create -p patches.mpp -o options.json
 > [!TIP]
 > Run this command again after updating your .mpp file to keep your options file in sync. Existing settings are preserved.
 
-#### 5. `-f`, `--filter-package-name`:
+#### `-f`, `--filter-package-name`:
 
 Required: No
 
@@ -1384,7 +1384,7 @@ java -jar morphe-desktop-*-all.jar utility install [flag/s] [device-serial...]
 | `--disable-stock`  | With`--route-links`: also stop the named stock package from handling them |
 | *(positional arg)* | ADB device serial(s)                                                      |
 
-##### 1. `-a`, `--apk`:
+##### `-a`, `--apk`:
 
 Required: Yes
 
@@ -1396,7 +1396,7 @@ Path to the APK file you want to install.
 java -jar morphe-desktop-*-all.jar utility install -a patched_app.apk
 ```
 
-##### 2. `-m`, `--mount`:
+##### `-m`, `--mount`:
 
 Required: No
 
@@ -1408,7 +1408,7 @@ Mount the APK on top of an existing app instead of a regular install. Pass the p
 java -jar morphe-desktop-*-all.jar utility install -a patched_app.apk -m com.google.android.youtube
 ```
 
-##### 3. `--route-links`:
+##### `--route-links`:
 
 Required: No
 
@@ -1420,7 +1420,7 @@ After installing, route the app's supported web links to it ("open with"), so th
 java -jar morphe-desktop-*-all.jar utility install -a patched_app.apk --route-links
 ```
 
-##### 4. `--disable-stock`:
+##### `--disable-stock`:
 
 Required: No
 
@@ -1432,7 +1432,7 @@ Use with `--route-links`. Also stops the named stock package from handling those
 java -jar morphe-desktop-*-all.jar utility install -a patched_youtube.apk --route-links --disable-stock com.google.android.youtube
 ```
 
-##### 5. Positional argument (device serials):
+##### Positional argument (device serials):
 
 Required: No
 
@@ -1461,7 +1461,7 @@ java -jar morphe-desktop-*-all.jar utility uninstall [flag/s] [device-serial...]
 | `-u`, `--unmount`      | Unmount instead of uninstall         |
 | *(positional arg)*     | ADB device serial(s)                 |
 
-##### 1. `-p`, `--package-name`:
+##### `-p`, `--package-name`:
 
 Required: Yes
 
@@ -1473,7 +1473,7 @@ The package name of the app to uninstall.
 java -jar morphe-desktop-*-all.jar utility uninstall -p com.google.android.youtube
 ```
 
-##### 2. `-u`, `--unmount`:
+##### `-u`, `--unmount`:
 
 Required: No
 
@@ -1485,7 +1485,7 @@ If the app was installed by mounting (using `--mount`), use this flag to unmount
 java -jar morphe-desktop-*-all.jar utility uninstall -p com.google.android.youtube --unmount
 ```
 
-##### 3. Positional argument (device serials):
+##### Positional argument (device serials):
 
 Required: No
 
