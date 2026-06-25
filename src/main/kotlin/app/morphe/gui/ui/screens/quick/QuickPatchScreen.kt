@@ -61,6 +61,7 @@ import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay
 import app.morphe.gui.util.toColor
 import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.AdbManager
