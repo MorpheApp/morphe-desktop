@@ -36,9 +36,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
-import app.morphe.morphe_cli.generated.resources.Res
-import app.morphe.morphe_cli.generated.resources.morphe_dark
-import app.morphe.morphe_cli.generated.resources.morphe_light
+import app.morphe.morphe_desktop.generated.resources.Res
+import app.morphe.morphe_desktop.generated.resources.morphe_dark
+import app.morphe.morphe_desktop.generated.resources.morphe_light
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp

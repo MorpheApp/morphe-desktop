@@ -257,7 +257,7 @@ publishing {
     }
 
     publications {
-        create<MavenPublication>("morphe-cli-publication") {
+        create<MavenPublication>("morphe-desktop-publication") {
             from(components["java"])
         }
     }
@@ -266,5 +266,5 @@ publishing {
 signing {
     useGpgCmd()
 
-    sign(publishing.publications["morphe-cli-publication"])
+    sign(publishing.publications["morphe-desktop-publication"])
 }

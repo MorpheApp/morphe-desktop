@@ -24,9 +24,9 @@ private object CLIVersionProvider : IVersionProvider {
                 Properties().apply {
                     load(stream)
                 }.let {
-                    "Morphe CLI v${it.getProperty("version")}"
+                    "Morphe Desktop v${it.getProperty("version")}"
                 }
-            } ?: "Morphe CLI",
+            } ?: "Morphe Desktop",
         )
 }
 
