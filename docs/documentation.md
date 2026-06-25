@@ -503,8 +503,6 @@ Here is a quick lookup for all the flags under this subcommand:
 | `--unsigned`                   | Skip signing the final APK                                                     |
 | `-t`, `--temporary-files-path` | Path to store temp files                                                       |
 | `--purge`                      | Delete temp files after patching                                               |
-| `--custom-aapt2-binary`        | Deprecated. No effect, will be removed in a future release                     |
-| `--force-apktool`              | Deprecated. No effect, will be removed in a future release                     |
 | `--striplibs`                  | Architectures to keep, comma-separated (e.g.`arm64-v8a,x86`)                   |
 | `--bytecode-mode`              | Bytecode mode:`FULL`, `STRIP_SAFE`, or `STRIP_FAST`                            |
 | `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                |
@@ -862,33 +860,7 @@ Delete the temporary files directory after patching is complete.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --purge your_app.apk
 ```
 
-#### 22. `--custom-aapt2-binary`:
-
-Required: No
-
-Default: -
-
-> [!WARNING]
-> **Deprecated.** AAPT2 was only used through apktool, which has been replaced by ARSCLib – this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
-
-```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --custom-aapt2-binary /path/to/aapt2 your_app.apk
-```
-
-#### 23. `--force-apktool`:
-
-Required: No
-
-Default: `false`
-
-> [!WARNING]
-> **Deprecated.** apktool has been replaced by ARSCLib – this flag now has no effect and will be removed in a future release. It's kept for backward compatibility with older scripts.
-
-```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --force-apktool your_app.apk
-```
-
-#### 24. `--striplibs`:
+#### 22. `--striplibs`:
 
 Required: No
 
@@ -900,7 +872,7 @@ Comma-separated list of native library architectures to **keep**. All other arch
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --striplibs arm64-v8a,armeabi-v7a your_app.apk
 ```
 
-#### 25. `--bytecode-mode`:
+#### 23. `--bytecode-mode`:
 
 Required: No
 
@@ -925,7 +897,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --bytecode-mode FULL you
 > [!NOTE]
 > On Windows, Morphe currently forces bytecode mode to `FULL` regardless of what you pass to this flag (workaround for a platform-specific issue). The flag still works as expected on macOS and Linux.
 
-#### 26. `--verify-with-sdk`:
+#### 24. `--verify-with-sdk`:
 
 Required: No
 
@@ -950,7 +922,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --verify-with-sdk your_a
 >
 > If none of those resolve to a real SDK, Morphe errors out with a hint to either set one of the env vars or supply a path explicitly.
 
-#### 27. `--continue-on-error`:
+#### 25. `--continue-on-error`:
 
 Required: No
 
@@ -962,7 +934,7 @@ By default, patching stops on the first patch failure. This flag lets Morphe con
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --continue-on-error your_app.apk
 ```
 
-#### 28. `--options-file`:
+#### 26. `--options-file`:
 
 Required: No
 
@@ -980,7 +952,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --options-file options.j
 > [!TIP]
 > The options file is great for repeatable patching. Generate it once (either with `options-create` or by letting `--options-file` auto-generate it), tweak it, and reuse it every time you patch.
 
-#### 29. `--options-update`:
+#### 27. `--options-update`:
 
 Required: No
 
@@ -992,7 +964,7 @@ Automatically update the options JSON file after patching to reflect the current
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --options-file options.json --options-update your_app.apk
 ```
 
-#### 30. `-r`, `--result-file`:
+#### 28. `-r`, `--result-file`:
 
 Required: No
 
