@@ -13,6 +13,7 @@ import app.morphe.engine.UpdateInfo
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.util.SignatureIdentity
 import app.morphe.gui.data.model.Patch
+import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
@@ -347,7 +348,7 @@ class HomeViewModel(
     private var lastLoadedVersion: String? = null
     // Snapshot of per-source pinned versions used in the last load — drives
     // refreshPatchesIfNeeded so we reload when ANY source's pin changes.
-    private var lastLoadedVersionsBySource: Map<String, String> = emptyMap()
+    private var lastLoadedVersionsBySource: Map<String, SourceVersionPref> = emptyMap()
 
     /**
      * Load patches from all enabled sources via [EnabledSourcesLoader] and build
@@ -372,9 +373,9 @@ class HomeViewModel(
                 // Per-source pinned versions (with one-time migration from legacy
                 // single-source field). Each source's resolver looks up its own pin;
                 // no cross-source contamination.
-                val preferredVersions = configRepository.getLastPatchesVersionsBySource()
-                lastLoadedVersionsBySource = preferredVersions
-                val result = EnabledSourcesLoader.loadAll(enabled, patchService, preferredVersions)
+                val prefs = configRepository.getSourceVersionPrefs()
+                lastLoadedVersionsBySource = prefs
+                val result = EnabledSourcesLoader.loadAll(enabled, patchService, prefs)
 
                 if (!result.anyLoaded) {
                     val firstError = result.resolved.firstNotNullOfOrNull { it.error }
@@ -780,7 +781,7 @@ class HomeViewModel(
      */
     fun refreshPatchesIfNeeded() {
         screenModelScope.launch {
-            val saved = configRepository.getLastPatchesVersionsBySource()
+            val saved = configRepository.getSourceVersionPrefs()
             if (saved != lastLoadedVersionsBySource) {
                 Logger.info("Patches versions changed across sources: $lastLoadedVersionsBySource -> $saved, reloading...")
                 loadPatchesAndSupportedApps(forceRefresh = true)

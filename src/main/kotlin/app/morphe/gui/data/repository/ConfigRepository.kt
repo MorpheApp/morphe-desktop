@@ -8,6 +8,8 @@ package app.morphe.gui.data.repository
 import app.morphe.engine.util.PortablePaths
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
+import app.morphe.gui.data.model.FollowMode
+import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.model.PatchChannel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
@@ -102,40 +104,48 @@ class ConfigRepository {
     }
 
     /**
-     * LEGACY — kept so single-source callers don't break during the multi-source
-     * transition. New code should use [setLastPatchesVersionForSource].
+     * Record a source's version preference (called by PatchesScreen when the user
+     * picks a release). Per-source, so sources with overlapping tag names don't
+     * contaminate each other.
      */
-    @Deprecated("Use setLastPatchesVersionForSource", ReplaceWith("setLastPatchesVersionForSource(sourceId, version)"))
-    suspend fun setLastPatchesVersion(version: String) {
+    suspend fun setSourceVersionPref(sourceId: String, pref: SourceVersionPref) {
         val current = loadConfig()
-        saveConfig(current.copy(lastPatchesVersion = version))
+        saveConfig(current.copy(sourceVersionPrefs = current.sourceVersionPrefs + (sourceId to pref)))
     }
 
     /**
-     * Pin a specific release tag for [sourceId]. Used by PatchesScreen when the
-     * user picks a version. Per-source = no cross-contamination across sources
-     * with overlapping tag names.
+     * Returns the per-source version preferences, with a one-time migration from
+     * the legacy tag-only fields ([AppConfig.lastPatchesVersionBySource] and the
+     * even-older single [AppConfig.lastPatchesVersion]).
+     *
+     * Migration intent: those legacy tags were auto-saved on every selection, not
+     * deliberate freezes, so we can't tell a real pin from "just used the latest."
+     * We therefore convert each old tag to a *follow track* based on whether it was
+     * a dev tag — `-dev` ⇒ [FollowMode.FOLLOW_DEV], else [FollowMode.FOLLOW_STABLE].
+     * Net effect: everyone shifts onto the latest of their channel (the fix), at the
+     * cost of un-freezing anyone who had deliberately pinned an old version (they can
+     * re-pin). A dev user parked on a stable tag at migration looks like a stable
+     * user and is migrated as such — an accepted, self-healing one-time loss.
      */
-    suspend fun setLastPatchesVersionForSource(sourceId: String, version: String) {
+    suspend fun getSourceVersionPrefs(): Map<String, SourceVersionPref> {
         val current = loadConfig()
-        val updated = current.lastPatchesVersionBySource + (sourceId to version)
-        saveConfig(current.copy(lastPatchesVersionBySource = updated))
-    }
+        if (current.sourceVersionPrefs.isNotEmpty()) return current.sourceVersionPrefs
 
-    /**
-     * Returns the per-source version pin map, with one-time migration from the
-     * legacy [AppConfig.lastPatchesVersion] field: if the map is empty and the
-     * legacy field is set, it's mapped to the default source.
-     */
-    suspend fun getLastPatchesVersionsBySource(): Map<String, String> {
-        val current = loadConfig()
-        if (current.lastPatchesVersionBySource.isNotEmpty()) {
-            return current.lastPatchesVersionBySource
+        // Build the legacy tag map (per-source map, or the single legacy field
+        // mapped onto the default source).
+        val legacyTags: Map<String, String> = when {
+            current.lastPatchesVersionBySource.isNotEmpty() -> current.lastPatchesVersionBySource
+            current.lastPatchesVersion != null -> mapOf(DEFAULT_PATCH_SOURCE.id to current.lastPatchesVersion!!)
+            else -> emptyMap()
         }
-        val legacy = current.lastPatchesVersion ?: return emptyMap()
-        // Migrate: write the legacy pin onto the default source, return the new map.
-        val migrated = mapOf(DEFAULT_PATCH_SOURCE.id to legacy)
-        saveConfig(current.copy(lastPatchesVersionBySource = migrated))
+        if (legacyTags.isEmpty()) return emptyMap()
+
+        val migrated = legacyTags.mapValues { (_, tag) ->
+            val mode = if (tag.contains("-dev", ignoreCase = true)) FollowMode.FOLLOW_DEV
+                       else FollowMode.FOLLOW_STABLE
+            SourceVersionPref(mode = mode)
+        }
+        saveConfig(current.copy(sourceVersionPrefs = migrated))
         return migrated
     }
 
