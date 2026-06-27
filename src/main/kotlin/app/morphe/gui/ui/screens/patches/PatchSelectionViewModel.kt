@@ -260,7 +260,7 @@ class PatchSelectionViewModel(
             BundlePatches(
                 bundleId = "bundle-$idx-${File(path).nameWithoutExtension}",
                 bundleName = displayName,
-                patches = patches,
+                patches = patches.sortedBy { it.name.lowercase() },
             )
         }
 
