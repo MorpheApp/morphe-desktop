@@ -38,7 +38,6 @@ fun Patch<*>.versionsFor(
     return matchingPkgs.flatMap { (_, versions) -> versions?.toList() ?: emptyList() }
 }
 
-
 @Suppress("DEPRECATION")
 fun Patch<*>.isCompatibleWith(
     packageName: String,
@@ -67,6 +66,25 @@ fun Patch<*>.isCompatibleWith(
     return legacyPackages.any { (name, _) -> name == packageName }
 }
 
+@Suppress("DEPRECATION")
+fun Patch<*>.supportedVersionsFor(packageName: String): List<String>? {
+    val compat = compatibility
+
+    if (!compat.isNullOrEmpty()) {
+        val matching = compat.filter { it.packageName == packageName }
+        if (matching.isEmpty()) {
+            val hasUniversalEntry = compat.any { it.packageName == null }
+            return if (hasUniversalEntry) null else emptyList()
+        }
+        return matching.flatMap { entry -> entry.targets.mapNotNull { it.version } }
+    }
+
+    val legacyPackages = compatiblePackages ?: return null
+    val match = legacyPackages.singleOrNull { (name, _) -> name == packageName }
+        ?: return emptyList()
+    val legacyVersions = match.second
+    return if (legacyVersions.isNullOrEmpty()) null else legacyVersions.toList()
+}
 
 @Suppress("DEPRECATION")
 fun Patch<*>.compatibleVersionsForDisplay(
