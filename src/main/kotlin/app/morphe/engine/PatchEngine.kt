@@ -320,23 +320,15 @@ object PatchEngine {
             val patchName = patch.name ?: return@patchLoop
 
             // Check package compatibility first to avoid duplicate logs for multi-app patches.
-            patch.compatiblePackages?.let { packages ->
-                val matchingPkg = packages.singleOrNull { (name, _) -> name == packageName }
-                if (matchingPkg == null) {
-                    return@patchLoop
-                }
-
-                val (_, versions) = matchingPkg
-                if (versions?.isEmpty() == true) {
-                    return@patchLoop
-                }
-
-                val matchesVersion = forceCompatibility ||
-                        versions?.any { it == packageVersion } ?: true
-
-                if (!matchesVersion) {
-                    onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
-                    return@patchLoop
+            val supportedVersions = patch.supportedVersionsFor(packageName)
+            when {
+                supportedVersions != null && supportedVersions.isEmpty() -> return@patchLoop
+                supportedVersions != null -> {
+                    val matchesVersion = forceCompatibility || packageVersion in supportedVersions
+                    if (!matchesVersion) {
+                        onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
+                        return@patchLoop
+                    }
                 }
             }
 
@@ -347,7 +339,7 @@ object PatchEngine {
             }
 
             val isManuallyEnabled = patchName in enabledPatches
-            val isEnabledByDefault = !exclusiveMode && patch.use
+            val isEnabledByDefault = !exclusiveMode && patch.default
 
             if (!(isEnabledByDefault || isManuallyEnabled)) {
                 return@patchLoop
