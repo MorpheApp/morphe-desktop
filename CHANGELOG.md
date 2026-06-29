@@ -1,3 +1,10 @@
+# [1.10.0-dev.7](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.6...v1.10.0-dev.7) (2026-06-29)
+
+
+### Features
+
+* Add `--include-experimental` flag to `list-patches` and `list-versions` ([#189](https://github.com/MorpheApp/morphe-cli/issues/189)) ([8ef916c](https://github.com/MorpheApp/morphe-cli/commit/8ef916cdaab28e51c244906341a32d9434126ccf))
+
 # [1.10.0-dev.6](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.5...v1.10.0-dev.6) (2026-06-29)
 
 
