@@ -12,6 +12,7 @@ import app.morphe.cli.command.model.*
 import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.isWindows
+import app.morphe.engine.supportedVersionsFor
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
@@ -673,8 +674,13 @@ internal object PatchCommand : Callable<Int> {
 
                         val compatiblePatchNames = bundlePatches
                             .filter { patch ->
-                                patch.compatiblePackages == null ||
-                                    patch.compatiblePackages!!.any { (name, _) -> name == packageName }
+                                val compat = patch.compatibility
+                                if (!compat.isNullOrEmpty()) {
+                                    compat.any { it.packageName == packageName || it.packageName == null }
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    patch.compatiblePackages == null || patch.compatiblePackages!!.any { (name, _) -> name == packageName }
+                                }
                             }
                             .mapNotNull { it.name?.lowercase() }
                             .toSet()
@@ -701,11 +707,15 @@ internal object PatchCommand : Callable<Int> {
 
                             // Compare against the live patch in this bundle (not the snapshot)
                             // so multi-app patches with the same name aren't merged together.
-                            val actualPatch = bundlePatches.find {
-                                it.name.equals(patchName, ignoreCase = true) &&
-                                    (it.compatiblePackages == null || it.compatiblePackages!!.any {
-                                        (name, _) -> name == packageName
-                                    })
+                            val actualPatch = bundlePatches.find { patch ->
+                                if (!patch.name.equals(patchName, ignoreCase = true)) return@find false
+                                val compat = patch.compatibility
+                                if (!compat.isNullOrEmpty()) {
+                                    compat.any { it.packageName == packageName || it.packageName == null }
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    patch.compatiblePackages == null || patch.compatiblePackages!!.any { (name, _) -> name == packageName }
+                                }
                             }
                             val actualOptionKeys = actualPatch?.options?.keys ?: emptySet()
 
@@ -1019,34 +1029,31 @@ internal object PatchCommand : Callable<Int> {
             val patchNameLower = patchName.lowercase()
 
             // Check package compatibility first to avoid duplicate logs for multi-app patches.
-            patch.compatiblePackages?.let { packages ->
-                packages.singleOrNull { (name, _) -> name == packageName }?.let { (_, versions) ->
-                    if (versions?.isEmpty() == true) {
-                        return@patchLoop logger.warning(
-                            "Skipping \"$patchName\": incompatible with $packageName"
-                        )
-                    }
-
-                    val matchesVersion =
-                        force || versions?.let { it.any { version -> version == packageVersion } } ?: true
-
+            val supportedVersions = patch.supportedVersionsFor(packageName)
+            when {
+                supportedVersions != null && supportedVersions.isEmpty() -> {
+                    return@patchLoop logger.fine(
+                        "Skipping \"$patchName\": incompatible with $packageName " +
+                            "(only compatible with " +
+                            (patch.compatibility
+                                ?.mapNotNull { it.packageName }
+                                ?.joinToString(", ")
+                                ?: @Suppress("DEPRECATION") patch.compatiblePackages
+                                    ?.joinToString(", ") { (name, _) -> name }
+                                ?: "") + ")"
+                    )
+                }
+                supportedVersions != null -> {
+                    val matchesVersion = force || packageVersion in supportedVersions
                     if (!matchesVersion) {
-                        val compatibilityHint = packages.joinToString("; ") { (pkg, vers) ->
-                            pkg + " " + (vers ?: emptySet()).joinToString(", ")
-                        }
+                        val hint = supportedVersions.joinToString(", ")
                         return@patchLoop logger.warning(
                             "Skipping \"$patchName\": incompatible with $packageName $packageVersion " +
-                                "(supported: $compatibilityHint)"
+                                "(supported: $packageName $hint)"
                         )
                     }
-                } ?: return@patchLoop logger.fine(
-                    "Skipping \"$patchName\": incompatible with $packageName " +
-                        "(only compatible with " +
-                        packages.joinToString(", ") { (name, _) -> name } + ")"
-                )
-
-                return@let
-            } ?: logger.fine("\"$patchName\" has no package constraints")
+                }
+            }
 
             // CLI flags take precedence over JSON, JSON takes precedence over defaults.
             // Log strings match the GUI engine's "Skipping disabled: …" format so
@@ -1075,7 +1082,7 @@ internal object PatchCommand : Callable<Int> {
 
             val isJsonEnabled = patchNameLower in jsonEnabledPatches
 
-            val isEnabled = !exclusive && patch.use
+            val isEnabled = !exclusive && patch.default
 
             if (!(isEnabled || isCliEnabled || isJsonEnabled)) {
                 // Default-disabled patches (the patch ships with use=false and

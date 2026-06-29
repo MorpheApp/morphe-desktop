@@ -1,10 +1,15 @@
+/*
+ * Copyright 2026 Morphe.
+ * https://github.com/MorpheApp/morphe-cli
+ */
+
 package app.morphe.cli.command
 
+import app.morphe.engine.CompatibleVersionsMap
 import app.morphe.engine.MorpheData
-import app.morphe.patcher.patch.PackageName
-import app.morphe.patcher.patch.VersionMap
+import app.morphe.engine.VersionMap
+import app.morphe.engine.mostCommonCompatibleVersions
 import app.morphe.patcher.patch.loadPatchesFromJar
-import app.morphe.patcher.patch.mostCommonCompatibleVersions
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Help.Visibility.ALWAYS
@@ -57,6 +62,13 @@ internal class ListCompatibleVersions : Runnable {
     private var countUnusedPatches: Boolean = false
 
     @Option(
+        names = ["-x", "--include-experimental"],
+        description = ["Include experimental app versions in the output."],
+        showDefaultValue = ALWAYS,
+    )
+    private var includeExperimental: Boolean = false
+
+    @Option(
         names = ["-t", "--temporary-files-path"],
         description = ["Path to store temporary files."],
     )
@@ -76,7 +88,7 @@ internal class ListCompatibleVersions : Runnable {
             }
         }
 
-        fun buildString(entry: Map.Entry<PackageName, VersionMap>) =
+        fun buildString(entry: Map.Entry<String, VersionMap>) =
             buildString {
                 val (name, versions) = entry
                 appendLine("Package name: $name")
@@ -105,6 +117,7 @@ internal class ListCompatibleVersions : Runnable {
         patches.mostCommonCompatibleVersions(
             packageNames,
             countUnusedPatches,
+            includeExperimental,
         ).entries.joinToString("\n", transform = ::buildString).let(logger::info)
     }
 }

@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 Morphe.
+ * https://github.com/MorpheApp/morphe-cli
+ */
+
 package app.morphe.gui.ui.screens.patches
 
 import androidx.compose.animation.AnimatedVisibility

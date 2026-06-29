@@ -1,3 +1,31 @@
+# [1.10.0-dev.7](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.6...v1.10.0-dev.7) (2026-06-29)
+
+
+### Features
+
+* Add `--include-experimental` flag to `list-patches` and `list-versions` ([#189](https://github.com/MorpheApp/morphe-cli/issues/189)) ([8ef916c](https://github.com/MorpheApp/morphe-cli/commit/8ef916cdaab28e51c244906341a32d9434126ccf))
+
+# [1.10.0-dev.6](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.5...v1.10.0-dev.6) (2026-06-29)
+
+
+### Bug Fixes
+
+* Update to latest patcher ([2c89128](https://github.com/MorpheApp/morphe-cli/commit/2c891284460762e15115f21c83036ac544549372))
+
+# [1.10.0-dev.5](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.4...v1.10.0-dev.5) (2026-06-28)
+
+
+### Features
+
+* Patch sources follows latest (stable/dev) instead of to last used version ([#185](https://github.com/MorpheApp/morphe-cli/issues/185)) ([5d34993](https://github.com/MorpheApp/morphe-cli/commit/5d349931b283f62f617e7a1ceb10009cf2639a8e))
+
+# [1.10.0-dev.4](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.3...v1.10.0-dev.4) (2026-06-27)
+
+
+### Features
+
+* Array GUI patches alphabetically, improve error logging, use separate class loader for multiple patch bundles ([#187](https://github.com/MorpheApp/morphe-cli/issues/187)) ([755909c](https://github.com/MorpheApp/morphe-cli/commit/755909ca2ab8735ffe99b3ad200a80316e6ec0c9))
+
 # [1.10.0-dev.3](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.2...v1.10.0-dev.3) (2026-06-23)
 
 

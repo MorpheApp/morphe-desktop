@@ -10,6 +10,8 @@ import app.morphe.patcher.patch.loadPatchesFromJar
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import app.morphe.engine.model.Release
+import app.morphe.gui.data.model.FollowMode
+import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -81,10 +83,16 @@ class PatchesViewModel(
                     val stableReleases = releases.filter { !it.isDevRelease() }
                     val devReleases = releases.filter { it.isDevRelease() }
 
-                    // Check config for previously selected version FOR THIS SOURCE
+                    // Resolve this source's version preference to a concrete tag
+                    // to pre-select: a pin → its tag; follow-stable → newest stable;
+                    // follow-dev → newest overall.
                     val activeSourceId = patchSourceManager?.getActiveSource()?.id
-                    val savedVersion = activeSourceId?.let {
-                        configRepository.getLastPatchesVersionsBySource()[it]
+                    val pref = activeSourceId?.let { configRepository.getSourceVersionPrefs()[it] }
+                    val savedVersion = when (pref?.mode) {
+                        FollowMode.PINNED -> pref.pinnedTag
+                        FollowMode.FOLLOW_STABLE -> stableReleases.firstOrNull()?.tagName
+                        FollowMode.FOLLOW_DEV -> releases.firstOrNull()?.tagName
+                        null -> null
                     }
 
                     // Find the saved release, or fall back to latest stable
@@ -137,8 +145,12 @@ class PatchesViewModel(
                                     .fold(0L) { acc, part -> acc * 10000 + part }
                             }
                         val activeSourceId = patchSourceManager?.getActiveSource()?.id
-                        val savedVersion = activeSourceId?.let {
-                            configRepository.getLastPatchesVersionsBySource()[it]
+                        val pref = activeSourceId?.let { configRepository.getSourceVersionPrefs()[it] }
+                        val savedVersion = when (pref?.mode) {
+                            FollowMode.PINNED -> pref.pinnedTag
+                            FollowMode.FOLLOW_STABLE -> offlineReleases.firstOrNull { !it.isDevRelease() }?.tagName
+                            FollowMode.FOLLOW_DEV -> offlineReleases.firstOrNull()?.tagName
+                            null -> null
                         }
 
                         // Pre-select the saved version, or fall back to the first (most recent)
@@ -306,12 +318,13 @@ class PatchesViewModel(
                     )
                     Logger.info("Patches downloaded: ${patchFile.absolutePath}")
 
-                    // Save the selected version PER SOURCE so HomeScreen can pick it up
-                    // without contaminating other enabled sources.
+                    // Save the version preference PER SOURCE so HomeScreen can pick
+                    // it up without contaminating other enabled sources.
                     val activeSourceId = patchSourceManager?.getActiveSource()?.id
                     if (activeSourceId != null) {
-                        configRepository.setLastPatchesVersionForSource(activeSourceId, release.tagName)
-                        Logger.info("Saved selected patches version for source '$activeSourceId': ${release.tagName}")
+                        val pref = versionPrefFor(release)
+                        configRepository.setSourceVersionPref(activeSourceId, pref)
+                        Logger.info("Saved version pref for source '$activeSourceId': $pref")
                     }
                 },
                 onFailure = { e ->
@@ -338,10 +351,31 @@ class PatchesViewModel(
         screenModelScope.launch {
             val activeSourceId = patchSourceManager?.getActiveSource()?.id
             if (activeSourceId != null) {
-                configRepository.setLastPatchesVersionForSource(activeSourceId, release.tagName)
-                Logger.info("Confirmed patches selection for source '$activeSourceId': ${release.tagName}")
+                val pref = versionPrefFor(release)
+                configRepository.setSourceVersionPref(activeSourceId, pref)
+                Logger.info("Confirmed version pref for source '$activeSourceId': $pref")
             }
         }
+    }
+
+    /**
+     * Turn a user-selected release into a [SourceVersionPref]:
+     *  - the newest stable  → [FollowMode.FOLLOW_STABLE] (ride latest stable)
+     *  - the newest dev      → [FollowMode.FOLLOW_DEV] (ride newest overall)
+     *  - anything older      → [FollowMode.PINNED] to that exact tag
+     *
+     * "Picked the latest of a channel" is read as "stay on that channel's latest,"
+     * which is what auto-updates the source going forward.
+     */
+    private fun versionPrefFor(release: Release): SourceVersionPref {
+        val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
+        val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
+        val mode = when {
+            release.isDevRelease() && release.tagName == newestDevTag -> FollowMode.FOLLOW_DEV
+            !release.isDevRelease() && release.tagName == newestStableTag -> FollowMode.FOLLOW_STABLE
+            else -> FollowMode.PINNED
+        }
+        return SourceVersionPref(mode = mode, pinnedTag = release.tagName.takeIf { mode == FollowMode.PINNED })
     }
 
     /**

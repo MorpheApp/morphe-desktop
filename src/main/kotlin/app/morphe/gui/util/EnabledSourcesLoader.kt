@@ -6,8 +6,10 @@
 package app.morphe.gui.util
 
 import app.morphe.engine.MultiSourceLoader
+import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.PatchRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -79,7 +81,7 @@ object EnabledSourcesLoader {
     suspend fun loadAll(
         enabled: List<Pair<PatchSource, PatchRepository?>>,
         patchService: PatchService,
-        preferredVersionsBySource: Map<String, String> = emptyMap(),
+        prefsBySource: Map<String, SourceVersionPref> = emptyMap(),
     ): Result = supervisorScope {
         // supervisorScope (not coroutineScope) so a single source's failure
         // doesn't cancel the other in-flight resolves. Each async catches its
@@ -89,7 +91,7 @@ object EnabledSourcesLoader {
         val resolved = enabled.map { (source, repo) ->
             async(Dispatchers.IO) {
                 try {
-                    resolve(source, repo, preferredVersionsBySource[source.id])
+                    resolve(source, repo, prefsBySource[source.id])
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
@@ -136,7 +138,7 @@ object EnabledSourcesLoader {
     private suspend fun resolve(
         source: PatchSource,
         repo: PatchRepository?,
-        preferredVersion: String?,
+        pref: SourceVersionPref?,
     ): ResolvedSource = withContext(Dispatchers.IO) {
         when (source.type) {
             PatchSourceType.LOCAL -> resolveLocal(source)
@@ -145,7 +147,7 @@ object EnabledSourcesLoader {
             // which API to talk to based on the source's provider type.
             PatchSourceType.DEFAULT,
             PatchSourceType.GITHUB,
-            PatchSourceType.GITLAB -> resolveRemote(source, repo, preferredVersion)
+            PatchSourceType.GITLAB -> resolveRemote(source, repo, pref)
         }
     }
 
@@ -169,7 +171,7 @@ object EnabledSourcesLoader {
     private suspend fun resolveRemote(
         source: PatchSource,
         repo: PatchRepository?,
-        preferredVersion: String?,
+        pref: SourceVersionPref?,
     ): ResolvedSource {
         if (repo == null) {
             return ResolvedSource(source = source, error = "No repository configured for source")
@@ -193,17 +195,23 @@ object EnabledSourcesLoader {
             return ResolvedSource(source = source, error = errMsg)
         }
 
-        // Honor a user-pinned version if it exists in this source's releases.
-        // Otherwise pick latest stable, falling back to latest dev.
-        val release = preferredVersion
-            ?.let { pinned -> releases.find { it.tagName == pinned } }
-            ?: releases.firstOrNull { !it.isDevRelease() }
-            ?: releases.firstOrNull()
-            ?: return ResolvedSource(source = source, error = "No releases found")
+        // Resolve which release to load from this source's version preference:
+        //  - PINNED        → the exact tag (fall back to latest stable if it's gone)
+        //  - FOLLOW_DEV    → newest release overall, pre-releases included
+        //  - FOLLOW_STABLE → newest stable (also the default when there's no pref)
+        // The release list is newest-first, so firstOrNull() is the newest overall.
+        val latestStable = releases.firstOrNull { !it.isDevRelease() }
+        val latestOverall = releases.firstOrNull()
+        val release = when (pref?.mode) {
+            FollowMode.PINNED ->
+                releases.find { it.tagName == pref.pinnedTag } ?: latestStable ?: latestOverall
+            FollowMode.FOLLOW_DEV -> latestOverall ?: latestStable
+            FollowMode.FOLLOW_STABLE, null -> latestStable ?: latestOverall
+        } ?: return ResolvedSource(source = source, error = "No releases found")
 
-        // Classify against this source's release list so the LED + badge can
-        // distinguish "latest stable" from "older stable" from "dev".
-        val latestStableTag = releases.firstOrNull { !it.isDevRelease() }?.tagName
+        // Classify where the resolved release actually sits (for the LED + badge),
+        // independent of which track it's following.
+        val latestStableTag = latestStable?.tagName
         val latestDevTag = releases.firstOrNull { it.isDevRelease() }?.tagName
         val channel = when {
             release.isDevRelease() && release.tagName == latestDevTag -> Channel.DEV_LATEST
