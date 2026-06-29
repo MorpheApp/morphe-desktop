@@ -842,7 +842,7 @@ Required: No
 
 Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
 
-Path to a directory where Morphe stores temporary files during patching. This is also where downloaded .mpp files are cached when using URLs with `--patches`.
+Path to a directory where Morphe stores temporary files during patching.
 
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -t /tmp/morphe-temp your_app.apk
@@ -852,7 +852,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -t /tmp/morphe-temp your
 
 Required: No
 
-Default: `false`
+Default: `true`
 
 Delete the temporary files directory after patching is complete.
 
