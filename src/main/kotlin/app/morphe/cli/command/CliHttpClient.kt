@@ -9,6 +9,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 /**
  * Lazy initialized HttpClient for CLI commands. One client per process is fine for short-lived
@@ -19,7 +20,9 @@ import io.ktor.serialization.kotlinx.json.json
 object CliHttpClient {
     val instance: HttpClient by lazy {
         HttpClient(CIO) {
-            install(ContentNegotiation) { json() }
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
         }
     }
 }
