@@ -1008,6 +1008,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `-u`, `--with-universal-patches` | Include patches compatible with any app                |
 | `-i`, `--index`                  | Show patch index                                       |
 | `-f`, `--filter-package-name`    | Filter patches by package name                         |
+| `-x`, `--include-experimental`   | Include experimental app versions in the output        |
 
 #### `--patches`:
 
@@ -1142,6 +1143,18 @@ Only show patches that are compatible with the specified package name.
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --filter-package-name com.google.android.youtube
 ```
 
+#### `-x`, `--include-experimental`:
+
+Required: No
+
+Default: `false`
+
+By default, only stable app versions are listed. Pass this flag to also include experimental versions.
+
+```
+java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --include-experimental
+```
+
 ---
 
 <h3 id="subcommand-3-list-versions">Subcommand 3: <code>list-versions</code></h3>
@@ -1162,6 +1175,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `-t`, `--temporary-files-path` | Path to store temporary files                          |
 | `-f`, `--filter-package-names` | Filter by package names                                |
 | `-u`, `--count-unused-patches` | Include unused patches in the version count            |
+| `-x`, `--include-experimental` | Include experimental app versions in the output        |
 
 #### `--patches`:
 
@@ -1222,6 +1236,18 @@ Include patches that are not enabled by default when calculating the most common
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp --count-unused-patches
+```
+
+#### `-x`, `--include-experimental`:
+
+Required: No
+
+Default: `false`
+
+By default, only stable app versions are counted and shown. Pass this flag to also include experimental versions.
+
+```
+java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp --include-experimental
 ```
 
 ---
