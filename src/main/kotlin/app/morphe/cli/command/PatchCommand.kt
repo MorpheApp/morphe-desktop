@@ -158,7 +158,7 @@ internal object PatchCommand : Callable<Int> {
 
     @CommandLine.Option(
         names = ["-o", "--out"],
-        description = ["Path to save the patched APK file to. Defaults to the same path as the supplied APK file."],
+        description = ["Path to save the patched APK file to. If omitted, it is saved next to the input APK in a subfolder named after the app."],
     )
     @Suppress("unused")
     private fun setOutputFilePath(outputFilePath: File?) {
@@ -169,7 +169,7 @@ internal object PatchCommand : Callable<Int> {
 
     @CommandLine.Option(
         names = ["-r", "--result-file"],
-        description = ["Path to save the patching result file to"],
+        description = ["Path to write a JSON report of the patching run to. The report lists the package name and version, whether patching succeeded, each patching step's result, etc. (Can be used for scripts and CI.)"],
     )
     @Suppress("unused")
     private fun setPatchingResultOutputFilePath(outputFilePath: File?) {

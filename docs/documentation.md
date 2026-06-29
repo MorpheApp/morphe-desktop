@@ -970,7 +970,13 @@ Required: No
 
 Default: -
 
-Path to save a JSON file containing the patching result, including which patches succeeded, which failed, and any error details.
+Path to save a JSON file containing the patching result. The file records:
+
+- the package name and version of the patched app
+- whether patching succeeded overall
+- the result of each patching step
+- the list of applied patches
+- the list of failed patches, with their error details
 
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -r result.json your_app.apk
