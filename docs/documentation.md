@@ -1359,7 +1359,7 @@ When you update your .mpp file to a newer version, patches may be added or remov
 
 <h3 id="subcommand-5-utility">Subcommand 5: <code>utility</code></h3>
 
-Parent command for utility operations. It allows for things like manually installing or uninstalling apps via ADB, clearing the cache directory, etc. Has two sub-subcommands: `install` and `uninstall`.
+Parent command for utility operations. It allows for things like manually installing or uninstalling apps via ADB, clearing the cache directory, etc. Has three sub-subcommands: `install`, `uninstall`, and `clear-cache`.
 
 <h4 id="utility-install"><code>utility install</code></h4>
 
