@@ -27,6 +27,7 @@ Now that you've done your first run, let's dig deeper into how the magic happens
   - [utility](#subcommand-5-utility)
     - [install](#utility-install)
     - [uninstall](#utility-uninstall)
+    - [clear-cache](#utility-clear-cache)
   - [Value Types Reference](#value-types-reference)
 - [Building](#building)
 
@@ -259,7 +260,7 @@ Morphe runs the pipeline and streams the same log lines the CLI prints, with a *
 | **OUTPUT FILE** / **OPEN FOLDER →** | Locate the patched APK        | output path is set by`-o` / `--out`          |
 | **ADB INSTALL** (+ device picker)   | Install straight to a device  | `-i` / [`utility install`](#utility-install) |
 | **PATCH ANOTHER**                   | Start over with a new APK     | –                                            |
-| **TEMPORARY FILES → CLEAN UP**      | Free this run's scratch space | `--purge`                                    |
+| **TEMPORARY FILES → CLEAN UP**      | Free this run's scratch space | auto-purged by default; `--disable-purge` to keep |
 
 - **OUTPUT FILE / OPEN FOLDER →** – the finished APK and a button to reveal it in your file manager.
 - **ADB INSTALL** – with a device connected and ADB enabled, install directly. Pick a device (**SELECT A DEVICE**), wait for **READY**, install; you'll see **INSTALLED ON &lt;device&gt;** on success or **RETRY** on failure. Device states include **UNAUTH** (accept the USB-debugging prompt on the phone) and **UNKNOWN**. If ADB is off you'll see **ENABLE ADB** (turn on Auto-start ADB in Settings).
@@ -326,7 +327,7 @@ The gear icon opens Settings – Morphe's persistent preferences. Think of it as
 |--------------------------------|-----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 | **Theme**                      | App color scheme: Light, Dark, AMOLED, System                                                             | System                                                                               | –                                                                                          |
 | **Expert mode**                | Switch between Quick and Expert                                                                           | Off (Quick)                                                                          | –                                                                                          |
-| **Auto-cleanup temp files**    | Delete scratch files after patching                                                                       | On                                                                                   | `--purge`                                                                                  |
+| **Auto-cleanup temp files**    | Delete scratch files after patching                                                                       | On                                                                                   | On by default; `--disable-purge` to turn off                                               |
 | **Auto-start ADB**             | Start the ADB daemon on launch so devices are monitored                                                   | Off                                                                                  | enables`-i` / install features                                                             |
 | **Update channel**             | Stable or Dev app updates                                                                                 | Smart (Dev on dev builds, else Stable)                                               | `--prerelease` (loosely)                                                                   |
 | **Output folder**              | Default location for patched APKs                                                                         | The input APK's folder                                                               | `-o` / `--out`                                                                             |
@@ -502,7 +503,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `--signer`                     | Signer name in the APK signature                                               |
 | `--unsigned`                   | Skip signing the final APK                                                     |
 | `-t`, `--temporary-files-path` | Path to store temp files                                                       |
-| `--purge`                      | Delete temp files after patching                                               |
+| `--disable-purge`              | Keep this run's scratch files (deleted after patching by default)              |
 | `--striplibs`                  | Architectures to keep, comma-separated (e.g.`arm64-v8a,x86`)                   |
 | `--bytecode-mode`              | Bytecode mode:`FULL`, `STRIP_SAFE`, or `STRIP_FAST`                            |
 | `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                |
@@ -848,16 +849,16 @@ Path to a directory where Morphe stores temporary files during patching.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -t /tmp/morphe-temp your_app.apk
 ```
 
-#### `--purge`:
+#### `--disable-purge`:
 
 Required: No
 
-Default: `true`
+Default: `false`
 
-Delete the temporary files directory after patching is complete.
+By default, this run's scratch files are deleted once patching finishes. Pass this flag to keep them instead — useful for debugging a failed patch. Does not affect cached patches, other sessions, or config.
 
 ```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --purge your_app.apk
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --disable-purge your_app.apk
 ```
 
 #### `--striplibs`:
@@ -999,7 +1000,6 @@ Here is a quick lookup for all the flags under this subcommand:
 |----------------------------------|--------------------------------------------------------|
 | `--patches`                      | Paths to .mpp files or GitHub or GitLab repo URLs      |
 | `--prerelease`                   | Fetch latest dev pre-release instead of stable release |
-| `-t`, `--temporary-files-path`   | Path to store temporary files                          |
 | `--out`                          | Write patch list to a file instead of stdout           |
 | `-d`, `--with-descriptions`      | Show patch descriptions                                |
 | `-p`, `--with-packages`          | Show compatible packages                               |
@@ -1033,18 +1033,6 @@ When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pr
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches --prerelease
-```
-
-#### `-t`, `--temporary-files-path`:
-
-Required: No
-
-Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
-
-Path to a directory where Morphe stores temporary files, including cached .mpp downloads when using URLs with `--patches`.
-
-```
-java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches -t /tmp/morphe-temp
 ```
 
 #### `--out`:
@@ -1172,7 +1160,6 @@ Here is a quick lookup for all the flags under this subcommand:
 |--------------------------------|--------------------------------------------------------|
 | `--patches`                    | Paths to .mpp files or GitHub or GitLab repo URLs      |
 | `--prerelease`                 | Fetch latest dev pre-release instead of stable release |
-| `-t`, `--temporary-files-path` | Path to store temporary files                          |
 | `-f`, `--filter-package-names` | Filter by package names                                |
 | `-u`, `--count-unused-patches` | Include unused patches in the version count            |
 | `-x`, `--include-experimental` | Include experimental app versions in the output        |
@@ -1200,18 +1187,6 @@ When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pr
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches --prerelease
-```
-
-#### `-t`, `--temporary-files-path`:
-
-Required: No
-
-Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
-
-Path to a directory where Morphe stores temporary files, including cached .mpp downloads when using URLs with `--patches`.
-
-```
-java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches -t /tmp/morphe-temp
 ```
 
 #### `-f`, `--filter-package-names`:
@@ -1267,7 +1242,6 @@ Here is a quick lookup for all the flags under this subcommand:
 |--------------------------------|--------------------------------------------------------|
 | `-p`, `--patches`              | Paths to .mpp files or GitHub or GitLab repo URLs      |
 | `--prerelease`                 | Fetch latest dev pre-release instead of stable release |
-| `-t`, `--temporary-files-path` | Path to store temporary files                          |
 | `-o`, `--out`                  | Path to the output JSON file                           |
 | `-f`, `--filter-package-name`  | Filter patches by package name                         |
 
@@ -1294,18 +1268,6 @@ When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pr
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches --prerelease -o options.json
-```
-
-#### `-t`, `--temporary-files-path`:
-
-Required: No
-
-Default: `morphe-data/tmp/` next to the JAR (falls back to `~/morphe/tmp/`)
-
-Path to a directory where Morphe stores temporary files, including cached .mpp downloads when using URLs with `--patches`.
-
-```
-java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches -t /tmp/morphe-temp -o options.json
 ```
 
 #### `-o`, `--out`:
@@ -1397,7 +1359,7 @@ When you update your .mpp file to a newer version, patches may be added or remov
 
 <h3 id="subcommand-5-utility">Subcommand 5: <code>utility</code></h3>
 
-Parent command for utility operations like manually installing or uninstalling apps via ADB. Has two sub-subcommands: `install` and `uninstall`.
+Parent command for utility operations. It allows for things like manually installing or uninstalling apps via ADB, clearing the cache directory, etc. Has two sub-subcommands: `install` and `uninstall`.
 
 <h4 id="utility-install"><code>utility install</code></h4>
 
@@ -1527,6 +1489,31 @@ One or more ADB device serials to uninstall from. If not provided, uninstalls fr
 
 ```
 java -jar morphe-desktop-*-all.jar utility uninstall -p com.google.android.youtube SERIAL1 SERIAL2
+```
+
+<h4 id="utility-clear-cache"><code>utility clear-cache</code></h4>
+
+Delete Morphe's cached data: downloaded patch files, logs, and temporary files. By default it prints a short confirmation message.
+
+```
+java -jar morphe-desktop-*-all.jar utility clear-cache [flag/s]
+```
+
+
+| Flag     | Description                                                           |
+|----------|-----------------------------------------------------------------------|
+| `--info` | Show a per-category breakdown of what was cleared and the space freed |
+
+##### `--info`:
+
+Required: No
+
+Default: `false`
+
+Show how much was cleared from each location (patches, logs, temp) with file counts and the total space freed, instead of just a confirmation line.
+
+```
+java -jar morphe-desktop-*-all.jar utility clear-cache --info
 ```
 
 ---
