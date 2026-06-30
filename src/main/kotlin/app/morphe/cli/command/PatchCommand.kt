@@ -234,8 +234,6 @@ internal object PatchCommand : Callable<Int> {
     )
     private var temporaryFilesPath: File? = null
 
-    private var aaptBinaryPath: File? = null
-
     @CommandLine.Option(
         names = ["--purge"],
         description = ["Delete THIS run's scratch files after patching. " +
@@ -267,28 +265,6 @@ internal object PatchCommand : Callable<Int> {
         showDefaultValue = ALWAYS,
     )
     private var prerelease: Boolean = false
-
-    @CommandLine.Option(
-        names = ["--custom-aapt2-binary"],
-        description = ["apktool is deprecated. This parameter has no effect and will be removed in a future release."],
-    )
-    @Suppress("unused")
-    private fun setAaptBinaryPath(aaptBinaryPath: File) {
-        if (!aaptBinaryPath.exists()) {
-            throw CommandLine.ParameterException(
-                spec.commandLine(),
-                "AAPT binary ${aaptBinaryPath.name} does not exist",
-            )
-        }
-        this.aaptBinaryPath = aaptBinaryPath
-    }
-
-    @CommandLine.Option(
-        names = ["--force-apktool"],
-        description = ["apktool is deprecated. This parameter has no effect and will be removed in a future release."],
-        showDefaultValue = ALWAYS,
-    )
-    private var forceApktool: Boolean = false
 
     @CommandLine.Option(
         names = ["--unsigned"],
@@ -632,7 +608,7 @@ internal object PatchCommand : Callable<Int> {
                 ApkMerger(logger.toMorpheLogger()).merge(
                     inputFile = apk,
                     outputFile = outputApk,
-                    cleanMetaInf = true
+                    cleanMetaInf = false
                 )
 
                 mergedApkToCleanup = outputApk
@@ -646,15 +622,9 @@ internal object PatchCommand : Callable<Int> {
                 PatcherConfig(
                     inputApk,
                     patcherTemporaryFilesPath,
-                    aaptBinaryPath?.path,
-                    patcherTemporaryFilesPath.absolutePath,
-                    useArsclib = if (aaptBinaryPath != null) { false } else { !forceApktool },
+                    useArsclib = true,
                     keepArchitectures = keepArchitectures,
-                    /*
-                    TODO: Remove Windows override once the patcher ships its proper fix
-                     (reflection-based MappedByteBuffer release + copy-instead-of-rename for output DEX files).
-                     */
-                    useBytecodeMode = if (isWindows()) { BytecodeMode.FULL } else { bytecodeMode },
+                    useBytecodeMode = bytecodeMode,
                     verifier = verifier
                 ),
             ).use { patcher ->

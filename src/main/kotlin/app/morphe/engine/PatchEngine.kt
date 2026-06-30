@@ -56,7 +56,6 @@ object PatchEngine {
         val signerName: String = DEFAULT_SIGNER_NAME,
         val keystoreDetails: ApkUtils.KeyStoreDetails? = null,
         val architecturesToKeep: Set<CpuArchitecture> = emptySet(),
-        val aaptBinaryPath: File? = null,
         val tempDir: File? = null,
         val failOnError: Boolean = true,
         val bytecodeMode: BytecodeMode = BytecodeMode.STRIP_FAST
@@ -110,7 +109,7 @@ object PatchEngine {
                 ApkMerger(logger.toMorpheLogger()).merge(
                     inputFile = config.inputApk,
                     outputFile = mergedApk,
-                    cleanMetaInf = true
+                    cleanMetaInf = false
                 )
                 mergedApkToCleanup = mergedApk
                 mergedApk
@@ -128,15 +127,10 @@ object PatchEngine {
             val patcherConfig = PatcherConfig(
                 actualInputApk,
                 patcherTempDir,
-                config.aaptBinaryPath?.path,
                 patcherTempDir.absolutePath,
                 useArsclib = true,
                 keepArchitectures = config.architecturesToKeep,
-                /*
-                TODO: Remove Windows override once the patcher ships its proper fix
-                 (reflection-based MappedByteBuffer release + copy-instead-of-rename for output DEX files).
-                 */
-                useBytecodeMode = if (isWindows()) { BytecodeMode.FULL } else { config.bytecodeMode }
+                useBytecodeMode = config.bytecodeMode
             )
 
             Patcher(patcherConfig).use { patcher ->
