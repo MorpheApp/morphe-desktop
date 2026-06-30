@@ -5,6 +5,7 @@
 
 package app.morphe.cli.command
 
+import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.engine.patches.findPatchAsset
 import io.ktor.client.HttpClient
@@ -21,12 +22,12 @@ object PatchFileResolver {
      * Returns a new Set<File> with URLs replaced by downloaded/cached .mpp files.
      *
      * Provider detection (GitHub vs GitLab) + URL parsing + API talk lives in the engine.
-     * This function only owns the CLI's disk cache layout and the "which release do we pick" decision.
+     * This function owns the "which release do we pick" decision. The on-disk cache
+     * layout is shared with the GUI via [PatchCache] (one cache for both surfaces).
      */
     fun resolve(
         patchFiles: Set<File>,
         prerelease: Boolean,
-        cacheDir: File,
         httpClient: HttpClient
     ): Set<File> {
         val urlEntry = patchFiles.firstOrNull {
@@ -72,37 +73,21 @@ object PatchFileResolver {
                 val asset = targetRelease.findPatchAsset()
                     ?: throw IllegalArgumentException("No .mpp file found in release ${targetRelease.tagName}")
 
-                // Disk-cache check (same layout as before: {cacheDir}/download/{owner}-{repo}/).
-                val versionNumber = targetRelease.tagName.removePrefix("v")
-                val repoCacheDir =
-                    cacheDir.resolve("download").resolve(parsed.repoPath.replace("/", "-"))
+                // Shared on-disk cache (via PatchCache): the same directory and tag-prefixed filename
+                // the GUI uses, so a .mpp downloaded by either side is reused by the other.
+                // Layout: morphe-data/patches/<owner>-<repo>/<tag>__<asset>.mpp
+                val repoCacheDir = PatchCache.sourceDir(parsed.repoPath)
+                val targetFile = File(repoCacheDir, PatchCache.cachedFileName(targetRelease, asset))
 
-                val cachedFile = repoCacheDir.listFiles()?.find {
-                    it.name.endsWith(".mpp") && it.name.contains(versionNumber)
-                }
-
-                val resolvedFile = if (cachedFile != null) {
-                    val rel = cachedFile.relativeTo(cacheDir.parentFile).path
-                    logger.info("Using cached patch file at $rel")
-
-                    cachedFile
-                } else {
-                    // Different version cached -> wipe it before downloading (matches the existing behavior)
-                    repoCacheDir.listFiles()
-                        ?.filter { it.name.endsWith(".mpp") }
-                        ?.forEach{ it.delete() }
-                    repoCacheDir.mkdirs()
-
-                    val targetFile = File(repoCacheDir, asset.name)
-                    logger.info("Downloading patches from ${parsed.repoPath} $versionNumber...")
-
-                    source.downloadAsset(asset, targetFile).getOrThrow()
-
-                    val rel = targetFile.relativeTo(cacheDir.parentFile).path
-                    logger.info("Patches mpp saved to $rel. This file will be used on your next run as long as it is not deleted!")
-
+                val resolvedFile = if (targetFile.exists() && targetFile.length() > 0L) {
+                    logger.info("Using cached patch file at ${targetFile.absolutePath}")
                     targetFile
-            }
+                } else {
+                    logger.info("Downloading patches from ${parsed.repoPath} ${targetRelease.tagName}...")
+                    source.downloadAsset(asset, targetFile).getOrThrow()
+                    logger.info("Patches mpp saved to ${targetFile.absolutePath}. This file will be used on your next run as long as it is not deleted!")
+                    targetFile
+                }
                 patchFiles - urlEntry + resolvedFile
             } catch (e: Exception) {
                 throw IllegalArgumentException("Failed to download patches from URL: ${e.message}")

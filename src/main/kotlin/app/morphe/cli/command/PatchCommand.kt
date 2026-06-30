@@ -237,12 +237,13 @@ internal object PatchCommand : Callable<Int> {
     private var aaptBinaryPath: File? = null
 
     @CommandLine.Option(
-        names = ["--purge"],
-        description = ["Delete THIS run's scratch files after patching. " +
-            "Does not affect cached patches, other sessions, or config."],
+        names = ["--disable-purge"],
+        description = ["Keep THIS run's scratch files instead of deleting them after patching. " +
+            "By default the scratch files are purged once patching finishes; this keeps them " +
+            "(e.g. for debugging a failed patch). Does not affect cached patches, other sessions, or config."],
         showDefaultValue = ALWAYS,
     )
-    private var purge: Boolean = false
+    private var disablePurge: Boolean = false
 
     @CommandLine.Parameters(
         description = ["APK file to patch."],
@@ -511,7 +512,6 @@ internal object PatchCommand : Callable<Int> {
                 val resolved = PatchFileResolver.resolve(
                     setOf(bundle.patchesFile),
                     prerelease,
-                    temporaryFilesPath,
                     CliHttpClient.instance
                 )
                 bundle.patchesFile = resolved.single()
@@ -524,7 +524,7 @@ internal object PatchCommand : Callable<Int> {
         }
 
         // Per-session scratch dir. Hoisted out of the patching `try` block so
-        // the `finally` block can reference it for --purge scope (Phase 6).
+        // the `finally` block can reference it for the auto-purge (unless --disable-purge).
         // Naming matches the GUI's FileUtils.createPatchingTempDir() so the
         // tmp/ folder shows consistent siblings across CLI + GUI sessions.
         val patcherTemporaryFilesPath =
@@ -617,7 +617,7 @@ internal object PatchCommand : Callable<Int> {
             // endregion
 
             // (patcherTemporaryFilesPath is declared above the outer try
-            // block so it's visible to --purge in the finally clause.)
+            // block so it's visible to the auto-purge in the finally clause.)
 
             // We need to check for apkm (like reddit), xapk and apks formats here
 
@@ -976,7 +976,7 @@ internal object PatchCommand : Callable<Int> {
                 }
             }
 
-            if (purge) {
+            if (!disablePurge) {
                 // Scope: only THIS session's tmp subfolder. Cached patches,
                 // logs, config, and other in-flight sessions (CLI or GUI) are
                 // never touched.

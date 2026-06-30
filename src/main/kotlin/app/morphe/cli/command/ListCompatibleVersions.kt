@@ -6,7 +6,6 @@
 package app.morphe.cli.command
 
 import app.morphe.engine.CompatibleVersionsMap
-import app.morphe.engine.MorpheData
 import app.morphe.engine.VersionMap
 import app.morphe.engine.mostCommonCompatibleVersions
 import app.morphe.patcher.patch.loadPatchesFromJar
@@ -68,12 +67,6 @@ internal class ListCompatibleVersions : Runnable {
     )
     private var includeExperimental: Boolean = false
 
-    @Option(
-        names = ["-t", "--temporary-files-path"],
-        description = ["Path to store temporary files."],
-    )
-    private var temporaryFilesPath: File? = null
-
     @Spec
     private lateinit var spec: CommandSpec
 
@@ -96,13 +89,10 @@ internal class ListCompatibleVersions : Runnable {
                 appendLine(versions.buildVersionsString().prependIndent("\t"))
             }
 
-        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
-
         try {
             patchesFiles = PatchFileResolver.resolve(
                 patchesFiles,
                 prerelease,
-                temporaryFilesPath,
                 CliHttpClient.instance
             )
         } catch (e: IllegalArgumentException) {
