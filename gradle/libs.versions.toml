@@ -27,7 +27,7 @@ coroutines = "1.10.2"
 kotlinx-serialization = "1.11.0"
 
 # JNA (Windows DWM title bar tinting)
-jna = "5.18.1"
+jna = "5.19.1"
 
 # Testing
 mockk = "1.14.11"
