@@ -1,6 +1,6 @@
 [versions]
 # Core
-junit = "6.0.3"
+junit = "6.1.1"
 kotlin = "2.3.21"
 
 # CLI
