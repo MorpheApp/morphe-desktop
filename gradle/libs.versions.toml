@@ -20,7 +20,7 @@ ktor = "3.5.0"
 koin-bom = "4.2.1"
 
 # Navigation
-voyager = "1.1.0-beta03"
+voyager = "2.2.21-1.10.3"
 
 # Async / Serialization
 coroutines = "1.10.2"
