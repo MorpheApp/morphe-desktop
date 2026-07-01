@@ -36,7 +36,7 @@ mockk = "1.14.11"
 slf4j = "2.0.18"
 
 # Libraries
-about-libraries = "14.1.0"
+about-libraries = "15.0.3"
 
 [libraries]
 # Morphe Core
