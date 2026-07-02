@@ -1,3 +1,10 @@
+# [1.10.0-dev.9](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.8...v1.10.0-dev.9) (2026-07-02)
+
+
+### Features
+
+* cli ignores unknown keys (fix) + unify CLI/GUI patch cache + add clear-cache + make purge opt-out ([#192](https://github.com/MorpheApp/morphe-cli/issues/192)) ([70d16f0](https://github.com/MorpheApp/morphe-cli/commit/70d16f0e105f6362ee45e5e600c9ded01ab6c09e))
+
 # [1.10.0-dev.8](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.7...v1.10.0-dev.8) (2026-07-02)
 
 
