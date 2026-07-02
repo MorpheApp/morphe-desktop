@@ -24,6 +24,7 @@ import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheColors
+import app.morphe.engine.CacheManager
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
 import java.awt.Desktop
@@ -260,27 +261,11 @@ private fun calculateCacheSize(): String {
 }
 
 private fun clearAllCache(): Boolean {
-    return try {
-        var failedCount = 0
-        FileUtils.getPatchesDir().listFiles()?.forEach { file ->
-            try { if (!file.deleteRecursively()) throw Exception("Could not delete") }
-            catch (e: Exception) { failedCount++; Logger.error("Failed to delete ${file.name}: ${e.message}") }
-        }
-        FileUtils.getLogsDir().listFiles()?.forEach { file ->
-            try { if (!file.deleteRecursively()) throw Exception("Could not delete") }
-            catch (e: Exception) { failedCount++; Logger.error("Failed to delete log ${file.name}: ${e.message}") }
-        }
-
-        FileUtils.cleanupAllTempDirs()
-        if (failedCount > 0) {
-            Logger.error("Cache clear incomplete: $failedCount file(s) could not be deleted (may be locked)")
-            false
-        } else {
-            Logger.info("Cache cleared successfully")
-            true
-        }
-    } catch (e: Exception) {
-        Logger.error("Failed to clear cache", e)
-        false
+    val result = CacheManager.clearCaches()
+    if (result.success) {
+        Logger.info("Cache cleared successfully (${result.bytesFreed} bytes freed)")
+    } else {
+        Logger.error("Cache clear incomplete: ${result.failedFiles} file(s) could not be deleted (may be locked)")
     }
+    return result.success
 }

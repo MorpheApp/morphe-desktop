@@ -8,7 +8,6 @@
 
 package app.morphe.cli.command
 
-import app.morphe.engine.MorpheData
 import app.morphe.engine.compatibleVersionsForDisplay
 import app.morphe.engine.isCompatibleWith
 import app.morphe.patcher.patch.Patch
@@ -62,12 +61,6 @@ internal object ListPatchesCommand : Runnable {
         showDefaultValue = ALWAYS,
     )
     private var withDescriptions: Boolean = true
-
-    @Option(
-        names = ["-t", "--temporary-files-path"],
-        description = ["Path to store temporary files."],
-    )
-    private var temporaryFilesPath: File? = null
 
     @Option(
         names = ["-p", "--with-packages"],
@@ -190,13 +183,10 @@ internal object ListPatchesCommand : Runnable {
             )
 
 
-        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
-
         try {
             patchesFiles = PatchFileResolver.resolve(
                 patchesFiles,
                 prerelease,
-                temporaryFilesPath,
                 CliHttpClient.instance
             )
         } catch (e: IllegalArgumentException) {
