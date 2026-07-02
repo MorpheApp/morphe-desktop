@@ -76,7 +76,8 @@ fun Patch<*>.supportedVersionsFor(packageName: String): List<String>? {
             val hasUniversalEntry = compat.any { it.packageName == null }
             return if (hasUniversalEntry) null else emptyList()
         }
-        return matching.flatMap { entry -> entry.targets.mapNotNull { it.version } }
+        val versions = matching.flatMap { entry -> entry.targets.mapNotNull { it.version } }
+        return versions.ifEmpty { null }
     }
 
     val legacyPackages = compatiblePackages ?: return null
