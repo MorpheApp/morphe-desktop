@@ -52,11 +52,23 @@ interface RemotePatchSource {
      *   - Sending appropriate Accept / auth headers
      *   - Failing if the response body is empty (zero-byte downloads are
      *     never valid patch files)
+     *   - Streaming the response directly to [targetFile] — large (100MB+)
+     *     assets must never be buffered fully in memory
+     *   - Removing [targetFile] if the download is interrupted or fails, so
+     *     a partial file is never mistaken for a complete one
      *
      * Implementations are NOT responsible for cache-hit checks — the caller
      * should look at [targetFile] before calling this if it wants caching.
+     *
+     * [onProgress], when provided, is called with (bytesDownloaded, totalBytes?)
+     * as the download streams in. Optional and defaults to no-op so existing
+     * callers are unaffected.
      */
-    suspend fun downloadAsset(asset: ReleaseAsset, targetFile: File): Result<File>
+    suspend fun downloadAsset(
+        asset: ReleaseAsset,
+        targetFile: File,
+        onProgress: ((bytesRead: Long, totalBytes: Long?) -> Unit)? = null,
+    ): Result<File>
 }
 
 /**

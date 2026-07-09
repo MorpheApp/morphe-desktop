@@ -5,7 +5,7 @@
 
 package app.morphe.engine.patches
 
-import io.ktor.client.HttpClient
+import app.morphe.engine.network.HttpService
 
 /**
  * Centralized URL parsing + provider detection for remote patch sources.
@@ -31,7 +31,7 @@ object RemotePatchSourceFactory {
      *
      * Use [instantiate] to turn the descriptor into a working [RemotePatchSource].
      * Splitting parse from instantiation lets callers validate URLs in
-     * dialogs without needing an HttpClient handy.
+     * dialogs without needing an [HttpService] handy.
      */
     fun parse(input: String): Parsed? {
         val trimmed = input.trim()
@@ -70,16 +70,16 @@ object RemotePatchSourceFactory {
     /**
      * Convenience: parse and instantiate in one shot.
      */
-    fun from(input: String, httpClient: HttpClient): RemotePatchSource? =
-        parse(input)?.instantiate(httpClient)
+    fun from(input: String, http: HttpService): RemotePatchSource? =
+        parse(input)?.instantiate(http)
 
     /**
      * Build a source for a known provider + repoPath, skipping URL parsing.
      * Used by callers that already have the canonical pieces in hand (e.g.
      * the GUI's PatchSourceManager loading a previously-saved source).
      */
-    fun build(provider: PatchProvider, repoPath: String, httpClient: HttpClient): RemotePatchSource =
-        Parsed(provider, repoPath).instantiate(httpClient)
+    fun build(provider: PatchProvider, repoPath: String, http: HttpService): RemotePatchSource =
+        Parsed(provider, repoPath).instantiate(http)
 
     private fun buildParsed(rawPath: String, provider: PatchProvider): Parsed? {
         val clean = rawPath.trimEnd('/').removeSuffix(".git")
@@ -103,9 +103,9 @@ object RemotePatchSourceFactory {
                 PatchProvider.GITLAB -> "https://gitlab.com/$repoPath"
             }
 
-        fun instantiate(httpClient: HttpClient): RemotePatchSource = when (provider) {
-            PatchProvider.GITHUB -> GitHubPatchSource(httpClient, repoPath)
-            PatchProvider.GITLAB -> GitLabPatchSource(httpClient, repoPath)
+        fun instantiate(http: HttpService): RemotePatchSource = when (provider) {
+            PatchProvider.GITHUB -> GitHubPatchSource(http, repoPath)
+            PatchProvider.GITLAB -> GitLabPatchSource(http, repoPath)
         }
     }
 }

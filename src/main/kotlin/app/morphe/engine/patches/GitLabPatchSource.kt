@@ -7,13 +7,9 @@ package app.morphe.engine.patches
 
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.head
+import app.morphe.engine.network.HttpService
 import io.ktor.client.request.headers
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
-import io.ktor.client.statement.readRawBytes
+import io.ktor.client.request.url
 import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.Dispatchers
@@ -44,9 +40,14 @@ import java.util.logging.Logger
  *   - No size or content_type in the release payload — we resolve sizes
  *     via parallel HEAD requests against the .mpp assets we care about,
  *     so the UI can show real megabytes
+ *
+ * This class owns only release parsing + asset selection concerns; all
+ * HTTP mechanics (streaming, retries, timeouts, cleanup) live in
+ * [HttpService]. The hand-rolled JSON normalization below is unchanged
+ * from before — only how the response bytes/text are fetched changed.
  */
 class GitLabPatchSource(
-    private val httpClient: HttpClient,
+    private val http: HttpService,
     override val repoPath: String,
 ) : RemotePatchSource {
 
@@ -63,17 +64,11 @@ class GitLabPatchSource(
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {
         try {
             logger.info("GitLab: fetching releases from $releasesEndpoint")
-            val response: HttpResponse = httpClient.get(releasesEndpoint) {
+            val raw = http.getText(releasesEndpoint) {
                 headers {
                     append(HttpHeaders.Accept, "application/json")
                 }
             }
-            if (!response.status.isSuccess()) {
-                return@withContext Result.failure(
-                    Exception("GitLab releases fetch failed: HTTP ${response.status}")
-                )
-            }
-            val raw = response.bodyAsText()
             val releases = parseReleases(raw)
             logger.info("GitLab: fetched ${releases.size} releases from $repoPath")
             Result.success(releases)
@@ -86,31 +81,41 @@ class GitLabPatchSource(
     override suspend fun downloadAsset(
         asset: ReleaseAsset,
         targetFile: File,
+        onProgress: ((bytesRead: Long, totalBytes: Long?) -> Unit)?,
     ): Result<File> = withContext(Dispatchers.IO) {
         try {
             logger.info("GitLab: downloading ${asset.name} from ${asset.downloadUrl}")
-            val response: HttpResponse = httpClient.get(asset.downloadUrl) {
-                headers {
-                    append(HttpHeaders.Accept, "application/octet-stream")
-                }
-            }
-            if (!response.status.isSuccess()) {
-                return@withContext Result.failure(
-                    Exception("Download failed: HTTP ${response.status} from ${asset.downloadUrl}")
-                )
-            }
-            val bytes = response.readRawBytes()
-            if (bytes.isEmpty()) {
+            targetFile.parentFile?.mkdirs()
+
+            // Streams straight to disk (never buffers the whole asset in
+            // memory) and automatically parallelizes large downloads —
+            // this is what makes 100MB+ patch bundles reliable.
+            http.downloadToFile(
+                saveLocation = targetFile,
+                builder = {
+                    url(asset.downloadUrl)
+                    headers {
+                        append(HttpHeaders.Accept, "application/octet-stream")
+                    }
+                },
+                onProgress = onProgress
+            )
+
+            if (!targetFile.exists() || targetFile.length() == 0L) {
+                targetFile.delete()
                 return@withContext Result.failure(
                     Exception("Download returned 0 bytes from ${asset.downloadUrl}")
                 )
             }
-            targetFile.parentFile?.mkdirs()
-            targetFile.writeBytes(bytes)
-            logger.info("GitLab: wrote ${bytes.size} bytes to ${targetFile.absolutePath}")
+
+            logger.info("GitLab: wrote ${targetFile.length()} bytes to ${targetFile.absolutePath}")
             Result.success(targetFile)
         } catch (e: Exception) {
-            if (targetFile.exists() && targetFile.length() == 0L) targetFile.delete()
+            // Never leave a partial/corrupt file behind on failure or
+            // interruption — targetFile is always this download's own
+            // destination, never a pre-existing valid cache entry (callers
+            // check the cache before invoking downloadAsset).
+            runCatching { targetFile.delete() }
             Result.failure(e)
         }
     }
@@ -197,7 +202,7 @@ class GitLabPatchSource(
      */
     private suspend fun resolveContentLength(url: String): Long {
         return try {
-            val response: HttpResponse = httpClient.head(url)
+            val response = http.head(url)
             if (!response.status.isSuccess()) {
                 logger.fine("HEAD $url returned ${response.status}")
                 return 0L

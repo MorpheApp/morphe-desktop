@@ -7,14 +7,10 @@ package app.morphe.engine.patches
 
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import app.morphe.engine.network.HttpService
 import io.ktor.client.request.headers
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.readRawBytes
+import io.ktor.client.request.url
 import io.ktor.http.HttpHeaders
-import io.ktor.http.isSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -25,10 +21,16 @@ import java.util.logging.Logger
  *
  * GitHub's release JSON matches our [Release] model directly (the SerialName
  * annotations align with GitHub's field names), so deserialization is a
- * straight `response.body()` via Ktor content negotiation.
+ * straight decode via [HttpService.request] — same ContentNegotiation-based
+ * decoding path as before, just with retry and richer error propagation
+ * layered on top by [HttpService].
+ *
+ * This class owns only release parsing + asset selection concerns; all
+ * HTTP mechanics (streaming, retries, timeouts, cleanup) live in
+ * [HttpService].
  */
 class GitHubPatchSource(
-    private val httpClient: HttpClient,
+    private val http: HttpService,
     override val repoPath: String,
 ) : RemotePatchSource {
 
@@ -40,18 +42,12 @@ class GitHubPatchSource(
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {
         try {
             logger.info("GitHub: fetching releases from $releasesEndpoint")
-            val response: HttpResponse = httpClient.get(releasesEndpoint) {
+            val releases: List<Release> = http.request(releasesEndpoint) {
                 headers {
                     append(HttpHeaders.Accept, "application/vnd.github+json")
                     append("X-GitHub-Api-Version", "2022-11-28")
                 }
             }
-            if (!response.status.isSuccess()) {
-                return@withContext Result.failure(
-                    Exception("GitHub releases fetch failed: HTTP ${response.status}")
-                )
-            }
-            val releases: List<Release> = response.body()
             logger.info("GitHub: fetched ${releases.size} releases from $repoPath")
             Result.success(releases)
         } catch (e: Exception) {
@@ -63,32 +59,41 @@ class GitHubPatchSource(
     override suspend fun downloadAsset(
         asset: ReleaseAsset,
         targetFile: File,
+        onProgress: ((bytesRead: Long, totalBytes: Long?) -> Unit)?,
     ): Result<File> = withContext(Dispatchers.IO) {
         try {
             logger.info("GitHub: downloading ${asset.name} from ${asset.downloadUrl}")
-            val response: HttpResponse = httpClient.get(asset.downloadUrl) {
-                headers {
-                    append(HttpHeaders.Accept, "application/octet-stream")
-                }
-            }
-            if (!response.status.isSuccess()) {
-                return@withContext Result.failure(
-                    Exception("Download failed: HTTP ${response.status} from ${asset.downloadUrl}")
-                )
-            }
-            val bytes = response.readRawBytes()
-            if (bytes.isEmpty()) {
+            targetFile.parentFile?.mkdirs()
+
+            // Streams straight to disk (never buffers the whole asset in
+            // memory) and automatically parallelizes large downloads —
+            // this is what makes 100MB+ patch bundles reliable.
+            http.downloadToFile(
+                saveLocation = targetFile,
+                builder = {
+                    url(asset.downloadUrl)
+                    headers {
+                        append(HttpHeaders.Accept, "application/octet-stream")
+                    }
+                },
+                onProgress = onProgress
+            )
+
+            if (!targetFile.exists() || targetFile.length() == 0L) {
+                targetFile.delete()
                 return@withContext Result.failure(
                     Exception("Download returned 0 bytes from ${asset.downloadUrl}")
                 )
             }
-            targetFile.parentFile?.mkdirs()
-            targetFile.writeBytes(bytes)
-            logger.info("GitHub: wrote ${bytes.size} bytes to ${targetFile.absolutePath}")
+
+            logger.info("GitHub: wrote ${targetFile.length()} bytes to ${targetFile.absolutePath}")
             Result.success(targetFile)
         } catch (e: Exception) {
-            // Don't leave a partial file behind
-            if (targetFile.exists() && targetFile.length() == 0L) targetFile.delete()
+            // Never leave a partial/corrupt file behind on failure or
+            // interruption — targetFile is always this download's own
+            // destination, never a pre-existing valid cache entry (callers
+            // check the cache before invoking downloadAsset).
+            runCatching { targetFile.delete() }
             Result.failure(e)
         }
     }

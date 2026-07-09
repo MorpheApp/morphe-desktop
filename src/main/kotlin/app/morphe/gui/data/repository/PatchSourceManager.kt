@@ -10,7 +10,7 @@ import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.util.Logger
-import io.ktor.client.*
+import app.morphe.engine.network.HttpService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +27,7 @@ enum class ActiveMode { QUICK, EXPERT }
  * Emits [sourceVersion] whenever the active source changes so the UI can react.
  */
 class PatchSourceManager(
-    private val httpClient: HttpClient,
+    private val httpClient: HttpService,
     private val configRepository: ConfigRepository
 ) {
     private val repositories = mutableMapOf<String, PatchRepository>()
