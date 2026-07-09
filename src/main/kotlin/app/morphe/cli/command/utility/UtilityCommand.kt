@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 Morphe.
+ * https://github.com/MorpheApp/morphe-cli
+ */
+
 package app.morphe.cli.command.utility
 
 import picocli.CommandLine
@@ -5,6 +10,6 @@ import picocli.CommandLine
 @CommandLine.Command(
     name = "utility",
     description = ["Commands for utility purposes."],
-    subcommands = [InstallCommand::class, UninstallCommand::class],
+    subcommands = [InstallCommand::class, UninstallCommand::class, ClearCacheCommand::class],
 )
 internal object UtilityCommand

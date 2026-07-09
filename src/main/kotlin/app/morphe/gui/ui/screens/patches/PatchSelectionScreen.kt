@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 Morphe.
+ * https://github.com/MorpheApp/morphe-cli
+ */
+
 package app.morphe.gui.ui.screens.patches
 
 import androidx.compose.animation.AnimatedVisibility
@@ -58,6 +63,7 @@ import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.DeviceIndicator
 import app.morphe.gui.ui.components.MorpheSwitch
 import app.morphe.gui.ui.components.SettingsButton
+import app.morphe.gui.ui.components.ToolsButton
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.components.getErrorType
 import app.morphe.gui.ui.components.getFriendlyErrorMessage
@@ -91,13 +97,21 @@ data class PatchSelectionScreen(
     /** Parallel to [patchesFilePaths] — display name per source. Drives badging
      *  in the patch list. Empty disables badging (legacy single-source). */
     val patchSourceNames: List<String> = emptyList(),
+    /** One-click repatch seed (source/bundle name → patch uniqueIds). Empty =
+     *  normal flow. Set when entering from a "Your apps" / patched-row Repatch. */
+    val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
+    /** One-click repatch option seed ("patchName.optionKey" → value). */
+    val initialPatchOptions: Map<String, String> = emptyMap(),
 ) : Screen {
 
     @Composable
     override fun Content() {
         val effectiveList = patchesFilePaths.takeIf { it.isNotEmpty() } ?: listOf(patchesFilePath)
         val viewModel = koinScreenModel<PatchSelectionViewModel> {
-            parametersOf(apkPath, apkName, patchesFilePath, packageName, apkArchitectures, effectiveList, patchSourceNames)
+            parametersOf(
+                apkPath, apkName, patchesFilePath, packageName, apkArchitectures,
+                effectiveList, patchSourceNames, initialSelectionByBundle, initialPatchOptions,
+            )
         }
         PatchSelectionScreenContent(viewModel = viewModel)
     }
@@ -322,8 +336,9 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
 
             DeviceIndicator()
             Spacer(modifier = Modifier.width(6.dp))
+            ToolsButton(allowCacheClear = false)
+            Spacer(modifier = Modifier.width(6.dp))
             SettingsButton(
-                allowCacheClear = false,
                 onDismiss = { viewModel.refreshStripLibsStatus() }
             )
         }

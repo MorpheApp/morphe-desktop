@@ -25,6 +25,8 @@ import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
@@ -63,6 +65,11 @@ class PatchSelectionViewModel(
     /** Parallel to [patchesFilePaths] — display name of each source. Used as the
      *  per-bundle label AND persistence key. */
     private val patchSourceNames: List<String> = emptyList(),
+    /** One-click repatch seed: source/bundle name → set of patch uniqueIds to
+     *  pre-select. Empty = normal flow (saved prefs / .mpp defaults). */
+    private val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
+    /** One-click repatch seed: "patchName.optionKey" → option value. */
+    private val initialPatchOptions: Map<String, String> = emptyMap(),
 ) : ScreenModel {
 
     // Actual path to use for the primary file — may differ from patchesFilePath
@@ -93,8 +100,18 @@ class PatchSelectionViewModel(
             // Store the resolved absolute path so the lookup at line ~487 can
             // pass it straight into File(...) without re-resolving.
             defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
+            // Architectures arrive empty from a repatch/update (the caller didn't
+            // pre-analyze the APK) — derive them from the APK itself so the strip-libs
+            // option isn't lost. Also correct for an Update's freshly-downloaded APK.
+            val arches = apkArchitectures.ifEmpty {
+                withContext(Dispatchers.IO) {
+                    runCatching { app.morphe.gui.util.FileUtils.extractArchitectures(File(apkPath)) }
+                        .getOrDefault(emptyList())
+                }
+            }
             _uiState.value = _uiState.value.copy(
-                stripLibsStatus = computeStripLibsStatus(apkArchitectures, config.keepArchitectures)
+                apkArchitectures = arches,
+                stripLibsStatus = computeStripLibsStatus(arches, config.keepArchitectures),
             )
         }
     }
@@ -151,24 +168,40 @@ class PatchSelectionViewModel(
                     val savedByBundle = mutableMapOf<String, Set<String>>()
                     val initialOptions = mutableMapOf<String, String>()
                     var anyBundleHasSaved = false
-                    for (bundle in bundles) {
-                        val saved = preferencesRepository.get(bundle.bundleName, packageName)
-                        if (saved != null) {
-                            anyBundleHasSaved = true
-                            val byName = bundle.patches.associateBy { it.name }
-                            val selected = saved.patches
-                                .filter { (_, entry) -> entry.enabled }
-                                .keys
-                                .mapNotNull { byName[it]?.uniqueId }
-                                .toSet()
-                            savedByBundle[bundle.bundleId] = selected
-                            // Materialize saved option values ("patchName.optionKey" → string).
-                            // Options are per-patch-name so they're naturally global here;
-                            // identical patches in two bundles share option values, which
-                            // is fine — same option means same thing.
-                            for ((patchName, entry) in saved.patches) {
-                                for ((optKey, jsonValue) in entry.options) {
-                                    initialOptions["$patchName.$optKey"] = jsonValue.toString().trim('"')
+
+                    if (initialSelectionByBundle.isNotEmpty()) {
+                        // One-click repatch: seed selection + options from the
+                        // PatchedAppRecord (keyed by source/bundle name). Takes
+                        // precedence over saved prefs; keep only ids that still
+                        // exist in the current (possibly newer) bundle.
+                        anyBundleHasSaved = true
+                        for (bundle in bundles) {
+                            val seed = initialSelectionByBundle[bundle.bundleName] ?: continue
+                            val validIds = bundle.patches.mapTo(mutableSetOf()) { it.uniqueId }
+                            savedByBundle[bundle.bundleId] = seed.intersect(validIds)
+                        }
+                        initialOptions.putAll(initialPatchOptions)
+                        Logger.info("Repatch: seeded selection for $packageName from record")
+                    } else {
+                        for (bundle in bundles) {
+                            val saved = preferencesRepository.get(bundle.bundleName, packageName)
+                            if (saved != null) {
+                                anyBundleHasSaved = true
+                                val byName = bundle.patches.associateBy { it.name }
+                                val selected = saved.patches
+                                    .filter { (_, entry) -> entry.enabled }
+                                    .keys
+                                    .mapNotNull { byName[it]?.uniqueId }
+                                    .toSet()
+                                savedByBundle[bundle.bundleId] = selected
+                                // Materialize saved option values ("patchName.optionKey" → string).
+                                // Options are per-patch-name so they're naturally global here;
+                                // identical patches in two bundles share option values, which
+                                // is fine — same option means same thing.
+                                for ((patchName, entry) in saved.patches) {
+                                    for ((optKey, jsonValue) in entry.options) {
+                                        initialOptions["$patchName.$optKey"] = jsonValue.toString().trim('"')
+                                    }
                                 }
                             }
                         }
@@ -227,7 +260,7 @@ class PatchSelectionViewModel(
             BundlePatches(
                 bundleId = "bundle-$idx-${File(path).nameWithoutExtension}",
                 bundleName = displayName,
-                patches = patches,
+                patches = patches.sortedBy { it.name.lowercase() },
             )
         }
 
@@ -501,6 +534,21 @@ class PatchSelectionViewModel(
             ?.toSet()
             ?: emptySet()
 
+        // Recall metadata: capture per-bundle selection and the source+version
+        // snapshot so the patching success path can record a PatchedAppRecord.
+        val state = _uiState.value
+        val selectionByBundle = state.bundles.associate { bundle ->
+            bundle.bundleName to state.selectedByBundle[bundle.bundleId].orEmpty()
+        }
+        val sourcesSnapshot = actualPatchesFilePaths.mapIndexed { i, path ->
+            val name = patchSourceNames.getOrNull(i) ?: File(path).nameWithoutExtension
+            app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot(
+                sourceId = name,
+                sourceName = name,
+                version = extractPatchesVersion(File(path).name) ?: "unknown",
+            )
+        }
+
         return PatchConfig(
             inputApkPath = apkPath,
             outputApkPath = outputPath,
@@ -511,6 +559,10 @@ class PatchSelectionViewModel(
             useExclusiveMode = true,
             keepArchitectures = keepArches,
             continueOnError = continueOnError,
+            packageName = packageName,
+            appDisplayName = apkName,
+            patchSelectionByBundle = selectionByBundle,
+            sourcesSnapshot = sourcesSnapshot,
         )
     }
 

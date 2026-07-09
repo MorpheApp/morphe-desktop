@@ -8,8 +8,8 @@
 
 package app.morphe.cli.command
 
-import app.morphe.engine.MorpheData
-import app.morphe.patcher.patch.Package
+import app.morphe.engine.compatibleVersionsForDisplay
+import app.morphe.engine.isCompatibleWith
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.loadPatchesFromJar
 import picocli.CommandLine
@@ -63,12 +63,6 @@ internal object ListPatchesCommand : Runnable {
     private var withDescriptions: Boolean = true
 
     @Option(
-        names = ["-t", "--temporary-files-path"],
-        description = ["Path to store temporary files."],
-    )
-    private var temporaryFilesPath: File? = null
-
-    @Option(
         names = ["-p", "--with-packages"],
         description = ["List the packages the patches are compatible with."],
         showDefaultValue = ALWAYS,
@@ -109,24 +103,17 @@ internal object ListPatchesCommand : Runnable {
     )
     private var packageName: String? = null
 
+    @Option(
+        names = ["-x", "--include-experimental"],
+        description = ["Include experimental app versions in the output."],
+        showDefaultValue = ALWAYS,
+    )
+    private var includeExperimental: Boolean = false
+
     @Spec
     private lateinit var spec: CommandSpec
 
     override fun run() {
-        fun Package.buildString(): String {
-            val (name, versions) = this
-
-            return buildString {
-                if (withVersions && versions != null) {
-                    appendLine("Package name: $name")
-                    appendLine("Compatible versions:")
-                    append(versions.joinToString("\n") { version -> version }.prependIndent("\t"))
-                } else {
-                    append("Package name: $name")
-                }
-            }
-        }
-
         fun PatchOption<*>.buildString() =
             buildString {
                 appendLine("Title: $title")
@@ -165,30 +152,41 @@ internal object ListPatchesCommand : Runnable {
                         )
                     }
 
-                    if (withPackages && patch.compatiblePackages != null) {
-                        appendLine("\nCompatible packages:")
-                        append(
-                            patch.compatiblePackages!!.joinToString("\n") {
-                                it.buildString()
-                            }.prependIndent("\t"),
-                        )
+                    if (withPackages) {
+                        val packages = patch.compatibleVersionsForDisplay(includeExperimental)
+                        if (packages.isNotEmpty()) {
+                            appendLine("\nCompatible packages:")
+                            append(
+                                packages.joinToString("\n") { (name, versions) ->
+                                    buildString {
+                                        val displayName = name ?: "(universal)"
+                                        if (withVersions && versions.isNotEmpty()) {
+                                            appendLine("Package name: $displayName")
+                                            appendLine("Compatible versions:")
+                                            append(versions.joinToString("\n").prependIndent("\t"))
+                                        } else {
+                                            append("Package name: $displayName")
+                                        }
+                                    }
+                                }.prependIndent("\t"),
+                            )
+                        }
                     }
                 }
             }
 
         fun Patch<*>.filterCompatiblePackages(name: String) =
-            compatiblePackages?.any { (compatiblePackageName, _) ->
-                compatiblePackageName == name
-            } ?: withUniversalPatches
+            isCompatibleWith(
+                packageName = name,
+                includeExperimental = includeExperimental,
+                includeUniversalPatches = withUniversalPatches,
+            )
 
-
-        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
         try {
             patchesFiles = PatchFileResolver.resolve(
                 patchesFiles,
                 prerelease,
-                temporaryFilesPath,
                 CliHttpClient.instance
             )
         } catch (e: IllegalArgumentException) {

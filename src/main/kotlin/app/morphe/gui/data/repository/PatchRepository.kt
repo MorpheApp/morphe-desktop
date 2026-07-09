@@ -7,9 +7,9 @@ package app.morphe.gui.data.repository
 
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
+import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.RemotePatchSource
 import app.morphe.engine.patches.findPatchAsset
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -55,7 +55,7 @@ class PatchRepository(
          * to eyeball when grepping the cache directory than a single dash.
          */
         fun cachedFileName(release: Release, asset: ReleaseAsset): String =
-            "${release.tagName}__${asset.name}"
+            PatchCache.cachedFileName(release, asset)
     }
 
     // In-memory cache so multiple callers don't re-fetch from the remote API
@@ -124,8 +124,7 @@ class PatchRepository(
                 Exception("No .mpp patch files found in release ${release.tagName}")
             )
 
-        val patchesDir = File(FileUtils.getPatchesDir(), repoPath.replace("/", "-"))
-        patchesDir.mkdirs()
+        val patchesDir = PatchCache.sourceDir(repoPath)
         val targetFile = File(patchesDir, cachedFileName(release, asset))
 
         // Cache hit rules:
@@ -163,7 +162,7 @@ class PatchRepository(
 
     /** Get cached patch file for a specific version. */
     fun getCachedPatches(version: String): File? {
-        val patchesDir = File(FileUtils.getPatchesDir(), repoPath.replace("/", "-"))
+        val patchesDir = PatchCache.sourceDir(repoPath)
         return patchesDir.listFiles()?.find {
             it.name.contains(version) && isPatchFileName(it.name)
         }
@@ -174,23 +173,19 @@ class PatchRepository(
 
     /** List all cached patch versions. */
     fun listCachedPatches(): List<File> {
-        val patchesDir = File(FileUtils.getPatchesDir(), repoPath.replace("/", "-"))
+        val patchesDir = PatchCache.sourceDir(repoPath)
         return patchesDir.listFiles()?.filter { isPatchFileName(it.name) } ?: emptyList()
     }
 
     /** Get the per-source cache directory for this repository. */
-    fun getCacheDir(): File {
-        val dir = File(FileUtils.getPatchesDir(), repoPath.replace("/", "-"))
-        dir.mkdirs()
-        return dir
-    }
+    fun getCacheDir(): File = PatchCache.sourceDir(repoPath)
 
     /** Delete cached patches (both in-memory release list and on-disk files). */
     fun clearCache(): Boolean {
         cachedReleases = null
         cacheTimestamp = 0L
         return try {
-            val patchesDir = File(FileUtils.getPatchesDir(), repoPath.replace("/", "-"))
+            val patchesDir = PatchCache.sourceDir(repoPath)
             var failedCount = 0
             patchesDir.listFiles()?.forEach { file ->
                 try {

@@ -25,24 +25,57 @@ val DEFAULT_PATCH_SOURCE = PatchSource(
     deletable = false
 )
 
+/**
+ * How a patch source decides which release to load.
+ *
+ * - [FOLLOW_STABLE]: ride the newest **stable** (non-pre-release) — auto-updates
+ *   as new stables ship. The default for an untouched source.
+ * - [FOLLOW_DEV]: ride the newest release **overall**, pre-releases included
+ *   ("bleeding edge"). When a dev is newest you get the dev; when a stable is the
+ *   newest thing out, you get that stable — without losing the dev track.
+ * - [PINNED]: stay frozen on one exact tag (chosen deliberately), ignoring newer
+ *   releases. The version lives in [SourceVersionPref.pinnedTag].
+ */
+@Serializable
+enum class FollowMode { FOLLOW_STABLE, FOLLOW_DEV, PINNED }
+
+/**
+ * A source's version preference: which release-tracking [mode], plus the exact
+ * tag when [mode] is [FollowMode.PINNED] (null otherwise).
+ */
+@Serializable
+data class SourceVersionPref(
+    val mode: FollowMode,
+    val pinnedTag: String? = null,
+)
+
 @Serializable
 data class AppConfig(
     val themePreference: String = ThemePreference.SYSTEM.name,
     val lastCliVersion: String? = null,
     /**
-     * LEGACY single-source version pin. Kept only for one-version migration into
-     * [lastPatchesVersionBySource] — read it on first load if the map is empty,
-     * then phase out. Do not read this directly anywhere new — go through
-     * [ConfigRepository.getLastPatchesVersionsBySource].
+     * LEGACY single-source version pin. Kept only so it can be migrated (via
+     * [lastPatchesVersionBySource]) into [sourceVersionPrefs]. Do not read directly
+     * anywhere new — go through [ConfigRepository.getSourceVersionPrefs].
      */
     val lastPatchesVersion: String? = null,
     /**
-     * Per-source version pin: sourceId → release tag. Absence of a key means
-     * "no pin — use that source's latest stable". Replaces the legacy single
-     * [lastPatchesVersion] which silently contaminated other sources whose tag
-     * names happened to overlap.
+     * LEGACY per-source version pin: sourceId → release tag. Superseded by
+     * [sourceVersionPrefs]; kept only so existing configs can migrate (every old
+     * tag becomes a follow-track based on whether it was a dev tag). Do not read
+     * directly — go through [ConfigRepository.getSourceVersionPrefs].
      */
     val lastPatchesVersionBySource: Map<String, String> = emptyMap(),
+    /**
+     * Per-source version preference: sourceId → [SourceVersionPref].
+     *
+     * Absence of a key = follow the source's latest stable (the default for a
+     * brand-new, untouched source). Otherwise the stored [SourceVersionPref]
+     * decides whether the source rides the latest stable, the latest overall
+     * (dev/bleeding-edge), or stays frozen on a specific tag. See
+     * [ConfigRepository.getSourceVersionPrefs] / [setSourceVersionPref].
+     */
+    val sourceVersionPrefs: Map<String, SourceVersionPref> = emptyMap(),
     val preferredPatchChannel: String = PatchChannel.STABLE.name,
     val defaultOutputDirectory: String? = null,
     val autoCleanupTempFiles: Boolean = true,  // Default ON
@@ -82,6 +115,17 @@ data class AppConfig(
     // When ON, DeviceMonitor polls devices; if Morphe was the one that started
     // the daemon, it's killed on toggle-OFF and on window close.
     val autoStartAdb: Boolean = false,
+    // Which home apps tab the user last viewed ("ALL" or "YOURS"), restored on
+    // next launch. Stored as a string so this data layer stays free of UI enums.
+    val homeAppListFilter: String = "ALL",
+    // After an ADB install, automatically route the patched app's web links to it
+    // ("open with"). Default OFF — it changes how the device opens links, so it's
+    // opt-in. See AppLinkCommands / AdbManager.setLinkHandling.
+    val autoRouteLinksAfterInstall: Boolean = false,
+    // When auto-routing links, also stop the stock app from opening those links
+    // (only applies when a rename patch was used and stock is installed). Default
+    // OFF — it reaches into a stock app's behavior.
+    val disableStockLinksAfterInstall: Boolean = false,
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {

@@ -1,7 +1,11 @@
+/*
+ * Copyright 2026 Morphe.
+ * https://github.com/MorpheApp/morphe-cli
+ */
+
 package app.morphe.cli.command
 
 import app.morphe.cli.command.model.PatchBundle
-import app.morphe.engine.MorpheData
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.cli.command.model.findMatchingBundle
@@ -59,12 +63,6 @@ internal object OptionsCommand : Callable<Int> {
     private var prerelease: Boolean = false
 
     @Option(
-        names = ["-t", "--temporary-files-path"],
-        description = ["Path to store temporary files."],
-    )
-    private var temporaryFilesPath: File? = null
-
-    @Option(
         names = ["-f", "--filter-package-name"],
         description = ["Filter patches by compatible package name."],
     )
@@ -73,15 +71,12 @@ internal object OptionsCommand : Callable<Int> {
     private val json = Json { prettyPrint = true }
 
     override fun call(): Int {
-        val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
-
         try {
             // Since we could have many URLs, we resolve each of them separately
             patchesFiles = patchesFiles.map { file ->
                 val resolved = PatchFileResolver.resolve(
                     setOf(file),
                     prerelease,
-                    temporaryFilesPath,
                     CliHttpClient.instance
                 )
                 resolved.single()

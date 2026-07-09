@@ -10,6 +10,7 @@ import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchPreferencesRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
+import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.util.PatchService
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
@@ -90,11 +91,12 @@ val appModule = module {
     single { PatchSourceManager(get(), get()) }
     single { PatchService() }
     single { UpdateCheckRepository(get()) }
+    single { PatchedAppStore.shared }
 
     // ViewModels (ScreenModels)
     // ViewModels observe PatchSourceManager.sourceVersion and reload on source changes.
     factory {
-        HomeViewModel(get(), get(), get(), get())
+        HomeViewModel(get(), get(), get(), get(), get())
     }
     factory { params ->
         val psm = get<PatchSourceManager>()
@@ -123,11 +125,14 @@ val appModule = module {
             psm.getLocalFilePath(),
             params.get(),
             params.get(),
+            params.get(),
+            params.get(),
         )
     }
     factory { params ->
         PatchingViewModel(
             params.get(),
+            get(),
             get(),
             get()
         )

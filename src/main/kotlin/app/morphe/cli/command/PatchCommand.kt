@@ -12,6 +12,7 @@ import app.morphe.cli.command.model.*
 import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.isWindows
+import app.morphe.engine.supportedVersionsFor
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
@@ -212,13 +213,13 @@ internal object PatchCommand : Callable<Int> {
         description = ["Alias of the private key and certificate pair keystore entry."],
         showDefaultValue = ALWAYS,
     )
-    private var keyStoreEntryAlias = PatchEngine.Config.DEFAULT_KEYSTORE_ALIAS
+    private var keyStoreEntryAlias = DEFAULT_KEYSTORE_ALIAS
 
     @CommandLine.Option(
         names = ["--keystore-entry-password"],
         description = ["Password of the keystore entry."],
     )
-    private var keyStoreEntryPassword = PatchEngine.Config.DEFAULT_KEYSTORE_PASSWORD
+    private var keyStoreEntryPassword = DEFAULT_KEYSTORE_PASSWORD
 
     @CommandLine.Option(
         names = ["--signer"],
@@ -233,15 +234,14 @@ internal object PatchCommand : Callable<Int> {
     )
     private var temporaryFilesPath: File? = null
 
-    private var aaptBinaryPath: File? = null
-
     @CommandLine.Option(
-        names = ["--purge"],
-        description = ["Delete THIS run's scratch files after patching. " +
-            "Does not affect cached patches, other sessions, or config."],
+        names = ["--disable-purge"],
+        description = ["Keep THIS run's scratch files instead of deleting them after patching. " +
+            "By default the scratch files are purged once patching finishes; this keeps them " +
+            "(e.g. for debugging a failed patch). Does not affect cached patches, other sessions, or config."],
         showDefaultValue = ALWAYS,
     )
-    private var purge: Boolean = false
+    private var disablePurge: Boolean = false
 
     @CommandLine.Parameters(
         description = ["APK file to patch."],
@@ -266,28 +266,6 @@ internal object PatchCommand : Callable<Int> {
         showDefaultValue = ALWAYS,
     )
     private var prerelease: Boolean = false
-
-    @CommandLine.Option(
-        names = ["--custom-aapt2-binary"],
-        description = ["apktool is deprecated. This parameter has no effect and will be removed in a future release."],
-    )
-    @Suppress("unused")
-    private fun setAaptBinaryPath(aaptBinaryPath: File) {
-        if (!aaptBinaryPath.exists()) {
-            throw CommandLine.ParameterException(
-                spec.commandLine(),
-                "AAPT binary ${aaptBinaryPath.name} does not exist",
-            )
-        }
-        this.aaptBinaryPath = aaptBinaryPath
-    }
-
-    @CommandLine.Option(
-        names = ["--force-apktool"],
-        description = ["apktool is deprecated. This parameter has no effect and will be removed in a future release."],
-        showDefaultValue = ALWAYS,
-    )
-    private var forceApktool: Boolean = false
 
     @CommandLine.Option(
         names = ["--unsigned"],
@@ -336,7 +314,7 @@ internal object PatchCommand : Callable<Int> {
 
     @CommandLine.Option(
         names = ["--verify-with-sdk"],
-        description = ["Verify the patched DEX and APK files using the provided Android SDK. If not specified, the patched files will not be verified."],
+        description = ["Verify the patched DEX and APK files using the provided Android SDK. If not specified, the patched files will not be verified. Verification may throw false positives and is for patch developer use only."],
         fallbackValue = "",
         arity = "0..1",
     )
@@ -432,7 +410,38 @@ internal object PatchCommand : Callable<Int> {
 
         val temporaryFilesPath = temporaryFilesPath ?: MorpheData.tmpDir
 
-        val keystoreFilePath = keyStoreFilePath ?: MorpheData.defaultKeystoreFile
+        // Resolve and possibly convert the keystore. The patcher only loads BKS,
+        // but users frequently pass PKCS12 (Android Studio default) or JKS (older
+        // projects, URV exports). KeystoreImporter sniffs by magic bytes (not
+        // extension — URV ships the same bytes under multiple suffixes), short-
+        // circuits when already BKS so existing setups are zero-risk, and writes
+        // converted bytes to a separate file so the user's source is never mutated.
+        val keystoreFilePath = run {
+            val source = keyStoreFilePath ?: return@run MorpheData.defaultKeystoreFile
+            if (!source.exists()) return@run source  // patcher will produce a clearer error
+            val importResult = app.morphe.engine.util.KeystoreImporter.ensureBks(
+                source = source,
+                convertedOutput = MorpheData.importedKeystoreFile,
+                alias = keyStoreEntryAlias,
+                password = keyStoreEntryPassword,
+            )
+            when (importResult) {
+                is app.morphe.engine.util.KeystoreImporter.Result.AlreadyBks -> importResult.file
+                is app.morphe.engine.util.KeystoreImporter.Result.Converted -> {
+                    logger.info(
+                        "Converted ${importResult.sourceFormat.displayName} keystore → BKS: ${importResult.file.absolutePath}"
+                    )
+                    importResult.file
+                }
+                is app.morphe.engine.util.KeystoreImporter.Result.Failed -> {
+                    logger.severe("Keystore conversion failed: ${importResult.reason}")
+                    importResult.cause?.let { logger.severe(it.stackTraceToString()) }
+                    throw IllegalArgumentException(
+                        "Could not use keystore '${source.absolutePath}': ${importResult.reason}"
+                    )
+                }
+            }
+        }
 
         val installer = if (deviceSerial != null) {
             val deviceSerial = deviceSerial!!.ifEmpty { null }
@@ -479,7 +488,6 @@ internal object PatchCommand : Callable<Int> {
                 val resolved = PatchFileResolver.resolve(
                     setOf(bundle.patchesFile),
                     prerelease,
-                    temporaryFilesPath,
                     CliHttpClient.instance
                 )
                 bundle.patchesFile = resolved.single()
@@ -492,7 +500,7 @@ internal object PatchCommand : Callable<Int> {
         }
 
         // Per-session scratch dir. Hoisted out of the patching `try` block so
-        // the `finally` block can reference it for --purge scope (Phase 6).
+        // the `finally` block can reference it for the auto-purge (unless --disable-purge).
         // Naming matches the GUI's FileUtils.createPatchingTempDir() so the
         // tmp/ folder shows consistent siblings across CLI + GUI sessions.
         val patcherTemporaryFilesPath =
@@ -585,11 +593,11 @@ internal object PatchCommand : Callable<Int> {
             // endregion
 
             // (patcherTemporaryFilesPath is declared above the outer try
-            // block so it's visible to --purge in the finally clause.)
+            // block so it's visible to the auto-purge in the finally clause.)
 
             // We need to check for apkm (like reddit), xapk and apks formats here
 
-            val inputApk = if (apk.extension.lowercase() in  setOf("apkm", "xapk", "apks")) {
+            val inputApk = if (app.morphe.engine.util.BundleFormats.isBundle(apk)) {
 
                 logger.info("Merging split APK bundle")
 
@@ -600,7 +608,7 @@ internal object PatchCommand : Callable<Int> {
                 ApkMerger(logger.toMorpheLogger()).merge(
                     inputFile = apk,
                     outputFile = outputApk,
-                    cleanMetaInf = true
+                    cleanMetaInf = false
                 )
 
                 mergedApkToCleanup = outputApk
@@ -614,15 +622,9 @@ internal object PatchCommand : Callable<Int> {
                 PatcherConfig(
                     inputApk,
                     patcherTemporaryFilesPath,
-                    aaptBinaryPath?.path,
-                    patcherTemporaryFilesPath.absolutePath,
-                    useArsclib = if (aaptBinaryPath != null) { false } else { !forceApktool },
+                    useArsclib = true,
                     keepArchitectures = keepArchitectures,
-                    /*
-                    TODO: Remove Windows override once the patcher ships its proper fix
-                     (reflection-based MappedByteBuffer release + copy-instead-of-rename for output DEX files).
-                     */
-                    useBytecodeMode = if (isWindows()) { BytecodeMode.FULL } else { bytecodeMode },
+                    useBytecodeMode = bytecodeMode,
                     verifier = verifier
                 ),
             ).use { patcher ->
@@ -642,8 +644,13 @@ internal object PatchCommand : Callable<Int> {
 
                         val compatiblePatchNames = bundlePatches
                             .filter { patch ->
-                                patch.compatiblePackages == null ||
-                                    patch.compatiblePackages!!.any { (name, _) -> name == packageName }
+                                val compat = patch.compatibility
+                                if (!compat.isNullOrEmpty()) {
+                                    compat.any { it.packageName == packageName || it.packageName == null }
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    patch.compatiblePackages == null || patch.compatiblePackages!!.any { (name, _) -> name == packageName }
+                                }
                             }
                             .mapNotNull { it.name?.lowercase() }
                             .toSet()
@@ -670,11 +677,15 @@ internal object PatchCommand : Callable<Int> {
 
                             // Compare against the live patch in this bundle (not the snapshot)
                             // so multi-app patches with the same name aren't merged together.
-                            val actualPatch = bundlePatches.find {
-                                it.name.equals(patchName, ignoreCase = true) &&
-                                    (it.compatiblePackages == null || it.compatiblePackages!!.any {
-                                        (name, _) -> name == packageName
-                                    })
+                            val actualPatch = bundlePatches.find { patch ->
+                                if (!patch.name.equals(patchName, ignoreCase = true)) return@find false
+                                val compat = patch.compatibility
+                                if (!compat.isNullOrEmpty()) {
+                                    compat.any { it.packageName == packageName || it.packageName == null }
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    patch.compatiblePackages == null || patch.compatiblePackages!!.any { (name, _) -> name == packageName }
+                                }
                             }
                             val actualOptionKeys = actualPatch?.options?.keys ?: emptySet()
 
@@ -823,7 +834,7 @@ internal object PatchCommand : Callable<Int> {
 
             // region Save.
 
-            inputApk.copyTo(temporaryFilesPath.resolve(inputApk.name), overwrite = true).apply {
+            inputApk.copyTo(patcherTemporaryFilesPath.resolve(inputApk.name), overwrite = true).apply {
                 patchingResult.addStepResult(
                     PatchingStep.REBUILDING,
                     {
@@ -935,7 +946,7 @@ internal object PatchCommand : Callable<Int> {
                 }
             }
 
-            if (purge) {
+            if (!disablePurge) {
                 // Scope: only THIS session's tmp subfolder. Cached patches,
                 // logs, config, and other in-flight sessions (CLI or GUI) are
                 // never touched.
@@ -988,34 +999,31 @@ internal object PatchCommand : Callable<Int> {
             val patchNameLower = patchName.lowercase()
 
             // Check package compatibility first to avoid duplicate logs for multi-app patches.
-            patch.compatiblePackages?.let { packages ->
-                packages.singleOrNull { (name, _) -> name == packageName }?.let { (_, versions) ->
-                    if (versions?.isEmpty() == true) {
-                        return@patchLoop logger.warning(
-                            "Skipping \"$patchName\": incompatible with $packageName"
-                        )
-                    }
-
-                    val matchesVersion =
-                        force || versions?.let { it.any { version -> version == packageVersion } } ?: true
-
+            val supportedVersions = patch.supportedVersionsFor(packageName)
+            when {
+                supportedVersions != null && supportedVersions.isEmpty() -> {
+                    return@patchLoop logger.fine(
+                        "Skipping \"$patchName\": incompatible with $packageName " +
+                            "(only compatible with " +
+                            (patch.compatibility
+                                ?.mapNotNull { it.packageName }
+                                ?.joinToString(", ")
+                                ?: @Suppress("DEPRECATION") patch.compatiblePackages
+                                    ?.joinToString(", ") { (name, _) -> name }
+                                ?: "") + ")"
+                    )
+                }
+                supportedVersions != null -> {
+                    val matchesVersion = force || packageVersion in supportedVersions
                     if (!matchesVersion) {
-                        val compatibilityHint = packages.joinToString("; ") { (pkg, vers) ->
-                            pkg + " " + (vers ?: emptySet()).joinToString(", ")
-                        }
+                        val hint = supportedVersions.joinToString(", ")
                         return@patchLoop logger.warning(
                             "Skipping \"$patchName\": incompatible with $packageName $packageVersion " +
-                                "(supported: $compatibilityHint)"
+                                "(supported: $packageName $hint)"
                         )
                     }
-                } ?: return@patchLoop logger.fine(
-                    "Skipping \"$patchName\": incompatible with $packageName " +
-                        "(only compatible with " +
-                        packages.joinToString(", ") { (name, _) -> name } + ")"
-                )
-
-                return@let
-            } ?: logger.fine("\"$patchName\" has no package constraints")
+                }
+            }
 
             // CLI flags take precedence over JSON, JSON takes precedence over defaults.
             // Log strings match the GUI engine's "Skipping disabled: …" format so
@@ -1044,7 +1052,7 @@ internal object PatchCommand : Callable<Int> {
 
             val isJsonEnabled = patchNameLower in jsonEnabledPatches
 
-            val isEnabled = !exclusive && patch.use
+            val isEnabled = !exclusive && patch.default
 
             if (!(isEnabled || isCliEnabled || isJsonEnabled)) {
                 // Default-disabled patches (the patch ships with use=false and

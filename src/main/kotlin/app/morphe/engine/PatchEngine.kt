@@ -8,6 +8,7 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.BundleFormats
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.patcher.Patcher
 import app.morphe.patcher.PatcherConfig
@@ -55,7 +56,6 @@ object PatchEngine {
         val signerName: String = DEFAULT_SIGNER_NAME,
         val keystoreDetails: ApkUtils.KeyStoreDetails? = null,
         val architecturesToKeep: Set<CpuArchitecture> = emptySet(),
-        val aaptBinaryPath: File? = null,
         val tempDir: File? = null,
         val failOnError: Boolean = true,
         val bytecodeMode: BytecodeMode = BytecodeMode.STRIP_FAST
@@ -100,14 +100,16 @@ object PatchEngine {
         val failedPatches = mutableListOf<FailedPatch>()
 
         try {
-            // 1. Handle APKM format (split APK bundle)
-            val actualInputApk = if (config.inputApk.extension.equals("apkm", ignoreCase = true)) {
-                onProgress("Converting APKM to APK...")
+            // 1. Handle split-APK bundles (.apkm/.xapk/.apks) — merge splits into
+            // a single APK. ApkMerger is format-agnostic (it just extracts the
+            // .apk entries from the zip), so all three formats go through here.
+            val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
+                onProgress("Merging split APKs...")
                 val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
                 ApkMerger(logger.toMorpheLogger()).merge(
                     inputFile = config.inputApk,
                     outputFile = mergedApk,
-                    cleanMetaInf = true
+                    cleanMetaInf = false
                 )
                 mergedApkToCleanup = mergedApk
                 mergedApk
@@ -125,15 +127,10 @@ object PatchEngine {
             val patcherConfig = PatcherConfig(
                 actualInputApk,
                 patcherTempDir,
-                config.aaptBinaryPath?.path,
                 patcherTempDir.absolutePath,
                 useArsclib = true,
                 keepArchitectures = config.architecturesToKeep,
-                /*
-                TODO: Remove Windows override once the patcher ships its proper fix
-                 (reflection-based MappedByteBuffer release + copy-instead-of-rename for output DEX files).
-                 */
-                useBytecodeMode = if (isWindows()) { BytecodeMode.FULL } else { config.bytecodeMode }
+                useBytecodeMode = config.bytecodeMode
             )
 
             Patcher(patcherConfig).use { patcher ->
@@ -317,23 +314,15 @@ object PatchEngine {
             val patchName = patch.name ?: return@patchLoop
 
             // Check package compatibility first to avoid duplicate logs for multi-app patches.
-            patch.compatiblePackages?.let { packages ->
-                val matchingPkg = packages.singleOrNull { (name, _) -> name == packageName }
-                if (matchingPkg == null) {
-                    return@patchLoop
-                }
-
-                val (_, versions) = matchingPkg
-                if (versions?.isEmpty() == true) {
-                    return@patchLoop
-                }
-
-                val matchesVersion = forceCompatibility ||
-                        versions?.any { it == packageVersion } ?: true
-
-                if (!matchesVersion) {
-                    onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
-                    return@patchLoop
+            val supportedVersions = patch.supportedVersionsFor(packageName)
+            when {
+                supportedVersions != null && supportedVersions.isEmpty() -> return@patchLoop
+                supportedVersions != null -> {
+                    val matchesVersion = forceCompatibility || packageVersion in supportedVersions
+                    if (!matchesVersion) {
+                        onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
+                        return@patchLoop
+                    }
                 }
             }
 
@@ -344,7 +333,7 @@ object PatchEngine {
             }
 
             val isManuallyEnabled = patchName in enabledPatches
-            val isEnabledByDefault = !exclusiveMode && patch.use
+            val isEnabledByDefault = !exclusiveMode && patch.default
 
             if (!(isEnabledByDefault || isManuallyEnabled)) {
                 return@patchLoop

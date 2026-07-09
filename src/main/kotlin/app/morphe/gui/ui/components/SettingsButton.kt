@@ -36,7 +36,6 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
@@ -48,7 +47,6 @@ import app.morphe.gui.ui.theme.LocalThemeState
 @Composable
 fun SettingsButton(
     modifier: Modifier = Modifier,
-    allowCacheClear: Boolean = true,
     isPatching: Boolean = false,
     onDismiss: () -> Unit = {},
     /**
@@ -63,7 +61,6 @@ fun SettingsButton(
     val modeState = LocalModeState.current
     val adbPreference = LocalAdbPreference.current
     val configRepository: ConfigRepository = koinInject()
-    val patchSourceManager: PatchSourceManager = koinInject()
     val updateCheckRepository: UpdateCheckRepository = koinInject()
     val scope = rememberCoroutineScope()
 
@@ -77,6 +74,8 @@ fun SettingsButton(
     var keepArchitectures by remember { mutableStateOf<Set<String>>(emptySet()) }
     var collapsibleSectionStates by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
     var updateChannelPreference by remember { mutableStateOf(UpdateChannelPreference.STABLE) }
+    var autoRouteLinksAfterInstall by remember { mutableStateOf(false) }
+    var disableStockLinksAfterInstall by remember { mutableStateOf(false) }
 
     LaunchedEffect(showSettingsDialog) {
         if (showSettingsDialog) {
@@ -92,6 +91,8 @@ fun SettingsButton(
             keystoreEntryPassword = config.keystoreEntryPassword
             keepArchitectures = config.keepArchitectures
             collapsibleSectionStates = config.collapsibleSectionStates
+            autoRouteLinksAfterInstall = config.autoRouteLinksAfterInstall
+            disableStockLinksAfterInstall = config.disableStockLinksAfterInstall
             // Resolve the smart-default if the user has never picked a channel
             // (returns DEV when the running build is dev, STABLE otherwise).
             updateChannelPreference = configRepository.getOrInitUpdateChannelPreference(
@@ -150,11 +151,7 @@ fun SettingsButton(
                 showSettingsDialog = false
                 onDismiss()
             },
-            allowCacheClear = allowCacheClear,
             isPatching = isPatching,
-            onCacheCleared = {
-                patchSourceManager.notifyCacheCleared()
-            },
             keystorePath = keystorePath,
             keystorePassword = keystorePassword,
             keystoreAlias = keystoreAlias,
@@ -198,6 +195,16 @@ fun SettingsButton(
             },
             autoStartAdb = adbPreference.enabled,
             onAutoStartAdbChange = { adbPreference.onChange(it) },
+            autoRouteLinksAfterInstall = autoRouteLinksAfterInstall,
+            onAutoRouteLinksChange = { enabled ->
+                autoRouteLinksAfterInstall = enabled
+                scope.launch { configRepository.setAutoRouteLinksAfterInstall(enabled) }
+            },
+            disableStockLinksAfterInstall = disableStockLinksAfterInstall,
+            onDisableStockLinksChange = { enabled ->
+                disableStockLinksAfterInstall = enabled
+                scope.launch { configRepository.setDisableStockLinksAfterInstall(enabled) }
+            },
             collapsibleSectionStates = collapsibleSectionStates,
             onCollapsibleSectionToggle = { id, expanded ->
                 collapsibleSectionStates = collapsibleSectionStates + (id to expanded)
@@ -222,8 +229,8 @@ fun TopBarRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         DeviceIndicator()
+        ToolsButton(allowCacheClear = allowCacheClear)
         SettingsButton(
-            allowCacheClear = allowCacheClear,
             isPatching = isPatching,
             onUpdateChannelChanged = onUpdateChannelChanged,
         )

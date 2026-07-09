@@ -15,14 +15,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import app.morphe.engine.MorpheData
+import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.UpdateChecker
+import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.util.ApkManifestReader
+import app.morphe.engine.util.FileChecksum
 import app.morphe.gui.util.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import app.morphe.gui.util.PatchService
 import java.io.File
 
 class PatchingViewModel(
     private val config: PatchConfig,
     private val patchService: PatchService,
-    private val configRepository: ConfigRepository
+    private val configRepository: ConfigRepository,
+    private val patchedAppStore: PatchedAppStore,
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(PatchingUiState())
@@ -119,6 +127,7 @@ class PatchingViewModel(
                             progress = 1f
                         )
                         Logger.info("Patching completed: ${config.outputApkPath}")
+                        recordPatchedApp(patchResult)
                     } else {
                         val reason = patchResult.failureReason
                             ?: if (patchResult.failedPatches.isNotEmpty())
@@ -152,6 +161,47 @@ class PatchingViewModel(
             status = PatchingStatus.CANCELLED
         )
         Logger.info("Patching cancelled by user")
+    }
+
+    /**
+     * Record this patch in the shared patched-app history (see [PatchedAppStore]).
+     * Best-effort: a history-write failure must never disrupt the success UX.
+     */
+    private suspend fun recordPatchedApp(patchResult: app.morphe.gui.util.PatchResult) {
+        try {
+            val pkg = config.packageName.ifEmpty { patchResult.packageName }
+            if (pkg.isEmpty()) return // nothing useful to key on
+            val (sha, size) = withContext(Dispatchers.IO) {
+                FileChecksum.fingerprintOrNull(config.outputApkPath)
+            }
+            // Read the output APK's manifest once: post-rename package (for device
+            // matching) + versionName (fallback so the APK version number always shows).
+            val manifest = withContext(Dispatchers.IO) {
+                runCatching { ApkManifestReader.read(File(config.outputApkPath)) }.getOrNull()
+            }
+            patchedAppStore.upsert(
+                PatchedAppRecord(
+                    packageName = pkg,
+                    currentPackageName = manifest?.packageName,
+                    displayName = config.appDisplayName.ifEmpty { pkg },
+                    // Prefer the manifest's versionName (e.g. "21.20.400") — the patch
+                    // result's packageVersion can be the numeric versionCode, which breaks
+                    // version comparisons for update detection.
+                    apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: patchResult.packageVersion,
+                    inputApkPath = config.inputApkPath,
+                    outputApkPath = config.outputApkPath,
+                    outputApkSha256 = sha,
+                    outputApkSize = size,
+                    patchSelectionByBundle = config.patchSelectionByBundle,
+                    patchOptionValues = config.patchOptions,
+                    sourcesSnapshot = config.sourcesSnapshot,
+                    patchedAt = System.currentTimeMillis(),
+                    patchedWithMorpheVersion = UpdateChecker.currentVersion() ?: "unknown",
+                )
+            )
+        } catch (e: Exception) {
+            Logger.error("Failed to record patched app", e)
+        }
     }
 
     private fun addLog(message: String, level: LogLevel) {

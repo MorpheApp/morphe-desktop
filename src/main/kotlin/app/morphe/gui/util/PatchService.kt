@@ -15,6 +15,7 @@ import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import app.morphe.patcher.apk.ApkUtils
+import app.morphe.engine.patches.PatchBundleLoader
 import java.io.File
 import kotlin.reflect.KType
 import app.morphe.patcher.patch.Patch as LibraryPatch
@@ -115,7 +116,7 @@ class PatchService {
                 tmp
             }
             try {
-                val loadedPatches = loadPatchesFromJar(tempCopies.toSet())
+                val loadedPatches = PatchBundleLoader.loadFlat(tempCopies)
 
                 // Convert GUI's flat "patchName.optionKey" -> value map
                 // to engine's Map<patchName, Map<optionKey, value>> format
@@ -150,9 +151,28 @@ class PatchService {
 
                 val engineResult = PatchEngine.patch(config, onProgress)
 
+                // Build the COMPLETE failure detail (full stack traces, incl. any
+                // nested "Caused by:" cause). Used for both the log file and the
+                // UI's expandable "Details" section. The short [failureReason]
+                // below is only the one-line banner summary. It must never be the
+                // single source, or the cause gets lost (e.g. a PatchException
+                // ending in "...which raised an exception:" with the cause dropped).
+                val failureDetail: String? = if (engineResult.success) null else buildString {
+                    engineResult.failedPatches.forEach { fp ->
+                        appendLine("Patch '${fp.name}' failed:")
+                        appendLine(fp.error)
+                    }
+                    engineResult.stepResults
+                        .filter { !it.success && it.error != null }
+                        .forEach { appendLine("Step ${it.step.name} failed:"); appendLine(it.error) }
+                }.takeIf { it.isNotBlank() }
+                failureDetail?.let { Logger.error("Patching failed — full detail:\n$it") }
+
                 val failureReason = if (engineResult.success) null else {
                     // Prefer a specific failed-patch error, else the last failed
                     // step's error (rebuild/sign), else a generic fallback.
+                    // First line only — this is the short UI-banner summary; the
+                    // full traces are already logged above.
                     engineResult.failedPatches.firstOrNull()?.let { fp ->
                         "${fp.name}: ${fp.error.lineSequence().first()}"
                     }
@@ -166,11 +186,21 @@ class PatchService {
                     appliedPatches = engineResult.appliedPatches,
                     failedPatches = engineResult.failedPatches.map { it.name },
                     failureReason = failureReason,
+                    failureDetail = failureDetail,
+                    packageName = engineResult.packageName,
+                    packageVersion = engineResult.packageVersion,
                 ))
             } finally {
                 tempCopies.forEach { runCatching { it.delete() } }
             }
-        } catch (e: Exception) {
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // Catch Throwable, not just Exception: a mismatched patch bundle can
+            // throw java.lang.Error (e.g. NoSuchMethodError when two sources ship
+            // the same class compiled against different patcher versions). Those
+            // are Errors, not Exceptions, so catch(Exception) would let them escape and the UI
+            // would hang on "Loading patches" forever instead of surfacing a failure.
             Logger.error("Patching failed", e)
             Result.failure(e)
         }
@@ -276,4 +306,12 @@ data class PatchResult(
     // failed patch's error or — when patching succeeded but a later step
     // (rebuild, sign) blew up — that step's error. Null on success.
     val failureReason: String? = null,
+    // Full failure detail: complete stack traces (incl. nested "Caused by:"
+    // causes) for every failed patch and step. The expandable "Details"
+    // counterpart to the one-line [failureReason]. Null on success.
+    val failureDetail: String? = null,
+    // Surfaced from the engine so callers (e.g. patched-app history) can record
+    // what was actually patched. Empty when the patcher didn't report them.
+    val packageName: String = "",
+    val packageVersion: String = "",
 )
