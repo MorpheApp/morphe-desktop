@@ -28,7 +28,6 @@ object PatchFileResolver {
     fun resolve(
         patchFiles: Set<File>,
         prerelease: Boolean,
-        cacheDir: File,
         http: HttpService
     ): Set<File> {
         val urlEntry = patchFiles.firstOrNull {
