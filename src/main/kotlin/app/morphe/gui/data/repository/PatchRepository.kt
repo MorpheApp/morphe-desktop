@@ -147,8 +147,16 @@ class PatchRepository(
             return@withContext Result.success(targetFile)
         }
 
-        // Delegate the actual network IO to the engine source.
-        val result = remoteSource.downloadAsset(asset, targetFile)
+        // Delegate the actual network IO to the engine source. Streaming
+        // progress (bytesRead / totalBytes) is converted to the GUI's
+        // fractional [0, 1] callback shape here; falls back to the known
+        // asset size when the server doesn't report Content-Length.
+        val result = remoteSource.downloadAsset(asset, targetFile) { bytesRead, totalBytes ->
+            val total = totalBytes ?: asset.size.takeIf { it > 0L }
+            if (total != null && total > 0L) {
+                onProgress((bytesRead.toFloat() / total.toFloat()).coerceIn(0f, 1f))
+            }
+        }
         if (result.isSuccess) onProgress(1f)
         result
     }

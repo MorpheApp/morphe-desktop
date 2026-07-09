@@ -89,7 +89,7 @@ dependencies {
 
     // -- Networking (GUI) --------------------------------------------------
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
@@ -207,6 +207,8 @@ tasks {
             exclude(dependency("app.morphe:morphe-patcher"))
             // Ktor uses ServiceLoader
             exclude(dependency("io.ktor:.*"))
+            exclude(dependency("com.squareup.okhttp3:.*"))
+            exclude(dependency("com.squareup.okio:.*"))
             exclude(dependency("org.slf4j:.*"))
             // Koin uses reflection
             exclude(dependency("io.insert-koin:.*"))

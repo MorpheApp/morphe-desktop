@@ -1,8 +1,8 @@
 package app.morphe.cli.command
 
+import app.morphe.engine.network.HttpService
 import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.engine.patches.findPatchAsset
-import io.ktor.client.HttpClient
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.util.logging.Logger
@@ -22,7 +22,7 @@ object PatchFileResolver {
         patchFiles: Set<File>,
         prerelease: Boolean,
         cacheDir: File,
-        httpClient: HttpClient
+        http: HttpService
     ): Set<File> {
         val urlEntry = patchFiles.firstOrNull {
             it.path.startsWith("http:/") || it.path.startsWith("https:/")
@@ -38,7 +38,7 @@ object PatchFileResolver {
                 val parsed = RemotePatchSourceFactory.parse(url)
                     ?: throw IllegalArgumentException("Unrecognized patch URL: \$url")
 
-                val source = parsed.instantiate(httpClient)
+                val source = parsed.instantiate(http)
 
                 // List releases and decide which one to use. `releases/tag/<version>` in the URL pins to
                 // that exact tag.
