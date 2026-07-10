@@ -13,6 +13,7 @@ import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.util.PatchService
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
@@ -52,8 +53,17 @@ val appModule = module {
                     }
                 }
             }
+            // Socket-based (idle) timeouts, not a wall-clock cap. A large but flowing
+            // patch download is never killed just for being big.
+            // requestTimeoutMillis is left unset (infinite).
+            install(HttpTimeout) {
+                connectTimeoutMillis = 30_000
+                socketTimeoutMillis = 60_000
+            }
+            // Retry/429 handling lives in HttpService (single layer). Not a client plugin, to avoid compounding retries.
             engine {
-                requestTimeout = 60_000
+                // Disable the engine-level total-call cap; the timeouts above govern.
+                requestTimeout = 0
             }
         }
     }

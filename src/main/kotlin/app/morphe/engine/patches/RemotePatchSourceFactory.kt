@@ -5,6 +5,7 @@
 
 package app.morphe.engine.patches
 
+import app.morphe.engine.network.HttpService
 import io.ktor.client.HttpClient
 
 /**
@@ -103,9 +104,15 @@ object RemotePatchSourceFactory {
                 PatchProvider.GITLAB -> "https://gitlab.com/$repoPath"
             }
 
-        fun instantiate(httpClient: HttpClient): RemotePatchSource = when (provider) {
-            PatchProvider.GITHUB -> GitHubPatchSource(httpClient, repoPath)
-            PatchProvider.GITLAB -> GitLabPatchSource(httpClient, repoPath)
+        fun instantiate(httpClient: HttpClient): RemotePatchSource {
+            // Wrap the shared client in the centralized service so both sources
+            // get identical request/stream/retry behavior. Call sites still pass
+            // an HttpClient, so nothing downstream changes.
+            val service = HttpService(httpClient)
+            return when (provider) {
+                PatchProvider.GITHUB -> GitHubPatchSource(service, repoPath)
+                PatchProvider.GITLAB -> GitLabPatchSource(service, repoPath)
+            }
         }
     }
 }

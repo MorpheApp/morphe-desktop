@@ -103,10 +103,26 @@ class PatchRepository(
         fetchReleases().map { releases -> releases.filter { it.isDevRelease() } }
 
     suspend fun getLatestStableRelease(): Result<Release?> =
-        fetchStableReleases().map { it.firstOrNull() }
+        latestFromManifestOrApi(prerelease = false)
 
     suspend fun getLatestDevRelease(): Result<Release?> =
-        fetchDevReleases().map { it.firstOrNull() }
+        latestFromManifestOrApi(prerelease = true)
+
+    /**
+     * Resolve the latest release for a channel via the repo's `patches-bundle.json`
+     * (raw CDN, no API rate limit); fall back to the releases API only when the source
+     * publishes no manifest. This is the common path, so it keeps the tight 60/hr GitHub
+     * API budget for the rarer "list older versions" case.
+     */
+    private suspend fun latestFromManifestOrApi(prerelease: Boolean): Result<Release?> =
+        withContext(Dispatchers.IO) {
+            remoteSource.fetchLatestFromManifest(prerelease).getOrNull()?.let {
+                Logger.info("Latest ${if (prerelease) "dev" else "stable"} via patches-bundle.json: ${it.tagName}")
+                return@withContext Result.success(it)
+            }
+            if (prerelease) fetchDevReleases().map { it.firstOrNull() }
+            else fetchStableReleases().map { it.firstOrNull() }
+        }
 
     /** Find the patch .mpp asset in a release. */
     fun findPatchAsset(release: Release): ReleaseAsset? = release.findPatchAsset()
@@ -146,8 +162,15 @@ class PatchRepository(
             return@withContext Result.success(targetFile)
         }
 
-        // Delegate the actual network IO to the engine source.
-        val result = remoteSource.downloadAsset(asset, targetFile)
+        // Delegate the actual network IO to the engine source, translating byte
+        // progress into a 0..1 fraction for the UI. When the server omits
+        // Content-Length we can't compute a fraction, so the bar stays put until
+        // completion — GitHub/GitLab CDN downloads do send it, so this is rare.
+        val result = remoteSource.downloadAsset(asset, targetFile) { bytesRead, contentLength ->
+            if (contentLength != null && contentLength > 0L) {
+                onProgress((bytesRead.toFloat() / contentLength).coerceIn(0f, 1f))
+            }
+        }
         if (result.isSuccess) onProgress(1f)
         result
     }

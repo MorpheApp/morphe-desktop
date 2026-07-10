@@ -7,6 +7,7 @@ package app.morphe.gui.util
 
 import app.morphe.engine.MultiSourceLoader
 import app.morphe.gui.data.model.FollowMode
+import app.morphe.engine.model.Release
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.model.SourceVersionPref
@@ -177,42 +178,35 @@ object EnabledSourcesLoader {
             return ResolvedSource(source = source, error = "No repository configured for source")
         }
 
-        val releasesResult = repo.fetchReleases()
-        val releases = releasesResult.getOrNull()
+        // Resolve the target release WITHOUT the releases API where possible:
+        //  - FOLLOW_STABLE / default / FOLLOW_DEV → latest via the raw patches-bundle.json.
+        //    getLatest*Release is manifest-first (it only touches the API if the source
+        //    ships no manifest), so following sources cost 0 API calls on startup.
+        //  - PINNED → needs the full release list (API) to locate the exact old tag.
+        val release: Release?
+        val latestStableTag: String?
+        val latestDevTag: String?
 
-        if (releases.isNullOrEmpty()) {
-            // Offline fallback: scan source's cache dir for any .mpp/.jar file
-            val cached = findCachedPatchFile(repo)
-            if (cached != null) {
-                return ResolvedSource(
-                    source = source,
-                    patchFile = cached,
-                    resolvedVersion = versionFromFilename(cached),
-                    isOffline = true,
-                )
-            }
-            val errMsg = releasesResult.exceptionOrNull()?.message ?: "Could not fetch releases"
-            return ResolvedSource(source = source, error = errMsg)
+        if (pref?.mode == FollowMode.PINNED) {
+            val releases = repo.fetchReleases().getOrNull()
+            if (releases.isNullOrEmpty()) return offlineOrError(source, repo)
+            val latestStable = releases.firstOrNull { !it.isDevRelease() }
+            release = releases.find { it.tagName == pref.pinnedTag } ?: latestStable ?: releases.firstOrNull()
+            latestStableTag = latestStable?.tagName
+            latestDevTag = releases.firstOrNull { it.isDevRelease() }?.tagName
+        } else {
+            val stable = repo.getLatestStableRelease().getOrNull()
+            val dev = repo.getLatestDevRelease().getOrNull()
+            release = if (pref?.mode == FollowMode.FOLLOW_DEV) (dev ?: stable) else (stable ?: dev)
+            latestStableTag = stable?.tagName
+            latestDevTag = dev?.tagName
         }
 
-        // Resolve which release to load from this source's version preference:
-        //  - PINNED        → the exact tag (fall back to latest stable if it's gone)
-        //  - FOLLOW_DEV    → newest release overall, pre-releases included
-        //  - FOLLOW_STABLE → newest stable (also the default when there's no pref)
-        // The release list is newest-first, so firstOrNull() is the newest overall.
-        val latestStable = releases.firstOrNull { !it.isDevRelease() }
-        val latestOverall = releases.firstOrNull()
-        val release = when (pref?.mode) {
-            FollowMode.PINNED ->
-                releases.find { it.tagName == pref.pinnedTag } ?: latestStable ?: latestOverall
-            FollowMode.FOLLOW_DEV -> latestOverall ?: latestStable
-            FollowMode.FOLLOW_STABLE, null -> latestStable ?: latestOverall
-        } ?: return ResolvedSource(source = source, error = "No releases found")
+        // Manifest + API both unavailable (e.g. offline) → fall back to a cached file.
+        if (release == null) return offlineOrError(source, repo)
 
-        // Classify where the resolved release actually sits (for the LED + badge),
-        // independent of which track it's following.
-        val latestStableTag = latestStable?.tagName
-        val latestDevTag = releases.firstOrNull { it.isDevRelease() }?.tagName
+        // Classify where the resolved release sits (for the LED + badge), independent
+        // of which track it's following.
         val channel = when {
             release.isDevRelease() && release.tagName == latestDevTag -> Channel.DEV_LATEST
             release.isDevRelease() -> Channel.DEV_OLDER
@@ -236,6 +230,21 @@ object EnabledSourcesLoader {
             isOffline = false,
             channel = channel,
         )
+    }
+
+    /** Offline / no-releases fallback: use the newest cached .mpp/.jar for this source. */
+    private fun offlineOrError(source: PatchSource, repo: PatchRepository): ResolvedSource {
+        val cached = findCachedPatchFile(repo)
+        return if (cached != null) {
+            ResolvedSource(
+                source = source,
+                patchFile = cached,
+                resolvedVersion = versionFromFilename(cached),
+                isOffline = true,
+            )
+        } else {
+            ResolvedSource(source = source, error = "Could not fetch releases")
+        }
     }
 
     private fun findCachedPatchFile(repo: PatchRepository): File? {

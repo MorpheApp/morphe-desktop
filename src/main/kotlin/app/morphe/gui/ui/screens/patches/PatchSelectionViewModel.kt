@@ -692,21 +692,23 @@ class PatchSelectionViewModel(
 
         Logger.info("Looking for patches version: ${expectedVersion ?: "latest"}")
 
-        val releasesResult = patchRepository.fetchReleases()
-        if (releasesResult.isFailure) {
-            return Result.failure(
-                releasesResult.exceptionOrNull() ?: Exception("Failed to fetch releases")
-            )
-        }
-        val releases = releasesResult.getOrNull() ?: emptyList()
-        if (releases.isEmpty()) return Result.failure(Exception("No releases found"))
-
         val targetRelease = if (expectedVersion != null) {
+            // A specific version is expected (repatch/update) → the full release list
+            // (API) is the only way to locate that exact tag.
+            val releasesResult = patchRepository.fetchReleases()
+            if (releasesResult.isFailure) {
+                return Result.failure(releasesResult.exceptionOrNull() ?: Exception("Failed to fetch releases"))
+            }
+            val releases = releasesResult.getOrNull() ?: emptyList()
+            if (releases.isEmpty()) return Result.failure(Exception("No releases found"))
             releases.find { it.tagName.contains(expectedVersion) }
                 ?: releases.firstOrNull { !it.isDevRelease() }
+                ?: return Result.failure(Exception("No suitable release found"))
         } else {
-            releases.firstOrNull { !it.isDevRelease() }
-        } ?: return Result.failure(Exception("No suitable release found"))
+            // Just need the latest stable → resolve via the raw manifest (no API call).
+            patchRepository.getLatestStableRelease().getOrNull()
+                ?: return Result.failure(Exception("No suitable release found"))
+        }
 
         Logger.info("Downloading patches from release: ${targetRelease.tagName}")
         return patchRepository.downloadPatches(targetRelease)

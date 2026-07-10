@@ -44,19 +44,35 @@ interface RemotePatchSource {
     suspend fun listReleases(): Result<List<Release>>
 
     /**
+     * Resolve the latest release from the repo's `patches-bundle.json` via the **raw
+     * CDN**, avoiding the rate-limited releases API. [prerelease] selects the `dev`
+     * branch (vs `main` for stable).
+     *
+     * Returns a failed [Result] when the source publishes no manifest (or it can't be
+     * fetched/parsed). Callers should fall back to [listReleases]. Never throws.
+     */
+    suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release>
+
+    /**
      * Download [asset] to [targetFile]. Replaces any existing file at the
      * target path. Returns the file on success.
      *
      * Implementations are responsible for:
-     *   - Following any provider-specific redirects (GitLab's `direct_asset_url`)
-     *   - Sending appropriate Accept / auth headers
-     *   - Failing if the response body is empty (zero-byte downloads are
-     *     never valid patch files)
+     *  - Following any provider-specific redirects (GitLab's `direct_asset_url`)
+     *  - Sending appropriate Accept / auth headers
+     *  - Failing if the response body is empty (zero-byte downloads are never valid patch files)
      *
-     * Implementations are NOT responsible for cache-hit checks — the caller
+     * Implementations are NOT responsible for cache-hit checks. The caller
      * should look at [targetFile] before calling this if it wants caching.
+     *
+     * [onProgress] (optional) reports `(bytesRead, contentLength?)` as the body
+     * streams to disk; `contentLength` is null when the server omits it.
      */
-    suspend fun downloadAsset(asset: ReleaseAsset, targetFile: File): Result<File>
+    suspend fun downloadAsset(
+        asset: ReleaseAsset,
+        targetFile: File,
+        onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)? = null,
+    ): Result<File>
 }
 
 /**
