@@ -224,7 +224,7 @@ The full patch list from your selected bundle(s), with a running **"N of M selec
 - **Command preview**: The exact CLI invocation your choices produce. **COPY** it to reproduce this run in a terminal or drop it into a script. **EXPAND** / **COMPACT** toggles full vs condensed.
 
 <p align="center">
-  <img src="images/documentation/gui/command-preview.png" width="65%" alt="Command Preview" style="vertical-align: middle"/>
+  <img src="images/documentation/gui/command-preview.png" width="75%" alt="Command Preview" style="vertical-align: middle"/>
 </p>
 
 > [!TIP]
@@ -248,8 +248,13 @@ The patch expects a specific icon folder on disk, but you never have to build th
 
 **Foreground vs. background.** Android adaptive icons are two layers: an **opaque background** and a **foreground** on top (the foreground may be transparent). The launcher masks the combined result into whatever shape the device uses. The Icon Studio mirrors this with two panels:
 
-- **FOREGROUND**: Your logo/mark, built from stacked **layers**. Each layer is an **IMAGE**, **TEXT**, or a **SHAPE** (circle, square, rounded, triangle, and more). Per layer you get **TRANSFORM** (move / scale / rotate, with **RESET POSITION**), color, and effects like **SHADOW**, **GLOW**, **STROKE**. Text layers add **BOLD** / **ITALIC** / **UNDERLINE** / **STRIKE**; **DUPLICATE** copies a layer. A foreground image SHOULD have transparency around your mark. That's what lets the monochrome and notification icons read as a shape. So if you import one that's fully opaque the Studio **warns you**, but leaves the image untouched (auto-editing it could mangle a real icon).
-- **BACKGROUND**: A **SOLID** color, a **GRADIENT** (**LINEAR** / **RADIAL** / **CONIC**), or an **IMAGE**. Adaptive backgrounds can't be see-through, so this one's handled the opposite way. The Studio keeps it opaque **automatically**. If you import a background image with transparent areas, its flattened onto a solid base for you.
+- **FOREGROUND**: Your logo/mark, built from stacked **layers**. Each layer is an **IMAGE**, **TEXT**, or a **SHAPE** (circle, square, rounded, triangle, and more). Per layer you get **TRANSFORM** (move / scale / rotate, with **RESET POSITION**), color, and effects like **SHADOW**, **GLOW**, **STROKE**. Text layers add **BOLD** / **ITALIC** / **UNDERLINE** / **STRIKE**; **DUPLICATE** copies a layer.
+- **BACKGROUND**: A **SOLID** color, a **GRADIENT** (**LINEAR** / **RADIAL** / **CONIC**), or an **IMAGE**.
+
+> [!IMPORTANT]
+> **Transparency is the #1 reason a custom icon looks wrong**, and the two layers have opposite rules:
+> - **The foreground should be transparent** around your mark. That cut-out is what makes the monochrome and notification icons read as a *shape*. A fully opaque foreground turns them into a solid block. If you import an opaque image the Studio **warns you** but won't auto-edit it (that could mangle a real icon). Fix it yourself with a transparent PNG, or use a **TEXT** / **SHAPE** layer instead.
+> - **The background must be opaque**. Adaptive backgrounds can't be see-through. Here the Studio handles it *for* you. A transparent background image is **automatically flattened** onto a solid base, so backgrounds just work. (Although it is highly recommended to use a proper, fully opaque background.)
 
 Colors come from a picker with saveable swatches, **TEMPLATES** give you starting points, and **UNDO** / **REDO** cover mistakes. Your work autosaves (the header shows **SAVED**), so **EDIT ICON** reopens exactly where you left off.
 
