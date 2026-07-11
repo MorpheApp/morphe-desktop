@@ -13,6 +13,7 @@ Now that you've done your first run, let's dig deeper into how the magic happens
   - [The TopBar](#gui-window)
   - [Quick mode](#gui-quick)
   - [Expert mode](#gui-expert)
+  - [Custom app icons (Icon Studio)](#gui-icon-studio)
   - [Link handling ("open with")](#gui-expert-links)
   - [Your apps](#gui-your-apps)
   - [Settings](#gui-settings)
@@ -206,21 +207,21 @@ The full patch list from your selected bundle(s), with a running **"N of M selec
 | **COMMAND PREVIEW** (**COPY** / **EXPAND** / **COMPACT**) | The exact CLI command for your selections                        | – (it*is* the CLI command)                       |
 | **PATCH (N)**                                             | Start patching the N selected patches                            | runs the`patch` command                          |
 
-- **Toggling & search** – flip patches on/off; search filters the list (you'll see *No patches match your search*). If you added multiple sources, patches are grouped per bundle (*No matches in this bundle* when a filter empties one).
+- **Toggling & search**: Flip patches on/off. Search filters the list (you'll see *No patches match your search*). If you added multiple sources, patches are grouped per bundle (*No matches in this bundle* when a filter empties one).
 
 <p align="center">
   <img src="images/documentation/gui/patch-selection.png" width="60%" alt="Patch Selection Screen" style="vertical-align: middle"/>
 </p>
 
-- **Options** – patches with configurable options show an options count; expand to edit. Values are typed – see the [Value Types Reference](#value-types-reference) for how strings / booleans / lists are formatted. **PATCH DEFAULTS** means untouched; **YOUR DEFAULTS** means you've customized it.
+- **Options**: Patches with configurable options show an options count. Click on this to expand and edit. Values are typed, see the [Value Types Reference](#value-types-reference) for how strings / booleans / lists are formatted. **PATCH DEFAULTS** means untouched. **YOUR DEFAULTS** means you've customized it. A few options are richer than a text box, notably **custom icon** option, which opens the [Icon Studio](#gui-icon-studio) instead.
 
 <p align="center">
   <img src="images/documentation/gui/patch-options.png" width="60%" alt="Patch Selection Options" style="vertical-align: middle"/>
 </p>
 
-- **Strip libs** – a summary chip shows whether native libs will be stripped (**STRIPPING NATIVE LIBS** / **NO STRIPPING NEEDED** / **NO NATIVE LIBS**); change the kept architectures under Settings → Strip Libs.
-- **Continue patching even if a patch fails** – by default a failed patch aborts the whole run; enable this to skip the failure and apply the rest. The GUI's equivalent of the CLI's `--continue-on-error`.
-- **Command preview** – the exact CLI invocation your choices produce. **COPY** it to reproduce this run in a terminal or drop it into a script; **EXPAND** / **COMPACT** toggles full vs. condensed.
+- **Strip libs**: A summary chip shows whether native libs will be stripped (**STRIPPING NATIVE LIBS** / **NO STRIPPING NEEDED** / **NO NATIVE LIBS**). Change the kept architectures under Settings → Strip Libs.
+- **Continue patching even if a patch fails**: By default a failed patch aborts the whole run. Enable this to skip the failure and apply the rest. The GUI's equivalent of the CLI's `--continue-on-error`.
+- **Command preview**: The exact CLI invocation your choices produce. **COPY** it to reproduce this run in a terminal or drop it into a script. **EXPAND** / **COMPACT** toggles full vs condensed.
 
 <p align="center">
   <img src="images/documentation/gui/command-preview.png" width="65%" alt="Command Preview" style="vertical-align: middle"/>
@@ -228,6 +229,46 @@ The full patch list from your selected bundle(s), with a running **"N of M selec
 
 > [!TIP]
 > The Command Preview is the best way to *learn* the CLI: configure a patch visually, copy the command, and you've got a reproducible one-liner. Handy for scripting or sharing exactly what you ran.
+
+<h4 id="gui-icon-studio">Custom app icons (Icon Studio)</h4>
+
+Some patches can replace the app's launcher icon. When a patch exposes a **custom icon** option (for example the **Custom branding** patch on the official Morphe patches), its row in the options editor shows action buttons instead of a plain text field:
+
+| Control                         | What it does                                                                                   |
+|---------------------------------|------------------------------------------------------------------------------------------------|
+| **DESIGN ICON** / **EDIT ICON** | Open the **Icon Studio** to build a new icon (or re-open the one you saved)                    |
+| **IMPORT FOLDER**               | Point the option at an already-prepared icon folder. E.g. one exported from the Morphe Manager |
+| **DELETE**                      | Clear the icon and delete its saved project + generated files                                  |
+
+The patch expects a specific icon folder on disk, but you never have to build that by hand. The Icon Studio generates it and sets the option to its path. The row reads **Custom icon ready** once set, **No custom icon set** otherwise.
+
+<p align="center">
+  <img src="images/documentation/gui/icon-studio-option.png" width="60%" alt="Custom icon option row" style="vertical-align: middle"/>
+</p>
+
+**Foreground vs. background.** Android adaptive icons are two layers: an **opaque background** and a **foreground** on top (the foreground may be transparent). The launcher masks the combined result into whatever shape the device uses. The Icon Studio mirrors this with two panels:
+
+- **FOREGROUND**: Your logo/mark, built from stacked **layers**. Each layer is an **IMAGE**, **TEXT**, or a **SHAPE** (circle, square, rounded, triangle, and more). Per layer you get **TRANSFORM** (move / scale / rotate, with **RESET POSITION**), color, and effects like **SHADOW**, **GLOW**, **STROKE**. Text layers add **BOLD** / **ITALIC** / **UNDERLINE** / **STRIKE**; **DUPLICATE** copies a layer. A foreground image SHOULD have transparency around your mark. That's what lets the monochrome and notification icons read as a shape. So if you import one that's fully opaque the Studio **warns you**, but leaves the image untouched (auto-editing it could mangle a real icon).
+- **BACKGROUND**: A **SOLID** color, a **GRADIENT** (**LINEAR** / **RADIAL** / **CONIC**), or an **IMAGE**. Adaptive backgrounds can't be see-through, so this one's handled the opposite way. The Studio keeps it opaque **automatically**. If you import a background image with transparent areas, its flattened onto a solid base for you.
+
+Colors come from a picker with saveable swatches, **TEMPLATES** give you starting points, and **UNDO** / **REDO** cover mistakes. Your work autosaves (the header shows **SAVED**), so **EDIT ICON** reopens exactly where you left off.
+
+**Live previews.** The right side shows how the icon renders in three real contexts:
+
+- **ADAPTIVE** – the normal launcher icon (foreground over background).
+- **MONOCHROME** – the themed/monochrome icon (Android 13+): a tinted silhouette of the *foreground*.
+- **NOTIFICATION / STATUS BAR** – the small white silhouette used in the status bar and notifications, again derived from the foreground.
+
+Because the monochrome and notification icons come from the foreground's shape and transparency, a background-only icon shows nothing in those two previews. That's expected, and the Studio points it out.
+
+> [!NOTE]
+> **PREVIEW SHAPES** (circle, squircle, rounded, square) are only a *preview* of how different launchers might mask your icon. You don't pick the final shape. The device's launcher decides that, so your icon just needs to look right under any of them.
+
+Hit **SAVE ICON** to export the folder and wire it into the option (**CANCEL** discards the current session), then patch as usual – the new icon is applied during patching.
+
+<p align="center">
+  <img src="images/documentation/gui/icon-studio.png" width="60%" alt="Icon Studio" style="vertical-align: middle"/>
+</p>
 
 <h4 id="gui-expert-patching">4. Patching</h4>
 
