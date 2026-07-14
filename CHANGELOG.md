@@ -1,3 +1,25 @@
+# [1.10.0](https://github.com/MorpheApp/morphe-cli/compare/v1.9.1...v1.10.0) (2026-07-14)
+
+
+### Bug Fixes
+
+* Allow patches with empty targets to apply automatically ([#207](https://github.com/MorpheApp/morphe-cli/issues/207)) ([5a07bf7](https://github.com/MorpheApp/morphe-cli/commit/5a07bf7d6fe34d42e2dd1b95e601386e6e214f83))
+* CLI --purge command does not cleanup temp APK ([#169](https://github.com/MorpheApp/morphe-cli/issues/169)) ([6163e9c](https://github.com/MorpheApp/morphe-cli/commit/6163e9c29070e5013274792437d05f8ed2c20853))
+* fix patch repo rate limiting by switching to raw links + stream downloads to disk ([#214](https://github.com/MorpheApp/morphe-cli/issues/214)) ([e21646c](https://github.com/MorpheApp/morphe-cli/commit/e21646cb4e184ca8a5efb9ecc3ea2b280f2a1cc7))
+* Handle GUI patching xapk / apks, add distinct patch-source channel colors, improve patch loading errors ([#180](https://github.com/MorpheApp/morphe-cli/issues/180)) ([d8245f0](https://github.com/MorpheApp/morphe-cli/commit/d8245f081b507cac74b06e16120e4271ce0e1f96))
+* Update to latest patcher ([2c89128](https://github.com/MorpheApp/morphe-cli/commit/2c891284460762e15115f21c83036ac544549372))
+* use latest patcher ([d7e9b62](https://github.com/MorpheApp/morphe-cli/commit/d7e9b625ae0571f2bafa082a3716138a2d7e2e8e))
+
+
+### Features
+
+* "your apps" section + settings and tools split + re-orderable patch sources + block play store updates for patched apps ([#176](https://github.com/MorpheApp/morphe-cli/issues/176)) ([d865abd](https://github.com/MorpheApp/morphe-cli/commit/d865abdbbe2258cf24476add02a361b05f3fdf7e))
+* Add `--include-experimental` flag to `list-patches` and `list-versions` ([#189](https://github.com/MorpheApp/morphe-cli/issues/189)) ([8ef916c](https://github.com/MorpheApp/morphe-cli/commit/8ef916cdaab28e51c244906341a32d9434126ccf))
+* Array GUI patches alphabetically, improve error logging, use separate class loader for multiple patch bundles ([#187](https://github.com/MorpheApp/morphe-cli/issues/187)) ([755909c](https://github.com/MorpheApp/morphe-cli/commit/755909ca2ab8735ffe99b3ad200a80316e6ec0c9))
+* cli ignores unknown keys (fix) + unify CLI/GUI patch cache + add clear-cache + make purge opt-out ([#192](https://github.com/MorpheApp/morphe-cli/issues/192)) ([70d16f0](https://github.com/MorpheApp/morphe-cli/commit/70d16f0e105f6362ee45e5e600c9ded01ab6c09e))
+* Patch sources follows latest (stable/dev) instead of to last used version ([#185](https://github.com/MorpheApp/morphe-cli/issues/185)) ([5d34993](https://github.com/MorpheApp/morphe-cli/commit/5d349931b283f62f617e7a1ceb10009cf2639a8e))
+* route links through patched app + uninstall from "Your Apps" section's cards ([#179](https://github.com/MorpheApp/morphe-cli/issues/179)) ([1626ce5](https://github.com/MorpheApp/morphe-cli/commit/1626ce5ffe3300de2299443ed9b7587ebd1cdcb6))
+
 # [1.10.0-dev.11](https://github.com/MorpheApp/morphe-cli/compare/v1.10.0-dev.10...v1.10.0-dev.11) (2026-07-13)
 
 
