@@ -1,15 +1,19 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.di
 
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchRepository
+import app.morphe.gui.data.repository.PatchPreferencesRepository
+import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.data.repository.UpdateCheckRepository
+import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.util.PatchService
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
@@ -18,7 +22,7 @@ import org.koin.dsl.module
 import app.morphe.gui.ui.screens.home.HomeViewModel
 import app.morphe.gui.ui.screens.patches.PatchesViewModel
 import app.morphe.gui.ui.screens.patches.PatchSelectionViewModel
-import app.morphe.gui.ui.screens.patching.PatchingScreenModel
+import app.morphe.gui.ui.screens.patching.PatchingViewModel
 
 /**
  * Main Koin module for dependency injection.
@@ -49,20 +53,71 @@ val appModule = module {
                     }
                 }
             }
+            // Socket-based (idle) timeouts, not a wall-clock cap. A large but flowing
+            // patch download is never killed just for being big.
+            // requestTimeoutMillis is left unset (infinite).
+            install(HttpTimeout) {
+                connectTimeoutMillis = 30_000
+                socketTimeoutMillis = 60_000
+            }
+            // Retry/429 handling lives in HttpService (single layer). Not a client plugin, to avoid compounding retries.
             engine {
-                requestTimeout = 60_000
+                // Disable the engine-level total-call cap; the timeouts above govern.
+                requestTimeout = 0
             }
         }
     }
 
     // Repositories and Services
     single { ConfigRepository() }
-    single { PatchRepository(get()) }
+    single { PatchPreferencesRepository() }
+    single { PatchSourceManager(get(), get()) }
     single { PatchService() }
+    single { UpdateCheckRepository(get()) }
+    single { PatchedAppStore.shared }
 
     // ViewModels (ScreenModels)
-    factory { HomeViewModel(get(), get(), get()) }
-    factory { params -> PatchesViewModel(params.get(), params.get(), get(), get()) }
-    factory { params -> PatchSelectionViewModel(params.get(), params.get(), params.get(), params.get(), params.get(), get(), get()) }
-    factory { params -> PatchingScreenModel(params.get(), get()) }
+    // ViewModels observe PatchSourceManager.sourceVersion and reload on source changes.
+    factory {
+        HomeViewModel(get(), get(), get(), get(), get())
+    }
+    factory { params ->
+        val psm = get<PatchSourceManager>()
+        PatchesViewModel(
+            params.get(),
+            params.get(),
+            psm.getActiveRepositorySync(),
+            get(),
+            psm.getLocalFilePath(),
+            psm
+        )
+    }
+    factory { params ->
+        val psm = get<PatchSourceManager>()
+        PatchSelectionViewModel(
+            params.get(),
+            params.get(),
+            params.get(),
+            params.get(),
+            params.get(),
+            get(),
+            psm.getActiveRepositorySync(),
+            get(),
+            get(),
+            psm.getActiveSourceName(),
+            psm.getLocalFilePath(),
+            params.get(),
+            params.get(),
+            params.get(),
+            params.get(),
+        )
+    }
+    factory { params ->
+        PatchingViewModel(
+            params.get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 }

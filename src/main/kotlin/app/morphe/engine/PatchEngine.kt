@@ -1,6 +1,6 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  *
  * Code hard forked from:
  * https://github.com/revanced/revanced-library/tree/06733072045c8016a75f232dec76505c0ba2e1cd
@@ -8,14 +8,18 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.BundleFormats
+import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.patcher.Patcher
 import app.morphe.patcher.PatcherConfig
 import app.morphe.patcher.apk.ApkMerger
 import app.morphe.patcher.apk.ApkUtils
 import app.morphe.patcher.apk.ApkUtils.applyTo
+import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.logging.toMorpheLogger
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.setOptions
+import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
@@ -26,13 +30,15 @@ import java.io.StringWriter
 import java.nio.file.Files
 import java.util.logging.Logger
 
-/**
+/*
  * Single patching pipeline shared by CLI and GUI. (Eventually. Right now we are still having 2 pipelines)
  */
+
+
 object PatchEngine {
 
     enum class PatchStep {
-        PATCHING, REBUILDING, STRIPPING_LIBS, SIGNING
+        PATCHING, REBUILDING, SIGNING
     }
 
     data class StepResult(val step: PatchStep, val success: Boolean, val error: String? = null)
@@ -47,13 +53,21 @@ object PatchEngine {
         val forceCompatibility: Boolean = false,
         val patchOptions: Map<String, Map<String, Any?>> = emptyMap(),
         val unsigned: Boolean = false,
-        val signerName: String = "Morphe",
+        val signerName: String = DEFAULT_SIGNER_NAME,
         val keystoreDetails: ApkUtils.KeyStoreDetails? = null,
-        val architecturesToKeep: List<String> = emptyList(),
-        val aaptBinaryPath: File? = null,
+        val architecturesToKeep: Set<CpuArchitecture> = emptySet(),
         val tempDir: File? = null,
         val failOnError: Boolean = true,
-    )
+        val bytecodeMode: BytecodeMode = BytecodeMode.STRIP_FAST
+    ) {
+        companion object {
+            internal const val DEFAULT_KEYSTORE_ALIAS = "Morphe"
+            internal const val DEFAULT_KEYSTORE_PASSWORD = "Morphe"
+            internal const val DEFAULT_SIGNER_NAME = "Morphe"
+            internal const val LEGACY_KEYSTORE_ALIAS = "Morphe Key"
+            internal const val LEGACY_KEYSTORE_PASSWORD = ""
+        }
+    }
 
     data class Result(
         val success: Boolean,
@@ -86,14 +100,16 @@ object PatchEngine {
         val failedPatches = mutableListOf<FailedPatch>()
 
         try {
-            // 1. Handle APKM format (split APK bundle)
-            val actualInputApk = if (config.inputApk.extension.equals("apkm", ignoreCase = true)) {
-                onProgress("Converting APKM to APK...")
+            // 1. Handle split-APK bundles (.apkm/.xapk/.apks) — merge splits into
+            // a single APK. ApkMerger is format-agnostic (it just extracts the
+            // .apk entries from the zip), so all three formats go through here.
+            val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
+                onProgress("Merging split APKs...")
                 val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
                 ApkMerger(logger.toMorpheLogger()).merge(
                     inputFile = config.inputApk,
                     outputFile = mergedApk,
-                    cleanMetaInf = true
+                    cleanMetaInf = false
                 )
                 mergedApkToCleanup = mergedApk
                 mergedApk
@@ -111,8 +127,10 @@ object PatchEngine {
             val patcherConfig = PatcherConfig(
                 actualInputApk,
                 patcherTempDir,
-                config.aaptBinaryPath?.path,
                 patcherTempDir.absolutePath,
+                useArsclib = true,
+                keepArchitectures = config.architecturesToKeep,
+                useBytecodeMode = config.bytecodeMode
             )
 
             Patcher(patcherConfig).use { patcher ->
@@ -207,39 +225,35 @@ object PatchEngine {
 
                 currentCoroutineContext().ensureActive()
 
-                // 7. Strip libs (if configured)
-                if (config.architecturesToKeep.isNotEmpty()) {
-                    onProgress("Stripping native libraries...")
-                    try {
-                        ApkLibraryStripper.stripLibraries(rebuiltApk, config.architecturesToKeep) {
-                            onProgress(it)
-                        }
-                        stepResults.add(StepResult(PatchStep.STRIPPING_LIBS, true))
-                    } catch (e: Exception) {
-                        stepResults.add(StepResult(PatchStep.STRIPPING_LIBS, false, e.toString()))
-                        return earlyResult()
-                    }
-                }
-
-                currentCoroutineContext().ensureActive()
-
-                // 8. Sign APK (unless unsigned)
+                // 7. Sign APK (unless unsigned)
                 val tempOutput = File(tempDir, config.outputApk.name)
                 if (!config.unsigned) {
-                    onProgress("Signing APK...")
+                    val keystoreDetails = config.keystoreDetails ?: ApkUtils.KeyStoreDetails(
+                        File(tempDir, "morphe.keystore"),
+                        null,
+                        Config.DEFAULT_KEYSTORE_ALIAS,
+                        Config.DEFAULT_KEYSTORE_PASSWORD,
+                    )
+
+                    if (config.keystoreDetails != null) {
+                        onProgress("Signing APK with custom keystore: ${keystoreDetails.keyStore.name}")
+                    } else {
+                        onProgress("Signing APK...")
+                    }
+
                     try {
-                        val keystoreDetails = config.keystoreDetails ?: ApkUtils.KeyStoreDetails(
-                            File(tempDir, "morphe.keystore"),
-                            null,
-                            "Morphe Key",
-                            "",
-                        )
-                        ApkUtils.signApk(
-                            rebuiltApk,
-                            tempOutput,
-                            config.signerName,
-                            keystoreDetails,
-                        )
+                        signWithLegacyFallback(
+                            primary = keystoreDetails,
+                            allowLegacyFallback = config.keystoreDetails == null,
+                            logger = logger,
+                        ) { details ->
+                            ApkUtils.signApk(
+                                rebuiltApk,
+                                tempOutput,
+                                config.signerName,
+                                details,
+                            )
+                        }
                         stepResults.add(StepResult(PatchStep.SIGNING, true))
                     } catch (e: Exception) {
                         stepResults.add(StepResult(PatchStep.SIGNING, false, e.toString()))
@@ -249,14 +263,19 @@ object PatchEngine {
                     rebuiltApk.copyTo(tempOutput, overwrite = true)
                 }
 
-                // 9. Copy to final output
+                // 8. Copy to final output
                 config.outputApk.parentFile?.mkdirs()
                 tempOutput.copyTo(config.outputApk, overwrite = true)
 
                 onProgress("Patching complete!")
 
+                // When failOnError=false (user asked to continue on error), reaching this
+                // line means the APK was successfully rebuilt from the patches that worked,
+                // treat the run as a success. Individual failures are still reported via
+                // `failedPatches` for the UI to display. Only strict mode (failOnError=true)
+                // treats any failure as an overall failure.
                 return Result(
-                    success = failedPatches.isEmpty(),
+                    success = if (config.failOnError) failedPatches.isEmpty() else true,
                     outputPath = config.outputApk.absolutePath,
                     packageName = packageName,
                     packageVersion = packageVersion,
@@ -295,23 +314,15 @@ object PatchEngine {
             val patchName = patch.name ?: return@patchLoop
 
             // Check package compatibility first to avoid duplicate logs for multi-app patches.
-            patch.compatiblePackages?.let { packages ->
-                val matchingPkg = packages.singleOrNull { (name, _) -> name == packageName }
-                if (matchingPkg == null) {
-                    return@patchLoop
-                }
-
-                val (_, versions) = matchingPkg
-                if (versions?.isEmpty() == true) {
-                    return@patchLoop
-                }
-
-                val matchesVersion = forceCompatibility ||
-                        versions?.any { it == packageVersion } ?: true
-
-                if (!matchesVersion) {
-                    onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
-                    return@patchLoop
+            val supportedVersions = patch.supportedVersionsFor(packageName)
+            when {
+                supportedVersions != null && supportedVersions.isEmpty() -> return@patchLoop
+                supportedVersions != null -> {
+                    val matchesVersion = forceCompatibility || packageVersion in supportedVersions
+                    if (!matchesVersion) {
+                        onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
+                        return@patchLoop
+                    }
                 }
             }
 
@@ -322,7 +333,7 @@ object PatchEngine {
             }
 
             val isManuallyEnabled = patchName in enabledPatches
-            val isEnabledByDefault = !exclusiveMode && patch.use
+            val isEnabledByDefault = !exclusiveMode && patch.default
 
             if (!(isEnabledByDefault || isManuallyEnabled)) {
                 return@patchLoop

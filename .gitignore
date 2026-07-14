@@ -4,6 +4,7 @@ build/
 
 # Local configuration file (sdk path, etc)
 local.properties
+old_build.gradle.kts
 
 # Log/OS Files
 *.log

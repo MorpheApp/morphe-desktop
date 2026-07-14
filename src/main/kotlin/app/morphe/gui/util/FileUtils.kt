@@ -1,81 +1,61 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.util
 
+import app.morphe.engine.MorpheData
 import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.zip.ZipFile
 
 /**
  * Platform-agnostic file utilities.
  * Handles app directories, temp files, and cross-platform path operations.
+ *
+ * Directory paths delegate to [MorpheData] (the engine-level single source of
+ * truth) so the GUI, CLI, and any future surface all agree on where data
+ * lives. The previous per-OS app-data folders (`%APPDATA%/morphe-gui`,
+ * `~/Library/Application Support/morphe-gui`, `~/.config/morphe-gui`) are
+ * superseded by `MorpheData.root` — see `unified-data-location-plan.md`.
  */
 object FileUtils {
 
-    private const val APP_NAME = "morphe-gui"
-
     /**
-     * Get the app data directory based on OS.
-     * - Windows: %APPDATA%/morphe-gui
-     * - macOS: ~/Library/Application Support/morphe-gui
-     * - Linux: ~/.config/morphe-gui
+     * All modern Android architectures. Obsolete architectures such as Mips are not included.
      */
-    fun getAppDataDir(): File {
-        val osName = System.getProperty("os.name").lowercase()
-        val userHome = System.getProperty("user.home")
+    val ANDROID_ARCHITECTURES = setOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
 
-        val appDataPath = when {
-            osName.contains("win") -> {
-                val appData = System.getenv("APPDATA") ?: Paths.get(userHome, "AppData", "Roaming").toString()
-                Paths.get(appData, APP_NAME)
-            }
-            osName.contains("mac") -> {
-                Paths.get(userHome, "Library", "Application Support", APP_NAME)
-            }
-            else -> {
-                // Linux and others
-                Paths.get(userHome, ".config", APP_NAME)
-            }
-        }
+    private val EXTENSION_APK_BUNDLES = app.morphe.engine.util.BundleFormats.EXTENSIONS
+    private val EXTENSION_APK_ANY = EXTENSION_APK_BUNDLES + "apk"
 
-        return appDataPath.toFile().also { it.mkdirs() }
-    }
+    /** Returns the unified Morphe data root. Was: per-OS app-data folder. */
+    fun getAppDataDir(): File = MorpheData.root
 
-    /**
-     * Get the patches cache directory.
-     */
-    fun getPatchesDir(): File {
-        return File(getAppDataDir(), "patches").also { it.mkdirs() }
-    }
+    /** Returns the patches cache directory. */
+    fun getPatchesDir(): File = MorpheData.patchesDir
 
-    /**
-     * Get the logs directory.
-     */
-    fun getLogsDir(): File {
-        return File(getAppDataDir(), "logs").also { it.mkdirs() }
-    }
+    /** Returns the logs directory. */
+    fun getLogsDir(): File = MorpheData.logsDir
+
+    /** Returns the GUI config file path. */
+    fun getConfigFile(): File = MorpheData.configFile
+
+    /** Returns the patcher-scratch directory shared with the CLI. */
+    // TODO: This points at morphe-data/tmp, but the GUI's actual patching scratch
+    //  goes to the system temp dir (PatchEngine uses Files.createTempDirectory
+    //  when no tempDir is passed, and PatchService never passes one). So the
+    //  cleanup/size helpers below (getTempDirSize, hasTempFiles, cleanupAllTempDirs)
+    //  under-report — they miss the real per-run patching scratch. Either route GUI
+    //  patching through this dir (createPatchingTempDir is currently dead code) or
+    //  point these helpers at the actual system-temp location. Part of the
+    //  unified-data-location cleanup.
+    fun getTempDir(): File = MorpheData.tmpDir
 
     /**
-     * Get the config file path.
-     */
-    fun getConfigFile(): File {
-        return File(getAppDataDir(), "config.json")
-    }
-
-    /**
-     * Get the app temp directory for patching operations.
-     */
-    fun getTempDir(): File {
-        val systemTemp = System.getProperty("java.io.tmpdir")
-        return File(systemTemp, APP_NAME).also { it.mkdirs() }
-    }
-
-    /**
-     * Create a unique temp directory for a patching session.
+     * Create a unique temp directory for a patching session. Session-scoped
+     * timestamp keeps concurrent CLI/GUI patches from stepping on each other
+     * (see Phase 6 of the unified-data-location plan).
      */
     fun createPatchingTempDir(): File {
         val timestamp = System.currentTimeMillis()
@@ -147,22 +127,54 @@ object FileUtils {
     }
 
     /**
-     * Check if file is an APK or APKM.
+     * Check if file is an APK or split APK bundle (APKM, XAPK, APKS).
      */
     fun isApkFile(file: File): Boolean {
         val ext = getExtension(file)
-        return file.isFile && (ext == "apk" || ext == "apkm")
+        return file.isFile && ext in EXTENSION_APK_ANY
     }
 
     /**
-     * Extract base.apk from an .apkm file to a temp directory.
+     * Check if file is a split APK bundle (.apkm, .xapk, or .apks).
+     */
+    fun isBundleFormat(file: File): Boolean {
+        return file.extension.lowercase() in EXTENSION_APK_BUNDLES
+    }
+
+    /**
+     * Extract base.apk from a split APK bundle (.apkm, .xapk, or .apks) to a temp directory.
+     * For XAPK files, the base APK may not be named "base.apk" — falls back to the
+     * first non-split .apk entry or the largest by compressed size.
      * Returns the extracted base.apk file, or null if extraction fails.
      * Caller is responsible for cleaning up the returned temp file.
      */
-    fun extractBaseApkFromApkm(apkmFile: File): File? {
+    fun extractBaseApkFromBundle(bundleFile: File): File? {
         return try {
-            ZipFile(apkmFile).use { zip ->
-                val baseEntry = zip.getEntry("base.apk") ?: return null
+            ZipFile(bundleFile).use { zip ->
+                val allEntries = zip.entries().asSequence().toList()
+
+                // Try "base.apk" first (APKM format)
+                var baseEntry = zip.getEntry("base.apk")
+
+                // For XAPK: find the base APK among all .apk entries.
+                // Splits are named like "config.arm64_v8a.apk", "split_config.en.apk", etc.
+                // The base APK is typically the package name (e.g., "com.google.android.youtube.apk").
+                if (baseEntry == null) {
+                    val apkEntries = allEntries
+                        .filter { !it.isDirectory && it.name.endsWith(".apk", ignoreCase = true) }
+
+                    val splitPatterns = listOf("split_config", "config.", "split_")
+                    baseEntry = apkEntries
+                        .firstOrNull { entry ->
+                            val name = entry.name.substringAfterLast('/').lowercase()
+                            splitPatterns.none { name.startsWith(it) }
+                        }
+                        // Final fallback: largest .apk by compressed size
+                        ?: apkEntries.maxByOrNull { it.compressedSize }
+                }
+
+                if (baseEntry == null) return null
+
                 val tempFile = File(getTempDir(), "base-${System.currentTimeMillis()}.apk")
                 zip.getInputStream(baseEntry).use { input ->
                     tempFile.outputStream().use { output ->
@@ -173,6 +185,48 @@ object FileUtils {
             }
         } catch (e: Exception) {
             null
+        }
+    }
+
+    @Deprecated("Use extractBaseApkFromBundle instead", ReplaceWith("extractBaseApkFromBundle(apkmFile)"))
+    fun extractBaseApkFromApkm(apkmFile: File): File? = extractBaseApkFromBundle(apkmFile)
+
+    /**
+     * Extract supported CPU architectures from native libraries in an APK or bundle.
+     * Scans for lib/<arch>/ directories, and for bundles also detects arch from split APK names.
+     */
+    fun extractArchitectures(file: File): List<String> {
+        return try {
+            ZipFile(file).use { zip ->
+                val archDirs = mutableSetOf<String>()
+
+                // Scan for lib/<arch>/ entries
+                zip.entries().asSequence()
+                    .map { it.name }
+                    .filter { it.startsWith("lib/") }
+                    .mapNotNull { path ->
+                        val parts = path.split("/")
+                        if (parts.size >= 2) parts[1] else null
+                    }
+                    .forEach { archDirs.add(it) }
+
+                // For bundles: detect arch from split APK names (e.g. split_config.arm64_v8a.apk)
+                if (archDirs.isEmpty()) {
+                    zip.entries().asSequence()
+                        .map { it.name }
+                        .filter { it.endsWith(".apk") }
+                        .forEach { name ->
+                            val normalized = name.replace("_", "-")
+                            ANDROID_ARCHITECTURES.filter { arch -> normalized.contains(arch) }
+                                .forEach { archDirs.add(it) }
+                        }
+                }
+
+                archDirs.toList().ifEmpty { listOf("universal") }
+            }
+        } catch (e: Exception) {
+            Logger.warn("Could not extract architectures: ${e.message}")
+            emptyList()
         }
     }
 }

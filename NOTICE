@@ -1,24 +1,29 @@
 Morphe NOTICE
+
+https://github.com/MorpheApp/morphe-desktop
+
 =============
 
-This file contains Section 7 notices of the GNU General Public License v3
-as they apply to Morphe code. These notices apply to all code authored by
-Morphe, including any modifications of code that may have originated
-outside this repository, and do not change the terms of the GPLv3 license.
-For the full license text, see the LICENSE file or:
-https://www.gnu.org/licenses/gpl-3.0.html
+GPLv3 Section 7b: Preservation of User Notices
 
-7b. Attribution Requirement
----------------------------
+All derivative works (source code and binaries) must include this
+NOTICE text and provide it to the software user.
 
-Any distributed source code that incorporates Morphe CLI,
-including modified versions and derivative works, must retain this NOTICE file.
+Portions of this software are provided "AS IS" by the Morphe software project.
+Any express or implied warranties, including the implied warranties of
+merchantability and fitness for a particular purpose, are disclaimed.
 
-https://morphe.software
 
-7c. Project Name Restriction
-----------------------------
+GPLv3 Section 7c: Prohibiting Misrepresentation of Origin
 
-The project name "Morphe" may not be used for derivative works.
-Derivatives must adopt a completely different identity that is not related
-to or similar to the name "Morphe".
+You are prohibited from misrepresenting the origin of the Program,
+and modified versions of the Program must be identified and marked in
+reasonable ways as different from the original version so as not to cause
+confusion regarding their origin.
+
+
+GPLv3 Section 7e: Declining Grant of Trademark Rights
+
+This License does not grant any rights or permission under trademark law
+to use the name "Morphe" or any of the Program's trade names, trademarks,
+service marks, or logos.

@@ -1,13 +1,15 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui
 
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import app.morphe.gui.ui.components.LocalFrameWindowScope
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -16,6 +18,8 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import app.morphe.gui.data.model.AppConfig
+import app.morphe.gui.util.DeviceMonitor
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
 import app.morphe.gui.util.FileUtils
@@ -30,6 +34,18 @@ fun launchGui(args: Array<String>) = application {
         args.contains("--quick") || args.contains("-q") -> true
         args.contains("--full") || args.contains("-f") -> false
         else -> loadConfigSync().useSimplifiedMode
+    }
+
+    // Belt-and-braces: on any JVM-normal exit path (window close, Cmd+Q,
+    // SIGTERM), kill the ADB daemon if Morphe spawned it. Compose's
+    // DisposableEffect already cancels polling; this hook covers shutdown
+    // routes where Compose teardown doesn't reach the suspend kill call.
+    remember {
+        Runtime.getRuntime().addShutdownHook(Thread {
+            runCatching {
+                runBlocking { DeviceMonitor.stopMonitoringAndKillIfOwned() }
+            }
+        })
     }
 
     val windowState = rememberWindowState(
@@ -58,12 +74,36 @@ fun launchGui(args: Array<String>) = application {
 
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Morphe",
+        title = "",
         state = windowState,
         icon = appIcon
     ) {
-        window.minimumSize = java.awt.Dimension(600, 400)
-        App(initialSimplifiedMode = initialSimplifiedMode)
+        // Min width keeps the single side-by-side Home layout viable — there is no
+        // narrow/stacked variant to fall back to (intentionally removed; one layout
+        // to maintain). 900 is the floor at which the two panes still read well.
+        window.minimumSize = java.awt.Dimension(900, 500)
+
+        // macOS: hide the OS-drawn title bar so a Compose-rendered colored
+        // band can take its place. Traffic lights stay where the OS draws
+        // them (top-left of the client area, ~12px from each edge), and the
+        // colored band sits behind them. These three Apple AWT properties
+        // ship with every macOS JDK — no JetBrains Runtime needed.
+        //
+        // Windows / Linux: standard decorated window. The OS title bar is
+        // drawn above the client area as normal. On Windows, its color is
+        // tinted to match the active theme via DWM (see WindowTitleBarTint).
+        remember {
+            val isMac = System.getProperty("os.name")?.lowercase()?.contains("mac") == true
+            if (isMac) {
+                window.rootPane.putClientProperty("apple.awt.fullWindowContent", true)
+                window.rootPane.putClientProperty("apple.awt.transparentTitleBar", true)
+                window.rootPane.putClientProperty("apple.awt.windowTitleVisible", false)
+            }
+        }
+
+        CompositionLocalProvider(LocalFrameWindowScope provides this) {
+            App(initialSimplifiedMode = initialSimplifiedMode)
+        }
     }
 }
 
@@ -119,3 +159,4 @@ private fun loadAppIcon(): BitmapPainter? {
     }
     return null
 }
+

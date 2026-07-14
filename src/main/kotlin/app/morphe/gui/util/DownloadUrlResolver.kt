@@ -1,11 +1,12 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.util
 
 import app.morphe.gui.data.constants.AppConstants.MORPHE_API_URL
+import io.ktor.http.encodeURLParameter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +19,8 @@ object DownloadUrlResolver {
 
     fun getWebSearchDownloadLink(packageName: String, version: String, architecture: String? = null): String {
         val architectureString = architecture ?: "all"
-        return "$MORPHE_API_URL/v2/web-search/$packageName:$version:$architectureString"
+        val query = "$packageName~$version~$architectureString".encodeURLParameter()
+        return "$MORPHE_API_URL/v2/web-search/$query"
     }
 
     fun openUrlAndFollowRedirects(url: String, handleResolvedUrl: (String) -> Unit) {

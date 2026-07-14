@@ -1,6 +1,6 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.util
@@ -34,8 +34,14 @@ object DeviceMonitor {
 
             if (!adbAvailable) return@launch
 
-            // Poll every 5 seconds
+            // Re-detect ownership on every poll. startServer() is cheap when
+            // the daemon's already alive (TCP port probe + early-return),
+            // and when the daemon has died externally + Morphe respawns it,
+            // ownership correctly flips to true — so a later kill on toggle
+            // OFF / window close tears down the daemon Morphe is actively
+            // keeping alive instead of leaking it.
             while (isActive) {
+                adbManager.startServer()
                 refreshDevices()
                 delay(5000)
             }
@@ -45,6 +51,20 @@ object DeviceMonitor {
     fun stopMonitoring() {
         pollingJob?.cancel()
         pollingJob = null
+    }
+
+    /**
+     * Stop polling AND kill the ADB daemon if Morphe owns it. Use this when
+     * the user toggles auto-start ADB OFF or closes the window. The owned-check
+     * lives in [AdbManager.killServerIfOwned] — if the daemon was already
+     * running when Morphe attached, this is a no-op.
+     *
+     * Clears device state immediately so UI doesn't flash stale entries.
+     */
+    suspend fun stopMonitoringAndKillIfOwned() {
+        stopMonitoring()
+        _state.value = DeviceMonitorState(isAdbAvailable = _state.value.isAdbAvailable)
+        adbManager.killServerIfOwned()
     }
 
     fun selectDevice(device: AdbDevice) {

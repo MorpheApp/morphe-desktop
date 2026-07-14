@@ -1,10 +1,11 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -22,67 +23,72 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.LocalMorpheCorners
 
 @Composable
 fun OfflineBanner(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
-
-    val buttonColor = if (isHovered) {
-        MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f)
-    } else {
-        MaterialTheme.colorScheme.onErrorContainer
-    }
+    val shape = RoundedCornerShape(corners.medium)
 
     Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.errorContainer,
-        shape = RoundedCornerShape(12.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.2f), shape),
+        color = MaterialTheme.colorScheme.error.copy(alpha = 0.06f),
+        shape = shape
     ) {
         Row(
-            modifier = Modifier.padding(start = 16.dp, top = 10.dp, bottom = 10.dp, end = 8.dp),
+            modifier = Modifier.padding(start = 14.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.WifiOff,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onErrorContainer,
-                modifier = Modifier.size(18.dp)
+                tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                modifier = Modifier.size(16.dp)
             )
             Text(
-                text = "Offline — showing cached patches",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onErrorContainer,
+                text = "Offline — using cached patches",
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 modifier = Modifier.weight(1f)
             )
-            Surface(
+            OutlinedButton(
                 onClick = onRetry,
-                modifier = Modifier.hoverable(interactionSource),
-                color = buttonColor,
-                shape = RoundedCornerShape(8.dp)
+                modifier = Modifier.hoverable(interactionSource).height(28.dp),
+                shape = RoundedCornerShape(corners.small),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (isHovered) MaterialTheme.colorScheme.error.copy(alpha = 0.4f)
+                    else MaterialTheme.colorScheme.error.copy(alpha = 0.2f)
+                ),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                )
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.errorContainer,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Text(
-                        text = "Retry",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.errorContainer
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp)
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = "RETRY",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = mono,
+                    letterSpacing = 0.5.sp
+                )
             }
         }
     }

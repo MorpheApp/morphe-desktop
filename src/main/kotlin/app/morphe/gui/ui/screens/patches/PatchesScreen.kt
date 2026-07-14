@@ -1,46 +1,62 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.ui.screens.patches
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import app.morphe.gui.data.model.Release
+import app.morphe.engine.model.Release
 import org.koin.core.parameter.parametersOf
 import cafe.adriel.voyager.koin.koinScreenModel
 import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.DeviceIndicator
 import app.morphe.gui.ui.components.SettingsButton
+import app.morphe.gui.ui.components.ToolsButton
+import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.components.getErrorType
 import app.morphe.gui.ui.components.getFriendlyErrorMessage
 import app.morphe.gui.ui.components.OfflineBanner
+import app.morphe.gui.ui.theme.LocalMorpheAccents
+import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.MorpheColors
+import app.morphe.gui.ui.theme.LocalMorpheFont
 import java.awt.FileDialog
 import java.awt.Frame
 import java.io.File
@@ -64,8 +80,11 @@ data class PatchesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatchesScreenContent(viewModel: PatchesViewModel) {
+    val corners = LocalMorpheCorners.current
     val navigator = LocalNavigator.currentOrThrow
     val uiState by viewModel.uiState.collectAsState()
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
 
     var showErrorDialog by remember { mutableStateOf(false) }
     var currentError by remember { mutableStateOf<String?>(null) }
@@ -95,131 +114,244 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text("Select Patches", fontWeight = FontWeight.SemiBold)
-                        Text(
-                            text = viewModel.getApkName(),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navigator.pop() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
-                actions = {
-                    DeviceIndicator()
-                    IconButton(
-                        onClick = { viewModel.loadReleases() },
-                        enabled = !uiState.isLoading
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Refresh"
-                        )
-                    }
-                    SettingsButton(allowCacheClear = true)
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            )
-        },
-    ) { paddingValues ->
-        Column(
+    val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        // ── Header bar ──
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+                .fillMaxWidth()
+                .drawBehind {
+                    drawLine(
+                        color = dividerColor,
+                        start = Offset(0f, size.height),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = 1f
+                    )
+                }
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Channel selector (hidden when offline)
-            if (!uiState.isOffline) {
-                ChannelSelector(
-                    selectedChannel = uiState.selectedChannel,
-                    onChannelSelected = { viewModel.setChannel(it) },
-                    stableCount = uiState.stableReleases.size,
-                    devCount = uiState.devReleases.size,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            // Back button
+            val backHover = remember { MutableInteractionSource() }
+            val isBackHovered by backHover.collectIsHoveredAsState()
+            val backBorder by animateColorAsState(
+                if (isBackHovered) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                else MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                animationSpec = tween(150)
+            )
+
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .hoverable(backHover)
+                    .clip(RoundedCornerShape(corners.small))
+                    .border(1.dp, backBorder, RoundedCornerShape(corners.small))
+                    .clickable { navigator.pop() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(16.dp)
                 )
             }
 
-            // Offline banner
-            if (uiState.isOffline && uiState.currentReleases.isNotEmpty()) {
-                OfflineBanner(
-                    onRetry = { viewModel.loadReleases() },
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp)
+            Spacer(modifier = Modifier.width(14.dp))
+
+            // Title block
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "SELECT PATCHES",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    letterSpacing = 1.5.sp,
+                    lineHeight = 14.sp
                 )
+                if (viewModel.getApkName().isNotBlank()) {
+                    Text(
+                        text = viewModel.getApkName(),
+                        fontSize = 10.sp,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        letterSpacing = 0.3.sp,
+                        lineHeight = 8.sp
+                    )
+                }
+            }
+
+            // Actions
+            val refreshHover = remember { MutableInteractionSource() }
+            val isRefreshHovered by refreshHover.collectIsHoveredAsState()
+            val refreshBorder by animateColorAsState(
+                MaterialTheme.colorScheme.outline.copy(alpha = if (isRefreshHovered) 0.24f else 0.1f),
+                animationSpec = tween(150)
+            )
+
+            if (!uiState.isLocalSource) {
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .hoverable(refreshHover)
+                        .clip(RoundedCornerShape(corners.small))
+                        .border(1.dp, refreshBorder, RoundedCornerShape(corners.small))
+                        .then(
+                            if (!uiState.isLoading) Modifier.clickable { viewModel.loadReleases() }
+                            else Modifier
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh",
+                        tint = if (uiState.isLoading) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(6.dp))
+            }
+
+            DeviceIndicator()
+            Spacer(modifier = Modifier.width(6.dp))
+            ToolsButton(allowCacheClear = true)
+            Spacer(modifier = Modifier.width(6.dp))
+            SettingsButton()
+        }
+
+        // ── Content area ──
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Local source banner
+            if (uiState.isLocalSource) {
+                LocalSourceBanner(
+                    patchFile = uiState.downloadedPatchFile,
+                    modifier = Modifier.padding(16.dp)
+                )
+            } else {
+                // Channel selector
+                if (!uiState.isOffline) {
+                    ChannelSelector(
+                        selectedChannel = uiState.selectedChannel,
+                        onChannelSelected = { viewModel.setChannel(it) },
+                        stableCount = uiState.stableReleases.size,
+                        devCount = uiState.devReleases.size,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                    )
+                }
+
+                // Offline banner
+                if (uiState.isOffline && uiState.currentReleases.isNotEmpty()) {
+                    OfflineBanner(
+                        onRetry = { viewModel.loadReleases() },
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp)
+                    )
+                }
             }
 
             when {
+                uiState.isLocalSource -> {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
                 uiState.isLoading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            CircularProgressIndicator(color = MorpheColors.Blue)
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(28.dp),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(modifier = Modifier.height(14.dp))
                             Text(
-                                text = "Fetching releases...",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                text = "FETCHING RELEASES",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = mono,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                letterSpacing = 2.sp
                             )
                         }
                     }
                 }
-
                 uiState.currentReleases.isEmpty() && !uiState.isLoading -> {
                     Box(
                         modifier = Modifier.weight(1f).fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "No releases found",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                text = "NO RELEASES FOUND",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = mono,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                letterSpacing = 1.5.sp
                             )
-                            OutlinedButton(onClick = { viewModel.loadReleases() }) {
-                                Text("Retry")
+                            Spacer(modifier = Modifier.height(12.dp))
+                            OutlinedButton(
+                                onClick = { viewModel.loadReleases() },
+                                shape = RoundedCornerShape(corners.small),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant)
+                            ) {
+                                Text(
+                                    "RETRY",
+                                    fontFamily = mono,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 11.sp,
+                                    letterSpacing = 1.sp
+                                )
                             }
                         }
                     }
                 }
-
                 else -> {
                     // Releases list
-                    LazyColumn(
+                    val releasesListState = rememberLazyListState()
+                    Box(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxWidth(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                            .fillMaxWidth()
                     ) {
-                        items(
-                            items = uiState.currentReleases,
-                            key = { it.tagName }
-                        ) { release ->
-                            ReleaseCard(
-                                release = release,
-                                isSelected = release.tagName == uiState.selectedRelease?.tagName,
-                                isDownloaded = release.tagName in uiState.cachedReleaseVersions,
-                                isOffline = uiState.isOffline,
-                                onClick = { viewModel.selectRelease(release) }
-                            )
+                        LazyColumn(
+                            state = releasesListState,
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            val latestStableTag = uiState.stableReleases.firstOrNull()?.tagName
+                            val latestDevTag = uiState.devReleases.firstOrNull()?.tagName
+                            items(
+                                items = uiState.currentReleases,
+                                key = { it.tagName }
+                            ) { release ->
+                                ReleaseCard(
+                                    release = release,
+                                    isSelected = release.tagName == uiState.selectedRelease?.tagName,
+                                    isDownloaded = release.tagName in uiState.cachedReleaseVersions,
+                                    isOffline = uiState.isOffline,
+                                    isLatest = release.tagName == latestStableTag ||
+                                               release.tagName == latestDevTag,
+                                    onClick = { viewModel.selectRelease(release) }
+                                )
+                            }
                         }
+
+                        VerticalScrollbar(
+                            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                            adapter = rememberScrollbarAdapter(releasesListState),
+                            style = morpheScrollbarStyle()
+                        )
                     }
 
                     // Bottom action bar
@@ -227,9 +359,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         uiState = uiState,
                         onDownloadClick = { viewModel.downloadPatches() },
                         onSelectClick = {
-                            // Save the selected version to config before navigating back
                             viewModel.confirmSelection()
-                            // Go back to HomeScreen - the new patches file is now cached
                             navigator.pop()
                         },
                         onExportJsonClick = {
@@ -250,6 +380,10 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
     }
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  CHANNEL SELECTOR
+// ═══════════════════════════════════════════════════════════════════
+
 @Composable
 private fun ChannelSelector(
     selectedChannel: ReleaseChannel,
@@ -258,22 +392,26 @@ private fun ChannelSelector(
     devCount: Int,
     modifier: Modifier = Modifier
 ) {
+    val accents = LocalMorpheAccents.current
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         ChannelChip(
-            label = "Stable",
+            label = "STABLE",
             count = stableCount,
             isSelected = selectedChannel == ReleaseChannel.STABLE,
             onClick = { onChannelSelected(ReleaseChannel.STABLE) },
+            accentColor = accents.primary,
             modifier = Modifier.weight(1f)
         )
         ChannelChip(
-            label = "Dev",
+            label = "DEV",
             count = devCount,
             isSelected = selectedChannel == ReleaseChannel.DEV,
             onClick = { onChannelSelected(ReleaseChannel.DEV) },
+            accentColor = accents.primary,
             modifier = Modifier.weight(1f)
         )
     }
@@ -285,49 +423,73 @@ private fun ChannelChip(
     count: Int,
     isSelected: Boolean,
     onClick: () -> Unit,
+    accentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (isSelected) {
-        MorpheColors.Blue.copy(alpha = 0.15f)
-    } else {
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    }
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val hoverInteraction = remember { MutableInteractionSource() }
+    val isHovered by hoverInteraction.collectIsHoveredAsState()
 
-    val borderColor = if (isSelected) {
-        MorpheColors.Blue
-    } else {
-        MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-    }
+    val borderColor by animateColorAsState(
+        when {
+            isSelected -> accentColor.copy(alpha = 0.5f)
+            isHovered -> accentColor.copy(alpha = 0.3f)
+            else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
+        },
+        animationSpec = tween(150)
+    )
+    val bgColor = if (isSelected) accentColor.copy(alpha = 0.08f) else Color.Transparent
 
-    Surface(
+    Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick),
-        color = backgroundColor,
-        shape = RoundedCornerShape(12.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, borderColor)
+            .clip(RoundedCornerShape(corners.small))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+            .background(bgColor)
+            .hoverable(hoverInteraction)
+            .clickable(onClick = onClick)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 10.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Selection dot
+            if (isSelected) {
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .background(accentColor, RoundedCornerShape(1.dp))
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
             Text(
                 text = label,
-                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                color = if (isSelected) MorpheColors.Blue else MaterialTheme.colorScheme.onSurface
+                fontSize = 11.sp,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                fontFamily = mono,
+                color = if (isSelected) accentColor else MaterialTheme.colorScheme.onSurface,
+                letterSpacing = 1.5.sp
             )
             if (count > 0) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "($count)",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "$count",
+                    fontSize = 10.sp,
+                    fontFamily = mono,
+                    color = if (isSelected) accentColor.copy(alpha = 0.6f)
+                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                 )
             }
         }
     }
 }
+
+// ════════════════════════════════════════════════════════════════════
+//  RELEASE CARD
+// ════════════════════════════════════════════════════════════════════
 
 @Composable
 private fun ReleaseCard(
@@ -335,158 +497,231 @@ private fun ReleaseCard(
     isSelected: Boolean,
     isDownloaded: Boolean,
     isOffline: Boolean = false,
+    isLatest: Boolean = false,
     onClick: () -> Unit
 ) {
-    val titleColor = MaterialTheme.colorScheme.onSurface
-    val subtitleColor = MaterialTheme.colorScheme.onSurfaceVariant
-    val dateColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-    val accentColor = if (isSelected && isDownloaded) MorpheColors.Teal else MorpheColors.Blue
-    val devBadgeColor = MorpheColors.Teal
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+    val selectedColor = accents.primary
+    val downloadedColor = accents.secondary
+    val accentColor = when {
+        isSelected -> selectedColor
+        isDownloaded -> downloadedColor
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
 
     var isExpanded by remember { mutableStateOf(false) }
     val hasNotes = !release.body.isNullOrBlank()
 
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
-    val cardBackground = when {
-        isSelected && isDownloaded -> MorpheColors.Teal.copy(alpha = if (isHovered) 0.22f else 0.15f)
-        isSelected -> MorpheColors.Blue.copy(alpha = if (isHovered) 0.22f else 0.15f)
-        else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = if (isHovered) 0.7f else 0.25f)
+
+    val borderColor by animateColorAsState(
+        when {
+            isSelected -> accentColor.copy(alpha = 0.5f)
+            isDownloaded -> downloadedColor.copy(alpha = 0.32f)
+            isHovered -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f)
+            else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
+        },
+        animationSpec = tween(150)
+    )
+
+    val bgColor = when {
+        isSelected -> selectedColor.copy(alpha = 0.07f)
+        isDownloaded -> downloadedColor.copy(alpha = 0.045f)
+        else -> MaterialTheme.colorScheme.surface
     }
 
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
+            .background(bgColor)
             .hoverable(interactionSource)
-            .clickable(interactionSource = interactionSource, indication = null) { onClick() },
-        colors = CardDefaults.cardColors(containerColor = cardBackground),
-        shape = RoundedCornerShape(12.dp)
+            .clickable(interactionSource = interactionSource, indication = null) { onClick() }
     ) {
         Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-            // Green ribbon for downloaded (non-selected) cards
-            if (isDownloaded && !isSelected) {
+            // Left accent stripe
+            if (isSelected || isDownloaded) {
                 Box(
                     modifier = Modifier
-                        .width(4.dp)
+                        .width(3.dp)
                         .fillMaxHeight()
-                        .background(
-                            MorpheColors.Teal,
-                            RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                        )
+                        .background(accentColor)
                 )
             }
 
             Column(modifier = Modifier.weight(1f)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = release.tagName,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = titleColor
-                        )
-                        if (release.isDevRelease()) {
-                            Surface(
-                                color = devBadgeColor.copy(alpha = 0.2f),
-                                shape = RoundedCornerShape(4.dp)
-                            ) {
-                                Text(
-                                    text = "DEV",
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = devBadgeColor,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = release.tagName,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontFamily = mono,
+                                color = when {
+                                    isSelected -> selectedColor
+                                    isDownloaded -> downloadedColor
+                                    else -> MaterialTheme.colorScheme.onSurface
+                                }
+                            )
+                            if (isLatest) {
+                                val latestColor = accents.secondary
+                                Box(
+                                    modifier = Modifier
+                                        .background(latestColor.copy(alpha = 0.12f), RoundedCornerShape(corners.small))
+                                        .border(1.dp, latestColor.copy(alpha = 0.32f), RoundedCornerShape(corners.small))
+                                        .padding(horizontal = 5.dp, vertical = 1.dp)
+                                ) {
+                                    Text(
+                                        text = "LATEST",
+                                        fontSize = 8.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = mono,
+                                        color = latestColor,
+                                        letterSpacing = 1.sp
+                                    )
+                                }
+                            }
+                            if (release.isDevRelease()) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(accents.primary.copy(alpha = 0.1f), RoundedCornerShape(corners.small))
+                                        .border(1.dp, accents.primary.copy(alpha = 0.22f), RoundedCornerShape(corners.small))
+                                        .padding(horizontal = 5.dp, vertical = 1.dp)
+                                ) {
+                                    Text(
+                                        text = "DEV",
+                                        fontSize = 8.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = mono,
+                                        color = accents.primary,
+                                        letterSpacing = 1.sp
+                                    )
+                                }
+                            }
+                            if (isDownloaded) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(downloadedColor.copy(alpha = 0.1f), RoundedCornerShape(corners.small))
+                                        .border(1.dp, downloadedColor.copy(alpha = 0.24f), RoundedCornerShape(corners.small))
+                                        .padding(horizontal = 5.dp, vertical = 1.dp)
+                                ) {
+                                    Text(
+                                        text = "CACHED",
+                                        fontSize = 8.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = mono,
+                                        color = downloadedColor,
+                                        letterSpacing = 1.sp
+                                    )
+                                }
                             }
                         }
-                    }
 
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    // Show .mpp file info if available
-                    release.assets.find { it.isMpp() }?.let { mppAsset ->
-                        Text(
-                            text = "${mppAsset.name} (${mppAsset.getFormattedSize()})",
-                            fontSize = 13.sp,
-                            color = subtitleColor
-                        )
-                    }
-
-                    val formattedDate = formatDate(release.publishedAt)
-                    if (formattedDate.isNotEmpty()) {
-                        Text(
-                            text = "${if (isOffline) "Cached:" else "Published:"} $formattedDate",
-                            fontSize = 12.sp,
-                            color = dateColor
-                        )
-                    }
-
-                    if (hasNotes) {
                         Spacer(modifier = Modifier.height(4.dp))
-                        Surface(
-                            color = accentColor.copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(6.dp),
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null
-                                ) { isExpanded = !isExpanded }
-                        ) {
+
+                        // Patch file info
+                        release.assets.find { it.isPatchFile() }?.let { patchAsset ->
+                            Text(
+                                text = "${patchAsset.name} (${patchAsset.getFormattedSize()})",
+                                fontSize = 11.sp,
+                                fontFamily = mono,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                letterSpacing = 0.3.sp
+                            )
+                        }
+
+                        val formattedDate = release.publishedAt?.let { formatDate(it) } ?: ""
+                        if (formattedDate.isNotEmpty()) {
+                            Text(
+                                text = "${if (isOffline) "Cached:" else "Published:"} $formattedDate",
+                                fontSize = 10.sp,
+                                fontFamily = mono,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                            )
+                        }
+
+                        if (hasNotes) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            val noteHover = remember { MutableInteractionSource() }
+                            val isNoteHovered by noteHover.collectIsHoveredAsState()
+                            val noteBorder by animateColorAsState(
+                                if (isNoteHovered) accentColor.copy(alpha = 0.3f)
+                                else accentColor.copy(alpha = 0.15f),
+                                animationSpec = tween(150)
+                            )
+
                             Row(
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(corners.small))
+                                    .border(1.dp, noteBorder, RoundedCornerShape(corners.small))
+                                    .hoverable(noteHover)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null
+                                    ) { isExpanded = !isExpanded }
+                                    .padding(horizontal = 8.dp, vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 Text(
-                                    text = if (isExpanded) "Hide patch notes" else "Patch notes",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = accentColor
+                                    text = if (isExpanded) "HIDE NOTES" else "PATCH NOTES",
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = mono,
+                                    color = accentColor,
+                                    letterSpacing = 0.5.sp
                                 )
                                 Icon(
                                     imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
                                     contentDescription = null,
                                     tint = accentColor,
-                                    modifier = Modifier.size(16.dp)
+                                    modifier = Modifier.size(14.dp)
                                 )
                             }
                         }
                     }
                 }
 
-            }
-
-            // Expandable release notes
-            if (isExpanded && hasNotes) {
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                )
-                FormattedReleaseNotes(
-                    markdown = release.body.orEmpty(),
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+                // Expandable release notes
+                if (isExpanded && hasNotes) {
+                    val notesDividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.06f)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .height(1.dp)
+                            .background(notesDividerColor)
+                    )
+                    FormattedReleaseNotes(
+                        markdown = release.body.orEmpty(),
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }
 }
 
-/**
- * Renders GitHub release notes markdown as formatted Compose text.
- */
+// ════════════════════════════════════════════════════════════════════
+//  RELEASE NOTES
+// ════════════════════════════════════════════════════════════════════
+
 @Composable
 private fun FormattedReleaseNotes(markdown: String, modifier: Modifier = Modifier) {
+    val mono = LocalMorpheFont.current
     val lines = parseMarkdown(markdown)
     Column(
         modifier = modifier,
@@ -496,36 +731,42 @@ private fun FormattedReleaseNotes(markdown: String, modifier: Modifier = Modifie
             when (line) {
                 is MdLine.Header -> Text(
                     text = line.text,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    letterSpacing = 0.5.sp
                 )
                 is MdLine.SubHeader -> Text(
                     text = line.text,
-                    fontSize = 13.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
+                    fontFamily = mono,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 is MdLine.Bullet -> {
                     Row {
                         Text(
-                            text = "\u2022  ",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = "·  ",
+                            fontSize = 11.sp,
+                            fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
                         )
                         Text(
                             text = line.text,
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            lineHeight = 18.sp
+                            fontSize = 11.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                            lineHeight = 17.sp
                         )
                     }
                 }
                 is MdLine.Plain -> Text(
                     text = line.text,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 18.sp
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    lineHeight = 17.sp
                 )
             }
         }
@@ -574,6 +815,10 @@ private fun cleanMarkdown(text: String): String {
     return result
 }
 
+// ════════════════════════════════════════════════════════════════════
+//  BOTTOM ACTION BAR
+// ════════════════════════════════════════════════════════════════════
+
 @Composable
 private fun BottomActionBar(
     uiState: PatchesUiState,
@@ -581,105 +826,189 @@ private fun BottomActionBar(
     onSelectClick: () -> Unit,
     onExportJsonClick: () -> Unit,
 ) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 3.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            // Download progress
-            if (uiState.isDownloading) {
-                LinearProgressIndicator(
-                    progress = { uiState.downloadProgress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(2.dp)),
-                    color = MorpheColors.Blue,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Downloading patches...",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+    val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .drawBehind {
+                drawLine(
+                    color = dividerColor,
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
+                    strokeWidth = 1f
+                )
+            }
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp)
+    ) {
+        // Download progress
+        if (uiState.isDownloading) {
+            LinearProgressIndicator(
+                progress = { uiState.downloadProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(3.dp)
+                    .clip(RoundedCornerShape(1.dp)),
+                color = accents.primary,
+                trackColor = accents.primary.copy(alpha = 0.15f)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "DOWNLOADING…",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                letterSpacing = 1.5.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            if (uiState.downloadedPatchFile == null) {
                 // Download button
-                if (uiState.downloadedPatchFile == null) {
-                    Button(
-                        onClick = onDownloadClick,
-                        enabled = uiState.selectedRelease != null && !uiState.isDownloading,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MorpheColors.Blue
-                        ),
-                        shape = RoundedCornerShape(12.dp)
+                Button(
+                    onClick = onDownloadClick,
+                    enabled = uiState.selectedRelease != null && !uiState.isDownloading,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(44.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = accents.primary),
+                    shape = RoundedCornerShape(corners.small)
+                ) {
+                    Text(
+                        text = if (uiState.isDownloading) "DOWNLOADING…" else "DOWNLOAD",
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = mono,
+                        fontSize = 12.sp,
+                        letterSpacing = 1.sp
+                    )
+                }
+            } else {
+                // Select button
+                Button(
+                    onClick = onSelectClick,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(44.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = accents.primary),
+                    shape = RoundedCornerShape(corners.small)
+                ) {
+                    Text(
+                        text = "SELECT",
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = mono,
+                        fontSize = 12.sp,
+                        letterSpacing = 1.sp
+                    )
+                }
+
+                // Export JSON
+                if (uiState.isExporting) {
+                    Box(
+                        modifier = Modifier.height(44.dp).width(44.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = if (uiState.isDownloading) "Downloading..." else "Download Patches",
-                            fontWeight = FontWeight.Medium
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            strokeWidth = 2.dp
                         )
                     }
                 } else {
-                    // Select button (patches downloaded)
-                    Button(
-                        onClick = onSelectClick,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MorpheColors.Teal
-                        ),
-                        shape = RoundedCornerShape(12.dp)
+                    OutlinedButton(
+                        onClick = onExportJsonClick,
+                        modifier = Modifier.height(44.dp),
+                        shape = RoundedCornerShape(corners.small),
+                        border = BorderStroke(1.dp, accents.primary.copy(alpha = 0.3f)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = accents.primary)
                     ) {
                         Text(
-                            text = "Select",
-                            fontWeight = FontWeight.Medium
+                            text = "EXPORT JSON",
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = mono,
+                            fontSize = 11.sp,
+                            letterSpacing = 0.5.sp
                         )
-                    }
-
-                    // Export JSON button / spinner
-                    if (uiState.isExporting) {
-                        Box(
-                            modifier = Modifier.height(48.dp).width(48.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                color = MorpheColors.Blue,
-                                strokeWidth = 2.dp
-                            )
-                        }
-                    } else {
-                        OutlinedButton(
-                            onClick = onExportJsonClick,
-                            modifier = Modifier.height(48.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            border = androidx.compose.foundation.BorderStroke(
-                                1.dp,
-                                MorpheColors.Blue
-                            ),
-                        ) {
-                            Text(
-                                text = "Export JSON",
-                                fontWeight = FontWeight.Medium,
-                                color = MorpheColors.Blue
-                            )
-                        }
                     }
                 }
             }
+        }
+    }
+}
 
+// ════════════════════════════════════════════════════════════════════
+//  LOCAL SOURCE BANNER
+// ════════════════════════════════════════════════════════════════════
+
+@Composable
+private fun LocalSourceBanner(
+    patchFile: File?,
+    modifier: Modifier = Modifier
+) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.medium))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.16f), RoundedCornerShape(corners.medium))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.18f))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+        ) {
+            // Left accent stripe
+            Box(
+                modifier = Modifier
+                    .width(3.dp)
+                    .fillMaxHeight()
+                    .background(accents.primary)
+            )
+
+            Row(
+                modifier = Modifier.padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.FolderOpen,
+                    contentDescription = null,
+                    tint = accents.primary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Column {
+                    Text(
+                        text = "LOCAL PATCH FILE",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = accents.primary,
+                        letterSpacing = 1.5.sp
+                    )
+                    if (patchFile != null) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = patchFile.name,
+                            fontSize = 11.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                            letterSpacing = 0.3.sp
+                        )
+                    }
+                }
+            }
         }
     }
 }

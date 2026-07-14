@@ -1,10 +1,12 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.data.model
 
+import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.serialization.Serializable
 
 /**
@@ -50,7 +52,9 @@ data class Patch(
 @Serializable
 data class CompatiblePackage(
     val name: String,
-    val versions: List<String> = emptyList()
+    val displayName: String? = null,
+    val versions: List<String> = emptyList(),
+    val experimentalVersions: List<String> = emptyList()
 )
 
 @Serializable
@@ -70,7 +74,8 @@ enum class PatchOptionType {
     INT,
     LONG,
     FLOAT,
-    LIST
+    LIST,
+    FILE
 }
 
 /**
@@ -80,11 +85,23 @@ enum class PatchOptionType {
 data class PatchConfig(
     val inputApkPath: String,
     val outputApkPath: String,
-    val patchesFilePath: String,
+    /** One or more .mpp file paths. Multiple = union of patches across sources. */
+    val patchesFilePaths: List<String>,
     val enabledPatches: List<String> = emptyList(),
     val disabledPatches: List<String> = emptyList(),
     val patchOptions: Map<String, String> = emptyMap(),
     val useExclusiveMode: Boolean = false,
-    val striplibs: List<String> = emptyList(),
-    val continueOnError: Boolean = false
+    val keepArchitectures: Set<CpuArchitecture> = emptySet(),
+    val continueOnError: Boolean = false,
+
+    // ── Recall metadata ──
+    // Carried from the selection screen down to the patching screen so the
+    // success path can record a PatchedAppRecord (see PatchedAppStore). All
+    // default-empty, so callers that don't populate them still work.
+    val packageName: String = "",
+    val appDisplayName: String = "",
+    /** Source name → set of selected patch unique ids. */
+    val patchSelectionByBundle: Map<String, Set<String>> = emptyMap(),
+    /** Sources + versions enabled at patch time (drives "update available"). */
+    val sourcesSnapshot: List<PatchedAppRecord.PatchedSourceSnapshot> = emptyList(),
 )

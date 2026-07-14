@@ -1,6 +1,6 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.data.model
@@ -15,24 +15,41 @@ data class SupportedApp(
     val packageName: String,
     val displayName: String,
     val supportedVersions: List<String>,
+    val experimentalVersions: List<String> = emptyList(),
     val recommendedVersion: String?,
-    val apkDownloadUrl: String? = null
+    val apkDownloadUrl: String? = null,
+    val experimentalDownloadUrl: String? = null
 ) {
     companion object {
+        fun resolveDisplayName(packageName: String, providedName: String?): String {
+            return providedName?.takeIf { it.isNotBlank() } ?: getDisplayName(packageName)
+        }
+
         /**
          * Derive display name from package name.
          */
         fun getDisplayName(packageName: String): String {
-            return when (packageName) {
-                "com.google.android.youtube" -> "YouTube"
-                "com.google.android.apps.youtube.music" -> "YouTube Music"
-                "com.reddit.frontpage" -> "Reddit"
-                else -> {
-                    // Fallback: Extract last part of package name and capitalize
-                    packageName.substringAfterLast(".")
-                        .replaceFirstChar { it.uppercase() }
-                }
-            }
+            // Well-known package name mappings
+            val knownNames = mapOf(
+                "com.google.android.youtube" to "YouTube",
+                "com.google.android.apps.youtube.music" to "YouTube Music",
+                "com.reddit.frontpage" to "Reddit",
+            )
+            knownNames[packageName]?.let { return it }
+
+            // Smart fallback: use the most meaningful part of the package name
+            val parts = packageName.split(".")
+            // Skip common prefixes: com, org, net, android, app, etc.
+            val skipParts = setOf("com", "org", "net", "io", "me", "app", "android", "apps", "free")
+            val meaningful = parts.filter { it.lowercase() !in skipParts && it.length > 1 }
+            // Use the last meaningful part, or the full last segment
+            val name = meaningful.lastOrNull() ?: parts.last()
+            // Split camelCase and underscores, capitalize
+            return name
+                .replace("_", " ")
+                .replace(Regex("([a-z])([A-Z])")) { "${it.groupValues[1]} ${it.groupValues[2]}" }
+                .split(" ")
+                .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
         }
 
         /**

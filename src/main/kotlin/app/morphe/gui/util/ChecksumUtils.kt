@@ -1,13 +1,12 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.util
 
+import app.morphe.engine.util.FileChecksum
 import java.io.File
-import java.io.FileInputStream
-import java.security.MessageDigest
 
 /**
  * Utility for calculating and verifying file checksums.
@@ -18,19 +17,7 @@ object ChecksumUtils {
      * Calculate SHA-256 checksum of a file.
      * @return Lowercase hex string of the checksum
      */
-    fun calculateSha256(file: File): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        val buffer = ByteArray(8192)
-
-        FileInputStream(file).use { fis ->
-            var bytesRead: Int
-            while (fis.read(buffer).also { bytesRead = it } != -1) {
-                digest.update(buffer, 0, bytesRead)
-            }
-        }
-
-        return digest.digest().joinToString("") { "%02x".format(it) }
-    }
+    fun calculateSha256(file: File): String = FileChecksum.sha256(file)
 
     /**
      * Verify a file's checksum against expected value.

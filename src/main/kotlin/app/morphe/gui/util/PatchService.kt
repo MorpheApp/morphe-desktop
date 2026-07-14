@@ -1,6 +1,6 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.util
@@ -11,8 +11,11 @@ import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchOption
 import app.morphe.gui.data.model.PatchOptionType
 import app.morphe.patcher.patch.loadPatchesFromJar
+import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import app.morphe.patcher.apk.ApkUtils
+import app.morphe.engine.patches.PatchBundleLoader
 import java.io.File
 import kotlin.reflect.KType
 import app.morphe.patcher.patch.Patch as LibraryPatch
@@ -75,35 +78,45 @@ class PatchService {
      * Delegates to PatchEngine for the actual pipeline.
      */
     suspend fun patch(
-        patchesFilePath: String,
+        patchesFilePaths: List<String>,
         inputApkPath: String,
         outputApkPath: String,
         enabledPatches: List<String> = emptyList(),
         disabledPatches: List<String> = emptyList(),
         options: Map<String, String> = emptyMap(),
         exclusiveMode: Boolean = false,
-        striplibs: List<String> = emptyList(),
+        keepArchitectures: Set<CpuArchitecture> = emptySet(),
         continueOnError: Boolean = false,
+        keystorePath: String? = null,
+        keystorePassword: String? = null,
+        keystoreAlias: String? = null,
+        keystoreEntryPassword: String? = null,
         onProgress: (String) -> Unit = {}
     ): Result<PatchResult> = withContext(Dispatchers.IO) {
         try {
-            val patchFile = File(patchesFilePath)
+            if (patchesFilePaths.isEmpty()) {
+                return@withContext Result.failure(Exception("No patches files supplied"))
+            }
+            val patchFiles = patchesFilePaths.map { File(it) }
             val inputApk = File(inputApkPath)
             val outputFile = File(outputApkPath)
 
-            if (!patchFile.exists()) {
-                return@withContext Result.failure(Exception("Patches file not found"))
+            patchFiles.firstOrNull { !it.exists() }?.let {
+                return@withContext Result.failure(Exception("Patches file not found: ${it.name}"))
             }
             if (!inputApk.exists()) {
                 return@withContext Result.failure(Exception("Input APK not found"))
             }
 
-            // Load patches (copy to temp to avoid Windows file lock)
+            // Load patches (copy each to temp to avoid Windows file lock)
             onProgress("Loading patches...")
-            val patchTempCopy = File.createTempFile("morphe-patches-", ".mpp")
+            val tempCopies = patchFiles.map { src ->
+                val tmp = File.createTempFile("morphe-patches-", ".mpp")
+                src.copyTo(tmp, overwrite = true)
+                tmp
+            }
             try {
-                patchFile.copyTo(patchTempCopy, overwrite = true)
-                val loadedPatches = loadPatchesFromJar(setOf(patchTempCopy))
+                val loadedPatches = PatchBundleLoader.loadFlat(tempCopies)
 
                 // Convert GUI's flat "patchName.optionKey" -> value map
                 // to engine's Map<patchName, Map<optionKey, value>> format
@@ -112,6 +125,15 @@ class PatchService {
                         .mapKeys { it.key.removePrefix("$patchName.") }
                         .mapValues { it.value as Any? }
                 }.filter { it.value.isNotEmpty() }
+
+                val keystoreDetails = if (keystorePath != null) {
+                    ApkUtils.KeyStoreDetails(
+                        keyStore = File(keystorePath),
+                        keyStorePassword = keystorePassword,
+                        alias = keystoreAlias ?: PatchEngine.Config.DEFAULT_KEYSTORE_ALIAS,
+                        password = keystoreEntryPassword ?: PatchEngine.Config.DEFAULT_KEYSTORE_PASSWORD,
+                    )
+                } else null
 
                 val config = PatchEngine.Config(
                     inputApk = inputApk,
@@ -122,46 +144,127 @@ class PatchService {
                     exclusiveMode = exclusiveMode,
                     forceCompatibility = true,
                     patchOptions = patchOptions,
-                    architecturesToKeep = striplibs,
+                    architecturesToKeep = keepArchitectures,
                     failOnError = !continueOnError,
+                    keystoreDetails = keystoreDetails,
                 )
 
                 val engineResult = PatchEngine.patch(config, onProgress)
 
+                // Build the COMPLETE failure detail (full stack traces, incl. any
+                // nested "Caused by:" cause). Used for both the log file and the
+                // UI's expandable "Details" section. The short [failureReason]
+                // below is only the one-line banner summary. It must never be the
+                // single source, or the cause gets lost (e.g. a PatchException
+                // ending in "...which raised an exception:" with the cause dropped).
+                val failureDetail: String? = if (engineResult.success) null else buildString {
+                    engineResult.failedPatches.forEach { fp ->
+                        appendLine("Patch '${fp.name}' failed:")
+                        appendLine(fp.error)
+                    }
+                    engineResult.stepResults
+                        .filter { !it.success && it.error != null }
+                        .forEach { appendLine("Step ${it.step.name} failed:"); appendLine(it.error) }
+                }.takeIf { it.isNotBlank() }
+                failureDetail?.let { Logger.error("Patching failed — full detail:\n$it") }
+
+                val failureReason = if (engineResult.success) null else {
+                    // Prefer a specific failed-patch error, else the last failed
+                    // step's error (rebuild/sign), else a generic fallback.
+                    // First line only — this is the short UI-banner summary; the
+                    // full traces are already logged above.
+                    engineResult.failedPatches.firstOrNull()?.let { fp ->
+                        "${fp.name}: ${fp.error.lineSequence().first()}"
+                    }
+                        ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }
+                            ?.let { "${it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }} failed: ${it.error}" }
+                        ?: "Patching failed for an unknown reason"
+                }
                 Result.success(PatchResult(
                     success = engineResult.success,
                     outputPath = engineResult.outputPath,
                     appliedPatches = engineResult.appliedPatches,
                     failedPatches = engineResult.failedPatches.map { it.name },
+                    failureReason = failureReason,
+                    failureDetail = failureDetail,
+                    packageName = engineResult.packageName,
+                    packageVersion = engineResult.packageVersion,
                 ))
             } finally {
-                patchTempCopy.delete()
+                tempCopies.forEach { runCatching { it.delete() } }
             }
-        } catch (e: Exception) {
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // Catch Throwable, not just Exception: a mismatched patch bundle can
+            // throw java.lang.Error (e.g. NoSuchMethodError when two sources ship
+            // the same class compiled against different patcher versions). Those
+            // are Errors, not Exceptions, so catch(Exception) would let them escape and the UI
+            // would hang on "Loading patches" forever instead of surfacing a failure.
             Logger.error("Patching failed", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Convert library Patch to GUI Patch model.
+     * Convert a set of already-loaded library patches into GUI patches.
+     * Used by EnabledSourcesLoader / MultiSourceLoader paths so we don't have to
+     * re-open the .mpp file just to convert.
      */
+    fun convertToGuiPatches(loaded: Set<LibraryPatch<*>>): List<Patch> =
+        loaded.map { it.toGuiPatch() }
+
+    /**
+     * Convert library Patch to GUI Patch model.
+     *
+     * Reads BOTH the new [compatibility] API and the deprecated [compatiblePackages]
+     * field — some forks (e.g. hoo-dles) compiled their patches against the older
+     * patcher API and only declare compatibility via the legacy field. Without the
+     * fallback, those patches would convert to a GUI Patch with empty
+     * compatiblePackages, which means SupportedAppExtractor under-counts apps and
+     * the per-source attribution map misses entire sources.
+     */
+    @Suppress("DEPRECATION")
     private fun LibraryPatch<*>.toGuiPatch(): Patch {
+        // Primary: new compatibility API (typed, with experimental flag, display name).
+        val fromNewApi: List<CompatiblePackage> = this.compatibility
+            ?.mapNotNull { compatibility ->
+                val packageName = compatibility.packageName ?: return@mapNotNull null
+                val (experimental, stable) = compatibility.targets.partition { it.isExperimental }
+                CompatiblePackage(
+                    name = packageName,
+                    displayName = compatibility.name,
+                    versions = stable.mapNotNull { it.version },
+                    experimentalVersions = experimental.mapNotNull { it.version }
+                )
+            }
+            ?: emptyList()
+
+        // Fallback: legacy compatiblePackages field (Set<Pair<packageName, versions?>>).
+        // No display name or experimental flag in the legacy schema — those stay null/empty.
+        val fromLegacyApi: List<CompatiblePackage> = if (fromNewApi.isEmpty()) {
+            this.compatiblePackages
+                ?.map { (pkgName, versions) ->
+                    CompatiblePackage(
+                        name = pkgName,
+                        displayName = null,
+                        versions = versions?.toList() ?: emptyList(),
+                        experimentalVersions = emptyList(),
+                    )
+                }
+                ?: emptyList()
+        } else emptyList()
+
         return Patch(
             name = this.name ?: "Unknown",
             description = this.description ?: "",
-            compatiblePackages = this.compatiblePackages?.map { (name, versions) ->
-                CompatiblePackage(
-                    name = name,
-                    versions = versions?.toList() ?: emptyList()
-                )
-            } ?: emptyList(),
+            compatiblePackages = fromNewApi.ifEmpty { fromLegacyApi },
             options = this.options.values.map { opt ->
                 PatchOption(
                     key = opt.key,
                     title = opt.title ?: opt.key,
                     description = opt.description ?: "",
-                    type = mapKTypeToOptionType(opt.type),
+                    type = mapKTypeToOptionType(opt.type, opt.key, opt.title ?: opt.key),
                     default = opt.default?.toString(),
                     required = opt.required
                 )
@@ -173,7 +276,7 @@ class PatchService {
     /**
      * Map Kotlin KType to GUI PatchOptionType.
      */
-    private fun mapKTypeToOptionType(kType: KType): PatchOptionType {
+    private fun mapKTypeToOptionType(kType: KType, key: String, title: String): PatchOptionType {
         val typeName = kType.toString()
         return when {
             typeName.contains("Boolean") -> PatchOptionType.BOOLEAN
@@ -181,7 +284,12 @@ class PatchService {
             typeName.contains("Long") -> PatchOptionType.LONG
             typeName.contains("Float") || typeName.contains("Double") -> PatchOptionType.FLOAT
             typeName.contains("List") || typeName.contains("Array") || typeName.contains("Set") -> PatchOptionType.LIST
-            else -> PatchOptionType.STRING
+            typeName.contains("File") || typeName.contains("Path") || typeName.contains("InputStream") -> PatchOptionType.FILE
+            else -> {
+                val combined = "$key $title".lowercase()
+                val fileKeywords = listOf("icon", "image", "logo", "banner", "path", "file", "png", "jpg")
+                if (fileKeywords.any { it in combined }) PatchOptionType.FILE else PatchOptionType.STRING
+            }
         }
     }
 }
@@ -193,5 +301,17 @@ data class PatchResult(
     val success: Boolean,
     val outputPath: String,
     val appliedPatches: List<String>,
-    val failedPatches: List<String>
+    val failedPatches: List<String>,
+    // Human-readable reason for [success == false]. Populated from the first
+    // failed patch's error or — when patching succeeded but a later step
+    // (rebuild, sign) blew up — that step's error. Null on success.
+    val failureReason: String? = null,
+    // Full failure detail: complete stack traces (incl. nested "Caused by:"
+    // causes) for every failed patch and step. The expandable "Details"
+    // counterpart to the one-line [failureReason]. Null on success.
+    val failureDetail: String? = null,
+    // Surfaced from the engine so callers (e.g. patched-app history) can record
+    // what was actually patched. Empty when the patcher didn't report them.
+    val packageName: String = "",
+    val packageVersion: String = "",
 )

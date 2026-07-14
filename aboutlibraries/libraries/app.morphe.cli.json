@@ -1,0 +1,6 @@
+{
+  "uniqueId": "app.morphe.desktop",
+  "name": "Morphe Desktop",
+  "developers": [{"name": "Morphe"}],
+  "licenses": ["GPL-3.0-only"]
+}

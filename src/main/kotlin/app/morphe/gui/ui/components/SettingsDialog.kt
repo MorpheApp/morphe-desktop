@@ -1,36 +1,71 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.data.constants.AppConstants
+import app.morphe.engine.MorpheData
+import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
+import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
+import app.morphe.engine.util.KeystoreImporter
+import app.morphe.gui.data.model.PatchSource
+import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.ui.theme.LocalMorpheAccents
+import app.morphe.gui.ui.theme.LocalMorpheDimens
+import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.util.AdbManager
+import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
+import kotlinx.coroutines.launch
+import app.morphe.patcher.apk.ApkSigner
 import java.awt.Desktop
+import java.awt.FileDialog
+import java.awt.Frame
 import java.io.File
+import javax.swing.JFileChooser
+import java.security.KeyStore
+import java.security.MessageDigest
+import java.security.cert.X509Certificate
+import java.text.SimpleDateFormat
+import java.util.UUID
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 
 @Composable
 fun SettingsDialog(
@@ -38,283 +73,1567 @@ fun SettingsDialog(
     onThemeChange: (ThemePreference) -> Unit,
     autoCleanupTempFiles: Boolean,
     onAutoCleanupChange: (Boolean) -> Unit,
+    defaultOutputDirectory: String?,
+    onDefaultOutputDirectoryChange: (String?) -> Unit,
     useExpertMode: Boolean,
     onExpertModeChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
-    allowCacheClear: Boolean = true
+    isPatching: Boolean = false,
+    keystorePath: String? = null,
+    keystorePassword: String? = null,
+    keystoreAlias: String = DEFAULT_KEYSTORE_ALIAS,
+    keystoreEntryPassword: String = DEFAULT_KEYSTORE_PASSWORD,
+    onKeystorePathChange: (String?) -> Unit = {},
+    onKeystoreCredentialsChange: (password: String?, alias: String, entryPassword: String) -> Unit = { _, _, _ -> },
+    keepArchitectures: Set<String> = emptySet(),
+    onKeepArchitecturesChange: (Set<String>) -> Unit = {},
+    updateChannelPreference: app.morphe.gui.data.model.UpdateChannelPreference = app.morphe.gui.data.model.UpdateChannelPreference.STABLE,
+    onUpdateChannelChange: (app.morphe.gui.data.model.UpdateChannelPreference) -> Unit = {},
+    autoStartAdb: Boolean = false,
+    onAutoStartAdbChange: (Boolean) -> Unit = {},
+    autoRouteLinksAfterInstall: Boolean = false,
+    onAutoRouteLinksChange: (Boolean) -> Unit = {},
+    disableStockLinksAfterInstall: Boolean = false,
+    onDisableStockLinksChange: (Boolean) -> Unit = {},
+    collapsibleSectionStates: Map<String, Boolean> = emptyMap(),
+    onCollapsibleSectionToggle: (id: String, expanded: Boolean) -> Unit = { _, _ -> }
 ) {
-    var showClearCacheConfirm by remember { mutableStateOf(false) }
-    var cacheCleared by remember { mutableStateOf(false) }
-    var cacheClearFailed by remember { mutableStateOf(false) }
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
+
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(corners.medium),
+        containerColor = MaterialTheme.colorScheme.surface,
         title = {
             Text(
-                text = "Settings",
-                fontWeight = FontWeight.SemiBold
+                text = "SETTINGS",
+                fontWeight = FontWeight.Bold,
+                fontFamily = mono,
+                fontSize = 13.sp,
+                letterSpacing = 2.sp,
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         text = {
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .widthIn(min = 300.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .widthIn(min = 340.dp),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
-                // Theme selection
-                Text(
-                    text = "Theme",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                // ── Theme ──
+                SectionLabel("THEME", mono)
+                Spacer(Modifier.height(8.dp))
+                @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    ThemePreference.entries.forEach { theme ->
+                    ThemePreference.entries.filter { it != ThemePreference.MATCHA }.forEach { theme ->
                         val isSelected = currentTheme == theme
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = if (isSelected) MorpheColors.Blue.copy(alpha = 0.15f)
-                                    else Color.Transparent,
-                            border = BorderStroke(
-                                width = 1.dp,
-                                color = if (isSelected) MorpheColors.Blue.copy(alpha = 0.5f)
-                                        else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-                            ),
+                        val themeAccent = theme.accentColor()
+                        val hoverInteraction = remember { MutableInteractionSource() }
+                        val isHovered by hoverInteraction.collectIsHoveredAsState()
+                        Row(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(8.dp))
+                                .clip(RoundedCornerShape(corners.small))
+                                .border(
+                                    1.dp,
+                                    when {
+                                        isSelected -> themeAccent.copy(alpha = 0.5f)
+                                        isHovered -> MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                                        else -> borderColor
+                                    },
+                                    RoundedCornerShape(corners.small)
+                                )
+                                .background(
+                                    if (isSelected) themeAccent.copy(alpha = 0.08f)
+                                    else Color.Transparent
+                                )
+                                .hoverable(hoverInteraction)
                                 .clickable { onThemeChange(theme) }
+                                .padding(horizontal = 10.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
+                            // Themed icon
                             Text(
-                                text = theme.toDisplayName(),
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                                fontSize = 13.sp,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) MorpheColors.Blue
+                                text = theme.iconSymbol(),
+                                fontSize = 11.sp,
+                                color = themeAccent
+                            )
+                            Text(
+                                text = theme.toDisplayName().uppercase(),
+                                fontSize = 10.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                fontFamily = mono,
+                                letterSpacing = 0.5.sp,
+                                color = if (isSelected) themeAccent
                                         else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
                 }
 
-                HorizontalDivider()
+                SettingsDivider(borderColor)
 
-                // Expert mode setting
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Expert mode",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Full control over patch selection and configuration",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Switch(
-                        checked = useExpertMode,
-                        onCheckedChange = onExpertModeChange,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MorpheColors.Blue,
-                            checkedTrackColor = MorpheColors.Blue.copy(alpha = 0.5f)
-                        )
-                    )
-                }
-
-                HorizontalDivider()
-
-                // Auto-cleanup setting
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Auto-cleanup temp files",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Automatically delete temporary files after patching",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Switch(
-                        checked = autoCleanupTempFiles,
-                        onCheckedChange = onAutoCleanupChange,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MorpheColors.Teal,
-                            checkedTrackColor = MorpheColors.Teal.copy(alpha = 0.5f)
-                        )
-                    )
-                }
-
-                HorizontalDivider()
-
-                // Actions
-                Text(
-                    text = "Actions",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
+                // ── Expert Mode ──
+                SettingToggleRow(
+                    label = "Expert mode",
+                    description = "Full control over patch selection and configuration",
+                    checked = useExpertMode,
+                    onCheckedChange = onExpertModeChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching
                 )
 
-                // Export logs button
-                OutlinedButton(
-                    onClick = {
-                        try {
-                            val logsDir = FileUtils.getLogsDir()
-                            if (Desktop.isDesktopSupported()) {
-                                Desktop.getDesktop().open(logsDir)
-                            }
-                        } catch (e: Exception) {
-                            Logger.error("Failed to open logs folder", e)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.BugReport,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Open Logs Folder")
+                SettingsDivider(borderColor)
+
+                // ── Auto Cleanup ──
+                SettingToggleRow(
+                    label = "Auto-cleanup temp files",
+                    description = "Delete temporary files after patching",
+                    checked = autoCleanupTempFiles,
+                    onCheckedChange = onAutoCleanupChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Update Channel ──
+                UpdateChannelRow(
+                    selected = updateChannelPreference,
+                    onChange = onUpdateChannelChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    borderColor = borderColor,
+                    enabled = !isPatching,
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Output Folder ──
+                OutputFolderSection(
+                    defaultOutputDirectory = defaultOutputDirectory,
+                    onDefaultOutputDirectoryChange = onDefaultOutputDirectoryChange,
+                    mono = mono,
+                    borderColor = borderColor,
+                    enabled = !isPatching
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Signing / Keystore ──
+                SigningSection(
+                    keystorePath = keystorePath,
+                    keystorePassword = keystorePassword,
+                    keystoreAlias = keystoreAlias,
+                    keystoreEntryPassword = keystoreEntryPassword,
+                    onKeystorePathChange = onKeystorePathChange,
+                    onCredentialsChange = onKeystoreCredentialsChange,
+                    mono = mono,
+                    accentColor = accents.primary,
+                    borderColor = borderColor,
+                    enabled = !isPatching,
+                    expanded = collapsibleSectionStates["SIGNING"] == true,
+                    onExpandedChange = { onCollapsibleSectionToggle("SIGNING", it) }
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Strip Libs ──
+                StripLibsSection(
+                    keepArchitectures = keepArchitectures,
+                    onChange = onKeepArchitecturesChange,
+                    mono = mono,
+                    accentColor = accents.primary,
+                    enabled = !isPatching,
+                    expanded = collapsibleSectionStates["STRIP LIBS"] == true,
+                    onExpandedChange = { onCollapsibleSectionToggle("STRIP LIBS", it) }
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Auto-start ADB ──
+                SettingToggleRow(
+                    label = "Auto-start ADB",
+                    description = "Spawn the ADB daemon on launch so connected devices are monitored. " +
+                        "When off, Morphe never starts the server, and install/push features are disabled.",
+                    checked = autoStartAdb,
+                    onCheckedChange = onAutoStartAdbChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Link handling ("open with") ──
+                SettingToggleRow(
+                    label = "Route links to patched app",
+                    description = "After installing via ADB, make the patched app open its supported web links instead of the browser or the stock/default app.",
+                    checked = autoRouteLinksAfterInstall,
+                    onCheckedChange = onAutoRouteLinksChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching
+                )
+                AnimatedVisibility(visible = autoRouteLinksAfterInstall) {
+                    Column {
+                        Spacer(Modifier.height(12.dp))
+                        SettingToggleRow(
+                            label = "Disable stock app's links",
+                            description = "Also stop the original app from opening these links (only when a " +
+                                "rename patch was used and the stock app is installed). Reversible.",
+                            checked = disableStockLinksAfterInstall,
+                            onCheckedChange = onDisableStockLinksChange,
+                            accentColor = accents.primary,
+                            mono = mono,
+                            enabled = !isPatching
+                        )
+                    }
                 }
 
-                // Open app data folder
-                OutlinedButton(
-                    onClick = {
-                        try {
-                            val appDataDir = FileUtils.getAppDataDir()
-                            if (Desktop.isDesktopSupported()) {
-                                Desktop.getDesktop().open(appDataDir)
-                            }
-                        } catch (e: Exception) {
-                            Logger.error("Failed to open app data folder", e)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.FolderOpen,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Open App Data Folder")
-                }
+                SettingsDivider(borderColor)
 
-                // Clear cache button
-                OutlinedButton(
-                    onClick = { showClearCacheConfirm = true },
-                    enabled = allowCacheClear && !cacheCleared,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = when {
-                            cacheCleared -> MorpheColors.Teal
-                            cacheClearFailed -> MaterialTheme.colorScheme.error
-                            else -> MaterialTheme.colorScheme.error
-                        },
-                        disabledContentColor = if (cacheCleared) MorpheColors.Teal.copy(alpha = 0.7f)
-                            else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    )
+                // ── Patched App Runtime Logs ──
+                PatchedAppRuntimeLogsSection(
+                    mono = mono,
+                    accentColor = accents.primary,
+                    borderColor = borderColor,
+                    enabled = !isPatching,
+                    expanded = collapsibleSectionStates["RUNTIME LOGS"] == true,
+                    onExpandedChange = { onCollapsibleSectionToggle("RUNTIME LOGS", it) }
+                )
+
+            }
+        },
+        confirmButton = {
+            OutlinedButton(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(1.dp, borderColor)
+            ) {
+                Text(
+                    "CLOSE",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 11.sp,
+                    letterSpacing = 0.5.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    )
+}
+
+// ── Shared building blocks ──
+
+@Composable
+private fun SectionLabel(
+    text: String,
+    mono: androidx.compose.ui.text.font.FontFamily
+) {
+    Text(
+        text = text,
+        fontSize = 9.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = mono,
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+        letterSpacing = 1.5.sp
+    )
+}
+
+@Composable
+private fun CollapsibleSection(
+    title: String,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    content: @Composable () -> Unit
+) {
+    val corners = LocalMorpheCorners.current
+    val rotationAngle by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (expanded) -90f else 0f,
+        animationSpec = androidx.compose.animation.core.tween(200)
+    )
+    val hoverInteraction = remember { MutableInteractionSource() }
+    val isHovered by hoverInteraction.collectIsHoveredAsState()
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corners.small))
+            .hoverable(hoverInteraction)
+            .background(
+                if (isHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f)
+                else Color.Transparent
+            )
+            .clickable { onExpandedChange(!expanded) }
+            .padding(horizontal = 8.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isHovered) 0.6f else 0.4f),
+            letterSpacing = 1.5.sp
+        )
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+            contentDescription = if (expanded) "Collapse" else "Expand",
+            modifier = Modifier
+                .size(16.dp)
+                .graphicsLayer { rotationZ = rotationAngle },
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isHovered) 0.5f else 0.3f)
+        )
+    }
+
+    androidx.compose.animation.AnimatedVisibility(
+        visible = expanded,
+        enter = androidx.compose.animation.expandVertically(
+            expandFrom = Alignment.Top,
+            animationSpec = androidx.compose.animation.core.tween(200)
+        ) + androidx.compose.animation.fadeIn(animationSpec = androidx.compose.animation.core.tween(200)),
+        exit = androidx.compose.animation.shrinkVertically(
+            shrinkTowards = Alignment.Top,
+            animationSpec = androidx.compose.animation.core.tween(200)
+        ) + androidx.compose.animation.fadeOut(animationSpec = androidx.compose.animation.core.tween(150))
+    ) {
+        Column {
+            Spacer(Modifier.height(8.dp))
+            content()
+        }
+    }
+}
+
+@Composable
+private fun SettingsDivider(borderColor: Color) {
+    Spacer(Modifier.height(14.dp))
+    HorizontalDivider(color = borderColor)
+    Spacer(Modifier.height(14.dp))
+}
+
+/**
+ * Inline row letting the user pick which CLI release channel update checks
+ * follow. Mirrors [SettingToggleRow]'s layout — label + dynamic description
+ * on the left, chip group on the right where the switch would be.
+ */
+@Composable
+private fun UpdateChannelRow(
+    selected: app.morphe.gui.data.model.UpdateChannelPreference,
+    onChange: (app.morphe.gui.data.model.UpdateChannelPreference) -> Unit,
+    accentColor: Color,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+    enabled: Boolean,
+) {
+    val corners = LocalMorpheCorners.current
+    val alpha = if (enabled) 1f else 0.4f
+
+    val description = when {
+        !enabled -> "Disabled while patching"
+        selected == app.morphe.gui.data.model.UpdateChannelPreference.STABLE ->
+            "You'll see a banner when a new stable release is available"
+        selected == app.morphe.gui.data.model.UpdateChannelPreference.DEV ->
+            "You'll see a banner when a new dev or stable release is available"
+        else -> "Update checks are off. Re-enable here anytime"
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "Check for updates",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = description,
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f * alpha),
+            )
+        }
+        Spacer(Modifier.width(12.dp))
+        UpdateChannelSegmentedToggle(
+            selected = selected,
+            onChange = onChange,
+            accentColor = accentColor,
+            mono = mono,
+            enabled = enabled,
+        )
+    }
+}
+
+/**
+ * Three-segment switch styled to match [MorpheSwitch]'s sharp variant — single
+ * rectangular border, a sliding accent block beneath the active label, mono
+ * labels that flip between muted and on-accent. Soft themes get the same shape
+ * with rounded corners (matching how [MorpheSwitch] rounds in soft themes).
+ */
+@Composable
+private fun UpdateChannelSegmentedToggle(
+    selected: app.morphe.gui.data.model.UpdateChannelPreference,
+    onChange: (app.morphe.gui.data.model.UpdateChannelPreference) -> Unit,
+    accentColor: Color,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    enabled: Boolean,
+) {
+    val isSoft = LocalMorpheCorners.current.medium >= 10.dp
+    val height = if (isSoft) 26.dp else 24.dp
+    // Segments sized so the longest label (STABLE) gets ~10dp horizontal
+    // breathing room on each side, matching the visual padding the OFF/ON
+    // labels have inside MorpheSwitch's 28dp halves.
+    val segWidth = 48.dp
+    val totalWidth = segWidth * 3
+    val pillShape = if (isSoft) RoundedCornerShape(height / 2) else RoundedCornerShape(0.dp)
+
+    val entries = app.morphe.gui.data.model.UpdateChannelPreference.entries
+    val activeIndex = entries.indexOf(selected)
+
+    val blockOffset by androidx.compose.animation.core.animateDpAsState(
+        targetValue = segWidth * activeIndex,
+        animationSpec = androidx.compose.animation.core.tween(180),
+    )
+    val borderColor by androidx.compose.animation.animateColorAsState(
+        targetValue = if (enabled) accentColor.copy(alpha = 0.45f)
+                      else MaterialTheme.colorScheme.outline.copy(alpha = 0.18f),
+        animationSpec = androidx.compose.animation.core.tween(180),
+    )
+
+    val onBlockLabel = MaterialTheme.colorScheme.onPrimary
+    val mutedLabel = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f)
+    val disabledAlpha = if (enabled) 1f else 0.4f
+
+    Box(
+        modifier = Modifier
+            .size(totalWidth, height)
+            .clip(pillShape)
+            .border(1.dp, borderColor, pillShape)
+            .graphicsLayer { this.alpha = disabledAlpha },
+    ) {
+        // Sliding accent block — sits behind the labels and animates between
+        // segments when the user changes selection.
+        Box(
+            modifier = Modifier
+                .offset(x = blockOffset)
+                .size(segWidth, height)
+                .background(accentColor),
+        )
+        // Labels — each tappable, color flips depending on whether it sits
+        // over the accent block.
+        Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+            entries.forEachIndexed { index, pref ->
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable(enabled = enabled) { onChange(pref) },
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        when {
-                            !allowCacheClear -> "Clear Cache (disabled during patching)"
-                            cacheCleared -> "Cache Cleared"
-                            cacheClearFailed -> "Clear Cache Failed (files in use)"
-                            else -> "Clear Cache"
-                        }
+                        text = pref.name,
+                        fontFamily = mono,
+                        fontSize = 8.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.4.sp,
+                        color = if (index == activeIndex) onBlockLabel else mutedLabel,
                     )
                 }
+            }
+        }
+    }
+}
 
-                // Cache info
-                val cacheSize = calculateCacheSize()
+
+@Composable
+private fun SettingToggleRow(
+    label: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    accentColor: Color,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    enabled: Boolean = true
+) {
+    val alpha = if (enabled) 1f else 0.4f
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = label,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = if (!enabled) "Disabled while patching" else description,
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f * alpha)
+            )
+        }
+        Spacer(Modifier.width(12.dp))
+        MorpheSwitch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            accentColor = accentColor,
+            enabled = enabled
+        )
+    }
+}
+
+@Composable
+private fun OutputFolderSection(
+    defaultOutputDirectory: String?,
+    onDefaultOutputDirectoryChange: (String?) -> Unit,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    borderColor: Color,
+    enabled: Boolean = true
+) {
+    val corners = LocalMorpheCorners.current
+    val dimens = LocalMorpheDimens.current
+    val alpha = if (enabled) 1f else 0.4f
+    val outputDir = defaultOutputDirectory?.let { File(it) }
+    val outputDirExists = outputDir?.isDirectory == true
+
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        SectionLabel("OUTPUT FOLDER", mono)
+        Spacer(Modifier.height(6.dp))
+
+        Text(
+            text = if (!enabled) "Disabled while patching"
+                   else "Where patched APKs are saved. A per-app subfolder is created inside.",
+            fontSize = 11.sp,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f * alpha)
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(corners.small))
+                    .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+                    .padding(horizontal = 10.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
                 Text(
-                    text = "Cache: $cacheSize (Patches + Logs)",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = outputDir?.name ?: "APK's folder (default)",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f * alpha),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
+            }
 
-                HorizontalDivider()
-
-                // About
+            OutlinedButton(
+                onClick = {
+                    val chooser = JFileChooser().apply {
+                        dialogTitle = "Select Output Folder"
+                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+                        isAcceptAllFileFilterUsed = false
+                        outputDir?.takeIf { it.isDirectory }?.let { currentDirectory = it }
+                    }
+                    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        onDefaultOutputDirectoryChange(chooser.selectedFile.absolutePath)
+                    }
+                },
+                enabled = enabled,
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(1.dp, borderColor),
+                contentPadding = PaddingValues(horizontal = 10.dp),
+                modifier = Modifier.fillMaxHeight()
+            ) {
                 Text(
-                    text = "${AppConstants.APP_NAME} ${AppConstants.APP_VERSION}",
+                    "BROWSE",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 9.sp,
+                    letterSpacing = 0.5.sp
+                )
+            }
+
+            if (defaultOutputDirectory != null) {
+                OutlinedButton(
+                    onClick = { onDefaultOutputDirectoryChange(null) },
+                    enabled = enabled,
+                    shape = RoundedCornerShape(corners.small),
+                    border = BorderStroke(1.dp, borderColor),
+                    contentPadding = PaddingValues(horizontal = 10.dp),
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    Text(
+                        "RESET",
+                        fontFamily = mono,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 9.sp,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+            }
+        }
+
+        if (defaultOutputDirectory != null && !outputDirExists) {
+            Text(
+                text = "Folder not found — will be created on next patch",
+                fontSize = 10.sp,
+                fontFamily = mono,
+                color = Color(0xFFE0A030)
+            )
+        }
+
+        // Stored form first (mirrors config.json), absolute resolution second.
+        // Hides the second line entirely when storage IS absolute, repeating
+        // the same path twice would make no sense now, innit.
+        if (defaultOutputDirectory != null) {
+            val stored = app.morphe.engine.util.PortablePaths.storableForm(defaultOutputDirectory)
+            val isBundleRelative = stored != defaultOutputDirectory
+            Text(
+                text = stored,
+                fontSize = 9.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (isBundleRelative) {
+                Text(
+                    text = "Resolves to: $defaultOutputDirectory",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+
+// ── Strip Libs Section ──
+
+/**
+ * Architectures exposed in the strip libs settings. Each entry has the
+ * patcher-facing value (matching CpuArchitecture.arch) and a short display name.
+ * Only modern arches are listed — legacy mips/armeabi are intentionally omitted.
+ */
+private val STRIP_LIBS_ARCHS = listOf(
+    "arm64-v8a" to "ARM 64-bit (most modern phones)",
+    "armeabi-v7a" to "ARM 32-bit (older phones)",
+    "x86_64" to "Intel 64-bit (emulators / Chromebooks)",
+    "x86" to "Intel 32-bit (legacy emulators)"
+)
+
+@Composable
+private fun StripLibsSection(
+    keepArchitectures: Set<String>,
+    onChange: (Set<String>) -> Unit,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    accentColor: Color,
+    enabled: Boolean = true,
+    expanded: Boolean = false,
+    onExpandedChange: (Boolean) -> Unit = {}
+) {
+    CollapsibleSection(
+        title = "STRIP LIBS",
+        mono = mono,
+        expanded = expanded,
+        onExpandedChange = onExpandedChange
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = "Uncheck architectures you don't need. When patching, the output APK will keep only the architectures present in the APK AND in this list. If none overlap, nothing is stripped to avoid broken APKs.",
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            )
+            STRIP_LIBS_ARCHS.forEach { (arch, description) ->
+                val checked = arch in keepArchitectures
+                SettingToggleRow(
+                    label = arch,
+                    description = description,
+                    checked = checked,
+                    onCheckedChange = { keepIt ->
+                        val updated = if (keepIt) keepArchitectures + arch
+                                      else keepArchitectures - arch
+                        onChange(updated)
+                    },
+                    accentColor = accentColor,
+                    mono = mono,
+                    enabled = enabled
+                )
+            }
+        }
+    }
+}
+
+// ── Signing / Keystore Section ──
+
+@Composable
+private fun SigningSection(
+    keystorePath: String?,
+    keystorePassword: String?,
+    keystoreAlias: String,
+    keystoreEntryPassword: String,
+    onKeystorePathChange: (String?) -> Unit,
+    onCredentialsChange: (password: String?, alias: String, entryPassword: String) -> Unit,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    accentColor: Color,
+    borderColor: Color,
+    enabled: Boolean = true,
+    expanded: Boolean = false,
+    onExpandedChange: (Boolean) -> Unit = {}
+) {
+    val corners = LocalMorpheCorners.current
+    val dimens = LocalMorpheDimens.current
+    val accents = LocalMorpheAccents.current
+    val alpha = if (enabled) 1f else 0.4f
+
+    var localPassword by remember(keystorePassword) { mutableStateOf(keystorePassword ?: "") }
+    var localAlias by remember(keystoreAlias) { mutableStateOf(keystoreAlias) }
+    var localEntryPassword by remember(keystoreEntryPassword) { mutableStateOf(keystoreEntryPassword) }
+    var showPassword by remember { mutableStateOf(false) }
+    var showEntryPassword by remember { mutableStateOf(false) }
+    var showKeystoreInfo by remember { mutableStateOf(false) }
+    var keystoreError by remember { mutableStateOf<String?>(null) }
+
+    val keystoreFile = keystorePath?.let { File(it) }
+    val keystoreExists = keystoreFile?.exists() == true
+
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        CollapsibleSection(
+            title = "SIGNING",
+            mono = mono,
+            expanded = expanded,
+            onExpandedChange = onExpandedChange
+        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            text = if (!enabled) "Disabled while patching"
+                   else "Keystore used to sign patched APKs",
+            fontSize = 11.sp,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        // Keystore path row
+        Row(
+            modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(corners.small))
+                    .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+                    .padding(horizontal = 10.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = if (keystorePath != null) {
+                        keystoreFile?.name ?: keystorePath
+                    } else "Default (auto-generated)",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f * alpha),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            OutlinedButton(
+                onClick = {
+                    val dialog = FileDialog(null as Frame?, "Select Keystore", FileDialog.LOAD).apply {
+                        setFilenameFilter { _, n ->
+                            n.lowercase().let {
+                                it.endsWith(".keystore") || it.endsWith(".jks") ||
+                                it.endsWith(".bks") || it.endsWith(".p12") || it.endsWith(".pfx")
+                            }
+                        }
+                        isVisible = true
+                    }
+                    if (dialog.directory != null && dialog.file != null) {
+                        val selected = File(dialog.directory, dialog.file)
+                        val validExtensions = listOf(".keystore", ".jks", ".bks", ".p12", ".pfx")
+                        if (validExtensions.any { selected.name.lowercase().endsWith(it) }) {
+                            // Route the picked file through KeystoreImporter:
+                            // BKS files pass through unchanged; PKCS12/JKS get
+                            // converted to BKS and saved as MorpheData.importedKeystoreFile
+                            // (original user file is never mutated). The config
+                            // then points at whichever file is BKS — patcher
+                            // only speaks BKS, so this is the only safe input.
+                            val result = KeystoreImporter.ensureBks(
+                                source = selected,
+                                convertedOutput = MorpheData.importedKeystoreFile,
+                                alias = keystoreAlias,
+                                password = keystoreEntryPassword,
+                            )
+                            when (result) {
+                                is KeystoreImporter.Result.AlreadyBks -> {
+                                    keystoreError = null
+                                    onKeystorePathChange(result.file.absolutePath)
+                                }
+                                is KeystoreImporter.Result.Converted -> {
+                                    keystoreError = null
+                                    Logger.info(
+                                        "Converted ${result.sourceFormat.displayName} → BKS for ${selected.name}"
+                                    )
+                                    onKeystorePathChange(result.file.absolutePath)
+                                }
+                                is KeystoreImporter.Result.Failed -> {
+                                    // Most common failure: wrong password. The
+                                    // user's configured entry password didn't
+                                    // match the source file. Surface inline so
+                                    // they can update it and re-import.
+                                    keystoreError = result.reason
+                                    result.cause?.let {
+                                        Logger.error("Keystore import failed for ${selected.name}", it)
+                                    }
+                                }
+                            }
+                        } else {
+                            keystoreError = "Invalid file type. Expected: ${validExtensions.joinToString(", ")}"
+                        }
+                    }
+                },
+                enabled = enabled,
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(1.dp, borderColor),
+                contentPadding = PaddingValues(horizontal = 10.dp),
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                Text(
+                    "BROWSE",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 9.sp,
+                    letterSpacing = 0.5.sp
+                )
+            }
+
+            if (keystorePath != null) {
+                OutlinedButton(
+                    onClick = { onKeystorePathChange(null) },
+                    enabled = enabled,
+                    shape = RoundedCornerShape(corners.small),
+                    border = BorderStroke(1.dp, borderColor),
+                    contentPadding = PaddingValues(horizontal = 10.dp),
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    Text(
+                        "RESET",
+                        fontFamily = mono,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 9.sp,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+            }
+        }
+
+        // Warning if keystore path set but file doesn't exist. Patching will
+        // refuse to start with this configured (see PatchingViewModel) — user
+        // must restore the file, pick another, or reset to use Morphe's default.
+        if (keystorePath != null && !keystoreExists) {
+            Text(
+                text = "Keystore not found — patching will fail until you restore it, pick another, or reset",
+                fontSize = 10.sp,
+                fontFamily = mono,
+                color = Color(0xFFE0A030)
+            )
+        }
+
+        // Error for invalid file type selection
+        keystoreError?.let {
+            Text(
+                text = it,
+                fontSize = 10.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
+        // Either: stored form (relative when inside the bundle, absolute otherwise)
+        // with a "Resolves to: ..." subtitle when relative. Mirrors config.json
+        // so users can see which paths follow the bundle vs which are pinned.
+        // Or: "using default" hint when no user-configured path is set.
+        if (keystorePath != null) {
+            val stored = app.morphe.engine.util.PortablePaths.storableForm(keystorePath)
+            val isBundleRelative = stored != keystorePath
+            Text(
+                text = stored,
+                fontSize = 9.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (isBundleRelative) {
+                Text(
+                    text = "Resolves to: $keystorePath",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        } else {
+            // Mirror the storage form treatment used for user-configured paths above.
+            // The default keystore lives in the bundle (`morphe-data/`) in the happy case,
+            // so the storable form will be relative.
+            // Verb is conditional on file existence. Patcher creates the file on first sign,
+            // so on a fresh install the hint accurately says "Will create..."
+            // instead of making up claims like "Using..." an absent file.
+            val defaultAbs = MorpheData.defaultKeystoreFile.absolutePath
+            val defaultStored = app.morphe.engine.util.PortablePaths.storableForm(defaultAbs)
+            val isBundleRelative = defaultStored != defaultAbs
+            val verb = if (MorpheData.defaultKeystoreFile.exists()) "Using"
+                       else "Will create"
+            Text(
+                text = "$verb Morphe's default keystore at $defaultStored",
+                fontSize = 9.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (isBundleRelative) {
+                Text(
+                    text = "Resolves to: $defaultAbs",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            LabeledField(label = "KEYSTORE PASSWORD", mono = mono) {
+                SlimTextField(
+                    value = localPassword,
+                    onValueChange = {
+                        localPassword = it
+                        onCredentialsChange(it.ifEmpty { null }, localAlias, localEntryPassword)
+                    },
+                    placeholder = "",
+                    mono = mono,
+                    accents = accents,
+                    corners = corners,
+                    enabled = enabled,
+                    visualTransformation = if (showPassword) androidx.compose.ui.text.input.VisualTransformation.None
+                                           else androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
+                    trailing = {
+                        IconButton(
+                            onClick = { showPassword = !showPassword },
+                            modifier = Modifier.size(24.dp),
+                        ) {
+                            Icon(
+                                imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = if (showPassword) "Hide" else "Show",
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            )
+                        }
+                    },
+                )
+            }
+
+            LabeledField(label = "KEY ALIAS", mono = mono) {
+                SlimTextField(
+                    value = localAlias,
+                    onValueChange = {
+                        localAlias = it
+                        onCredentialsChange(localPassword.ifEmpty { null }, it, localEntryPassword)
+                    },
+                    placeholder = "",
+                    mono = mono,
+                    accents = accents,
+                    corners = corners,
+                    enabled = enabled,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            LabeledField(label = "KEY PASSWORD", mono = mono) {
+                SlimTextField(
+                    value = localEntryPassword,
+                    onValueChange = {
+                        localEntryPassword = it
+                        onCredentialsChange(localPassword.ifEmpty { null }, localAlias, it)
+                    },
+                    placeholder = "",
+                    mono = mono,
+                    accents = accents,
+                    corners = corners,
+                    enabled = enabled,
+                    visualTransformation = if (showEntryPassword) androidx.compose.ui.text.input.VisualTransformation.None
+                                           else androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
+                    trailing = {
+                        IconButton(
+                            onClick = { showEntryPassword = !showEntryPassword },
+                            modifier = Modifier.size(24.dp),
+                        ) {
+                            Icon(
+                                imageVector = if (showEntryPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = if (showEntryPassword) "Hide" else "Show",
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            )
+                        }
+                    },
+                )
+            }
+        }
+
+        // Verify credentials button
+        var verifyResult by remember { mutableStateOf<String?>(null) }
+        var verifySuccess by remember { mutableStateOf(false) }
+
+        if (keystoreExists) {
+            Spacer(Modifier.height(6.dp))
+            OutlinedButton(
+                onClick = {
+                    verifyResult = null
+                    verifySuccess = false
+                    val path = keystorePath ?: return@OutlinedButton
+                    val result = readKeystoreInfo(
+                        path,
+                        localPassword.ifEmpty { null },
+                        localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                        localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
+                    )
+                    if (result == null) {
+                        verifyResult = "Could not open keystore — check keystore password"
+                        verifySuccess = false
+                    } else if (result.warnings.isNotEmpty()) {
+                        verifyResult = result.warnings.first()
+                        verifySuccess = false
+                    } else {
+                        verifyResult = "Credentials valid"
+                        verifySuccess = true
+                    }
+                },
+                enabled = enabled,
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(
+                    1.dp,
+                    when {
+                        verifySuccess -> MorpheColors.Teal.copy(alpha = 0.4f)
+                        verifyResult != null -> Color(0xFFE0A030).copy(alpha = 0.4f)
+                        else -> borderColor
+                    }
+                ),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    "VERIFY CREDENTIALS",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 9.sp,
+                    letterSpacing = 0.5.sp
+                )
+            }
+
+            verifyResult?.let {
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = it,
+                    fontSize = 10.sp,
+                    fontFamily = mono,
+                    color = if (verifySuccess) MorpheColors.Teal else Color(0xFFE0A030),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        // Generate button (only when no keystore exists yet)
+        var generateError by remember { mutableStateOf<String?>(null) }
+        var generateSuccess by remember { mutableStateOf(false) }
+
+        if (!keystoreExists) {
+            OutlinedButton(
+                onClick = {
+                    generateError = null
+                    generateSuccess = false
+
+                    // If no path set, ask the user where to save
+                    val path = keystorePath ?: run {
+                        val dialog = FileDialog(null as Frame?, "Save Keystore", FileDialog.SAVE).apply {
+                            file = "morphe.keystore"
+                            isVisible = true
+                        }
+                        if (dialog.directory != null && dialog.file != null) {
+                            val chosen = File(dialog.directory, dialog.file).absolutePath
+                            onKeystorePathChange(chosen)
+                            chosen
+                        } else {
+                            return@OutlinedButton // user cancelled
+                        }
+                    }
+
+                    try {
+                        val file = File(path)
+                        file.parentFile?.mkdirs()
+                        val keyPair = ApkSigner.newPrivateKeyCertificatePair(
+                            "Morphe",
+                            java.util.Date(System.currentTimeMillis() + 8L * 365 * 24 * 60 * 60 * 1000))
+                        val ks = ApkSigner.newKeyStore(setOf(
+                            ApkSigner.KeyStoreEntry(
+                                localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                                localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
+                                keyPair
+                            )
+                        ))
+                        file.outputStream().use {
+                            ks.store(it, localPassword.ifEmpty { null }?.toCharArray())
+                        }
+                        // Save credentials to config
+                        onCredentialsChange(
+                            localPassword.ifEmpty { null },
+                            localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                            localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
+                        )
+                        generateSuccess = true
+                    } catch (e: Exception) {
+                        generateError = "Failed to generate: ${e.message}"
+                        Logger.error("Failed to generate keystore", e)
+                    }
+                },
+                enabled = enabled,
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(
+                    1.dp, if (generateSuccess)
+                        MorpheColors.Teal.copy(alpha = 0.4f)
+                    else accentColor.copy(alpha = 0.3f)
+                ),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp),
+                    tint = if (generateSuccess) MorpheColors.Teal else accentColor
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    if (generateSuccess) "KEYSTORE GENERATED" else "GENERATE KEYSTORE",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 9.sp,
+                    letterSpacing = 0.5.sp,
+                    color = if (generateSuccess) MorpheColors.Teal else accentColor
+                )
+            }
+
+            generateError?.let {
+                Text(
+                    text = it,
+                    fontSize = 10.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            if (!generateSuccess) {
+                Text(
+                    text = "Uses the credentials entered above",
+                    fontSize = 9.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+
+            Spacer(Modifier.height(4.dp))
+        }
+
+        // Action buttons row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            // Certificate info
+            OutlinedButton(
+                onClick = { showKeystoreInfo = true },
+                enabled = enabled && keystoreExists,
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(1.dp, borderColor),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    "CERTIFICATE",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 9.sp,
+                    letterSpacing = 0.5.sp
+                )
+            }
+
+            // Export
+            OutlinedButton(
+                onClick = {
+                    val sourceFile = keystoreFile ?: return@OutlinedButton
+                    if (!sourceFile.exists()) return@OutlinedButton
+                    val dialog = FileDialog(null as Frame?, "Export Keystore", FileDialog.SAVE).apply {
+                        file = sourceFile.name
+                        isVisible = true
+                    }
+                    if (dialog.directory != null && dialog.file != null) {
+                        try {
+                            sourceFile.copyTo(File(dialog.directory, dialog.file), overwrite = true)
+                        } catch (e: Exception) {
+                            Logger.error("Failed to export keystore", e)
+                        }
+                    }
+                },
+                enabled = enabled && keystoreExists,
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(1.dp, borderColor),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Share,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    "EXPORT",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 9.sp,
+                    letterSpacing = 0.5.sp
+                )
+            }
+        }
+        } // inner Column
+        } // CollapsibleSection
+    }
+
+    // Certificate info dialog
+    if (showKeystoreInfo && keystorePath != null) {
+        KeystoreInfoDialog(
+            keystorePath = keystorePath,
+            password = keystorePassword,
+            alias = keystoreAlias,
+            entryPassword = keystoreEntryPassword,
+            onDismiss = { showKeystoreInfo = false }
+        )
+    }
+}
+
+@Composable
+private fun KeystoreInfoDialog(
+    keystorePath: String,
+    password: String?,
+    alias: String,
+    entryPassword: String,
+    onDismiss: () -> Unit
+) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
+
+    val info = remember(keystorePath, password, alias, entryPassword) {
+        readKeystoreInfo(keystorePath, password, alias, entryPassword)
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(corners.medium),
+        containerColor = MaterialTheme.colorScheme.surface,
+        title = {
+            Text(
+                "CERTIFICATE INFO",
+                fontFamily = mono,
+                fontWeight = FontWeight.Bold,
+                fontSize = 13.sp,
+                letterSpacing = 1.sp
+            )
+        },
+        text = {
+            if (info != null) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.widthIn(min = 300.dp)
+                ) {
+                    // Show warnings first if there are any
+                    if (info.warnings.isNotEmpty()) {
+                        info.warnings.forEach { warning ->
+                            Text(
+                                text = warning,
+                                fontSize = 10.sp,
+                                fontFamily = mono,
+                                color = Color(0xFFE0A030),
+                                lineHeight = 14.sp
+                            )
+                        }
+                        // If no cert data (alias not found), stop here
+                        if (info.sha256Fingerprint.isEmpty()) return@Column
+                        HorizontalDivider(color = borderColor)
+                    }
+
+                    CertInfoRow("Alias", info.alias, mono)
+                    CertInfoRow("Issuer", info.issuer, mono)
+                    CertInfoRow("Valid from", info.validFrom, mono)
+                    CertInfoRow("Valid until", info.validTo, mono)
+
+                    HorizontalDivider(color = borderColor)
+
+                    Text(
+                        "SHA-256 FINGERPRINT",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        letterSpacing = 1.sp
+                    )
+                    androidx.compose.foundation.text.selection.SelectionContainer {
+                        Text(
+                            text = info.sha256Fingerprint,
+                            fontSize = 10.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                            lineHeight = 16.sp
+                        )
+                    }
+
+                    HorizontalDivider(color = borderColor)
+
+                    Text(
+                        "SHA-1 FINGERPRINT",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        letterSpacing = 1.sp
+                    )
+                    androidx.compose.foundation.text.selection.SelectionContainer {
+                        Text(
+                            text = info.sha1Fingerprint,
+                            fontSize = 10.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    text = "Could not read keystore. Check the password and alias.",
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.error
                 )
             }
         },
         confirmButton = {
             OutlinedButton(
                 onClick = onDismiss,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(corners.small),
+                border = BorderStroke(1.dp, borderColor)
             ) {
                 Text(
-                    "Close",
-                    color = MaterialTheme.colorScheme.error
+                    "CLOSE",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 11.sp,
+                    letterSpacing = 0.5.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
     )
+}
 
-    // Clear cache confirmation dialog
-    if (showClearCacheConfirm) {
-        AlertDialog(
-            onDismissRequest = { showClearCacheConfirm = false },
-            shape = RoundedCornerShape(16.dp),
-            title = { Text("Clear Cache?") },
-            text = {
-                Text("This will delete downloaded patch files and log files. Patches will be re-downloaded when needed.")
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        val success = clearAllCache()
-                        cacheCleared = success
-                        cacheClearFailed = !success
-                        showClearCacheConfirm = false
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    Text("Clear")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showClearCacheConfirm = false }) {
-                    Text("Cancel")
-                }
-            }
+@Composable
+private fun CertInfoRow(
+    label: String,
+    value: String,
+    mono: androidx.compose.ui.text.font.FontFamily
+) {
+    Column {
+        Text(
+            text = label.uppercase(),
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+            letterSpacing = 1.sp
+        )
+        Text(
+            text = value,
+            fontSize = 11.sp,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
         )
     }
+}
+
+private data class KeystoreInfoResult(
+    val alias: String,
+    val issuer: String,
+    val validFrom: String,
+    val validTo: String,
+    val sha256Fingerprint: String,
+    val sha1Fingerprint: String,
+    val warnings: List<String> = emptyList()
+)
+
+private fun readKeystoreInfo(
+    keystorePath: String,
+    password: String?,
+    alias: String,
+    entryPassword: String? = null
+): KeystoreInfoResult? {
+    val file = File(keystorePath)
+    if (!file.exists()) return null
+
+    val passwordChars = password?.toCharArray() ?: charArrayOf()
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+    // Ensure BouncyCastle provider is registered (needed for BKS keystores)
+    try {
+        if (java.security.Security.getProvider("BC") == null) {
+            java.security.Security.addProvider(
+                Class.forName("org.bouncycastle.jce.provider.BouncyCastleProvider")
+                    .getDeclaredConstructor().newInstance() as java.security.Provider
+            )
+        }
+    } catch (_: Exception) {
+        // BC not on classpath — BKS keystores won't be readable, but JKS/PKCS12 still work
+    }
+
+    // Try multiple keystore types: BKS (what Morphe generates), then JKS, then PKCS12
+    // BKS requires BouncyCastle provider — try with provider name, fall back without
+    val types = listOf("BKS" to "BC", "BKS" to null, "JKS" to null, "PKCS12" to null)
+    for ((type, provider) in types) {
+        try {
+            val ks = if (provider != null) {
+                KeyStore.getInstance(type, provider)
+            } else {
+                KeyStore.getInstance(type)
+            }
+
+            file.inputStream().use { ks.load(it, passwordChars) }
+
+            val warnings = mutableListOf<String>()
+
+            // Alias must match exactly
+            if (!ks.containsAlias(alias)) {
+                return KeystoreInfoResult(
+                    alias = alias,
+                    issuer = "",
+                    validFrom = "",
+                    validTo = "",
+                    sha256Fingerprint = "",
+                    sha1Fingerprint = "",
+                    warnings = listOf("Alias \"$alias\" not found in keystore")
+                )
+            }
+
+            val cert = ks.getCertificate(alias) as? X509Certificate ?: continue
+
+            // Verify the entry password actually works
+            try {
+                ks.getKey(alias, entryPassword?.toCharArray() ?: charArrayOf())
+            } catch (_: Exception) {
+                return KeystoreInfoResult(
+                    alias = alias,
+                    issuer = "",
+                    validFrom = "",
+                    validTo = "",
+                    sha256Fingerprint = "",
+                    sha1Fingerprint = "",
+                    warnings = listOf("Key password is incorrect for alias \"$alias\"")
+                )
+            }
+
+            val sha256 = MessageDigest.getInstance("SHA-256")
+                .digest(cert.encoded)
+                .joinToString(":") { "%02X".format(it) }
+
+            val sha1 = MessageDigest.getInstance("SHA-1")
+                .digest(cert.encoded)
+                .joinToString(":") { "%02X".format(it) }
+
+            return KeystoreInfoResult(
+                alias = alias,
+                issuer = cert.issuerDN.name,
+                validFrom = dateFormat.format(cert.notBefore),
+                validTo = dateFormat.format(cert.notAfter),
+                sha256Fingerprint = sha256,
+                sha1Fingerprint = sha1,
+                warnings = warnings
+            )
+        } catch (_: Exception) {
+            continue
+        }
+    }
+    return null
 }
 
 private fun ThemePreference.toDisplayName(): String {
@@ -322,56 +1641,196 @@ private fun ThemePreference.toDisplayName(): String {
         ThemePreference.LIGHT -> "Light"
         ThemePreference.DARK -> "Dark"
         ThemePreference.AMOLED -> "AMOLED"
+        ThemePreference.NORD -> "Nord"
+        ThemePreference.CATPPUCCIN -> "Catppuccin"
+        ThemePreference.SAKURA -> "Sakura"
+        ThemePreference.MATCHA -> "Matcha"
+        ThemePreference.DEEPSPACE -> "Deepspace"
         ThemePreference.SYSTEM -> "System"
     }
 }
 
-private fun calculateCacheSize(): String {
-    val patchesSize = FileUtils.getPatchesDir().walkTopDown().filter { it.isFile }.sumOf { it.length() }
-    val logsSize = FileUtils.getLogsDir().walkTopDown().filter { it.isFile }.sumOf { it.length() }
-    val totalSize = patchesSize + logsSize
-
-    return when {
-        totalSize < 1024 -> "$totalSize B"
-        totalSize < 1024 * 1024 -> "%.1f KB".format(totalSize / 1024.0)
-        else -> "%.1f MB".format(totalSize / (1024.0 * 1024.0))
+private fun ThemePreference.iconSymbol(): String {
+    return when (this) {
+        ThemePreference.LIGHT -> "☀"
+        ThemePreference.DARK -> "☾"
+        ThemePreference.AMOLED -> "◆"
+        ThemePreference.NORD -> "❄"
+        ThemePreference.CATPPUCCIN -> "🐱"
+        ThemePreference.SAKURA -> "🌸"
+        ThemePreference.MATCHA -> "🍵"
+        ThemePreference.DEEPSPACE -> "✦"
+        ThemePreference.SYSTEM -> "⚙"
     }
 }
 
-private fun clearAllCache(): Boolean {
-    return try {
-        var failedCount = 0
+private fun ThemePreference.accentColor(): Color {
+    return when (this) {
+        ThemePreference.LIGHT -> MorpheColors.Blue
+        ThemePreference.DARK -> MorpheColors.Blue
+        ThemePreference.AMOLED -> MorpheColors.Cyan
+        ThemePreference.NORD -> Color(0xFF88C0D0)
+        ThemePreference.CATPPUCCIN -> Color(0xFFCBA6F7)
+        ThemePreference.SAKURA -> Color(0xFFB43A67)
+        ThemePreference.MATCHA -> Color(0xFF4C7A35)
+        ThemePreference.DEEPSPACE -> Color(0xFF00D9FF)
+        ThemePreference.SYSTEM -> MorpheColors.Blue
+    }
+}
 
-        // Delete patch files
-        FileUtils.getPatchesDir().listFiles()?.forEach { file ->
-            try {
-                java.nio.file.Files.delete(file.toPath())
-            } catch (e: Exception) {
-                failedCount++
-                Logger.error("Failed to delete ${file.name}: ${e.message}")
+// ── Patched App Runtime Logs Section ──
+
+private sealed interface RuntimeLogsStatus {
+    data object Idle : RuntimeLogsStatus
+    data object Clearing : RuntimeLogsStatus
+    data object Saving : RuntimeLogsStatus
+    data object Cleared : RuntimeLogsStatus
+    data class Saved(val file: File, val lineCount: Int) : RuntimeLogsStatus
+    data class Error(val message: String) : RuntimeLogsStatus
+}
+
+@Composable
+private fun PatchedAppRuntimeLogsSection(
+    mono: androidx.compose.ui.text.font.FontFamily,
+    accentColor: Color,
+    borderColor: Color,
+    enabled: Boolean = true,
+    expanded: Boolean = false,
+    onExpandedChange: (Boolean) -> Unit = {}
+) {
+    val monitorState by DeviceMonitor.state.collectAsState()
+    val selectedDevice = monitorState.selectedDevice
+    val scope = rememberCoroutineScope()
+    val adbManager = remember { AdbManager() }
+    var status by remember { mutableStateOf<RuntimeLogsStatus>(RuntimeLogsStatus.Idle) }
+
+    val isWorking = status is RuntimeLogsStatus.Clearing || status is RuntimeLogsStatus.Saving
+    val deviceReady = selectedDevice?.isReady == true
+    val canAct = enabled && deviceReady && !isWorking
+
+    CollapsibleSection(
+        title = "PATCHED APP RUNTIME LOGS",
+        mono = mono,
+        expanded = expanded,
+        onExpandedChange = onExpandedChange
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(
+                text = "Capture logs from your phone after a patched app crashes or misbehaves. Clear before reproducing the bug, then save the filtered output to attach to a bug report.",
+                fontSize = 11.sp,
+                fontFamily = mono,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            )
+
+            // Device row
+            if (deviceReady) {
+                Text(
+                    text = "Device: ${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+            } else {
+                Text(
+                    text = "No device connected. Plug in your phone with USB debugging enabled.",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                )
+            }
+
+            ActionButton(
+                label = if (status is RuntimeLogsStatus.Clearing) "CLEARING…" else "CLEAR DEVICE LOGS",
+                icon = Icons.Default.DeleteSweep,
+                mono = mono,
+                borderColor = borderColor,
+                enabled = canAct,
+                onClick = {
+                    val device = selectedDevice ?: return@ActionButton
+                    status = RuntimeLogsStatus.Clearing
+                    scope.launch {
+                        val result = adbManager.clearLogcat(device.id)
+                        status = result.fold(
+                            onSuccess = { RuntimeLogsStatus.Cleared },
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to clear logs") }
+                        )
+                    }
+                }
+            )
+
+            ActionButton(
+                label = if (status is RuntimeLogsStatus.Saving) "SAVING…" else "SAVE DEVICE LOGS",
+                icon = Icons.Default.Save,
+                mono = mono,
+                borderColor = borderColor,
+                contentColor = accentColor,
+                enabled = canAct,
+                onClick = {
+                    val device = selectedDevice ?: return@ActionButton
+                    status = RuntimeLogsStatus.Saving
+                    scope.launch {
+                        val timestamp = SimpleDateFormat("yyyy-MM-dd-HHmmss", java.util.Locale.US).format(java.util.Date())
+                        val outFile = File(FileUtils.getLogsDir(), "device-logcat-$timestamp.txt")
+                        val result = adbManager.captureLogcat(device.id, outFile)
+                        status = result.fold(
+                            onSuccess = { count -> RuntimeLogsStatus.Saved(outFile, count) },
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to save logs") }
+                        )
+                    }
+                }
+            )
+
+            // Status line
+            when (val s = status) {
+                RuntimeLogsStatus.Idle, RuntimeLogsStatus.Clearing, RuntimeLogsStatus.Saving -> Unit
+                RuntimeLogsStatus.Cleared -> Text(
+                    text = "Logs cleared on device.",
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = accentColor.copy(alpha = 0.85f)
+                )
+                is RuntimeLogsStatus.Saved -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = if (s.lineCount == 0)
+                            "Nothing captured yet. Run the patched app on your phone, then save again."
+                        else
+                            "Saved ${s.lineCount} line(s) to ${s.file.name}",
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        color = if (s.lineCount == 0) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                                else accentColor.copy(alpha = 0.85f)
+                    )
+                    if (s.lineCount > 0) {
+                        val cornersLocal = LocalMorpheCorners.current
+                        Text(
+                            text = "OPEN LOGS",
+                            fontSize = 10.sp,
+                            fontFamily = mono,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.5.sp,
+                            color = accentColor,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(cornersLocal.small))
+                                .clickable {
+                                    try {
+                                        if (Desktop.isDesktopSupported()) {
+                                            Desktop.getDesktop().open(s.file.parentFile)
+                                        }
+                                    } catch (e: Exception) {
+                                        Logger.error("Failed to reveal logs folder", e)
+                                    }
+                                }
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+                is RuntimeLogsStatus.Error -> Text(
+                    text = s.message,
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
-
-        // Delete log files
-        FileUtils.getLogsDir().listFiles()?.forEach { file ->
-            try {
-                java.nio.file.Files.delete(file.toPath())
-            } catch (e: Exception) {
-                failedCount++
-                Logger.error("Failed to delete log ${file.name}: ${e.message}")
-            }
-        }
-
-        FileUtils.cleanupAllTempDirs()
-        if (failedCount > 0) {
-            Logger.error("Cache clear incomplete: $failedCount file(s) could not be deleted (may be locked)")
-            false
-        } else {
-            Logger.info("Cache cleared successfully")
-            true
-        }
-    } catch (e: Exception) {
-        Logger.error("Failed to clear cache", e)
-        false
     }
 }

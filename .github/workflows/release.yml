@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # Make sure the release step uses its own credentials:
           # https://github.com/cycjimmy/semantic-release-action#private-packages
@@ -24,11 +24,6 @@ jobs:
 
       - name: Cache Gradle
         uses: burrunan/gradle-cache-action@v3
-
-      - name: Build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew build clean
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -40,7 +35,7 @@ jobs:
         run: npm install
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}

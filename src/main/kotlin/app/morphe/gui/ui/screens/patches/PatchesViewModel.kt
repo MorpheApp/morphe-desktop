@@ -1,17 +1,21 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.ui.screens.patches
 
-import app.morphe.cli.command.model.toPatchBundle
+import app.morphe.desktop.command.model.toPatchBundle
 import app.morphe.patcher.patch.loadPatchesFromJar
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import app.morphe.gui.data.model.Release
+import app.morphe.engine.model.Release
+import app.morphe.gui.data.model.FollowMode
+import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
+import app.morphe.gui.data.repository.PatchSourceManager
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,14 +24,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import app.morphe.gui.util.Logger
-import app.morphe.gui.data.model.ReleaseAsset
+import app.morphe.engine.model.ReleaseAsset
 import java.io.File
 
 class PatchesViewModel(
     private val apkPath: String,
     private val apkName: String,
     private val patchRepository: PatchRepository,
-    private val configRepository: ConfigRepository
+    private val configRepository: ConfigRepository,
+    private val localPatchFilePath: String? = null,
+    private val patchSourceManager: PatchSourceManager? = null
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(PatchesUiState())
@@ -35,11 +41,40 @@ class PatchesViewModel(
 
     init {
         loadReleases()
+
+        // Observe cache clears / source changes
+        patchSourceManager?.let { psm ->
+            screenModelScope.launch {
+                psm.sourceVersion.drop(1).collect {
+                    Logger.info("PatchesVM: Source changed, reloading...")
+                    _uiState.value = PatchesUiState()
+                    loadReleases()
+                }
+            }
+        }
     }
 
     fun loadReleases() {
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            // LOCAL source: skip GitHub, use the file directly
+            if (localPatchFilePath != null) {
+                val localFile = File(localPatchFilePath)
+                if (localFile.exists()) {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isLocalSource = true,
+                        downloadedPatchFile = localFile
+                    )
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = "Local patch file not found: ${localFile.name}"
+                    )
+                }
+                return@launch
+            }
 
             val result = patchRepository.fetchReleases()
 
@@ -48,9 +83,17 @@ class PatchesViewModel(
                     val stableReleases = releases.filter { !it.isDevRelease() }
                     val devReleases = releases.filter { it.isDevRelease() }
 
-                    // Check config for previously selected version
-                    val config = configRepository.loadConfig()
-                    val savedVersion = config.lastPatchesVersion
+                    // Resolve this source's version preference to a concrete tag
+                    // to pre-select: a pin → its tag; follow-stable → newest stable;
+                    // follow-dev → newest overall.
+                    val activeSourceId = patchSourceManager?.getActiveSource()?.id
+                    val pref = activeSourceId?.let { configRepository.getSourceVersionPrefs()[it] }
+                    val savedVersion = when (pref?.mode) {
+                        FollowMode.PINNED -> pref.pinnedTag
+                        FollowMode.FOLLOW_STABLE -> stableReleases.firstOrNull()?.tagName
+                        FollowMode.FOLLOW_DEV -> releases.firstOrNull()?.tagName
+                        null -> null
+                    }
 
                     // Find the saved release, or fall back to latest stable
                     val initialRelease = if (savedVersion != null) {
@@ -101,8 +144,14 @@ class PatchesViewModel(
                                 parseVersionParts(version)
                                     .fold(0L) { acc, part -> acc * 10000 + part }
                             }
-                        val config = configRepository.loadConfig()
-                        val savedVersion = config.lastPatchesVersion
+                        val activeSourceId = patchSourceManager?.getActiveSource()?.id
+                        val pref = activeSourceId?.let { configRepository.getSourceVersionPrefs()[it] }
+                        val savedVersion = when (pref?.mode) {
+                            FollowMode.PINNED -> pref.pinnedTag
+                            FollowMode.FOLLOW_STABLE -> offlineReleases.firstOrNull { !it.isDevRelease() }?.tagName
+                            FollowMode.FOLLOW_DEV -> offlineReleases.firstOrNull()?.tagName
+                            null -> null
+                        }
 
                         // Pre-select the saved version, or fall back to the first (most recent)
                         val initialRelease = if (savedVersion != null) {
@@ -144,7 +193,7 @@ class PatchesViewModel(
             // In offline mode, find the cached file by matching the asset name
             val assetName = release.assets.firstOrNull()?.name
             if (assetName != null) {
-                val patchesDir = app.morphe.gui.util.FileUtils.getPatchesDir()
+                val patchesDir = patchRepository.getCacheDir()
                 val file = File(patchesDir, assetName)
                 if (file.exists()) file else null
             } else null
@@ -160,13 +209,14 @@ class PatchesViewModel(
     }
 
     /**
-     * Find all cached .mpp files in the patches directory.
+     * Find all cached .mpp files in the per-source cache directory.
      */
     private fun findAllCachedPatchFiles(): List<File> {
-        val patchesDir = app.morphe.gui.util.FileUtils.getPatchesDir()
-        return patchesDir.listFiles { file -> file.extension.equals("mpp", ignoreCase = true) }
-            ?.filter { it.length() > 0 }
-            ?: emptyList()
+        val patchesDir = patchRepository.getCacheDir()
+        return patchesDir.listFiles { file ->
+            val ext = file.extension.lowercase()
+            ext == "mpp" || ext == "jar"
+        }?.filter { it.length() > 0 } ?: emptyList()
     }
 
     private val versionRegex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
@@ -210,9 +260,14 @@ class PatchesViewModel(
      * Check if patches for a release are already downloaded and valid.
      */
     private fun checkCachedPatches(release: Release): File? {
-        val asset = patchRepository.findMppAsset(release) ?: return null
-        val patchesDir = app.morphe.gui.util.FileUtils.getPatchesDir()
-        val cachedFile = File(patchesDir, asset.name)
+        val asset = patchRepository.findPatchAsset(release) ?: return null
+        val patchesDir = patchRepository.getCacheDir()
+        // Match the version-prefixed filename PatchRepository.downloadPatches writes.
+        // Looking up by bare asset.name would falsely "find" the latest version's
+        // file for every other version's check (since maintainers commonly reuse
+        // the asset filename across releases) — that was the cause of the
+        // "latest stable shows SELECT after Clear Cache" bug.
+        val cachedFile = File(patchesDir, PatchRepository.cachedFileName(release, asset))
 
         // Verify file exists and size matches (size check acts as basic integrity verification)
         return if (cachedFile.exists() && cachedFile.length() == asset.size) {
@@ -263,9 +318,14 @@ class PatchesViewModel(
                     )
                     Logger.info("Patches downloaded: ${patchFile.absolutePath}")
 
-                    // Save the selected version to config so HomeScreen can pick it up
-                    configRepository.setLastPatchesVersion(release.tagName)
-                    Logger.info("Saved selected patches version to config: ${release.tagName}")
+                    // Save the version preference PER SOURCE so HomeScreen can pick
+                    // it up without contaminating other enabled sources.
+                    val activeSourceId = patchSourceManager?.getActiveSource()?.id
+                    if (activeSourceId != null) {
+                        val pref = versionPrefFor(release)
+                        configRepository.setSourceVersionPref(activeSourceId, pref)
+                        Logger.info("Saved version pref for source '$activeSourceId': $pref")
+                    }
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
@@ -289,9 +349,33 @@ class PatchesViewModel(
     fun confirmSelection() {
         val release = _uiState.value.selectedRelease ?: return
         screenModelScope.launch {
-            configRepository.setLastPatchesVersion(release.tagName)
-            Logger.info("Confirmed patches selection: ${release.tagName}")
+            val activeSourceId = patchSourceManager?.getActiveSource()?.id
+            if (activeSourceId != null) {
+                val pref = versionPrefFor(release)
+                configRepository.setSourceVersionPref(activeSourceId, pref)
+                Logger.info("Confirmed version pref for source '$activeSourceId': $pref")
+            }
         }
+    }
+
+    /**
+     * Turn a user-selected release into a [SourceVersionPref]:
+     *  - the newest stable  → [FollowMode.FOLLOW_STABLE] (ride latest stable)
+     *  - the newest dev      → [FollowMode.FOLLOW_DEV] (ride newest overall)
+     *  - anything older      → [FollowMode.PINNED] to that exact tag
+     *
+     * "Picked the latest of a channel" is read as "stay on that channel's latest,"
+     * which is what auto-updates the source going forward.
+     */
+    private fun versionPrefFor(release: Release): SourceVersionPref {
+        val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
+        val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
+        val mode = when {
+            release.isDevRelease() && release.tagName == newestDevTag -> FollowMode.FOLLOW_DEV
+            !release.isDevRelease() && release.tagName == newestStableTag -> FollowMode.FOLLOW_STABLE
+            else -> FollowMode.PINNED
+        }
+        return SourceVersionPref(mode = mode, pinnedTag = release.tagName.takeIf { mode == FollowMode.PINNED })
     }
 
     /**
@@ -334,6 +418,7 @@ enum class ReleaseChannel {
 data class PatchesUiState(
     val isLoading: Boolean = false,
     val isOffline: Boolean = false,
+    val isLocalSource: Boolean = false,
     val offlineReleases: List<Release> = emptyList(),
     val stableReleases: List<Release> = emptyList(),
     val devReleases: List<Release> = emptyList(),

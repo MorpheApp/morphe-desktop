@@ -1,10 +1,11 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.util
 
+import app.morphe.gui.data.constants.AppConstants
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -13,7 +14,10 @@ import java.util.*
 
 /**
  * Simple file logger with rotation support.
- * Logs to ~/.morphe-gui/logs/morphe-gui.log
+ *
+ * Log file location: `<MorpheData.root>/logs/morphe-gui.log` — JAR-adjacent
+ * `morphe-data/logs/` for shipped jars, `~/morphe/logs/` for IDE/dev runs.
+ * See [app.morphe.engine.MorpheData] for the full resolution + fallback rules.
  */
 object Logger {
 
@@ -49,11 +53,13 @@ object Logger {
             // Log startup info
             info("=".repeat(60))
             info("Morphe-GUI Started")
-            info("Version: 1.0.0")
-            info("OS: ${System.getProperty("os.name")} ${System.getProperty("os.version")}")
-            info("Java: ${System.getProperty("java.version")}")
+            info("Version: ${AppConstants.APP_VERSION}")
+            info("OS: ${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})")
+            info("Java: ${System.getProperty("java.version")} (${System.getProperty("java.vendor")}) ${System.getProperty("sun.arch.data.model")}-bit")
+            info("Memory: ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB max")
             info("User: ${System.getProperty("user.name")}")
             info("App Data: ${FileUtils.getAppDataDir().absolutePath}")
+            info("Working Dir: ${System.getProperty("user.dir")}")
             info("=".repeat(60))
 
             initialized = true
