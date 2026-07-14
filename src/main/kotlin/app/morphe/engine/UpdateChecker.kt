@@ -1,6 +1,6 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.engine
@@ -45,9 +45,9 @@ object UpdateChecker {
                 // dev branch tracks main after every stable release, so probing
                 // dev also catches new stables for users on dev builds.
                 ReleaseChannel.DEV ->
-                    "https://raw.githubusercontent.com/MorpheApp/morphe-cli/refs/heads/dev/gradle.properties"
+                    "https://raw.githubusercontent.com/MorpheApp/morphe-desktop/refs/heads/dev/gradle.properties"
                 ReleaseChannel.STABLE ->
-                    "https://raw.githubusercontent.com/MorpheApp/morphe-cli/refs/heads/main/gradle.properties"
+                    "https://raw.githubusercontent.com/MorpheApp/morphe-desktop/refs/heads/main/gradle.properties"
             }
 
             val connection = URL(url).openConnection() as HttpURLConnection
@@ -63,8 +63,8 @@ object UpdateChecker {
             if (latestVersion == currentVersion) return null
 
             val downloadLink = when (resolvedChannel) {
-                ReleaseChannel.DEV -> "https://github.com/MorpheApp/morphe-cli/releases/"
-                ReleaseChannel.STABLE -> "https://github.com/MorpheApp/morphe-cli/releases/latest"
+                ReleaseChannel.DEV -> "https://github.com/MorpheApp/morphe-desktop/releases/"
+                ReleaseChannel.STABLE -> "https://github.com/MorpheApp/morphe-desktop/releases/latest"
             }
 
             return UpdateInfo(

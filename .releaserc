@@ -32,7 +32,7 @@
       {
         "assets": [
           {
-            "path": "build/libs/morphe-cli*-all.jar"
+            "path": "build/libs/morphe-desktop*-all.jar"
           }
         ],
         successComment: false

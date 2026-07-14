@@ -1,6 +1,6 @@
 {
   "uniqueId": "app.morphe.cli",
-  "name": "Morphe CLI",
+  "name": "Morphe Desktop",
   "developers": [{"name": "Morphe"}],
   "licenses": ["GPL-3.0-only"]
 }

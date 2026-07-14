@@ -41,4 +41,4 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           archive: false
-          path: build/libs/morphe-cli-*-all.jar
+          path: build/libs/morphe-desktop-*-all.jar

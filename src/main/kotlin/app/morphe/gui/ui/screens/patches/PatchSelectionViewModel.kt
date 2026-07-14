@@ -1,6 +1,6 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.ui.screens.patches
@@ -630,7 +630,7 @@ class PatchSelectionViewModel(
             buildString {
                 appendLine(
                     """
-                        java -jar morphe-cli.jar patch \
+                        java -jar morphe-desktop.jar patch \
                           -p ${patchesFile.name} \
                           -o $outputFileName \
                           --force \
@@ -671,7 +671,7 @@ class PatchSelectionViewModel(
                 if (keystoreEntryPassword != null && keystoreEntryPassword != "Morphe") parts.add("--keystore-entry-password \"$keystoreEntryPassword\"")
                 parts.joinToString(" ")
             } else ""
-            "java -jar morphe-cli.jar patch -p ${patchesFile.name} -o $outputFileName --force$continueOnErrorPart$exclusivePart$striplibsPart$keystorePart $patches ${inputFile.name}"
+            "java -jar morphe-desktop.jar patch -p ${patchesFile.name} -o $outputFileName --force$continueOnErrorPart$exclusivePart$striplibsPart$keystorePart $patches ${inputFile.name}"
         }
     }
 

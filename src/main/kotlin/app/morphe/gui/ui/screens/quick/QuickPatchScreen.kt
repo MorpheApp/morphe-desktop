@@ -1,6 +1,6 @@
 /*
  * Copyright 2026 Morphe.
- * https://github.com/MorpheApp/morphe-cli
+ * https://github.com/MorpheApp/morphe-desktop
  */
 
 package app.morphe.gui.ui.screens.quick
@@ -36,10 +36,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
-import app.morphe.morphe_cli.generated.resources.Res
-import app.morphe.morphe_cli.generated.resources.morphe_dark
-import app.morphe.morphe_cli.generated.resources.morphe_light
-import app.morphe.engine.PatchedAppStore
+import app.morphe.morphe_desktop.generated.resources.Res
+import app.morphe.morphe_desktop.generated.resources.morphe_dark
+import app.morphe.morphe_desktop.generated.resources.morphe_light
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp
@@ -62,6 +61,7 @@ import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay
 import app.morphe.gui.util.toColor
 import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.AdbManager
