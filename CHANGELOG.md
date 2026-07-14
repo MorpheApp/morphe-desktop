@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.10.0...v1.11.0) (2026-07-14)
+
+
+### Features
+
+* Rename project to "Morphe Desktop" ([#181](https://github.com/MorpheApp/morphe-desktop/issues/181)) ([66a6de7](https://github.com/MorpheApp/morphe-desktop/commit/66a6de7bb2d3cbc27c32de16b0ec138aaacc960e))
+
 # [1.11.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.10.0...v1.11.0-dev.1) (2026-07-14)
 
 
