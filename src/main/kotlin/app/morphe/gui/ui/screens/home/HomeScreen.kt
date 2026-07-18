@@ -90,9 +90,9 @@ import app.morphe.gui.ui.screens.home.components.ApkInfoCard
 import app.morphe.gui.ui.screens.home.components.AppListFilter
 import app.morphe.gui.ui.screens.home.components.AppListFilterChips
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
-import app.morphe.gui.ui.screens.home.components.MorpheDialogButton
-import app.morphe.gui.ui.screens.home.components.MorpheDialogCard
-import app.morphe.gui.ui.screens.home.components.MorpheDialogText
+import app.morphe.gui.ui.components.MorpheDialogButton
+import app.morphe.gui.ui.components.MorpheDialogCard
+import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
 import app.morphe.gui.ui.screens.home.components.PatchedUpdatesBanner
 import app.morphe.gui.ui.screens.home.components.SupportedAppListRow

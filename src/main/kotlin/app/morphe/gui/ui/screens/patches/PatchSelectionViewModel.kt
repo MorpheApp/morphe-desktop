@@ -200,7 +200,13 @@ class PatchSelectionViewModel(
                                 // is fine — same option means same thing.
                                 for ((patchName, entry) in saved.patches) {
                                     for ((optKey, jsonValue) in entry.options) {
-                                        initialOptions["$patchName.$optKey"] = jsonValue.toString().trim('"')
+                                        val optValue = jsonValue.toString().trim('"')
+                                        // Drop a stale customIcon whose folder no longer exists (e.g.
+                                        // the user deleted the icon) so it doesn't reappear as "ready".
+                                        if (optKey.equals("customIcon", ignoreCase = true) &&
+                                            (optValue.isBlank() || !java.io.File(optValue).exists())
+                                        ) continue
+                                        initialOptions["$patchName.$optKey"] = optValue
                                     }
                                 }
                             }
@@ -446,6 +452,9 @@ class PatchSelectionViewModel(
         val key = "$patchName.$optionKey"
         return _uiState.value.patchOptionValues[key] ?: default ?: ""
     }
+
+    /** Target app package being patched — used to key per-app storage (e.g. Icon Studio output). */
+    fun targetPackage(): String = packageName
 
     /** Total count of patches across all bundles that ship disabled by default. */
     fun getDefaultDisabledCount(): Int =

@@ -1,3 +1,10 @@
+# [1.12.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.11.0...v1.12.0-dev.1) (2026-07-18)
+
+
+### Features
+
+* Add icon studio ([#211](https://github.com/MorpheApp/morphe-desktop/issues/211)) ([16e5cb3](https://github.com/MorpheApp/morphe-desktop/commit/16e5cb397e31b663a8f184f028e6c7cb7b57c580))
+
 # [1.11.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.10.0...v1.11.0) (2026-07-14)
 
 
