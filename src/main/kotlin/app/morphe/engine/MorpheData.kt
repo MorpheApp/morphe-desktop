@@ -27,6 +27,7 @@ import java.util.logging.Logger
  * morphe-data/
  *   patches/{owner}-{repo}/v1.5.0__patches.mpp   # downloaded .mpp files
  *   logs/                                        # app logs
+ *   icons/{packageName}/                         # user-created custom app icons (persistent)
  *   config.json                                  # GUI preferences + sources
  *   tmp/patching-{timestamp}/                    # per-session patcher scratch
  *   morphe.keystore                              # shared default signing key
@@ -69,6 +70,10 @@ object MorpheData {
 
     /** App logs. */
     val logsDir: File by lazy { File(root, "logs").also { it.mkdirs() } }
+
+    /** User-created custom app icons (Icon Studio output), organized per package.
+     *  Persistent USER CONTENT. Deliberately NOT wiped by clear-cache. */
+    val iconsDir: File by lazy { File(root, "icons").also { it.mkdirs() } }
 
     /** Patcher scratch space. Each patching session gets its own subfolder
      *  here (see Phase 6 of the unified-data-location plan). */

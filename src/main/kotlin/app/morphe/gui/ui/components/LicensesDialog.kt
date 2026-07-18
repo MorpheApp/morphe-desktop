@@ -72,7 +72,10 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
             val stream = Thread.currentThread().contextClassLoader.getResourceAsStream("aboutlibraries.json")
             val json = stream?.bufferedReader()?.use { it.readText() }
             if (json != null) Libs.Builder().withJson(json).build() else null
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            // Throwable, not Exception: a JVM/dep version mismatch surfaces as an
+            // UnsupportedClassVersionError (a LinkageError), which isn't an Exception —
+            // catch it so the viewer degrades to empty instead of taking down the screen.
             Logger.error("Failed to load licenses", e)
             null
         }
@@ -80,6 +83,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
 
     var searchQuery by remember { mutableStateOf("") }
     var viewingLicense by remember { mutableStateOf<License?>(null) }
+    var showNotice by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
 
     val filtered = remember(libs, searchQuery) {
@@ -139,28 +143,41 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                             letterSpacing = 0.5.sp
                         )
                     }
-                    val closeHover = remember { MutableInteractionSource() }
-                    val isCloseHovered by closeHover.collectIsHoveredAsState()
-                    Box(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clip(RoundedCornerShape(corners.small))
-                            .hoverable(closeHover)
-                            .background(
-                                if (isCloseHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
-                                else Color.Transparent
-                            )
-                            .clickable(onClick = onDismiss),
-                        contentAlignment = Alignment.Center
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                alpha = if (isCloseHovered) 0.85f else 0.55f
-                            ),
-                            modifier = Modifier.size(14.dp)
+                        // GPLv3 §7b requires the warranty NOTICE be provided to the user.
+                        NoticeButton(
+                            onClick = { showNotice = true },
+                            mono = mono,
+                            accentColor = accents.primary,
+                            corners = corners
                         )
+
+                        val closeHover = remember { MutableInteractionSource() }
+                        val isCloseHovered by closeHover.collectIsHoveredAsState()
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(RoundedCornerShape(corners.small))
+                                .hoverable(closeHover)
+                                .background(
+                                    if (isCloseHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
+                                    else Color.Transparent
+                                )
+                                .clickable(onClick = onDismiss),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = if (isCloseHovered) 0.85f else 0.55f
+                                ),
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
                     }
                 }
 
@@ -248,6 +265,10 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
 
     viewingLicense?.let { license ->
         LicenseTextDialog(license = license, onDismiss = { viewingLicense = null })
+    }
+
+    if (showNotice) {
+        NoticeTextDialog(onDismiss = { showNotice = false })
     }
 }
 
@@ -602,6 +623,168 @@ private fun EmptyHint(text: String, mono: androidx.compose.ui.text.font.FontFami
                     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),
             letterSpacing = 0.8.sp
         )
+    }
+}
+
+/**
+ * Morphe's project NOTICE. Hardcoded on purpose since it never changes. GPLv3 §7b requires this
+ * warranty statement reach the user. The NOTICE button in the header shows it.
+ */
+private val MORPHE_NOTICE = """
+    Morphe NOTICE
+
+    https://github.com/MorpheApp/morphe-desktop
+
+    =============
+
+    GPLv3 Section 7b: Preservation of User Notices
+
+    All derivative works (source code and binaries) must include this
+    NOTICE text and provide it to the software user.
+
+    Portions of this software are provided "AS IS" by the Morphe software project.
+    Any express or implied warranties, including the implied warranties of
+    merchantability and fitness for a particular purpose, are disclaimed.
+
+
+    GPLv3 Section 7c: Prohibiting Misrepresentation of Origin
+
+    You are prohibited from misrepresenting the origin of the Program,
+    and modified versions of the Program must be identified and marked in
+    reasonable ways as different from the original version so as not to cause
+    confusion regarding their origin.
+
+
+    GPLv3 Section 7e: Declining Grant of Trademark Rights
+
+    This License does not grant any rights or permission under trademark law
+    to use the name "Morphe" or any of the Program's trade names, trademarks,
+    service marks, or logos.
+""".trimIndent()
+
+/** Header pill that opens the [NoticeTextDialog]. */
+@Composable
+private fun NoticeButton(
+    onClick: () -> Unit,
+    mono: androidx.compose.ui.text.font.FontFamily,
+    accentColor: Color,
+    corners: MorpheCornerStyle,
+) {
+    val hover = remember { MutableInteractionSource() }
+    val isHovered by hover.collectIsHoveredAsState()
+    val bg by animateColorAsState(
+        if (isHovered) accentColor.copy(alpha = 0.18f) else accentColor.copy(alpha = 0.08f),
+        animationSpec = tween(140)
+    )
+    Box(
+        modifier = Modifier
+            .hoverable(hover)
+            .clip(RoundedCornerShape(corners.small))
+            .background(bg, RoundedCornerShape(corners.small))
+            .border(1.dp, accentColor.copy(alpha = 0.35f), RoundedCornerShape(corners.small))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 5.dp)
+    ) {
+        Text(
+            text = "NOTICE",
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = mono,
+            color = accentColor,
+            letterSpacing = 1.sp,
+            maxLines = 1
+        )
+    }
+}
+
+/** Scrollable viewer for the project [MORPHE_NOTICE] — mirrors [LicenseTextDialog]. */
+@Composable
+private fun NoticeTextDialog(onDismiss: () -> Unit) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .widthIn(min = 540.dp, max = 820.dp)
+                .heightIn(min = 380.dp, max = 680.dp)
+                .fillMaxWidth(0.78f)
+                .fillMaxHeight(0.82f),
+            color = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(corners.medium),
+            border = BorderStroke(1.dp, borderColor)
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 22.dp, vertical = 14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = "MORPHE NOTICE",
+                            fontFamily = mono,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            letterSpacing = 1.5.sp,
+                            color = accents.primary
+                        )
+                        Text(
+                            text = "Required attribution & warranty statement (GPLv3 §7)",
+                            fontFamily = mono,
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(RoundedCornerShape(corners.small))
+                            .clickable(onClick = onDismiss),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+                }
+
+                HorizontalDivider(color = borderColor)
+
+                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    val scrollState = rememberScrollState()
+                    Text(
+                        text = MORPHE_NOTICE,
+                        fontSize = 11.sp,
+                        fontFamily = mono,
+                        lineHeight = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(horizontal = 22.dp, vertical = 16.dp)
+                    )
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight()
+                            .padding(vertical = 6.dp),
+                        adapter = rememberScrollbarAdapter(scrollState),
+                        style = morpheScrollbarStyle()
+                    )
+                }
+            }
+        }
     }
 }
 

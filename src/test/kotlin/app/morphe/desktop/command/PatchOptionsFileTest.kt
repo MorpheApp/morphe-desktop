@@ -127,7 +127,13 @@ class PatchOptionsFileTest {
         // We add new Patch that didn't exist with default values
         val themePatch = rawResourcePatch(name = "Theme", description = "Change Theme", default = true) {}
 
-        val adBlockPatch = rawResourcePatch(name = "AdBlocker", description = "Block Ads", default = true) {}
+        // Declare a compatible package so this is NOT a universal patch. As of
+        // morphe-patcher 1.6.1-dev.1, Patch.resolveDefaultValue() forces universal
+        // patches (no compatibleWith) to default = false, so `default = true` is only
+        // honored for app-specific patches.
+        val adBlockPatch = rawResourcePatch(name = "AdBlocker", description = "Block Ads", default = true) {
+            compatibleWith("com.example.app")
+        }
 
         val userBundle = PatchBundle(
             meta = PatchBundleMeta(),
@@ -137,6 +143,22 @@ class PatchOptionsFileTest {
         assertEquals(2, result.patches.size)
         assertEquals(false, result.patches["Theme"]!!.enabled) // This is preserved
         assertEquals(true, result.patches["AdBlocker"]!!.enabled) // Added with default setting
+    }
+
+    @Test
+    fun `mergeWithBundle adds a universal Patch disabled even when it declares default true`(){
+        // A universal patch (no compatibleWith, so it targets any app) marked default = true.
+        // The patcher's Patch.resolveDefaultValue() force-disables universal patches, so even
+        // though we asked for default = true, it must come out DISABLED after the merge.
+        val universalPatch = rawResourcePatch(name = "Universal", description = "Applies to any app", default = true) {}
+
+        val userBundle = PatchBundle(
+            meta = PatchBundleMeta(),
+            patches = emptyMap(),
+        )
+        val result = setOf(universalPatch).mergeWithBundle(existing = userBundle)
+        assertEquals(1, result.patches.size)
+        assertEquals(false, result.patches["Universal"]!!.enabled)
     }
 
     @Test

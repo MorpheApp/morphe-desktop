@@ -94,7 +94,7 @@ fun Set<Patch<*>>.toPatchBundle(
         .filter { it.name != null }
         .associate { patch ->
             patch.name!! to PatchEntry(
-                enabled = patch.use,
+                enabled = patch.default,
                 options = patch.options.mapValues { (_, option) ->
                     PatchSerializer.serializeValue(option.default)
                 },
@@ -140,7 +140,7 @@ fun Set<Patch<*>>.mergeWithBundle(
             }
 
             patchName to PatchEntry(
-                enabled = existingEntry?.enabled ?: patch.use,
+                enabled = existingEntry?.enabled ?: patch.default,
                 options = updatedOptions,
             )
         }
