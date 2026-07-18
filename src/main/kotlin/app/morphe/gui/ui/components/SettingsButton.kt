@@ -76,6 +76,7 @@ fun SettingsButton(
     var updateChannelPreference by remember { mutableStateOf(UpdateChannelPreference.STABLE) }
     var autoRouteLinksAfterInstall by remember { mutableStateOf(false) }
     var disableStockLinksAfterInstall by remember { mutableStateOf(false) }
+    var developerOptions by remember { mutableStateOf(false) }
 
     LaunchedEffect(showSettingsDialog) {
         if (showSettingsDialog) {
@@ -93,6 +94,7 @@ fun SettingsButton(
             collapsibleSectionStates = config.collapsibleSectionStates
             autoRouteLinksAfterInstall = config.autoRouteLinksAfterInstall
             disableStockLinksAfterInstall = config.disableStockLinksAfterInstall
+            developerOptions = config.developerOptions
             // Resolve the smart-default if the user has never picked a channel
             // (returns DEV when the running build is dev, STABLE otherwise).
             updateChannelPreference = configRepository.getOrInitUpdateChannelPreference(
@@ -146,6 +148,11 @@ fun SettingsButton(
             useExpertMode = !modeState.isSimplified,
             onExpertModeChange = { enabled ->
                 modeState.onChange(!enabled)
+            },
+            developerOptions = developerOptions,
+            onDeveloperOptionsChange = { enabled ->
+                developerOptions = enabled
+                scope.launch { configRepository.setDeveloperOptions(enabled) }
             },
             onDismiss = {
                 showSettingsDialog = false

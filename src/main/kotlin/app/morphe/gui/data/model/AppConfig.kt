@@ -115,6 +115,12 @@ data class AppConfig(
     // When ON, DeviceMonitor polls devices; if Morphe was the one that started
     // the daemon, it's killed on toggle-OFF and on window close.
     val autoStartAdb: Boolean = false,
+    // Patch-developer options. Enables a suite of developers options that patch developers
+    // can use.
+    val developerOptions: Boolean = false,
+    // Last folder browsed when picking a local .mpp, so the file picker reopens there
+    // instead of a system default. Set after a successful pick.
+    val lastLocalPatchDir: String? = null,
     // Which home apps tab the user last viewed ("ALL" or "YOURS"), restored on
     // next launch. Stored as a string so this data layer stays free of UI enums.
     val homeAppListFilter: String = "ALL",

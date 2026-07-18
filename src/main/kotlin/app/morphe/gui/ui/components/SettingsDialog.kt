@@ -91,6 +91,8 @@ fun SettingsDialog(
     onUpdateChannelChange: (app.morphe.gui.data.model.UpdateChannelPreference) -> Unit = {},
     autoStartAdb: Boolean = false,
     onAutoStartAdbChange: (Boolean) -> Unit = {},
+    developerOptions: Boolean = false,
+    onDeveloperOptionsChange: (Boolean) -> Unit = {},
     autoRouteLinksAfterInstall: Boolean = false,
     onAutoRouteLinksChange: (Boolean) -> Unit = {},
     disableStockLinksAfterInstall: Boolean = false,
@@ -268,6 +270,19 @@ fun SettingsDialog(
                         "When off, Morphe never starts the server, and install/push features are disabled.",
                     checked = autoStartAdb,
                     onCheckedChange = onAutoStartAdbChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching
+                )
+
+                SettingsDivider(borderColor)
+
+                // ── Developer options ──
+                SettingToggleRow(
+                    label = "Developer options",
+                    description = "For patch developers. Unlocks a suite of workflow options for building and testing patches (see the documentation for the full list). For now, that's pointing a local source at a folder so Morphe always loads its newest .mpp.",
+                    checked = developerOptions,
+                    onCheckedChange = onDeveloperOptionsChange,
                     accentColor = accents.primary,
                     mono = mono,
                     enabled = !isPatching

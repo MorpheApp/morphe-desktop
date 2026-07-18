@@ -157,9 +157,18 @@ object EnabledSourcesLoader {
         if (path.isNullOrBlank()) {
             return ResolvedSource(source = source, error = "Local source has no file path configured")
         }
-        val file = File(path)
-        if (!file.exists()) {
-            return ResolvedSource(source = source, error = "Local patch file not found: ${file.name}")
+        val target = File(path)
+        if (!target.exists()) {
+            return ResolvedSource(source = source, error = "Local patch path not found: ${target.name}")
+        }
+        // Folder source (patch-developer mode): auto-resolve the NEWEST .mpp in the
+        // directory. This is re-evaluated on every load, so rebuilding a patch is
+        // picked up on the next (re)load without touching the file picker.
+        val file = if (target.isDirectory) {
+            newestMppIn(target)
+                ?: return ResolvedSource(source = source, error = "No .mpp files found in folder: ${target.name}")
+        } else {
+            target
         }
         return ResolvedSource(
             source = source,
@@ -168,6 +177,15 @@ object EnabledSourcesLoader {
             isOffline = false,
         )
     }
+
+    /**
+     * Newest `.mpp` file directly inside [dir] (by last-modified time), or null when
+     * the folder contains none. Backs developer folder sources so a freshly-built
+     * patch is picked up without re-selecting the file. Non-`.mpp` files are ignored.
+     */
+    private fun newestMppIn(dir: File): File? =
+        dir.listFiles { f -> f.isFile && f.extension.equals("mpp", ignoreCase = true) }
+            ?.maxByOrNull { it.lastModified() }
 
     private suspend fun resolveRemote(
         source: PatchSource,

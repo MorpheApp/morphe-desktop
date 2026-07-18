@@ -346,6 +346,18 @@ class ConfigRepository {
         saveConfig(current.copy(autoStartAdb = enabled))
     }
 
+    /** Toggle patch-developer options (unlocks folder-based local sources). */
+    suspend fun setDeveloperOptions(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(developerOptions = enabled))
+    }
+
+    /** Remember the last folder used in the local .mpp picker. */
+    suspend fun setLastLocalPatchDir(path: String?) {
+        val current = loadConfig()
+        saveConfig(current.copy(lastLocalPatchDir = path))
+    }
+
     /**
      * Mark the multi-source upgrade hint as dismissed. One-shot — never resets.
      */

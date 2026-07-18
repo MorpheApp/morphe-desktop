@@ -107,6 +107,14 @@ object MorpheData {
     }
 
     private fun resolveRoot(): Resolution {
+        // Explicit override (MORPHE_DATA_DIR): highest priority, so a read-only /
+        // package-manager install can point the data root at a writable, XDG-compliant
+        // location. No portable-bundle concept here for now (maybe change in the future?), paths stay absolute.
+        envOverrideRoot()?.let { override ->
+            logger.info("Morphe data root: ${override.absolutePath} (MORPHE_DATA_DIR override)")
+            override.mkdirs()
+            return Resolution(root = override, bundleRoot = null)
+        }
         val (jarAdjacent, fallbackReason) = tryJarAdjacent()
         if (jarAdjacent != null) {
             logger.info("Morphe data root: ${jarAdjacent.absolutePath} (JAR-adjacent)")
@@ -160,9 +168,43 @@ object MorpheData {
         return candidate to null
     }
 
+    /**
+     * Explicit data-root override via the `MORPHE_DATA_DIR` environment variable.
+     * Lets read-only / package-manager installs point the data root at a writable
+     * (e.g. XDG) location. Returns null when unset; a set-but-unusable value is
+     * logged and ignored so the app still starts on the normal resolution.
+     */
+    private fun envOverrideRoot(): File? {
+        val raw = System.getenv("MORPHE_DATA_DIR")?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        val dir = File(raw)
+        val usable = runCatching { dir.mkdirs(); dir.isDirectory && dir.canWrite() }.getOrDefault(false)
+        if (!usable) {
+            logger.warning("MORPHE_DATA_DIR is set to '$raw' but it isn't a writable directory — ignoring.")
+            return null
+        }
+        return dir
+    }
+
     private fun userHomeFallback(): File {
         val userHome = System.getProperty("user.home")
-        return File(userHome, "morphe")
+        val legacy = File(userHome, "morphe")
+        // Don't strand an existing ~/morphe install by silently moving it to XDG.
+        if (legacy.isDirectory) return legacy
+        // On Linux, honor an explicitly-set XDG_DATA_HOME; otherwise ~/morphe.
+        return xdgDataRoot() ?: legacy
+    }
+
+    /**
+     * XDG data root on Linux: `$XDG_DATA_HOME/morphe`, only when XDG_DATA_HOME is
+     * explicitly set. Null otherwise (unset, or macOS/Windows) so the caller uses
+     * `~/morphe`.
+     */
+    private fun xdgDataRoot(): File? {
+        val os = System.getProperty("os.name")?.lowercase().orEmpty()
+        val isLinux = "linux" in os || "nix" in os || "nux" in os
+        if (!isLinux) return null
+        val base = System.getenv("XDG_DATA_HOME")?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        return File(base, "morphe")
     }
 
     private fun isWritable(dir: File): Boolean {

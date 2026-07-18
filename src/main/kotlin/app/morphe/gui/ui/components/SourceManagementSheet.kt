@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.DragIndicator
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -84,6 +85,9 @@ fun SourceManagementSheet(
     onRemove: (id: String) -> Unit,
     onOpenPatches: (sourceId: String) -> Unit,
     onDismiss: () -> Unit,
+    /** Reload all sources: Re-resolves a folder source to its newest .mpp so a
+     *  freshly-built patch is picked up without leaving the screen. */
+    onRefresh: () -> Unit = {},
     /** Persist a new source ordering (ids in desired order). Order affects only
      *  the display-name tiebreak + UI presentation, not which patches load. */
     onReorder: (orderedIds: List<String>) -> Unit = {},
@@ -152,13 +156,28 @@ fun SourceManagementSheet(
         shape = RoundedCornerShape(corners.medium),
         containerColor = MaterialTheme.colorScheme.surface,
         title = {
-            Text(
-                "PATCH SOURCES",
-                fontFamily = mono,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                letterSpacing = 2.sp,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "PATCH SOURCES",
+                    fontFamily = mono,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    letterSpacing = 2.sp,
+                )
+                // Reload sources — re-resolves a folder source to its newest .mpp.
+                IconButton(onClick = onRefresh, enabled = enabled, modifier = Modifier.size(28.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Reload patches",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (enabled) 0.7f else 0.3f),
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
+            }
         },
         text = {
             // Hoisted so the scrollbar can share the same state as the
