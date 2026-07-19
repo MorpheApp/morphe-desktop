@@ -131,6 +131,33 @@ fun HomeScreenContent(
     // away) shows stale "NOT ON THIS DEVICE" until the next full reload.
     LaunchedEffect(Unit) { viewModel.refreshDeviceInfo() }
 
+    // ── Self-update dialog (in-app download/verify/install) ──
+    // Opened from UpdateBanner's DOWNLOAD action. The dialog does its own rich
+    // release check via SelfUpdateRepository — this just supplies which channel
+    // to check and whether to auto-start the download once it finds one.
+    val selfUpdateRepository: app.morphe.gui.data.repository.SelfUpdateRepository = org.koin.compose.koinInject()
+    val configRepositoryForUpdate: app.morphe.gui.data.repository.ConfigRepository = org.koin.compose.koinInject()
+    var showSelfUpdateDialog by remember { mutableStateOf(false) }
+    var selfUpdateChannel by remember { mutableStateOf(app.morphe.gui.data.model.UpdateChannelPreference.STABLE) }
+    var autoDownloadUpdates by remember { mutableStateOf(false) }
+    val selfUpdateScope = rememberCoroutineScope()
+    val openSelfUpdateDialog: () -> Unit = {
+        selfUpdateScope.launch {
+            val config = configRepositoryForUpdate.loadConfig()
+            selfUpdateChannel = config.getUpdateChannelPreference() ?: app.morphe.gui.data.model.UpdateChannelPreference.STABLE
+            autoDownloadUpdates = config.autoDownloadUpdates
+            showSelfUpdateDialog = true
+        }
+    }
+    if (showSelfUpdateDialog) {
+        app.morphe.gui.ui.components.SelfUpdateDialog(
+            channel = selfUpdateChannel,
+            autoDownload = autoDownloadUpdates,
+            repository = selfUpdateRepository,
+            onDismiss = { showSelfUpdateDialog = false },
+        )
+    }
+
     // One-click repatch: a patched-app row's "Re-patch" action. Jump straight to
     // patch selection with the input APK + the record's saved selection, using
     // the CURRENT resolved sources (so it repatches against current bundle versions).
@@ -605,6 +632,7 @@ fun HomeScreenContent(
                                     info = uiState.updateInfo!!,
                                     onDismissForSession = { viewModel.dismissUpdateForSession() },
                                     onDismissForVersion = { viewModel.dismissUpdateForVersion() },
+                                    onDownloadClick = openSelfUpdateDialog,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(start = padding, end = padding, top = 8.dp),
