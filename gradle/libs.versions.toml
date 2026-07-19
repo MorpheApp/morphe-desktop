@@ -29,6 +29,9 @@ kotlinx-serialization = "1.11.0"
 # JNA (Windows DWM title bar tinting)
 jna = "5.19.1"
 
+# FileKit (native file/folder pickers across Win/macOS/Linux)
+filekit = "0.14.2"
+
 # Testing
 mockk = "1.14.11"
 
@@ -75,6 +78,9 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 # JNA (Windows DWM title bar tinting)
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
+
+# FileKit: native OS file/folder pickers (JNA on Win/macOS, XDG Desktop Portal on Linux)
+filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "filekit" }
 
 # Testing
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

@@ -36,6 +36,9 @@ import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheAccentColors
 import app.morphe.gui.ui.theme.MorpheCornerStyle
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import java.awt.FileDialog
@@ -508,6 +511,7 @@ private fun LocalSourceRow(
     accents: MorpheAccentColors,
     corners: MorpheCornerStyle,
 ) {
+    val scope = rememberCoroutineScope()
     fun startDir(): String? {
         val fromCurrent = filePath.takeIf { it.isNotBlank() }?.let { File(it) }
             ?.let { if (it.isDirectory) it else it.parentFile }
@@ -554,13 +558,13 @@ private fun LocalSourceRow(
                         mono = mono,
                         corners = corners,
                         onClick = {
-                            val chooser = javax.swing.JFileChooser().apply {
-                                fileSelectionMode = javax.swing.JFileChooser.DIRECTORIES_ONLY
-                                dialogTitle = "Select a folder (newest .mpp is used)"
-                                startDir()?.let { currentDirectory = File(it) }
-                            }
-                            if (chooser.showOpenDialog(null) == javax.swing.JFileChooser.APPROVE_OPTION) {
-                                chooser.selectedFile?.let { dir -> onPicked(dir.absolutePath, dir.name) }
+                            // Native OS folder picker via FileKit (XDG portal on Linux,
+                            // JNA/native on Win/macOS), replacing the Swing JFileChooser.
+                            scope.launch {
+                                val picked = FileKit.openDirectoryPicker(
+                                    directory = startDir()?.let { PlatformFile(File(it)) },
+                                )
+                                picked?.file?.let { dir -> onPicked(dir.absolutePath, dir.name) }
                             }
                         },
                     )
