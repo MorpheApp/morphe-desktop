@@ -36,9 +36,7 @@ import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheAccentColors
 import app.morphe.gui.ui.theme.MorpheCornerStyle
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
+import app.morphe.gui.util.MorpheFilePicker
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import java.awt.FileDialog
@@ -558,13 +556,13 @@ private fun LocalSourceRow(
                         mono = mono,
                         corners = corners,
                         onClick = {
-                            // Native OS folder picker via FileKit (XDG portal on Linux,
-                            // JNA/native on Win/macOS), replacing the Swing JFileChooser.
+                            // Native OS folder picker (XDG portal on Linux, native on
+                            // Win/macOS) via the shared MorpheFilePicker wrapper.
                             scope.launch {
-                                val picked = FileKit.openDirectoryPicker(
-                                    directory = startDir()?.let { PlatformFile(File(it)) },
-                                )
-                                picked?.file?.let { dir -> onPicked(dir.absolutePath, dir.name) }
+                                MorpheFilePicker.pickDirectory(
+                                    title = "Select a folder (newest .mpp is used)",
+                                    startDir = startDir()?.let { File(it) },
+                                )?.let { dir -> onPicked(dir.absolutePath, dir.name) }
                             }
                         },
                     )

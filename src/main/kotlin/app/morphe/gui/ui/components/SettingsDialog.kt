@@ -52,7 +52,7 @@ import java.awt.Desktop
 import java.awt.FileDialog
 import java.awt.Frame
 import java.io.File
-import javax.swing.JFileChooser
+import app.morphe.gui.util.MorpheFilePicker
 import java.security.KeyStore
 import java.security.MessageDigest
 import java.security.cert.X509Certificate
@@ -628,6 +628,7 @@ private fun OutputFolderSection(
 ) {
     val corners = LocalMorpheCorners.current
     val dimens = LocalMorpheDimens.current
+    val scope = rememberCoroutineScope()
     val alpha = if (enabled) 1f else 0.4f
     val outputDir = defaultOutputDirectory?.let { File(it) }
     val outputDirExists = outputDir?.isDirectory == true
@@ -672,14 +673,11 @@ private fun OutputFolderSection(
 
             OutlinedButton(
                 onClick = {
-                    val chooser = JFileChooser().apply {
-                        dialogTitle = "Select Output Folder"
-                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-                        isAcceptAllFileFilterUsed = false
-                        outputDir?.takeIf { it.isDirectory }?.let { currentDirectory = it }
-                    }
-                    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        onDefaultOutputDirectoryChange(chooser.selectedFile.absolutePath)
+                    scope.launch {
+                        MorpheFilePicker.pickDirectory(
+                            title = "Select Output Folder",
+                            startDir = outputDir?.takeIf { it.isDirectory },
+                        )?.let { onDefaultOutputDirectoryChange(it.absolutePath) }
                     }
                 },
                 enabled = enabled,
@@ -1849,3 +1847,5 @@ private fun PatchedAppRuntimeLogsSection(
         }
     }
 }
+
+// (Excluded-patterns editor moved to SourceManagementSheet, under the sources it applies to.)

@@ -121,6 +121,10 @@ data class AppConfig(
     // Last folder browsed when picking a local .mpp, so the file picker reopens there
     // instead of a system default. Set after a successful pick.
     val lastLocalPatchDir: String? = null,
+    // Extra glob patterns (e.g. "*-debug.mpp") for .mpp files to skip when a developer
+    // folder source auto-loads the newest .mpp. Layered on top of the always-excluded
+    // build classifiers (*-sources.mpp, *-javadoc.mpp). Patch-developer option.
+    val excludedMppPatterns: List<String> = emptyList(),
     // Which home apps tab the user last viewed ("ALL" or "YOURS"), restored on
     // next launch. Stored as a string so this data layer stays free of UI enums.
     val homeAppListFilter: String = "ALL",

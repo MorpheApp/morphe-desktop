@@ -358,6 +358,12 @@ class ConfigRepository {
         saveConfig(current.copy(lastLocalPatchDir = path))
     }
 
+    /** User-added glob patterns for .mpp files a developer folder source should skip. */
+    suspend fun setExcludedMppPatterns(patterns: List<String>) {
+        val current = loadConfig()
+        saveConfig(current.copy(excludedMppPatterns = patterns))
+    }
+
     /**
      * Mark the multi-source upgrade hint as dismissed. One-shot — never resets.
      */
