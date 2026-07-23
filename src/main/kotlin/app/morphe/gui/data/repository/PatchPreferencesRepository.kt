@@ -5,9 +5,9 @@
 
 package app.morphe.gui.data.repository
 
-import app.morphe.cli.command.model.PatchBundle
-import app.morphe.cli.command.model.PatchBundleMeta
-import app.morphe.cli.command.model.PatchEntry
+import app.morphe.desktop.command.model.PatchBundle
+import app.morphe.desktop.command.model.PatchBundleMeta
+import app.morphe.desktop.command.model.PatchEntry
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
 import kotlinx.coroutines.Dispatchers

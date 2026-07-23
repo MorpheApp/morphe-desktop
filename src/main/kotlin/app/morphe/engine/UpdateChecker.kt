@@ -92,7 +92,7 @@ object UpdateChecker {
 
     /**
      * Legacy formatter — returns the same multi-line string the CLI prints.
-     * Kept byte-identical so [app.morphe.cli.command.PatchCommand]'s logger
+     * Kept byte-identical so [app.morphe.desktop.command.PatchCommand]'s logger
      * output doesn't change.
      */
     fun check(logger: Logger): String? {

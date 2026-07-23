@@ -5,7 +5,7 @@
 
 package app.morphe.gui.ui.screens.patches
 
-import app.morphe.cli.command.model.toPatchBundle
+import app.morphe.desktop.command.model.toPatchBundle
 import app.morphe.patcher.patch.loadPatchesFromJar
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
