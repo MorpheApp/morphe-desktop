@@ -44,7 +44,10 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
  * Non-blocking banner shown when a newer CLI release is available.
  *
  * Three actions:
- *  - DOWNLOAD opens the release page in the user's browser.
+ *  - DOWNLOAD opens [onDownloadClick] — the self-update dialog, which
+ *    downloads and installs the update in-app. Falls back to opening the
+ *    release page in the browser when [onDownloadClick] isn't supplied
+ *    (e.g. self-update being unavailable for this build).
  *  - LATER hides the banner for the rest of the session (returns next startup).
  *  - SKIP v{latestVersion} hides the banner persistently for this version
  *    only — reappears when an even newer version drops.
@@ -55,6 +58,7 @@ fun UpdateBanner(
     onDismissForSession: () -> Unit,
     onDismissForVersion: () -> Unit,
     modifier: Modifier = Modifier,
+    onDownloadClick: (() -> Unit)? = null,
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheFont.current
@@ -107,7 +111,7 @@ fun UpdateBanner(
             val downloadHover = remember { MutableInteractionSource() }
             val isDownloadHovered by downloadHover.collectIsHoveredAsState()
             OutlinedButton(
-                onClick = { uriHandler.openUri(info.downloadLink) },
+                onClick = { onDownloadClick?.invoke() ?: uriHandler.openUri(info.downloadLink) },
                 modifier = Modifier.hoverable(downloadHover).height(24.dp),
                 shape = RoundedCornerShape(corners.small),
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),

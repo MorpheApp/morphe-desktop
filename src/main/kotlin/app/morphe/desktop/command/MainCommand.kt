@@ -46,6 +46,7 @@ private object CLIVersionProvider : IVersionProvider {
         ListCompatibleVersions::class,
         OptionsCommand::class,
         UtilityCommand::class,
+        UpdateCommand::class,
     ]
 )
 @VisibleForTesting

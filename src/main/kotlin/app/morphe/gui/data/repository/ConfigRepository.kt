@@ -176,6 +176,16 @@ class ConfigRepository {
     }
 
     /**
+     * Persist the "auto-download updates in the background" preference.
+     * See [AppConfig.autoDownloadUpdates] for what this does and doesn't
+     * skip.
+     */
+    suspend fun setAutoDownloadUpdates(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(autoDownloadUpdates = enabled))
+    }
+
+    /**
      * Resolve the update-channel preference. When the user has explicitly
      * picked one (via Settings), respect that. Otherwise re-derive from the
      * running build's version on every call so swapping between a stable and

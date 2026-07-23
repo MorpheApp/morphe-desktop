@@ -8,6 +8,7 @@ package app.morphe.gui.di
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchPreferencesRepository
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.data.repository.SelfUpdateRepository
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.util.PatchService
@@ -74,6 +75,7 @@ val appModule = module {
     single { PatchSourceManager(get(), get()) }
     single { PatchService() }
     single { UpdateCheckRepository(get()) }
+    single { SelfUpdateRepository(get()) }
     single { PatchedAppStore.shared }
 
     // ViewModels (ScreenModels)

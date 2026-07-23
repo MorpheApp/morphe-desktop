@@ -126,6 +126,14 @@ data class AppConfig(
     // (only applies when a rename patch was used and stock is installed). Default
     // OFF — it reaches into a stock app's behavior.
     val disableStockLinksAfterInstall: Boolean = false,
+    // When an update is found, start downloading it in the background immediately
+    // instead of waiting for the user to open the update dialog and press
+    // "Download & Install" — so by the time they do, it's often already staged
+    // and verified. Installing (replacing the JAR + restart) always still
+    // requires an explicit click; this only skips the wait on the download step.
+    // Default OFF — some users are on metered/slow connections and don't want
+    // background transfers they didn't ask for.
+    val autoDownloadUpdates: Boolean = false,
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {

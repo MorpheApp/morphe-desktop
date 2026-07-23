@@ -89,6 +89,8 @@ fun SettingsDialog(
     onKeepArchitecturesChange: (Set<String>) -> Unit = {},
     updateChannelPreference: app.morphe.gui.data.model.UpdateChannelPreference = app.morphe.gui.data.model.UpdateChannelPreference.STABLE,
     onUpdateChannelChange: (app.morphe.gui.data.model.UpdateChannelPreference) -> Unit = {},
+    autoDownloadUpdates: Boolean = false,
+    onAutoDownloadUpdatesChange: (Boolean) -> Unit = {},
     autoStartAdb: Boolean = false,
     onAutoStartAdbChange: (Boolean) -> Unit = {},
     autoRouteLinksAfterInstall: Boolean = false,
@@ -215,6 +217,16 @@ fun SettingsDialog(
                     mono = mono,
                     borderColor = borderColor,
                     enabled = !isPatching,
+                )
+
+                SettingToggleRow(
+                    label = "Auto-download updates",
+                    description = "Fetch new versions in the background as soon as they're found — installing still requires a click",
+                    checked = autoDownloadUpdates,
+                    onCheckedChange = onAutoDownloadUpdatesChange,
+                    accentColor = accents.primary,
+                    mono = mono,
+                    enabled = !isPatching && updateChannelPreference != app.morphe.gui.data.model.UpdateChannelPreference.OFF,
                 )
 
                 SettingsDivider(borderColor)

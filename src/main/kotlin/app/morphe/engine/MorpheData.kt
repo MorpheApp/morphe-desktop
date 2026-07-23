@@ -100,6 +100,18 @@ object MorpheData {
     val importedKeystoreFile: File get() = File(root, "imported.keystore")
 
     /**
+     * The live [File] this JVM is actually running from, or null when
+     * launched from an IDE/classpath (`./gradlew run`, tests, etc.) where
+     * there's no JAR to speak of. Symlinks are resolved (see
+     * [resolveJarFile]) so this always points at the real on-disk file.
+     *
+     * Used by the self-updater ([app.morphe.engine.update.UpdateInstaller])
+     * to know which file to replace — self-update is unsupported when this
+     * is null, since there's nothing to overwrite.
+     */
+    val currentJarFile: File? by lazy { resolveJarFile() }
+
+    /**
      * Reason the primary (JAR-adjacent) location was rejected. Drives the
      * fallback log message so a user reporting "where's my cache?" can
      * tell from logs alone which branch ran.
@@ -135,27 +147,16 @@ object MorpheData {
      * The reason gets surfaced in logs so users can tell WHY we fell back.
      */
     private fun tryJarAdjacent(): Pair<File?, FallbackReason?> {
-        val location = try {
-            MorpheData::class.java.protectionDomain.codeSource?.location
-                ?: return null to FallbackReason.NO_JAR_LOCATION
-        } catch (e: Exception) {
-            return null to FallbackReason.EXCEPTION
-        }
-
-        val jarFile = try {
-            // canonicalFile resolves symlinks — Homebrew/asdf-style installs
-            // often symlink the JAR; we want the cache next to the real file,
-            // not next to the symlink.
-            File(location.toURI()).canonicalFile
-        } catch (e: Exception) {
-            return null to FallbackReason.EXCEPTION
-        }
-
-        // When running from IDE (`./gradlew run`), location is a classes
-        // directory, not a JAR. Detect and fall back so we don't pollute
-        // build outputs that `./gradlew clean` wipes.
-        if (jarFile.isDirectory || !jarFile.name.endsWith(".jar")) {
-            return null to FallbackReason.NOT_A_JAR
+        val jarFile = resolveJarFile() ?: run {
+            // Distinguish "no codeSource at all" from "codeSource isn't a JAR"
+            // only for logging purposes — re-probe cheaply since resolveJarFile
+            // already swallows the exception cases into null.
+            val hasLocation = try {
+                MorpheData::class.java.protectionDomain.codeSource?.location != null
+            } catch (e: Exception) {
+                return null to FallbackReason.EXCEPTION
+            }
+            return null to if (hasLocation) FallbackReason.NOT_A_JAR else FallbackReason.NO_JAR_LOCATION
         }
 
         val candidate = File(jarFile.parentFile, "morphe-data")
@@ -163,6 +164,28 @@ object MorpheData {
             return null to FallbackReason.NOT_WRITABLE
         }
         return candidate to null
+    }
+
+    /**
+     * Resolve the JAR this JVM's code was loaded from, or null when running
+     * from a classes directory (IDE/tests) or the codeSource is unavailable.
+     * Symlinks are resolved via [File.getCanonicalFile] — Homebrew/asdf-style
+     * installs often symlink the JAR, and callers want the real file.
+     */
+    private fun resolveJarFile(): File? {
+        val location = try {
+            MorpheData::class.java.protectionDomain.codeSource?.location ?: return null
+        } catch (e: Exception) {
+            return null
+        }
+        val file = try {
+            File(location.toURI()).canonicalFile
+        } catch (e: Exception) {
+            return null
+        }
+        // When running from IDE (`./gradlew run`), location is a classes
+        // directory, not a JAR — not something a self-update can replace.
+        return file.takeIf { !it.isDirectory && it.name.endsWith(".jar") }
     }
 
     private fun userHomeFallback(): File {
