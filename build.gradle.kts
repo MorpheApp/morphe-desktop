@@ -110,6 +110,9 @@ dependencies {
     implementation(libs.jna)
     implementation(libs.jna.platform)
 
+    // -- FileKit (native file/folder pickers) ------------------------------
+    implementation(libs.filekit.dialogs)
+
     // -- License attribution UI (About / Licenses screen) -----------------
     implementation(libs.about.libraries.core)
     implementation(libs.about.libraries.m3)
@@ -217,6 +220,12 @@ tasks {
             exclude(dependency("net.java.dev.jna:.*"))
             // Skiko uses ServiceLoader for native registration. Same class of problem as Ktor / Koin / JNA above.
             exclude(dependency("org.jetbrains.skiko:.*"))
+            // FileKit + its DBus transport (Linux XDG portal) are reached reflectively /
+            // via ServiceLoader. Keep them whole so minimize doesn't prune the pickers.
+            exclude(dependency("io.github.vinceglb:.*"))
+            // dbus-java registers its unix-socket transport via ServiceLoader (invisible
+            // to minimize). Backs FileKit's Linux XDG portal picker.
+            exclude(dependency("com.github.hypfvieh:.*"))
         }
 
         mergeServiceFiles()

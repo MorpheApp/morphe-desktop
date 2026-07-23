@@ -19,6 +19,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.util.DeviceMonitor
+import io.github.vinceglb.filekit.FileKit
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
@@ -28,7 +29,13 @@ import app.morphe.gui.util.FileUtils
  * Main entry point.
  * The app switches between simplified and full mode dynamically via settings.
  */
-fun launchGui(args: Array<String>) = application {
+fun launchGui(args: Array<String>) {
+    // FileKit backs the native OS file/folder pickers (JNA on Windows/macOS,
+    // XDG Desktop Portal on Linux). Must run once before any picker is used;
+    // appId doubles as the DBus application id on Linux.
+    FileKit.init(appId = "app.morphe.desktop")
+
+    application {
     // Determine initial mode from args or config
     val initialSimplifiedMode = when {
         args.contains("--quick") || args.contains("-q") -> true
@@ -104,6 +111,7 @@ fun launchGui(args: Array<String>) = application {
         CompositionLocalProvider(LocalFrameWindowScope provides this) {
             App(initialSimplifiedMode = initialSimplifiedMode)
         }
+    }
     }
 }
 

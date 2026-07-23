@@ -132,6 +132,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
             onReorder = { orderedIds -> pickerScope.launch { patchSourceManager.reorderSources(orderedIds) } },
             onOpenPatches = { /* unused in SINGLE_SELECT mode */ },
             onDismiss = { showSourcePicker = false },
+            onRefresh = { viewModel.retryLoadPatches() },
             enabled = uiState.phase != QuickPatchPhase.DOWNLOADING &&
                       uiState.phase != QuickPatchPhase.PATCHING,
         )

@@ -196,7 +196,11 @@ class QuickPatchViewModel(
                 val pair: Pair<app.morphe.gui.data.model.PatchSource, app.morphe.gui.data.repository.PatchRepository?> =
                     activeSource to activeRepo
 
-                val result = EnabledSourcesLoader.loadAll(listOf(pair), patchService)
+                val result = EnabledSourcesLoader.loadAll(
+                    listOf(pair),
+                    patchService,
+                    excludedMppPatterns = configRepository.loadConfig().excludedMppPatterns,
+                )
 
                 if (!result.anyLoaded) {
                     val firstError = result.resolved.firstNotNullOfOrNull { it.error }

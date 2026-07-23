@@ -83,6 +83,7 @@ object EnabledSourcesLoader {
         enabled: List<Pair<PatchSource, PatchRepository?>>,
         patchService: PatchService,
         prefsBySource: Map<String, SourceVersionPref> = emptyMap(),
+        excludedMppPatterns: List<String> = emptyList(),
     ): Result = supervisorScope {
         // supervisorScope (not coroutineScope) so a single source's failure
         // doesn't cancel the other in-flight resolves. Each async catches its
@@ -92,7 +93,7 @@ object EnabledSourcesLoader {
         val resolved = enabled.map { (source, repo) ->
             async(Dispatchers.IO) {
                 try {
-                    resolve(source, repo, prefsBySource[source.id])
+                    resolve(source, repo, prefsBySource[source.id], excludedMppPatterns)
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
@@ -140,9 +141,10 @@ object EnabledSourcesLoader {
         source: PatchSource,
         repo: PatchRepository?,
         pref: SourceVersionPref?,
+        excludedMppPatterns: List<String>,
     ): ResolvedSource = withContext(Dispatchers.IO) {
         when (source.type) {
-            PatchSourceType.LOCAL -> resolveLocal(source)
+            PatchSourceType.LOCAL -> resolveLocal(source, excludedMppPatterns)
             // GitHub / GitLab / built-in default all flow through the same
             // remote-fetch path. The PatchRepository instance itself knows
             // which API to talk to based on the source's provider type.
@@ -152,14 +154,23 @@ object EnabledSourcesLoader {
         }
     }
 
-    private fun resolveLocal(source: PatchSource): ResolvedSource {
+    private fun resolveLocal(source: PatchSource, excludedMppPatterns: List<String>): ResolvedSource {
         val path = source.filePath
         if (path.isNullOrBlank()) {
             return ResolvedSource(source = source, error = "Local source has no file path configured")
         }
-        val file = File(path)
-        if (!file.exists()) {
-            return ResolvedSource(source = source, error = "Local patch file not found: ${file.name}")
+        val target = File(path)
+        if (!target.exists()) {
+            return ResolvedSource(source = source, error = "Local patch path not found: ${target.name}")
+        }
+        // Folder source (patch-developer mode): auto-resolve the NEWEST .mpp in the
+        // directory. This is re-evaluated on every load, so rebuilding a patch is
+        // picked up on the next (re)load without touching the file picker.
+        val file = if (target.isDirectory) {
+            newestMppIn(target, excludedMppPatterns)
+                ?: return ResolvedSource(source = source, error = "No .mpp files found in folder: ${target.name}")
+        } else {
+            target
         }
         return ResolvedSource(
             source = source,
@@ -167,6 +178,58 @@ object EnabledSourcesLoader {
             resolvedVersion = file.nameWithoutExtension,
             isOffline = false,
         )
+    }
+
+    /**
+     * Build-output classifiers a patch build emits *alongside* the real bundle (same
+     * convention as Maven's `-sources.jar` / `-javadoc.jar`). Never the patch file we
+     * want, yet often the newest files in the folder — so a naive "newest .mpp" would
+     * wrongly pick one. Always excluded, on top of any user-configured patterns.
+     */
+    private val DEFAULT_EXCLUDED_MPP_GLOBS = listOf("*-sources.mpp", "*-javadoc.mpp")
+
+    /**
+     * Newest *loadable* `.mpp` file directly inside [dir] (by last-modified time), or null
+     * when the folder contains none. Backs developer folder sources so a freshly-built
+     * patch is picked up without re-selecting the file. Non-`.mpp` files, build-output
+     * classifiers ([DEFAULT_EXCLUDED_MPP_GLOBS]), and any [extraExcludedPatterns] the user
+     * configured are ignored. See [toExclusionMatcher] for how a pattern is interpreted.
+     */
+    private fun newestMppIn(dir: File, extraExcludedPatterns: List<String>): File? {
+        val matchers = (DEFAULT_EXCLUDED_MPP_GLOBS + extraExcludedPatterns)
+            .mapNotNull { p -> p.trim().takeIf { it.isNotEmpty() }?.let(::toExclusionMatcher) }
+        return dir.listFiles { f ->
+            f.isFile &&
+                f.extension.equals("mpp", ignoreCase = true) &&
+                matchers.none { it(f.name) }
+        }?.maxByOrNull { it.lastModified() }
+    }
+
+    /**
+     * Interpret one exclusion pattern into a filename predicate. A pattern with a wildcard
+     * (`*` or `?`) is a glob matched against the whole name, so `*-sources.mpp` ignores any
+     * file ending that way. A plain word (no wildcard) is a "contains" match, so `debug`
+     * ignores every file with "debug" anywhere in its name. Both are case-insensitive.
+     */
+    private fun toExclusionMatcher(pattern: String): (String) -> Boolean {
+        if ('*' in pattern || '?' in pattern) {
+            val regex = globToRegex(pattern)
+            return { name -> regex.matches(name) }
+        }
+        return { name -> name.contains(pattern, ignoreCase = true) }
+    }
+
+    /** Translate a shell-style glob (`*` = any run, `?` = one char) into a case-insensitive [Regex]. */
+    private fun globToRegex(glob: String): Regex {
+        val pattern = buildString {
+            for (c in glob) when (c) {
+                '*' -> append(".*")
+                '?' -> append('.')
+                '.', '(', ')', '[', ']', '{', '}', '+', '^', '$', '|', '\\' -> { append('\\'); append(c) }
+                else -> append(c)
+            }
+        }
+        return Regex(pattern, RegexOption.IGNORE_CASE)
     }
 
     private suspend fun resolveRemote(

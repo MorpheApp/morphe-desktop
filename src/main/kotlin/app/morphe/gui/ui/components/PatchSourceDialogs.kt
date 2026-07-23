@@ -29,10 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheAccentColors
+import app.morphe.gui.ui.theme.MorpheCornerStyle
+import app.morphe.gui.util.MorpheFilePicker
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import java.awt.FileDialog
 import java.awt.Frame
 import java.io.File
@@ -51,6 +57,15 @@ internal fun AddPatchSourceDialog(
     var url by remember { mutableStateOf("") }
     var filePath by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
+    val configRepository: ConfigRepository = koinInject()
+    val scope = rememberCoroutineScope()
+    var developerOptions by remember { mutableStateOf(false) }
+    var lastLocalPatchDir by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(Unit) {
+        val cfg = configRepository.loadConfig()
+        developerOptions = cfg.developerOptions
+        lastLocalPatchDir = cfg.lastLocalPatchDir
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -153,40 +168,20 @@ internal fun AddPatchSourceDialog(
                         }
                     }
                     PatchSourceType.LOCAL -> {
-                        LabeledField(label = ".MPP FILE", mono = mono) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                SlimTextField(
-                                    value = filePath,
-                                    onValueChange = { filePath = it; error = null },
-                                    placeholder = "Path to .mpp",
-                                    mono = mono,
-                                    accents = accents,
-                                    corners = corners,
-                                    modifier = Modifier.weight(1f),
-                                    readOnly = true,
-                                )
-                                DialogActionButton(
-                                    label = "BROWSE",
-                                    mono = mono,
-                                    corners = corners,
-                                    onClick = {
-                                        val dialog = FileDialog(null as Frame?, "Select .mpp file", FileDialog.LOAD).apply {
-                                            setFilenameFilter { _, n -> n.endsWith(".mpp", ignoreCase = true) }
-                                            isVisible = true
-                                        }
-                                        if (dialog.directory != null && dialog.file != null) {
-                                            filePath = File(dialog.directory, dialog.file).absolutePath
-                                            if (name.isBlank()) name = dialog.file.removeSuffix(".mpp")
-                                            error = null
-                                        }
-                                    },
-                                )
-                            }
-                        }
+                        LocalSourceRow(
+                            filePath = filePath,
+                            developerOptions = developerOptions,
+                            lastLocalPatchDir = lastLocalPatchDir,
+                            onPicked = { path, suggested ->
+                                filePath = path
+                                if (name.isBlank()) name = suggested
+                                error = null
+                                scope.launch { configRepository.setLastLocalPatchDir(dirToRemember(path)) }
+                            },
+                            mono = mono,
+                            accents = accents,
+                            corners = corners,
+                        )
                     }
                     else -> {}
                 }
@@ -287,6 +282,15 @@ internal fun EditPatchSourceDialog(
     var url by remember { mutableStateOf(source.url ?: "") }
     var filePath by remember { mutableStateOf(source.filePath ?: "") }
     var error by remember { mutableStateOf<String?>(null) }
+    val configRepository: ConfigRepository = koinInject()
+    val scope = rememberCoroutineScope()
+    var developerOptions by remember { mutableStateOf(false) }
+    var lastLocalPatchDir by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(Unit) {
+        val cfg = configRepository.loadConfig()
+        developerOptions = cfg.developerOptions
+        lastLocalPatchDir = cfg.lastLocalPatchDir
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -346,39 +350,19 @@ internal fun EditPatchSourceDialog(
                         }
                     }
                     PatchSourceType.LOCAL -> {
-                        LabeledField(label = ".MPP FILE", mono = mono) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                SlimTextField(
-                                    value = filePath,
-                                    onValueChange = { filePath = it; error = null },
-                                    placeholder = "Path to .mpp",
-                                    mono = mono,
-                                    accents = accents,
-                                    corners = corners,
-                                    modifier = Modifier.weight(1f),
-                                    readOnly = true,
-                                )
-                                DialogActionButton(
-                                    label = "BROWSE",
-                                    mono = mono,
-                                    corners = corners,
-                                    onClick = {
-                                        val dialog = FileDialog(null as Frame?, "Select .mpp file", FileDialog.LOAD).apply {
-                                            setFilenameFilter { _, n -> n.endsWith(".mpp", ignoreCase = true) }
-                                            isVisible = true
-                                        }
-                                        if (dialog.directory != null && dialog.file != null) {
-                                            filePath = File(dialog.directory, dialog.file).absolutePath
-                                            error = null
-                                        }
-                                    },
-                                )
-                            }
-                        }
+                        LocalSourceRow(
+                            filePath = filePath,
+                            developerOptions = developerOptions,
+                            lastLocalPatchDir = lastLocalPatchDir,
+                            onPicked = { path, _ ->
+                                filePath = path
+                                error = null
+                                scope.launch { configRepository.setLastLocalPatchDir(dirToRemember(path)) }
+                            },
+                            mono = mono,
+                            accents = accents,
+                            corners = corners,
+                        )
                     }
                     else -> {}
                 }
@@ -496,3 +480,102 @@ private fun suggestNameFromUrl(input: String): String? {
 
 // LabeledField, SlimTextField, DialogActionButton moved to SlimInputs.kt for
 // reuse across the codebase (SettingsDialog uses them too).
+
+/** Folder to remember for the next picker: the folder itself if [path] is a directory
+ *  source, otherwise the file's parent. */
+private fun dirToRemember(path: String): String? =
+    File(path).let { if (it.isDirectory) it.absolutePath else it.parent }
+
+/**
+ * Shared local-source picker row for the Add/Edit source dialogs.
+ *
+ * The file browser always opens at a useful folder — the current path's directory when
+ * editing, else the last-used folder — so re-picking a local `.mpp` never starts from a
+ * system default. When [developerOptions] is on it also offers a FOLDER picker: a folder
+ * source auto-resolves to the newest `.mpp` inside it (see
+ * [EnabledSourcesLoader.resolveLocal][app.morphe.gui.util.EnabledSourcesLoader]), so a
+ * patch developer who rebuilds never has to re-pick the file.
+ *
+ * [onPicked] receives the chosen path and a suggested name (file name without extension,
+ * or the folder name) — callers use the suggestion only when a name isn't already set.
+ */
+@Composable
+private fun LocalSourceRow(
+    filePath: String,
+    developerOptions: Boolean,
+    lastLocalPatchDir: String?,
+    onPicked: (path: String, suggestedName: String) -> Unit,
+    mono: FontFamily,
+    accents: MorpheAccentColors,
+    corners: MorpheCornerStyle,
+) {
+    val scope = rememberCoroutineScope()
+    fun startDir(): String? {
+        val fromCurrent = filePath.takeIf { it.isNotBlank() }?.let { File(it) }
+            ?.let { if (it.isDirectory) it else it.parentFile }
+            ?.takeIf { it.isDirectory }?.absolutePath
+        return fromCurrent ?: lastLocalPatchDir?.takeIf { File(it).isDirectory }
+    }
+
+    LabeledField(label = if (developerOptions) ".MPP FILE OR FOLDER" else ".MPP FILE", mono = mono) {
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                SlimTextField(
+                    value = filePath,
+                    onValueChange = {},
+                    placeholder = if (developerOptions) "Path to .mpp or folder" else "Path to .mpp",
+                    mono = mono,
+                    accents = accents,
+                    corners = corners,
+                    modifier = Modifier.weight(1f),
+                    readOnly = true,
+                )
+                DialogActionButton(
+                    label = if (developerOptions) "FILE" else "BROWSE",
+                    mono = mono,
+                    corners = corners,
+                    onClick = {
+                        val dialog = FileDialog(null as Frame?, "Select .mpp file", FileDialog.LOAD).apply {
+                            startDir()?.let { directory = it }
+                            setFilenameFilter { _, n -> n.endsWith(".mpp", ignoreCase = true) }
+                            isVisible = true
+                        }
+                        if (dialog.directory != null && dialog.file != null) {
+                            val picked = File(dialog.directory, dialog.file)
+                            onPicked(picked.absolutePath, dialog.file.removeSuffix(".mpp"))
+                        }
+                    },
+                )
+                if (developerOptions) {
+                    DialogActionButton(
+                        label = "FOLDER",
+                        mono = mono,
+                        corners = corners,
+                        onClick = {
+                            // Native OS folder picker (XDG portal on Linux, native on
+                            // Win/macOS) via the shared MorpheFilePicker wrapper.
+                            scope.launch {
+                                MorpheFilePicker.pickDirectory(
+                                    title = "Select a folder (newest .mpp is used)",
+                                    startDir = startDir()?.let { File(it) },
+                                )?.let { dir -> onPicked(dir.absolutePath, dir.name) }
+                            }
+                        },
+                    )
+                }
+            }
+            if (developerOptions) {
+                Text(
+                    text = "Pick a folder to always load the newest .mpp inside it — handy when rebuilding patches.",
+                    fontSize = 10.sp,
+                    fontFamily = mono,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),
+                )
+            }
+        }
+    }
+}
