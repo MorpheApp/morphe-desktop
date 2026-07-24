@@ -40,7 +40,7 @@ object EnabledSourcesLoader {
      */
     /** What channel the resolved release is on. Used by the home pill LEDs and
      *  the sheet's channel badge so we don't keep re-deriving from tag strings. */
-    enum class Channel { STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, UNKNOWN }
+    enum class Channel { STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, LOCAL, UNKNOWN }
 
     data class ResolvedSource(
         val source: PatchSource,
@@ -166,6 +166,9 @@ object EnabledSourcesLoader {
             patchFile = file,
             resolvedVersion = file.nameWithoutExtension,
             isOffline = false,
+            // A local file has no release channel, so tag it LOCAL rather than letting
+            // it fall through to the STABLE_LATEST default used for remote sources.
+            channel = Channel.LOCAL,
         )
     }
 

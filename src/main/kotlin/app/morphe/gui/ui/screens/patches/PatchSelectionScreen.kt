@@ -108,6 +108,9 @@ data class PatchSelectionScreen(
     val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
     /** One-click repatch option seed ("patchName.optionKey" → value). */
     val initialPatchOptions: Map<String, String> = emptyMap(),
+    /** The app's versionName (parsed from the APK), threaded to the output-name helper so
+     *  the filename is unique by app version even for renamed bundles. Blank = not supplied. */
+    val apkVersion: String = "",
 ) : Screen {
 
     @Composable
@@ -117,6 +120,7 @@ data class PatchSelectionScreen(
             parametersOf(
                 apkPath, apkName, patchesFilePath, packageName, apkArchitectures,
                 effectiveList, patchSourceNames, initialSelectionByBundle, initialPatchOptions,
+                apkVersion,
             )
         }
         PatchSelectionScreenContent(viewModel = viewModel)

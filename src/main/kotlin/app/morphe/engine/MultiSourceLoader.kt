@@ -94,13 +94,20 @@ object MultiSourceLoader {
                 sourceName = input.sourceName,
                 patches = patches,
             )
-        } catch (e: Exception) {
-            logger.warning("MultiSourceLoader: failed to load '${input.sourceName}': ${e.message}")
+        } catch (e: Throwable) {
+            // Catch Throwable, not just Exception: a bundle built against a newer patcher
+            // throws java.lang.Error (NoSuchMethodError / NoClassDefFoundError / LinkageError)
+            // because it references patcher APIs missing here. As an Error it would escape a
+            // catch(Exception), sink the whole load, and hang the UI on "loading" forever.
+            // Isolating it per source keeps one bad bundle from taking the others down, and
+            // lets us surface a clear "update Morphe" message (mirrors morphe-manager).
+            val versionMsg = PatcherCompatibility.incompatibilityMessage(input.patchFile)
+            logger.warning("MultiSourceLoader: failed to load '${input.sourceName}': ${versionMsg ?: e.message}")
             LoadedSource(
                 sourceId = input.sourceId,
                 sourceName = input.sourceName,
                 patches = emptySet(),
-                error = e,
+                error = versionMsg?.let { PatchBundleIncompatibleException(it) } ?: e,
             )
         } finally {
             tempCopy.deleteOnExit()

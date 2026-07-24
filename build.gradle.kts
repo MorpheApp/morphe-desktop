@@ -157,7 +157,12 @@ tasks {
 
         // Only expand properties files, not binary files like PNG/ICO
         filesMatching("**/*.properties") {
-            expand("projectVersion" to project.version)
+            expand(
+                "projectVersion" to project.version,
+                // The bundled patcher version, so the app can tell a user when a
+                // patch bundle needs a newer patcher than this build ships.
+                "patcherVersion" to libs.versions.morphe.patcher.get(),
+            )
         }
         // Bundle the project's NOTICE (GPL 7b/7c) and LICENSE into META-INF so they
         // land in the main JAR before the Shadow merge. Source of truth stays at the

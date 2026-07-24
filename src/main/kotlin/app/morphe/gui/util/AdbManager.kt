@@ -285,7 +285,10 @@ class AdbManager {
             }
 
             val devices = parseDeviceList(output, adb)
-            Logger.info("Found ${devices.size} device(s)")
+            // No per-call log here: this runs on every 5s device poll, and the log file
+            // has no level filtering (debug writes too), so any line here floods it.
+            // Connect / disconnect / status transitions are logged once each by
+            // DeviceMonitor.refreshDevices instead.
             Result.success(devices)
         } catch (e: Exception) {
             Logger.error("Error getting devices", e)
