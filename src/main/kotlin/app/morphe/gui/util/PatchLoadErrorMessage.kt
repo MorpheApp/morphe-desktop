@@ -43,5 +43,12 @@ fun humanizePatchLoadError(e: Throwable): String = when (e) {
         }
     }
 
+    // A bundle built against a newer patcher fails at link time with java.lang.Error
+    // subclasses (NoSuchMethodError / NoClassDefFoundError / AbstractMethodError, all
+    // LinkageError). The per-source loader gives a precise version message where it can,
+    // this is the catch-all when only the throwable is available.
+    is LinkageError ->
+        "This patch bundle needs a newer version of Morphe. Update Morphe and try again."
+
     else -> e.message?.takeIf { it.isNotBlank() } ?: "Could not load patches"
 }

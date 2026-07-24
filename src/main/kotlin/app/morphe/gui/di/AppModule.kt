@@ -110,6 +110,7 @@ val appModule = module {
             params.get(),
             params.get(),
             params.get(),
+            params.get(),
         )
     }
     factory { params ->

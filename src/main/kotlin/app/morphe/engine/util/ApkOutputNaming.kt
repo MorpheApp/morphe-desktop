@@ -68,6 +68,15 @@ object ApkOutputNaming {
         ApkManifestReader.read(apkFile)?.applicationLabel?.takeIf { it.isNotBlank() }
 
     /**
+     * The app's versionName from its manifest (engine [ApkManifestReader]), or null when it
+     * can't be read or is blank. The reliable source of the app version, unlike
+     * [extractApkVersionFromFilename], which only works when the input file follows the
+     * APKMirror naming convention.
+     */
+    fun resolveAppVersion(apkFile: File): String? =
+        ApkManifestReader.read(apkFile)?.versionName?.takeIf { it.isNotBlank() }
+
+    /**
      * Compute the unified output APK path. Layout:
      * `<base>/<appName>/<appName>-Morphe-{apkVer}-patches-{patchesVer}.apk`
      *
@@ -94,6 +103,7 @@ object ApkOutputNaming {
         patchesFile: File? = null,
         baseOutputDir: File? = null,
         appDisplayName: String? = null,
+        appVersion: String? = null,
     ): File {
         val appFolderName = (appDisplayName ?: inputApk.nameWithoutExtension)
             .replace(" ", "-")
@@ -101,9 +111,26 @@ object ApkOutputNaming {
             ?: inputApk.absoluteFile.parentFile
             ?: File("").absoluteFile
         val outputDir = File(base, appFolderName).also { it.mkdirs() }
-        val version = extractApkVersionFromFilename(inputApk.name) ?: "patched"
+        // App version, most reliable first: a version the caller already resolved, then the
+        // APK manifest's versionName, then the input filename (APKMirror convention), then a
+        // constant. Reading it from the manifest is what keeps the output unique by app
+        // version even when the input file was renamed (e.g. base.apk) — the filename-only
+        // path fell back to "patched" and collided across versions.
+        val version = sanitizeForFilename(
+            appVersion?.takeIf { it.isUsableVersion() }
+                ?: resolveAppVersion(inputApk)
+                ?: extractApkVersionFromFilename(inputApk.name)
+                ?: "patched"
+        )
         val patchesVersion = patchesFile?.name?.let { extractPatchesVersion(it) }
         val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
         return File(outputDir, "${appFolderName}-Morphe-${version}${patchesSuffix}.apk")
     }
+
+    private fun String.isUsableVersion(): Boolean =
+        isNotBlank() && !equals("unknown", ignoreCase = true)
+
+    /** Keep a versionName filename-safe: some apps put spaces or symbols in versionName. */
+    private fun sanitizeForFilename(v: String): String =
+        v.trim().replace(Regex("""[^A-Za-z0-9.\-_]"""), "-").ifBlank { "patched" }
 }

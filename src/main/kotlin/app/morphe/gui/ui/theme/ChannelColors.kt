@@ -32,6 +32,8 @@ fun channelColor(channel: Channel?): Color {
         Channel.STABLE_OLDER -> accents.warning
         Channel.DEV_LATEST -> accents.tertiary
         Channel.DEV_OLDER -> MaterialTheme.colorScheme.error
+        // Local files aren't a release channel, so give them their own distinct tint.
+        Channel.LOCAL -> accents.primary
         null, Channel.UNKNOWN -> accents.secondary
     }
 }

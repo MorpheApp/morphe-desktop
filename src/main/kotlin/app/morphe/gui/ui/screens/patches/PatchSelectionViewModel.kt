@@ -70,6 +70,11 @@ class PatchSelectionViewModel(
     private val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
     /** One-click repatch seed: "patchName.optionKey" → option value. */
     private val initialPatchOptions: Map<String, String> = emptyMap(),
+    /** The app's versionName (parsed from the APK upstream). Threaded here so the output
+     *  filename stays unique by app version even for renamed bundles the engine can't
+     *  re-read a version from. Blank falls back to the engine's manifest/filename resolution.
+     *  Non-null (rather than String?) so no null flows through the Koin parametersOf chain. */
+    private val apkVersion: String = "",
 ) : ScreenModel {
 
     // Actual path to use for the primary file — may differ from patchesFilePath
@@ -530,6 +535,7 @@ class PatchSelectionViewModel(
             patchesFile = File(actualPatchesFilePath),
             baseOutputDir = defaultOutputDirectory?.let { File(it) },
             appDisplayName = apkName,
+            appVersion = apkVersion,
         ).absolutePath
 
         // Flatten across bundles: the engine takes a single flat enable/disable

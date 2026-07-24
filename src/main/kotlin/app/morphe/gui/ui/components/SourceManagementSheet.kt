@@ -96,6 +96,9 @@ fun SourceManagementSheet(
      *  in place of the version/badge for enabled sources whose data isn't yet
      *  in [sourceVersions]. */
     isLoading: Boolean = false,
+    /** sourceId → load-failure message for sources that failed to load. Drives the per-row
+     *  FAILED state, so a partial multi-source failure shows exactly which source broke. */
+    sourceErrors: Map<String, String> = emptyMap(),
     /** Selection semantics. Defaults to multi-toggle (Expert mode). */
     mode: SourceSheetMode = SourceSheetMode.MULTI_TOGGLE,
     /** sourceId of the currently picked source — only used when [mode] is SINGLE_SELECT. */
@@ -235,6 +238,7 @@ fun SourceManagementSheet(
                         version = sourceVersions[source.id],
                         channel = sourceChannels[source.id],
                         isLoading = isLoading,
+                        error = sourceErrors[source.id],
                         accentColor = accents.primary,
                         borderColor = borderColor,
                         mono = mono,
@@ -342,6 +346,7 @@ private fun SourceRow(
     version: String?,
     channel: app.morphe.gui.util.EnabledSourcesLoader.Channel?,
     isLoading: Boolean,
+    error: String? = null,
     accentColor: Color,
     borderColor: Color,
     mono: androidx.compose.ui.text.font.FontFamily,
@@ -376,6 +381,13 @@ private fun SourceRow(
     // For visual highlight: in MULTI mode highlight when source is enabled; in
     // SINGLE_SELECT highlight when this row is the picked one.
     val isHighlighted = if (mode == SourceSheetMode.SINGLE_SELECT) isActiveSelection else isEnabled
+
+    // The status LED reflects the source's state: red on load failure, otherwise its
+    // release-channel color (green stable-latest, amber stable-older, blue dev-latest,
+    // red dev-older, plus the local tint). Same color source as the home pill LEDs, so
+    // the two always agree. While resolving, channelColor's UNKNOWN default applies.
+    val statusColor = if (error != null) MaterialTheme.colorScheme.error
+                      else app.morphe.gui.ui.theme.channelColor(channel)
 
     val animatedBorder by animateColorAsState(
         targetValue = when {
@@ -445,7 +457,7 @@ private fun SourceRow(
                 )
             }
             // LED indicator — glows when enabled (MULTI) or selected (SINGLE).
-            LedIndicator(isOn = isHighlighted, isHot = isHovered && canInteract, accentColor = accentColor)
+            LedIndicator(isOn = isHighlighted, isHot = isHovered && canInteract, accentColor = statusColor)
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -454,8 +466,12 @@ private fun SourceRow(
                         fontSize = 12.sp,
                         fontWeight = if (isEnabled) FontWeight.SemiBold else FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        // Wrap to a second line instead of cramming/ellipsizing a long name
+                        // against the DEFAULT badge. weight(fill = false) bounds the width so
+                        // it wraps within the row rather than pushing the badge off.
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
                     )
                     if (isDefault) {
                         Text(
@@ -486,7 +502,22 @@ private fun SourceRow(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
                     )
-                    if (isEnabled && version != null) {
+                    if (error != null) {
+                        Text(
+                            text = "·",
+                            fontSize = 10.sp,
+                            fontFamily = mono,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                        )
+                        Text(
+                            text = "FAILED",
+                            fontSize = 9.sp,
+                            fontFamily = mono,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp,
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    } else if (isEnabled && version != null) {
                         Text(
                             text = "·",
                             fontSize = 10.sp,
@@ -523,6 +554,18 @@ private fun SourceRow(
                             letterSpacing = 1.sp,
                         )
                     }
+                }
+                if (error != null) {
+                    Spacer(Modifier.height(3.dp))
+                    Text(
+                        text = error,
+                        fontSize = 9.sp,
+                        fontFamily = mono,
+                        lineHeight = 12.sp,
+                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.85f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
             }
 
@@ -647,6 +690,7 @@ private fun ChannelBadge(
         app.morphe.gui.util.EnabledSourcesLoader.Channel.STABLE_OLDER -> "STABLE OLDER"
         app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_LATEST -> "DEV LATEST"
         app.morphe.gui.util.EnabledSourcesLoader.Channel.DEV_OLDER -> "DEV OLDER"
+        app.morphe.gui.util.EnabledSourcesLoader.Channel.LOCAL -> "LOCAL"
         else -> "STABLE LATEST"
     }
     val color = app.morphe.gui.ui.theme.channelColor(channel)

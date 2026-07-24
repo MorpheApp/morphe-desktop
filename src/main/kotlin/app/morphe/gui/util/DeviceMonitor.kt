@@ -76,6 +76,24 @@ object DeviceMonitor {
         result.fold(
             onSuccess = { devices ->
                 val currentState = _state.value
+
+                // Log only transitions, not the (unchanged) result of every 5s poll.
+                // Connect / disconnect / authorization-status changes are the events worth
+                // recording; a steady state produces no log lines.
+                val previousById = currentState.devices.associateBy { it.id }
+                val currentById = devices.associateBy { it.id }
+                devices.forEach { dev ->
+                    val prev = previousById[dev.id]
+                    when {
+                        prev == null -> Logger.info("Device connected: ${dev.id} (${dev.status})")
+                        prev.status != dev.status ->
+                            Logger.info("Device ${dev.id} status changed: ${prev.status} -> ${dev.status}")
+                    }
+                }
+                currentState.devices.forEach { prev ->
+                    if (prev.id !in currentById) Logger.info("Device disconnected: ${prev.id}")
+                }
+
                 val readyDevices = devices.filter { it.isReady }
 
                 // Determine selected device

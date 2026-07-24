@@ -426,10 +426,19 @@ fun HomeScreenContent(
             ?.resolved
             ?.associate { it.source.id to it.channel }
             ?: emptyMap()
+        // Per-source load failures (resolve phase + load phase), so the sheet shows which
+        // source broke and why. Same data the "some sources failed" banner is driven by.
+        val sourceErrors: Map<String, String> = buildMap {
+            snapshot?.resolved?.forEach { r -> r.error?.let { put(r.source.id, it) } }
+            snapshot?.loaded?.perSource?.forEach { s ->
+                if (!s.isSuccess) put(s.sourceId, s.error?.message ?: "Failed to load")
+            }
+        }
         SourceManagementSheet(
             sources = allSources,
             sourceVersions = versions,
             sourceChannels = channels,
+            sourceErrors = sourceErrors,
             isLoading = uiState.isLoadingPatches,
             onToggleEnabled = { id, enabled ->
                 coroutineScope.launch {
@@ -511,6 +520,7 @@ fun HomeScreenContent(
                                 patchesFilePath = patchesFile.absolutePath,
                                 packageName = uiState.apkInfo!!.packageName,
                                 apkArchitectures = uiState.apkInfo!!.architectures,
+                                apkVersion = uiState.apkInfo!!.versionName,
                                 patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
                                 patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
                             ))
@@ -582,7 +592,7 @@ fun HomeScreenContent(
                 accum
             }
             val sourceStates: List<SourceLedState> = allSources.map { src ->
-                sourceLedState(src, channelsBySource[src.id])
+                sourceLedState(src, channelsBySource[src.id], hasError = src.id in uiState.failedSourceIds)
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 Column(modifier = Modifier.fillMaxSize()) {
@@ -613,6 +623,16 @@ fun HomeScreenContent(
                             if (uiState.showMultiSourceHint) {
                                 MultiSourceHintBanner(
                                     onDismiss = { viewModel.dismissMultiSourceHint() },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = padding, end = padding, top = 8.dp),
+                                )
+                            }
+                            if (uiState.showSourcesFailedBanner) {
+                                SourcesFailedBanner(
+                                    count = uiState.failedSourcesCount,
+                                    onManageSources = { showSourceManagementSheet = true },
+                                    onDismiss = { viewModel.dismissSourcesFailedBanner() },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(start = padding, end = padding, top = 8.dp),
@@ -654,6 +674,7 @@ fun HomeScreenContent(
                                     isLoading = uiState.isLoadingPatches,
                                     loadError = uiState.patchLoadError,
                                     onRetry = onRetry,
+                                    onManageSources = { showSourceManagementSheet = true },
                                     isCompact = isCompact,
                                     modifier = Modifier
                                         .weight(1.2f)
@@ -731,6 +752,7 @@ private fun handleContinue(
                 patchesFilePath = patchesFile.absolutePath,
                 packageName = info.packageName,
                 apkArchitectures = info.architectures,
+                apkVersion = info.versionName,
                 patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
                 patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
             ))
@@ -933,6 +955,89 @@ private fun MultiSourceHintBanner(
                 imageVector = Icons.Default.Clear,
                 contentDescription = "Dismiss",
                 tint = accents.primary,
+                modifier = Modifier.size(14.dp),
+            )
+        }
+    }
+}
+
+/**
+ * Non-blocking banner shown when some patch sources loaded but at least one failed.
+ * Patching still works with the loaded sources, so this is an informational warning that
+ * points at the source manager (where each failed source shows exactly why it broke).
+ */
+@Composable
+private fun SourcesFailedBanner(
+    count: Int,
+    onManageSources: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val corners = LocalMorpheCorners.current
+    val mono = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+    val warn = accents.warning
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(corners.small))
+            .border(1.dp, warn.copy(alpha = 0.3f), RoundedCornerShape(corners.small))
+            .background(warn.copy(alpha = 0.06f))
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Default.Warning,
+            contentDescription = null,
+            tint = warn,
+            modifier = Modifier.size(15.dp),
+        )
+        Text(
+            text = (if (count == 1) "A patch source" else "$count patch sources") +
+                " failed to load. Using the ones that loaded successfully.",
+            fontSize = 11.sp,
+            fontFamily = mono,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+            letterSpacing = 0.2.sp,
+            modifier = Modifier.weight(1f),
+        )
+        // House-style pill: corners.small with an animated hover border/text, matching the
+        // update banner's actions rather than the default Material TextButton (which used a
+        // full-pill shape and no hover color change).
+        val actionHover = remember { MutableInteractionSource() }
+        val isActionHovered by actionHover.collectIsHoveredAsState()
+        val actionBorder by animateColorAsState(
+            if (isActionHovered) warn.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+            animationSpec = tween(150),
+        )
+        val actionText by animateColorAsState(
+            if (isActionHovered) warn else warn.copy(alpha = 0.7f),
+            animationSpec = tween(150),
+        )
+        Box(
+            modifier = Modifier
+                .height(24.dp)
+                .hoverable(actionHover)
+                .clip(RoundedCornerShape(corners.small))
+                .border(1.dp, actionBorder, RoundedCornerShape(corners.small))
+                .clickable(onClick = onManageSources)
+                .padding(horizontal = 8.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                "MANAGE SOURCES",
+                fontFamily = mono,
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp,
+                color = actionText,
+            )
+        }
+        IconButton(onClick = onDismiss, modifier = Modifier.size(24.dp)) {
+            Icon(
+                imageVector = Icons.Default.Clear,
+                contentDescription = "Dismiss",
+                tint = warn,
                 modifier = Modifier.size(14.dp),
             )
         }
@@ -1350,6 +1455,7 @@ private fun SupportedAppsListPane(
     isLoading: Boolean,
     loadError: String?,
     onRetry: () -> Unit,
+    onManageSources: () -> Unit = {},
     isCompact: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -1476,17 +1582,34 @@ private fun SupportedAppsListPane(
                         textAlign = TextAlign.Center,
                     )
                     Spacer(Modifier.height(10.dp))
-                    OutlinedButton(
-                        onClick = onRetry,
-                        shape = RoundedCornerShape(corners.small),
-                    ) {
-                        Text(
-                            "RETRY",
-                            fontFamily = mono,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 0.5.sp,
-                        )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(
+                            onClick = onRetry,
+                            shape = RoundedCornerShape(corners.small),
+                        ) {
+                            Text(
+                                "RETRY",
+                                fontFamily = mono,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 0.5.sp,
+                            )
+                        }
+                        // Always offer a way to the source manager here: when a bundle is
+                        // broken (e.g. needs a newer patcher), fixing it means removing or
+                        // re-pointing that source, so it must be reachable from the error.
+                        OutlinedButton(
+                            onClick = onManageSources,
+                            shape = RoundedCornerShape(corners.small),
+                        ) {
+                            Text(
+                                "MANAGE SOURCES",
+                                fontFamily = mono,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 0.5.sp,
+                            )
+                        }
                     }
                 }
             }
