@@ -536,7 +536,8 @@ class QuickPatchViewModel(
                 phase = QuickPatchPhase.PATCHING,
                 statusMessage = "Patching...",
                 completedPatches = 0,
-                totalPatches = _uiState.value.compatiblePatches.count { it.isEnabled }
+                totalPatches = _uiState.value.compatiblePatches.count { it.isEnabled },
+                isAllStepsDone = false
             )
 
             // Generate output path via the shared engine helper — same path
@@ -610,7 +611,8 @@ class QuickPatchViewModel(
                         // Force 100% progress immediately upon engine success
                         _uiState.value = _uiState.value.copy(
                             progress = 1.0f,
-                            statusMessage = ""
+                            statusMessage = "",
+                            isAllStepsDone = true
                         )
 
                         // Delay transition so the 90% -> 100% animation can visually finish
@@ -727,7 +729,8 @@ class QuickPatchViewModel(
         patchingJob = null
         _uiState.value = _uiState.value.copy(
             phase = QuickPatchPhase.READY,
-            statusMessage = "Cancelled"
+            statusMessage = "Cancelled",
+            isAllStepsDone = false
         )
     }
 
@@ -846,6 +849,7 @@ data class QuickPatchUiState(
     /** Session-only dismiss; cleared on next app start. Not persisted. */
     val updateBannerSessionDismissed: Boolean = false,
     val useExperimentalVersions: Boolean = false,
+    val isAllStepsDone: Boolean = false,
 ) {
     val showUpdateBanner: Boolean
         get() = updateInfo != null &&

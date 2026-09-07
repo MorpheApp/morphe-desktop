@@ -20,6 +20,7 @@ import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.ui.components.LocalFrameWindowScope
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FileUtils
+import app.morphe.gui.util.Logger
 import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import java.awt.Taskbar
@@ -34,6 +35,8 @@ import org.jetbrains.skia.Image
  * The app switches between simplified and full mode dynamically via settings.
  */
 fun launchGui(args: Array<String>) {
+    Logger.init()
+
     // FileKit backs the native OS file/folder pickers (JNA on Windows/macOS,
     // XDG Desktop Portal on Linux). Must run once before any picker is used;
     // appId doubles as the DBus application id on Linux.
