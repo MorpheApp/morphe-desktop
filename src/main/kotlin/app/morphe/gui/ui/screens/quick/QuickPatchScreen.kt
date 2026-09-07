@@ -18,6 +18,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.MorpheData
+import app.morphe.gui.LocalBackgroundSpeed
+import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.OfflineBanner
@@ -45,6 +47,8 @@ import app.morphe.gui.util.sourceVersionMap
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import java.io.File
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -59,6 +63,44 @@ class QuickPatchScreen : Screen {
 @Composable
 fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     val uiState by viewModel.uiState.collectAsState()
+
+    val patchingCompletedState = LocalPatchingCompleted.current
+    val backgroundSpeedState = LocalBackgroundSpeed.current
+
+    val isPatching = (uiState.phase == QuickPatchPhase.DOWNLOADING || uiState.phase == QuickPatchPhase.PATCHING) && !uiState.isAllStepsDone
+
+    LaunchedEffect(isPatching) {
+        if (isPatching) {
+            var movingAverage = 0.0f
+            val smoothingFactor = 0.25f
+            while (true) {
+                movingAverage = (1 - smoothingFactor) * movingAverage +
+                        smoothingFactor * viewModel.uiState.value.progress
+                backgroundSpeedState.floatValue = 1f + movingAverage
+                delay(250.milliseconds)
+            }
+        } else {
+            backgroundSpeedState.floatValue = 1f
+        }
+    }
+
+    LaunchedEffect(uiState.isAllStepsDone) {
+        if (uiState.isAllStepsDone) {
+            delay(300.milliseconds)
+            patchingCompletedState.value = true
+            delay(2500.milliseconds)
+            patchingCompletedState.value = false
+        } else {
+            patchingCompletedState.value = false
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            backgroundSpeedState.floatValue = 1f
+            patchingCompletedState.value = false
+        }
+    }
 
     // Source picker state. Quick Patch is single-source by design, so the picker
     // uses the same SourceManagementSheet as Expert mode but in SINGLE_SELECT

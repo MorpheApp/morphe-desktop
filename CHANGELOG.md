@@ -1,3 +1,24 @@
+## [1.15.1-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.3...v1.15.1-dev.4) (2026-09-06)
+
+
+### Bug Fixes
+
+* Resolve `IoUsageSampler` NPE regression ([#297](https://github.com/MorpheApp/morphe-desktop/issues/297)) ([082849c](https://github.com/MorpheApp/morphe-desktop/commit/082849c99e8523b02f92286125f77344566e89ea))
+
+## [1.15.1-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.2...v1.15.1-dev.3) (2026-09-06)
+
+
+### Bug Fixes
+
+* Trigger background completion effect when patching finishes ([#295](https://github.com/MorpheApp/morphe-desktop/issues/295)) ([f45091d](https://github.com/MorpheApp/morphe-desktop/commit/f45091d3bde63eab38a0d02e7fe5e73ec22aee8a))
+
+## [1.15.1-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.1...v1.15.1-dev.2) (2026-09-05)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([c973dc7](https://github.com/MorpheApp/morphe-desktop/commit/c973dc7b3cd243cfb4188668e764d41a7d6dfd76))
+
 ## [1.15.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.0...v1.15.1-dev.1) (2026-09-04)
 
 
