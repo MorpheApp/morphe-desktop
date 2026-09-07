@@ -43,6 +43,9 @@ import cafe.adriel.voyager.transitions.ScreenTransition
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.core.logger.Level as KoinLevel
+import org.koin.core.logger.Logger as KoinLogger
+import org.koin.core.logger.MESSAGE
 import org.koin.dsl.koinConfiguration
 
 /**
@@ -106,9 +109,23 @@ fun app(
     }
 
     KoinApplication(koinConfiguration {
+        logger(KoinLoggerAdapter)
         modules(appModule)
     }) {
         appContent(initialSimplifiedMode = initialSimplifiedMode)
+    }
+}
+
+private object KoinLoggerAdapter : KoinLogger(KoinLevel.INFO) {
+    override fun display(level: KoinLevel, msg: MESSAGE) {
+        val taggedMessage = "[Koin] $msg"
+        when (level) {
+            KoinLevel.ERROR -> Logger.error(taggedMessage)
+            KoinLevel.WARNING -> Logger.warn(taggedMessage)
+            KoinLevel.INFO -> Logger.info(taggedMessage)
+            KoinLevel.DEBUG -> Logger.debug(taggedMessage)
+            KoinLevel.NONE -> Unit
+        }
     }
 }
 
