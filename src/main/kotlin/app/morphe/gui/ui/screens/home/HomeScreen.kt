@@ -12,28 +12,30 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.SourceLedState
 import app.morphe.gui.ui.components.SourceManagementSheet
-import app.morphe.gui.ui.components.UpdateBanner
+import app.morphe.gui.data.model.PatchSource
+import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.ui.components.AddPatchSourceDialog
 import app.morphe.gui.ui.components.sourceLedState
-import app.morphe.gui.ui.screens.home.components.ForgetConfirmDialog
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
+import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
+import app.morphe.gui.ui.components.MorpheBanners
+import app.morphe.gui.ui.components.UpdateBanner
+import app.morphe.gui.ui.screens.home.components.ForgetConfirmDialog
 import app.morphe.gui.ui.screens.home.components.HeaderBar
 import app.morphe.gui.ui.screens.home.components.MiddleContent
 import app.morphe.gui.ui.screens.home.components.MultiSourceHintBanner
-import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
 import app.morphe.gui.ui.screens.home.components.RepatchMissingApkDialog
 import app.morphe.gui.ui.screens.home.components.SourcesFailedBanner
 import app.morphe.gui.ui.screens.home.components.SupportedAppsListPane
 import app.morphe.gui.ui.screens.home.components.UninstallConfirmDialog
-import app.morphe.gui.ui.screens.home.components.UpdateAvailableDialog
-import app.morphe.gui.ui.screens.home.components.UpdateFailedDialog
-import app.morphe.gui.ui.screens.home.components.UpdatePreparingDialog
 import app.morphe.gui.ui.screens.home.components.VersionWarningDialog
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
@@ -52,8 +54,6 @@ import java.awt.Desktop
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 class HomeScreen : Screen {
 
@@ -73,6 +73,13 @@ fun HomeScreenContent(
 
     // Device install-state is polled (adb), not streamed.
     LaunchedEffect(Unit) { viewModel.refreshDeviceInfo() }
+
+    val coroutineScope = rememberCoroutineScope()
+    val patchSourceManager: PatchSourceManager = koinInject()
+    val allSources by patchSourceManager.allSources.collectAsState()
+
+    var showSourceManagementSheet by rememberSaveable { mutableStateOf(false) }
+    var pendingReopenSheet by rememberSaveable { mutableStateOf(false) }
 
     // One-click repatch: a patched-app row's "Re-patch" action. Jump straight to
     // patch selection with the input APK + the record's saved selection, using
@@ -164,8 +171,29 @@ fun HomeScreenContent(
     // Phase 7. Tap a "Your apps" row to see the full recall breakdown.
     var detailRecord by remember { mutableStateOf<PatchedAppRecord?>(null) }
     val onShowDetail: (PatchedAppRecord) -> Unit = { detailRecord = it }
-    val onUpdate: (String) -> Unit = { pkg ->
-        viewModel.getPatchedRecord(pkg)?.let { viewModel.prepareUpdate(it) }
+    var bundleVersionsBySource by remember { mutableStateOf(emptyMap<String, List<BundleRelease>>()) }
+    var showAddSourceDialog by remember { mutableStateOf(false) }
+    var preparingPatch by remember { mutableStateOf(false) }
+    var patchPrepProgress by remember { mutableStateOf<Pair<String, Float>?>(null) }
+    val activeSources = viewModel.activePatchSources()
+    LaunchedEffect(detailRecord?.packageName, activeSources.map { it.name }) {
+        if (detailRecord == null) return@LaunchedEffect
+        bundleVersionsBySource = activeSources.associate { src ->
+            src.name to viewModel.availableBundleVersions(src.name)
+        }
+    }
+    if (showAddSourceDialog) {
+        AddPatchSourceDialog(
+            isQuickMode = false,
+            onDismiss = { showAddSourceDialog = false },
+            onAdd = { source ->
+                showAddSourceDialog = false
+                coroutineScope.launch {
+                    patchSourceManager.addSource(source)
+                    viewModel.retryLoadPatches()
+                }
+            },
+        )
     }
     detailRecord?.let { record ->
         val updateInfo = remember(record) { viewModel.recallUpdateInfo(record) }
@@ -174,9 +202,59 @@ fun HomeScreenContent(
             state = uiState.patchedStates[record.packageName] ?: PatchedAppState.PATCHED,
             deviceInfo = uiState.deviceAppInfo[record.packageName],
             updateInfo = updateInfo,
+            supportedApp = uiState.supportedApps.find { it.packageName == record.packageName },
+            activeSources = activeSources,
+            allSources = allSources,
+            bundleVersionsBySource = bundleVersionsBySource,
+            onSetSourceEnabled = { id, enabled ->
+                coroutineScope.launch {
+                    patchSourceManager.setSourceEnabled(id, enabled)
+                    viewModel.retryLoadPatches()
+                }
+            },
+            onAddSource = { showAddSourceDialog = true },
+            onAddLocalBundle = { path ->
+                coroutineScope.launch {
+                    patchSourceManager.addSource(
+                        PatchSource(
+                            id = java.util.UUID.randomUUID().toString(),
+                            name = java.io.File(path).nameWithoutExtension,
+                            type = PatchSourceType.LOCAL,
+                            filePath = path,
+                        )
+                    )
+                    viewModel.retryLoadPatches()
+                }
+            },
+            onResolveApkVersion = { path -> viewModel.apkVersionOf(path) },
+            onIsBundleCached = { name, tag -> viewModel.isBundleCached(name, tag) },
+            onSupportedAppFor = { pkg, overrides -> viewModel.supportedAppFor(pkg, overrides) },
+            onDownloadBundle = { name, tag, onProgress -> viewModel.downloadBundle(name, tag, onProgress) },
             onDismiss = { detailRecord = null },
             onRepatch = { onRepatch(record.packageName) },
-            onUpdate = { viewModel.prepareUpdate(record) },
+            preparingPatch = preparingPatch,
+            patchPrepProgress = patchPrepProgress,
+            onPatchWith = { apkPath, overrides ->
+                coroutineScope.launch {
+                    preparingPatch = true
+                    patchPrepProgress = null
+                    try {
+                        viewModel.resolvePatchFiles(overrides) { name, pct ->
+                            patchPrepProgress = name to pct
+                        }
+                            .onSuccess { (files, names) ->
+                                detailRecord = null
+                                launchPatch(record, apkPath, files, names)
+                            }
+                            .onFailure {
+                                viewModel.showError(it.message ?: "Couldn't resolve patch files.")
+                            }
+                    } finally {
+                        preparingPatch = false
+                        patchPrepProgress = null
+                    }
+                }
+            },
             onForget = { onForget(record.packageName) },
             onOpenFolder = {
                 runCatching {
@@ -190,78 +268,6 @@ fun HomeScreenContent(
             uninstalling = uiState.uninstallingPackage == record.packageName,
         )
     }
-
-    // ── Update flow (Phase 7, issue 2c): resolve latest → maybe pick a newer APK ──
-    val uriHandler = LocalUriHandler.current
-    val coroutineScope = rememberCoroutineScope()
-    when (val prep = uiState.updatePrep) {
-        is UpdatePrep.Preparing -> UpdatePreparingDialog(onCancel = { viewModel.clearUpdatePrep() })
-        is UpdatePrep.Failed -> UpdateFailedDialog(
-            message = prep.message,
-            onDismiss = { viewModel.clearUpdatePrep() },
-        )
-        is UpdatePrep.Ready -> {
-            val record = viewModel.getPatchedRecord(prep.packageName)
-            if (record == null) {
-                viewModel.clearUpdatePrep()
-            } else {
-                // Patch with the latest files using either an existing or a picked APK.
-                suspend fun launchWith(apkPath: String) {
-                    viewModel.clearUpdatePrep()
-                    if (File(apkPath).exists()) {
-                        launchPatch(record, apkPath, prep.patchFilePaths, prep.sourceNames)
-                    } else {
-                        val picked = MorpheFilePicker.pickFile(
-                            title = "Select APK to patch",
-                            extensions = listOf("apk", "apkm", "xapk", "apks"),
-                        )
-                        picked?.takeIf { it.exists() }
-                            ?.let { launchPatch(record, it.absolutePath, prep.patchFilePaths, prep.sourceNames) }
-                    }
-                }
-                if (!prep.needsNewerApk) {
-                    // APK still satisfies the latest patches → patch straight away.
-                    LaunchedEffect(prep) { launchWith(record.inputApkPath) }
-                } else {
-                    val targetV = prep.targetVersion?.removePrefix("v") ?: "newer"
-                    UpdateAvailableDialog(
-                        appName = record.displayName,
-                        currentVersion = record.apkVersion.removePrefix("v"),
-                        targetVersion = targetV,
-                        currentSupported = prep.currentSupported,
-                        onDismiss = { viewModel.clearUpdatePrep() },
-                        onUseMyApk = { coroutineScope.launch { launchWith(record.inputApkPath) } },
-                        onGetNewer = {
-                            val url = prep.downloadUrl
-                            val files = prep.patchFilePaths
-                            val names = prep.sourceNames
-                            viewModel.clearUpdatePrep()
-                            if (url != null) uriHandler.openUri(url)
-                            coroutineScope.launch {
-                                val picked = MorpheFilePicker.pickFile(
-                                    title = "Select the v$targetV APK",
-                                    extensions = listOf("apk", "apkm", "xapk", "apks"),
-                                )
-                                picked?.takeIf { it.exists() }
-                                    ?.let { launchPatch(record, it.absolutePath, files, names) }
-                            }
-                        },
-                    )
-                }
-            }
-        }
-        null -> {}
-    }
-
-    val patchSourceManager: PatchSourceManager = koinInject()
-    val allSources by patchSourceManager.allSources.collectAsState()
-    // Two-flag pattern for smooth navigation in/out of the sheet:
-    //  - showSourceManagementSheet: actually visible right now
-    //  - pendingReopenSheet: user navigated away from the sheet via a row click,
-    //    we should reopen it once they pop back AND the screen transition settles.
-    // rememberSaveable on both so they survive Voyager's push/pop teardown.
-    var showSourceManagementSheet by rememberSaveable { mutableStateOf(false) }
-    var pendingReopenSheet by rememberSaveable { mutableStateOf(false) }
 
     // Re-show the sheet after the pop animation finishes, NOT immediately on
     // re-entry. Without the delay the sheet flashes in mid-transition.
@@ -457,35 +463,33 @@ fun HomeScreenContent(
                     // ── Body: drop zone / APK info on one side, supported-apps
                     // list on the other. The list pane owns its own scroll. ──
                     Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                            if (uiState.showUpdateBanner) {
-                                UpdateBanner(
-                                    info = uiState.updateInfo!!,
-                                    onDismissForSession = { viewModel.dismissUpdateForSession() },
-                                    onDismissForVersion = { viewModel.dismissUpdateForVersion() },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(start = padding, end = padding, top = 8.dp),
-                                )
+                            if (uiState.showUpdateBanner ||
+                                uiState.showMultiSourceHint ||
+                                uiState.showSourcesFailedBanner
+                            ) {
+                                MorpheBanners {
+                                    if (uiState.showUpdateBanner) {
+                                        UpdateBanner(
+                                            info = uiState.updateInfo!!,
+                                            onDismissForSession = { viewModel.dismissUpdateForSession() },
+                                            onDismissForVersion = { viewModel.dismissUpdateForVersion() },
+                                        )
+                                    }
+                                    if (uiState.showMultiSourceHint) {
+                                        MultiSourceHintBanner(
+                                            onDismiss = { viewModel.dismissMultiSourceHint() },
+                                        )
+                                    }
+                                    if (uiState.showSourcesFailedBanner) {
+                                        SourcesFailedBanner(
+                                            count = uiState.failedSourcesCount,
+                                            onManageSources = { showSourceManagementSheet = true },
+                                            onDismiss = { viewModel.dismissSourcesFailedBanner() },
+                                        )
+                                    }
+                                }
                             }
-                            if (uiState.showMultiSourceHint) {
-                                MultiSourceHintBanner(
-                                    onDismiss = { viewModel.dismissMultiSourceHint() },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(start = padding, end = padding, top = 8.dp),
-                                )
-                            }
-                            if (uiState.showSourcesFailedBanner) {
-                                SourcesFailedBanner(
-                                    count = uiState.failedSourcesCount,
-                                    onManageSources = { showSourceManagementSheet = true },
-                                    onDismiss = { viewModel.dismissSourcesFailedBanner() },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(start = padding, end = padding, top = 8.dp),
-                                )
-                            }
-                            Row(
+                            BoxWithConstraints(
                                 modifier = Modifier
                                     .weight(1f)
                                     .fillMaxWidth()
@@ -498,7 +502,13 @@ fun HomeScreenContent(
                                         top = 4.dp,
                                         bottom = padding,
                                     ),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                            val bodyViewport = this.maxHeight
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(padding),
+                                verticalAlignment = Alignment.Top,
                             ) {
                                 // Left: browse/discover supported apps (wizard step 1).
                                 SupportedAppsListPane(
@@ -507,13 +517,10 @@ fun HomeScreenContent(
                                     patchedRecords = uiState.patchedRecords,
                                     deviceAppInfo = uiState.deviceAppInfo,
                                     updateInfoByPackage = uiState.updateInfoByPackage,
-                                    onRepatch = onRepatch,
-                                    onForget = onForget,
-                                    onUpdate = onUpdate,
+                                    sortMode = uiState.sortMode,
+                                    onSortModeChange = { viewModel.setSortMode(it) },
                                     onInstall = { viewModel.installPatchedApp(it) },
                                     installingPackage = uiState.installingPackage,
-                                    onUninstall = onUninstall,
-                                    uninstallingPackage = uiState.uninstallingPackage,
                                     onShowDetail = onShowDetail,
                                     filter = uiState.appListFilter,
                                     onFilterChange = { viewModel.setAppListFilter(it) },
@@ -524,34 +531,31 @@ fun HomeScreenContent(
                                     onManageSources = { showSourceManagementSheet = true },
                                     modifier = Modifier
                                         .weight(1.2f)
-                                        .fillMaxHeight(),
+                                        .heightIn(max = bodyViewport),
                                 )
                                 // Right: APK info / drop zone (wizard step 2, pick the
                                 // APK you want patched). Content centers vertically when
                                 // it fits, scrolls when it doesn't, so the CONTINUE
                                 // button is never clipped off the bottom.
-                                BoxWithConstraints(
-                                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .align(Alignment.CenterVertically)
+                                        .heightIn(max = bodyViewport)
+                                        .padding(top = 16.dp)
+                                        .verticalScroll(rememberScrollState()),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
-                                    val viewport = this.maxHeight
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .verticalScroll(rememberScrollState())
-                                            .heightIn(min = viewport),
-                                        verticalArrangement = Arrangement.Center,
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                    ) {
-                                        MiddleContent(
-                                            uiState = uiState,
-                                            patchesLoaded = patchesLoaded,
-                                            onClearClick = onClearClick,
-                                            onChangeClick = onChangeClick,
-                                            onContinueClick = onContinueClick,
-                                            patchSourceNames = patchSourcesForSelectedApk,
-                                        )
-                                    }
+                                    MiddleContent(
+                                        uiState = uiState,
+                                        patchesLoaded = patchesLoaded,
+                                        onClearClick = onClearClick,
+                                        onChangeClick = onChangeClick,
+                                        onContinueClick = onContinueClick,
+                                        patchSourceNames = patchSourcesForSelectedApk,
+                                    )
                                 }
+                            }
                             }
                     }
                 }
@@ -569,7 +573,6 @@ fun HomeScreenContent(
                             .padding(horizontal = 24.dp, vertical = 20.dp)
                     )
                 }
-
 
             }
         }

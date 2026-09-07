@@ -9,16 +9,11 @@ import java.util.Properties
 
 /**
  * Centralized configuration for supported apps.
- * This file is massively outdated. Could be used for other things in the future but kinda useless now.
  */
 object AppConstants {
 
     // ==================== APP INFO ====================
     private val pkg by lazy { AppConstants::class.java.`package` }
-
-    val APP_NAME: String by lazy {
-        pkg?.implementationTitle ?: "Morphe GUI"
-    }
 
     val APP_VERSION: String by lazy {
         val resourceVersion = AppConstants::class.java
@@ -34,31 +29,13 @@ object AppConstants {
     // ==================== API ====================
     const val MORPHE_API_URL = "https://api.morphe.software"
 
-    // ==================== YOUTUBE ====================
-    object YouTube {
-        const val DISPLAY_NAME = "YouTube"
-        const val PACKAGE_NAME = "com.google.android.youtube"
-    }
+    const val WEBSITE_URL = "https://morphe.software"
+    const val DOCUMENTATION_URL = "https://github.com/MorpheApp/morphe-desktop/blob/main/docs/documentation.md"
 
-    // ==================== YOUTUBE MUSIC ====================
-    object YouTubeMusic {
-        const val DISPLAY_NAME = "YouTube Music"
-        const val PACKAGE_NAME = "com.google.android.apps.youtube.music"
-    }
-
-    // ==================== REDDIT ====================
-    object Reddit {
-        const val DISPLAY_NAME = "Reddit"
-        const val PACKAGE_NAME = "com.reddit.frontpage"
-    }
-
-    /**
-     * List of all supported package names for quick lookup.
-     */
-    val SUPPORTED_PACKAGES = listOf(
-        YouTube.PACKAGE_NAME,
-        YouTubeMusic.PACKAGE_NAME,
-        Reddit.PACKAGE_NAME
+    val FALLBACK_PACKAGES = listOf(
+        "com.google.android.youtube",
+        "com.google.android.apps.youtube.music",
+        "com.reddit.frontpage",
     )
 
     // TODO: Checksum verification will be re-enabled when checksums are added to .mpp files

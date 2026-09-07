@@ -15,11 +15,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.morphe_desktop.generated.resources.Res
@@ -97,7 +96,7 @@ internal fun PatchesVersionBadge(
                 .border(1.dp, borderColor, RoundedCornerShape(corners.small))
                 .then(
                     if (interactive) Modifier
-                        .pointerHoverIcon(PointerIcon.Hand)
+                        .handCursor()
                         .clickable(onClick = onClick)
                     else Modifier
                 )

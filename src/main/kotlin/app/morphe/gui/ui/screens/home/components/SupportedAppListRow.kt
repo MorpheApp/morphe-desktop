@@ -31,8 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontFamily
@@ -41,24 +39,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.onCardGradient
+import app.morphe.gui.ui.components.LocalCardFills
+import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
+import app.morphe.gui.ui.theme.shiftLightness
+import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheAccentColors
-import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
 
 /**
  * Vertical-list-friendly supported-app row. Two-row collapsed layout:
  *   row 1: initial badge + app name + package name (muted)
- *   row 2: STABLE LATEST chip + EXPERIMENTAL LATEST chip (or "—")
+ *   row 2: STABLE LATEST chip + EXPERIMENTAL LATEST chip (or a dash placeholder)
  *
  * Whole row is clickable (Phase 3 hooks expansion to it). Version chips are
- * also tappable as quick-download shortcuts — their clicks are consumed so
+ * also tappable as quick-download shortcuts. Their clicks are consumed so
  * they don't bubble up and trigger the row click.
  */
 @Composable
@@ -69,7 +72,6 @@ fun SupportedAppListRow(
     /** Source display names whose patches target [app.packageName]. Rendered as
      *  the FROM chips inside the expanded body. Empty hides the FROM section. */
     patchSourceNames: List<String> = emptyList(),
-    /** Recall state — renders a badge in the header for PATCHED / APK_MISSING. */
     patchedState: PatchedAppState = PatchedAppState.NEVER_PATCHED,
     /** Optional device-layer info (installed? + version). Null = no device / not patched.
      *  Recall ACTIONS (Re-patch/Forget) live on the "Your apps" card, not here. */
@@ -81,16 +83,20 @@ fun SupportedAppListRow(
     val accents = LocalMorpheAccents.current
 
     val initial = app.displayName.firstOrNull()?.uppercase() ?: "?"
-    val hasStable = app.recommendedVersion != null
     val hasExperimental = app.experimentalVersions.isNotEmpty()
     val latestExperimental = app.experimentalVersions.firstOrNull()
+
+    val cardFills = LocalCardFills.current
 
     AppCard(
         modifier = modifier.fillMaxWidth(),
         cornerRadius = corners.medium,
         appIconColorHex = app.appIconColor,
-        isExpanded = isExpanded,
-        onClick = onClick
+        fill = cardFills[app.packageName],
+        onClick = onClick,
+        onCustomise = {
+            cardFills.requestEdit(app.packageName, app.displayName, app.appIconColor)
+        },
     ) {
         Column(
             modifier = Modifier
@@ -120,7 +126,7 @@ fun SupportedAppListRow(
             Text(
                 text = app.displayName,
                 fontSize = 13.sp,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.Bold,
                 fontFamily = font,
                 color = Color.White,
                 maxLines = 1,
@@ -152,7 +158,7 @@ fun SupportedAppListRow(
                 channelLabel = "Latest Stable",
                 version = app.recommendedVersion,
                 color = accents.secondary,
-                // Pass the URL through unconditionally — when recommendedVersion
+                // Pass the URL through unconditionally. When recommendedVersion
                 // is null (patches work on Any version), the URL still points to
                 // the app's general APKMirror page and stays clickable.
                 downloadUrl = app.apkDownloadUrl,
@@ -194,7 +200,6 @@ fun SupportedAppListRow(
 }
 }
 
-
 /** Optional device-layer line: whether the app is installed on the connected device. */
 @Composable
 private fun DeviceInfoLine(info: DeviceAppInfo, font: FontFamily) {
@@ -223,7 +228,7 @@ private fun DeviceInfoLine(info: DeviceAppInfo, font: FontFamily) {
 internal fun PatchedStateBadge(state: PatchedAppState, font: FontFamily) {
     val label = when (state) {
         PatchedAppState.PATCHED -> "Patched"
-        PatchedAppState.PATCHED_WITH_UPDATES -> "Update available"
+        PatchedAppState.PATCHED_WITH_UPDATES -> "Patch update available"
         PatchedAppState.MODIFIED_EXTERNALLY -> "Modified"
         PatchedAppState.APK_MISSING -> "APK missing"
         PatchedAppState.NEVER_PATCHED -> return
@@ -249,10 +254,10 @@ internal fun PatchedStateBadge(state: PatchedAppState, font: FontFamily) {
 /**
  * Channel label + version pair. When [downloadUrl] is non-null and [version] is
  * present, the chip becomes a clickable quick-download (with hand cursor + open-
- * in-new icon). When [version] is null, renders "—" in a muted style with no
+ * in-new icon). When [version] is null, renders a dash placeholder, muted and with no
  * click affordance.
  *
- * The chip's clickable consumes the press — clicking it does NOT bubble up to
+ * The chip's clickable consumes the press. Clicking it does NOT bubble up to
  * the row's clickable, so quick-downloading doesn't accidentally expand the row.
  */
 @Composable
@@ -265,22 +270,26 @@ private fun VersionChip(
     font: FontFamily,
     cornerSmall: Dp,
 ) {
-    // A chip is a clickable download link whenever the URL is present, even if
-    // the version is null ("Any" label still routes to the app's general page).
     val isLink = downloadUrl != null
     val uriHandler = LocalUriHandler.current
     val hoverInteraction = remember(channelLabel) { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
+    val chipColor = color.onCardGradient()
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         modifier = Modifier
             .clip(RoundedCornerShape(cornerSmall))
-            .background(Color.White.copy(alpha = if (isHovered && isLink) 0.26f else 0.20f))
+            .background(Color.Black.copy(alpha = if (isHovered && isLink) 0.34f else 0.22f))
+            .border(
+                1.dp,
+                Color.White.copy(alpha = if (isHovered && isLink) 0.85f else 0.55f),
+                RoundedCornerShape(cornerSmall),
+            )
             .hoverable(hoverInteraction)
             .then(
                 if (isLink) Modifier
-                    .pointerHoverIcon(PointerIcon.Hand)
+                    .handCursor()
                     .clickable {
                         openUrlAndFollowRedirects(downloadUrl) { uriHandler.openUri(it) }
                     }
@@ -293,27 +302,27 @@ private fun VersionChip(
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
-            color = Color.White
+            color = chipColor
         )
         Text(
             text = "·",
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
-            color = Color.White
+            color = chipColor.copy(alpha = 0.6f)
         )
         Text(
             text = version?.let { if (it.startsWith("v")) it else "v$it" } ?: nullLabel,
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
-            color = Color.White
+            color = chipColor
         )
         if (isLink) {
             Icon(
                 imageVector = MorpheIcons.OpenInNew,
                 contentDescription = "Download $channelLabel",
-                tint = Color.White,
+                tint = chipColor,
                 modifier = Modifier.size(10.dp),
             )
         }
@@ -342,7 +351,7 @@ private fun ExpandedBody(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (patchSourceNames.isNotEmpty()) {
-            SectionLabel(text = "Patches from", font = font)
+            SectionLabel(text = "Patches from", font = font, color = accents.primary.onCardGradient())
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -357,19 +366,20 @@ private fun ExpandedBody(
                         color = accents.primary,
                         font = font,
                         cornerSmall = cornerSmall,
+                        onGradient = true,
                     )
                 }
             }
         }
 
         if (otherStable.isNotEmpty()) {
-            SectionLabel(text = "Stable", font = font)
+            SectionLabel(text = "Stable", font = font, color = accents.secondary.onCardGradient())
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 otherStable.take(maxPills).forEach { v ->
-                    // URL is a pure function of package + version — compute
+                    // URL is a pure function of package + version. Compute
                     // per pill rather than pre-storing all of them on the model.
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
                     Pill(
@@ -377,6 +387,7 @@ private fun ExpandedBody(
                         color = accents.secondary,
                         font = font,
                         cornerSmall = cornerSmall,
+                        onGradient = true,
                         onClick = url?.let { { uriHandler.openUri(it) } },
                     )
                 }
@@ -393,7 +404,7 @@ private fun ExpandedBody(
         }
 
         if (app.experimentalVersions.isNotEmpty()) {
-            SectionLabel(text = "Experimental", font = font)
+            SectionLabel(text = "Experimental", font = font, color = accents.warning.onCardGradient())
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -405,6 +416,7 @@ private fun ExpandedBody(
                         color = accents.warning,
                         font = font,
                         cornerSmall = cornerSmall,
+                        onGradient = true,
                         onClick = url?.let { { uriHandler.openUri(it) } },
                     )
                 }
@@ -423,31 +435,32 @@ private fun ExpandedBody(
 }
 
 @Composable
-private fun SectionLabel(
+internal fun SectionLabel(
     text: String,
     font: FontFamily,
+    color: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     Text(
         text = text,
         fontSize = 13.sp,
         fontWeight = FontWeight.SemiBold,
-        color = Color.White,
+        color = color,
         fontFamily = font,
     )
 }
 
 @Composable
-private fun Pill(
+internal fun Pill(
     text: String,
     color: Color,
     font: FontFamily,
     cornerSmall: Dp,
-    textColor: Color = Color.White,
-    backgroundAlpha: Float = 0.2f,
+    onGradient: Boolean = false,
+    backgroundAlpha: Float = if (onGradient) 0.2f else 0.14f,
     // When non-null, the pill becomes a tappable download link: gets a hand
     // cursor, an OpenInNew icon, a subtle hover lift, and fires onClick on tap.
     // detectTapGestures (not .clickable) so scroll wheel / two-finger gestures
-    // pass through on Linux/Skiko — same reason as the apps-cards Row.
+    // pass through on Linux/Skiko. Same reason as the apps-cards Row.
     onClick: (() -> Unit)? = null,
 ) {
     val hoverSource = remember { MutableInteractionSource() }
@@ -455,19 +468,32 @@ private fun Pill(
     val isInteractive = onClick != null
     val hoveredLift = if (isInteractive && isHovered) 0.20f else 0f
     val effectiveBackgroundAlpha = (backgroundAlpha + hoveredLift / 2f).coerceAtMost(0.30f)
+    val pillColor = if (onGradient) color.onCardGradient() else color
+    val pillInk = if (onGradient) pillColor.contrastingForeground() else pillColor
 
     Box(
         modifier = Modifier
             .hoverable(hoverSource)
             .then(
                 if (isInteractive) Modifier
-                    .pointerHoverIcon(PointerIcon.Hand)
+                    .handCursor()
                     .pointerInput(onClick) {
                         detectTapGestures(onTap = { onClick() })
                     }
                 else Modifier
             )
-            .background(Color.White.copy(alpha = effectiveBackgroundAlpha), RoundedCornerShape(cornerSmall))
+            .background(
+                if (onGradient) {
+                    if (isInteractive && isHovered) pillColor.shiftLightness(0.08f) else pillColor
+                } else {
+                    pillColor.copy(alpha = effectiveBackgroundAlpha)
+                },
+                RoundedCornerShape(cornerSmall),
+            )
+            .then(
+                if (onGradient) Modifier
+                else Modifier.border(1.dp, pillColor.copy(alpha = 0.35f), RoundedCornerShape(cornerSmall))
+            )
             .padding(horizontal = 6.dp, vertical = 2.dp),
     ) {
         Row(
@@ -479,14 +505,14 @@ private fun Pill(
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
-                color = Color.White,
+                color = pillInk,
                 maxLines = 1,
             )
             if (isInteractive) {
                 Icon(
                     imageVector = MorpheIcons.OpenInNew,
                     contentDescription = "Open download page",
-                    tint = textColor.copy(alpha = if (isHovered) 0.9f else 0.5f),
+                    tint = pillInk.copy(alpha = if (isHovered) 0.9f else 0.6f),
                     modifier = Modifier.size(9.dp),
                 )
             }

@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.quick
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -18,7 +17,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.MorpheData
 import app.morphe.gui.LocalBackgroundSpeed
 import app.morphe.gui.LocalPatchingCompleted
@@ -28,8 +26,8 @@ import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.SourceManagementSheet
 import app.morphe.gui.ui.components.SourceSheetMode
 import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.UpdateBanner
-import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.screens.patching.LogFileViewerDialog
 import app.morphe.gui.ui.screens.patching.LogLevel
@@ -42,7 +40,6 @@ import app.morphe.gui.ui.screens.quick.components.PatchingContent
 import app.morphe.gui.ui.screens.quick.components.ReadyContent
 import app.morphe.gui.ui.screens.quick.components.SupportedAppsRow
 import app.morphe.gui.ui.theme.*
-import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
@@ -243,22 +240,20 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Offline banner
-                    if (uiState.isOffline && uiState.phase == QuickPatchPhase.IDLE) {
-                        OfflineBanner(
-                            onRetry = { viewModel.retryLoadPatches() },
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-                        )
-                    }
-
-                    // CLI update banner
-                    if (uiState.showUpdateBanner) {
-                        UpdateBanner(
-                            info = uiState.updateInfo!!,
-                            onDismissForSession = { viewModel.dismissUpdateForSession() },
-                            onDismissForVersion = { viewModel.dismissUpdateForVersion() },
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-                        )
+                    val showOffline = uiState.isOffline && uiState.phase == QuickPatchPhase.IDLE
+                    if (showOffline || uiState.showUpdateBanner) {
+                        MorpheBanners(inset = 0.dp) {
+                            if (showOffline) {
+                                OfflineBanner(onRetry = { viewModel.retryLoadPatches() })
+                            }
+                            if (uiState.showUpdateBanner) {
+                                UpdateBanner(
+                                    info = uiState.updateInfo!!,
+                                    onDismissForSession = { viewModel.dismissUpdateForSession() },
+                                    onDismissForVersion = { viewModel.dismissUpdateForVersion() },
+                                )
+                            }
+                        }
                     }
 
                     // ── Main content ──

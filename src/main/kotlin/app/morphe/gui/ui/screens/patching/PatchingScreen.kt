@@ -41,7 +41,6 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -157,7 +156,6 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                         .hoverable(backHover)
                         .clip(RoundedCornerShape(corners.small))
                         .border(1.dp, if (uiState.isInProgress) MaterialTheme.colorScheme.outline.copy(alpha = 0.15f) else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(corners.small))
-                        .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.5f), RoundedCornerShape(corners.small))
                         .background(backBg)
                         .clickable(enabled = !uiState.isInProgress) { navigator.pop() },
                     contentAlignment = Alignment.Center
@@ -217,7 +215,6 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                             .hoverable(cancelHover)
                             .clip(RoundedCornerShape(corners.small))
                             .border(1.dp, cancelBorder, RoundedCornerShape(corners.small))
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(corners.small))
                             .background(cancelBg)
                             .clickable { viewModel.cancelPatching() }
                             .padding(horizontal = 12.dp, vertical = 6.dp),
@@ -269,15 +266,12 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                             font = font
                         )
 
-
-                        // Log output
                         Box(
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(corners.medium))
                                 .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
                         ) {
                             Column(
                                 modifier = Modifier
@@ -324,7 +318,6 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                                                 strokeWidth = 1f
                                             )
                                         }
-                                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f)).background(accents.secondary.copy(alpha = 0.08f))
                                         .padding(14.dp),
                                     horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically
@@ -384,7 +377,7 @@ private fun FailureBottomBar(
                     strokeWidth = 1f
                 )
             }
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f)).background(statusColor.copy(alpha = 0.08f))
+            .background(statusColor.copy(alpha = 0.08f))
             .padding(14.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -410,6 +403,7 @@ private fun LogEntryRow(
     entry: LogEntry,
     font: FontFamily
 ) {
+    val corners = LocalMorpheCorners.current
     val mono = LocalMorpheMono.current
     val accents = LocalMorpheAccents.current
     
@@ -451,7 +445,7 @@ private fun LogEntryRow(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Surface(shape = RoundedCornerShape(4.dp), color = badgeBg) {
+        Surface(shape = RoundedCornerShape(corners.small), color = badgeBg) {
             Text(
                 text = badge,
                 fontFamily = mono,
@@ -508,7 +502,7 @@ fun LogFileViewerDialog(
     val clipboardScope = rememberCoroutineScope()
 
     // Read file once on open. Logs are line-oriented text, typically well
-    // under a few MB; if a single patching session ever produces something
+    // under a few MB. If a single patching session ever produces something
     // pathologically large we'd notice and tail it then.
     val content = remember(file) {
         runCatching { file.readText() }.getOrElse { e ->
@@ -653,7 +647,6 @@ fun LogFileViewerDialog(
                     }
                 }
 
-                // Log content — read-only, selectable, monospace.
                 val scrollState = rememberScrollState()
                 Box(modifier = Modifier.fillMaxSize()) {
                     SelectionContainer(
@@ -685,8 +678,11 @@ fun LogFileViewerDialog(
     }
 }
 
-private val PatcherProgressBlueColor = Color(0xFF1E5AA8)
-private val PatcherProgressTealColor = Color(0xFF00AFAE)
+@Composable
+private fun progressGradient(): Pair<Color, Color> {
+    val accents = LocalMorpheAccents.current
+    return accents.primary to accents.secondary
+}
 
 @Composable
 private fun ExpertProgressHeader(
@@ -755,15 +751,23 @@ private fun ExpertProgressHeader(
 
             if (uiState.totalPatches > 0) {
                 Surface(
-                    shape = CircleShape,
-                    color = if (uiState.status == PatchingStatus.COMPLETED) PatcherProgressTealColor.copy(alpha = 0.18f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
+                    shape = RoundedCornerShape(LocalMorpheCorners.current.small),
+                    color = if (uiState.status == PatchingStatus.COMPLETED) {
+                        progressGradient().second.copy(alpha = 0.18f)
+                    } else {
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
+                    }
                 ) {
                     Text(
                         text = "${uiState.patchedCount} / ${uiState.totalPatches}",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font,
-                        color = if (uiState.status == PatchingStatus.COMPLETED) PatcherProgressTealColor else MaterialTheme.colorScheme.primary,
+                        color = if (uiState.status == PatchingStatus.COMPLETED) {
+                            progressGradient().second
+                        } else {
+                            MaterialTheme.colorScheme.primary
+                        },
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
                 }
@@ -799,9 +803,8 @@ private fun ExpertProgressHeader(
 @Composable
 private fun PercentageBadge(progress: Float, status: PatchingStatus) {
     val font = LocalMorpheFont.current
-    val isCompleted = status == PatchingStatus.COMPLETED
     Surface(
-        shape = CircleShape,
+        shape = RoundedCornerShape(LocalMorpheCorners.current.small),
         color = MaterialTheme.colorScheme.primary
     ) {
         Text(
@@ -821,15 +824,19 @@ private fun ExpertLinearProgressBar(progress: Float) {
         modifier = Modifier
             .fillMaxWidth()
             .height(10.dp)
-            .clip(RoundedCornerShape(5.dp))
+            .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
             .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
     ) {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(fraction = progress.coerceIn(0f, 1f))
-                .clip(RoundedCornerShape(5.dp))
-                .background(Brush.horizontalGradient(listOf(PatcherProgressBlueColor, PatcherProgressTealColor)))
+                .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
+                .background(
+                    progressGradient().let { (start, end) ->
+                        Brush.horizontalGradient(listOf(start, end))
+                    }
+                )
         )
     }
 }
@@ -841,6 +848,7 @@ private fun HeapUsageGraph(
     modifier: Modifier = Modifier,
     font: FontFamily
 ) {
+    val corners = LocalMorpheCorners.current
     val mono = LocalMorpheMono.current
     val barColor = MaterialTheme.colorScheme.primary
     val warnColor = MaterialTheme.colorScheme.error
@@ -848,7 +856,7 @@ private fun HeapUsageGraph(
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(corners.medium),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
         tonalElevation = 0.dp
     ) {
@@ -950,6 +958,7 @@ private fun IoUsageGraph(
     modifier: Modifier = Modifier,
     font: FontFamily
 ) {
+    val corners = LocalMorpheCorners.current
     val mono = LocalMorpheMono.current
     val accentColor = MaterialTheme.colorScheme.secondary
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
@@ -961,7 +970,7 @@ private fun IoUsageGraph(
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(corners.medium),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
         tonalElevation = 0.dp
     ) {
@@ -1044,6 +1053,7 @@ private fun CpuUsageGraph(
     modifier: Modifier = Modifier,
     font: FontFamily
 ) {
+    val corners = LocalMorpheCorners.current
     val mono = LocalMorpheMono.current
     val accentColor = MaterialTheme.colorScheme.tertiary
     val warnColor = MaterialTheme.colorScheme.error
@@ -1053,7 +1063,7 @@ private fun CpuUsageGraph(
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(corners.medium),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
         tonalElevation = 0.dp
     ) {
@@ -1144,17 +1154,16 @@ private fun PatcherInfoCard(
     badge: String? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
     val accentColor = when (variant) {
         CardVariant.Start -> MaterialTheme.colorScheme.primary
-        CardVariant.Success -> PatcherProgressTealColor
+        CardVariant.Success -> progressGradient().second
     }
-    val bgColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
-
     Surface(
-        modifier = Modifier.fillMaxWidth().border(1.dp, accentColor.copy(alpha = 0.25f), RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        color = bgColor,
+        modifier = Modifier.fillMaxWidth().border(1.dp, accentColor.copy(alpha = 0.55f), RoundedCornerShape(corners.medium)),
+        shape = RoundedCornerShape(corners.medium),
+        color = Color.Transparent,
         tonalElevation = 0.dp
     ) {
         Column(
@@ -1177,7 +1186,7 @@ private fun PatcherInfoCard(
                 )
                 if (badge != null) {
                     Surface(
-                        shape = RoundedCornerShape(4.dp),
+                        shape = RoundedCornerShape(corners.small),
                         color = accentColor.copy(alpha = 0.18f)
                     ) {
                         Text(
@@ -1470,7 +1479,6 @@ private fun ExpertFailureContent(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(corners.medium))
                 .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -1538,7 +1546,6 @@ private fun ExpertFailureContent(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corners.medium))
                     .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                    .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
             ) {
                 Column(
                     modifier = Modifier
@@ -1638,7 +1645,6 @@ private fun ExpertFailureContent(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corners.small))
                     .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -1694,8 +1700,7 @@ private fun ExpertFailureContent(
                     .widthIn(max = 480.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corners.small))
-                    .background(accents.secondary.copy(alpha = 0.06f))
-                    .border(1.dp, accents.secondary.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(corners.small))
                     .padding(12.dp)
             ) {
                 Text(
@@ -1722,9 +1727,10 @@ private fun ExpertFailureContent(
                 modifier = Modifier.weight(1f).height(40.dp),
                 shape = RoundedCornerShape(corners.small),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.onSurface
                 ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 Text(

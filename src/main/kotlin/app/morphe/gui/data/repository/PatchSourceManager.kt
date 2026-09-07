@@ -44,11 +44,7 @@ class PatchSourceManager(
     private val _sourceVersion = MutableStateFlow(0)
     val sourceVersion: StateFlow<Int> = _sourceVersion.asStateFlow()
 
-    // Observable list of enabled sources for UI
-    private val _enabledSources = MutableStateFlow<List<PatchSource>>(emptyList())
-    val enabledSources: StateFlow<List<PatchSource>> = _enabledSources.asStateFlow()
-
-    // Observable list of ALL sources (enabled + disabled) — drives the
+    // Observable list of ALL sources (enabled + disabled). Drives the
     // SourceManagementSheet which needs to render every source with a toggle.
     private val _allSources = MutableStateFlow<List<PatchSource>>(emptyList())
     val allSources: StateFlow<List<PatchSource>> = _allSources.asStateFlow()
@@ -56,8 +52,8 @@ class PatchSourceManager(
     /**
      * Which mode's ViewModel is currently driving the UI. Used by both
      * [HomeViewModel] (EXPERT) and [QuickPatchViewModel] (QUICK) to skip
-     * patch-loading when they're not visible — both VMs can be alive
-     * simultaneously (QuickVM is `remember`-scoped to App.kt; HomeVM is
+     * patch-loading when they're not visible. Both VMs can be alive
+     * simultaneously (QuickVM is `remember`-scoped to App.kt, HomeVM is
      * created by Voyager when the Navigator branch composes), and without
      * this gate they'd race to download the same sources twice on every
      * cache clear / source toggle.
@@ -77,6 +73,7 @@ class PatchSourceManager(
      * Call once at app startup (from a LaunchedEffect).
      */
     suspend fun initialize() {
+        configRepository.migrateSourceChannelFlags()
         val source = configRepository.getActivePatchSource()
         cachedActiveSource = source
         cachedActiveRepo = getRepositoryForSource(source)
@@ -205,13 +202,6 @@ class PatchSourceManager(
     }
 
     /**
-     * Clear all cached repository instances (e.g. after source list changes).
-     */
-    fun clearAll() {
-        repositories.clear()
-    }
-
-    /**
      * Notify that cached patch files were deleted (e.g. via "Clear Cache" in settings).
      * Clears cached repo state and bumps [sourceVersion] so ViewModels reload.
      */
@@ -229,7 +219,7 @@ class PatchSourceManager(
 
     /**
      * Pair each enabled source with its [PatchRepository]. The repo is null for LOCAL
-     * sources — callers should use [PatchSource.filePath] directly in that case.
+     * sources. Callers should use [PatchSource.filePath] directly in that case.
      */
     fun getEnabledRepositories(): List<Pair<PatchSource, PatchRepository?>> =
         cachedEnabledSources.map { it to getRepositoryForSource(it) }
@@ -291,7 +281,6 @@ class PatchSourceManager(
         val all = configRepository.loadConfig().patchSource
         val enabled = all.filter { it.enabled }
         cachedEnabledSources = enabled
-        _enabledSources.value = enabled
         _allSources.value = all
     }
 }

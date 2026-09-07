@@ -5,14 +5,18 @@
 
 package app.morphe.gui.icon
 
-import androidx.compose.foundation.BorderStroke
+import app.morphe.gui.ui.components.color.MorpheGradientEditor
+import app.morphe.gui.ui.components.color.MorpheSwatchRow
+import app.morphe.gui.ui.components.MorpheChoiceChip
+import app.morphe.gui.ui.components.MorpheAdjustRow
+import app.morphe.gui.data.model.GradientType
+import app.morphe.gui.data.model.MorpheFill
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.rememberScrollState
@@ -28,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
@@ -51,12 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonVariant
-import app.morphe.gui.ui.components.MorpheColorPickerCard
 import app.morphe.gui.ui.components.MorpheDropdown
 import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.components.morpheScrollbarStyle
@@ -66,17 +66,10 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheAccentColors
 import app.morphe.gui.util.MorpheFilePicker
-import java.awt.Color.HSBtoRGB
-import java.awt.Color.RGBtoHSB
 import java.awt.GraphicsEnvironment
 import java.io.File
-import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.hypot
 import kotlin.math.roundToInt
-import kotlin.math.sin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -89,11 +82,6 @@ private val MASKS: List<Pair<String, Shape>> = listOf(
     "Squircle" to RoundedCornerShape(46),
     "Rounded" to RoundedCornerShape(28),
     "Square" to RoundedCornerShape(8),
-)
-
-private val SWATCHES = listOf(
-    0xFFFFFFFF.toInt(), 0xFF000000.toInt(), 0xFFFF0033.toInt(), 0xFF00E5FF.toInt(),
-    0xFF1DE9B6.toInt(), 0xFFFFC400.toInt(), 0xFF7C4DFF.toInt(), 0xFFFF6D00.toInt(),
 )
 
 /**
@@ -249,7 +237,7 @@ fun IconStudioDialog(
         scope.launch {
             val picked = pickImage() ?: return@launch
             val path = withContext(Dispatchers.IO) { copyIntoProject(picked) }
-            commit(project.copy(background = IconProject.Background.Image(path)))
+            commit(project.copy(background = MorpheFill.Image(path)))
         }
     }
 
@@ -284,7 +272,7 @@ fun IconStudioDialog(
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(corners.medium),
             color = MaterialTheme.colorScheme.surface,
             modifier = Modifier.width(800.dp).heightIn(max = 660.dp).padding(4.dp),
         ) {
@@ -307,7 +295,6 @@ fun IconStudioDialog(
                     // ── Previews: adaptive + monochrome side by side, mask gallery, status bar ──
                     Column(Modifier.width(previewColWidth), horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            // Adaptive icon — the full-colour result; interactive (drag the selected layer).
                             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Label("Adaptive", font)
                                 Canvas(
@@ -339,7 +326,6 @@ fun IconStudioDialog(
                                     }
                                 }
                             }
-                            // Monochrome / themed icon — Android 13+ launchers tint the foreground silhouette.
                             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Label("Monochrome", font)
                                 Canvas(Modifier.size(previewDp).clip(MASKS[selectedMask].second).background(Color(0xFF15171E))) {
@@ -612,120 +598,53 @@ private fun BackgroundControls(project: IconProject, accents: MorpheAccentColors
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Label("Background", font)
             Spacer(Modifier.weight(1f))
-            Toggle("Solid", bg is IconProject.Background.Solid, accents, font) { onChange(project.copy(background = IconProject.Background.Solid(0xFFFFFFFF.toInt()))) }
-            Toggle("Gradient", bg is IconProject.Background.Gradient, accents, font) { onChange(project.copy(background = IconProject.Background.Gradient())) }
-            Toggle("Image", bg is IconProject.Background.Image, accents, font) { onImportBg() }
-        }
-        Text("Fills the whole tile, behind the foreground", fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        when (bg) {
-            is IconProject.Background.Solid -> SwatchRow(bg.argb) { onChange(project.copy(background = IconProject.Background.Solid(it))) }
-            is IconProject.Background.Gradient -> {
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Toggle("Linear", bg.type == IconProject.GradientType.LINEAR, accents, font) { onChange(project.copy(background = bg.copy(type = IconProject.GradientType.LINEAR))) }
-                    Toggle("Radial", bg.type == IconProject.GradientType.RADIAL, accents, font) { onChange(project.copy(background = bg.copy(type = IconProject.GradientType.RADIAL))) }
-                    Toggle("Conic", bg.type == IconProject.GradientType.CONIC, accents, font) { onChange(project.copy(background = bg.copy(type = IconProject.GradientType.CONIC))) }
-                }
-                bg.stops.forEachIndexed { i, stop ->
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        ColorChip(stop.argb) { c -> onChange(project.copy(background = bg.copy(stops = bg.stops.mapIndexed { j, s -> if (j == i) s.copy(argb = c) else s }))) }
-                        Slider(value = stop.position, onValueChange = { p -> onChange(project.copy(background = bg.copy(stops = bg.stops.mapIndexed { j, s -> if (j == i) s.copy(position = p) else s }))) }, valueRange = 0f..1f, modifier = Modifier.weight(1f).height(20.dp))
-                        if (bg.stops.size > 2) SymBtn(MorpheIcons.Delete, accents) { onChange(project.copy(background = bg.copy(stops = bg.stops.filterIndexed { j, _ -> j != i }))) }
-                    }
-                }
-                Toggle("+ Stop", false, accents, font) { onChange(project.copy(background = bg.copy(stops = bg.stops + IconProject.Background.Stop(0.5f, 0xFFFFFFFF.toInt())))) }
-                if (bg.type != IconProject.GradientType.RADIAL) AdjustRow("Angle", bg.angleDeg, 0f..360f, 0, font, accents) { onChange(project.copy(background = bg.copy(angleDeg = it))) }
+            Toggle("Solid", bg is MorpheFill.Solid, accents, font) {
+                onChange(project.copy(background = MorpheFill.Solid(0xFFFFFFFF.toInt())))
             }
-            is IconProject.Background.Image -> Text("Image background set - click IMAGE to replace", fontFamily = font, fontSize = 11.sp, fontWeight = FontWeight.Normal, color = accents.primary)
-        }
-    }
-}
-
-/** A single colour swatch that opens the full picker popup, for gradient stops. */
-@Composable
-private fun ColorChip(argb: Int, onChange: (Int) -> Unit) {
-    val accents = LocalMorpheAccents.current
-    val font = LocalMorpheFont.current
-    var open by remember { mutableStateOf(false) }
-    val yOff = with(LocalDensity.current) { 26.dp.roundToPx() }
-    Box {
-        Box(Modifier.size(22.dp).clip(RoundedCornerShape(4.dp)).background(Color(argb)).border(1.dp, accents.primary.copy(alpha = 0.5f), RoundedCornerShape(4.dp)).clickable { open = true })
-        if (open) {
-            Popup(alignment = Alignment.TopStart, offset = IntOffset(0, yOff), onDismissRequest = { open = false }, properties = PopupProperties(focusable = true)) {
-                MorpheColorPickerCard(argb, accents, font, onPick = onChange)
+            Toggle("Gradient", bg is MorpheFill.Gradient, accents, font) {
+                onChange(project.copy(background = MorpheFill.Gradient()))
             }
+            Toggle("Image", bg is MorpheFill.Image, accents, font) { onImportBg() }
         }
-    }
-}
-
-@Composable
-private fun SwatchRow(selected: Int, onPick: (Int) -> Unit) {
-    val accents = LocalMorpheAccents.current
-    val font = LocalMorpheFont.current
-    var pickerOpen by remember { mutableStateOf(false) }
-    val yOff = with(LocalDensity.current) { 26.dp.roundToPx() }
-
-    @Composable
-    fun swatch(argb: Int) {
-        val isSel = selected == argb
-        Box(Modifier.size(22.dp).clip(RoundedCornerShape(4.dp)).background(Color(argb)).border(if (isSel) 2.dp else 1.dp, if (isSel) accents.primary else Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp)).clickable { onPick(argb) })
-    }
-
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        SWATCHES.forEach { swatch(it) }
-        CustomSwatches.colors.forEach { swatch(it) }
-        // Palette chip opens the full picker (wheel + hex + saved colours).
-        Box {
-            Box(
-                Modifier.size(22.dp).clip(RoundedCornerShape(4.dp)).border(1.dp, accents.primary.copy(alpha = 0.4f), RoundedCornerShape(4.dp)).clickable { pickerOpen = true },
-                contentAlignment = Alignment.Center,
-            ) { Icon(MorpheIcons.Palette, contentDescription = "Custom colour", tint = accents.primary, modifier = Modifier.size(13.dp)) }
-            if (pickerOpen) {
-                Popup(alignment = Alignment.TopStart, offset = IntOffset(0, yOff), onDismissRequest = { pickerOpen = false }, properties = PopupProperties(focusable = true)) {
-                    MorpheColorPickerCard(selected, accents, font, onPick = onPick)
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-private fun AdjustRow(label: String, value: Float, range: ClosedFloatingPointRange<Float>, decimals: Int, font: FontFamily, accents: MorpheAccentColors, onChange: (Float) -> Unit) {
-    Column {
-        Text(label, fontFamily = font, fontSize = 11.sp, fontWeight = FontWeight.Normal, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Slider(value = value, onValueChange = onChange, valueRange = range, modifier = Modifier.weight(1f).height(22.dp))
-            NumberField(value, decimals, range, font, accents, onChange)
-        }
-    }
-}
-
-@Composable
-private fun NumberField(value: Float, decimals: Int, range: ClosedFloatingPointRange<Float>, font: FontFamily, accents: MorpheAccentColors, onValue: (Float) -> Unit) {
-    val step = when (decimals) { 0 -> 1f; 1 -> 0.1f; 2 -> 0.05f; else -> 0.005f }
-    fun fmt(v: Float) = if (decimals == 0) "%.0f".format(v) else "%.${decimals}f".format(v)
-    var text by remember { mutableStateOf(fmt(value)) }
-    LaunchedEffect(value) { if (text.trim().toFloatOrNull() != value) text = fmt(value) }
-    val corners = LocalMorpheCorners.current
-    Row(Modifier.width(66.dp).height(26.dp).clip(RoundedCornerShape(corners.small)).border(1.dp, accents.primary.copy(alpha = 0.25f), RoundedCornerShape(corners.small)), verticalAlignment = Alignment.CenterVertically) {
-        BasicTextField(
-            value = text,
-            onValueChange = { text = it; it.trim().toFloatOrNull()?.let { v -> onValue(v.coerceIn(range)) } },
-            singleLine = true,
-            textStyle = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Normal, lineHeight = 12.sp, fontFamily = font, color = MaterialTheme.colorScheme.onSurface),
-            cursorBrush = SolidColor(accents.primary),
-            modifier = Modifier.weight(1f).padding(start = 6.dp),
+        Text(
+            "Fills the whole tile, behind the foreground",
+            fontFamily = font,
+            fontWeight = FontWeight.Normal,
+            fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Column(Modifier.fillMaxHeight().width(18.dp)) {
-            Box(Modifier.weight(1f).fillMaxWidth().clickable { onValue((value + step).coerceIn(range)) }, contentAlignment = Alignment.Center) {
-                Icon(MorpheIcons.ArrowDropUp, contentDescription = null, tint = accents.primary.copy(alpha = 0.8f), modifier = Modifier.size(18.dp).offset(y = 2.dp, x = (-1).dp))
+        when (bg) {
+            is MorpheFill.Accent -> Unit
+            is MorpheFill.Solid -> SwatchRow(bg.argb) {
+                onChange(project.copy(background = MorpheFill.Solid(it)))
             }
-            Box(Modifier.weight(1f).fillMaxWidth().clickable { onValue((value - step).coerceIn(range)) }, contentAlignment = Alignment.Center) {
-                Icon(MorpheIcons.ArrowDropDown, contentDescription = null, tint = accents.primary.copy(alpha = 0.8f), modifier = Modifier.size(18.dp).offset(y = (-2).dp, x = (-1).dp))
+            is MorpheFill.Gradient -> MorpheGradientEditor(bg, font) {
+                onChange(project.copy(background = it))
             }
+            is MorpheFill.Image -> Text(
+                "Image background set, click IMAGE to replace",
+                fontFamily = font,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Normal,
+                color = accents.primary,
+            )
         }
     }
 }
+
+@Composable
+private fun SwatchRow(selected: Int, onPick: (Int) -> Unit) = MorpheSwatchRow(selected, onPick = onPick)
+
+@Composable
+private fun AdjustRow(
+    label: String,
+    value: Float,
+    range: ClosedFloatingPointRange<Float>,
+    decimals: Int,
+    font: FontFamily,
+    accents: MorpheAccentColors,
+    onChange: (Float) -> Unit,
+) = MorpheAdjustRow(label = label, value = value, range = range, font = font, decimals = decimals, onChange = onChange)
 
 @Composable
 private fun TextInput(value: String, font: FontFamily, accents: MorpheAccentColors, placeholder: String = "", onValue: (String) -> Unit) {
@@ -750,12 +669,14 @@ private fun SymBtn(icon: ImageVector, accents: MorpheAccentColors, onClick: () -
 }
 
 @Composable
-private fun Toggle(text: String, active: Boolean, accents: MorpheAccentColors, font: FontFamily, dense: Boolean = false, onClick: () -> Unit) {
-    val corners = LocalMorpheCorners.current
-    Box(Modifier.clip(RoundedCornerShape(corners.small)).background(if (active) accents.primary.copy(alpha = 0.2f) else Color.Transparent).border(1.dp, accents.primary.copy(alpha = if (active) 0.6f else 0.2f), RoundedCornerShape(corners.small)).clickable(onClick = onClick).padding(horizontal = 10.dp, vertical = if (dense) 2.dp else 4.dp)) {
-        Text(text, fontFamily = font, fontSize = 11.sp, fontWeight = FontWeight.Normal, color = if (active) accents.primary else MaterialTheme.colorScheme.onSurfaceVariant)
-    }
-}
+private fun Toggle(
+    text: String,
+    active: Boolean,
+    accents: MorpheAccentColors,
+    font: FontFamily,
+    dense: Boolean = false,
+    onClick: () -> Unit,
+) = MorpheChoiceChip(text = text, active = active, font = font, dense = dense, onClick = onClick)
 
 private fun DrawScope.drawPreview(bitmap: ImageBitmap?) {
     if (bitmap == null) return
@@ -765,15 +686,16 @@ private fun DrawScope.drawPreview(bitmap: ImageBitmap?) {
 
 /**
  * A realistic status bar showing the actual monochrome notification silhouette (with the
- * clipped-slot guide) between the clock and the system icons — this is the output most
+ * clipped-slot guide) between the clock and the system icons. This is the output most
  * easily gotten wrong, mirroring how morphe-manager previews it.
  */
 @Composable
 private fun StatusBarPreview(silhouette: ImageBitmap?, font: FontFamily) {
+    val corners = LocalMorpheCorners.current
     val onSurface = MaterialTheme.colorScheme.onSurface
-    Box(Modifier.fillMaxWidth().height(40.dp).clip(RoundedCornerShape(12.dp))
+    Box(Modifier.fillMaxWidth().height(40.dp).clip(RoundedCornerShape(corners.medium))
         .background(MaterialTheme.colorScheme.surfaceVariant)
-        .border(1.dp, onSurface.copy(alpha = 0.1f), RoundedCornerShape(12.dp))
+        .border(1.dp, onSurface.copy(alpha = 0.1f), RoundedCornerShape(corners.medium))
         .padding(horizontal = 14.dp)) {
         Row(Modifier.align(Alignment.CenterStart), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             Text("9:41", fontFamily = font, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = onSurface)
@@ -790,24 +712,22 @@ private fun StatusBarPreview(silhouette: ImageBitmap?, font: FontFamily) {
     }
 }
 
-// ── Templates (starting points; the user then adds/edits layers) ──
-
 private fun templateGradient() = IconProject(
-    background = IconProject.Background.Gradient(
-        stops = listOf(IconProject.Background.Stop(0f, 0xFF00E5FF.toInt()), IconProject.Background.Stop(1f, 0xFF7C4DFF.toInt())),
-        type = IconProject.GradientType.RADIAL,
+    background = MorpheFill.Gradient(
+        stops = listOf(MorpheFill.Stop(0f, 0xFF00E5FF.toInt()), MorpheFill.Stop(1f, 0xFF7C4DFF.toInt())),
+        type = GradientType.RADIAL,
     ),
 )
 
 private fun templateBadge() = IconProject(
-    background = IconProject.Background.Solid(0xFF1DE9B6.toInt()),
+    background = MorpheFill.Solid(0xFF1DE9B6.toInt()),
     layers = listOf(IconProject.Layer(System.nanoTime().toString(), IconProject.LayerContent.Text("A", 0xFF102027.toInt(), true), scale = 0.6f)),
 )
 
 private fun templateShape() = IconProject(
-    background = IconProject.Background.Gradient(
-        stops = listOf(IconProject.Background.Stop(0f, 0xFFFF6D00.toInt()), IconProject.Background.Stop(1f, 0xFFFF0033.toInt())),
-        type = IconProject.GradientType.RADIAL,
+    background = MorpheFill.Gradient(
+        stops = listOf(MorpheFill.Stop(0f, 0xFFFF6D00.toInt()), MorpheFill.Stop(1f, 0xFFFF0033.toInt())),
+        type = GradientType.RADIAL,
     ),
     layers = listOf(IconProject.Layer(System.nanoTime().toString(), IconProject.LayerContent.Shape(IconProject.ShapeKind.CIRCLE, 0xFFFFFFFF.toInt()), scale = 0.5f)),
 )

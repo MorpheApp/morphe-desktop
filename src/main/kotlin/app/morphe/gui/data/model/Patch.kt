@@ -52,7 +52,8 @@ data class CompatiblePackage(
     val displayName: String? = null,
     val versions: List<String> = emptyList(),
     val experimentalVersions: List<String> = emptyList(),
-    val appIconColor: String? = null
+    val appIconColor: String? = null,
+    val versionBuildCodes: Map<String, Set<Int>> = emptyMap()
 )
 
 @Serializable
