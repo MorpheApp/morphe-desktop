@@ -72,8 +72,6 @@ internal fun SupportedAppsListPane(
     patchedRecords: List<PatchedAppRecord> = emptyList(),
     deviceAppInfo: Map<String, DeviceAppInfo> = emptyMap(),
     updateInfoByPackage: Map<String, RecallUpdateInfo> = emptyMap(),
-    onInstall: (String) -> Unit = {},
-    installingPackage: String? = null,
     onShowDetail: (PatchedAppRecord) -> Unit = {},
     filter: AppListFilter = AppListFilter.ALL,
     onFilterChange: (AppListFilter) -> Unit = {},
@@ -137,7 +135,7 @@ internal fun SupportedAppsListPane(
 
         // ── Filter: ALL APPS · YOUR APPS ──
         Row(
-            modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+            modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AppListFilterChips(
@@ -184,8 +182,6 @@ internal fun SupportedAppsListPane(
                 updateInfoByPackage = updateInfoByPackage,
                 appIconColorByPackage = supportedApps.associate { it.packageName to (it.appIconColor ?: "") }.filterValues { it.isNotEmpty() },
                 onShowDetail = onShowDetail,
-                onInstall = onInstall,
-                installingPackage = installingPackage,
                 paneMaxHeight = paneMaxHeight,
                 showSearch = activeCount > 4,
             )

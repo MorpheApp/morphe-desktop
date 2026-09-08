@@ -259,14 +259,14 @@ internal fun ActionButtonContent(
         Text(
             "Loading…",
             fontSize = 13.sp,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Bold,
             fontFamily = font
         )
     } else {
         Text(
             "Continue",
             fontSize = 13.sp,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Bold,
             fontFamily = font
         )
     }

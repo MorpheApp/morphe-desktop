@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.AppCard
-import app.morphe.gui.ui.components.handCursor
+import app.morphe.gui.ui.components.MorpheCardChip
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -318,48 +318,18 @@ internal fun SupportedAppsRow(
                                 )
 
                                 if (url != null) {
-                                    val pillInteraction = remember { MutableInteractionSource() }
-                                    val isPillHovered by pillInteraction.collectIsHoveredAsState()
-                                    val pillBg by animateColorAsState(
-                                        if (isPillHovered) Color.White.copy(alpha = 0.26f)
-                                        else Color.White.copy(alpha = 0.20f),
-                                        animationSpec = tween(150)
-                                    )
-
-                                    Row(
-                                        modifier = Modifier
-                                            .hoverable(pillInteraction)
-                                            .clip(RoundedCornerShape(corners.small))
-                                            .background(pillBg, RoundedCornerShape(corners.small))
-                                            .handCursor()
-                                            .clickable {
-                                                openUrlAndFollowRedirects(url) { resolved ->
-                                                    uriHandler.openUri(resolved)
-                                                }
-                                            }
-                                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    val versionToDisplay = if (isExperimental) {
+                                        app.experimentalVersions.firstOrNull()
+                                    } else {
+                                        app.recommendedVersion
+                                    }
+                                    MorpheCardChip(
+                                        text = versionToDisplay?.let { "v$it" } ?: "Download",
+                                        icon = MorpheIcons.OpenInNew,
                                     ) {
-                                        val versionToDisplay = if (isExperimental) {
-                                            app.experimentalVersions.firstOrNull()
-                                        } else {
-                                            app.recommendedVersion
+                                        openUrlAndFollowRedirects(url) { resolved ->
+                                            uriHandler.openUri(resolved)
                                         }
-                                        
-                                        Text(
-                                            text = versionToDisplay?.let { "v$it" } ?: "Download",
-                                            fontSize = 11.sp,
-                                            fontFamily = font,
-                                            color = Color.White,
-                                            fontWeight = FontWeight.Normal
-                                        )
-                                        Icon(
-                                            imageVector = MorpheIcons.OpenInNew,
-                                            contentDescription = "Download",
-                                            tint = Color.White,
-                                            modifier = Modifier.size(10.dp)
-                                        )
                                     }
                                 }
                             }

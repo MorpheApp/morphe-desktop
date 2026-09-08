@@ -34,6 +34,7 @@ import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay
@@ -70,6 +71,7 @@ fun ApkInfoCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(cardShape)
+            .background(panelFill)
             .border(1.dp, borderColor, cardShape)
     ) {
         Column(

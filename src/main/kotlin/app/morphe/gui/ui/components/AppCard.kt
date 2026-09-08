@@ -69,6 +69,12 @@ internal fun Color.onCardGradient(): Color =
 
 private const val CARD_CONTRAST_FLOOR = 0.40f
 
+private const val CHIP_INK_WHITEN = 0.8f
+
+/** Ink for chips drawn on a card fill: near-white, still carrying the accent. */
+val cardChipInk: Color
+    @Composable get() = lerp(LocalMorpheAccents.current.primary, Color.White, CHIP_INK_WHITEN)
+
 fun MorpheFill?.resolveAccent(accent: Color): MorpheFill? {
     if (this !is MorpheFill.Accent) return this
     val dark = accent.luminance() < 0.5f
@@ -102,9 +108,9 @@ private val MANAGER_MID = Color(0xFF1E5AA8)
 private val MANAGER_END = Color(0xFF00AFAE)
 private val MANAGER_BASE = Color(0xFF0E3F6E)
 
-private const val CARD_BASE_ALPHA = 0.90f
-private const val CARD_MID_ALPHA = 0.58f
-private const val CARD_END_ALPHA = 0.64f
+private const val CARD_BASE_ALPHA = 0.78f
+private const val CARD_MID_ALPHA = 0.48f
+private const val CARD_END_ALPHA = 0.54f
 
 @Composable
 internal fun defaultCardPalette(): CardPalette =

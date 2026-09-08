@@ -284,27 +284,15 @@ fun SourceManagementSheet(
 
                 Spacer(Modifier.height(2.dp))
 
-                OutlinedButton(
-                    onClick = { showAddDialog = true },
-                    enabled = enabled,
+                MorpheChoiceChip(
+                    text = "Add source",
+                    active = false,
+                    font = font,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(corners.small),
-                    border = BorderStroke(1.dp, borderColor),
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = MorpheIcons.Add,
-                        contentDescription = null,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        "Add source",
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 11.sp
-                    )
-                }
+                    icon = MorpheIcons.Add,
+                    enabled = enabled,
+                    onClick = { showAddDialog = true },
+                )
 
                 // Patch-developer extras. Sits under the sources it applies to, and
                 // renders only when Developer options are on.
@@ -569,7 +557,7 @@ private fun SourceRow(
                         fontWeight = FontWeight.Medium,
                         color = accentColor
                     )
-                    ChannelBadge(channel = channel, font = font)
+                    ChannelBadge(channel = channel)
                 } else if (isEnabled && isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(12.dp),
@@ -706,9 +694,7 @@ private fun ReorderArrow(
 @Composable
 private fun ChannelBadge(
     channel: EnabledSourcesLoader.Channel?,
-    font: FontFamily,
 ) {
-    val corners = LocalMorpheCorners.current
     val label = when (channel) {
         EnabledSourcesLoader.Channel.STABLE_LATEST -> "Latest Stable"
         EnabledSourcesLoader.Channel.STABLE_OLDER -> "Older Stable"
@@ -718,20 +704,11 @@ private fun ChannelBadge(
         else -> "Latest Stable"
     }
     val color = channelColor(channel)
-    Box(
-        modifier = Modifier
-            .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(corners.small))
-            .background(color.copy(alpha = 0.08f), RoundedCornerShape(corners.small))
-            .padding(horizontal = 5.dp, vertical = 1.dp)
-    ) {
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            fontFamily = font,
-            fontWeight = FontWeight.Medium,
-            color = color,
-        )
-    }
+    MorpheBadge(
+        text = label,
+        containerColor = color.copy(alpha = 0.12f),
+        contentColor = color,
+    )
 }
 
 /**

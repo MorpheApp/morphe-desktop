@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.screens.home.components
 
-import app.morphe.gui.ui.components.onCardGradient
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.AppCard
 import app.morphe.gui.ui.components.handCursor
@@ -29,6 +28,11 @@ import java.io.File
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -78,9 +82,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -100,16 +104,22 @@ import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
-import app.morphe.gui.ui.theme.shiftLightness
-import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.MorpheColors
+import app.morphe.gui.ui.theme.contrastingForeground
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import app.morphe.gui.ui.components.MorpheActionButtonHeight
+import app.morphe.gui.ui.components.cardChipInk
+import app.morphe.gui.ui.components.MorpheCardChip
 import app.morphe.gui.ui.components.MorpheBadge
+import app.morphe.gui.ui.components.MorpheChevron
+import app.morphe.gui.ui.components.MorpheChoiceChip
+import app.morphe.gui.ui.components.MorpheBannerText
+import app.morphe.gui.ui.components.MorpheBannerAction
+import app.morphe.gui.ui.components.MorpheBanner
 
 /** Which list the home pane is showing: all supported apps, or only patched ("yours"). */
 enum class AppListFilter { ALL, YOURS }
@@ -133,7 +143,7 @@ fun AppListFilterChips(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = modifier.padding(bottom = 6.dp),
+        modifier = modifier,
     ) {
         FilterChip(
             label = "All apps",
@@ -163,33 +173,16 @@ fun AppListFilterChips(
  */
 @Composable
 fun PatchedUpdatesBanner(count: Int, onView: () -> Unit) {
-    val font = LocalMorpheFont.current
-    val corners = LocalMorpheCorners.current
-    val hover = remember { MutableInteractionSource() }
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 12.dp, bottom = 8.dp)
-            .clip(RoundedCornerShape(corners.medium))
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .hoverable(hover)
-            .handCursor()
-            .clickable(onClick = onView)
-            .padding(horizontal = 12.dp, vertical = 9.dp),
+    MorpheBanner(
+        modifier = Modifier.padding(end = 12.dp, bottom = 8.dp),
+        icon = MorpheIcons.Refresh,
     ) {
-        Icon(MorpheIcons.Refresh, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(15.dp))
-        Text(
+        MorpheBannerText(
             text = if (count == 1) "A patch update is available for 1 app"
                    else "Patch updates are available for $count apps",
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.weight(1f),
         )
-        Text("View", fontSize = 11.sp, fontWeight = FontWeight.Normal, fontFamily = font, color = MaterialTheme.colorScheme.onPrimaryContainer)
+        MorpheBannerAction(label = "View", onClick = onView)
     }
 }
 
@@ -256,8 +249,6 @@ fun YourAppRow(
     deviceInfo: DeviceAppInfo?,
     updateInfo: RecallUpdateInfo?,
     onClick: () -> Unit,
-    onInstall: () -> Unit = {},
-    installing: Boolean = false,
     appIconColorHex: String? = null,
 ) {
     val corners = LocalMorpheCorners.current
@@ -320,7 +311,7 @@ fun YourAppRow(
                 Spacer(Modifier.width(8.dp))
                 MorpheBadge(
                     text = "Install ready",
-                    containerColor = MorpheColors.Teal,
+                    containerColor = cardChipInk,
                     onGradient = true,
                 )
             }
@@ -329,8 +320,7 @@ fun YourAppRow(
                 PatchedStateBadge(state, font)
             }
         }
-        deviceInfo?.let { DeviceLine(it, font, Color.White.copy(alpha = 0.5f), Color.White) }
-        // Patch source + version, with "→ vNew" when a newer patch file is available.
+        deviceInfo?.let { DeviceLine(it, font, Color.White.copy(alpha = 0.5f), cardChipInk) }
         updateInfo?.sources?.firstOrNull()?.let { s ->
             val more = updateInfo.sources.size - 1
             VersionBumpText(
@@ -348,7 +338,7 @@ fun YourAppRow(
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
-                color = Color(0xFFE0A030),
+                color = cardChipInk,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -378,20 +368,6 @@ fun YourAppRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-        }
-        if (deviceInfo?.installPending == true) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(top = 2.dp),
-            ) {
-                DetailActionPill(
-                    if (installing) "Installing…" else "Install",
-                    MorpheIcons.Download,
-                    accents.secondary, font, corners.small,
-                    onGradient = true,
-                    onClick = if (installing) ({}) else onInstall,
-                )
-            }
         }
     }
 }
@@ -579,7 +555,7 @@ fun PatchedAppDetailDialog(
                             previousVersion = apkPrevious,
                             sub = File(selectedApkPath).name,
                             expanded = apkExpanded,
-                            accent = accents.secondary,
+                            accent = accents.primary,
                             font = font,
                             warning = apkNeedsAttention,
                             onToggle = { apkExpanded = !apkExpanded },
@@ -647,6 +623,7 @@ fun PatchedAppDetailDialog(
                                     sourceName = src.name,
                                     enabled = src.enabled,
                                     resolvedVersion = active?.resolvedVersion,
+                                    sourceUrl = allSources.firstOrNull { it.name == src.name }?.url,
                                     availableVersions = bundleVersionsBySource[src.name],
                                     choice = bundleChoices[src.name],
                                     font = font,
@@ -671,7 +648,7 @@ fun PatchedAppDetailDialog(
                         ActionBar(
                             label = if (installing) "Installing…" else "Install to device",
                             icon = MorpheIcons.Download,
-                            color = app.morphe.gui.ui.theme.MorpheColors.Teal,
+                            color = accents.primary,
                             font = font,
                             corner = corners.small,
                             filled = true,
@@ -702,7 +679,7 @@ fun PatchedAppDetailDialog(
                             else -> "Repatch"
                         },
                         icon = null,
-                        color = if (hasUpdate) app.morphe.gui.ui.theme.MorpheColors.Blue else accents.primary,
+                        color = accents.primary,
                         font = font,
                         corner = corners.small,
                         filled = !installPending,
@@ -734,13 +711,13 @@ fun PatchedAppDetailDialog(
                 var patchSearch by remember { mutableStateOf("") }
                 DisclosureHeader(
                     label = "Details",
-                    color = accents.secondary,
+                    color = accents.primary,
                     font = font,
                     corner = corners.small,
                     expanded = detailsExpanded,
                     onToggle = { detailsExpanded = !detailsExpanded },
                 )
-                if (detailsExpanded) {
+                AnimatedVisibility(visible = detailsExpanded, enter = DisclosureEnter, exit = DisclosureExit) {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -751,7 +728,7 @@ fun PatchedAppDetailDialog(
                         "App version",
                         buildString {
                             append("v${record.apkVersion.removePrefix("v")}")
-                            record.apkVersionCode?.let { append(" (${'$'}it)") }
+                            record.apkVersionCode?.let { append(" ($it)") }
                         },
                         font,
                     )
@@ -763,6 +740,7 @@ fun PatchedAppDetailDialog(
                 record.outputApkSha256?.let { CopyableStat("SHA-256", it, font, corners.small) }
                 CopyableStat("Output path", record.outputApkPath, font, corners.small)
                 }
+                }
                 DisclosureHeader(
                     label = "Patches applied",
                     color = accents.primary,
@@ -772,7 +750,7 @@ fun PatchedAppDetailDialog(
                     trailing = "$patchCount",
                     onToggle = { patchesExpanded = !patchesExpanded },
                 )
-                if (patchesExpanded) {
+                AnimatedVisibility(visible = patchesExpanded, enter = DisclosureEnter, exit = DisclosureExit) {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -830,10 +808,11 @@ fun PatchedAppDetailDialog(
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, top = 6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(start = 8.dp, end = 20.dp, top = 6.dp, bottom = 12.dp),
                 ) {
                     DetailActionPill(
-                        "Folder", MorpheIcons.OpenInNew, accents.secondary, font, corners.small,
+                        "Folder", MorpheIcons.OpenInNew, accents.primary, font, corners.small,
                         modifier = Modifier.weight(1f), onClick = onOpenFolder,
                     )
                     DetailActionPill(
@@ -851,7 +830,6 @@ fun PatchedAppDetailDialog(
                         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f), font, corners.small,
                         modifier = Modifier.weight(1f),
                     ) { onDismiss(); onForget() }
-                }
                 }
                 }
         }
@@ -925,11 +903,11 @@ private fun IdentityBand(
             }
             if (state != PatchedAppState.NEVER_PATCHED) {
                 Spacer(Modifier.width(10.dp))
-                PatchedStateBadge(state, font)
+                PatchedStateBadge(state, font, onGradient = false)
             }
         }
         deviceInfo?.let {
-            DeviceLine(it, font, MaterialTheme.colorScheme.onSurfaceVariant, MorpheColors.Teal)
+            DeviceLine(it, font, MaterialTheme.colorScheme.onSurfaceVariant, accents.primary)
         }
         val advice = updateInfo?.let { appAdvice(it) }
         if (advice != null) {
@@ -1056,7 +1034,7 @@ private fun AssemblyRow(
             }
             Chevron(expanded, accent)
         }
-        if (expanded) {
+        AnimatedVisibility(visible = expanded, enter = DisclosureEnter, exit = DisclosureExit) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 6.dp, bottom = 12.dp),
@@ -1067,15 +1045,8 @@ private fun AssemblyRow(
 }
 
 @Composable
-private fun Chevron(expanded: Boolean, color: Color, alpha: Float = 0.7f) {
-    Text(
-        text = if (expanded) "▾" else "▸",
-        fontSize = 15.sp,
-        fontWeight = FontWeight.Bold,
-        fontFamily = LocalMorpheFont.current,
-        color = color.copy(alpha = alpha),
-    )
-}
+private fun Chevron(expanded: Boolean, color: Color, alpha: Float = 0.7f) =
+    MorpheChevron(expanded = expanded, tint = color.copy(alpha = alpha))
 
 @Composable
 private fun ActionBar(
@@ -1095,21 +1066,23 @@ private fun ActionBar(
     val running = progress != null
     val contentColor = when {
         running -> MaterialTheme.colorScheme.onSurface
-        filled -> if (color.luminance() > 0.45f) Color(0xFF10141A) else Color.White
+        filled -> color.contrastingForeground()
         else -> color
     }
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = if (filled) 46.dp else 38.dp)
+            .heightIn(min = if (filled) MorpheActionButtonHeight else 38.dp)
             .clip(shape)
             .then(
                 when {
                     running -> Modifier.background(color.copy(alpha = 0.14f))
-                    filled -> Modifier.background(color.copy(alpha = if (isHovered) 1f else 0.9f))
+                    filled -> Modifier
+                        .border(1.dp, color, shape)
+                        .background(if (isHovered) lerp(color, color.contrastingForeground(), 0.08f) else color)
                     else -> Modifier
-                        .border(1.dp, color.copy(alpha = if (isHovered) 0.55f else 0.3f), shape)
-                        .background(color.copy(alpha = if (isHovered) 0.12f else 0.06f))
+                        .border(1.dp, color.copy(alpha = if (isHovered) 0.4f else 0.2f), shape)
+                        .background(color.copy(alpha = if (isHovered) 0.08f else 0f))
                 }
             )
             .hoverable(hover)
@@ -1160,18 +1133,24 @@ private fun ActionBar(
                 contentAlignment = Alignment.Center,
             ) { lines() }
 
-            sublabels.isEmpty() -> Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(horizontal = 12.dp),
-            ) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier.size(if (filled) 16.dp else 13.dp),
-                )
-                title()
+            sublabels.isEmpty() -> {
+                val iconSize = if (filled) 16.dp else 13.dp
+                val iconGap = 8.dp
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                ) {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(iconSize),
+                    )
+                    Spacer(Modifier.width(iconGap))
+                    title()
+                    Spacer(Modifier.width(iconSize + iconGap))
+                }
             }
 
             else -> {
@@ -1196,6 +1175,12 @@ private fun ActionBar(
         }
     }
 }
+
+private val DisclosureEnter = expandVertically(animationSpec = tween(220), expandFrom = Alignment.Top) +
+        fadeIn(animationSpec = tween(180))
+
+private val DisclosureExit = shrinkVertically(animationSpec = tween(180), shrinkTowards = Alignment.Top) +
+        fadeOut(animationSpec = tween(120))
 
 @Composable
 private fun DisclosureHeader(
@@ -1351,15 +1336,16 @@ private fun PatchSearchField(
     )
 }
 
-/** "↑ …" advice line. recommended = amber (take it), optional = blue (your call). */
+/** "↑ …" advice line. recommended = warning tone, optional = accent. */
 @Composable
 private fun UpdateHint(text: String, font: FontFamily, recommended: Boolean = false) {
+    val accents = LocalMorpheAccents.current
     Text(
         text = "↑ $text",
         fontSize = 11.sp,
         fontWeight = FontWeight.Normal,
         fontFamily = font,
-        color = if (recommended) Color(0xFFE0A030) else MorpheColors.Blue,
+        color = if (recommended) accents.warning else accents.primary,
         lineHeight = 14.sp,
         modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
     )
@@ -1445,44 +1431,17 @@ private fun DetailActionPill(
     corner: androidx.compose.ui.unit.Dp,
     modifier: Modifier = Modifier,
     progress: Float? = null,
-    onGradient: Boolean = false,
     onClick: () -> Unit,
-) {
-    val hover = remember { MutableInteractionSource() }
-    val isHovered by hover.collectIsHoveredAsState()
-    val shape = RoundedCornerShape(corner)
-    val pillColor = if (onGradient) color.onCardGradient() else color
-    val pillInk = pillColor.contrastingForeground()
-    Box(
-        modifier = modifier
-            .clip(shape)
-            .background(if (isHovered) pillColor.shiftLightness(0.08f) else pillColor)
-            .hoverable(hover)
-            .handCursor()
-            .clickable(onClick = onClick),
-    ) {
-        if (progress != null) {
-            Box(Modifier.matchParentSize()) {
-                Box(
-                    Modifier
-                        .fillMaxWidth(progress.coerceIn(0f, 1f))
-                        .fillMaxHeight()
-                        .background(color.copy(alpha = 0.3f)),
-                )
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-        ) {
-            icon?.let {
-                Icon(it, contentDescription = null, tint = pillInk, modifier = Modifier.size(13.dp))
-            }
-            Text(label, fontSize = 11.sp, fontWeight = FontWeight.Medium, fontFamily = font, color = pillInk)
-        }
-    }
-}
+) = MorpheChoiceChip(
+    text = label,
+    active = false,
+    font = font,
+    modifier = modifier,
+    icon = icon,
+    accent = color,
+    progress = progress,
+    onClick = onClick,
+)
 
 @Composable
 private fun ApkSourceSection(
@@ -1554,7 +1513,7 @@ private fun ApkSourceSection(
                         append("⚠  ")
                     }
                     withStyle(SpanStyle(color = muted)) { append("Versions below are what ") }
-                    withStyle(SpanStyle(color = accents.secondary, fontWeight = FontWeight.Bold)) {
+                    withStyle(SpanStyle(color = accents.primary, fontWeight = FontWeight.Bold)) {
                         append(loadedLabel)
                     }
                     withStyle(SpanStyle(color = muted)) { append(" supports. You picked ") }
@@ -1572,7 +1531,7 @@ private fun ApkSourceSection(
             DetailActionPill(
                 if (downloadProgress != null) "Downloading  ${(downloadProgress * 100).toInt()}%"
                 else if (missing.size > 1) "Download ${missing.size} bundles" else "Download bundle",
-                MorpheIcons.Download, accents.warning, font, corner,
+                MorpheIcons.Download, accents.primary, font, corner,
                 progress = downloadProgress,
                 onClick = if (downloadProgress != null) ({}) else onDownloadMissing,
             )
@@ -1622,7 +1581,7 @@ private fun ApkSourceSection(
 
     if (app != null) {
         if (app.supportedVersions.isNotEmpty()) {
-            SectionLabel(text = "Stable", font = font, color = accents.secondary)
+            SectionLabel(text = "Stable", font = font, color = accents.primary)
             @OptIn(ExperimentalLayoutApi::class)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -1630,12 +1589,11 @@ private fun ApkSourceSection(
             ) {
                 app.supportedVersions.forEach { v ->
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
-                    Pill(
+                    MorpheCardChip(
                         text = v,
-                        color = accents.secondary,
-                        font = font,
-                        cornerSmall = corner,
-                        onClick = url?.let { { uriHandler.openUri(it) } },
+                        icon = if (url != null) MorpheIcons.OpenInNew else null,
+                        onCard = false,
+                        onClick = { url?.let { u -> uriHandler.openUri(u) } },
                     )
                 }
             }
@@ -1649,12 +1607,11 @@ private fun ApkSourceSection(
             ) {
                 app.experimentalVersions.forEach { v ->
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
-                    Pill(
+                    MorpheCardChip(
                         text = v,
-                        color = accents.warning,
-                        font = font,
-                        cornerSmall = corner,
-                        onClick = url?.let { { uriHandler.openUri(it) } },
+                        icon = if (url != null) MorpheIcons.OpenInNew else null,
+                        onCard = false,
+                        onClick = { url?.let { u -> uriHandler.openUri(u) } },
                     )
                 }
             }
@@ -1662,8 +1619,9 @@ private fun ApkSourceSection(
     }
 
     DetailActionPill(
-        if (recordedExists) "Choose a different APK…" else "Choose an APK…",
-        MorpheIcons.FolderOpen, accents.secondary, font, corner,
+        "Choose APK",
+        MorpheIcons.FolderOpen, accents.primary, font, corner,
+        modifier = Modifier.fillMaxWidth(),
     ) {
         val fd = FileDialog(null as Frame?, "Select an APK to patch", FileDialog.LOAD)
         fd.isVisible = true
@@ -1681,10 +1639,16 @@ private fun AddSourceControl(
 ) {
     val accents = LocalMorpheAccents.current
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
-        DetailActionPill("New source…", MorpheIcons.Add, accents.primary, font, corner) {
+        DetailActionPill(
+            "New source", MorpheIcons.Add, accents.primary, font, corner,
+            modifier = Modifier.weight(1f),
+        ) {
             onAddSource()
         }
-        DetailActionPill("Local .mpp…", MorpheIcons.FolderOpen, accents.secondary, font, corner) {
+        DetailActionPill(
+            "Local .mpp", MorpheIcons.FolderOpen, accents.primary, font, corner,
+            modifier = Modifier.weight(1f),
+        ) {
             val fd = FileDialog(null as Frame?, "Select a patch bundle", FileDialog.LOAD)
             fd.isVisible = true
             val picked = fd.file?.let { File(fd.directory, it) }
@@ -1693,9 +1657,15 @@ private fun AddSourceControl(
     }
 }
 
+/** GitLab nests releases under `/-/`, GitHub does not. */
+private fun releaseUrl(sourceUrl: String, tag: String): String =
+    if (sourceUrl.contains("gitlab", ignoreCase = true)) "$sourceUrl/-/releases/$tag"
+    else "$sourceUrl/releases/tag/$tag"
+
 @Composable
 private fun PatchSourceSection(
     sourceName: String,
+    sourceUrl: String?,
     enabled: Boolean,
     resolvedVersion: String?,
     availableVersions: List<BundleRelease>?,
@@ -1706,12 +1676,15 @@ private fun PatchSourceSection(
     onSetEnabled: (Boolean) -> Unit,
 ) {
     val accents = LocalMorpheAccents.current
+    val uriHandler = LocalUriHandler.current
     val dim = if (enabled) 1f else 0.38f
     var expanded by remember(sourceName) { mutableStateOf(false) }
+    val using = (choice as? BundleChoice.Version)?.tag ?: resolvedVersion
 
     val cardHover = remember { MutableInteractionSource() }
+    val open = enabled && expanded
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(if (open) 8.dp else 0.dp),
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(corner))
@@ -1728,24 +1701,86 @@ private fun PatchSourceSection(
                     .clickable { expanded = !expanded }
                 else Modifier
             )
-            .padding(10.dp),
+            .padding(horizontal = 10.dp, vertical = if (open) 10.dp else 4.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth(),
         ) {
-            if (enabled) Chevron(expanded, accents.secondary)
-            Text(
-                text = sourceName,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
-                color = accents.secondary.copy(alpha = dim),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+            if (enabled) Chevron(expanded, accents.primary)
+            Column(
                 modifier = Modifier.weight(1f),
-            )
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                Text(
+                    text = sourceName,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = font,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = dim),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                AnimatedVisibility(visible = enabled, enter = DisclosureEnter, exit = DisclosureExit) {
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Text(
+                            text = "Using",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = font,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                        )
+                        Text(
+                            text = using?.let { "v${it.removePrefix("v")}" } ?: "latest available",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = font,
+                            color = accents.primary,
+                        )
+                        if (choice != null) {
+                            val clearHover = remember { MutableInteractionSource() }
+                            val clearHovered by clearHover.collectIsHoveredAsState()
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(corner))
+                                    .border(
+                                        1.dp,
+                                        accents.warning.copy(alpha = if (clearHovered) 0.6f else 0.3f),
+                                        RoundedCornerShape(corner),
+                                    )
+                                    .background(accents.warning.copy(alpha = if (clearHovered) 0.14f else 0.06f))
+                                    .hoverable(clearHover)
+                                    .handCursor()
+                                    .clickable { onChoose(null) }
+                                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                            ) {
+                                Icon(
+                                    MorpheIcons.Clear,
+                                    contentDescription = null,
+                                    tint = accents.warning,
+                                    modifier = Modifier.size(9.dp),
+                                )
+                                Text(
+                                    text = "Pinned",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = font,
+                                    color = accents.warning,
+                                )
+                            }
+                        }
+                    }
+
+                }
+            }
             MorpheSwitch(
                 checked = enabled,
                 onCheckedChange = onSetEnabled,
@@ -1753,113 +1788,60 @@ private fun PatchSourceSection(
             )
         }
 
-        if (!enabled) return@Column
+        AnimatedVisibility(visible = expanded, enter = DisclosureEnter, exit = DisclosureExit) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
 
-        val using = (choice as? BundleChoice.Version)?.tag ?: resolvedVersion
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            Text(
-                text = "Using",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Medium,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
-            )
-            Text(
-                text = using?.let { "v${it.removePrefix("v")}" } ?: "latest available",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = font,
-                color = accents.primary,
-            )
-            if (choice != null) {
-                val clearHover = remember { MutableInteractionSource() }
-                val clearHovered by clearHover.collectIsHoveredAsState()
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(corner))
-                        .border(
-                            1.dp,
-                            accents.warning.copy(alpha = if (clearHovered) 0.6f else 0.3f),
-                            RoundedCornerShape(corner),
-                        )
-                        .background(accents.warning.copy(alpha = if (clearHovered) 0.14f else 0.06f))
-                        .hoverable(clearHover)
-                        .handCursor()
-                        .clickable { onChoose(null) }
-                        .padding(horizontal = 6.dp, vertical = 2.dp),
-                ) {
-                    Icon(
-                        MorpheIcons.Clear,
-                        contentDescription = null,
-                        tint = accents.warning,
-                        modifier = Modifier.size(9.dp),
-                    )
-                    Text(
-                        text = "Pinned",
+                when {
+                    availableVersions == null -> Text(
+                        text = "Loading versions…",
                         fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium,
                         fontFamily = font,
-                        color = accents.warning,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     )
-                }
-            }
-        }
-
-        if (!expanded) return@Column
-
-        when {
-            availableVersions == null -> Text(
-                text = "Loading versions…",
-                fontSize = 10.sp,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-            )
-            availableVersions.isEmpty() -> Text(
-                text = "No other versions available",
-                fontSize = 10.sp,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-            )
-            else -> {
-                listOf(
-                    "Stable" to accents.secondary,
-                    "Dev" to accents.warning,
-                ).forEach { (label, color) ->
-                    val group = availableVersions.filter { it.isDev == (label == "Dev") }
-                    if (group.isEmpty()) return@forEach
-                    SectionLabel(text = label, font = font, color = color)
-                    @OptIn(ExperimentalLayoutApi::class)
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        group.forEach { release ->
-                            val isUsing = using == release.tag
-                            Pill(
-                                text = release.tag,
-                                color = if (isUsing) accents.primary else color,
-                                font = font,
-                                cornerSmall = corner,
-                                backgroundAlpha = if (isUsing) 0.20f else 0.06f,
-                                onClick = {
-                                    onChoose(
-                                        if (release.tag == resolvedVersion) null
-                                        else BundleChoice.Version(release.tag)
+                    availableVersions.isEmpty() -> Text(
+                        text = "No other versions available",
+                        fontSize = 10.sp,
+                        fontFamily = font,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    )
+                    else -> {
+                        listOf(
+                            "Stable" to accents.primary,
+                            "Dev" to accents.warning,
+                        ).forEach { (label, color) ->
+                            val group = availableVersions.filter { it.isDev == (label == "Dev") }
+                            if (group.isEmpty()) return@forEach
+                            SectionLabel(text = label, font = font, color = color)
+                            @OptIn(ExperimentalLayoutApi::class)
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                group.forEach { release ->
+                                    val isUsing = using == release.tag
+                                    MorpheCardChip(
+                                        text = release.tag,
+                                        icon = if (sourceUrl != null) MorpheIcons.OpenInNew else null,
+                                        onCard = false,
+                                        onIconClick = sourceUrl?.let {
+                                            { uriHandler.openUri(releaseUrl(it, release.tag)) }
+                                        },
+                                        onClick = {
+                                            onChoose(
+                                                if (release.tag == resolvedVersion) null
+                                                else BundleChoice.Version(release.tag)
+                                            )
+                                        },
                                     )
-                                },
-                            )
+                                }
+                            }
                         }
                     }
-                }
+            }
             }
         }
-    }
-}
+            }
+        }
 
 @Composable
 private fun ChoiceRow(
@@ -1979,8 +1961,6 @@ internal fun YourAppsListBody(
     updateInfoByPackage: Map<String, RecallUpdateInfo>,
     appIconColorByPackage: Map<String, String>,
     onShowDetail: (PatchedAppRecord) -> Unit,
-    onInstall: (String) -> Unit,
-    installingPackage: String?,
     paneMaxHeight: Dp,
     showSearch: Boolean,
 ) {
@@ -2016,8 +1996,6 @@ internal fun YourAppsListBody(
                             deviceInfo = deviceAppInfo[record.packageName],
                             updateInfo = updateInfoByPackage[record.packageName],
                             onClick = { onShowDetail(record) },
-                            onInstall = { onInstall(record.packageName) },
-                            installing = installingPackage == record.packageName,
                             appIconColorHex = appIconColorByPackage[record.packageName],
                         )
                     }

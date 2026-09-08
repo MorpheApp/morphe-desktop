@@ -61,7 +61,7 @@ private val MorpheFill?.mode: FillMode
 
 @Composable
 fun AppCardFillDialog(
-    appName: String,
+    appName: String?,
     appIconColorHex: String?,
     initialFill: MorpheFill?,
     onDismiss: () -> Unit,
@@ -84,13 +84,15 @@ fun AppCardFillDialog(
                     fontFamily = font,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
-                Text(
-                    text = appName,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                if (appName != null) {
+                    Text(
+                        text = appName,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = font,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         },
         text = {
@@ -105,7 +107,7 @@ fun AppCardFillDialog(
                     interactive = false,
                 ) {
                     Text(
-                        text = appName,
+                        text = appName ?: "Example App Name",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font,

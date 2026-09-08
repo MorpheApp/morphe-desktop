@@ -5,10 +5,6 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -19,13 +15,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -44,6 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 
@@ -54,6 +48,8 @@ object MorpheBannerDefaults {
 }
 
 enum class MorpheBannerTone { Info, Error }
+
+private const val BANNER_TINT = 0.22f
 
 /** Compose only when a banner will show, or its top padding leaves a gap. */
 @Composable
@@ -80,14 +76,11 @@ fun MorpheBanner(
     content: @Composable RowScope.() -> Unit,
 ) {
     val corners = LocalMorpheCorners.current
-    val container = when (tone) {
-        MorpheBannerTone.Info -> MaterialTheme.colorScheme.secondaryContainer
-        MorpheBannerTone.Error -> MaterialTheme.colorScheme.errorContainer
-    }
     val onContainer = when (tone) {
-        MorpheBannerTone.Info -> MaterialTheme.colorScheme.onSecondaryContainer
-        MorpheBannerTone.Error -> MaterialTheme.colorScheme.onErrorContainer
+        MorpheBannerTone.Info -> LocalMorpheAccents.current.primary
+        MorpheBannerTone.Error -> MaterialTheme.colorScheme.error
     }
+    val container = onContainer.copy(alpha = BANNER_TINT)
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = container,
@@ -96,7 +89,7 @@ fun MorpheBanner(
     ) {
         Row(
             modifier = Modifier
-                .heightIn(min = 36.dp)
+                .heightIn(min = 42.dp)
                 .padding(start = 12.dp, end = 6.dp, top = 5.dp, bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -137,56 +130,15 @@ fun MorpheBannerAction(
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     hoverAccent: Color? = null,
-) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val base = LocalContentColor.current
-    val accent = hoverAccent ?: base
-    val hover = remember { MutableInteractionSource() }
-    val isHovered by hover.collectIsHoveredAsState()
-    val shape = RoundedCornerShape(corners.small)
-
-    val borderColor by animateColorAsState(
-        if (isHovered) accent.copy(alpha = 0.6f) else base.copy(alpha = 0.25f),
-        animationSpec = tween(150),
-        label = "bannerActionBorder",
-    )
-    val contentColor by animateColorAsState(
-        if (isHovered) accent else base.copy(alpha = 0.8f),
-        animationSpec = tween(150),
-        label = "bannerActionContent",
-    )
-
-    Box(
-        modifier = modifier
-            .height(24.dp)
-            .hoverable(hover)
-            .clip(shape)
-            .border(BorderStroke(1.dp, borderColor), shape)
-            .handCursor()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier.size(12.dp),
-                )
-                Spacer(Modifier.width(4.dp))
-            }
-            Text(
-                text = label,
-                fontSize = MorpheBannerDefaults.TextSize,
-                fontFamily = font,
-                color = contentColor,
-            )
-        }
-    }
-}
+) = MorpheChoiceChip(
+    text = label,
+    active = false,
+    font = LocalMorpheFont.current,
+    modifier = modifier,
+    icon = icon,
+    accent = hoverAccent ?: LocalContentColor.current,
+    onClick = onClick,
+)
 
 @Composable
 fun MorpheBannerDismiss(

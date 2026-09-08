@@ -124,14 +124,14 @@ internal fun PatchingContent(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .clip(RoundedCornerShape(corners.small))
-                        .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f))
+                        .background(accents.primary.copy(alpha = 0.14f))
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Info,
                         contentDescription = null,
                         modifier = Modifier.size(14.dp),
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        tint = accents.primary
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
@@ -139,7 +139,7 @@ internal fun PatchingContent(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = accents.primary
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))

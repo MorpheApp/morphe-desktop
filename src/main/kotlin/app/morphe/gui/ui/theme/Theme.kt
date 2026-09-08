@@ -9,6 +9,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -96,16 +97,36 @@ val LocalMorpheCorners = compositionLocalOf { MorpheCornerStyle() }
  *
  * - [controlHeight]: standard interactive height (buttons, text fields, pills,
  *   search bars). Matches the height of OPEN LOGS / OPEN APP DATA action buttons.
+ * - [chipHeight]: badges and small chips. MUST stay above twice corners.small,
+ *   or the radius clamps to half the height and the chip renders as a capsule
+ *   instead of picking up the rounded-rectangle corner the buttons have.
  * - [iconInControl]: icon size used inside controlHeight-sized affordances.
  * - [controlHorizontalPadding]: standard horizontal padding inside a control.
  */
 data class MorpheDimens(
     val controlHeight: Dp = 36.dp,
+    val chipHeight: Dp = 28.dp,
     val iconInControl: Dp = 14.dp,
     val controlHorizontalPadding: Dp = 12.dp,
 )
 
 val LocalMorpheDimens = compositionLocalOf { MorpheDimens() }
+
+/**
+ * Fill for panels that sit over the animated background. Opaque, because motion
+ * behind a panel reads through even a few percent of translucency.
+ */
+val panelFill: Color
+    @Composable get() = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+
+/**
+ * Scrim for a screen whose content is dense text. The animated background still
+ * reads through it, but not enough to bleed into what is on top.
+ */
+val screenScrim: Color
+    @Composable get() = MaterialTheme.colorScheme.background.copy(alpha = SCREEN_SCRIM_ALPHA)
+
+private const val SCREEN_SCRIM_ALPHA = 0.72f
 
 private val SharpCorners = MorpheCornerStyle(small = 2.dp, medium = 2.dp, large = 2.dp)
 
@@ -126,6 +147,8 @@ private val MorpheDarkColorScheme = darkColorScheme(
     onSecondaryContainer = Color(0xFFD8E3F8),
     tertiary = Color(0xFFD9BDE3),
     onTertiary = Color(0xFF3D2946),
+    tertiaryContainer = Color(0xFF543F5E),
+    onTertiaryContainer = Color(0xFFF6D9FF),
     background = Color(0xFF1A1C1E),
     onBackground = Color(0xFFE3E2E6),
     surface = Color(0xFF1A1C1E),
@@ -155,6 +178,8 @@ private val MorpheLightColorScheme = lightColorScheme(
     onSecondaryContainer = Color(0xFF111C2B),
     tertiary = Color(0xFF6D5677),
     onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFF6D9FF),
+    onTertiaryContainer = Color(0xFF271430),
     background = Color(0xFFFDFCFF),
     onBackground = Color(0xFF1A1C1E),
     surface = Color(0xFFFDFCFF),

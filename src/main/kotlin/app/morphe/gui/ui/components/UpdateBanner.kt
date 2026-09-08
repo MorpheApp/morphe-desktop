@@ -51,7 +51,6 @@ fun UpdateBanner(
         )
         MorpheBannerAction(
             label = "Later",
-            hoverAccent = MaterialTheme.colorScheme.tertiary,
             onClick = onDismissForSession,
         )
         MorpheBannerAction(

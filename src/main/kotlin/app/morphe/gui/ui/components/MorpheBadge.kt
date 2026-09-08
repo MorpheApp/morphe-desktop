@@ -8,11 +8,13 @@ package app.morphe.gui.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.contrastingForeground
 
@@ -70,12 +73,14 @@ fun MorpheBadge(
                 if (onGradient) Modifier
                 else Modifier.border(1.dp, contentColor.copy(alpha = 0.25f), corner)
             )
-            .padding(horizontal = 6.dp, vertical = 2.dp)
+            .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
+            .padding(horizontal = 8.dp, vertical = 2.dp)
             .clearAndSetSemantics { },
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text,
-            fontSize = 10.sp,
+            fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             fontFamily = LocalMorpheFont.current,
             color = ink,

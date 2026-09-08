@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.gui.data.model.PatchConfig
+import app.morphe.gui.ui.components.MorphePanel
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -60,6 +61,8 @@ import app.morphe.gui.util.Logger
 import app.morphe.gui.util.rememberZenoProgress
 import app.morphe.gui.ui.theme.desktopScreenEnter
 import app.morphe.gui.ui.theme.desktopScreenExit
+import app.morphe.gui.ui.theme.panelFill
+import app.morphe.gui.ui.theme.screenScrim
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -126,6 +129,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(screenScrim)
         ) {
             // Header row
         Row(
@@ -271,6 +275,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                                 .weight(1f)
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(corners.medium))
+                                .background(panelFill)
                                 .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
                         ) {
                             Column(
@@ -377,7 +382,9 @@ private fun FailureBottomBar(
                     strokeWidth = 1f
                 )
             }
-            .background(statusColor.copy(alpha = 0.08f))
+            .background(
+                lerp(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp), statusColor, 0.08f)
+            )
             .padding(14.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -825,7 +832,13 @@ private fun ExpertLinearProgressBar(progress: Float) {
             .fillMaxWidth()
             .height(10.dp)
             .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
-            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
+            .background(
+                lerp(
+                    MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                    MaterialTheme.colorScheme.onSurface,
+                    0.1f,
+                )
+            )
     ) {
         Box(
             modifier = Modifier
@@ -854,12 +867,7 @@ private fun HeapUsageGraph(
     val warnColor = MaterialTheme.colorScheme.error
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(corners.medium),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        tonalElevation = 0.dp
-    ) {
+    MorphePanel(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -968,12 +976,7 @@ private fun IoUsageGraph(
         if (kbPerSec >= 1024) "%.1f MB/s".format(kbPerSec / 1024f) else "$kbPerSec KB/s"
     }
 
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(corners.medium),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        tonalElevation = 0.dp
-    ) {
+    MorphePanel(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1061,12 +1064,7 @@ private fun CpuUsageGraph(
 
     val average = if (coreLoads.isNotEmpty()) coreLoads.average().toInt() else 0
 
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(corners.medium),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        tonalElevation = 0.dp
-    ) {
+    MorphePanel(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1163,7 +1161,7 @@ private fun PatcherInfoCard(
     Surface(
         modifier = Modifier.fillMaxWidth().border(1.dp, accentColor.copy(alpha = 0.55f), RoundedCornerShape(corners.medium)),
         shape = RoundedCornerShape(corners.medium),
-        color = Color.Transparent,
+        color = panelFill,
         tonalElevation = 0.dp
     ) {
         Column(
@@ -1478,6 +1476,7 @@ private fun ExpertFailureContent(
                 .widthIn(max = 480.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(corners.medium))
+                .background(panelFill)
                 .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
         ) {
             Column(
@@ -1545,6 +1544,7 @@ private fun ExpertFailureContent(
                     .widthIn(max = 480.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corners.medium))
+                    .background(panelFill)
                     .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
             ) {
                 Column(
@@ -1644,6 +1644,7 @@ private fun ExpertFailureContent(
                     .widthIn(max = 480.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corners.small))
+                    .background(panelFill)
                     .border(1.dp, borderColor, RoundedCornerShape(corners.small))
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -1700,6 +1701,7 @@ private fun ExpertFailureContent(
                     .widthIn(max = 480.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corners.small))
+                    .background(panelFill)
                     .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(corners.small))
                     .padding(12.dp)
             ) {

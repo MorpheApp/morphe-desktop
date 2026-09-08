@@ -14,14 +14,9 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -39,20 +33,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.components.onCardGradient
+import app.morphe.gui.ui.components.MorpheBadge
+import app.morphe.gui.ui.components.MorpheBadgeTone
+import app.morphe.gui.ui.components.cardChipInk
+import app.morphe.gui.ui.components.MorpheCardChip
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.AppCard
-import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
-import app.morphe.gui.ui.theme.shiftLightness
-import app.morphe.gui.ui.theme.contrastingForeground
-import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.MorpheAccentColors
 import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
 
 /**
@@ -79,8 +71,8 @@ fun SupportedAppListRow(
     modifier: Modifier = Modifier,
 ) {
     val corners = LocalMorpheCorners.current
+    val chipInk = cardChipInk
     val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
 
     val initial = app.displayName.firstOrNull()?.uppercase() ?: "?"
     val hasExperimental = app.experimentalVersions.isNotEmpty()
@@ -154,27 +146,11 @@ fun SupportedAppListRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            VersionChip(
-                channelLabel = "Latest Stable",
-                version = app.recommendedVersion,
-                color = accents.secondary,
-                // Pass the URL through unconditionally. When recommendedVersion
-                // is null (patches work on Any version), the URL still points to
-                // the app's general APKMirror page and stays clickable.
-                downloadUrl = app.apkDownloadUrl,
-                nullLabel = "Any",
-                font = font,
-                cornerSmall = corners.small,
-            )
-            VersionChip(
-                channelLabel = "Latest Experimental",
-                version = latestExperimental,
-                color = accents.warning,
-                downloadUrl = app.experimentalDownloadUrl,
-                nullLabel = "N/A",
-                font = font,
-                cornerSmall = corners.small,
-            )
+            // The URL goes through unconditionally. When recommendedVersion is null
+            // (patches work on Any version) it still points at the app's general
+            // APKMirror page and stays clickable.
+            VersionCardChip("Latest Stable", app.recommendedVersion, app.apkDownloadUrl, "Any")
+            VersionCardChip("Latest Experimental", latestExperimental, app.experimentalDownloadUrl, "N/A")
         }
 
         // ── Expanded body: PATCHES FROM + ALSO STABLE + EXPERIMENTAL pills ──
@@ -189,7 +165,7 @@ fun SupportedAppListRow(
                 ExpandedBody(
                     app = app,
                     patchSourceNames = patchSourceNames,
-                    accents = accents,
+                    chipInk = chipInk,
                     font = font,
                     cornerSmall = corners.small,
                 )
@@ -225,7 +201,11 @@ private fun DeviceInfoLine(info: DeviceAppInfo, font: FontFamily) {
  * [PatchedAppState.NEVER_PATCHED] (callers gate on that before calling).
  */
 @Composable
-internal fun PatchedStateBadge(state: PatchedAppState, font: FontFamily) {
+internal fun PatchedStateBadge(
+    state: PatchedAppState,
+    font: FontFamily,
+    onGradient: Boolean = true,
+) {
     val label = when (state) {
         PatchedAppState.PATCHED -> "Patched"
         PatchedAppState.PATCHED_WITH_UPDATES -> "Patch update available"
@@ -233,100 +213,29 @@ internal fun PatchedStateBadge(state: PatchedAppState, font: FontFamily) {
         PatchedAppState.APK_MISSING -> "APK missing"
         PatchedAppState.NEVER_PATCHED -> return
     }
-    val corners = LocalMorpheCorners.current
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(corners.small))
-            .background(Color.White.copy(alpha = 0.2f))
-            .border(1.dp, Color.Transparent, RoundedCornerShape(corners.small))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-    ) {
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = Color.White,
-        )
+    if (!onGradient) {
+        MorpheBadge(text = label, tone = MorpheBadgeTone.Primary)
+        return
     }
+    MorpheCardChip(text = label)
 }
 
-/**
- * Channel label + version pair. When [downloadUrl] is non-null and [version] is
- * present, the chip becomes a clickable quick-download (with hand cursor + open-
- * in-new icon). When [version] is null, renders a dash placeholder, muted and with no
- * click affordance.
- *
- * The chip's clickable consumes the press. Clicking it does NOT bubble up to
- * the row's clickable, so quick-downloading doesn't accidentally expand the row.
- */
 @Composable
-private fun VersionChip(
+private fun VersionCardChip(
     channelLabel: String,
     version: String?,
-    color: Color,
     downloadUrl: String?,
     nullLabel: String,
-    font: FontFamily,
-    cornerSmall: Dp,
 ) {
-    val isLink = downloadUrl != null
     val uriHandler = LocalUriHandler.current
-    val hoverInteraction = remember(channelLabel) { MutableInteractionSource() }
-    val isHovered by hoverInteraction.collectIsHoveredAsState()
-    val chipColor = color.onCardGradient()
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = Modifier
-            .clip(RoundedCornerShape(cornerSmall))
-            .background(Color.Black.copy(alpha = if (isHovered && isLink) 0.34f else 0.22f))
-            .border(
-                1.dp,
-                Color.White.copy(alpha = if (isHovered && isLink) 0.85f else 0.55f),
-                RoundedCornerShape(cornerSmall),
-            )
-            .hoverable(hoverInteraction)
-            .then(
-                if (isLink) Modifier
-                    .handCursor()
-                    .clickable {
-                        openUrlAndFollowRedirects(downloadUrl) { uriHandler.openUri(it) }
-                    }
-                else Modifier
-            )
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-    ) {
-        Text(
-            text = channelLabel,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = chipColor
-        )
-        Text(
-            text = "·",
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = chipColor.copy(alpha = 0.6f)
-        )
-        Text(
-            text = version?.let { if (it.startsWith("v")) it else "v$it" } ?: nullLabel,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = chipColor
-        )
-        if (isLink) {
-            Icon(
-                imageVector = MorpheIcons.OpenInNew,
-                contentDescription = "Download $channelLabel",
-                tint = chipColor,
-                modifier = Modifier.size(10.dp),
-            )
-        }
-    }
+    val shown = version?.let { if (it.startsWith("v")) it else "v$it" } ?: nullLabel
+    MorpheCardChip(
+        text = "$channelLabel · $shown",
+        icon = if (downloadUrl != null) MorpheIcons.OpenInNew else null,
+        onClick = downloadUrl?.let {
+            { openUrlAndFollowRedirects(it) { resolved -> uriHandler.openUri(resolved) } }
+        },
+    )
 }
 
 /** Body that drops down below the collapsed row when [SupportedAppListRow.isExpanded]
@@ -335,7 +244,7 @@ private fun VersionChip(
 private fun ExpandedBody(
     app: SupportedApp,
     patchSourceNames: List<String>,
-    accents: MorpheAccentColors,
+    chipInk: Color,
     font: FontFamily,
     cornerSmall: Dp,
 ) {
@@ -351,29 +260,19 @@ private fun ExpandedBody(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (patchSourceNames.isNotEmpty()) {
-            SectionLabel(text = "Patches from", font = font, color = accents.primary.onCardGradient())
+            SectionLabel(text = "Patches from", font = font, color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 patchSourceNames.forEach { name ->
-                    // Source pills use a bright near-white label (vs. the colored
-                    // text used by version pills below) so the source name reads
-                    // crisply without feeling dimmed. The accent still shows in
-                    // the border / subtle background tint.
-                    Pill(
-                        text = name,
-                        color = accents.primary,
-                        font = font,
-                        cornerSmall = cornerSmall,
-                        onGradient = true,
-                    )
+                    MorpheCardChip(text = name)
                 }
             }
         }
 
         if (otherStable.isNotEmpty()) {
-            SectionLabel(text = "Stable", font = font, color = accents.secondary.onCardGradient())
+            SectionLabel(text = "Stable", font = font, color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -382,12 +281,8 @@ private fun ExpandedBody(
                     // URL is a pure function of package + version. Compute
                     // per pill rather than pre-storing all of them on the model.
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
-                    Pill(
+                    MorpheCardChip(
                         text = v,
-                        color = accents.secondary,
-                        font = font,
-                        cornerSmall = cornerSmall,
-                        onGradient = true,
                         onClick = url?.let { { uriHandler.openUri(it) } },
                     )
                 }
@@ -404,19 +299,15 @@ private fun ExpandedBody(
         }
 
         if (app.experimentalVersions.isNotEmpty()) {
-            SectionLabel(text = "Experimental", font = font, color = accents.warning.onCardGradient())
+            SectionLabel(text = "Experimental", font = font, color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 app.experimentalVersions.take(maxPills).forEach { v ->
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
-                    Pill(
+                    MorpheCardChip(
                         text = v,
-                        color = accents.warning,
-                        font = font,
-                        cornerSmall = cornerSmall,
-                        onGradient = true,
                         onClick = url?.let { { uriHandler.openUri(it) } },
                     )
                 }
@@ -449,73 +340,3 @@ internal fun SectionLabel(
     )
 }
 
-@Composable
-internal fun Pill(
-    text: String,
-    color: Color,
-    font: FontFamily,
-    cornerSmall: Dp,
-    onGradient: Boolean = false,
-    backgroundAlpha: Float = if (onGradient) 0.2f else 0.14f,
-    // When non-null, the pill becomes a tappable download link: gets a hand
-    // cursor, an OpenInNew icon, a subtle hover lift, and fires onClick on tap.
-    // detectTapGestures (not .clickable) so scroll wheel / two-finger gestures
-    // pass through on Linux/Skiko. Same reason as the apps-cards Row.
-    onClick: (() -> Unit)? = null,
-) {
-    val hoverSource = remember { MutableInteractionSource() }
-    val isHovered by hoverSource.collectIsHoveredAsState()
-    val isInteractive = onClick != null
-    val hoveredLift = if (isInteractive && isHovered) 0.20f else 0f
-    val effectiveBackgroundAlpha = (backgroundAlpha + hoveredLift / 2f).coerceAtMost(0.30f)
-    val pillColor = if (onGradient) color.onCardGradient() else color
-    val pillInk = if (onGradient) pillColor.contrastingForeground() else pillColor
-
-    Box(
-        modifier = Modifier
-            .hoverable(hoverSource)
-            .then(
-                if (isInteractive) Modifier
-                    .handCursor()
-                    .pointerInput(onClick) {
-                        detectTapGestures(onTap = { onClick() })
-                    }
-                else Modifier
-            )
-            .background(
-                if (onGradient) {
-                    if (isInteractive && isHovered) pillColor.shiftLightness(0.08f) else pillColor
-                } else {
-                    pillColor.copy(alpha = effectiveBackgroundAlpha)
-                },
-                RoundedCornerShape(cornerSmall),
-            )
-            .then(
-                if (onGradient) Modifier
-                else Modifier.border(1.dp, pillColor.copy(alpha = 0.35f), RoundedCornerShape(cornerSmall))
-            )
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Text(
-                text = text,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                color = pillInk,
-                maxLines = 1,
-            )
-            if (isInteractive) {
-                Icon(
-                    imageVector = MorpheIcons.OpenInNew,
-                    contentDescription = "Open download page",
-                    tint = pillInk.copy(alpha = if (isHovered) 0.9f else 0.6f),
-                    modifier = Modifier.size(9.dp),
-                )
-            }
-        }
-    }
-}

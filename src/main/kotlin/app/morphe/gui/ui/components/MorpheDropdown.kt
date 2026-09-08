@@ -58,6 +58,7 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.panelFill
 
 /** One entry in a [MorpheDropdown]. */
 data class MorpheDropdownItem(val label: String, val onClick: () -> Unit)
@@ -89,6 +90,7 @@ fun MorpheDropdown(
     Box(modifier) {
         Row(
             Modifier.fillMaxWidth().clip(corner)
+                .background(panelFill)
                 .border(1.dp, accents.primary.copy(alpha = if (expanded) 0.6f else 0.3f), corner)
                 .onGloballyPositioned { triggerWidth = it.size.width; triggerHeight = it.size.height }
                 .clickable(enabled = enabled) { expanded = !expanded; query = "" }
@@ -97,7 +99,7 @@ fun MorpheDropdown(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                label, fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 13.sp,
+                label, fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )

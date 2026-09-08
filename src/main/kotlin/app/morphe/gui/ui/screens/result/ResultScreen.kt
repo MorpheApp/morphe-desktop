@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.result
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,10 +39,12 @@ import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.ui.components.MorpheActionButton
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.contrastingForeground
+import app.morphe.gui.ui.theme.panelFill
+import app.morphe.gui.ui.theme.screenScrim
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
@@ -231,6 +233,7 @@ fun ResultScreenContent(outputPath: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(screenScrim)
     ) {
         // Header row
         Row(
@@ -399,7 +402,7 @@ fun ResultScreenContent(outputPath: String) {
 
             // Patch Another button
             Spacer(Modifier.height(4.dp))
-            PatchAnotherButton(corners = corners, font = font)
+            PatchAnotherButton()
 
             Spacer(Modifier.height(8.dp))
             }
@@ -981,8 +984,11 @@ private fun CleanupSection(
                 RoundedCornerShape(corners.medium)
             )
             .background(
-                if (tempFilesCleared) accents.secondary.copy(alpha = 0.04f)
-                else MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                if (tempFilesCleared) {
+                    lerp(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp), accents.secondary, 0.04f)
+                } else {
+                    MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                }
             )
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -1151,6 +1157,7 @@ private fun OutputFileCard(
             .widthIn(max = 520.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(corners.medium))
+            .background(panelFill)
             .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
     ) {
 
@@ -1254,31 +1261,11 @@ private fun OutputFileCard(
 }
 
 @Composable
-private fun PatchAnotherButton(
-    corners: MorpheCornerStyle,
-    font: FontFamily,
-) {
-    val font = LocalMorpheFont.current
+private fun PatchAnotherButton() {
     val navigator = LocalNavigator.currentOrThrow
-    val accents = LocalMorpheAccents.current
-    OutlinedButton(
+    MorpheActionButton(
+        label = "Patch another",
+        modifier = Modifier.widthIn(max = 520.dp).fillMaxWidth(),
         onClick = { navigator.popUntilRoot() },
-        modifier = Modifier
-            .widthIn(max = 520.dp)
-            .fillMaxWidth()
-            .height(42.dp),
-        shape = RoundedCornerShape(corners.small),
-        border = BorderStroke(1.dp, accents.primary),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = accents.primary,
-            contentColor = accents.primary.contrastingForeground()
-        )
-    ) {
-        Text(
-            text = "Patch another",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font
-        )
-    }
+    )
 }

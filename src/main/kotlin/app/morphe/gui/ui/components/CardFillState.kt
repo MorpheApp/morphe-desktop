@@ -31,7 +31,7 @@ val LocalCardFills = compositionLocalOf { CardFillState() }
 
 private data class EditTarget(
     val packageName: String?,
-    val appName: String,
+    val appName: String?,
     val appIconColorHex: String?,
 )
 
@@ -52,7 +52,7 @@ fun CardFillHost(
         onGlobalChange = onGlobalChange,
         onClearAll = onClearAll,
         requestEdit = { pkg, name, hex -> editing = EditTarget(pkg, name, hex) },
-        requestEditGlobal = { editing = EditTarget(null, "All app cards", null) },
+        requestEditGlobal = { editing = EditTarget(null, null, null) },
     )
 
     CompositionLocalProvider(LocalCardFills provides state) {

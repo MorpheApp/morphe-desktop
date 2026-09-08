@@ -408,7 +408,6 @@ fun SettingsDialog(
                                         text = "Customise",
                                         active = false,
                                         font = font,
-                                        dense = true,
                                         onClick = { cardFills.requestEditGlobal() },
                                     )
                                 }
@@ -433,8 +432,7 @@ fun SettingsDialog(
                                             text = "Reset",
                                             active = false,
                                             font = font,
-                                            dense = true,
-                                            onClick = { cardFills.onClearAll() },
+                                                onClick = { cardFills.onClearAll() },
                                         )
                                     }
                                 }
@@ -567,7 +565,8 @@ fun SettingsDialog(
                                             onCheckedChange = onDisableStockLinksChange,
                                             accentColor = accents.primary,
                                             font = font,
-                                            enabled = !isPatching
+                                            enabled = !isPatching,
+                                            icon = MorpheIcons.LinkOff
                                         )
                                     }
                                 }

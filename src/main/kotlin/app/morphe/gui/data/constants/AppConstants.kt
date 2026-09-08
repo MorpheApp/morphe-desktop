@@ -30,7 +30,13 @@ object AppConstants {
     const val MORPHE_API_URL = "https://api.morphe.software"
 
     const val WEBSITE_URL = "https://morphe.software"
-    const val DOCUMENTATION_URL = "https://github.com/MorpheApp/morphe-desktop/blob/main/docs/documentation.md"
+    /** A dev build carries a prerelease suffix, and an unpackaged run reports "dev". */
+    val IS_DEV_BUILD: Boolean by lazy { APP_VERSION == "dev" || APP_VERSION.contains('-') }
+
+    val DOCUMENTATION_URL: String by lazy {
+        val branch = if (IS_DEV_BUILD) "dev" else "main"
+        "https://github.com/MorpheApp/morphe-desktop/blob/$branch/docs/documentation.md"
+    }
 
     val FALLBACK_PACKAGES = listOf(
         "com.google.android.youtube",
