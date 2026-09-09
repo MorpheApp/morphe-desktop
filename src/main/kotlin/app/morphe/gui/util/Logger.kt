@@ -10,8 +10,13 @@ import app.morphe.gui.data.constants.AppConstants
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.text.MessageFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.logging.Handler
+import java.util.logging.Level as JVLevel
+import java.util.logging.LogRecord
+import java.util.logging.Logger as JVLogger
 
 /**
  * Simple file logger with rotation support.
@@ -42,6 +47,9 @@ object Logger {
         if (initialized) return
 
         try {
+            // Install JUL bridge early so logs during startup (e.g. MorpheData) are unified
+            installJulBridge()
+
             val logsDir = FileUtils.getLogsDir()
             logFile = File(logsDir, LOG_FILE_NAME)
 
@@ -69,6 +77,63 @@ object Logger {
         } catch (e: Exception) {
             System.err.println("Failed to initialize logger: ${e.message}")
         }
+    }
+
+    /**
+     * Bridges java.util.logging for `app.morphe` into this Logger.
+     * Sets useParentHandlers = false on "app.morphe" to isolate it from the root ConsoleHandler.
+     */
+    private fun installJulBridge() {
+        val morpheLogger = JVLogger.getLogger("app.morphe")
+        morpheLogger.useParentHandlers = false
+
+        for (handler in morpheLogger.handlers.toList()) {
+            if (handler is JulBridgeHandler) {
+                morpheLogger.removeHandler(handler)
+            }
+        }
+
+        morpheLogger.addHandler(JulBridgeHandler())
+    }
+
+    private class JulBridgeHandler : Handler() {
+        override fun publish(record: LogRecord) {
+            val rawMessage = record.message ?: return
+            if (rawMessage.isBlank()) return
+
+            val message = runCatching {
+                val params = record.parameters
+                if (params != null && params.isNotEmpty()) {
+                    MessageFormat.format(rawMessage, *params)
+                } else rawMessage
+            }.getOrDefault(rawMessage)
+
+            val loggerName = record.loggerName ?: ""
+            val isPatcher = loggerName.startsWith("app.morphe.patcher")
+            val taggedMessage = if (isPatcher) "[PATCH] $message" else message
+
+            when {
+                record.level.intValue() >= JVLevel.SEVERE.intValue() -> {
+                    if (record.thrown != null) {
+                        error(taggedMessage, record.thrown)
+                    } else {
+                        error(taggedMessage)
+                    }
+                }
+                record.level.intValue() >= JVLevel.WARNING.intValue() -> {
+                    warn(taggedMessage)
+                }
+                record.level.intValue() >= JVLevel.INFO.intValue() -> {
+                    info(taggedMessage)
+                }
+                else -> {
+                    debug(taggedMessage)
+                }
+            }
+        }
+
+        override fun flush() {}
+        override fun close() {}
     }
 
     /**
