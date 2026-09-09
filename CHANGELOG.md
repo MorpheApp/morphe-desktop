@@ -1,3 +1,10 @@
+## [1.15.1-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.4...v1.15.1-dev.5) (2026-09-09)
+
+
+### Bug Fixes
+
+* Harden `IoUsageSampler` against corrupted Windows performance counters ([#298](https://github.com/MorpheApp/morphe-desktop/issues/298)) ([ea1380d](https://github.com/MorpheApp/morphe-desktop/commit/ea1380d28040166950397657dda01368d812eff8))
+
 ## [1.15.1-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.3...v1.15.1-dev.4) (2026-09-06)
 
 
