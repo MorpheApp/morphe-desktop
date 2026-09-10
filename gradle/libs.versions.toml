@@ -6,7 +6,7 @@ kotlin = "2.4.10"
 # CLI
 picocli = "4.7.7"
 arsclib = "a28c6fb2a7"
-morphe-patcher = "1.13.0-dev.4"
+morphe-patcher = "1.13.0"
 morphe-library = "1.4.0"
 jadb = "1.2.3"
 
