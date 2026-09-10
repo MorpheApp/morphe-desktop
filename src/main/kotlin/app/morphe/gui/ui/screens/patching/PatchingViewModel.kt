@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import oshi.SystemInfo
+import oshi.software.os.OSProcess
 
 class PatchingViewModel(
     private val config: PatchConfig,
@@ -401,16 +402,29 @@ data class IoUsage(val readKbPerSec: Int, val writeKbPerSec: Int, val totalKbPer
  */
 class IoUsageSampler {
     private val os = SystemInfo().operatingSystem
-    private val currentProcess = os.currentProcess
+    private val currentProcess: OSProcess? = try {
+        os.currentProcess
+    } catch (e: Exception) {
+        null
+    }
 
     private var previousRead = -1L
     private var previousWrite = -1L
     private var previousUptimeMs = 0L
 
     fun sample(): IoUsage? {
-        if (currentProcess == null || !currentProcess.updateAttributes()) return null
-        val read = currentProcess.bytesRead
-        val write = currentProcess.bytesWritten
+        val p = currentProcess ?: return null
+
+        val updated = try {
+            p.updateAttributes()
+        } catch (e: Exception) {
+            false
+        }
+
+        if (!updated) return null
+
+        val read = p.bytesRead
+        val write = p.bytesWritten
 
         val uptimeMs = System.currentTimeMillis()
         val elapsed = uptimeMs - previousUptimeMs

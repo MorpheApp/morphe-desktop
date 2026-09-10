@@ -1,3 +1,52 @@
+## [1.15.1-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.6...v1.15.1-dev.7) (2026-09-10)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([9083e8a](https://github.com/MorpheApp/morphe-desktop/commit/9083e8a2ff1a3de963508a88070847b472608c17))
+
+## [1.15.1-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.5...v1.15.1-dev.6) (2026-09-09)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([c99fa98](https://github.com/MorpheApp/morphe-desktop/commit/c99fa98616690583db6d806bfb82a774109b8e93))
+
+## [1.15.1-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.4...v1.15.1-dev.5) (2026-09-09)
+
+
+### Bug Fixes
+
+* Harden `IoUsageSampler` against corrupted Windows performance counters ([#298](https://github.com/MorpheApp/morphe-desktop/issues/298)) ([ea1380d](https://github.com/MorpheApp/morphe-desktop/commit/ea1380d28040166950397657dda01368d812eff8))
+
+## [1.15.1-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.3...v1.15.1-dev.4) (2026-09-06)
+
+
+### Bug Fixes
+
+* Resolve `IoUsageSampler` NPE regression ([#297](https://github.com/MorpheApp/morphe-desktop/issues/297)) ([082849c](https://github.com/MorpheApp/morphe-desktop/commit/082849c99e8523b02f92286125f77344566e89ea))
+
+## [1.15.1-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.2...v1.15.1-dev.3) (2026-09-06)
+
+
+### Bug Fixes
+
+* Trigger background completion effect when patching finishes ([#295](https://github.com/MorpheApp/morphe-desktop/issues/295)) ([f45091d](https://github.com/MorpheApp/morphe-desktop/commit/f45091d3bde63eab38a0d02e7fe5e73ec22aee8a))
+
+## [1.15.1-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1-dev.1...v1.15.1-dev.2) (2026-09-05)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([c973dc7](https://github.com/MorpheApp/morphe-desktop/commit/c973dc7b3cd243cfb4188668e764d41a7d6dfd76))
+
+## [1.15.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.0...v1.15.1-dev.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([b152ebb](https://github.com/MorpheApp/morphe-desktop/commit/b152ebb3a370c883d410cec18493d222846d11f3))
+
 # [1.15.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.14.0...v1.15.0) (2026-09-03)
 
 
