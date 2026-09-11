@@ -151,11 +151,14 @@ fun AppCardFillDialog(
                 )
 
                 val fill = working
-                when {
-                    mode == FillMode.SOLID && fill is MorpheFill.Solid ->
+                when (mode) {
+                    FillMode.SOLID -> if (fill is MorpheFill.Solid) {
                         MorpheSwatchRow(fill.argb) { working = MorpheFill.Solid(it) }
-                    mode == FillMode.GRADIENT && fill is MorpheFill.Gradient ->
+                    }
+                    FillMode.GRADIENT -> if (fill is MorpheFill.Gradient) {
                         MorpheGradientEditor(fill, font) { working = it }
+                    }
+                    else -> Unit
                 }
             }
         },

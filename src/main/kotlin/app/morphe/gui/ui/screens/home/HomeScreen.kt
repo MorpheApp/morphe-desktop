@@ -14,24 +14,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.gui.data.model.PatchSource
+import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.ui.components.AddPatchSourceDialog
+import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.SourceLedState
 import app.morphe.gui.ui.components.SourceManagementSheet
-import app.morphe.gui.data.model.PatchSource
-import app.morphe.gui.data.model.PatchSourceType
-import app.morphe.gui.ui.components.AddPatchSourceDialog
-import app.morphe.gui.ui.components.sourceLedState
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
-import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
-import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
-import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.UpdateBanner
+import app.morphe.gui.ui.components.sourceLedState
 import app.morphe.gui.ui.screens.home.components.ForgetConfirmDialog
+import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.screens.home.components.HeaderBar
 import app.morphe.gui.ui.screens.home.components.MiddleContent
 import app.morphe.gui.ui.screens.home.components.MultiSourceHintBanner
+import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
 import app.morphe.gui.ui.screens.home.components.RepatchMissingApkDialog
 import app.morphe.gui.ui.screens.home.components.SourcesFailedBanner
 import app.morphe.gui.ui.screens.home.components.SupportedAppsListPane
@@ -47,13 +45,16 @@ import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import java.awt.Desktop
 import java.io.File
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 class HomeScreen : Screen {
 
@@ -217,8 +218,8 @@ fun HomeScreenContent(
                 coroutineScope.launch {
                     patchSourceManager.addSource(
                         PatchSource(
-                            id = java.util.UUID.randomUUID().toString(),
-                            name = java.io.File(path).nameWithoutExtension,
+                            id = UUID.randomUUID().toString(),
+                            name = File(path).nameWithoutExtension,
                             type = PatchSourceType.LOCAL,
                             filePath = path,
                         )
