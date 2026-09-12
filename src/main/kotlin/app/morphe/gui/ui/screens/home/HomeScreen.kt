@@ -392,10 +392,7 @@ fun HomeScreenContent(
             val onClearClick: () -> Unit = { viewModel.clearSelection() }
             val onChangeClick: () -> Unit = {
                 coroutineScope.launch {
-                    MorpheFilePicker.pickFile(
-                        title = "Select APK file",
-                        extensions = listOf("apk", "apkm", "xapk", "apks"),
-                    )?.let { file ->
+                    openFilePicker()?.let { file ->
                         viewModel.onFileSelected(file)
                     }
                 }
