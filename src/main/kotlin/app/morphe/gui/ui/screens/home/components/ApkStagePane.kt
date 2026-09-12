@@ -29,11 +29,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.HomeUiState
 import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.util.StatusColorType
 import app.morphe.gui.util.VersionStatus
@@ -51,26 +53,53 @@ internal fun MiddleContent(
     onClearClick: () -> Unit,
     onChangeClick: () -> Unit,
     onContinueClick: () -> Unit,
-    patchSourceNames: List<String> = emptyList(),
+    onInstallExistingClick: () -> Unit,
+    patchSources: List<PatchSource> = emptyList(),
 ) {
-    when {
-        uiState.isAnalyzing -> {
-            AnalyzingSection()
+    val font = LocalMorpheFont.current
+    val corners = LocalMorpheCorners.current
+    val dimens = LocalMorpheDimens.current
+    Column(
+        modifier = Modifier.widthIn(max = 440.dp).fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                "Patch an APK",
+                fontFamily = font,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(Modifier.weight(1f))
+            OutlinedButton(
+                onClick = onInstallExistingClick,
+                modifier = Modifier.height(dimens.controlHeight),
+                shape = RoundedCornerShape(corners.small),
+                contentPadding = PaddingValues(horizontal = dimens.controlHorizontalPadding, vertical = 0.dp),
+            ) {
+                Icon(MorpheIcons.Download, contentDescription = null, modifier = Modifier.size(dimens.iconInControl))
+                Spacer(Modifier.width(6.dp))
+                Text("Install existing APK…", fontFamily = font, fontSize = 10.sp)
+            }
         }
-        uiState.apkInfo != null -> {
-            ApkSelectedSection(
+        Spacer(Modifier.height(10.dp))
+        when {
+            uiState.isAnalyzing -> AnalyzingSection()
+            uiState.apkInfo != null -> ApkSelectedSection(
                 patchesLoaded = patchesLoaded,
                 apkInfo = uiState.apkInfo,
                 onClearClick = onClearClick,
                 onChangeClick = onChangeClick,
                 onContinueClick = onContinueClick,
-                patchSourceNames = patchSourceNames,
+                patchSources = patchSources,
             )
-        }
-        else -> {
-            DropPromptSection(
+            else -> DropPromptSection(
                 isDragHovering = uiState.isDragHovering,
-                onBrowseClick = onChangeClick
+                onBrowseClick = onChangeClick,
             )
         }
     }
@@ -168,11 +197,12 @@ internal fun ApkSelectedSection(
     onClearClick: () -> Unit,
     onChangeClick: () -> Unit,
     onContinueClick: () -> Unit,
-    patchSourceNames: List<String> = emptyList(),
+    patchSources: List<PatchSource> = emptyList(),
 ) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
+    val dimens = LocalMorpheDimens.current
     val statusColorType = resolveStatusColorType(apkInfo.versionStatus, apkInfo.checksumStatus)
     val accentColor = if (statusColorType == StatusColorType.PRIMARY) accents.secondary
                       else statusColorType.toColor()
@@ -203,7 +233,7 @@ internal fun ApkSelectedSection(
             apkInfo = apkInfo,
             onClearClick = onClearClick,
             modifier = Modifier.fillMaxWidth(),
-            patchSourceNames = patchSourceNames,
+            patchSources = patchSources,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -211,7 +241,7 @@ internal fun ApkSelectedSection(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedButton(
                 onClick = onChangeClick,
-                modifier = Modifier.height(44.dp),
+                modifier = Modifier.height(dimens.controlHeight),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
                 colors = ButtonDefaults.outlinedButtonColors(
@@ -232,7 +262,7 @@ internal fun ApkSelectedSection(
             OutlinedButton(
                 onClick = onContinueClick,
                 enabled = patchesLoaded,
-                modifier = Modifier.widthIn(min = 160.dp).height(44.dp),
+                modifier = Modifier.widthIn(min = 160.dp).height(dimens.controlHeight),
                 colors = buttonColors,
                 border = BorderStroke(1.dp, buttonBorderColor),
                 shape = RoundedCornerShape(corners.small),

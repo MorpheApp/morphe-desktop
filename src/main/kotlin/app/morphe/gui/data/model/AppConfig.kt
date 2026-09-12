@@ -51,6 +51,13 @@ data class SourceVersionPref(
     val pinnedTag: String? = null,
 )
 
+/** Persisted sort choice for one home app-list view. */
+@Serializable
+data class AppSortPreference(
+    val criterion: String = "NAME",
+    val direction: String = "ASCENDING",
+)
+
 @Serializable
 data class AppConfig(
     val themePreference: String = ThemePreference.SYSTEM.name,
@@ -135,6 +142,9 @@ data class AppConfig(
     // Which home apps tab the user last viewed ("ALL" or "YOURS"), restored on
     // next launch. Stored as a string so this data layer stays free of UI enums.
     val homeAppListFilter: String = "ALL",
+    // Per-home-view app sorting. Missing or invalid entries resolve to Name ascending.
+    // Keys and enum values stay as strings so this data layer remains UI-independent.
+    val homeAppSortPreferences: Map<String, AppSortPreference> = emptyMap(),
     // After an ADB install, automatically route the patched app's web links to it
     // ("open with"). Default OFF. It changes how the device opens links, so it's
     // opt-in. See AppLinkCommands / AdbManager.setLinkHandling.

@@ -63,12 +63,40 @@ fun MorpheErrorBar(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     isWarning: Boolean = false,
+    actionLabel: String? = null,
+    onAction: (() -> Unit)? = null,
 ) {
     val accents = LocalMorpheAccents.current
+    val accentColor = if (isWarning) accents.warning else MaterialTheme.colorScheme.error
+    MorpheMessageBar(message, onDismiss, modifier, accentColor, actionLabel, onAction)
+}
+
+/** Non-blocking confirmation counterpart to [MorpheErrorBar]. */
+@Composable
+fun MorpheSuccessBar(
+    message: String,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    MorpheMessageBar(
+        message = message,
+        onDismiss = onDismiss,
+        modifier = modifier,
+        accentColor = LocalMorpheAccents.current.secondary,
+    )
+}
+
+@Composable
+private fun MorpheMessageBar(
+    message: String,
+    onDismiss: () -> Unit,
+    modifier: Modifier,
+    accentColor: Color,
+    actionLabel: String? = null,
+    onAction: (() -> Unit)? = null,
+) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
-
-    val accentColor = if (isWarning) accents.warning else MaterialTheme.colorScheme.error
     val borderCol = accentColor.copy(alpha = 0.4f)
 
     Row(
@@ -105,6 +133,25 @@ fun MorpheErrorBar(
             modifier = Modifier.weight(1f)
         )
         Spacer(Modifier.width(12.dp))
+
+        if (actionLabel != null && onAction != null) {
+            MorpheTooltip(
+                if (actionLabel == "Uninstall & retry") TooltipText.MIGRATE else actionLabel,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(28.dp)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(accentColor)
+                        .clickable(onClick = onAction)
+                        .padding(horizontal = 12.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(actionLabel, fontSize = 11.sp, fontFamily = font, color = MaterialTheme.colorScheme.onError)
+                }
+            }
+            Spacer(Modifier.width(8.dp))
+        }
 
         val dismissHover = remember { MutableInteractionSource() }
         val isDismissHovered by dismissHover.collectIsHoveredAsState()

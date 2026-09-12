@@ -96,6 +96,8 @@ data class PatchConfig(
     val useExclusiveMode: Boolean = false,
     val keepArchitectures: Set<CpuArchitecture> = emptySet(),
     val continueOnError: Boolean = false,
+    /** Existing flows preserve force mode; validated S4 imports explicitly disable it. */
+    val forceCompatibility: Boolean = true,
 
     // ── Recall metadata ──
     // Carried from the selection screen down to the patching screen so the
@@ -110,4 +112,10 @@ data class PatchConfig(
     val appVersion: String? = null,
     val patchesSourceName: String? = null,
     val patchesVersion: String? = null,
+    /** S4-owned temporary input directory; removed after patch completion/failure/cancel. */
+    val temporaryInputRoot: String? = null,
+    /** Source device retained separately from later installation targets. */
+    val sourceDeviceSerial: String? = null,
+    /** True when the input was reconstructed from a device-specific split set. */
+    val deviceSpecificInput: Boolean = false,
 )

@@ -26,9 +26,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.RepositoryLinkText
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.theme.*
+import app.morphe.gui.util.RepositoryWebLink
 import java.awt.datatransfer.StringSelection
 import kotlinx.coroutines.launch
 
@@ -38,6 +40,7 @@ internal fun ErrorContent(
     errorMessage: String?,
     apkInfo: QuickApkInfo?,
     patchSourceName: String?,
+    repositoryLink: RepositoryWebLink?,
     patchesVersion: String?,
     onStartOver: () -> Unit,
     onViewLogs: () -> Unit
@@ -109,12 +112,13 @@ internal fun ErrorContent(
                     modifier = Modifier.padding(vertical = 8.dp),
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
                 )
-                Text(
+                RepositoryLinkText(
                     text = patchSourceName ?: "Unknown",
+                    link = repositoryLink,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurface
+                    textColor = MaterialTheme.colorScheme.onSurface,
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(

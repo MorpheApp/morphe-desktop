@@ -41,6 +41,9 @@ import app.morphe.gui.util.resolveVersionStatusDisplay
 import app.morphe.gui.util.StatusColorType
 import app.morphe.gui.util.toColor
 import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.data.model.PatchSource
+import app.morphe.gui.ui.components.RepositoryLinkText
+import app.morphe.gui.util.RepositoryLinks
 
 @Composable
 fun ApkInfoCard(
@@ -49,7 +52,7 @@ fun ApkInfoCard(
     modifier: Modifier = Modifier,
     /** Names of enabled sources whose patches target [apkInfo.packageName]. When
      *  more than one, surfaces the multi-source provenance directly on the card. */
-    patchSourceNames: List<String> = emptyList(),
+    patchSources: List<PatchSource> = emptyList(),
 ) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
@@ -338,7 +341,7 @@ fun ApkInfoCard(
             }
 
             // ── Patch sources providing patches for this app ──
-            if (patchSourceNames.isNotEmpty()) {
+            if (patchSources.isNotEmpty()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -366,7 +369,7 @@ fun ApkInfoCard(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        patchSourceNames.forEach { name ->
+                        patchSources.forEach { source ->
                             Box(
                                 modifier = Modifier
                                     .border(
@@ -380,12 +383,13 @@ fun ApkInfoCard(
                                     )
                                     .padding(horizontal = 8.dp, vertical = 3.dp)
                             ) {
-                                Text(
-                                    text = name,
+                                RepositoryLinkText(
+                                    text = source.name,
+                                    link = RepositoryLinks.resolve(source),
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = font,
-                                    color = accents.primary,
+                                    textColor = accents.primary,
                                     maxLines = 1,
                                 )
                             }

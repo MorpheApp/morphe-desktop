@@ -12,6 +12,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -80,7 +81,7 @@ fun SettingsDialogHost() {
             val config = configRepository.loadConfig()
             autoCleanupTempFiles = config.autoCleanupTempFiles
             // Display the resolved absolute form even though storage may be
-            // bundle-relative. Users expect to see a real filesystem path in
+            // bundle-relative — users expect to see a real filesystem path in
             // the field, not a cryptic basename.
             defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
             keystorePath = config.resolvedKeystorePath()?.absolutePath
@@ -213,23 +214,24 @@ fun SettingsButton(
         animationSpec = tween(150)
     )
 
-    Box(
-        modifier = modifier
-            .size(34.dp)
-            .hoverable(hoverInteraction)
-            .clip(RoundedCornerShape(corners.small))
-            .background(containerColor)
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-            .handCursor()
-            .clickable { settingsDialogVisible.value = true },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = MorpheIcons.Settings,
-            contentDescription = "Settings",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(16.dp)
-        )
+    MorpheTooltip(TooltipText.SETTINGS) {
+        Box(
+            modifier = modifier
+                .size(34.dp)
+                .hoverable(hoverInteraction)
+                .clip(RoundedCornerShape(corners.small))
+                .background(containerColor)
+                .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+                .clickable { settingsDialogVisible.value = true },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = MorpheIcons.Settings,
+                contentDescription = "Settings",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }
 
@@ -237,6 +239,7 @@ fun SettingsButton(
 fun TopBarRow(
     modifier: Modifier = Modifier,
     allowCacheClear: Boolean = true,
+    showDeviceIndicator: Boolean = true,
     isPatching: Boolean = false,
     onUpdateChannelChanged: () -> Unit = {},
 ) {
@@ -252,7 +255,7 @@ fun TopBarRow(
             horizontalArrangement = Arrangement.spacedBy(if (isSoft) 12.dp else 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            DeviceIndicator()
+            if (showDeviceIndicator) DeviceIndicator()
             ToolsButton(allowCacheClear = allowCacheClear)
             SettingsButton()
         }

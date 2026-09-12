@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +31,7 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import org.koin.compose.koinInject
 
 /**
- * Tools button, the peer of [SettingsButton]. Opens [ToolsDialog]. Wrench icon,
+ * Tools button — peer of [SettingsButton]. Opens [ToolsDialog]. Wrench icon,
  * same hover/border treatment as Settings. Sits to the LEFT of Settings in the
  * top bar (actions left of preferences).
  *
@@ -56,23 +57,24 @@ fun ToolsButton(
         animationSpec = tween(150)
     )
 
-    Box(
-        modifier = modifier
-            .size(34.dp)
-            .hoverable(hoverInteraction)
-            .clip(RoundedCornerShape(corners.small))
-            .background(containerColor)
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-            .handCursor()
-            .clickable { showToolsDialog = true },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = MorpheIcons.Build,
-            contentDescription = "Tools",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(16.dp)
-        )
+    MorpheTooltip(TooltipText.TOOLS) {
+        Box(
+            modifier = modifier
+                .size(34.dp)
+                .hoverable(hoverInteraction)
+                .clip(RoundedCornerShape(corners.small))
+                .background(containerColor)
+                .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+                .clickable { showToolsDialog = true },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = MorpheIcons.Build,
+                contentDescription = "Tools",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 
     if (showToolsDialog) {

@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.jadb) {
         exclude(group = "org.mockito")
     }
+    implementation(libs.apksig)
     implementation(libs.picocli)
 
     // -- Bootstrap (Code Generation) ---------------------------------------

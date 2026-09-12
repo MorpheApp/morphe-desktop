@@ -8,6 +8,7 @@ package app.morphe.gui.util
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SupportedApp
 
+
 /**
  * Extracts supported apps from parsed patch data.
  * This allows the app to dynamically determine which apps are supported
@@ -25,34 +26,20 @@ object SupportedAppExtractor {
         val packageExperimentalMap = mutableMapOf<String, MutableSet<String>>()
         val packageDisplayNames = mutableMapOf<String, String>()
         val packageIconColors = mutableMapOf<String, String>()
-        val packageBuildCodes = mutableMapOf<String, MutableMap<String, MutableSet<Int>>>()
 
-        for (patch in patches) {
-            for (pkg in patch.compatiblePackages) {
-                val packageName = pkg.name
+        for ((_, _, compatiblePackages) in patches) {
+            for ((packageName, displayName, versions, experimentalVersions, appIconColor) in compatiblePackages) {
                 if (packageName.isNotBlank()) {
                     packageVersionsMap.getOrPut(packageName) { mutableSetOf() }
-                        .addAll(pkg.versions)
+                        .addAll(versions)
                     packageExperimentalMap.getOrPut(packageName) { mutableSetOf() }
-                        .addAll(pkg.experimentalVersions)
-                    pkg.displayName
+                        .addAll(experimentalVersions)
+                    displayName
                         ?.takeIf { it.isNotBlank() }
                         ?.let { packageDisplayNames.putIfAbsent(packageName, it) }
-                    pkg.appIconColor
+                    appIconColor
                         ?.takeIf { it.isNotBlank() }
                         ?.let { packageIconColors.putIfAbsent(packageName, it) }
-                    if (pkg.versionBuildCodes.isNotEmpty()) {
-                        val perVersion = packageBuildCodes.getOrPut(packageName) { mutableMapOf() }
-                        pkg.versionBuildCodes.forEach { (version, codes) ->
-                            val existing = perVersion[version]
-                            when {
-                                codes.isEmpty() -> perVersion[version] = mutableSetOf()
-                                existing == null -> perVersion[version] = codes.toMutableSet()
-                                existing.isEmpty() -> Unit
-                                else -> existing.addAll(codes)
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -77,9 +64,7 @@ object SupportedAppExtractor {
                 apkDownloadUrl = SupportedApp.getDownloadUrl(packageName, recommendedVersion ?: "any"),
                 experimentalDownloadUrl = SupportedApp.getDownloadUrl(packageName, latestExperimental),
                 appIconColor = packageIconColors[packageName],
-                versionBuildCodes = packageBuildCodes[packageName]
-                    ?.mapValues { (_, codes) -> codes.toSet() }
-                    .orEmpty()
+                trustedDisplayName = packageDisplayNames[packageName],
             )
         }.sortedBy { it.displayName }
     }
@@ -89,6 +74,15 @@ object SupportedAppExtractor {
      */
     fun getSupportedApp(patches: List<Patch>, packageName: String): SupportedApp? {
         return extractSupportedApps(patches).find { it.packageName == packageName }
+    }
+
+    /**
+     * Check if a package is supported by the patches.
+     */
+    fun isPackageSupported(patches: List<Patch>, packageName: String): Boolean {
+        return patches.any { patch ->
+            patch.compatiblePackages.any { it.name == packageName }
+        }
     }
 
     /**

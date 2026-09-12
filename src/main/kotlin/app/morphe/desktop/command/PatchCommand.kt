@@ -18,6 +18,10 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.installation.AdbApkInstaller
+import app.morphe.engine.installation.AdbExecutableLocator
+import app.morphe.engine.installation.AdbInstallRequest
+import app.morphe.engine.installation.resolveAdbDeviceSerial
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
@@ -442,16 +446,20 @@ internal object PatchCommand : Callable<Int> {
             }
         }
 
-        val installer = if (deviceSerial != null) {
+        var resolvedInstallDeviceSerial: String? = null
+        val rootInstaller = if (deviceSerial != null) {
             val deviceSerial = deviceSerial!!.ifEmpty { null }
 
             try {
                 if (mount) {
                     AdbRootInstaller(deviceSerial)
                 } else {
-                    AdbInstaller(deviceSerial)
+                    val adb = AdbExecutableLocator.find()
+                        ?: throw IllegalStateException("ADB not found. Please install Android SDK Platform Tools.")
+                    resolvedInstallDeviceSerial = resolveAdbDeviceSerial(adb, deviceSerial)
+                    null
                 }
-            } catch (_: DeviceNotFoundException) {
+            } catch (_: Exception) {
                 if (deviceSerial?.isNotEmpty() == true) {
                     logger.severe(
                         "Device with serial $deviceSerial not found to install to. " +
@@ -861,16 +869,22 @@ internal object PatchCommand : Callable<Int> {
             deviceSerial?.let {
                 patchingResult.addStepResult(PatchingStep.INSTALLING) {
                     runBlocking {
-                        when (val result = installer!!.install(Installer.Apk(outputFilePath, packageName))) {
-                            RootInstallerResult.FAILURE -> {
-                                logger.severe("Failed to mount the patched APK file")
-                                throw IllegalStateException("Failed to mount the patched APK file")
+                        if (mount) {
+                            when (rootInstaller!!.install(Installer.Apk(outputFilePath, packageName))) {
+                                RootInstallerResult.FAILURE -> {
+                                    logger.severe("Failed to mount the patched APK file")
+                                    throw IllegalStateException("Failed to mount the patched APK file")
+                                }
+                                else -> logger.info("Installed the patched APK file")
                             }
-                            is AdbInstallerResult.Failure -> {
-                                logger.severe(result.exception.toString())
-                                throw result.exception
-                            }
-                            else -> logger.info("Installed the patched APK file")
+                        } else {
+                            val adb = AdbExecutableLocator.find()
+                                ?: throw IllegalStateException("ADB not found. Please install Android SDK Platform Tools.")
+                            val mode = AdbApkInstaller().install(
+                                AdbInstallRequest(adb, outputFilePath, resolvedInstallDeviceSerial!!),
+                                onDebug = logger::fine,
+                            ).getOrThrow()
+                            logger.info("Installed the patched APK file using ${mode.name.lowercase()}")
                         }
                     }
                 }

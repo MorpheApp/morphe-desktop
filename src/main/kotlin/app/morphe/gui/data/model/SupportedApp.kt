@@ -20,16 +20,9 @@ data class SupportedApp(
     val apkDownloadUrl: String? = null,
     val experimentalDownloadUrl: String? = null,
     val appIconColor: String? = null,
-    val versionBuildCodes: Map<String, Set<Int>> = emptyMap()
+    /** Structured patch metadata only; null when [displayName] was inferred. */
+    val trustedDisplayName: String? = null,
 ) {
-    fun buildCodeSupported(version: String, versionCode: Int?): Boolean {
-        val codes = versionBuildCodes[version.removePrefix("v")]
-            ?: versionBuildCodes[version]
-            ?: return true
-        if (codes.isEmpty()) return true
-        return versionCode == null || versionCode in codes
-    }
-
     companion object {
         fun resolveDisplayName(packageName: String, providedName: String?): String {
             return providedName?.takeIf { it.isNotBlank() } ?: getDisplayName(packageName)

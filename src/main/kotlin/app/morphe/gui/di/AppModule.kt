@@ -6,10 +6,8 @@
 package app.morphe.gui.di
 
 import app.morphe.engine.PatchedAppStore
-import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchPreferencesRepository
-import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.home.HomeViewModel
@@ -90,17 +88,15 @@ val appModule = module {
     // Repositories and Services
     single { ConfigRepository() }
     single { PatchPreferencesRepository() }
-    single { SeenPatchesRepository() }
     single { PatchSourceManager(get(), get()) }
     single { PatchService() }
     single { UpdateCheckRepository(get()) }
-    single { ChangelogRepository(get()) }
     single { PatchedAppStore.shared }
 
     // ViewModels (ScreenModels)
     // ViewModels observe PatchSourceManager.sourceVersion and reload on source changes.
     factory {
-        HomeViewModel(get(), get(), get(), get(), get(), get())
+        HomeViewModel(get(), get(), get(), get(), get())
     }
     factory {
         QuickPatchViewModel(get(), get(), get(), get())
@@ -135,7 +131,12 @@ val appModule = module {
             params.get(),
             params.get(),
             params.get(),
-            sourceIdsByName = psm.getEnabledSourcesSync().associate { it.name to it.id },
+            params.get(),
+            params.get(),
+            params.get(),
+            params.get(),
+            params.get(),
+            params.get(),
         )
     }
     factory { params ->

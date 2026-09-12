@@ -19,6 +19,8 @@ import app.morphe.gui.util.PatchResult
 import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.PatcherLogInterceptor
 import app.morphe.gui.util.PatcherState
+import app.morphe.gui.util.runBackgroundWork
+import app.morphe.gui.util.cleanupDeviceImportRoot
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
@@ -64,7 +66,9 @@ class PatchingViewModel(
             val inputApkFile = File(config.inputApkPath)
             val apkSizeMb = if (inputApkFile.exists()) "%.1f MB".format(inputApkFile.length() / 1_048_576.0) else "?"
             
-            val appVersion = config.appVersion ?: ApkManifestReader.read(inputApkFile)?.versionName ?: "?"
+            val appVersion = config.appVersion ?: runBackgroundWork {
+                ApkManifestReader.read(inputApkFile)?.versionName
+            } ?: "?"
             val patchesSourceName = config.patchesSourceName ?: "MORPHE PATCHES"
             val patchesVersion = config.patchesVersion ?: config.sourcesSnapshot.firstOrNull()?.version ?: "?"
             val isSplit = config.inputApkPath.endsWith(".apkm", true) || config.inputApkPath.endsWith(".xapk", true) || config.inputApkPath.endsWith(".apks", true) || inputApkFile.isDirectory
@@ -170,6 +174,7 @@ class PatchingViewModel(
                     exclusiveMode = config.useExclusiveMode,
                     keepArchitectures = config.keepArchitectures,
                     continueOnError = config.continueOnError,
+                    forceCompatibility = config.forceCompatibility,
                     keystorePath = resolvedKeystorePath,
                     keystorePassword = appConfig.keystorePassword,
                     keystoreAlias = appConfig.keystoreAlias,
@@ -226,6 +231,7 @@ class PatchingViewModel(
                 }
             )
         }
+        patchingJob?.invokeOnCompletion { cleanupTemporaryInput() }
     }
 
     fun cancelPatching() {
@@ -273,6 +279,8 @@ class PatchingViewModel(
                     sourcesSnapshot = config.sourcesSnapshot,
                     patchedAt = System.currentTimeMillis(),
                     patchedWithMorpheVersion = UpdateChecker.currentVersion() ?: "unknown",
+                    sourceDeviceSerial = config.sourceDeviceSerial,
+                    deviceSpecificInput = config.deviceSpecificInput,
                 )
             )
         } catch (e: Exception) {
@@ -285,6 +293,15 @@ class PatchingViewModel(
         _uiState.update { it.copy(
             logs = it.logs + entry
         ) }
+    }
+
+    private fun cleanupTemporaryInput() {
+        config.temporaryInputRoot?.let { root ->
+            java.util.concurrent.CompletableFuture.runAsync {
+                runCatching { cleanupDeviceImportRoot(File(root)) }
+                    .onFailure { Logger.warn("Could not remove temporary device import: ${it.message}") }
+            }
+        }
     }
 
     private fun parseAndAddLog(line: String) {

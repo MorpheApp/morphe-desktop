@@ -10,13 +10,16 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -35,17 +38,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.morphe.gui.ui.components.MorpheDialogButton
-import androidx.compose.ui.window.Dialog
-import app.morphe.gui.ui.components.MorpheDialogCard
-import app.morphe.gui.ui.components.MorpheDialogSurface
-import app.morphe.gui.ui.components.MorpheDialogText
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.LocalOnSettingsDismiss
 import app.morphe.gui.data.model.Patch
@@ -56,22 +53,25 @@ import app.morphe.gui.icon.IconExporter
 import app.morphe.gui.icon.IconStudioDialog
 import app.morphe.gui.ui.components.DeviceIndicator
 import app.morphe.gui.ui.components.ErrorDialog
+import app.morphe.gui.ui.components.MorpheDialogButton
+import app.morphe.gui.ui.components.MorpheDialogCard
+import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.MorpheSwitch
+import app.morphe.gui.ui.components.MorpheTooltip
+import app.morphe.gui.ui.components.RepositoryLinkText
 import app.morphe.gui.ui.components.SettingsButton
+import app.morphe.gui.ui.components.TooltipText
 import app.morphe.gui.ui.components.ToolsButton
 import app.morphe.gui.ui.components.getErrorType
 import app.morphe.gui.ui.components.getFriendlyErrorMessage
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patching.PatchingScreen
-import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.panelFill
-import app.morphe.gui.ui.theme.screenScrim
 import app.morphe.gui.ui.theme.LocalMorpheMono
+import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.MorpheFilePicker
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -79,24 +79,12 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
+import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
-import app.morphe.gui.ui.components.MorpheActionButton
-import app.morphe.gui.ui.components.MorpheBadge
-import app.morphe.gui.ui.components.MorpheChevron
-import app.morphe.gui.ui.components.MorpheChoiceChip
-import app.morphe.gui.ui.components.MorpheTooltip
-import app.morphe.gui.util.expectedValueHint
-import app.morphe.gui.util.optionValueOrNull
-import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.components.MorpheBadgeTone
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.contentDescription
-
-private val FILTER_BAR_HEIGHT = 32.dp
 
 /**
  * Screen for selecting which patches to apply.
@@ -114,9 +102,13 @@ data class PatchSelectionScreen(
     /** All enabled-source .mpp file paths. Single-element in single-source mode.
      *  Used by the patching pipeline to feed the engine the union of patches. */
     val patchesFilePaths: List<String> = emptyList(),
-    /** Parallel to [patchesFilePaths]. Display name per source. Drives badging
+    /** Parallel to [patchesFilePaths] — display name per source. Drives badging
      *  in the patch list. Empty disables badging (legacy single-source). */
     val patchSourceNames: List<String> = emptyList(),
+    /** Parallel source ids used only for exact structured repository-link lookup. */
+    val patchSourceIds: List<String> = emptyList(),
+    /** Parallel SHA-256 identities for the exact `.mpp` inputs. */
+    val patchSourceHashes: List<String?> = emptyList(),
     /** One-click repatch seed (source/bundle name → patch uniqueIds). Empty =
      *  normal flow. Set when entering from a "Your apps" / patched-row Repatch. */
     val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
@@ -125,6 +117,10 @@ data class PatchSelectionScreen(
     /** The app's versionName (parsed from the APK), threaded to the output-name helper so
      *  the filename is unique by app version even for renamed bundles. Blank = not supplied. */
     val apkVersion: String = "",
+    val temporaryInputRoot: String? = null,
+    val sourceDeviceSerial: String? = null,
+    val deviceSpecificInput: Boolean = false,
+    val validatedDeviceImport: Boolean = false,
 ) : Screen {
 
     @Composable
@@ -133,14 +129,17 @@ data class PatchSelectionScreen(
         val viewModel = koinScreenModel<PatchSelectionViewModel> {
             parametersOf(
                 apkPath, apkName, patchesFilePath, packageName, apkArchitectures,
-                effectiveList, patchSourceNames, initialSelectionByBundle, initialPatchOptions,
+                effectiveList, patchSourceNames, patchSourceIds, patchSourceHashes,
+                initialSelectionByBundle, initialPatchOptions,
                 apkVersion,
+                temporaryInputRoot, sourceDeviceSerial, deviceSpecificInput, validatedDeviceImport,
             )
         }
         PatchSelectionScreenContent(viewModel = viewModel)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val corners = LocalMorpheCorners.current
@@ -194,17 +193,11 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     var cleanMode by remember { mutableStateOf(false) }
     var showCommandPreview by remember { mutableStateOf(false) }
     var continueOnError by remember { mutableStateOf(false) }
-    var showRunInfo by remember { mutableStateOf(false) }
-
-    if (showRunInfo) {
-        val info = remember(uiState.bundles) { viewModel.runInfo() }
-        RunInfoDialog(info = info, onDismiss = { showRunInfo = false })
-    }
 
     val dividerColor = MaterialTheme.colorScheme.outlineVariant
 
-    Column(modifier = Modifier.fillMaxSize().background(screenScrim)) {
-        val containerColor = panelFill
+    Column(modifier = Modifier.fillMaxSize()) {
+        val containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.5f)
         val baseBorderColor = MaterialTheme.colorScheme.outlineVariant
         val baseIconTint = MaterialTheme.colorScheme.onSurfaceVariant
 
@@ -230,22 +223,24 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 animationSpec = tween(150)
             )
 
-            Box(
-                modifier = Modifier
-                    .size(34.dp)
-                    .hoverable(backHover)
-                    .clip(RoundedCornerShape(corners.small))
-                    .background(containerColor)
-                    .border(1.dp, backBorder, RoundedCornerShape(corners.small))
-                    .clickable { navigator.pop() },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = MorpheIcons.ArrowBack,
-                    contentDescription = "Back",
-                    tint = baseIconTint,
-                    modifier = Modifier.size(16.dp)
-                )
+            MorpheTooltip("Return to app selection without starting patching.") {
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .hoverable(backHover)
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(containerColor)
+                        .border(1.dp, backBorder, RoundedCornerShape(corners.small))
+                        .clickable { navigator.pop() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = MorpheIcons.ArrowBack,
+                        contentDescription = "Back",
+                        tint = baseIconTint,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(14.dp))
@@ -275,30 +270,28 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
                 val cmdHover = remember { MutableInteractionSource() }
                 val cmdActive = showCommandPreview
-                val cmdAccent = MaterialTheme.colorScheme.onSurface
                 val cmdBorder by animateColorAsState(
-                    if (cmdActive) cmdAccent.copy(alpha = 0.5f)
+                    if (cmdActive) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     else baseBorderColor,
                     animationSpec = tween(150)
                 )
 
-                MorpheTooltip("Preview the equivalent CLI command") {
+                MorpheTooltip(TooltipText.COMMAND_PREVIEW) {
                     Box(
                         modifier = Modifier
                             .size(34.dp)
                             .hoverable(cmdHover)
                             .clip(RoundedCornerShape(corners.small))
                             .background(containerColor)
-                            .background(if (cmdActive) cmdAccent.copy(alpha = 0.08f) else Color.Transparent)
+                            .background(if (cmdActive) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f) else Color.Transparent)
                             .border(1.dp, cmdBorder, RoundedCornerShape(corners.small))
-                            .handCursor()
                             .clickable { showCommandPreview = !showCommandPreview },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = MorpheIcons.Terminal,
                             contentDescription = "Command Preview",
-                            tint = if (cmdActive) cmdAccent
+                            tint = if (cmdActive) MaterialTheme.colorScheme.onSurface
                                    else baseIconTint,
                             modifier = Modifier.size(16.dp)
                         )
@@ -315,7 +308,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     animationSpec = tween(150)
                 )
 
-                MorpheTooltip("Continue patching even if a patch fails") {
+                MorpheTooltip(TooltipText.CONTINUE_ON_ERROR) {
                     Box(
                         modifier = Modifier
                             .size(34.dp)
@@ -324,7 +317,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             .background(containerColor)
                             .background(if (continueOnError) MaterialTheme.colorScheme.error.copy(alpha = 0.08f) else Color.Transparent)
                             .border(1.dp, errBorder, RoundedCornerShape(corners.small))
-                            .handCursor()
                             .clickable { continueOnError = !continueOnError },
                         contentAlignment = Alignment.Center
                     ) {
@@ -341,44 +333,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 Spacer(modifier = Modifier.width(6.dp))
             }
 
-            val infoHover = remember { MutableInteractionSource() }
-            val isInfoHovered by infoHover.collectIsHoveredAsState()
-            val infoBorder by animateColorAsState(
-                when {
-                    showRunInfo -> accents.primary.copy(alpha = 0.5f)
-                    isInfoHovered -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-                    else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
-                },
-                animationSpec = tween(150)
-            )
-            MorpheTooltip("APK and patch bundle used for this run") {
-                Box(
-                    modifier = Modifier
-                        .size(34.dp)
-                        .hoverable(infoHover)
-                        .clip(RoundedCornerShape(corners.small))
-                        .border(1.dp, infoBorder, RoundedCornerShape(corners.small))
-                        .then(
-                            if (showRunInfo) Modifier.background(
-                                accents.primary.copy(alpha = 0.08f),
-                                RoundedCornerShape(corners.small)
-                            ) else Modifier
-                        )
-                        .handCursor()
-                        .clickable { showRunInfo = true },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = MorpheIcons.Info,
-                        contentDescription = "Run info",
-                        tint = if (showRunInfo) accents.primary
-                               else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.width(6.dp))
-
             DeviceIndicator()
             Spacer(modifier = Modifier.width(6.dp))
             ToolsButton(allowCacheClear = false)
@@ -388,6 +342,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             }
         }
 
+        // Command preview — collapsible
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
             val commandPreview = remember(uiState.selectedByBundle, uiState.stripLibsStatus, cleanMode, continueOnError, keystorePath) {
                 viewModel.getCommandPreview(cleanMode, continueOnError, keystorePath, keystorePassword, keystoreAlias, keystoreEntryPassword)
@@ -423,7 +378,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
         // ONE bundle. Multi-bundle moves these chips INTO each bundle box
         // so each source can be managed independently. The deprecated
         // applySaved/applyDefaults/selectAll/deselectAll methods loop over
-        // bundles. For a single bundle, they're equivalent to the per-
+        // bundles — for a single bundle, they're equivalent to the per-
         // bundle methods.
         val isSingleBundle = uiState.bundles.size == 1
         AnimatedVisibility(
@@ -477,9 +432,9 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 }
             }
 
-            // Global empty state. When EVERY loaded bundle has zero patches
+            // Global empty state — when EVERY loaded bundle has zero patches
             // compatible with this APK. None of the enabled sources contribute
-            // anything for this app's package. Rendering empty bundle boxes
+            // anything for this app's package; rendering empty bundle boxes
             // would be pure noise.
             !uiState.isLoading && uiState.bundles.all { it.patches.isEmpty() } -> {
                 Box(
@@ -498,7 +453,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 }
             }
 
-            // Global "no matches for search" empty state. Only fires when
+            // Global "no matches for search" empty state — only fires when
             // EVERY bundle that HAS patches has been filtered to empty by
             // the active search. Bundles with 0 patches for this app are
             // hidden separately above, so we only consider non-empty sources.
@@ -525,12 +480,12 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             }
 
             else -> {
-                // Patch list. Single-bundle renders flat (no box chrome),
+                // Patch list — single-bundle renders flat (no box chrome),
                 // multi-bundle renders per-bundle collapsible boxes.
                 val scrollState = rememberScrollState()
 
                 // Expand/collapse state for multi-bundle, keyed by bundleId.
-                // Default: all bundles expanded. Uses plain `remember`. State
+                // Default: all bundles expanded. Uses plain `remember` — state
                 // resets if the user backs out and re-enters the screen, which
                 // is acceptable since "show me everything" is the right default.
                 val collapsedBundles = remember { mutableStateListOf<String>() }
@@ -540,7 +495,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(scrollState)
-                            .padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         val showBanner = uiState.stripLibsStatus !is StripLibsStatus.NoNativeLibs
@@ -553,12 +508,10 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             val bundle = uiState.filteredBundles.firstOrNull() ?: return@Column
                             val bundleId = bundle.bundleId
                             val selectedInBundle = uiState.selectedByBundle[bundleId].orEmpty()
-                            val newInBundle = uiState.newPatchesByBundle[bundleId].orEmpty()
-                            bundle.patches.newestFirst(newInBundle).forEach { patch ->
+                            bundle.patches.forEach { patch ->
                                 PatchListItem(
                                     patch = patch,
                                     isSelected = selectedInBundle.contains(patch.uniqueId),
-                                    isNew = patch.uniqueId in newInBundle,
                                     onToggle = { viewModel.togglePatch(bundleId, patch.uniqueId) },
                                     sourceName = null,
                                     packageName = targetPackage,
@@ -576,7 +529,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             // (i.e. the bundle has NO patches compatible with this
                             // APK at all). Bundles that loaded patches but are
                             // currently empty due to an active search still
-                            // render. Their box shows "no matches in this bundle".
+                            // render — their box shows "no matches in this bundle".
                             val bundlesById = uiState.bundles.associateBy { it.bundleId }
                             val visibleBundles = uiState.filteredBundles.filter { fb ->
                                 bundlesById[fb.bundleId]?.patches?.isNotEmpty() == true
@@ -586,7 +539,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                     bundle = bundle,
                                     packageName = targetPackage,
                                     selectedInBundle = uiState.selectedByBundle[bundle.bundleId].orEmpty(),
-                                    newInBundle = uiState.newPatchesByBundle[bundle.bundleId].orEmpty(),
                                     selectionMode = uiState.selectionModeFor(bundle.bundleId),
                                     hasSavedForBundle = uiState.savedSelectedByBundle?.containsKey(bundle.bundleId) == true,
                                     expanded = bundle.bundleId !in collapsedBundles,
@@ -634,15 +586,29 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 ) {
                     val patchEnabled = uiState.selectedCount > 0
 
-                    MorpheActionButton(
-                        label = "Patch (${uiState.selectedCount})",
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = patchEnabled,
+                    OutlinedButton(
                         onClick = {
                             val config = viewModel.createPatchConfig(continueOnError)
                             navigator.push(PatchingScreen(config))
                         },
-                    )
+                        enabled = patchEnabled,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(42.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
+                        shape = RoundedCornerShape(corners.small)
+                    ) {
+                        Text(
+                            text = "Patch (${uiState.selectedCount})",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = font
+                        )
+                    }
                 }
             }
         }
@@ -679,8 +645,9 @@ private fun PatchSearchBar(
         Row(
             modifier = Modifier
                 .weight(1f)
-                .height(FILTER_BAR_HEIGHT)
+                .height(32.dp)
                 .clip(RoundedCornerShape(corners.small))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(corners.small))
                 .border(1.dp, searchBorderColor, RoundedCornerShape(corners.small))
                 .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -754,9 +721,10 @@ private fun PatchSearchBar(
 
         Box(
             modifier = Modifier
-                .height(FILTER_BAR_HEIGHT)
+                .height(38.dp)
                 .hoverable(chipHover)
                 .clip(RoundedCornerShape(corners.small))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(corners.small))
                 .border(1.dp, chipBorder, RoundedCornerShape(corners.small))
                 .then(
                     if (showOnlySelected) Modifier.background(
@@ -800,7 +768,6 @@ private fun PatchListItem(
     patch: Patch,
     isSelected: Boolean,
     onToggle: () -> Unit,
-    isNew: Boolean = false,
     sourceName: String? = null,
     packageName: String = "",
     getOptionValue: (optionKey: String, default: String?) -> String = { _, d -> d ?: "" },
@@ -813,15 +780,15 @@ private fun PatchListItem(
     val isHovered by interactionSource.collectIsHoveredAsState()
 
     val colors = MaterialTheme.colorScheme
-    val containerColor = when {
-        isSelected -> accents.primary.copy(alpha = 0.22f)
-        isHovered -> accents.primary.copy(alpha = 0.06f)
-        else -> Color.Transparent
-    }
+    val containerColor = if (isSelected)
+        colors.surfaceColorAtElevation(2.dp)
+    else
+        colors.surfaceColorAtElevation(1.dp).copy(alpha = 0.5f)
     val borderColor by animateColorAsState(
         when {
-            isSelected -> accents.primary.copy(alpha = 0.7f)
-            isHovered -> colors.outlineVariant
+            isSelected && isHovered -> colors.outlineVariant
+            isSelected -> colors.outlineVariant
+            isHovered -> colors.outlineVariant.copy(alpha = 0.5f)
             else -> colors.outlineVariant.copy(alpha = 0.5f)
         },
         animationSpec = tween(150)
@@ -838,46 +805,32 @@ private fun PatchListItem(
             .border(1.dp, borderColor, RoundedCornerShape(corners.small))
             .hoverable(interactionSource)
     ) {
-        // The row speaks for its contents, so the New badge has to be read out
-        // here or it is never announced.
-        val rowDescription = listOfNotNull(
-            patch.name,
-            if (isSelected) "enabled" else "disabled",
-            "new".takeIf { isNew },
-        ).joinToString(", ")
+        // Header — clicking toggles patch
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(interactionSource = interactionSource, indication = null, onClick = onToggle)
-                .semantics(mergeDescendants = true) { contentDescription = rowDescription }
                 .padding(14.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val boxShape = RoundedCornerShape(corners.small)
+            // Custom checkbox
+            val containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
+            val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+            
             Box(
                 modifier = Modifier
                     .size(18.dp)
-                    .clip(boxShape)
-                    .background(if (isSelected) accents.primary else Color.Transparent, boxShape)
-                    .then(
-                        if (isSelected) Modifier
-                        else Modifier.border(
-                            1.dp,
-                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            boxShape,
-                        )
-                    ),
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(containerColor, RoundedCornerShape(corners.small)),
                 contentAlignment = Alignment.Center
             ) {
-                if (isSelected) {
-                    Icon(
-                        imageVector = MorpheIcons.Check,
-                        contentDescription = null,
-                        tint = accents.primary.contrastingForeground(),
-                        modifier = Modifier.size(12.dp)
-                    )
-                }
+                Icon(
+                    imageVector = MorpheIcons.Check,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(12.dp)
+                )
             }
 
             Column(modifier = Modifier.weight(1f)) {
@@ -897,37 +850,26 @@ private fun PatchListItem(
                         modifier = Modifier.weight(1f, fill = false)
                     )
 
-                    if (isNew) {
-                        MorpheBadge(text = "New", tone = MorpheBadgeTone.Primary)
-                    }
-
                     if (sourceName != null) {
-                        val badgeColor = if (isSelected) {
-                            accents.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
                         Box(
                             modifier = Modifier
                                 .border(
                                     1.dp,
-                                    badgeColor.copy(alpha = if (isSelected) 0.3f else 0.2f),
+                                    accents.primary.copy(alpha = 0.3f),
                                     RoundedCornerShape(corners.small)
                                 )
                                 .background(
-                                    if (isSelected) badgeColor.copy(alpha = 0.06f) else Color.Transparent,
+                                    accents.primary.copy(alpha = 0.06f),
                                     RoundedCornerShape(corners.small)
                                 )
-                                .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
-                                .padding(horizontal = 8.dp, vertical = 2.dp),
-                            contentAlignment = Alignment.Center,
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = sourceName,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
-                                color = badgeColor.copy(alpha = if (isSelected) 1f else 0.7f),
+                                color = accents.primary,
                                 maxLines = 1
                             )
                         }
@@ -948,9 +890,7 @@ private fun PatchListItem(
                                         MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
                                         RoundedCornerShape(corners.small)
                                     )
-                                    .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
-                                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                                contentAlignment = Alignment.Center,
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
                             ) {
                                 Text(
                                     text = displayName,
@@ -996,6 +936,7 @@ private fun PatchListItem(
                     animationSpec = tween(150)
                 )
 
+                // Wrapper box — no clip, allows badge to overflow
                 Box(
                     modifier = Modifier.size(48.dp),
                     contentAlignment = Alignment.Center
@@ -1022,12 +963,13 @@ private fun PatchListItem(
                             modifier = Modifier.size(22.dp)
                         )
                     }
+                    // Options count badge — outside clip
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .offset(x = 3.dp, y = (-3).dp)
                             .size(18.dp)
-                            .background(accents.primary, RoundedCornerShape(corners.small)),
+                            .background(accents.primary, RoundedCornerShape(9.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -1103,6 +1045,7 @@ private fun IconStudioOption(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        // Edit/design first (accent-filled), then import, then delete — all on the left.
         IconActionPill(MorpheIcons.Edit, if (hasIcon) "Edit icon" else "Design icon", accents.primary, filled = true, shape = shape, font = font) { showStudio = true }
         // Import an already-prepared folder (e.g. one made in the Manager).
         IconActionPill(MorpheIcons.FolderOpen, "Import folder", accents.primary.copy(alpha = 0.8f), filled = false, shape = shape, font = font) {
@@ -1374,21 +1317,10 @@ private fun PatchOptionEditor(
                     if (localText != value) localText = value
                 }
 
-                // Blank clears the option, so the patch keeps its own default,
-                // unless the patch demands one.
-                val missing = option.required && localText.isBlank()
-                val badType = localText.isNotBlank() && option.valueType?.let {
-                    optionValueOrNull(localText, it) == null
-                } == true
-                val invalid = missing || badType
-
                 val fieldFocused = remember { mutableStateOf(false) }
                 val fieldBorder by animateColorAsState(
-                    when {
-                        invalid -> MaterialTheme.colorScheme.error
-                        fieldFocused.value -> accents.primary.copy(alpha = 0.6f)
-                        else -> accents.primary.copy(alpha = 0.2f)
-                    },
+                    if (fieldFocused.value) accents.primary.copy(alpha = 0.6f)
+                    else accents.primary.copy(alpha = 0.2f),
                     animationSpec = tween(150)
                 )
 
@@ -1431,20 +1363,6 @@ private fun PatchOptionEditor(
                         )
                     }
                 }
-                if (invalid) {
-                    Text(
-                        text = if (missing) {
-                            "This option is required"
-                        } else {
-                            "Expected ${option.valueType?.let { expectedValueHint(it) }}"
-                        },
-                        fontSize = 10.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(top = 2.dp),
-                    )
-                }
             }
         }
     }
@@ -1472,12 +1390,12 @@ private fun SelectionModeChips(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // SAVED is computed by overlaying the saved-selection check on top of CUSTOM
+        // SAVED is computed by overlaying the saved-selection check on top of CUSTOM —
         // when hasSavedSelection is true AND the current selection matches the saved
         // bundle, we treat it as SAVED. The VM only knows ALL/DEFAULTS/NONE/CUSTOM, so
         // we approximate: if hasSavedSelection is true and activeMode is CUSTOM, the
         // user could still be on their saved set. We can't tell here without the
-        // bundle. For now SAVED highlights only when activeMode == SelectionMode.SAVED
+        // bundle; for now SAVED highlights only when activeMode == SelectionMode.SAVED
         // (which is set after applySavedDefaults by virtue of the chip being clicked).
         SelectionModeChip(
             label = "Your defaults",
@@ -1519,15 +1437,71 @@ private fun SelectionModeChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-) = MorpheChoiceChip(
-    text = label,
-    active = active,
-    font = LocalMorpheFont.current,
-    modifier = modifier,
-    icon = icon,
-    enabled = enabled,
-    onClick = onClick,
-)
+) {
+    val corners = LocalMorpheCorners.current
+    val font = LocalMorpheFont.current
+    val accents = LocalMorpheAccents.current
+
+    val hover = remember { MutableInteractionSource() }
+    val isHovered by hover.collectIsHoveredAsState()
+
+    val borderColor by animateColorAsState(
+        when {
+            !enabled -> MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
+            active -> accents.primary.copy(alpha = 0.55f)
+            isHovered -> accents.primary.copy(alpha = 0.35f)
+            else -> MaterialTheme.colorScheme.outlineVariant
+        },
+        animationSpec = tween(150)
+    )
+    val bgColor by animateColorAsState(
+        when {
+            !enabled -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            active -> accents.primary.copy(alpha = 0.20f)
+            isHovered -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
+            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        },
+        animationSpec = tween(150)
+    )
+    val textColor = when {
+        !enabled -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        active -> accents.primary
+        else -> accents.primary.copy(alpha = 0.7f)
+    }
+
+    Box(
+        modifier = modifier
+            .height(32.dp)
+            .hoverable(hover)
+            .clip(RoundedCornerShape(corners.small))
+            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+            .background(bgColor, RoundedCornerShape(corners.small))
+            .let { if (enabled) it.clickable(onClick = onClick) else it }
+            .padding(horizontal = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = textColor,
+                modifier = Modifier.size(12.dp)
+            )
+            Text(
+                text = label,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Normal,
+                fontFamily = font,
+                color = textColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
 
 // ── Command Preview ──
 
@@ -1683,21 +1657,21 @@ private fun StripLibsStatusBanner(
 
     // Each status variant maps to a BannerDisplay that tells the banner what color,
     // headline, description, and arch chips to render.
-    // accents.secondary is the app's "informational" accent. MaterialTheme tertiary is
+    // accents.secondary is the app's "informational" accent; MaterialTheme tertiary is
     // used for warning/fallback states.
     val display: BannerDisplay = when (status) {
         is StripLibsStatus.NoNativeLibs -> BannerDisplay(
-            dotColor = accents.primary.copy(alpha = 0.4f),
+            dotColor = accents.secondary.copy(alpha = 0.4f),
             headline = "No native libs",
             detail = "stripping does not apply"
         )
         is StripLibsStatus.Universal -> BannerDisplay(
-            dotColor = accents.primary.copy(alpha = 0.4f),
+            dotColor = accents.secondary.copy(alpha = 0.4f),
             headline = "Universal libs",
             detail = "single universal folder - stripping does not apply"
         )
         is StripLibsStatus.KeepAll -> BannerDisplay(
-            dotColor = accents.primary.copy(alpha = 0.4f),
+            dotColor = accents.secondary.copy(alpha = 0.4f),
             headline = "No stripping needed",
             detail = "keep-list covers every arch in this APK",
             notInApkChips = status.notInApk
@@ -1709,7 +1683,7 @@ private fun StripLibsStatusBanner(
             keepChips = status.apkArches
         )
         is StripLibsStatus.WillStrip -> BannerDisplay(
-            dotColor = accents.primary,
+            dotColor = accents.secondary,
             headline = "Stripping native libs",
             detail = "keeping listed archs only",
             keepChips = status.keeping,
@@ -1724,6 +1698,7 @@ private fun StripLibsStatusBanner(
             .fillMaxWidth()
             .clip(RoundedCornerShape(corners.small))
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(corners.small))
+            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp), RoundedCornerShape(corners.small))
             .padding(horizontal = 10.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -1780,7 +1755,7 @@ private fun ArchChip(
     // Chip visual treatment per role:
     //  - KEEP       : filled accent background, strong border, full-opacity text
     //  - STRIP      : outlined only, dim border, dimmed text
-    //  - NOT_IN_APK : outlined only, very dim border, dimmed italicized text
+    //  - NOT_IN_APK : outlined only, very dim border, dimmed italicized text —
     //                 signals "this preference has no effect on this APK"
     val borderAlpha = when (role) {
         ArchChipRole.KEEP -> 0.4f
@@ -1812,8 +1787,7 @@ private fun ArchChip(
                     Modifier.background(accent.copy(alpha = 0.08f), RoundedCornerShape(corners.small))
                 } else Modifier
             )
-            .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
-            .padding(horizontal = 9.dp, vertical = 3.dp)
+            .padding(horizontal = 7.dp, vertical = 3.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -1862,7 +1836,7 @@ private data class BannerDisplay(
  * and the patches list itself.
  *
  * In search-active state, the box stays visible even if [BundlePatches.patches]
- * is empty. It renders a "no matches in this bundle" inline empty state so
+ * is empty — it renders a "no matches in this bundle" inline empty state so
  * the structural grouping stays stable while the user iterates on the query.
  */
 @Composable
@@ -1870,7 +1844,6 @@ private fun BundleBox(
     bundle: BundlePatches,
     packageName: String = "",
     selectedInBundle: Set<String>,
-    newInBundle: Set<String>,
     selectionMode: SelectionMode,
     hasSavedForBundle: Boolean,
     expanded: Boolean,
@@ -1892,7 +1865,7 @@ private fun BundleBox(
     val totalCount = bundle.patches.size
 
     val outlineColor = MaterialTheme.colorScheme.outlineVariant
-    val bgColor = panelFill
+    val bgColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
 
     Column(
         modifier = Modifier
@@ -1910,18 +1883,25 @@ private fun BundleBox(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            MorpheChevron(expanded)
+            // Chevron
             Text(
+                text = if (expanded) "▼" else "▶",
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontFamily = font,
+            )
+            RepositoryLinkText(
                 text = bundle.bundleName,
+                link = bundle.repositoryLink,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurface,
+                textColor = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f, fill = false)
             )
-            // Count chip. "Your Defaults" badge lives in SelectionModeChips
+            // Count chip — "Your Defaults" badge lives in SelectionModeChips
             // below so we don't duplicate the signal here.
             Text(
                 text = "$enabledCount / $totalCount",
@@ -1939,7 +1919,7 @@ private fun BundleBox(
             exit = shrinkVertically(),
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                // Per-bundle control row. REUSES the same SelectionModeChips
+                // Per-bundle control row — REUSES the same SelectionModeChips
                 // composable the single-bundle path uses, so icons, hover
                 // states, "Your Defaults" badge, and full-width layout match
                 // exactly. Callbacks scope each action to THIS bundle.
@@ -1954,7 +1934,7 @@ private fun BundleBox(
                 )
 
                 // Patches inside this bundle. Note: this is a regular Column,
-                // NOT a LazyColumn. Bundles aren't typically huge enough
+                // NOT a LazyColumn — bundles aren't typically huge enough
                 // (tens of patches) to justify lazy rendering, and nesting
                 // LazyColumns inside a LazyColumn is unsupported.
                 if (bundle.patches.isEmpty() && searchActive) {
@@ -1972,11 +1952,10 @@ private fun BundleBox(
                             .padding(horizontal = 4.dp, vertical = 4.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
-                        bundle.patches.newestFirst(newInBundle).forEach { patch ->
+                        bundle.patches.forEach { patch ->
                             PatchListItem(
                                 patch = patch,
                                 isSelected = selectedInBundle.contains(patch.uniqueId),
-                                isNew = patch.uniqueId in newInBundle,
                                 onToggle = { onTogglePatch(patch.uniqueId) },
                                 // Bundle context is implicit from the box header
                                 sourceName = null,
@@ -1995,120 +1974,3 @@ private fun BundleBox(
         }
     }
 }
-
-@Composable
-private fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    Dialog(onDismissRequest = onDismiss) {
-        MorpheDialogSurface(
-            modifier = Modifier.widthIn(max = 520.dp),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Text(
-                text = "This run",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-
-            RunInfoGroup(label = "App", color = accents.secondary, font = font) {
-                RunInfoHeadline(
-                    name = info.appName,
-                    version = info.appVersion.takeIf { it.isNotBlank() }
-                        ?.let { "v${it.removePrefix("v")}" },
-                    accent = accents.secondary,
-                    font = font,
-                )
-                RunInfoDetail(info.packageName, font)
-                RunInfoDetail(info.apkFileName, font)
-                RunInfoDetail(info.apkPath, font)
-            }
-
-            RunInfoGroup(
-                label = if (info.bundles.size == 1) "Patch bundle" else "Patch bundles",
-                color = accents.primary,
-                font = font,
-            ) {
-                info.bundles.forEach { bundle ->
-                    RunInfoHeadline(
-                        name = bundle.name,
-                        version = bundle.version?.let { "v${it.removePrefix("v")}" },
-                        accent = accents.primary,
-                        font = font,
-                    )
-                    RunInfoDetail(bundle.fileName, font)
-                }
-                if (info.bundles.isEmpty()) RunInfoDetail("No bundles resolved", font)
-            }
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                MorpheDialogButton("Close", accents.primary, filled = false, onClick = onDismiss)
-            }
-        }
-    }
-}
-
-@Composable
-private fun RunInfoGroup(
-    label: String,
-    color: Color,
-    font: FontFamily,
-    content: @Composable ColumnScope.() -> Unit,
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(3.dp),
-    ) {
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Medium,
-            fontFamily = font,
-            color = color.copy(alpha = 0.85f),
-        )
-        content()
-    }
-}
-
-@Composable
-private fun RunInfoHeadline(name: String, version: String?, accent: Color, font: FontFamily) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = name,
-            fontSize = 13.sp,
-            fontFamily = font,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f),
-        )
-        Text(
-            text = version ?: "unknown",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = font,
-            color = if (version != null) accent
-                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-        )
-    }
-}
-
-@Composable
-private fun RunInfoDetail(text: String, font: FontFamily) {
-    Text(
-        text = text,
-        fontSize = 9.sp,
-        fontFamily = font,
-        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-        lineHeight = 13.sp,
-    )
-}
-
-/** New patches float to the top, the rest keep the bundle's own order. */
-private fun List<Patch>.newestFirst(newIds: Set<String>): List<Patch> =
-    if (newIds.isEmpty()) this else sortedByDescending { it.uniqueId in newIds }

@@ -44,6 +44,7 @@ import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
+import app.morphe.gui.util.RepositoryLinks
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import java.io.File
@@ -112,9 +113,10 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     var showSourcePicker by remember { mutableStateOf(false) }
     var showLogViewer by remember { mutableStateOf(false) }
     var activeSourceId by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(uiState.patchSourceName, allSources) {
-        // Resolve the current active source's id by name for radio selection.
-        activeSourceId = allSources.firstOrNull { it.name == uiState.patchSourceName }?.id
+    LaunchedEffect(uiState.patchSourceId, allSources) {
+        // Keep link and radio selection tied to structured identity, never display name.
+        activeSourceId = uiState.patchSourceId
+            ?.takeIf { id -> allSources.any { it.id == id } }
             ?: patchSourceManager.getActiveSource().id
     }
 
@@ -215,6 +217,9 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                             isLoading = uiState.isLoadingPatches,
                             patchSourceName = uiState.patchSourceName,
                             patchesChannel = uiState.patchesChannel,
+                            repositoryLink = activeSourceId
+                                ?.let { id -> allSources.singleOrNull { it.id == id } }
+                                ?.let(RepositoryLinks::resolve),
                             onClick = { showSourcePicker = true },
                         )
                     }
@@ -314,6 +319,9 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                     errorMessage = detailedError,
                                     apkInfo = uiState.apkInfo ?: lastApkInfo,
                                     patchSourceName = uiState.patchSourceName,
+                                    repositoryLink = activeSourceId
+                                        ?.let { id -> allSources.singleOrNull { it.id == id } }
+                                        ?.let(RepositoryLinks::resolve),
                                     patchesVersion = uiState.patchesVersion,
                                     onStartOver = { viewModel.reset() },
                                     onViewLogs = { showLogViewer = true }

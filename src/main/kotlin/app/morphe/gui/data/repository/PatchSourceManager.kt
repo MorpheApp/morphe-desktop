@@ -239,10 +239,11 @@ class PatchSourceManager(
     /**
      * Add a new source. Persists and refreshes the cached snapshot.
      */
-    suspend fun addSource(source: PatchSource) {
-        configRepository.addPatchSource(source)
+    suspend fun addSource(source: PatchSource): Boolean {
+        if (!configRepository.addPatchSource(source)) return false
         refreshEnabledSources()
         _sourceVersion.value++
+        return true
     }
 
     /**

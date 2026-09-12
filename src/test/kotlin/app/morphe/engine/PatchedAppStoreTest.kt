@@ -86,6 +86,51 @@ class PatchedAppStoreTest {
     }
 
     @Test
+    fun `patch source artifact hash persists across store instances`() = runBlocking {
+        val hash = "a".repeat(64)
+        val withSource = record("com.a").copy(
+            sourcesSnapshot = listOf(
+                PatchedAppRecord.PatchedSourceSnapshot("source-id", "Local patches", "1.4.1", hash),
+            ),
+        )
+
+        PatchedAppStore(storeFile).upsert(withSource)
+
+        assertEquals(hash, PatchedAppStore(storeFile).get("com.a")?.sourcesSnapshot?.single()?.artifactSha256)
+    }
+
+    @Test
+    fun `legacy source snapshot without artifact hash still loads`() = runBlocking {
+        storeFile.parentFile.mkdirs()
+        storeFile.writeText(
+            """
+            {
+              "schemaVersion": 1,
+              "records": [{
+                "packageName": "com.legacy",
+                "displayName": "Legacy",
+                "apkVersion": "1.0",
+                "inputApkPath": "/in/legacy.apk",
+                "outputApkPath": "/out/legacy.apk",
+                "sourcesSnapshot": [{
+                  "sourceId": "old-local-id",
+                  "sourceName": "Old local source",
+                  "version": "1.4.1"
+                }],
+                "patchedAt": 1,
+                "patchedWithMorpheVersion": "old"
+              }]
+            }
+            """.trimIndent(),
+        )
+
+        val snapshot = newStore().get("com.legacy")?.sourcesSnapshot?.single()
+
+        assertEquals("old-local-id", snapshot?.sourceId)
+        assertNull(snapshot?.artifactSha256)
+    }
+
+    @Test
     fun `tolerates a corrupt file and heals on next write`() = runBlocking {
         storeFile.parentFile.mkdirs()
         storeFile.writeText("{ not valid json ")

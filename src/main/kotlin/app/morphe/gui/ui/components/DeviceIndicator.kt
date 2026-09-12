@@ -23,6 +23,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -73,23 +74,23 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
     )
 
     Box(modifier = modifier) {
-        Box(
-            modifier = Modifier
-                .height(34.dp)
-                .hoverable(hoverInteraction)
-                .clip(RoundedCornerShape(corners.small))
-                .background(containerColor)
-                .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-                .handCursor()
-                .clickable { showPopup = !showPopup }
-        ) {
-            Row(
+        MorpheTooltip(TooltipText.DEVICE_PICKER) {
+            Box(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    .height(34.dp)
+                    .hoverable(hoverInteraction)
+                    .clip(RoundedCornerShape(corners.small))
+                    .background(containerColor)
+                    .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+                    .clickable { showPopup = !showPopup }
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(horizontal = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
                 // Status dot
                 Box(
                     modifier = Modifier
@@ -108,7 +109,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                     isAdbDisabledByUser -> "ADB off"
                     isAdbAvailable == null -> "Checking…"
                     !isAdbAvailable -> "No ADB"
-                    selectedDevice != null -> selectedDevice.displayName
+                    selectedDevice != null -> selectedDevice.displayNameWithEndpoint
                     unauthorizedDevices.isNotEmpty() -> "Unauthorized"
                     else -> "No device"
                 }
@@ -136,6 +137,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                     modifier = Modifier.size(14.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                }
             }
         }
 
@@ -364,6 +366,17 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                             fontWeight = FontWeight.Medium,
                                             fontFamily = font
                                         )
+                                        if (device.displayName != device.id) {
+                                            Text(
+                                                text = device.id,
+                                                fontSize = 10.sp,
+                                                fontFamily = font,
+                                                fontWeight = FontWeight.Normal,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                        }
                                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                             device.architecture?.let { arch ->
                                                 Text(

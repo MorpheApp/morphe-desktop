@@ -29,6 +29,8 @@ import java.util.logging.Logger
  *   logs/                                        # app logs
  *   icons/{packageName}/                         # user-created custom app icons (persistent)
  *   config.json                                  # GUI preferences + sources
+ *   installed-app-labels.json                    # small installed-app label metadata cache
+ *   device-patch-deployments.json                # verified per-device patch receipts
  *   tmp/patching-{timestamp}/                    # per-session patcher scratch
  *   morphe.keystore                              # shared default signing key
  * ```
@@ -81,6 +83,12 @@ object MorpheData {
 
     /** GUI's persisted preferences (theme, enabled sources, etc.). */
     val configFile: File get() = File(root, "config.json")
+
+    /** Small metadata-only cache for labels resolved from installed Android apps. */
+    val installedAppLabelsCacheFile: File get() = File(root, "installed-app-labels.json")
+
+    /** Successful patched-APK deployments, keyed by device serial + original package. */
+    val devicePatchDeploymentsFile: File get() = File(root, DevicePatchDeploymentStore.FILE_NAME)
 
     /**
      * Default shared keystore. The patcher library creates it on first sign

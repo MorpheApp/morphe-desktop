@@ -5,7 +5,9 @@
 
 package app.morphe.engine.util
 
+import com.android.apksig.ApkVerifier
 import java.io.File
+import java.security.MessageDigest
 import java.security.KeyStore
 import java.security.Security
 import java.security.cert.Certificate
@@ -33,21 +35,33 @@ object SignatureIdentity {
     fun idForCert(cert: Certificate): String =
         Integer.toHexString(cert.encoded.contentHashCode())
 
+    /** Collision-resistant identity used for local APK-to-keystore comparisons. */
+    fun sha256ForCert(cert: Certificate): String =
+        MessageDigest.getInstance("SHA-256").digest(cert.encoded)
+            .joinToString("") { "%02x".format(it) }
+
     /**
      * Signature id of the cert under [alias] in the BKS [keystoreFile], or null
      * if it can't be read. Only the public certificate is needed, so the key
      * (entry) password is irrelevant — just the store password.
      */
     fun idForKeystore(keystoreFile: File, storePassword: String?, alias: String): String? = try {
-        if (!keystoreFile.exists()) {
-            null
-        } else {
-            ensureBouncyCastle()
-            val ks = KeyStore.getInstance("BKS")
-            keystoreFile.inputStream().use { ks.load(it, storePassword?.toCharArray()) }
-            val realAlias = ks.aliases().toList().firstOrNull { it.equals(alias, ignoreCase = true) } ?: alias
-            ks.getCertificate(realAlias)?.let { idForCert(it) }
-        }
+        certificateForKeystore(keystoreFile, storePassword, alias)?.let(::idForCert)
+    } catch (e: Exception) {
+        null
+    }
+
+    fun sha256ForKeystore(keystoreFile: File, storePassword: String?, alias: String): String? = try {
+        certificateForKeystore(keystoreFile, storePassword, alias)?.let(::sha256ForCert)
+    } catch (e: Exception) {
+        null
+    }
+
+    /** Verified current APK signer fingerprints, or null when no reliable verdict is possible. */
+    fun sha256ForApkSigners(apkFile: File): Set<String>? = try {
+        val result = ApkVerifier.Builder(apkFile).build().verify()
+        if (!result.isVerified || result.signerCertificates.isEmpty()) null
+        else result.signerCertificates.mapTo(linkedSetOf(), ::sha256ForCert)
     } catch (e: Exception) {
         null
     }
@@ -58,6 +72,19 @@ object SignatureIdentity {
      */
     fun parseDeviceSignatureId(dumpsysOutput: String): String? =
         Regex("""signatures:\[([0-9a-fA-F]+)\]""").find(dumpsysOutput)?.groupValues?.get(1)?.lowercase()
+
+    private fun certificateForKeystore(
+        keystoreFile: File,
+        storePassword: String?,
+        alias: String,
+    ): Certificate? {
+        if (!keystoreFile.exists()) return null
+        ensureBouncyCastle()
+        val ks = KeyStore.getInstance("BKS")
+        keystoreFile.inputStream().use { ks.load(it, storePassword?.toCharArray()) }
+        val realAlias = ks.aliases().toList().firstOrNull { it.equals(alias, ignoreCase = true) } ?: alias
+        return ks.getCertificate(realAlias)
+    }
 
     private fun ensureBouncyCastle() {
         if (Security.getProvider("BC") != null) return

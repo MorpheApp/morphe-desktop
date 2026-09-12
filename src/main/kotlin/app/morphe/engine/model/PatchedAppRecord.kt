@@ -65,6 +65,10 @@ data class PatchedAppRecord(
     /** Epoch millis of when the patch completed. */
     val patchedAt: Long,
     val patchedWithMorpheVersion: String,
+    /** Source device for an S4 import; unrelated to subsequent install targets. */
+    val sourceDeviceSerial: String? = null,
+    /** Split-derived imports are not silently treated as cross-device universal. */
+    val deviceSpecificInput: Boolean = false,
 ) {
     /** Package actually installed on a device (post-rename if applicable). */
     val installedPackageName: String get() = currentPackageName?.takeIf { it.isNotBlank() } ?: packageName
@@ -75,5 +79,11 @@ data class PatchedAppRecord(
         val sourceName: String,
         /** `.mpp` release version, e.g. `v1.5.0`. */
         val version: String,
+        /**
+         * Content identity of the exact `.mpp` used for this patch. This lets a
+         * local source survive path changes or delete/re-add (new UUID) without
+         * falling back to its editable display name. Null for legacy records.
+         */
+        val artifactSha256: String? = null,
     )
 }

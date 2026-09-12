@@ -5,6 +5,9 @@
 
 package app.morphe.gui.util
 
+import app.morphe.engine.installation.AdbApkInstaller
+import app.morphe.engine.installation.AdbInstallRequest
+import app.morphe.engine.installation.AdbMigrationRequiredException
 import app.morphe.engine.util.AppLinkCommands
 import app.morphe.engine.util.SignatureIdentity
 import kotlinx.coroutines.Dispatchers
@@ -362,62 +365,31 @@ class AdbManager {
             )
         }
 
-        // Build + run the install, factored so we can transparently retry
-        // without installer attribution. Stricter Android builds could reject an
-        // `-i` pointing at a store the user doesn't have; if that's what failed,
-        // we'd rather install without Play-update blocking than not install at
-        // all. (Validated on Android 12 that an absent `-i` is accepted; this is
-        // a safety net for versions we haven't tested.)
-        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
-            val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
-            if (allowDowngrade) command.add("-d") // Allow downgrade
-            if (withInstaller && !installerPackage.isNullOrBlank()) {
-                command.add("-i") // Record installer source (blocks Play auto-update)
-                command.add(installerPackage)
-            }
-            command.add(apkPath)
-
-            onProgress("Installing on ${targetDevice.displayName}...")
-            Logger.info("Running: ${command.joinToString(" ")}")
-
-            return try {
-                val process = ProcessBuilder(command)
-                    .redirectErrorStream(true)
-                    .start()
-
-                // Read output in real-time
-                val output = StringBuilder()
-                process.inputStream.bufferedReader().forEachLine { line ->
-                    output.appendLine(line)
-                    onProgress(line)
-                    Logger.debug("ADB: $line")
-                }
-
-                val exitCode = process.waitFor()
-                val outputStr = output.toString()
-
-                if (exitCode == 0 && outputStr.contains("Success")) {
-                    Logger.info("APK installed successfully")
-                    Result.success(Unit)
-                } else {
-                    val errorMessage = parseInstallError(outputStr)
-                    Logger.error("Installation failed: $errorMessage")
-                    Result.failure(AdbException(errorMessage))
-                }
-            } catch (e: Exception) {
-                Logger.error("Error installing APK", e)
-                Result.failure(AdbException("Installation failed: ${e.message}"))
-            }
-        }
-
-        val withInstaller = !installerPackage.isNullOrBlank()
-        val first = attemptInstall(withInstaller = withInstaller)
-        if (first.isFailure && withInstaller) {
-            Logger.info("Install with '-i $installerPackage' failed; retrying without installer attribution")
-            attemptInstall(withInstaller = false)
-        } else {
-            first
-        }
+        onProgress("Installing on ${targetDevice.displayName}...")
+        AdbApkInstaller().install(
+            request = AdbInstallRequest(
+                adbPath = adb,
+                apk = apkFile,
+                deviceSerial = targetDevice.id,
+                allowDowngrade = allowDowngrade,
+                installerPackage = installerPackage,
+            ),
+            onProgress = onProgress,
+            onDebug = Logger::debug,
+        ).fold(
+            onSuccess = { mode ->
+                Logger.info("APK installed successfully on ${targetDevice.id} using ${mode.name.lowercase()}")
+                Result.success(Unit)
+            },
+            onFailure = { error ->
+                val message = parseInstallError(error.message.orEmpty())
+                Logger.error("Installation failed: $message")
+                Result.failure(
+                    if (error is AdbMigrationRequiredException) error
+                    else AdbException(message)
+                )
+            },
+        )
     }
 
     /**
@@ -664,11 +636,50 @@ class AdbManager {
      * may be null if absent/unparseable), or null if the package isn't dumpable.
      */
     suspend fun getInstalledPackageInfo(deviceId: String, pkg: String): Pair<String?, String?>? =
+        getInstalledPackageSnapshot(deviceId, pkg)?.let { it.versionName to it.signatureId }
+
+    /** Identity fields used to invalidate a persisted deployment receipt cheaply. */
+    suspend fun getInstalledPackageSnapshot(deviceId: String, pkg: String): InstalledPackageSnapshot? =
         withContext(Dispatchers.IO) {
             val out = dumpsysPackage(deviceId, pkg) ?: return@withContext null
-            val version = Regex("""versionName=(\S+)""").find(out)?.groupValues?.get(1)
-            val signatureId = SignatureIdentity.parseDeviceSignatureId(out)
-            version to signatureId
+            InstalledPackageSnapshot(
+                versionName = Regex("""versionName=(\S+)""").find(out)?.groupValues?.get(1),
+                signatureId = SignatureIdentity.parseDeviceSignatureId(out),
+                lastUpdateTime = parsePackageLastUpdateTime(out),
+            )
+        }
+
+    /**
+     * SHA-256 of the installed base APK, computed on-device so verification does
+     * not transfer a potentially huge APK back to the desktop. Null is a
+     * fail-closed result: missing package, inaccessible path, unavailable hash
+     * command, disconnect, or malformed output.
+     */
+    suspend fun getInstalledBaseApkSha256(deviceId: String, pkg: String): String? =
+        withContext(Dispatchers.IO) {
+            val adb = findAdb() ?: return@withContext null
+            try {
+                val pathProcess = ProcessBuilder(adb, "-s", deviceId, "shell", "pm", "path", pkg)
+                    .redirectErrorStream(true)
+                    .start()
+                val pathOutput = pathProcess.inputStream.bufferedReader().readText()
+                pathProcess.waitFor()
+                if (pathProcess.exitValue() != 0) return@withContext null
+                val baseApkPath = parseInstalledBaseApkPath(pathOutput) ?: return@withContext null
+
+                fun hashWith(command: List<String>): String? {
+                    val process = ProcessBuilder(command).redirectErrorStream(true).start()
+                    val output = process.inputStream.bufferedReader().readText()
+                    process.waitFor()
+                    return if (process.exitValue() == 0) parseSha256Sum(output) else null
+                }
+
+                hashWith(listOf(adb, "-s", deviceId, "shell", "sha256sum", baseApkPath))
+                    ?: hashWith(listOf(adb, "-s", deviceId, "shell", "toybox", "sha256sum", baseApkPath))
+            } catch (e: Exception) {
+                Logger.debug("Could not verify installed APK hash for $pkg on $deviceId: ${e.message}")
+                null
+            }
         }
 
     private suspend fun dumpsysPackage(deviceId: String, pkg: String): String? = withContext(Dispatchers.IO) {
@@ -800,6 +811,10 @@ data class AdbDevice(
     val displayName: String
         get() = model?.takeIf { it.isNotBlank() } ?: id
 
+    /** Friendly name plus a compact hint derived only from the exact ADB serial. */
+    val displayNameWithEndpoint: String
+        get() = if (displayName == id) id else "$displayName · ${compactDeviceId(id)}"
+
     /** Full display with status for UI */
     val displayNameWithStatus: String
         get() {
@@ -816,6 +831,11 @@ data class AdbDevice(
     /** Whether device is ready for installation */
     val isReady: Boolean
         get() = status == DeviceStatus.DEVICE
+
+    companion object {
+        internal fun compactDeviceId(id: String): String =
+            if (id.length <= 20) id else "${id.take(10)}…${id.takeLast(6)}"
+    }
 }
 
 enum class DeviceStatus {
@@ -840,3 +860,34 @@ class AdbMultipleDevicesException(
     message: String,
     val devices: List<AdbDevice>
 ) : AdbException(message)
+
+internal fun parseInstalledBaseApkPath(output: String): String? {
+    val paths = output.lineSequence()
+        .map(String::trim)
+        .filter { it.startsWith("package:") }
+        .map { it.removePrefix("package:") }
+        .filter { it.startsWith("/") && it.endsWith(".apk") }
+        .toList()
+    return paths.firstOrNull { it.endsWith("/base.apk") }
+        ?: paths.singleOrNull()
+}
+
+data class InstalledPackageSnapshot(
+    val versionName: String?,
+    val signatureId: String?,
+    val lastUpdateTime: String?,
+)
+
+internal fun parseSha256Sum(output: String): String? =
+    Regex("""(?i)^([0-9a-f]{64})(?:\s|$)""")
+        .find(output.trim())
+        ?.groupValues
+        ?.get(1)
+        ?.lowercase()
+
+internal fun parsePackageLastUpdateTime(output: String): String? =
+    Regex("""(?m)^\s*lastUpdateTime=(.+)$""")
+        .find(output)
+        ?.groupValues
+        ?.get(1)
+        ?.trim()

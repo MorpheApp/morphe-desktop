@@ -25,6 +25,7 @@ import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.data.repository.PatchSourceDuplicateGuard
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheDimens
@@ -40,6 +41,7 @@ import org.koin.compose.koinInject
 @Composable
 internal fun AddPatchSourceDialog(
     isQuickMode: Boolean,
+    existingSources: List<PatchSource>,
     onDismiss: () -> Unit,
     onAdd: (PatchSource) -> Unit
 ) {
@@ -57,6 +59,14 @@ internal fun AddPatchSourceDialog(
     val scope = rememberCoroutineScope()
     var developerOptions by remember { mutableStateOf(false) }
     var lastLocalPatchDir by remember { mutableStateOf<String?>(null) }
+    fun addIfUnique(source: PatchSource): Boolean {
+        if (existingSources.any { PatchSourceDuplicateGuard.sameSource(it, source) }) {
+            error = "This patch source is already configured."
+            return false
+        }
+        onAdd(source)
+        return true
+    }
     LaunchedEffect(Unit) {
         val cfg = configRepository.loadConfig()
         developerOptions = cfg.developerOptions
@@ -261,7 +271,7 @@ internal fun AddPatchSourceDialog(
                             if (resolved == null) {
                                 error = "Enter a valid GitHub or GitLab URL"; return@Button
                             }
-                            onAdd(PatchSource(
+                            addIfUnique(PatchSource(
                                 id = UUID.randomUUID().toString(),
                                 name = name.trim(),
                                 type = resolved.provider,
@@ -279,7 +289,7 @@ internal fun AddPatchSourceDialog(
                         }
                         else -> {}
                     }
-                    onAdd(PatchSource(
+                    addIfUnique(PatchSource(
                         id = UUID.randomUUID().toString(),
                         name = name.trim(),
                         type = sourceType,

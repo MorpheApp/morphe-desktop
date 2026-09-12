@@ -69,7 +69,9 @@ object DeviceMonitor {
     }
 
     fun selectDevice(device: AdbDevice) {
-        _state.value = _state.value.copy(selectedDevice = device)
+        val current = _state.value
+        val selected = resolveExplicitDevice(current.devices, device.id) ?: return
+        _state.value = current.copy(selectedDevice = selected)
     }
 
     private suspend fun refreshDevices() {
@@ -95,21 +97,7 @@ object DeviceMonitor {
                     if (prev.id !in currentById) Logger.info("Device disconnected: ${prev.id}")
                 }
 
-                val readyDevices = devices.filter { it.isReady }
-
-                // Determine selected device
-                val selected = when {
-                    // Keep current selection if it's still available
-                    currentState.selectedDevice != null &&
-                        readyDevices.any { it.id == currentState.selectedDevice.id } ->
-                        readyDevices.first { it.id == currentState.selectedDevice.id }
-                    // Auto-select if only one ready device
-                    readyDevices.size == 1 -> readyDevices.first()
-                    // Clear selection if no ready devices
-                    readyDevices.isEmpty() -> null
-                    // Keep null if multiple devices and no prior selection
-                    else -> currentState.selectedDevice
-                }
+                val selected = resolveSelectedDevice(devices, currentState.selectedDevice)
 
                 _state.value = currentState.copy(
                     devices = devices,

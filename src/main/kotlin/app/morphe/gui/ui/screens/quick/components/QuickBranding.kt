@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.EnabledSourcesLoader
+import app.morphe.gui.ui.components.RepositoryLinkText
+import app.morphe.gui.util.RepositoryWebLink
 import app.morphe.morphe_desktop.generated.resources.Res
 import app.morphe.morphe_desktop.generated.resources.morphe_dark
 import app.morphe.morphe_desktop.generated.resources.morphe_light
@@ -51,6 +53,7 @@ internal fun PatchesVersionBadge(
     isLoading: Boolean,
     patchSourceName: String? = null,
     patchesChannel: EnabledSourcesLoader.Channel? = null,
+    repositoryLink: RepositoryWebLink? = null,
     onClick: (() -> Unit)? = null,
 ) {
     val font = LocalMorpheFont.current
@@ -103,12 +106,13 @@ internal fun PatchesVersionBadge(
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            RepositoryLinkText(
                 text = patchSourceName ?: "Patches",
+                link = repositoryLink,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                textColor = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = " · ",

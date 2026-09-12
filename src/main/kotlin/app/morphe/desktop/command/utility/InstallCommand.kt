@@ -7,6 +7,10 @@ package app.morphe.desktop.command.utility
 
 import app.morphe.engine.util.ApkManifestReader
 import app.morphe.engine.util.AppLinkCommands
+import app.morphe.engine.installation.AdbApkInstaller
+import app.morphe.engine.installation.AdbExecutableLocator
+import app.morphe.engine.installation.AdbInstallRequest
+import app.morphe.engine.installation.resolveAdbDeviceSerial
 import app.morphe.library.installation.installer.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -56,28 +60,33 @@ internal object InstallCommand : Runnable {
 
     override fun run() {
         suspend fun install(deviceSerial: String? = null) {
-            val result = try {
-                if (packageName != null) {
-                    AdbRootInstaller(deviceSerial)
-                } else {
-                    AdbInstaller(deviceSerial)
-                }.install(Installer.Apk(apk, packageName))
-            } catch (e: Exception) {
-                logger.severe(e.toString())
-                return
-            }
-
-            when (result) {
-                RootInstallerResult.FAILURE -> {
+            if (packageName != null) {
+                val result = try {
+                    AdbRootInstaller(deviceSerial).install(Installer.Apk(apk, packageName))
+                } catch (e: Exception) {
+                    logger.severe(e.toString())
+                    return
+                }
+                if (result == RootInstallerResult.FAILURE) {
                     logger.severe("Failed to mount the APK file")
                     return
                 }
-                is AdbInstallerResult.Failure -> {
-                    logger.severe(result.exception.toString())
+            } else {
+                val result = runCatching {
+                    val adb = AdbExecutableLocator.find()
+                        ?: throw IllegalStateException("ADB not found. Please install Android SDK Platform Tools.")
+                    val serial = resolveAdbDeviceSerial(adb, deviceSerial)
+                    AdbApkInstaller().install(
+                        AdbInstallRequest(adb, apk, serial),
+                        onDebug = logger::fine,
+                    ).getOrThrow()
+                }
+                if (result.isFailure) {
+                    logger.severe(result.exceptionOrNull().toString())
                     return
                 }
-                else -> logger.info("Installed the APK file")
             }
+            logger.info("Installed the APK file")
 
             if (routeLinks) routeLinks(deviceSerial)
         }
