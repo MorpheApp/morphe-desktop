@@ -264,6 +264,7 @@ tasks {
     processResources {
         // Make sure the licenses are generated before the resources are processed
         dependsOn("exportLibraryDefinitions", writeMorpheComponents)
+        inputs.property("projectVersion", project.version.toString())
         from(layout.buildDirectory.file("generated/aboutLibraries/aboutlibraries.json"))
         from(layout.buildDirectory.dir("generated/morphe-components"))
 

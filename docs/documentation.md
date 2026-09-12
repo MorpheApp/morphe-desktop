@@ -805,7 +805,7 @@ Automatically install the patched APK to a connected ADB device after patching.
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i your_app.apk
 ```
 
-If no serial is provided, it installs to the first connected device. You can optionally specify a device serial.
+You can optionally specify a device serial. Without a serial, installation is allowed only when exactly one ready ADB device is connected. If multiple devices are ready, the command fails before installation and lists the serials you can specify; it never makes an arbitrary selection.
 
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i SERIAL123 your_app.apk
@@ -1508,9 +1508,9 @@ java -jar morphe-desktop-*-all.jar utility install -a patched_youtube.apk --rout
 
 Required: No
 
-Default: First connected device
+Default: The only ready device
 
-One or more ADB device serials to install to. If not provided, installs to the first connected device.
+One or more ADB device serials to install to. Each supplied serial must identify that exact ready device. If no serial is provided, installation is allowed only when exactly one ready device is connected. With multiple ready devices, the command fails before changing any device and lists the available serials.
 
 ```
 java -jar morphe-desktop-*-all.jar utility install -a patched_app.apk SERIAL1 SERIAL2
@@ -1561,9 +1561,9 @@ java -jar morphe-desktop-*-all.jar utility uninstall -p com.google.android.youtu
 
 Required: No
 
-Default: First connected device
+Default: The only ready device
 
-One or more ADB device serials to uninstall from. If not provided, uninstalls from the first connected device.
+One or more ADB device serials to uninstall from. Each supplied serial must identify that exact ready device. If no serial is provided, uninstallation is allowed only when exactly one ready device is connected. With multiple ready devices, the command fails before changing any device and lists the available serials.
 
 ```
 java -jar morphe-desktop-*-all.jar utility uninstall -p com.google.android.youtube SERIAL1 SERIAL2
@@ -1647,7 +1647,7 @@ This sets `stringKey` to the string `"1"` instead of the integer `1`.
 
 Want to build Morphe Desktop from source instead of grabbing a release? Here's how.
 
-**Requirements:** Java Development Kit 17 (e.g. [Azul Zulu](https://www.azul.com/downloads/?package=jdk#zulu) or [OpenJDK](https://jdk.java.net/archive/)).
+**Requirements:** Java Development Kit 21 (e.g. [Azul Zulu](https://www.azul.com/downloads/?package=jdk#zulu) or [OpenJDK](https://jdk.java.net/archive/)).
 
 1. Clone the repository:
 

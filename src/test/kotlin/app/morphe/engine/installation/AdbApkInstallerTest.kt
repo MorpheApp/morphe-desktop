@@ -64,6 +64,29 @@ class AdbApkInstallerTest {
     }
 
     @Test
+    fun `legacy attribution retry stays on captured serial`() {
+        var installAttempts = 0
+        val installer = installer { command ->
+            when {
+                command.takeLast(3) == listOf("shell", "pm", "help") -> ok("install [-r] [-d]")
+                "install" in command -> {
+                    installAttempts++
+                    if (installAttempts == 1) AdbCommandResult(1, "attribution rejected") else ok("Success")
+                }
+                else -> error("Unexpected command: $command")
+            }
+        }
+
+        val result = installer.install(request(installerPackage = "org.fdroid.fdroid"))
+
+        assertEquals(AdbInstallMode.LEGACY, result.getOrThrow())
+        val installs = commands.filter { "install" in it }
+        assertEquals(2, installs.size)
+        assertTrue(installs.all { it.take(3) == listOf("adb", "-s", "SERIAL") })
+        assertTrue(installs.none { "OTHER" in it })
+    }
+
+    @Test
     fun `failed ownership install propagates error and still removes remote APK`() {
         val installer = installer { command ->
             when {

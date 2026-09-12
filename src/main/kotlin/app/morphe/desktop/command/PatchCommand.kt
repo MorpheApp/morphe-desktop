@@ -19,9 +19,10 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.installation.AdbApkInstaller
+import app.morphe.engine.installation.AdbDeviceTarget
 import app.morphe.engine.installation.AdbExecutableLocator
 import app.morphe.engine.installation.AdbInstallRequest
-import app.morphe.engine.installation.resolveAdbDeviceSerial
+import app.morphe.engine.installation.resolveAdbDeviceTarget
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
@@ -182,8 +183,8 @@ internal object PatchCommand : Callable<Int> {
 
     @CommandLine.Option(
         names = ["-i", "--install"],
-        description = ["Serial of the ADB device to install to. If not specified, the first connected device will be used."],
-        // Empty string to indicate that the first connected device should be used.
+        description = ["Serial of the ADB device to install to. If omitted, exactly one ready device must be connected."],
+        // Empty string requests safe automatic selection of the only ready device.
         fallbackValue = "",
         arity = "0..1",
     )
@@ -446,32 +447,22 @@ internal object PatchCommand : Callable<Int> {
             }
         }
 
-        var resolvedInstallDeviceSerial: String? = null
+        var resolvedInstallTarget: AdbDeviceTarget? = null
         val rootInstaller = if (deviceSerial != null) {
-            val deviceSerial = deviceSerial!!.ifEmpty { null }
+            val requestedSerial = deviceSerial!!.ifEmpty { null }
 
             try {
+                val adb = AdbExecutableLocator.find()
+                    ?: throw IllegalStateException("ADB not found. Please install Android SDK Platform Tools.")
+                val target = resolveAdbDeviceTarget(adb, requestedSerial)
+                resolvedInstallTarget = target
                 if (mount) {
-                    AdbRootInstaller(deviceSerial)
+                    AdbRootInstaller(target.serial)
                 } else {
-                    val adb = AdbExecutableLocator.find()
-                        ?: throw IllegalStateException("ADB not found. Please install Android SDK Platform Tools.")
-                    resolvedInstallDeviceSerial = resolveAdbDeviceSerial(adb, deviceSerial)
                     null
                 }
-            } catch (_: Exception) {
-                if (deviceSerial?.isNotEmpty() == true) {
-                    logger.severe(
-                        "Device with serial $deviceSerial not found to install to. " +
-                            "Ensure the device is connected and the serial is correct when using the --install option.",
-                    )
-                } else {
-                    logger.severe(
-                        "No device has been found to install to. " +
-                            "Ensure a device is connected when using the --install option.",
-                    )
-                }
-
+            } catch (e: Exception) {
+                logger.severe(e.message ?: "Could not resolve an ADB device target for --install")
                 return EXIT_CODE_ERROR
             }
         } else {
@@ -878,10 +869,9 @@ internal object PatchCommand : Callable<Int> {
                                 else -> logger.info("Installed the patched APK file")
                             }
                         } else {
-                            val adb = AdbExecutableLocator.find()
-                                ?: throw IllegalStateException("ADB not found. Please install Android SDK Platform Tools.")
+                            val target = resolvedInstallTarget!!
                             val mode = AdbApkInstaller().install(
-                                AdbInstallRequest(adb, outputFilePath, resolvedInstallDeviceSerial!!),
+                                AdbInstallRequest(target.adbPath, outputFilePath, target.serial),
                                 onDebug = logger::fine,
                             ).getOrThrow()
                             logger.info("Installed the patched APK file using ${mode.name.lowercase()}")

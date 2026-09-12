@@ -42,6 +42,12 @@ class ProcessAdbCommandRunner : AdbCommandRunner {
 
 open class AdbInstallException(message: String) : Exception(message)
 
+/** An ADB target whose ready serial was resolved before a CLI mutation starts. */
+data class AdbDeviceTarget(
+    val adbPath: String,
+    val serial: String,
+)
+
 sealed interface MigrationRequiredReason {
     data object NoOwner : MigrationRequiredReason
     data class ForeignOwner(val packageName: String) : MigrationRequiredReason
@@ -265,25 +271,68 @@ object AdbExecutableLocator {
     }
 }
 
-/** Resolve the CLI's optional serial using the same first-device semantics as before. */
-fun resolveAdbDeviceSerial(
+private data class AdbDeviceListing(
+    val serial: String,
+    val state: String,
+)
+
+/**
+ * Resolve all requested CLI targets in one preflight, before any device mutation starts.
+ *
+ * An omitted serial is accepted only when exactly one ready device exists. Explicit
+ * serials must match ready devices exactly; disconnected, offline, and unauthorized
+ * targets never fall back to another device.
+ */
+fun resolveAdbDeviceTargets(
     adbPath: String,
-    requestedSerial: String?,
+    requestedSerials: List<String>,
     runner: AdbCommandRunner = ProcessAdbCommandRunner(),
-): String {
+): List<AdbDeviceTarget> {
     val result = runner.run(listOf(adbPath, "devices")) {}
     if (result.exitCode != 0) {
         throw AdbInstallException(result.output.trim().ifBlank { "Could not list ADB devices" })
     }
     val devices = result.output.lineSequence()
+        .dropWhile { !it.trim().startsWith("List of devices attached") }
         .drop(1)
         .map { it.trim().split(Regex("\\s+")) }
-        .filter { it.size >= 2 && it[1] == "device" }
-        .map { it[0] }
+        .filter { it.size >= 2 }
+        .map { AdbDeviceListing(serial = it[0], state = it[1]) }
         .toList()
-    return requestedSerial?.takeIf { it.isNotEmpty() }?.let { serial ->
-        devices.firstOrNull { it == serial }
-            ?: throw AdbInstallException("Device with serial $serial not found")
-    } ?: devices.firstOrNull()
-        ?: throw AdbInstallException("No authorized ADB device found")
+
+    if (requestedSerials.isNotEmpty()) {
+        val resolved = requestedSerials.map { serial ->
+            require(serial.isNotBlank()) { "ADB device serial must not be blank" }
+            val exact = devices.singleOrNull { it.serial == serial }
+                ?: throw AdbInstallException("Device '$serial' is not connected")
+            if (exact.state != "device") {
+                throw AdbInstallException("Device '$serial' is not ready (state: ${exact.state})")
+            }
+            AdbDeviceTarget(adbPath, exact.serial)
+        }
+        return resolved
+    }
+
+    val ready = devices.filter { it.state == "device" }.sortedBy { it.serial }
+    return when (ready.size) {
+        0 -> throw AdbInstallException("No authorized ADB device is connected and ready")
+        1 -> listOf(AdbDeviceTarget(adbPath, ready.single().serial))
+        else -> throw AdbInstallException(
+            buildString {
+                appendLine("Multiple ready ADB devices are connected. Specify a device serial.")
+                appendLine("Available devices:")
+                ready.forEach { appendLine("- ${it.serial}") }
+            }.trimEnd()
+        )
+    }
 }
+
+fun resolveAdbDeviceTarget(
+    adbPath: String,
+    requestedSerial: String?,
+    runner: AdbCommandRunner = ProcessAdbCommandRunner(),
+): AdbDeviceTarget = resolveAdbDeviceTargets(
+    adbPath = adbPath,
+    requestedSerials = requestedSerial?.takeIf { it.isNotEmpty() }?.let(::listOf).orEmpty(),
+    runner = runner,
+).single()
