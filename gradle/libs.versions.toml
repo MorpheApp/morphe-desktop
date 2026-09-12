@@ -40,7 +40,7 @@ materialIcons = "1.7.3"
 mockk = "1.14.11"
 
 # Logging
-slf4j = "2.0.18"
+slf4j = "2.0.19"
 
 # Libraries
 about-libraries = "15.2.0"
