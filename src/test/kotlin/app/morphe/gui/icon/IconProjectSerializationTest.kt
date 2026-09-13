@@ -1,5 +1,7 @@
 package app.morphe.gui.icon
 
+import app.morphe.gui.data.model.GradientType
+import app.morphe.gui.data.model.MorpheFill
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 
@@ -9,9 +11,9 @@ class IconProjectSerializationTest {
     @Test
     fun roundTrips() {
         val project = IconProject(
-            background = IconProject.Background.Gradient(
-                stops = listOf(IconProject.Background.Stop(0f, 0xFF00E5FF.toInt()), IconProject.Background.Stop(1f, 0xFF000000.toInt())),
-                type = IconProject.GradientType.CONIC,
+            background = MorpheFill.Gradient(
+                stops = listOf(MorpheFill.Stop(0f, 0xFF00E5FF.toInt()), MorpheFill.Stop(1f, 0xFF000000.toInt())),
+                type = GradientType.CONIC,
             ),
             layers = listOf(
                 IconProject.Layer("1", IconProject.LayerContent.Text("Hi"), name = "Title"),
@@ -24,5 +26,47 @@ class IconProjectSerializationTest {
         val back = json.decodeFromString(IconProject.serializer(), text)
         check(back == project) { "round trip mismatch" }
         println("ROUNDTRIP_OK")
+    }
+
+    @Test
+    fun decodesProjectsWrittenBeforeTheFillModelMoved() {
+        val legacy = """
+            {
+                "background": {
+                    "#kind": "app.morphe.gui.icon.IconProject.Background.Gradient",
+                    "stops": [
+                        { "position": 0.0, "argb": -16718337 },
+                        { "position": 1.0, "argb": -16777216 }
+                    ],
+                    "type": "CONIC",
+                    "angleDeg": 45.0
+                },
+                "layers": []
+            }
+        """
+        val decoded = json.decodeFromString(IconProject.serializer(), legacy)
+        val bg = decoded.background as MorpheFill.Gradient
+        check(bg.type == GradientType.CONIC) { "gradient type lost: ${'$'}{bg.type}" }
+        check(bg.stops.size == 2) { "stops lost: ${'$'}{bg.stops}" }
+
+        val reEncoded = json.encodeToString(IconProject.serializer(), decoded)
+        check("app.morphe.gui.icon.IconProject.Background.Gradient" in reEncoded) {
+            "serial name drifted, saved projects would stop loading"
+        }
+    }
+
+    @Test
+    fun decodesLegacySolidBackground() {
+        val legacy = """
+            {
+                "background": {
+                    "#kind": "app.morphe.gui.icon.IconProject.Background.Solid",
+                    "argb": -1
+                },
+                "layers": []
+            }
+        """
+        val decoded = json.decodeFromString(IconProject.serializer(), legacy)
+        check(decoded.background == MorpheFill.Solid(-1)) { "solid lost: ${'$'}{decoded.background}" }
     }
 }

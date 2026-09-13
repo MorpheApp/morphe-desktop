@@ -9,6 +9,7 @@ import app.morphe.desktop.command.model.toPatchBundle
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
 import app.morphe.gui.data.model.FollowMode
+import app.morphe.gui.util.newerRelease
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
@@ -84,9 +85,6 @@ class PatchesViewModel(
                     val stableReleases = releases.filter { !it.isDevRelease() }
                     val devReleases = releases.filter { it.isDevRelease() }
 
-                    // Resolve this source's version preference to a concrete tag
-                    // to pre-select: a pin → its tag; follow-stable → newest stable;
-                    // follow-dev → newest overall.
                     val activeSource = patchSourceManager?.getActiveSource()
                     val activeSourceId = activeSource?.id
                     val pref = activeSourceId?.let { configRepository.getSourceVersionPrefs()[it] }
@@ -95,7 +93,7 @@ class PatchesViewModel(
                     val savedVersion = when (pref?.mode) {
                         FollowMode.PINNED -> pref.pinnedTag
                         else -> if (usePreRelease) {
-                            (devReleases.firstOrNull() ?: stableReleases.firstOrNull())?.tagName
+                            newerRelease(devReleases.firstOrNull(), stableReleases.firstOrNull())?.tagName
                         } else {
                             stableReleases.firstOrNull()?.tagName
                         }
@@ -109,7 +107,7 @@ class PatchesViewModel(
                             ?: stableReleases.firstOrNull()
                     } else {
                         if (usePreRelease) {
-                            devReleases.firstOrNull() ?: stableReleases.firstOrNull()
+                            newerRelease(devReleases.firstOrNull(), stableReleases.firstOrNull())
                         } else {
                             stableReleases.firstOrNull()
                         }
@@ -162,7 +160,10 @@ class PatchesViewModel(
                         val savedVersion = when (pref?.mode) {
                             FollowMode.PINNED -> pref.pinnedTag
                             else -> if (usePreRelease) {
-                                (offlineReleases.firstOrNull { it.isDevRelease() } ?: offlineReleases.firstOrNull { !it.isDevRelease() })?.tagName
+                                newerRelease(
+                                    offlineReleases.firstOrNull { it.isDevRelease() },
+                                    offlineReleases.firstOrNull { !it.isDevRelease() },
+                                )?.tagName
                             } else {
                                 offlineReleases.firstOrNull { !it.isDevRelease() }?.tagName
                             }
@@ -173,7 +174,10 @@ class PatchesViewModel(
                             offlineReleases.find { it.tagName == savedVersion }
                         } else null
                         val selected = initialRelease ?: if (usePreRelease) {
-                            offlineReleases.firstOrNull { it.isDevRelease() } ?: offlineReleases.firstOrNull { !it.isDevRelease() } ?: offlineReleases.firstOrNull()
+                            newerRelease(
+                                offlineReleases.firstOrNull { it.isDevRelease() },
+                                offlineReleases.firstOrNull { !it.isDevRelease() },
+                            ) ?: offlineReleases.firstOrNull()
                         } else {
                             offlineReleases.firstOrNull { !it.isDevRelease() } ?: offlineReleases.firstOrNull()
                         }
@@ -284,7 +288,7 @@ class PatchesViewModel(
         // Match the version-prefixed filename PatchRepository.downloadPatches writes.
         // Looking up by bare asset.name would falsely "find" the latest version's
         // file for every other version's check (since maintainers commonly reuse
-        // the asset filename across releases) — that was the cause of the
+        // the asset filename across releases). That was the cause of the
         // "latest stable shows SELECT after Clear Cache" bug.
         val cachedFile = File(patchesDir, PatchRepository.cachedFileName(release, asset))
 

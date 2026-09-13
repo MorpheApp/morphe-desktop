@@ -5,27 +5,19 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.patches.PatchProvider
@@ -71,10 +63,8 @@ internal fun AddPatchSourceDialog(
         lastLocalPatchDir = cfg.lastLocalPatchDir
     }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(corners.medium),
-        containerColor = MaterialTheme.colorScheme.surface,
+    MorpheAlertDialog(
+        onDismiss = onDismiss,
         title = {
             Text(
                 "Add source",
@@ -110,7 +100,7 @@ internal fun AddPatchSourceDialog(
                             Text(
                                 text = when (type) {
                                     // The "REMOTE" tab covers both GitHub and
-                                    // GitLab — the resolver picks the right
+                                    // GitLab, and the resolver picks the right
                                     // provider from the URL the user pastes.
                                     PatchSourceType.GITHUB -> "Remote"
                                     PatchSourceType.LOCAL -> "Local file"
@@ -264,8 +254,8 @@ internal fun AddPatchSourceDialog(
                     if (name.isBlank()) { error = "Name is required"; return@Button }
                     when (sourceType) {
                         PatchSourceType.GITHUB -> {
-                            // sourceType is the UI's "REMOTE" mode placeholder;
-                            // the actual provider (GITHUB vs GITLAB) is decided
+                            // sourceType is the UI's "REMOTE" mode placeholder.
+                            // The actual provider (GITHUB vs GITLAB) is decided
                             // by the resolver based on the URL the user pasted.
                             val resolved = resolveRemoteSourceUrl(url.trim())
                             if (resolved == null) {
@@ -357,10 +347,8 @@ internal fun EditPatchSourceDialog(
         lastLocalPatchDir = cfg.lastLocalPatchDir
     }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(corners.medium),
-        containerColor = MaterialTheme.colorScheme.surface,
+    MorpheAlertDialog(
+        onDismiss = onDismiss,
         title = {
             Text(
                 "Edit source",
@@ -571,7 +559,7 @@ internal fun EditPatchSourceDialog(
 /**
  * Result of parsing a user-entered remote source URL. The detected
  * [provider] is the GUI-side persisted type that will be stored on the
- * [PatchSource] config (GITHUB or GITLAB only — never DEFAULT or LOCAL).
+ * [PatchSource] config (GITHUB or GITLAB only, never DEFAULT or LOCAL).
  */
 internal data class ResolvedRemoteSource(
     val canonicalUrl: String,
@@ -581,7 +569,7 @@ internal data class ResolvedRemoteSource(
 /**
  * Thin GUI-side wrapper around the engine's [RemotePatchSourceFactory.parse].
  * Returns `null` if the engine can't classify the input. The engine owns
- * the actual URL-parsing logic — this function only translates the engine's
+ * the actual URL-parsing logic. This function only translates the engine's
  * [app.morphe.engine.patches.PatchProvider] back to the GUI's persisted
  * [PatchSourceType] (which carries DEFAULT/LOCAL too).
  */
@@ -595,7 +583,7 @@ internal fun resolveRemoteSourceUrl(input: String): ResolvedRemoteSource? {
 }
 
 /**
- * Suggest a friendly source name from a typed/pasted URL — used to populate
+ * Suggest a friendly source name from a typed or pasted URL, used to populate
  * the NAME field while the user is filling in REPOSITORY URL, so they don't
  * have to think one up themselves. Returns `<owner>/<repo>` so two sources
  * with similarly-named repos (e.g. forks of `morphe-patches`) stay
@@ -618,15 +606,15 @@ private fun dirToRemember(path: String): String? =
 /**
  * Shared local-source picker row for the Add/Edit source dialogs.
  *
- * The file browser always opens at a useful folder — the current path's directory when
- * editing, else the last-used folder — so re-picking a local `.mpp` never starts from a
+ * The file browser always opens at a useful folder: the current path's directory when
+ * editing, else the last-used folder, so re-picking a local `.mpp` never starts from a
  * system default. When [developerOptions] is on it also offers a FOLDER picker: a folder
  * source auto-resolves to the newest `.mpp` inside it (see
  * [EnabledSourcesLoader.resolveLocal][app.morphe.gui.util.EnabledSourcesLoader]), so a
  * patch developer who rebuilds never has to re-pick the file.
  *
  * [onPicked] receives the chosen path and a suggested name (file name without extension,
- * or the folder name) — callers use the suggestion only when a name isn't already set.
+ * or the folder name). Callers use the suggestion only when a name isn't already set.
  */
 @Composable
 private fun LocalSourceRow(

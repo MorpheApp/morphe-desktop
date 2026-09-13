@@ -12,7 +12,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -81,7 +80,7 @@ fun SettingsDialogHost() {
             val config = configRepository.loadConfig()
             autoCleanupTempFiles = config.autoCleanupTempFiles
             // Display the resolved absolute form even though storage may be
-            // bundle-relative — users expect to see a real filesystem path in
+            // bundle-relative. Users expect to see a real filesystem path in
             // the field, not a cryptic basename.
             defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
             keystorePath = config.resolvedKeystorePath()?.absolutePath
@@ -221,6 +220,7 @@ fun SettingsButton(
             .clip(RoundedCornerShape(corners.small))
             .background(containerColor)
             .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+            .handCursor()
             .clickable { settingsDialogVisible.value = true },
         contentAlignment = Alignment.Center
     ) {

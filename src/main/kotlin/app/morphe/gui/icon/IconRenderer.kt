@@ -5,10 +5,11 @@
 
 package app.morphe.gui.icon
 
+import app.morphe.gui.data.model.GradientType
+import app.morphe.gui.data.model.MorpheFill
 import java.awt.AlphaComposite
 import java.awt.Color
 import java.awt.Font
-import java.awt.GradientPaint
 import java.awt.Graphics2D
 import java.awt.LinearGradientPaint
 import java.awt.Polygon
@@ -30,8 +31,8 @@ import kotlin.math.sin
 /**
  * Renders an [IconProject] to square [BufferedImage]s at a requested tile size.
  * [renderBackground] + [renderForeground] are what [IconExporter] writes (kept
- * separate — the launcher composites them). [renderForeground] flattens the layer
- * stack; [renderComposite] draws both together for the studio preview so it's
+ * separate, as the launcher composites them). [renderForeground] flattens the layer
+ * stack, and [renderComposite] draws both together for the studio preview so it's
  * pixel-exact to the export. Transforms + effect sizes are in tile-fraction units.
  */
 object IconRenderer {
@@ -45,15 +46,16 @@ object IconRenderer {
         try {
             enableQuality(g)
             when (val bg = project.background) {
-                is IconProject.Background.Solid -> {
+                is MorpheFill.Accent -> Unit
+                is MorpheFill.Solid -> {
                     g.color = Color(bg.argb, true); g.fillRect(0, 0, size, size)
                 }
-                is IconProject.Background.Gradient -> {
+                is MorpheFill.Gradient -> {
                     val stops = bg.stops.sortedBy { it.position }
                     if (stops.size < 2) {
                         g.color = Color(stops.firstOrNull()?.argb ?: 0xFFFFFFFF.toInt(), true); g.fillRect(0, 0, size, size)
                     } else when (bg.type) {
-                        IconProject.GradientType.LINEAR -> {
+                        GradientType.LINEAR -> {
                             val h = size / 2f
                             val rad = Math.toRadians(bg.angleDeg.toDouble())
                             val dx = cos(rad).toFloat(); val dy = sin(rad).toFloat()
@@ -63,7 +65,7 @@ object IconRenderer {
                             )
                             g.fillRect(0, 0, size, size)
                         }
-                        IconProject.GradientType.RADIAL -> {
+                        GradientType.RADIAL -> {
                             val h = size / 2f
                             g.paint = RadialGradientPaint(
                                 Point2D.Float(h, h), h,
@@ -71,10 +73,10 @@ object IconRenderer {
                             )
                             g.fillRect(0, 0, size, size)
                         }
-                        IconProject.GradientType.CONIC -> drawConic(img, stops, bg.angleDeg)
+                        GradientType.CONIC -> drawConic(img, stops, bg.angleDeg)
                     }
                 }
-                is IconProject.Background.Image -> {
+                is MorpheFill.Image -> {
                     // Adaptive backgrounds MUST be fully opaque (the launcher masks them and
                     // can't handle a see-through background). Fill first so any transparency
                     // in the imported image is flattened onto an opaque white base.
@@ -112,7 +114,7 @@ object IconRenderer {
      *  yields a recognisable monochrome shape instead of nothing.
      *
      *  [safeZone] < 1 fits the silhouette's content into a centered box of that
-     *  fraction (e.g. 0.72) — mirrors the manager fitting the notification icon to the
+     *  fraction (e.g. 0.72), mirroring the manager fitting the notification icon to the
      *  safe zone so a small status-bar glyph isn't crammed edge to edge or clipped. */
     fun renderSilhouette(project: IconProject, size: Int, colorArgb: Int, safeZone: Float = 1f): BufferedImage {
         val fg = if (project.layers.isEmpty()) renderComposite(project, size) else renderForeground(project, size)
@@ -142,7 +144,6 @@ object IconRenderer {
         return out
     }
 
-    /** Background + foreground composited — for the studio preview / mask thumbnails. */
     fun renderComposite(project: IconProject, size: Int): BufferedImage {
         val out = renderBackground(project, size)
         val g = out.createGraphics()
@@ -199,7 +200,6 @@ object IconRenderer {
         is IconProject.LayerContent.Shape -> renderShape(c)
     }
 
-    // Custom fonts are expensive to create — cache the base font per file path.
     private val fontCache = HashMap<String, Font>()
 
     private fun baseFont(c: IconProject.LayerContent.Text): Font {
@@ -311,8 +311,7 @@ object IconRenderer {
         return out
     }
 
-    /** Conic (sweep) gradient — no AWT primitive, so sample per pixel by angle. */
-    private fun drawConic(img: BufferedImage, stops: List<IconProject.Background.Stop>, angleDeg: Float) {
+    private fun drawConic(img: BufferedImage, stops: List<MorpheFill.Stop>, angleDeg: Float) {
         val size = img.width
         val cx = size / 2f; val cy = size / 2f
         val base = Math.toRadians(angleDeg.toDouble())
@@ -325,7 +324,7 @@ object IconRenderer {
         img.setRGB(0, 0, size, size, px, 0, size)
     }
 
-    private fun sampleStops(stops: List<IconProject.Background.Stop>, t: Float): Int {
+    private fun sampleStops(stops: List<MorpheFill.Stop>, t: Float): Int {
         if (t <= stops.first().position) return stops.first().argb
         if (t >= stops.last().position) return stops.last().argb
         for (i in 0 until stops.size - 1) {

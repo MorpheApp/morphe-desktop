@@ -3,7 +3,7 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.icon
+package app.morphe.gui.ui.components.color
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -13,11 +13,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 
-/**
- * User-saved colours, shared across every colour control in the Icon Studio and
- * persisted to `morphe-data/icons/swatches.json`. Backed by a snapshot list so the
- * UI recomposes when a colour is added/removed. Capped at [MAX] slots.
- */
+val MORPHE_SWATCHES = listOf(
+    0xFFFFFFFF.toInt(), 0xFF000000.toInt(), 0xFFFF0033.toInt(), 0xFF00E5FF.toInt(),
+    0xFF1DE9B6.toInt(), 0xFFFFC400.toInt(), 0xFF7C4DFF.toInt(), 0xFFFF6D00.toInt(),
+)
+
 object CustomSwatches {
     const val MAX = 12
 
