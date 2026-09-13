@@ -377,10 +377,21 @@ class HomeViewModel(
      * device (no re-patch needed). On completion, refresh the device layer so the
      * "install pending" badge clears the moment the device reports the new version.
      */
-    fun installPatchedApp(packageName: String) {
+    fun installPatchedApp(
+        packageName: String,
+        requestedTarget: DeviceOperationTarget? = null,
+    ) {
         val record = patchedRecordsByPackage[packageName] ?: return
-        val target = DeviceMonitor.state.value.captureOperationTarget() ?: return
+        val monitorState = DeviceMonitor.state.value
+        val target = requestedTarget ?: monitorState.captureOperationTarget() ?: return
         if (_uiState.value.installingPackage != null || _uiState.value.migrationBusy) return
+        if (monitorState.devices.none { it.id == target.serial && it.isReady }) {
+            _uiState.value = _uiState.value.copy(
+                error = "${target.displayName} is no longer connected and ready. Installation was not started.",
+                deviceErrorSerial = target.serial,
+            )
+            return
+        }
         crossDeviceInstallBlockReason(record.deviceSpecificInput, record.sourceDeviceSerial, target.serial)?.let { reason ->
             _uiState.value = _uiState.value.copy(
                 error = "Cannot install on ${target.displayName}: $reason",

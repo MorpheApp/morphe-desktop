@@ -603,7 +603,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         shape = RoundedCornerShape(corners.small)
                     ) {
                         Text(
-                            text = "Patch (${uiState.selectedCount})",
+                            text = "Start patching (${uiState.selectedCount})",
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font

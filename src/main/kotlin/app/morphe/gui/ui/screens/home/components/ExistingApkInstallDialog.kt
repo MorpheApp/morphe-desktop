@@ -124,6 +124,16 @@ internal fun ExistingApkInstallDialog(
                                 }
                             }
                         }
+                        if (selectedState?.installed == true) {
+                            Text(
+                                "This will update the installed v${selectedState.installedVersion?.removePrefix("v") ?: "unknown"} " +
+                                    "to v${info.versionName?.removePrefix("v") ?: "unknown"}. Android normally preserves app data. " +
+                                    "If signatures are incompatible, nothing is uninstalled without a separate confirmation.",
+                                fontFamily = font,
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
                 (selectedState?.installError ?: error)?.let {

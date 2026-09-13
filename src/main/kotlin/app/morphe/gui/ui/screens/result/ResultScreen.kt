@@ -44,6 +44,7 @@ import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.DeviceInstallConfirmationDialog
 import app.morphe.gui.ui.components.UpdateOwnerMigrationDialog
 import app.morphe.gui.ui.components.MorpheTooltip
 import app.morphe.gui.ui.components.TooltipText
@@ -117,6 +118,7 @@ fun ResultScreenContent(outputPath: String) {
     var showMigrationConfirm by remember { mutableStateOf(false) }
     var migrationBusy by remember { mutableStateOf(false) }
     var migrationError by remember { mutableStateOf<String?>(null) }
+    var pendingInstallTarget by remember { mutableStateOf<DeviceOperationTarget?>(null) }
 
     // Whether the patched package is already on the selected device → show "Update"
     // instead of "Install" (the install itself already reinstalls with -r).
@@ -281,6 +283,10 @@ fun ResultScreenContent(outputPath: String) {
         }
     }
 
+    fun requestInstall() {
+        pendingInstallTarget = DeviceMonitor.state.value.captureOperationTarget()
+    }
+
     fun applyLinkHandling(enable: Boolean, requestedTarget: DeviceOperationTarget? = null) {
         val target = requestedTarget ?: DeviceMonitor.state.value.captureOperationTarget() ?: return
         val patched = outputPackage ?: return
@@ -373,6 +379,17 @@ fun ResultScreenContent(outputPath: String) {
 
                 Spacer(Modifier.weight(1f))
 
+                OutlinedButton(
+                    onClick = { navigator.popUntilRoot() },
+                    modifier = Modifier.height(34.dp),
+                    shape = RoundedCornerShape(corners.small),
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
+                ) {
+                    Text("Home", fontFamily = font, fontSize = 11.sp)
+                }
+
+                Spacer(Modifier.width(8.dp))
+
                 // This screen owns the one visible device selector below, where
                 // every serial also has its deployment status.
                 TopBarRow(allowCacheClear = false, showDeviceIndicator = false)
@@ -415,7 +432,7 @@ fun ResultScreenContent(outputPath: String) {
                     font = font,
                     borderColor = borderColor,
                     onDeviceSelected = { DeviceMonitor.selectDevice(it) },
-                    onInstallClick = { installViaAdb() },
+                    onInstallClick = ::requestInstall,
                     onRetryClick = {
                         installViaAdb(installTarget)
                     },
@@ -501,9 +518,9 @@ fun ResultScreenContent(outputPath: String) {
                 )
             }
 
-            // Patch Another button
+            // Direct root navigation after a completed patch.
             Spacer(Modifier.height(4.dp))
-            PatchAnotherButton(corners = corners, font = font)
+            BackToHomeButton(corners = corners, font = font)
 
             Spacer(Modifier.height(8.dp))
             }
@@ -519,6 +536,24 @@ fun ResultScreenContent(outputPath: String) {
                 )
             }
         }
+    }
+
+    pendingInstallTarget?.let { target ->
+        val deployment = deployments.forSerial(target.serial)
+        DeviceInstallConfirmationDialog(
+            appName = patchedRecord?.displayName ?: outputFile.nameWithoutExtension,
+            packageName = outputPackage ?: patchedRecord?.installedPackageName ?: "Unknown package",
+            apkVersion = patchedRecord?.apkVersion,
+            deviceName = target.displayName,
+            deviceSerial = target.serial,
+            installedVersion = deployment.installedVersion,
+            replacingExisting = deployment.installed == true,
+            onDismiss = { pendingInstallTarget = null },
+            onConfirm = {
+                pendingInstallTarget = null
+                installViaAdb(target)
+            },
+        )
     }
 
     if (showMigrationConfirm && migrationRequest != null) {
@@ -1350,7 +1385,7 @@ private fun OutputFileCard(
 }
 
 @Composable
-private fun PatchAnotherButton(
+private fun BackToHomeButton(
     corners: MorpheCornerStyle,
     font: FontFamily,
 ) {
@@ -1372,7 +1407,7 @@ private fun PatchAnotherButton(
         )
     ) {
         Text(
-            text = "Patch another",
+            text = "Back to Home",
             fontSize = 13.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font

@@ -18,6 +18,7 @@ import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.MorpheSuccessBar
+import app.morphe.gui.ui.components.DeviceInstallConfirmationDialog
 import app.morphe.gui.ui.components.SourceLedState
 import app.morphe.gui.ui.components.SourceManagementSheet
 import app.morphe.gui.ui.components.UpdateBanner
@@ -42,11 +43,13 @@ import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.DeviceOperationTarget
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
+import app.morphe.gui.util.captureOperationTarget
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.Navigator
@@ -80,6 +83,9 @@ fun HomeScreenContent(
     val coroutineScope = rememberCoroutineScope()
     var showMigrationConfirm by remember { mutableStateOf(false) }
     var showExistingApkInstall by remember { mutableStateOf(false) }
+    var pendingPatchedInstall by remember {
+        mutableStateOf<Pair<PatchedAppRecord, DeviceOperationTarget>?>(null)
+    }
 
     LaunchedEffect(uiState.migrationRequest) {
         if (uiState.migrationRequest == null) showMigrationConfirm = false
@@ -140,6 +146,31 @@ fun HomeScreenContent(
                 showExistingApkInstall = false
             },
         )
+    }
+
+    pendingPatchedInstall?.let { (record, target) ->
+        val deviceInfo = uiState.deviceAppInfo[record.packageName]
+            ?.takeIf { uiState.deviceInfoDeviceSerial == target.serial }
+        DeviceInstallConfirmationDialog(
+            appName = record.displayName,
+            packageName = record.installedPackageName,
+            apkVersion = record.apkVersion,
+            deviceName = target.displayName,
+            deviceSerial = target.serial,
+            installedVersion = deviceInfo?.installedVersion,
+            replacingExisting = deviceInfo?.installed == true,
+            onDismiss = { pendingPatchedInstall = null },
+            onConfirm = {
+                pendingPatchedInstall = null
+                viewModel.installPatchedApp(record.packageName, requestedTarget = target)
+            },
+        )
+    }
+
+    fun requestPatchedInstall(packageName: String) {
+        val record = viewModel.getPatchedRecord(packageName) ?: return
+        val target = DeviceMonitor.state.value.captureOperationTarget()
+        if (target != null) pendingPatchedInstall = record to target
     }
 
     LaunchedEffect(
@@ -287,7 +318,10 @@ fun HomeScreenContent(
                     }
                 }
             },
-            onInstall = { viewModel.installPatchedApp(record.packageName) },
+            onInstall = {
+                detailRecord = null
+                requestPatchedInstall(record.packageName)
+            },
             onUninstall = { onUninstall(record.packageName) },
             installing = uiState.installingPackage == record.packageName,
             uninstalling = uiState.uninstallingPackage == record.packageName,
@@ -310,16 +344,18 @@ fun HomeScreenContent(
             } else {
                 // Patch with the latest files using either an existing or a picked APK.
                 suspend fun launchWith(apkPath: String) {
-                    viewModel.clearUpdatePrep()
                     if (File(apkPath).exists()) {
+                        viewModel.clearUpdatePrep()
                         launchPatch(record, apkPath, prep.patchFilePaths, prep.sourceNames, prep.sourceIds, prep.sourceHashes)
                     } else {
                         val picked = MorpheFilePicker.pickFile(
                             title = "Select APK to patch",
                             extensions = listOf("apk", "apkm", "xapk", "apks"),
                         )
-                        picked?.takeIf { it.exists() }
-                            ?.let { launchPatch(record, it.absolutePath, prep.patchFilePaths, prep.sourceNames, prep.sourceIds, prep.sourceHashes) }
+                        picked?.takeIf { it.exists() }?.let {
+                            viewModel.clearUpdatePrep()
+                            launchPatch(record, it.absolutePath, prep.patchFilePaths, prep.sourceNames, prep.sourceIds, prep.sourceHashes)
+                        }
                     }
                 }
                 if (!prep.needsNewerApk) {
@@ -332,23 +368,26 @@ fun HomeScreenContent(
                         currentVersion = record.apkVersion.removePrefix("v"),
                         targetVersion = targetV,
                         currentSupported = prep.currentSupported,
+                        downloadAvailable = prep.downloadUrl != null,
                         onDismiss = { viewModel.clearUpdatePrep() },
                         onUseMyApk = { coroutineScope.launch { launchWith(record.inputApkPath) } },
-                        onGetNewer = {
-                            val url = prep.downloadUrl
+                        onOpenDownloadPage = {
+                            prep.downloadUrl?.let(uriHandler::openUri)
+                        },
+                        onSelectNewerApk = {
                             val files = prep.patchFilePaths
                             val names = prep.sourceNames
                             val sourceIds = prep.sourceIds
                             val sourceHashes = prep.sourceHashes
-                            viewModel.clearUpdatePrep()
-                            if (url != null) uriHandler.openUri(url)
                             coroutineScope.launch {
                                 val picked = MorpheFilePicker.pickFile(
                                     title = "Select the v$targetV APK",
                                     extensions = listOf("apk", "apkm", "xapk", "apks"),
                                 )
-                                picked?.takeIf { it.exists() }
-                                    ?.let { launchPatch(record, it.absolutePath, files, names, sourceIds, sourceHashes) }
+                                picked?.takeIf { it.exists() }?.let {
+                                    viewModel.clearUpdatePrep()
+                                    launchPatch(record, it.absolutePath, files, names, sourceIds, sourceHashes)
+                                }
                             }
                         },
                     )
@@ -625,7 +664,7 @@ fun HomeScreenContent(
                                     onRepatch = onRepatch,
                                     onForget = onForget,
                                     onUpdate = onUpdate,
-                                    onInstall = { viewModel.installPatchedApp(it) },
+                                    onInstall = ::requestPatchedInstall,
                                     installingPackage = uiState.installingPackage?.takeIf {
                                         uiState.deviceOperationTarget?.serial == uiState.deviceInfoDeviceSerial
                                     },

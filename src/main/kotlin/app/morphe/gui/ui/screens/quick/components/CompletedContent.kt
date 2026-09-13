@@ -32,6 +32,7 @@ import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.ui.components.UpdateOwnerMigrationDialog
+import app.morphe.gui.ui.components.DeviceInstallConfirmationDialog
 import app.morphe.gui.ui.components.MorpheTooltip
 import app.morphe.gui.ui.components.TooltipText
 import app.morphe.gui.data.model.Patch
@@ -85,6 +86,7 @@ internal fun CompletedContent(
     var migrationBusy by remember { mutableStateOf(false) }
     var migrationError by remember { mutableStateOf<String?>(null) }
     var outputPackage by remember(outputPath) { mutableStateOf<String?>(null) }
+    var pendingInstallTarget by remember { mutableStateOf<DeviceOperationTarget?>(null) }
 
     LaunchedEffect(outputPath) {
         outputPackage = withContext(Dispatchers.IO) {
@@ -101,8 +103,9 @@ internal fun CompletedContent(
             if (current.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING) return@forEach
             val installed = adbManager.listInstalledPackages(device.id).getOrNull()?.contains(pkg)
                 ?: return@forEach
+            val version = if (installed) adbManager.getInstalledPackageInfo(device.id, pkg)?.first else null
             if (DeviceMonitor.state.value.devices.any { it.id == device.id && it.isReady }) {
-                deployments = deployments + (device.id to deployments.forSerial(device.id).observed(installed))
+                deployments = deployments + (device.id to deployments.forSerial(device.id).observed(installed, version))
             }
         }
     }
@@ -135,6 +138,46 @@ internal fun CompletedContent(
                     onFailure = { deployments.forSerial(deviceId).linksFailed(it.message ?: "Link handling failed") },
                 ))
             }
+        }
+    }
+
+    fun installViaAdb(target: DeviceOperationTarget) {
+        if (deployments.values.any { it.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING }) return
+        if (DeviceMonitor.state.value.devices.none { it.id == target.serial && it.isReady }) {
+            installTarget = target
+            deployments = deployments + (target.serial to deployments.forSerial(target.serial).installFailed(
+                "${target.displayName} is no longer connected and ready. Installation was not started.",
+            ))
+            return
+        }
+        val wasAlreadyInstalled = deployments.forSerial(target.serial).installed == true
+        scope.launch {
+            migrationRequest = null
+            installTarget = target
+            deployments = deployments + (target.serial to deployments.forSerial(target.serial).installing(
+                "${if (wasAlreadyInstalled) "Updating" else "Installing"} on ${target.displayName}…",
+            ))
+            val installer = adbManager.resolveSpoofInstaller(target.serial)
+            val result = adbManager.installApk(
+                apkPath = outputPath,
+                deviceId = target.serial,
+                installerPackage = installer,
+            )
+            result.fold(
+                onSuccess = {
+                    deployments = deployments + (target.serial to deployments.forSerial(target.serial).installed(
+                        "${if (wasAlreadyInstalled) "Updated" else "Installed"} on ${target.displayName}",
+                        apkInfo.versionName,
+                    ))
+                    runPostInstall(target.serial)
+                },
+                onFailure = { error ->
+                    migrationRequest = migrationRequestOrNull(error, target.serial, outputPath)
+                    deployments = deployments + (target.serial to deployments.forSerial(target.serial).installFailed(
+                        "Installation failed on ${target.displayName}: ${error.message ?: "Unknown error"}",
+                    ))
+                },
+            )
         }
     }
 
@@ -373,34 +416,7 @@ internal fun CompletedContent(
                                         it.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING
                                     }
                                 ) return@clickable
-                                val operationTarget = DeviceMonitor.state.value.captureOperationTarget()
-                                    ?: return@clickable
-                                scope.launch {
-                                    migrationRequest = null
-                                    installTarget = operationTarget
-                                    deployments = deployments + (operationTarget.serial to
-                                        deployments.forSerial(operationTarget.serial).installing("Installing on ${operationTarget.displayName}…"))
-                                    val installer = adbManager.resolveSpoofInstaller(operationTarget.serial)
-                                    val result = adbManager.installApk(
-                                        apkPath = outputPath,
-                                        deviceId = operationTarget.serial,
-                                        installerPackage = installer,
-                                    )
-                                    result.fold(
-                                        onSuccess = {
-                                            deployments = deployments + (operationTarget.serial to
-                                                deployments.forSerial(operationTarget.serial).installed("Installed on ${operationTarget.displayName}"))
-                                            runPostInstall(operationTarget.serial)
-                                        },
-                                        onFailure = { error ->
-                                            migrationRequest = migrationRequestOrNull(error, operationTarget.serial, outputPath)
-                                            deployments = deployments + (operationTarget.serial to
-                                                deployments.forSerial(operationTarget.serial).installFailed(
-                                                    "Installation failed on ${operationTarget.displayName}: ${error.message ?: "Unknown error"}",
-                                                ))
-                                        }
-                                    )
-                                }
+                                pendingInstallTarget = DeviceMonitor.state.value.captureOperationTarget()
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -474,12 +490,30 @@ internal fun CompletedContent(
             )
         ) {
             Text(
-                text = "Patch another",
+                text = "Back to Home",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
             )
         }
+    }
+
+    pendingInstallTarget?.let { target ->
+        val deployment = deployments.forSerial(target.serial)
+        DeviceInstallConfirmationDialog(
+            appName = apkInfo.displayName,
+            packageName = outputPackage ?: apkInfo.packageName,
+            apkVersion = apkInfo.versionName,
+            deviceName = target.displayName,
+            deviceSerial = target.serial,
+            installedVersion = deployment.installedVersion,
+            replacingExisting = deployment.installed == true,
+            onDismiss = { pendingInstallTarget = null },
+            onConfirm = {
+                pendingInstallTarget = null
+                installViaAdb(target)
+            },
+        )
     }
 
     if (showMigrationConfirm && migrationRequest != null) {
