@@ -5,6 +5,7 @@
 
 package app.morphe.gui.util
 
+import app.morphe.desktop.command.model.deserializeOptionValue
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.gui.data.model.CompatiblePackage
@@ -20,6 +21,7 @@ import kotlin.reflect.KType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Bridge between GUI and morphe-patcher library.
@@ -119,12 +121,31 @@ class PatchService {
             try {
                 val loadedPatches = PatchBundleLoader.loadFlat(tempCopies)
 
+                // Build a lookup: patchName -> (optionKey -> KType) for type-aware coercion.
+                val patchOptionTypes: Map<String, Map<String, KType>> = loadedPatches
+                    .filter { it.name != null }
+                    .associate { patch ->
+                        patch.name!! to patch.options.mapValues { (_, opt) -> opt.type }
+                    }
+
                 // Convert GUI's flat "patchName.optionKey" -> value map
-                // to engine's Map<patchName, Map<optionKey, value>> format
+                // to engine's Map<patchName, Map<optionKey, value>> format.
+                // String values are coerced to the option's native type (Boolean, Int, etc.)
+                // so the patcher receives the expected JVM type, not a raw String.
                 val patchOptions = enabledPatches.associateWith { patchName ->
                     options.filterKeys { it.startsWith("$patchName.") }
                         .mapKeys { it.key.removePrefix("$patchName.") }
-                        .mapValues { it.value as Any? }
+                        .mapNotNull { (optKey, strValue) ->
+                            val kType = patchOptionTypes[patchName]?.get(optKey)
+                            val coerced: Any? = if (kType != null) {
+                                runCatching {
+                                    deserializeOptionValue(JsonPrimitive(strValue), kType)
+                                }.getOrElse { strValue }
+                            } else {
+                                strValue
+                            }
+                            optKey to coerced
+                        }.toMap()
                 }.filter { it.value.isNotEmpty() }
 
                 val keystoreDetails = if (keystorePath != null) {
