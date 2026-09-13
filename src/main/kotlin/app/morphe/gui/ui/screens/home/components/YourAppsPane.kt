@@ -5,34 +5,14 @@
 
 package app.morphe.gui.ui.screens.home.components
 
-import app.morphe.gui.ui.components.LocalCardFills
-import app.morphe.gui.ui.components.AppCard
-import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.data.model.SupportedApp
-import app.morphe.gui.ui.screens.home.BundleChoice
-import app.morphe.gui.ui.screens.home.ActivePatchSource
-import app.morphe.gui.ui.screens.home.BundleRelease
-import app.morphe.gui.ui.screens.home.BundleSupport
-import app.morphe.gui.data.model.PatchSource
-import app.morphe.gui.ui.components.MorpheDialogSurface
-import app.morphe.gui.ui.components.MorpheSwitch
-import androidx.compose.ui.platform.LocalUriHandler
-import kotlinx.coroutines.launch
-import java.awt.FileDialog
-import java.awt.Toolkit
-import java.awt.datatransfer.StringSelection
-import java.awt.Frame
-import java.io.File
-
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -45,17 +25,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -82,10 +61,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -100,7 +80,28 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.gui.data.model.PatchSource
+import app.morphe.gui.data.model.SupportedApp
+import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.LocalCardFills
+import app.morphe.gui.ui.components.MorpheActionButtonHeight
+import app.morphe.gui.ui.components.MorpheBadge
+import app.morphe.gui.ui.components.MorpheBanner
+import app.morphe.gui.ui.components.MorpheBannerAction
+import app.morphe.gui.ui.components.MorpheBannerText
+import app.morphe.gui.ui.components.MorpheCardChip
+import app.morphe.gui.ui.components.MorpheChevron
+import app.morphe.gui.ui.components.MorpheChoiceChip
+import app.morphe.gui.ui.components.MorpheDialogSurface
+import app.morphe.gui.ui.components.MorpheSwitch
+import app.morphe.gui.ui.components.cardChipInk
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.screens.home.ActivePatchSource
+import app.morphe.gui.ui.screens.home.BundleChoice
+import app.morphe.gui.ui.screens.home.BundleRelease
+import app.morphe.gui.ui.screens.home.BundleSupport
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
@@ -108,18 +109,15 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.contrastingForeground
+import java.awt.FileDialog
+import java.awt.Frame
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import app.morphe.gui.ui.components.MorpheActionButtonHeight
-import app.morphe.gui.ui.components.cardChipInk
-import app.morphe.gui.ui.components.MorpheCardChip
-import app.morphe.gui.ui.components.MorpheBadge
-import app.morphe.gui.ui.components.MorpheChevron
-import app.morphe.gui.ui.components.MorpheChoiceChip
-import app.morphe.gui.ui.components.MorpheBannerText
-import app.morphe.gui.ui.components.MorpheBannerAction
-import app.morphe.gui.ui.components.MorpheBanner
+import kotlinx.coroutines.launch
 
 /** Which list the home pane is showing: all supported apps, or only patched ("yours"). */
 enum class AppListFilter { ALL, YOURS }
@@ -383,7 +381,7 @@ fun PatchedAppDetailDialog(
     record: PatchedAppRecord,
     state: PatchedAppState,
     deviceInfo: DeviceAppInfo?,
-    updateInfo: app.morphe.gui.ui.screens.home.RecallUpdateInfo?,
+    updateInfo: RecallUpdateInfo?,
     supportedApp: SupportedApp? = null,
     activeSources: List<ActivePatchSource> = emptyList(),
     allSources: List<PatchSource> = emptyList(),
@@ -1051,7 +1049,7 @@ private fun Chevron(expanded: Boolean, color: Color, alpha: Float = 0.7f) =
 @Composable
 private fun ActionBar(
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector?,
+    icon: ImageVector?,
     color: Color,
     font: FontFamily,
     corner: Dp,
@@ -1356,7 +1354,7 @@ private fun UpdateHint(text: String, font: FontFamily, recommended: Boolean = fa
  * recommended): recommended=true (amber) when the version is unsupported or a newer
  * stable is out. False (blue) for an optional experimental bump.
  */
-private fun appAdvice(u: app.morphe.gui.ui.screens.home.RecallUpdateInfo): Pair<String, Boolean>? {
+private fun appAdvice(u: RecallUpdateInfo): Pair<String, Boolean>? {
     if (u.appUsedSupported) return null
     return "v${u.appUsedVersion.removePrefix("v")} is no longer supported by the latest patches" to true
 }
@@ -1425,10 +1423,10 @@ private fun SectionHeader(text: String, color: Color, font: FontFamily) {
 @Composable
 private fun DetailActionPill(
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector?,
+    icon: ImageVector?,
     color: Color,
     font: FontFamily,
-    corner: androidx.compose.ui.unit.Dp,
+    corner: Dp,
     modifier: Modifier = Modifier,
     progress: Float? = null,
     onClick: () -> Unit,
@@ -1459,7 +1457,7 @@ private fun ApkSourceSection(
     onDownloadMissing: () -> Unit,
     downloadError: String?,
     font: FontFamily,
-    corner: androidx.compose.ui.unit.Dp,
+    corner: Dp,
     onApkSelected: (String) -> Unit,
 ) {
     val accents = LocalMorpheAccents.current
@@ -1582,7 +1580,6 @@ private fun ApkSourceSection(
     if (app != null) {
         if (app.supportedVersions.isNotEmpty()) {
             SectionLabel(text = "Stable", font = font, color = accents.primary)
-            @OptIn(ExperimentalLayoutApi::class)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -1600,7 +1597,6 @@ private fun ApkSourceSection(
         }
         if (app.experimentalVersions.isNotEmpty()) {
             SectionLabel(text = "Experimental", font = font, color = accents.warning)
-            @OptIn(ExperimentalLayoutApi::class)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -1633,7 +1629,7 @@ private fun ApkSourceSection(
 @Composable
 private fun AddSourceControl(
     font: FontFamily,
-    corner: androidx.compose.ui.unit.Dp,
+    corner: Dp,
     onAddSource: () -> Unit,
     onAddLocalBundle: (String) -> Unit,
 ) {
@@ -1671,7 +1667,7 @@ private fun PatchSourceSection(
     availableVersions: List<BundleRelease>?,
     choice: BundleChoice?,
     font: FontFamily,
-    corner: androidx.compose.ui.unit.Dp,
+    corner: Dp,
     onChoose: (BundleChoice?) -> Unit,
     onSetEnabled: (Boolean) -> Unit,
 ) {
@@ -1812,7 +1808,6 @@ private fun PatchSourceSection(
                             val group = availableVersions.filter { it.isDev == (label == "Dev") }
                             if (group.isEmpty()) return@forEach
                             SectionLabel(text = label, font = font, color = color)
-                            @OptIn(ExperimentalLayoutApi::class)
                             FlowRow(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -1848,7 +1843,7 @@ private fun ChoiceRow(
     label: String,
     selected: Boolean,
     font: FontFamily,
-    corner: androidx.compose.ui.unit.Dp,
+    corner: Dp,
     sub: String? = null,
     onClick: () -> Unit,
 ) {

@@ -17,15 +17,15 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 fun MorpheFill.toBrush(size: Size): Brush? = when (this) {
-    is MorpheFill.Solid -> SolidColorBrush(Color(argb))
+    is MorpheFill.Solid -> solidColorBrush(Color(argb))
     is MorpheFill.Image -> null
     is MorpheFill.Accent -> null
     is MorpheFill.Gradient -> {
         val ordered = stops.sortedBy { it.position }
         val colorStops = ordered.map { it.position.coerceIn(0f, 1f) to Color(it.argb) }.toTypedArray()
         when {
-            colorStops.isEmpty() -> SolidColorBrush(Color.Transparent)
-            colorStops.size == 1 -> SolidColorBrush(colorStops[0].second)
+            colorStops.isEmpty() -> solidColorBrush(Color.Transparent)
+            colorStops.size == 1 -> solidColorBrush(colorStops[0].second)
             type == GradientType.RADIAL -> Brush.radialGradient(
                 colorStops = colorStops,
                 center = size.center,
@@ -43,7 +43,7 @@ fun MorpheFill.toBrush(size: Size): Brush? = when (this) {
     }
 }
 
-private fun SolidColorBrush(color: Color): Brush = Brush.linearGradient(listOf(color, color))
+private fun solidColorBrush(color: Color): Brush = Brush.linearGradient(listOf(color, color))
 
 private fun rotatedStops(
     stops: Array<Pair<Float, Color>>,

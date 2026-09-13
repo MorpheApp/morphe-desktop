@@ -719,7 +719,7 @@ class HomeViewModel(
             .orEmpty()
     }
 
-    suspend fun isBundleCached(sourceName: String, tag: String): Boolean {
+    fun isBundleCached(sourceName: String, tag: String): Boolean {
         val repo = patchSourceManager.getEnabledRepositories()
             .firstOrNull { (source, _) -> source.name == sourceName }
             ?.second
@@ -867,23 +867,23 @@ class HomeViewModel(
         val resolvedByName = cachedSourcesResult?.resolved?.associateBy { it.source.name }.orEmpty()
         val names = appNameCandidates(app)
         return buildSet {
-            for (snap in record.sourcesSnapshot) {
-                val latest = latestBySource[snap.sourceName] ?: continue
-                if (!isNewerVersion(latest, snap.version)) continue
+            for ((_, sourceName, version) in record.sourcesSnapshot) {
+                val latest = latestBySource[sourceName] ?: continue
+                if (!isNewerVersion(latest, version)) continue
 
-                val resolved = resolvedByName[snap.sourceName]
-                if (resolved == null) { add(snap.sourceName); continue }
+                val resolved = resolvedByName[sourceName]
+                if (resolved == null) { add(sourceName); continue }
                 val prerelease = resolved.channel == EnabledSourcesLoader.Channel.DEV_LATEST ||
                     resolved.channel == EnabledSourcesLoader.Channel.DEV_OLDER
                 val entries = changelogRepository.entriesFor(resolved.source, prerelease)
-                if (entries == null) { add(snap.sourceName); continue }
-                if (names.isEmpty()) { add(snap.sourceName); continue }
+                if (entries == null) { add(sourceName); continue }
+                if (names.isEmpty()) { add(sourceName); continue }
 
-                if (ChangelogParser.hasChangesFor(entries, snap.version, names)) {
-                    add(snap.sourceName)
+                if (ChangelogParser.hasChangesFor(entries, version, names)) {
+                    add(sourceName)
                 } else {
                     Logger.debug(
-                        "Changelog: '${snap.sourceName}' ${snap.version} -> $latest lists no scoped " +
+                        "Changelog: '$sourceName' $version -> $latest lists no scoped " +
                             "changes for ${app.displayName} (tried ${names.joinToString(", ")}), no badge"
                     )
                 }
