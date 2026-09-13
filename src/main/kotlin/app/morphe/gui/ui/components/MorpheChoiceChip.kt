@@ -64,8 +64,8 @@ fun MorpheChoiceChip(
         when {
             !enabled -> MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
             active -> tint.copy(alpha = 0.6f)
-            isHovered -> tint.copy(alpha = 0.4f)
-            else -> tint.copy(alpha = 0.2f)
+            isHovered -> tint.copy(alpha = if (accent != null) 0.7f else 0.4f)
+            else -> tint.copy(alpha = if (accent != null) 0.45f else 0.2f)
         },
         animationSpec = tween(150),
     )
@@ -81,7 +81,7 @@ fun MorpheChoiceChip(
     val ink = when {
         !enabled -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         active -> tint
-        accent != null -> tint.copy(alpha = if (isHovered) 1f else 0.8f)
+        accent != null -> tint
         else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 

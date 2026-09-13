@@ -8,6 +8,7 @@ package app.morphe.gui.ui.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -71,11 +72,18 @@ fun MorpheCardChip(
         ),
         animationSpec = tween(150),
     )
+    // An outline is how every other control in the app says it can be clicked, so
+    // only a chip that actually does something gets one.
+    val borderColor by animateColorAsState(
+        if (interactive) ink.copy(alpha = if (isHovered) 0.7f else 0.45f) else Color.Transparent,
+        animationSpec = tween(150),
+    )
 
     Row(
         modifier = modifier
             .clip(shape)
             .background(fill)
+            .border(1.dp, borderColor, shape)
             .hoverable(hover)
             .then(if (onClick != null) Modifier.handCursor().clickable(onClick = onClick) else Modifier)
             .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
@@ -97,7 +105,7 @@ fun MorpheCardChip(
                             Modifier
                         }
                     )
-                    .size(10.dp),
+                    .size(12.dp),
             )
         }
     }

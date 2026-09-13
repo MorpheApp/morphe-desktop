@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 
@@ -49,8 +48,6 @@ object MorpheBannerDefaults {
 }
 
 enum class MorpheBannerTone { Info, Error }
-
-private const val BANNER_TINT = 0.22f
 
 /** Compose only when a banner will show, or its top padding leaves a gap. */
 @Composable
@@ -77,11 +74,14 @@ fun MorpheBanner(
     content: @Composable RowScope.() -> Unit,
 ) {
     val corners = LocalMorpheCorners.current
-    val onContainer = when (tone) {
-        MorpheBannerTone.Info -> LocalMorpheAccents.current.primary
-        MorpheBannerTone.Error -> MaterialTheme.colorScheme.error
+    val container = when (tone) {
+        MorpheBannerTone.Info -> MaterialTheme.colorScheme.primaryContainer
+        MorpheBannerTone.Error -> MaterialTheme.colorScheme.errorContainer
     }
-    val container = onContainer.copy(alpha = BANNER_TINT)
+    val onContainer = when (tone) {
+        MorpheBannerTone.Info -> MaterialTheme.colorScheme.onPrimaryContainer
+        MorpheBannerTone.Error -> MaterialTheme.colorScheme.onErrorContainer
+    }
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = container,
@@ -118,9 +118,8 @@ fun MorpheBannerText(
         modifier = modifier,
         fontSize = MorpheBannerDefaults.TextSize,
         fontFamily = LocalMorpheFont.current,
-        fontWeight = if (emphasis) FontWeight.Medium
-            else FontWeight.Normal,
-        color = if (emphasis) LocalContentColor.current else LocalContentColor.current.copy(alpha = 0.8f),
+        fontWeight = if (emphasis) FontWeight.Medium else FontWeight.Normal,
+        color = LocalContentColor.current,
     )
 }
 
@@ -160,7 +159,7 @@ fun MorpheBannerDismiss(
         Icon(
             imageVector = MorpheIcons.Clear,
             contentDescription = "Dismiss",
-            tint = LocalContentColor.current.copy(alpha = if (isHovered) 1f else 0.7f),
+            tint = LocalContentColor.current.copy(alpha = if (isHovered) 1f else 0.85f),
             modifier = Modifier.size(14.dp),
         )
     }

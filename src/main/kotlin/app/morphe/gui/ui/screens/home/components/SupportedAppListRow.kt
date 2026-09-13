@@ -100,7 +100,7 @@ fun SupportedAppListRow(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
-                    .size(28.dp)
+                    .size(40.dp)
                     .clip(RoundedCornerShape(corners.small))
                     .border(1.dp, Color.White.copy(alpha = 0.35f), RoundedCornerShape(corners.small))
                     .background(Color.White.copy(alpha = 0.06f)),
@@ -108,33 +108,33 @@ fun SupportedAppListRow(
             ) {
                 Text(
                     text = initial,
-                    fontSize = 12.sp,
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = font,
                     color = Color.White,
                 )
             }
             Spacer(Modifier.width(10.dp))
-            Text(
-                text = app.displayName,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = font,
-                color = Color.White,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = app.packageName,
-                fontSize = 10.sp,
-                fontFamily = font,
-                fontWeight = FontWeight.Normal,
-                color = Color.White.copy(alpha = 0.6f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = app.displayName,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = font,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = app.packageName,
+                    fontSize = 10.sp,
+                    fontFamily = font,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White.copy(alpha = 0.6f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
             if (patchedState != PatchedAppState.NEVER_PATCHED) {
                 Spacer(Modifier.width(8.dp))
                 PatchedStateBadge(patchedState, font)
@@ -283,6 +283,7 @@ private fun ExpandedBody(
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
                     MorpheCardChip(
                         text = v,
+                        icon = if (url != null) MorpheIcons.OpenInNew else null,
                         onClick = url?.let { { uriHandler.openUri(it) } },
                     )
                 }
@@ -308,6 +309,7 @@ private fun ExpandedBody(
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
                     MorpheCardChip(
                         text = v,
+                        icon = if (url != null) MorpheIcons.OpenInNew else null,
                         onClick = url?.let { { uriHandler.openUri(it) } },
                     )
                 }

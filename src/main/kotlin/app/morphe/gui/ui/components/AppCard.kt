@@ -25,7 +25,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -107,10 +106,10 @@ private fun Color.over(background: Color, alpha: Float): Color = Color(
 private val MANAGER_MID = Color(0xFF1E5AA8)
 private val MANAGER_END = Color(0xFF00AFAE)
 private val MANAGER_BASE = Color(0xFF0E3F6E)
-
-private const val CARD_BASE_ALPHA = 0.78f
-private const val CARD_MID_ALPHA = 0.48f
-private const val CARD_END_ALPHA = 0.54f
+private val CARD_GROUND = Color.Black
+private const val CARD_BASE_ALPHA = 0.70f
+private const val CARD_MID_ALPHA = 0.85f
+private const val CARD_END_ALPHA = 0.72f
 
 @Composable
 internal fun defaultCardPalette(): CardPalette =
@@ -167,7 +166,6 @@ fun AppCard(
 
     val fill = fill.resolveAccent(LocalMorpheAccents.current.primary)
     val (baseColor, midColor, endColor) = cardPalette(fill, appIconColorHex, defaultCardPalette())
-    val surface = MaterialTheme.colorScheme.background
 
     Box(
         modifier = modifier
@@ -179,13 +177,13 @@ fun AppCard(
 
                 val userBrush = fill?.toBrush(size)
                 val isFlatFill = fill is MorpheFill.Solid
-                val lift = hoverProgress * 0.05f
+                val lift = hoverProgress * 0.03f
                 drawRoundRect(
                     brush = userBrush ?: Brush.linearGradient(
                         colors = listOf(
-                            baseColor.over(surface, CARD_BASE_ALPHA).shiftLightness(lift),
-                            midColor.over(surface, CARD_MID_ALPHA).shiftLightness(lift),
-                            endColor.over(surface, CARD_END_ALPHA).shiftLightness(lift),
+                            baseColor.over(CARD_GROUND, CARD_BASE_ALPHA).shiftLightness(lift),
+                            midColor.over(CARD_GROUND, CARD_MID_ALPHA).shiftLightness(lift),
+                            endColor.over(CARD_GROUND, CARD_END_ALPHA).shiftLightness(lift),
                         ),
                         start = Offset(0f, h),
                         end = Offset(w, 0f),
