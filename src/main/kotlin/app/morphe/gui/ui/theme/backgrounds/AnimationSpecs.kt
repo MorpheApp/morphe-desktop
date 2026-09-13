@@ -14,8 +14,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * Frame-based time accumulator that respects a [speedMultiplier].
@@ -68,16 +67,41 @@ val LocalParallaxState = staticCompositionLocalOf<ParallaxState> {
 fun rememberParallaxState(
     enableParallax: Boolean,
     sensitivity: Float = 0.3f,
-    coroutineScope: CoroutineScope
 ): Pair<ParallaxState, Modifier> {
     val smoothTiltX = remember { Animatable(0f) }
     val smoothTiltY = remember { Animatable(0f) }
     var componentSize by remember { mutableStateOf(IntSize.Zero) }
+    val targetTiltX = remember { mutableFloatStateOf(0f) }
+    val targetTiltY = remember { mutableFloatStateOf(0f) }
+    val parallaxSpring = remember {
+        spring<Float>(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow,
+        )
+    }
 
     LaunchedEffect(enableParallax) {
         if (!enableParallax) {
+            targetTiltX.floatValue = 0f
+            targetTiltY.floatValue = 0f
             smoothTiltX.snapTo(0f)
             smoothTiltY.snapTo(0f)
+        }
+    }
+
+    // Pointer events can arrive much faster than the display refresh rate. Keep one
+    // long-lived collector per axis and retain only the newest target instead of
+    // launching two new animation coroutines for every mouse movement.
+    LaunchedEffect(enableParallax) {
+        if (enableParallax) {
+            snapshotFlow { targetTiltX.floatValue }
+                .collectLatest { smoothTiltX.animateTo(it, parallaxSpring) }
+        }
+    }
+    LaunchedEffect(enableParallax) {
+        if (enableParallax) {
+            snapshotFlow { targetTiltY.floatValue }
+                .collectLatest { smoothTiltY.animateTo(it, parallaxSpring) }
         }
     }
 
@@ -86,20 +110,33 @@ fun rememberParallaxState(
             .onSizeChanged { componentSize = it }
             .onPointerEvent(PointerEventType.Move, pass = PointerEventPass.Initial) { event ->
                 val position = event.changes.first().position
-                val centerX = componentSize.width / 2f
-                val centerY = componentSize.height / 2f
-                // Normalize to roughly -10f..10f to match Android accelerometer scale
-                val rawTiltX = ((position.x - centerX) / centerX) * 10f
-                val rawTiltY = ((position.y - centerY) / centerY) * 10f
-
-                coroutineScope.launch {
-                    smoothTiltX.animateTo(rawTiltX * sensitivity, spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow))
-                }
-                coroutineScope.launch {
-                    smoothTiltY.animateTo(rawTiltY * sensitivity, spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow))
-                }
+                val target = calculateParallaxTilt(
+                    positionX = position.x,
+                    positionY = position.y,
+                    width = componentSize.width,
+                    height = componentSize.height,
+                    sensitivity = sensitivity,
+                )
+                targetTiltX.floatValue = target.first
+                targetTiltY.floatValue = target.second
             }
     } else Modifier
 
     return ParallaxState(smoothTiltX.asState(), smoothTiltY.asState()) to modifier
+}
+
+internal fun calculateParallaxTilt(
+    positionX: Float,
+    positionY: Float,
+    width: Int,
+    height: Int,
+    sensitivity: Float,
+): Pair<Float, Float> {
+    if (width <= 0 || height <= 0 || !sensitivity.isFinite()) return 0f to 0f
+    val centerX = width / 2f
+    val centerY = height / 2f
+    val maximum = 10f * sensitivity.coerceAtLeast(0f)
+    val tiltX = (((positionX - centerX) / centerX) * maximum).coerceIn(-maximum, maximum)
+    val tiltY = (((positionY - centerY) / centerY) * maximum).coerceIn(-maximum, maximum)
+    return tiltX to tiltY
 }

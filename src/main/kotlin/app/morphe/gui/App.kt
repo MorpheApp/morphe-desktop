@@ -143,7 +143,6 @@ private fun appContent(
     val enableParallaxState = remember { mutableStateOf(true) }
     val (parallaxState, parallaxMod) = rememberParallaxState(
         enableParallax = enableParallaxState.value,
-        coroutineScope = scope
     )
 
     var themePreference by remember { mutableStateOf(ThemePreference.SYSTEM) }

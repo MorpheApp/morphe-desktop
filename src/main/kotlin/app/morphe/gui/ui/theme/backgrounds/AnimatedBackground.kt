@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.morphe.gui.ui.icons.MorpheIcons
 
@@ -70,9 +68,6 @@ fun AnimatedBackground(
         modifier = Modifier
             .fillMaxSize()
             .clipToBounds()
-            .graphicsLayer {
-                compositingStrategy = CompositingStrategy.Offscreen
-            }
     ) {
         when (type) {
             BackgroundType.CIRCLES -> CirclesBackground(
