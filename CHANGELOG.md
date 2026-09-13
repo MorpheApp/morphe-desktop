@@ -1,3 +1,10 @@
+## [1.15.2-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.2-dev.2...v1.15.2-dev.3) (2026-09-13)
+
+
+### Bug Fixes
+
+* Resolve `Boolean/String` type mismatch when applying patch options from GUI ([#308](https://github.com/MorpheApp/morphe-desktop/issues/308)) ([c7c4a11](https://github.com/MorpheApp/morphe-desktop/commit/c7c4a110c285fe445b859effc6da98f92aa3a441))
+
 ## [1.15.2-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.2-dev.1...v1.15.2-dev.2) (2026-09-12)
 
 
