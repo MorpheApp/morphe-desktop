@@ -5,6 +5,7 @@
 
 package app.morphe.gui.util
 
+import app.morphe.desktop.command.model.deserializeOptionValue
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.gui.data.model.CompatiblePackage
@@ -119,36 +120,31 @@ class PatchService {
             try {
                 val loadedPatches = PatchBundleLoader.loadFlat(tempCopies)
 
+                // Build a lookup: patchName -> (optionKey -> KType) for type-aware coercion.
+                val patchOptionTypes: Map<String, Map<String, KType>> = loadedPatches
+                    .filter { it.name != null }
+                    .associate { patch ->
+                        patch.name!! to patch.options.mapValues { (_, opt) -> opt.type }
+                    }
+
                 // Convert GUI's flat "patchName.optionKey" -> value map
                 // to engine's Map<patchName, Map<optionKey, value>> format.
-                // The GUI edits every option as text, so coerce to the type the
-                // patch declared. A String handed to a Boolean option is dropped
-                // by the patcher, which then silently uses the default.
-                val declaredTypes = loadedPatches.associate { patch ->
-                    (patch.name ?: "") to patch.options.mapValues { (_, opt) -> opt.type }
-                }
+                // String values are coerced to the option's native type (Boolean, Int, etc.)
+                // so the patcher receives the expected JVM type, not a raw String.
                 val patchOptions = enabledPatches.associateWith { patchName ->
-                    val types = declaredTypes[patchName].orEmpty()
                     options.filterKeys { it.startsWith("$patchName.") }
                         .mapKeys { it.key.removePrefix("$patchName.") }
-                        .mapNotNull { (key, raw) ->
-                            val type = types[key]
-                            if (type == null) {
-                                key to raw
+                        .mapNotNull { (optKey, strValue) ->
+                            val kType = patchOptionTypes[patchName]?.get(optKey)
+                            val coerced: Any? = if (kType != null) {
+                                runCatching {
+                                    deserializeOptionValue(optionTextToJson(strValue, kType), kType)
+                                }.getOrElse { strValue }
                             } else {
-                                val coerced = coerceOptionValue(type, raw)
-                                if (coerced == null) {
-                                    Logger.warn(
-                                        "Ignoring option '$key' of patch '$patchName': " +
-                                            "'$raw' is not a valid $type"
-                                    )
-                                    null
-                                } else {
-                                    key to coerced
-                                }
+                                strValue
                             }
-                        }
-                        .toMap()
+                            optKey to coerced
+                        }.toMap()
                 }.filter { it.value.isNotEmpty() }
 
                 val keystoreDetails = if (keystorePath != null) {

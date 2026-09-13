@@ -90,7 +90,7 @@ import app.morphe.gui.ui.components.MorpheChevron
 import app.morphe.gui.ui.components.MorpheChoiceChip
 import app.morphe.gui.ui.components.MorpheTooltip
 import app.morphe.gui.util.expectedValueHint
-import app.morphe.gui.util.coerceOptionValue
+import app.morphe.gui.util.optionValueOrNull
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.MorpheBadgeTone
 import androidx.compose.ui.semantics.semantics
@@ -1378,7 +1378,7 @@ private fun PatchOptionEditor(
                 // unless the patch demands one.
                 val missing = option.required && localText.isBlank()
                 val badType = localText.isNotBlank() && option.valueType?.let {
-                    coerceOptionValue(it, localText) == null
+                    optionValueOrNull(localText, it) == null
                 } == true
                 val invalid = missing || badType
 

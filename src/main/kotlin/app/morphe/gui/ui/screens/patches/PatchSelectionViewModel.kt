@@ -20,7 +20,7 @@ import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.optionValueFromJson
 import app.morphe.gui.util.optionValueToJson
-import app.morphe.gui.util.coerceOptionValue
+import app.morphe.gui.util.optionValueOrNull
 import app.morphe.gui.util.PatchService
 import app.morphe.patcher.resource.CpuArchitecture
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -497,7 +497,7 @@ class PatchSelectionViewModel(
             val patchName = compoundKey.substring(0, dotIdx)
             val optKey = compoundKey.substring(dotIdx + 1)
             val type = declaredTypes[patchName]?.get(optKey)
-            val typed = type?.let { coerceOptionValue(it, value) }
+            val typed = type?.let { optionValueOrNull(value, it) }
             groupedOptions.getOrPut(patchName) { mutableMapOf() }[optKey] =
                 if (typed == null) JsonPrimitive(value) else optionValueToJson(typed)
         }
