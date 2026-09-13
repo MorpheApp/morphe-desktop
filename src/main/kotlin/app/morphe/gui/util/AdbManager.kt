@@ -7,11 +7,13 @@ package app.morphe.gui.util
 
 import app.morphe.engine.util.AppLinkCommands
 import app.morphe.engine.util.SignatureIdentity
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.Socket
+import org.jetbrains.compose.resources.getString
 
 /**
  * Manages ADB (Android Debug Bridge) operations for installing APKs. Works across macOS, Linux, and Windows.
@@ -368,7 +370,7 @@ class AdbManager {
         // we'd rather install without Play-update blocking than not install at
         // all. (Validated on Android 12 that an absent `-i` is accepted; this is
         // a safety net for versions we haven't tested.)
-        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
+        suspend fun attemptInstall(withInstaller: Boolean): Result<Unit> {
             val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
             if (allowDowngrade) command.add("-d") // Allow downgrade
             if (withInstaller && !installerPackage.isNullOrBlank()) {
@@ -377,7 +379,7 @@ class AdbManager {
             }
             command.add(apkPath)
 
-            onProgress("Installing on ${targetDevice.displayName}...")
+            onProgress(getString(Res.string.adb_status_installing, targetDevice.displayName))
             Logger.info("Running: ${command.joinToString(" ")}")
 
             return try {
@@ -761,31 +763,32 @@ class AdbManager {
         }
     }
 
-    private fun parseInstallError(output: String): String {
+    private suspend fun parseInstallError(output: String): String {
         // Common ADB install errors
         return when {
             output.contains("INSTALL_FAILED_VERSION_DOWNGRADE") ->
-                "Cannot downgrade - a newer version is installed. Uninstall the existing app first"
+                getString(Res.string.adb_error_downgrade)
             output.contains("INSTALL_FAILED_ALREADY_EXISTS") ->
-                "App already exists. Try uninstalling it first"
+                getString(Res.string.adb_error_already_exists)
             output.contains("INSTALL_FAILED_INSUFFICIENT_STORAGE") ->
-                "Not enough storage space on device"
+                getString(Res.string.adb_error_storage)
             output.contains("INSTALL_FAILED_INVALID_APK") ->
-                "Invalid APK file"
+                getString(Res.string.adb_error_invalid_apk)
             output.contains("INSTALL_PARSE_FAILED_NO_CERTIFICATES") ->
-                "APK is not signed properly"
+                getString(Res.string.adb_error_no_certificates)
             output.contains("INSTALL_FAILED_UPDATE_INCOMPATIBLE") ->
-                "Incompatible update - signatures don't match. Uninstall the existing app first"
+                getString(Res.string.adb_error_update_incompatible)
             output.contains("INSTALL_FAILED_USER_RESTRICTED") ->
-                "Installation restricted by user settings"
+                getString(Res.string.adb_error_user_restricted)
             output.contains("INSTALL_FAILED_VERIFICATION_FAILURE") ->
-                "Package verification failed"
+                getString(Res.string.adb_error_verification_failure)
             output.contains("Failure") -> {
                 // Extract the failure reason
                 val match = Regex("Failure \\[(.+)]").find(output)
-                match?.groupValues?.get(1) ?: "Installation failed: $output"
+                val failureMessage = match?.groupValues?.get(1) ?: output
+                getString(Res.string.adb_error_generic, failureMessage)
             }
-            else -> "Installation failed: $output"
+            else -> getString(Res.string.adb_error_generic, output)
         }
     }
 }

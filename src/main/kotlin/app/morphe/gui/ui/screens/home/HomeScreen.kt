@@ -43,6 +43,7 @@ import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.Navigator
@@ -53,6 +54,8 @@ import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class HomeScreen : Screen {
@@ -212,7 +215,7 @@ fun HomeScreenContent(
                         launchPatch(record, apkPath, prep.patchFilePaths, prep.sourceNames)
                     } else {
                         val picked = MorpheFilePicker.pickFile(
-                            title = "Select APK to patch",
+                            title = getString(Res.string.home_select_apk_to_patch),
                             extensions = listOf("apk", "apkm", "xapk", "apks"),
                         )
                         picked?.takeIf { it.exists() }
@@ -223,7 +226,8 @@ fun HomeScreenContent(
                     // APK still satisfies the latest patches → patch straight away.
                     LaunchedEffect(prep) { launchWith(record.inputApkPath) }
                 } else {
-                    val targetV = prep.targetVersion?.removePrefix("v") ?: "newer"
+                    val targetFallback = stringResource(Res.string.home_update_target_version_newer)
+                    val targetV = prep.targetVersion?.removePrefix("v") ?: targetFallback
                     UpdateAvailableDialog(
                         appName = record.displayName,
                         currentVersion = record.apkVersion.removePrefix("v"),
@@ -239,7 +243,7 @@ fun HomeScreenContent(
                             if (url != null) uriHandler.openUri(url)
                             coroutineScope.launch {
                                 val picked = MorpheFilePicker.pickFile(
-                                    title = "Select the v$targetV APK",
+                                    title = getString(Res.string.home_select_version_apk, targetV),
                                     extensions = listOf("apk", "apkm", "xapk", "apks"),
                                 )
                                 picked?.takeIf { it.exists() }
@@ -386,7 +390,7 @@ fun HomeScreenContent(
             val onChangeClick: () -> Unit = {
                 coroutineScope.launch {
                     MorpheFilePicker.pickFile(
-                        title = "Select APK file",
+                        title = getString(Res.string.home_select_apk_file),
                         extensions = listOf("apk", "apkm", "xapk", "apks"),
                     )?.let { file ->
                         viewModel.onFileSelected(file)
@@ -604,6 +608,6 @@ private fun handleContinue(
 
 private suspend fun openFilePicker(): File? =
     MorpheFilePicker.pickFile(
-        title = "Select APK file",
+        title = getString(Res.string.home_select_apk_file),
         extensions = listOf("apk", "apkm", "xapk", "apks"),
     )

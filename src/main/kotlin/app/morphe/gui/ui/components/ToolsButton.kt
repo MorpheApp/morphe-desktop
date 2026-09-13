@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /**
@@ -69,7 +71,7 @@ fun ToolsButton(
     ) {
         Icon(
             imageVector = MorpheIcons.Build,
-            contentDescription = "Tools",
+            contentDescription = stringResource(Res.string.tools_dialog_title),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(16.dp)
         )

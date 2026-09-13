@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheColors
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 enum class ErrorType {
     NETWORK,
@@ -36,8 +38,8 @@ fun ErrorDialog(
     errorType: ErrorType = ErrorType.GENERIC,
     onDismiss: () -> Unit,
     onRetry: (() -> Unit)? = null,
-    dismissText: String = "OK",
-    retryText: String = "Retry"
+    dismissText: String = stringResource(Res.string.ok),
+    retryText: String = stringResource(Res.string.retry)
 ) {
     val font = LocalMorpheFont.current
     val icon = when (errorType) {
@@ -137,26 +139,27 @@ fun getErrorType(error: String): ErrorType {
 /**
  * Get user-friendly error message.
  */
+@Composable
 fun getFriendlyErrorMessage(error: String): String {
     val lowerError = error.lowercase()
     return when {
         lowerError.contains("timeout") ->
-            "The connection timed out. Please check your internet connection and try again"
+            stringResource(Res.string.error_dialog_timeout)
 
         lowerError.contains("unreachable") || lowerError.contains("connect") ->
-            "Unable to connect to the server. Please check your internet connection"
+            stringResource(Res.string.error_dialog_unreachable)
 
         lowerError.contains("permission") || lowerError.contains("access denied") ->
-            "Permission denied. Please check that you have access to the file or folder"
+            stringResource(Res.string.error_dialog_permission_denied)
 
         lowerError.contains("not found") ->
-            "The requested file or resource was not found"
+            stringResource(Res.string.error_dialog_not_found)
 
         lowerError.contains("disk full") || lowerError.contains("no space") ->
-            "Not enough disk space. Please free up some space and try again"
+            stringResource(Res.string.error_dialog_disk_full)
 
         lowerError.contains("exit code") ->
-            "The patching process encountered an error. Check the logs for details"
+            stringResource(Res.string.error_dialog_exit_code)
 
         else -> error
     }

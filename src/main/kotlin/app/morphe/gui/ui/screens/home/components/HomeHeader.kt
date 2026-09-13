@@ -41,10 +41,10 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.ThemePreference
-import app.morphe.morphe_desktop.generated.resources.Res
-import app.morphe.morphe_desktop.generated.resources.morphe_dark
-import app.morphe.morphe_desktop.generated.resources.morphe_light
+import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // HEADER BAR AND STATUS INDICATORS
@@ -148,7 +148,7 @@ internal fun MultiSourceHintBanner(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(
-            text = "Patches from every enabled source are unioned. Manage from the sources button above",
+            text = stringResource(Res.string.home_header_multi_source_hint),
             fontSize = 11.sp,
             fontFamily = font,
             fontWeight = FontWeight.Normal,
@@ -158,7 +158,7 @@ internal fun MultiSourceHintBanner(
         IconButton(onClick = onDismiss, modifier = Modifier.size(24.dp)) {
             Icon(
                 imageVector = MorpheIcons.Clear,
-                contentDescription = "Dismiss",
+                contentDescription = stringResource(Res.string.dismiss),
                 tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.size(14.dp),
             )
@@ -197,8 +197,7 @@ internal fun SourcesFailedBanner(
             modifier = Modifier.size(15.dp),
         )
         Text(
-            text = (if (count == 1) "A patch source" else "$count patch sources") +
-                " failed to load. Using the ones that loaded successfully",
+            text = pluralStringResource(Res.plurals.home_header_sources_failed, count, count),
             fontSize = 11.sp,
             fontFamily = font,
             fontWeight = FontWeight.Normal,
@@ -229,7 +228,7 @@ internal fun SourcesFailedBanner(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                "Manage sources",
+                text = stringResource(Res.string.home_header_manage_sources_button),
                 fontFamily = font,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Bold,
@@ -239,7 +238,7 @@ internal fun SourcesFailedBanner(
         IconButton(onClick = onDismiss, modifier = Modifier.size(24.dp)) {
             Icon(
                 imageVector = MorpheIcons.Clear,
-                contentDescription = "Dismiss",
+                contentDescription = stringResource(Res.string.dismiss),
                 tint = warn,
                 modifier = Modifier.size(14.dp),
             )
@@ -277,7 +276,7 @@ internal fun PatchesLoadingIndicator() {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Loading…",
+            text = stringResource(Res.string.status_loading),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
@@ -314,7 +313,7 @@ internal fun OfflineBadge(onRetry: () -> Unit) {
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
-            text = "Offline",
+            text = stringResource(Res.string.status_offline),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
@@ -332,7 +331,7 @@ internal fun BrandingSection(isCompact: Boolean = false) {
     }
     Image(
         painter = painterResource(if (isDark) Res.drawable.morphe_dark else Res.drawable.morphe_light),
-        contentDescription = "Morphe Logo",
+        contentDescription = stringResource(Res.string.morphe_logo_content_description),
         modifier = Modifier.height(if (isCompact) 36.dp else 60.dp)
     )
 }

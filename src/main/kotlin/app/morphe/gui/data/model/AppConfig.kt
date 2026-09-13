@@ -51,6 +51,7 @@ data class SourceVersionPref(
 
 @Serializable
 data class AppConfig(
+    val language: String = "system",
     val themePreference: String = ThemePreference.SYSTEM.name,
     val backgroundType: String = "CIRCLES",
     val enableParallax: Boolean = true,

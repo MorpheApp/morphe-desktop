@@ -15,11 +15,28 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun resolveStepName(stepName: String): String {
+    return when (stepName) {
+        "Preparing" -> stringResource(Res.string.patching_step_preparing)
+        "Loading patches" -> stringResource(Res.string.patching_step_loading_patches)
+        "Merging split APK" -> stringResource(Res.string.patching_step_merging_split_apk)
+        "Read APK file" -> stringResource(Res.string.patching_step_read_apk)
+        "Applying patches" -> stringResource(Res.string.patching_step_applying_patches)
+        "Saving" -> stringResource(Res.string.patching_step_saving)
+        "Writing patched APK file" -> stringResource(Res.string.patching_step_writing_apk)
+        "Signing patched APK file" -> stringResource(Res.string.patching_step_signing)
+        else -> stepName
+    }
+}
 
 enum class StepCategory {
     INITIALIZATION, PATCHING, COMPILATION, SIGNING, DONE
@@ -174,7 +191,7 @@ fun rememberZenoProgress(
     progress: Float,
     isActive: Boolean
 ): Float {
-    var displayProgress by remember { mutableFloatStateOf(0f) }
+    var displayProgress by remember { mutableFloatStateOf(progress) }
     val currentProgress by rememberUpdatedState(progress)
     val currentlyActive by rememberUpdatedState(isActive)
 

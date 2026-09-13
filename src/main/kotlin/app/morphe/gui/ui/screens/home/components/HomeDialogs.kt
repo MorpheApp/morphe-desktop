@@ -29,8 +29,11 @@ import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveVersionWarningContent
 import app.morphe.gui.util.toColor
+import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // HOME DIALOGS
@@ -62,8 +65,18 @@ internal fun VersionWarningDialog(
         )
         MorpheDialogText(warningContent.message)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Continue anyway", warnColor, filled = true, onClick = onConfirm)
+            MorpheDialogButton(
+                stringResource(Res.string.cancel),
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onDismiss
+            )
+            MorpheDialogButton(
+                stringResource(Res.string.home_dialog_continue_anyway),
+                warnColor,
+                filled = true,
+                onClick = onConfirm
+            )
         }
     }
 }
@@ -75,14 +88,26 @@ internal fun ForgetConfirmDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    MorpheDialogCard(onDismiss = onDismiss, title = "Forget ${record.displayName}?") {
+    MorpheDialogCard(
+        onDismiss = onDismiss,
+        title = stringResource(Res.string.home_dialog_forget_title, record.displayName)
+    ) {
         MorpheDialogText(
-            "This removes ${record.displayName} from your patched-app history. " +
-                "It doesn't touch any files - repatching the app adds it back"
+            stringResource(Res.string.home_dialog_forget_message, record.displayName)
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Forget", DangerRed, filled = true, onClick = onConfirm)
+            MorpheDialogButton(
+                stringResource(Res.string.cancel),
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onDismiss
+            )
+            MorpheDialogButton(
+                stringResource(Res.string.home_dialog_forget_button),
+                DangerRed,
+                filled = true,
+                onClick = onConfirm
+            )
         }
     }
 }
@@ -102,11 +127,10 @@ internal fun UninstallConfirmDialog(
     val font = LocalMorpheFont.current
     MorpheDialogCard(
         onDismiss = onDismiss,
-        title = "Uninstall ${record.displayName}?",
+        title = stringResource(Res.string.home_dialog_uninstall_title, record.displayName),
     ) {
         MorpheDialogText(
-            "This removes ${record.displayName} from the connected device. " +
-                "The patched APK on disk and your history are kept unless you choose otherwise below"
+            stringResource(Res.string.home_dialog_uninstall_message, record.displayName)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -124,7 +148,7 @@ internal fun UninstallConfirmDialog(
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                "Also remove from Your apps",
+                text = stringResource(Res.string.home_dialog_uninstall_also_forget),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -132,8 +156,18 @@ internal fun UninstallConfirmDialog(
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Uninstall", DangerRed, filled = true, onClick = onConfirm)
+            MorpheDialogButton(
+                stringResource(Res.string.cancel),
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onDismiss
+            )
+            MorpheDialogButton(
+                stringResource(Res.string.home_dialog_uninstall_button),
+                DangerRed,
+                filled = true,
+                onClick = onConfirm
+            )
         }
     }
 }
@@ -149,17 +183,25 @@ internal fun RepatchMissingApkDialog(
     onApkPicked: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    MorpheDialogCard(onDismiss = onDismiss, title = "Original APK not found") {
+    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_missing_apk_title)) {
         MorpheDialogText(
-            "The input APK for ${record.displayName} is no longer at:\n" +
-                "${record.inputApkPath}\n\nSelect the APK again to repatch with your saved settings."
+            stringResource(Res.string.home_dialog_missing_apk_message, record.displayName, record.inputApkPath)
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Select APK…", LocalMorpheAccents.current.primary, filled = true) {
+            MorpheDialogButton(
+                stringResource(Res.string.cancel),
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onDismiss
+            )
+            MorpheDialogButton(
+                stringResource(Res.string.home_dialog_select_apk),
+                LocalMorpheAccents.current.primary,
+                filled = true
+            ) {
                 scope.launch {
                     val picked = MorpheFilePicker.pickFile(
-                        title = "Select APK to repatch",
+                        title = getString(Res.string.home_dialog_select_apk_to_repatch),
                         extensions = listOf("apk", "apkm", "xapk", "apks"),
                     )
                     onDismiss()
@@ -173,7 +215,7 @@ internal fun RepatchMissingApkDialog(
 /** Spinner shown while the latest patches for an update are being resolved. */
 @Composable
 internal fun UpdatePreparingDialog(onCancel: () -> Unit) {
-    MorpheDialogCard(onDismiss = onCancel, title = "Preparing update…") {
+    MorpheDialogCard(onDismiss = onCancel, title = stringResource(Res.string.home_dialog_update_preparing_title)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CircularProgressIndicator(
                 modifier = Modifier.size(16.dp),
@@ -181,10 +223,15 @@ internal fun UpdatePreparingDialog(onCancel: () -> Unit) {
                 color = LocalMorpheAccents.current.primary,
             )
             Spacer(Modifier.width(12.dp))
-            MorpheDialogText("Resolving the latest patches…")
+            MorpheDialogText(stringResource(Res.string.home_dialog_update_resolving_patches))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onCancel)
+            MorpheDialogButton(
+                stringResource(Res.string.cancel),
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onCancel
+            )
         }
     }
 }
@@ -192,10 +239,15 @@ internal fun UpdatePreparingDialog(onCancel: () -> Unit) {
 /** Terminal error state for a failed update preparation. */
 @Composable
 internal fun UpdateFailedDialog(message: String, onDismiss: () -> Unit) {
-    MorpheDialogCard(onDismiss = onDismiss, title = "Update failed") {
+    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_update_failed_title)) {
         MorpheDialogText(message)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("OK", LocalMorpheAccents.current.primary, filled = true, onClick = onDismiss)
+            MorpheDialogButton(
+                stringResource(Res.string.ok),
+                LocalMorpheAccents.current.primary,
+                filled = true,
+                onClick = onDismiss
+            )
         }
     }
 }
@@ -214,19 +266,30 @@ internal fun UpdateAvailableDialog(
     onUseMyApk: () -> Unit,
     onGetNewer: () -> Unit,
 ) {
-    MorpheDialogCard(onDismiss = onDismiss, title = "Update $appName") {
+    MorpheDialogCard(
+        onDismiss = onDismiss,
+        title = stringResource(Res.string.home_dialog_update_available_title, appName)
+    ) {
         MorpheDialogText(
             if (currentSupported) {
-                "The latest patches add support for a newer app version (v$targetVersion). " +
-                    "You can grab it, or keep using your v$currentVersion - your call"
+                stringResource(Res.string.home_dialog_update_supported_message, targetVersion, currentVersion)
             } else {
-                "Your v$currentVersion is no longer supported by the latest patches. " +
-                    "Get v$targetVersion to keep patching"
+                stringResource(Res.string.home_dialog_update_unsupported_message, currentVersion, targetVersion)
             }
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Use my APK", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onUseMyApk)
-            MorpheDialogButton("Get v$targetVersion", LocalMorpheAccents.current.primary, filled = true, onClick = onGetNewer)
+            MorpheDialogButton(
+                stringResource(Res.string.home_dialog_use_my_apk),
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onUseMyApk
+            )
+            MorpheDialogButton(
+                stringResource(Res.string.home_dialog_get_version, targetVersion),
+                LocalMorpheAccents.current.primary,
+                filled = true,
+                onClick = onGetNewer
+            )
         }
     }
 }

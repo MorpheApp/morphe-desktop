@@ -37,14 +37,22 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
@@ -61,9 +69,11 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.data.repository.LanguageRepository
 import app.morphe.gui.ui.components.ChangelogDialog
 import app.morphe.gui.ui.components.MorpheColorPickerCard
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.THEME_PRESET_COLORS
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
@@ -75,10 +85,11 @@ import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FileUtils
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.MorpheFilePicker
-import app.morphe.morphe_desktop.generated.resources.Res
-import app.morphe.morphe_desktop.generated.resources.morphe_logo
+import app.morphe.gui.util.currentLocale
+import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.apk.ApkSigner
 import java.awt.Desktop
 import java.io.File
@@ -92,7 +103,10 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -128,7 +142,9 @@ fun SettingsDialog(
     collapsibleSectionStates: Map<String, Boolean> = emptyMap(),
     onCollapsibleSectionToggle: (id: String, expanded: Boolean) -> Unit = { _, _ -> },
     customAccentColorArgb: Int? = null,
-    onCustomAccentColorChange: (Int?) -> Unit = {}
+    onCustomAccentColorChange: (Int?) -> Unit = {},
+    currentLanguage: String = LanguageRepository.SYSTEM_CODE,
+    onLanguageChange: (String) -> Unit = {}
 ) {
     val uriHandler = LocalUriHandler.current
     val corners = LocalMorpheCorners.current
@@ -139,6 +155,25 @@ fun SettingsDialog(
     var showCustomColorDialog by remember { mutableStateOf(false) }
     var showChangelogDialog by remember { mutableStateOf(false) }
     var showAppInfoDialog by remember { mutableStateOf(false) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
+
+    val languageRepository: LanguageRepository = remember { LanguageRepository() }
+    val currentLanguageOption = remember(currentLanguage) {
+        languageRepository.getLanguageByCode(currentLanguage, currentLanguage)
+    }
+
+    if (showLanguageDialog) {
+        LanguageDialog(
+            currentLanguageCode = currentLanguage,
+            onLanguageSelected = { newCode ->
+                onLanguageChange(newCode)
+                showLanguageDialog = false
+            },
+            onDismiss = { showLanguageDialog = false },
+            font = font,
+            languageRepository = languageRepository
+        )
+    }
 
     if (showChangelogDialog) {
         ChangelogDialog(
@@ -158,7 +193,7 @@ fun SettingsDialog(
         containerColor = MaterialTheme.colorScheme.surface,
         title = {
             Text(
-                text = "Settings",
+                text = stringResource(Res.string.settings_dialog_title),
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = font,
                 fontSize = 16.sp,
@@ -176,12 +211,12 @@ fun SettingsDialog(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     val navItems = listOf(
-                        "Appearance" to MorpheIcons.Palette,
-                        "Advanced" to MorpheIcons.Tune,
-                        "System" to MorpheIcons.Monitor
+                        Triple("Appearance", Res.string.settings_nav_appearance, MorpheIcons.Palette),
+                        Triple("Advanced", Res.string.settings_nav_advanced, MorpheIcons.Tune),
+                        Triple("System", Res.string.settings_nav_system, MorpheIcons.Monitor)
                     )
-                    navItems.forEach { (category, icon) ->
-                        val isSelected = selectedCategory == category
+                    navItems.forEach { (categoryKey, labelRes, icon) ->
+                        val isSelected = selectedCategory == categoryKey
                         val hoverInteraction = remember { MutableInteractionSource() }
                         Row(
                             modifier = Modifier
@@ -192,7 +227,7 @@ fun SettingsDialog(
                                     else Color.Transparent
                                 )
                                 .hoverable(hoverInteraction)
-                                .clickable { selectedCategory = category }
+                                .clickable { selectedCategory = categoryKey }
                                 .padding(horizontal = 12.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -205,7 +240,7 @@ fun SettingsDialog(
                             )
                             Spacer(Modifier.width(12.dp))
                             Text(
-                                text = category,
+                                text = stringResource(labelRes),
                                 fontSize = 13.sp,
                                 fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
                                 fontFamily = font,
@@ -229,7 +264,96 @@ fun SettingsDialog(
                 ) {
                     when (selectedCategory) {
                         "Appearance" -> {
-                            SectionLabel("Theme", font, icon = MorpheIcons.Palette)
+                            SectionLabel(stringResource(Res.string.settings_section_language), font, icon = MorpheIcons.Language)
+                            Spacer(Modifier.height(8.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = currentLanguageOption.flag,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier.padding(end = 12.dp)
+                                )
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = stringResource(Res.string.settings_language_current_title),
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        fontFamily = font,
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    val isSystem = currentLanguageOption.code == LanguageRepository.SYSTEM_CODE
+                                    Text(
+                                        text = if (isSystem) stringResource(Res.string.settings_theme_system) else currentLanguageOption.displayName,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        fontFamily = font,
+                                    )
+                                }
+                                IconButton(
+                                    onClick = {
+                                        showLanguageDialog = true
+                                    },
+                                    modifier = Modifier.size(32.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = MorpheIcons.KeyboardArrowRight,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier
+                                            .size(16.dp)
+                                            .autoMirrored()
+                                    )
+                                }
+                            }
+
+                            Spacer(Modifier.height(8.dp))
+
+                            val linkText = "morphe.software/translate"
+                            val linkUrl = "https://morphe.software/translate"
+                            val rawTranslationHint = stringResource(Res.string.settings_language_community_translation_hint, linkText)
+                            val annotatedTranslationHint = remember(rawTranslationHint, accents.primary) {
+                                buildAnnotatedString {
+                                    val linkIndex = rawTranslationHint.indexOf(linkText)
+                                    if (linkIndex != -1) {
+                                        append(rawTranslationHint.substring(0, linkIndex))
+                                        withLink(
+                                            LinkAnnotation.Url(
+                                                url = linkUrl,
+                                                styles = TextLinkStyles(
+                                                    style = SpanStyle(
+                                                        color = accents.primary,
+                                                        fontWeight = FontWeight.Medium,
+                                                        textDecoration = TextDecoration.Underline
+                                                    )
+                                                )
+                                            )
+                                        ) {
+                                            append(linkText)
+                                        }
+                                        append(rawTranslationHint.substring(linkIndex + linkText.length))
+                                    } else {
+                                        append(rawTranslationHint)
+                                    }
+                                }
+                            }
+
+                            Text(
+                                text = annotatedTranslationHint,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Normal,
+                                lineHeight = 16.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontFamily = font
+                            )
+
+                            SettingsDivider(borderColor)
+
+                            SectionLabel(stringResource(Res.string.settings_section_theme), font, icon = MorpheIcons.Palette)
                             Spacer(Modifier.height(8.dp))
                             FlowRow(
                                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -244,21 +368,21 @@ fun SettingsDialog(
                                         modifier = Modifier
                                             .clip(RoundedCornerShape(corners.small))
                                             .border(
-                                                1.dp,
-                                                when {
-                                                    isSelected -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                                                    isHovered -> MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-                                                    else -> borderColor
-                                                },
-                                                RoundedCornerShape(corners.small)
-                                            )
-                                            .background(
-                                                if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                                else Color.Transparent
-                                            )
-                                            .hoverable(hoverInteraction)
-                                            .clickable { onThemeChange(theme) }
-                                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                                            1.dp,
+                                            when {
+                                                isSelected -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                                isHovered -> MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                                                else -> borderColor
+                                            },
+                                            RoundedCornerShape(corners.small)
+                                        )
+                                        .background(
+                                            if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                                            else Color.Transparent
+                                        )
+                                        .hoverable(hoverInteraction)
+                                        .clickable { onThemeChange(theme) }
+                                        .padding(horizontal = 10.dp, vertical = 6.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                                     ) {
@@ -282,7 +406,7 @@ fun SettingsDialog(
 
                             SettingsDivider(borderColor)
 
-                            SectionLabel("Accent color", font, icon = MorpheIcons.Palette)
+                            SectionLabel(stringResource(Res.string.settings_section_accent_color), font, icon = MorpheIcons.Palette)
                             Spacer(Modifier.height(8.dp))
                             FlowRow(
                                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -302,7 +426,7 @@ fun SettingsDialog(
                                 ) {
                                     Icon(
                                         imageVector = MorpheIcons.Close,
-                                        contentDescription = "Clear accent color",
+                                        contentDescription = stringResource(Res.string.settings_accent_clear_description),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -342,7 +466,7 @@ fun SettingsDialog(
                                     ) {
                                         Icon(
                                             imageVector = MorpheIcons.Edit,
-                                            contentDescription = "Custom Accent Color",
+                                            contentDescription = stringResource(Res.string.settings_accent_custom_description),
                                             tint = if (isCustomNonPreset) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
@@ -367,7 +491,7 @@ fun SettingsDialog(
 
                             SettingsDivider(borderColor)
 
-                            SectionLabel("Background animation", font, icon = MorpheIcons.Wallpaper)
+                            SectionLabel(stringResource(Res.string.settings_section_background_animation), font, icon = MorpheIcons.Wallpaper)
                             Spacer(Modifier.height(8.dp))
 
                             val bgState = LocalBackgroundType.current
@@ -417,7 +541,7 @@ fun SettingsDialog(
                                             tint = MaterialTheme.colorScheme.primary
                                         )
                                         Text(
-                                            text = bgType.displayName,
+                                            text = bgType.toDisplayName(),
                                             fontSize = 11.sp,
                                             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                                             fontFamily = font,
@@ -431,8 +555,8 @@ fun SettingsDialog(
                             Spacer(Modifier.height(14.dp))
 
                             SettingToggleRow(
-                                label = "Parallax effect",
-                                description = "Smooth background shifting when moving the mouse",
+                                label = stringResource(Res.string.settings_toggle_parallax_label),
+                                description = stringResource(Res.string.settings_toggle_parallax_desc),
                                 checked = parallaxState.value,
                                 onCheckedChange = {
                                     parallaxState.value = it
@@ -445,8 +569,8 @@ fun SettingsDialog(
                         }
                         "Advanced" -> {
                             SettingToggleRow(
-                                label = "Expert mode",
-                                description = "Full control over patch selection and configuration",
+                                label = stringResource(Res.string.settings_toggle_expert_mode_label),
+                                description = stringResource(Res.string.settings_toggle_expert_mode_desc),
                                 checked = useExpertMode,
                                 onCheckedChange = onExpertModeChange,
                                 accentColor = accents.primary,
@@ -458,8 +582,8 @@ fun SettingsDialog(
                             SettingsDivider(borderColor)
 
                             SettingToggleRow(
-                                label = "Route links to patched app",
-                                description = "After installing via ADB, make the patched app open its supported web links instead of the browser or the stock/default app",
+                                label = stringResource(Res.string.settings_toggle_route_links_label),
+                                description = stringResource(Res.string.settings_toggle_route_links_desc),
                                 checked = autoRouteLinksAfterInstall,
                                 onCheckedChange = onAutoRouteLinksChange,
                                 accentColor = accents.primary,
@@ -471,9 +595,8 @@ fun SettingsDialog(
                                 Column {
                                     Spacer(Modifier.height(12.dp))
                                     SettingToggleRow(
-                                        label = "Disable stock app's links",
-                                        description = "Also stop the original app from opening these links (only when a " +
-                                            "rename patch was used and the stock app is installed). Reversible.",
+                                        label = stringResource(Res.string.settings_toggle_disable_stock_links_label),
+                                        description = stringResource(Res.string.settings_toggle_disable_stock_links_desc),
                                         checked = disableStockLinksAfterInstall,
                                         onCheckedChange = onDisableStockLinksChange,
                                         accentColor = accents.primary,
@@ -517,8 +640,8 @@ fun SettingsDialog(
                             SettingsDivider(borderColor)
 
                             SettingToggleRow(
-                                label = "Developer options",
-                                description = "For patch developers. Unlocks a suite of workflow options for building and testing patches (see the documentation for the full list). For now, that's pointing a local source at a folder so Morphe always loads its newest .mpp",
+                                label = stringResource(Res.string.settings_toggle_developer_options_label),
+                                description = stringResource(Res.string.settings_toggle_developer_options_desc),
                                 checked = developerOptions,
                                 onCheckedChange = onDeveloperOptionsChange,
                                 accentColor = accents.primary,
@@ -541,8 +664,8 @@ fun SettingsDialog(
                         }
                         "System" -> {
                             SettingToggleRow(
-                                label = "Auto-cleanup temp files",
-                                description = "Delete temporary files after patching",
+                                label = stringResource(Res.string.settings_toggle_auto_cleanup_label),
+                                description = stringResource(Res.string.settings_toggle_auto_cleanup_desc),
                                 checked = autoCleanupTempFiles,
                                 onCheckedChange = onAutoCleanupChange,
                                 accentColor = accents.primary,
@@ -577,9 +700,8 @@ fun SettingsDialog(
                             SettingsDivider(borderColor)
 
                             SettingToggleRow(
-                                label = "Auto-start ADB",
-                                description = "Spawn the ADB daemon on launch so connected devices are monitored. " +
-                                    "When off, Morphe never starts the server, and install/push features are disabled",
+                                label = stringResource(Res.string.settings_toggle_auto_start_adb_label),
+                                description = stringResource(Res.string.settings_toggle_auto_start_adb_desc),
                                 checked = autoStartAdb,
                                 onCheckedChange = onAutoStartAdbChange,
                                 accentColor = accents.primary,
@@ -590,7 +712,7 @@ fun SettingsDialog(
 
                             SettingsDivider(borderColor)
 
-                            SectionLabel("About", font, icon = MorpheIcons.Info)
+                            SectionLabel(stringResource(Res.string.settings_section_about), font, icon = MorpheIcons.Info)
                             Spacer(Modifier.height(16.dp))
 
                             Column(
@@ -602,7 +724,7 @@ fun SettingsDialog(
                                 ) {
                                     Image(
                                         painter = painterResource(Res.drawable.morphe_logo),
-                                        contentDescription = "Morphe Logo",
+                                        contentDescription = stringResource(Res.string.morphe_logo_content_description),
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(Modifier.width(12.dp))
@@ -616,7 +738,7 @@ fun SettingsDialog(
                                         )
                                         Spacer(Modifier.height(2.dp))
                                         Text(
-                                            text = "Version ${AppConstants.APP_VERSION}",
+                                            text = stringResource(Res.string.settings_about_version, AppConstants.APP_VERSION),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Normal,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -630,12 +752,12 @@ fun SettingsDialog(
                                         modifier = Modifier.size(32.dp)
                                     ) {
                                         Icon(
-                                            imageVector = MorpheIcons.KeyboardArrowLeft,
+                                            imageVector = MorpheIcons.KeyboardArrowRight,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier
                                                 .size(16.dp)
-                                                .graphicsLayer { rotationZ = 180f }
+                                                .autoMirrored()
                                         )
                                     }
                                 }
@@ -655,7 +777,7 @@ fun SettingsDialog(
                                     Spacer(Modifier.width(12.dp))
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = "View changelogs",
+                                            text = stringResource(Res.string.settings_about_changelogs_title),
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Medium,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -663,7 +785,7 @@ fun SettingsDialog(
                                         )
                                         Spacer(Modifier.height(2.dp))
                                         Text(
-                                            text = "Check out the latest changes in this update",
+                                            text = stringResource(Res.string.settings_about_changelogs_desc),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Normal,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -677,12 +799,12 @@ fun SettingsDialog(
                                         modifier = Modifier.size(32.dp)
                                     ) {
                                         Icon(
-                                            imageVector = MorpheIcons.KeyboardArrowLeft,
+                                            imageVector = MorpheIcons.KeyboardArrowRight,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier
                                                 .size(16.dp)
-                                                .graphicsLayer { rotationZ = 180f }
+                                                .autoMirrored()
                                         )
                                     }
                                 }
@@ -702,7 +824,7 @@ fun SettingsDialog(
                                     Spacer(Modifier.width(12.dp))
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = "Visit website",
+                                            text = stringResource(Res.string.settings_about_website_title),
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Medium,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -710,7 +832,7 @@ fun SettingsDialog(
                                         )
                                         Spacer(Modifier.height(2.dp))
                                         Text(
-                                            text = "Visit the official Morphe website",
+                                            text = stringResource(Res.string.settings_about_website_desc),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Normal,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -724,12 +846,12 @@ fun SettingsDialog(
                                         modifier = Modifier.size(32.dp)
                                     ) {
                                         Icon(
-                                            imageVector = MorpheIcons.KeyboardArrowLeft,
+                                            imageVector = MorpheIcons.KeyboardArrowRight,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier
                                                 .size(16.dp)
-                                                .graphicsLayer { rotationZ = 180f }
+                                                .autoMirrored()
                                         )
                                     }
                                 }
@@ -746,7 +868,7 @@ fun SettingsDialog(
                 border = BorderStroke(1.dp, borderColor)
             ) {
                 Text(
-                    "Close",
+                    stringResource(Res.string.close),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -803,8 +925,9 @@ private fun CollapsibleSection(
     content: @Composable () -> Unit
 ) {
     val corners = LocalMorpheCorners.current
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val rotationAngle by animateFloatAsState(
-        targetValue = if (expanded) 270f else 180f,
+        targetValue = if (expanded) 90f else (if (isRtl) 180f else 0f),
         animationSpec = tween(200)
     )
     val hoverInteraction = remember { MutableInteractionSource() }
@@ -843,8 +966,8 @@ private fun CollapsibleSection(
             )
         }
         Icon(
-            imageVector = MorpheIcons.KeyboardArrowLeft,
-            contentDescription = if (expanded) "Collapse" else "Expand",
+            imageVector = MorpheIcons.KeyboardArrowRight,
+            contentDescription = if (expanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
             modifier = Modifier
                 .size(16.dp)
                 .graphicsLayer { rotationZ = rotationAngle },
@@ -896,12 +1019,12 @@ private fun UpdateChannelRow(
     val alpha = if (enabled) 1f else 0.5f
 
     val description = when {
-        !enabled -> "Disabled while patching"
+        !enabled -> stringResource(Res.string.disabled_while_patching)
         selected == UpdateChannelPreference.STABLE ->
-            "You'll see a banner when a new stable release is available"
+            stringResource(Res.string.settings_channel_desc_stable)
         selected == UpdateChannelPreference.DEV ->
-            "You'll see a banner when a new dev or stable release is available"
-        else -> "Update checks are off. Re-enable here anytime"
+            stringResource(Res.string.settings_channel_desc_dev)
+        else -> stringResource(Res.string.settings_channel_desc_off)
     }
 
     Row(
@@ -921,7 +1044,7 @@ private fun UpdateChannelRow(
             }
             Column {
                 Text(
-                    text = "Check for updates",
+                    text = stringResource(Res.string.settings_channel_label),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
@@ -938,11 +1061,19 @@ private fun UpdateChannelRow(
             }
         }
         Spacer(Modifier.width(12.dp))
+        val getLabel: @Composable (UpdateChannelPreference) -> String = { option ->
+            when (option) {
+                UpdateChannelPreference.STABLE -> stringResource(Res.string.version_label_stable)
+                UpdateChannelPreference.DEV -> stringResource(Res.string.version_label_experimental)
+                UpdateChannelPreference.OFF -> stringResource(Res.string.off)
+            }
+        }
+        
         MorpheDropdown(
-            label = selected.name.lowercase().replaceFirstChar { it.uppercase() },
+            label = getLabel(selected),
             items = UpdateChannelPreference.entries.map { option ->
                 MorpheDropdownItem(
-                    label = option.name.lowercase().replaceFirstChar { it.uppercase() },
+                    label = getLabel(option),
                     onClick = { onChange(option) }
                 )
             },
@@ -989,7 +1120,7 @@ private fun SettingToggleRow(
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    text = if (!enabled) "Disabled while patching" else description,
+                    text = if (!enabled) stringResource(Res.string.disabled_while_patching) else description,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
@@ -1024,12 +1155,12 @@ private fun OutputFolderSection(
     val outputDirExists = outputDir?.isDirectory == true
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        SectionLabel("Output folder", font, icon = icon)
+        SectionLabel(stringResource(Res.string.settings_section_output_folder), font, icon = icon)
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = if (!enabled) "Disabled while patching"
-                   else "Where patched APKs are saved. A per-app subfolder is created inside",
+            text = if (!enabled) stringResource(Res.string.disabled_while_patching)
+                   else stringResource(Res.string.settings_output_folder_desc),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
@@ -1053,7 +1184,7 @@ private fun OutputFolderSection(
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
-                    text = outputDir?.name ?: "APK's folder (default)",
+                    text = outputDir?.name ?: stringResource(Res.string.settings_output_folder_default),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -1063,11 +1194,12 @@ private fun OutputFolderSection(
                 )
             }
 
+            val pickerTitle = stringResource(Res.string.settings_output_folder_picker_title)
             OutlinedButton(
                 onClick = {
                     scope.launch {
                         MorpheFilePicker.pickDirectory(
-                            title = "Select output folder",
+                            title = pickerTitle,
                             startDir = outputDir?.takeIf { it.isDirectory },
                         )?.let { onDefaultOutputDirectoryChange(it.absolutePath) }
                     }
@@ -1079,7 +1211,7 @@ private fun OutputFolderSection(
                 modifier = Modifier.fillMaxHeight()
             ) {
                 Text(
-                    "Browse",
+                    stringResource(Res.string.browse),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1097,7 +1229,7 @@ private fun OutputFolderSection(
                     modifier = Modifier.fillMaxHeight()
                 ) {
                     Text(
-                        "Reset",
+                        stringResource(Res.string.settings_dialog_reset_button),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1109,7 +1241,7 @@ private fun OutputFolderSection(
 
         if (defaultOutputDirectory != null && !outputDirExists) {
             Text(
-                text = "Folder not found - will be created on next patch",
+                text = stringResource(Res.string.settings_output_folder_not_found),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -1134,7 +1266,7 @@ private fun OutputFolderSection(
             )
             if (isBundleRelative) {
                 Text(
-                    text = "Resolves to: $defaultOutputDirectory",
+                    text = stringResource(Res.string.settings_dialog_resolves_to_message, defaultOutputDirectory),
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -1155,11 +1287,13 @@ private fun OutputFolderSection(
  * patcher-facing value (matching CpuArchitecture.arch) and a short display name.
  * Only modern arches are listed — legacy mips/armeabi are intentionally omitted.
  */
+private data class StripLibsArch(val arch: String, val descriptionRes: StringResource)
+
 private val STRIP_LIBS_ARCHS = listOf(
-    "arm64-v8a" to "ARM 64-bit (most modern phones)",
-    "armeabi-v7a" to "ARM 32-bit (older phones)",
-    "x86_64" to "Intel 64-bit (emulators / Chromebooks)",
-    "x86" to "Intel 32-bit (legacy emulators)"
+    StripLibsArch("arm64-v8a", Res.string.settings_strip_libs_arm64),
+    StripLibsArch("armeabi-v7a", Res.string.settings_strip_libs_armeabi),
+    StripLibsArch("x86_64", Res.string.settings_strip_libs_x86_64),
+    StripLibsArch("x86", Res.string.settings_strip_libs_x86)
 )
 
 @Composable
@@ -1174,7 +1308,7 @@ private fun StripLibsSection(
     onExpandedChange: (Boolean) -> Unit = {}
 ) {
     CollapsibleSection(
-        title = "Strip libs",
+        title = stringResource(Res.string.settings_section_strip_libs),
         font = font,
         expanded = expanded,
         icon = icon,
@@ -1184,17 +1318,17 @@ private fun StripLibsSection(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Uncheck architectures you don't need. When patching, the output APK will keep only the architectures present in the APK AND in this list. If none overlap, nothing is stripped to avoid broken APKs",
+                text = stringResource(Res.string.settings_strip_libs_desc),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontFamily = font
             )
-            STRIP_LIBS_ARCHS.forEach { (arch, description) ->
+            STRIP_LIBS_ARCHS.forEach { (arch, descriptionRes) ->
                 val checked = arch in keepArchitectures
                 SettingToggleRow(
                     label = arch,
-                    description = description,
+                    description = stringResource(descriptionRes),
                     checked = checked,
                     onCheckedChange = { keepIt ->
                         val updated = if (keepIt) keepArchitectures + arch
@@ -1247,7 +1381,7 @@ private fun SigningSection(
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         CollapsibleSection(
-            title = "Signing",
+            title = stringResource(Res.string.settings_section_signing),
             font = font,
             expanded = expanded,
             icon = icon,
@@ -1255,8 +1389,8 @@ private fun SigningSection(
         ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
-            text = if (!enabled) "Disabled while patching"
-                   else "Keystore used to sign patched APKs",
+            text = if (!enabled) stringResource(Res.string.disabled_while_patching)
+                   else stringResource(Res.string.settings_signing_desc),
             fontSize = 11.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
             fontFamily = font,
@@ -1283,7 +1417,7 @@ private fun SigningSection(
                 Text(
                     text = if (keystorePath != null) {
                         keystoreFile?.name ?: keystorePath
-                    } else "Default (auto-generated)",
+                    } else stringResource(Res.string.settings_signing_default_keystore),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -1293,21 +1427,17 @@ private fun SigningSection(
                 )
             }
 
+            val pickerTitle = stringResource(Res.string.settings_signing_picker_title)
+            val invalidFileTypeMsg = stringResource(Res.string.settings_signing_invalid_file_type, ".keystore, .jks, .bks, .p12, .pfx")
             OutlinedButton(
                 onClick = {
                     scope.launch {
                         val selected = MorpheFilePicker.pickFile(
-                            title = "Select keystore",
+                            title = pickerTitle,
                             extensions = listOf("keystore", "jks", "bks", "p12", "pfx"),
                         ) ?: return@launch
                         val validExtensions = listOf(".keystore", ".jks", ".bks", ".p12", ".pfx")
                         if (validExtensions.any { selected.name.lowercase().endsWith(it) }) {
-                            // Route the picked file through KeystoreImporter:
-                            // BKS files pass through unchanged; PKCS12/JKS get
-                            // converted to BKS and saved as MorpheData.importedKeystoreFile
-                            // (original user file is never mutated). The config
-                            // then points at whichever file is BKS — patcher
-                            // only speaks BKS, so this is the only safe input.
                             val result = KeystoreImporter.ensureBks(
                                 source = selected,
                                 convertedOutput = MorpheData.importedKeystoreFile,
@@ -1327,10 +1457,6 @@ private fun SigningSection(
                                     onKeystorePathChange(result.file.absolutePath)
                                 }
                                 is KeystoreImporter.Result.Failed -> {
-                                    // Most common failure: wrong password. The
-                                    // user's configured entry password didn't
-                                    // match the source file. Surface inline so
-                                    // they can update it and re-import.
                                     keystoreError = result.reason
                                     result.cause?.let {
                                         Logger.error("Keystore import failed for ${selected.name}", it)
@@ -1338,7 +1464,7 @@ private fun SigningSection(
                                 }
                             }
                         } else {
-                            keystoreError = "Invalid file type. Expected: ${validExtensions.joinToString(", ")}"
+                            keystoreError = invalidFileTypeMsg
                         }
                     }
                 },
@@ -1349,7 +1475,7 @@ private fun SigningSection(
                 modifier = Modifier.fillMaxHeight()
             ) {
                 Text(
-                    "Browse",
+                    stringResource(Res.string.browse),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1367,7 +1493,7 @@ private fun SigningSection(
                     modifier = Modifier.fillMaxHeight()
                 ) {
                     Text(
-                        "Reset",
+                        stringResource(Res.string.settings_dialog_reset_button),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1377,12 +1503,9 @@ private fun SigningSection(
             }
         }
 
-        // Warning if keystore path set but file doesn't exist. Patching will
-        // refuse to start with this configured (see PatchingViewModel) — user
-        // must restore the file, pick another, or reset to use Morphe's default.
         if (keystorePath != null && !keystoreExists) {
             Text(
-                text = "Keystore not found - patching will fail until you restore it, pick another, or reset",
+                text = stringResource(Res.string.settings_signing_not_found),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -1390,7 +1513,6 @@ private fun SigningSection(
             )
         }
 
-        // Error for invalid file type selection
         keystoreError?.let {
             Text(
                 text = it,
@@ -1401,10 +1523,6 @@ private fun SigningSection(
             )
         }
 
-        // Either: stored form (relative when inside the bundle, absolute otherwise)
-        // with a "Resolves to: ..." subtitle when relative. Mirrors config.json
-        // so users can see which paths follow the bundle vs which are pinned.
-        // Or: "using default" hint when no user-configured path is set.
         if (keystorePath != null) {
             val stored = PortablePaths.storableForm(keystorePath)
             val isBundleRelative = stored != keystorePath
@@ -1419,7 +1537,7 @@ private fun SigningSection(
             )
             if (isBundleRelative) {
                 Text(
-                    text = "Resolves to: $keystorePath",
+                    text = stringResource(Res.string.settings_dialog_resolves_to_message, keystorePath),
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -1429,19 +1547,15 @@ private fun SigningSection(
                 )
             }
         } else {
-            // Mirror the storage form treatment used for user-configured paths above.
-            // The default keystore lives in the bundle (`morphe-data/`) in the happy case,
-            // so the storable form will be relative.
-            // Verb is conditional on file existence. Patcher creates the file on first sign,
-            // so on a fresh install the hint accurately says "Will create..."
-            // instead of making up claims like "Using..." an absent file.
             val defaultAbs = MorpheData.defaultKeystoreFile.absolutePath
             val defaultStored = PortablePaths.storableForm(defaultAbs)
             val isBundleRelative = defaultStored != defaultAbs
-            val verb = if (MorpheData.defaultKeystoreFile.exists()) "Using"
-                       else "Will create"
+            val defaultMsg = if (MorpheData.defaultKeystoreFile.exists())
+                stringResource(Res.string.settings_signing_using_default, defaultStored)
+            else
+                stringResource(Res.string.settings_signing_will_create_default, defaultStored)
             Text(
-                text = "$verb Morphe's default keystore at $defaultStored",
+                text = defaultMsg,
                 fontSize = 11.sp,
                 fontFamily = font,
                 fontWeight = FontWeight.Normal,
@@ -1451,10 +1565,10 @@ private fun SigningSection(
             )
             if (isBundleRelative) {
                 Text(
-                    text = "Resolves to: $defaultAbs",
+                    text = stringResource(Res.string.settings_dialog_resolves_to_message, defaultAbs),
                     fontSize = 9.sp,
-                    fontFamily = font,
                     fontWeight = FontWeight.Normal,
+                    fontFamily = font,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -1465,7 +1579,7 @@ private fun SigningSection(
         Spacer(Modifier.height(8.dp))
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            LabeledField(label = "Keystore password", font = font) {
+            LabeledField(label = stringResource(Res.string.settings_signing_keystore_password_label), font = font) {
                 SlimTextField(
                     value = localPassword,
                     onValueChange = {
@@ -1487,7 +1601,7 @@ private fun SigningSection(
                         ) {
                             Icon(
                                 imageVector = if (showPassword) MorpheIcons.VisibilityOff else MorpheIcons.Visibility,
-                                contentDescription = if (showPassword) "Hide" else "Show",
+                                contentDescription = if (showPassword) stringResource(Res.string.settings_signing_password_hide) else stringResource(Res.string.settings_signing_password_show),
                                 modifier = Modifier.size(14.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             )
@@ -1496,7 +1610,7 @@ private fun SigningSection(
                 )
             }
 
-            LabeledField(label = "Key alias", font = font) {
+            LabeledField(label = stringResource(Res.string.settings_signing_key_alias_label), font = font) {
                 SlimTextField(
                     value = localAlias,
                     onValueChange = {
@@ -1512,7 +1626,7 @@ private fun SigningSection(
                 )
             }
 
-            LabeledField(label = "Key password", font = font) {
+            LabeledField(label = stringResource(Res.string.settings_signing_key_password_label), font = font) {
                 SlimTextField(
                     value = localEntryPassword,
                     onValueChange = {
@@ -1534,7 +1648,7 @@ private fun SigningSection(
                         ) {
                             Icon(
                                 imageVector = if (showEntryPassword) MorpheIcons.VisibilityOff else MorpheIcons.Visibility,
-                                contentDescription = if (showEntryPassword) "Hide" else "Show",
+                                contentDescription = if (showEntryPassword) stringResource(Res.string.settings_signing_password_hide) else stringResource(Res.string.settings_signing_password_show),
                                 modifier = Modifier.size(14.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             )
@@ -1545,30 +1659,23 @@ private fun SigningSection(
         }
 
         // Verify credentials button
-        var verifyResult by remember { mutableStateOf<String?>(null) }
-        var verifySuccess by remember { mutableStateOf(false) }
+        var verifyState by remember { mutableStateOf<VerifyKeystoreState?>(null) }
 
         if (keystoreExists) {
             Spacer(Modifier.height(6.dp))
             OutlinedButton(
                 onClick = {
-                    verifyResult = null
-                    verifySuccess = false
+                    verifyState = null
                     val result = readKeystoreInfo(
                         keystorePath,
                         localPassword.ifEmpty { null },
                         localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
                         localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
                     )
-                    if (result == null) {
-                        verifyResult = "Could not open keystore — check keystore password"
-                        verifySuccess = false
-                    } else if (result.warnings.isNotEmpty()) {
-                        verifyResult = result.warnings.first()
-                        verifySuccess = false
-                    } else {
-                        verifyResult = "Credentials valid"
-                        verifySuccess = true
+                    verifyState = when {
+                        result == null -> VerifyKeystoreState.CouldNotOpen
+                        result.warnings.isNotEmpty() -> VerifyKeystoreState.Warning(result.warnings.first())
+                        else -> VerifyKeystoreState.Valid
                     }
                 },
                 enabled = enabled,
@@ -1576,10 +1683,10 @@ private fun SigningSection(
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(
                     1.dp,
-                    when {
-                        verifySuccess -> MorpheColors.Teal.copy(alpha = 0.4f)
-                        verifyResult != null -> Color(0xFFE0A030).copy(alpha = 0.4f)
-                        else -> borderColor
+                    when (verifyState) {
+                        is VerifyKeystoreState.Valid -> MorpheColors.Teal.copy(alpha = 0.4f)
+                        is VerifyKeystoreState.CouldNotOpen, is VerifyKeystoreState.Warning -> Color(0xFFE0A030).copy(alpha = 0.4f)
+                        null -> borderColor
                     }
                 ),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
@@ -1591,7 +1698,7 @@ private fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "Verify credentials",
+                    stringResource(Res.string.settings_signing_verify_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1599,14 +1706,23 @@ private fun SigningSection(
                 )
             }
 
-            verifyResult?.let {
+            verifyState?.let { state ->
                 Spacer(Modifier.height(4.dp))
+                val isSuccess = state is VerifyKeystoreState.Valid
+                val text = when (state) {
+                    VerifyKeystoreState.CouldNotOpen -> stringResource(Res.string.settings_signing_verify_could_not_open)
+                    is VerifyKeystoreState.Warning -> when (val w = state.warning) {
+                        is KeystoreWarning.AliasNotFound -> stringResource(Res.string.settings_cert_warning_alias_not_found, w.alias)
+                        is KeystoreWarning.KeyPasswordIncorrect -> stringResource(Res.string.settings_cert_warning_key_password_incorrect, w.alias)
+                    }
+                    VerifyKeystoreState.Valid -> stringResource(Res.string.settings_signing_verify_valid)
+                }
                 Text(
-                    text = it,
+                    text = text,
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
-                    color = if (verifySuccess) MorpheColors.Teal else Color(0xFFE0A030),
+                    color = if (isSuccess) MorpheColors.Teal else Color(0xFFE0A030),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
@@ -1619,19 +1735,20 @@ private fun SigningSection(
         var generateError by remember { mutableStateOf<String?>(null) }
         var generateSuccess by remember { mutableStateOf(false) }
 
+        val saveKeystoreTitle = stringResource(Res.string.settings_signing_picker_save_keystore)
+
         if (!keystoreExists) {
             OutlinedButton(
                 onClick = {
                     generateError = null
                     generateSuccess = false
                     scope.launch {
-                        // If no path set, ask the user where to save
                         val path = keystorePath ?: run {
                             val chosen = MorpheFilePicker.saveFile(
-                                title = "Save keystore",
+                                title = saveKeystoreTitle,
                                 baseName = "morphe",
                                 extension = "keystore",
-                            ) ?: return@launch // user cancelled
+                            ) ?: return@launch
                             val chosenPath = chosen.absolutePath
                             onKeystorePathChange(chosenPath)
                             chosenPath
@@ -1653,7 +1770,6 @@ private fun SigningSection(
                             file.outputStream().use {
                                 ks.store(it, localPassword.ifEmpty { null }?.toCharArray())
                             }
-                            // Save credentials to config
                             onCredentialsChange(
                                 localPassword.ifEmpty { null },
                                 localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
@@ -1661,7 +1777,7 @@ private fun SigningSection(
                             )
                             generateSuccess = true
                         } catch (e: Exception) {
-                            generateError = "Failed to generate: ${e.message}"
+                            generateError = e.message ?: ""
                             Logger.error("Failed to generate keystore", e)
                         }
                     }
@@ -1684,7 +1800,7 @@ private fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    if (generateSuccess) "Keystore generated" else "Generate keystore",
+                    if (generateSuccess) stringResource(Res.string.settings_signing_generated_button) else stringResource(Res.string.settings_signing_generate_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = if (generateSuccess) MorpheColors.Teal else accentColor,
@@ -1694,7 +1810,7 @@ private fun SigningSection(
 
             generateError?.let {
                 Text(
-                    text = it,
+                    text = stringResource(Res.string.settings_signing_failed_to_generate, it),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -1704,7 +1820,7 @@ private fun SigningSection(
 
             if (!generateSuccess) {
                 Text(
-                    text = "Uses the credentials entered above",
+                    text = stringResource(Res.string.settings_signing_uses_credentials_hint),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -1717,6 +1833,7 @@ private fun SigningSection(
             Spacer(Modifier.height(4.dp))
         }
 
+        val exportKeystoreTitle = stringResource(Res.string.settings_signing_picker_export_title)
         // Action buttons row
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -1738,7 +1855,7 @@ private fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "Certificate",
+                    stringResource(Res.string.settings_signing_certificate_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1753,7 +1870,7 @@ private fun SigningSection(
                     if (!sourceFile.exists()) return@OutlinedButton
                     scope.launch {
                         val dest = MorpheFilePicker.saveFile(
-                            title = "Export keystore",
+                            title = exportKeystoreTitle,
                             baseName = sourceFile.nameWithoutExtension,
                             extension = sourceFile.extension.ifEmpty { "keystore" },
                         ) ?: return@launch
@@ -1777,7 +1894,7 @@ private fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "Export",
+                    stringResource(Res.string.settings_signing_export_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1823,7 +1940,7 @@ private fun KeystoreInfoDialog(
         containerColor = MaterialTheme.colorScheme.surface,
         title = {
             Text(
-                "Certificate info",
+                stringResource(Res.string.settings_cert_info_title),
                 fontFamily = font,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
@@ -1838,8 +1955,12 @@ private fun KeystoreInfoDialog(
                     // Show warnings first if there are any
                     if (info.warnings.isNotEmpty()) {
                         info.warnings.forEach { warning ->
+                            val warningText = when (warning) {
+                                is KeystoreWarning.AliasNotFound -> stringResource(Res.string.settings_cert_warning_alias_not_found, warning.alias)
+                                is KeystoreWarning.KeyPasswordIncorrect -> stringResource(Res.string.settings_cert_warning_key_password_incorrect, warning.alias)
+                            }
                             Text(
-                                text = warning,
+                                text = warningText,
                                 fontSize = 11.sp,
                                 fontFamily = font,
                                 fontWeight = FontWeight.Normal,
@@ -1847,20 +1968,20 @@ private fun KeystoreInfoDialog(
                                 lineHeight = 14.sp
                             )
                         }
-                        // If no cert data (alias not found), stop here
                         if (info.sha256Fingerprint.isEmpty()) return@Column
                         HorizontalDivider(color = borderColor)
                     }
 
-                    CertInfoRow("Alias", info.alias, font)
-                    CertInfoRow("Issuer", info.issuer, font)
-                    CertInfoRow("Valid from", info.validFrom, font)
-                    CertInfoRow("Valid until", info.validTo, font)
+                    val locale = currentLocale()
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_alias), info.alias, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_issuer), info.issuer, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_from), FormatUtils.formatDate(info.validFrom, locale), font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_until), FormatUtils.formatDate(info.validTo, locale), font)
 
                     HorizontalDivider(color = borderColor)
 
                     Text(
-                        "SHA-256 fingerprint",
+                        stringResource(Res.string.settings_cert_info_sha256),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = font,
@@ -1880,7 +2001,7 @@ private fun KeystoreInfoDialog(
                     HorizontalDivider(color = borderColor)
 
                     Text(
-                        "SHA-1 fingerprint",
+                        stringResource(Res.string.settings_cert_info_sha1),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = font,
@@ -1899,7 +2020,7 @@ private fun KeystoreInfoDialog(
                 }
             } else {
                 Text(
-                    text = "Could not read keystore. Check the password and alias",
+                    text = stringResource(Res.string.settings_cert_info_could_not_read),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -1914,7 +2035,7 @@ private fun KeystoreInfoDialog(
                 border = BorderStroke(1.dp, borderColor)
             ) {
                 Text(
-                    "Close",
+                    stringResource(Res.string.close),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1948,14 +2069,25 @@ private fun CertInfoRow(
     }
 }
 
+private sealed interface VerifyKeystoreState {
+    data object CouldNotOpen : VerifyKeystoreState
+    data class Warning(val warning: KeystoreWarning) : VerifyKeystoreState
+    data object Valid : VerifyKeystoreState
+}
+
+private sealed interface KeystoreWarning {
+    data class AliasNotFound(val alias: String) : KeystoreWarning
+    data class KeyPasswordIncorrect(val alias: String) : KeystoreWarning
+}
+
 private data class KeystoreInfoResult(
     val alias: String,
     val issuer: String,
-    val validFrom: String,
-    val validTo: String,
+    val validFrom: Date? = null,
+    val validTo: Date? = null,
     val sha256Fingerprint: String,
     val sha1Fingerprint: String,
-    val warnings: List<String> = emptyList()
+    val warnings: List<KeystoreWarning> = emptyList()
 )
 
 private fun readKeystoreInfo(
@@ -1968,9 +2100,7 @@ private fun readKeystoreInfo(
     if (!file.exists()) return null
 
     val passwordChars = password?.toCharArray() ?: charArrayOf()
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
-    // Ensure BouncyCastle provider is registered (needed for BKS keystores)
     try {
         if (Security.getProvider("BC") == null) {
             Security.addProvider(
@@ -1979,11 +2109,8 @@ private fun readKeystoreInfo(
             )
         }
     } catch (_: Exception) {
-        // BC not on classpath — BKS keystores won't be readable, but JKS/PKCS12 still work
     }
 
-    // Try multiple keystore types: BKS (what Morphe generates), then JKS, then PKCS12
-    // BKS requires BouncyCastle provider — try with provider name, fall back without
     val types = listOf("BKS" to "BC", "BKS" to null, "JKS" to null, "PKCS12" to null)
     for ((type, provider) in types) {
         try {
@@ -1995,35 +2122,33 @@ private fun readKeystoreInfo(
 
             file.inputStream().use { ks.load(it, passwordChars) }
 
-            val warnings = mutableListOf<String>()
+            val warnings = mutableListOf<KeystoreWarning>()
 
-            // Alias must match exactly
             if (!ks.containsAlias(alias)) {
                 return KeystoreInfoResult(
                     alias = alias,
                     issuer = "",
-                    validFrom = "",
-                    validTo = "",
+                    validFrom = null,
+                    validTo = null,
                     sha256Fingerprint = "",
                     sha1Fingerprint = "",
-                    warnings = listOf("Alias \"$alias\" not found in keystore")
+                    warnings = listOf(KeystoreWarning.AliasNotFound(alias))
                 )
             }
 
             val cert = ks.getCertificate(alias) as? X509Certificate ?: continue
 
-            // Verify the entry password actually works
             try {
                 ks.getKey(alias, entryPassword?.toCharArray() ?: charArrayOf())
             } catch (_: Exception) {
                 return KeystoreInfoResult(
                     alias = alias,
                     issuer = "",
-                    validFrom = "",
-                    validTo = "",
+                    validFrom = null,
+                    validTo = null,
                     sha256Fingerprint = "",
                     sha1Fingerprint = "",
-                    warnings = listOf("Key password is incorrect for alias \"$alias\"")
+                    warnings = listOf(KeystoreWarning.KeyPasswordIncorrect(alias))
                 )
             }
 
@@ -2038,8 +2163,8 @@ private fun readKeystoreInfo(
             return KeystoreInfoResult(
                 alias = alias,
                 issuer = cert.issuerX500Principal.name,
-                validFrom = dateFormat.format(cert.notBefore),
-                validTo = dateFormat.format(cert.notAfter),
+                validFrom = cert.notBefore,
+                validTo = cert.notAfter,
                 sha256Fingerprint = sha256,
                 sha1Fingerprint = sha1,
                 warnings = warnings
@@ -2051,12 +2176,29 @@ private fun readKeystoreInfo(
     return null
 }
 
+@Composable
 private fun ThemePreference.toDisplayName(): String {
     return when (this) {
-        ThemePreference.LIGHT -> "Light"
-        ThemePreference.DARK -> "Dark"
-        ThemePreference.PURE_BLACK -> "Pure black"
-        ThemePreference.SYSTEM -> "System"
+        ThemePreference.LIGHT -> stringResource(Res.string.settings_theme_light)
+        ThemePreference.DARK -> stringResource(Res.string.settings_theme_dark)
+        ThemePreference.PURE_BLACK -> stringResource(Res.string.settings_theme_pure_black)
+        ThemePreference.SYSTEM -> stringResource(Res.string.settings_theme_system)
+    }
+}
+
+@Composable
+private fun BackgroundType.toDisplayName(): String {
+    return when (this) {
+        BackgroundType.CIRCLES -> stringResource(Res.string.settings_background_circles)
+        BackgroundType.RINGS -> stringResource(Res.string.settings_background_rings)
+        BackgroundType.MESH -> stringResource(Res.string.settings_background_mesh)
+        BackgroundType.SPACE -> stringResource(Res.string.settings_background_space)
+        BackgroundType.SHAPES -> stringResource(Res.string.settings_background_shapes)
+        BackgroundType.SNOW -> stringResource(Res.string.settings_background_snow)
+        BackgroundType.GRID -> stringResource(Res.string.settings_background_grid)
+        BackgroundType.PARTICLES -> stringResource(Res.string.settings_background_particles)
+        BackgroundType.MATRIX -> stringResource(Res.string.settings_background_matrix)
+        BackgroundType.NONE -> stringResource(Res.string.none)
     }
 }
 
@@ -2109,8 +2251,11 @@ private fun PatchedAppRuntimeLogsSection(
     val deviceReady = selectedDevice?.isReady == true
     val canAct = enabled && deviceReady && !isWorking
 
+    val failedToClearMsg = stringResource(Res.string.settings_runtime_logs_failed_to_clear)
+    val failedToSaveMsg = stringResource(Res.string.settings_runtime_logs_failed_to_save)
+
     CollapsibleSection(
-        title = "Patched app runtime logs",
+        title = stringResource(Res.string.settings_runtime_logs_title),
         font = font,
         expanded = expanded,
         icon = icon,
@@ -2118,7 +2263,7 @@ private fun PatchedAppRuntimeLogsSection(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(
-                text = "Capture logs from your phone after a patched app crashes or misbehaves. Clear before reproducing the bug, then save the filtered output to attach to a bug report",
+                text = stringResource(Res.string.settings_runtime_logs_desc),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -2127,8 +2272,9 @@ private fun PatchedAppRuntimeLogsSection(
 
             // Device row
             if (deviceReady) {
+                val devInfo = "${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}"
                 Text(
-                    text = "Device: ${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}",
+                    text = stringResource(Res.string.settings_runtime_logs_device_info, devInfo),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -2136,7 +2282,7 @@ private fun PatchedAppRuntimeLogsSection(
                 )
             } else {
                 Text(
-                    text = "No device connected. Plug in your phone with USB debugging enabled",
+                    text = stringResource(Res.string.settings_runtime_logs_no_device),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -2145,7 +2291,7 @@ private fun PatchedAppRuntimeLogsSection(
             }
 
             ActionButton(
-                label = if (status is RuntimeLogsStatus.Clearing) "Clearing…" else "Clear device logs",
+                label = if (status is RuntimeLogsStatus.Clearing) stringResource(Res.string.settings_runtime_logs_clearing) else stringResource(Res.string.settings_runtime_logs_clear_button),
                 icon = MorpheIcons.DeleteSweep,
                 font = font,
                 borderColor = borderColor,
@@ -2157,14 +2303,14 @@ private fun PatchedAppRuntimeLogsSection(
                         val result = adbManager.clearLogcat(device.id)
                         status = result.fold(
                             onSuccess = { RuntimeLogsStatus.Cleared },
-                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to clear logs") }
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: failedToClearMsg) }
                         )
                     }
                 }
             )
 
             ActionButton(
-                label = if (status is RuntimeLogsStatus.Saving) "Saving…" else "Save device logs",
+                label = if (status is RuntimeLogsStatus.Saving) stringResource(Res.string.status_saving) else stringResource(Res.string.settings_runtime_logs_save_button),
                 icon = MorpheIcons.Save,
                 font = font,
                 borderColor = borderColor,
@@ -2179,7 +2325,7 @@ private fun PatchedAppRuntimeLogsSection(
                         val result = adbManager.captureLogcat(device.id, outFile)
                         status = result.fold(
                             onSuccess = { count -> RuntimeLogsStatus.Saved(outFile, count) },
-                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to save logs") }
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: failedToSaveMsg) }
                         )
                     }
                 }
@@ -2189,7 +2335,7 @@ private fun PatchedAppRuntimeLogsSection(
             when (val s = status) {
                 RuntimeLogsStatus.Idle, RuntimeLogsStatus.Clearing, RuntimeLogsStatus.Saving -> Unit
                 RuntimeLogsStatus.Cleared -> Text(
-                    text = "Logs cleared on device",
+                    text = stringResource(Res.string.settings_runtime_logs_cleared_success),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -2198,9 +2344,9 @@ private fun PatchedAppRuntimeLogsSection(
                 is RuntimeLogsStatus.Saved -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = if (s.lineCount == 0)
-                            "Nothing captured yet. Run the patched app on your phone, then save again"
+                            stringResource(Res.string.settings_runtime_logs_nothing_captured)
                         else
-                            "Saved ${s.lineCount} line(s) to ${s.file.name}",
+                            pluralStringResource(Res.plurals.settings_runtime_logs_saved_success, s.lineCount, s.lineCount, s.file.name),
                         fontSize = 11.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
@@ -2210,7 +2356,7 @@ private fun PatchedAppRuntimeLogsSection(
                     if (s.lineCount > 0) {
                         val cornersLocal = LocalMorpheCorners.current
                         Text(
-                            text = "Open logs",
+                            text = stringResource(Res.string.settings_dialog_open_logs_button),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,

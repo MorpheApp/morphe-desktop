@@ -20,8 +20,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import app.morphe.gui.ui.theme.desktopScreenEnter
 import app.morphe.gui.ui.theme.desktopScreenExit
@@ -33,8 +36,10 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickPatchPhase
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.rememberZenoProgress
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // PATCHING CONTENT (progress)
@@ -73,25 +78,49 @@ internal fun PatchingContent(
         )
 
         Box(contentAlignment = Alignment.Center) {
-            Box(
-                contentAlignment = Alignment.Center,
+            val primaryColor = MaterialTheme.colorScheme.primary
+            val trackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
+            val strokeWidth = 12.dp
+
+            Canvas(
                 modifier = Modifier.size(280.dp)
             ) {
-                CircularProgressIndicator(
-                    progress = { 1f },
-                    modifier = Modifier.fillMaxSize(),
-                    strokeWidth = 12.dp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f),
-                    strokeCap = StrokeCap.Butt
+                val strokePx = strokeWidth.toPx()
+                val arcRadius = (size.minDimension - strokePx) / 2f
+                val arcCenter = Offset(size.width / 2f, size.height / 2f)
+                val topLeft = Offset(arcCenter.x - arcRadius, arcCenter.y - arcRadius)
+                val arcSize = Size(arcRadius * 2f, arcRadius * 2f)
+
+                // Background track
+                drawArc(
+                    color = trackColor,
+                    startAngle = 0f,
+                    sweepAngle = 360f,
+                    useCenter = false,
+                    topLeft = topLeft,
+                    size = arcSize,
+                    style = Stroke(width = strokePx, cap = StrokeCap.Butt)
                 )
-                CircularProgressIndicator(
-                    progress = { smoothProgress.coerceAtLeast(0.001f) },
-                    modifier = Modifier.fillMaxSize(),
-                    strokeWidth = 12.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = Color.Transparent,
-                    strokeCap = StrokeCap.Round
-                )
+
+                // Active progress arc
+                if (smoothProgress > 0f) {
+                    drawArc(
+                        color = primaryColor,
+                        startAngle = 270f,
+                        sweepAngle = smoothProgress * 360f,
+                        useCenter = false,
+                        topLeft = topLeft,
+                        size = arcSize,
+                        style = Stroke(width = strokePx, cap = StrokeCap.Round)
+                    )
+
+                    // Static rounded cap at starting coordinate to eliminate anti-aliasing artifact
+                    drawCircle(
+                        color = primaryColor,
+                        radius = strokePx / 2f,
+                        center = Offset(arcCenter.x, arcCenter.y - arcRadius)
+                    )
+                }
             }
 
             Column(
@@ -109,7 +138,7 @@ internal fun PatchingContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "$completedPatches / $totalPatches patches",
+                    text = stringResource(Res.string.quick_patch_patching_patches_count, completedPatches, totalPatches),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = font,
@@ -142,7 +171,7 @@ internal fun PatchingContent(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "This is taking longer than usual. Please wait...",
+                        text = stringResource(Res.string.quick_patch_patching_slow_warning),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -189,7 +218,7 @@ internal fun PatchingContent(
             border = BorderStroke(1.dp, if (isWrappingUp) Color.Transparent else MaterialTheme.colorScheme.error.copy(alpha = 0.35f))
         ) {
             Text(
-                text = "Cancel",
+                text = stringResource(Res.string.cancel),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,

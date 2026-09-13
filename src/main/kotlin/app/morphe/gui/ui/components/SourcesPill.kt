@@ -37,6 +37,9 @@ import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.channelColor
 import app.morphe.gui.util.EnabledSourcesLoader
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /** Per-source LED state surfaced in [SourcesCountPill]. */
 enum class SourceLedState { DISABLED, STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, LOCAL, ERROR }
@@ -71,7 +74,7 @@ fun SourcesCountPill(
     
     val tint = MaterialTheme.colorScheme.onSurfaceVariant
     val count = sourceStates.size.coerceAtLeast(1)
-    val label = if (count == 1) "1 source" else "$count sources"
+    val label = pluralStringResource(Res.plurals.count_sources, count, count)
     Row(
         modifier = Modifier
             .height(dimens.controlHeight)
@@ -107,7 +110,7 @@ fun SourcesCountPill(
         if (interactive) {
             Icon(
                 imageVector = MorpheIcons.Add,
-                contentDescription = "Manage patch sources",
+                contentDescription = stringResource(Res.string.source_sheet_manage_description),
                 tint = tint,
                 modifier = Modifier.size(12.dp),
             )

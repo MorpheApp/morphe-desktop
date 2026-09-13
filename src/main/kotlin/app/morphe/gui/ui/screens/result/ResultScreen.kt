@@ -54,7 +54,11 @@ import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.DeviceStatus
 import app.morphe.gui.util.FileUtils
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
+import app.morphe.gui.util.currentLocale
+import app.morphe.gui.ui.icons.autoMirrored
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -63,6 +67,8 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /**
@@ -163,7 +169,7 @@ fun ResultScreenContent(outputPath: String) {
         scope.launch {
             isInstalling = true
             installError = null
-            installProgress = "${if (alreadyInstalled) "Updating" else "Installing"} on ${device.displayName}..."
+            installProgress = if (alreadyInstalled) getString(Res.string.result_adb_updating_on_device, device.displayName) else getString(Res.string.adb_status_installing, device.displayName)
 
             // Always record a non-Play installer so the Play Store won't clobber
             // the patched app with an official update.
@@ -178,10 +184,10 @@ fun ResultScreenContent(outputPath: String) {
             result.fold(
                 onSuccess = {
                     installSuccess = true
-                    installProgress = if (alreadyInstalled) "Update successful!" else "Installation successful!"
+                    installProgress = if (alreadyInstalled) getString(Res.string.result_adb_update_successful) else getString(Res.string.result_adb_install_successful)
                 },
                 onFailure = { exception ->
-                    installError = (exception as? AdbException)?.message ?: exception.message ?: "Unknown error"
+                    installError = (exception as? AdbException)?.message ?: exception.message ?: getString(Res.string.error_patching_unknown)
                 }
             )
 
@@ -206,13 +212,13 @@ fun ResultScreenContent(outputPath: String) {
                 onSuccess = { outcome ->
                     linkSuccess = enable
                     linkProgress = when {
-                        !enable -> "Default link handling restored"
-                        outcome.stockChanged -> "Links routed to patched app, stock disabled"
-                        else -> "Links routed to patched app"
+                        !enable -> getString(Res.string.result_link_default_restored)
+                        outcome.stockChanged -> getString(Res.string.result_link_routed_stock_disabled)
+                        else -> getString(Res.string.result_screen_links_routed_label)
                     }
                 },
                 onFailure = { e ->
-                    linkError = (e as? AdbException)?.message ?: e.message ?: "Unknown error"
+                    linkError = (e as? AdbException)?.message ?: e.message ?: getString(Res.string.error_patching_unknown)
                 }
             )
             isApplyingLinks = false
@@ -269,8 +275,8 @@ fun ResultScreenContent(outputPath: String) {
                 ) {
                     Icon(
                         imageVector = MorpheIcons.ArrowBack,
-                        contentDescription = "Back",
-                        modifier = Modifier.size(16.dp),
+                        contentDescription = stringResource(Res.string.back),
+                        modifier = Modifier.size(16.dp).autoMirrored(),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -279,7 +285,7 @@ fun ResultScreenContent(outputPath: String) {
 
                 // Title
                 Text(
-                    text = "Patching complete",
+                    text = stringResource(Res.string.status_patching_completed),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
@@ -389,7 +395,7 @@ fun ResultScreenContent(outputPath: String) {
             // the explanation; suppress the duplicate "ADB not found" text.
             if (!isAdbDisabledByUser && monitorState.isAdbAvailable == false) {
                 Text(
-                    text = "ADB not found. Install Android SDK Platform Tools to enable direct installation",
+                    text = stringResource(Res.string.result_adb_not_found_hint),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -462,7 +468,7 @@ private fun AdbInstallSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "ADB install",
+                    text = stringResource(Res.string.result_adb_section_title),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
@@ -486,7 +492,7 @@ private fun AdbInstallSection(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "Installed on ${(selectedDevice?.displayName ?: "device")}",
+                            text = stringResource(Res.string.installed_on, (selectedDevice?.displayName ?: "device")),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -524,7 +530,7 @@ private fun AdbInstallSection(
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = "Dismiss",
+                                text = stringResource(Res.string.dismiss),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -547,7 +553,7 @@ private fun AdbInstallSection(
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = "Retry",
+                                text = stringResource(Res.string.retry),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -569,7 +575,7 @@ private fun AdbInstallSection(
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
-                            text = installProgress.ifEmpty { "Installing..." },
+                            text = installProgress.ifEmpty { stringResource(Res.string.installing) },
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -584,7 +590,7 @@ private fun AdbInstallSection(
 
                     if (devices.isEmpty()) {
                         Text(
-                            text = "No devices connected",
+                            text = stringResource(Res.string.result_adb_no_devices),
                             fontSize = 12.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Medium,
@@ -592,7 +598,7 @@ private fun AdbInstallSection(
                         )
                         Spacer(Modifier.height(2.dp))
                         Text(
-                            text = "Connect via USB with USB debugging enabled",
+                            text = stringResource(Res.string.result_adb_connect_hint),
                             fontSize = 11.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
@@ -679,10 +685,10 @@ private fun AdbInstallSection(
                                 ) {
                                     Text(
                                         text = when (device.status) {
-                                            DeviceStatus.DEVICE -> "Ready"
-                                            DeviceStatus.UNAUTHORIZED -> "Unauth"
-                                            DeviceStatus.OFFLINE -> "Offline"
-                                            DeviceStatus.UNKNOWN -> "Unknown"
+                                            DeviceStatus.DEVICE -> stringResource(Res.string.status_ready)
+                                            DeviceStatus.UNAUTHORIZED -> stringResource(Res.string.result_device_status_unauth)
+                                            DeviceStatus.OFFLINE -> stringResource(Res.string.status_offline)
+                                            DeviceStatus.UNKNOWN -> stringResource(Res.string.unknown)
                                         },
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Medium,
@@ -721,10 +727,12 @@ private fun AdbInstallSection(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = if (selectedDevice != null)
-                                    "${if (alreadyInstalled) "Update" else "Install"} on ${selectedDevice.displayName}"
-                                else
-                                    "Select a device",
+                                text = if (selectedDevice != null) {
+                                    if (alreadyInstalled) stringResource(Res.string.result_adb_update_button, selectedDevice.displayName)
+                                    else stringResource(Res.string.result_screen_install_on_device_label, selectedDevice.displayName)
+                                } else {
+                                    stringResource(Res.string.result_adb_select_device_button)
+                                },
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -783,7 +791,7 @@ private fun LinkHandlingSection(
                 .padding(20.dp)
         ) {
             Text(
-                text = "Link handling",
+                text = stringResource(Res.string.result_link_section_title),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = font,
@@ -791,7 +799,7 @@ private fun LinkHandlingSection(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Open supported web links in the patched app instead of the browser",
+                text = stringResource(Res.string.result_link_section_subtitle),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -819,7 +827,7 @@ private fun LinkHandlingSection(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Also stop $stockName from opening these links",
+                        text = stringResource(Res.string.result_link_stop_stock, stockName),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -841,7 +849,7 @@ private fun LinkHandlingSection(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(10.dp))
-                    SecondaryActionChip(text = "Dismiss", corners = corners, font = font, onClick = onDismissError)
+                    SecondaryActionChip(text = stringResource(Res.string.dismiss), corners = corners, font = font, onClick = onDismissError)
                 }
 
                 isApplying -> {
@@ -856,7 +864,7 @@ private fun LinkHandlingSection(
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
-                            text = progress.ifEmpty { "Applying..." },
+                            text = progress.ifEmpty { stringResource(Res.string.result_link_applying) },
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -878,7 +886,7 @@ private fun LinkHandlingSection(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = progress.ifEmpty { "Links routed to patched app" },
+                            text = progress.ifEmpty { stringResource(Res.string.result_screen_links_routed_label) },
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -886,7 +894,7 @@ private fun LinkHandlingSection(
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(Modifier.width(8.dp))
-                        SecondaryActionChip(text = "Restore", corners = corners, font = font, onClick = onRestore)
+                        SecondaryActionChip(text = stringResource(Res.string.result_link_restore), corners = corners, font = font, onClick = onRestore)
                     }
                 }
 
@@ -908,7 +916,7 @@ private fun LinkHandlingSection(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Open links with patched app",
+                            text = stringResource(Res.string.result_link_open_with_patched),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -993,7 +1001,7 @@ private fun CleanupSection(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = if (tempFilesCleared) "Temp files cleaned" else "Temporary files",
+                text = if (tempFilesCleared) stringResource(Res.string.result_cleanup_cleaned_title) else stringResource(Res.string.temporary_files_label),
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = font,
@@ -1003,9 +1011,9 @@ private fun CleanupSection(
             Spacer(Modifier.height(2.dp))
             Text(
                 text = when {
-                    tempFilesCleared && autoCleanupEnabled -> "Auto-cleanup is enabled"
-                    tempFilesCleared -> "Freed ${formatFileSize(tempFilesSize)}"
-                    else -> "${formatFileSize(tempFilesSize)} can be freed"
+                    tempFilesCleared && autoCleanupEnabled -> stringResource(Res.string.result_cleanup_auto_enabled)
+                    tempFilesCleared -> stringResource(Res.string.result_cleanup_freed, formatFileSize(tempFilesSize))
+                    else -> stringResource(Res.string.size_can_be_freed_label, formatFileSize(tempFilesSize))
                 },
                 fontSize = 11.sp,
                 fontFamily = font,
@@ -1031,7 +1039,7 @@ private fun CleanupSection(
                     .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 Text(
-                    text = "Clean up",
+                    text = stringResource(Res.string.clean_up),
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = font,
@@ -1077,7 +1085,7 @@ private fun AdbDisabledHint(
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
             Text(
-                text = "ADB install",
+                text = stringResource(Res.string.result_adb_section_title),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = font,
@@ -1085,7 +1093,7 @@ private fun AdbDisabledHint(
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "ADB is off. Install-on-device is disabled",
+                text = stringResource(Res.string.result_adb_disabled_title),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = font,
@@ -1093,7 +1101,7 @@ private fun AdbDisabledHint(
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text = "Enable ADB in Settings to push patched APKs directly",
+                text = stringResource(Res.string.result_adb_disabled_subtitle),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -1120,7 +1128,7 @@ private fun AdbDisabledHint(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Enable ADB",
+                    text = stringResource(Res.string.enable_adb_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -1131,14 +1139,9 @@ private fun AdbDisabledHint(
     }
 }
 
-private fun formatFileSize(bytes: Long): String {
-    return when {
-        bytes < 1024 -> "$bytes B"
-        bytes < 1024 * 1024 -> "%.1f KB".format(bytes / 1024.0)
-        bytes < 1024 * 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
-        else -> "%.2f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
-    }
-}
+@Composable
+private fun formatFileSize(bytes: Long): String =
+    FormatUtils.formatFileSize(bytes, currentLocale())
 
 @Composable
 private fun OutputFileCard(
@@ -1178,7 +1181,7 @@ private fun OutputFileCard(
                     .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 14.dp)
             ) {
                 Text(
-                    text = "Output file",
+                    text = stringResource(Res.string.output_file_label),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
@@ -1253,7 +1256,7 @@ private fun OutputFileCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Open folder",
+                        text = stringResource(Res.string.open_folder),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -1287,7 +1290,7 @@ private fun PatchAnotherButton(
         )
     ) {
         Text(
-            text = "Patch another",
+            text = stringResource(Res.string.result_screen_patch_another_button),
             fontSize = 13.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font

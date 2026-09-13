@@ -35,6 +35,8 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.DeviceStatus
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DeviceIndicator(modifier: Modifier = Modifier) {
@@ -105,12 +107,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                 }
 
                 val displayText = when {
-                    isAdbDisabledByUser -> "ADB off"
-                    isAdbAvailable == null -> "Checking…"
-                    !isAdbAvailable -> "No ADB"
+                    isAdbDisabledByUser -> stringResource(Res.string.device_indicator_adb_off)
+                    isAdbAvailable == null -> stringResource(Res.string.device_indicator_checking)
+                    !isAdbAvailable -> stringResource(Res.string.device_indicator_no_adb)
                     selectedDevice != null -> selectedDevice.displayName
-                    unauthorizedDevices.isNotEmpty() -> "Unauthorized"
-                    else -> "No device"
+                    unauthorizedDevices.isNotEmpty() -> stringResource(Res.string.device_indicator_status_unauthorized)
+                    else -> stringResource(Res.string.device_indicator_no_device)
                 }
 
                 Text(
@@ -132,7 +134,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
 
                 Icon(
                     imageVector = MorpheIcons.ArrowDropDown,
-                    contentDescription = "Device details",
+                    contentDescription = stringResource(Res.string.device_indicator_details_description),
                     modifier = Modifier.size(14.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -164,14 +166,14 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 )
                                 Column {
                                     Text(
-                                        text = "ADB is off",
+                                        text = stringResource(Res.string.device_indicator_adb_is_off_title),
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = font,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Morphe is not monitoring connected devices",
+                                        text = stringResource(Res.string.device_indicator_adb_is_off_subtitle),
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = font,
@@ -197,7 +199,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                     tint = accents.primary
                                 )
                                 Text(
-                                    text = "Enable ADB",
+                                    text = stringResource(Res.string.enable_adb_button),
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
                                     fontFamily = font,
@@ -228,14 +230,14 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 )
                                 Column {
                                     Text(
-                                        text = "ADB not found",
+                                        text = stringResource(Res.string.device_indicator_adb_not_found_title),
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = font,
                                         color = MaterialTheme.colorScheme.error
                                     )
                                     Text(
-                                        text = "Install Android SDK Platform Tools",
+                                        text = stringResource(Res.string.device_indicator_adb_not_found_subtitle),
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = font,
@@ -264,14 +266,14 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 )
                                 Column {
                                     Text(
-                                        text = "No devices detected",
+                                        text = stringResource(Res.string.device_indicator_no_devices_title),
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = font,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
-                                        text = "Connect a device with USB debugging enabled",
+                                        text = stringResource(Res.string.device_indicator_no_devices_subtitle),
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = font,
@@ -298,14 +300,14 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 )
                                 Column {
                                     Text(
-                                        text = "Enable USB debugging",
+                                        text = stringResource(Res.string.device_indicator_enable_debugging_title),
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = font,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Settings → Developer Options → USB Debugging",
+                                        text = stringResource(Res.string.device_indicator_enable_debugging_subtitle),
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = font,
@@ -347,14 +349,14 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                             modifier = Modifier
                                                 .size(6.dp)
                                                 .background(
-                                                    when {
-                                                        isSelected -> accents.secondary
-                                                        device.isReady -> accents.primary
-                                                        device.status == DeviceStatus.UNAUTHORIZED -> accents.warning
-                                                        else -> MaterialTheme.colorScheme.error
-                                                    },
-                                                    CircleShape
-                                                )
+                                                when {
+                                                    isSelected -> accents.secondary
+                                                    device.isReady -> accents.primary
+                                                    device.status == DeviceStatus.UNAUTHORIZED -> accents.warning
+                                                    else -> MaterialTheme.colorScheme.error
+                                                },
+                                                CircleShape
+                                            )
                                         )
                                     }
                                     Column(modifier = Modifier.weight(1f)) {
@@ -383,10 +385,10 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                             }
                                             Text(
                                                 text = when (device.status) {
-                                                    DeviceStatus.DEVICE -> "Connected"
-                                                    DeviceStatus.UNAUTHORIZED -> "Unauthorized"
-                                                    DeviceStatus.OFFLINE -> "Offline"
-                                                    DeviceStatus.UNKNOWN -> "Unknown"
+                                                    DeviceStatus.DEVICE -> stringResource(Res.string.device_indicator_status_connected)
+                                                    DeviceStatus.UNAUTHORIZED -> stringResource(Res.string.device_indicator_status_unauthorized)
+                                                    DeviceStatus.OFFLINE -> stringResource(Res.string.status_offline)
+                                                    DeviceStatus.UNKNOWN -> stringResource(Res.string.unknown)
                                                 },
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.Normal,
@@ -426,14 +428,14 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 )
                                 Column {
                                     Text(
-                                        text = "Device not listed?",
+                                        text = stringResource(Res.string.device_indicator_not_listed_title),
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = font,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
-                                        text = "Enable USB Debugging in Developer Options",
+                                        text = stringResource(Res.string.device_indicator_not_listed_subtitle),
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = font,

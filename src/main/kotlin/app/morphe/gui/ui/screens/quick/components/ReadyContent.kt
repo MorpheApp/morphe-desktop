@@ -37,11 +37,16 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.StatusColorType
+import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay
 import app.morphe.gui.util.toColor
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // READY CONTENT (apk info + patch action)
@@ -157,7 +162,7 @@ internal fun ReadyContent(
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "v${apkInfo.versionName} · ${apkInfo.formattedSize}",
+                            text = "v${apkInfo.versionName} · ${FormatUtils.formatFileSize(apkInfo.fileSize, currentLocale())}",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -185,7 +190,7 @@ internal fun ReadyContent(
                     ) {
                         Icon(
                             imageVector = MorpheIcons.Close,
-                            contentDescription = "Clear",
+                            contentDescription = stringResource(Res.string.clear),
                             tint = if (isCloseHovered) MaterialTheme.colorScheme.error
                                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             modifier = Modifier.size(16.dp)
@@ -276,7 +281,7 @@ internal fun ReadyContent(
                         val highlightArch = if (hasMultipleArchs && deviceArch != null) deviceArch else null
 
                         Text(
-                            text = "Arch",
+                            text = stringResource(Res.string.app_info_arch_label),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -332,7 +337,7 @@ internal fun ReadyContent(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Min SDK",
+                            text = stringResource(Res.string.app_info_min_sdk_label),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -374,7 +379,7 @@ internal fun ReadyContent(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No compatible patches for this app",
+                            text = stringResource(Res.string.quick_patch_ready_no_compatible_patches),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -398,7 +403,7 @@ internal fun ReadyContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Patches",
+                            text = stringResource(Res.string.quick_patch_patches_label),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -406,7 +411,7 @@ internal fun ReadyContent(
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
-                            text = "${enabledPatches.size} enabled",
+                            text = pluralStringResource(Res.plurals.quick_patch_ready_patches_enabled, enabledPatches.size, enabledPatches.size),
                             fontSize = 11.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
@@ -423,7 +428,7 @@ internal fun ReadyContent(
                             )
                             Spacer(Modifier.width(6.dp))
                             Text(
-                                text = "${disabledPatches.size} disabled",
+                                text = pluralStringResource(Res.plurals.quick_patch_ready_patches_disabled, disabledPatches.size, disabledPatches.size),
                                 fontSize = 11.sp,
                                 fontFamily = font,
                                 fontWeight = FontWeight.Normal,
@@ -433,7 +438,7 @@ internal fun ReadyContent(
                         Spacer(Modifier.weight(1f))
                         Icon(
                             imageVector = MorpheIcons.KeyboardArrowDown,
-                            contentDescription = if (patchesExpanded) "Collapse patches" else "Expand patches",
+                            contentDescription = if (patchesExpanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             modifier = Modifier
                                 .size(18.dp)
@@ -510,7 +515,7 @@ internal fun ReadyContent(
                                     Box(modifier = Modifier.weight(1f)) {
                                         if (patchSearchQuery.isEmpty()) {
                                             Text(
-                                                "Search patches…",
+                                                stringResource(Res.string.patches_search_hint),
                                                 fontSize = 11.sp,
                                                 fontFamily = font,
                                                 fontWeight = FontWeight.Normal,
@@ -530,7 +535,7 @@ internal fun ReadyContent(
                                         ) {
                                             Icon(
                                                 MorpheIcons.Clear,
-                                                contentDescription = "Clear",
+                                                contentDescription = stringResource(Res.string.clear),
                                                 tint = muted.copy(alpha = 0.5f),
                                                 modifier = Modifier.size(12.dp)
                                             )
@@ -586,7 +591,7 @@ internal fun ReadyContent(
                         if (filteredPatches.isEmpty() && patchSearchQuery.isNotBlank()) {
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                text = "No patches matching \"$patchSearchQuery\"",
+                                text = stringResource(Res.string.quick_patch_ready_no_matching_patches, patchSearchQuery),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -613,7 +618,7 @@ internal fun ReadyContent(
             shape = RoundedCornerShape(corners.small)
         ) {
             Text(
-                text = "Patch with defaults",
+                text = stringResource(Res.string.quick_patch_ready_patch_with_defaults),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font
@@ -622,9 +627,16 @@ internal fun ReadyContent(
 
         Spacer(modifier = Modifier.height(6.dp))
 
+        val appliedText = pluralStringResource(Res.plurals.quick_patch_ready_patches_applied_summary, enabledPatches.size, enabledPatches.size)
+        val summaryText = if (disabledPatches.isNotEmpty()) {
+            val excludedText = pluralStringResource(Res.plurals.quick_patch_ready_patches_excluded, disabledPatches.size, disabledPatches.size)
+            stringResource(Res.string.quick_patch_ready_patches_applied_summary_with_excluded, appliedText, excludedText)
+        } else {
+            appliedText
+        }
+
         Text(
-            text = "${enabledPatches.size} patches will be applied" +
-                if (disabledPatches.isNotEmpty()) " · ${disabledPatches.size} excluded" else "",
+            text = summaryText,
             fontSize = 11.sp,
             fontFamily = font,
             fontWeight = FontWeight.Normal,

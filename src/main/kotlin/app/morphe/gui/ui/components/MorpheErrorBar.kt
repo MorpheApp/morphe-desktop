@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Cyberdeck-aesthetic error/warning bar — single-line message with an accent
@@ -124,7 +126,7 @@ fun MorpheErrorBar(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Dismiss",
+                text = stringResource(Res.string.dismiss),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,

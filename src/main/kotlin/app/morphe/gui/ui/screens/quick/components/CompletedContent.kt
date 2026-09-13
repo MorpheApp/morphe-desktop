@@ -36,9 +36,11 @@ import app.morphe.gui.ui.screens.quick.formatFileSize
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 // ============================================================================
@@ -74,7 +76,7 @@ internal fun CompletedContent(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Patching complete",
+            text = stringResource(Res.string.status_patching_completed),
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             fontFamily = font,
@@ -111,7 +113,7 @@ internal fun CompletedContent(
                         .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 14.dp)
                 ) {
                     Text(
-                        text = "Output file",
+                        text = stringResource(Res.string.output_file_label),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font,
@@ -176,7 +178,7 @@ internal fun CompletedContent(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Open folder",
+                            text = stringResource(Res.string.open_folder),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -216,7 +218,7 @@ internal fun CompletedContent(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "ADB off · Enable to install",
+                    text = stringResource(Res.string.quick_patch_completed_adb_off),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -242,7 +244,10 @@ internal fun CompletedContent(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "Installed on ${(selectedDevice?.displayName ?: "device")}",
+                            text = stringResource(
+                                Res.string.installed_on,
+                                selectedDevice?.displayName ?: stringResource(Res.string.quick_patch_completed_device_default)
+                            ),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -262,7 +267,7 @@ internal fun CompletedContent(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "Installing…",
+                            text = stringResource(Res.string.installing),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -321,7 +326,7 @@ internal fun CompletedContent(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Install on ${device.displayName}",
+                            text = stringResource(Res.string.adb_install_on_button, device.displayName),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -331,7 +336,7 @@ internal fun CompletedContent(
                 }
                 else -> {
                     Text(
-                        text = "Connect a device via USB to install with ADB",
+                        text = stringResource(Res.string.quick_patch_completed_adb_connect_device),
                         fontSize = 11.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
@@ -370,7 +375,7 @@ internal fun CompletedContent(
             )
         ) {
             Text(
-                text = "Patch another",
+                text = stringResource(Res.string.quick_patch_patch_another_button),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,

@@ -14,6 +14,7 @@ import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.util.Logger
+import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.patch.loadPatchesFromJar
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
 
 class PatchesViewModel(
     private val apkPath: String,
@@ -71,7 +73,7 @@ class PatchesViewModel(
                 } else {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = "Local patch file not found: ${localFile.name}"
+                        error = getString(Res.string.patches_error_local_file_not_found, localFile.name)
                     )
                 }
                 return@launch
@@ -198,7 +200,7 @@ class PatchesViewModel(
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
                             isOffline = true,
-                            error = e.message ?: "Failed to load releases"
+                            error = e.message ?: getString(Res.string.patches_error_failed_to_load_releases)
                         )
                     }
                     Logger.error("Failed to load releases", e)
@@ -360,7 +362,7 @@ class PatchesViewModel(
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
                         isDownloading = false,
-                        error = e.message ?: "Failed to download patches"
+                        error = e.message ?: getString(Res.string.patches_error_failed_to_download_patches)
                     )
                     Logger.error("Failed to download patches", e)
                 }
@@ -443,7 +445,7 @@ class PatchesViewModel(
                 Logger.info("Exported ${_uiState.value.downloadedPatchFile?.name} options to ${outputFile.path}")
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    error = "Failed to export options: ${e.message}"
+                    error = getString(Res.string.patches_error_failed_to_export_options, e.message ?: "")
                 )
                 Logger.error("Failed to export options JSON", e)
             } finally {

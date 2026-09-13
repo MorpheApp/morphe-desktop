@@ -22,10 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.EnabledSourcesLoader
-import app.morphe.morphe_desktop.generated.resources.Res
-import app.morphe.morphe_desktop.generated.resources.morphe_dark
-import app.morphe.morphe_desktop.generated.resources.morphe_light
+import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // QUICK BRANDING (logo + patches version badge)
@@ -41,7 +40,7 @@ internal fun BrandingLogo() {
 
     Image(
         painter = painterResource(if (isDark) Res.drawable.morphe_dark else Res.drawable.morphe_light),
-        contentDescription = "Morphe Logo",
+        contentDescription = stringResource(Res.string.morphe_logo_content_description),
         modifier = Modifier.height(28.dp)
     )
 }
@@ -81,7 +80,7 @@ internal fun PatchesVersionBadge(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Loading…",
+                text = stringResource(Res.string.status_loading),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = font,
@@ -105,7 +104,7 @@ internal fun PatchesVersionBadge(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = patchSourceName ?: "Patches",
+                text = patchSourceName ?: stringResource(Res.string.quick_patch_patches_label),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = font,
@@ -126,8 +125,8 @@ internal fun PatchesVersionBadge(
                 color = accents.primary
             )
             val latestLabel = when (patchesChannel) {
-                EnabledSourcesLoader.Channel.STABLE_LATEST -> "Latest Stable"
-                EnabledSourcesLoader.Channel.DEV_LATEST -> "Latest Dev"
+                EnabledSourcesLoader.Channel.STABLE_LATEST -> stringResource(Res.string.version_label_latest_stable)
+                EnabledSourcesLoader.Channel.DEV_LATEST -> stringResource(Res.string.version_label_latest_dev)
                 else -> null
             }
             

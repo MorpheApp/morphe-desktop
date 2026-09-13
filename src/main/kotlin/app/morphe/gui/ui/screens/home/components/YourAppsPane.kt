@@ -80,9 +80,11 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheColors
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.currentLocale
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /** Which list the home pane is showing: all supported apps, or only patched ("yours"). */
 enum class AppListFilter { ALL, YOURS }
@@ -108,7 +110,7 @@ fun AppListFilterChips(
         modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 6.dp),
     ) {
         FilterChip(
-            label = "All apps",
+            label = stringResource(Res.string.home_filter_all_apps),
             count = if (allCount > 0) allCount else null,
             selected = filter == AppListFilter.ALL,
             accent = accents.primary,
@@ -117,7 +119,7 @@ fun AppListFilterChips(
             onClick = { onSelect(AppListFilter.ALL) },
         )
         FilterChip(
-            label = "Your apps",
+            label = stringResource(Res.string.home_filter_your_apps),
             count = if (yourCount > 0) yourCount else null,
             selected = filter == AppListFilter.YOURS,
             accent = accents.primary,
@@ -153,15 +155,20 @@ fun PatchedUpdatesBanner(count: Int, onView: () -> Unit) {
     ) {
         Icon(MorpheIcons.Refresh, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(15.dp))
         Text(
-            text = if (count == 1) "1 patched app has an update available"
-                   else "$count patched apps have updates available",
+            text = pluralStringResource(Res.plurals.home_banner_update_available, count, count),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.weight(1f),
         )
-        Text("View", fontSize = 11.sp, fontWeight = FontWeight.Normal, fontFamily = font, color = MaterialTheme.colorScheme.onPrimaryContainer)
+        Text(
+            text = stringResource(Res.string.home_banner_view),
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Normal,
+            fontFamily = font,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
     }
 }
 
@@ -289,7 +296,7 @@ fun YourAppRow(
             }
             if (deviceInfo?.installPending == true) {
                 Spacer(Modifier.width(8.dp))
-                MiniBadge("Install ready", MorpheColors.Teal, font)
+                MiniBadge(stringResource(Res.string.home_your_apps_install_ready), MorpheColors.Teal, font)
             }
             if (state != PatchedAppState.NEVER_PATCHED) {
                 Spacer(Modifier.width(8.dp))
@@ -313,37 +320,66 @@ fun YourAppRow(
         val cardAdvice = updateInfo?.let { appAdvice(it) }
         if (cardAdvice != null && updateInfo.appSuggestedVersion != null) {
             VersionBumpText(
-                label = "App ",
+                label = stringResource(Res.string.home_your_apps_app_label),
                 oldVersion = record.apkVersion,
                 newVersion = updateInfo.appSuggestedVersion,
                 font = font,
             )
         } else if (updateInfo != null && updateInfo.sources.any { it.outdated }) {
-            Text(
-                text = "ⓘ Newer patch may bump the app - tap Update to check",
-                fontSize = 11.sp,
-                fontFamily = font,
-                fontWeight = FontWeight.Normal,
-                color = Color.White.copy(alpha = 0.6f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Icon(
+                    imageVector = MorpheIcons.Info,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp),
+                    tint = Color.White.copy(alpha = 0.6f),
+                )
+                Text(
+                    text = stringResource(Res.string.home_your_apps_newer_patch_hint),
+                    fontSize = 11.sp,
+                    fontFamily = font,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White.copy(alpha = 0.6f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
         // Already-patched APK is newer than what's on the device → offer to install
         // it directly (no re-patch needed). Streams away once the device catches up.
         if (deviceInfo?.installPending == true) {
-            Text(
-                text = if (deviceInfo.installed)
-                    "⤓ Patched v${record.apkVersion.removePrefix("v")} ready - device on v${deviceInfo.installedVersion?.removePrefix("v") ?: "?"} (no repatch needed)"
-                else
-                    "⤓ Patched v${record.apkVersion.removePrefix("v")} ready to install (no repatch needed)",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                color = Color.White,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Icon(
+                    imageVector = MorpheIcons.Download,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp),
+                    tint = Color.White,
+                )
+                Text(
+                    text = if (deviceInfo.installed)
+                        stringResource(
+                            Res.string.home_your_apps_device_version_ready,
+                            record.apkVersion.removePrefix("v"),
+                            deviceInfo.installedVersion?.removePrefix("v") ?: "?"
+                        )
+                    else
+                        stringResource(
+                            Res.string.home_your_apps_install_ready_hint,
+                            record.apkVersion.removePrefix("v")
+                        ),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = font,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
         // Actions live directly on the card. Clicks are consumed, so they don't
         // also open the detail dialog.
@@ -354,7 +390,7 @@ fun YourAppRow(
         ) {
             if (deviceInfo?.installPending == true) {
                 DetailActionPill(
-                    if (installing) "Installing…" else "Install",
+                    if (installing) stringResource(Res.string.installing) else stringResource(Res.string.home_action_install),
                     MorpheIcons.Download,
                     MorpheColors.Teal, font, corners.small,
                     onClick = if (installing) ({}) else onInstall,
@@ -362,22 +398,22 @@ fun YourAppRow(
             }
             if (hasUpdate) {
                 DetailActionPill(
-                    "Update", MorpheIcons.Refresh,
+                    stringResource(Res.string.home_action_update), MorpheIcons.Refresh,
                     MorpheColors.Blue, font, corners.small, onClick = onUpdate,
                 )
             }
-            DetailActionPill("Repatch", MorpheIcons.Refresh, accents.primary, font, corners.small, onClick = onRepatch)
+            DetailActionPill(stringResource(Res.string.home_action_repatch), MorpheIcons.Refresh, accents.primary, font, corners.small, onClick = onRepatch)
             // Only offer uninstall when the app is actually on the connected device.
             if (deviceInfo?.installed == true) {
                 DetailActionPill(
-                    if (uninstalling) "Uninstalling…" else "Uninstall",
+                    if (uninstalling) stringResource(Res.string.home_action_uninstalling) else stringResource(Res.string.home_dialog_uninstall_button),
                     MorpheIcons.Delete,
                     Color(0xFFE0504D), font, corners.small,
                     onClick = if (uninstalling) ({}) else onUninstall,
                 )
             }
             DetailActionPill(
-                "Forget", MorpheIcons.Delete,
+                stringResource(Res.string.home_dialog_forget_button), MorpheIcons.Delete,
                 MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f), font, corners.small,
                 onClick = onForget,
             )
@@ -484,27 +520,27 @@ fun PatchedAppDetailDialog(
                 Divider(accents.primary)
 
                 // ── Key facts ──
-                DetailRow("Patched", fullDate(record.patchedAt), font)
-                DetailRow("App version", "v${record.apkVersion.removePrefix("v")}", font)
+                DetailRow(stringResource(Res.string.home_your_apps_status_patched), fullDate(record.patchedAt), font)
+                DetailRow(stringResource(Res.string.home_detail_app_version_label), "v${record.apkVersion.removePrefix("v")}", font)
                 val appAdviceMsg = updateInfo?.let { appAdvice(it) }
                 if (appAdviceMsg != null) {
                     UpdateHint(appAdviceMsg.first, font, recommended = appAdviceMsg.second)
                 } else if (updateInfo != null && updateInfo.sources.any { it.outdated }) {
                     // Newer patch exists but its app versions aren't resolved yet
                     // (offline / mid-fetch) — UPDATE fetches them.
-                    InfoNote("A newer patch is available and may support a newer app version. Tap Update to check.", font)
+                    InfoNote(stringResource(Res.string.home_detail_newer_patch_available_note), font)
                 }
-                DetailRow("Morphe", record.patchedWithMorpheVersion, font)
+                DetailRow(stringResource(Res.string.home_detail_morphe_label), record.patchedWithMorpheVersion, font)
 
                 // ── Sources + per-source patch-file freshness ──
                 val sourceRows = updateInfo?.sources
                 if (!sourceRows.isNullOrEmpty()) {
                     Divider(accents.primary)
-                    SectionHeader("Sources", accents.secondary, font)
+                    SectionHeader(stringResource(Res.string.home_detail_section_sources), accents.secondary, font)
                     sourceRows.forEach { SourceUpdateRow(it, font) }
                 } else if (record.sourcesSnapshot.isNotEmpty()) {
                     Divider(accents.primary)
-                    SectionHeader("Sources", accents.secondary, font)
+                    SectionHeader(stringResource(Res.string.home_detail_section_sources), accents.secondary, font)
                     record.sourcesSnapshot.forEach { src ->
                         DetailRow(src.sourceName, "v${src.version.removePrefix("v")}", font)
                     }
@@ -522,7 +558,7 @@ fun PatchedAppDetailDialog(
                         .clickable { patchesExpanded = !patchesExpanded }
                         .padding(vertical = 4.dp, horizontal = 4.dp),
                 ) {
-                    SectionHeader("Patches applied", accents.primary, font)
+                    SectionHeader(stringResource(Res.string.home_detail_section_patches_applied), accents.primary, font)
                     Spacer(Modifier.weight(1f))
                     Text(
                         text = "$patchCount  ${if (patchesExpanded) "▾" else "▸"}",
@@ -562,7 +598,7 @@ fun PatchedAppDetailDialog(
                     }
                     if (record.patchOptionValues.isNotEmpty() && patchSearch.isBlank()) {
                         Text(
-                            text = "Options",
+                            text = stringResource(Res.string.home_detail_section_options),
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = font,
@@ -584,9 +620,9 @@ fun PatchedAppDetailDialog(
 
                 // ── Output ──
                 Divider(accents.primary)
-                DetailRow("Output size", humanSize(record.outputApkSize), font)
+                DetailRow(stringResource(Res.string.home_detail_output_size_label), humanSize(record.outputApkSize), font)
                 record.outputApkSha256?.let {
-                    DetailRow("SHA-256", it.take(16) + "…", font)
+                    DetailRow(stringResource(Res.string.home_detail_sha256_label), it.take(16) + "…", font)
                 }
                 Text(
                     text = record.outputApkPath,
@@ -599,16 +635,20 @@ fun PatchedAppDetailDialog(
                 // ── Actions: full-width buttons that state what they'll do ──
                 Divider(accents.primary)
                 val repatchSub = updateInfo?.sources?.firstNotNullOfOrNull { it.resolvedVersion }
-                    ?.let { "uses v${it.removePrefix("v")}" }
+                    ?.let { stringResource(Res.string.home_detail_uses_version, it.removePrefix("v")) }
                 val updateSub = updateInfo?.let { updateSummary(it) }
                 // Already-patched APK ready to install (no re-patch) — primary action.
                 if (installPending) {
                     val sub = if (deviceInfo.installed)
-                        "v${record.apkVersion.removePrefix("v")} ready · device on v${deviceInfo.installedVersion?.removePrefix("v") ?: "?"}"
-                    else "v${record.apkVersion.removePrefix("v")} ready - no repatch needed"
+                        stringResource(
+                            Res.string.home_detail_ready_device_version,
+                            record.apkVersion.removePrefix("v"),
+                            deviceInfo.installedVersion?.removePrefix("v") ?: "?"
+                        )
+                    else stringResource(Res.string.home_detail_ready_no_repatch, record.apkVersion.removePrefix("v"))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                         WideActionButton(
-                            if (installing) "Installing…" else "Install",
+                            if (installing) stringResource(Res.string.installing) else stringResource(Res.string.home_action_install),
                             sub, MorpheIcons.Download,
                             MorpheColors.Teal, font, corners.small,
                             onClick = if (installing) ({}) else ({ onInstall() }),
@@ -618,11 +658,12 @@ fun PatchedAppDetailDialog(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                     if (hasUpdate) {
                         WideActionButton(
-                            "Update", updateSub, MorpheIcons.Refresh,
+                            stringResource(Res.string.home_action_update), updateSub, MorpheIcons.Refresh,
                             MorpheColors.Blue, font, corners.small,
+                            sublabelIcon = if (updateSub != null) MorpheIcons.ArrowForward else null,
                         ) { onDismiss(); onUpdate() }
                     }
-                    WideActionButton("Repatch", repatchSub, MorpheIcons.Refresh, accents.primary, font, corners.small) {
+                    WideActionButton(stringResource(Res.string.home_action_repatch), repatchSub, MorpheIcons.Refresh, accents.primary, font, corners.small) {
                         onDismiss(); onRepatch()
                     }
                 }
@@ -630,17 +671,17 @@ fun PatchedAppDetailDialog(
                 if (deviceInfo?.installed == true) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                         WideActionButton(
-                            if (uninstalling) "Uninstalling…" else "Uninstall",
-                            "remove from device", MorpheIcons.Delete,
+                            if (uninstalling) stringResource(Res.string.home_action_uninstalling) else stringResource(Res.string.home_dialog_uninstall_button),
+                            stringResource(Res.string.home_detail_remove_from_device), MorpheIcons.Delete,
                             Color(0xFFE0504D), font, corners.small,
                             onClick = if (uninstalling) ({}) else ({ onDismiss(); onUninstall() }),
                         )
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                    WideActionButton("Folder", null, MorpheIcons.OpenInNew, accents.secondary, font, corners.small, onClick = onOpenFolder)
+                    WideActionButton(stringResource(Res.string.folder), null, MorpheIcons.OpenInNew, accents.secondary, font, corners.small, onClick = onOpenFolder)
                     WideActionButton(
-                        "Forget", null, MorpheIcons.Delete,
+                        stringResource(Res.string.home_dialog_forget_button), null, MorpheIcons.Delete,
                         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f), font, corners.small,
                     ) { onDismiss(); onForget() }
                 }
@@ -660,6 +701,7 @@ private fun RowScope.WideActionButton(
     color: Color,
     font: FontFamily,
     corner: Dp,
+    sublabelIcon: ImageVector? = null,
     onClick: () -> Unit,
 ) {
     val hover = remember { MutableInteractionSource() }
@@ -680,29 +722,45 @@ private fun RowScope.WideActionButton(
             Text(label, fontSize = 11.sp, fontWeight = FontWeight.Normal, fontFamily = font, color = MaterialTheme.colorScheme.onSurface)
         }
         if (sublabel != null) {
-            Text(
-                text = sublabel,
-                fontSize = 11.sp,
-                fontFamily = font,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                if (sublabelIcon != null) {
+                    Icon(
+                        sublabelIcon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(11.dp),
+                    )
+                }
+                Text(
+                    text = sublabel,
+                    fontSize = 11.sp,
+                    fontFamily = font,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
 
 /** One-line summary of what an UPDATE will move to (patch + app versions). */
+@Composable
 private fun updateSummary(u: RecallUpdateInfo): String? {
     val parts = mutableListOf<String>()
     val outdated = u.sources.filter { it.outdated && it.latestAvailableVersion != null }
     outdated.firstOrNull()?.let { s ->
         val more = outdated.size - 1
-        parts += "→ patches v${s.latestAvailableVersion!!.removePrefix("v")}" + if (more > 0) " +$more" else ""
+        val versionStr = s.latestAvailableVersion!!.removePrefix("v")
+        parts += if (more > 0) stringResource(Res.string.home_detail_update_summary_patches_more, versionStr, more)
+                 else stringResource(Res.string.home_detail_update_summary_patches, versionStr)
     }
     if (u.appOutdated && u.appSuggestedVersion != null) {
-        parts += "app v${u.appSuggestedVersion.removePrefix("v")}"
+        parts += stringResource(Res.string.home_detail_update_summary_app, u.appSuggestedVersion.removePrefix("v"))
     }
     return parts.joinToString(" · ").ifBlank { null }
 }
@@ -744,7 +802,7 @@ private fun PatchSearchField(
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty()) {
                         Text(
-                            "Search patches…",
+                            text = stringResource(Res.string.patches_search_hint),
                             fontSize = 11.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
@@ -804,13 +862,24 @@ private fun SourceUpdateRow(s: RecallUpdateInfo.SourceUpdate, font: FontFamily) 
                 color = MaterialTheme.colorScheme.onSurface,
             )
             if (s.outdated && s.latestAvailableVersion != null) {
-                Text(
-                    text = "↑ v${s.latestAvailableVersion.removePrefix("v")} available",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
-                    color = MorpheColors.Blue,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Icon(
+                        imageVector = MorpheIcons.ArrowUpward,
+                        contentDescription = null,
+                        tint = MorpheColors.Blue,
+                        modifier = Modifier.size(11.dp),
+                    )
+                    Text(
+                        text = stringResource(Res.string.home_source_update_available, s.latestAvailableVersion.removePrefix("v")),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = font,
+                        color = MorpheColors.Blue,
+                    )
+                }
             }
         }
     }
@@ -819,15 +888,27 @@ private fun SourceUpdateRow(s: RecallUpdateInfo.SourceUpdate, font: FontFamily) 
 /** "↑ …" advice line. recommended = amber (take it), optional = blue (your call). */
 @Composable
 private fun UpdateHint(text: String, font: FontFamily, recommended: Boolean = false) {
-    Text(
-        text = "↑ $text",
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Normal,
-        fontFamily = font,
-        color = if (recommended) Color(0xFFE0A030) else MorpheColors.Blue,
-        lineHeight = 14.sp,
+    val color = if (recommended) Color(0xFFE0A030) else MorpheColors.Blue
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
-    )
+    ) {
+        Icon(
+            imageVector = MorpheIcons.ArrowUpward,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(11.dp),
+        )
+        Text(
+            text = text,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Normal,
+            fontFamily = font,
+            color = color,
+            lineHeight = 14.sp,
+        )
+    }
 }
 
 /**
@@ -835,15 +916,16 @@ private fun UpdateHint(text: String, font: FontFamily, recommended: Boolean = fa
  * recommended): recommended=true (amber) when the version is unsupported or a newer
  * stable is out; false (blue) for an optional experimental bump.
  */
+@Composable
 private fun appAdvice(u: RecallUpdateInfo): Pair<String, Boolean>? {
     if (!u.appOutdated || u.appSuggestedVersion == null) return null
     val target = u.appSuggestedVersion.removePrefix("v")
     val used = u.appUsedVersion.removePrefix("v")
     return when {
-        !u.appUsedSupported -> "v$used is no longer supported. Please update to v$target" to true
+        !u.appUsedSupported -> stringResource(Res.string.home_advice_unsupported, used, target) to true
         u.appChannel == RecallUpdateInfo.AppChannel.EXPERIMENTAL ->
-            "Newer experimental v$target available." to false
-        else -> "Update recommended. Newer stable v$target available" to true
+            stringResource(Res.string.home_advice_experimental, target) to false
+        else -> stringResource(Res.string.home_advice_recommended, target) to true
     }
 }
 
@@ -962,11 +1044,22 @@ private fun DetailActionPill(
 /** Shared device-install line (mirrors the supported-row variant). */
 @Composable
 private fun DeviceLine(info: DeviceAppInfo, font: FontFamily, mutedColor: Color, activeColor: Color) {
-    val version = info.installedVersion?.let { " · v${it.removePrefix("v")}" } ?: ""
-    val (text, color) = when {
-        !info.installed -> "Not on this device" to mutedColor
-        info.signedByMorphe == false -> "On device$version · not Morphe-signed" to Color(0xFFE0504D)
-        else -> "On device$version" to activeColor
+    val version = info.installedVersion?.removePrefix("v")
+    val text = when {
+        !info.installed -> stringResource(Res.string.home_app_row_not_on_device)
+        info.signedByMorphe == false -> {
+            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version_not_signed, version)
+            else stringResource(Res.string.home_app_row_on_device_not_signed)
+        }
+        else -> {
+            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version, version)
+            else stringResource(Res.string.home_app_row_on_device)
+        }
+    }
+    val color = when {
+        !info.installed -> mutedColor
+        info.signedByMorphe == false -> Color(0xFFE0504D)
+        else -> activeColor
     }
     Text(
         text = text,
@@ -977,25 +1070,27 @@ private fun DeviceLine(info: DeviceAppInfo, font: FontFamily, mutedColor: Color,
     )
 }
 
+@Composable
 private fun fullDate(millis: Long): String =
-    SimpleDateFormat("MMM d, yyyy · h:mm a", Locale.US).format(Date(millis))
+    FormatUtils.formatDateTime(millis, currentLocale())
 
 /** "today / yesterday / 3d ago / MMM d" — compact for the list row. */
+@Composable
 private fun relativeOrShortDate(millis: Long): String {
     val now = System.currentTimeMillis()
     val days = ((now - millis) / 86_400_000L).toInt()
     return when {
-        days <= 0 -> "today"
-        days == 1 -> "yesterday"
-        days < 7 -> "${days}d ago"
-        else -> SimpleDateFormat("MMM d", Locale.US).format(Date(millis))
+        days <= 0 -> stringResource(Res.string.home_date_today)
+        days == 1 -> stringResource(Res.string.home_date_yesterday)
+        days < 7 -> stringResource(Res.string.home_date_days_ago, days)
+        else -> FormatUtils.formatShortDate(millis, currentLocale())
     }
 }
 
+@Composable
 private fun humanSize(bytes: Long): String {
     if (bytes <= 0) return "-"
-    val mb = bytes / 1_048_576.0
-    return if (mb >= 1) "%.1f MB".format(mb) else "%.0f KB".format(bytes / 1024.0)
+    return FormatUtils.formatFileSize(bytes, currentLocale())
 }
 
 // ============================================================================
@@ -1031,13 +1126,13 @@ internal fun YourAppsListBody(
     val font = LocalMorpheFont.current
     when {
         patchedRecords.isEmpty() -> YourAppsEmptyHint(
-            title = "No patched apps yet",
-            subtitle = "Patch an app and it shows up here",
+            title = stringResource(Res.string.home_your_apps_empty_title),
+            subtitle = stringResource(Res.string.home_your_apps_empty_subtitle),
             font = font,
         )
         filteredRecords.isEmpty() -> YourAppsEmptyHint(
-            title = "No matches",
-            subtitle = "Nothing matches \"$searchQuery\"",
+            title = stringResource(Res.string.no_matches),
+            subtitle = stringResource(Res.string.home_your_apps_no_matches_subtitle, searchQuery),
             font = font,
         )
         else -> {

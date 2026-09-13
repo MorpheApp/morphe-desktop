@@ -9,6 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import app.morphe.gui.ui.theme.LocalMorpheAccents
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 // -----------------------------
 //  STATUS COLOR TYPE
@@ -33,6 +35,7 @@ data class VersionStatusDisplay(
     val colorType: StatusColorType
 )
 
+@Composable
 fun resolveVersionStatusDisplay(
     versionStatus: VersionStatus,
     checksumStatus: ChecksumStatus,
@@ -41,22 +44,22 @@ fun resolveVersionStatusDisplay(
     return when (versionStatus) {
         VersionStatus.LATEST_STABLE -> when (checksumStatus) {
             is ChecksumStatus.Verified -> VersionStatusDisplay(
-                label = "Latest Stable",
-                detail = "Checksum matches APKMirror",
+                label = stringResource(Res.string.version_label_latest_stable),
+                detail = stringResource(Res.string.version_status_checksum_matches),
                 colorType = StatusColorType.PRIMARY
             )
             is ChecksumStatus.Mismatch -> VersionStatusDisplay(
-                label = "Checksum mismatch",
-                detail = "File may be corrupted, re-download from APKMirror",
+                label = stringResource(Res.string.version_status_checksum_mismatch),
+                detail = stringResource(Res.string.version_status_checksum_corrupted),
                 colorType = StatusColorType.ERROR
             )
             is ChecksumStatus.Error -> VersionStatusDisplay(
-                label = "Latest Stable",
-                detail = "Checksum verification failed",
+                label = stringResource(Res.string.version_label_latest_stable),
+                detail = stringResource(Res.string.version_status_checksum_failed),
                 colorType = StatusColorType.WARNING
             )
             is ChecksumStatus.NotConfigured -> VersionStatusDisplay(
-                label = "Latest Stable",
+                label = stringResource(Res.string.version_label_latest_stable),
                 detail = null,
                 colorType = StatusColorType.PRIMARY
             )
@@ -64,42 +67,42 @@ fun resolveVersionStatusDisplay(
         }
 
         VersionStatus.OLDER_STABLE -> VersionStatusDisplay(
-            label = "Older stable",
+            label = stringResource(Res.string.version_status_older_stable),
             detail = suggestedVersion
-                ?.let { "Newer stable v$it available" }
-                ?: "A newer stable version is available",
+                ?.let { stringResource(Res.string.version_status_newer_stable_available, it) }
+                ?: stringResource(Res.string.version_status_newer_stable_available_fallback),
             colorType = StatusColorType.WARNING
         )
 
         VersionStatus.LATEST_EXPERIMENTAL -> VersionStatusDisplay(
-            label = "Experimental",
-            detail = "Supported, but may not work properly",
+            label = stringResource(Res.string.version_label_experimental),
+            detail = stringResource(Res.string.version_status_experimental_detail),
             colorType = StatusColorType.WARNING
         )
 
         VersionStatus.OLDER_EXPERIMENTAL -> VersionStatusDisplay(
-            label = "Older Experimental",
+            label = stringResource(Res.string.version_status_older_experimental),
             detail = suggestedVersion
-                ?.let { "Newer experimental v$it available" }
-                ?: "A newer experimental build is available",
+                ?.let { stringResource(Res.string.version_status_newer_experimental_available, it) }
+                ?: stringResource(Res.string.version_status_newer_experimental_available_fallback),
             colorType = StatusColorType.WARNING
         )
 
         VersionStatus.TOO_NEW -> VersionStatusDisplay(
-            label = "Version too new",
-            detail = "Not officially supported - patches will most likely fail",
+            label = stringResource(Res.string.version_status_too_new),
+            detail = stringResource(Res.string.version_status_unsupported_detail),
             colorType = StatusColorType.ERROR
         )
 
         VersionStatus.TOO_OLD -> VersionStatusDisplay(
-            label = "Version too old",
-            detail = "Not officially supported - patches will most likely fail",
+            label = stringResource(Res.string.version_status_too_old),
+            detail = stringResource(Res.string.version_status_unsupported_detail),
             colorType = StatusColorType.ERROR
         )
 
         VersionStatus.UNSUPPORTED_BETWEEN -> VersionStatusDisplay(
-            label = "Unsupported version",
-            detail = "Not officially supported - patches will most likely fail",
+            label = stringResource(Res.string.version_status_unsupported),
+            detail = stringResource(Res.string.version_status_unsupported_detail),
             colorType = StatusColorType.ERROR
         )
 
@@ -142,6 +145,7 @@ data class VersionWarningContent(
     val colorType: StatusColorType
 )
 
+@Composable
 fun resolveVersionWarningContent(
     versionStatus: VersionStatus,
     currentVersion: String,
@@ -149,43 +153,33 @@ fun resolveVersionWarningContent(
 ): VersionWarningContent {
     val (title, message) = when (versionStatus) {
         VersionStatus.OLDER_STABLE -> Pair(
-            "Older Stable version",
-            "Current: v$currentVersion\nLatest stable: v$suggestedVersion\n\n" +
-                "This version is supported, but a newer stable version is available. " +
-                "You may be missing recent fixes"
+            stringResource(Res.string.version_warning_older_stable_title),
+            stringResource(Res.string.version_warning_older_stable_message, currentVersion, suggestedVersion)
         )
         VersionStatus.LATEST_EXPERIMENTAL -> Pair(
-            "Do you want to experiment? \uD83E\uDDEA",
-            "Current: v$currentVersion\n\n" +
-                "This version has early experimental support\n\n" +
-                "\uD83D\uDD27 Expect quirky app behavior or unidentified bugs as the " +
-                "patches are refined for this app version."
+            stringResource(Res.string.version_warning_experiment_title),
+            stringResource(Res.string.version_warning_latest_experimental_message, currentVersion)
         )
         VersionStatus.OLDER_EXPERIMENTAL -> Pair(
-            "Older Experimental Version\nDo you want to experiment? \uD83E\uDDEA",
-            "Current: v$currentVersion\nLatest experimental: v$suggestedVersion\n\n" +
-                "This is a supported experimental build, but a newer experimental " +
-                "version is available. Expect quirky app behavior or unidentified" +
-                " bugs as the patches are refined for this app version"
+            stringResource(Res.string.version_warning_older_experimental_title),
+            stringResource(Res.string.version_warning_older_experimental_message, currentVersion, suggestedVersion)
         )
         VersionStatus.TOO_NEW -> Pair(
-            "Do you want to experiment? \uD83E\uDDEA",
-            "Current: v$currentVersion\nNewest known: v$suggestedVersion\n\n" +
-                "This version has early experimental support\n\n" +
-                "\uD83D\uDD27 Expect quirky app behavior or unidentified bugs as the " +
-                "patches are refined for this app version"
+            stringResource(Res.string.version_warning_experiment_title),
+            stringResource(Res.string.version_warning_too_new_message, currentVersion, suggestedVersion)
         )
         VersionStatus.TOO_OLD -> Pair(
-            "Version too old",
-            "Current: v$currentVersion\nOldest supported: v$suggestedVersion\n\n" +
-                "This isn't an officially supported version. Patches will most likely fail"
+            stringResource(Res.string.version_status_too_old),
+            stringResource(Res.string.version_warning_too_old_message, currentVersion, suggestedVersion)
         )
         VersionStatus.UNSUPPORTED_BETWEEN -> Pair(
-            "Unsupported version",
-            "Current: v$currentVersion\n\n" +
-                "This isn't an officially supported version. Patches will most likely fail"
+            stringResource(Res.string.version_status_unsupported),
+            stringResource(Res.string.version_warning_unsupported_message, currentVersion)
         )
-        else -> Pair("Version notice", "Continue with v$currentVersion?")
+        else -> Pair(
+            stringResource(Res.string.version_warning_notice_title),
+            stringResource(Res.string.version_warning_notice_message, currentVersion)
+        )
     }
 
     val isHardError = versionStatus == VersionStatus.TOO_OLD ||

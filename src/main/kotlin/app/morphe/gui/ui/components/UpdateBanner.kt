@@ -38,6 +38,8 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Non-blocking banner shown when a newer CLI release is available.
@@ -81,7 +83,7 @@ fun UpdateBanner(
                 modifier = Modifier.size(14.dp),
             )
             Text(
-                text = "Update available · v${info.latestVersion}",
+                text = stringResource(Res.string.update_banner_available, info.latestVersion),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = font,
@@ -89,9 +91,9 @@ fun UpdateBanner(
             )
             Text(
                 text = if (info.crossesDevToStable) {
-                    "from v${info.currentVersion} · dev → stable"
+                    stringResource(Res.string.update_banner_from_version_crosses, info.currentVersion)
                 } else {
-                    "from v${info.currentVersion}"
+                    stringResource(Res.string.update_banner_from_version, info.currentVersion)
                 },
                 fontSize = 11.sp,
                 fontFamily = font,
@@ -122,7 +124,7 @@ fun UpdateBanner(
                 )
                 Spacer(Modifier.width(3.dp))
                 Text(
-                    text = "Download",
+                    text = stringResource(Res.string.update_banner_download_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font
@@ -131,14 +133,14 @@ fun UpdateBanner(
 
             // LATER — session-only dismiss (reappears next startup). Yellow on hover.
             DismissTextAction(
-                label = "Later",
+                label = stringResource(Res.string.update_banner_later_button),
                 hoverAccent = MaterialTheme.colorScheme.tertiary,
                 onClick = onDismissForSession,
             )
 
             // SKIP v{ver} — persistent dismiss for this version only. Red on hover.
             DismissTextAction(
-                label = "Skip v${info.latestVersion}",
+                label = stringResource(Res.string.update_banner_skip_button, info.latestVersion),
                 hoverAccent = MaterialTheme.colorScheme.error,
                 onClick = onDismissForVersion,
             )

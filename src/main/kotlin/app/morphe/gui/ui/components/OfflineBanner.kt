@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun OfflineBanner(
@@ -54,7 +56,7 @@ fun OfflineBanner(
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = "Offline - using cached patches",
+                text = stringResource(Res.string.offline_banner_text),
                 fontSize = 11.sp,
                 fontFamily = font,
                 fontWeight = FontWeight.Normal,
@@ -82,7 +84,7 @@ fun OfflineBanner(
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = "Retry",
+                    text = stringResource(Res.string.retry),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,

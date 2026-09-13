@@ -38,10 +38,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.LocalOnSettingsDismiss
@@ -63,6 +65,7 @@ import app.morphe.gui.ui.components.getErrorType
 import app.morphe.gui.ui.components.getFriendlyErrorMessage
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.screens.patching.PatchingScreen
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
@@ -70,6 +73,7 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheMono
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.MorpheFilePicker
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -80,6 +84,8 @@ import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
@@ -162,7 +168,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
 
     if (showErrorDialog && currentError != null) {
         ErrorDialog(
-            title = "Error Loading Patches",
+            title = stringResource(Res.string.patch_selection_error_title),
             message = getFriendlyErrorMessage(currentError!!),
             errorType = getErrorType(currentError!!),
             onDismiss = {
@@ -222,9 +228,9 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             ) {
                 Icon(
                     imageVector = MorpheIcons.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(Res.string.back),
                     tint = baseIconTint,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp).autoMirrored()
                 )
             }
 
@@ -236,14 +242,14 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
-                    text = "Select patches",
+                    text = stringResource(Res.string.patch_selection_title),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "${uiState.selectedCount} of ${uiState.totalCount} selected",
+                    text = pluralStringResource(Res.plurals.patch_selection_selected_count, uiState.selectedCount, uiState.selectedCount, uiState.totalCount),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -274,7 +280,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Terminal,
-                        contentDescription = "Command Preview",
+                        contentDescription = stringResource(Res.string.patch_selection_cmd_preview),
                         tint = if (cmdActive) MaterialTheme.colorScheme.onSurface
                                else baseIconTint,
                         modifier = Modifier.size(16.dp)
@@ -296,7 +302,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     tooltip = {
                         PlainTooltip {
                             Text(
-                                "Continue patching even if a patch fails",
+                                text = stringResource(Res.string.patch_selection_continue_on_error_tooltip),
                                 fontFamily = font,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 11.sp
@@ -318,7 +324,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     ) {
                         Icon(
                             imageVector = MorpheIcons.PlaylistRemove,
-                            contentDescription = "Continue on error",
+                            contentDescription = stringResource(Res.string.patch_selection_continue_on_error_description),
                             tint = if (continueOnError) MaterialTheme.colorScheme.error
                                    else baseIconTint,
                             modifier = Modifier.size(16.dp)
@@ -418,7 +424,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            text = "Loading patches",
+                            text = stringResource(Res.string.patching_step_loading_patches),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -438,8 +444,8 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (uiState.bundles.isEmpty()) "No patches found"
-                               else "None of your enabled sources have patches for this app",
+                        text = if (uiState.bundles.isEmpty()) stringResource(Res.string.patch_selection_no_patches_found)
+                               else stringResource(Res.string.patch_selection_no_source_patches_for_app),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -466,7 +472,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No patches match your search",
+                        text = stringResource(Res.string.patch_selection_no_search_matches),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -599,7 +605,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         shape = RoundedCornerShape(corners.small)
                     ) {
                         Text(
-                            text = "Patch (${uiState.selectedCount})",
+                            text = stringResource(Res.string.patch_selection_action_patch, uiState.selectedCount),
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font
@@ -651,7 +657,7 @@ private fun PatchSearchBar(
         ) {
             Icon(
                 imageVector = MorpheIcons.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(Res.string.patches_search_hint),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
                 modifier = Modifier.size(16.dp)
             )
@@ -659,7 +665,7 @@ private fun PatchSearchBar(
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                 if (query.isEmpty()) {
                     Text(
-                        "Search patches…",
+                        text = stringResource(Res.string.patches_search_hint),
                         fontSize = 11.sp,
                         lineHeight = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -695,7 +701,7 @@ private fun PatchSearchBar(
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Clear,
-                        contentDescription = "Clear",
+                        contentDescription = stringResource(Res.string.clear),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                         modifier = Modifier.size(14.dp)
                     )
@@ -745,7 +751,7 @@ private fun PatchSearchBar(
                     )
                 }
                 Text(
-                    text = "Selected",
+                    text = stringResource(Res.string.patch_selection_filter_selected),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -938,6 +944,7 @@ private fun PatchListItem(
                     contentAlignment = Alignment.Center
                 ) {
                     // Gear button
+                    val layoutDirection = LocalLayoutDirection.current
                     Box(
                         modifier = Modifier
                             .size(44.dp)
@@ -950,7 +957,7 @@ private fun PatchListItem(
                     ) {
                         Icon(
                             imageVector = MorpheIcons.Settings,
-                            contentDescription = "Configure options",
+                            contentDescription = stringResource(Res.string.patch_selection_configure_options_description),
                             tint = when {
                                 showOptions -> accents.primary
                                 isGearHovered -> accents.primary.copy(alpha = 0.7f)
@@ -963,7 +970,7 @@ private fun PatchListItem(
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .offset(x = 3.dp, y = (-3).dp)
+                            .offset(x = if (layoutDirection == LayoutDirection.Rtl) (-3).dp else 3.dp, y = (-3).dp)
                             .size(18.dp)
                             .background(accents.primary, RoundedCornerShape(9.dp)),
                         contentAlignment = Alignment.Center
@@ -1036,25 +1043,26 @@ private fun IconStudioOption(
     var showDeleteConfirm by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
+    val selectFolderTitle = stringResource(Res.string.patch_selection_icon_select_folder_title)
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         // Edit/design first (accent-filled), then import, then delete — all on the left.
-        IconActionPill(MorpheIcons.Edit, if (hasIcon) "Edit icon" else "Design icon", accents.primary, filled = true, shape = shape, font = font) { showStudio = true }
+        IconActionPill(MorpheIcons.Edit, if (hasIcon) stringResource(Res.string.patch_selection_icon_edit) else stringResource(Res.string.patch_selection_icon_design), accents.primary, filled = true, shape = shape, font = font) { showStudio = true }
         // Import an already-prepared folder (e.g. one made in the Manager).
-        IconActionPill(MorpheIcons.FolderOpen, "Import folder", accents.primary.copy(alpha = 0.8f), filled = false, shape = shape, font = font) {
+        IconActionPill(MorpheIcons.FolderOpen, stringResource(Res.string.patch_selection_icon_import_folder), accents.primary.copy(alpha = 0.8f), filled = false, shape = shape, font = font) {
             scope.launch {
-                MorpheFilePicker.pickDirectory(title = "Select an icon folder")
+                MorpheFilePicker.pickDirectory(title = selectFolderTitle)
                     ?.let { onValueChange(it.absolutePath) }
             }
         }
         if (hasIcon) {
-            IconActionPill(MorpheIcons.Delete, "Delete", MaterialTheme.colorScheme.error, filled = false, shape = shape, font = font) { showDeleteConfirm = true }
+            IconActionPill(MorpheIcons.Delete, stringResource(Res.string.delete), MaterialTheme.colorScheme.error, filled = false, shape = shape, font = font) { showDeleteConfirm = true }
         }
         Text(
-            text = if (hasIcon) "Custom icon ready" else "No custom icon set",
+            text = if (hasIcon) stringResource(Res.string.patch_selection_icon_ready) else stringResource(Res.string.patch_selection_icon_none),
             fontSize = 11.sp,
             fontFamily = font,
             color = if (hasIcon) accents.primary else MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1070,15 +1078,15 @@ private fun IconStudioOption(
     }
 
     if (showDeleteConfirm) {
-        MorpheDialogCard(onDismiss = { showDeleteConfirm = false }, title = "Delete custom icon?") {
+        MorpheDialogCard(onDismiss = { showDeleteConfirm = false }, title = stringResource(Res.string.patch_selection_icon_dialog_delete_title)) {
             MorpheDialogText(
-                "This clears the icon and removes its saved project and generated files. This can't be undone"
+                stringResource(Res.string.patch_selection_icon_dialog_delete_message)
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false) {
+                MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false) {
                     showDeleteConfirm = false
                 }
-                MorpheDialogButton("Delete", Color(0xFFE0504D), filled = true) {
+                MorpheDialogButton(stringResource(Res.string.delete), Color(0xFFE0504D), filled = true) {
                     runCatching { IconExporter.projectDir(packageName).deleteRecursively() }
                     onValueChange("")
                     showDeleteConfirm = false
@@ -1164,7 +1172,7 @@ private fun PatchOptionEditor(
         // For customIcon, add our own note: the Icon Studio builds this folder for you.
         if (option.key.equals("customIcon", ignoreCase = true)) {
             Text(
-                text = "You don't have to build this folder yourself! Click on the Design/Edit icon to create it in the Icon Studio or import it from the Manager!)",
+                text = stringResource(Res.string.patch_selection_custom_icon_hint),
                 fontSize = 10.sp,
                 fontFamily = font,
                 fontWeight = FontWeight.Normal,
@@ -1191,7 +1199,8 @@ private fun PatchOptionEditor(
                         accentColor = accents.primary
                     )
                     Text(
-                        text = if (localChecked) "Enabled" else "Disabled",
+                        text = if (localChecked) stringResource(Res.string.patch_selection_option_enabled)
+                               else stringResource(Res.string.patch_selection_option_disabled),
                         fontSize = 10.sp,
                         fontFamily = font,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
@@ -1241,7 +1250,8 @@ private fun PatchOptionEditor(
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                             if (localPath.isEmpty()) {
                                 Text(
-                                    text = if (isImage) "Select image…" else "Select file…",
+                                    text = if (isImage) stringResource(Res.string.select_image)
+                                           else stringResource(Res.string.select_file),
                                     fontSize = 11.sp,
                                     lineHeight = 14.sp,
                                     fontFamily = font,
@@ -1297,7 +1307,7 @@ private fun PatchOptionEditor(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Browse",
+                            text = stringResource(Res.string.browse),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -1394,7 +1404,7 @@ private fun SelectionModeChips(
         // bundle; for now SAVED highlights only when activeMode == SelectionMode.SAVED
         // (which is set after applySavedDefaults by virtue of the chip being clicked).
         SelectionModeChip(
-            label = "Your defaults",
+            label = stringResource(Res.string.patch_selection_mode_your_defaults),
             icon = MorpheIcons.Bookmark,
             active = activeMode == SelectionMode.SAVED,
             enabled = hasSavedSelection,
@@ -1402,21 +1412,21 @@ private fun SelectionModeChips(
             modifier = Modifier.weight(1f)
         )
         SelectionModeChip(
-            label = "Patch defaults",
+            label = stringResource(Res.string.patch_selection_mode_patch_defaults),
             icon = MorpheIcons.AutoAwesome,
             active = activeMode == SelectionMode.DEFAULTS,
             onClick = onApplyDefaults,
             modifier = Modifier.weight(1f)
         )
         SelectionModeChip(
-            label = "All",
+            label = stringResource(Res.string.patch_selection_mode_all),
             icon = MorpheIcons.DoneAll,
             active = activeMode == SelectionMode.ALL,
             onClick = onApplyAll,
             modifier = Modifier.weight(1f)
         )
         SelectionModeChip(
-            label = "None",
+            label = stringResource(Res.string.none),
             icon = MorpheIcons.RemoveDone,
             active = activeMode == SelectionMode.NONE,
             onClick = onApplyNone,
@@ -1556,7 +1566,7 @@ private fun CommandPreview(
                     modifier = Modifier.size(14.dp)
                 )
                 Text(
-                    text = "Command preview",
+                    text = stringResource(Res.string.patch_selection_cmd_preview),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
@@ -1587,7 +1597,8 @@ private fun CommandPreview(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = if (showCopied) "Copied" else "Copy",
+                            text = if (showCopied) stringResource(Res.string.copied)
+                                   else stringResource(Res.string.copy),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -1609,7 +1620,8 @@ private fun CommandPreview(
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
                     Text(
-                        text = if (cleanMode) "Compact" else "Expand",
+                        text = if (cleanMode) stringResource(Res.string.collapse)
+                               else stringResource(Res.string.expand),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -1658,30 +1670,30 @@ private fun StripLibsStatusBanner(
     val display: BannerDisplay = when (status) {
         is StripLibsStatus.NoNativeLibs -> BannerDisplay(
             dotColor = accents.secondary.copy(alpha = 0.4f),
-            headline = "No native libs",
-            detail = "stripping does not apply"
+            headline = stringResource(Res.string.patch_selection_strip_no_libs_headline),
+            detail = stringResource(Res.string.patch_selection_strip_no_libs_detail)
         )
         is StripLibsStatus.Universal -> BannerDisplay(
             dotColor = accents.secondary.copy(alpha = 0.4f),
-            headline = "Universal libs",
-            detail = "single universal folder - stripping does not apply"
+            headline = stringResource(Res.string.patch_selection_strip_universal_headline),
+            detail = stringResource(Res.string.patch_selection_strip_universal_detail)
         )
         is StripLibsStatus.KeepAll -> BannerDisplay(
             dotColor = accents.secondary.copy(alpha = 0.4f),
-            headline = "No stripping needed",
-            detail = "keep-list covers every arch in this APK",
+            headline = stringResource(Res.string.patch_selection_strip_keep_all_headline),
+            detail = stringResource(Res.string.patch_selection_strip_keep_all_detail),
             notInApkChips = status.notInApk
         )
         is StripLibsStatus.Fallback -> BannerDisplay(
             dotColor = MaterialTheme.colorScheme.tertiary,
-            headline = "Fallback - keeping all",
-            detail = "no preferred archs present - review Strip Libs settings",
+            headline = stringResource(Res.string.patch_selection_strip_fallback_headline),
+            detail = stringResource(Res.string.patch_selection_strip_fallback_detail),
             keepChips = status.apkArches
         )
         is StripLibsStatus.WillStrip -> BannerDisplay(
             dotColor = accents.secondary,
-            headline = "Stripping native libs",
-            detail = "keeping listed archs only",
+            headline = stringResource(Res.string.patch_selection_strip_will_strip_headline),
+            detail = stringResource(Res.string.patch_selection_strip_will_strip_detail),
             keepChips = status.keeping,
             stripChips = status.stripping,
             notInApkChips = status.notInApk
@@ -1718,7 +1730,7 @@ private fun StripLibsStatusBanner(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = "· Settings → Strip Libs",
+            text = stringResource(Res.string.patch_selection_strip_settings_hint),
             fontSize = 9.sp,
             fontFamily = font,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1764,9 +1776,9 @@ private fun ArchChip(
         ArchChipRole.NOT_IN_APK -> 0.5f
     }
     val roleLabel = when (role) {
-        ArchChipRole.KEEP -> "keep"
-        ArchChipRole.STRIP -> "strip"
-        ArchChipRole.NOT_IN_APK -> "not in apk"
+        ArchChipRole.KEEP -> stringResource(Res.string.patch_selection_arch_keep)
+        ArchChipRole.STRIP -> stringResource(Res.string.patch_selection_arch_strip)
+        ArchChipRole.NOT_IN_APK -> stringResource(Res.string.patch_selection_arch_not_in_apk)
     }
     val labelColor = when (role) {
         ArchChipRole.KEEP -> accent.copy(alpha = textAlpha)
@@ -1934,7 +1946,7 @@ private fun BundleBox(
                 // LazyColumns inside a LazyColumn is unsupported.
                 if (bundle.patches.isEmpty() && searchActive) {
                     Text(
-                        text = "No matches in this bundle",
+                        text = stringResource(Res.string.patch_selection_no_matches_in_bundle),
                         fontSize = 11.sp,
                         fontFamily = font,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,

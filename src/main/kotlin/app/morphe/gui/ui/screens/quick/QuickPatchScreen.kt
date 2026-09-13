@@ -43,16 +43,21 @@ import app.morphe.gui.ui.screens.quick.components.ReadyContent
 import app.morphe.gui.ui.screens.quick.components.SupportedAppsRow
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.EnabledSourcesLoader
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.MorpheFilePicker
+import app.morphe.gui.util.currentLocale
+import app.morphe.gui.util.resolveStepName
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class QuickPatchScreen : Screen {
@@ -272,10 +277,11 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                     ) { phase ->
                         when (phase) {
                             QuickPatchPhase.IDLE, QuickPatchPhase.ANALYZING -> {
+                                val selectApkTitle = stringResource(Res.string.quick_patch_select_apk)
                                 IdleContent(
                                     isAnalyzing = phase == QuickPatchPhase.ANALYZING,
                                     isDragHovering = uiState.isDragHovering,
-                                    onBrowse = { pickerScope.launch { openFilePicker()?.let { viewModel.onFileSelected(it) } } }
+                                    onBrowse = { pickerScope.launch { openFilePicker(selectApkTitle)?.let { viewModel.onFileSelected(it) } } }
                                 )
                             }
                             QuickPatchPhase.READY -> {
@@ -295,7 +301,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                     progress = uiState.progress,
                                     completedPatches = uiState.completedPatches,
                                     totalPatches = uiState.totalPatches,
-                                    statusMessage = uiState.statusMessage,
+                                    statusMessage = resolveStepName(uiState.statusMessage),
                                     onCancel = { viewModel.cancelPatching() }
                                 )
                             }
@@ -314,7 +320,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                 val detailedError = uiState.logs
                                     .filter { it.level == LogLevel.ERROR }
                                     .joinToString("\n") { it.message }
-                                    .ifBlank { uiState.error ?: "Unknown error" }
+                                    .ifBlank { uiState.error ?: stringResource(Res.string.error_patching_unknown) }
                                 ErrorContent(
                                     errorMessage = detailedError,
                                     apkInfo = uiState.apkInfo ?: lastApkInfo,
@@ -365,17 +371,12 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
 //  UTILITIES
 // ════════════════════════════════════════════════════════════════════
 
-private suspend fun openFilePicker(): File? =
+private suspend fun openFilePicker(title: String): File? =
     MorpheFilePicker.pickFile(
-        title = "Select APK",
+        title = title,
         extensions = listOf("apk", "apkm", "xapk", "apks"),
     )
 
-internal fun formatFileSize(bytes: Long): String {
-    return when {
-        bytes < 1024 -> "$bytes B"
-        bytes < 1024 * 1024 -> "%.1f KB".format(bytes / 1024.0)
-        bytes < 1024 * 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
-        else -> "%.2f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
-    }
-}
+@Composable
+internal fun formatFileSize(bytes: Long): String =
+    FormatUtils.formatFileSize(bytes, currentLocale())

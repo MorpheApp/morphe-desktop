@@ -39,6 +39,8 @@ import app.morphe.gui.util.StatusColorType
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.toColor
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // APK STAGE (drop zone, APK info, analyzing)
@@ -127,7 +129,7 @@ internal fun DropPromptSection(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = if (isDragHovering) "Release to drop" else "Drop APK here",
+                    text = if (isDragHovering) stringResource(Res.string.release_to_drop) else stringResource(Res.string.drop_apk_here),
                     fontSize = 18.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.SemiBold,
@@ -137,7 +139,7 @@ internal fun DropPromptSection(
                 if (!isDragHovering) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "or click to browse",
+                        text = stringResource(Res.string.click_to_browse),
                         fontSize = 14.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
@@ -145,7 +147,7 @@ internal fun DropPromptSection(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = ".apk  ·  .apkm  ·  .xapk  ·  .apks",
+                        text = stringResource(Res.string.app_info_extensions_label),
                         fontSize = 10.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
@@ -220,7 +222,7 @@ internal fun ApkSelectedSection(
                 )
             ) {
                 Text(
-                    "Change APK",
+                    text = stringResource(Res.string.home_stage_change_apk),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font
@@ -257,14 +259,14 @@ internal fun ActionButtonContent(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            "Loading…",
+            text = stringResource(Res.string.status_loading),
             fontSize = 13.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font
         )
     } else {
         Text(
-            "Continue",
+            text = stringResource(Res.string.home_stage_continue),
             fontSize = 13.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font
@@ -294,7 +296,7 @@ internal fun AnalyzingSection() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Analyzing",
+            text = stringResource(Res.string.home_stage_analyzing_title),
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
             fontFamily = font,
@@ -304,7 +306,7 @@ internal fun AnalyzingSection() {
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "Reading app metadata…",
+            text = stringResource(Res.string.home_stage_reading_metadata),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,

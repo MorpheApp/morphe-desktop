@@ -28,6 +28,7 @@ import app.morphe.gui.ui.screens.patching.LogLevel
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FileUtils
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchResult
 import app.morphe.gui.util.PatchService
@@ -38,6 +39,7 @@ import app.morphe.gui.util.VersionResolution
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.resolveVersionStatus
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
@@ -56,6 +58,8 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getPluralString
+import org.jetbrains.compose.resources.getString
 
 /**
  * ViewModel for Quick Patch mode - handles the entire flow in one screen.
@@ -222,7 +226,7 @@ class QuickPatchViewModel(
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
                     val firstError = result.resolved.firstNotNullOfOrNull { it.error }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }
-                        ?: "Could not load any patches"
+                        ?: getString(Res.string.error_could_not_load_patches)
                     if (firstThrowable != null) {
                         Logger.error("Quick mode: Failed to load any patches: $firstError", firstThrowable)
                     } else {
@@ -262,7 +266,7 @@ class QuickPatchViewModel(
                 val sourceName = if (result.resolved.size == 1) {
                     firstResolved?.source?.name ?: patchSourceManager.getActiveSourceName()
                 } else {
-                    "${result.resolved.count { it.patchFile != null }} sources"
+                    getPluralString(Res.plurals.count_sources, result.resolved.count { it.patchFile != null }, result.resolved.count { it.patchFile != null })
                 }
 
                 _uiState.update { it.copy(
@@ -310,7 +314,9 @@ class QuickPatchViewModel(
         if (apkFile != null) {
             onFileSelected(apkFile)
         } else {
-            setError("Please drop a valid .apk, .apkm, .xapk, or .apks file")
+            screenModelScope.launch {
+                setError(getString(Res.string.error_drop_valid_apk))
+            }
         }
     }
 
@@ -336,7 +342,7 @@ class QuickPatchViewModel(
             } else {
                 _uiState.value = _uiState.value.copy(
                     phase = QuickPatchPhase.IDLE,
-                    error = _uiState.value.error ?: "Failed to analyze APK"
+                    error = _uiState.value.error ?: getString(Res.string.quick_patch_analyze_apk_failed)
                 )
             }
         }
@@ -347,7 +353,7 @@ class QuickPatchViewModel(
      */
     private suspend fun analyzeApk(file: File): QuickApkInfo? = withContext(Dispatchers.IO) {
         if (!file.exists() || !FileUtils.isApkFile(file)) {
-            _uiState.value = _uiState.value.copy(error = "Please drop a valid .apk, .apkm, .xapk, or .apks file")
+            _uiState.value = _uiState.value.copy(error = getString(Res.string.error_drop_valid_apk))
             return@withContext null
         }
 
@@ -355,7 +361,7 @@ class QuickPatchViewModel(
         val isBundleFormat = FileUtils.isBundleFormat(file)
         val apkToParse = if (isBundleFormat) {
             FileUtils.extractBaseApkFromBundle(file) ?: run {
-                _uiState.value = _uiState.value.copy(error = "Failed to extract base APK from bundle")
+                _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_extract_base_apk_failed))
                 return@withContext null
             }
         } else {
@@ -369,7 +375,7 @@ class QuickPatchViewModel(
                 ?: throw IllegalStateException("ARSCLib couldn't read manifest")
 
             val packageName = manifest.packageName
-            val versionName = manifest.versionName ?: "Unknown"
+            val versionName = manifest.versionName ?: getString(Res.string.unknown)
 
             // Check if supported using dynamic data
             val dynamicAppInfo = cachedSupportedApps.find { it.packageName == packageName }
@@ -392,7 +398,7 @@ class QuickPatchViewModel(
                         .ifEmpty { listOf("YouTube", "YouTube Music", "Reddit") }
                         .joinToString(", ")
                     _uiState.value = _uiState.value.copy(
-                        error = "$appName is not supported in Quick Patch mode. Supported apps: $supportedNames. Use Normal mode for unsupported apps",
+                        error = getString(Res.string.quick_patch_unsupported_app_error, appName, supportedNames),
                         phase = QuickPatchPhase.IDLE
                     )
                     return@withContext null
@@ -427,17 +433,17 @@ class QuickPatchViewModel(
             }
             val versionWarning = when (versionStatus) {
                 VersionStatus.OLDER_STABLE ->
-                    "Older stable build - newer stable v${versionResolution.suggestedVersion} available"
+                    getString(Res.string.quick_patch_warning_older_stable, versionResolution.suggestedVersion ?: "")
                 VersionStatus.LATEST_EXPERIMENTAL ->
-                    "Experimental build - supported, but may not work properly"
+                    getString(Res.string.quick_patch_warning_latest_experimental)
                 VersionStatus.OLDER_EXPERIMENTAL ->
-                    "Older experimental build - newer experimental v${versionResolution.suggestedVersion} available"
+                    getString(Res.string.quick_patch_warning_older_experimental, versionResolution.suggestedVersion ?: "")
                 VersionStatus.TOO_NEW ->
-                    "Version too new - not officially supported, patches will most likely fail"
+                    getString(Res.string.quick_patch_warning_too_new)
                 VersionStatus.TOO_OLD ->
-                    "Version too old - not officially supported, patches will most likely fail"
+                    getString(Res.string.quick_patch_warning_too_old)
                 VersionStatus.UNSUPPORTED_BETWEEN ->
-                    "Unsupported version - patches will most likely fail"
+                    getString(Res.string.quick_patch_warning_unsupported_between)
                 VersionStatus.LATEST_STABLE,
                 VersionStatus.UNKNOWN -> null
             }
@@ -468,7 +474,7 @@ class QuickPatchViewModel(
             )
         } catch (e: Exception) {
             Logger.error("Quick mode: Failed to analyze APK", e)
-            _uiState.value = _uiState.value.copy(error = "Failed to read APK: ${e.message}")
+            _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_read_apk_failed, e.message ?: ""))
             null
         } finally {
             if (isBundleFormat) apkToParse.delete()
@@ -492,7 +498,7 @@ class QuickPatchViewModel(
             _uiState.value = _uiState.value.copy(
                 phase = QuickPatchPhase.DOWNLOADING,
                 progress = 0f,
-                statusMessage = "Preparing patches..."
+                statusMessage = getString(Res.string.quick_patch_status_preparing_patches)
             )
 
             // Use cached patches file if available, otherwise download
@@ -505,13 +511,13 @@ class QuickPatchViewModel(
                 if (patchRelease == null) {
                     _uiState.value = _uiState.value.copy(
                         phase = QuickPatchPhase.READY,
-                        error = "Failed to fetch patches. Check your internet connection."
+                        error = getString(Res.string.quick_patch_fetch_patches_failed)
                     )
                     return@launch
                 }
 
                 _uiState.value = _uiState.value.copy(
-                    statusMessage = "Downloading patches ${patchRelease.tagName}..."
+                    statusMessage = getString(Res.string.quick_patch_status_downloading_patches, patchRelease.tagName)
                 )
 
                 val patchFileResult = patchRepository.downloadPatches(patchRelease) { progress ->
@@ -522,7 +528,7 @@ class QuickPatchViewModel(
                 if (downloadedFile == null) {
                     _uiState.value = _uiState.value.copy(
                         phase = QuickPatchPhase.READY,
-                        error = "Failed to download patches: ${patchFileResult.exceptionOrNull()?.message}"
+                        error = getString(Res.string.quick_patch_download_patches_failed, patchFileResult.exceptionOrNull()?.message ?: "")
                     )
                     return@launch
                 }
@@ -534,7 +540,7 @@ class QuickPatchViewModel(
             isSplitApk = false
             _uiState.value = _uiState.value.copy(
                 phase = QuickPatchPhase.PATCHING,
-                statusMessage = "Patching...",
+                statusMessage = getString(Res.string.quick_patch_status_patching),
                 completedPatches = 0,
                 totalPatches = _uiState.value.compatiblePatches.count { it.isEnabled },
                 isAllStepsDone = false
@@ -557,8 +563,7 @@ class QuickPatchViewModel(
             // Default: shared MorpheData keystore, auto-created on first sign.
             val userKeystore = appConfig.resolvedKeystorePath()
             if (userKeystore != null && !userKeystore.exists()) {
-                val msg = "Configured keystore not found: ${userKeystore.absolutePath}. " +
-                    "Restore the file, pick another in Settings, or clear the setting to use Morphe's default."
+                val msg = getString(Res.string.settings_dialog_error_keystore_not_found, userKeystore.absolutePath)
                 _uiState.value = _uiState.value.copy(phase = QuickPatchPhase.READY, error = msg)
                 Logger.error("Quick patching aborted: $msg")
                 return@launch
@@ -627,7 +632,8 @@ class QuickPatchViewModel(
                         Logger.info("Quick mode: Patching completed - $outputPath (${result.appliedPatches.size} patches)")
                         recordPatchedApp(result, apkFile.absolutePath, outputPath, apkInfo.displayName)
                     } else {
-                        val errorMsg = result.failureDetail ?: result.failureReason ?: "Patching failed for an unknown reason"
+                        val errorMsg = result.failureDetail ?: result.failureReason
+                            ?: getString(Res.string.error_patching_unknown)
                         _uiState.value = _uiState.value.copy(
                             phase = QuickPatchPhase.ERROR,
                             error = errorMsg
@@ -639,7 +645,7 @@ class QuickPatchViewModel(
                     val newLogs = _uiState.value.logs + LogEntry(exceptionStr, LogLevel.ERROR)
                     _uiState.value = _uiState.value.copy(
                         phase = QuickPatchPhase.ERROR,
-                        error = "Error: ${e.message}",
+                        error = getString(Res.string.error_patching_general, e.message ?: ""),
                         logs = newLogs
                     )
                 }
@@ -727,11 +733,14 @@ class QuickPatchViewModel(
     fun cancelPatching() {
         patchingJob?.cancel()
         patchingJob = null
-        _uiState.value = _uiState.value.copy(
-            phase = QuickPatchPhase.READY,
-            statusMessage = "Cancelled",
-            isAllStepsDone = false
-        )
+        screenModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                phase = QuickPatchPhase.READY,
+                statusMessage = getString(Res.string.status_patching_cancelled),
+                isAllStepsDone = false
+            )
+        }
+
     }
 
     /**
@@ -810,12 +819,7 @@ data class QuickApkInfo(
     val minSdk: Int? = null
 ) {
     val formattedSize: String
-        get() = when {
-            fileSize < 1024 -> "$fileSize B"
-            fileSize < 1024 * 1024 -> "%.1f KB".format(fileSize / 1024.0)
-            fileSize < 1024 * 1024 * 1024 -> "%.1f MB".format(fileSize / (1024.0 * 1024.0))
-            else -> "%.2f GB".format(fileSize / (1024.0 * 1024.0 * 1024.0))
-        }
+        get() = FormatUtils.formatFileSize(fileSize)
 }
 
 /**

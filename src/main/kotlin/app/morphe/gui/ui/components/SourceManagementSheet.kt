@@ -53,10 +53,12 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.channelColor
 import app.morphe.gui.util.EnabledSourcesLoader
+import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Cursor
 import java.io.File
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /**
@@ -169,7 +171,7 @@ fun SourceManagementSheet(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    "Patch sources",
+                    stringResource(Res.string.source_sheet_title),
                     fontFamily = font,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
@@ -178,7 +180,7 @@ fun SourceManagementSheet(
                 IconButton(onClick = onRefresh, enabled = enabled, modifier = Modifier.size(28.dp)) {
                     Icon(
                         imageVector = MorpheIcons.Refresh,
-                        contentDescription = "Reload patches",
+                        contentDescription = stringResource(Res.string.source_sheet_reload_description),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (enabled) 0.7f else 0.3f),
                         modifier = Modifier.size(16.dp),
                     )
@@ -204,10 +206,10 @@ fun SourceManagementSheet(
                 ) {
                 Text(
                     text = when {
-                        !enabled -> "Disabled while patching"
+                        !enabled -> stringResource(Res.string.disabled_while_patching)
                         mode == SourceSheetMode.SINGLE_SELECT ->
-                            "Pick which source Quick Patch uses. Multi-source is available in Expert mode"
-                        else -> "Enable/Disable any combination. Patches from all enabled sources are unioned"
+                            stringResource(Res.string.source_sheet_quick_mode_hint)
+                        else -> stringResource(Res.string.source_sheet_multi_mode_hint)
                     },
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
@@ -304,7 +306,7 @@ fun SourceManagementSheet(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        "Add source",
+                        stringResource(Res.string.add_source),
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
                         fontSize = 11.sp
@@ -334,7 +336,7 @@ fun SourceManagementSheet(
                 shape = RoundedCornerShape(corners.small),
             ) {
                 Text(
-                    "Done",
+                    stringResource(Res.string.source_sheet_done_button),
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
                     fontSize = 11.sp
@@ -475,7 +477,7 @@ private fun SourceRow(
                 ) {
                     Icon(
                         imageVector = MorpheIcons.DragIndicator,
-                        contentDescription = "Drag to reorder",
+                        contentDescription = stringResource(Res.string.drag_to_reorder),
                         tint = if (isDragging) accentColor
                                else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
                         modifier = Modifier.size(15.dp)
@@ -512,9 +514,9 @@ private fun SourceRow(
                     ) {
                         Text(
                             text = when (source.type) {
-                                PatchSourceType.DEFAULT -> "Pre-installed"
-                                PatchSourceType.GITHUB, PatchSourceType.GITLAB -> "Remote"
-                                PatchSourceType.LOCAL -> "Local"
+                                PatchSourceType.DEFAULT -> stringResource(Res.string.source_sheet_type_preinstalled)
+                                PatchSourceType.GITHUB, PatchSourceType.GITLAB -> stringResource(Res.string.source_sheet_remote_label)
+                                PatchSourceType.LOCAL -> stringResource(Res.string.source_sheet_local_label)
                             },
                             fontSize = 10.sp,
                             fontFamily = font,
@@ -524,12 +526,16 @@ private fun SourceRow(
                         )
                     }
                 }
+                val builtinLabel = stringResource(Res.string.source_sheet_builtin)
+                val githubLabel = stringResource(Res.string.github_label)
+                val gitlabLabel = stringResource(Res.string.source_sheet_gitlab_label)
+                val localFileLabel = stringResource(Res.string.patch_source_dialog_local_file_label)
                 Text(
                     text = when (source.type) {
-                        PatchSourceType.DEFAULT -> source.url?.removePrefix("https://github.com/") ?: "Built-in"
-                        PatchSourceType.GITHUB -> source.url?.removePrefix("https://github.com/") ?: "GitHub"
-                        PatchSourceType.GITLAB -> source.url?.removePrefix("https://gitlab.com/") ?: "GitLab"
-                        PatchSourceType.LOCAL -> source.filePath?.let { File(it).name } ?: "Local file"
+                        PatchSourceType.DEFAULT -> source.url?.removePrefix("https://github.com/") ?: builtinLabel
+                        PatchSourceType.GITHUB -> source.url?.removePrefix("https://github.com/") ?: githubLabel
+                        PatchSourceType.GITLAB -> source.url?.removePrefix("https://gitlab.com/") ?: gitlabLabel
+                        PatchSourceType.LOCAL -> source.filePath?.let { File(it).name } ?: localFileLabel
                     },
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
@@ -560,7 +566,7 @@ private fun SourceRow(
             ) {
                 if (error != null) {
                     Text(
-                        text = "Failed",
+                        text = stringResource(Res.string.failed),
                         fontSize = 11.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Medium,
@@ -582,7 +588,7 @@ private fun SourceRow(
                         color = accentColor,
                     )
                     Text(
-                        text = "Resolving...",
+                        text = stringResource(Res.string.source_sheet_status_resolving),
                         fontSize = 11.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Medium,
@@ -607,7 +613,7 @@ private fun SourceRow(
                 IconButton(onClick = onEdit, modifier = Modifier.size(28.dp)) {
                     Icon(
                         imageVector = MorpheIcons.Edit,
-                        contentDescription = "Edit",
+                        contentDescription = stringResource(Res.string.source_sheet_edit_description),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
                         modifier = Modifier.size(14.dp)
                     )
@@ -616,7 +622,7 @@ private fun SourceRow(
                     IconButton(onClick = onRemove, modifier = Modifier.size(28.dp)) {
                         Icon(
                             imageVector = MorpheIcons.Close,
-                            contentDescription = "Remove",
+                            contentDescription = stringResource(Res.string.remove),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
                             modifier = Modifier.size(14.dp)
                         )
@@ -670,8 +676,8 @@ private fun ReorderArrows(
     accentColor: Color,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        ReorderArrow(MorpheIcons.KeyboardArrowUp, "Move up", canMoveUp, accentColor, onMoveUp)
-        ReorderArrow(MorpheIcons.KeyboardArrowDown, "Move down", canMoveDown, accentColor, onMoveDown)
+        ReorderArrow(MorpheIcons.KeyboardArrowUp, stringResource(Res.string.source_sheet_move_up_description), canMoveUp, accentColor, onMoveUp)
+        ReorderArrow(MorpheIcons.KeyboardArrowDown, stringResource(Res.string.source_sheet_move_down_description), canMoveDown, accentColor, onMoveDown)
     }
 }
 
@@ -717,12 +723,12 @@ private fun ChannelBadge(
 ) {
     val corners = LocalMorpheCorners.current
     val label = when (channel) {
-        EnabledSourcesLoader.Channel.STABLE_LATEST -> "Latest Stable"
-        EnabledSourcesLoader.Channel.STABLE_OLDER -> "Older Stable"
-        EnabledSourcesLoader.Channel.DEV_LATEST -> "Latest Dev"
-        EnabledSourcesLoader.Channel.DEV_OLDER -> "Older Dev"
-        EnabledSourcesLoader.Channel.LOCAL -> "Local"
-        else -> "Latest Stable"
+        EnabledSourcesLoader.Channel.STABLE_LATEST -> stringResource(Res.string.version_label_latest_stable)
+        EnabledSourcesLoader.Channel.STABLE_OLDER -> stringResource(Res.string.source_sheet_channel_older_stable)
+        EnabledSourcesLoader.Channel.DEV_LATEST -> stringResource(Res.string.version_label_latest_dev)
+        EnabledSourcesLoader.Channel.DEV_OLDER -> stringResource(Res.string.source_sheet_channel_older_dev)
+        EnabledSourcesLoader.Channel.LOCAL -> stringResource(Res.string.source_sheet_local_label)
+        else -> stringResource(Res.string.version_label_latest_stable)
     }
     val color = channelColor(channel)
     Box(
@@ -809,7 +815,7 @@ private fun DeveloperMppExclusionsSection(enabled: Boolean) {
                 .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
         )
         Text(
-            "Ignored .mpp patterns",
+            stringResource(Res.string.source_sheet_ignored_mpp_title),
             fontFamily = font,
             fontWeight = FontWeight.Medium,
             fontSize = 11.sp,
@@ -853,10 +859,7 @@ private fun ExcludedPatternsEditor(
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text = "Only affects folder sources, which auto-load the newest .mpp in a folder. When " +
-                "picking that newest build, files whose name matches a pattern here are skipped. A " +
-                "plain word matches any file containing it (e.g. debug). Use * for globs (e.g. " +
-                "*-debug.mpp). *-sources.mpp and *-javadoc.mpp are always ignored",
+            text = stringResource(Res.string.source_sheet_ignored_mpp_hint),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
@@ -866,7 +869,7 @@ private fun ExcludedPatternsEditor(
         SlimTextField(
             value = draft,
             onValueChange = { draft = it },
-            placeholder = "e.g. debug or *-debug.mpp",
+            placeholder = stringResource(Res.string.source_sheet_ignored_mpp_placeholder),
             font = font,
             accents = accents,
             corners = corners,
@@ -880,7 +883,7 @@ private fun ExcludedPatternsEditor(
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Add,
-                        contentDescription = "Add pattern",
+                        contentDescription = stringResource(Res.string.source_sheet_add_pattern_description),
                         modifier = Modifier.size(16.dp),
                         tint = if (draft.isNotBlank()) accents.primary
                         else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
@@ -909,7 +912,7 @@ private fun ExcludedPatternsEditor(
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Close,
-                        contentDescription = "Remove pattern",
+                        contentDescription = stringResource(Res.string.source_sheet_remove_pattern_description),
                         modifier = Modifier.size(13.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     )

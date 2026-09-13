@@ -32,6 +32,7 @@ import app.morphe.engine.UpdateChecker
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.LocalCustomAccentColor
 import app.morphe.gui.LocalIsPatching
+import app.morphe.gui.LocalLanguageState
 import app.morphe.gui.LocalModeState
 import app.morphe.gui.LocalOnSettingsDismiss
 import app.morphe.gui.LocalOnUpdateChannelChanged
@@ -43,7 +44,9 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.util.Logger
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -57,6 +60,7 @@ fun SettingsDialogHost() {
 
     val themeState = LocalThemeState.current
     val modeState = LocalModeState.current
+    val languageState = LocalLanguageState.current
     val adbPreference = LocalAdbPreference.current
     val configRepository: ConfigRepository = koinInject()
     val updateCheckRepository: UpdateCheckRepository = koinInject()
@@ -105,6 +109,11 @@ fun SettingsDialogHost() {
         SettingsDialog(
             currentTheme = themeState.current,
             onThemeChange = { themeState.onChange(it) },
+            currentLanguage = languageState.current,
+            onLanguageChange = { code ->
+                languageState.onChange(code)
+                scope.launch { configRepository.setLanguage(code) }
+            },
             autoCleanupTempFiles = autoCleanupTempFiles,
             onAutoCleanupChange = { enabled ->
                 autoCleanupTempFiles = enabled
@@ -226,7 +235,7 @@ fun SettingsButton(
     ) {
         Icon(
             imageVector = MorpheIcons.Settings,
-            contentDescription = "Settings",
+            contentDescription = stringResource(Res.string.settings_dialog_title),
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(16.dp)
         )

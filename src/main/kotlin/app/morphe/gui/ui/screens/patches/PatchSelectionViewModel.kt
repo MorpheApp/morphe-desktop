@@ -18,6 +18,7 @@ import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
+import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.resource.CpuArchitecture
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
+import org.jetbrains.compose.resources.getString
 
 /**
  * Per-bundle view of one source's contribution to the patches-selection screen.
@@ -145,7 +147,7 @@ class PatchSelectionViewModel(
                 if (downloadResult.isFailure) {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = "Patches file missing and could not be downloaded: ${downloadResult.exceptionOrNull()?.message}",
+                        error = getString(Res.string.patch_selection_error_patches_file_missing, downloadResult.exceptionOrNull()?.message ?: ""),
                     )
                     return@launch
                 }
@@ -247,7 +249,7 @@ class PatchSelectionViewModel(
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = "Failed to list patches: ${e.message}",
+                        error = getString(Res.string.patch_selection_error_failed_to_list_patches, e.message ?: ""),
                     )
                     Logger.error("Failed to list patches", e)
                 },

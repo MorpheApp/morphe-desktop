@@ -38,6 +38,8 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.components.AppCard
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // SUPPORTED APPS ROW
@@ -64,7 +66,7 @@ internal fun SupportedAppsRow(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Supported apps",
+            text = stringResource(Res.string.quick_patch_supported_apps_title),
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
             fontFamily = font,
@@ -74,7 +76,7 @@ internal fun SupportedAppsRow(
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "Drop the exact APK version for a supported app here",
+            text = stringResource(Res.string.quick_patch_supported_apps_subtitle),
             fontFamily = font,
             fontSize = 12.sp,
             fontWeight = FontWeight.Normal,
@@ -101,7 +103,7 @@ internal fun SupportedAppsRow(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Loading supported apps…",
+                        text = stringResource(Res.string.quick_patch_supported_apps_loading),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -116,19 +118,19 @@ internal fun SupportedAppsRow(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = loadError ?: "Could not load supported apps",
+                        text = loadError ?: stringResource(Res.string.quick_patch_supported_apps_load_error),
                         fontSize = 11.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    ErrorActionPill(text = "Retry", onClick = onRetry)
+                    ErrorActionPill(text = stringResource(Res.string.retry), onClick = onRetry)
                     // Retrying a source that is itself broken (bad URL, corrupt .mpp,
                     // needs a newer patcher) loops forever, so the picker has to be
                     // reachable from the error itself and not only from the header badge.
                     Spacer(modifier = Modifier.width(6.dp))
-                    ErrorActionPill(text = "Change source", onClick = onManageSources)
+                    ErrorActionPill(text = stringResource(Res.string.quick_patch_supported_apps_change_source), onClick = onManageSources)
                 }
             }
             else -> {
@@ -186,7 +188,7 @@ internal fun SupportedAppsRow(
                                 Box(modifier = Modifier.weight(1f)) {
                                     if (searchQuery.isEmpty()) {
                                         Text(
-                                            "Filter apps…",
+                                            stringResource(Res.string.filter_apps_hint),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Normal,
                                             fontFamily = font,
@@ -206,7 +208,7 @@ internal fun SupportedAppsRow(
                                     ) {
                                         Icon(
                                             MorpheIcons.Clear,
-                                            contentDescription = "Clear",
+                                            contentDescription = stringResource(Res.string.clear),
                                             tint = muted.copy(alpha = 0.5f),
                                             modifier = Modifier.size(12.dp)
                                         )
@@ -226,7 +228,7 @@ internal fun SupportedAppsRow(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No matching apps",
+                            text = stringResource(Res.string.quick_patch_supported_apps_no_matches),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -295,9 +297,9 @@ internal fun SupportedAppsRow(
                                 val hasExperimental = app.experimentalVersions.isNotEmpty()
                                 val isExperimental = useExperimentalVersions && hasExperimental
                                 val recommendedVersionText = if (app.recommendedVersion != null) {
-                                    if (isExperimental) "Experimental" else "Stable"
+                                    if (isExperimental) stringResource(Res.string.version_label_experimental) else stringResource(Res.string.version_label_stable)
                                 } else {
-                                    "Any version"
+                                    stringResource(Res.string.quick_patch_supported_apps_version_any)
                                 }
                                 
                                 Text(
@@ -338,8 +340,9 @@ internal fun SupportedAppsRow(
                                             app.recommendedVersion
                                         }
                                         
+                                        val downloadText = stringResource(Res.string.update_banner_download_button)
                                         Text(
-                                            text = versionToDisplay?.let { "v$it" } ?: "Download",
+                                            text = versionToDisplay?.let { "v$it" } ?: downloadText,
                                             fontSize = 11.sp,
                                             fontFamily = font,
                                             color = Color.White,
@@ -347,7 +350,7 @@ internal fun SupportedAppsRow(
                                         )
                                         Icon(
                                             imageVector = MorpheIcons.OpenInNew,
-                                            contentDescription = "Download",
+                                            contentDescription = downloadText,
                                             tint = Color.White,
                                             modifier = Modifier.size(10.dp)
                                         )
