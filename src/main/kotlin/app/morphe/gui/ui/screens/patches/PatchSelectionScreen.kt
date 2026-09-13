@@ -89,6 +89,8 @@ import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheChevron
 import app.morphe.gui.ui.components.MorpheChoiceChip
 import app.morphe.gui.ui.components.MorpheTooltip
+import app.morphe.gui.util.expectedValueHint
+import app.morphe.gui.util.coerceOptionValue
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.MorpheBadgeTone
 import androidx.compose.ui.semantics.semantics
@@ -1372,10 +1374,21 @@ private fun PatchOptionEditor(
                     if (localText != value) localText = value
                 }
 
+                // Blank clears the option, so the patch keeps its own default,
+                // unless the patch demands one.
+                val missing = option.required && localText.isBlank()
+                val badType = localText.isNotBlank() && option.valueType?.let {
+                    coerceOptionValue(it, localText) == null
+                } == true
+                val invalid = missing || badType
+
                 val fieldFocused = remember { mutableStateOf(false) }
                 val fieldBorder by animateColorAsState(
-                    if (fieldFocused.value) accents.primary.copy(alpha = 0.6f)
-                    else accents.primary.copy(alpha = 0.2f),
+                    when {
+                        invalid -> MaterialTheme.colorScheme.error
+                        fieldFocused.value -> accents.primary.copy(alpha = 0.6f)
+                        else -> accents.primary.copy(alpha = 0.2f)
+                    },
                     animationSpec = tween(150)
                 )
 
@@ -1417,6 +1430,20 @@ private fun PatchOptionEditor(
                                 .onFocusChanged { fieldFocused.value = it.isFocused }
                         )
                     }
+                }
+                if (invalid) {
+                    Text(
+                        text = if (missing) {
+                            "This option is required"
+                        } else {
+                            "Expected ${option.valueType?.let { expectedValueHint(it) }}"
+                        },
+                        fontSize = 10.sp,
+                        fontFamily = font,
+                        fontWeight = FontWeight.Normal,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(top = 2.dp),
+                    )
                 }
             }
         }

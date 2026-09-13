@@ -18,6 +18,9 @@ import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import app.morphe.gui.util.Logger
+import app.morphe.gui.util.optionValueFromJson
+import app.morphe.gui.util.optionValueToJson
+import app.morphe.gui.util.coerceOptionValue
 import app.morphe.gui.util.PatchService
 import app.morphe.patcher.resource.CpuArchitecture
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -220,7 +223,7 @@ class PatchSelectionViewModel(
                                 // which is fine, because the same option means the same thing.
                                 for ((patchName, entry) in saved.patches) {
                                     for ((optKey, jsonValue) in entry.options) {
-                                        val optValue = jsonValue.toString().trim('"')
+                                        val optValue = optionValueFromJson(jsonValue)
                                         // Drop a stale customIcon whose folder no longer exists (e.g.
                                         // the user deleted the icon) so it doesn't reappear as "ready".
                                         if (optKey.equals("customIcon", ignoreCase = true) &&
@@ -484,14 +487,19 @@ class PatchSelectionViewModel(
         val state = _uiState.value
         // Group "patchName.optionKey" -> JsonElement under each patch name, ONCE.
         // (Option values are global by design. See setOptionValue.)
+        val declaredTypes = state.bundles
+            .flatMap { it.patches }
+            .associate { patch -> patch.name to patch.options.associate { it.key to it.valueType } }
         val groupedOptions = mutableMapOf<String, MutableMap<String, JsonElement>>()
         for ((compoundKey, value) in state.patchOptionValues) {
             val dotIdx = compoundKey.indexOf('.')
             if (dotIdx <= 0) continue
             val patchName = compoundKey.substring(0, dotIdx)
             val optKey = compoundKey.substring(dotIdx + 1)
+            val type = declaredTypes[patchName]?.get(optKey)
+            val typed = type?.let { coerceOptionValue(it, value) }
             groupedOptions.getOrPut(patchName) { mutableMapOf() }[optKey] =
-                JsonPrimitive(value)
+                if (typed == null) JsonPrimitive(value) else optionValueToJson(typed)
         }
 
         screenModelScope.launch {

@@ -120,11 +120,35 @@ class PatchService {
                 val loadedPatches = PatchBundleLoader.loadFlat(tempCopies)
 
                 // Convert GUI's flat "patchName.optionKey" -> value map
-                // to engine's Map<patchName, Map<optionKey, value>> format
+                // to engine's Map<patchName, Map<optionKey, value>> format.
+                // The GUI edits every option as text, so coerce to the type the
+                // patch declared. A String handed to a Boolean option is dropped
+                // by the patcher, which then silently uses the default.
+                val declaredTypes = loadedPatches.associate { patch ->
+                    (patch.name ?: "") to patch.options.mapValues { (_, opt) -> opt.type }
+                }
                 val patchOptions = enabledPatches.associateWith { patchName ->
+                    val types = declaredTypes[patchName].orEmpty()
                     options.filterKeys { it.startsWith("$patchName.") }
                         .mapKeys { it.key.removePrefix("$patchName.") }
-                        .mapValues { it.value as Any? }
+                        .mapNotNull { (key, raw) ->
+                            val type = types[key]
+                            if (type == null) {
+                                key to raw
+                            } else {
+                                val coerced = coerceOptionValue(type, raw)
+                                if (coerced == null) {
+                                    Logger.warn(
+                                        "Ignoring option '$key' of patch '$patchName': " +
+                                            "'$raw' is not a valid $type"
+                                    )
+                                    null
+                                } else {
+                                    key to coerced
+                                }
+                            }
+                        }
+                        .toMap()
                 }.filter { it.value.isNotEmpty() }
 
                 val keystoreDetails = if (keystorePath != null) {
@@ -275,7 +299,8 @@ class PatchService {
                     description = opt.description ?: "",
                     type = mapKTypeToOptionType(opt.type, opt.key, opt.title ?: opt.key),
                     default = opt.default?.toString(),
-                    required = opt.required
+                    required = opt.required,
+                    valueType = opt.type,
                 )
             },
             isEnabled = this.use
