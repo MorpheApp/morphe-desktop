@@ -29,7 +29,6 @@ import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveVersionWarningContent
 import app.morphe.gui.util.toColor
-import java.io.File
 import kotlinx.coroutines.launch
 
 // ============================================================================
@@ -166,67 +165,6 @@ internal fun RepatchMissingApkDialog(
                     if (picked != null && picked.exists()) onApkPicked(picked.absolutePath)
                 }
             }
-        }
-    }
-}
-
-/** Spinner shown while the latest patches for an update are being resolved. */
-@Composable
-internal fun UpdatePreparingDialog(onCancel: () -> Unit) {
-    MorpheDialogCard(onDismiss = onCancel, title = "Preparing update…") {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(16.dp),
-                strokeWidth = 2.dp,
-                color = LocalMorpheAccents.current.primary,
-            )
-            Spacer(Modifier.width(12.dp))
-            MorpheDialogText("Resolving the latest patches…")
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onCancel)
-        }
-    }
-}
-
-/** Terminal error state for a failed update preparation. */
-@Composable
-internal fun UpdateFailedDialog(message: String, onDismiss: () -> Unit) {
-    MorpheDialogCard(onDismiss = onDismiss, title = "Update failed") {
-        MorpheDialogText(message)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("OK", LocalMorpheAccents.current.primary, filled = true, onClick = onDismiss)
-        }
-    }
-}
-
-/**
- * Offered when the latest patches want a newer app version than the one on
- * record. The user can keep their current APK or fetch the newer one.
- */
-@Composable
-internal fun UpdateAvailableDialog(
-    appName: String,
-    currentVersion: String,
-    targetVersion: String,
-    currentSupported: Boolean,
-    onDismiss: () -> Unit,
-    onUseMyApk: () -> Unit,
-    onGetNewer: () -> Unit,
-) {
-    MorpheDialogCard(onDismiss = onDismiss, title = "Update $appName") {
-        MorpheDialogText(
-            if (currentSupported) {
-                "The latest patches add support for a newer app version (v$targetVersion). " +
-                    "You can grab it, or keep using your v$currentVersion - your call"
-            } else {
-                "Your v$currentVersion is no longer supported by the latest patches. " +
-                    "Get v$targetVersion to keep patching"
-            }
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Use my APK", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onUseMyApk)
-            MorpheDialogButton("Get v$targetVersion", LocalMorpheAccents.current.primary, filled = true, onClick = onGetNewer)
         }
     }
 }

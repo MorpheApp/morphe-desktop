@@ -34,7 +34,7 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 
 /**
  * Outlined, full-width action button. Shared by [SettingsDialog]'s runtime-logs
- * section and [ToolsDialog]'s action list — lifted to its own file so both
+ * section and [ToolsDialog]'s action list, lifted to its own file so both
  * surfaces use one definition.
  */
 @Composable
@@ -54,7 +54,7 @@ internal fun ActionButton(
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
-        modifier = Modifier.fillMaxWidth().hoverable(hoverInteraction),
+        modifier = Modifier.fillMaxWidth().hoverable(hoverInteraction).handCursor(),
         shape = RoundedCornerShape(corners.small),
         border = BorderStroke(
             1.dp,

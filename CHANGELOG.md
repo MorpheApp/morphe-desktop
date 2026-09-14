@@ -1,3 +1,31 @@
+# [1.16.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.2-dev.3...v1.16.0-dev.1) (2026-09-14)
+
+
+### Features
+
+* Prerelease aware updates + Changelog scoped badges + Overhauled "Your Apps" sheet + UI fixes ([#272](https://github.com/MorpheApp/morphe-desktop/issues/272)) ([5cdf1a0](https://github.com/MorpheApp/morphe-desktop/commit/5cdf1a00e6119afcf27ad8393c2b33873c5cd917)), closes [#259](https://github.com/MorpheApp/morphe-desktop/issues/259)
+
+## [1.15.2-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.2-dev.2...v1.15.2-dev.3) (2026-09-13)
+
+
+### Bug Fixes
+
+* Resolve `Boolean/String` type mismatch when applying patch options from GUI ([#308](https://github.com/MorpheApp/morphe-desktop/issues/308)) ([c7c4a11](https://github.com/MorpheApp/morphe-desktop/commit/c7c4a110c285fe445b859effc6da98f92aa3a441))
+
+## [1.15.2-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.2-dev.1...v1.15.2-dev.2) (2026-09-12)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([89e3868](https://github.com/MorpheApp/morphe-desktop/commit/89e3868d941651c6cd4a528a048cde7a454ca3fa))
+
+## [1.15.2-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1...v1.15.2-dev.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([4f878dd](https://github.com/MorpheApp/morphe-desktop/commit/4f878dd3ff474551b11299b56ab0104e260f0c19))
+
 ## [1.15.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.0...v1.15.1) (2026-09-10)
 
 

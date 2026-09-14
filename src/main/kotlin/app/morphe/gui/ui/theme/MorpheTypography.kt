@@ -8,11 +8,9 @@ package app.morphe.gui.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.Font
-import androidx.compose.ui.unit.sp
 
 /**
  * Roboto - the standard sans-serif font used for the main UI.
@@ -41,8 +39,34 @@ val RobotoMono: FontFamily
         Font(resource = "fonts/RobotoMono-Bold.ttf", weight = FontWeight.Bold),
     )
 
-/**
- * Theme-aware font provider.
- */
 val LocalMorpheFont = compositionLocalOf<FontFamily> { FontFamily.Default }
 val LocalMorpheMono = compositionLocalOf<FontFamily> { FontFamily.Monospace }
+
+/**
+ * Material's type scale rebased onto [font].
+ *
+ * Without this the app's font reaches a `Text` only where the call site sets
+ * `fontFamily` by hand, and every one that forgets silently falls back to
+ * Material's default. Passing a typography makes the theme's font the default
+ * everywhere, so an omission inherits the right face instead of Roboto.
+ */
+fun morpheTypography(font: FontFamily): Typography {
+    val base = Typography()
+    return Typography(
+        displayLarge = base.displayLarge.copy(fontFamily = font),
+        displayMedium = base.displayMedium.copy(fontFamily = font),
+        displaySmall = base.displaySmall.copy(fontFamily = font),
+        headlineLarge = base.headlineLarge.copy(fontFamily = font),
+        headlineMedium = base.headlineMedium.copy(fontFamily = font),
+        headlineSmall = base.headlineSmall.copy(fontFamily = font),
+        titleLarge = base.titleLarge.copy(fontFamily = font),
+        titleMedium = base.titleMedium.copy(fontFamily = font),
+        titleSmall = base.titleSmall.copy(fontFamily = font),
+        bodyLarge = base.bodyLarge.copy(fontFamily = font),
+        bodyMedium = base.bodyMedium.copy(fontFamily = font),
+        bodySmall = base.bodySmall.copy(fontFamily = font),
+        labelLarge = base.labelLarge.copy(fontFamily = font),
+        labelMedium = base.labelMedium.copy(fontFamily = font),
+        labelSmall = base.labelSmall.copy(fontFamily = font),
+    )
+}

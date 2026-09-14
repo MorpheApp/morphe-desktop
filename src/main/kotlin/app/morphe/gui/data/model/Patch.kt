@@ -8,6 +8,8 @@ package app.morphe.gui.data.model
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KType
+import kotlinx.serialization.Transient
 
 /**
  * Represents a single patch from Morphe patches bundle.
@@ -52,7 +54,8 @@ data class CompatiblePackage(
     val displayName: String? = null,
     val versions: List<String> = emptyList(),
     val experimentalVersions: List<String> = emptyList(),
-    val appIconColor: String? = null
+    val appIconColor: String? = null,
+    val versionBuildCodes: Map<String, Set<Int>> = emptyMap()
 )
 
 @Serializable
@@ -62,7 +65,9 @@ data class PatchOption(
     val description: String = "",
     val type: PatchOptionType = PatchOptionType.STRING,
     val default: String? = null,
-    val required: Boolean = false
+    val required: Boolean = false,
+    /** The type the patch declared. [type] cannot express a list's element type. */
+    @Transient val valueType: KType? = null,
 )
 
 @Serializable

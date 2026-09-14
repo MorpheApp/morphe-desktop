@@ -28,8 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,8 +38,8 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
 /**
  * Visual weight of a [MorpheButton].
  *  - [PRIMARY]   accent-tinted, the default call to action.
- *  - [GHOST]     transparent with a muted outline — secondary/cancel.
- *  - [DANGER]    red-tinted — destructive actions.
+ *  - [GHOST]     transparent with a muted outline, for secondary and cancel.
+ *  - [DANGER]    red-tinted, for destructive actions.
  */
 enum class MorpheButtonVariant { PRIMARY, GHOST, DANGER }
 
@@ -52,7 +50,7 @@ private val DANGER_COLOR = Color(0xFFE0504D)
  * pinned line-height so the text never sits off-centre), optional leading icon, hover
  * feedback and a disabled state. Prefer this over hand-rolling `Box { Text }` buttons.
  *
- * Width is content-sized by default; pass `Modifier.fillMaxWidth()` (or a weight in a
+ * Width is content-sized by default. Pass `Modifier.fillMaxWidth()` (or a weight in a
  * Row) via [modifier] when you need it to stretch.
  */
 @Composable
@@ -90,7 +88,7 @@ fun MorpheButton(
             .background(bg)
             .border(1.dp, base.copy(alpha = borderAlpha), corner)
             .hoverable(hover)
-            .pointerHoverIcon(PointerIcon.Hand)
+            .handCursor()
             .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center,
