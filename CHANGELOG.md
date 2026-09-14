@@ -1,3 +1,10 @@
+# [1.16.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.2-dev.3...v1.16.0-dev.1) (2026-09-14)
+
+
+### Features
+
+* Prerelease aware updates + Changelog scoped badges + Overhauled "Your Apps" sheet + UI fixes ([#272](https://github.com/MorpheApp/morphe-desktop/issues/272)) ([5cdf1a0](https://github.com/MorpheApp/morphe-desktop/commit/5cdf1a00e6119afcf27ad8393c2b33873c5cd917)), closes [#259](https://github.com/MorpheApp/morphe-desktop/issues/259)
+
 ## [1.15.2-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.2-dev.2...v1.15.2-dev.3) (2026-09-13)
 
 
