@@ -32,8 +32,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.icon.CustomSwatches
+import app.morphe.gui.ui.components.color.CustomSwatches
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.MorpheAccentColors
 import java.awt.Color.HSBtoRGB
 import java.awt.Color.RGBtoHSB
@@ -49,9 +50,11 @@ fun MorpheColorPickerCard(
     argb: Int,
     accents: MorpheAccentColors,
     font: FontFamily,
-    showAlphaAndSaved: Boolean = true,
+    showAlpha: Boolean = true,
+    showSaved: Boolean = true,
     onPick: (Int) -> Unit,
 ) {
+    val corners = LocalMorpheCorners.current
     val init = remember { argbToHsva(argb) }
     var h by remember { mutableStateOf(init[0]) }
     var s by remember { mutableStateOf(init[1]) }
@@ -76,7 +79,7 @@ fun MorpheColorPickerCard(
     }
 
     Surface(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(corners.medium),
         color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, accents.primary.copy(alpha = 0.4f)),
         shadowElevation = 8.dp,
@@ -97,7 +100,7 @@ fun MorpheColorPickerCard(
                 emit()
             }
             
-            if (showAlphaAndSaved) {
+            if (showAlpha) {
                 PickerSlider("A", a, font) {
                     a = it
                     emit()
@@ -111,17 +114,17 @@ fun MorpheColorPickerCard(
                 Box(
                     modifier = Modifier
                         .size(28.dp)
-                        .clip(RoundedCornerShape(4.dp))
+                        .clip(RoundedCornerShape(corners.small))
                         .background(Color(hsvaToArgb(h, s, v, a)))
-                        .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                        .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
                 )
                 
                 Row(
                     modifier = Modifier
                         .weight(1f)
                         .height(26.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .border(1.dp, accents.primary.copy(alpha = 0.25f), RoundedCornerShape(4.dp))
+                        .clip(RoundedCornerShape(corners.small))
+                        .border(1.dp, accents.primary.copy(alpha = 0.25f), RoundedCornerShape(corners.small))
                         .padding(horizontal = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -145,7 +148,7 @@ fun MorpheColorPickerCard(
                 }
             }
             
-            if (showAlphaAndSaved) {
+            if (showSaved) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "Saved",
@@ -174,9 +177,9 @@ fun MorpheColorPickerCard(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .clip(RoundedCornerShape(4.dp))
+                                        .clip(RoundedCornerShape(corners.small))
                                         .background(Color(c))
-                                        .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                        .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
                                         .clickable { setFrom(c) }
                                 )
                                 Box(
@@ -314,28 +317,4 @@ private fun Toggle(
     font: FontFamily,
     dense: Boolean = false,
     onClick: () -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (active) accents.primary.copy(alpha = 0.2f) else Color.Transparent)
-            .border(
-                width = 1.dp,
-                color = accents.primary.copy(alpha = if (active) 0.6f else 0.2f),
-                shape = RoundedCornerShape(6.dp),
-            )
-            .clickable(onClick = onClick)
-            .padding(
-                horizontal = 10.dp,
-                vertical = if (dense) 2.dp else 4.dp,
-            )
-    ) {
-        Text(
-            text = text,
-            fontFamily = font,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            color = if (active) accents.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
+) = MorpheChoiceChip(text = text, active = active, font = font, dense = dense, onClick = onClick)

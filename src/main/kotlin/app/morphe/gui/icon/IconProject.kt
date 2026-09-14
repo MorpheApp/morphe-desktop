@@ -5,6 +5,7 @@
 
 package app.morphe.gui.icon
 
+import app.morphe.gui.data.model.MorpheFill
 import kotlinx.serialization.Serializable
 
 /**
@@ -12,46 +13,21 @@ import kotlinx.serialization.Serializable
  *
  * Adaptive icons are TWO layers the launcher composites and masks itself: a
  * [background] that fills the tile, and a foreground (positioned inside the safe
- * zone). Here the foreground is a **stack of [layers]** — images, text, and
- * shapes — composited bottom-to-top. The stack is flattened into the single
- * foreground PNG on export; [background] is exported separately.
+ * zone). Here the foreground is a **stack of [layers]** (images, text, and
+ * shapes) composited bottom-to-top. The stack is flattened into the single
+ * foreground PNG on export. [background] is exported separately.
  *
  * [Serializable] so a project can be saved to `project.json` and reopened.
  */
 @Serializable
 data class IconProject(
-    val background: Background = Background.Solid(0xFFFFFFFF.toInt()),
+    val background: MorpheFill = MorpheFill.Solid(0xFFFFFFFF.toInt()),
     val layers: List<Layer> = emptyList(),
 ) {
 
-    /** What fills the icon tile behind the foreground. */
-    @Serializable
-    sealed interface Background {
-        @Serializable
-        data class Solid(val argb: Int) : Background
-
-        /** Multi-stop gradient. [angleDeg] applies to LINEAR (0 = →, 90 = ↓) and CONIC. */
-        @Serializable
-        data class Gradient(
-            val stops: List<Stop> = listOf(Stop(0f, 0xFF00E5FF.toInt()), Stop(1f, 0xFF000000.toInt())),
-            val type: GradientType = GradientType.LINEAR,
-            val angleDeg: Float = 45f,
-        ) : Background
-
-        /** A gradient colour stop at [position] (0..1) along the gradient. */
-        @Serializable
-        data class Stop(val position: Float, val argb: Int)
-
-        @Serializable
-        data class Image(val sourcePath: String) : Background
-    }
-
-    @Serializable
-    enum class GradientType { LINEAR, RADIAL, CONIC }
-
     /**
      * One foreground element with its own transform, colour adjust and effects.
-     * [content] is the element (image/text/shape); everything else is applied
+     * [content] is the element (image, text or shape). Everything else is applied
      * uniformly regardless of element type. Transform is in tile-fraction units.
      */
     @Serializable

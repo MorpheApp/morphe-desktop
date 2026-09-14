@@ -6,13 +6,7 @@
 package app.morphe.gui.ui.screens.quick.components
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -26,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import app.morphe.gui.ui.theme.desktopScreenEnter
 import app.morphe.gui.ui.theme.desktopScreenExit
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -130,15 +123,15 @@ internal fun PatchingContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f))
+                        .clip(RoundedCornerShape(corners.small))
+                        .background(accents.primary.copy(alpha = 0.14f))
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Info,
                         contentDescription = null,
                         modifier = Modifier.size(14.dp),
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        tint = accents.primary
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
@@ -146,7 +139,7 @@ internal fun PatchingContent(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = accents.primary
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))

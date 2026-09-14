@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.result
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,11 +14,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -30,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,9 +39,12 @@ import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.ui.components.MorpheActionButton
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.theme.panelFill
+import app.morphe.gui.ui.theme.screenScrim
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
@@ -116,8 +117,8 @@ fun ResultScreenContent(outputPath: String) {
             adbManager.listInstalledPackages(device.id).getOrNull()?.contains(pkg) == true
     }
 
-    // Link-handling ("open with") state. The stock package — needed only for the
-    // optional "stop stock from opening links" half — comes from the recall
+    // Link-handling ("open with") state. The stock package, needed only for the
+    // optional "stop stock from opening links" half, comes from the recall
     // record for this output (which stores original + renamed package names).
     var stockPackage by remember { mutableStateOf<String?>(null) }
     var disableStockLinks by remember { mutableStateOf(false) }
@@ -232,6 +233,7 @@ fun ResultScreenContent(outputPath: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(screenScrim)
     ) {
         // Header row
         Row(
@@ -291,7 +293,6 @@ fun ResultScreenContent(outputPath: String) {
                 TopBarRow(allowCacheClear = false)
         }
 
-        // Content — vertically centered when it fits, scrollable when it overflows
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
@@ -384,9 +385,9 @@ fun ResultScreenContent(outputPath: String) {
                 )
             }
 
-            // ADB help text — only when the toggle is ON but the binary is
+            // ADB help text, only when the toggle is ON but the binary is
             // missing. When the toggle is OFF, AdbDisabledHint above carries
-            // the explanation; suppress the duplicate "ADB not found" text.
+            // the explanation, so suppress the duplicate "ADB not found" text.
             if (!isAdbDisabledByUser && monitorState.isAdbAvailable == false) {
                 Text(
                     text = "ADB not found. Install Android SDK Platform Tools to enable direct installation",
@@ -401,7 +402,7 @@ fun ResultScreenContent(outputPath: String) {
 
             // Patch Another button
             Spacer(Modifier.height(4.dp))
-            PatchAnotherButton(corners = corners, font = font)
+            PatchAnotherButton()
 
             Spacer(Modifier.height(8.dp))
             }
@@ -746,7 +747,7 @@ private fun AdbInstallSection(
  * Route the patched app's web links to it (and optionally stop the stock app
  * from grabbing them). Shown only once the patched app is installed on a ready
  * device. The stock-disable checkbox appears only when a rename patch was used
- * (a distinct [stockPackage]); on-device, [AdbManager.setLinkHandling] still
+ * (a distinct [stockPackage]). On-device, [AdbManager.setLinkHandling] still
  * verifies the stock app is actually installed before touching it.
  */
 @Composable
@@ -798,7 +799,6 @@ private fun LinkHandlingSection(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            // Optional OFF half — only when a rename was used so stock + patched coexist.
             if (stockPackage != null) {
                 Spacer(Modifier.height(12.dp))
                 val stockName = SupportedApp.getDisplayName(stockPackage)
@@ -984,8 +984,11 @@ private fun CleanupSection(
                 RoundedCornerShape(corners.medium)
             )
             .background(
-                if (tempFilesCleared) accents.secondary.copy(alpha = 0.04f)
-                else MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                if (tempFilesCleared) {
+                    lerp(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp), accents.secondary, 0.04f)
+                } else {
+                    MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                }
             )
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -1051,7 +1054,7 @@ private fun CleanupSection(
 
 /**
  * Replaces [AdbInstallSection] when the user has the auto-start ADB toggle off.
- * Mirrors the bordered card layout so the result screen doesn't collapse —
+ * Mirrors the bordered card layout so the result screen doesn't collapse,
  * but the install button is replaced with a clearly-disabled "ENABLE ADB"
  * hint that flips the toggle in one click.
  */
@@ -1154,17 +1157,9 @@ private fun OutputFileCard(
             .widthIn(max = 520.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(corners.medium))
+            .background(panelFill)
             .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
     ) {
-        // Teal left stripe
-        Box(
-            modifier = Modifier
-                .width(3.dp)
-                .fillMaxHeight()
-                .background(accents.secondary)
-                .align(Alignment.CenterStart)
-        )
 
         Column(
             modifier = Modifier
@@ -1266,31 +1261,11 @@ private fun OutputFileCard(
 }
 
 @Composable
-private fun PatchAnotherButton(
-    corners: MorpheCornerStyle,
-    font: FontFamily,
-) {
-    val font = LocalMorpheFont.current
+private fun PatchAnotherButton() {
     val navigator = LocalNavigator.currentOrThrow
-    val accents = LocalMorpheAccents.current
-    OutlinedButton(
+    MorpheActionButton(
+        label = "Patch another",
+        modifier = Modifier.widthIn(max = 520.dp).fillMaxWidth(),
         onClick = { navigator.popUntilRoot() },
-        modifier = Modifier
-            .widthIn(max = 520.dp)
-            .fillMaxWidth()
-            .height(42.dp),
-        shape = RoundedCornerShape(corners.small),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-            contentColor = MaterialTheme.colorScheme.primary
-        )
-    ) {
-        Text(
-            text = "Patch another",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font
-        )
-    }
+    )
 }
