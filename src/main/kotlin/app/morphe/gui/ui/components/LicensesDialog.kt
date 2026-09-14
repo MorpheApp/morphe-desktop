@@ -54,10 +54,12 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheAccentColors
 import app.morphe.gui.ui.theme.MorpheCornerStyle
 import app.morphe.gui.util.Logger
+import app.morphe.morphe_desktop.generated.resources.*
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
-
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun LicensesDialog(onDismiss: () -> Unit) {
@@ -128,7 +130,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "Open Source licenses",
+                            text = stringResource(Res.string.licenses_dialog_title),
                             fontFamily = font,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
@@ -170,7 +172,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                         ) {
                             Icon(
                                 imageVector = MorpheIcons.Close,
-                                contentDescription = "Close",
+                                contentDescription = stringResource(Res.string.close),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
                                     alpha = if (isCloseHovered) 0.85f else 0.55f
                                 ),
@@ -192,8 +194,8 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                 // ── List ──
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when {
-                        libs == null -> EmptyHint(text = "// failed to load licenses", font = font, isError = true)
-                        filtered.isEmpty() -> EmptyHint(text = "// no matches", font = font, isError = false)
+                        libs == null -> EmptyHint(text = stringResource(Res.string.licenses_dialog_empty_failed), font = font, isError = true)
+                        filtered.isEmpty() -> EmptyHint(text = stringResource(Res.string.licenses_dialog_empty_no_matches), font = font, isError = false)
                         else -> {
                             LazyColumn(
                                 state = listState,
@@ -236,8 +238,8 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (searchQuery.isBlank()) "${filtered.size} libraries"
-                               else "${filtered.size} / ${libs?.libraries?.size ?: 0} matched",
+                        text = if (searchQuery.isBlank()) pluralStringResource(Res.plurals.licenses_dialog_footer_count, filtered.size, filtered.size)
+                               else stringResource(Res.string.licenses_dialog_footer_matched, filtered.size, libs?.libraries?.size ?: 0),
                         fontFamily = font,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
@@ -249,7 +251,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                         border = BorderStroke(1.dp, borderColor)
                     ) {
                         Text(
-                            "Close",
+                            stringResource(Res.string.close),
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
                             fontSize = 11.sp,
@@ -294,7 +296,7 @@ private fun LicenseSearchBar(query: String, onQueryChange: (String) -> Unit) {
     ) {
         Icon(
             imageVector = MorpheIcons.Search,
-            contentDescription = "Search",
+            contentDescription = stringResource(Res.string.search),
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
             modifier = Modifier.size(16.dp)
         )
@@ -302,7 +304,7 @@ private fun LicenseSearchBar(query: String, onQueryChange: (String) -> Unit) {
         Box(modifier = Modifier.weight(1f)) {
             if (query.isEmpty()) {
                 Text(
-                    text = "Search libraries, SPDX id, uniqueId…",
+                    text = stringResource(Res.string.licenses_search_placeholder),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -335,7 +337,7 @@ private fun LicenseSearchBar(query: String, onQueryChange: (String) -> Unit) {
             ) {
                 Icon(
                     imageVector = MorpheIcons.Clear,
-                    contentDescription = "Clear",
+                    contentDescription = stringResource(Res.string.clear),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier.size(14.dp)
                 )
@@ -425,7 +427,7 @@ private fun LibraryRow(
             ) {
                 if (library.licenses.isEmpty()) {
                     LicenseChip(
-                        label = "Unknown",
+                        label = stringResource(Res.string.unknown),
                         font = font,
                         corners = corners,
                         accentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f),
@@ -446,7 +448,7 @@ private fun LibraryRow(
 
             Icon(
                 imageVector = MorpheIcons.ExpandMore,
-                contentDescription = if (expanded) "Collapse" else "Expand",
+                contentDescription = if (expanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isHovered) 0.7f else 0.4f),
                 modifier = Modifier
                     .size(16.dp)
@@ -483,9 +485,9 @@ private fun LibraryRow(
                 if (devs.isNotEmpty() || org != null) {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         if (devs.isNotEmpty()) {
-                            MetaLine(label = "Authors", value = devs.joinToString(", "), font = font)
+                            MetaLine(label = stringResource(Res.string.licenses_row_authors_label), value = devs.joinToString(", "), font = font)
                         }
-                        org?.let { MetaLine(label = "Org", value = it, font = font) }
+                        org?.let { MetaLine(label = stringResource(Res.string.licenses_row_org_label), value = it, font = font) }
                     }
                 }
 
@@ -494,10 +496,10 @@ private fun LibraryRow(
                 if (website != null || source != null) {
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         website?.let {
-                            LinkPill(label = "Website", url = it, font = font, corners = corners, borderColor = borderColor)
+                            LinkPill(label = stringResource(Res.string.app_info_dialog_link_website), url = it, font = font, corners = corners, borderColor = borderColor)
                         }
                         source?.let {
-                            LinkPill(label = "Source", url = it, font = font, corners = corners, borderColor = borderColor)
+                            LinkPill(label = stringResource(Res.string.licenses_row_link_source), url = it, font = font, corners = corners, borderColor = borderColor)
                         }
                     }
                 }
@@ -521,7 +523,7 @@ private fun MetaLine(
             fontWeight = FontWeight.Medium,
             fontFamily = font,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.width(56.dp)
+            modifier = Modifier.width(100.dp)
         )
         Text(
             text = value,
@@ -685,7 +687,7 @@ private fun NoticeButton(
             .padding(horizontal = 10.dp, vertical = 5.dp)
     ) {
         Text(
-            text = "Notice",
+            text = stringResource(Res.string.licenses_notice_button),
             fontSize = 11.sp,
             fontFamily = font,
             fontWeight = FontWeight.Normal,
@@ -727,13 +729,13 @@ private fun NoticeTextDialog(onDismiss: () -> Unit) {
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         Text(
-                            text = "Morphe Notice",
+                            text = stringResource(Res.string.licenses_notice_title),
                             fontFamily = font,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
                         )
                         Text(
-                            text = "Required attribution & warranty statement (GPLv3 §7)",
+                            text = stringResource(Res.string.licenses_notice_subtitle),
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
                             fontSize = 11.sp,
@@ -749,7 +751,7 @@ private fun NoticeTextDialog(onDismiss: () -> Unit) {
                     ) {
                         Icon(
                             imageVector = MorpheIcons.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(Res.string.close),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                             modifier = Modifier.size(14.dp)
                         )
@@ -844,7 +846,7 @@ private fun LicenseTextDialog(license: License, onDismiss: () -> Unit) {
                     ) {
                         Icon(
                             imageVector = MorpheIcons.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(Res.string.close),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                             modifier = Modifier.size(14.dp)
                         )
@@ -882,7 +884,7 @@ private fun LicenseTextDialog(license: License, onDismiss: () -> Unit) {
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             Text(
-                                text = "// full license text not bundled",
+                                text = stringResource(Res.string.licenses_text_not_bundled),
                                 fontFamily = font,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
@@ -890,14 +892,14 @@ private fun LicenseTextDialog(license: License, onDismiss: () -> Unit) {
                             )
                             license.url?.takeIf { it.isNotBlank() }?.let { url ->
                                 Text(
-                                    text = "Open the canonical license text:",
+                                    text = stringResource(Res.string.licenses_text_open_canonical),
                                     fontFamily = font,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Normal,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 LinkPill(
-                                    label = "Open license",
+                                    label = stringResource(Res.string.licenses_text_open_license_button),
                                     url = url,
                                     font = font,
                                     corners = corners,
@@ -922,7 +924,7 @@ private fun LicenseTextDialog(license: License, onDismiss: () -> Unit) {
                         border = BorderStroke(1.dp, borderColor)
                     ) {
                         Text(
-                            "Close",
+                            stringResource(Res.string.close),
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
                             fontSize = 11.sp,

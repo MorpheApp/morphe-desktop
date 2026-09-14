@@ -27,6 +27,7 @@ import app.morphe.gui.ui.components.MorpheAlertDialog
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import java.security.KeyStore
 import java.security.MessageDigest
@@ -34,6 +35,7 @@ import java.security.Provider
 import java.security.Security
 import java.security.cert.X509Certificate
 import java.text.SimpleDateFormat
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun KeystoreInfoDialog(
@@ -55,7 +57,7 @@ internal fun KeystoreInfoDialog(
         onDismiss = onDismiss,
         title = {
             Text(
-                "Certificate info",
+                stringResource(Res.string.settings_cert_info_title),
                 fontFamily = font,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
@@ -70,8 +72,12 @@ internal fun KeystoreInfoDialog(
                     // Show warnings first if there are any
                     if (info.warnings.isNotEmpty()) {
                         info.warnings.forEach { warning ->
+                            val warningText = when (warning) {
+                                is KeystoreWarning.AliasNotFound -> stringResource(Res.string.settings_cert_warning_alias_not_found, warning.alias)
+                                is KeystoreWarning.KeyPasswordIncorrect -> stringResource(Res.string.settings_cert_warning_key_password_incorrect, warning.alias)
+                            }
                             Text(
-                                text = warning,
+                                text = warningText,
                                 fontSize = 11.sp,
                                 fontFamily = font,
                                 fontWeight = FontWeight.Normal,
@@ -84,15 +90,15 @@ internal fun KeystoreInfoDialog(
                         HorizontalDivider(color = borderColor)
                     }
 
-                    CertInfoRow("Alias", info.alias, font)
-                    CertInfoRow("Issuer", info.issuer, font)
-                    CertInfoRow("Valid from", info.validFrom, font)
-                    CertInfoRow("Valid until", info.validTo, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_alias), info.alias, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_issuer), info.issuer, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_from), info.validFrom, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_until), info.validTo, font)
 
                     HorizontalDivider(color = borderColor)
 
                     Text(
-                        "SHA-256 fingerprint",
+                        stringResource(Res.string.settings_cert_info_sha256),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = font,
@@ -112,7 +118,7 @@ internal fun KeystoreInfoDialog(
                     HorizontalDivider(color = borderColor)
 
                     Text(
-                        "SHA-1 fingerprint",
+                        stringResource(Res.string.settings_cert_info_sha1),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = font,
@@ -131,7 +137,7 @@ internal fun KeystoreInfoDialog(
                 }
             } else {
                 Text(
-                    text = "Could not read keystore. Check the password and alias",
+                    text = stringResource(Res.string.settings_cert_info_could_not_read),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -147,7 +153,7 @@ internal fun KeystoreInfoDialog(
                 border = BorderStroke(1.dp, borderColor)
             ) {
                 Text(
-                    "Close",
+                    stringResource(Res.string.close),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -181,6 +187,11 @@ private fun CertInfoRow(
     }
 }
 
+internal sealed interface KeystoreWarning {
+    data class AliasNotFound(val alias: String) : KeystoreWarning
+    data class KeyPasswordIncorrect(val alias: String) : KeystoreWarning
+}
+
 internal data class KeystoreInfoResult(
     val alias: String,
     val issuer: String,
@@ -188,7 +199,7 @@ internal data class KeystoreInfoResult(
     val validTo: String,
     val sha256Fingerprint: String,
     val sha1Fingerprint: String,
-    val warnings: List<String> = emptyList()
+    val warnings: List<KeystoreWarning> = emptyList()
 )
 
 internal fun readKeystoreInfo(
@@ -227,7 +238,7 @@ internal fun readKeystoreInfo(
 
             file.inputStream().use { ks.load(it, passwordChars) }
 
-            val warnings = mutableListOf<String>()
+            val warnings = mutableListOf<KeystoreWarning>()
 
             // Alias must match exactly
             if (!ks.containsAlias(alias)) {
@@ -238,7 +249,7 @@ internal fun readKeystoreInfo(
                     validTo = "",
                     sha256Fingerprint = "",
                     sha1Fingerprint = "",
-                    warnings = listOf("Alias \"$alias\" not found in keystore")
+                    warnings = listOf(KeystoreWarning.AliasNotFound(alias))
                 )
             }
 
@@ -255,7 +266,7 @@ internal fun readKeystoreInfo(
                     validTo = "",
                     sha256Fingerprint = "",
                     sha1Fingerprint = "",
-                    warnings = listOf("Key password is incorrect for alias \"$alias\"")
+                    warnings = listOf(KeystoreWarning.KeyPasswordIncorrect(alias))
                 )
             }
 

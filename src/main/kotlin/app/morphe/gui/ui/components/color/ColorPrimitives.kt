@@ -34,6 +34,8 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 private val SWATCH_SIZE = 22.dp
 
@@ -122,7 +124,7 @@ fun MorpheSwatchRow(
             ) {
                 Icon(
                     MorpheIcons.Palette,
-                    contentDescription = "Custom colour",
+                    contentDescription = stringResource(Res.string.custom_color_description),
                     tint = accents.primary,
                     modifier = Modifier.size(13.dp),
                 )

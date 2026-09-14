@@ -28,7 +28,9 @@ import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChangelogDialog(
@@ -41,10 +43,11 @@ fun ChangelogDialog(
 
     var showAllReleases by remember { mutableStateOf(false) }
 
+    val notAvailableMsg = stringResource(Res.string.changelog_not_available)
     val rawChangelog = try {
         File("CHANGELOG.md").readText()
     } catch (e: Exception) {
-        "Changelog not available."
+        notAvailableMsg
     }
     
     val chunks = rawChangelog.split(Regex("\\n(?=## )"), limit = 2)
@@ -67,7 +70,7 @@ fun ChangelogDialog(
             horizontalAlignment = Alignment.Start,
         ) {
             Text(
-                text = "View changelog",
+                text = stringResource(Res.string.changelog_dialog_title),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = font,
@@ -97,7 +100,7 @@ fun ChangelogDialog(
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
                         ) {
                             Text(
-                                text = "Show older releases",
+                                text = stringResource(Res.string.changelog_show_older_button),
                                 fontFamily = font,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 11.sp,
@@ -136,7 +139,7 @@ fun ChangelogDialog(
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = "View on GitHub",
+                        text = stringResource(Res.string.changelog_view_on_github_button),
                         fontFamily = font,
                         fontWeight = FontWeight.Medium,
                         fontSize = 11.sp,
@@ -150,7 +153,7 @@ fun ChangelogDialog(
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = "Close",
+                        text = stringResource(Res.string.close),
                         fontFamily = font,
                         fontWeight = FontWeight.Medium,
                         fontSize = 11.sp,

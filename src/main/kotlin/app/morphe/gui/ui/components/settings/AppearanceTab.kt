@@ -14,6 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -24,7 +25,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,20 +41,27 @@ import app.morphe.gui.LocalBackgroundType
 import app.morphe.gui.LocalEnableParallax
 import app.morphe.gui.LocalSharpCorners
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.data.repository.LanguageRepository
 import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.LanguageDialog
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheChoiceChip
 import app.morphe.gui.ui.components.MorpheColorPickerCard
 import app.morphe.gui.ui.components.color.CustomSwatches
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.THEME_PRESET_COLORS
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -57,16 +71,122 @@ internal fun AppearanceTab(
     customAccentColorArgb: Int?,
     onCustomAccentColorChange: (Int?) -> Unit,
     borderColor: Color,
+    currentLanguage: String = LanguageRepository.SYSTEM_CODE,
+    onLanguageChange: (String) -> Unit = {},
 ) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
     var showCustomColorDialog by remember { mutableStateOf(false) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val configRepo: ConfigRepository = koinInject()
+    val languageRepository: LanguageRepository = remember { LanguageRepository() }
+    val currentLanguageOption = remember(currentLanguage) {
+        languageRepository.getLanguageByCode(currentLanguage, currentLanguage)
+    }
 
-    SectionLabel("Theme", font, icon = MorpheIcons.Palette)
+    if (showLanguageDialog) {
+        LanguageDialog(
+            currentLanguageCode = currentLanguage,
+            onLanguageSelected = { newCode ->
+                onLanguageChange(newCode)
+                showLanguageDialog = false
+            },
+            onDismiss = { showLanguageDialog = false },
+            font = font,
+            languageRepository = languageRepository
+        )
+    }
+
+    SectionLabel(stringResource(Res.string.settings_section_language), font, icon = MorpheIcons.Language)
+    Spacer(Modifier.height(8.dp))
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = currentLanguageOption.flag,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(end = 12.dp)
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = stringResource(Res.string.settings_language_current_title),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontFamily = font,
+            )
+            Spacer(Modifier.height(2.dp))
+            val isSystem = currentLanguageOption.code == LanguageRepository.SYSTEM_CODE
+            Text(
+                text = if (isSystem) stringResource(Res.string.settings_theme_system) else currentLanguageOption.displayName,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontFamily = font,
+            )
+        }
+        IconButton(
+            onClick = {
+                showLanguageDialog = true
+            },
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(
+                imageVector = MorpheIcons.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .size(16.dp)
+                    .autoMirrored()
+            )
+        }
+    }
+
+    Spacer(Modifier.height(8.dp))
+
+    val linkText = "morphe.software/translate"
+    val linkUrl = "https://morphe.software/translate"
+    val rawTranslationHint = stringResource(Res.string.settings_language_community_translation_hint, linkText)
+    val linkIndex = rawTranslationHint.indexOf(linkText)
+    val annotatedString = buildAnnotatedString {
+        if (linkIndex != -1) {
+            append(rawTranslationHint.substring(0, linkIndex))
+            withLink(
+                LinkAnnotation.Url(
+                    linkUrl,
+                    TextLinkStyles(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    )
+                )
+            ) {
+                append(linkText)
+            }
+            append(rawTranslationHint.substring(linkIndex + linkText.length))
+        } else {
+            append(rawTranslationHint)
+        }
+    }
+
+    Text(
+        text = annotatedString,
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Normal,
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+        fontFamily = font,
+        lineHeight = 14.sp
+    )
+
+    SettingsDivider(borderColor)
+
+    SectionLabel(stringResource(Res.string.settings_section_theme), font, icon = MorpheIcons.Palette)
     Spacer(Modifier.height(8.dp))
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -106,7 +226,7 @@ internal fun AppearanceTab(
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = theme.toDisplayName(),
+                    text = stringResource(theme.displayNameRes),
                     fontSize = 11.sp,
                     fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                     fontFamily = font,
@@ -119,7 +239,7 @@ internal fun AppearanceTab(
 
     SettingsDivider(borderColor)
 
-    SectionLabel("Accent color", font, icon = MorpheIcons.Palette)
+    SectionLabel(stringResource(Res.string.settings_section_accent_color), font, icon = MorpheIcons.Palette)
     Spacer(Modifier.height(8.dp))
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -132,7 +252,7 @@ internal fun AppearanceTab(
         ) {
             Icon(
                 imageVector = MorpheIcons.Close,
-                contentDescription = "Clear accent color",
+                contentDescription = stringResource(Res.string.settings_accent_clear_description),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -167,7 +287,7 @@ internal fun AppearanceTab(
             ) {
                 Icon(
                     imageVector = MorpheIcons.Edit,
-                    contentDescription = "Custom Accent Color",
+                    contentDescription = stringResource(Res.string.settings_accent_custom_description),
                     tint = if (isCustomNonPreset) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -192,7 +312,7 @@ internal fun AppearanceTab(
 
     SettingsDivider(borderColor)
 
-    SectionLabel("App cards", font, icon = MorpheIcons.Gradient)
+    SectionLabel(stringResource(Res.string.settings_section_app_cards), font, icon = MorpheIcons.Gradient)
     Spacer(Modifier.height(8.dp))
 
     val cardFills = LocalCardFills.current
@@ -209,21 +329,21 @@ internal fun AppearanceTab(
         ) {}
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = "Colour for every card",
+                text = stringResource(Res.string.settings_app_cards_color_all),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = font,
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = "Cards you have customised individually keep their own colour",
+                text = stringResource(Res.string.settings_app_cards_color_all_desc),
                 fontSize = 11.sp,
                 fontFamily = font,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         MorpheChoiceChip(
-            text = "Customise",
+            text = stringResource(Res.string.customize),
             active = false,
             font = font,
             onClick = { cardFills.requestEditGlobal() },
@@ -238,16 +358,14 @@ internal fun AppearanceTab(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                text = "${cardFills.fills.size} card" +
-                    (if (cardFills.fills.size == 1) "" else "s") +
-                    " override this",
+                text = pluralStringResource(Res.plurals.settings_app_cards_override_count, cardFills.fills.size, cardFills.fills.size),
                 fontSize = 11.sp,
                 fontFamily = font,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f),
             )
             MorpheChoiceChip(
-                text = "Reset",
+                text = stringResource(Res.string.settings_dialog_reset_button),
                 active = false,
                 font = font,
                 onClick = { cardFills.onClearAll() },
@@ -257,7 +375,7 @@ internal fun AppearanceTab(
 
     SettingsDivider(borderColor)
 
-    SectionLabel("Background animation", font, icon = MorpheIcons.Wallpaper)
+    SectionLabel(stringResource(Res.string.settings_section_background_animation), font, icon = MorpheIcons.Wallpaper)
     Spacer(Modifier.height(8.dp))
 
     val bgState = LocalBackgroundType.current
@@ -306,7 +424,7 @@ internal fun AppearanceTab(
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = bgType.displayName,
+                    text = stringResource(bgType.displayNameRes),
                     fontSize = 11.sp,
                     fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                     fontFamily = font,
@@ -320,8 +438,8 @@ internal fun AppearanceTab(
     Spacer(Modifier.height(14.dp))
 
     SettingToggleRow(
-        label = "Parallax effect",
-        description = "Smooth background shifting when moving the mouse",
+        label = stringResource(Res.string.settings_toggle_parallax_label),
+        description = stringResource(Res.string.settings_toggle_parallax_desc),
         checked = parallaxState.value,
         onCheckedChange = {
             parallaxState.value = it
@@ -336,8 +454,8 @@ internal fun AppearanceTab(
 
     val sharpCornersState = LocalSharpCorners.current
     SettingToggleRow(
-        label = "Sharp corners",
-        description = "Square off cards, dialogs and buttons",
+        label = stringResource(Res.string.settings_toggle_sharp_corners_label),
+        description = stringResource(Res.string.settings_toggle_sharp_corners_desc),
         checked = sharpCornersState.value,
         onCheckedChange = { enabled ->
             sharpCornersState.value = enabled
@@ -349,14 +467,27 @@ internal fun AppearanceTab(
     )
 }
 
-private fun ThemePreference.toDisplayName(): String {
-    return when (this) {
-        ThemePreference.LIGHT -> "Light"
-        ThemePreference.DARK -> "Dark"
-        ThemePreference.AMOLED -> "Amoled"
-        ThemePreference.SYSTEM -> "System"
+private val ThemePreference.displayNameRes: StringResource
+    get() = when (this) {
+        ThemePreference.LIGHT -> Res.string.settings_theme_light
+        ThemePreference.DARK -> Res.string.settings_theme_dark
+        ThemePreference.AMOLED -> Res.string.settings_theme_amoled
+        ThemePreference.SYSTEM -> Res.string.settings_theme_system
     }
-}
+
+private val BackgroundType.displayNameRes: StringResource
+    get() = when (this) {
+        BackgroundType.CIRCLES -> Res.string.settings_background_circles
+        BackgroundType.RINGS -> Res.string.settings_background_rings
+        BackgroundType.MESH -> Res.string.settings_background_mesh
+        BackgroundType.SPACE -> Res.string.settings_background_space
+        BackgroundType.SHAPES -> Res.string.settings_background_shapes
+        BackgroundType.SNOW -> Res.string.settings_background_snow
+        BackgroundType.GRID -> Res.string.settings_background_grid
+        BackgroundType.PARTICLES -> Res.string.settings_background_particles
+        BackgroundType.MATRIX -> Res.string.settings_background_matrix
+        BackgroundType.NONE -> Res.string.none
+    }
 
 private fun ThemePreference.icon(): ImageVector {
     return when (this) {

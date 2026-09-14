@@ -44,9 +44,12 @@ import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.patcher.apk.ApkSigner
+import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import java.util.Date
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SigningSection(
@@ -83,7 +86,7 @@ internal fun SigningSection(
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         CollapsibleSection(
-            title = "Signing",
+            title = stringResource(Res.string.settings_section_signing),
             font = font,
             expanded = expanded,
             icon = icon,
@@ -91,8 +94,8 @@ internal fun SigningSection(
         ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
-            text = if (!enabled) "Disabled while patching"
-                   else "Keystore used to sign patched APKs",
+            text = if (!enabled) stringResource(Res.string.disabled_while_patching)
+                   else stringResource(Res.string.settings_signing_desc),
             fontSize = 11.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
             fontFamily = font,
@@ -119,7 +122,7 @@ internal fun SigningSection(
                 Text(
                     text = if (keystorePath != null) {
                         keystoreFile?.name ?: keystorePath
-                    } else "Default (auto-generated)",
+                    } else stringResource(Res.string.settings_signing_default_keystore),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -133,7 +136,7 @@ internal fun SigningSection(
                 onClick = {
                     scope.launch {
                         val selected = MorpheFilePicker.pickFile(
-                            title = "Select keystore",
+                            title = getString(Res.string.settings_signing_picker_title),
                             extensions = listOf("keystore", "jks", "bks", "p12", "pfx"),
                         ) ?: return@launch
                         val validExtensions = listOf(".keystore", ".jks", ".bks", ".p12", ".pfx")
@@ -174,7 +177,7 @@ internal fun SigningSection(
                                 }
                             }
                         } else {
-                            keystoreError = "Invalid file type. Expected: ${validExtensions.joinToString(", ")}"
+                            keystoreError = getString(Res.string.settings_signing_invalid_file_type, validExtensions.joinToString(", "))
                         }
                     }
                 },
@@ -185,7 +188,7 @@ internal fun SigningSection(
                 modifier = Modifier.fillMaxHeight().handCursor()
             ) {
                 Text(
-                    "Browse",
+                    stringResource(Res.string.browse),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -203,7 +206,7 @@ internal fun SigningSection(
                     modifier = Modifier.fillMaxHeight().handCursor()
                 ) {
                     Text(
-                        "Reset",
+                        stringResource(Res.string.settings_dialog_reset_button),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -218,7 +221,7 @@ internal fun SigningSection(
         // must restore the file, pick another, or reset to use Morphe's default.
         if (keystorePath != null && !keystoreExists) {
             Text(
-                text = "Keystore not found - patching will fail until you restore it, pick another, or reset",
+                text = stringResource(Res.string.settings_signing_not_found),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -255,7 +258,7 @@ internal fun SigningSection(
             )
             if (isBundleRelative) {
                 Text(
-                    text = "Resolves to: $keystorePath",
+                    text = stringResource(Res.string.settings_dialog_resolves_to_message, keystorePath),
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -274,10 +277,12 @@ internal fun SigningSection(
             val defaultAbs = MorpheData.defaultKeystoreFile.absolutePath
             val defaultStored = PortablePaths.storableForm(defaultAbs)
             val isBundleRelative = defaultStored != defaultAbs
-            val verb = if (MorpheData.defaultKeystoreFile.exists()) "Using"
-                       else "Will create"
+            val defaultText = if (MorpheData.defaultKeystoreFile.exists())
+                stringResource(Res.string.settings_signing_using_default, defaultStored)
+            else
+                stringResource(Res.string.settings_signing_will_create_default, defaultStored)
             Text(
-                text = "$verb Morphe's default keystore at $defaultStored",
+                text = defaultText,
                 fontSize = 11.sp,
                 fontFamily = font,
                 fontWeight = FontWeight.Normal,
@@ -287,7 +292,7 @@ internal fun SigningSection(
             )
             if (isBundleRelative) {
                 Text(
-                    text = "Resolves to: $defaultAbs",
+                    text = stringResource(Res.string.settings_dialog_resolves_to_message, defaultAbs),
                     fontSize = 9.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -301,7 +306,7 @@ internal fun SigningSection(
         Spacer(Modifier.height(8.dp))
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            LabeledField(label = "Keystore password", font = font) {
+            LabeledField(label = stringResource(Res.string.settings_signing_keystore_password_label), font = font) {
                 SlimTextField(
                     value = localPassword,
                     onValueChange = {
@@ -323,7 +328,7 @@ internal fun SigningSection(
                         ) {
                             Icon(
                                 imageVector = if (showPassword) MorpheIcons.VisibilityOff else MorpheIcons.Visibility,
-                                contentDescription = if (showPassword) "Hide" else "Show",
+                                contentDescription = if (showPassword) stringResource(Res.string.settings_signing_password_hide) else stringResource(Res.string.settings_signing_password_show),
                                 modifier = Modifier.size(14.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             )
@@ -332,7 +337,7 @@ internal fun SigningSection(
                 )
             }
 
-            LabeledField(label = "Key alias", font = font) {
+            LabeledField(label = stringResource(Res.string.settings_signing_key_alias_label), font = font) {
                 SlimTextField(
                     value = localAlias,
                     onValueChange = {
@@ -348,7 +353,7 @@ internal fun SigningSection(
                 )
             }
 
-            LabeledField(label = "Key password", font = font) {
+            LabeledField(label = stringResource(Res.string.settings_signing_key_password_label), font = font) {
                 SlimTextField(
                     value = localEntryPassword,
                     onValueChange = {
@@ -370,7 +375,7 @@ internal fun SigningSection(
                         ) {
                             Icon(
                                 imageVector = if (showEntryPassword) MorpheIcons.VisibilityOff else MorpheIcons.Visibility,
-                                contentDescription = if (showEntryPassword) "Hide" else "Show",
+                                contentDescription = if (showEntryPassword) stringResource(Res.string.settings_signing_password_hide) else stringResource(Res.string.settings_signing_password_show),
                                 modifier = Modifier.size(14.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             )
@@ -390,21 +395,26 @@ internal fun SigningSection(
                 onClick = {
                     verifyResult = null
                     verifySuccess = false
-                    val result = readKeystoreInfo(
-                        keystorePath,
-                        localPassword.ifEmpty { null },
-                        localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
-                        localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
-                    )
-                    if (result == null) {
-                        verifyResult = "Could not open keystore — check keystore password"
-                        verifySuccess = false
-                    } else if (result.warnings.isNotEmpty()) {
-                        verifyResult = result.warnings.first()
-                        verifySuccess = false
-                    } else {
-                        verifyResult = "Credentials valid"
-                        verifySuccess = true
+                    scope.launch {
+                        val result = readKeystoreInfo(
+                            keystorePath,
+                            localPassword.ifEmpty { null },
+                            localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                            localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
+                        )
+                        if (result == null) {
+                            verifyResult = getString(Res.string.settings_signing_verify_could_not_open)
+                            verifySuccess = false
+                        } else if (result.warnings.isNotEmpty()) {
+                            verifyResult = when (val w = result.warnings.first()) {
+                                is KeystoreWarning.AliasNotFound -> getString(Res.string.settings_cert_warning_alias_not_found, w.alias)
+                                is KeystoreWarning.KeyPasswordIncorrect -> getString(Res.string.settings_cert_warning_key_password_incorrect, w.alias)
+                            }
+                            verifySuccess = false
+                        } else {
+                            verifyResult = getString(Res.string.settings_signing_verify_valid)
+                            verifySuccess = true
+                        }
                     }
                 },
                 enabled = enabled,
@@ -427,7 +437,7 @@ internal fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "Verify credentials",
+                    stringResource(Res.string.settings_signing_verify_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -464,7 +474,7 @@ internal fun SigningSection(
                         // If no path set, ask the user where to save
                         val path = keystorePath ?: run {
                             val chosen = MorpheFilePicker.saveFile(
-                                title = "Save keystore",
+                                title = getString(Res.string.settings_signing_picker_save_keystore),
                                 baseName = "morphe",
                                 extension = "keystore",
                             ) ?: return@launch // user cancelled
@@ -497,7 +507,7 @@ internal fun SigningSection(
                             )
                             generateSuccess = true
                         } catch (e: Exception) {
-                            generateError = "Failed to generate: ${e.message}"
+                            generateError = getString(Res.string.settings_signing_failed_to_generate, e.message ?: "")
                             Logger.error("Failed to generate keystore", e)
                         }
                     }
@@ -520,7 +530,7 @@ internal fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    if (generateSuccess) "Keystore generated" else "Generate keystore",
+                    stringResource(if (generateSuccess) Res.string.settings_signing_generated_button else Res.string.settings_signing_generate_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = if (generateSuccess) MorpheColors.Teal else accentColor,
@@ -540,7 +550,7 @@ internal fun SigningSection(
 
             if (!generateSuccess) {
                 Text(
-                    text = "Uses the credentials entered above",
+                    text = stringResource(Res.string.settings_signing_uses_credentials_hint),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -574,7 +584,7 @@ internal fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "Certificate",
+                    stringResource(Res.string.settings_signing_certificate_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -589,7 +599,7 @@ internal fun SigningSection(
                     if (!sourceFile.exists()) return@OutlinedButton
                     scope.launch {
                         val dest = MorpheFilePicker.saveFile(
-                            title = "Export keystore",
+                            title = getString(Res.string.settings_signing_picker_export_title),
                             baseName = sourceFile.nameWithoutExtension,
                             extension = sourceFile.extension.ifEmpty { "keystore" },
                         ) ?: return@launch
@@ -613,7 +623,7 @@ internal fun SigningSection(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "Export",
+                    stringResource(Res.string.settings_signing_export_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
