@@ -32,6 +32,7 @@ import androidx.compose.ui.window.DialogProperties
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.gui.data.model.UpdateChannelPreference
+import app.morphe.gui.data.repository.LanguageRepository
 import app.morphe.gui.ui.components.settings.AdvancedTab
 import app.morphe.gui.ui.components.settings.AppearanceTab
 import app.morphe.gui.ui.components.settings.SystemTab
@@ -39,9 +40,13 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SettingsDialog(
+    currentLanguage: String = LanguageRepository.SYSTEM_CODE,
+    onLanguageChange: (String) -> Unit = {},
     currentTheme: ThemePreference,
     onThemeChange: (ThemePreference) -> Unit,
     autoCleanupTempFiles: Boolean,
@@ -111,7 +116,7 @@ fun SettingsDialog(
             horizontalAlignment = Alignment.Start,
         ) {
             Text(
-                text = "Settings",
+                text = stringResource(Res.string.settings_dialog_title),
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = font,
                 fontSize = 16.sp,
@@ -127,11 +132,11 @@ fun SettingsDialog(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     val navItems = listOf(
-                        "Appearance" to MorpheIcons.Palette,
-                        "Advanced" to MorpheIcons.Tune,
-                        "System" to MorpheIcons.Monitor
+                        Triple("Appearance", Res.string.settings_nav_appearance, MorpheIcons.Palette),
+                        Triple("Advanced", Res.string.settings_nav_advanced, MorpheIcons.Tune),
+                        Triple("System", Res.string.settings_nav_system, MorpheIcons.Monitor)
                     )
-                    navItems.forEach { (category, icon) ->
+                    navItems.forEach { (category, labelRes, icon) ->
                         val isSelected = selectedCategory == category
                         val hoverInteraction = remember { MutableInteractionSource() }
                         Row(
@@ -157,7 +162,7 @@ fun SettingsDialog(
                             )
                             Spacer(Modifier.width(12.dp))
                             Text(
-                                text = category,
+                                text = stringResource(labelRes),
                                 fontSize = 13.sp,
                                 fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
                                 fontFamily = font,
@@ -182,6 +187,8 @@ fun SettingsDialog(
                     ) {
                         when (selectedCategory) {
                             "Appearance" -> AppearanceTab(
+                                currentLanguage = currentLanguage,
+                                onLanguageChange = onLanguageChange,
                                 currentTheme = currentTheme,
                                 onThemeChange = onThemeChange,
                                 customAccentColorArgb = customAccentColorArgb,
@@ -247,7 +254,7 @@ fun SettingsDialog(
                     border = BorderStroke(1.dp, borderColor)
                 ) {
                     Text(
-                        "Close",
+                        stringResource(Res.string.close),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,

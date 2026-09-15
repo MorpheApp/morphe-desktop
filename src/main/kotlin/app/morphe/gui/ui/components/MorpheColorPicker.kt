@@ -36,6 +36,7 @@ import app.morphe.gui.ui.components.color.CustomSwatches
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.MorpheAccentColors
+import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Color.HSBtoRGB
 import java.awt.Color.RGBtoHSB
 import kotlin.math.PI
@@ -44,6 +45,7 @@ import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MorpheColorPickerCard(
@@ -151,7 +153,7 @@ fun MorpheColorPickerCard(
             if (showSaved) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Saved",
+                        text = stringResource(Res.string.color_picker_saved),
                         fontFamily = font,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
@@ -160,7 +162,7 @@ fun MorpheColorPickerCard(
                     
                     Spacer(Modifier.weight(1f))
                     
-                    Toggle("+ Save", false, accents, font) {
+                    Toggle(stringResource(Res.string.save), false, accents, font) {
                         if (!CustomSwatches.isFull) {
                             CustomSwatches.add(hsvaToArgb(h, s, v, a))
                         }
@@ -181,7 +183,7 @@ fun MorpheColorPickerCard(
                                         .background(Color(c))
                                         .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
                                         .clickable { setFrom(c) }
-                                )
+                                 )
                                 Box(
                                     modifier = Modifier
                                         .align(Alignment.TopEnd)
@@ -193,7 +195,7 @@ fun MorpheColorPickerCard(
                                 ) {
                                     Icon(
                                         imageVector = MorpheIcons.Close,
-                                        contentDescription = "Remove",
+                                        contentDescription = stringResource(Res.string.remove),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(9.dp),
                                     )

@@ -45,10 +45,10 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.ThemePreference
-import app.morphe.morphe_desktop.generated.resources.Res
-import app.morphe.morphe_desktop.generated.resources.morphe_dark
-import app.morphe.morphe_desktop.generated.resources.morphe_light
+import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // HEADER BAR AND STATUS INDICATORS
@@ -141,7 +141,7 @@ internal fun MultiSourceHintBanner(
 ) {
     MorpheBanner(modifier = modifier, tone = MorpheBannerTone.Info) {
         MorpheBannerText(
-            text = "Patches from every enabled source are unioned. Manage from the sources button above",
+            text = stringResource(Res.string.home_header_multi_source_hint),
             modifier = Modifier.weight(1f),
         )
         MorpheBannerDismiss(onClick = onDismiss)
@@ -166,11 +166,10 @@ internal fun SourcesFailedBanner(
         icon = MorpheIcons.Warning,
     ) {
         MorpheBannerText(
-            text = (if (count == 1) "A patch source" else "$count patch sources") +
-                " failed to load. Using the ones that loaded successfully",
+            text = pluralStringResource(Res.plurals.home_header_sources_failed, count, count),
             modifier = Modifier.weight(1f),
         )
-        MorpheBannerAction(label = "Manage sources", onClick = onManageSources)
+        MorpheBannerAction(label = stringResource(Res.string.home_header_manage_sources_button), onClick = onManageSources)
         MorpheBannerDismiss(onClick = onDismiss)
     }
 }
@@ -205,7 +204,7 @@ internal fun PatchesLoadingIndicator() {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Loading…",
+            text = stringResource(Res.string.status_loading),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
@@ -242,7 +241,7 @@ internal fun OfflineBadge(onRetry: () -> Unit) {
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
-            text = "Offline",
+            text = stringResource(Res.string.status_offline),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
@@ -260,7 +259,7 @@ internal fun BrandingSection(isCompact: Boolean = false) {
     }
     Image(
         painter = painterResource(if (isDark) Res.drawable.morphe_dark else Res.drawable.morphe_light),
-        contentDescription = "Morphe Logo",
+        contentDescription = stringResource(Res.string.morphe_logo_content_description),
         modifier = Modifier.height(if (isCompact) 36.dp else 60.dp)
     )
 }

@@ -27,12 +27,16 @@ import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
+import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 private sealed interface RuntimeLogsStatus {
     data object Idle : RuntimeLogsStatus
@@ -64,7 +68,7 @@ internal fun PatchedAppRuntimeLogsSection(
     val canAct = enabled && deviceReady && !isWorking
 
     CollapsibleSection(
-        title = "Patched app runtime logs",
+        title = stringResource(Res.string.settings_runtime_logs_title),
         font = font,
         expanded = expanded,
         icon = icon,
@@ -72,7 +76,7 @@ internal fun PatchedAppRuntimeLogsSection(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(
-                text = "Capture logs from your phone after a patched app crashes or misbehaves. Clear before reproducing the bug, then save the filtered output to attach to a bug report",
+                text = stringResource(Res.string.settings_runtime_logs_desc),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -81,8 +85,9 @@ internal fun PatchedAppRuntimeLogsSection(
 
             // Device row
             if (deviceReady) {
+                val deviceInfo = "${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}"
                 Text(
-                    text = "Device: ${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}",
+                    text = stringResource(Res.string.settings_runtime_logs_device_info, deviceInfo),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -90,7 +95,7 @@ internal fun PatchedAppRuntimeLogsSection(
                 )
             } else {
                 Text(
-                    text = "No device connected. Plug in your phone with USB debugging enabled",
+                    text = stringResource(Res.string.settings_runtime_logs_no_device),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -99,7 +104,7 @@ internal fun PatchedAppRuntimeLogsSection(
             }
 
             ActionButton(
-                label = if (status is RuntimeLogsStatus.Clearing) "Clearing…" else "Clear device logs",
+                label = stringResource(if (status is RuntimeLogsStatus.Clearing) Res.string.settings_runtime_logs_clearing else Res.string.settings_runtime_logs_clear_button),
                 icon = MorpheIcons.DeleteSweep,
                 font = font,
                 borderColor = borderColor,
@@ -108,17 +113,18 @@ internal fun PatchedAppRuntimeLogsSection(
                     val device = selectedDevice ?: return@ActionButton
                     status = RuntimeLogsStatus.Clearing
                     scope.launch {
+                        val defaultErrMsg = getString(Res.string.settings_runtime_logs_failed_to_clear)
                         val result = adbManager.clearLogcat(device.id)
                         status = result.fold(
                             onSuccess = { RuntimeLogsStatus.Cleared },
-                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to clear logs") }
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: defaultErrMsg) }
                         )
                     }
                 }
             )
 
             ActionButton(
-                label = if (status is RuntimeLogsStatus.Saving) "Saving…" else "Save device logs",
+                label = if (status is RuntimeLogsStatus.Saving) stringResource(Res.string.status_saving) else stringResource(Res.string.settings_runtime_logs_save_button),
                 icon = MorpheIcons.Save,
                 font = font,
                 borderColor = borderColor,
@@ -128,12 +134,13 @@ internal fun PatchedAppRuntimeLogsSection(
                     val device = selectedDevice ?: return@ActionButton
                     status = RuntimeLogsStatus.Saving
                     scope.launch {
+                        val defaultErrMsg = getString(Res.string.settings_runtime_logs_failed_to_save)
                         val timestamp = SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.US).format(Date())
                         val outFile = File(FileUtils.getLogsDir(), "device-logcat-$timestamp.txt")
                         val result = adbManager.captureLogcat(device.id, outFile)
                         status = result.fold(
                             onSuccess = { count -> RuntimeLogsStatus.Saved(outFile, count) },
-                            onFailure = { RuntimeLogsStatus.Error(it.message ?: "Failed to save logs") }
+                            onFailure = { RuntimeLogsStatus.Error(it.message ?: defaultErrMsg) }
                         )
                     }
                 }
@@ -143,7 +150,7 @@ internal fun PatchedAppRuntimeLogsSection(
             when (val s = status) {
                 RuntimeLogsStatus.Idle, RuntimeLogsStatus.Clearing, RuntimeLogsStatus.Saving -> Unit
                 RuntimeLogsStatus.Cleared -> Text(
-                    text = "Logs cleared on device",
+                    text = stringResource(Res.string.settings_runtime_logs_cleared_success),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -152,9 +159,9 @@ internal fun PatchedAppRuntimeLogsSection(
                 is RuntimeLogsStatus.Saved -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = if (s.lineCount == 0)
-                            "Nothing captured yet. Run the patched app on your phone, then save again"
+                            stringResource(Res.string.settings_runtime_logs_nothing_captured)
                         else
-                            "Saved ${s.lineCount} line(s) to ${s.file.name}",
+                            pluralStringResource(Res.plurals.settings_runtime_logs_saved_success, s.lineCount, s.lineCount, s.file.name),
                         fontSize = 11.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
@@ -164,7 +171,7 @@ internal fun PatchedAppRuntimeLogsSection(
                     if (s.lineCount > 0) {
                         val cornersLocal = LocalMorpheCorners.current
                         Text(
-                            text = "Open logs",
+                            text = stringResource(Res.string.settings_dialog_open_logs_button),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
