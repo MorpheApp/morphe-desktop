@@ -993,7 +993,7 @@ private fun IoUsageGraph(
             }
 
             Text(
-                text = current?.let { formatRate(it.totalKbPerSec) } ?: String.format(locale, "%.1f MB/s", 0.0f),
+                text = current?.let { formatRate(it.totalKbPerSec) } ?: formatRate(0),
                 fontFamily = mono,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,

@@ -75,18 +75,14 @@ class PatchingViewModel(
             val isSplit = config.inputApkPath.endsWith(".apkm", true) || config.inputApkPath.endsWith(".xapk", true) || config.inputApkPath.endsWith(".apks", true) || inputApkFile.isDirectory
             
             val parentFile = File(config.outputApkPath).parentFile ?: File(System.getProperty("user.home"))
-            val usable = parentFile.usableSpace / 1073741824.0
-            val total = parentFile.totalSpace / 1073741824.0
-            val storageFreeInfo = String.format(locale, "%.2f GB / %.2f GB", usable, total)
+            val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, locale)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, locale)}"
 
             val desktopVersion = UpdateChecker.currentVersion() ?: "?"
             val patcherVersion = MorpheComponents.patcherVersion ?: "?"
             val nativeLibs = if (config.keepArchitectures.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
 
             val osBean = ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean
-            val freeGb = osBean.freeMemorySize / 1073741824.0
-            val totalGb = osBean.totalMemorySize / 1073741824.0
-            val ramFreeInfo = String.format(locale, "%.2f GB / %.2f GB", freeGb, totalGb)
+            val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, locale)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, locale)}"
 
             _uiState.value = _uiState.value.copy(
                 status = PatchingStatus.PREPARING,

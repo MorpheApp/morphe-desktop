@@ -27,6 +27,8 @@ import app.morphe.gui.ui.components.MorpheAlertDialog
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import java.security.KeyStore
@@ -34,7 +36,7 @@ import java.security.MessageDigest
 import java.security.Provider
 import java.security.Security
 import java.security.cert.X509Certificate
-import java.text.SimpleDateFormat
+import java.util.Locale
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -49,8 +51,9 @@ internal fun KeystoreInfoDialog(
     val font = LocalMorpheFont.current
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
 
-    val info = remember(keystorePath, password, alias, entryPassword) {
-        readKeystoreInfo(keystorePath, password, alias, entryPassword)
+    val locale = currentLocale()
+    val info = remember(keystorePath, password, alias, entryPassword, locale) {
+        readKeystoreInfo(keystorePath, password, alias, entryPassword, locale)
     }
 
     MorpheAlertDialog(
@@ -206,13 +209,13 @@ internal fun readKeystoreInfo(
     keystorePath: String,
     password: String?,
     alias: String,
-    entryPassword: String? = null
+    entryPassword: String? = null,
+    locale: Locale = Locale.getDefault()
 ): KeystoreInfoResult? {
     val file = File(keystorePath)
     if (!file.exists()) return null
 
     val passwordChars = password?.toCharArray() ?: charArrayOf()
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     // Ensure BouncyCastle provider is registered (needed for BKS keystores)
     try {
@@ -281,8 +284,8 @@ internal fun readKeystoreInfo(
             return KeystoreInfoResult(
                 alias = alias,
                 issuer = cert.issuerX500Principal.name,
-                validFrom = dateFormat.format(cert.notBefore),
-                validTo = dateFormat.format(cert.notAfter),
+                validFrom = FormatUtils.formatDate(cert.notBefore, locale),
+                validTo = FormatUtils.formatDate(cert.notAfter, locale),
                 sha256Fingerprint = sha256,
                 sha1Fingerprint = sha1,
                 warnings = warnings

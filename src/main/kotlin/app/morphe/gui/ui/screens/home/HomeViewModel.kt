@@ -1180,7 +1180,6 @@ class HomeViewModel(
                 fileName = file.name,
                 filePath = file.absolutePath,
                 fileSize = file.length(),
-                formattedSize = formatFileSize(file.length()),
                 appName = appName,
                 packageName = packageName,
                 versionName = versionName,
@@ -1257,7 +1256,6 @@ class HomeViewModel(
             fileName = file.name,
             filePath = file.absolutePath,
             fileSize = file.length(),
-            formattedSize = formatFileSize(file.length()),
             appName = displayName,
             packageName = packageName,
             versionName = versionFromName ?: getString(Res.string.unknown),
@@ -1335,9 +1333,6 @@ class HomeViewModel(
     //     file: File, packageName: String, version: String,
     //     architectures: List<String>, recommendedVersion: String?
     // ): app.morphe.gui.util.ChecksumStatus { ... }
-
-    private fun formatFileSize(bytes: Long): String =
-        FormatUtils.formatFileSize(bytes)
 
 }
 
@@ -1481,7 +1476,6 @@ data class ApkInfo(
     val fileName: String,
     val filePath: String,
     val fileSize: Long,
-    val formattedSize: String,
     val appName: String,
     val packageName: String,
     val versionName: String,
@@ -1497,7 +1491,10 @@ data class ApkInfo(
      *  less accurate. UI should surface a banner letting the user know they can
      *  still proceed but card info is approximate. */
     val hasLimitedInfo: Boolean = false
-)
+) {
+    val formattedSize: String
+        get() = FormatUtils.formatFileSize(fileSize)
+}
 
 data class ApkValidationResult(
     val isValid: Boolean,

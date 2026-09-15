@@ -590,7 +590,7 @@ private fun ReleaseCard(
                     // Patch file info
                     release.assets.find { it.isPatchFile() }?.let { patchAsset ->
                         Text(
-                            text = "${patchAsset.name} (${patchAsset.getFormattedSize()})",
+                            text = "${patchAsset.name} (${FormatUtils.formatFileSize(patchAsset.size, currentLocale())})",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
