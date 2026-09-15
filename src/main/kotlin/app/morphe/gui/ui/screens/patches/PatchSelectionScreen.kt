@@ -2042,7 +2042,7 @@ private fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
             }
 
             RunInfoGroup(
-                label = pluralStringResource(Res.plurals.patch_selection_run_info_bundles_label, info.bundles.size),
+                label = stringResource(Res.string.patch_selection_run_info_bundles_group),
                 color = accents.primary,
                 font = font,
             ) {

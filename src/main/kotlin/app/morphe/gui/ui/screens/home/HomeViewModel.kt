@@ -850,7 +850,7 @@ class HomeViewModel(
         }
         localFiles.forEach { (name, file) ->
             if (!file.exists()) {
-                return Result.failure(Exception(getString(Res.string.home_error_patch_file_not_found, file.name)))
+                return Result.failure(Exception(getString(Res.string.error_patch_file_not_found, file.name)))
             }
             files += file.absolutePath
             names += name

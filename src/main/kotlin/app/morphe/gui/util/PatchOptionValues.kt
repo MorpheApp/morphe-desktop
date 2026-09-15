@@ -5,12 +5,15 @@
 
 package app.morphe.gui.util
 
+import androidx.compose.runtime.Composable
 import app.morphe.desktop.command.model.deserializeOptionValue
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
+import org.jetbrains.compose.resources.stringResource
 import kotlin.reflect.KType
 
 /**
@@ -54,18 +57,20 @@ fun optionValueToJson(value: Any?): JsonElement = when (value) {
 }
 
 /** What [type] will accept, phrased for someone typing into a field. */
+@Composable
 fun expectedValueHint(type: KType): String {
     if (type.classifier == List::class) {
         val element = type.arguments.firstOrNull()?.type
-        val each = element?.let { scalarHint(it) } ?: "value"
-        return "a comma separated list, each one $each"
+        val each = element?.let { scalarHint(it) } ?: stringResource(Res.string.patch_selection_option_hint_value)
+        return stringResource(Res.string.patch_selection_option_hint_list, each)
     }
     return scalarHint(type)
 }
 
+@Composable
 private fun scalarHint(type: KType): String = when (type.classifier) {
-    Boolean::class -> "true or false"
-    Int::class, Long::class -> "a whole number"
-    Float::class, Double::class -> "a number"
-    else -> "text"
+    Boolean::class -> stringResource(Res.string.patch_selection_option_hint_boolean)
+    Int::class, Long::class -> stringResource(Res.string.patch_selection_option_hint_whole_number)
+    Float::class, Double::class -> stringResource(Res.string.patch_selection_option_hint_number)
+    else -> stringResource(Res.string.patch_selection_option_hint_text)
 }

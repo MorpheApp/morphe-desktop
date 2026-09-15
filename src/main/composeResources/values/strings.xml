@@ -20,6 +20,15 @@
     <string name="release_to_drop">Release to drop</string>
     <string name="click_to_browse">or click to browse</string>
     <string name="error_could_not_load_patches">Could not load any patches</string>
+    <string name="error_network_timeout">Network timeout - check your connection and try again</string>
+    <string name="error_could_not_reach_patch_server">Couldn't reach the patch server - check your connection</string>
+    <string name="error_github_rate_limit">GitHub rate limit hit - wait a few minutes and try again</string>
+    <string name="error_connection_dropped">Connection dropped while downloading - try again</string>
+    <string name="error_network_loading_patches">Network error while loading patches</string>
+    <string name="error_patch_file_not_found">Patch file not found: %1$s</string>
+    <string name="error_no_patches_files_supplied">No patches files supplied</string>
+    <string name="error_input_apk_not_found">Input APK not found</string>
+    <string name="error_step_failed">%1$s failed: %2$s</string>
     <string name="error_drop_valid_apk">Please drop a valid .apk, .apkm, .xapk, or .apks file</string>
     <string name="status_saving">Saving…</string>
     <string name="installed_on">Installed on %1$s</string>
@@ -125,6 +134,24 @@
     <string name="adb_error_user_restricted">Installation restricted by user settings</string>
     <string name="adb_error_verification_failure">Package verification failed</string>
     <string name="adb_error_generic">Installation failed: %1$s</string>
+    <string name="adb_error_not_found">ADB not found. Please install Android SDK Platform Tools</string>
+    <string name="adb_error_unauthorized">Device connected but not authorized. Please accept the USB debugging prompt on your device</string>
+    <string name="adb_error_no_devices">No devices connected. Please connect your Android device with USB debugging enabled</string>
+    <string name="adb_error_device_not_found">Device %1$s not found</string>
+    <string name="adb_error_multiple_devices">Multiple devices connected. Please select one</string>
+    <string name="adb_error_apk_not_found">APK file not found: %1$s</string>
+    <string name="adb_error_start_server">Failed to start ADB server: %1$s</string>
+    <string name="adb_error_kill_server">Failed to kill ADB server: %1$s</string>
+    <string name="adb_error_get_devices">Failed to get devices: %1$s</string>
+    <string name="adb_error_uninstall">Uninstall failed: %1$s</string>
+    <string name="adb_error_clear_logs">Failed to clear logs: %1$s</string>
+    <string name="adb_error_capture_logs">Failed to capture logs: %1$s</string>
+    <string name="adb_error_run_command">Failed to run command: %1$s</string>
+    <string name="adb_error_pm_list_packages">pm list packages failed: %1$s</string>
+    <string name="adb_status_routing_links">Routing links to %1$s…</string>
+    <string name="adb_status_restoring_links">Restoring default link handling…</string>
+    <string name="adb_status_disabling_links">Disabling links in %1$s…</string>
+    <string name="adb_status_enabling_links">Re-enabling links in %1$s…</string>
 
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
     <string name="version_status_checksum_mismatch">Checksum mismatch</string>
@@ -211,7 +238,6 @@
     <string name="home_patch_file_corrupted">Patch file is missing or corrupted. Clear cache and re-download</string>
     <string name="home_error_no_repository_for_source">No repository for %1$s</string>
     <string name="home_error_release_not_found_in_source">Release %1$s not found in %2$s</string>
-    <string name="home_error_patch_file_not_found">Patch file not found: %1$s</string>
     <string name="home_validation_file_not_exist">File does not exist</string>
     <string name="home_validation_not_a_file">Selected item is not a file</string>
     <string name="home_validation_invalid_extension">File must have .apk, .apkm, .xapk, or .apks extension</string>
@@ -425,8 +451,15 @@
     <string name="patch_selection_badge_new">New</string>
     <string name="patch_selection_option_required">This option is required</string>
     <string name="patch_selection_option_expected">Expected %1$s</string>
+    <string name="patch_selection_option_hint_list">a comma separated list, each one %1$s</string>
+    <string name="patch_selection_option_hint_value">value</string>
+    <string name="patch_selection_option_hint_boolean">true or false</string>
+    <string name="patch_selection_option_hint_whole_number">a whole number</string>
+    <string name="patch_selection_option_hint_number">a number</string>
+    <string name="patch_selection_option_hint_text">text</string>
     <string name="patch_selection_run_info_title">This run</string>
     <string name="patch_selection_run_info_app_group">App</string>
+    <string name="patch_selection_run_info_bundles_group">Patch bundles</string>
     <string name="patch_selection_run_info_no_bundles">No bundles resolved</string>
 
     <!-- Patching Screen -->
@@ -566,6 +599,13 @@
     <string name="icon_studio_shape_star">Star</string>
 
     <!-- Source Management Sheet -->
+    <string name="source_error_local_no_path">Local source has no file path configured</string>
+    <string name="source_error_local_not_found">Local patch path not found: %1$s</string>
+    <string name="source_error_local_no_mpp">No .mpp files found in folder: %1$s</string>
+    <string name="source_error_no_repository">No repository configured for source</string>
+    <string name="source_error_download_failed">Could not download patches: %1$s</string>
+    <string name="source_error_fetch_releases">Could not fetch releases</string>
+    <string name="source_error_failed_to_load">Failed to load</string>
     <string name="source_sheet_manage_description">Manage patch sources</string>
     <string name="source_sheet_local_label">Local</string>
     <string name="source_sheet_remote_label">Remote</string>
