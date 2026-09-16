@@ -114,6 +114,7 @@ internal fun SupportedAppsListPane(
     var searchQuery by remember { mutableStateOf("") }
     var expandedPackage by remember { mutableStateOf<String?>(null) }
     var deviceAppsFilter by remember { mutableStateOf(DeviceAppsFilter.KNOWN) }
+    var yourAppsFilter by remember { mutableStateOf(YourAppsFilter.ALL) }
     val sortState = resolveSortState(filter, sortPreferences[filter.name])
     val onSortChange: (AppSortState) -> Unit = { updated ->
         onSortPreferenceChange(filter.name, updated.toPreference())
@@ -123,10 +124,17 @@ internal fun SupportedAppsListPane(
         it.displayName.contains(searchQuery, ignoreCase = true) ||
         it.packageName.contains(searchQuery, ignoreCase = true)
     }, sortState)
-    val filteredRecords = sortPatchedApps(if (searchQuery.isBlank()) patchedRecords else patchedRecords.filter {
-        it.displayName.contains(searchQuery, ignoreCase = true) ||
-        it.packageName.contains(searchQuery, ignoreCase = true)
-    }, sortState)
+    val attentionByPackage = patchedRecords.associate { record ->
+        record.packageName to yourAppAttention(
+            updateInfo = updateInfoByPackage[record.packageName],
+            deviceInfo = deviceAppInfo[record.packageName],
+        )
+    }
+    val filteredRecords = sortPatchedApps(
+        apps = filterPatchedApps(patchedRecords, yourAppsFilter, attentionByPackage, searchQuery),
+        state = sortState,
+        attentionByPackage = attentionByPackage,
+    )
     val allDeviceApps = deviceDiscovery?.apps.orEmpty()
     val filteredDeviceApps = sortDeviceApps(
         filterDeviceApps(allDeviceApps, deviceAppsFilter, searchQuery),
@@ -152,9 +160,20 @@ internal fun SupportedAppsListPane(
             .align(Alignment.TopStart),
       ) {
         // ── On-open update notice: jumps to "Your apps" where each is badged ──
-        val updateCount = patchedStates.values.count { it == PatchedAppState.PATCHED_WITH_UPDATES }
+        val updateCount = attentionByPackage.values.count { it.hasUpdate }
         if (filter == AppListFilter.ALL && updateCount > 0) {
-            PatchedUpdatesBanner(updateCount) { onFilterChange(AppListFilter.YOURS) }
+            PatchedUpdatesBanner(updateCount) {
+                searchQuery = ""
+                yourAppsFilter = YourAppsFilter.UPDATES
+                onFilterChange(AppListFilter.YOURS)
+                onSortPreferenceChange(
+                    AppListFilter.YOURS.name,
+                    AppSortState(
+                        AppSortCriterion.ACTION_PRIORITY,
+                        AppSortDirection.ASCENDING,
+                    ).toPreference(),
+                )
+            }
         }
 
         // ── Filter: ALL APPS · YOUR APPS ──
@@ -184,6 +203,13 @@ internal fun SupportedAppsListPane(
                 apps = allDeviceApps,
                 filter = deviceAppsFilter,
                 onFilterChange = { deviceAppsFilter = it },
+            )
+        } else if (filter == AppListFilter.YOURS) {
+            YourAppFilterControls(
+                attentionByPackage = attentionByPackage,
+                totalCount = patchedRecords.size,
+                filter = yourAppsFilter,
+                onFilterChange = { yourAppsFilter = it },
             )
         }
 
@@ -218,6 +244,7 @@ internal fun SupportedAppsListPane(
                 currentSources = currentSources,
                 filteredRecords = filteredRecords,
                 searchQuery = searchQuery,
+                activeFilter = yourAppsFilter,
                 patchedStates = patchedStates,
                 deviceAppInfo = deviceAppInfo,
                 updateInfoByPackage = updateInfoByPackage,
@@ -399,7 +426,7 @@ private fun AppSortControls(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box {
-            MorpheTooltip("Choose sort criterion") {
+            MorpheTooltip(sortCriterionTooltip(state.criterion)) {
                 Row(
                     modifier = Modifier
                         .height(dimens.controlHeight)
@@ -436,21 +463,32 @@ private fun AppSortControls(
                 containerColor = MaterialTheme.colorScheme.surface,
             ) {
                 availableSortCriteria(filter).forEach { criterion ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                criterion.label,
-                                fontFamily = font,
-                                fontSize = 11.sp,
-                                color = if (criterion == state.criterion) accents.primary
-                                else MaterialTheme.colorScheme.onSurface,
-                            )
-                        },
-                        onClick = {
-                            onStateChange(state.copy(criterion = criterion))
-                            menuExpanded = false
-                        },
-                    )
+                    MorpheTooltip(sortCriterionTooltip(criterion)) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    criterion.label,
+                                    fontFamily = font,
+                                    fontSize = 11.sp,
+                                    color = if (criterion == state.criterion) accents.primary
+                                    else MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            onClick = {
+                                onStateChange(
+                                    state.copy(
+                                        criterion = criterion,
+                                        direction = if (criterion == AppSortCriterion.ACTION_PRIORITY) {
+                                            AppSortDirection.ASCENDING
+                                        } else {
+                                            state.direction
+                                        },
+                                    ),
+                                )
+                                menuExpanded = false
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -495,22 +533,79 @@ private fun DeviceAppFilterControls(
     val corners = LocalMorpheCorners.current
     val accents = LocalMorpheAccents.current
     val knownCount = apps.count { it.patchSourceAvailability == DevicePatchSourceAvailability.AVAILABLE }
+    val patchableCount = apps.count { it.patchability == DevicePatchability.PATCHABLE }
     val unknownCount = apps.size - knownCount
     Row(
         modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        FilterChip("Known", knownCount.takeIf { it > 0 }, filter == DeviceAppsFilter.KNOWN, accents.primary, font, corners.small) {
+        FilterChip("Patchable now", patchableCount.takeIf { it > 0 }, filter == DeviceAppsFilter.PATCHABLE, accents.primary, font, corners.small, TooltipText.FILTER_DEVICE_PATCHABLE) {
+            onFilterChange(DeviceAppsFilter.PATCHABLE)
+        }
+        FilterChip("Known", knownCount.takeIf { it > 0 }, filter == DeviceAppsFilter.KNOWN, accents.primary, font, corners.small, TooltipText.FILTER_DEVICE_KNOWN) {
             onFilterChange(DeviceAppsFilter.KNOWN)
         }
-        FilterChip("No patch source", unknownCount.takeIf { it > 0 }, filter == DeviceAppsFilter.NO_PATCH_SOURCE, accents.primary, font, corners.small) {
+        FilterChip("No patch source", unknownCount.takeIf { it > 0 }, filter == DeviceAppsFilter.NO_PATCH_SOURCE, accents.primary, font, corners.small, TooltipText.FILTER_DEVICE_NO_SOURCE) {
             onFilterChange(DeviceAppsFilter.NO_PATCH_SOURCE)
         }
-        FilterChip("All installed", apps.size.takeIf { it > 0 }, filter == DeviceAppsFilter.ALL, accents.primary, font, corners.small) {
+        FilterChip("All installed", apps.size.takeIf { it > 0 }, filter == DeviceAppsFilter.ALL, accents.primary, font, corners.small, TooltipText.FILTER_DEVICE_ALL) {
             onFilterChange(DeviceAppsFilter.ALL)
         }
     }
+}
+
+@Composable
+private fun YourAppFilterControls(
+    attentionByPackage: Map<String, YourAppAttention>,
+    totalCount: Int,
+    filter: YourAppsFilter,
+    onFilterChange: (YourAppsFilter) -> Unit,
+) {
+    val font = LocalMorpheFont.current
+    val corners = LocalMorpheCorners.current
+    val accents = LocalMorpheAccents.current
+    val counts = mapOf(
+        YourAppsFilter.ALL to totalCount,
+        YourAppsFilter.UPDATES to attentionByPackage.values.count { it.hasUpdate },
+        YourAppsFilter.APP_UPDATE to attentionByPackage.values.count { it.appUpdate },
+        YourAppsFilter.PATCH_UPDATE to attentionByPackage.values.count { it.patchUpdate },
+        YourAppsFilter.INSTALL_READY to attentionByPackage.values.count { it.installReady },
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        YourAppsFilter.entries.forEach { candidate ->
+            FilterChip(
+                label = candidate.label,
+                count = counts[candidate]?.takeIf { it > 0 },
+                selected = filter == candidate,
+                accent = accents.primary,
+                font = font,
+                corner = corners.small,
+                tooltip = yourAppsFilterTooltip(candidate),
+                onClick = { onFilterChange(candidate) },
+            )
+        }
+    }
+}
+
+private fun yourAppsFilterTooltip(filter: YourAppsFilter): String = when (filter) {
+    YourAppsFilter.ALL -> TooltipText.FILTER_YOUR_ALL
+    YourAppsFilter.UPDATES -> TooltipText.FILTER_YOUR_ALL_UPDATES
+    YourAppsFilter.APP_UPDATE -> TooltipText.FILTER_YOUR_APP_UPDATE
+    YourAppsFilter.PATCH_UPDATE -> TooltipText.FILTER_YOUR_PATCH_UPDATE
+    YourAppsFilter.INSTALL_READY -> TooltipText.FILTER_YOUR_INSTALL_READY
+}
+
+private fun sortCriterionTooltip(criterion: AppSortCriterion): String = when (criterion) {
+    AppSortCriterion.NAME -> "Sort apps alphabetically by displayed name."
+    AppSortCriterion.PACKAGE -> "Sort apps alphabetically by Android package name."
+    AppSortCriterion.LAST_PATCHED -> "Sort apps by the time their local patched APK was created."
+    AppSortCriterion.INSTALLED_VERSION -> "Sort apps by the version installed on the selected device."
+    AppSortCriterion.ACTION_PRIORITY -> TooltipText.SORT_ACTION_PRIORITY
 }
 
 @Composable

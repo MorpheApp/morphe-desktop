@@ -199,6 +199,7 @@ internal fun FilterChip(
     accent: Color,
     font: FontFamily,
     corner: Dp,
+    tooltip: String? = null,
     onClick: () -> Unit,
 ) {
     val dimens = LocalMorpheDimens.current
@@ -212,37 +213,40 @@ internal fun FilterChip(
         },
         tween(150), label = "chip",
     )
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-        modifier = Modifier
-            .height(dimens.controlHeight)
-            .clip(RoundedCornerShape(corner))
-            .border(1.dp, border, RoundedCornerShape(corner))
-            .background(if (selected) accent.copy(alpha = 0.20f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-            .hoverable(hover)
-            .pointerHoverIcon(PointerIcon.Hand)
-            .clickable(onClick = onClick)
-            .padding(horizontal = dimens.controlHorizontalPadding),
-    ) {
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-            fontFamily = font,
-            color = if (selected) accent
-                    else MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        if (count != null) {
+    val chip = @Composable {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier
+                .height(dimens.controlHeight)
+                .clip(RoundedCornerShape(corner))
+                .border(1.dp, border, RoundedCornerShape(corner))
+                .background(if (selected) accent.copy(alpha = 0.20f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                .hoverable(hover)
+                .pointerHoverIcon(PointerIcon.Hand)
+                .clickable(onClick = onClick)
+                .padding(horizontal = dimens.controlHorizontalPadding),
+        ) {
             Text(
-                text = count.toString(),
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Medium,
+                text = label,
+                fontSize = 11.sp,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                 fontFamily = font,
-                color = if (selected) accent else MaterialTheme.colorScheme.onSurfaceVariant,
+                color = if (selected) accent
+                        else MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            if (count != null) {
+                Text(
+                    text = count.toString(),
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = font,
+                    color = if (selected) accent else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
+    if (tooltip != null) MorpheTooltip(tooltip, chip) else chip()
 }
 
 /**
@@ -331,7 +335,7 @@ fun YourAppRow(
         }
         deviceInfo?.let {
             DeviceLine(it, font, Color.White.copy(alpha = 0.76f), Color.White)
-            if (it.installed) InstalledPatchLine(it.installedPatchStatus, font, onGradient = true)
+            if (it.installed) InstalledPatchLine(it, font, onGradient = true)
         }
         // Patch source + version, with "→ vNew" when a newer patch file is available.
         updateInfo?.sources?.firstOrNull()?.let { s ->
@@ -555,7 +559,7 @@ fun PatchedAppDetailDialog(
 
                 deviceInfo?.let {
                     DeviceLine(it, font, MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f), MorpheColors.Teal)
-                    if (it.installed) InstalledPatchLine(it.installedPatchStatus, font, onGradient = false)
+                    if (it.installed) InstalledPatchLine(it, font, onGradient = false)
                 }
 
                 Divider(accents.primary)
@@ -1190,16 +1194,23 @@ private fun DeviceLine(info: DeviceAppInfo, font: FontFamily, mutedColor: Color,
 }
 
 @Composable
-private fun InstalledPatchLine(status: InstalledPatchStatus, font: FontFamily, onGradient: Boolean) {
+private fun InstalledPatchLine(deviceInfo: DeviceAppInfo, font: FontFamily, onGradient: Boolean) {
+    val status = deviceInfo.installedPatchStatus
     if (status.state == InstalledPatchState.NOT_INSTALLED) return
-    val tone = when (status.state) {
+    val tone = if (deviceInfo.installPending && deviceInfo.installedOutputMatchesCurrent == false) {
+        Color(0xFFE0A030)
+    } else when (status.state) {
         InstalledPatchState.CURRENT -> MorpheColors.Teal
         InstalledPatchState.OUTDATED -> Color(0xFFE0A030)
         InstalledPatchState.NOT_MORPHE_SIGNED -> Color(0xFFE0504D)
         InstalledPatchState.UNKNOWN -> MaterialTheme.colorScheme.onSurfaceVariant
         InstalledPatchState.NOT_INSTALLED -> Color.Transparent
     }
-    val label = installedPatchStatusLabel(status)
+    val label = installedPatchStatusLabel(
+        status = status,
+        installedOutputMatchesCurrent = deviceInfo.installedOutputMatchesCurrent,
+        installPending = deviceInfo.installPending,
+    )
     if (onGradient) {
         val corner = LocalMorpheCorners.current.small
         Box(
@@ -1231,7 +1242,13 @@ private fun InstalledPatchLine(status: InstalledPatchStatus, font: FontFamily, o
     }
 }
 
-internal fun installedPatchStatusLabel(status: InstalledPatchStatus): String = when (status.state) {
+internal fun installedPatchStatusLabel(
+    status: InstalledPatchStatus,
+    installedOutputMatchesCurrent: Boolean? = null,
+    installPending: Boolean = false,
+): String = when {
+    installPending && installedOutputMatchesCurrent == false -> "New patched APK ready to install"
+    else -> when (status.state) {
     InstalledPatchState.CURRENT -> "Current patches installed"
     InstalledPatchState.OUTDATED -> {
         val outdated = status.sources.filter { it.outdated }
@@ -1247,6 +1264,7 @@ internal fun installedPatchStatusLabel(status: InstalledPatchStatus): String = w
     InstalledPatchState.UNKNOWN -> "Installed patch state unknown"
     InstalledPatchState.NOT_MORPHE_SIGNED -> "No verified Morphe patches installed"
     InstalledPatchState.NOT_INSTALLED -> "Not installed"
+    }
 }
 
 private fun fullDate(millis: Long): String =
@@ -1286,6 +1304,7 @@ internal fun YourAppsListBody(
     currentSources: List<PatchSource>,
     filteredRecords: List<PatchedAppRecord>,
     searchQuery: String,
+    activeFilter: YourAppsFilter,
     patchedStates: Map<String, PatchedAppState>,
     deviceAppInfo: Map<String, DeviceAppInfo>,
     updateInfoByPackage: Map<String, RecallUpdateInfo>,
@@ -1310,12 +1329,16 @@ internal fun YourAppsListBody(
         )
         filteredRecords.isEmpty() -> YourAppsEmptyHint(
             title = "No matches",
-            subtitle = "Nothing matches \"$searchQuery\"",
+            subtitle = if (searchQuery.isNotBlank()) {
+                "Nothing matches \"$searchQuery\""
+            } else {
+                "No apps match the ${activeFilter.label.lowercase()} filter"
+            },
             font = font,
         )
         else -> {
             val listState = rememberLazyListState()
-            val headerSearchAllowance = if (showSearch) 118.dp else 72.dp
+            val headerSearchAllowance = if (showSearch) 158.dp else 112.dp
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

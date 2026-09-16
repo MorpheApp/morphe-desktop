@@ -13,6 +13,9 @@ import app.morphe.gui.util.DevicePatchSourceAvailability
 import app.morphe.gui.util.DeviceUpdateOwner
 import app.morphe.gui.util.AppLabelProvenance
 import app.morphe.gui.util.DiscoveredDeviceApp
+import app.morphe.gui.util.UpdateMetadataResolution
+import app.morphe.gui.ui.screens.home.DeviceAppInfo
+import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -85,6 +88,95 @@ class AppListSortingTest {
                 AppListFilter.YOURS,
                 AppSortPreference("LAST_PATCHED", "DESCENDING"),
             ),
+        )
+    }
+
+    @Test
+    fun `action priority is available only for your apps`() {
+        assertTrue(AppSortCriterion.ACTION_PRIORITY in availableSortCriteria(AppListFilter.YOURS))
+        assertTrue(AppSortCriterion.ACTION_PRIORITY !in availableSortCriteria(AppListFilter.ALL))
+        assertTrue(AppSortCriterion.ACTION_PRIORITY !in availableSortCriteria(AppListFilter.DEVICE))
+    }
+
+    @Test
+    fun `attention keeps app patch and device installation facts independent`() {
+        val info = RecallUpdateInfo(
+            sources = listOf(sourceUpdate(outdated = true)),
+            appUsedVersion = "1",
+            appChannel = RecallUpdateInfo.AppChannel.STABLE,
+            appSuggestedVersion = "2",
+            appOutdated = true,
+            metadataResolution = UpdateMetadataResolution.READY,
+        )
+
+        assertEquals(
+            YourAppAttention(
+                appUpdate = true,
+                patchUpdate = true,
+                installReady = true,
+                updateStatusKnown = true,
+            ),
+            yourAppAttention(info, DeviceAppInfo(installed = true, installedVersion = "1", installPending = true)),
+        )
+    }
+
+    @Test
+    fun `your apps filters compose with search and overlapping update facts`() {
+        val appOnly = patched("app.only", "App only", 1)
+        val patchOnly = patched("patch.only", "Patch only", 2)
+        val both = patched("both", "Both", 3)
+        val install = patched("install", "Install", 4)
+        val apps = listOf(appOnly, patchOnly, both, install)
+        val attention = mapOf(
+            "app.only" to YourAppAttention(appUpdate = true, updateStatusKnown = true),
+            "patch.only" to YourAppAttention(patchUpdate = true, updateStatusKnown = true),
+            "both" to YourAppAttention(appUpdate = true, patchUpdate = true, updateStatusKnown = true),
+            "install" to YourAppAttention(installReady = true, updateStatusKnown = true),
+        )
+
+        assertEquals(
+            listOf("app.only", "patch.only", "both"),
+            filterPatchedApps(apps, YourAppsFilter.UPDATES, attention, "").map { it.packageName },
+        )
+        assertEquals(
+            listOf("app.only", "both"),
+            filterPatchedApps(apps, YourAppsFilter.APP_UPDATE, attention, "").map { it.packageName },
+        )
+        assertEquals(
+            listOf("both"),
+            filterPatchedApps(apps, YourAppsFilter.PATCH_UPDATE, attention, "Both").map { it.packageName },
+        )
+        assertEquals(
+            listOf("install"),
+            filterPatchedApps(apps, YourAppsFilter.INSTALL_READY, attention, "").map { it.packageName },
+        )
+    }
+
+    @Test
+    fun `action priority puts immediate install before combined and individual updates`() {
+        val apps = listOf(
+            patched("clean", "Clean", 1),
+            patched("app", "App", 1),
+            patched("patch", "Patch", 1),
+            patched("both", "Both", 1),
+            patched("install", "Install", 1),
+            patched("unknown", "Unknown", 1),
+        )
+        val attention = mapOf(
+            "clean" to YourAppAttention(updateStatusKnown = true),
+            "app" to YourAppAttention(appUpdate = true, updateStatusKnown = true),
+            "patch" to YourAppAttention(patchUpdate = true, updateStatusKnown = true),
+            "both" to YourAppAttention(appUpdate = true, patchUpdate = true, updateStatusKnown = true),
+            "install" to YourAppAttention(installReady = true, updateStatusKnown = true),
+        )
+
+        assertEquals(
+            listOf("install", "both", "patch", "app", "clean", "unknown"),
+            sortPatchedApps(
+                apps,
+                AppSortState(AppSortCriterion.ACTION_PRIORITY, AppSortDirection.ASCENDING),
+                attention,
+            ).map { it.packageName },
         )
     }
 
@@ -162,6 +254,7 @@ class AppListSortingTest {
         assertEquals(1, filterDeviceApps(apps, DeviceAppsFilter.KNOWN, "").size)
         assertEquals(1, filterDeviceApps(apps, DeviceAppsFilter.NO_PATCH_SOURCE, "").size)
         assertEquals(2, filterDeviceApps(apps, DeviceAppsFilter.ALL, "").size)
+        assertEquals(listOf("one.pkg"), filterDeviceApps(apps, DeviceAppsFilter.PATCHABLE, "").map { it.packageName })
     }
 
     @Test
@@ -272,11 +365,24 @@ class AppListSortingTest {
         displayName = displayName,
         versionCode = versionCode,
         versionName = versionCode.toString(),
-        patchability = DevicePatchability.PATCHABLE,
+        patchability = if (availability == DevicePatchSourceAvailability.AVAILABLE) {
+            DevicePatchability.PATCHABLE
+        } else {
+            DevicePatchability.NO_PATCH_SOURCE
+        },
         patchNames = emptyList(),
         sourceNames = emptyList(),
         updateOwner = DeviceUpdateOwner.DesktopManaged,
         patchSourceAvailability = availability,
         labelProvenance = AppLabelProvenance.ANDROID_RESOURCE,
+    )
+
+    private fun sourceUpdate(outdated: Boolean) = RecallUpdateInfo.SourceUpdate(
+        sourceId = "source",
+        name = "Patches",
+        usedVersion = "1",
+        resolvedVersion = "2",
+        latestAvailableVersion = "2",
+        outdated = outdated,
     )
 }

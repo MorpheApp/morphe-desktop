@@ -35,6 +35,24 @@ object TooltipText {
     const val REPATCH = "Create a new patched APK using the current sources and options."
     const val MIGRATE = "Uninstall the existing app and reinstall this patched APK so Morphe Desktop can manage future updates."
     const val DEVICE_IMPORT = "Use the app package currently installed on this device as the patch source."
+    const val FILTER_YOUR_ALL = "Show every locally patched app in Morphe Desktop."
+    const val FILTER_YOUR_ALL_UPDATES =
+        "Show apps with a newer app version, a newer patch version, or both."
+    const val FILTER_YOUR_APP_UPDATE =
+        "Show apps for which a newer compatible app version is available."
+    const val FILTER_YOUR_PATCH_UPDATE =
+        "Show apps for which an enabled source provides a newer patch version."
+    const val FILTER_YOUR_INSTALL_READY =
+        "Show patched APKs that are not installed in this exact form on the selected device."
+    const val FILTER_DEVICE_PATCHABLE =
+        "Show installed apps with a compatible patch in an enabled source."
+    const val FILTER_DEVICE_KNOWN =
+        "Show installed apps found in at least one enabled patch source."
+    const val FILTER_DEVICE_NO_SOURCE =
+        "Show installed apps not found in any enabled patch source."
+    const val FILTER_DEVICE_ALL = "Show every app installed on the selected device."
+    const val SORT_ACTION_PRIORITY =
+        "Prioritize installation-ready APKs, combined updates, patch updates, app updates, current apps, then unknown states."
 
     fun ownership(owner: DeviceUpdateOwner): String = when (owner) {
         DeviceUpdateOwner.DesktopManaged -> "Updates are managed by Morphe Desktop on this device."

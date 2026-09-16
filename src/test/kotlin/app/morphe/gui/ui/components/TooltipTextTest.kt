@@ -30,11 +30,25 @@ class TooltipTextTest {
             TooltipText.REPATCH,
             TooltipText.MIGRATE,
             TooltipText.DEVICE_IMPORT,
+            TooltipText.FILTER_YOUR_ALL,
+            TooltipText.FILTER_YOUR_ALL_UPDATES,
+            TooltipText.FILTER_YOUR_APP_UPDATE,
+            TooltipText.FILTER_YOUR_PATCH_UPDATE,
+            TooltipText.FILTER_YOUR_INSTALL_READY,
+            TooltipText.FILTER_DEVICE_PATCHABLE,
+            TooltipText.FILTER_DEVICE_KNOWN,
+            TooltipText.FILTER_DEVICE_NO_SOURCE,
+            TooltipText.FILTER_DEVICE_ALL,
+            TooltipText.SORT_ACTION_PRIORITY,
         )
         assertTrue(required.all { it.length >= 24 && it.endsWith('.') })
         assertContains(TooltipText.SOURCE_REMOVE, "not deleted")
         assertContains(TooltipText.UNINSTALL, "selected device")
         assertContains(TooltipText.FORGET, "without deleting")
+        assertContains(TooltipText.FILTER_YOUR_ALL_UPDATES, "app version")
+        assertContains(TooltipText.FILTER_YOUR_ALL_UPDATES, "patch version")
+        assertContains(TooltipText.FILTER_YOUR_INSTALL_READY, "exact form")
+        assertContains(TooltipText.SORT_ACTION_PRIORITY, "installation-ready")
     }
 
     @Test
