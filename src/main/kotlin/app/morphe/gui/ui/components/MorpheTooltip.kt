@@ -39,7 +39,7 @@ object TooltipText {
     const val FILTER_YOUR_ALL_UPDATES =
         "Show apps with a newer app version, a newer patch version, or both."
     const val FILTER_YOUR_APP_UPDATE =
-        "Show apps for which a newer compatible app version is available."
+        "Show apps with a newer compatible base app version. A patched install can still have an app update."
     const val FILTER_YOUR_PATCH_UPDATE =
         "Show apps for which an enabled source provides a newer patch version."
     const val FILTER_YOUR_INSTALL_READY =

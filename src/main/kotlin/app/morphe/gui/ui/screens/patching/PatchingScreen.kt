@@ -63,8 +63,7 @@ import app.morphe.gui.util.Logger
 import app.morphe.gui.util.RepositoryLinks
 import app.morphe.gui.util.RepositoryWebLink
 import app.morphe.gui.util.rememberZenoProgress
-import app.morphe.gui.ui.theme.desktopScreenEnter
-import app.morphe.gui.ui.theme.desktopScreenExit
+import app.morphe.gui.ui.theme.desktopContentTransition
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -258,7 +257,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
         AnimatedContent(
             targetState = uiState.hasAutoNavigated && (uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED),
             modifier = Modifier.weight(1f).fillMaxWidth(),
-            transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit }
+            transitionSpec = { desktopContentTransition() }
         ) { isFailed ->
             if (isFailed) {
                 Box(modifier = Modifier.fillMaxSize()) {
@@ -747,7 +746,7 @@ private fun ExpertProgressHeader(
                 AnimatedContent(
                     targetState = stepNameToDisplay,
                     label = "step_name_anim",
-                    transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit }
+                    transitionSpec = { desktopContentTransition() }
                 ) { targetStep ->
                     Text(
                         text = targetStep.ifEmpty { "Waiting..." },

@@ -273,7 +273,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                     AnimatedContent(
                         targetState = uiState.phase,
                         modifier = Modifier.weight(1f),
-                        transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit }
+                        transitionSpec = { desktopContentTransition() }
                     ) { phase ->
                         when (phase) {
                             QuickPatchPhase.IDLE, QuickPatchPhase.ANALYZING -> {

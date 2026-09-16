@@ -365,7 +365,7 @@ Use the filters above the list to focus the workflow:
 |---------------------|--------------------------------------------------------------------------------------------------------|
 | **All**             | Every locally patched app                                                                              |
 | **All updates**     | Apps with a newer compatible app version, a newer patch version, or both                              |
-| **App update**      | Apps for which a newer compatible APK/app version is available                                        |
+| **App update**      | Apps for which a newer compatible base APK/app version is available; a patched install can still have an app update |
 | **Patch update**    | Apps for which an enabled source provides a newer patch bundle                                         |
 | **Install ready**   | Local patched APKs that are not installed in this exact form on the selected device                    |
 

@@ -128,7 +128,6 @@ internal fun HeaderBar(
         }
     }
 }
-
 /** One-time intro banner shown when the user first sees multi-source mode.
  *  Persists dismissal in ConfigRepository so it never reappears once dismissed. */
 @Composable

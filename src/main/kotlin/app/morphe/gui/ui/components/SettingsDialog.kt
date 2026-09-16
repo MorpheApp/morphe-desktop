@@ -646,9 +646,9 @@ fun SettingsDialog(
                                         )
                                     }
                                 }
-                                
+
                                 SettingsDivider(borderColor)
-                                
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically

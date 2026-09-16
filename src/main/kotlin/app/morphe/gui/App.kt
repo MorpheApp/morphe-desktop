@@ -5,8 +5,6 @@
 
 package app.morphe.gui
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -32,13 +30,14 @@ import app.morphe.gui.ui.theme.backgrounds.AnimatedBackground
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
 import app.morphe.gui.ui.theme.backgrounds.rememberParallaxState
-import app.morphe.gui.ui.theme.desktopScreenEnter
-import app.morphe.gui.ui.theme.desktopScreenExit
+import app.morphe.gui.ui.theme.desktopContentTransition
+import app.morphe.gui.ui.theme.useAnimatedScreenTransitions
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.applyTitleBarTint
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.transitions.ScreenTransition
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinApplication
@@ -139,6 +138,9 @@ private fun appContent(
     val enableParallaxState = remember { mutableStateOf(true) }
     val isWindows = remember {
         System.getProperty("os.name")?.startsWith("Windows", ignoreCase = true) == true
+    }
+    val animatedScreenTransitionsEnabled = remember {
+        useAnimatedScreenTransitions(System.getProperty("os.name"))
     }
     // A root pointer listener invalidates the full-window background for every mouse
     // movement. On Windows/Skiko this can expose white swap-chain frames, especially
@@ -336,10 +338,18 @@ private fun appContent(
                                     }
                                 }
 
-                                ScreenTransition(
-                                    navigator = navigator,
-                                    transition = { desktopScreenEnter togetherWith desktopScreenExit }
-                                )
+                                if (animatedScreenTransitionsEnabled) {
+                                    ScreenTransition(
+                                        navigator = navigator,
+                                        transition = { desktopContentTransition() }
+                                    )
+                                } else {
+                                    // Skia/Direct3D can expose the white swap-chain while two
+                                    // translucent, scaled full-window layers overlap. Rendering
+                                    // the current screen directly makes every Windows navigation
+                                    // atomic and avoids a first-frame flash across the application.
+                                    CurrentScreen()
+                                }
                             }
                         }
                     }

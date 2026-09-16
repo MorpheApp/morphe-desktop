@@ -47,6 +47,7 @@ class TooltipTextTest {
         assertContains(TooltipText.FORGET, "without deleting")
         assertContains(TooltipText.FILTER_YOUR_ALL_UPDATES, "app version")
         assertContains(TooltipText.FILTER_YOUR_ALL_UPDATES, "patch version")
+        assertContains(TooltipText.FILTER_YOUR_APP_UPDATE, "patched install")
         assertContains(TooltipText.FILTER_YOUR_INSTALL_READY, "exact form")
         assertContains(TooltipText.SORT_ACTION_PRIORITY, "installation-ready")
     }
