@@ -351,13 +351,27 @@ The **Link handling** section appears on the Result screen once the patched app 
 
 <h3 id="gui-your-apps">Your apps</h3>
 
-The home screen has two tabs: **Supported apps** (what your patches can target) and **Your apps**, a history of everything you've patched with Morphe. The "Your apps" tab carries a count badge, and when newer patches are available a banner ("N patched apps have updates available") jumps you there.
+The home screen has three app views: **All apps** (what your patches can target), **Your apps** (everything you've patched with Morphe), and **Device** (apps installed on the selected ADB device). The "Your apps" tab carries a count badge. When newer app or patch versions are available, the update banner jumps directly to **Your apps → All updates** and sorts the results by action priority.
 
 <p align="center">
   <img src="images/documentation/gui/your-apps.png" width="60%" alt="Your Apps section" style="vertical-align: middle"/>
 </p>
 
 Each entry is a card showing the app, the patched version, and when you patched it. Tap one for the full breakdown and actions:
+
+Use the filters above the list to focus the workflow:
+
+| Filter              | What it shows                                                                                         |
+|---------------------|--------------------------------------------------------------------------------------------------------|
+| **All**             | Every locally patched app                                                                              |
+| **All updates**     | Apps with a newer compatible app version, a newer patch version, or both                              |
+| **App update**      | Apps for which a newer compatible APK/app version is available                                        |
+| **Patch update**    | Apps for which an enabled source provides a newer patch bundle                                         |
+| **Install ready**   | Local patched APKs that are not installed in this exact form on the selected device                    |
+
+The **Action priority** sort places installation-ready APKs first, followed by combined app-and-patch updates, patch updates, app updates, current apps, and unknown states. Search, filters, and sorting can be combined. Hover a filter or sort option for an explanation.
+
+In the **Device** view, **Patchable now** limits the list to installed apps whose exact installed version has a compatible patch in an enabled source. It intentionally excludes unconfirmed or incompatible versions.
 
 
 | Action        | What it does                                                                                     | CLI equivalent                            |
