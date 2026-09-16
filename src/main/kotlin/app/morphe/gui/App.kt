@@ -31,6 +31,7 @@ import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.ui.theme.ThemeState
 import app.morphe.gui.ui.theme.backgrounds.AnimatedBackground
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
+import app.morphe.gui.ui.theme.backgrounds.LocalBackgroundAnimationEnabled
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
 import app.morphe.gui.ui.theme.backgrounds.rememberParallaxState
 import app.morphe.gui.ui.theme.desktopContentTransition
@@ -277,6 +278,11 @@ private fun appContent(
             LocalSettingsDialogVisible provides settingsDialogVisible,
             LocalIsPatching provides isPatchingState,
             LocalMorpheDialogHostState provides morpheDialogHostState,
+            // Dense translucent lists should not sit above a full-window canvas
+            // that invalidates on every animation frame. A static snapshot keeps
+            // the selected background design while making Windows scrolling and
+            // dialog presentation deterministic.
+            LocalBackgroundAnimationEnabled provides !isWindows,
             LocalBackgroundType provides backgroundTypeState,
             LocalEnableParallax provides enableParallaxState,
             LocalParallaxState provides parallaxState,

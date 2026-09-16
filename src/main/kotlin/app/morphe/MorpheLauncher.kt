@@ -15,6 +15,11 @@ import kotlin.system.exitProcess
 import picocli.CommandLine
 
 fun main(args: Array<String>) {
+    // Must run before GraphicsEnvironment, AWT, Compose, or Skiko are touched.
+    // The bootstrapped GUI subprocess enters this main function again, so the
+    // policy also covers packaged all-JAR launches.
+    configureStableWindowsRenderer()
+
     System.setProperty("awt.app.className", "Morphe")
     System.setProperty("APP_NAME", "Morphe")
 

@@ -16,6 +16,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.flow.collectLatest
 
+val LocalBackgroundAnimationEnabled = staticCompositionLocalOf { true }
+
 /**
  * Frame-based time accumulator that respects a [speedMultiplier].
  * Returns a [State<Float>] that increases every frame by (deltaMs * speedMultiplier).
@@ -24,11 +26,16 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun rememberAnimatedTime(speedMultiplier: Float): State<Float> {
     val time = remember { mutableFloatStateOf(0f) }
+    val animationEnabled = LocalBackgroundAnimationEnabled.current
     // targetSpeed is updated every recomposition via SideEffect (composition thread, safe to read in frame callback)
     val targetSpeed = remember { mutableFloatStateOf(speedMultiplier) }
     SideEffect { targetSpeed.floatValue = speedMultiplier }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(animationEnabled) {
+        if (!animationEnabled) {
+            time.floatValue = 0f
+            return@LaunchedEffect
+        }
         var lastFrameMs = withInfiniteAnimationFrameMillis { it }
         var currentSpeed = targetSpeed.floatValue
         while (true) {
