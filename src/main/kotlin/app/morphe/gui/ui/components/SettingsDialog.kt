@@ -374,6 +374,9 @@ fun SettingsDialog(
 
                             val bgState = LocalBackgroundType.current
                             val parallaxState = LocalEnableParallax.current
+                            val parallaxSupported = remember {
+                                System.getProperty("os.name")?.startsWith("Windows", ignoreCase = true) != true
+                            }
                             val scope = rememberCoroutineScope()
                             val configRepo: ConfigRepository = koinInject()
 
@@ -435,13 +438,15 @@ fun SettingsDialog(
                             SettingToggleRow(
                                 label = "Parallax effect",
                                 description = "Smooth background shifting when moving the mouse",
-                                checked = parallaxState.value,
+                                checked = parallaxState.value && parallaxSupported,
                                 onCheckedChange = {
                                     parallaxState.value = it
                                     scope.launch { configRepo.setEnableParallax(it) }
                                 },
                                 accentColor = accents.primary,
                                 font = font,
+                                enabled = parallaxSupported,
+                                disabledDescription = "Disabled on Windows to prevent renderer flicker",
                                 icon = MorpheIcons.Mouse
                             )
                         }
@@ -963,6 +968,7 @@ private fun SettingToggleRow(
     accentColor: Color,
     font: FontFamily,
     enabled: Boolean = true,
+    disabledDescription: String = "Disabled while patching",
     icon: ImageVector? = null
 ) {
     val alpha = if (enabled) 1f else 0.5f
@@ -991,7 +997,7 @@ private fun SettingToggleRow(
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    text = if (!enabled) "Disabled while patching" else description,
+                    text = if (!enabled) disabledDescription else description,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),

@@ -20,6 +20,9 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -28,6 +31,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -482,7 +486,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             else -> {
                 // Patch list — single-bundle renders flat (no box chrome),
                 // multi-bundle renders per-bundle collapsible boxes.
-                val scrollState = rememberScrollState()
+                val listState = rememberLazyListState()
 
                 // Expand/collapse state for multi-bundle, keyed by bundleId.
                 // Default: all bundles expanded. Uses plain `remember` — state
@@ -491,37 +495,43 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 val collapsedBundles = remember { mutableStateListOf<String>() }
 
                 Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                    Column(
+                    LazyColumn(
+                        state = listState,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                            .fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         val showBanner = uiState.stripLibsStatus !is StripLibsStatus.NoNativeLibs
                         if (showBanner) {
-                            StripLibsStatusBanner(status = uiState.stripLibsStatus)
+                            item(key = "strip-libs-status") {
+                                StripLibsStatusBanner(status = uiState.stripLibsStatus)
+                            }
                         }
 
                         if (isSingleBundle) {
                             // ── Flat rendering (single bundle, no chrome) ──
-                            val bundle = uiState.filteredBundles.firstOrNull() ?: return@Column
-                            val bundleId = bundle.bundleId
-                            val selectedInBundle = uiState.selectedByBundle[bundleId].orEmpty()
-                            bundle.patches.forEach { patch ->
-                                PatchListItem(
-                                    patch = patch,
-                                    isSelected = selectedInBundle.contains(patch.uniqueId),
-                                    onToggle = { viewModel.togglePatch(bundleId, patch.uniqueId) },
-                                    sourceName = null,
-                                    packageName = targetPackage,
-                                    getOptionValue = { optionKey, default ->
-                                        viewModel.getOptionValue(patch.name, optionKey, default)
-                                    },
-                                    onOptionValueChange = { optionKey, value ->
-                                        viewModel.setOptionValue(patch.name, optionKey, value)
-                                    }
-                                )
+                            uiState.filteredBundles.firstOrNull()?.let { bundle ->
+                                val bundleId = bundle.bundleId
+                                val selectedInBundle = uiState.selectedByBundle[bundleId].orEmpty()
+                                items(
+                                    items = bundle.patches,
+                                    key = { patch -> "$bundleId:${patch.uniqueId}" },
+                                ) { patch ->
+                                    PatchListItem(
+                                        patch = patch,
+                                        isSelected = selectedInBundle.contains(patch.uniqueId),
+                                        onToggle = { viewModel.togglePatch(bundleId, patch.uniqueId) },
+                                        sourceName = null,
+                                        packageName = targetPackage,
+                                        getOptionValue = { optionKey, default ->
+                                            viewModel.getOptionValue(patch.name, optionKey, default)
+                                        },
+                                        onOptionValueChange = { optionKey, value ->
+                                            viewModel.setOptionValue(patch.name, optionKey, value)
+                                        }
+                                    )
+                                }
                             }
                         } else {
                             // ── Per-bundle collapsible boxes (multi-bundle) ──
@@ -534,7 +544,10 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             val visibleBundles = uiState.filteredBundles.filter { fb ->
                                 bundlesById[fb.bundleId]?.patches?.isNotEmpty() == true
                             }
-                            visibleBundles.forEach { bundle ->
+                            items(
+                                items = visibleBundles,
+                                key = { bundle -> "bundle:${bundle.bundleId}" },
+                            ) { bundle ->
                                 BundleBox(
                                     bundle = bundle,
                                     packageName = targetPackage,
@@ -565,7 +578,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
 
                     VerticalScrollbar(
                         modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(scrollState),
+                        adapter = rememberScrollbarAdapter(listState),
                         style = morpheScrollbarStyle()
                     )
                 }
@@ -777,24 +790,15 @@ private fun PatchListItem(
     val font = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
     val interactionSource = remember { MutableInteractionSource() }
-    val isHovered by interactionSource.collectIsHoveredAsState()
 
     val colors = MaterialTheme.colorScheme
     val containerColor = if (isSelected)
         colors.surfaceColorAtElevation(2.dp)
     else
         colors.surfaceColorAtElevation(1.dp).copy(alpha = 0.5f)
-    val borderColor by animateColorAsState(
-        when {
-            isSelected && isHovered -> colors.outlineVariant
-            isSelected -> colors.outlineVariant
-            isHovered -> colors.outlineVariant.copy(alpha = 0.5f)
-            else -> colors.outlineVariant.copy(alpha = 0.5f)
-        },
-        animationSpec = tween(150)
-    )
+    val borderColor = if (isSelected) colors.outlineVariant else colors.outlineVariant.copy(alpha = 0.5f)
 
-    var showOptions by remember { mutableStateOf(false) }
+    var showOptions by rememberSaveable(patch.uniqueId) { mutableStateOf(false) }
     val hasOptions = patch.options.isNotEmpty()
 
     Column(
@@ -803,7 +807,6 @@ private fun PatchListItem(
             .clip(RoundedCornerShape(corners.small))
             .background(containerColor, RoundedCornerShape(corners.small))
             .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-            .hoverable(interactionSource)
     ) {
         // Header — clicking toggles patch
         Row(

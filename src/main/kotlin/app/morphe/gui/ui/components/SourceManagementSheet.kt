@@ -402,8 +402,6 @@ private fun SourceRow(
 ) {
     val corners = LocalMorpheCorners.current
     val accents = LocalMorpheAccents.current
-    val hoverInteraction = remember(source.id) { MutableInteractionSource() }
-    val isHovered by hoverInteraction.collectIsHoveredAsState()
     val isEnabled = source.enabled
     val isDefault = !source.deletable
     // Card click works regardless of enable state. In MULTI_TOGGLE mode it opens
@@ -421,22 +419,8 @@ private fun SourceRow(
     val statusColor = if (error != null) MaterialTheme.colorScheme.error
                       else channelColor(channel)
 
-    val animatedBorder by animateColorAsState(
-        targetValue = when {
-            isHovered && canInteract -> accentColor.copy(alpha = if (isHighlighted) 0.7f else 0.45f)
-            isHighlighted -> accentColor.copy(alpha = 0.35f)
-            else -> borderColor
-        },
-        animationSpec = tween(150)
-    )
-    val animatedBg by animateColorAsState(
-        targetValue = when {
-            isHovered && canInteract -> accentColor.copy(alpha = if (isHighlighted) 0.12f else 0.05f)
-            isHighlighted -> accentColor.copy(alpha = 0.06f)
-            else -> Color.Transparent
-        },
-        animationSpec = tween(150)
-    )
+    val rowBorder = if (isHighlighted) accentColor.copy(alpha = 0.35f) else borderColor
+    val rowOverlay = if (isHighlighted) accentColor.copy(alpha = 0.06f) else Color.Transparent
 
     val baseBg = if (isHighlighted)
         MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
@@ -452,12 +436,11 @@ private fun SourceRow(
             .clip(RoundedCornerShape(corners.medium))
             .border(
                 1.dp,
-                if (isDragging) accentColor.copy(alpha = 0.7f) else animatedBorder,
+                if (isDragging) accentColor.copy(alpha = 0.7f) else rowBorder,
                 RoundedCornerShape(corners.medium)
             )
             .background(baseBg)
-            .background(if (isDragging) accentColor.copy(alpha = 0.10f) else animatedBg)
-            .hoverable(hoverInteraction)
+            .background(if (isDragging) accentColor.copy(alpha = 0.10f) else rowOverlay)
             .then(
                 if (canInteract) Modifier
                     .pointerHoverIcon(PointerIcon.Hand)

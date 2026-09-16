@@ -141,8 +141,16 @@ private fun appContent(
     val patchSourceManager: PatchSourceManager = koinInject()
     val scope = rememberCoroutineScope()
     val enableParallaxState = remember { mutableStateOf(true) }
+    val isWindows = remember {
+        System.getProperty("os.name")?.startsWith("Windows", ignoreCase = true) == true
+    }
+    // A root pointer listener invalidates the full-window background for every mouse
+    // movement. On Windows/Skiko this can expose white swap-chain frames, especially
+    // above dense lists and modal dialogs. Keep the normal timed animation, but do not
+    // attach mouse-driven parallax on Windows.
+    val interactiveParallaxEnabled = enableParallaxState.value && !isWindows
     val (parallaxState, parallaxMod) = rememberParallaxState(
-        enableParallax = enableParallaxState.value,
+        enableParallax = interactiveParallaxEnabled,
     )
 
     var themePreference by remember { mutableStateOf(ThemePreference.SYSTEM) }
@@ -336,7 +344,7 @@ private fun appContent(
                     Box(modifier = Modifier.fillMaxWidth().weight(1f).then(parallaxMod)) {
                         AnimatedBackground(
                             type = backgroundTypeState.value,
-                            enableParallax = enableParallaxState.value,
+                            enableParallax = interactiveParallaxEnabled,
                             speedMultiplier = { backgroundSpeedState.floatValue },
                             patchingCompleted = { patchingCompletedState.value }
                         )
