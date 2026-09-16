@@ -13,10 +13,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.ui.theme.LocalMorpheCorners
+import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheColors
 
@@ -38,7 +40,6 @@ fun ErrorDialog(
     retryText: String = "Retry"
 ) {
     val font = LocalMorpheFont.current
-    val corners = LocalMorpheCorners.current
     val icon = when (errorType) {
         ErrorType.NETWORK -> MorpheIcons.WifiOff
         ErrorType.FILE -> MorpheIcons.Error
@@ -46,9 +47,9 @@ fun ErrorDialog(
         ErrorType.GENERIC -> MorpheIcons.Warning
     }
 
-    MorpheAlertDialog(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        onDismiss = onDismiss,
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(16.dp),
         icon = {
             Icon(
                 imageVector = icon,
@@ -81,7 +82,7 @@ fun ErrorDialog(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MorpheColors.Blue
                     ),
-                    shape = RoundedCornerShape(corners.small)
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(retryText, fontFamily = font)
                 }
@@ -91,7 +92,7 @@ fun ErrorDialog(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MorpheColors.Blue
                     ),
-                    shape = RoundedCornerShape(corners.small)
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(dismissText, fontFamily = font)
                 }

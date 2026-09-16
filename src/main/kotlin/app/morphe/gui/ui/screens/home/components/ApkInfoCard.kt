@@ -34,7 +34,7 @@ import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.panelFill
+import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay
@@ -74,9 +74,18 @@ fun ApkInfoCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(cardShape)
-            .background(panelFill)
             .border(1.dp, borderColor, cardShape)
+            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
     ) {
+        // Left accent stripe
+        Box(
+            modifier = Modifier
+                .width(3.dp)
+                .fillMaxHeight()
+                .background(accentColor)
+                .align(Alignment.CenterStart)
+        )
+
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -87,6 +96,7 @@ fun ApkInfoCard(
                     .padding(start = 23.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // App initial — monospace, bold, in accent
                 Box(
                     modifier = Modifier
                         .size(44.dp)
@@ -166,7 +176,7 @@ fun ApkInfoCard(
             // Surfaced when full manifest parsing failed (typically split APKs
             // like SoundCloud where base.apk references resources living in
             // other splits). Patching still works because the patcher merges
-            // splits first. This banner just tells the user the card details
+            // splits first — this banner just tells the user the card details
             // are approximate.
             if (apkInfo.hasLimitedInfo) {
                 Row(
@@ -261,14 +271,6 @@ fun ApkInfoCard(
                     font = font,
                     modifier = Modifier.weight(1f)
                 )
-                if (apkInfo.versionCode != null) {
-                    TechDataCell(
-                        label = "Build",
-                        value = apkInfo.versionCode.toString(),
-                        font = font,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
                 TechDataCell(
                     label = "Size",
                     value = apkInfo.formattedSize,
@@ -285,6 +287,7 @@ fun ApkInfoCard(
                 }
             }
 
+            // ── Architectures — shown as individual tags, device arch highlighted ──
             if (apkInfo.architectures.isNotEmpty()) {
                 val deviceState by DeviceMonitor.state.collectAsState()
                 val deviceArch = deviceState.selectedDevice?.architecture

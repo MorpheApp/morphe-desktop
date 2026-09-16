@@ -35,9 +35,11 @@ fun AppInfoDialog(
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
 
-    MorpheAlertDialog(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        onDismiss = onDismiss,
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(corners.medium),
+        containerColor = MaterialTheme.colorScheme.surface,
+        title = null,
         text = {
             Column(
                 modifier = Modifier.widthIn(min = 340.dp).padding(top = 16.dp),
@@ -102,7 +104,7 @@ fun AppInfoDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
-                    IconButton(onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) }) {
+                    IconButton(onClick = { uriHandler.openUri("https://morphe.software") }) {
                         Icon(imageVector = MorpheIcons.Public, contentDescription = "Website", tint = iconTint)
                     }
                     IconButton(onClick = { uriHandler.openUri("https://morphe.software/changelog") }) {

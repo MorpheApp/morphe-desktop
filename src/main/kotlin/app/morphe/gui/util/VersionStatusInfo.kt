@@ -85,13 +85,6 @@ fun resolveVersionStatusDisplay(
             colorType = StatusColorType.WARNING
         )
 
-        VersionStatus.BUILD_UNSUPPORTED -> VersionStatusDisplay(
-            label = "Build not supported",
-            detail = "This version is supported, but not this build of it. " +
-                "Get a build the patches target.",
-            colorType = StatusColorType.ERROR
-        )
-
         VersionStatus.TOO_NEW -> VersionStatusDisplay(
             label = "Version too new",
             detail = "Not officially supported - patches will most likely fail",
@@ -135,7 +128,6 @@ fun resolveStatusColorType(
 
         VersionStatus.TOO_NEW,
         VersionStatus.TOO_OLD,
-        VersionStatus.BUILD_UNSUPPORTED,
         VersionStatus.UNSUPPORTED_BETWEEN -> StatusColorType.ERROR
     }
 }

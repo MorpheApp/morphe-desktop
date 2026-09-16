@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
@@ -30,12 +32,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.components.LocalCardFills
-import app.morphe.gui.ui.components.AppCard
-import app.morphe.gui.ui.components.MorpheCardChip
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.screens.home.components.AppCard
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
 
@@ -256,7 +256,6 @@ internal fun SupportedAppsRow(
                         },
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    val cardFills = LocalCardFills.current
                     filteredApps.forEach { app ->
                         val url = app.apkDownloadUrl
 
@@ -269,15 +268,7 @@ internal fun SupportedAppsRow(
                                 .fillMaxHeight(),
                             cornerRadius = corners.small,
                             appIconColorHex = app.appIconColor,
-                            fill = cardFills[app.packageName],
-                            interactive = false,
-                            onCustomise = {
-                                cardFills.requestEdit(
-                                    app.packageName,
-                                    app.displayName,
-                                    app.appIconColor,
-                                )
-                            },
+                            interactive = false
                         ) {
                             Column(
                                 modifier = Modifier
@@ -290,7 +281,7 @@ internal fun SupportedAppsRow(
                                 Text(
                                     text = app.displayName,
                                     fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.SemiBold,
                                     fontFamily = font,
                                     color = Color.White,
                                     maxLines = 1,
@@ -318,18 +309,48 @@ internal fun SupportedAppsRow(
                                 )
 
                                 if (url != null) {
-                                    val versionToDisplay = if (isExperimental) {
-                                        app.experimentalVersions.firstOrNull()
-                                    } else {
-                                        app.recommendedVersion
-                                    }
-                                    MorpheCardChip(
-                                        text = versionToDisplay?.let { "v$it" } ?: "Download",
-                                        icon = MorpheIcons.OpenInNew,
+                                    val pillInteraction = remember { MutableInteractionSource() }
+                                    val isPillHovered by pillInteraction.collectIsHoveredAsState()
+                                    val pillBg by animateColorAsState(
+                                        if (isPillHovered) Color.White.copy(alpha = 0.26f)
+                                        else Color.White.copy(alpha = 0.20f),
+                                        animationSpec = tween(150)
+                                    )
+
+                                    Row(
+                                        modifier = Modifier
+                                            .hoverable(pillInteraction)
+                                            .clip(RoundedCornerShape(corners.small))
+                                            .background(pillBg, RoundedCornerShape(corners.small))
+                                            .pointerHoverIcon(PointerIcon.Hand)
+                                            .clickable {
+                                                openUrlAndFollowRedirects(url) { resolved ->
+                                                    uriHandler.openUri(resolved)
+                                                }
+                                            }
+                                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                                     ) {
-                                        openUrlAndFollowRedirects(url) { resolved ->
-                                            uriHandler.openUri(resolved)
+                                        val versionToDisplay = if (isExperimental) {
+                                            app.experimentalVersions.firstOrNull()
+                                        } else {
+                                            app.recommendedVersion
                                         }
+                                        
+                                        Text(
+                                            text = versionToDisplay?.let { "v$it" } ?: "Download",
+                                            fontSize = 11.sp,
+                                            fontFamily = font,
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                        Icon(
+                                            imageVector = MorpheIcons.OpenInNew,
+                                            contentDescription = "Download",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(10.dp)
+                                        )
                                     }
                                 }
                             }

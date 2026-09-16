@@ -25,6 +25,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
 import java.lang.management.ManagementFactory
+import java.util.logging.Level
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -136,12 +137,12 @@ class PatchingViewModel(
             )
 
             // Resolve keystore. Two modes:
-            //  - User configured one in Settings, so use it and fail loudly if the
-            //    file is missing (don't silently swap in our default, that
+            //  - User configured one in Settings → use it; fail loudly if the
+            //    file is missing (don't silently swap in our default — that
             //    would produce APKs signed by a different identity than the
             //    user picked, breaking on-device updates without explanation).
             //  - Otherwise → use the shared MorpheData default keystore. The
-            //    patcher library creates it on first sign if missing, reused
+            //    patcher library creates it on first sign if missing; reused
             //    every patch session so all Morphe-patched apps share one
             //    signing identity.
             val appConfig = configRepository.loadConfig()
@@ -265,11 +266,10 @@ class PatchingViewModel(
                     packageName = pkg,
                     currentPackageName = manifest?.packageName,
                     displayName = config.appDisplayName.ifEmpty { pkg },
-                    // Prefer the manifest's versionName (e.g. "21.20.400"). The patch
+                    // Prefer the manifest's versionName (e.g. "21.20.400") — the patch
                     // result's packageVersion can be the numeric versionCode, which breaks
                     // version comparisons for update detection.
                     apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: patchResult.packageVersion,
-                    apkVersionCode = manifest?.versionCode,
                     inputApkPath = config.inputApkPath,
                     outputApkPath = config.outputApkPath,
                     outputApkSha256 = sha,
@@ -371,6 +371,7 @@ data class PatchingUiState(
     val outputPath: String? = null,
     val error: String? = null,
     val progress: Float = 0f,
+    val currentPatch: String? = null,
     val patchedCount: Int = 0,
     val totalPatches: Int = 0,
     val currentStepName: String = "",
@@ -405,6 +406,9 @@ data class PatchingUiState(
     val canCancel: Boolean
         get() = isInProgress
 
+    // Only show determinate progress if we've actually received progress updates from CLI
+    val hasProgress: Boolean
+        get() = hasReceivedProgressUpdate && progress > 0f
 }
 
 data class IoUsage(val readKbPerSec: Int, val writeKbPerSec: Int, val totalKbPerSec: Int = readKbPerSec + writeKbPerSec)

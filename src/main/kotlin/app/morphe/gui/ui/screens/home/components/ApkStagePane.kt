@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -32,7 +33,6 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.HomeUiState
-import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheDimens
@@ -215,13 +215,13 @@ internal fun ApkSelectedSection(
             // For unsupported or limited info, use accents.warning instead of statusColorType if status is PRIMARY
             val warningColor = if (statusColorType == StatusColorType.PRIMARY) accents.warning else statusColorType.toColor()
             ButtonDefaults.outlinedButtonColors(
-                containerColor = warningColor,
-                contentColor = warningColor.contrastingForeground()
+                containerColor = warningColor.copy(alpha = 0.15f),
+                contentColor = warningColor
             )
         }
         else -> ButtonDefaults.outlinedButtonColors(
-            containerColor = accents.primary,
-            contentColor = accents.primary.contrastingForeground()
+            containerColor = accents.primary.copy(alpha = 0.15f),
+            contentColor = accents.primary
         )
     }
 
@@ -245,7 +245,7 @@ internal fun ApkSelectedSection(
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                     contentColor = MaterialTheme.colorScheme.onSurface
                 )
             ) {
@@ -264,7 +264,7 @@ internal fun ApkSelectedSection(
                 enabled = patchesLoaded,
                 modifier = Modifier.widthIn(min = 160.dp).height(dimens.controlHeight),
                 colors = buttonColors,
-                border = BorderStroke(1.dp, buttonBorderColor),
+                border = BorderStroke(1.dp, buttonBorderColor.copy(alpha = 0.35f)),
                 shape = RoundedCornerShape(corners.small),
                 interactionSource = remember { MutableInteractionSource() }
             ) {
@@ -289,14 +289,14 @@ internal fun ActionButtonContent(
         Text(
             "Loading…",
             fontSize = 13.sp,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Normal,
             fontFamily = font
         )
     } else {
         Text(
             "Continue",
             fontSize = 13.sp,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Normal,
             fontFamily = font
         )
     }

@@ -1,6 +1,5 @@
 package app.morphe.gui.icon
 
-import app.morphe.gui.data.model.MorpheFill
 import kotlin.test.Test
 
 class IconRendererTest {
@@ -22,9 +21,9 @@ class IconRendererTest {
 
     @Test
     fun backgroundOnlyIconFallsBackToComposite() {
-        // No foreground layers, so a background-only icon should still yield a silhouette
+        // No foreground layers — a background-only icon should still yield a silhouette
         // (falls back to the whole composite) rather than an empty notification icon.
-        val project = IconProject(background = MorpheFill.Gradient())
+        val project = IconProject(background = IconProject.Background.Gradient())
         val sil = IconRenderer.renderSilhouette(project, 128, 0xFFFFFFFF.toInt())
         println("BACKGROUND_ONLY_SILHOUETTE_OPAQUE=${opaqueCount(sil)}")
         check(opaqueCount(sil) > 100) { "background-only icon should fall back to the composite silhouette" }
