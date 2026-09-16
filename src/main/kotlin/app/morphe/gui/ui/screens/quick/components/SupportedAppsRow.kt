@@ -337,7 +337,6 @@ internal fun SupportedAppsRow(
                                         } else {
                                             app.recommendedVersion
                                         }
-                                        
                                         Text(
                                             text = versionToDisplay?.let { "v$it" } ?: "Download",
                                             fontSize = 11.sp,

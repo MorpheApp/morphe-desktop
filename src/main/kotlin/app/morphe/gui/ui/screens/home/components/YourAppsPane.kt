@@ -279,7 +279,6 @@ fun YourAppRow(
     )
 
     val initial = record.displayName.firstOrNull()?.uppercase() ?: "?"
-    
     AppCard(
         modifier = Modifier.fillMaxWidth(),
         cornerRadius = corners.medium,

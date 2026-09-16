@@ -820,7 +820,6 @@ private fun PatchListItem(
             // Custom checkbox
             val containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
             val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-            
             Box(
                 modifier = Modifier
                     .size(18.dp)

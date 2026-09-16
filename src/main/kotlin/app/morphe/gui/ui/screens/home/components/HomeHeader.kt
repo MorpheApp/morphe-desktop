@@ -335,4 +335,3 @@ internal fun BrandingSection(isCompact: Boolean = false) {
         modifier = Modifier.height(if (isCompact) 36.dp else 60.dp)
     )
 }
-
