@@ -9,6 +9,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,21 +26,106 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+
+internal data class HostedMorpheDialog(
+    val id: Any,
+    val onDismiss: () -> Unit,
+    val content: @Composable () -> Unit,
+)
+
+@Stable
+class MorpheDialogHostState {
+    private val dialogs = mutableStateListOf<HostedMorpheDialog>()
+
+    internal val current: HostedMorpheDialog?
+        get() = dialogs.lastOrNull()
+
+    internal fun show(dialog: HostedMorpheDialog) {
+        dialogs.removeAll { it.id === dialog.id }
+        dialogs += dialog
+    }
+
+    internal fun hide(id: Any) {
+        dialogs.removeAll { it.id === id }
+    }
+}
+
+val LocalMorpheDialogHostState = staticCompositionLocalOf<MorpheDialogHostState?> { null }
+
+/**
+ * Renders standard Morphe modals inside the existing application window.
+ * On Windows this avoids creating another native Skia surface whose first
+ * unpainted frame can briefly flash white.
+ */
+@Composable
+fun MorpheDialogHost(state: MorpheDialogHostState) {
+    val dialog = state.current ?: return
+    val focusRequester = remember(dialog.id) { FocusRequester() }
+    val dismissInteraction = remember(dialog.id) { MutableInteractionSource() }
+    val consumeInteraction = remember(dialog.id) { MutableInteractionSource() }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.58f))
+            .focusRequester(focusRequester)
+            .focusable()
+            .onPreviewKeyEvent { event ->
+                if (event.type == KeyEventType.KeyUp && event.key == Key.Escape) {
+                    dialog.onDismiss()
+                    true
+                } else {
+                    false
+                }
+            }
+            .clickable(
+                interactionSource = dismissInteraction,
+                indication = null,
+                onClick = dialog.onDismiss,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(
+            modifier = Modifier.clickable(
+                interactionSource = consumeInteraction,
+                indication = null,
+                onClick = {},
+            ),
+        ) {
+            dialog.content()
+        }
+    }
+
+    androidx.compose.runtime.LaunchedEffect(dialog.id) {
+        focusRequester.requestFocus()
+    }
+}
 
 /**
  * Morphe-styled modal card (Dialog + Surface) — the house replacement for stock
@@ -50,28 +137,61 @@ fun MorpheDialogCard(
     title: String,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val accents = LocalMorpheAccents.current
+    val hostState = LocalMorpheDialogHostState.current
+    if (hostState != null) {
+        val id = remember { Any() }
+        val latestDismiss = rememberUpdatedState(onDismiss)
+        val latestTitle = rememberUpdatedState(title)
+        val latestContent = rememberUpdatedState(content)
+        val hostedDialog = remember(id, hostState) {
+            HostedMorpheDialog(
+                id = id,
+                onDismiss = { latestDismiss.value() },
+                content = {
+                    MorpheDialogSurface(
+                        title = latestTitle.value,
+                        content = latestContent.value,
+                    )
+                },
+            )
+        }
+        DisposableEffect(hostState, hostedDialog) {
+            hostState.show(hostedDialog)
+            onDispose { hostState.hide(id) }
+        }
+        return
+    }
+
+    // Preview and isolated component fallback when no application-level host exists.
+    Dialog(onDismissRequest = onDismiss) {
+        MorpheDialogSurface(title = title, content = content)
+    }
+}
+
+@Composable
+private fun MorpheDialogSurface(
+    title: String,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = RoundedCornerShape(corners.large),
-            color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.widthIn(max = 440.dp),
+    Surface(
+        shape = RoundedCornerShape(corners.large),
+        color = MaterialTheme.colorScheme.surface,
+        modifier = Modifier.widthIn(max = 440.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
-            ) {
-                Text(
-                    text = title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = font,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                content()
-            }
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = font,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            content()
         }
     }
 }

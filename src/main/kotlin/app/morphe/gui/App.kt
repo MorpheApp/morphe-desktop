@@ -19,6 +19,9 @@ import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.di.appModule
 import app.morphe.gui.ui.components.LocalFrameWindowScope
+import app.morphe.gui.ui.components.LocalMorpheDialogHostState
+import app.morphe.gui.ui.components.MorpheDialogHost
+import app.morphe.gui.ui.components.MorpheDialogHostState
 import app.morphe.gui.ui.components.SettingsDialogHost
 import app.morphe.gui.ui.screens.home.HomeScreen
 import app.morphe.gui.ui.screens.quick.QuickPatchScreen
@@ -264,6 +267,7 @@ private fun appContent(
 
     val settingsDialogVisible = remember { mutableStateOf(false) }
     val isPatchingState = remember { mutableStateOf(false) }
+    val morpheDialogHostState = remember { MorpheDialogHostState() }
 
     MorpheTheme(themePreference = themePreference, customAccentColorArgb = customAccentColorState.value) {
         CompositionLocalProvider(
@@ -272,6 +276,7 @@ private fun appContent(
             LocalAdbPreference provides adbPreferenceState,
             LocalSettingsDialogVisible provides settingsDialogVisible,
             LocalIsPatching provides isPatchingState,
+            LocalMorpheDialogHostState provides morpheDialogHostState,
             LocalBackgroundType provides backgroundTypeState,
             LocalEnableParallax provides enableParallaxState,
             LocalParallaxState provides parallaxState,
@@ -352,6 +357,8 @@ private fun appContent(
                                 }
                             }
                         }
+
+                        MorpheDialogHost(morpheDialogHostState)
                     }
                 }
             }
