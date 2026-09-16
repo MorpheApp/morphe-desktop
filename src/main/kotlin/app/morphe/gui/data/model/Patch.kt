@@ -41,8 +41,9 @@ data class Patch(
         return compatiblePackages.any { pkg ->
             pkg.name == packageName && (
                 versionName == null ||
-                pkg.versions.isEmpty() ||
-                pkg.versions.contains(versionName)
+                (pkg.versions.isEmpty() && pkg.experimentalVersions.isEmpty()) ||
+                pkg.versions.contains(versionName) ||
+                pkg.experimentalVersions.contains(versionName)
             )
         }
     }

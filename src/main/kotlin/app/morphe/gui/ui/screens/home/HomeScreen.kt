@@ -31,6 +31,7 @@ import app.morphe.gui.ui.screens.home.components.HeaderBar
 import app.morphe.gui.ui.screens.home.components.MiddleContent
 import app.morphe.gui.ui.screens.home.components.MultiSourceHintBanner
 import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
+import app.morphe.gui.ui.screens.home.components.PatchedApkInstallProgressDialog
 import app.morphe.gui.ui.screens.home.components.RepatchMissingApkDialog
 import app.morphe.gui.ui.screens.home.components.SourcesFailedBanner
 import app.morphe.gui.ui.screens.home.components.SupportedAppsListPane
@@ -165,6 +166,18 @@ fun HomeScreenContent(
                 viewModel.installPatchedApp(record.packageName, requestedTarget = target)
             },
         )
+    }
+
+    uiState.installingPackage?.let { packageName ->
+        val record = uiState.patchedRecords.firstOrNull { it.packageName == packageName }
+        val target = uiState.deviceOperationTarget
+        if (record != null && target != null) {
+            PatchedApkInstallProgressDialog(
+                appName = record.displayName,
+                deviceName = target.displayName,
+                progress = uiState.installProgress,
+            )
+        }
     }
 
     fun requestPatchedInstall(packageName: String) {

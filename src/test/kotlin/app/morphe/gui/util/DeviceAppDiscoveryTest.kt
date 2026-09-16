@@ -193,6 +193,27 @@ class DeviceAppDiscoveryTest {
     }
 
     @Test
+    fun `experimental compatible version is patchable on device`() {
+        val runner = FakeRunner(
+            installed = "package:app.supported versionCode:99",
+            dumps = mapOf("app.supported" to packageDump("app.supported", "2.0", null)),
+        )
+        val experimental = listOf(
+            Patch(
+                "Experimental",
+                compatiblePackages = listOf(
+                    CompatiblePackage("app.supported", experimentalVersions = listOf("2.0")),
+                ),
+            ),
+        )
+
+        val app = service(runner).discover("adb", "phone", supported, experimental).apps.single()
+
+        assertEquals(DevicePatchability.PATCHABLE, app.patchability)
+        assertEquals(listOf("Experimental"), app.patchNames)
+    }
+
+    @Test
     fun `missing version is not falsely confirmed`() {
         val runner = FakeRunner(
             installed = "package:app.supported versionCode:42",

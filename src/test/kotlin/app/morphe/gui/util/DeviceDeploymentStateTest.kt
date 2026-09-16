@@ -38,4 +38,22 @@ class DeviceDeploymentStateTest {
         assertEquals(DeviceDeploymentState.InstallPhase.FAILED, state.installPhase)
         assertEquals("failed", state.installError)
     }
+
+    @Test
+    fun `observed package is not called installed until exact output is verified`() {
+        val different = DeviceDeploymentState("A").observed(
+            isInstalled = true,
+            version = "10",
+            outputMatchesCurrent = false,
+        )
+        val exact = DeviceDeploymentState("A").observed(
+            isInstalled = true,
+            version = "10",
+            outputMatchesCurrent = true,
+        )
+
+        assertEquals(DeviceDeploymentState.InstallPhase.PRESENT, different.installPhase)
+        assertEquals(false, different.installedOutputMatchesCurrent)
+        assertEquals(DeviceDeploymentState.InstallPhase.INSTALLED, exact.installPhase)
+    }
 }

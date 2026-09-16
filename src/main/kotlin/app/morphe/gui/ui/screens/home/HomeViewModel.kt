@@ -72,8 +72,10 @@ import app.morphe.gui.util.cleanupDeviceImportRoot
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.resolveVersionStatus
 import app.morphe.gui.util.resolveInstalledPatchStatus
+import app.morphe.gui.util.resolveInstalledOutputMatch
 import app.morphe.gui.util.buildCurrentPatchVersionLookup
 import app.morphe.gui.util.currentPatchVersionFor
+import app.morphe.gui.util.compareVersionStrings
 import app.morphe.gui.util.CurrentPatchSourceVersion
 import app.morphe.gui.util.sameInstalledAppIdentity
 import app.morphe.gui.util.runBackgroundWork
@@ -409,6 +411,7 @@ class HomeViewModel(
         preemptDeviceLabelIndex(target.serial)
         _uiState.value = _uiState.value.copy(
             installingPackage = packageName,
+            installProgress = "Preparing installation on ${target.displayName}…",
             deviceOperationTarget = target,
             migrationRequest = null,
             migrationError = null,
@@ -421,7 +424,19 @@ class HomeViewModel(
             // Always record a non-Play installer so the Play Store won't clobber
             // the patched app with an official update.
             val installer = adbManager.resolveSpoofInstaller(target.serial)
-            val result = adbManager.installApk(record.outputApkPath, target.serial, installerPackage = installer)
+            val result = adbManager.installApk(
+                apkPath = record.outputApkPath,
+                deviceId = target.serial,
+                installerPackage = installer,
+                onProgress = { progress ->
+                    val current = _uiState.value
+                    if (current.installingPackage == packageName &&
+                        current.deviceOperationTarget?.serial == target.serial
+                    ) {
+                        _uiState.value = current.copy(installProgress = progress)
+                    }
+                },
+            )
 
             // Mirror ResultScreen: if the user opted into auto-routing links,
             // point the patched app at its web links right after a good install.
@@ -432,6 +447,7 @@ class HomeViewModel(
 
             _uiState.value = _uiState.value.copy(
                 installingPackage = null,
+                installProgress = null,
                 error = result.exceptionOrNull()?.let {
                     "Installation failed on ${target.displayName}: ${it.message}"
                 },
@@ -815,6 +831,15 @@ class HomeViewModel(
                 apkPath = info.path,
                 deviceId = target.serial,
                 installerPackage = installer,
+                onProgress = { progress ->
+                    val latest = _uiState.value.existingApkDeployments.forSerial(target.serial)
+                    if (latest.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING) {
+                        _uiState.value = _uiState.value.copy(
+                            existingApkDeployments = _uiState.value.existingApkDeployments +
+                                (target.serial to latest.installing(progress)),
+                        )
+                    }
+                },
             )
             if (result.isSuccess) {
                 patchedRecordsByPackage.values
@@ -1352,16 +1377,13 @@ class HomeViewModel(
                         currentRecord = record,
                         currentVersionBySourceId = currentPatchVersions,
                     )
-                    val currentOutputHash = record.outputApkSha256?.takeIf { it.length == 64 }
-                    val installedOutputMatchesCurrent = when {
-                        currentOutputHash == null -> null
-                        installedHash != null -> currentOutputHash.equals(installedHash, ignoreCase = true)
-                        receiptIdentityMatches -> currentOutputHash.equals(
-                            deployment.outputApkSha256,
-                            ignoreCase = true,
-                        )
-                        else -> null
-                    }
+                    val installedOutputMatchesCurrent = resolveInstalledOutputMatch(
+                        currentOutputSha256 = record.outputApkSha256,
+                        installedApkSha256 = installedHash,
+                        deployment = deployment,
+                        installedVersion = version,
+                        packageLastUpdateTime = packageSnapshot?.lastUpdateTime,
+                    )
                     // Bootstrap a durable receipt for pre-feature installs only when
                     // the on-device bytes exactly match the current local artifact.
                     if (installedHash != null) {
@@ -1378,8 +1400,14 @@ class HomeViewModel(
                                 )
                         }
                     }
-                    // Device is behind the version we already patched → install pending.
-                    val pending = outputExists && version != null && isNewerVersion(record.apkVersion, version)
+                    // Same Android app version can still contain different patch bytes.
+                    val pending = patchedOutputInstallPending(
+                        outputExists = outputExists,
+                        installed = true,
+                        installedOutputMatchesCurrent = installedOutputMatchesCurrent,
+                        patchedVersion = record.apkVersion,
+                        installedVersion = version,
+                    )
                     DeviceAppInfo(
                         installed = true,
                         installedVersion = version,
@@ -2175,6 +2203,25 @@ data class DeviceAppInfo(
     val installedOutputMatchesCurrent: Boolean? = null,
 )
 
+internal fun patchedOutputInstallPending(
+    outputExists: Boolean,
+    installed: Boolean,
+    installedOutputMatchesCurrent: Boolean?,
+    patchedVersion: String?,
+    installedVersion: String?,
+): Boolean {
+    if (!outputExists) return false
+    if (!installed) return true
+    return when (installedOutputMatchesCurrent) {
+        true -> false
+        false -> true
+        null -> !patchedVersion.isNullOrBlank() && !installedVersion.isNullOrBlank() &&
+            !patchedVersion.equals("unknown", ignoreCase = true) &&
+            !installedVersion.equals("unknown", ignoreCase = true) &&
+            compareVersionStrings(patchedVersion, installedVersion) > 0
+    }
+}
+
 internal fun installationSuccessMessage(displayName: String, version: String, deviceName: String): String =
     "$displayName v${version.removePrefix("v")} installed successfully on $deviceName."
 
@@ -2222,6 +2269,8 @@ data class HomeUiState(
     val updatePrep: UpdatePrep? = null,
     /** Package currently being installed to the device from its stored output APK. */
     val installingPackage: String? = null,
+    /** Live ADB stage for the direct Your Apps installation. */
+    val installProgress: String? = null,
     /** Package currently being uninstalled from the device. */
     val uninstallingPackage: String? = null,
     /** Package whose moved patched output is currently being verified by hash. */

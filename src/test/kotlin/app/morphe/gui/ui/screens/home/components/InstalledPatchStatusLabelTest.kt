@@ -2,6 +2,7 @@ package app.morphe.gui.ui.screens.home.components
 
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.installationSuccessMessage
+import app.morphe.gui.ui.screens.home.patchedOutputInstallPending
 import app.morphe.gui.util.InstalledPatchSourceStatus
 import app.morphe.gui.util.InstalledPatchState
 import app.morphe.gui.util.InstalledPatchStatus
@@ -33,6 +34,42 @@ class InstalledPatchStatusLabelTest {
         assertEquals(
             "Installed patch state unknown",
             installedPatchStatusLabel(InstalledPatchStatus(InstalledPatchState.UNKNOWN)),
+        )
+    }
+
+    @Test
+    fun `new local output overrides misleading current patches label`() {
+        assertEquals(
+            "New patched APK ready to install",
+            installedPatchStatusLabel(
+                status = InstalledPatchStatus(InstalledPatchState.CURRENT),
+                installedOutputMatchesCurrent = false,
+                installPending = true,
+            ),
+        )
+    }
+
+    @Test
+    fun `same app version still needs install when patched bytes changed`() {
+        assertEquals(
+            true,
+            patchedOutputInstallPending(
+                outputExists = true,
+                installed = true,
+                installedOutputMatchesCurrent = false,
+                patchedVersion = "2026.37.0",
+                installedVersion = "2026.37.0",
+            ),
+        )
+        assertEquals(
+            false,
+            patchedOutputInstallPending(
+                outputExists = true,
+                installed = true,
+                installedOutputMatchesCurrent = true,
+                patchedVersion = "2026.37.0",
+                installedVersion = "2026.37.0",
+            ),
         )
     }
 

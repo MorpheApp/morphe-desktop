@@ -128,25 +128,6 @@ fun ResultScreenContent(outputPath: String) {
             runCatching { ApkManifestReader.read(outputFile)?.packageName }.getOrNull()
         }
     }
-    val readySerialsKey = monitorState.devices.filter { it.isReady }.joinToString("|") { it.id }
-    LaunchedEffect(readySerialsKey, outputPackage) {
-        val pkg = outputPackage ?: return@LaunchedEffect
-        monitorState.devices.filter { it.isReady }.forEach { device ->
-            val serial = device.id
-            val existing = deployments.forSerial(serial)
-            if (existing.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING) return@forEach
-            deployments = deployments + (serial to existing.checking())
-            val installed = adbManager.listInstalledPackages(serial).getOrNull()?.contains(pkg)
-                ?: return@forEach
-            val version = if (installed) adbManager.getInstalledPackageInfo(serial, pkg)?.first else null
-            val readyNow = DeviceMonitor.state.value.devices.any { it.id == serial && it.isReady }
-            val current = deployments.forSerial(serial)
-            if (readyNow && current.installPhase != DeviceDeploymentState.InstallPhase.INSTALLING) {
-                deployments = deployments + (serial to current.observed(installed, version))
-            }
-        }
-    }
-
     // Link-handling ("open with") state. The stock package — needed only for the
     // optional "stop stock from opening links" half — comes from the recall
     // record for this output (which stores original + renamed package names).
@@ -168,6 +149,36 @@ fun ResultScreenContent(outputPath: String) {
         sourceDeviceSerial = record?.sourceDeviceSerial
         deviceSpecificInput = record?.deviceSpecificInput == true
         patchedRecord = record
+    }
+
+    val readySerialsKey = monitorState.devices.filter { it.isReady }.joinToString("|") { it.id }
+    LaunchedEffect(readySerialsKey, outputPackage, patchedRecord?.outputApkSha256) {
+        val pkg = outputPackage ?: return@LaunchedEffect
+        val currentHash = patchedRecord?.outputApkSha256?.takeIf { it.length == 64 }
+        monitorState.devices.filter { it.isReady }.forEach { device ->
+            val serial = device.id
+            val existing = deployments.forSerial(serial)
+            if (existing.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING) return@forEach
+            deployments = deployments + (serial to existing.checking())
+            val installed = adbManager.listInstalledPackages(serial).getOrNull()?.contains(pkg)
+                ?: return@forEach
+            val snapshot = if (installed) adbManager.getInstalledPackageSnapshot(serial, pkg) else null
+            val installedHash = if (installed && currentHash != null) {
+                adbManager.getInstalledBaseApkSha256(serial, pkg)
+            } else null
+            val matchesCurrent = if (currentHash != null && installedHash != null) {
+                currentHash.equals(installedHash, ignoreCase = true)
+            } else null
+            val readyNow = DeviceMonitor.state.value.devices.any { it.id == serial && it.isReady }
+            val current = deployments.forSerial(serial)
+            if (readyNow && current.installPhase != DeviceDeploymentState.InstallPhase.INSTALLING) {
+                deployments = deployments + (serial to current.observed(
+                    isInstalled = installed,
+                    version = snapshot?.versionName,
+                    outputMatchesCurrent = matchesCurrent,
+                ))
+            }
+        }
     }
 
     suspend fun recordSuccessfulDeployment(deviceSerial: String) {
@@ -442,8 +453,11 @@ fun ResultScreenContent(outputPath: String) {
                         installTarget?.let { target ->
                             val current = deployments.forSerial(target.serial)
                             deployments = deployments + (target.serial to current.copy(
-                                installPhase = if (current.installed == true) DeviceDeploymentState.InstallPhase.INSTALLED
-                                    else DeviceDeploymentState.InstallPhase.IDLE,
+                                installPhase = when {
+                                    current.installed != true -> DeviceDeploymentState.InstallPhase.IDLE
+                                    current.installedOutputMatchesCurrent == true -> DeviceDeploymentState.InstallPhase.INSTALLED
+                                    else -> DeviceDeploymentState.InstallPhase.PRESENT
+                                },
                                 installError = null,
                             ))
                         }
@@ -746,6 +760,8 @@ private fun AdbInstallSection(
                                 val statusColor = when {
                                     state.installPhase == DeviceDeploymentState.InstallPhase.FAILED -> MaterialTheme.colorScheme.error
                                     state.installPhase == DeviceDeploymentState.InstallPhase.INSTALLED -> accents.secondary
+                                    state.installPhase == DeviceDeploymentState.InstallPhase.PRESENT -> accents.warning
+                                    state.installPhase == DeviceDeploymentState.InstallPhase.CHECKING -> accents.primary
                                     state.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING -> accents.primary
                                     device.status == DeviceStatus.DEVICE -> MaterialTheme.colorScheme.onSurfaceVariant
                                     device.status == DeviceStatus.UNAUTHORIZED -> accents.warning
@@ -760,7 +776,11 @@ private fun AdbInstallSection(
                                     Text(
                                         text = when {
                                             state.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING -> "Installing…"
+                                            state.installPhase == DeviceDeploymentState.InstallPhase.CHECKING -> "Checking…"
                                             state.installPhase == DeviceDeploymentState.InstallPhase.INSTALLED -> "Installed"
+                                            state.installPhase == DeviceDeploymentState.InstallPhase.PRESENT &&
+                                                state.installedOutputMatchesCurrent == false -> "Update ready"
+                                            state.installPhase == DeviceDeploymentState.InstallPhase.PRESENT -> "App installed"
                                             state.installPhase == DeviceDeploymentState.InstallPhase.FAILED -> "Failed"
                                             device.status == DeviceStatus.DEVICE -> "Not installed"
                                             device.status == DeviceStatus.UNAUTHORIZED -> "Unauth"

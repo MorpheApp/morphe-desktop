@@ -93,6 +93,38 @@ class InstalledPatchStatusTest {
     }
 
     @Test
+    fun `new local artifact differs from unchanged installed receipt`() {
+        val receipt = deployment("1.4.1", oldHash).copy(packageLastUpdateTime = "same")
+
+        assertEquals(
+            false,
+            resolveInstalledOutputMatch(
+                currentOutputSha256 = currentHash,
+                installedApkSha256 = null,
+                deployment = receipt,
+                installedVersion = "10",
+                packageLastUpdateTime = "same",
+            ),
+        )
+    }
+
+    @Test
+    fun `fresh device hash wins over a stale receipt`() {
+        val receipt = deployment("1.4.2", currentHash).copy(packageLastUpdateTime = "same")
+
+        assertEquals(
+            false,
+            resolveInstalledOutputMatch(
+                currentOutputSha256 = currentHash,
+                installedApkSha256 = oldHash,
+                deployment = receipt,
+                installedVersion = "10",
+                packageLastUpdateTime = "same",
+            ),
+        )
+    }
+
+    @Test
     fun `unrecognized Morphe signed artifact remains unknown`() {
         val status = resolveInstalledPatchStatus(
             installed = true,

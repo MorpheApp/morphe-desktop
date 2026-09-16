@@ -117,6 +117,7 @@ internal fun ExistingApkInstallDialog(
                                         DeviceDeploymentState.InstallPhase.CHECKING -> "Checking…"
                                         DeviceDeploymentState.InstallPhase.INSTALLING -> "Installing…"
                                         DeviceDeploymentState.InstallPhase.INSTALLED -> "Installed"
+                                        DeviceDeploymentState.InstallPhase.PRESENT -> "App installed"
                                         DeviceDeploymentState.InstallPhase.FAILED -> "Failed"
                                         else -> null
                                     }

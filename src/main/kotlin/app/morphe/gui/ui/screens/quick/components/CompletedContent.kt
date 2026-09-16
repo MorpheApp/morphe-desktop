@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.DevicePatchDeploymentStore
 import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.ui.components.UpdateOwnerMigrationDialog
@@ -86,26 +87,42 @@ internal fun CompletedContent(
     var migrationBusy by remember { mutableStateOf(false) }
     var migrationError by remember { mutableStateOf<String?>(null) }
     var outputPackage by remember(outputPath) { mutableStateOf<String?>(null) }
+    var patchedRecord by remember(outputPath) { mutableStateOf<PatchedAppRecord?>(null) }
     var pendingInstallTarget by remember { mutableStateOf<DeviceOperationTarget?>(null) }
 
     LaunchedEffect(outputPath) {
-        outputPackage = withContext(Dispatchers.IO) {
-            PatchedAppStore.shared.getAll().firstOrNull { it.outputApkPath == outputPath }?.installedPackageName
-                ?: ApkManifestReader.read(outputFile)?.packageName
+        val record = withContext(Dispatchers.IO) {
+            PatchedAppStore.shared.getAll().firstOrNull { it.outputApkPath == outputPath }
+        }
+        patchedRecord = record
+        outputPackage = record?.installedPackageName ?: withContext(Dispatchers.IO) {
+            ApkManifestReader.read(outputFile)?.packageName
         }
     }
 
     val readySerialsKey = monitorState.devices.filter { it.isReady }.joinToString("|") { it.id }
-    LaunchedEffect(readySerialsKey, outputPackage) {
+    LaunchedEffect(readySerialsKey, outputPackage, patchedRecord?.outputApkSha256) {
         val pkg = outputPackage ?: return@LaunchedEffect
+        val currentHash = patchedRecord?.outputApkSha256?.takeIf { it.length == 64 }
         monitorState.devices.filter { it.isReady }.forEach { device ->
             val current = deployments.forSerial(device.id)
             if (current.installPhase == DeviceDeploymentState.InstallPhase.INSTALLING) return@forEach
+            deployments = deployments + (device.id to current.checking())
             val installed = adbManager.listInstalledPackages(device.id).getOrNull()?.contains(pkg)
                 ?: return@forEach
-            val version = if (installed) adbManager.getInstalledPackageInfo(device.id, pkg)?.first else null
+            val snapshot = if (installed) adbManager.getInstalledPackageSnapshot(device.id, pkg) else null
+            val installedHash = if (installed && currentHash != null) {
+                adbManager.getInstalledBaseApkSha256(device.id, pkg)
+            } else null
+            val matchesCurrent = if (currentHash != null && installedHash != null) {
+                currentHash.equals(installedHash, ignoreCase = true)
+            } else null
             if (DeviceMonitor.state.value.devices.any { it.id == device.id && it.isReady }) {
-                deployments = deployments + (device.id to deployments.forSerial(device.id).observed(installed, version))
+                deployments = deployments + (device.id to deployments.forSerial(device.id).observed(
+                    isInstalled = installed,
+                    version = snapshot?.versionName,
+                    outputMatchesCurrent = matchesCurrent,
+                ))
             }
         }
     }
@@ -162,6 +179,11 @@ internal fun CompletedContent(
                 apkPath = outputPath,
                 deviceId = target.serial,
                 installerPackage = installer,
+                onProgress = { progress ->
+                    deployments = deployments + (target.serial to deployments.forSerial(target.serial).installing(
+                        "$progress (${target.displayName})",
+                    ))
+                },
             )
             result.fold(
                 onSuccess = {
@@ -346,6 +368,25 @@ internal fun CompletedContent(
             val selectedState = selectedTarget?.let { deployments.forSerial(it.serial) }
 
             when {
+                selectedState?.installPhase == DeviceDeploymentState.InstallPhase.CHECKING -> {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(14.dp),
+                            strokeWidth = 2.dp,
+                            color = accents.primary,
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = "Checking installed APK on ${selectedTarget.displayName}…",
+                            fontSize = 11.sp,
+                            fontFamily = font,
+                            color = accents.primary,
+                        )
+                    }
+                }
                 selectedState?.installPhase == DeviceDeploymentState.InstallPhase.INSTALLED -> {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -421,7 +462,7 @@ internal fun CompletedContent(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Install on ${target.displayName}",
+                            text = "${if (selectedState?.installed == true) "Update" else "Install"} on ${target.displayName}",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,

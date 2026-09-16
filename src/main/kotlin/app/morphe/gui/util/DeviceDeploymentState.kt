@@ -15,6 +15,8 @@ data class DeviceDeploymentState(
     val serial: String,
     val installed: Boolean? = null,
     val installedVersion: String? = null,
+    /** True only when the installed base APK is the exact output shown by this screen. */
+    val installedOutputMatchesCurrent: Boolean? = null,
     val installPhase: InstallPhase = InstallPhase.IDLE,
     val installMessage: String? = null,
     val installError: String? = null,
@@ -22,7 +24,7 @@ data class DeviceDeploymentState(
     val linkMessage: String? = null,
     val linkError: String? = null,
 ) {
-    enum class InstallPhase { IDLE, CHECKING, INSTALLING, INSTALLED, FAILED }
+    enum class InstallPhase { IDLE, CHECKING, PRESENT, INSTALLING, INSTALLED, FAILED }
     enum class LinkPhase { UNKNOWN, NOT_CONFIGURED, APPLYING, CONFIGURED, FAILED }
 
     fun checking(): DeviceDeploymentState = copy(
@@ -31,10 +33,19 @@ data class DeviceDeploymentState(
         installError = null,
     )
 
-    fun observed(isInstalled: Boolean, version: String? = null): DeviceDeploymentState = copy(
+    fun observed(
+        isInstalled: Boolean,
+        version: String? = null,
+        outputMatchesCurrent: Boolean? = null,
+    ): DeviceDeploymentState = copy(
         installed = isInstalled,
         installedVersion = version,
-        installPhase = if (isInstalled) InstallPhase.INSTALLED else InstallPhase.IDLE,
+        installedOutputMatchesCurrent = if (isInstalled) outputMatchesCurrent else false,
+        installPhase = when {
+            !isInstalled -> InstallPhase.IDLE
+            outputMatchesCurrent == true -> InstallPhase.INSTALLED
+            else -> InstallPhase.PRESENT
+        },
         installMessage = null,
         installError = null,
         linkPhase = if (isInstalled) linkPhase else LinkPhase.NOT_CONFIGURED,
@@ -51,6 +62,7 @@ data class DeviceDeploymentState(
     fun installed(message: String, version: String? = installedVersion): DeviceDeploymentState = copy(
         installed = true,
         installedVersion = version,
+        installedOutputMatchesCurrent = true,
         installPhase = InstallPhase.INSTALLED,
         installMessage = message,
         installError = null,

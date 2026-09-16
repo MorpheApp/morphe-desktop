@@ -139,3 +139,30 @@ fun resolveInstalledPatchStatus(
         sources = comparisons,
     )
 }
+
+/**
+ * Resolve whether the currently stored output is the exact APK installed on a
+ * device. Prefer a freshly measured device hash; otherwise trust a deployment
+ * receipt only while its captured Android package identity still matches.
+ */
+fun resolveInstalledOutputMatch(
+    currentOutputSha256: String?,
+    installedApkSha256: String?,
+    deployment: DevicePatchDeploymentRecord?,
+    installedVersion: String?,
+    packageLastUpdateTime: String?,
+): Boolean? {
+    val current = currentOutputSha256?.takeIf { it.length == 64 } ?: return null
+    val installed = installedApkSha256?.takeIf { it.length == 64 }
+    if (installed != null) return current.equals(installed, ignoreCase = true)
+
+    val receiptIdentityMatches = deployment != null &&
+        !deployment.packageLastUpdateTime.isNullOrBlank() &&
+        deployment.packageLastUpdateTime == packageLastUpdateTime &&
+        deployment.apkVersion.equals(installedVersion, ignoreCase = true)
+    return if (receiptIdentityMatches) {
+        current.equals(deployment.outputApkSha256, ignoreCase = true)
+    } else {
+        null
+    }
+}
