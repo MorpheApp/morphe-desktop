@@ -1,3 +1,10 @@
+# [1.17.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.16.1-dev.1...v1.17.0-dev.1) (2026-09-17)
+
+
+### Features
+
+* Modernize patch selection layout and add category grouping ([#315](https://github.com/MorpheApp/morphe-desktop/issues/315)) ([1c60dc0](https://github.com/MorpheApp/morphe-desktop/commit/1c60dc014766adc879e6692d9d3d30a512243df6))
+
 ## [1.16.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.16.0...v1.16.1-dev.1) (2026-09-17)
 
 
