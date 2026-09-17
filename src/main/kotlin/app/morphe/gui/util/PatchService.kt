@@ -299,7 +299,8 @@ class PatchService {
                     valueType = opt.type,
                 )
             },
-            isEnabled = this.use
+            isEnabled = this.use,
+            category = this.category?.takeIf { it.isNotBlank() }
         )
     }
 

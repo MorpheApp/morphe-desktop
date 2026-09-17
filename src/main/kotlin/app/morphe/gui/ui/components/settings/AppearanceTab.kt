@@ -32,6 +32,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.LocalBackgroundType
 import app.morphe.gui.LocalEnableParallax
+import app.morphe.gui.LocalGroupPatchesByCategory
 import app.morphe.gui.LocalSharpCorners
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.AppCard
@@ -116,6 +117,22 @@ internal fun AppearanceTab(
             }
         }
     }
+
+    Spacer(Modifier.height(14.dp))
+
+    val sharpCornersState = LocalSharpCorners.current
+    SettingToggleRow(
+        label = "Sharp corners",
+        description = "Square off cards, dialogs and buttons",
+        checked = sharpCornersState.value,
+        onCheckedChange = { enabled ->
+            sharpCornersState.value = enabled
+            scope.launch { configRepo.setUseSharpCorners(enabled) }
+        },
+        accentColor = accents.primary,
+        font = font,
+        icon = MorpheIcons.RoundedCorner
+    )
 
     SettingsDivider(borderColor)
 
@@ -257,6 +274,25 @@ internal fun AppearanceTab(
 
     SettingsDivider(borderColor)
 
+    SectionLabel("Patch list", font, icon = MorpheIcons.Extension)
+    Spacer(Modifier.height(8.dp))
+
+    val groupPatchesByCategoryState = LocalGroupPatchesByCategory.current
+    SettingToggleRow(
+        label = "Patch categories",
+        description = "Group patches into expandable categories",
+        checked = groupPatchesByCategoryState.value,
+        onCheckedChange = { enabled ->
+            groupPatchesByCategoryState.value = enabled
+            scope.launch { configRepo.setGroupPatchesByCategory(enabled) }
+        },
+        accentColor = accents.primary,
+        font = font,
+        icon = MorpheIcons.Category
+    )
+
+    SettingsDivider(borderColor)
+
     SectionLabel("Background animation", font, icon = MorpheIcons.Wallpaper)
     Spacer(Modifier.height(8.dp))
 
@@ -330,22 +366,6 @@ internal fun AppearanceTab(
         accentColor = accents.primary,
         font = font,
         icon = MorpheIcons.Mouse
-    )
-
-    Spacer(Modifier.height(14.dp))
-
-    val sharpCornersState = LocalSharpCorners.current
-    SettingToggleRow(
-        label = "Sharp corners",
-        description = "Square off cards, dialogs and buttons",
-        checked = sharpCornersState.value,
-        onCheckedChange = { enabled ->
-            sharpCornersState.value = enabled
-            scope.launch { configRepo.setUseSharpCorners(enabled) }
-        },
-        accentColor = accents.primary,
-        font = font,
-        icon = MorpheIcons.RoundedCorner
     )
 }
 
