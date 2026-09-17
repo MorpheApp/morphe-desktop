@@ -89,6 +89,10 @@ val LocalSharpCorners = compositionLocalOf<MutableState<Boolean>> {
     error("No LocalSharpCorners provided")
 }
 
+val LocalGroupPatchesByCategory = compositionLocalOf<MutableState<Boolean>> {
+    error("No LocalGroupPatchesByCategory provided")
+}
+
 /**
  * Auto-start ADB preference. Exposed as a composition local so the
  * SettingsDialog (writer) and DeviceIndicator + install buttons (readers)
@@ -154,6 +158,7 @@ private fun appContent(
     var cardFills by remember { mutableStateOf(emptyMap<String, MorpheFill>()) }
     var globalCardFill by remember { mutableStateOf<MorpheFill?>(null) }
     val sharpCornersState = remember { mutableStateOf(false) }
+    val groupPatchesByCategoryState = remember { mutableStateOf(true) }
     val backgroundSpeedState = remember { mutableFloatStateOf(1f) }
     val patchingCompletedState = remember { mutableStateOf(false) }
 
@@ -163,6 +168,7 @@ private fun appContent(
         val config = configRepository.loadConfig()
         themePreference = config.getThemePreference()
         isSimplifiedMode = config.useSimplifiedMode
+        groupPatchesByCategoryState.value = config.groupPatchesByCategory
         backgroundTypeState.value = try {
             BackgroundType.valueOf(config.backgroundType)
         } catch (e: Exception) {
@@ -282,6 +288,7 @@ private fun appContent(
             LocalParallaxState provides parallaxState,
             LocalCustomAccentColor provides customAccentColorState,
             LocalSharpCorners provides sharpCornersState,
+            LocalGroupPatchesByCategory provides groupPatchesByCategoryState,
             LocalBackgroundSpeed provides backgroundSpeedState,
             LocalPatchingCompleted provides patchingCompletedState
         ) {

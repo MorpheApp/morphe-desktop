@@ -10,6 +10,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,12 +19,20 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +56,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.LocalGroupPatchesByCategory
 import app.morphe.gui.LocalOnSettingsDismiss
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchOption
@@ -86,7 +96,6 @@ import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import app.morphe.gui.ui.components.MorpheActionButton
 import app.morphe.gui.ui.components.MorpheBadge
-import app.morphe.gui.ui.components.MorpheChevron
 import app.morphe.gui.ui.components.MorpheChoiceChip
 import app.morphe.gui.ui.components.MorpheTooltip
 import app.morphe.gui.util.expectedValueHint
@@ -419,38 +428,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
         )
 
-        // Global selection-mode chips: only meaningful when there's exactly
-        // ONE bundle. Multi-bundle moves these chips INTO each bundle box
-        // so each source can be managed independently. The deprecated
-        // applySaved/applyDefaults/selectAll/deselectAll methods loop over
-        // bundles. For a single bundle, they're equivalent to the per-
-        // bundle methods.
-        val isSingleBundle = uiState.bundles.size == 1
-        AnimatedVisibility(
-            visible = !uiState.isLoading && isSingleBundle && uiState.bundles.firstOrNull()?.patches?.isNotEmpty() == true,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            val activeBundleId = uiState.bundles.firstOrNull()?.bundleId
-            SelectionModeChips(
-                hasSavedSelection = uiState.hasSavedSelection,
-                activeMode = activeBundleId?.let { uiState.selectionModeFor(it) } ?: SelectionMode.CUSTOM,
-                onApplySaved = {
-                    activeBundleId?.let { viewModel.applySavedDefaultsInBundle(it) }
-                },
-                onApplyDefaults = {
-                    activeBundleId?.let { viewModel.applyPatchDefaultsInBundle(it) }
-                },
-                onApplyAll = {
-                    activeBundleId?.let { viewModel.selectAllInBundle(it) }
-                },
-                onApplyNone = {
-                    activeBundleId?.let { viewModel.deselectAllInBundle(it) }
-                },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-            )
-        }
-
         when {
             uiState.isLoading -> {
                 Box(
@@ -525,97 +502,291 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             }
 
             else -> {
-                // Patch list. Single-bundle renders flat (no box chrome),
-                // multi-bundle renders per-bundle collapsible boxes.
-                val scrollState = rememberScrollState()
+                val eligibleBundles = remember(uiState.bundles) {
+                    uiState.bundles.filter { it.patches.isNotEmpty() }
+                }
+                val filteredBundlesById = remember(uiState.filteredBundles) {
+                    uiState.filteredBundles.associateBy { it.bundleId }
+                }
+                val hasMultipleBundles = eligibleBundles.size > 1
+                val groupByCategory = LocalGroupPatchesByCategory.current.value
+                val sectionState = rememberPatchSectionState()
+                val coroutineScope = rememberCoroutineScope()
+                val pagerState = rememberPagerState { eligibleBundles.size }
 
-                // Expand/collapse state for multi-bundle, keyed by bundleId.
-                // Default: all bundles expanded. Uses plain `remember`. State
-                // resets if the user backs out and re-enters the screen, which
-                // is acceptable since "show me everything" is the right default.
-                val collapsedBundles = remember { mutableStateListOf<String>() }
+                val currentBundles = rememberUpdatedState(eligibleBundles)
+                val currentFiltered = rememberUpdatedState(filteredBundlesById)
+                LaunchedEffect(pagerState) {
+                    snapshotFlow { currentFiltered.value }.collect { filteredMap ->
+                        val bundles = currentBundles.value
+                        val openBundle = bundles.getOrNull(pagerState.currentPage) ?: return@collect
+                        val openHasResults = filteredMap[openBundle.bundleId]?.patches?.isNotEmpty() == true
+                        if (openHasResults) return@collect
 
-                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        val showBanner = uiState.stripLibsStatus !is StripLibsStatus.NoNativeLibs
-                        if (showBanner) {
-                            StripLibsStatusBanner(status = uiState.stripLibsStatus)
+                        val firstWithResultsIndex = bundles.indexOfFirst { bundle ->
+                            filteredMap[bundle.bundleId]?.patches?.isNotEmpty() == true
+                        }
+                        if (firstWithResultsIndex >= 0) {
+                            pagerState.animateScrollToPage(firstWithResultsIndex)
+                        }
+                    }
+                }
+
+                val pageListStates = rememberSaveable(
+                    eligibleBundles.size,
+                    saver = listSaver(
+                        save = { states ->
+                            states.flatMap { listOf(it.firstVisibleItemIndex, it.firstVisibleItemScrollOffset) }
+                        },
+                        restore = { saved ->
+                            saved.chunked(2).map { (index, offset) -> LazyListState(index, offset) }
+                        }
+                    )
+                ) {
+                    List(eligibleBundles.size) { LazyListState() }
+                }
+
+                val showBanner = uiState.stripLibsStatus !is StripLibsStatus.NoNativeLibs
+                if (showBanner) {
+                    StripLibsStatusBanner(
+                        status = uiState.stripLibsStatus,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    // 1. Tab row (when multiple bundles are present)
+                    if (hasMultipleBundles) {
+                        val tabScrollState = rememberScrollState()
+
+                        SecondaryScrollableTabRow(
+                            selectedTabIndex = pagerState.currentPage.coerceIn(0, (eligibleBundles.size - 1).coerceAtLeast(0)),
+                            scrollState = tabScrollState,
+                            edgePadding = 0.dp,
+                            divider = {},
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ) {
+                            eligibleBundles.forEachIndexed { index, bundle ->
+                                val bundleFiltered = filteredBundlesById[bundle.bundleId]?.patches.orEmpty()
+                                val hasResults = bundleFiltered.isNotEmpty()
+                                val enabledCount = uiState.selectedByBundle[bundle.bundleId]?.size ?: 0
+                                val totalCount = bundle.patches.size
+                                val isSelected = pagerState.currentPage == index
+
+                                Tab(
+                                    selected = isSelected,
+                                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                                    unselectedContentColor = if (hasResults)
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    else
+                                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                                    ) {
+                                        Text(
+                                            text = bundle.bundleName,
+                                            fontSize = 13.sp,
+                                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                                            fontFamily = font,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        Spacer(modifier = Modifier.height(2.dp))
+
+                                        MorpheBadge(
+                                            text = "$enabledCount/$totalCount",
+                                            tone = if (isSelected && hasResults) MorpheBadgeTone.Primary else MorpheBadgeTone.Neutral
+                                        )
+                                    }
+                                }
+                            }
                         }
 
-                        if (isSingleBundle) {
-                            // ── Flat rendering (single bundle, no chrome) ──
-                            val bundle = uiState.filteredBundles.firstOrNull() ?: return@Column
-                            val bundleId = bundle.bundleId
-                            val selectedInBundle = uiState.selectedByBundle[bundleId].orEmpty()
-                            val newInBundle = uiState.newPatchesByBundle[bundleId].orEmpty()
-                            bundle.patches.newestFirst(newInBundle).forEach { patch ->
-                                PatchListItem(
-                                    patch = patch,
-                                    isSelected = selectedInBundle.contains(patch.uniqueId),
-                                    isNew = patch.uniqueId in newInBundle,
-                                    onToggle = { viewModel.togglePatch(bundleId, patch.uniqueId) },
-                                    sourceName = null,
-                                    packageName = targetPackage,
-                                    getOptionValue = { optionKey, default ->
-                                        viewModel.getOptionValue(patch.name, optionKey, default)
-                                    },
-                                    onOptionValueChange = { optionKey, value ->
-                                        viewModel.setOptionValue(patch.name, optionKey, value)
-                                    }
+                        if (tabScrollState.maxValue > 0) {
+                            Spacer(Modifier.height(4.dp))
+                            HorizontalScrollbar(
+                                adapter = rememberScrollbarAdapter(tabScrollState),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                                style = morpheScrollbarStyle()
+                            )
+                            Spacer(Modifier.height(4.dp))
+                        }
+
+                        HorizontalDivider(
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                            thickness = 0.5.dp
+                        )
+                    } else {
+                        val singleBundle = eligibleBundles.firstOrNull()
+                        if (singleBundle != null) {
+                            Row(
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = MorpheIcons.Source,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(16.dp)
                                 )
-                            }
-                        } else {
-                            // ── Per-bundle collapsible boxes (multi-bundle) ──
-                            // Hide bundles whose pre-filter patches list is empty
-                            // (i.e. the bundle has NO patches compatible with this
-                            // APK at all). Bundles that loaded patches but are
-                            // currently empty due to an active search still
-                            // render. Their box shows "no matches in this bundle".
-                            val bundlesById = uiState.bundles.associateBy { it.bundleId }
-                            val visibleBundles = uiState.filteredBundles.filter { fb ->
-                                bundlesById[fb.bundleId]?.patches?.isNotEmpty() == true
-                            }
-                            visibleBundles.forEach { bundle ->
-                                BundleBox(
-                                    bundle = bundle,
-                                    packageName = targetPackage,
-                                    selectedInBundle = uiState.selectedByBundle[bundle.bundleId].orEmpty(),
-                                    newInBundle = uiState.newPatchesByBundle[bundle.bundleId].orEmpty(),
-                                    selectionMode = uiState.selectionModeFor(bundle.bundleId),
-                                    hasSavedForBundle = uiState.savedSelectedByBundle?.containsKey(bundle.bundleId) == true,
-                                    expanded = bundle.bundleId !in collapsedBundles,
-                                    searchActive = uiState.searchQuery.isNotBlank(),
-                                    onExpandToggle = {
-                                        if (bundle.bundleId in collapsedBundles) collapsedBundles.remove(bundle.bundleId)
-                                        else collapsedBundles.add(bundle.bundleId)
-                                    },
-                                    onTogglePatch = { patchId -> viewModel.togglePatch(bundle.bundleId, patchId) },
-                                    onSelectAll = { viewModel.selectAllInBundle(bundle.bundleId) },
-                                    onDeselectAll = { viewModel.deselectAllInBundle(bundle.bundleId) },
-                                    onApplyDefaults = { viewModel.applyPatchDefaultsInBundle(bundle.bundleId) },
-                                    onApplySaved = { viewModel.applySavedDefaultsInBundle(bundle.bundleId) },
-                                    getOptionValue = { patchName, optionKey, default ->
-                                        viewModel.getOptionValue(patchName, optionKey, default)
-                                    },
-                                    onOptionValueChange = { patchName, optionKey, value ->
-                                        viewModel.setOptionValue(patchName, optionKey, value)
-                                    },
+                                Spacer(Modifier.width(6.dp))
+                                Text(
+                                    text = singleBundle.bundleName,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontFamily = font
                                 )
                             }
                         }
                     }
 
-                    VerticalScrollbar(
-                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(scrollState),
-                        style = morpheScrollbarStyle()
-                    )
+                    // 2. Controls fixed below the tab row
+                    val currentIndex = pagerState.currentPage
+                    val currentBundle = eligibleBundles.getOrNull(currentIndex)
+                    if (currentBundle != null) {
+                        SelectionModeChips(
+                            hasSavedSelection = uiState.savedSelectedByBundle?.containsKey(currentBundle.bundleId) == true,
+                            activeMode = uiState.selectionModeFor(currentBundle.bundleId),
+                            onApplySaved = { viewModel.applySavedDefaultsInBundle(currentBundle.bundleId) },
+                            onApplyDefaults = { viewModel.applyPatchDefaultsInBundle(currentBundle.bundleId) },
+                            onApplyAll = { viewModel.selectAllInBundle(currentBundle.bundleId) },
+                            onApplyNone = { viewModel.deselectAllInBundle(currentBundle.bundleId) },
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                        )
+                    }
+
+                    // 3. Pager for the patch list
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxSize()
+                        ) { pageIndex ->
+                            val bundle = eligibleBundles.getOrNull(pageIndex) ?: return@HorizontalPager
+                            val bundleFiltered = filteredBundlesById[bundle.bundleId]?.patches.orEmpty()
+                            val selectedInBundle = uiState.selectedByBundle[bundle.bundleId].orEmpty()
+                            val newInBundle = uiState.newPatchesByBundle[bundle.bundleId].orEmpty()
+                            val listState = pageListStates.getOrElse(pageIndex) { rememberLazyListState() }
+
+                            if (bundleFiltered.isEmpty() && uiState.searchQuery.isNotBlank()) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "No matches in this bundle",
+                                        fontSize = 13.sp,
+                                        fontFamily = font,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            } else {
+                                val sortedPatches = remember(bundleFiltered, newInBundle) {
+                                    bundleFiltered.newestFirst(newInBundle)
+                                }
+                                val groups = remember(sortedPatches, groupByCategory, selectedInBundle) {
+                                    buildPatchGroups(
+                                        patches = sortedPatches,
+                                        groupByCategory = groupByCategory,
+                                        categoryOf = { it.category },
+                                        isUniversal = { it.isUniversal },
+                                        isEnabled = { it.uniqueId in selectedInBundle }
+                                    )
+                                }
+                                val isSearching = uiState.searchQuery.isNotBlank()
+
+                                LazyColumn(
+                                    state = listState,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    groups.forEach { group ->
+                                        if (group.title != null) {
+                                            val isExpanded = isSearching || sectionState.isExpanded(bundle.bundleId, group)
+                                            item(key = "group_${bundle.bundleId}_${group.key}") {
+                                                PatchGroupHeader(
+                                                    title = group.title,
+                                                    count = group.items.size,
+                                                    isExpanded = isExpanded,
+                                                    onToggle = if (isSearching) null else ({ sectionState.toggle(bundle.bundleId, group) }),
+                                                    icon = group.icon,
+                                                    selectedCount = group.selectedCount
+                                                )
+                                            }
+                                            if (isExpanded) {
+                                                items(
+                                                    items = group.items,
+                                                    key = { it.uniqueId }
+                                                ) { patch ->
+                                                    PatchListItem(
+                                                        patch = patch,
+                                                        isSelected = selectedInBundle.contains(patch.uniqueId),
+                                                        isNew = patch.uniqueId in newInBundle,
+                                                        onToggle = { viewModel.togglePatch(bundle.bundleId, patch.uniqueId) },
+                                                        sourceName = null,
+                                                        packageName = targetPackage,
+                                                        getOptionValue = { optionKey, default ->
+                                                            viewModel.getOptionValue(patch.name, optionKey, default)
+                                                        },
+                                                        onOptionValueChange = { optionKey, value ->
+                                                            viewModel.setOptionValue(patch.name, optionKey, value)
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        } else {
+                                            items(
+                                                items = group.items,
+                                                key = { it.uniqueId }
+                                            ) { patch ->
+                                                PatchListItem(
+                                                    patch = patch,
+                                                    isSelected = selectedInBundle.contains(patch.uniqueId),
+                                                    isNew = patch.uniqueId in newInBundle,
+                                                    onToggle = { viewModel.togglePatch(bundle.bundleId, patch.uniqueId) },
+                                                    sourceName = null,
+                                                    packageName = targetPackage,
+                                                    getOptionValue = { optionKey, default ->
+                                                        viewModel.getOptionValue(patch.name, optionKey, default)
+                                                    },
+                                                    onOptionValueChange = { optionKey, value ->
+                                                        viewModel.setOptionValue(patch.name, optionKey, value)
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        val currentPageList = eligibleBundles.getOrNull(pagerState.currentPage)
+                            ?.takeIf { filteredBundlesById[it.bundleId]?.patches?.isNotEmpty() == true }
+                            ?.let { pageListStates.getOrNull(pagerState.currentPage) }
+                        if (currentPageList != null) {
+                            VerticalScrollbar(
+                                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                                adapter = rememberScrollbarAdapter(currentPageList),
+                                style = morpheScrollbarStyle()
+                            )
+                        }
+                    }
                 }
 
                 // ── Bottom action bar ──
@@ -1851,150 +2022,6 @@ private data class BannerDisplay(
     val notInApkChips: List<String> = emptyList()
 )
 
-// ────────────────────────────────────────────────────────────────────────────
-//  Per-bundle collapsible box (multi-bundle view)
-// ────────────────────────────────────────────────────────────────────────────
-
-/**
- * Collapsible box containing one bundle's patches. Each box has its own
- * header (bundle name, count, expand chevron, "Your Defaults" chip),
- * per-bundle control buttons (Select all / Deselect / Defaults / Saved),
- * and the patches list itself.
- *
- * In search-active state, the box stays visible even if [BundlePatches.patches]
- * is empty. It renders a "no matches in this bundle" inline empty state so
- * the structural grouping stays stable while the user iterates on the query.
- */
-@Composable
-private fun BundleBox(
-    bundle: BundlePatches,
-    packageName: String = "",
-    selectedInBundle: Set<String>,
-    newInBundle: Set<String>,
-    selectionMode: SelectionMode,
-    hasSavedForBundle: Boolean,
-    expanded: Boolean,
-    searchActive: Boolean,
-    onExpandToggle: () -> Unit,
-    onTogglePatch: (String) -> Unit,
-    onSelectAll: () -> Unit,
-    onDeselectAll: () -> Unit,
-    onApplyDefaults: () -> Unit,
-    onApplySaved: () -> Unit,
-    getOptionValue: (patchName: String, optionKey: String, default: String?) -> String,
-    onOptionValueChange: (patchName: String, optionKey: String, value: String) -> Unit,
-) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-
-    val enabledCount = selectedInBundle.size
-    val totalCount = bundle.patches.size
-
-    val outlineColor = MaterialTheme.colorScheme.outlineVariant
-    val bgColor = panelFill
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(corners.medium))
-            .background(bgColor)
-            .border(1.dp, outlineColor, RoundedCornerShape(corners.medium))
-    ) {
-        // ── Header ──
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onExpandToggle() }
-                .padding(horizontal = 14.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            MorpheChevron(expanded)
-            Text(
-                text = bundle.bundleName,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f, fill = false)
-            )
-            // Count chip. "Your Defaults" badge lives in SelectionModeChips
-            // below so we don't duplicate the signal here.
-            Text(
-                text = "$enabledCount / $totalCount",
-                fontSize = 10.sp,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.weight(1f))
-        }
-
-        // ── Body (controls + patches) ──
-        AnimatedVisibility(
-            visible = expanded,
-            enter = expandVertically(),
-            exit = shrinkVertically(),
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                // Per-bundle control row. REUSES the same SelectionModeChips
-                // composable the single-bundle path uses, so icons, hover
-                // states, "Your Defaults" badge, and full-width layout match
-                // exactly. Callbacks scope each action to THIS bundle.
-                SelectionModeChips(
-                    hasSavedSelection = hasSavedForBundle,
-                    activeMode = selectionMode,
-                    onApplySaved = onApplySaved,
-                    onApplyDefaults = onApplyDefaults,
-                    onApplyAll = onSelectAll,
-                    onApplyNone = onDeselectAll,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                )
-
-                // Patches inside this bundle. Note: this is a regular Column,
-                // NOT a LazyColumn. Bundles aren't typically huge enough
-                // (tens of patches) to justify lazy rendering, and nesting
-                // LazyColumns inside a LazyColumn is unsupported.
-                if (bundle.patches.isEmpty() && searchActive) {
-                    Text(
-                        text = "No matches in this bundle",
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                    )
-                } else {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp, vertical = 4.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                    ) {
-                        bundle.patches.newestFirst(newInBundle).forEach { patch ->
-                            PatchListItem(
-                                patch = patch,
-                                isSelected = selectedInBundle.contains(patch.uniqueId),
-                                isNew = patch.uniqueId in newInBundle,
-                                onToggle = { onTogglePatch(patch.uniqueId) },
-                                // Bundle context is implicit from the box header
-                                sourceName = null,
-                                packageName = packageName,
-                                getOptionValue = { optionKey, default ->
-                                    getOptionValue(patch.name, optionKey, default)
-                                },
-                                onOptionValueChange = { optionKey, value ->
-                                    onOptionValueChange(patch.name, optionKey, value)
-                                },
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 private fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {

@@ -143,6 +143,14 @@ class ConfigRepository {
     }
 
     /**
+     * Update group patches by category preference.
+     */
+    suspend fun setGroupPatchesByCategory(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(groupPatchesByCategory = enabled))
+    }
+
+    /**
      * Update patch channel preference.
      */
     suspend fun setPatchChannel(channel: PatchChannel) {
