@@ -1,3 +1,10 @@
+## [1.16.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.16.0...v1.16.1-dev.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([6cc9b28](https://github.com/MorpheApp/morphe-desktop/commit/6cc9b28295d1b7cd65fd77271bb709e030cf28d2))
+
 # [1.16.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1...v1.16.0) (2026-09-14)
 
 
