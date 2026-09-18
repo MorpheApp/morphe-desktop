@@ -705,10 +705,14 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 val sortedPatches = remember(bundleFiltered, newInBundle) {
                                     bundleFiltered.newestFirst(newInBundle)
                                 }
-                                val groups = remember(sortedPatches, groupByCategory, selectedInBundle) {
+                                val universalTitle = stringResource(Res.string.patch_selection_group_universal)
+                                val ungroupedTitle = stringResource(Res.string.patch_selection_group_ungrouped)
+                                val groups = remember(sortedPatches, groupByCategory, selectedInBundle, universalTitle, ungroupedTitle) {
                                     buildPatchGroups(
                                         patches = sortedPatches,
                                         groupByCategory = groupByCategory,
+                                        universalTitle = universalTitle,
+                                        ungroupedTitle = ungroupedTitle,
                                         categoryOf = { it.category },
                                         isUniversal = { it.isUniversal },
                                         isEnabled = { it.uniqueId in selectedInBundle }

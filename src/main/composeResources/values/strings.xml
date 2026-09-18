@@ -461,6 +461,9 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch bundles</string>
     <string name="patch_selection_run_info_no_bundles">No bundles resolved</string>
+    <string name="patch_selection_group_universal">Universal</string>
+    <string name="patch_selection_group_ungrouped">Ungrouped</string>
+    <string name="patch_selection_group_selected_count">%1$d selected</string>
 
     <!-- Patching Screen -->
     <string name="patching_status_ready">Ready to patch</string>

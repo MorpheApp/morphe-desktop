@@ -40,6 +40,10 @@
         <item quantity="one">%1$d of %2$d selected</item>
         <item quantity="other">%1$d of %2$d selected</item>
     </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patches</item>
+    </plurals>
     <plurals name="settings_app_cards_override_count">
         <item quantity="one">%1$d card overrides this</item>
         <item quantity="other">%1$d cards override this</item>
