@@ -47,6 +47,8 @@ import app.morphe.gui.ui.theme.shiftLightness
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 fun parseHexColor(hexString: String?, fallback: Color): Color {
     if (hexString.isNullOrBlank()) return fallback
@@ -245,7 +247,7 @@ fun AppCard(
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Settings,
-                        contentDescription = "Customise card",
+                        contentDescription = stringResource(Res.string.customize_card_description),
                         tint = buttonInk,
                         modifier = Modifier.size(20.dp),
                     )

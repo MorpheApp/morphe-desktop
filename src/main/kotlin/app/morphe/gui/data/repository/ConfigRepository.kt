@@ -83,6 +83,14 @@ class ConfigRepository {
     }
 
     /**
+     * Update language preference.
+     */
+    suspend fun setLanguage(language: String) {
+        val current = loadConfig()
+        saveConfig(current.copy(language = language))
+    }
+
+    /**
      * Update theme preference.
      */
     suspend fun setThemePreference(theme: ThemePreference) {

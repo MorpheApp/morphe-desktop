@@ -46,6 +46,8 @@ import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Vertical-list-friendly supported-app row. Two-row collapsed layout:
@@ -149,8 +151,18 @@ fun SupportedAppListRow(
             // The URL goes through unconditionally. When recommendedVersion is null
             // (patches work on Any version) it still points at the app's general
             // APKMirror page and stays clickable.
-            VersionCardChip("Latest Stable", app.recommendedVersion, app.apkDownloadUrl, "Any")
-            VersionCardChip("Latest Experimental", latestExperimental, app.experimentalDownloadUrl, "N/A")
+            VersionCardChip(
+                channelLabel = stringResource(Res.string.version_label_latest_stable),
+                version = app.recommendedVersion,
+                downloadUrl = app.apkDownloadUrl,
+                nullLabel = stringResource(Res.string.home_app_row_any),
+            )
+            VersionCardChip(
+                channelLabel = stringResource(Res.string.home_app_row_latest_experimental),
+                version = latestExperimental,
+                downloadUrl = app.experimentalDownloadUrl,
+                nullLabel = stringResource(Res.string.home_app_row_na),
+            )
         }
 
         // ── Expanded body: PATCHES FROM + ALSO STABLE + EXPERIMENTAL pills ──
@@ -179,12 +191,23 @@ fun SupportedAppListRow(
 /** Optional device-layer line: whether the app is installed on the connected device. */
 @Composable
 private fun DeviceInfoLine(info: DeviceAppInfo, font: FontFamily) {
-    val version = info.installedVersion?.let { " · v${it.removePrefix("v")}" } ?: ""
-    val (text, color) = when {
-        !info.installed -> "Not on this device" to Color.White.copy(alpha = 0.5f)
+    val version = info.installedVersion?.removePrefix("v")
+    val text = when {
+        !info.installed -> stringResource(Res.string.home_app_row_not_on_device)
         // Installed but signed by a different cert → replaced/re-signed outside Morphe.
-        info.signedByMorphe == false -> "On device$version · not Morphe-signed" to Color(0xFFE0504D) // red
-        else -> "On device$version" to Color.White // ours, or signature undetermined
+        info.signedByMorphe == false -> {
+            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version_not_signed, version)
+            else stringResource(Res.string.home_app_row_on_device_not_signed)
+        }
+        else -> {
+            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version, version)
+            else stringResource(Res.string.home_app_row_on_device)
+        }
+    }
+    val color = when {
+        !info.installed -> Color.White.copy(alpha = 0.5f)
+        info.signedByMorphe == false -> Color(0xFFE0504D) // red
+        else -> Color.White // ours, or signature undetermined
     }
     Text(
         text = text,
@@ -207,10 +230,10 @@ internal fun PatchedStateBadge(
     onGradient: Boolean = true,
 ) {
     val label = when (state) {
-        PatchedAppState.PATCHED -> "Patched"
-        PatchedAppState.PATCHED_WITH_UPDATES -> "Patch update available"
-        PatchedAppState.MODIFIED_EXTERNALLY -> "Modified"
-        PatchedAppState.APK_MISSING -> "APK missing"
+        PatchedAppState.PATCHED -> stringResource(Res.string.home_your_apps_status_patched)
+        PatchedAppState.PATCHED_WITH_UPDATES -> stringResource(Res.string.home_app_row_update_available_badge)
+        PatchedAppState.MODIFIED_EXTERNALLY -> stringResource(Res.string.home_app_row_modified_badge)
+        PatchedAppState.APK_MISSING -> stringResource(Res.string.home_app_row_apk_missing_badge)
         PatchedAppState.NEVER_PATCHED -> return
     }
     if (!onGradient) {
@@ -260,7 +283,7 @@ private fun ExpandedBody(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (patchSourceNames.isNotEmpty()) {
-            SectionLabel(text = "Patches from", font = font, color = chipInk)
+            SectionLabel(text = stringResource(Res.string.home_app_row_section_patches_from), font = font, color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -272,7 +295,7 @@ private fun ExpandedBody(
         }
 
         if (otherStable.isNotEmpty()) {
-            SectionLabel(text = "Stable", font = font, color = chipInk)
+            SectionLabel(text = stringResource(Res.string.version_label_stable), font = font, color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -300,7 +323,7 @@ private fun ExpandedBody(
         }
 
         if (app.experimentalVersions.isNotEmpty()) {
-            SectionLabel(text = "Experimental", font = font, color = chipInk)
+            SectionLabel(text = stringResource(Res.string.version_label_experimental), font = font, color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -341,4 +364,3 @@ internal fun SectionLabel(
         fontFamily = font,
     )
 }
-

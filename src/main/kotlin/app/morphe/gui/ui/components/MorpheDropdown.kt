@@ -59,6 +59,8 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.panelFill
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 /** One entry in a [MorpheDropdown]. */
 data class MorpheDropdownItem(val label: String, val onClick: () -> Unit)
@@ -126,7 +128,7 @@ fun MorpheDropdown(
                         Box(Modifier.heightIn(max = maxHeight)) {
                             Column(Modifier.verticalScroll(listScroll).padding(end = 10.dp)) {
                                 if (shown.isEmpty()) {
-                                    Text("No matches", fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(10.dp))
+                                    Text(stringResource(Res.string.no_matches), fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(10.dp))
                                 }
                                 shown.forEach { item ->
                                     val hover = remember { MutableInteractionSource() }
@@ -167,7 +169,7 @@ private fun SearchField(query: String, font: FontFamily, accent: Color, onChange
     ) {
         Icon(MorpheIcons.Search, contentDescription = null, tint = accent.copy(alpha = 0.6f), modifier = Modifier.size(13.dp))
         Box(Modifier.weight(1f).padding(start = 6.dp)) {
-            if (query.isEmpty()) Text("Search…", fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+            if (query.isEmpty()) Text(stringResource(Res.string.dropdown_search_placeholder), fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
             BasicTextField(
                 value = query,
                 onValueChange = onChange,

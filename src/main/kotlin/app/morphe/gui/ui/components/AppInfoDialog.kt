@@ -23,9 +23,9 @@ import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.morphe_desktop.generated.resources.Res
-import app.morphe.morphe_desktop.generated.resources.morphe_logo
+import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AppInfoDialog(
@@ -47,7 +47,7 @@ fun AppInfoDialog(
                 // App Logo
                 Image(
                     painter = painterResource(Res.drawable.morphe_logo),
-                    contentDescription = "Morphe Logo",
+                    contentDescription = stringResource(Res.string.morphe_logo_content_description),
                     modifier = Modifier
                         .size(72.dp)
                         .clip(RoundedCornerShape(corners.medium))
@@ -55,7 +55,7 @@ fun AppInfoDialog(
 
                 // Main Title
                 Text(
-                    text = "Morphe",
+                    text = stringResource(Res.string.app_name),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
@@ -67,20 +67,21 @@ fun AppInfoDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val aboutColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    val unknownVer = stringResource(Res.string.unknown)
                     Text(
-                        text = "GUI: ${AppConstants.APP_VERSION}",
+                        text = stringResource(Res.string.app_info_version_gui, AppConstants.APP_VERSION),
                         fontSize = 12.sp,
                         fontFamily = font,
                         color = aboutColor
                     )
                     Text(
-                        text = "Patcher: v${MorpheComponents.patcherVersion ?: "unknown"}",
+                        text = stringResource(Res.string.app_info_version_patcher, MorpheComponents.patcherVersion ?: unknownVer),
                         fontSize = 12.sp,
                         fontFamily = font,
                         color = aboutColor
                     )
                     Text(
-                        text = "Library: v${MorpheComponents.libraryVersion ?: "unknown"}",
+                        text = stringResource(Res.string.app_info_version_library, MorpheComponents.libraryVersion ?: unknownVer),
                         fontSize = 12.sp,
                         fontFamily = font,
                         color = aboutColor
@@ -89,7 +90,7 @@ fun AppInfoDialog(
 
                 // Description
                 Text(
-                    text = "An open-source project for modern, streamlined patching of popular Android apps, driven by community feedback and contributions",
+                    text = stringResource(Res.string.app_info_description),
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp,
                     fontFamily = font,
@@ -103,16 +104,19 @@ fun AppInfoDialog(
                 ) {
                     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
                     IconButton(onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) }) {
-                        Icon(imageVector = MorpheIcons.Public, contentDescription = "Website", tint = iconTint)
+                        Icon(imageVector = MorpheIcons.Public, contentDescription = stringResource(Res.string.app_info_dialog_link_website), tint = iconTint)
                     }
                     IconButton(onClick = { uriHandler.openUri("https://morphe.software/changelog") }) {
-                        Icon(imageVector = MorpheIcons.Article, contentDescription = "Changelog", tint = iconTint)
+                        Icon(imageVector = MorpheIcons.Article, contentDescription = stringResource(Res.string.app_info_link_changelog), tint = iconTint)
                     }
                     IconButton(onClick = { uriHandler.openUri("https://github.com/MorpheApp") }) {
-                        Icon(imageVector = MorpheIcons.Github, contentDescription = "GitHub", tint = iconTint)
+                        Icon(imageVector = MorpheIcons.Github, contentDescription = stringResource(Res.string.github_label), tint = iconTint)
                     }
                     IconButton(onClick = { uriHandler.openUri("https://reddit.com/r/MorpheApp") }) {
-                        Icon(imageVector = MorpheIcons.Reddit, contentDescription = "Reddit", tint = iconTint)
+                        Icon(imageVector = MorpheIcons.Reddit, contentDescription = stringResource(Res.string.app_info_link_reddit), tint = iconTint)
+                    }
+                    IconButton(onClick = { uriHandler.openUri("https://morphe.software/translate") }) {
+                        Icon(imageVector = MorpheIcons.Translate, contentDescription = stringResource(Res.string.app_info_link_translate), tint = iconTint)
                     }
                 }
             }
@@ -124,7 +128,7 @@ fun AppInfoDialog(
                 shape = RoundedCornerShape(corners.small)
             ) {
                 Text(
-                    text = "Close",
+                    text = stringResource(Res.string.close),
                     fontFamily = font,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

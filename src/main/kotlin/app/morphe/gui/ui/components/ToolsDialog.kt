@@ -24,7 +24,11 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.util.FileUtils
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
+import app.morphe.gui.util.currentLocale
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import java.awt.Desktop
 
 /**
@@ -56,7 +60,7 @@ fun ToolsDialog(
         onDismiss = onDismiss,
         title = {
             Text(
-                text = "Tools",
+                text = stringResource(Res.string.tools_dialog_title),
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = font,
                 fontSize = 16.sp,
@@ -69,7 +73,7 @@ fun ToolsDialog(
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
                 ActionButton(
-                    label = "Open logs",
+                    label = stringResource(Res.string.tools_dialog_open_logs_button),
                     icon = MorpheIcons.BugReport,
                     font = font,
                     borderColor = borderColor,
@@ -88,7 +92,7 @@ fun ToolsDialog(
                 Spacer(Modifier.height(6.dp))
 
                 ActionButton(
-                    label = "Open app data",
+                    label = stringResource(Res.string.tools_dialog_open_app_data_button),
                     icon = MorpheIcons.FolderOpen,
                     font = font,
                     borderColor = borderColor,
@@ -107,7 +111,7 @@ fun ToolsDialog(
                 Spacer(Modifier.height(6.dp))
 
                 ActionButton(
-                    label = "View licenses",
+                    label = stringResource(Res.string.tools_dialog_view_licenses_button),
                     icon = MorpheIcons.Description,
                     font = font,
                     borderColor = borderColor,
@@ -125,14 +129,14 @@ fun ToolsDialog(
                 }
                 ActionButton(
                     label = when {
-                        cacheCleared -> "Cache cleared"
-                        cacheClearFailed -> "Clear failed"
-                        else -> "Clear cache"
+                        cacheCleared -> stringResource(Res.string.tools_dialog_cache_cleared)
+                        cacheClearFailed -> stringResource(Res.string.tools_dialog_clear_failed)
+                        else -> stringResource(Res.string.tools_dialog_clear_cache_button)
                     },
                     icon = MorpheIcons.Delete,
                     font = font,
                     borderColor = if (cacheCleared) MorpheColors.Teal.copy(alpha = 0.3f)
-                                  else MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
+                    else MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
                     contentColor = cacheColor,
                     enabled = allowCacheClear && !cacheCleared && cacheBytes > 0L,
                     onClick = { showClearCacheConfirm = true }
@@ -142,7 +146,7 @@ fun ToolsDialog(
 
                 val cacheSize = formatCacheSize(cacheBytes)
                 Text(
-                    text = "Cache: $cacheSize (patches + logs)",
+                    text = stringResource(Res.string.tools_dialog_cache_summary, cacheSize),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -159,7 +163,7 @@ fun ToolsDialog(
                 border = BorderStroke(1.dp, borderColor)
             ) {
                 Text(
-                    "Close",
+                    stringResource(Res.string.close),
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
                     fontSize = 11.sp,
@@ -175,7 +179,7 @@ fun ToolsDialog(
             onDismiss = { showClearCacheConfirm = false },
             title = {
                 Text(
-                    "Clear cache?",
+                    stringResource(Res.string.tools_dialog_confirm_clear_title),
                     fontFamily = font,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp
@@ -183,7 +187,7 @@ fun ToolsDialog(
             },
             text = {
                 Text(
-                    "This will delete downloaded patches and log files. Patches will be re-downloaded when needed",
+                    stringResource(Res.string.tools_dialog_confirm_clear_message),
                     fontFamily = font,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
@@ -207,7 +211,7 @@ fun ToolsDialog(
                     shape = RoundedCornerShape(corners.small)
                 ) {
                     Text(
-                        "Clear",
+                        stringResource(Res.string.clear),
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
                         fontSize = 11.sp
@@ -217,7 +221,7 @@ fun ToolsDialog(
             dismissButton = {
                 TextButton(onClick = { showClearCacheConfirm = false }, modifier = Modifier.handCursor()) {
                     Text(
-                        "Cancel",
+                        stringResource(Res.string.cancel),
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
                         fontSize = 11.sp
@@ -238,13 +242,9 @@ private fun getCacheSizeBytes(): Long {
     return patchesSize + logsSize
 }
 
-private fun formatCacheSize(totalSize: Long): String {
-    return when {
-        totalSize < 1024 -> "$totalSize B"
-        totalSize < 1024 * 1024 -> "%.1f KB".format(totalSize / 1024.0)
-        else -> "%.1f MB".format(totalSize / (1024.0 * 1024.0))
-    }
-}
+@Composable
+private fun formatCacheSize(totalSize: Long): String =
+    FormatUtils.formatFileSize(totalSize, currentLocale())
 
 private fun clearAllCache(): Boolean {
     val result = CacheManager.clearCaches()

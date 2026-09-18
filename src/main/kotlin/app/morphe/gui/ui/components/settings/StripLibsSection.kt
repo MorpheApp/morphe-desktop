@@ -16,6 +16,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Architectures exposed in the strip libs settings. Each entry has the
@@ -23,10 +25,10 @@ import androidx.compose.ui.unit.sp
  * Only modern arches are listed. Legacy mips and armeabi are intentionally omitted.
  */
 private val STRIP_LIBS_ARCHS = listOf(
-    "arm64-v8a" to "ARM 64-bit (most modern phones)",
-    "armeabi-v7a" to "ARM 32-bit (older phones)",
-    "x86_64" to "Intel 64-bit (emulators / Chromebooks)",
-    "x86" to "Intel 32-bit (legacy emulators)"
+    "arm64-v8a" to Res.string.settings_strip_libs_arm64,
+    "armeabi-v7a" to Res.string.settings_strip_libs_armeabi,
+    "x86_64" to Res.string.settings_strip_libs_x86_64,
+    "x86" to Res.string.settings_strip_libs_x86
 )
 
 @Composable
@@ -41,7 +43,7 @@ internal fun StripLibsSection(
     onExpandedChange: (Boolean) -> Unit = {}
 ) {
     CollapsibleSection(
-        title = "Strip libs",
+        title = stringResource(Res.string.settings_section_strip_libs),
         font = font,
         expanded = expanded,
         icon = icon,
@@ -51,17 +53,17 @@ internal fun StripLibsSection(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Uncheck architectures you don't need. When patching, the output APK will keep only the architectures present in the APK AND in this list. If none overlap, nothing is stripped to avoid broken APKs",
+                text = stringResource(Res.string.settings_strip_libs_desc),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontFamily = font
             )
-            STRIP_LIBS_ARCHS.forEach { (arch, description) ->
+            STRIP_LIBS_ARCHS.forEach { (arch, descRes) ->
                 val checked = arch in keepArchitectures
                 SettingToggleRow(
                     label = arch,
-                    description = description,
+                    description = stringResource(descRes),
                     checked = checked,
                     onCheckedChange = { keepIt ->
                         val updated = if (keepIt) keepArchitectures + arch

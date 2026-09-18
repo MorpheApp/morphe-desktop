@@ -8,6 +8,7 @@ package app.morphe.gui.di
 import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.data.repository.LanguageRepository
 import app.morphe.gui.data.repository.PatchPreferencesRepository
 import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -89,6 +90,7 @@ val appModule = module {
 
     // Repositories and Services
     single { ConfigRepository() }
+    single { LanguageRepository() }
     single { PatchPreferencesRepository() }
     single { SeenPatchesRepository() }
     single { PatchSourceManager(get(), get()) }

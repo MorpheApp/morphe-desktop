@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.*
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // IDLE CONTENT (drop prompt)
@@ -72,7 +74,7 @@ internal fun IdleContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Analyzing APK…",
+                    text = stringResource(Res.string.quick_patch_idle_analyzing),
                     fontSize = 15.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -88,7 +90,7 @@ internal fun IdleContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = if (isDragHovering) "Release to drop" else "Drop APK here",
+                    text = if (isDragHovering) stringResource(Res.string.release_to_drop) else stringResource(Res.string.drop_apk_here),
                     fontSize = 18.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.SemiBold,
@@ -98,7 +100,7 @@ internal fun IdleContent(
                 if (!isDragHovering) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "or click to browse",
+                        text = stringResource(Res.string.click_to_browse),
                         fontSize = 14.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
@@ -106,7 +108,7 @@ internal fun IdleContent(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = ".apk  ·  .apkm  ·  .xapk  ·  .apks",
+                        text = stringResource(Res.string.app_info_extensions_label),
                         fontSize = 10.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
