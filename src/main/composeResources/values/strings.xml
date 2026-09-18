@@ -20,10 +20,10 @@
     <string name="release_to_drop">Release to drop</string>
     <string name="click_to_browse">or click to browse</string>
     <string name="error_could_not_load_patches">Could not load any patches</string>
-    <string name="error_network_timeout">Network timeout - check your connection and try again</string>
-    <string name="error_could_not_reach_patch_server">Couldn't reach the patch server - check your connection</string>
-    <string name="error_github_rate_limit">GitHub rate limit hit - wait a few minutes and try again</string>
-    <string name="error_connection_dropped">Connection dropped while downloading - try again</string>
+    <string name="error_network_timeout">Network timeout, check your connection and try again</string>
+    <string name="error_could_not_reach_patch_server">Couldn't reach the patch server, check your connection</string>
+    <string name="error_github_rate_limit">GitHub rate limit hit, wait a few minutes and try again</string>
+    <string name="error_connection_dropped">Connection dropped while downloading, try again</string>
     <string name="error_network_loading_patches">Network error while loading patches</string>
     <string name="error_patch_file_not_found">Patch file not found: %1$s</string>
     <string name="error_no_patches_files_supplied">No patches files supplied</string>
@@ -125,12 +125,12 @@
     
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Installing on %1$s…</string>
-    <string name="adb_error_downgrade">Cannot downgrade - a newer version is installed. Uninstall the existing app first</string>
+    <string name="adb_error_downgrade">Cannot downgrade, a newer version is installed. Uninstall the existing app first</string>
     <string name="adb_error_already_exists">App already exists. Try uninstalling it first</string>
     <string name="adb_error_storage">Not enough storage space on device</string>
     <string name="adb_error_invalid_apk">Invalid APK file</string>
     <string name="adb_error_no_certificates">APK is not signed properly</string>
-    <string name="adb_error_update_incompatible">Incompatible update - signatures don't match. Uninstall the existing app first</string>
+    <string name="adb_error_update_incompatible">Incompatible update, signatures don't match. Uninstall the existing app first</string>
     <string name="adb_error_user_restricted">Installation restricted by user settings</string>
     <string name="adb_error_verification_failure">Package verification failed</string>
     <string name="adb_error_generic">Installation failed: %1$s</string>
@@ -166,7 +166,7 @@
     <string name="version_status_newer_experimental_available">Newer experimental v%1$s available</string>
     <string name="version_status_newer_experimental_available_fallback">A newer experimental build is available</string>
     <string name="version_status_too_new">Version too new</string>
-    <string name="version_status_unsupported_detail">Not officially supported - patches will most likely fail</string>
+    <string name="version_status_unsupported_detail">Not officially supported, patches will most likely fail</string>
     <string name="version_status_too_old">Version too old</string>
     <string name="version_status_unsupported">Unsupported version</string>
     <string name="version_status_build_unsupported">Build not supported</string>
@@ -263,9 +263,9 @@
     <string name="home_dialog_uninstall_button">Uninstall</string>
     <string name="home_dialog_continue_anyway">Continue anyway</string>
     <string name="home_dialog_forget_title">Forget %1$s?</string>
-    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. It doesn't touch any files - repatching the app adds it back.</string>
+    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. It doesn't touch any files - repatching the app adds it back</string>
     <string name="home_dialog_uninstall_title">Uninstall %1$s?</string>
-    <string name="home_dialog_uninstall_message">This removes %1$s from the connected device. The patched APK on disk and your history are kept unless you choose otherwise below.</string>
+    <string name="home_dialog_uninstall_message">This removes %1$s from the connected device. The patched APK on disk and your history are kept unless you choose otherwise below</string>
     <string name="home_dialog_uninstall_also_forget">Also remove from Your apps</string>
     <string name="home_dialog_missing_apk_title">Original APK not found</string>
     <string name="home_dialog_missing_apk_message">The input APK for %1$s is no longer at:\n%2$s\n\nSelect the APK again to repatch with your saved settings</string>
@@ -275,8 +275,8 @@
     <string name="home_dialog_update_resolving_patches">Resolving the latest patches…</string>
     <string name="home_dialog_update_failed_title">Update failed</string>
     <string name="home_dialog_update_available_title">Update %1$s</string>
-    <string name="home_dialog_update_supported_message">The latest patches add support for a newer app version (v%1$s). You can grab it, or keep using your v%2$s - your call.</string>
-    <string name="home_dialog_update_unsupported_message">Your v%1$s is no longer supported by the latest patches. Get v%2$s to keep patching.</string>
+    <string name="home_dialog_update_supported_message">The latest patches add support for a newer app version (v%1$s). You can grab it, or keep using your v%2$s - your call</string>
+    <string name="home_dialog_update_unsupported_message">Your v%1$s is no longer supported by the latest patches. Get v%2$s to keep patching</string>
     <string name="home_dialog_use_my_apk">Use my APK</string>
     <string name="home_dialog_get_version">Get v%1$s</string>
 
@@ -321,8 +321,8 @@
     <string name="home_filter_your_apps">Your apps</string>
     <string name="home_banner_view">View</string>
     <string name="home_your_apps_install_ready">Install ready</string>
-    <string name="home_your_apps_newer_patch_hint">Newer patch may bump the app - tap Update to check</string>
-    <string name="home_your_apps_device_version_ready">Patched v%1$s ready - device on v%2$s (no repatch needed)</string>
+    <string name="home_your_apps_newer_patch_hint">Newer patch may bump the app, click Update to check</string>
+    <string name="home_your_apps_device_version_ready">Patched v%1$s ready, device on v%2$s (no repatch needed)</string>
     <string name="home_your_apps_install_ready_hint">Patched v%1$s ready to install (no repatch needed)</string>
     <string name="home_action_install">Install</string>
     <string name="home_action_install_to_device">Install to device</string>
@@ -366,7 +366,7 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_uses_version">uses v%1$s</string>
     <string name="home_detail_ready_device_version">v%1$s ready · device on v%2$s</string>
-    <string name="home_detail_ready_no_repatch">v%1$s ready - no repatch needed</string>
+    <string name="home_detail_ready_no_repatch">v%1$s ready, no repatch needed</string>
     <string name="home_detail_remove_from_device">remove from device</string>
     <string name="home_source_update_available">v%1$s available</string>
     <string name="home_advice_unsupported">v%1$s is no longer supported. Please update to v%2$s</string>
@@ -422,7 +422,7 @@
     <string name="patch_selection_icon_none">No custom icon set</string>
     <string name="patch_selection_icon_dialog_delete_title">Delete custom icon?</string>
     <string name="patch_selection_icon_dialog_delete_message">This clears the icon and removes its saved project and generated files. This can't be undone</string>
-    <string name="patch_selection_custom_icon_hint">You don't have to build this folder yourself! Click on the Design/Edit icon to create it in the Icon Studio or import it from the Manager.</string>
+    <string name="patch_selection_custom_icon_hint">You don't have to build this folder yourself! Click on the Design/Edit icon to create it in the Icon Studio or import it from the Manager</string>
     <string name="patch_selection_option_enabled">Enabled</string>
     <string name="patch_selection_option_disabled">Disabled</string>
     <string name="patch_selection_mode_your_defaults">Your defaults</string>
@@ -431,11 +431,11 @@
     <string name="patch_selection_strip_no_libs_headline">No native libs</string>
     <string name="patch_selection_strip_no_libs_detail">stripping does not apply</string>
     <string name="patch_selection_strip_universal_headline">Universal libs</string>
-    <string name="patch_selection_strip_universal_detail">single universal folder - stripping does not apply</string>
+    <string name="patch_selection_strip_universal_detail">single universal folder, stripping does not apply</string>
     <string name="patch_selection_strip_keep_all_headline">No stripping needed</string>
     <string name="patch_selection_strip_keep_all_detail">keep-list covers every arch in this APK</string>
-    <string name="patch_selection_strip_fallback_headline">Fallback - keeping all</string>
-    <string name="patch_selection_strip_fallback_detail">no preferred archs present - review Strip libs settings</string>
+    <string name="patch_selection_strip_fallback_headline">Fallback, keeping all</string>
+    <string name="patch_selection_strip_fallback_detail">no preferred archs present, review Strip libs settings</string>
     <string name="patch_selection_strip_will_strip_headline">Stripping native libs</string>
     <string name="patch_selection_strip_will_strip_detail">keeping listed archs only</string>
     <string name="patch_selection_strip_settings_hint">· Settings → Strip libs</string>
@@ -469,9 +469,9 @@
     <string name="patching_status_ready">Ready to patch</string>
     <string name="patching_status_preparing">Preparing to patch</string>
     <string name="patching_status_in_progress">Applying patches</string>
-    <string name="patching_completed_loading_result">Patching completed - loading result…</string>
-    <string name="patching_cancelled_loading_result">Patching cancelled - loading result…</string>
-    <string name="patching_failed_loading_result">Patching failed - loading result…</string>
+    <string name="patching_completed_loading_result">Patching completed, loading result…</string>
+    <string name="patching_cancelled_loading_result">Patching cancelled, loading result…</string>
+    <string name="patching_failed_loading_result">Patching failed, loading result…</string>
     <string name="patching_log_viewer_failed_to_read">Failed to read log file: %1$s</string>
     <string name="patching_log_viewer_title">Log file</string>
     <string name="patching_log_viewer_copy_all">Copy all</string>
@@ -688,7 +688,7 @@
     <string name="error_dialog_exit_code">The patching process encountered an error. Check the logs for details</string>
 
     <!-- Banners -->
-    <string name="offline_banner_text">Offline - using cached patches</string>
+    <string name="offline_banner_text">Offline, using cached patches</string>
     <string name="update_banner_available">Update available · v%1$s</string>
     <string name="update_banner_from_version_crosses">from v%1$s · dev → stable</string>
     <string name="update_banner_from_version">from v%1$s</string>
@@ -794,7 +794,7 @@
     <string name="settings_output_folder_desc">Where patched APKs are saved. A per-app subfolder is created inside</string>
     <string name="settings_output_folder_default">APK's folder (default)</string>
     <string name="settings_output_folder_picker_title">Select output folder</string>
-    <string name="settings_output_folder_not_found">Folder not found - will be created on next patch</string>
+    <string name="settings_output_folder_not_found">Folder not found, will be created on next patch</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-start ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spawn the ADB daemon on launch so connected devices are monitored. When off, Morphe never starts the server, and install/push features are disabled</string>
     <string name="settings_section_about">About</string>
@@ -817,7 +817,7 @@
     <string name="settings_signing_desc">Keystore used to sign patched APKs</string>
     <string name="settings_signing_default_keystore">Default (auto-generated)</string>
     <string name="settings_signing_picker_title">Select keystore</string>
-    <string name="settings_signing_not_found">Keystore not found - patching will fail until you restore it, pick another, or reset</string>
+    <string name="settings_signing_not_found">Keystore not found, patching will fail until you restore it, pick another, or reset</string>
     <string name="settings_signing_invalid_file_type">Invalid file type. Expected: %1$s</string>
     <string name="settings_signing_using_default">Using Morphe's default keystore at %1$s</string>
     <string name="settings_signing_will_create_default">Will create Morphe's default keystore at %1$s</string>
@@ -827,7 +827,7 @@
     <string name="settings_signing_password_hide">Hide</string>
     <string name="settings_signing_password_show">Show</string>
     <string name="settings_signing_verify_button">Verify credentials</string>
-    <string name="settings_signing_verify_could_not_open">Could not open keystore — check keystore password</string>
+    <string name="settings_signing_verify_could_not_open">Could not open keystore, check keystore password</string>
     <string name="settings_signing_verify_valid">Credentials valid</string>
     <string name="settings_signing_picker_save_keystore">Save keystore</string>
     <string name="settings_signing_failed_to_generate">Failed to generate: %1$s</string>
