@@ -1,3 +1,10 @@
+# [1.17.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.1...v1.17.0-dev.2) (2026-09-18)
+
+
+### Features
+
+* Add Crowdin support ([#273](https://github.com/MorpheApp/morphe-desktop/issues/273)) ([b5b0243](https://github.com/MorpheApp/morphe-desktop/commit/b5b0243104620450da0097f8d0b7affa54f0afde))
+
 # [1.17.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.16.1-dev.1...v1.17.0-dev.1) (2026-09-17)
 
 
