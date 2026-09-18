@@ -27,9 +27,10 @@ import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.morphe_desktop.generated.resources.Res
-import app.morphe.morphe_desktop.generated.resources.morphe_logo
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SystemTab(
@@ -51,8 +52,8 @@ internal fun SystemTab(
     val accents = LocalMorpheAccents.current
 
     SettingToggleRow(
-        label = "Auto-cleanup temp files",
-        description = "Delete temporary files after patching",
+        label = stringResource(Res.string.settings_toggle_auto_cleanup_label),
+        description = stringResource(Res.string.settings_toggle_auto_cleanup_desc),
         checked = autoCleanupTempFiles,
         onCheckedChange = onAutoCleanupChange,
         accentColor = accents.primary,
@@ -87,9 +88,8 @@ internal fun SystemTab(
     SettingsDivider(borderColor)
 
     SettingToggleRow(
-        label = "Auto-start ADB",
-        description = "Spawn the ADB daemon on launch so connected devices are monitored. " +
-            "When off, Morphe never starts the server, and install/push features are disabled",
+        label = stringResource(Res.string.settings_toggle_auto_start_adb_label),
+        description = stringResource(Res.string.settings_toggle_auto_start_adb_desc),
         checked = autoStartAdb,
         onCheckedChange = onAutoStartAdbChange,
         accentColor = accents.primary,
@@ -100,21 +100,21 @@ internal fun SystemTab(
 
     SettingsDivider(borderColor)
 
-    SectionLabel("About", font, icon = MorpheIcons.Info)
+    SectionLabel(stringResource(Res.string.settings_section_about), font, icon = MorpheIcons.Info)
     Spacer(Modifier.height(16.dp))
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         AboutRow(
-            title = "Morphe",
-            subtitle = "Version ${AppConstants.APP_VERSION}",
+            title = stringResource(Res.string.app_name),
+            subtitle = stringResource(Res.string.settings_about_version, AppConstants.APP_VERSION),
             font = font,
             onClick = onShowAppInfo,
         ) {
             Image(
                 painter = painterResource(Res.drawable.morphe_logo),
-                contentDescription = "Morphe Logo",
+                contentDescription = stringResource(Res.string.morphe_logo_content_description),
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -122,8 +122,8 @@ internal fun SystemTab(
         SettingsDivider(borderColor)
 
         AboutRow(
-            title = "View changelogs",
-            subtitle = "Check out the latest changes in this update",
+            title = stringResource(Res.string.settings_about_changelogs_title),
+            subtitle = stringResource(Res.string.settings_about_changelogs_desc),
             font = font,
             onClick = onShowChangelog,
         ) {
@@ -138,8 +138,8 @@ internal fun SystemTab(
         SettingsDivider(borderColor)
 
         AboutRow(
-            title = "Documentation",
-            subtitle = "Guides for patching, sources and troubleshooting",
+            title = stringResource(Res.string.settings_about_documentation_title),
+            subtitle = stringResource(Res.string.settings_about_documentation_desc),
             font = font,
             onClick = { uriHandler.openUri(AppConstants.DOCUMENTATION_URL) },
         ) {
@@ -154,8 +154,8 @@ internal fun SystemTab(
         SettingsDivider(borderColor)
 
         AboutRow(
-            title = "Visit website",
-            subtitle = "Visit the official Morphe website",
+            title = stringResource(Res.string.settings_about_website_title),
+            subtitle = stringResource(Res.string.settings_about_website_desc),
             font = font,
             onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) },
         ) {
@@ -187,12 +187,12 @@ private fun UpdateChannelRow(
     val alpha = if (enabled) 1f else 0.5f
 
     val description = when {
-        !enabled -> "Disabled while patching"
+        !enabled -> stringResource(Res.string.disabled_while_patching)
         selected == UpdateChannelPreference.STABLE ->
-            "You'll see a banner when a new stable release is available"
+            stringResource(Res.string.settings_channel_desc_stable)
         selected == UpdateChannelPreference.DEV ->
-            "You'll see a banner when a new dev or stable release is available"
-        else -> "Update checks are off. Re-enable here anytime"
+            stringResource(Res.string.settings_channel_desc_dev)
+        else -> stringResource(Res.string.settings_channel_desc_off)
     }
 
     Row(
@@ -212,7 +212,7 @@ private fun UpdateChannelRow(
             }
             Column {
                 Text(
-                    text = "Check for updates",
+                    text = stringResource(Res.string.settings_channel_label),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
@@ -230,10 +230,10 @@ private fun UpdateChannelRow(
         }
         Spacer(Modifier.width(12.dp))
         MorpheDropdown(
-            label = selected.name.lowercase().replaceFirstChar { it.uppercase() },
+            label = stringResource(selected.displayNameRes),
             items = UpdateChannelPreference.entries.map { option ->
                 MorpheDropdownItem(
-                    label = option.name.lowercase().replaceFirstChar { it.uppercase() },
+                    label = stringResource(option.displayNameRes),
                     onClick = { onChange(option) }
                 )
             },
@@ -242,3 +242,10 @@ private fun UpdateChannelRow(
         )
     }
 }
+
+private val UpdateChannelPreference.displayNameRes: StringResource
+    get() = when (this) {
+        UpdateChannelPreference.STABLE -> Res.string.version_label_stable
+        UpdateChannelPreference.DEV -> Res.string.version_label_dev
+        UpdateChannelPreference.OFF -> Res.string.off
+    }

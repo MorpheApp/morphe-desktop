@@ -5,6 +5,7 @@
 
 package app.morphe.gui.util
 
+import androidx.compose.runtime.Composable
 import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.model.Release
 import app.morphe.gui.data.model.FollowMode
@@ -13,6 +14,7 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.PatchRepository
+import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * GUI-side orchestrator that resolves each enabled patch source to a downloaded
@@ -157,21 +161,21 @@ object EnabledSourcesLoader {
         }
     }
 
-    private fun resolveLocal(source: PatchSource, excludedMppPatterns: List<String>): ResolvedSource {
+    private suspend fun resolveLocal(source: PatchSource, excludedMppPatterns: List<String>): ResolvedSource {
         val path = source.filePath
         if (path.isNullOrBlank()) {
-            return ResolvedSource(source = source, error = "Local source has no file path configured")
+            return ResolvedSource(source = source, error = getString(Res.string.source_error_local_no_path))
         }
         val target = File(path)
         if (!target.exists()) {
-            return ResolvedSource(source = source, error = "Local patch path not found: ${target.name}")
+            return ResolvedSource(source = source, error = getString(Res.string.source_error_local_not_found, target.name))
         }
         // Folder source (patch-developer mode): auto-resolve the NEWEST .mpp in the
         // directory. This is re-evaluated on every load, so rebuilding a patch is
         // picked up on the next (re)load without touching the file picker.
         val file = if (target.isDirectory) {
             newestMppIn(target, excludedMppPatterns)
-                ?: return ResolvedSource(source = source, error = "No .mpp files found in folder: ${target.name}")
+                ?: return ResolvedSource(source = source, error = getString(Res.string.source_error_local_no_mpp, target.name))
         } else {
             target
         }
@@ -245,7 +249,7 @@ object EnabledSourcesLoader {
         onDownloadProgress: ((String, Float) -> Unit)? = null,
     ): ResolvedSource {
         if (repo == null) {
-            return ResolvedSource(source = source, error = "No repository configured for source")
+            return ResolvedSource(source = source, error = getString(Res.string.source_error_no_repository))
         }
 
         // Resolve the target release WITHOUT the releases API where possible:
@@ -294,7 +298,7 @@ object EnabledSourcesLoader {
         val patchFile = downloadResult.getOrNull()
             ?: return ResolvedSource(
                 source = source,
-                error = "Could not download patches: ${downloadResult.exceptionOrNull()?.message}",
+                error = getString(Res.string.source_error_download_failed, downloadResult.exceptionOrNull()?.message ?: ""),
             )
 
         return ResolvedSource(
@@ -308,7 +312,7 @@ object EnabledSourcesLoader {
     }
 
     /** Offline / no-releases fallback: use the newest cached .mpp/.jar for this source. */
-    private fun offlineOrError(source: PatchSource, repo: PatchRepository): ResolvedSource {
+    private suspend fun offlineOrError(source: PatchSource, repo: PatchRepository): ResolvedSource {
         val cached = findCachedPatchFile(repo)
         return if (cached != null) {
             ResolvedSource(
@@ -318,7 +322,7 @@ object EnabledSourcesLoader {
                 isOffline = true,
             )
         } else {
-            ResolvedSource(source = source, error = "Could not fetch releases")
+            ResolvedSource(source = source, error = getString(Res.string.source_error_fetch_releases))
         }
     }
 
@@ -359,13 +363,14 @@ fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, EnabledSourcesL
  * fetch or find an .mpp) and the load phase (found one, couldn't read it), so a
  * partial multi-source failure shows exactly which source broke and why.
  */
+@Composable
 fun EnabledSourcesLoader.Result?.sourceErrorMap(): Map<String, String> {
     val snapshot = this ?: return emptyMap()
     return buildMap {
         snapshot.resolved.forEach { r -> r.error?.let { put(r.source.id, it) } }
         snapshot.loaded.perSource.forEach { s ->
             if (!s.isSuccess) {
-                put(s.sourceId, s.error?.let { humanizePatchLoadError(it) } ?: "Failed to load")
+                put(s.sourceId, s.error?.let { resolvePatchLoadError(it) } ?: stringResource(Res.string.source_error_failed_to_load))
             }
         }
     }

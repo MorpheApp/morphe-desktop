@@ -33,6 +33,9 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * One collapsible block of a patch list.
@@ -63,8 +66,8 @@ const val UNGROUPED_GROUP_KEY = "ungrouped"
 fun <T> buildPatchGroups(
     patches: List<T>,
     groupByCategory: Boolean,
-    universalTitle: String = "Universal",
-    ungroupedTitle: String = "Ungrouped",
+    universalTitle: String,
+    ungroupedTitle: String,
     categoryOf: (T) -> String?,
     isUniversal: (T) -> Boolean = { false },
     isEnabled: (T) -> Boolean = { false }
@@ -174,7 +177,7 @@ fun PatchGroupHeader(
     val hoverInteraction = remember { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
 
-    val countLabel = if (count == 1) "1 patch" else "$count patches"
+    val countLabel = pluralStringResource(Res.plurals.patch_selection_group_patch_count, count, count)
 
     Row(
         modifier = modifier
@@ -232,7 +235,7 @@ fun PatchGroupHeader(
 
         if (selectedCount > 0) {
             MorpheBadge(
-                text = "$selectedCount selected",
+                text = stringResource(Res.string.patch_selection_group_selected_count, selectedCount),
                 tone = MorpheBadgeTone.Primary
             )
         }

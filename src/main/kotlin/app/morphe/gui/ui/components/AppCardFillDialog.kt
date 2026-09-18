@@ -41,14 +41,17 @@ import androidx.compose.ui.text.font.FontFamily
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.morphe_desktop.generated.resources.*
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.size
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
-private enum class FillMode(val label: String, val icon: ImageVector, val blurb: String) {
-    DEFAULT("Default", MorpheIcons.Apps, "The colour that ships with the patch bundle."),
-    ACCENT("Accent", MorpheIcons.ColorLens, "Tracks the accent colour, changing when it does."),
-    GRADIENT("Gradient", MorpheIcons.Gradient, "Any number of stops, linear, radial or conic."),
-    SOLID("Solid", MorpheIcons.Circle, "One flat colour."),
+private enum class FillMode(val labelRes: StringResource, val icon: ImageVector, val blurbRes: StringResource) {
+    DEFAULT(Res.string.card_fill_mode_default, MorpheIcons.Apps, Res.string.card_fill_mode_default_blurb),
+    ACCENT(Res.string.card_fill_mode_accent, MorpheIcons.ColorLens, Res.string.card_fill_mode_accent_blurb),
+    GRADIENT(Res.string.card_fill_mode_gradient, MorpheIcons.Gradient, Res.string.card_fill_mode_gradient_blurb),
+    SOLID(Res.string.card_fill_mode_solid, MorpheIcons.Circle, Res.string.card_fill_mode_solid_blurb),
 }
 
 private val MorpheFill?.mode: FillMode
@@ -78,7 +81,7 @@ fun AppCardFillDialog(
         title = {
             Column {
                 Text(
-                    text = "Customise card",
+                    text = stringResource(Res.string.card_fill_title),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
@@ -107,7 +110,7 @@ fun AppCardFillDialog(
                     interactive = false,
                 ) {
                     Text(
-                        text = appName ?: "Example App Name",
+                        text = appName ?: stringResource(Res.string.card_fill_example_app_name),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font,
@@ -143,7 +146,7 @@ fun AppCardFillDialog(
                 }
 
                 Text(
-                    text = mode.blurb,
+                    text = stringResource(mode.blurbRes),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -163,10 +166,10 @@ fun AppCardFillDialog(
             }
         },
         dismissButton = {
-            MorpheChoiceChip("Cancel", active = false, font = font, onClick = onDismiss)
+            MorpheChoiceChip(stringResource(Res.string.cancel), active = false, font = font, onClick = onDismiss)
         },
         confirmButton = {
-            MorpheChoiceChip("Save", active = true, font = font) { onSave(working) }
+            MorpheChoiceChip(stringResource(Res.string.save), active = true, font = font) { onSave(working) }
         },
     )
 }
@@ -215,7 +218,7 @@ private fun FillModeCard(
             modifier = Modifier.size(18.dp),
         )
         Text(
-            text = option.label,
+            text = stringResource(option.labelRes),
             fontSize = 11.sp,
             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
             fontFamily = font,
