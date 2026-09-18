@@ -83,6 +83,14 @@ class ConfigRepository {
     }
 
     /**
+     * Update language preference.
+     */
+    suspend fun setLanguage(language: String) {
+        val current = loadConfig()
+        saveConfig(current.copy(language = language))
+    }
+
+    /**
      * Update theme preference.
      */
     suspend fun setThemePreference(theme: ThemePreference) {
@@ -140,6 +148,14 @@ class ConfigRepository {
     suspend fun setCustomAccentColorArgb(color: Int?) {
         val current = loadConfig()
         saveConfig(current.copy(customAccentColorArgb = color))
+    }
+
+    /**
+     * Update group patches by category preference.
+     */
+    suspend fun setGroupPatchesByCategory(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(groupPatchesByCategory = enabled))
     }
 
     /**

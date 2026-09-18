@@ -89,7 +89,12 @@ object PatchFileResolver {
                     logger.info("Patches mpp saved to ${targetFile.absolutePath}. This file will be used on your next run as long as it is not deleted!")
                     targetFile
                 }
-                patchFiles - urlEntry + resolvedFile
+
+                buildSet {
+                    addAll(patchFiles)
+                    remove(urlEntry)
+                    add(resolvedFile)
+                }
             } catch (e: Exception) {
                 throw IllegalArgumentException("Failed to download patches from URL: ${e.message}")
             }

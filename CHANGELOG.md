@@ -1,3 +1,24 @@
+# [1.17.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.1...v1.17.0-dev.2) (2026-09-18)
+
+
+### Features
+
+* Add Crowdin support ([#273](https://github.com/MorpheApp/morphe-desktop/issues/273)) ([b5b0243](https://github.com/MorpheApp/morphe-desktop/commit/b5b0243104620450da0097f8d0b7affa54f0afde))
+
+# [1.17.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.16.1-dev.1...v1.17.0-dev.1) (2026-09-17)
+
+
+### Features
+
+* Modernize patch selection layout and add category grouping ([#315](https://github.com/MorpheApp/morphe-desktop/issues/315)) ([1c60dc0](https://github.com/MorpheApp/morphe-desktop/commit/1c60dc014766adc879e6692d9d3d30a512243df6))
+
+## [1.16.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.16.0...v1.16.1-dev.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([6cc9b28](https://github.com/MorpheApp/morphe-desktop/commit/6cc9b28295d1b7cd65fd77271bb709e030cf28d2))
+
 # [1.16.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.15.1...v1.16.0) (2026-09-14)
 
 

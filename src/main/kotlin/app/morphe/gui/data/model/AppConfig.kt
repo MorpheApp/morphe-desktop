@@ -53,6 +53,7 @@ data class SourceVersionPref(
 
 @Serializable
 data class AppConfig(
+    val language: String = "system",
     val themePreference: String = ThemePreference.SYSTEM.name,
     val backgroundType: String = "CIRCLES",
     val enableParallax: Boolean = true,
@@ -85,6 +86,7 @@ data class AppConfig(
     val cardFills: Map<String, MorpheFill> = emptyMap(),
     val globalCardFill: MorpheFill? = null,
     val useSharpCorners: Boolean = false,
+    val groupPatchesByCategory: Boolean = true,
     val homeAppSortMode: String = "RECOMMENDED",
     val preferredPatchChannel: String = PatchChannel.STABLE.name,
     val defaultOutputDirectory: String? = null,

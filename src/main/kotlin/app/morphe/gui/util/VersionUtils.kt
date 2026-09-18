@@ -173,7 +173,7 @@ fun resolveVersionStatus(
         else -> latestExperimental
     }
 
-    if (newestKnown != null && compareVersions(currentVersion, newestKnown) > 0) {
+    if (compareVersions(currentVersion, newestKnown) > 0) {
         return VersionResolution(VersionStatus.TOO_NEW, newestKnown)
     }
     if (oldestStable != null && compareVersions(currentVersion, oldestStable) < 0) {

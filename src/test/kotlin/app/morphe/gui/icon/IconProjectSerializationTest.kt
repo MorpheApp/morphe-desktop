@@ -46,8 +46,8 @@ class IconProjectSerializationTest {
         """
         val decoded = json.decodeFromString(IconProject.serializer(), legacy)
         val bg = decoded.background as MorpheFill.Gradient
-        check(bg.type == GradientType.CONIC) { "gradient type lost: ${'$'}{bg.type}" }
-        check(bg.stops.size == 2) { "stops lost: ${'$'}{bg.stops}" }
+        check(bg.type == GradientType.CONIC) { "gradient type lost: ${bg.type}" }
+        check(bg.stops.size == 2) { "stops lost: ${bg.stops}" }
 
         val reEncoded = json.encodeToString(IconProject.serializer(), decoded)
         check("app.morphe.gui.icon.IconProject.Background.Gradient" in reEncoded) {
@@ -67,6 +67,6 @@ class IconProjectSerializationTest {
             }
         """
         val decoded = json.decodeFromString(IconProject.serializer(), legacy)
-        check(decoded.background == MorpheFill.Solid(-1)) { "solid lost: ${'$'}{decoded.background}" }
+        check(decoded.background == MorpheFill.Solid(-1)) { "solid lost: ${decoded.background}" }
     }
 }

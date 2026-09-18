@@ -16,11 +16,13 @@ import app.morphe.patcher.apk.ApkUtils
 import app.morphe.patcher.patch.Patch as LibraryPatch
 import app.morphe.patcher.patch.loadPatchesFromJar
 import app.morphe.patcher.resource.CpuArchitecture
+import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlin.reflect.KType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 
 /**
  * Bridge between GUI and morphe-patcher library.
@@ -39,7 +41,7 @@ class PatchService {
         try {
             val patchFile = File(patchesFilePath)
             if (!patchFile.exists()) {
-                return@withContext Result.failure(Exception("Patches file not found: $patchesFilePath"))
+                return@withContext Result.failure(Exception(getString(Res.string.error_patch_file_not_found, patchesFilePath)))
             }
 
             Logger.info("Loading patches from: $patchesFilePath")
@@ -97,17 +99,17 @@ class PatchService {
     ): Result<PatchResult> = withContext(Dispatchers.IO) {
         try {
             if (patchesFilePaths.isEmpty()) {
-                return@withContext Result.failure(Exception("No patches files supplied"))
+                return@withContext Result.failure(Exception(getString(Res.string.error_no_patches_files_supplied)))
             }
             val patchFiles = patchesFilePaths.map { File(it) }
             val inputApk = File(inputApkPath)
             val outputFile = File(outputApkPath)
 
             patchFiles.firstOrNull { !it.exists() }?.let {
-                return@withContext Result.failure(Exception("Patches file not found: ${it.name}"))
+                return@withContext Result.failure(Exception(getString(Res.string.error_patch_file_not_found, it.name)))
             }
             if (!inputApk.exists()) {
-                return@withContext Result.failure(Exception("Input APK not found"))
+                return@withContext Result.failure(Exception(getString(Res.string.error_input_apk_not_found)))
             }
 
             // Load patches (copy each to temp to avoid Windows file lock)
@@ -195,8 +197,8 @@ class PatchService {
                         "${fp.name}: ${fp.error.lineSequence().first()}"
                     }
                         ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }
-                            ?.let { "${it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }} failed: ${it.error}" }
-                        ?: "Patching failed for an unknown reason"
+                            ?.let { getString(Res.string.error_step_failed, it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }, it.error ?: "") }
+                        ?: getString(Res.string.error_patching_unknown)
                 }
                 Result.success(PatchResult(
                     success = engineResult.success,
@@ -299,7 +301,8 @@ class PatchService {
                     valueType = opt.type,
                 )
             },
-            isEnabled = this.use
+            isEnabled = this.use,
+            category = this.category?.takeIf { it.isNotBlank() }
         )
     }
 

@@ -20,8 +20,13 @@ data class Patch(
     val description: String = "",
     val compatiblePackages: List<CompatiblePackage> = emptyList(),
     val options: List<PatchOption> = emptyList(),
-    val isEnabled: Boolean = true
+    val isEnabled: Boolean = true,
+    val category: String? = null
 ) {
+    /** Whether this patch targets no specific package (applies universally / system-wide). */
+    val isUniversal: Boolean
+        get() = compatiblePackages.isEmpty()
+
     /**
      * Unique identifier for this patch.
      * Combines name, packages, and description hash for true uniqueness.

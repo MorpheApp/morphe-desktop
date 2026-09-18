@@ -5,15 +5,27 @@
 
 package app.morphe.gui.ui.screens.home
 
+import androidx.compose.runtime.Composable
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.data.model.SupportedApp
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
-enum class HomeAppSortMode(val label: String, val description: String) {
-    RECOMMENDED("Recommended", "Patched apps first, then installed, then by name"),
-    NAME_ASC("Name (A to Z)", "Alphabetical"),
-    NAME_DESC("Name (Z to A)", "Reverse alphabetical"),
-    UPDATES_FIRST("Patch updates first", "Apps with a patch update first, then recommended"),
-    RECENTLY_PATCHED("Recently patched", "Most recently patched first");
+enum class HomeAppSortMode(val labelRes: StringResource, val descriptionRes: StringResource) {
+    RECOMMENDED(Res.string.home_sort_recommended, Res.string.home_sort_recommended_desc),
+    NAME_ASC(Res.string.home_sort_name_asc, Res.string.home_sort_name_asc_desc),
+    NAME_DESC(Res.string.home_sort_name_desc, Res.string.home_sort_name_desc_desc),
+    UPDATES_FIRST(Res.string.home_sort_updates_first, Res.string.home_sort_updates_first_desc),
+    RECENTLY_PATCHED(Res.string.home_sort_recently_patched, Res.string.home_sort_recently_patched_desc);
+
+    val label: String
+        @Composable
+        get() = stringResource(labelRes)
+
+    val description: String
+        @Composable
+        get() = stringResource(descriptionRes)
 
     companion object {
         fun fromPreference(value: String?): HomeAppSortMode =

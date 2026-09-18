@@ -27,23 +27,22 @@ object SupportedAppExtractor {
         val packageIconColors = mutableMapOf<String, String>()
         val packageBuildCodes = mutableMapOf<String, MutableMap<String, MutableSet<Int>>>()
 
-        for (patch in patches) {
-            for (pkg in patch.compatiblePackages) {
-                val packageName = pkg.name
+        for ((_, _, compatiblePackages) in patches) {
+            for ((packageName, displayName, versions, experimentalVersions, appIconColor, versionBuildCodes) in compatiblePackages) {
                 if (packageName.isNotBlank()) {
                     packageVersionsMap.getOrPut(packageName) { mutableSetOf() }
-                        .addAll(pkg.versions)
+                        .addAll(versions)
                     packageExperimentalMap.getOrPut(packageName) { mutableSetOf() }
-                        .addAll(pkg.experimentalVersions)
-                    pkg.displayName
+                        .addAll(experimentalVersions)
+                    displayName
                         ?.takeIf { it.isNotBlank() }
                         ?.let { packageDisplayNames.putIfAbsent(packageName, it) }
-                    pkg.appIconColor
+                    appIconColor
                         ?.takeIf { it.isNotBlank() }
                         ?.let { packageIconColors.putIfAbsent(packageName, it) }
-                    if (pkg.versionBuildCodes.isNotEmpty()) {
+                    if (versionBuildCodes.isNotEmpty()) {
                         val perVersion = packageBuildCodes.getOrPut(packageName) { mutableMapOf() }
-                        pkg.versionBuildCodes.forEach { (version, codes) ->
+                        versionBuildCodes.forEach { (version, codes) ->
                             val existing = perVersion[version]
                             when {
                                 codes.isEmpty() -> perVersion[version] = mutableSetOf()
