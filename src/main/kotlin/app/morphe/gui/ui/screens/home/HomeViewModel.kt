@@ -11,6 +11,7 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateInfo
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.readableMessage
 import app.morphe.engine.util.ApkManifestReader
 import app.morphe.engine.util.SignatureIdentity
 import app.morphe.gui.data.constants.AppConstants
@@ -25,6 +26,7 @@ import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.home.components.AppListFilter
+import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
@@ -33,6 +35,7 @@ import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
+import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.SupportedAppExtractor
 import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.VersionResolution
@@ -55,6 +58,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getPluralString
 import org.jetbrains.compose.resources.getString
 
@@ -255,7 +259,8 @@ class HomeViewModel(
             }
 
             val installError = result.exceptionOrNull()?.let {
-                getString(Res.string.home_install_failed, it.message ?: "")
+                val detail = (it as? AdbException)?.getUserMessage() ?: it.message ?: ""
+                getString(Res.string.home_install_failed, detail)
             } ?: _uiState.value.error
             _uiState.value = _uiState.value.copy(
                 installingPackage = null,
@@ -286,7 +291,8 @@ class HomeViewModel(
                 patchedAppStore.delete(packageName)
             }
             val uninstallError = result.exceptionOrNull()?.let {
-                getString(Res.string.home_uninstall_failed, it.message ?: "")
+                val detail = (it as? AdbException)?.getUserMessage() ?: it.message ?: ""
+                getString(Res.string.home_uninstall_failed, detail)
             } ?: _uiState.value.error
             _uiState.value = _uiState.value.copy(
                 uninstallingPackage = null,
@@ -357,19 +363,23 @@ class HomeViewModel(
 
                 if (!result.anyLoaded) {
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
-                    val firstError = result.resolved.firstNotNullOfOrNull { it.error }
+                    val rawTechnicalError = firstThrowable?.message
+                        ?: result.resolved.firstNotNullOfOrNull { it.error }
+                        ?: "Failed to load any patches"
+                    // Log the real throwable (full stack). Never only a null/blank .message.
+                    if (firstThrowable != null) {
+                        Logger.error("Failed to load any patches: $rawTechnicalError", firstThrowable)
+                    } else {
+                        Logger.warn("Failed to load any patches: $rawTechnicalError")
+                    }
+
+                    val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }
                         ?: getString(Res.string.error_could_not_load_patches)
                     val friendlyError = if (firstError.contains("zip", ignoreCase = true) || firstError.contains("END header", ignoreCase = true)) {
                         getString(Res.string.home_patch_file_corrupted)
                     } else {
                         firstError
-                    }
-                    // Log the real throwable (full stack). Never only a null/blank .message.
-                    if (firstThrowable != null) {
-                        Logger.error("Failed to load any patches: $friendlyError", firstThrowable)
-                    } else {
-                        Logger.warn("Failed to load any patches: $firstError")
                     }
                     result.loaded.perSource.filter { !it.isSuccess }.forEach { src ->
                         val err = src.error
@@ -442,7 +452,7 @@ class HomeViewModel(
                         result.loaded.perSource.forEach { s ->
                             if (!s.isSuccess) {
                                 val err = s.error
-                                add("${s.sourceName}: ${err?.let { humanizePatchLoadError(it) } ?: "failed to load"}")
+                                add("${s.sourceName}: ${err?.readableMessage() ?: "failed to load"}")
                                 if (err != null) {
                                     Logger.error("Patch source '${s.sourceName}' failed to load", err)
                                 }
@@ -810,9 +820,9 @@ class HomeViewModel(
         val repo = patchSourceManager.getEnabledRepositories()
             .firstOrNull { (source, _) -> source.name == sourceName }
             ?.second
-            ?: return Result.failure(IllegalStateException(getString(Res.string.home_error_no_repository_for_source, sourceName)))
+            ?: return Result.failure(IllegalStateException("No repository configured for source '$sourceName'"))
         val release = repo.fetchReleases().getOrNull()?.firstOrNull { it.tagName == tag }
-            ?: return Result.failure(IllegalStateException(getString(Res.string.home_error_release_not_found_in_source, tag, sourceName)))
+            ?: return Result.failure(IllegalStateException("Release '$tag' not found in source '$sourceName'"))
         return repo.downloadPatches(release, onProgress).map { }
     }
 
@@ -850,14 +860,14 @@ class HomeViewModel(
         }
         localFiles.forEach { (name, file) ->
             if (!file.exists()) {
-                return Result.failure(Exception(getString(Res.string.error_patch_file_not_found, file.name)))
+                return Result.failure(PatchException("Patch file not found: ${file.name}", Res.string.error_patch_file_not_found, listOf(file.name)))
             }
             files += file.absolutePath
             names += name
         }
 
         if (files.isEmpty()) {
-            Result.failure(Exception(getString(Res.string.home_could_not_resolve_patch_files)))
+            Result.failure(PatchException("Could not resolve patch files", Res.string.home_could_not_resolve_patch_files))
         } else {
             Result.success(files to names)
         }
@@ -865,7 +875,7 @@ class HomeViewModel(
         throw e
     } catch (e: Exception) {
         Logger.error("Failed to resolve patch files with overrides", e)
-        Result.failure(Exception(humanizePatchLoadError(e)))
+        Result.failure(e)
     }
 
     private var relevantSourceUpdates: Map<String, Set<String>> = emptyMap()
@@ -1036,7 +1046,7 @@ class HomeViewModel(
                 _uiState.value = _uiState.value.copy(
                     selectedApk = null,
                     apkInfo = null,
-                    error = validationResult.errorMessage,
+                    error = validationResult.getUserErrorMessage() ?: validationResult.errorMessage,
                     isReady = false,
                     isAnalyzing = false
                 )
@@ -1086,19 +1096,35 @@ class HomeViewModel(
 
     private suspend fun validateAndAnalyzeApk(file: File): ApkValidationResult {
         if (!file.exists()) {
-            return ApkValidationResult(false, errorMessage = getString(Res.string.home_validation_file_not_exist))
+            return ApkValidationResult(
+                isValid = false,
+                errorMessage = "File does not exist: ${file.absolutePath}",
+                errorRes = Res.string.home_validation_file_not_exist
+            )
         }
 
         if (!file.isFile) {
-            return ApkValidationResult(false, errorMessage = getString(Res.string.home_validation_not_a_file))
+            return ApkValidationResult(
+                isValid = false,
+                errorMessage = "Selected item is not a file: ${file.absolutePath}",
+                errorRes = Res.string.home_validation_not_a_file
+            )
         }
 
         if (!FileUtils.isApkFile(file)) {
-            return ApkValidationResult(false, errorMessage = getString(Res.string.home_validation_invalid_extension))
+            return ApkValidationResult(
+                isValid = false,
+                errorMessage = "Invalid APK file extension: ${file.name}",
+                errorRes = Res.string.home_validation_invalid_extension
+            )
         }
 
         if (file.length() < 1024) {
-            return ApkValidationResult(false, errorMessage = getString(Res.string.home_validation_file_too_small))
+            return ApkValidationResult(
+                isValid = false,
+                errorMessage = "APK file is too small (${file.length()} bytes): ${file.name}",
+                errorRes = Res.string.home_validation_file_too_small
+            )
         }
 
         // Parse APK info from AndroidManifest.xml using apk-parser
@@ -1107,7 +1133,11 @@ class HomeViewModel(
         return if (apkInfo != null) {
             ApkValidationResult(true, apkInfo = apkInfo)
         } else {
-            ApkValidationResult(false, errorMessage = getString(Res.string.home_validation_parse_failed))
+            ApkValidationResult(
+                isValid = false,
+                errorMessage = "Failed to parse APK manifest: ${file.name}",
+                errorRes = Res.string.home_validation_parse_failed
+            )
         }
     }
 
@@ -1171,7 +1201,7 @@ class HomeViewModel(
             val checksumStatus = ChecksumStatus.NotConfigured
 
             Logger.info(
-                "Parsed APK: $packageName v$versionName" +
+                "Parsed APK: $packageName v${manifest.versionName ?: "unknown"}" +
                     (versionCode?.let { " build $it" } ?: "") +
                     " (recommended=$suggestedVersion, minSdk=$minSdk, archs=$architectures)"
             )
@@ -1499,5 +1529,12 @@ data class ApkInfo(
 data class ApkValidationResult(
     val isValid: Boolean,
     val apkInfo: ApkInfo? = null,
-    val errorMessage: String? = null
-)
+    val errorMessage: String? = null,
+    val errorRes: StringResource? = null,
+    val errorArgs: List<Any> = emptyList(),
+) {
+    suspend fun getUserErrorMessage(): String? {
+        val res = errorRes ?: return errorMessage
+        return getString(res, *errorArgs.toTypedArray())
+    }
+}

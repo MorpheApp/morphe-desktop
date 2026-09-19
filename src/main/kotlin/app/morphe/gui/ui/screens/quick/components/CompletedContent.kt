@@ -36,6 +36,7 @@ import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.screens.quick.formatFileSize
 import app.morphe.gui.ui.theme.*
+import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.morphe_desktop.generated.resources.*
@@ -317,7 +318,7 @@ internal fun CompletedContent(
                                                     }
                                                 }
                                             },
-                                            onFailure = { installError = it.message }
+                                            onFailure = { installError = (it as? AdbException)?.getUserMessage() ?: it.message }
                                         )
                                         isInstalling = false
                                     }

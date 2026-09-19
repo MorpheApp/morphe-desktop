@@ -144,10 +144,11 @@ class PatchingViewModel(
             //    signing identity.
             val userKeystore = appConfig.resolvedKeystorePath()
             if (userKeystore != null && !userKeystore.exists()) {
-                val msg = getString(Res.string.settings_signing_error_not_found, userKeystore.absolutePath)
-                addLog(msg, LogLevel.ERROR)
-                _uiState.value = _uiState.value.copy(status = PatchingStatus.FAILED, error = msg)
-                Logger.error("Patching aborted: $msg")
+                val rawMsg = "Keystore file not found at ${userKeystore.absolutePath}"
+                val uiMsg = getString(Res.string.settings_signing_error_not_found, userKeystore.absolutePath)
+                addLog(rawMsg, LogLevel.ERROR)
+                _uiState.value = _uiState.value.copy(status = PatchingStatus.FAILED, error = uiMsg)
+                Logger.error("Patching aborted: $rawMsg")
                 return@launch
             }
             val resolvedKeystorePath = (userKeystore ?: MorpheData.defaultKeystoreFile).absolutePath
@@ -205,7 +206,7 @@ class PatchingViewModel(
                         recordPatchedApp(patchResult)
                     } else {
                         val reason = patchResult.failureDetail
-                            ?: patchResult.failureReason
+                            ?: patchResult.getLocalizedFailureReason()
                             ?: if (patchResult.failedPatches.isNotEmpty())
                                 getString(Res.string.patching_error_failed_patches, patchResult.failedPatches.joinToString(", "))
                             else getString(Res.string.error_patching_unknown)
@@ -217,7 +218,7 @@ class PatchingViewModel(
                     }
                 },
                 onFailure = { e ->
-                    addLog(getString(Res.string.error_patching_general, e.message ?: ""), LogLevel.ERROR)
+                    addLog("Patching error: ${e.message ?: "unknown error"}", LogLevel.ERROR)
                     _uiState.value = _uiState.value.copy(
                         status = PatchingStatus.FAILED,
                         error = e.stackTraceToString()
