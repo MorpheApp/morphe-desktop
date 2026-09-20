@@ -54,7 +54,7 @@ internal fun ActionButton(
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
-        modifier = Modifier.fillMaxWidth().hoverable(hoverInteraction).handCursor(),
+        modifier = Modifier.fillMaxWidth().hoverable(hoverInteraction).handCursor(enabled),
         shape = RoundedCornerShape(corners.small),
         border = BorderStroke(
             1.dp,

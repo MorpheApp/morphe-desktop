@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.MorpheSwitch
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -169,8 +170,8 @@ internal fun AboutRow(
         Icon(
             imageVector = MorpheIcons.KeyboardArrowRight,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(16.dp)
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(16.dp).autoMirrored()
         )
     }
 }

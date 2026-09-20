@@ -41,6 +41,7 @@ import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.MorpheActionButton
 import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.panelFill
@@ -272,6 +273,7 @@ fun ResultScreenContent(outputPath: String) {
                         .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(corners.small))
                         .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.5f), RoundedCornerShape(corners.small))
                         .background(backBg)
+                        .handCursor()
                         .clickable { navigator.pop() },
                     contentAlignment = Alignment.Center
                 ) {
@@ -527,6 +529,7 @@ private fun AdbInstallSection(
                                     ),
                                     RoundedCornerShape(corners.small)
                                 )
+                                .handCursor()
                                 .clickable(onClick = onDismissError)
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
@@ -550,6 +553,7 @@ private fun AdbInstallSection(
                                     else MaterialTheme.colorScheme.error,
                                     RoundedCornerShape(corners.small)
                                 )
+                                .handCursor()
                                 .clickable(onClick = onRetryClick)
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
@@ -637,6 +641,7 @@ private fun AdbInstallSection(
                                     .clip(RoundedCornerShape(corners.small))
                                     .border(1.dp, deviceBorder, RoundedCornerShape(corners.small))
                                     .background(deviceBg, RoundedCornerShape(corners.small))
+                                    .handCursor(enabled)
                                     .then(
                                         if (enabled) Modifier.clickable { onDeviceSelected(device) }
                                         else Modifier
@@ -703,43 +708,17 @@ private fun AdbInstallSection(
                         Spacer(Modifier.height(6.dp))
 
                         // Install button
-                        val installHover = remember { MutableInteractionSource() }
-                        val isInstallHovered by installHover.collectIsHoveredAsState()
-                        val installBg by animateColorAsState(
-                            when {
-                                selectedDevice == null -> accents.secondary.copy(alpha = 0.3f)
-                                isInstallHovered -> accents.secondary.copy(alpha = 0.9f)
-                                else -> accents.secondary
+                        MorpheActionButton(
+                            label = if (selectedDevice != null) {
+                                if (alreadyInstalled) stringResource(Res.string.result_adb_update_button, selectedDevice.displayName)
+                                else stringResource(Res.string.result_screen_install_on_device_label, selectedDevice.displayName)
+                            } else {
+                                stringResource(Res.string.result_adb_select_device_button)
                             },
-                            animationSpec = tween(150)
+                            enabled = selectedDevice != null,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = onInstallClick,
                         )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(38.dp)
-                                .hoverable(installHover)
-                                .clip(RoundedCornerShape(corners.small))
-                                .background(installBg, RoundedCornerShape(corners.small))
-                                .then(
-                                    if (selectedDevice != null) Modifier.clickable(onClick = onInstallClick)
-                                    else Modifier
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = if (selectedDevice != null) {
-                                    if (alreadyInstalled) stringResource(Res.string.result_adb_update_button, selectedDevice.displayName)
-                                    else stringResource(Res.string.result_screen_install_on_device_label, selectedDevice.displayName)
-                                } else {
-                                    stringResource(Res.string.result_adb_select_device_button)
-                                },
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
                     }
                 }
             }
@@ -814,6 +793,7 @@ private fun LinkHandlingSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(corners.small))
+                        .handCursor(!isApplying)
                         .clickable(enabled = !isApplying) { onToggleDisableStock(!disableStockLinks) }
                         .padding(vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -899,30 +879,12 @@ private fun LinkHandlingSection(
                 }
 
                 else -> {
-                    val hover = remember { MutableInteractionSource() }
-                    val isHovered by hover.collectIsHoveredAsState()
-                    val bg by animateColorAsState(
-                        if (isHovered) accents.secondary.copy(alpha = 0.9f) else accents.secondary,
-                        animationSpec = tween(150)
+                    MorpheActionButton(
+                        label = stringResource(Res.string.result_link_open_with_patched),
+                        enabled = !isApplying,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = onApply,
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(38.dp)
-                            .hoverable(hover)
-                            .clip(RoundedCornerShape(corners.small))
-                            .background(bg, RoundedCornerShape(corners.small))
-                            .clickable(onClick = onApply),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.result_link_open_with_patched),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = font,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
                 }
             }
         }
@@ -949,6 +911,7 @@ private fun SecondaryActionChip(
                 MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isHovered) 0.3f else 0.12f),
                 RoundedCornerShape(corners.small)
             )
+            .handCursor()
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
@@ -1038,6 +1001,7 @@ private fun CleanupSection(
                     .hoverable(cleanHover)
                     .clip(RoundedCornerShape(corners.small))
                     .background(cleanBg)
+                    .handCursor()
                     .clickable(onClick = onCleanupClick)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
@@ -1127,6 +1091,7 @@ private fun AdbDisabledHint(
                         if (isHovered) accents.primary.copy(alpha = 0.08f)
                         else Color.Transparent
                     )
+                    .handCursor()
                     .clickable(onClick = onEnableClick),
                 contentAlignment = Alignment.Center
             ) {
@@ -1239,6 +1204,7 @@ private fun OutputFileCard(
                             if (isFolderHovered) accents.primary.copy(alpha = 0.5f) else accents.primary.copy(alpha = 0.25f),
                             RoundedCornerShape(corners.small)
                         )
+                        .handCursor()
                         .clickable {
                             try {
                                 val folder = outputFile.parentFile

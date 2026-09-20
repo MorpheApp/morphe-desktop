@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.*
 import app.morphe.morphe_desktop.generated.resources.*
@@ -56,6 +57,7 @@ internal fun IdleContent(
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
             .background(animatedBgColor)
             .clickable(enabled = !isAnalyzing) { onBrowse() }
+            .handCursor(!isAnalyzing)
             .drawBehind {
                 drawRoundRect(
                     color = bracketColor,

@@ -7,6 +7,8 @@ package app.morphe.gui.ui.screens.quick.components
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import app.morphe.gui.ui.components.MorpheActionButton
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
@@ -16,7 +18,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,6 +34,7 @@ import app.morphe.engine.PatchedAppStore
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.screens.quick.formatFileSize
 import app.morphe.gui.ui.theme.*
@@ -170,6 +172,7 @@ internal fun CompletedContent(
                                     if (isFolderHovered) accents.primary.copy(alpha = 0.5f) else accents.primary.copy(alpha = 0.25f),
                                     RoundedCornerShape(corners.small)
                                 )
+                                .handCursor()
                                 .clickable {
                                     try {
                                         val folder = outputFile.parentFile
@@ -215,6 +218,7 @@ internal fun CompletedContent(
                             else accents.primary.copy(alpha = 0.22f),
                             RoundedCornerShape(corners.small)
                         )
+                        .handCursor()
                         .clickable { adbPreference.onChange(true) },
                     contentAlignment = Alignment.Center
                 ) {
@@ -238,10 +242,11 @@ internal fun CompletedContent(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .background(accents.secondary, CircleShape)
+                            Icon(
+                                imageVector = MorpheIcons.CheckCircle,
+                                contentDescription = null,
+                                tint = accents.secondary,
+                                modifier = Modifier.size(18.dp)
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
@@ -278,61 +283,42 @@ internal fun CompletedContent(
                     }
                     readyDevices.isNotEmpty() -> {
                         val device = selectedDevice ?: readyDevices.first()
-                        val installHover = remember { MutableInteractionSource() }
-                        val isInstallHovered by installHover.collectIsHoveredAsState()
-                        val installBg by animateColorAsState(
-                            if (isInstallHovered) accents.secondary.copy(alpha = 0.9f) else accents.secondary,
-                            animationSpec = tween(150)
-                        )
-
-                        Box(
+                        MorpheActionButton(
+                            label = stringResource(Res.string.adb_install_on_button, device.displayName),
                             modifier = Modifier
                                 .widthIn(max = 480.dp)
-                                .fillMaxWidth()
-                                .height(38.dp)
-                                .hoverable(installHover)
-                                .clip(RoundedCornerShape(corners.small))
-                                .background(installBg, RoundedCornerShape(corners.small))
-                                .clickable {
-                                    scope.launch {
-                                        isInstalling = true
-                                        installError = null
-                                        val result = adbManager.installApk(
-                                            apkPath = outputPath,
-                                            deviceId = device.id
-                                        )
-                                        result.fold(
-                                            onSuccess = {
-                                                installSuccess = true
-                                                val config = configRepository.loadConfig()
-                                                if (config.autoRouteLinksAfterInstall) {
-                                                    val record = PatchedAppStore.shared.getAll()
-                                                        .firstOrNull { it.outputApkPath == outputPath }
-                                                    record?.let {
-                                                        adbManager.setLinkHandling(
-                                                            deviceId = device.id,
-                                                            patchedPackage = it.installedPackageName,
-                                                            stockPackage = if (config.disableStockLinksAfterInstall) it.packageName else null,
-                                                            enable = true,
-                                                        )
-                                                    }
+                                .fillMaxWidth(),
+                            onClick = {
+                                scope.launch {
+                                    isInstalling = true
+                                    installError = null
+                                    val result = adbManager.installApk(
+                                        apkPath = outputPath,
+                                        deviceId = device.id
+                                    )
+                                    result.fold(
+                                        onSuccess = {
+                                            installSuccess = true
+                                            val config = configRepository.loadConfig()
+                                            if (config.autoRouteLinksAfterInstall) {
+                                                val record = PatchedAppStore.shared.getAll()
+                                                    .firstOrNull { it.outputApkPath == outputPath }
+                                                record?.let {
+                                                    adbManager.setLinkHandling(
+                                                        deviceId = device.id,
+                                                        patchedPackage = it.installedPackageName,
+                                                        stockPackage = if (config.disableStockLinksAfterInstall) it.packageName else null,
+                                                        enable = true,
+                                                    )
                                                 }
-                                            },
-                                            onFailure = { installError = (it as? AdbException)?.getUserMessage() ?: it.message }
-                                        )
-                                        isInstalling = false
-                                    }
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.adb_install_on_button, device.displayName),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = Color.White
-                            )
-                        }
+                                            }
+                                        },
+                                        onFailure = { installError = (it as? AdbException)?.getUserMessage() ?: it.message }
+                                    )
+                                    isInstalling = false
+                                }
+                            }
+                        )
                     }
                     else -> {
                         Text(
@@ -365,7 +351,8 @@ internal fun CompletedContent(
                 modifier = Modifier
                     .widthIn(max = 480.dp)
                     .fillMaxWidth()
-                    .height(42.dp),
+                    .height(42.dp)
+                    .handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
                 colors = ButtonDefaults.outlinedButtonColors(

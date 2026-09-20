@@ -301,11 +301,12 @@ private fun LicenseSearchBar(query: String, onQueryChange: (String) -> Unit) {
             modifier = Modifier.size(16.dp)
         )
 
-        Box(modifier = Modifier.weight(1f)) {
+        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
             if (query.isEmpty()) {
                 Text(
                     text = stringResource(Res.string.licenses_search_placeholder),
                     fontSize = 11.sp,
+                    lineHeight = 14.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
@@ -316,7 +317,8 @@ private fun LicenseSearchBar(query: String, onQueryChange: (String) -> Unit) {
                 onValueChange = onQueryChange,
                 singleLine = true,
                 textStyle = LocalTextStyle.current.copy(
-                    fontSize = 12.sp,
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp,
                     fontFamily = font,
                     color = MaterialTheme.colorScheme.onSurface
                 ),

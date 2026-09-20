@@ -670,7 +670,7 @@ private fun TextInput(value: String, font: FontFamily, accents: MorpheAccentColo
     LaunchedEffect(value) { if (text != value) text = value }
     val corners = LocalMorpheCorners.current
     Row(Modifier.fillMaxWidth().height(28.dp).clip(RoundedCornerShape(corners.small)).border(1.dp, accents.primary.copy(alpha = 0.25f), RoundedCornerShape(corners.small)).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.fillMaxWidth()) {
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
             if (text.isEmpty() && placeholder.isNotEmpty()) {
                 Text(placeholder, fontSize = 11.sp, fontWeight = FontWeight.Normal, lineHeight = 14.sp, fontFamily = font, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
             }

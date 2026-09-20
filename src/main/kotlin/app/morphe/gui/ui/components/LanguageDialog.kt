@@ -304,6 +304,7 @@ private fun LanguageSearchField(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(corners.small))
+                            .handCursor()
                             .clickable { onQueryChange("") }
                             .padding(2.dp)
                     ) {
@@ -348,6 +349,7 @@ private fun LanguageOptionRow(
             .clip(RoundedCornerShape(corners.small))
             .background(rowBgColor)
             .hoverable(hoverInteraction)
+            .handCursor()
             .clickable(onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 7.dp),
         verticalAlignment = Alignment.CenterVertically

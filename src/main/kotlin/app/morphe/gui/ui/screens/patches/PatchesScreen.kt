@@ -281,10 +281,10 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                             Spacer(modifier = Modifier.height(14.dp))
                             Text(
                                 text = stringResource(Res.string.patches_fetching_releases),
-                                fontSize = 11.sp,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
                     }
@@ -297,14 +297,15 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 text = stringResource(Res.string.patches_no_releases_found),
-                                fontSize = 11.sp,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             OutlinedButton(
                                 onClick = { viewModel.loadReleases() },
+                                modifier = Modifier.handCursor(),
                                 shape = RoundedCornerShape(corners.small),
                                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)),
                                 colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant)

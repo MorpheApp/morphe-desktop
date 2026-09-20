@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
@@ -178,6 +179,7 @@ internal fun ErrorContent(
                                 .hoverable(copyHover)
                                 .clip(RoundedCornerShape(corners.small))
                                 .background(copyBg)
+                                .handCursor()
                                 .clickable {
                                     clipboardScope.launch {
                                         clipboard.setClipEntry(
@@ -241,7 +243,8 @@ internal fun ErrorContent(
                 onClick = onStartOver,
                 modifier = Modifier
                     .weight(1f)
-                    .height(42.dp),
+                    .height(42.dp)
+                    .handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
@@ -262,7 +265,8 @@ internal fun ErrorContent(
                 onClick = onViewLogs,
                 modifier = Modifier
                     .weight(1f)
-                    .height(42.dp),
+                    .height(42.dp)
+                    .handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
                 colors = ButtonDefaults.outlinedButtonColors(

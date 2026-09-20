@@ -252,6 +252,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     .clip(RoundedCornerShape(corners.small))
                     .background(containerColor)
                     .border(1.dp, backBorder, RoundedCornerShape(corners.small))
+                    .handCursor()
                     .clickable { navigator.pop() },
                 contentAlignment = Alignment.Center
             ) {
@@ -587,6 +588,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 Tab(
                                     selected = isSelected,
                                     onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                                    modifier = Modifier.handCursor(),
                                     selectedContentColor = MaterialTheme.colorScheme.primary,
                                     unselectedContentColor = if (hasResults)
                                         MaterialTheme.colorScheme.onSurfaceVariant
@@ -908,6 +910,7 @@ private fun PatchSearchBar(
                     modifier = Modifier
                         .size(24.dp)
                         .clip(RoundedCornerShape(corners.small))
+                        .handCursor()
                         .clickable { onQueryChange("") },
                     contentAlignment = Alignment.Center
                 ) {
@@ -945,6 +948,7 @@ private fun PatchSearchBar(
                         RoundedCornerShape(corners.small)
                     ) else Modifier
                 )
+                .handCursor()
                 .clickable { onShowOnlySelectedChange(!showOnlySelected) }
                 .padding(horizontal = 12.dp),
             contentAlignment = Alignment.Center
@@ -1032,6 +1036,7 @@ private fun PatchListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .handCursor()
                 .clickable(interactionSource = interactionSource, indication = null, onClick = onToggle)
                 .semantics(mergeDescendants = true) { contentDescription = rowDescription }
                 .padding(14.dp),
@@ -1193,6 +1198,7 @@ private fun PatchListItem(
                             .clip(RoundedCornerShape(corners.small))
                             .border(1.dp, gearBorder, RoundedCornerShape(corners.small))
                             .background(gearBg, RoundedCornerShape(corners.small))
+                            .handCursor()
                             .clickable { showOptions = !showOptions },
                         contentAlignment = Alignment.Center
                     ) {
@@ -1351,6 +1357,7 @@ private fun IconActionPill(
             .clip(shape)
             .then(if (filled) Modifier.background(color.copy(alpha = 0.15f)) else Modifier)
             .border(1.dp, color.copy(alpha = if (filled) 0.5f else 0.35f), shape)
+            .handCursor()
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
@@ -1533,6 +1540,7 @@ private fun PatchOptionEditor(
                             .hoverable(browseHover)
                             .clip(RoundedCornerShape(corners.small))
                             .border(1.dp, browseBorder, RoundedCornerShape(corners.small))
+                            .handCursor()
                             .clickable {
                                 scope.launch {
                                     val picked = MorpheFilePicker.pickFile(
@@ -1794,6 +1802,7 @@ private fun CommandPreview(
                     modifier = Modifier
                         .hoverable(copyHover)
                         .clip(RoundedCornerShape(corners.small))
+                        .handCursor()
                         .clickable {
                             onCopy()
                             showCopied = true
@@ -1824,6 +1833,7 @@ private fun CommandPreview(
                     modifier = Modifier
                         .hoverable(modeHover)
                         .clip(RoundedCornerShape(corners.small))
+                        .handCursor()
                         .clickable(onClick = onToggleMode)
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {

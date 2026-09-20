@@ -365,6 +365,7 @@ internal fun SlimSearchField(
         textStyle = MaterialTheme.typography.bodySmall.copy(
             fontFamily = font,
             fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface
         ),
@@ -390,11 +391,12 @@ internal fun SlimSearchField(
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Box(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty()) {
                         Text(
                             text = stringResource(Res.string.filter_apps_hint),
                             fontSize = 11.sp,
+                            lineHeight = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
                             color = muted.copy(alpha = 0.4f)

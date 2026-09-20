@@ -88,7 +88,7 @@ fun MorpheButton(
             .background(bg)
             .border(1.dp, base.copy(alpha = borderAlpha), corner)
             .hoverable(hover)
-            .handCursor()
+            .handCursor(enabled)
             .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center,

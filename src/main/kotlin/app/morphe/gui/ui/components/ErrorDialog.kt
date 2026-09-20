@@ -5,20 +5,16 @@
 
 package app.morphe.gui.ui.components
 
-import app.morphe.gui.ui.icons.MorpheIcons
-
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.MorpheColors
+import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -39,8 +35,6 @@ fun ErrorDialog(
     dismissText: String = stringResource(Res.string.ok),
     retryText: String = stringResource(Res.string.retry)
 ) {
-    val font = LocalMorpheFont.current
-    val corners = LocalMorpheCorners.current
     val icon = when (errorType) {
         ErrorType.NETWORK -> MorpheIcons.WifiOff
         ErrorType.FILE -> MorpheIcons.Error
@@ -48,65 +42,34 @@ fun ErrorDialog(
         ErrorType.GENERIC -> MorpheIcons.Warning
     }
 
-    MorpheAlertDialog(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        onDismiss = onDismiss,
-        icon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(48.dp)
+    MorpheDialogCard(onDismiss = onDismiss, title = title) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.error,
+            modifier = Modifier.size(28.dp),
+        )
+        MorpheDialogText(message)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            MorpheDialogButton(
+                label = dismissText,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onDismiss,
             )
-        },
-        title = {
-            Text(
-                text = title,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
-                textAlign = TextAlign.Center
-            )
-        },
-        text = {
-            Text(
-                text = message,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        },
-        confirmButton = {
             if (onRetry != null) {
-                Button(
+                MorpheDialogButton(
+                    label = retryText,
+                    color = MaterialTheme.colorScheme.error,
+                    filled = true,
                     onClick = onRetry,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MorpheColors.Blue
-                    ),
-                    shape = RoundedCornerShape(corners.small)
-                ) {
-                    Text(retryText, fontFamily = font)
-                }
-            } else {
-                Button(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MorpheColors.Blue
-                    ),
-                    shape = RoundedCornerShape(corners.small)
-                ) {
-                    Text(dismissText, fontFamily = font)
-                }
+                )
             }
-        },
-        dismissButton = if (onRetry != null) {
-            {
-                TextButton(onClick = onDismiss) {
-                    Text(dismissText, fontFamily = font)
-                }
-            }
-        } else null
-    )
+        }
+    }
 }
 
 /**

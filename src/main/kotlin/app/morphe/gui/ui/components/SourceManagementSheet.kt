@@ -172,7 +172,7 @@ fun SourceManagementSheet(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                 )
-                IconButton(onClick = onRefresh, enabled = enabled, modifier = Modifier.size(28.dp)) {
+                IconButton(onClick = onRefresh, enabled = enabled, modifier = Modifier.size(28.dp).handCursor(enabled)) {
                     Icon(
                         imageVector = MorpheIcons.Refresh,
                         contentDescription = stringResource(Res.string.source_sheet_reload_description),
@@ -317,6 +317,7 @@ fun SourceManagementSheet(
             TextButton(
                 onClick = onDismiss,
                 shape = RoundedCornerShape(corners.small),
+                modifier = Modifier.handCursor(),
             ) {
                 Text(
                     stringResource(Res.string.source_sheet_done_button),

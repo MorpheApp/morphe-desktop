@@ -97,6 +97,7 @@ internal fun AddPatchSourceDialog(
                                     else Color.Transparent
                                 )
                                 .clickable { sourceType = type }
+                                .handCursor()
                                 .padding(horizontal = 14.dp, vertical = 7.dp)
                         ) {
                             Text(
@@ -297,7 +298,7 @@ internal fun AddPatchSourceDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = accents.primary),
                 shape = RoundedCornerShape(corners.small),
                 contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
-                modifier = Modifier.height(dimens.controlHeight),
+                modifier = Modifier.height(dimens.controlHeight).handCursor(),
             ) {
                 Text(
                     stringResource(Res.string.patch_source_dialog_add_button),
@@ -313,7 +314,7 @@ internal fun AddPatchSourceDialog(
                 onClick = onDismiss,
                 shape = RoundedCornerShape(corners.small),
                 contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
-                modifier = Modifier.height(dimens.controlHeight),
+                modifier = Modifier.height(dimens.controlHeight).handCursor(),
             ) {
                 Text(
                     stringResource(Res.string.cancel),
@@ -535,7 +536,7 @@ internal fun EditPatchSourceDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = accents.primary),
                 shape = RoundedCornerShape(corners.small),
                 contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
-                modifier = Modifier.height(dimens.controlHeight),
+                modifier = Modifier.height(dimens.controlHeight).handCursor(),
             ) {
                 Text(
                     stringResource(Res.string.save),
@@ -551,7 +552,7 @@ internal fun EditPatchSourceDialog(
                 onClick = onDismiss,
                 shape = RoundedCornerShape(corners.small),
                 contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
-                modifier = Modifier.height(dimens.controlHeight),
+                modifier = Modifier.height(dimens.controlHeight).handCursor(),
             ) {
                 Text(
                     stringResource(Res.string.cancel),
