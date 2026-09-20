@@ -1,3 +1,10 @@
+# [1.17.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.5...v1.17.0-dev.6) (2026-09-20)
+
+
+### Bug Fixes
+
+* GUI improvements ([#319](https://github.com/MorpheApp/morphe-desktop/issues/319)) ([ee78d88](https://github.com/MorpheApp/morphe-desktop/commit/ee78d88aa281b074bca34005c0ce0883c6323bce))
+
 # [1.17.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.4...v1.17.0-dev.5) (2026-09-20)
 
 
