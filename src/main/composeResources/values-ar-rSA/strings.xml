@@ -321,7 +321,7 @@
     <string name="home_detail_loading_versions">جارٍ تحميل الإصدارات…</string>
     <string name="home_detail_no_other_versions">لا توجد إصدارات أخرى متاحة</string>
     <string name="home_detail_app_version_label">إصدار التطبيق</string>
-    <string name="home_detail_newer_patch_available_note">تتوفر رقعة أحدث وقد تدعم إصدارًا أحدث من التطبيق. انقر على تحديث للتحقق</string>
+    <string name="home_detail_newer_patch_available_note">يتوفر تعديل أحدث وقد يدعم إصدارًا أحدث من التطبيق. انقر على تحديث للتحقق</string>
     <string name="home_detail_section_patches_applied">التصحيحات المطبقة</string>
     <string name="home_detail_section_options">الخيارات</string>
     <string name="home_detail_output_size_label">حجم الناتج</string>

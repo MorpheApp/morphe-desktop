@@ -19,10 +19,10 @@
     <string name="release_to_drop">Відпустіть, щоб додати</string>
     <string name="click_to_browse">або натисніть для перегляду</string>
     <string name="error_could_not_load_patches">Не вдалося завантажити жодних патчів</string>
-    <string name="error_network_timeout">Час очікування мережі вичерпано, перевірте з\'єднання та спробуйте знову</string>
-    <string name="error_could_not_reach_patch_server">Не вдалося з\'єднатися з сервером патчів, перевірте з\'єднання</string>
+    <string name="error_network_timeout">Час очікування мережі вичерпано, перевірте з'єднання та спробуйте знову</string>
+    <string name="error_could_not_reach_patch_server">Не вдалося з'єднатися з сервером патчів, перевірте з'єднання</string>
     <string name="error_github_rate_limit">Досягнуто ліміту запитів GitHub, зачекайте кілька хвилин і спробуйте знову</string>
-    <string name="error_connection_dropped">З\'єднання перервано під час завантаження, спробуйте знову</string>
+    <string name="error_connection_dropped">З'єднання перервано під час завантаження, спробуйте знову</string>
     <string name="error_network_loading_patches">Мережева помилка під час завантаження патчів</string>
     <string name="error_patch_file_not_found">Файл патча не знайдено: %1$s</string>
     <string name="error_no_patches_files_supplied">Не надано жодних файлів патчів</string>
@@ -404,7 +404,7 @@
     <string name="patch_selection_run_info_tooltip">APK і набір патчів, використані для цього запуску</string>
     <string name="patch_selection_run_info_description">Інформація про запуск</string>
     <string name="patch_selection_badge_new">Новий</string>
-    <string name="patch_selection_option_required">Цей параметр є обов\'язковим</string>
+    <string name="patch_selection_option_required">Цей параметр є обов'язковим</string>
     <string name="patch_selection_option_expected">Очікується %1$s</string>
     <string name="patch_selection_option_hint_list">список через кому, кожен %1$s</string>
     <string name="patch_selection_option_hint_value">значення</string>
@@ -432,7 +432,7 @@
     <string name="patching_progress_title">Патчинг застосунку</string>
     <string name="patching_step_all_done">Все готово!</string>
     <string name="patching_step_waiting">Очікування…</string>
-    <string name="patching_graph_memory_usage">Використання пам\'яті</string>
+    <string name="patching_graph_memory_usage">Використання пам'яті</string>
     <string name="patching_graph_storage_io">Введення-виведення сховища</string>
     <string name="patching_graph_cpu_usage">Використання ЦП</string>
     <string name="patching_banner_started_title">Патчинг розпочато</string>
@@ -453,8 +453,8 @@
     <string name="patching_success_title">Патчинг успішно завершено</string>
     <string name="patching_success_output_size">Розмір вихідного файлу</string>
     <string name="patching_success_time">Час</string>
-    <string name="patching_success_memory_avg">Середнє використання пам\'яті</string>
-    <string name="patching_success_memory_max">Максимальне використання пам\'яті</string>
+    <string name="patching_success_memory_avg">Середнє використання пам'яті</string>
+    <string name="patching_success_memory_max">Максимальне використання пам'яті</string>
     <string name="patching_success_storage_io_peak">Пік I/O сховища</string>
     <string name="patching_failure_temp_files_cleaned">Тимчасові файли очищено</string>
     <string name="patching_banner_native_libs_kept">Збережено</string>
@@ -548,7 +548,7 @@
     <string name="icon_studio_background_image_set_hint">Фонове зображення встановлено. Натисніть «Зображення», щоб замінити</string>
     <string name="icon_studio_shape_triangle">Трикутник</string>
     <string name="icon_studio_shape_diamond">Ромб</string>
-    <string name="icon_studio_shape_pentagon">П\'ятикутник</string>
+    <string name="icon_studio_shape_pentagon">П'ятикутник</string>
     <string name="icon_studio_shape_hexagon">Шестикутник</string>
     <string name="icon_studio_shape_star">Зірка</string>
     <!-- Source Management Sheet -->
@@ -566,7 +566,7 @@
     <string name="source_sheet_title">Джерела патчів</string>
     <string name="source_sheet_reload_description">Перезавантажити патчі</string>
     <string name="source_sheet_quick_mode_hint">Виберіть джерело, яке використовує Quick Patch. Мультиджерела доступні в режимі експерта</string>
-    <string name="source_sheet_multi_mode_hint">Увімкніть/вимкніть будь-яку комбінацію. Патчі з усіх увімкнених джерел об\'єднуються</string>
+    <string name="source_sheet_multi_mode_hint">Увімкніть/вимкніть будь-яку комбінацію. Патчі з усіх увімкнених джерел об'єднуються</string>
     <string name="source_sheet_done_button">Готово</string>
     <string name="source_sheet_type_preinstalled">Вбудоване</string>
     <string name="source_sheet_builtin">Вбудований</string>
@@ -593,7 +593,7 @@
     <string name="patch_source_dialog_pre_release_hint">Отримує ранній доступ до нових експериментальних версій патчів</string>
     <string name="patch_source_dialog_experimental_title">Експериментальні версії застосунків</string>
     <string name="patch_source_dialog_experimental_hint">Надає пріоритет експериментальним версіям застосунку, якщо вони доступні</string>
-    <string name="patch_source_dialog_error_name_required">Назва обов\'язкова</string>
+    <string name="patch_source_dialog_error_name_required">Назва обов'язкова</string>
     <string name="patch_source_dialog_error_invalid_url">Введіть дійсний URL GitHub або GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Виберіть дійсний файл .mpp</string>
     <string name="patch_source_dialog_add_button">Додати</string>
@@ -627,8 +627,8 @@
     <string name="device_indicator_not_listed_title">Пристрій не відображається?</string>
     <string name="device_indicator_not_listed_subtitle">Увімкніть налагодження по USB у параметрах розробника</string>
     <!-- Error Dialog -->
-    <string name="error_dialog_timeout">Час очікування з\'єднання минув. Перевірте інтернет-з\'єднання та спробуйте знову</string>
-    <string name="error_dialog_unreachable">Не вдається з\'єднатися з сервером. Перевірте інтернет-з\'єднання</string>
+    <string name="error_dialog_timeout">Час очікування з'єднання минув. Перевірте інтернет-з'єднання та спробуйте знову</string>
+    <string name="error_dialog_unreachable">Не вдається з'єднатися з сервером. Перевірте інтернет-з'єднання</string>
     <string name="error_dialog_permission_denied">Доступ заборонено. Перевірте, чи маєте ви доступ до файлу або папки</string>
     <string name="error_dialog_not_found">Запитаний файл або ресурс не знайдено</string>
     <string name="error_dialog_disk_full">Недостатньо місця на диску. Звільніть трохи місця та спробуйте знову</string>
@@ -662,7 +662,7 @@
     <string name="licenses_row_link_source">Джерело</string>
     <string name="licenses_notice_button">Повідомлення</string>
     <string name="licenses_notice_title">Повідомлення Morphe</string>
-    <string name="licenses_notice_subtitle">Обов\'язкове зазначення авторства &amp; гарантій (GPLv3 §7)</string>
+    <string name="licenses_notice_subtitle">Обов'язкове зазначення авторства &amp; гарантій (GPLv3 §7)</string>
     <string name="licenses_text_not_bundled">// повний текст ліцензії не додано</string>
     <string name="licenses_text_open_canonical">Відкрити канонічний текст ліцензії:</string>
     <string name="licenses_text_open_license_button">Відкрити ліцензію</string>

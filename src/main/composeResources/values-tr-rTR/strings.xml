@@ -15,18 +15,18 @@
     <string name="close">Kapat</string>
     <string name="delete">Sil</string>
     <string name="disabled_while_patching">Yama uygulanırken devre dışı</string>
-    <string name="drop_apk_here">APK\'yı buraya bırakın</string>
+    <string name="drop_apk_here">APK'yı buraya bırakın</string>
     <string name="release_to_drop">Dosyayı bırakın</string>
     <string name="click_to_browse">veya dosya seçmek için tıklayın</string>
     <string name="error_could_not_load_patches">Hiçbir yama yüklenemedi</string>
     <string name="error_network_timeout">Ağ zaman aşımı, bağlantınızı kontrol edin ve tekrar deneyin</string>
     <string name="error_could_not_reach_patch_server">Yama sunucusuna ulaşılamadı, bağlantınızı kontrol edin</string>
-    <string name="error_github_rate_limit">GitHub\'da istek sınırına ulaşıldı, birkaç dakika bekleyin ve tekrar deneyin</string>
+    <string name="error_github_rate_limit">GitHub'da istek sınırına ulaşıldı, birkaç dakika bekleyin ve tekrar deneyin</string>
     <string name="error_connection_dropped">İndirme sırasında bağlantı kesildi, lütfen tekrar deneyin</string>
     <string name="error_network_loading_patches">Yamalar yüklenirken bağlantı hatası oluştu</string>
     <string name="error_patch_file_not_found">Yama dosyası bulunamadı: %1$s</string>
     <string name="error_no_patches_files_supplied">Yama dosyaları sağlanmadı</string>
-    <string name="error_input_apk_not_found">Girdi APK\'sı bulunamadı</string>
+    <string name="error_input_apk_not_found">Girdi APK'sı bulunamadı</string>
     <string name="error_step_failed">%1$s başarısız oldu: %2$s</string>
     <string name="error_drop_valid_apk">Lütfen geçerli bir .apk, .apkm, .xapk veya .apks dosyası bırakın</string>
     <string name="status_saving">Kaydediliyor...</string>
@@ -44,7 +44,7 @@
     <string name="copy">Kopyala</string>
     <string name="copied">Kopyalandı</string>
     <string name="click_to_copy">Kopyalamak için tıklayın</string>
-    <string name="enable_adb_button">ADB\'yi aç</string>
+    <string name="enable_adb_button">ADB'yi aç</string>
     <string name="drag_to_reorder">Yeniden sıralamak için sürükleyin</string>
     <string name="off">Kapalı</string>
     <string name="on">Açık</string>
@@ -148,7 +148,7 @@
     <string name="adb_status_enabling_links">%1$s uygulamasındaki bağlantılar yeniden etkinleştiriliyor…</string>
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
     <string name="version_status_checksum_mismatch">Kontrol toplamı eşleşmiyor</string>
-    <string name="version_status_checksum_corrupted">Dosya bozuk olabilir; lütfen APKMirror\'dan yeniden indirin</string>
+    <string name="version_status_checksum_corrupted">Dosya bozuk olabilir; lütfen APKMirror'dan yeniden indirin</string>
     <string name="version_status_checksum_failed">Kontrol toplamı doğrulaması başarısız oldu</string>
     <string name="version_status_checksum_matches">Kontrol toplamı APKMirror ile eşleşiyor</string>
     <string name="version_status_older_stable">Daha eski kararlı</string>
@@ -223,15 +223,15 @@
     <string name="home_validation_file_too_small">Dosya geçerli bir APK olamayacak kadar küçük</string>
     <string name="home_validation_parse_failed">APK ayrıştırılamadı. Dosya bozuk veya geçerli bir APK olmayabilir</string>
     <!-- Home Screen - ApkInfoCard -->
-    <string name="home_apk_info_remove_description">APK\'yı kaldır</string>
-    <string name="home_apk_info_limited_info_warning">Bu APK\'nın manifesti tam olarak okunamadı (bölünmüş paketlerde yaygındır). Aşağıdaki ayrıntılar yaklaşıktır, yamalama yine de çalışmalıdır</string>
+    <string name="home_apk_info_remove_description">APK'yı kaldır</string>
+    <string name="home_apk_info_limited_info_warning">Bu APK'nın manifesti tam olarak okunamadı (bölünmüş paketlerde yaygındır). Aşağıdaki ayrıntılar yaklaşıktır, yamalama yine de çalışmalıdır</string>
     <string name="home_apk_info_unsupported_app_warning">Bu uygulama için uyumlu yama bulunamadı. Yine de devam edebilirsiniz, ancak yamalamanın etkisi olmayabilir</string>
     <string name="home_apk_info_version_label">Sürüm</string>
     <string name="home_apk_info_build_label">Derleme</string>
     <string name="home_apk_info_size_label">Boyut</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Kaynak</string>
-    <string name="home_stage_change_apk">APK\'yı değiştir</string>
+    <string name="home_stage_change_apk">APK'yı değiştir</string>
     <string name="home_stage_continue">Devam et</string>
     <string name="home_stage_analyzing_title">Analiz ediliyor</string>
     <string name="home_stage_reading_metadata">Uygulama meta verileri okunuyor…</string>
@@ -243,9 +243,9 @@
     <string name="home_dialog_forget_message">Bu işlem, %1$s ögesini yamalanmış uygulama geçmişinizden kaldırır. Hiçbir dosyaya dokunmaz - uygulamayı yeniden yamamak bunu geri ekler.</string>
     <string name="home_dialog_uninstall_title">%1$s kaldırılsın mı?</string>
     <string name="home_dialog_uninstall_message">Bu işlem %1$s ögesini bağlı cihazdan kaldırır. Aşağıda aksini seçmediğiniz sürece diskteki yamalanmış APK ve geçmişiniz saklanır.</string>
-    <string name="home_dialog_uninstall_also_forget">Ayrıca Uygulamalarım\'dan kaldır</string>
+    <string name="home_dialog_uninstall_also_forget">Ayrıca Uygulamalarım'dan kaldır</string>
     <string name="home_dialog_missing_apk_title">Orijinal APK bulunamadı</string>
-    <string name="home_dialog_missing_apk_message">%1$s için girdi APK\'sı artık şurada değil:\n%2$s\n\nKayıtlı ayarlarınızla yeniden yamalamak için APK\'yı tekrar seçin</string>
+    <string name="home_dialog_missing_apk_message">%1$s için girdi APK'sı artık şurada değil:\n%2$s\n\nKayıtlı ayarlarınızla yeniden yamalamak için APK'yı tekrar seçin</string>
     <string name="home_dialog_select_apk">APK seç…</string>
     <string name="home_dialog_select_apk_to_repatch">Yeniden yamalamak için APK seç</string>
     <!-- Home Screen - HomeHeader -->
@@ -270,9 +270,9 @@
     <string name="home_list_no_apps_match">\"%1$s\" ile eşleşen uygulama yok</string>
     <string name="home_sort_recommended">Önerilen</string>
     <string name="home_sort_recommended_desc">Önce yamalanan uygulamalar, sonra kurulu olanlar, ardından ada göre</string>
-    <string name="home_sort_name_asc">Ad (A\'dan Z\'ye)</string>
+    <string name="home_sort_name_asc">Ad (A'dan Z'ye)</string>
     <string name="home_sort_name_asc_desc">Alfabetik</string>
-    <string name="home_sort_name_desc">Ad (Z\'den A\'ya)</string>
+    <string name="home_sort_name_desc">Ad (Z'den A'ya)</string>
     <string name="home_sort_name_desc_desc">Ters alfabetik</string>
     <string name="home_sort_updates_first">Önce yama güncellemeleri</string>
     <string name="home_sort_updates_first_desc">Önce yama güncellemesi olan uygulamalar, sonra önerilenler</string>
@@ -284,7 +284,7 @@
     <string name="home_filter_your_apps">Uygulamalarım</string>
     <string name="home_banner_view">Görüntüle</string>
     <string name="home_your_apps_install_ready">Kuruluma hazır</string>
-    <string name="home_your_apps_newer_patch_hint">Daha yeni bir yama uygulama sürümünü yükseltebilir, kontrol etmek için Güncelle\'ye tıklayın</string>
+    <string name="home_your_apps_newer_patch_hint">Daha yeni bir yama uygulama sürümünü yükseltebilir, kontrol etmek için Güncelle'ye tıklayın</string>
     <string name="home_your_apps_device_version_ready">Yamalanmış v%1$s hazır, cihaz v%2$s sürümünde (yeniden yamamak gerekmez)</string>
     <string name="home_your_apps_install_ready_hint">Yamalı v%1$s kuruluma hazır (yeniden yamalama gerekmez)</string>
     <string name="home_action_install">Kur</string>
@@ -308,9 +308,9 @@
     <string name="home_detail_using_label">Kullanılan</string>
     <string name="home_detail_apk_origin_sub">bu uygulamanın yamalandığı APK</string>
     <string name="home_detail_reading_chosen_bundle">Seçilen paket okunuyor…</string>
-    <string name="home_detail_bundle_not_downloaded_warning">Aşağıdaki sürümler %1$s\'in destekledikleridir. %2$s sürümünü seçtiniz; bu sürüm indirilmediği için destekledikleri bilinmiyor</string>
+    <string name="home_detail_bundle_not_downloaded_warning">Aşağıdaki sürümler %1$s'in destekledikleridir. %2$s sürümünü seçtiniz; bu sürüm indirilmediği için destekledikleri bilinmiyor</string>
     <string name="home_detail_bundle_does_not_support_warning">%1$s, %2$s sürümünü desteklemiyor. Bunun yerine şunlardan birini seçin</string>
-    <string name="home_detail_versions_what_bundle_supports">Aşağıdaki sürümler %1$s\'in destekledikleridir</string>
+    <string name="home_detail_versions_what_bundle_supports">Aşağıdaki sürümler %1$s'in destekledikleridir</string>
     <string name="home_detail_choose_apk_button">APK seç</string>
     <string name="home_detail_select_apk_title">Yamalamak için bir APK seç</string>
     <string name="home_detail_new_source_button">Yeni kaynak</string>
@@ -321,7 +321,7 @@
     <string name="home_detail_loading_versions">Sürümler yükleniyor…</string>
     <string name="home_detail_no_other_versions">Başka sürüm mevcut değil</string>
     <string name="home_detail_app_version_label">Uygulama sürümü</string>
-    <string name="home_detail_newer_patch_available_note">Daha yeni bir yama mevcut ve daha yeni bir uygulama sürümünü destekleyebilir. Kontrol etmek için Güncelle\'ye tıklayın</string>
+    <string name="home_detail_newer_patch_available_note">Daha yeni bir yama mevcut ve daha yeni bir uygulama sürümünü destekleyebilir. Kontrol etmek için Güncelle'ye tıklayın</string>
     <string name="home_detail_section_patches_applied">Uygulanan yamalar</string>
     <string name="home_detail_section_options">Seçenekler</string>
     <string name="home_detail_output_size_label">Çıktı boyutu</string>
@@ -377,7 +377,7 @@
     <string name="patch_selection_icon_none">Özel simge ayarlanmamış</string>
     <string name="patch_selection_icon_dialog_delete_title">Özel simge silinsin mi?</string>
     <string name="patch_selection_icon_dialog_delete_message">Bu, simgeyi temizler ve kayıtlı projesini ile üretilen dosyalarını kaldırır. Bu işlem geri alınamaz</string>
-    <string name="patch_selection_custom_icon_hint">Bu klasörü kendiniz oluşturmanıza gerek yok! Icon Studio\'da oluşturmak için Tasarım/Düzenle simgesine tıklayın veya Manager\'dan içe aktarın
+    <string name="patch_selection_custom_icon_hint">Bu klasörü kendiniz oluşturmanıza gerek yok! Icon Studio'da oluşturmak için Tasarım/Düzenle simgesine tıklayın veya Manager'dan içe aktarın
 </string>
     <string name="patch_selection_option_enabled">Etkin</string>
     <string name="patch_selection_option_disabled">Devre dışı</string>
@@ -389,7 +389,7 @@
     <string name="patch_selection_strip_universal_headline">Evrensel kitaplıklar</string>
     <string name="patch_selection_strip_universal_detail">tek evrensel klasör, kırpma uygulanmıyor</string>
     <string name="patch_selection_strip_keep_all_headline">Kırpmaya gerek yok</string>
-    <string name="patch_selection_strip_keep_all_detail">koruma listesi bu APK\'daki tüm mimarileri kapsar</string>
+    <string name="patch_selection_strip_keep_all_detail">koruma listesi bu APK'daki tüm mimarileri kapsar</string>
     <string name="patch_selection_strip_fallback_headline">Geri dönüş: tümü korunuyor</string>
     <string name="patch_selection_strip_fallback_detail">tercih edilen mimari yok, Kitaplıkları kırp ayarlarını gözden geçirin</string>
     <string name="patch_selection_strip_will_strip_headline">Yerel kitaplıklar kırpılıyor</string>
@@ -415,7 +415,7 @@
     <string name="patch_selection_option_hint_text">metin</string>
     <string name="patch_selection_run_info_title">Bu çalıştırma</string>
     <string name="patch_selection_run_info_app_group">Uygulama</string>
-    <string name="patch_selection_run_info_bundles_group">Yama bundle\'ları</string>
+    <string name="patch_selection_run_info_bundles_group">Yama bundle'ları</string>
     <string name="patch_selection_run_info_no_bundles">Paket çözümlenemedi</string>
     <string name="patch_selection_group_universal">Evrensel</string>
     <string name="patch_selection_group_ungrouped">Gruplanmamış</string>
@@ -470,7 +470,7 @@
     <string name="result_adb_install_successful">Kurulum başarılı!</string>
     <string name="result_link_default_restored">Varsayılan bağlantı işleme geri yüklendi</string>
     <string name="result_link_routed_stock_disabled">Bağlantılar yamalı uygulamaya yönlendirildi, stok uygulama devre dışı bırakıldı</string>
-    <string name="result_adb_not_found_hint">ADB bulunamadı. Doğrudan kurulumu etkinleştirmek için Android SDK Platform Araçları\'nı kurun</string>
+    <string name="result_adb_not_found_hint">ADB bulunamadı. Doğrudan kurulumu etkinleştirmek için Android SDK Platform Araçları'nı kurun</string>
     <string name="result_adb_section_title">ADB kurulumu</string>
     <string name="result_adb_no_devices">Bağlı cihaz yok</string>
     <string name="result_adb_connect_hint">USB hata ayıklama etkinken USB ile bağlanın</string>
@@ -487,7 +487,7 @@
     <string name="result_cleanup_auto_enabled">Otomatik temizlik etkin</string>
     <string name="result_cleanup_freed">%1$s boşaltıldı</string>
     <string name="result_adb_disabled_title">ADB kapalı. Cihaza kurulum devre dışı</string>
-    <string name="result_adb_disabled_subtitle">Yamalı APK\'ları doğrudan göndermek için Ayarlar\'da ADB\'yi etkinleştirin</string>
+    <string name="result_adb_disabled_subtitle">Yamalı APK'ları doğrudan göndermek için Ayarlar'da ADB'yi etkinleştirin</string>
     <!-- Icon Studio -->
     <string name="icon_studio_title">Simge Stüdyosu</string>
     <string name="icon_studio_shape_circle">Daire</string>
@@ -546,7 +546,7 @@
     <string name="icon_studio_background_solid">Düz</string>
     <string name="icon_studio_background_image">Görsel</string>
     <string name="icon_studio_background_hint">Ön planın arkasında tüm kutucuğu doldurur</string>
-    <string name="icon_studio_background_image_set_hint">Görsel arka plan ayarlandı, değiştirmek için Görsel\'e tıklayın</string>
+    <string name="icon_studio_background_image_set_hint">Görsel arka plan ayarlandı, değiştirmek için Görsel'e tıklayın</string>
     <string name="icon_studio_shape_triangle">Üçgen</string>
     <string name="icon_studio_shape_diamond">Elmas</string>
     <string name="icon_studio_shape_pentagon">Beşgen</string>
@@ -566,7 +566,7 @@
     <string name="add_source">Kaynak ekleyin</string>
     <string name="source_sheet_title">Yama kaynakları</string>
     <string name="source_sheet_reload_description">Yamaları yeniden yükle</string>
-    <string name="source_sheet_quick_mode_hint">Hızlı Yamalama\'nın hangi kaynağı kullanacağını seçin. Çoklu kaynak, Uzman modunda kullanılabilir</string>
+    <string name="source_sheet_quick_mode_hint">Hızlı Yamalama'nın hangi kaynağı kullanacağını seçin. Çoklu kaynak, Uzman modunda kullanılabilir</string>
     <string name="source_sheet_multi_mode_hint">İstediğiniz kombinasyonu etkinleştirin/devre dışı bırakın. Tüm etkin kaynaklardan gelen yamalar birleştirilir</string>
     <string name="source_sheet_done_button">Bitti</string>
     <string name="source_sheet_type_preinstalled">Ön yüklü</string>
@@ -587,7 +587,7 @@
     <string name="patch_source_dialog_local_file_label">Yerel dosya</string>
     <string name="patch_source_dialog_name_label">Ad</string>
     <string name="patch_source_dialog_name_placeholder">Özel Yamalarım</string>
-    <string name="patch_source_dialog_repo_url_label">Depo URL\'si</string>
+    <string name="patch_source_dialog_repo_url_label">Depo URL'si</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo veya gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">GitHub, GitLab veya morphe.software/add-source bağlantısını kabul eder</string>
     <string name="patch_source_dialog_pre_release_title">Ön sürüm yamalar</string>
@@ -595,7 +595,7 @@
     <string name="patch_source_dialog_experimental_title">Deneysel uygulama sürümleri</string>
     <string name="patch_source_dialog_experimental_hint">Mevcutse deneysel uygulama sürümlerine öncelik verir</string>
     <string name="patch_source_dialog_error_name_required">Ad gereklidir</string>
-    <string name="patch_source_dialog_error_invalid_url">Geçerli bir GitHub veya GitLab URL\'si girin</string>
+    <string name="patch_source_dialog_error_invalid_url">Geçerli bir GitHub veya GitLab URL'si girin</string>
     <string name="patch_source_dialog_error_invalid_file">Geçerli bir .mpp dosyası seçin</string>
     <string name="patch_source_dialog_add_button">Ekle</string>
     <string name="patch_source_dialog_edit_title">Kaynağı düzenle</string>
@@ -618,7 +618,7 @@
     <string name="device_indicator_adb_is_off_title">ADB kapalı</string>
     <string name="device_indicator_adb_is_off_subtitle">Morphe bağlı cihazları izlemiyor</string>
     <string name="device_indicator_adb_not_found_title">ADB bulunamadı</string>
-    <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Araçları\'nı kurun</string>
+    <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Araçları'nı kurun</string>
     <string name="device_indicator_no_devices_title">Cihaz algılanmadı</string>
     <string name="device_indicator_no_devices_subtitle">USB hata ayıklama etkin bir cihaz bağlayın</string>
     <string name="device_indicator_enable_debugging_title">USB hata ayıklamayı etkinleştir</string>
@@ -626,7 +626,7 @@
     <string name="device_indicator_status_connected">Bağlı</string>
     <string name="device_indicator_status_unauthorized">Yetkisiz</string>
     <string name="device_indicator_not_listed_title">Cihaz listelenmiyor mu?</string>
-    <string name="device_indicator_not_listed_subtitle">Geliştirici Seçenekleri\'nde USB Hata Ayıklama\'yı etkinleştirin</string>
+    <string name="device_indicator_not_listed_subtitle">Geliştirici Seçenekleri'nde USB Hata Ayıklama'yı etkinleştirin</string>
     <!-- Error Dialog -->
     <string name="error_dialog_timeout">Bağlantı zaman aşımına uğradı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin</string>
     <string name="error_dialog_unreachable">Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin</string>
@@ -675,7 +675,7 @@
     <string name="settings_dialog_open_logs_button">Günlükleri aç</string>
     <string name="settings_dialog_reset_button">Sıfırla</string>
     <string name="settings_theme_system">Sistem</string>
-    <string name="settings_signing_error_not_found">Yapılandırılan anahtar deposu bulunamadı: %1$s. Dosyayı geri yükleyin, Ayarlar\'dan başka birini seçin veya Morphe\'nin varsayılanını kullanmak için ayarı temizleyin</string>
+    <string name="settings_signing_error_not_found">Yapılandırılan anahtar deposu bulunamadı: %1$s. Dosyayı geri yükleyin, Ayarlar'dan başka birini seçin veya Morphe'nin varsayılanını kullanmak için ayarı temizleyin</string>
     <string name="settings_search_languages_placeholder">Dilleri ara</string>
     <string name="settings_dialog_resolves_to_message">Şuraya çözümlenir: %1$s</string>
     <string name="settings_dialog_error_keystore_not_found">Anahtar deposu bulunamadı: %1$s</string>
@@ -723,7 +723,7 @@
     <string name="settings_section_signing">İmzalama</string>
     <string name="settings_section_strip_libs">Kitaplıkları kırp</string>
     <string name="settings_toggle_developer_options_label">Geliştirici seçenekleri</string>
-    <string name="settings_toggle_developer_options_desc">Yama geliştiricileri için. Yamaları derleme ve test etme için bir dizi iş akışı seçeneğinin kilidini açar (tam liste için belgelere bakın). Şimdilik bu, yerel bir kaynağı bir klasöre yönlendirerek Morphe\'nin her zaman en yeni .mpp dosyasını yüklemesini sağlar</string>
+    <string name="settings_toggle_developer_options_desc">Yama geliştiricileri için. Yamaları derleme ve test etme için bir dizi iş akışı seçeneğinin kilidini açar (tam liste için belgelere bakın). Şimdilik bu, yerel bir kaynağı bir klasöre yönlendirerek Morphe'nin her zaman en yeni .mpp dosyasını yüklemesini sağlar</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Geçici dosyaları otomatik temizle</string>
     <string name="settings_toggle_auto_cleanup_desc">Yamalamadan sonra geçici dosyaları sil</string>
@@ -732,11 +732,11 @@
     <string name="settings_channel_desc_dev">Yeni bir geliştirici veya kararlı sürüm mevcut olduğunda bir bildirim çubuğu görürsünüz</string>
     <string name="settings_channel_desc_off">Güncelleme denetimleri kapalı. İstediğiniz zaman buradan yeniden etkinleştirin</string>
     <string name="settings_section_output_folder">Çıktı klasörü</string>
-    <string name="settings_output_folder_desc">Yamalı APK\'ların kaydedildiği yer. İçinde uygulama başına bir alt klasör oluşturulur</string>
-    <string name="settings_output_folder_default">APK\'nın klasörü (varsayılan)</string>
+    <string name="settings_output_folder_desc">Yamalı APK'ların kaydedildiği yer. İçinde uygulama başına bir alt klasör oluşturulur</string>
+    <string name="settings_output_folder_default">APK'nın klasörü (varsayılan)</string>
     <string name="settings_output_folder_picker_title">Çıktı klasörünü seç</string>
     <string name="settings_output_folder_not_found">Klasör bulunamadı, sonraki yamalamada oluşturulacak</string>
-    <string name="settings_toggle_auto_start_adb_label">ADB\'yi otomatik başlat</string>
+    <string name="settings_toggle_auto_start_adb_label">ADB'yi otomatik başlat</string>
     <string name="settings_toggle_auto_start_adb_desc">Başlangıçta ADB arka plan sürecini başlatarak bağlı cihazların izlenmesini sağlar. Kapalıyken Morphe sunucuyu asla başlatmaz ve kurulum/gönderme özellikleri devre dışı kalır</string>
     <string name="settings_section_about">Hakkında</string>
     <string name="settings_about_version">Sürüm %1$s</string>
@@ -747,19 +747,19 @@
     <string name="settings_about_website_title">Web sitesini ziyaret et</string>
     <string name="settings_about_website_desc">Resmi Morphe web sitesini ziyaret edin</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">İhtiyacınız olmayan mimarilerin işaretini kaldırın. Yamalama sırasında çıktı APK\'sı yalnızca APK\'da VE bu listede bulunan mimarileri tutar. Hiçbiri örtüşmezse, bozuk APK\'ları önlemek için hiçbir şey kırpılmaz</string>
+    <string name="settings_strip_libs_desc">İhtiyacınız olmayan mimarilerin işaretini kaldırın. Yamalama sırasında çıktı APK'sı yalnızca APK'da VE bu listede bulunan mimarileri tutar. Hiçbiri örtüşmezse, bozuk APK'ları önlemek için hiçbir şey kırpılmaz</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (çoğu modern telefon)</string>
     <string name="settings_strip_libs_armeabi">ARM 32-bit (eski telefonlar)</string>
-    <string name="settings_strip_libs_x86_64">Intel 64-bit (emülatörler / Chromebook\'lar)</string>
+    <string name="settings_strip_libs_x86_64">Intel 64-bit (emülatörler / Chromebook'lar)</string>
     <string name="settings_strip_libs_x86">Intel 32-bit (eski emülatörler)</string>
     <!-- Settings - Signing -->
-    <string name="settings_signing_desc">Yamalı APK\'ları imzalamak için kullanılan anahtar deposu</string>
+    <string name="settings_signing_desc">Yamalı APK'ları imzalamak için kullanılan anahtar deposu</string>
     <string name="settings_signing_default_keystore">Varsayılan (otomatik oluşturulan)</string>
     <string name="settings_signing_picker_title">Anahtar deposu seç</string>
     <string name="settings_signing_not_found">Anahtar deposu bulunamadı; geri yükleyene, başka birini seçene veya sıfırlayana kadar yamalama başarısız olacak</string>
     <string name="settings_signing_invalid_file_type">Geçersiz dosya türü. Beklenen: %1$s</string>
-    <string name="settings_signing_using_default">Morphe\'nin %1$s konumundaki varsayılan anahtar deposu kullanılıyor</string>
-    <string name="settings_signing_will_create_default">Morphe\'nin varsayılan anahtar deposu %1$s konumunda oluşturulacak</string>
+    <string name="settings_signing_using_default">Morphe'nin %1$s konumundaki varsayılan anahtar deposu kullanılıyor</string>
+    <string name="settings_signing_will_create_default">Morphe'nin varsayılan anahtar deposu %1$s konumunda oluşturulacak</string>
     <string name="settings_signing_keystore_password_label">Anahtar deposu parolası</string>
     <string name="settings_signing_key_alias_label">Anahtar takma adı</string>
     <string name="settings_signing_key_password_label">Anahtar parolası</string>
@@ -812,5 +812,5 @@
     <string name="changelog_not_available">Değişiklik günlüğü mevcut değil</string>
     <string name="changelog_dialog_title">Değişiklik günlüğünü görüntüle</string>
     <string name="changelog_show_older_button">Daha eski sürümleri göster</string>
-    <string name="changelog_view_on_github_button">GitHub\'da görüntüle</string>
+    <string name="changelog_view_on_github_button">GitHub'da görüntüle</string>
 </resources>

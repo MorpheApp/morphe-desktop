@@ -270,7 +270,7 @@
     <!-- Home Screen - SupportedAppsListPane -->
     <string name="home_list_load_failed">불러오기 실패</string>
     <string name="home_list_no_supported_apps">지원되는 앱이 없습니다</string>
-    <string name="home_list_no_apps_match">\'%1$s\'와 일치하는 앱이 없습니다</string>
+    <string name="home_list_no_apps_match">'%1$s'와 일치하는 앱이 없습니다</string>
     <string name="home_sort_recommended">권장 버전</string>
     <string name="home_sort_recommended_desc">패치된 앱 먼저, 그다음 설치된 앱, 그다음 이름순</string>
     <string name="home_sort_name_asc">이름 (A~Z)</string>

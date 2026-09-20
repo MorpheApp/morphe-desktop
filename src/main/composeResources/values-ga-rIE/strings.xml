@@ -90,7 +90,7 @@
     <string name="gradient_angle">Uillinn</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_title">Saincheap an cárta</string>
-    <string name="card_fill_example_app_name">Sampla d\'ainm aipe</string>
+    <string name="card_fill_example_app_name">Sampla d'ainm aipe</string>
     <string name="card_fill_mode_default">Réamhshocrú</string>
     <string name="card_fill_mode_default_blurb">An dath a thagann leis an mbeart paiste</string>
     <string name="card_fill_mode_accent">Béim</string>
@@ -141,20 +141,20 @@
     <string name="adb_error_clear_logs">Theip ar logaí a ghlanadh: %1$s</string>
     <string name="adb_error_capture_logs">Theip ar logaí a ghabháil: %1$s</string>
     <string name="adb_error_run_command">Theip ar an ordú a rith: %1$s</string>
-    <string name="adb_error_pm_list_packages">theip ar \'pm list packages\': %1$s</string>
+    <string name="adb_error_pm_list_packages">theip ar 'pm list packages': %1$s</string>
     <string name="adb_status_routing_links">Ag ródáil naisc chuig %1$s…</string>
     <string name="adb_status_restoring_links">Ag athchóiriú na láimhseála réamhshocraithe do naisc…</string>
     <string name="adb_status_disabling_links">Ag díchumasú naisc i %1$s…</string>
     <string name="adb_status_enabling_links">Ag athchumasú naisc i %1$s…</string>
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
     <string name="version_status_checksum_mismatch">Neamhréir suime seiceála</string>
-    <string name="version_status_checksum_corrupted">D\'fhéadfadh an comhad a bheith truaillithe, íoslódáil arís ó APKMirror é</string>
+    <string name="version_status_checksum_corrupted">D'fhéadfadh an comhad a bheith truaillithe, íoslódáil arís ó APKMirror é</string>
     <string name="version_status_checksum_failed">Theip ar fhíorú an tsuim sheiceála</string>
     <string name="version_status_checksum_matches">Meaitseálann an suim sheiceála le APKMirror</string>
     <string name="version_status_older_stable">Stábla níos sine</string>
     <string name="version_status_newer_stable_available">Tá leagan cobhsaí níos nuaí, v%1$s, ar fáil.</string>
     <string name="version_status_newer_stable_available_fallback">Tá leagan cobhsaí níos nuaí ar fáil.</string>
-    <string name="version_status_experimental_detail">Tacaithe, ach b\'fhéidir nach n-oibreoidh sé i gceart</string>
+    <string name="version_status_experimental_detail">Tacaithe, ach b'fhéidir nach n-oibreoidh sé i gceart</string>
     <string name="version_status_older_experimental">Turgnamhach níos sine</string>
     <string name="version_status_newer_experimental_available">Tá leagan turgnamhach níos nuaí de %1$s ar fáil</string>
     <string name="version_status_newer_experimental_available_fallback">Tá leagan turgnamhach níos nuaí ar fáil.</string>
@@ -168,7 +168,7 @@
     <string name="version_warning_notice_title">Fógra leagain</string>
     <string name="version_warning_experiment_title">Ar mhaith leat turgnamh a dhéanamh? 🧪</string>
     <string name="version_warning_older_stable_title">Leagan cobhsaí níos sine</string>
-    <string name="version_warning_older_stable_message">Reatha: v%1$s\nCobhsaí is déanaí: v%2$s\n\nTacaítear leis an leagan seo, ach tá leagan cobhsaí níos nua ar fáil. B\'fhéidir go bhfuil deisiúcháin le déanaí in easnamh ort.</string>
+    <string name="version_warning_older_stable_message">Reatha: v%1$s\nCobhsaí is déanaí: v%2$s\n\nTacaítear leis an leagan seo, ach tá leagan cobhsaí níos nua ar fáil. B'fhéidir go bhfuil deisiúcháin le déanaí in easnamh ort.</string>
     <string name="version_warning_latest_experimental_message">Reatha: v%1$s\n\nTá tacaíocht thurgnamhach luath ag an leagan seo\n\n🔧 Bí ag súil le hiompar aisteach aipe nó fabhtanna gan aithint de réir mar a bheifear ag snasta na paistí don leagan aipe seo.</string>
     <string name="version_warning_older_experimental_title">Leagan turgnamhach níos sine\nAn bhfuil tú ag iarraidh turgnamh a dhéanamh? 🧪</string>
     <string name="version_warning_older_experimental_message">Reatha: v%1$s\nTurgnamhach is déanaí: v%2$s\n\nIs tógáil thurgnamhach tacaithe é seo, ach tá leagan turgnamhach níos nua ar fáil. Bí ag súil le hiompar aisteach aipe nó fabhtanna gan aithint de réir mar a bheifear ag snasta na paistí don leagan aipe seo.</string>
@@ -204,7 +204,7 @@
     <string name="quick_patch_ready_patch_with_defaults">Paiste le réamhshocruithe</string>
     <!-- Quick Patch - Supported Apps Row -->
     <string name="quick_patch_supported_apps_title">Aipeanna tacaithe</string>
-    <string name="quick_patch_supported_apps_subtitle">Cuir an leagan cruinn APK d\'aip a dtacaítear léi anseo.</string>
+    <string name="quick_patch_supported_apps_subtitle">Cuir an leagan cruinn APK d'aip a dtacaítear léi anseo.</string>
     <string name="quick_patch_supported_apps_loading">Ag luchtú aipeanna tacaithe…</string>
     <string name="quick_patch_supported_apps_load_error">Níorbh fhéidir aipeanna tacaithe a luchtú</string>
     <string name="quick_patch_supported_apps_change_source">Athraigh foinse</string>
@@ -224,7 +224,7 @@
     <string name="home_validation_parse_failed">Níorbh fhéidir an APK a pharsáil. D’fhéadfadh sé go bhfuil an comhad truaillithe nó nach APK bailí é.</string>
     <!-- Home Screen - ApkInfoCard -->
     <string name="home_apk_info_remove_description">Bain APK</string>
-    <string name="home_apk_info_limited_info_warning">Níorbh fhéidir comhad \'manifest\' an APK seo a léamh go hiomlán (rud coitianta i gcás \'split bundles\'). Is meastacháin iad na sonraí thíos, ach ba cheart go n-oibreodh an paisteáil fós.</string>
+    <string name="home_apk_info_limited_info_warning">Níorbh fhéidir comhad 'manifest' an APK seo a léamh go hiomlán (rud coitianta i gcás 'split bundles'). Is meastacháin iad na sonraí thíos, ach ba cheart go n-oibreodh an paisteáil fós.</string>
     <string name="home_apk_info_unsupported_app_warning">Níor aimsíodh aon phaistí comhoiriúnacha don aip seo. Is féidir leat leanúint ar aghaidh fós, ach b’fhéidir nach mbeidh aon éifeacht ag an bpaistiú.</string>
     <string name="home_apk_info_version_label">Leagan</string>
     <string name="home_apk_info_build_label">Tógáil</string>
@@ -321,7 +321,7 @@
     <string name="home_detail_loading_versions">Ag luchtú leaganacha…</string>
     <string name="home_detail_no_other_versions">Níl aon leagan eile ar fáil</string>
     <string name="home_detail_app_version_label">Leagan aip</string>
-    <string name="home_detail_newer_patch_available_note">Tá paiste níos nua ar fáil agus d\'fhéadfadh sé tacú le leagan níos nua den aip. Cliceáil ar Nuashonraigh chun seiceáil</string>
+    <string name="home_detail_newer_patch_available_note">Tá paiste níos nua ar fáil agus d'fhéadfadh sé tacú le leagan níos nua den aip. Cliceáil ar Nuashonraigh chun seiceáil</string>
     <string name="home_detail_section_patches_applied">Paistí curtha i bhfeidhm</string>
     <string name="home_detail_section_options">Roghanna</string>
     <string name="home_detail_output_size_label">Méid an aschuir</string>
@@ -466,7 +466,7 @@
     <string name="result_screen_links_routed_label">Naisc atá curtha ar aghaidh chuig an aip nuashonraithe</string>
     <string name="result_adb_updating_on_device">Ag nuashonrú ar %1$s…</string>
     <string name="result_adb_update_successful">Nuashonrú rathúil!</string>
-    <string name="result_adb_install_successful">D\'éirigh leis an suiteáil!</string>
+    <string name="result_adb_install_successful">D'éirigh leis an suiteáil!</string>
     <string name="result_link_default_restored">Athchóirithe láimhseáil nasc réamhshocraithe</string>
     <string name="result_link_routed_stock_disabled">Naisc atá curtha chuig an aip phaisteáilte; an leagan bunaidh díchumasaithe</string>
     <string name="result_adb_not_found_hint">Níor aimsíodh ADB. Suiteáil Android SDK Platform Tools chun suiteáil dhíreach a chumasú.</string>

@@ -224,7 +224,7 @@
     <string name="home_validation_parse_failed">Kunne ikke parse APK. Filen kan være beskadiget eller ikke en gyldig APK</string>
     <!-- Home Screen - ApkInfoCard -->
     <string name="home_apk_info_remove_description">Fjern APK</string>
-    <string name="home_apk_info_limited_info_warning">Kunne ikke læse denne APK\'s manifest fuldt ud (almindeligt for split-bundter). Oplysningerne nedenfor er omtrentlige, patchning burde stadig virke</string>
+    <string name="home_apk_info_limited_info_warning">Kunne ikke læse denne APK's manifest fuldt ud (almindeligt for split-bundter). Oplysningerne nedenfor er omtrentlige, patchning burde stadig virke</string>
     <string name="home_apk_info_unsupported_app_warning">Ingen kompatible patches fundet til denne app. Du kan stadig fortsætte, men patchning har muligvis ingen effekt</string>
     <string name="home_apk_info_version_label">Version</string>
     <string name="home_apk_info_build_label">Build</string>
@@ -245,7 +245,7 @@
     <string name="home_dialog_uninstall_message">Dette fjerner %1$s fra den tilsluttede enhed. Den patchede APK på disken og din historik beholdes, medmindre du vælger andet nedenfor</string>
     <string name="home_dialog_uninstall_also_forget">Fjern også fra Dine apps</string>
     <string name="home_dialog_missing_apk_title">Original APK ikke fundet</string>
-    <string name="home_dialog_missing_apk_message">Input-APK\'en for %1$s er ikke længere på:\n%2$s\n\nVælg APK\'en igen for at patche med dine gemte indstillinger</string>
+    <string name="home_dialog_missing_apk_message">Input-APK'en for %1$s er ikke længere på:\n%2$s\n\nVælg APK'en igen for at patche med dine gemte indstillinger</string>
     <string name="home_dialog_select_apk">Vælg APK…</string>
     <string name="home_dialog_select_apk_to_repatch">Vælg APK til genpatchning</string>
     <!-- Home Screen - HomeHeader -->
@@ -486,7 +486,7 @@
     <string name="result_cleanup_auto_enabled">Auto-oprydning er aktiveret</string>
     <string name="result_cleanup_freed">Frigjort %1$s</string>
     <string name="result_adb_disabled_title">ADB er fra. Installation på enhed er deaktiveret</string>
-    <string name="result_adb_disabled_subtitle">Aktivér ADB i Indstillinger for at skubbe patchede APK\'er direkte</string>
+    <string name="result_adb_disabled_subtitle">Aktivér ADB i Indstillinger for at skubbe patchede APK'er direkte</string>
     <!-- Icon Studio -->
     <string name="icon_studio_title">Icon Studio</string>
     <string name="icon_studio_shape_circle">Cirkel</string>
@@ -731,8 +731,8 @@
     <string name="settings_channel_desc_dev">Du ser et banner, når en ny dev- eller stabil release er tilgængelig</string>
     <string name="settings_channel_desc_off">Opdateringssøgning er slået fra. Du kan slå den til igen her når som helst</string>
     <string name="settings_section_output_folder">Outputmappe</string>
-    <string name="settings_output_folder_desc">Hvor patchede APK\'er gemmes. Der oprettes en undermappe pr. app inde i mappen</string>
-    <string name="settings_output_folder_default">APK\'ens mappe (standard)</string>
+    <string name="settings_output_folder_desc">Hvor patchede APK'er gemmes. Der oprettes en undermappe pr. app inde i mappen</string>
+    <string name="settings_output_folder_default">APK'ens mappe (standard)</string>
     <string name="settings_output_folder_picker_title">Vælg outputmappe</string>
     <string name="settings_output_folder_not_found">Mappe ikke fundet. Den oprettes ved næste patchning</string>
     <string name="settings_toggle_auto_start_adb_label">Autostart ADB</string>
@@ -746,13 +746,13 @@
     <string name="settings_about_website_title">Besøg hjemmesiden</string>
     <string name="settings_about_website_desc">Besøg den officielle Morphe-hjemmeside</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">Fjern markeringen fra arkitekturer, du ikke har brug for. Når du patcher, beholder output-APK\'en kun de arkitekturer, der findes i APK\'en OG på denne liste. Hvis ingen overlapper, fjernes intet for at undgå ødelagte APK\'er.</string>
+    <string name="settings_strip_libs_desc">Fjern markeringen fra arkitekturer, du ikke har brug for. Når du patcher, beholder output-APK'en kun de arkitekturer, der findes i APK'en OG på denne liste. Hvis ingen overlapper, fjernes intet for at undgå ødelagte APK'er.</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (de fleste moderne telefoner)</string>
     <string name="settings_strip_libs_armeabi">ARM 32-bit (ældre telefoner)</string>
     <string name="settings_strip_libs_x86_64">Intel 64-bit (emulatorer / Chromebooks)</string>
     <string name="settings_strip_libs_x86">Intel 32-bit (ældre emulatorer)</string>
     <!-- Settings - Signing -->
-    <string name="settings_signing_desc">Keystore, der bruges til at signere patchede APK\'er</string>
+    <string name="settings_signing_desc">Keystore, der bruges til at signere patchede APK'er</string>
     <string name="settings_signing_default_keystore">Standard (autogenereret)</string>
     <string name="settings_signing_picker_title">Vælg keystore</string>
     <string name="settings_signing_not_found">Keystore ikke fundet. Patchning vil mislykkes, indtil du gendanner den, vælger en anden eller nulstiller</string>

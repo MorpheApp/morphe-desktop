@@ -321,7 +321,7 @@
     <string name="home_detail_loading_versions">Wczytywanie wersji…</string>
     <string name="home_detail_no_other_versions">Brak innych dostępnych wersji</string>
     <string name="home_detail_app_version_label">Wersja aplikacji</string>
-    <string name="home_detail_newer_patch_available_note">Dostępna jest nowsza poprawka i może obsługiwać nowszą wersję aplikacji. Kliknij Aktualizuj, aby to sprawdzić</string>
+    <string name="home_detail_newer_patch_available_note">Dostępna jest nowsza modyfikacja, która może obsługiwać nowszą wersję aplikacji. Kliknij Aktualizuj, aby to sprawdzić</string>
     <string name="home_detail_section_patches_applied">Zastosowane modyfikacje</string>
     <string name="home_detail_section_options">Opcje</string>
     <string name="home_detail_output_size_label">Rozmiar wyjściowy</string>
@@ -505,7 +505,7 @@
     <string name="icon_studio_preview_adaptive">Adaptacyjna</string>
     <string name="icon_studio_preview_monochrome">Monochromatyczna</string>
     <string name="icon_studio_preview_shapes">Podgląd kształtów</string>
-    <string name="icon_studio_preview_shapes_hint">Każdy launcher wybiera własny kształt, kliknij, aby zobaczyć podgląd, jak zostanie przycięty</string>
+    <string name="icon_studio_preview_shapes_hint">Każdy launcher wybiera własny kształt, kliknij, aby zobaczyć, jak ikona zostanie przycięta</string>
     <string name="icon_studio_preview_notification_status_bar">Powiadomienie / Pasek stanu</string>
     <string name="icon_studio_layer_label">Warstwa</string>
     <string name="icon_studio_duplicate_button">Duplikuj</string>

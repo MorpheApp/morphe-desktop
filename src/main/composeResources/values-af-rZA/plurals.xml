@@ -5,7 +5,7 @@
         <item quantity="other">%1$d patchbronne kon nie gelaai word nie. Gebruik dié wat suksesvol gelaai is</item>
     </plurals>
     <plurals name="home_banner_update_available">
-        <item quantity="one">%1$d gepatchte app het \'n opdatering beskikbaar</item>
+        <item quantity="one">%1$d gepatchte app het 'n opdatering beskikbaar</item>
         <item quantity="other">%1$d gepatchte apps het opdaterings beskikbaar</item>
     </plurals>
     <plurals name="settings_runtime_logs_saved_success">

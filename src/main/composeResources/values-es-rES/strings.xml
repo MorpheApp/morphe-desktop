@@ -17,7 +17,7 @@
     <string name="disabled_while_patching">Desactivado durante el parcheo</string>
     <string name="drop_apk_here">Suelta el APK aquí</string>
     <string name="release_to_drop">Suelta para cargar</string>
-    <string name="click_to_browse">o haz clic para explorar</string>
+    <string name="click_to_browse">o pulsa para explorar</string>
     <string name="error_could_not_load_patches">No se pudo cargar ningún parche</string>
     <string name="error_network_timeout">Tiempo de espera de red agotado, comprueba tu conexión e inténtalo de nuevo</string>
     <string name="error_could_not_reach_patch_server">No se pudo conectar al servidor de parches, comprueba tu conexión</string>
@@ -43,7 +43,7 @@
     <string name="failed">Fallido</string>
     <string name="copy">Copiar</string>
     <string name="copied">Copiado</string>
-    <string name="click_to_copy">Haz clic para copiar</string>
+    <string name="click_to_copy">Pulsa para copiar</string>
     <string name="enable_adb_button">Activar ADB</string>
     <string name="drag_to_reorder">Arrastra para reordenar</string>
     <string name="off">Desactivado</string>
@@ -308,7 +308,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="home_filter_your_apps">Tus aplicaciones</string>
     <string name="home_banner_view">Ver</string>
     <string name="home_your_apps_install_ready">Lista para instalar</string>
-    <string name="home_your_apps_newer_patch_hint">Un parche más reciente puede actualizar la aplicación, haz clic en Actualizar para comprobarlo</string>
+    <string name="home_your_apps_newer_patch_hint">Un parche más reciente puede actualizar la aplicación, pulsa Actualizar para comprobarlo</string>
     <string name="home_your_apps_device_version_ready">Parcheada v%1$s lista, el dispositivo tiene la v%2$s (no hace falta volver a parchear)</string>
     <string name="home_your_apps_install_ready_hint">Parcheada v%1$s lista para instalar (no hace falta volver a parchear)</string>
     <string name="home_action_install">Instalar</string>
@@ -345,7 +345,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="home_detail_loading_versions">Cargando versiones…</string>
     <string name="home_detail_no_other_versions">No hay otras versiones disponibles</string>
     <string name="home_detail_app_version_label">Versión de la aplicación</string>
-    <string name="home_detail_newer_patch_available_note">Un parche más reciente está disponible y puede ser compatible con una versión más nueva de la aplicación. Toca Actualizar para comprobarlo.</string>
+    <string name="home_detail_newer_patch_available_note">Hay un parche más reciente disponible y puede admitir una versión más reciente de la aplicación. Pulsa Actualizar para comprobarlo</string>
     <string name="home_detail_section_patches_applied">Parches aplicados</string>
     <string name="home_detail_section_options">Opciones</string>
     <string name="home_detail_output_size_label">Tamaño de salida</string>
@@ -401,7 +401,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="patch_selection_icon_none">No hay icono personalizado</string>
     <string name="patch_selection_icon_dialog_delete_title">¿Eliminar el icono personalizado?</string>
     <string name="patch_selection_icon_dialog_delete_message">Esto borra el icono y elimina su proyecto guardado y los archivos generados. No se puede deshacer</string>
-    <string name="patch_selection_custom_icon_hint">No hace falta que crees esta carpeta a mano. Haz clic en Diseñar/Editar icono para crearla en el Estudio de iconos o impórtala desde el Gestor</string>
+    <string name="patch_selection_custom_icon_hint">No hace falta que crees esta carpeta a mano. Pulsa en Diseñar/Editar icono para crearla en el Estudio de iconos o impórtala desde el Gestor</string>
     <string name="patch_selection_option_enabled">Activado</string>
     <string name="patch_selection_option_disabled">Desactivado</string>
     <string name="patch_selection_mode_your_defaults">Tus valores predeterminados</string>
@@ -529,7 +529,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="icon_studio_preview_adaptive">Adaptable</string>
     <string name="icon_studio_preview_monochrome">Monocromático</string>
     <string name="icon_studio_preview_shapes">Vista previa de formas</string>
-    <string name="icon_studio_preview_shapes_hint">Cada iniciador elige su propia forma, haz clic para previsualizar cómo se recortará</string>
+    <string name="icon_studio_preview_shapes_hint">Cada lanzador elige su propia forma, pulsa para ver cómo se recortará</string>
     <string name="icon_studio_preview_notification_status_bar">Notificación / Barra de estado</string>
     <string name="icon_studio_layer_label">Capa</string>
     <string name="icon_studio_duplicate_button">Duplicar</string>
@@ -569,7 +569,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="icon_studio_background_solid">Sólido</string>
     <string name="icon_studio_background_image">Imagen</string>
     <string name="icon_studio_background_hint">Rellena todo el lienzo del icono, detrás del primer plano</string>
-    <string name="icon_studio_background_image_set_hint">Fondo de imagen establecido; haz clic en Imagen para reemplazarlo</string>
+    <string name="icon_studio_background_image_set_hint">Fondo de imagen establecido; pulsa en Imagen para reemplazarlo</string>
     <string name="icon_studio_shape_triangle">Triángulo</string>
     <string name="icon_studio_shape_diamond">Rombo</string>
     <string name="icon_studio_shape_pentagon">Pentágono</string>

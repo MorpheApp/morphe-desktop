@@ -406,7 +406,7 @@
     <string name="patch_selection_badge_new">Nieuw</string>
     <string name="patch_selection_option_required">Deze optie is vereist</string>
     <string name="patch_selection_option_expected">Verwacht %1$s</string>
-    <string name="patch_selection_option_hint_list">een door komma\'s gescheiden lijst, elk %1$s</string>
+    <string name="patch_selection_option_hint_list">een door komma's gescheiden lijst, elk %1$s</string>
     <string name="patch_selection_option_hint_value">waarde</string>
     <string name="patch_selection_option_hint_boolean">waar of onwaar</string>
     <string name="patch_selection_option_hint_whole_number">een geheel getal</string>
@@ -486,7 +486,7 @@
     <string name="result_cleanup_auto_enabled">Automatische opschoning is ingeschakeld</string>
     <string name="result_cleanup_freed">%1$s vrijgemaakt</string>
     <string name="result_adb_disabled_title">ADB is uit. Installeren op apparaat is uitgeschakeld</string>
-    <string name="result_adb_disabled_subtitle">Schakel ADB in in Instellingen om gepatchte APK\'s direct te pushen</string>
+    <string name="result_adb_disabled_subtitle">Schakel ADB in in Instellingen om gepatchte APK's direct te pushen</string>
     <!-- Icon Studio -->
     <string name="icon_studio_title">Pictogramstudio</string>
     <string name="icon_studio_shape_circle">Cirkel</string>
@@ -731,7 +731,7 @@
     <string name="settings_channel_desc_dev">Je ziet een banner wanneer er een nieuwe dev- of stabiele release beschikbaar is</string>
     <string name="settings_channel_desc_off">Updatecontroles zijn uitgeschakeld. Schakel ze hier op elk moment opnieuw in</string>
     <string name="settings_section_output_folder">Uitvoermap</string>
-    <string name="settings_output_folder_desc">Waar gepatchte APK\'s worden opgeslagen. Er wordt een submap per app in gemaakt</string>
+    <string name="settings_output_folder_desc">Waar gepatchte APK's worden opgeslagen. Er wordt een submap per app in gemaakt</string>
     <string name="settings_output_folder_default">APK-map (standaard)</string>
     <string name="settings_output_folder_picker_title">Selecteer uitvoermap</string>
     <string name="settings_output_folder_not_found">Map niet gevonden, wordt aangemaakt bij de volgende patch</string>
@@ -746,13 +746,13 @@
     <string name="settings_about_website_title">Website bezoeken</string>
     <string name="settings_about_website_desc">Bezoek de officiële Morphe-website</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">Schakel architecturen uit die je niet nodig hebt. Tijdens het patchen zal de uitvoer-APK alleen de architecturen behouden die aanwezig zijn in de APK EN in deze lijst. Als er geen overlap is, wordt er niets gestript om kapotte APK\'s te voorkomen</string>
+    <string name="settings_strip_libs_desc">Schakel architecturen uit die je niet nodig hebt. Tijdens het patchen zal de uitvoer-APK alleen de architecturen behouden die aanwezig zijn in de APK EN in deze lijst. Als er geen overlap is, wordt er niets gestript om kapotte APK's te voorkomen</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (meeste moderne telefoons)</string>
     <string name="settings_strip_libs_armeabi">ARM 32-bit (oudere telefoons)</string>
     <string name="settings_strip_libs_x86_64">Intel 64-bit (emulators / Chromebooks)</string>
     <string name="settings_strip_libs_x86">Intel 32-bit (legacy-emulators)</string>
     <!-- Settings - Signing -->
-    <string name="settings_signing_desc">Keystore gebruikt om gepatchte APK\'s te ondertekenen</string>
+    <string name="settings_signing_desc">Keystore gebruikt om gepatchte APK's te ondertekenen</string>
     <string name="settings_signing_default_keystore">Standaard (automatisch gegenereerd)</string>
     <string name="settings_signing_picker_title">Keystore selecteren</string>
     <string name="settings_signing_not_found">Keystore niet gevonden, patchen zal mislukken totdat je deze herstelt, een andere kiest of reset</string>
