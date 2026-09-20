@@ -117,6 +117,8 @@ import java.awt.Frame
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.pluralStringResource
@@ -1262,6 +1264,15 @@ private fun CopyableStat(label: String, value: String, font: FontFamily, corner:
     val hover = remember { MutableInteractionSource() }
     val isHovered by hover.collectIsHoveredAsState()
     val accents = LocalMorpheAccents.current
+    var copied by remember { mutableStateOf(false) }
+
+    LaunchedEffect(copied) {
+        if (copied) {
+            delay(1500.milliseconds)
+            copied = false
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(2.dp),
         modifier = Modifier
@@ -1273,6 +1284,7 @@ private fun CopyableStat(label: String, value: String, font: FontFamily, corner:
             .clickable {
                 Toolkit.getDefaultToolkit().systemClipboard
                     .setContents(StringSelection(value), null)
+                copied = true
             }
             .padding(horizontal = 6.dp, vertical = 4.dp),
     ) {
@@ -1284,7 +1296,15 @@ private fun CopyableStat(label: String, value: String, font: FontFamily, corner:
                 fontFamily = font,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
             )
-            if (isHovered) {
+            if (copied) {
+                Text(
+                    text = stringResource(Res.string.copied),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = font,
+                    color = accents.primary,
+                )
+            } else if (isHovered) {
                 Text(
                     text = stringResource(Res.string.click_to_copy),
                     fontSize = 10.sp,
@@ -1339,6 +1359,7 @@ private fun PatchSearchField(
         singleLine = true,
         textStyle = TextStyle(
             fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontFamily = font,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface,
@@ -1360,6 +1381,7 @@ private fun PatchSearchField(
                         Text(
                             text = stringResource(Res.string.patches_search_hint),
                             fontSize = 11.sp,
+                            lineHeight = 14.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),

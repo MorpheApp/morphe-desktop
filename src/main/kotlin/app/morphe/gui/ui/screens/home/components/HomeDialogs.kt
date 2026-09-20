@@ -21,6 +21,7 @@ import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.components.MorpheDialogButton
 import app.morphe.gui.ui.components.MorpheDialogCard
 import app.morphe.gui.ui.components.MorpheDialogText
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
@@ -113,6 +114,7 @@ internal fun UninstallConfirmDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
+                .handCursor()
                 .clickable { onAlsoForgetChange(!alsoForget) }
                 .padding(vertical = 4.dp),
         ) {

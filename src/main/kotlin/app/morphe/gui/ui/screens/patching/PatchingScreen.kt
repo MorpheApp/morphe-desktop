@@ -48,6 +48,7 @@ import androidx.compose.ui.window.DialogProperties
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.ui.components.MorphePanel
 import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.result.ResultScreen
@@ -214,6 +215,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                             .clip(RoundedCornerShape(corners.small))
                             .border(1.dp, cancelBorder, RoundedCornerShape(corners.small))
                             .background(cancelBg)
+                            .handCursor()
                             .clickable { viewModel.cancelPatching() }
                             .padding(horizontal = 12.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -568,6 +570,7 @@ fun LogFileViewerDialog(
                             .hoverable(openHover)
                             .clip(RoundedCornerShape(corners.small))
                             .background(openBg)
+                            .handCursor()
                             .clickable {
                                 try {
                                     if (Desktop.isDesktopSupported()) {
@@ -601,6 +604,7 @@ fun LogFileViewerDialog(
                             .hoverable(copyHover)
                             .clip(RoundedCornerShape(corners.small))
                             .background(copyBg)
+                            .handCursor()
                             .clickable {
                                 clipboardScope.launch {
                                     clipboard.setClipEntry(
@@ -633,6 +637,7 @@ fun LogFileViewerDialog(
                             .hoverable(closeHover)
                             .clip(RoundedCornerShape(corners.small))
                             .background(closeBg)
+                            .handCursor()
                             .clickable { onDismiss() }
                             .padding(6.dp)
                     ) {
@@ -1718,7 +1723,7 @@ private fun ExpertFailureContent(
         ) {
             OutlinedButton(
                 onClick = { navigator.popUntilRoot() },
-                modifier = Modifier.weight(1f).height(40.dp),
+                modifier = Modifier.weight(1f).height(40.dp).handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = Color.Transparent,
@@ -1736,7 +1741,7 @@ private fun ExpertFailureContent(
             }
             OutlinedButton(
                 onClick = { showLogViewer = true },
-                modifier = Modifier.weight(1f).height(40.dp),
+                modifier = Modifier.weight(1f).height(40.dp).handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
                 colors = ButtonDefaults.outlinedButtonColors(

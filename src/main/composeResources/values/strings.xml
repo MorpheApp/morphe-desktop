@@ -321,7 +321,7 @@
     <string name="home_detail_error_download_bundle">Could not download %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">downloading %1$s</string>
     <string name="home_detail_resolving_patch_files">resolving patch files</string>
-    <string name="home_detail_downloading_percent">Downloading %1$d%%</string>
+    <string name="home_detail_downloading_percent">Downloading %1$d%</string>
     <string name="home_detail_details_title">Details</string>
     <string name="home_detail_output_path_label">Output path</string>
     <string name="home_detail_using_label">Using</string>

@@ -95,7 +95,8 @@ fun ChangelogDialog(
                             onClick = { showAllReleases = true },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = 8.dp)
+                                .handCursor(),
                             shape = RoundedCornerShape(corners.small),
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
                         ) {

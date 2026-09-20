@@ -25,6 +25,7 @@ import app.morphe.gui.ui.theme.desktopScreenExit
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickPatchPhase
 import app.morphe.gui.ui.theme.*
@@ -200,7 +201,8 @@ internal fun PatchingContent(
             enabled = !isWrappingUp,
             modifier = Modifier
                 .widthIn(min = 160.dp)
-                .height(44.dp),
+                .height(44.dp)
+                .handCursor(!isWrappingUp),
             shape = RoundedCornerShape(corners.small),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.15f),

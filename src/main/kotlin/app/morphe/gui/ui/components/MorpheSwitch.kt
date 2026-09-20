@@ -33,7 +33,7 @@ fun MorpheSwitch(
     Switch(
         checked = checked,
         onCheckedChange = onCheckedChange,
-        modifier = modifier,
+        modifier = if (enabled) modifier.handCursor() else modifier,
         enabled = enabled,
         colors = SwitchDefaults.colors(
             checkedTrackColor = accentColor,

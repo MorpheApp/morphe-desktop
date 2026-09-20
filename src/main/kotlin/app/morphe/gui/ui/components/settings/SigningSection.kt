@@ -185,7 +185,7 @@ internal fun SigningSection(
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, borderColor),
                 contentPadding = PaddingValues(horizontal = 10.dp),
-                modifier = Modifier.fillMaxHeight().handCursor()
+                modifier = Modifier.fillMaxHeight().handCursor(enabled)
             ) {
                 Text(
                     stringResource(Res.string.browse),
@@ -203,7 +203,7 @@ internal fun SigningSection(
                     shape = RoundedCornerShape(corners.small),
                     border = BorderStroke(1.dp, borderColor),
                     contentPadding = PaddingValues(horizontal = 10.dp),
-                    modifier = Modifier.fillMaxHeight().handCursor()
+                    modifier = Modifier.fillMaxHeight().handCursor(enabled)
                 ) {
                     Text(
                         stringResource(Res.string.settings_dialog_reset_button),
@@ -324,7 +324,7 @@ internal fun SigningSection(
                     trailing = {
                         IconButton(
                             onClick = { showPassword = !showPassword },
-                            modifier = Modifier.size(24.dp).handCursor(),
+                            modifier = Modifier.size(24.dp).handCursor(enabled),
                         ) {
                             Icon(
                                 imageVector = if (showPassword) MorpheIcons.VisibilityOff else MorpheIcons.Visibility,
@@ -371,7 +371,7 @@ internal fun SigningSection(
                     trailing = {
                         IconButton(
                             onClick = { showEntryPassword = !showEntryPassword },
-                            modifier = Modifier.size(24.dp).handCursor(),
+                            modifier = Modifier.size(24.dp).handCursor(enabled),
                         ) {
                             Icon(
                                 imageVector = if (showEntryPassword) MorpheIcons.VisibilityOff else MorpheIcons.Visibility,
@@ -418,7 +418,7 @@ internal fun SigningSection(
                     }
                 },
                 enabled = enabled,
-                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(),
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(enabled),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(
                     1.dp,
@@ -513,7 +513,7 @@ internal fun SigningSection(
                     }
                 },
                 enabled = enabled,
-                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(),
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(enabled),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(
                     1.dp, if (generateSuccess)
@@ -575,7 +575,7 @@ internal fun SigningSection(
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, borderColor),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                modifier = Modifier.weight(1f).handCursor()
+                modifier = Modifier.weight(1f).handCursor(enabled && keystoreExists)
             ) {
                 Icon(
                     imageVector = MorpheIcons.Info,
@@ -614,7 +614,7 @@ internal fun SigningSection(
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, borderColor),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                modifier = Modifier.weight(1f).handCursor()
+                modifier = Modifier.weight(1f).handCursor(enabled && keystoreExists)
             ) {
                 Icon(
                     imageVector = MorpheIcons.Share,

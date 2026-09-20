@@ -103,19 +103,19 @@ fun AppInfoDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
-                    IconButton(onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) }) {
+                    IconButton(onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) }, modifier = Modifier.handCursor()) {
                         Icon(imageVector = MorpheIcons.Public, contentDescription = stringResource(Res.string.app_info_dialog_link_website), tint = iconTint)
                     }
-                    IconButton(onClick = { uriHandler.openUri("https://morphe.software/changelog") }) {
+                    IconButton(onClick = { uriHandler.openUri("https://morphe.software/changelog") }, modifier = Modifier.handCursor()) {
                         Icon(imageVector = MorpheIcons.Article, contentDescription = stringResource(Res.string.app_info_link_changelog), tint = iconTint)
                     }
-                    IconButton(onClick = { uriHandler.openUri("https://github.com/MorpheApp") }) {
+                    IconButton(onClick = { uriHandler.openUri("https://github.com/MorpheApp") }, modifier = Modifier.handCursor()) {
                         Icon(imageVector = MorpheIcons.Github, contentDescription = stringResource(Res.string.github_label), tint = iconTint)
                     }
-                    IconButton(onClick = { uriHandler.openUri("https://reddit.com/r/MorpheApp") }) {
+                    IconButton(onClick = { uriHandler.openUri("https://reddit.com/r/MorpheApp") }, modifier = Modifier.handCursor()) {
                         Icon(imageVector = MorpheIcons.Reddit, contentDescription = stringResource(Res.string.app_info_link_reddit), tint = iconTint)
                     }
-                    IconButton(onClick = { uriHandler.openUri("https://morphe.software/translate") }) {
+                    IconButton(onClick = { uriHandler.openUri("https://morphe.software/translate") }, modifier = Modifier.handCursor()) {
                         Icon(imageVector = MorpheIcons.Translate, contentDescription = stringResource(Res.string.app_info_link_translate), tint = iconTint)
                     }
                 }
@@ -124,7 +124,7 @@ fun AppInfoDialog(
         confirmButton = {
             OutlinedButton(
                 onClick = onDismiss,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().handCursor(),
                 shape = RoundedCornerShape(corners.small)
             ) {
                 Text(

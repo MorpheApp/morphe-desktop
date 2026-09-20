@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.HomeUiState
@@ -110,6 +111,7 @@ internal fun DropPromptSection(
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                 .background(animatedBgColor)
                 .clickable { onBrowseClick() }
+                .handCursor()
                 .drawBehind {
                     drawRoundRect(
                         color = bracketColor,
@@ -213,7 +215,7 @@ internal fun ApkSelectedSection(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedButton(
                 onClick = onChangeClick,
-                modifier = Modifier.height(44.dp),
+                modifier = Modifier.height(44.dp).handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
                 colors = ButtonDefaults.outlinedButtonColors(
@@ -234,7 +236,7 @@ internal fun ApkSelectedSection(
             OutlinedButton(
                 onClick = onContinueClick,
                 enabled = patchesLoaded,
-                modifier = Modifier.widthIn(min = 160.dp).height(44.dp),
+                modifier = Modifier.widthIn(min = 160.dp).height(44.dp).handCursor(patchesLoaded),
                 colors = buttonColors,
                 border = BorderStroke(1.dp, buttonBorderColor),
                 shape = RoundedCornerShape(corners.small),

@@ -14,7 +14,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -51,7 +50,6 @@ import app.morphe.gui.ui.components.MorpheColorPickerCard
 import app.morphe.gui.ui.components.color.CustomSwatches
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
@@ -104,48 +102,17 @@ internal fun AppearanceTab(
     SectionLabel(stringResource(Res.string.settings_section_language), font, icon = MorpheIcons.Language)
     Spacer(Modifier.height(8.dp))
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+    val isSystem = currentLanguageOption.code == LanguageRepository.SYSTEM_CODE
+    AboutRow(
+        title = stringResource(Res.string.settings_language_current_title),
+        subtitle = if (isSystem) stringResource(Res.string.settings_theme_system) else currentLanguageOption.displayName,
+        font = font,
+        onClick = { showLanguageDialog = true },
     ) {
         Text(
             text = currentLanguageOption.flag,
             fontSize = 20.sp,
-            modifier = Modifier.padding(end = 12.dp)
         )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = stringResource(Res.string.settings_language_current_title),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontFamily = font,
-            )
-            Spacer(Modifier.height(2.dp))
-            val isSystem = currentLanguageOption.code == LanguageRepository.SYSTEM_CODE
-            Text(
-                text = if (isSystem) stringResource(Res.string.settings_theme_system) else currentLanguageOption.displayName,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = font,
-            )
-        }
-        IconButton(
-            onClick = {
-                showLanguageDialog = true
-            },
-            modifier = Modifier.size(32.dp)
-        ) {
-            Icon(
-                imageVector = MorpheIcons.KeyboardArrowRight,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier
-                    .size(16.dp)
-                    .autoMirrored()
-            )
-        }
     }
 
     Spacer(Modifier.height(8.dp))

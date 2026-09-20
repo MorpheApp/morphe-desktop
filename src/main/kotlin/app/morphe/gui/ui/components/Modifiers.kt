@@ -9,4 +9,5 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 
-fun Modifier.handCursor(): Modifier = pointerHoverIcon(PointerIcon.Hand)
+fun Modifier.handCursor(enabled: Boolean = true): Modifier =
+    if (enabled) pointerHoverIcon(PointerIcon.Hand) else this

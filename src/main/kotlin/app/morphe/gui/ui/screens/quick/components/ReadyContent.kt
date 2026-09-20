@@ -8,6 +8,7 @@ package app.morphe.gui.ui.screens.quick.components
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
@@ -196,6 +197,7 @@ internal fun ReadyContent(
                                 .hoverable(closeHover)
                                 .clip(RoundedCornerShape(corners.small))
                                 .background(closeBg)
+                                .handCursor()
                                 .clickable(onClick = onClear),
                             contentAlignment = Alignment.Center
                         ) {
@@ -393,6 +395,7 @@ internal fun ReadyContent(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .handCursor()
                                 .clickable { patchesExpanded = !patchesExpanded }
                                 .padding(horizontal = 20.dp, vertical = 14.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -477,6 +480,7 @@ internal fun ReadyContent(
                                     textStyle = MaterialTheme.typography.bodySmall.copy(
                                         fontFamily = font,
                                         fontSize = 11.sp,
+                                        lineHeight = 14.sp,
                                         fontWeight = FontWeight.Normal,
                                         color = MaterialTheme.colorScheme.onSurface
                                     ),
@@ -500,11 +504,12 @@ internal fun ReadyContent(
                                                 modifier = Modifier.size(14.dp)
                                             )
                                             Spacer(modifier = Modifier.width(8.dp))
-                                            Box(modifier = Modifier.weight(1f)) {
+                                            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                                                 if (patchSearchQuery.isEmpty()) {
                                                     Text(
                                                         stringResource(Res.string.patches_search_hint),
                                                         fontSize = 11.sp,
+                                                        lineHeight = 14.sp,
                                                         fontFamily = font,
                                                         fontWeight = FontWeight.Normal,
                                                         color = muted.copy(alpha = 0.4f)
@@ -606,7 +611,8 @@ internal fun ReadyContent(
                 onClick = onPatch,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp),
+                    .height(48.dp)
+                    .handCursor(),
                 colors = buttonColors,
                 border = BorderStroke(1.dp, buttonBorderColor.copy(alpha = 0.35f)),
                 shape = RoundedCornerShape(corners.small)

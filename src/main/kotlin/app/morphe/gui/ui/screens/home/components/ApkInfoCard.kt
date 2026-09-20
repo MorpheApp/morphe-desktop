@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.theme.LocalMorpheAccents
@@ -150,6 +151,7 @@ fun ApkInfoCard(
                         .clip(RoundedCornerShape(corners.small))
                         .background(closeBg, RoundedCornerShape(corners.small))
                         .border(1.dp, closeBorder, RoundedCornerShape(corners.small))
+                        .handCursor()
                         .clickable(onClick = onClearClick),
                     contentAlignment = Alignment.Center
                 ) {
