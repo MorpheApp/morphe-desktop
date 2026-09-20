@@ -842,7 +842,7 @@
     <string name="settings_runtime_logs_nothing_captured">Nothing captured yet. Run the patched app on your phone, then save again</string>
 
     <!-- Settings - GitHub PAT -->
-    <string name="settings_section_github_pat">GitHub Personal Access Token</string>
+    <string name="settings_section_github_pat">GitHub PAT</string>
     <string name="settings_github_pat_desc">A GitHub Personal Access Token (PAT) with the public_repo scope is required to download pull request artifacts. Create a PAT with scope public_repo on %1$s</string>
     <string name="settings_github_pat_label">Personal Access Token</string>
 
