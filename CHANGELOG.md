@@ -1,3 +1,10 @@
+# [1.17.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.2...v1.17.0-dev.3) (2026-09-20)
+
+
+### Bug Fixes
+
+* Decouple UI localization from console logging and exceptions ([#318](https://github.com/MorpheApp/morphe-desktop/issues/318)) ([5ff50ee](https://github.com/MorpheApp/morphe-desktop/commit/5ff50eed110e0df7be8af660e22a8bd73a47a068))
+
 # [1.17.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.1...v1.17.0-dev.2) (2026-09-18)
 
 
