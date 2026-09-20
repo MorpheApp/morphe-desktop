@@ -1,3 +1,10 @@
+# [1.17.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.3...v1.17.0-dev.4) (2026-09-20)
+
+
+### Bug Fixes
+
+* Strip escaped apostrophes from Crowdin translations ([#320](https://github.com/MorpheApp/morphe-desktop/issues/320)) ([ffffe57](https://github.com/MorpheApp/morphe-desktop/commit/ffffe575b2f90db9f8b500bb6fd50d736b5991d2))
+
 # [1.17.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.2...v1.17.0-dev.3) (2026-09-20)
 
 
