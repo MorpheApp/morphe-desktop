@@ -78,6 +78,7 @@ fun SettingsDialogHost() {
     var autoRouteLinksAfterInstall by remember { mutableStateOf(false) }
     var disableStockLinksAfterInstall by remember { mutableStateOf(false) }
     var developerOptions by remember { mutableStateOf(false) }
+    var gitHubPat by remember { mutableStateOf("") }
 
     LaunchedEffect(showSettingsDialog) {
         if (showSettingsDialog) {
@@ -96,6 +97,7 @@ fun SettingsDialogHost() {
             autoRouteLinksAfterInstall = config.autoRouteLinksAfterInstall
             disableStockLinksAfterInstall = config.disableStockLinksAfterInstall
             developerOptions = config.developerOptions
+            gitHubPat = config.gitHubPat
             // Resolve the smart-default if the user has never picked a channel
             // (returns DEV when the running build is dev, STABLE otherwise).
             updateChannelPreference = configRepository.getOrInitUpdateChannelPreference(
@@ -196,6 +198,11 @@ fun SettingsDialogHost() {
             onCollapsibleSectionToggle = { id, expanded ->
                 collapsibleSectionStates = collapsibleSectionStates + (id to expanded)
                 scope.launch { configRepository.setCollapsibleSectionExpanded(id, expanded) }
+            },
+            gitHubPat = gitHubPat,
+            onGitHubPatChange = { pat ->
+                gitHubPat = pat
+                scope.launch { configRepository.setGitHubPat(pat) }
             },
             customAccentColorArgb = customAccentColorArgb,
             onCustomAccentColorChange = {

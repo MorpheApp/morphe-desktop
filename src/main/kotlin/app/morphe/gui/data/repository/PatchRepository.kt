@@ -7,6 +7,7 @@ package app.morphe.gui.data.repository
 
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
+import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.RemotePatchSource
 import app.morphe.engine.patches.findPatchAsset
@@ -28,7 +29,7 @@ import kotlinx.coroutines.withContext
  * convenience layer.
  */
 class PatchRepository(
-    private val remoteSource: RemotePatchSource,
+    val remoteSource: RemotePatchSource,
 ) {
     val repoPath: String get() = remoteSource.repoPath
 
@@ -179,7 +180,7 @@ class PatchRepository(
     fun getCachedPatches(version: String): File? {
         val patchesDir = PatchCache.sourceDir(repoPath)
         return patchesDir.listFiles()?.find {
-            it.name.contains(version) && isPatchFileName(it.name)
+            (it.name.contains(version) || PatchBundleLoader.extractVersion(it) == version) && isPatchFileName(it.name)
         }
     }
 

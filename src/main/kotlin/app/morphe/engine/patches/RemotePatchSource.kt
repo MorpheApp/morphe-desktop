@@ -82,6 +82,7 @@ interface RemotePatchSource {
 enum class PatchProvider {
     GITHUB,
     GITLAB,
+    GITHUB_PR,
 }
 
 /** Convenience: find the .mpp asset in a release. */

@@ -160,33 +160,36 @@ internal fun AddPatchSourceDialog(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 4.dp),
                             )
-                            Row(
-                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                                    Text(
-                                        text = stringResource(Res.string.patch_source_dialog_pre_release_title),
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        fontFamily = font,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = stringResource(Res.string.patch_source_dialog_pre_release_hint),
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        fontFamily = font,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        lineHeight = 14.sp
+                            val isPullRequest = RemotePatchSourceFactory.parse(url)?.provider == PatchProvider.GITHUB_PR
+                            if (!isPullRequest) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                                        Text(
+                                            text = stringResource(Res.string.patch_source_dialog_pre_release_title),
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            fontFamily = font,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Text(
+                                            text = stringResource(Res.string.patch_source_dialog_pre_release_hint),
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            fontFamily = font,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            lineHeight = 14.sp
+                                        )
+                                    }
+                                    MorpheSwitch(
+                                        checked = usePreRelease,
+                                        onCheckedChange = { usePreRelease = it },
+                                        accentColor = accents.primary
                                     )
                                 }
-                                MorpheSwitch(
-                                    checked = usePreRelease,
-                                    onCheckedChange = { usePreRelease = it },
-                                    accentColor = accents.primary
-                                )
                             }
                             if (isQuickMode) {
                                 Row(
@@ -368,12 +371,14 @@ internal fun EditPatchSourceDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.widthIn(min = 300.dp)
             ) {
+                val isPullRequest = RemotePatchSourceFactory.parse(url)?.provider == PatchProvider.GITHUB_PR
                 if (source.deletable) {
                     Text(
-                        text = when (source.type) {
-                            PatchSourceType.GITHUB -> stringResource(Res.string.patch_source_dialog_type_github_repo)
-                            PatchSourceType.GITLAB -> stringResource(Res.string.patch_source_dialog_type_gitlab_repo)
-                            PatchSourceType.LOCAL -> stringResource(Res.string.patch_source_dialog_local_file_label)
+                        text = when {
+                            isPullRequest -> stringResource(Res.string.patch_source_dialog_type_github_pr)
+                            source.type == PatchSourceType.GITHUB -> stringResource(Res.string.patch_source_dialog_type_github_repo)
+                            source.type == PatchSourceType.GITLAB -> stringResource(Res.string.patch_source_dialog_type_gitlab_repo)
+                            source.type == PatchSourceType.LOCAL -> stringResource(Res.string.patch_source_dialog_local_file_label)
                             else -> ""
                         },
                         fontSize = 11.sp,
@@ -428,34 +433,37 @@ internal fun EditPatchSourceDialog(
                 }
 
                 if (source.type != PatchSourceType.LOCAL) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(top = if (source.deletable) 8.dp else 0.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                            Text(
-                                text = stringResource(Res.string.patch_source_dialog_pre_release_title),
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Medium,
-                                fontFamily = font,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = stringResource(Res.string.patch_source_dialog_pre_release_hint),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                lineHeight = 14.sp
+                    if (!isPullRequest) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top = if (source.deletable) 8.dp else 0.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                                Text(
+                                    text = stringResource(Res.string.patch_source_dialog_pre_release_title),
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = font,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = stringResource(Res.string.patch_source_dialog_pre_release_hint),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = font,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    lineHeight = 14.sp
+                                )
+                            }
+                            MorpheSwitch(
+                                checked = usePreRelease,
+                                onCheckedChange = { usePreRelease = it },
+                                accentColor = accents.primary
                             )
                         }
-                        MorpheSwitch(
-                            checked = usePreRelease,
-                            onCheckedChange = { usePreRelease = it },
-                            accentColor = accents.primary
-                        )
                     }
+
                     if (isQuickMode) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -585,7 +593,7 @@ internal data class ResolvedRemoteSource(
 internal fun resolveRemoteSourceUrl(input: String): ResolvedRemoteSource? {
     val parsed = RemotePatchSourceFactory.parse(input) ?: return null
     val type = when (parsed.provider) {
-        PatchProvider.GITHUB -> PatchSourceType.GITHUB
+        PatchProvider.GITHUB, PatchProvider.GITHUB_PR -> PatchSourceType.GITHUB
         PatchProvider.GITLAB -> PatchSourceType.GITLAB
     }
     return ResolvedRemoteSource(canonicalUrl = parsed.canonicalUrl, provider = type)
@@ -601,6 +609,9 @@ internal fun resolveRemoteSourceUrl(input: String): ResolvedRemoteSource? {
  */
 private fun suggestNameFromUrl(input: String): String? {
     val parsed = RemotePatchSourceFactory.parse(input) ?: return null
+    if (parsed.prNumber != null) {
+        return "${parsed.repoPath}#${parsed.prNumber}"
+    }
     return parsed.repoPath.takeIf { it.isNotBlank() }
 }
 

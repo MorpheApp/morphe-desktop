@@ -39,6 +39,8 @@ internal fun AdvancedTab(
     onDeveloperOptionsChange: (Boolean) -> Unit,
     collapsibleSectionStates: Map<String, Boolean>,
     onCollapsibleSectionToggle: (id: String, expanded: Boolean) -> Unit,
+    gitHubPat: String = "",
+    onGitHubPatChange: (String) -> Unit = {},
     isPatching: Boolean,
     borderColor: Color,
 ) {
@@ -138,5 +140,18 @@ internal fun AdvancedTab(
         expanded = collapsibleSectionStates["Runtime logs"] == true,
         icon = MorpheIcons.DeployedCode,
         onExpandedChange = { onCollapsibleSectionToggle("Runtime logs", it) }
+    )
+
+    SettingsDivider(borderColor)
+
+    GitHubPatSection(
+        gitHubPat = gitHubPat,
+        onGitHubPatChange = onGitHubPatChange,
+        font = font,
+        accentColor = accents.primary,
+        enabled = !isPatching,
+        expanded = collapsibleSectionStates["GitHub PAT"] == true,
+        icon = MorpheIcons.Key,
+        onExpandedChange = { onCollapsibleSectionToggle("GitHub PAT", it) }
     )
 }

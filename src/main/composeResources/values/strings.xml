@@ -582,9 +582,10 @@
     <string name="source_error_local_not_found">Local patch path not found: %1$s</string>
     <string name="source_error_local_no_mpp">No .mpp files found in folder: %1$s</string>
     <string name="source_error_no_repository">No repository configured for source</string>
-    <string name="source_error_download_failed">Could not download patches: %1$s</string>
     <string name="source_error_fetch_releases">Could not fetch releases</string>
     <string name="source_error_failed_to_load">Failed to load</string>
+    <string name="source_error_github_pat_required">A GitHub PAT is required to download pull request sources</string>
+    <string name="source_error_pr_no_artifact">No artifacts found for pull request</string>
     <string name="source_sheet_manage_description">Manage patch sources</string>
     <string name="source_sheet_local_label">Local</string>
     <string name="source_sheet_remote_label">Remote</string>
@@ -626,6 +627,7 @@
     <string name="patch_source_dialog_add_button">Add</string>
     <string name="patch_source_dialog_edit_title">Edit source</string>
     <string name="patch_source_dialog_type_github_repo">GitHub Repository</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab Repository</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp file or folder</string>
     <string name="patch_source_dialog_mpp_label">.mpp file</string>
@@ -838,6 +840,11 @@
     <string name="settings_runtime_logs_failed_to_save">Failed to save logs</string>
     <string name="settings_runtime_logs_cleared_success">Logs cleared on device</string>
     <string name="settings_runtime_logs_nothing_captured">Nothing captured yet. Run the patched app on your phone, then save again</string>
+
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub Personal Access Token</string>
+    <string name="settings_github_pat_desc">A GitHub Personal Access Token (PAT) with the public_repo scope is required to download pull request artifacts. Create a PAT with scope public_repo on %1$s</string>
+    <string name="settings_github_pat_label">Personal Access Token</string>
 
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Website</string>

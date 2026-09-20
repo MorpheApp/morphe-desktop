@@ -241,7 +241,8 @@ class QuickPatchViewModel(
                     cachedSourcesResult = result
                     _uiState.update { it.copy(
                         isLoadingPatches = false,
-                        patchLoadError = firstError
+                        patchLoadError = firstError,
+                        patchSourceName = activeSource.name,
                     ) }
                     return@launch
                 }
@@ -292,6 +293,7 @@ class QuickPatchViewModel(
                 _uiState.update { it.copy(
                     isLoadingPatches = false,
                     patchLoadError = humanizePatchLoadError(e),
+                    patchSourceName = patchSourceManager.getActiveSourceName(),
                 ) }
             } finally {
                 _uiState.update { it.copy(isLoadingPatches = false) }

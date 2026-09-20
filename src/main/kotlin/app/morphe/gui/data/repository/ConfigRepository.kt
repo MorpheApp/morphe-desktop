@@ -25,7 +25,7 @@ import kotlinx.serialization.json.Json
 /**
  * Repository for managing app configuration (config.json)
  */
-class ConfigRepository {
+open class ConfigRepository {
 
     private val json = Json {
         prettyPrint = true
@@ -39,7 +39,7 @@ class ConfigRepository {
     /**
      * Load config from file, or return default if not exists.
      */
-    suspend fun loadConfig(): AppConfig = withContext(Dispatchers.IO) {
+    open suspend fun loadConfig(): AppConfig = withContext(Dispatchers.IO) {
         cachedConfig?.let { return@withContext it }
 
         // One-time migration from the legacy per-OS app-data path to the
@@ -515,6 +515,19 @@ class ConfigRepository {
         }
         saveConfig(current.copy(patchSource = updatedSources, activePatchSourceId = newActiveId))
     }
+
+    /**
+     * Update GitHub Personal Access Token (PAT).
+     */
+    suspend fun setGitHubPat(pat: String) {
+        val current = loadConfig()
+        saveConfig(current.copy(gitHubPat = pat))
+    }
+
+    /**
+     * Get the configured GitHub Personal Access Token (PAT).
+     */
+    suspend fun getGitHubPat(): String = loadConfig().gitHubPat
 
     /**
      * Clear cached config (for testing).

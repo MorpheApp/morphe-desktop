@@ -6,6 +6,7 @@
 package app.morphe.gui.util
 
 import androidx.compose.runtime.Composable
+import app.morphe.engine.GitHubPatMissingException
 import app.morphe.engine.PatchBundleIncompatibleException
 import app.morphe.engine.PatchSourceLoadException
 import app.morphe.engine.readableMessage
@@ -33,6 +34,8 @@ import org.jetbrains.compose.resources.stringResource
  * surfacing it as an error.
  */
 private inline fun <T> mapPatchLoadError(e: Throwable, onResource: (StringResource) -> T, onText: (String) -> T): T = when (e) {
+    is GitHubPatMissingException -> onResource(Res.string.source_error_github_pat_required)
+
     is HttpRequestTimeoutException,
     is SocketTimeoutException,
     is ConnectTimeoutException -> onResource(Res.string.error_network_timeout)
@@ -53,7 +56,16 @@ private inline fun <T> mapPatchLoadError(e: Throwable, onResource: (StringResour
 
     // Already expanded by MultiSourceLoader / PatcherCompatibility
     is PatchBundleIncompatibleException,
-    is PatchSourceLoadException -> onText(e.message?.takeIf { it.isNotBlank() } ?: e.readableMessage())
+    is PatchSourceLoadException -> {
+        when {
+            e.message?.contains("A GitHub PAT is required", ignoreCase = true) == true ->
+                onResource(Res.string.source_error_github_pat_required)
+            e.message?.contains("No artifacts found", ignoreCase = true) == true ||
+                e.message?.contains("No GitHub Actions run found", ignoreCase = true) == true ->
+                onResource(Res.string.source_error_pr_no_artifact)
+            else -> onText(e.message?.takeIf { it.isNotBlank() } ?: e.readableMessage())
+        }
+    }
 
     // A bundle built against a newer patcher fails at link time with java.lang.Error
     // subclasses (NoSuchMethodError / NoClassDefFoundError / AbstractMethodError, all
@@ -62,7 +74,16 @@ private inline fun <T> mapPatchLoadError(e: Throwable, onResource: (StringResour
     is LinkageError -> onText(e.readableMessage())
 
     // ExceptionInInitializerError and friends often have null .message.
-    else -> onText(e.readableMessage())
+    else -> {
+        when {
+            e.message?.contains("A GitHub PAT is required", ignoreCase = true) == true ->
+                onResource(Res.string.source_error_github_pat_required)
+            e.message?.contains("No artifacts found", ignoreCase = true) == true ||
+                e.message?.contains("No GitHub Actions run found", ignoreCase = true) == true ->
+                onResource(Res.string.source_error_pr_no_artifact)
+            else -> onText(e.readableMessage())
+        }
+    }
 }
 
 suspend fun humanizePatchLoadError(e: Throwable): String =
