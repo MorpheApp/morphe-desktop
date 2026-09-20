@@ -1,2 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <!-- Common Components -->
+    <string name="search">Busca</string>
+    <string name="remove">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="none">Ningún</string>
+    <string name="select_image">Seleccionar imaxe</string>
+    <string name="copy">Copiar</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+    <string name="save">Gardar</string>
+    <string name="download">Descargar</string>
+    <string name="version_label_experimental">Experimental</string>
+    <string name="error_log_label">Rexistro de erros</string>
+    <string name="custom_color_description">Cor personalizada</string>
+    <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">Predefinido</string>
+    <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">Parches</string>
+    <string name="quick_patch_select_apk">Seleccionar APK</string>
+    <!-- Patcher Steps -->
+    <string name="patching_step_loading_patches">Cargando parches</string>
+    <string name="patching_step_preparing">Preparando</string>
+    <string name="patching_step_saving">Gardando</string>
+    <!-- ADB Installation Errors -->
+    <string name="adb_error_invalid_apk">Arquivo APK non válido</string>
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <string name="version_warning_experiment_title">Queres experimentar? 🧪</string>
+    <!-- Version warnings for Quick Patch -->
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <!-- Quick Patch - Supported Apps Row -->
+    <string name="quick_patch_supported_apps_version_any">Calquera versión</string>
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <string name="home_stage_continue">Continuar</string>
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <string name="home_app_row_update_available_badge">Actualización dispoñible</string>
+    <!-- Home Screen - SupportedAppsListPane -->
+    <string name="home_list_no_apps_match">Non existen aplicacións que coincidan con \"%1$s\".</string>
+    <string name="home_sort_recommended">Recomendado</string>
+    <!-- Home Screen - YourAppsPane -->
+    <string name="home_your_apps_status_patched">Parcheado</string>
+    <string name="home_detail_details_title">Detalles</string>
+    <string name="home_detail_section_options">Opcións</string>
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_no_patches_found">Non se atoparon parches</string>
+    <string name="patch_selection_option_enabled">Activado</string>
+    <string name="patch_selection_option_disabled">Desactivado</string>
+    <string name="patch_selection_badge_new">Novo</string>
+    <!-- Patching Screen -->
+    <string name="patching_banner_apk_size">Tamaño da APK</string>
+    <string name="patching_banner_patches">Parches</string>
+    <!-- Result Screen -->
+    <string name="result_adb_update_successful">Actualización correcta!</string>
+    <!-- Icon Studio -->
+    <string name="icon_studio_undo_button">Anular</string>
+    <!-- Source Management Sheet -->
+    <string name="source_sheet_local_label">Local</string>
+    <string name="source_sheet_remote_label">Remoto</string>
+    <string name="add_source">Engadir fonte</string>
+    <string name="source_sheet_title">Fonte de parches</string>
+    <string name="source_sheet_type_preinstalled">Preinstalado</string>
+    <!-- Patch Source Dialogs -->
+    <string name="patch_source_dialog_pre_release_title">Parche pre-lanzamento</string>
+    <string name="patch_source_dialog_pre_release_hint">Recibe acceso anticipado a novas versións experimentais dos parches</string>
+    <string name="patch_source_dialog_experimental_title">Versións experimentais da aplicación</string>
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <string name="settings_dialog_title">Axustes</string>
+    <string name="settings_nav_advanced">Avanzado</string>
+    <string name="settings_nav_system">Sistema</string>
+    <string name="settings_dialog_reset_button">Restablecer</string>
+    <string name="settings_theme_system">Sistema</string>
+    <!-- Settings - Appearance -->
+    <!-- Settings - Advanced -->
+    <string name="settings_toggle_expert_mode_label">Modo Experto</string>
+    <!-- Settings - System -->
+    <string name="settings_section_about">Acerca de</string>
+    <string name="settings_about_version">Versión %1$s</string>
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- App Info Dialog -->
+    <string name="app_info_dialog_link_website">Sitio web</string>
+    <!-- Changelog Dialog -->
+</resources>

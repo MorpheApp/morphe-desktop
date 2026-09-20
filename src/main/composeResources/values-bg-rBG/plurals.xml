@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d източник на пачове не успя да се зареди. Използвам тези, които се заредиха успешно</item>
+        <item quantity="other">%1$d източника на пачове не успяха да се заредят. Използвам тези, които се заредиха успешно</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d приложение с пачове има налична актуализация</item>
+        <item quantity="other">%1$d приложения с пачове имат налични актуализации</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Запазен е %1$d ред в %2$s</item>
+        <item quantity="other">Запазени са %1$d реда в %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d източник</item>
+        <item quantity="other">%1$d източници</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Ще бъде приложен %1$d пач</item>
+        <item quantity="other">Ще бъдат приложени %1$d пача</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d изключен</item>
+        <item quantity="other">%1$d изключени</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d включен</item>
+        <item quantity="other">%1$d включени</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d деактивиран</item>
+        <item quantity="other">%1$d деактивирани</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d библиотека</item>
+        <item quantity="other">%1$d библиотеки</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Избран %1$d от %2$d</item>
+        <item quantity="other">Избрани %1$d от %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d пач</item>
+        <item quantity="other">%1$d пачове</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d карта заменя това</item>
+        <item quantity="other">%1$d карти заменят това</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Изтегли %1$d пакет</item>
+        <item quantity="other">Изтегли %1$d пакета</item>
+    </plurals>
+</resources>

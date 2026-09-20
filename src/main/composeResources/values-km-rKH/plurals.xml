@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="other">បំណះ %1$d</item>
+    </plurals>
+</resources>

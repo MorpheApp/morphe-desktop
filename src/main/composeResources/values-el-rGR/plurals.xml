@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d πηγή τροποποιήσεων απέτυχε να φορτώσει. Θα χρησιμοποιηθούν αυτές που φορτώθηκαν με επιτυχία</item>
+        <item quantity="other">%1$d πηγές τροποποιήσεων απέτυχαν να φορτώσουν. Θα χρησιμοποιηθούν αυτές που φορτώθηκαν με επιτυχία</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d τροποποιημένη εφαρμογή έχει διαθέσιμη ενημέρωση</item>
+        <item quantity="other">%1$d τροποποιημένες εφαρμογές έχουν διαθέσιμες ενημερώσεις</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Αποθηκεύτηκε %1$d γραμμή στο %2$s</item>
+        <item quantity="other">Αποθηκεύτηκαν %1$d γραμμές στο %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d πηγή</item>
+        <item quantity="other">%1$d πηγές</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d τροποποίηση θα εφαρμοστεί</item>
+        <item quantity="other">%1$d τροποποιήσεις θα εφαρμοστούν</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d εξαιρέθηκε</item>
+        <item quantity="other">%1$d εξαιρέθηκαν</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d ενεργοποιήθηκε</item>
+        <item quantity="other">%1$d ενεργοποιήθηκαν</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d απενεργοποιήθηκε</item>
+        <item quantity="other">%1$d απενεργοποιήθηκαν</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d βιβλιοθήκη</item>
+        <item quantity="other">%1$d βιβλιοθήκες</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d από %2$d επιλέχθηκε</item>
+        <item quantity="other">%1$d από %2$d επιλέχθηκαν</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d τροποποίηση</item>
+        <item quantity="other">%1$d τροποποιήσεις</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d κάρτα το παρακάμπτει</item>
+        <item quantity="other">%1$d κάρτες το παρακάμπτουν</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Λήψη %1$d πακέτου</item>
+        <item quantity="other">Λήψη %1$d πακέτων</item>
+    </plurals>
+</resources>

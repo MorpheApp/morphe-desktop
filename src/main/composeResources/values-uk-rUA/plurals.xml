@@ -1,2 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d джерело патчів не вдалося завантажити. Використовуються ті, що завантажилися успішно</item>
+        <item quantity="few">%1$d джерела патчів не вдалося завантажити. Використовуються ті, що завантажилися успішно</item>
+        <item quantity="many">%1$d джерел патчів не вдалося завантажити. Використовуються ті, що завантажилися успішно</item>
+        <item quantity="other">%1$d джерел патчів не вдалося завантажити. Використовуються ті, що завантажилися успішно</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d пропатчений застосунок має доступне оновлення</item>
+        <item quantity="few">%1$d пропатчені застосунки мають доступні оновлення</item>
+        <item quantity="many">%1$d пропатчених застосунків мають доступні оновлення</item>
+        <item quantity="other">%1$d пропатчених застосунка мають доступні оновлення</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Збережено %1$d рядок у %2$s</item>
+        <item quantity="few">Збережено %1$d рядки у %2$s</item>
+        <item quantity="many">Збережено %1$d рядків у %2$s</item>
+        <item quantity="other">Збережено %1$d рядків у %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d джерело</item>
+        <item quantity="few">%1$d джерела</item>
+        <item quantity="many">%1$d джерел</item>
+        <item quantity="other">%1$d джерел</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Буде застосовано %1$d патч</item>
+        <item quantity="few">Буде застосовано %1$d патчі</item>
+        <item quantity="many">Буде застосовано %1$d патчів</item>
+        <item quantity="other">Буде застосовано %1$d патча</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d виключено</item>
+        <item quantity="few">%1$d виключено</item>
+        <item quantity="many">%1$d виключено</item>
+        <item quantity="other">%1$d виключено</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d увімкнено</item>
+        <item quantity="few">%1$d увімкнено</item>
+        <item quantity="many">%1$d увімкнено</item>
+        <item quantity="other">%1$d увімкнено</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d вимкнено</item>
+        <item quantity="few">%1$d вимкнено</item>
+        <item quantity="many">%1$d вимкнено</item>
+        <item quantity="other">%1$d вимкнено</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d бібліотека</item>
+        <item quantity="few">%1$d бібліотеки</item>
+        <item quantity="many">%1$d бібліотек</item>
+        <item quantity="other">%1$d бібліотек</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Вибрано %1$d з %2$d</item>
+        <item quantity="few">Вибрано %1$d з %2$d</item>
+        <item quantity="many">Вибрано %1$d з %2$d</item>
+        <item quantity="other">Вибрано %1$d з %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d патч</item>
+        <item quantity="few">%1$d патча</item>
+        <item quantity="many">%1$d патчів</item>
+        <item quantity="other">%1$d патчів</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d картка перевизначає це</item>
+        <item quantity="few">%1$d картки перевизначають це</item>
+        <item quantity="many">%1$d карток перевизначають це</item>
+        <item quantity="other">%1$d карток перевизначають це</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Завантажити %1$d пакунок</item>
+        <item quantity="few">Завантажити %1$d пакунки</item>
+        <item quantity="many">Завантажити %1$d пакунків</item>
+        <item quantity="other">Завантажити %1$d пакунків</item>
+    </plurals>
+</resources>

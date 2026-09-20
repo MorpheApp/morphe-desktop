@@ -1,2 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="zero">%1$d مصدرًا فشل في التحميل. باستخدام المصادر التي تم تحميلها بنجاح</item>
+        <item quantity="one">%1$d مصدر تصحيح فشل في التحميل. باستخدام المصادر التي تم تحميلها بنجاح</item>
+        <item quantity="two">%1$d مصدري تصحيح فشلا في التحميل. باستخدام المصادر التي تم تحميلها بنجاح</item>
+        <item quantity="few">%1$d مصادر تصحيح فشلت في التحميل. باستخدام المصادر التي تم تحميلها بنجاح</item>
+        <item quantity="many">%1$d مصدرًا فشل في التحميل. باستخدام المصادر التي تم تحميلها بنجاح</item>
+        <item quantity="other">%1$d مصدرًا فشل في التحميل. باستخدام المصادر التي تم تحميلها بنجاح</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="zero">%1$d تطبيقًا مصححًا لديه تحديثات متاحة</item>
+        <item quantity="one">%1$d تطبيق مصحح لديه تحديث متاح</item>
+        <item quantity="two">%1$d تطبيقين مصححين لديهما تحديثات متاحة</item>
+        <item quantity="few">%1$d تطبيقات مصححة لديها تحديثات متاحة</item>
+        <item quantity="many">%1$d تطبيقًا مصححًا لديه تحديثات متاحة</item>
+        <item quantity="other">%1$d تطبيقًا مصححًا لديه تحديثات متاحة</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="zero">تم حفظ %1$d سطرًا إلى %2$s</item>
+        <item quantity="one">تم حفظ %1$d سطر إلى %2$s</item>
+        <item quantity="two">تم حفظ %1$d سطرين إلى %2$s</item>
+        <item quantity="few">تم حفظ %1$d أسطر إلى %2$s</item>
+        <item quantity="many">تم حفظ %1$d سطرًا إلى %2$s</item>
+        <item quantity="other">تم حفظ %1$d سطرًا إلى %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="zero">%1$d مصادر التعديل</item>
+        <item quantity="one">%1$d مصدر</item>
+        <item quantity="two">%1$d مصادر التعديل</item>
+        <item quantity="few">%1$d مصادر التعديل</item>
+        <item quantity="many">%1$d مصادر التعديل</item>
+        <item quantity="other">%1$d مصادر التعديل</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="zero">سيتم تطبيق %1$d تصحيحًا</item>
+        <item quantity="one">سيتم تطبيق %1$d تصحيح</item>
+        <item quantity="two">سيتم تطبيق %1$d تصحيحين</item>
+        <item quantity="few">سيتم تطبيق %1$d تصحيحات</item>
+        <item quantity="many">سيتم تطبيق %1$d تصحيحًا</item>
+        <item quantity="other">سيتم تطبيق %1$d تصحيحًا</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="zero">%1$d مستبعدًا</item>
+        <item quantity="one">%1$d مستبعد</item>
+        <item quantity="two">%1$d مستبعدين</item>
+        <item quantity="few">%1$d مستبعدة</item>
+        <item quantity="many">%1$d مستبعدًا</item>
+        <item quantity="other">%1$d مستبعدًا</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="zero">%1$d مفعّلًا</item>
+        <item quantity="one">%1$d مفعّل</item>
+        <item quantity="two">%1$d مفعّلين</item>
+        <item quantity="few">%1$d مفعّلة</item>
+        <item quantity="many">%1$d مفعّلًا</item>
+        <item quantity="other">%1$d مفعّلًا</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="zero">%1$d معطّلًا</item>
+        <item quantity="one">%1$d معطّل</item>
+        <item quantity="two">%1$d معطّلين</item>
+        <item quantity="few">%1$d معطّلة</item>
+        <item quantity="many">%1$d معطّلًا</item>
+        <item quantity="other">%1$d معطّلًا</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="zero">%1$d مكتبةً</item>
+        <item quantity="one">%1$d مكتبة</item>
+        <item quantity="two">%1$d مكتبتين</item>
+        <item quantity="few">%1$d مكتبات</item>
+        <item quantity="many">%1$d مكتبةً</item>
+        <item quantity="other">%1$d مكتبةً</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="zero">%1$d من %2$d محدد</item>
+        <item quantity="one">%1$d من %2$d محدد</item>
+        <item quantity="two">%1$d من %2$d محدد</item>
+        <item quantity="few">%1$d من %2$d محدد</item>
+        <item quantity="many">%1$d من %2$d محدد</item>
+        <item quantity="other">%1$d من %2$d محدد</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="zero">%1$d تعديل</item>
+        <item quantity="one">%1$d تعديل</item>
+        <item quantity="two">%1$d تعديل</item>
+        <item quantity="few">%1$d تعديل</item>
+        <item quantity="many">%1$d تعديل</item>
+        <item quantity="other">%1$d تعديل</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="zero">%1$d بطاقةً تتجاوز هذا</item>
+        <item quantity="one">%1$d بطاقة تتجاوز هذا</item>
+        <item quantity="two">%1$d بطاقتين تتجاوزان هذا</item>
+        <item quantity="few">%1$d بطاقات تتجاوز هذا</item>
+        <item quantity="many">%1$d بطاقةً تتجاوز هذا</item>
+        <item quantity="other">%1$d بطاقةً تتجاوز هذا</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="zero">تنزيل %1$d حزمةً</item>
+        <item quantity="one">تنزيل %1$d حزمة</item>
+        <item quantity="two">تنزيل %1$d حزمتين</item>
+        <item quantity="few">تنزيل %1$d حزم</item>
+        <item quantity="many">تنزيل %1$d حزمةً</item>
+        <item quantity="other">تنزيل %1$d حزمةً</item>
+    </plurals>
+</resources>

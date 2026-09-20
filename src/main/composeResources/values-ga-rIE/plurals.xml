@@ -1,2 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Níor éirigh le %1$d fhoinse paiste lódáil. Ag úsáid na cinn ar éirigh leo lódáil</item>
+        <item quantity="two">Níor éirigh le %1$d fhoinse paiste lódáil. Ag úsáid na cinn ar éirigh leo lódáil</item>
+        <item quantity="few">Níor éirigh le %1$d fhoinse paiste lódáil. Ag úsáid na cinn ar éirigh leo lódáil</item>
+        <item quantity="many">Níor éirigh le %1$d bhfoinse paiste lódáil. Ag úsáid na cinn ar éirigh leo lódáil</item>
+        <item quantity="other">Níor éirigh le %1$d foinse paiste lódáil. Ag úsáid na cinn ar éirigh leo lódáil</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">Tá nuashonrú ar fáil ag %1$d aip phaisteáilte</item>
+        <item quantity="two">Tá nuashonruithe ar fáil ag %1$d aip phaisteáilte</item>
+        <item quantity="few">Tá nuashonruithe ar fáil ag %1$d aipeanna paisteáilte</item>
+        <item quantity="many">Tá nuashonruithe ar fáil ag %1$d aipeanna paisteáilte</item>
+        <item quantity="other">Tá nuashonruithe ar fáil ag %1$d aipeanna paisteáilte</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Sábháladh %1$d líne chuig %2$s</item>
+        <item quantity="two">Sábháladh %1$d líne chuig %2$s</item>
+        <item quantity="few">Sábháladh %1$d línte chuig %2$s</item>
+        <item quantity="many">Sábháladh %1$d línte chuig %2$s</item>
+        <item quantity="other">Sábháladh %1$d línte chuig %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d foinse</item>
+        <item quantity="two">%1$d foinsí</item>
+        <item quantity="few">%1$d foinsí</item>
+        <item quantity="many">%1$d foinsí</item>
+        <item quantity="other">%1$d foinsí</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Cuirfear %1$d phaiste i bhfeidhm</item>
+        <item quantity="two">Cuirfear %1$d phaiste i bhfeidhm</item>
+        <item quantity="few">Cuirfear %1$d paistí i bhfeidhm</item>
+        <item quantity="many">Cuirfear %1$d paistí i bhfeidhm</item>
+        <item quantity="other">Cuirfear %1$d paistí i bhfeidhm</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d eisiata</item>
+        <item quantity="two">%1$d eisiata</item>
+        <item quantity="few">%1$d eisiata</item>
+        <item quantity="many">%1$d eisiata</item>
+        <item quantity="other">%1$d eisiata</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d cumasaithe</item>
+        <item quantity="two">%1$d cumasaithe</item>
+        <item quantity="few">%1$d cumasaithe</item>
+        <item quantity="many">%1$d cumasaithe</item>
+        <item quantity="other">%1$d cumasaithe</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d díchumasaithe</item>
+        <item quantity="two">%1$d díchumasaithe</item>
+        <item quantity="few">%1$d díchumasaithe</item>
+        <item quantity="many">%1$d díchumasaithe</item>
+        <item quantity="other">%1$d díchumasaithe</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d leabharlann</item>
+        <item quantity="two">%1$d leabharlann</item>
+        <item quantity="few">%1$d leabharlanna</item>
+        <item quantity="many">%1$d leabharlanna</item>
+        <item quantity="other">%1$d leabharlanna</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d de %2$d roghnaithe</item>
+        <item quantity="two">%1$d de %2$d roghnaithe</item>
+        <item quantity="few">%1$d de %2$d roghnaithe</item>
+        <item quantity="many">%1$d de %2$d roghnaithe</item>
+        <item quantity="other">%1$d de %2$d roghnaithe</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d paiste</item>
+        <item quantity="two">%1$d paistí</item>
+        <item quantity="few">%1$d paistí</item>
+        <item quantity="many">%1$d paistí</item>
+        <item quantity="other">%1$d paistí</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">Sáraíonn %1$d chárta é seo</item>
+        <item quantity="two">Sáraíonn %1$d chárta é seo</item>
+        <item quantity="few">Sáraíonn %1$d cártaí é seo</item>
+        <item quantity="many">Sáraíonn %1$d cártaí é seo</item>
+        <item quantity="other">Sáraíonn %1$d cártaí é seo</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Íoslódáil %1$d bheartán</item>
+        <item quantity="two">Íoslódáil %1$d bheartán</item>
+        <item quantity="few">Íoslódáil %1$d beartáin</item>
+        <item quantity="many">Íoslódáil %1$d beartáin</item>
+        <item quantity="other">Íoslódáil %1$d beartáin</item>
+    </plurals>
+</resources>

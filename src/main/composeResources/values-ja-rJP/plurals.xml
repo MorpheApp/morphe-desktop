@@ -1,2 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="other">パッチソース%1$d個の読み込みに失敗しました。読み込みに成功したものを使っています</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="other">パッチ適用済みのアプリ%1$d個にアップデートがあります</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="other">%2$sに%1$d行を保存しました</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="other">ソース %1$d 件</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="other">%1$d個のパッチが適用されます</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="other">%1$d個が除外されています</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="other">%1$d個が有効です</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="other">%1$d個が無効です</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="other">%1$d個のライブラリ</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="other">%1$d / %2$d を選択中</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="other">%1$d 個のパッチ</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="other">この設定を上書きするカードが%1$d枚あります</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="other">バンドルを%1$d個ダウンロード</item>
+    </plurals>
+</resources>

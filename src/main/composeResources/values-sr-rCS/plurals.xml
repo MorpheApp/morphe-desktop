@@ -1,2 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Učitavanje %1$d izvora zakrpa nije uspelo. Koristim one koji su se uspešno učitali</item>
+        <item quantity="few">Učitavanje %1$d izvora zakrpa nije uspelo. Koristim one koji su se uspešno učitali</item>
+        <item quantity="other">Učitavanje %1$d izvora zakrpa nije uspelo. Koristim one koji su se uspešno učitali</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">Za %1$d zakrpanu aplikaciju dostupno je ažuriranje</item>
+        <item quantity="few">Za %1$d zakrpane aplikacije dostupna su ažuriranja</item>
+        <item quantity="other">Za %1$d zakrpanih aplikacija dostupna su ažuriranja</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Sačuvan je %1$d red u %2$s</item>
+        <item quantity="few">Sačuvana su %1$d reda u %2$s</item>
+        <item quantity="other">Sačuvano je %1$d redova u %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d izvor</item>
+        <item quantity="few">%1$d zakrpe</item>
+        <item quantity="other">%1$d zakrpe</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Primeniće se %1$d zakrpa</item>
+        <item quantity="few">Primeniće se %1$d zakrpe</item>
+        <item quantity="other">Primeniće se %1$d zakrpa</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d izuzeta</item>
+        <item quantity="few">%1$d izuzete</item>
+        <item quantity="other">%1$d izuzetih</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d omogućena</item>
+        <item quantity="few">%1$d omogućene</item>
+        <item quantity="other">%1$d omogućenih</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d onemogućena</item>
+        <item quantity="few">%1$d onemogućene</item>
+        <item quantity="other">%1$d onemogućenih</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d biblioteka</item>
+        <item quantity="few">%1$d biblioteke</item>
+        <item quantity="other">%1$d biblioteka</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Izabrana je %1$d od %2$d</item>
+        <item quantity="few">Izabrane su %1$d od %2$d</item>
+        <item quantity="other">Izabrano je %1$d od %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d zakrpa</item>
+        <item quantity="few">%1$d zakrpe</item>
+        <item quantity="other">%1$d zakrpa</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kartica ima prednost nad ovim</item>
+        <item quantity="few">%1$d kartice imaju prednost nad ovim</item>
+        <item quantity="other">%1$d kartica ima prednost nad ovim</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Preuzmi %1$d paket</item>
+        <item quantity="few">Preuzmi %1$d paketa</item>
+        <item quantity="other">Preuzmi %1$d paketa</item>
+    </plurals>
+</resources>

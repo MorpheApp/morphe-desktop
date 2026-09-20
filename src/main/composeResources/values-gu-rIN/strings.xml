@@ -1,2 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <!-- Common Components -->
+    <string name="search">શોધો</string>
+    <string name="unknown">અજ્ઞાત</string>
+    <string name="installing">ઇન્સ્ટોલ કરી રહ્યું છે...</string>
+    <string name="none">કોઈપણ નહિ </string>
+    <string name="custom_color_description">કસ્ટમ રંગ</string>
+    <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">ડિફૉલ્ટ</string>
+    <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">પેચો</string>
+    <!-- Patcher Steps -->
+    <!-- ADB Installation Errors -->
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <!-- Version warnings for Quick Patch -->
+    <string name="quick_patch_error_unknown_occurred">અજાણી ભૂલ આવી</string>
+    <!-- Quick Patch - Patching Content -->
+    <string name="quick_patch_patching_patches_count">%1$d / %2$d પેચીસ</string>
+    <!-- Quick Patch - Ready Content -->
+    <!-- Quick Patch - Supported Apps Row -->
+    <string name="quick_patch_supported_apps_version_any">કોઈપણ સંસ્કરણ</string>
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <!-- Home Screen - SupportedAppsListPane -->
+    <!-- Home Screen - YourAppsPane -->
+    <string name="home_action_installing">ઇન્સ્ટોલ કરી રહ્યું છે...</string>
+    <string name="home_detail_patch_bundle_label">પેચ બંડલ</string>
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_group_selected_count">%1$d પસંદ કરેલ</string>
+    <!-- Patching Screen -->
+    <string name="patching_banner_patches">પેચો</string>
+    <string name="patching_banner_patcher">પેચર</string>
+    <!-- Result Screen -->
+    <!-- Icon Studio -->
+    <!-- Source Management Sheet -->
+    <string name="source_sheet_local_label">સ્થાનિક</string>
+    <string name="source_sheet_remote_label">દૂરસ્થ</string>
+    <string name="add_source">સ્ત્રોત ઉમેરો</string>
+    <string name="source_sheet_title">પેચ સ્ત્રોતો</string>
+    <!-- Patch Source Dialogs -->
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <string name="settings_dialog_title">સેટિંગ્સ</string>
+    <!-- Settings - Appearance -->
+    <string name="settings_language_current_title">વર્તમાન ભાષા</string>
+    <string name="settings_language_search_no_results">કોઈ પરિણામ મળ્યું નથી.</string>
+    <string name="settings_section_background_animation">બેકગ્રાઉન્ડ એનિમેશન</string>
+    <string name="settings_background_circles">વર્તુળો </string>
+    <string name="settings_background_rings">રિંગ્સ</string>
+    <string name="settings_background_space">આકાશ</string>
+    <string name="settings_background_shapes">આકારો</string>
+    <string name="settings_background_snow">બરફ</string>
+    <!-- Settings - Advanced -->
+    <!-- Settings - System -->
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- App Info Dialog -->
+    <!-- Changelog Dialog -->
+</resources>

@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Non è stato possibile caricare %1$d fonte di patch. Utilizzo quelle caricate correttamente</item>
+        <item quantity="other">Non è stato possibile caricare %1$d fonti di patch. Utilizzo quelle caricate correttamente</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d app patchata ha un aggiornamento disponibile</item>
+        <item quantity="other">%1$d app patchate hanno aggiornamenti disponibili</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Salvata %1$d riga in %2$s</item>
+        <item quantity="other">Salvate %1$d righe in %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d fonte</item>
+        <item quantity="other">%1$d fonti</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d patch verrà applicata</item>
+        <item quantity="other">%1$d patch verranno applicate</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d esclusa</item>
+        <item quantity="other">%1$d escluse</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d abilitata</item>
+        <item quantity="other">%1$d abilitate</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d disabilitata</item>
+        <item quantity="other">%1$d disabilitate</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d libreria</item>
+        <item quantity="other">%1$d librerie</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d su %2$d selezionati</item>
+        <item quantity="other">%1$d su %2$d selezionati</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d modifica</item>
+        <item quantity="other">%1$d modifiche</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d scheda ha la precedenza su questa impostazione</item>
+        <item quantity="other">%1$d schede hanno la precedenza su questa impostazione</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Scarica %1$d bundle</item>
+        <item quantity="other">Scarica %1$d bundle</item>
+    </plurals>
+</resources>

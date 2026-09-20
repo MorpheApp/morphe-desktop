@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d крыніца</item>
+        <item quantity="few">%1$d крыніцы</item>
+        <item quantity="many">%1$d крыніцы</item>
+        <item quantity="other">%1$d крыніц</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d патч</item>
+        <item quantity="few">%1$d патча</item>
+        <item quantity="many">%1$d патчаў</item>
+        <item quantity="other">%1$d патча</item>
+    </plurals>
+</resources>

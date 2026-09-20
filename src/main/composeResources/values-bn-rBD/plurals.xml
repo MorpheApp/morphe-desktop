@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d প্যাচ উৎস লোড করতে ব্যর্থ হয়েছে। সফলভাবে লোড হওয়াগুলি ব্যবহার করা হচ্ছে</item>
+        <item quantity="other">%1$d প্যাচ উৎসগুলো লোড করতে ব্যর্থ হয়েছে। সফলভাবে লোড হওয়াগুলি ব্যবহার করা হচ্ছে</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d প্যাচ করা অ্যাপে একটি আপডেট উপলব্ধ</item>
+        <item quantity="other">%1$d প্যাচ করা অ্যাপে আপডেট উপলব্ধ</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d লাইন %2$s-এ সংরক্ষণ করা হয়েছে</item>
+        <item quantity="other">%1$d লাইন %2$s-এ সংরক্ষণ করা হয়েছে</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d উৎস</item>
+        <item quantity="other">%1$d টি সোর্স</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d প্যাচ প্রয়োগ করা হবে</item>
+        <item quantity="other">%1$d প্যাচ প্রয়োগ করা হবে</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d বাদ দেওয়া হয়েছে</item>
+        <item quantity="other">%1$d বাদ দেওয়া হয়েছে</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d সক্রিয়</item>
+        <item quantity="other">%1$d সক্রিয়</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d নিষ্ক্রিয়</item>
+        <item quantity="other">%1$d নিষ্ক্রিয়</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d লাইব্রেরি</item>
+        <item quantity="other">%1$d লাইব্রেরি</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%2$d এর মধ্যে %1$d নির্বাচিত</item>
+        <item quantity="other">%2$d এর মধ্যে %1$d নির্বাচিত</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d টি প্যাচ</item>
+        <item quantity="other">%1$d টি প্যাচ</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d কার্ড এটি ওভাররাইড করে</item>
+        <item quantity="other">%1$d কার্ড এটি ওভাররাইড করে</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">%1$d বান্ডল ডাউনলোড করুন</item>
+        <item quantity="other">%1$d বান্ডল ডাউনলোড করুন</item>
+    </plurals>
+</resources>

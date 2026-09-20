@@ -1,2 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d sursă de patch-uri nu a putut fi încărcată. Se folosesc cele care s-au încărcat cu succes</item>
+        <item quantity="few">%1$d surse de patch-uri nu au putut fi încărcate. Se folosesc cele care s-au încărcat cu succes</item>
+        <item quantity="other">%1$d de surse de patch-uri nu au putut fi încărcate. Se folosesc cele care s-au încărcat cu succes</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d aplicație cu patch are o actualizare disponibilă</item>
+        <item quantity="few">%1$d aplicații cu patch au actualizări disponibile</item>
+        <item quantity="other">%1$d de aplicații cu patch au actualizări disponibile</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">S-a salvat %1$d linie în %2$s</item>
+        <item quantity="few">S-au salvat %1$d linii în %2$s</item>
+        <item quantity="other">S-au salvat %1$d de linii în %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d sursă</item>
+        <item quantity="few">%1$d de surse</item>
+        <item quantity="other">%1$d de surse</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Se va aplica %1$d patch</item>
+        <item quantity="few">Se vor aplica %1$d patch-uri</item>
+        <item quantity="other">Se vor aplica %1$d de patch-uri</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d exclus</item>
+        <item quantity="few">%1$d excluse</item>
+        <item quantity="other">%1$d de excluse</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d activat</item>
+        <item quantity="few">%1$d activate</item>
+        <item quantity="other">%1$d de activate</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d dezactivat</item>
+        <item quantity="few">%1$d dezactivate</item>
+        <item quantity="other">%1$d de dezactivate</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d bibliotecă</item>
+        <item quantity="few">%1$d biblioteci</item>
+        <item quantity="other">%1$d de biblioteci</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d din %2$d selectat</item>
+        <item quantity="few">%1$d din %2$d selectate</item>
+        <item quantity="other">%1$d din %2$d selectate</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="few">%1$d patch-uri</item>
+        <item quantity="other">%1$d de patch-uri</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d card suprascrie această setare</item>
+        <item quantity="few">%1$d carduri suprascriu această setare</item>
+        <item quantity="other">%1$d de carduri suprascriu această setare</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Descarcă %1$d pachet</item>
+        <item quantity="few">Descarcă %1$d pachete</item>
+        <item quantity="other">Descarcă %1$d de pachete</item>
+    </plurals>
+</resources>

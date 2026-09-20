@@ -1,2 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <!-- Common Components -->
+    <!-- App Card Fill Dialog -->
+    <!-- Quick Patch Screen -->
+    <!-- Patcher Steps -->
+    <!-- ADB Installation Errors -->
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <!-- Version warnings for Quick Patch -->
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <!-- Quick Patch - Supported Apps Row -->
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <!-- Home Screen - SupportedAppsListPane -->
+    <string name="home_list_no_apps_match">No apps match \"%1$s\"</string>
+    <!-- Home Screen - YourAppsPane -->
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <!-- Patching Screen -->
+    <!-- Result Screen -->
+    <!-- Icon Studio -->
+    <!-- Source Management Sheet -->
+    <string name="add_source">මූලාශ්‍රය එක් කරන්න</string>
+    <!-- Patch Source Dialogs -->
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <!-- Settings - Appearance -->
+    <!-- Settings - Advanced -->
+    <!-- Settings - System -->
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- App Info Dialog -->
+    <!-- Changelog Dialog -->
+</resources>

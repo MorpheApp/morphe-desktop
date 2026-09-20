@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Nem sikerült betölteni %1$d javítási forrást. A sikeresen betöltötteket használjuk</item>
+        <item quantity="other">Nem sikerült betölteni %1$d javítási forrást. A sikeresen betöltötteket használjuk</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">Frissítés elérhető %1$d javított alkalmazáshoz</item>
+        <item quantity="other">Frissítések elérhetők %1$d javított alkalmazáshoz</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d sor elmentve ide: %2$s</item>
+        <item quantity="other">%1$d sor elmentve ide: %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d forrás</item>
+        <item quantity="other">%1$d forrás</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d javítás kerül alkalmazásra</item>
+        <item quantity="other">%1$d javítás kerül alkalmazásra</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d kizárva</item>
+        <item quantity="other">%1$d kizárva</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d engedélyezve</item>
+        <item quantity="other">%1$d engedélyezve</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d letiltva</item>
+        <item quantity="other">%1$d letiltva</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d könyvtár</item>
+        <item quantity="other">%1$d könyvtár</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d/%2$d módosítás kiválasztva</item>
+        <item quantity="other">%1$d/%2$d módosítás kiválasztva</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d módosítás</item>
+        <item quantity="other">%1$d módosítás</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kártya felülírja ezt</item>
+        <item quantity="other">%1$d kártya felülírja ezt</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">%1$d csomag letöltése</item>
+        <item quantity="other">%1$d csomag letöltése</item>
+    </plurals>
+</resources>

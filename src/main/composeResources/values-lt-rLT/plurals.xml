@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d šaltinis</item>
+        <item quantity="few">%1$d šaltiniai</item>
+        <item quantity="many">%1$d šaltiniai</item>
+        <item quantity="other">%1$d šaltiniai</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d pataisa</item>
+        <item quantity="few">%1$d pataisa</item>
+        <item quantity="many">%1$d pataisa</item>
+        <item quantity="other">%1$d pataisymai</item>
+    </plurals>
+</resources>

@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d patchkälla kunde inte laddas. Använder de som laddades framgångsrikt</item>
+        <item quantity="other">%1$d patchkällor kunde inte laddas. Använder de som laddades framgångsrikt</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d patchad app har en uppdatering tillgänglig</item>
+        <item quantity="other">%1$d patchade appar har uppdateringar tillgängliga</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Sparade %1$d rad till %2$s</item>
+        <item quantity="other">Sparade %1$d rader till %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d källa</item>
+        <item quantity="other">%1$d källor</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d patch kommer att tillämpas</item>
+        <item quantity="other">%1$d patchar kommer att tillämpas</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d exkluderad</item>
+        <item quantity="other">%1$d exkluderade</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d aktiverad</item>
+        <item quantity="other">%1$d aktiverade</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d inaktiverad</item>
+        <item quantity="other">%1$d inaktiverade</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d bibliotek</item>
+        <item quantity="other">%1$d bibliotek</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d av %2$d har valts</item>
+        <item quantity="other">%1$d av %2$d har valts</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d tillägg</item>
+        <item quantity="other">%1$d tillägg</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kort åsidosätter detta</item>
+        <item quantity="other">%1$d kort åsidosätter detta</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Ladda ner %1$d paket</item>
+        <item quantity="other">Ladda ner %1$d paket</item>
+    </plurals>
+</resources>

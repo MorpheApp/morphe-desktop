@@ -1,2 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d vir popravkov se ni naložil. Uporabljamo tiste, ki so se uspešno naložili</item>
+        <item quantity="two">%1$d vira popravkov se nista naložila. Uporabljamo tiste, ki so se uspešno naložili</item>
+        <item quantity="few">%1$d viri popravkov se niso naložili. Uporabljamo tiste, ki so se uspešno naložili</item>
+        <item quantity="other">%1$d virov popravkov se ni naložilo. Uporabljamo tiste, ki so se uspešno naložili</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d aplikacija s popravki ima na voljo posodobitev</item>
+        <item quantity="two">%1$d aplikaciji s popravki imata na voljo posodobitvi</item>
+        <item quantity="few">%1$d aplikacije s popravki imajo na voljo posodobitve</item>
+        <item quantity="other">%1$d aplikacij s popravki ima na voljo posodobitve</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Shranjena je bila %1$d vrstica v %2$s</item>
+        <item quantity="two">Shranjeni sta bili %1$d vrstici v %2$s</item>
+        <item quantity="few">Shranjene so bile %1$d vrstice v %2$s</item>
+        <item quantity="other">Shranjenih je bilo %1$d vrstic v %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d vir</item>
+        <item quantity="two">%1$d Vira</item>
+        <item quantity="few">%1$d viri</item>
+        <item quantity="other">%1$d Virov</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d popravek bo uporabljen</item>
+        <item quantity="two">%1$d popravka bosta uporabljena</item>
+        <item quantity="few">%1$d popravki bodo uporabljeni</item>
+        <item quantity="other">%1$d popravkov bo uporabljenih</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d izključen</item>
+        <item quantity="two">%1$d izključena</item>
+        <item quantity="few">%1$d izključeni</item>
+        <item quantity="other">%1$d izključenih</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d omogočen</item>
+        <item quantity="two">%1$d omogočena</item>
+        <item quantity="few">%1$d omogočeni</item>
+        <item quantity="other">%1$d omogočenih</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d onemogočen</item>
+        <item quantity="two">%1$d onemogočena</item>
+        <item quantity="few">%1$d onemogočeni</item>
+        <item quantity="other">%1$d onemogočenih</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d knjižnica</item>
+        <item quantity="two">%1$d knjižnici</item>
+        <item quantity="few">%1$d knjižnice</item>
+        <item quantity="other">%1$d knjižnic</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Izbran je %1$d od %2$d</item>
+        <item quantity="two">Izbrana sta %1$d od %2$d</item>
+        <item quantity="few">Izbrani so %1$d od %2$d</item>
+        <item quantity="other">Izbranih je %1$d od %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d popravek</item>
+        <item quantity="two">%1$d Popravka</item>
+        <item quantity="few">%1$d Popravkih</item>
+        <item quantity="other">%1$d Popravkih</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kartica to preglasi</item>
+        <item quantity="two">%1$d kartici to preglasita</item>
+        <item quantity="few">%1$d kartice to preglasijo</item>
+        <item quantity="other">%1$d kartic to preglasi</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Prenesi %1$d paket</item>
+        <item quantity="two">Prenesi %1$d paketa</item>
+        <item quantity="few">Prenesi %1$d pakete</item>
+        <item quantity="other">Prenesi %1$d paketov</item>
+    </plurals>
+</resources>

@@ -1,2 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <!-- Common Components -->
+    <string name="search">Carian</string>
+    <string name="remove">Keluarkan</string>
+    <string name="unknown">Tidak diketahui</string>
+    <string name="installing">Memasang…</string>
+    <string name="none">Tiada</string>
+    <string name="off">Mati</string>
+    <string name="on">Hidup</string>
+    <string name="version_label_experimental">Uji kaji</string>
+    <string name="app_info_shared_label">Maklumat aplikasi</string>
+    <string name="error_log_label">Log ralat</string>
+    <string name="custom_color_description">Warna tersuai</string>
+    <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">Lalai</string>
+    <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">Tampalan</string>
+    <string name="quick_patch_select_apk">Pilih APK</string>
+    <!-- Patcher Steps -->
+    <string name="patching_step_loading_patches">Memuatkan tampalan</string>
+    <string name="patching_step_preparing">Menyediakan</string>
+    <string name="patching_step_merging_split_apk">Mencantumkan APK terpisah</string>
+    <string name="patching_step_read_apk">Baca fail APK</string>
+    <string name="patching_step_applying_patches">Memasang tampalan</string>
+    <string name="patching_step_saving">Menyimpan</string>
+    <string name="patching_step_writing_apk">Menulis fail APK yang ditampal</string>
+    <string name="patching_step_signing">Menandatangani fail APK ditampal</string>
+    <!-- ADB Installation Errors -->
+    <string name="adb_error_invalid_apk">Fail APK tidak sah</string>
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <string name="version_warning_experiment_title">Anda mahu bereksperimen?  🧪</string>
+    <!-- Version warnings for Quick Patch -->
+    <string name="quick_patch_error_unknown_occurred">Ralat yang tidak diketahui berlaku</string>
+    <!-- Quick Patch - Patching Content -->
+    <string name="quick_patch_patching_patches_count">%1$d / %2$d ditampal</string>
+    <!-- Quick Patch - Ready Content -->
+    <string name="quick_patch_ready_version_build">(binaan %1$d)</string>
+    <!-- Quick Patch - Supported Apps Row -->
+    <string name="quick_patch_supported_apps_version_any">Mana-mana versi</string>
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <string name="home_stage_continue">Teruskan</string>
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <!-- Home Screen - SupportedAppsListPane -->
+    <string name="home_list_no_apps_match">Tiada aplikasi bersesuaian \"%1$s\"</string>
+    <string name="home_sort_recommended">Disyorkan</string>
+    <!-- Home Screen - YourAppsPane -->
+    <string name="home_filter_all_apps">Semua aplikasi</string>
+    <string name="home_action_installing">Memasang…</string>
+    <string name="home_detail_patch_bundle_label">Tampal Pekej</string>
+    <!-- Patches Screen -->
+    <string name="patches_dialog_error_title">Ralat</string>
+    <string name="patches_refresh_description">Segar semula</string>
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_no_patches_found">Tiada tampalan tersedia</string>
+    <string name="patch_selection_option_enabled">Didayakan</string>
+    <string name="patch_selection_option_disabled">Dilumpuhkan</string>
+    <string name="patch_selection_badge_new">Baharu</string>
+    <!-- Patching Screen -->
+    <string name="patching_status_in_progress">Memasang tampalan</string>
+    <string name="patching_progress_title">Menampal aplikasi</string>
+    <string name="patching_graph_memory_usage">Penggunaan memori</string>
+    <string name="patching_banner_apk_size">Saiz APK</string>
+    <string name="patching_banner_patches">Tampalan</string>
+    <string name="patching_banner_patcher">Penampal</string>
+    <!-- Result Screen -->
+    <string name="result_adb_update_successful">Kemas kini berjaya!</string>
+    <!-- Icon Studio -->
+    <string name="icon_studio_preview_adaptive">Adaptif</string>
+    <string name="icon_studio_preview_monochrome">Monokrom</string>
+    <string name="icon_studio_adjust_brightness">Kecerahan</string>
+    <!-- Source Management Sheet -->
+    <string name="source_sheet_local_label">Tempatan</string>
+    <string name="source_sheet_remote_label">Jauh</string>
+    <string name="add_source">Tambah sumber</string>
+    <string name="source_sheet_title">Tampalan sumber-sumber</string>
+    <string name="source_sheet_type_preinstalled">Prapasang</string>
+    <!-- Patch Source Dialogs -->
+    <string name="patch_source_dialog_pre_release_title">Tampalan prakeluaran</string>
+    <string name="patch_source_dialog_pre_release_hint">Menerima capaian awal kepada versi tampalan uji kaji baru</string>
+    <string name="patch_source_dialog_experimental_title">Versi aplikasi uji kaji</string>
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <string name="settings_dialog_title">Tetapan</string>
+    <string name="settings_nav_appearance">Penampilan</string>
+    <string name="settings_nav_advanced">Lebih mahir</string>
+    <string name="settings_nav_system">Sistem</string>
+    <string name="settings_theme_system">Sistem</string>
+    <!-- Settings - Appearance -->
+    <string name="settings_section_background_animation">Animasi latar belakang</string>
+    <string name="settings_background_circles">Bulatan</string>
+    <!-- Settings - Advanced -->
+    <string name="settings_toggle_expert_mode_label">Mod mahir</string>
+    <!-- Settings - System -->
+    <string name="settings_section_about">Mengenai</string>
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- App Info Dialog -->
+    <!-- Changelog Dialog -->
+</resources>

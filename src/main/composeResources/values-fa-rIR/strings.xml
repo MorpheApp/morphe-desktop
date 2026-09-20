@@ -1,2 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <!-- Common Components -->
+    <string name="ok">تأیید</string>
+    <string name="retry">تلاش دوباره</string>
+    <string name="clear">پاک‌کردن</string>
+    <string name="search">جست‌وجو</string>
+    <string name="remove">حذف</string>
+    <string name="collapse">بستن</string>
+    <string name="expand">بازکردن</string>
+    <string name="cancel">لغو</string>
+    <string name="close">بستن</string>
+    <string name="delete">حذف</string>
+    <string name="device_default">دستگاه</string>
+    <string name="unknown">ناشناخته</string>
+    <string name="installing">در حال نصب…</string>
+    <string name="none">هیچ‌کدام</string>
+    <string name="select_image">یک تصویر انتخاب کنید</string>
+    <string name="select_file">انتخاب فایل</string>
+    <string name="failed">ناموفق</string>
+    <string name="copy">کپی</string>
+    <string name="drag_to_reorder">برای مرتب‌سازی دوباره بکشید</string>
+    <string name="off">خاموش</string>
+    <string name="on">روشن</string>
+    <string name="save">ذخیره</string>
+    <string name="status_loading">در حال بارگیری…</string>
+    <string name="download">دانلود</string>
+    <string name="status_ready">آماده</string>
+    <string name="version_label_experimental">آزمایشی</string>
+    <string name="status_patching_failed">پچ‌کردن ناموفق بود</string>
+    <string name="error_log_label">گزارش خطا</string>
+    <string name="back">بازگشت</string>
+    <string name="temporary_files_label">فایل‌های موقت</string>
+    <string name="color_picker_saved">ذخیره‌شده</string>
+    <string name="custom_color_description">رنگ سفارشی</string>
+    <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">پیش‌فرض</string>
+    <string name="card_fill_mode_accent">تأکیدی</string>
+    <string name="card_fill_mode_gradient">گرادیان</string>
+    <string name="card_fill_mode_solid">یک‌دست</string>
+    <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">پچ‌ها</string>
+    <string name="quick_patch_select_apk">انتخاب APK</string>
+    <!-- Patcher Steps -->
+    <string name="patching_step_loading_patches">در حال بارگذاری پچ‌ها</string>
+    <string name="patching_step_preparing">در حال آماده‌سازی</string>
+    <string name="patching_step_merging_split_apk">در حال ادغام APK تکه‌ای</string>
+    <string name="patching_step_read_apk">در حال خواندن فایل APK</string>
+    <string name="patching_step_applying_patches">در حال اعمال پچ‌ها</string>
+    <string name="patching_step_saving">در حال ذخیره‌سازی</string>
+    <string name="patching_step_writing_apk">در حال نوشتن فایل APK پچ‌شده</string>
+    <string name="patching_step_signing">در حال امضای فایل APK پچ‌شده</string>
+    <!-- ADB Installation Errors -->
+    <string name="adb_error_invalid_apk">فایل APK نامعتبر</string>
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <string name="version_warning_experiment_title">می‌خواهید آزمایش کنید؟ 🧪</string>
+    <!-- Version warnings for Quick Patch -->
+    <string name="quick_patch_error_unknown_occurred">خطای ناشناخته‌ای رخ داد</string>
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <string name="quick_patch_ready_version_build">(ساخت %1$d)</string>
+    <!-- Quick Patch - Supported Apps Row -->
+    <string name="quick_patch_supported_apps_version_any">هر نسخه ای</string>
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <string name="home_apk_info_version_label">نسخه</string>
+    <string name="home_apk_info_from_label">از</string>
+    <string name="home_stage_continue">ادامه</string>
+    <!-- Home Screen - Dialogs -->
+    <string name="home_dialog_uninstall_button">حذف</string>
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <string name="home_app_row_any">هر نسخه‌ای</string>
+    <string name="home_app_row_update_available_badge">به‌روزرسانی موجود است</string>
+    <!-- Home Screen - SupportedAppsListPane -->
+    <string name="home_list_no_apps_match">هیچ برنامه‌ای با «%1$s» مطابقت ندارد</string>
+    <string name="home_sort_recommended">توصیه شده </string>
+    <string name="home_sort_updates_first">ابتدا به‌روزرسانی‌های پچ</string>
+    <string name="home_sort_recently_patched">به‌تازگی پچ‌شده</string>
+    <!-- Home Screen - YourAppsPane -->
+    <string name="home_your_apps_status_patched">پچ‌شده</string>
+    <string name="home_filter_all_apps">همهٔ برنامه‌ها</string>
+    <string name="home_banner_view">مشاهده</string>
+    <string name="home_action_install">نصب</string>
+    <string name="home_action_installing">در حال نصب…</string>
+    <string name="home_action_update">به‌روزرسانی</string>
+    <string name="home_detail_details_title">جزئیات</string>
+    <string name="home_detail_section_options">گزینه‌ها</string>
+    <string name="home_detail_output_size_label">اندازهٔ خروجی</string>
+    <!-- Patches Screen -->
+    <string name="patches_dialog_error_title">خطا</string>
+    <string name="patches_refresh_description">تازه‌سازی</string>
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_no_patches_found">هیچ پچی یافت نشد</string>
+    <string name="patch_selection_filter_selected">انتخاب‌شده</string>
+    <string name="patch_selection_option_enabled">فعال</string>
+    <string name="patch_selection_option_disabled">غیرفعال</string>
+    <string name="patch_selection_mode_all">همه</string>
+    <string name="patch_selection_badge_new">جدید</string>
+    <string name="patch_selection_run_info_app_group">برنامه</string>
+    <string name="patch_selection_run_info_bundles_group">بسته‌های پچ</string>
+    <string name="patch_selection_group_selected_count">%1$d مورد انتخاب شد</string>
+    <!-- Patching Screen -->
+    <string name="patching_status_in_progress">در حال اعمال پچ‌ها</string>
+    <string name="patching_progress_title">در حال پچ‌کردن برنامه</string>
+    <string name="patching_step_all_done">تمام شد!</string>
+    <string name="patching_graph_memory_usage">مصرف حافظه</string>
+    <string name="patching_graph_storage_io">ورودی/خروجی ذخیره‌سازی</string>
+    <string name="patching_graph_cpu_usage">مصرف CPU</string>
+    <string name="patching_banner_started_title">پچ‌کردن شروع شد</string>
+    <string name="patching_banner_apk_size">اندازهٔ APK</string>
+    <string name="patching_banner_patches">پچ‌ها</string>
+    <string name="patching_banner_split_apk">APK تکه‌ای</string>
+    <string name="patching_banner_yes">بله</string>
+    <string name="patching_banner_no">خیر</string>
+    <string name="patching_banner_patcher">پچر</string>
+    <string name="patching_banner_runtime">زمان اجرا</string>
+    <string name="patching_success_title">پچ‌کردن موفق بود</string>
+    <string name="patching_success_output_size">اندازهٔ خروجی</string>
+    <string name="patching_success_time">زمان</string>
+    <string name="patching_success_memory_avg">میانگین حافظه</string>
+    <string name="patching_success_memory_max">حداکثر حافظه</string>
+    <string name="patching_success_storage_io_peak">اوج ورودی/خروجی ذخیره‌سازی</string>
+    <!-- Result Screen -->
+    <string name="result_adb_update_successful">به روزرسانی موفقیت آمیز!</string>
+    <string name="result_cleanup_freed">%1$s آزاد شد</string>
+    <!-- Icon Studio -->
+    <string name="icon_studio_background_gradient">گرادیان</string>
+    <string name="icon_studio_undo_button">بازگردانی</string>
+    <string name="icon_studio_preview_adaptive">تطبیقی</string>
+    <string name="icon_studio_preview_monochrome">تک‌رنگ</string>
+    <string name="icon_studio_adjust_opacity">شفافیت</string>
+    <string name="icon_studio_color_label">رنگی</string>
+    <string name="icon_studio_adjust_hue">ته‌رنگ</string>
+    <string name="icon_studio_adjust_brightness">روشنایی</string>
+    <string name="icon_studio_background_label">پس‌زمینه</string>
+    <string name="icon_studio_background_solid">یک‌دست</string>
+    <!-- Source Management Sheet -->
+    <string name="source_sheet_local_label">محلی</string>
+    <string name="source_sheet_remote_label">از راه دور</string>
+    <string name="add_source">افزودن منبع</string>
+    <string name="source_sheet_title">منابع پچ </string>
+    <string name="source_sheet_done_button">انجام شد</string>
+    <string name="source_sheet_type_preinstalled">پیش نصب شده</string>
+    <string name="source_sheet_move_up_description">حرکت به بالا</string>
+    <string name="source_sheet_move_down_description">حرکت به پایین</string>
+    <!-- Patch Source Dialogs -->
+    <string name="patch_source_dialog_pre_release_title">پچ‌های پیش‌انتشار</string>
+    <string name="patch_source_dialog_pre_release_hint">دسترسی زودهنگام به نسخه‌های آزمایشی جدید پچ را فراهم می‌کند</string>
+    <string name="patch_source_dialog_experimental_title">نسخه‌های آزمایشی برنامه</string>
+    <string name="patch_source_dialog_add_button">افزودن</string>
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <string name="licenses_row_link_source">منبع</string>
+    <string name="licenses_notice_title">اعلان Morphe</string>
+    <!-- Settings -->
+    <string name="settings_dialog_title">تنظیمات</string>
+    <string name="settings_nav_appearance">ظاهر</string>
+    <string name="settings_nav_advanced">پیشرفته</string>
+    <string name="settings_nav_system">سیستم</string>
+    <string name="settings_dialog_reset_button">بازنشانی</string>
+    <string name="settings_theme_system">سیستم</string>
+    <!-- Settings - Appearance -->
+    <string name="settings_section_language">زبان</string>
+    <string name="settings_language_current_title">زبان فعلی</string>
+    <string name="settings_language_dialog_title">زبان برنامه</string>
+    <string name="settings_language_search_no_results">نتیجه‌ای پیدا نشد</string>
+    <string name="settings_section_theme">پوسته</string>
+    <string name="settings_theme_light">روشن</string>
+    <string name="settings_theme_dark">تیره</string>
+    <string name="settings_section_accent_color">رنگ تأکیدی</string>
+    <string name="settings_section_patch_list">فهرست پچ‌ها</string>
+    <string name="settings_section_background_animation">انیمیشن پس‌زمینه</string>
+    <string name="settings_background_circles">دایره‌ها</string>
+    <string name="settings_background_rings">حلقه‌ها</string>
+    <string name="settings_background_mesh">توری</string>
+    <string name="settings_background_space">فضا</string>
+    <string name="settings_background_shapes">شکل‌ها</string>
+    <string name="settings_background_snow">برف</string>
+    <string name="settings_background_grid">شبکه</string>
+    <string name="settings_background_particles">ذرات</string>
+    <string name="settings_toggle_parallax_label">افکت پارالاکس</string>
+    <!-- Settings - Advanced -->
+    <string name="settings_toggle_expert_mode_label">حالت حرفه‌ای</string>
+    <!-- Settings - System -->
+    <string name="settings_channel_label">بررسی به‌روزرسانی‌ها</string>
+    <string name="settings_section_about">درباره</string>
+    <string name="settings_about_version">نسخه %1$s</string>
+    <string name="settings_about_changelogs_title">مشاهدهٔ تغییرات نسخه</string>
+    <string name="settings_about_changelogs_desc">آخرین تغییرات این به‌روزرسانی را ببینید</string>
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <string name="settings_signing_password_hide">پنهان‌کردن</string>
+    <string name="settings_signing_export_button">خروجی‌گرفتن</string>
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- App Info Dialog -->
+    <string name="app_info_dialog_link_website">وب‌سایت</string>
+    <string name="app_info_description">پروژه‌ای متن‌باز برای پچ‌کردن مدرن و سادهٔ برنامه‌های محبوب Android که با بازخورد و مشارکت جامعه پیش می‌رود</string>
+    <string name="app_info_link_translate">ترجمه</string>
+    <!-- Changelog Dialog -->
+    <string name="changelog_show_older_button">نمایش نسخه‌های قدیمی‌تر</string>
+</resources>

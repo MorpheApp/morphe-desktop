@@ -1,2 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d מקור טלאים נכשל בטעינה. משתמש באלה שנטענו בהצלחה</item>
+        <item quantity="two">%1$d מקורות טלאים נכשלו בטעינה. משתמש באלה שנטענו בהצלחה</item>
+        <item quantity="other">%1$d מקורות טלאים נכשלו בטעינה. משתמש באלה שנטענו בהצלחה</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">יש עדכון זמין ל-%1$d אפליקציה מטולאת</item>
+        <item quantity="two">יש עדכונים זמינים ל-%1$d אפליקציות מטולאות</item>
+        <item quantity="other">יש עדכונים זמינים ל-%1$d אפליקציות מטולאות</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">נשמרה %1$d שורה ל-%2$s</item>
+        <item quantity="two">נשמרו %1$d שורות ל-%2$s</item>
+        <item quantity="other">נשמרו %1$d שורות ל-%2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d מקור</item>
+        <item quantity="two">%1$d מקורות</item>
+        <item quantity="other">%1$d מקורות</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">יוחל %1$d טלאי</item>
+        <item quantity="two">יוחלו %1$d טלאים</item>
+        <item quantity="other">יוחלו %1$d טלאים</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d מוחרג</item>
+        <item quantity="two">%1$d מוחרגים</item>
+        <item quantity="other">%1$d מוחרגים</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d מופעל</item>
+        <item quantity="two">%1$d מופעלים</item>
+        <item quantity="other">%1$d מופעלים</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d מושבת</item>
+        <item quantity="two">%1$d מושבתים</item>
+        <item quantity="other">%1$d מושבתים</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d ספרייה</item>
+        <item quantity="two">%1$d ספריות</item>
+        <item quantity="other">%1$d ספריות</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d מתוך %2$d נבחר</item>
+        <item quantity="two">%1$d מתוך %2$d נבחר</item>
+        <item quantity="other">%1$d מתוך %2$d נבחר</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d טלאי</item>
+        <item quantity="two">%1$d תיקונים</item>
+        <item quantity="other">%1$d תיקונים</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d כרטיס עוקף את זה</item>
+        <item quantity="two">%1$d כרטיסים עוקפים את זה</item>
+        <item quantity="other">%1$d כרטיסים עוקפים את זה</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">הורד %1$d חבילה</item>
+        <item quantity="two">הורד %1$d חבילות</item>
+        <item quantity="other">הורד %1$d חבילות</item>
+    </plurals>
+</resources>

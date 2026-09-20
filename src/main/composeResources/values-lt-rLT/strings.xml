@@ -1,2 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <!-- Common Components -->
+    <string name="search">Ieškoti</string>
+    <string name="remove">Pašalinti</string>
+    <string name="cancel">Atšaukti</string>
+    <string name="unknown">Nežinoma</string>
+    <string name="none">Nieko</string>
+    <string name="select_image">Pasirinkti vaizdą</string>
+    <string name="off">Ne</string>
+    <string name="on">Taip</string>
+    <string name="download">Atsisiųsti</string>
+    <string name="version_label_experimental">Eksperimentinis</string>
+    <string name="app_info_shared_label">Programos inform</string>
+    <string name="status_patching_failed">Pataisyti nepavyko</string>
+    <string name="error_log_label">Klaidų žurnalas</string>
+    <string name="custom_color_description">Pasirinktinė spalva</string>
+    <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">Numatytasis</string>
+    <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">Pataisos</string>
+    <string name="quick_patch_select_apk">Pasirinkite APK</string>
+    <!-- Patcher Steps -->
+    <string name="patching_step_loading_patches">Įkeliami pataisymai</string>
+    <string name="patching_step_preparing">Ruošiama</string>
+    <string name="patching_step_merging_split_apk">Apjungiamas padalintas APK</string>
+    <string name="patching_step_read_apk">Atverti APK failą</string>
+    <string name="patching_step_applying_patches">Pritaikomi pataisymai</string>
+    <string name="patching_step_saving">Išsaugoma</string>
+    <string name="patching_step_writing_apk">Rašomas pataisytas APK failas</string>
+    <string name="patching_step_signing">Pasirašomas pataisytas APK failas</string>
+    <!-- ADB Installation Errors -->
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <string name="version_warning_experiment_title">Ar norite eksperimentuoti? 🧪</string>
+    <!-- Version warnings for Quick Patch -->
+    <string name="quick_patch_error_unknown_occurred">Įvyko nežinoma klaida</string>
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <string name="quick_patch_ready_version_build">(versija %1$d)</string>
+    <!-- Quick Patch - Supported Apps Row -->
+    <string name="quick_patch_supported_apps_version_any">Bet kuri versija</string>
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <string name="home_stage_continue">Tęsti</string>
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <!-- Home Screen - SupportedAppsListPane -->
+    <string name="home_list_no_apps_match">Nėra programų, atitinkančių \"%1$s\"</string>
+    <string name="home_sort_recommended">Rekomenduojama</string>
+    <!-- Home Screen - YourAppsPane -->
+    <string name="home_filter_all_apps">Visos programos</string>
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_no_patches_found">Nėra rasti pataisų</string>
+    <string name="patch_selection_option_enabled">Įjungtas</string>
+    <string name="patch_selection_option_disabled">Išjungtas</string>
+    <string name="patch_selection_badge_new">Nauja</string>
+    <!-- Patching Screen -->
+    <string name="patching_status_in_progress">Pritaikomi pataisymai</string>
+    <string name="patching_progress_title">Programėlė taisoma</string>
+    <string name="patching_step_all_done">Baigta!</string>
+    <string name="patching_graph_memory_usage">Atminties naudojimas</string>
+    <string name="patching_banner_apk_size">APK dydis</string>
+    <string name="patching_banner_patches">Pataisos</string>
+    <!-- Result Screen -->
+    <string name="result_adb_update_successful">Sėkmingas atnaujinimas!</string>
+    <!-- Icon Studio -->
+    <string name="icon_studio_undo_button">Anuliuoti</string>
+    <string name="icon_studio_preview_adaptive">Prisitaikantis</string>
+    <string name="icon_studio_preview_monochrome">Vienspalvis</string>
+    <!-- Source Management Sheet -->
+    <string name="source_sheet_local_label">Vietinis</string>
+    <string name="source_sheet_remote_label">Nuotolinis</string>
+    <string name="add_source">Pridėti šaltinį</string>
+    <string name="source_sheet_title">Pataisų šaltiniai</string>
+    <string name="source_sheet_type_preinstalled">iš anksto įdiegta</string>
+    <!-- Patch Source Dialogs -->
+    <string name="patch_source_dialog_pre_release_title">Bandomosios versijos pataisos</string>
+    <string name="patch_source_dialog_pre_release_hint">Gaukite ankstyvą prieigą prie naujų eksperimentinių pataisos versijų</string>
+    <string name="patch_source_dialog_experimental_title">Eksperimentinės programos versijos</string>
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <string name="settings_dialog_title">Nustatymai</string>
+    <string name="settings_nav_appearance">Išvaizda</string>
+    <string name="settings_nav_advanced">Išplėstiniai</string>
+    <string name="settings_nav_system">Sistema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <!-- Settings - Appearance -->
+    <string name="settings_language_current_title">Dabartinė kalba</string>
+    <string name="settings_language_dialog_title">Programėlės kalba</string>
+    <string name="settings_section_theme">Tema</string>
+    <string name="settings_theme_light">Šviesi</string>
+    <string name="settings_theme_dark">Tamsi</string>
+    <string name="settings_section_accent_color">Akcento spalva</string>
+    <string name="settings_section_background_animation">Fono animacijos</string>
+    <string name="settings_background_circles">Apskritimai</string>
+    <string name="settings_background_rings">Žiedai</string>
+    <string name="settings_background_mesh">Tinklas</string>
+    <string name="settings_background_space">Erdvė</string>
+    <string name="settings_background_shapes">Formos</string>
+    <string name="settings_background_snow">Sniegas</string>
+    <string name="settings_background_grid">Tinklas</string>
+    <string name="settings_background_particles">Dalelės</string>
+    <!-- Settings - Advanced -->
+    <string name="settings_toggle_expert_mode_label">Eksperto rėžimas</string>
+    <!-- Settings - System -->
+    <string name="settings_channel_label">Patikrinti ar yra atnaujinimų</string>
+    <string name="settings_section_about">Apie</string>
+    <string name="settings_about_version">Versija %1$s</string>
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- App Info Dialog -->
+    <!-- Changelog Dialog -->
+</resources>

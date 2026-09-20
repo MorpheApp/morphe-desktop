@@ -1,2 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d zdroj záplat se nepodařilo načíst. Používám ty, které se načetly úspěšně</item>
+        <item quantity="few">%1$d zdroje záplat se nepodařilo načíst. Používám ty, které se načetly úspěšně</item>
+        <item quantity="many">%1$d zdrojů záplat se nepodařilo načíst. Používám ty, které se načetly úspěšně</item>
+        <item quantity="other">%1$d zdrojů záplat se nepodařilo načíst. Používám ty, které se načetly úspěšně</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d záplatovaná aplikace má k dispozici aktualizaci</item>
+        <item quantity="few">%1$d záplatované aplikace mají k dispozici aktualizace</item>
+        <item quantity="many">%1$d záplatovaných aplikací má k dispozici aktualizace</item>
+        <item quantity="other">%1$d záplatovaných aplikací má k dispozici aktualizace</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Uložen %1$d řádek do %2$s</item>
+        <item quantity="few">Uloženy %1$d řádky do %2$s</item>
+        <item quantity="many">Uloženo %1$d řádků do %2$s</item>
+        <item quantity="other">Uloženo %1$d řádků do %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d zdroj</item>
+        <item quantity="few">%1$d zdroje</item>
+        <item quantity="many">%1$d zdrojů</item>
+        <item quantity="other">%1$d zdrojů</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d záplata bude aplikována</item>
+        <item quantity="few">%1$d záplaty budou aplikovány</item>
+        <item quantity="many">%1$d záplat bude aplikováno</item>
+        <item quantity="other">%1$d záplat bude aplikováno</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">Vyloučeno: %1$d</item>
+        <item quantity="few">Vyloučeno: %1$d</item>
+        <item quantity="many">Vyloučeno: %1$d</item>
+        <item quantity="other">Vyloučeno: %1$d</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">Povoleno: %1$d</item>
+        <item quantity="few">Povoleno: %1$d</item>
+        <item quantity="many">Povoleno: %1$d</item>
+        <item quantity="other">Povoleno: %1$d</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">Zakázáno: %1$d</item>
+        <item quantity="few">Zakázáno: %1$d</item>
+        <item quantity="many">Zakázáno: %1$d</item>
+        <item quantity="other">Zakázáno: %1$d</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d knihovna</item>
+        <item quantity="few">%1$d knihovny</item>
+        <item quantity="many">%1$d knihoven</item>
+        <item quantity="other">%1$d knihoven</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Vybráno %1$d z %2$d</item>
+        <item quantity="few">Vybráno %1$d z %2$d</item>
+        <item quantity="many">Vybráno %1$d z %2$d</item>
+        <item quantity="other">Vybráno %1$d z %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d záplata</item>
+        <item quantity="few">%1$d záplaty</item>
+        <item quantity="many">%1$d záplat</item>
+        <item quantity="other">%1$d záplaty</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d karta přepisuje toto nastavení</item>
+        <item quantity="few">%1$d karty přepisují toto nastavení</item>
+        <item quantity="many">%1$d karet přepisuje toto nastavení</item>
+        <item quantity="other">%1$d karet přepisuje toto nastavení</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Stáhnout %1$d balíček</item>
+        <item quantity="few">Stáhnout %1$d balíčky</item>
+        <item quantity="many">Stáhnout %1$d balíčků</item>
+        <item quantity="other">Stáhnout %1$d balíčků</item>
+    </plurals>
+</resources>
