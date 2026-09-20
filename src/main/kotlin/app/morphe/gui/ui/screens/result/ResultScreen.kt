@@ -188,7 +188,7 @@ fun ResultScreenContent(outputPath: String) {
                     installProgress = if (alreadyInstalled) getString(Res.string.result_adb_update_successful) else getString(Res.string.result_adb_install_successful)
                 },
                 onFailure = { exception ->
-                    installError = (exception as? AdbException)?.message ?: exception.message ?: getString(Res.string.error_patching_unknown)
+                    installError = (exception as? AdbException)?.getUserMessage() ?: exception.message ?: getString(Res.string.error_patching_unknown)
                 }
             )
 
@@ -219,7 +219,7 @@ fun ResultScreenContent(outputPath: String) {
                     }
                 },
                 onFailure = { e ->
-                    linkError = (e as? AdbException)?.message ?: e.message ?: getString(Res.string.error_patching_unknown)
+                    linkError = (e as? AdbException)?.getUserMessage() ?: e.message ?: getString(Res.string.error_patching_unknown)
                 }
             )
             isApplyingLinks = false

@@ -23,6 +23,7 @@ import app.morphe.gui.ui.components.ActionButton
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FileUtils
@@ -117,7 +118,7 @@ internal fun PatchedAppRuntimeLogsSection(
                         val result = adbManager.clearLogcat(device.id)
                         status = result.fold(
                             onSuccess = { RuntimeLogsStatus.Cleared },
-                            onFailure = { RuntimeLogsStatus.Error(it.message ?: defaultErrMsg) }
+                            onFailure = { RuntimeLogsStatus.Error((it as? AdbException)?.getUserMessage() ?: it.message ?: defaultErrMsg) }
                         )
                     }
                 }
@@ -140,7 +141,7 @@ internal fun PatchedAppRuntimeLogsSection(
                         val result = adbManager.captureLogcat(device.id, outFile)
                         status = result.fold(
                             onSuccess = { count -> RuntimeLogsStatus.Saved(outFile, count) },
-                            onFailure = { RuntimeLogsStatus.Error(it.message ?: defaultErrMsg) }
+                            onFailure = { RuntimeLogsStatus.Error((it as? AdbException)?.getUserMessage() ?: it.message ?: defaultErrMsg) }
                         )
                     }
                 }

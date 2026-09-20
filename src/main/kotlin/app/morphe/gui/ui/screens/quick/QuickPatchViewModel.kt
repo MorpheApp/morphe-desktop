@@ -221,14 +221,17 @@ class QuickPatchViewModel(
 
                 if (!result.anyLoaded) {
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
-                    val firstError = result.resolved.firstNotNullOfOrNull { it.error }
+                    val technicalError = firstThrowable?.message
+                        ?: result.resolved.firstNotNullOfOrNull { it.error }
+                        ?: "Failed to load any patches"
+                    if (firstThrowable != null) {
+                        Logger.error("Quick mode: Failed to load any patches: $technicalError", firstThrowable)
+                    } else {
+                        Logger.warn("Quick mode: Failed to load any patches: $technicalError")
+                    }
+                    val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }
                         ?: getString(Res.string.error_could_not_load_patches)
-                    if (firstThrowable != null) {
-                        Logger.error("Quick mode: Failed to load any patches: $firstError", firstThrowable)
-                    } else {
-                        Logger.warn("Quick mode: Failed to load any patches: $firstError")
-                    }
                     result.loaded.perSource.filter { !it.isSuccess }.forEach { src ->
                         src.error?.let { Logger.error("Quick mode: source '${src.sourceName}' failed", it) }
                     }
@@ -447,7 +450,7 @@ class QuickPatchViewModel(
             val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
             val minSdk = manifest.minSdkVersion
 
-            Logger.info("Quick mode: Analyzed $displayName v$versionName (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
+            Logger.info("Quick mode: Analyzed $displayName v${manifest.versionName ?: "unknown"} (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
 
             QuickApkInfo(
                 fileName = file.name,
@@ -556,9 +559,10 @@ class QuickPatchViewModel(
             // Default: shared MorpheData keystore, auto-created on first sign.
             val userKeystore = appConfig.resolvedKeystorePath()
             if (userKeystore != null && !userKeystore.exists()) {
-                val msg = getString(Res.string.settings_dialog_error_keystore_not_found, userKeystore.absolutePath)
-                _uiState.value = _uiState.value.copy(phase = QuickPatchPhase.READY, error = msg)
-                Logger.error("Quick patching aborted: $msg")
+                val rawMsg = "Keystore file not found at ${userKeystore.absolutePath}"
+                val uiMsg = getString(Res.string.settings_dialog_error_keystore_not_found, userKeystore.absolutePath)
+                _uiState.value = _uiState.value.copy(phase = QuickPatchPhase.READY, error = uiMsg)
+                Logger.error("Quick patching aborted: $rawMsg")
                 return@launch
             }
             val resolvedKeystorePath = (userKeystore ?: MorpheData.defaultKeystoreFile).absolutePath
@@ -576,7 +580,6 @@ class QuickPatchViewModel(
             }
 
             val patchResult = try {
-                // Use PatchService for direct library patching (no CLI subprocess)
                 // exclusiveMode = false means the library's patch.use field determines defaults
                 patchService.patch(
                     patchesFilePaths = currentResolvedPatchFiles().map { it.absolutePath },
@@ -626,7 +629,7 @@ class QuickPatchViewModel(
                         recordPatchedApp(result, apkFile.absolutePath, outputPath, apkInfo.displayName)
                         recordSeenPatches(apkInfo.packageName)
                     } else {
-                        val errorMsg = result.failureDetail ?: result.failureReason
+                        val errorMsg = result.failureDetail ?: result.getLocalizedFailureReason()
                             ?: getString(Res.string.error_patching_unknown)
                         _uiState.value = _uiState.value.copy(
                             phase = QuickPatchPhase.ERROR,

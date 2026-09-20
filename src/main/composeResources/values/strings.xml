@@ -34,7 +34,6 @@
     <string name="installed_on">Installed on %1$s</string>
     <string name="device_default">device</string>
     <string name="unknown">Unknown</string>
-    <string name="unknown_reason">Unknown reason</string>
     <string name="installing">Installing…</string>
     <string name="folder">Folder</string>
     <string name="customize">Customize</string>
@@ -225,19 +224,12 @@
     <string name="quick_patch_supported_apps_version_any">Any version</string>
 
     <!-- Home Screen -->
-    <string name="home_select_apk_to_patch">Select APK to patch</string>
-    <string name="home_update_target_version_newer">newer</string>
-    <string name="home_select_version_apk">Select the v%1$s APK</string>
     <string name="home_select_apk_file">Select APK file</string>
-    <string name="home_update_prep_failed_resolve">Couldn't resolve the latest patches (offline?)</string>
     <string name="home_could_not_resolve_patch_files">Couldn't resolve patch files</string>
-    <string name="home_update_prep_failed">Update preparation failed</string>
     <string name="home_install_failed">Install failed: %1$s</string>
     <string name="home_uninstall_failed">Uninstall failed: %1$s</string>
     <string name="home_no_sources_enabled">No patch sources enabled. Add or enable a source from the home screen</string>
     <string name="home_patch_file_corrupted">Patch file is missing or corrupted. Clear cache and re-download</string>
-    <string name="home_error_no_repository_for_source">No repository for %1$s</string>
-    <string name="home_error_release_not_found_in_source">Release %1$s not found in %2$s</string>
     <string name="home_validation_file_not_exist">File does not exist</string>
     <string name="home_validation_not_a_file">Selected item is not a file</string>
     <string name="home_validation_invalid_extension">File must have .apk, .apkm, .xapk, or .apks extension</string>
@@ -271,14 +263,6 @@
     <string name="home_dialog_missing_apk_message">The input APK for %1$s is no longer at:\n%2$s\n\nSelect the APK again to repatch with your saved settings</string>
     <string name="home_dialog_select_apk">Select APK…</string>
     <string name="home_dialog_select_apk_to_repatch">Select APK to repatch</string>
-    <string name="home_dialog_update_preparing_title">Preparing update…</string>
-    <string name="home_dialog_update_resolving_patches">Resolving the latest patches…</string>
-    <string name="home_dialog_update_failed_title">Update failed</string>
-    <string name="home_dialog_update_available_title">Update %1$s</string>
-    <string name="home_dialog_update_supported_message">The latest patches add support for a newer app version (v%1$s). You can grab it, or keep using your v%2$s - your call</string>
-    <string name="home_dialog_update_unsupported_message">Your v%1$s is no longer supported by the latest patches. Get v%2$s to keep patching</string>
-    <string name="home_dialog_use_my_apk">Use my APK</string>
-    <string name="home_dialog_get_version">Get v%1$s</string>
 
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Manage sources</string>
@@ -296,9 +280,7 @@
     <string name="home_app_row_update_available_badge">Update available</string>
     <string name="home_app_row_modified_badge">Modified</string>
     <string name="home_app_row_apk_missing_badge">APK missing</string>
-    <string name="home_app_row_download_channel">Download %1$s</string>
     <string name="home_app_row_section_patches_from">Patches from</string>
-    <string name="home_app_row_open_download_page">Open download page</string>
 
     <!-- Home Screen - SupportedAppsListPane -->
     <string name="home_list_load_failed">Load failed</string>
@@ -358,21 +340,15 @@
     <string name="home_detail_loading_versions">Loading versions…</string>
     <string name="home_detail_no_other_versions">No other versions available</string>
     <string name="home_detail_app_version_label">App version</string>
-    <string name="home_detail_newer_patch_available_note">A newer patch is available and may support a newer app version. Tap Update to check</string>
-    <string name="home_detail_section_sources">Sources</string>
+    <string name="home_detail_newer_patch_available_note">A newer patch is available and may support a newer app version. Click Update to check</string>
     <string name="home_detail_section_patches_applied">Patches applied</string>
     <string name="home_detail_section_options">Options</string>
     <string name="home_detail_output_size_label">Output size</string>
     <string name="home_detail_sha256_label">SHA-256</string>
-    <string name="home_detail_uses_version">uses v%1$s</string>
     <string name="home_detail_ready_device_version">v%1$s ready · device on v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s ready, no repatch needed</string>
-    <string name="home_detail_remove_from_device">remove from device</string>
-    <string name="home_source_update_available">v%1$s available</string>
     <string name="home_advice_unsupported">v%1$s is no longer supported. Please update to v%2$s</string>
     <string name="home_advice_unsupported_by_patches">v%1$s is no longer supported by the latest patches</string>
-    <string name="home_advice_experimental">Newer experimental v%1$s available</string>
-    <string name="home_advice_recommended">Update recommended. Newer stable v%1$s available</string>
     <string name="home_date_today">today</string>
     <string name="home_date_yesterday">yesterday</string>
     <string name="home_date_days_ago">%1$dd ago</string>
@@ -554,7 +530,7 @@
     <string name="icon_studio_preview_adaptive">Adaptive</string>
     <string name="icon_studio_preview_monochrome">Monochrome</string>
     <string name="icon_studio_preview_shapes">Preview shapes</string>
-    <string name="icon_studio_preview_shapes_hint">Each launcher picks its own shape, tap to preview how it'll be cropped</string>
+    <string name="icon_studio_preview_shapes_hint">Each launcher picks its own shape, click to preview how it'll be cropped</string>
     <string name="icon_studio_preview_notification_status_bar">Notification / Status bar</string>
     <string name="icon_studio_layer_label">Layer</string>
     <string name="icon_studio_duplicate_button">Duplicate</string>

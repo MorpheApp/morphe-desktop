@@ -37,9 +37,12 @@ import app.morphe.gui.ui.screens.home.components.UninstallConfirmDialog
 import app.morphe.gui.ui.screens.home.components.VersionWarningDialog
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
+import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.MorpheFilePicker
+import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
@@ -251,7 +254,10 @@ fun HomeScreenContent(
                                 launchPatch(record, apkPath, files, names)
                             }
                             .onFailure {
-                                viewModel.showError(it.message ?: getString(Res.string.home_could_not_resolve_patch_files))
+                                val userMsg = (it as? PatchException)?.getUserMessage()
+                                    ?: (it as? AdbException)?.getUserMessage()
+                                    ?: humanizePatchLoadError(it)
+                                viewModel.showError(userMsg)
                             }
                     } finally {
                         preparingPatch = false
