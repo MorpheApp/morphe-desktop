@@ -65,9 +65,15 @@ class PullRequestPatchSource(
         }
     }
 
-    private suspend fun resolvePrRelease(): Release {
+    private suspend fun getGitHubPat(): String? {
         val config = getConfig()
-        val pat = config.gitHubPat.trim().takeIf { it.isNotEmpty() }
+        return config.gitHubPat.trim().takeIf { it.isNotEmpty() }
+            ?: System.getenv("GITHUB_TOKEN")?.trim()?.takeIf { it.isNotEmpty() }
+            ?: System.getenv("GH_TOKEN")?.trim()?.takeIf { it.isNotEmpty() }
+    }
+
+    private suspend fun resolvePrRelease(): Release {
+        val pat = getGitHubPat()
         logger.info("GitHub PR: resolving artifact for $owner/$repo#$prNumber (auth=${pat != null})")
         val prAsset = http.getAssetFromPullRequest(owner, repo, prNumber, pat)
 
@@ -103,9 +109,8 @@ class PullRequestPatchSource(
         onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)?,
     ): Result<File> = withContext(Dispatchers.IO) {
         try {
-            val config = getConfig()
-            val pat = config.gitHubPat.trim()
-            if (pat.isBlank()) {
+            val pat = getGitHubPat()
+            if (pat.isNullOrBlank()) {
                 throw GitHubPatMissingException("A GitHub PAT is required to download pull request sources")
             }
 

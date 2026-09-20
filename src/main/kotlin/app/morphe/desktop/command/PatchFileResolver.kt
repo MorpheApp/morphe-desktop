@@ -6,6 +6,7 @@
 package app.morphe.desktop.command
 
 import app.morphe.engine.patches.PatchCache
+import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.engine.patches.findPatchAsset
 import io.ktor.client.HttpClient
@@ -54,6 +55,9 @@ object PatchFileResolver {
 
                 val release = source.listReleases().getOrThrow()
                 val targetRelease = when {
+                    parsed.provider == PatchProvider.GITHUB_PR -> release.firstOrNull()
+                        ?: throw IllegalArgumentException("No release artifact found for ${parsed.canonicalUrl}")
+
                     pinnedTag != null -> release.firstOrNull {
                         it.tagName == pinnedTag
                     }
