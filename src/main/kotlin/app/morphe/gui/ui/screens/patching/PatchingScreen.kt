@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.ui.components.MorphePanel
 import app.morphe.gui.ui.components.TopBarRow
@@ -106,6 +107,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     val font = LocalMorpheFont.current
     val mono = LocalMorpheMono.current
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
+    val patchingCompletedState = LocalPatchingCompleted.current
 
     // Auto-start patching when screen loads
     LaunchedEffect(Unit) {
@@ -117,6 +119,23 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     LaunchedEffect(uiState.logs.size, uiState.status) {
         if (uiState.logs.isNotEmpty()) {
             scrollState.scrollTo(scrollState.maxValue)
+        }
+    }
+
+    LaunchedEffect(uiState.status) {
+        if (uiState.status == PatchingStatus.COMPLETED) {
+            delay(300.milliseconds)
+            patchingCompletedState.value = true
+            delay(2500.milliseconds)
+            patchingCompletedState.value = false
+        } else {
+            patchingCompletedState.value = false
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            patchingCompletedState.value = false
         }
     }
 
