@@ -1,3 +1,10 @@
+# [1.17.0-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.6...v1.17.0-dev.7) (2026-09-21)
+
+
+### Bug Fixes
+
+* Trigger background completion effect on Expert Mode ([#323](https://github.com/MorpheApp/morphe-desktop/issues/323)) ([3f06f3e](https://github.com/MorpheApp/morphe-desktop/commit/3f06f3e7605985585ce3ac8d9e626a24c9e64607))
+
 # [1.17.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.5...v1.17.0-dev.6) (2026-09-20)
 
 
