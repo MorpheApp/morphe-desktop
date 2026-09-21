@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Не удалось загрузить %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">загрузка... %1$s</string>
     <string name="home_detail_resolving_patch_files">поиск файлов патчей</string>
-    <string name="home_detail_downloading_percent">Загрузка... %1$d%%</string>
+    <string name="home_detail_downloading_percent">Загрузка... %1$d%</string>
     <string name="home_detail_details_title">Подробности</string>
     <string name="home_detail_output_path_label">Путь вывода</string>
     <string name="home_detail_using_label">Используется</string>

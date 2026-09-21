@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Lataus epäonnistui %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">ladataan %1$s</string>
     <string name="home_detail_resolving_patch_files">selvitetään paikkaustiedostoja</string>
-    <string name="home_detail_downloading_percent">Ladataan %1$d%%</string>
+    <string name="home_detail_downloading_percent">Ladataan %1$d%</string>
     <string name="home_detail_details_title">Tiedot</string>
     <string name="home_detail_output_path_label">Tulostuspolku</string>
     <string name="home_detail_using_label">Käytetään</string>

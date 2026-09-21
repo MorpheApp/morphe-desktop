@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">%1$s %2$s indirilemedi: %3$s</string>
     <string name="home_detail_downloading_patch">%1$s indiriliyor</string>
     <string name="home_detail_resolving_patch_files">yama dosyaları çözümleniyor</string>
-    <string name="home_detail_downloading_percent">İndiriliyor: %1$d%%</string>
+    <string name="home_detail_downloading_percent">İndiriliyor %1$d%</string>
     <string name="home_detail_details_title">Ayrıntılar</string>
     <string name="home_detail_output_path_label">Çıktı yolu</string>
     <string name="home_detail_using_label">Kullanılan</string>

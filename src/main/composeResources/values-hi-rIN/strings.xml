@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">%1$s %2$s डाउनलोड नहीं कर सके: %3$s</string>
     <string name="home_detail_downloading_patch">%1$s डाउनलोड हो रहा है</string>
     <string name="home_detail_resolving_patch_files">पैच फ़ाइलें हल हो रही हैं</string>
-    <string name="home_detail_downloading_percent">डाउनलोड हो रहा है %1$d%%</string>
+    <string name="home_detail_downloading_percent">डाउनलोड हो रहा है %1$d%</string>
     <string name="home_detail_details_title">विवरण</string>
     <string name="home_detail_output_path_label">आउटपुट पथ</string>
     <string name="home_detail_using_label">उपयोग कर रहे हैं</string>

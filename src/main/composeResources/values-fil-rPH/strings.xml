@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Hindi ma-download ang %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">dini-download ang %1$s</string>
     <string name="home_detail_resolving_patch_files">iniresolba ang mga patch file</string>
-    <string name="home_detail_downloading_percent">Dini-download ang %1$d%%</string>
+    <string name="home_detail_downloading_percent">Nagda-download ng %1$d%</string>
     <string name="home_detail_details_title">Mga Detalye</string>
     <string name="home_detail_output_path_label">Path ng output</string>
     <string name="home_detail_using_label">Ginagamit</string>

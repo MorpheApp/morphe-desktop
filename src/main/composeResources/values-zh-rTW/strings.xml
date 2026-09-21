@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">無法下載 %1$s %2$s：%3$s</string>
     <string name="home_detail_downloading_patch">正在下載%1$s</string>
     <string name="home_detail_resolving_patch_files">正在解析修補檔</string>
-    <string name="home_detail_downloading_percent">正在下載%1$d%%</string>
+    <string name="home_detail_downloading_percent">正在下載%1$d%</string>
     <string name="home_detail_details_title">詳細資料</string>
     <string name="home_detail_output_path_label">輸出路徑</string>
     <string name="home_detail_using_label">使用</string>

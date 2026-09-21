@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Не вдалося завантажити %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">завантаження %1$s</string>
     <string name="home_detail_resolving_patch_files">визначення файлів патчів</string>
-    <string name="home_detail_downloading_percent">Завантаження %1$d%%</string>
+    <string name="home_detail_downloading_percent">Завантаження %1$d%</string>
     <string name="home_detail_details_title">Деталі</string>
     <string name="home_detail_output_path_label">Шлях виводу</string>
     <string name="home_detail_using_label">Використання</string>

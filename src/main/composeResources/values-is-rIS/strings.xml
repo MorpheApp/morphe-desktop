@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Ekki var hægt að sækja %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">sæki %1$s</string>
     <string name="home_detail_resolving_patch_files">finna plástraskrár</string>
-    <string name="home_detail_downloading_percent">Sæki %1$d%%</string>
+    <string name="home_detail_downloading_percent">Sæki %1$d%</string>
     <string name="home_detail_details_title">Upplýsingar</string>
     <string name="home_detail_output_path_label">Úttaksslóð</string>
     <string name="home_detail_using_label">Nota</string>

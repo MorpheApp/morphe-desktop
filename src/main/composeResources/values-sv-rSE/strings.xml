@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Det gick inte att ladda ner %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">laddar ner %1$s</string>
     <string name="home_detail_resolving_patch_files">hämtar patchfiler</string>
-    <string name="home_detail_downloading_percent">Laddar ner %1$d%%</string>
+    <string name="home_detail_downloading_percent">Laddar ner %1$d%</string>
     <string name="home_detail_details_title">Information</string>
     <string name="home_detail_output_path_label">Utdatasökväg</string>
     <string name="home_detail_using_label">Använder</string>

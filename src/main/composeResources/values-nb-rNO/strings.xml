@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Kunne ikke laste ned %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">laster ned %1$s</string>
     <string name="home_detail_resolving_patch_files">finner patch-filer</string>
-    <string name="home_detail_downloading_percent">Laster ned %1$d%%</string>
+    <string name="home_detail_downloading_percent">Laster ned %1$d%</string>
     <string name="home_detail_details_title">Detaljer</string>
     <string name="home_detail_output_path_label">Utdatasti</string>
     <string name="home_detail_using_label">Bruker</string>

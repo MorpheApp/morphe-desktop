@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Nepodarilo sa stiahnuť %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">sťahuje sa %1$s</string>
     <string name="home_detail_resolving_patch_files">získavajú sa súbory so záplatami</string>
-    <string name="home_detail_downloading_percent">Sťahuje sa %1$d%%</string>
+    <string name="home_detail_downloading_percent">Sťahovanie %1$d%</string>
     <string name="home_detail_details_title">Podrobnosti</string>
     <string name="home_detail_output_path_label">Cesta výstupu</string>
     <string name="home_detail_using_label">Používa sa</string>

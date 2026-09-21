@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Impossibile scaricare %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">download di %1$s</string>
     <string name="home_detail_resolving_patch_files">risoluzione dei file di patch</string>
-    <string name="home_detail_downloading_percent">Download %1$d%%</string>
+    <string name="home_detail_downloading_percent">Download in corso %1$d%%</string>
     <string name="home_detail_details_title">Dettagli</string>
     <string name="home_detail_output_path_label">Percorso di output</string>
     <string name="home_detail_using_label">Usando</string>
@@ -321,7 +321,7 @@
     <string name="home_detail_loading_versions">Caricamento versioni…</string>
     <string name="home_detail_no_other_versions">Nessuna altra versione disponibile</string>
     <string name="home_detail_app_version_label">Versione app</string>
-    <string name="home_detail_newer_patch_available_note">È disponibile una patch più recente e potrebbe supportare una versione più recente dell'app. Fai clic su Aggiorna per verificare</string>
+    <string name="home_detail_newer_patch_available_note">È disponibile una modifica più recente e potrebbe supportare una versione più recente dell'applicazione. Premi su Aggiorna per verificare</string>
     <string name="home_detail_section_patches_applied">Patch applicate</string>
     <string name="home_detail_section_options">Opzioni</string>
     <string name="home_detail_output_size_label">Dimensione output</string>

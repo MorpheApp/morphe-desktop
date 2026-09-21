@@ -14,9 +14,9 @@
     <string name="cancel">Prekliči</string>
     <string name="close">Zapri</string>
     <string name="delete">Izbriši</string>
-    <string name="disabled_while_patching">Onemogočeno med krpanjem</string>
-    <string name="drop_apk_here">Spusti APK tukaj</string>
-    <string name="release_to_drop">Izpusti za spustitev</string>
+    <string name="disabled_while_patching">Onemogočeno med popravljanjem</string>
+    <string name="drop_apk_here">Spustite APK tukaj</string>
+    <string name="release_to_drop">Spustite za odložitev</string>
     <string name="click_to_browse">ali kliknite za brskanje</string>
     <string name="error_could_not_load_patches">Ni bilo mogoče naložiti nobenega popravka</string>
     <string name="error_network_timeout">Časovna omejitev omrežja je potekla; preverite povezavo in poskusite znova</string>
@@ -66,11 +66,11 @@
     <string name="app_info_shared_label">Podatki o aplikaciji</string>
     <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Išči popravke…</string>
-    <string name="status_patching_completed">Krpanje je končano</string>
-    <string name="status_patching_failed">Krpanje ni uspelo</string>
-    <string name="status_patching_cancelled">Krpanje je preklicano</string>
+    <string name="status_patching_completed">Popravljanje je končano</string>
+    <string name="status_patching_failed">Popravljanje ni uspelo</string>
+    <string name="status_patching_cancelled">Popravljanje je preklicano</string>
     <string name="view_full_logs_button">Prikaži celotne dnevnike</string>
-    <string name="error_patching_unknown">Krpanje ni uspelo iz neznanega razloga</string>
+    <string name="error_patching_unknown">Popravljanje ni uspelo iz neznanega razloga</string>
     <string name="error_patching_general">Napaka: %1$s</string>
     <string name="error_log_label">Dnevnik napak</string>
     <string name="back">Nazaj</string>
@@ -102,7 +102,7 @@
     <!-- Quick Patch Screen -->
     <string name="quick_patch_patches_label">Popravki</string>
     <string name="quick_patch_screen_start_over_button">Začni znova</string>
-    <string name="quick_patch_patch_another_button">Zakrpaj drugo</string>
+    <string name="quick_patch_patch_another_button">Popravi še eno</string>
     <string name="quick_patch_select_apk">Izberi APK</string>
     <string name="quick_patch_analyze_apk_failed">Analiza datoteke APK ni uspela</string>
     <string name="quick_patch_extract_base_apk_failed">Izvleček osnovne datoteke APK iz svežnja ni uspel</string>
@@ -115,8 +115,8 @@
     <string name="patching_step_read_apk">Branje datoteke APK</string>
     <string name="patching_step_applying_patches">Nanašanje popravkov</string>
     <string name="patching_step_saving">Shranjevanje</string>
-    <string name="patching_step_writing_apk">Zapisovanje zakrpane datoteke APK</string>
-    <string name="patching_step_signing">Podpisovanje zakrpane datoteke APK</string>
+    <string name="patching_step_writing_apk">Zapisovanje popravljene datoteke APK</string>
+    <string name="patching_step_signing">Podpisovanje popravljene datoteke APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Nameščanje na %1$s…</string>
     <string name="adb_error_downgrade">Ni mogoče preiti na starejšo različico, ker je nameščena novejša. Najprej odstranite obstoječo aplikacijo</string>
@@ -180,7 +180,7 @@
     <string name="quick_patch_warning_older_stable">Starejši stabilni build – na voljo je novejši stabilni v%1$s</string>
     <string name="quick_patch_warning_latest_experimental">Eksperimentalni build – podprt, vendar morda ne bo deloval pravilno</string>
     <string name="quick_patch_warning_older_experimental">Starejši eksperimentalni build – na voljo je novejši eksperimentalni v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Build ni podprt – ta različica je zakrpljiva, vendar ta build ni</string>
+    <string name="quick_patch_warning_build_unsupported">Gradnja ni podprta – to različico je mogoče popraviti, vendar ne to gradnjo</string>
     <string name="quick_patch_warning_too_new">Različica je preveč nova – uradno ni podprta; popravki bodo najverjetneje spodleteli</string>
     <string name="quick_patch_warning_too_old">Različica je preveč stara – uradno ni podprta; popravki bodo najverjetneje spodleteli</string>
     <string name="quick_patch_warning_unsupported_between">Nepodprta različica – popravki bodo najverjetneje spodleteli</string>
@@ -189,7 +189,7 @@
     <string name="quick_patch_fetch_patches_failed">Pridobivanje popravkov ni uspelo. Preverite internetno povezavo</string>
     <string name="quick_patch_status_downloading_patches">Prenašanje popravkov %1$s…</string>
     <string name="quick_patch_download_patches_failed">Prenos popravkov ni uspel: %1$s</string>
-    <string name="quick_patch_status_patching">Krpanje…</string>
+    <string name="quick_patch_status_patching">Popravljanje…</string>
     <string name="quick_patch_completed_adb_off">ADB izklopljen · Omogoči za namestitev</string>
     <string name="quick_patch_completed_adb_connect_device">Povežite napravo prek USB za namestitev z ADB</string>
     <string name="quick_patch_error_unknown_occurred">Prišlo je do neznane napake</string>
@@ -201,7 +201,7 @@
     <string name="quick_patch_ready_version_build">(build %1$d)</string>
     <string name="quick_patch_ready_no_compatible_patches">Za to aplikacijo ni združljivih popravkov</string>
     <string name="quick_patch_ready_no_matching_patches">Ni popravkov, ki bi se ujemali z »%1$s«</string>
-    <string name="quick_patch_ready_patch_with_defaults">Zakrpaj s privzetimi nastavitvami</string>
+    <string name="quick_patch_ready_patch_with_defaults">Popravi s privzetimi nastavitvami</string>
     <!-- Quick Patch - Supported Apps Row -->
     <string name="quick_patch_supported_apps_title">Podprte aplikacije</string>
     <string name="quick_patch_supported_apps_subtitle">Tukaj spustite točno tisto različico APK za podprto aplikacijo</string>
@@ -224,8 +224,8 @@
     <string name="home_validation_parse_failed">Datoteke APK ni bilo mogoče razčleniti. Datoteka je morda poškodovana ali ni veljaven APK</string>
     <!-- Home Screen - ApkInfoCard -->
     <string name="home_apk_info_remove_description">Odstrani APK</string>
-    <string name="home_apk_info_limited_info_warning">Manifesta te datoteke APK ni bilo mogoče v celoti prebrati (pogosto pri razdeljenih svežnjih). Spodnji podatki so približni, krpanje bi moralo še vedno delovati</string>
-    <string name="home_apk_info_unsupported_app_warning">Za to aplikacijo ni najdenih združljivih popravkov. Lahko nadaljujete, vendar krpanje morda ne bo imelo učinka</string>
+    <string name="home_apk_info_limited_info_warning">Manifesta te datoteke APK ni bilo mogoče v celoti prebrati (pogosto pri razdeljenih APK-jih). Spodnji podatki so približni, popravljanje bi moralo še vedno delovati</string>
+    <string name="home_apk_info_unsupported_app_warning">Za to aplikacijo ni najdenih združljivih popravkov. Lahko nadaljujete, vendar popravljanje morda ne bo imelo učinka</string>
     <string name="home_apk_info_version_label">Različica</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Velikost</string>
@@ -240,14 +240,14 @@
     <string name="home_dialog_uninstall_button">Odstrani</string>
     <string name="home_dialog_continue_anyway">Vseeno nadaljuj</string>
     <string name="home_dialog_forget_title">Pozabi %1$s?</string>
-    <string name="home_dialog_forget_message">To odstrani %1$s iz vaše zgodovine zakrpanih aplikacij. Ne dotakne se nobenih datotek – ponovno krpanje aplikacije jo doda nazaj</string>
+    <string name="home_dialog_forget_message">To odstrani %1$s iz vaše zgodovine popravljenih aplikacij. Ne dotakne se nobenih datotek – ponovno popravljanje aplikacije jo doda nazaj</string>
     <string name="home_dialog_uninstall_title">Odstrani %1$s?</string>
-    <string name="home_dialog_uninstall_message">To odstrani %1$s s povezane naprave. Zakrpana datoteka APK na disku in vaša zgodovina ostaneta, razen če spodaj izberete drugače</string>
+    <string name="home_dialog_uninstall_message">To odstrani %1$s s povezane naprave. Popravljena datoteka APK na disku in vaša zgodovina ostaneta, razen če spodaj izberete drugače</string>
     <string name="home_dialog_uninstall_also_forget">Odstrani tudi iz »Vaših aplikacij«</string>
     <string name="home_dialog_missing_apk_title">Izvirna datoteka APK ni najdena</string>
-    <string name="home_dialog_missing_apk_message">Vhodna datoteka APK za %1$s ni več na:\n%2$s\n\nZnova izberite datoteko APK za ponovno krpanje s shranjenimi nastavitvami</string>
+    <string name="home_dialog_missing_apk_message">Vhodna datoteka APK za %1$s ni več na:\n%2$s\n\nZnova izberite datoteko APK za ponovno popravljanje s shranjenimi nastavitvami</string>
     <string name="home_dialog_select_apk">Izberi APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Izberi APK za ponovno krpanje</string>
+    <string name="home_dialog_select_apk_to_repatch">Izberi APK za ponovno popravljanje</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Upravljaj vire</string>
     <string name="home_header_multi_source_hint">Popravki vseh omogočenih virov so združeni. Upravljajte jih z zgornjim gumbom za vire</string>
@@ -269,30 +269,30 @@
     <string name="home_list_no_supported_apps">Ni podprtih aplikacij</string>
     <string name="home_list_no_apps_match">Ni aplikacij, ki bi se ujemale z »%1$s«</string>
     <string name="home_sort_recommended">Priporočeno</string>
-    <string name="home_sort_recommended_desc">Najprej zakrpane aplikacije, nato nameščene, nato po imenu</string>
+    <string name="home_sort_recommended_desc">Najprej popravljene aplikacije, nato nameščene, nato po imenu</string>
     <string name="home_sort_name_asc">Ime (A do Ž)</string>
     <string name="home_sort_name_asc_desc">Po abecedi</string>
     <string name="home_sort_name_desc">Ime (Ž do A)</string>
     <string name="home_sort_name_desc_desc">Obratno abecedno</string>
     <string name="home_sort_updates_first">Najprej posodobitve popravkov</string>
     <string name="home_sort_updates_first_desc">Najprej aplikacije s posodobitvijo popravka, nato priporočene</string>
-    <string name="home_sort_recently_patched">Nedavno zakrpano</string>
-    <string name="home_sort_recently_patched_desc">Najprej najbolj nedavno zakrpane</string>
+    <string name="home_sort_recently_patched">Nedavno popravljeno</string>
+    <string name="home_sort_recently_patched_desc">Najprej nazadnje popravljene</string>
     <!-- Home Screen - YourAppsPane -->
-    <string name="home_your_apps_status_patched">Zakrpano</string>
+    <string name="home_your_apps_status_patched">Popravljeno</string>
     <string name="home_filter_all_apps">Vse aplikacije</string>
     <string name="home_filter_your_apps">Vaše aplikacije</string>
     <string name="home_banner_view">Prikaži</string>
     <string name="home_your_apps_install_ready">Namestitev pripravljena</string>
     <string name="home_your_apps_newer_patch_hint">Novejši popravek lahko spremeni različico aplikacije; kliknite Posodobi za preverjanje</string>
-    <string name="home_your_apps_device_version_ready">Zakrpana v%1$s pripravljena, naprava ima v%2$s (ponovno krpanje ni potrebno)</string>
-    <string name="home_your_apps_install_ready_hint">Zakrpana v%1$s je pripravljena za namestitev (ponovno krpanje ni potrebno)</string>
+    <string name="home_your_apps_device_version_ready">Popravljena različica v%1$s pripravljena, naprava ima v%2$s (ponovno popravljanje ni potrebno)</string>
+    <string name="home_your_apps_install_ready_hint">Popravljena različica v%1$s je pripravljena za namestitev (ponovno popravljanje ni potrebno)</string>
     <string name="home_action_install">Namesti</string>
     <string name="home_action_install_to_device">Namesti v napravo</string>
     <string name="home_action_installing">Nameščanje…</string>
     <string name="home_action_preparing">Pripravljanje…</string>
     <string name="home_action_update">Posodobi</string>
-    <string name="home_action_repatch">Znova zakrpaj</string>
+    <string name="home_action_repatch">Znova popravi</string>
     <string name="home_action_uninstalling">Odstranjevanje…</string>
     <string name="home_detail_source_apk_label">Izvorni APK</string>
     <string name="home_detail_patch_bundle_label">Sveženj popravkov</string>
@@ -306,13 +306,13 @@
     <string name="home_detail_details_title">Podrobnosti</string>
     <string name="home_detail_output_path_label">Izhodna pot</string>
     <string name="home_detail_using_label">Uporaba</string>
-    <string name="home_detail_apk_origin_sub">datoteka APK, iz katere je bila ta aplikacija zakrpana</string>
+    <string name="home_detail_apk_origin_sub">datoteka APK, s katero je bila ta aplikacija poppravljena</string>
     <string name="home_detail_reading_chosen_bundle">Branje izbranega svežnja…</string>
     <string name="home_detail_bundle_not_downloaded_warning">Spodnje različice so tiste, ki jih podpira %1$s. Izbrali ste %2$s, ki ni prenesen, zato ni znano, kaj podpira</string>
     <string name="home_detail_bundle_does_not_support_warning">%1$s ne podpira %2$s. Namesto tega izberite eno od teh</string>
     <string name="home_detail_versions_what_bundle_supports">Spodnje različice so tiste, ki jih podpira %1$s</string>
     <string name="home_detail_choose_apk_button">Izberi APK</string>
-    <string name="home_detail_select_apk_title">Izberite APK za krpanje</string>
+    <string name="home_detail_select_apk_title">Izberite APK za popravljanje</string>
     <string name="home_detail_new_source_button">Nov vir</string>
     <string name="home_detail_local_mpp_button">Lokalni .mpp</string>
     <string name="home_detail_select_patch_bundle_title">Izberite sveženj popravkov</string>
@@ -327,14 +327,14 @@
     <string name="home_detail_output_size_label">Velikost izhoda</string>
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s pripravljen · naprava ima v%2$s</string>
-    <string name="home_detail_ready_no_repatch">v%1$s pripravljen, ponovno krpanje ni potrebno</string>
+    <string name="home_detail_ready_no_repatch">v%1$s pripravljena, ponovno popravljanje ni potrebno</string>
     <string name="home_advice_unsupported">različica v%1$s ni več podprta. Prosimo, posodobite na v%2$s</string>
     <string name="home_advice_unsupported_by_patches">najnovejši popravki ne podpirajo več različice v%1$s</string>
     <string name="home_date_today">danes</string>
     <string name="home_date_yesterday">včeraj</string>
     <string name="home_date_days_ago">pred %1$dd</string>
-    <string name="home_your_apps_empty_title">Ni še zakrpanih aplikacij</string>
-    <string name="home_your_apps_empty_subtitle">Zakrpajte aplikacijo in prikazala se bo tukaj</string>
+    <string name="home_your_apps_empty_title">Ni še popravljenih aplikacij</string>
+    <string name="home_your_apps_empty_subtitle">Popravite aplikacijo in prikazala se bo tukaj</string>
     <string name="home_your_apps_no_matches_subtitle">Nič se ne ujema z »%1$s«</string>
     <!-- Patches Screen -->
     <string name="patches_dialog_error_title">Napaka</string>
@@ -361,12 +361,12 @@
     <string name="patch_selection_error_title">Napaka pri nalaganju popravkov</string>
     <string name="patch_selection_title">Izberi popravke</string>
     <string name="patch_selection_cmd_preview">Predogled ukaza</string>
-    <string name="patch_selection_continue_on_error_tooltip">Nadaljuj krpanje, tudi če popravek spodleti</string>
+    <string name="patch_selection_continue_on_error_tooltip">Nadaljuj popravljanje, tudi če popravek spodleti</string>
     <string name="patch_selection_continue_on_error_description">Nadaljuj ob napaki</string>
     <string name="patch_selection_no_patches_found">Ni najdenih popravkov</string>
     <string name="patch_selection_no_source_patches_for_app">Noben od vaših omogočenih virov nima popravkov za to aplikacijo</string>
     <string name="patch_selection_no_search_matches">Noben popravek se ne ujema z vašim iskanjem</string>
-    <string name="patch_selection_action_patch">Zakrpaj (%1$d)</string>
+    <string name="patch_selection_action_patch">Popravi (%1$d)</string>
     <string name="patch_selection_filter_selected">Izbrano</string>
     <string name="patch_selection_configure_options_description">Nastavi možnosti</string>
     <string name="patch_selection_icon_edit">Uredi ikono</string>
@@ -420,12 +420,12 @@
     <string name="patch_selection_group_ungrouped">Nerazvrščeno</string>
     <string name="patch_selection_group_selected_count">%1$d izbranih</string>
     <!-- Patching Screen -->
-    <string name="patching_status_ready">Pripravljeno za krpanje</string>
-    <string name="patching_status_preparing">Pripravljanje na krpanje</string>
+    <string name="patching_status_ready">Pripravljeno za popravljanje</string>
+    <string name="patching_status_preparing">Pripravljanje za popravljanje</string>
     <string name="patching_status_in_progress">Nanašanje popravkov</string>
-    <string name="patching_completed_loading_result">Krpanje je končano, nalaganje rezultata…</string>
-    <string name="patching_cancelled_loading_result">Krpanje je preklicano, nalaganje rezultata…</string>
-    <string name="patching_failed_loading_result">Krpanje ni uspelo, nalaganje rezultata…</string>
+    <string name="patching_completed_loading_result">Popravljanje je končano, nalaganje rezultata…</string>
+    <string name="patching_cancelled_loading_result">Popravljanje je preklicano, nalaganje rezultata…</string>
+    <string name="patching_failed_loading_result">Popravljanje ni uspelo, nalaganje rezultata…</string>
     <string name="patching_log_viewer_failed_to_read">Branje datoteke dnevnika ni uspelo: %1$s</string>
     <string name="patching_log_viewer_title">Datoteka dnevnika</string>
     <string name="patching_log_viewer_copy_all">Kopiraj vse</string>
@@ -435,7 +435,7 @@
     <string name="patching_graph_memory_usage">Uporaba pomnilnika</string>
     <string name="patching_graph_storage_io">V/I shranjevanja</string>
     <string name="patching_graph_cpu_usage">Uporaba CP U</string>
-    <string name="patching_banner_started_title">Krpanje se je začelo</string>
+    <string name="patching_banner_started_title">Popravljanje se je začelo</string>
     <string name="patching_banner_app_version">Različica aplikacije</string>
     <string name="patching_banner_apk_size">Velikost APK</string>
     <string name="patching_banner_patches">Popravki</string>
@@ -450,7 +450,7 @@
     <string name="patching_banner_arch">Arhitektura</string>
     <string name="patching_banner_ram_free">Prosti RAM</string>
     <string name="patching_banner_storage_free">Prosti prostor</string>
-    <string name="patching_success_title">Krpanje je uspelo</string>
+    <string name="patching_success_title">Popravljanje je uspelo</string>
     <string name="patching_success_output_size">Velikost izhoda</string>
     <string name="patching_success_time">Čas</string>
     <string name="patching_success_memory_avg">Povprečna uporaba pomnilnika</string>
@@ -461,14 +461,14 @@
     <string name="patching_banner_native_libs_stripped">Odstranjeno</string>
     <string name="patching_error_failed_patches">Neuspeli popravki: %1$s</string>
     <!-- Result Screen -->
-    <string name="result_screen_patch_another_button">Zakrpaj drugo</string>
+    <string name="result_screen_patch_another_button">Popravi drugo</string>
     <string name="result_screen_install_on_device_label">Namesti na %1$s</string>
-    <string name="result_screen_links_routed_label">Povezave so preusmerjene na zakrpano aplikacijo</string>
+    <string name="result_screen_links_routed_label">Povezave so preusmerjene na popravljeno aplikacijo</string>
     <string name="result_adb_updating_on_device">Posodabljanje na %1$s…</string>
     <string name="result_adb_update_successful">Posodobitev je uspela!</string>
     <string name="result_adb_install_successful">Namestitev je uspela!</string>
     <string name="result_link_default_restored">Privzeto obravnavanje povezav je obnovljeno</string>
-    <string name="result_link_routed_stock_disabled">Povezave so preusmerjene na zakrpano aplikacijo, prvotna je onemogočena</string>
+    <string name="result_link_routed_stock_disabled">Povezave so preusmerjene na popravljeno aplikacijo, prvotna je onemogočena</string>
     <string name="result_adb_not_found_hint">ADB ni najden. Namestite Android SDK Platform Tools za omogočanje neposredne namestitve</string>
     <string name="result_adb_section_title">Namestitev ADB</string>
     <string name="result_adb_no_devices">Ni povezanih naprav</string>
@@ -477,16 +477,16 @@
     <string name="result_adb_update_button">Posodobi na %1$s</string>
     <string name="result_adb_select_device_button">Izberi napravo</string>
     <string name="result_link_section_title">Obravnavanje povezav</string>
-    <string name="result_link_section_subtitle">Odprite podprte spletne povezave v zakrpani aplikaciji namesto v brskalniku</string>
+    <string name="result_link_section_subtitle">Odprite podprte spletne povezave v popravljeni aplikaciji namesto v brskalniku</string>
     <string name="result_link_stop_stock">Prav tako preprečite %1$s odpiranje teh povezav</string>
     <string name="result_link_applying">Uporabljanje…</string>
     <string name="result_link_restore">Obnovi</string>
-    <string name="result_link_open_with_patched">Odpri povezave z zakrpano aplikacijo</string>
+    <string name="result_link_open_with_patched">Odpri povezave s popravljeno aplikacijo</string>
     <string name="result_cleanup_cleaned_title">Začasne datoteke so počiščene</string>
     <string name="result_cleanup_auto_enabled">Samodejno čiščenje je omogočeno</string>
     <string name="result_cleanup_freed">Sproščeno %1$s</string>
     <string name="result_adb_disabled_title">ADB je izklopljen. Namestitev na napravo je onemogočena</string>
-    <string name="result_adb_disabled_subtitle">Omogočite ADB v Nastavitvah za neposredno namestitev zakrpanih datotek APK</string>
+    <string name="result_adb_disabled_subtitle">Omogočite ADB v nastavitvah za neposredno namestitev popravljenih datotek APK</string>
     <!-- Icon Studio -->
     <string name="icon_studio_title">Studio ikon</string>
     <string name="icon_studio_shape_circle">Krog</string>
@@ -632,7 +632,7 @@
     <string name="error_dialog_permission_denied">Dovoljenje je zavrnjeno. Preverite, ali imate dostop do datoteke ali mape</string>
     <string name="error_dialog_not_found">Zahtevana datoteka ali vir ni najden</string>
     <string name="error_dialog_disk_full">Na disku ni dovolj prostora. Sprostite nekaj prostora in poskusite znova</string>
-    <string name="error_dialog_exit_code">Med krpanjem je prišlo do napake. Za podrobnosti preverite dnevnike</string>
+    <string name="error_dialog_exit_code">Med popravljanjem je prišlo do napake. Za podrobnosti preverite dnevnike</string>
     <!-- Banners -->
     <string name="offline_banner_text">Brez povezave, uporabljajo se predpomnilniški popravki</string>
     <string name="update_banner_available">Na voljo je posodobitev · v%1$s</string>
@@ -715,8 +715,8 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Strokovni način</string>
     <string name="settings_toggle_expert_mode_desc">Popoln nadzor nad izbiro in konfiguracijo popravkov</string>
-    <string name="settings_toggle_route_links_label">Preusmerjaj povezave na zakrpano aplikacijo</string>
-    <string name="settings_toggle_route_links_desc">Po namestitvi prek ADB naj zakrpana aplikacija odpira svoje podprte spletne povezave namesto brskalnika ali privzete aplikacije</string>
+    <string name="settings_toggle_route_links_label">Preusmerjaj povezave na popravljeno aplikacijo</string>
+    <string name="settings_toggle_route_links_desc">Po namestitvi prek ADB naj popravljena aplikacija odpira svoje podprte spletne povezave namesto brskalnika ali privzete aplikacije</string>
     <string name="settings_toggle_disable_stock_links_label">Onemogoči povezave prvotne aplikacije</string>
     <string name="settings_toggle_disable_stock_links_desc">Prav tako prepreči prvotni aplikaciji odpiranje teh povezav (samo kadar je bil uporabljen popravek preimenovanja in je nameščena prvotna aplikacija). Povratno</string>
     <string name="settings_section_signing">Podpisovanje</string>
@@ -725,16 +725,16 @@
     <string name="settings_toggle_developer_options_desc">Za razvijalce popravkov. Odkleni nabor možnosti dela za ustvarjanje in testiranje popravkov (celoten seznam je v dokumentaciji). Za zdaj to pomeni usmerjanje lokalnega vira na mapo, tako da Morphe vedno naloži njegov najnovejši .mpp</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Samodejno čiščenje začasnih datotek</string>
-    <string name="settings_toggle_auto_cleanup_desc">Izbriši začasne datoteke po krpanju</string>
+    <string name="settings_toggle_auto_cleanup_desc">Izbriši začasne datoteke po popravljanju</string>
     <string name="settings_channel_label">Preveri posodobitve</string>
     <string name="settings_channel_desc_stable">Videli boste pasico, ko bo na voljo nova stabilna izdaja</string>
     <string name="settings_channel_desc_dev">Videli boste pasico, ko bo na voljo nova razvijalska ali stabilna izdaja</string>
     <string name="settings_channel_desc_off">Preverjanje posodobitev je izklopljeno. Znova ga lahko omogočite kadarkoli</string>
     <string name="settings_section_output_folder">Izhodna mapa</string>
-    <string name="settings_output_folder_desc">Kam so shranjene zakrpane datoteke APK. V njej se ustvari podmapa za vsako aplikacijo</string>
+    <string name="settings_output_folder_desc">Kjer se shranijo popravljene datoteke APK. Za vsako aplikacijo se ustvari pod-mapa.</string>
     <string name="settings_output_folder_default">Mapa datoteke APK (privzeto)</string>
     <string name="settings_output_folder_picker_title">Izberi izhodno mapo</string>
-    <string name="settings_output_folder_not_found">Mapa ni najdena; ustvarjena bo ob naslednjem krpanju</string>
+    <string name="settings_output_folder_not_found">Mapa ni najdena; ustvarjena bo ob naslednjem popravljanju</string>
     <string name="settings_toggle_auto_start_adb_label">Samodejni zagon ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Ob zagonu zaženi ozadnji program ADB, da se povezane naprave spremljajo. Ko je izklopljeno, Morphe nikoli ne zažene strežnika, funkciji nameščanja in pošiljanja pa sta onemogočeni</string>
     <string name="settings_section_about">O nas</string>
@@ -742,20 +742,20 @@
     <string name="settings_about_changelogs_title">Prikaži dnevnike sprememb</string>
     <string name="settings_about_changelogs_desc">Oglejte si najnovejše spremembe v tej posodobitvi</string>
     <string name="settings_about_documentation_title">Dokumentacija</string>
-    <string name="settings_about_documentation_desc">Vodniki za krpanje, vire in odpravljanje težav</string>
+    <string name="settings_about_documentation_desc">Vodniki za popravljanje, vire in odpravljanje težav</string>
     <string name="settings_about_website_title">Obiščite spletno stran</string>
     <string name="settings_about_website_desc">Obiščite uradno spletno stran Morphe</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">Odkljukajte arhitekture, ki jih ne potrebujete. Pri krpanju bo izhodna datoteka APK ohranila samo arhitekture, ki so prisotne v APK in na tem seznamu. Če ni prekrivanja, se nič ne odstrani, da bi se izognili pokvarjenim datotekam APK</string>
+    <string name="settings_strip_libs_desc">Odkljukajte arhitekture, ki jih ne potrebujete. Pri popravljanju bo izhodna datoteka APK ohranila samo arhitekture, ki so prisotne v APK in na tem seznamu. Če ni prekrivanja, se nič ne odstrani, da bi se izognili pokvarjenim datotekam APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (večina sodobnih telefonov)</string>
     <string name="settings_strip_libs_armeabi">ARM 32-bit (starejši telefoni)</string>
     <string name="settings_strip_libs_x86_64">Intel 64-bit (emulatorji / Chromebooki)</string>
     <string name="settings_strip_libs_x86">Intel 32-bit (stari emulatorji)</string>
     <!-- Settings - Signing -->
-    <string name="settings_signing_desc">Shramba ključev za podpisovanje zakrpanih datotek APK</string>
+    <string name="settings_signing_desc">Shramba ključev za podpisovanje popravljenih datotek APK</string>
     <string name="settings_signing_default_keystore">Privzeto (samodejno ustvarjeno)</string>
     <string name="settings_signing_picker_title">Izberi shrambo ključev</string>
-    <string name="settings_signing_not_found">Shramba ključev ni najdena; krpanje bo spodletelo, dokler je ne obnovite, izberete drugo ali ponastavite</string>
+    <string name="settings_signing_not_found">Shramba ključev ni najdena; popravljanje bo spodletelo, dokler je ne obnovite, izberete drugo ali jo ponastavite</string>
     <string name="settings_signing_invalid_file_type">Neveljavna vrsta datoteke. Pričakovano: %1$s</string>
     <string name="settings_signing_using_default">Uporablja se privzeta shramba ključev Morphe v %1$s</string>
     <string name="settings_signing_will_create_default">Privzeta shramba ključev Morphe bo ustvarjena v %1$s</string>
@@ -787,8 +787,8 @@
     <string name="settings_cert_warning_alias_not_found">Alias »%1$s« ni najden v shrambi ključev</string>
     <string name="settings_cert_warning_key_password_incorrect">Geslo ključa za alias »%1$s« je napačno</string>
     <!-- Settings - Runtime Logs -->
-    <string name="settings_runtime_logs_title">Dnevniki delovanja zakrpane aplikacije</string>
-    <string name="settings_runtime_logs_desc">Posnemite dnevnike iz telefona, ko se zakrpana aplikacija zruši ali ne deluje pravilno. Počistite pred ponovitvijo napake, nato shranite filtrirani izpis in ga priložite prijavi napake</string>
+    <string name="settings_runtime_logs_title">Dnevniki delovanja popravljene aplikacije</string>
+    <string name="settings_runtime_logs_desc">Posnemite dnevnike iz telefona, ko se popravljena aplikacija zruši ali ne deluje pravilno. Počistite pred ponovitvijo napake, nato shranite filtrirani izpis in ga priložite prijavi napake</string>
     <string name="settings_runtime_logs_device_info">Naprava: %1$s</string>
     <string name="settings_runtime_logs_no_device">Ni povezane naprave. Priključite telefon z omogočenim USB razhroščevanjem</string>
     <string name="settings_runtime_logs_clearing">Čiščenje…</string>
@@ -797,7 +797,7 @@
     <string name="settings_runtime_logs_save_button">Shrani dnevnike naprave</string>
     <string name="settings_runtime_logs_failed_to_save">Shranjevanje dnevnkov ni uspelo</string>
     <string name="settings_runtime_logs_cleared_success">Dnevniki v napravi so počiščeni</string>
-    <string name="settings_runtime_logs_nothing_captured">Ni še ničesar posnetega. Zaženite zakrpano aplikacijo na telefonu in znova shranite</string>
+    <string name="settings_runtime_logs_nothing_captured">Nič še ni posneto. Zaženite popravljeno aplikacijo na telefonu in znova shranite</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Spletna stran</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

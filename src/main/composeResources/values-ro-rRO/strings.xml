@@ -28,7 +28,7 @@
     <string name="error_no_patches_files_supplied">Nu au fost furnizate fișiere de patch</string>
     <string name="error_input_apk_not_found">APK-ul de intrare nu a fost găsit</string>
     <string name="error_step_failed">%1$s a eșuat: %2$s</string>
-    <string name="error_drop_valid_apk">Vă rugăm să plasați un fișier valid .apk, .apkm, .xapk sau .apks</string>
+    <string name="error_drop_valid_apk">Te rugăm să plasezi un fișier valid .apk, .apkm, .xapk sau .apks</string>
     <string name="status_saving">Se salvează…</string>
     <string name="installed_on">Instalat pe %1$s</string>
     <string name="device_default">dispozitiv</string>
@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Nu s-a putut descărca %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">se descarcă %1$s</string>
     <string name="home_detail_resolving_patch_files">se rezolvă fișierele de patch</string>
-    <string name="home_detail_downloading_percent">Se descarcă %1$d%%</string>
+    <string name="home_detail_downloading_percent">Se descarcă %1$d%</string>
     <string name="home_detail_details_title">Detalii</string>
     <string name="home_detail_output_path_label">Cale de ieșire</string>
     <string name="home_detail_using_label">Folosind</string>

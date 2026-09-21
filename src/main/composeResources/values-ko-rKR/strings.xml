@@ -13,7 +13,7 @@
     <string name="expand">펼치기</string>
     <string name="cancel">취소</string>
     <string name="close">닫기</string>
-    <string name="delete">파일 삭제</string>
+    <string name="delete">삭제</string>
     <string name="disabled_while_patching">패치 중 비활성화됨</string>
     <string name="drop_apk_here">APK를 여기에 놓으세요</string>
     <string name="release_to_drop">놓으려면 떼세요</string>
@@ -29,14 +29,14 @@
     <string name="error_input_apk_not_found">입력 APK를 찾을 수 없습니다</string>
     <string name="error_step_failed">%1$s 실패: %2$s</string>
     <string name="error_drop_valid_apk">유효한 .apk, .apkm, .xapk 또는 .apks 파일을 끌어다 놓으세요</string>
-    <string name="status_saving">저장 중…</string>
+    <string name="status_saving">저장하는 중…</string>
     <string name="installed_on">%1$s에 설치됨</string>
     <string name="device_default">기기</string>
     <string name="unknown">알 수 없음</string>
     <string name="installing">설치하는 중…</string>
     <string name="folder">폴더</string>
-    <string name="customize">사용자 지정</string>
-    <string name="customize_card_description">카드 사용자 지정</string>
+    <string name="customize">사용자 정의</string>
+    <string name="customize_card_description">카드 사용자 정의</string>
     <string name="none">없음</string>
     <string name="select_image">이미지 선택</string>
     <string name="select_file">파일 선택</string>
@@ -44,9 +44,9 @@
     <string name="copy">복사</string>
     <string name="copied">복사하였습니다</string>
     <string name="click_to_copy">클릭하여 복사</string>
-    <string name="enable_adb_button">ADB 사용</string>
+    <string name="enable_adb_button">ADB 활성화</string>
     <string name="drag_to_reorder">드래그하여 순서를 변경하세요</string>
-    <string name="off">사용 안함</string>
+    <string name="off">꺼짐</string>
     <string name="on">켜짐</string>
     <string name="browse">찾아보기</string>
     <string name="save">저장하기</string>
@@ -55,17 +55,17 @@
     <string name="status_offline">오프라인</string>
     <string name="status_ready">준비 완료</string>
     <string name="filter_apps_hint">앱 필터링…</string>
-    <string name="version_label_stable">안정</string>
-    <string name="version_label_dev">개발</string>
+    <string name="version_label_stable">안정 버전</string>
+    <string name="version_label_dev">개발자 버전</string>
     <string name="version_label_experimental">실험 버전</string>
-    <string name="version_label_latest_dev">최신 개발</string>
-    <string name="version_label_latest_stable">최신 안정</string>
+    <string name="version_label_latest_dev">최신 개발자 버전</string>
+    <string name="version_label_latest_stable">최신 안정 버전</string>
     <string name="app_info_arch_label">아키텍처</string>
     <string name="app_info_min_sdk_label">최소 SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
     <string name="app_info_shared_label">앱 정보</string>
     <string name="github_label">GitHub</string>
-    <string name="patches_search_hint">패치 검색하기 …</string>
+    <string name="patches_search_hint">패치 검색하기…</string>
     <string name="status_patching_completed">패치 완료</string>
     <string name="status_patching_failed">패치 실패</string>
     <string name="status_patching_cancelled">패치 취소됨</string>
@@ -76,12 +76,12 @@
     <string name="back">뒤로</string>
     <string name="open_folder">폴더 열기</string>
     <string name="temporary_files_label">임시 파일</string>
-    <string name="size_can_be_freed_label">%1$s를 확보할 수 있습니다</string>
+    <string name="size_can_be_freed_label">%1$s를 해제할 수 있습니다</string>
     <string name="clean_up">정리</string>
     <string name="output_file_label">출력 파일</string>
     <string name="color_picker_saved">저장됨</string>
     <string name="dropdown_search_placeholder">검색…</string>
-    <string name="custom_color_description">커스텀 색상</string>
+    <string name="custom_color_description">사용자 정의 색상</string>
     <string name="gradient_linear">선형</string>
     <string name="gradient_radial">방사형</string>
     <string name="gradient_conic">원뿔형</string>
@@ -89,7 +89,7 @@
     <string name="gradient_remove_stop_description">정지점 제거</string>
     <string name="gradient_angle">각도</string>
     <!-- App Card Fill Dialog -->
-    <string name="card_fill_title">카드 사용자 지정</string>
+    <string name="card_fill_title">카드 사용자 정의</string>
     <string name="card_fill_example_app_name">예시 앱 이름</string>
     <string name="card_fill_mode_default">기본값</string>
     <string name="card_fill_mode_default_blurb">패치 번들에 포함된 색상</string>
@@ -102,7 +102,7 @@
     <!-- Quick Patch Screen -->
     <string name="quick_patch_patches_label">패치</string>
     <string name="quick_patch_screen_start_over_button">다시 시작</string>
-    <string name="quick_patch_patch_another_button">다른 앱 패치</string>
+    <string name="quick_patch_patch_another_button">다른 패치</string>
     <string name="quick_patch_select_apk">APK 선택</string>
     <string name="quick_patch_analyze_apk_failed">APK 분석 실패</string>
     <string name="quick_patch_extract_base_apk_failed">번들에서 기본 APK를 추출하지 못했습니다</string>
@@ -305,7 +305,7 @@
     <string name="home_detail_error_download_bundle">%1$s %2$s를 다운로드할 수 없습니다: %3$s</string>
     <string name="home_detail_downloading_patch">%1$s 다운로드 중</string>
     <string name="home_detail_resolving_patch_files">패치 파일 확인 중</string>
-    <string name="home_detail_downloading_percent">%1$d%% 다운로드 중</string>
+    <string name="home_detail_downloading_percent">다운로드 중 %1$d%%</string>
     <string name="home_detail_details_title">세부 정보</string>
     <string name="home_detail_output_path_label">출력 경로</string>
     <string name="home_detail_using_label">사용</string>
@@ -324,7 +324,7 @@
     <string name="home_detail_loading_versions">버전 불러오는 중…</string>
     <string name="home_detail_no_other_versions">다른 사용 가능한 버전이 없습니다</string>
     <string name="home_detail_app_version_label">앱 버전</string>
-    <string name="home_detail_newer_patch_available_note">새로운 패치가 있으며 최신 앱 버전을 지원할 수 있습니다. 업데이트를 클릭하여 확인하세요.</string>
+    <string name="home_detail_newer_patch_available_note">새로운 패치가 있으며, 더 최신 버전의 앱을 지원할 수 있습니다. ‘업데이트’를 탭하여 확인하세요</string>
     <string name="home_detail_section_patches_applied">적용된 패치</string>
     <string name="home_detail_section_options">옵션</string>
     <string name="home_detail_output_size_label">출력 크기</string>
@@ -508,7 +508,7 @@
     <string name="icon_studio_preview_adaptive">적응형</string>
     <string name="icon_studio_preview_monochrome">흑백</string>
     <string name="icon_studio_preview_shapes">도형 미리보기</string>
-    <string name="icon_studio_preview_shapes_hint">각 런처는 자체 모양을 선택하며, 클릭하여 잘리는 방식을 미리 볼 수 있습니다.</string>
+    <string name="icon_studio_preview_shapes_hint">각 런처마다 사용하는 모양이 다릅니다. 탭하면 어떻게 잘려서 표시되는지 미리 볼 수 있습니다</string>
     <string name="icon_studio_preview_notification_status_bar">알림 / 상태 표시줄</string>
     <string name="icon_studio_layer_label">레이어</string>
     <string name="icon_studio_duplicate_button">복제</string>

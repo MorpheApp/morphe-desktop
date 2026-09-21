@@ -293,13 +293,13 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="home_list_no_supported_apps">No hay aplicaciones compatibles</string>
     <string name="home_list_no_apps_match">No hay aplicaciones que coincidan con \"%1$s\"</string>
     <string name="home_sort_recommended">Recomendado</string>
-    <string name="home_sort_recommended_desc">Primero las aplicaciones parcheadas, luego las instaladas y luego por nombre</string>
+    <string name="home_sort_recommended_desc">Aplicaciones parcheadas primero, luego las instaladas y luego por nombre</string>
     <string name="home_sort_name_asc">Nombre (A a Z)</string>
     <string name="home_sort_name_asc_desc">Alfabético</string>
     <string name="home_sort_name_desc">Nombre (Z a A)</string>
     <string name="home_sort_name_desc_desc">Alfabético inverso</string>
     <string name="home_sort_updates_first">Actualizaciones de parches primero</string>
-    <string name="home_sort_updates_first_desc">Primero las aplicaciones con actualización de parches, luego el orden recomendado</string>
+    <string name="home_sort_updates_first_desc">Aplicaciones con actualización de parches primero, luego el orden recomendado</string>
     <string name="home_sort_recently_patched">Recientemente parcheadas</string>
     <string name="home_sort_recently_patched_desc">Parcheadas recientemente primero</string>
     <!-- Home Screen - YourAppsPane -->
@@ -309,8 +309,8 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="home_banner_view">Ver</string>
     <string name="home_your_apps_install_ready">Lista para instalar</string>
     <string name="home_your_apps_newer_patch_hint">Un parche más reciente puede actualizar la aplicación, pulsa Actualizar para comprobarlo</string>
-    <string name="home_your_apps_device_version_ready">Parcheada v%1$s lista, el dispositivo tiene la v%2$s (no hace falta volver a parchear)</string>
-    <string name="home_your_apps_install_ready_hint">Parcheada v%1$s lista para instalar (no hace falta volver a parchear)</string>
+    <string name="home_your_apps_device_version_ready">v%1$s parcheada lista, el dispositivo tiene la v%2$s (no hace falta volver a parchear)</string>
+    <string name="home_your_apps_install_ready_hint">v%1$s parcheada lista para instalar (no hace falta volver a parchear)</string>
     <string name="home_action_install">Instalar</string>
     <string name="home_action_install_to_device">Instalar en el dispositivo</string>
     <string name="home_action_installing">Instalando…</string>
@@ -326,7 +326,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="home_detail_error_download_bundle">No se pudo descargar %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">descargando %1$s</string>
     <string name="home_detail_resolving_patch_files">resolviendo archivos de parches</string>
-    <string name="home_detail_downloading_percent">Descargando %1$d%%</string>
+    <string name="home_detail_downloading_percent">Descargando %1$d%</string>
     <string name="home_detail_details_title">Detalles</string>
     <string name="home_detail_output_path_label">Ruta de salida</string>
     <string name="home_detail_using_label">Usando</string>

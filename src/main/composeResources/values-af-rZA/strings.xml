@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Kon nie %1$s %2$s aflaai nie: %3$s</string>
     <string name="home_detail_downloading_patch">laai %1$s af</string>
     <string name="home_detail_resolving_patch_files">besig om veranderingslêers op te los</string>
-    <string name="home_detail_downloading_percent">Laai %1$d%% af</string>
+    <string name="home_detail_downloading_percent">Laai %1$d% af</string>
     <string name="home_detail_details_title"> Besonderhede</string>
     <string name="home_detail_output_path_label">Uitvoerpad</string>
     <string name="home_detail_using_label">Gebruik</string>

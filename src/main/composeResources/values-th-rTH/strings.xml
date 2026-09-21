@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">ไม่สามารถดาวน์โหลด %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">กำลังดาวน์โหลด %1$s</string>
     <string name="home_detail_resolving_patch_files">กำลังระบุไฟล์แพตช์</string>
-    <string name="home_detail_downloading_percent">กำลังดาวน์โหลด %1$d%%</string>
+    <string name="home_detail_downloading_percent">กำลังดาวน์โหลด %1$d%</string>
     <string name="home_detail_details_title">รายละเอียด</string>
     <string name="home_detail_output_path_label">เส้นทางเอาต์พุต</string>
     <string name="home_detail_using_label">ใช้</string>

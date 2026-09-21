@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Kon %1$s %2$s niet downloaden: %3$s</string>
     <string name="home_detail_downloading_patch">%1$s downloaden</string>
     <string name="home_detail_resolving_patch_files">patchbestanden ophalen</string>
-    <string name="home_detail_downloading_percent">Bezig met downloaden %1$d%%</string>
+    <string name="home_detail_downloading_percent">Bezig met downloaden %1$d%</string>
     <string name="home_detail_details_title">Details</string>
     <string name="home_detail_output_path_label">Uitvoerpad</string>
     <string name="home_detail_using_label">Gebruiken</string>

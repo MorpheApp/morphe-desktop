@@ -305,7 +305,7 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="home_detail_error_download_bundle">A %1$s %2$s letöltése nem sikerült: %3$s</string>
     <string name="home_detail_downloading_patch">%1$s letöltése</string>
     <string name="home_detail_resolving_patch_files">javítófájlok feloldása</string>
-    <string name="home_detail_downloading_percent">Letöltés: %1$d%%</string>
+    <string name="home_detail_downloading_percent">Letöltés: %1$d%</string>
     <string name="home_detail_details_title">Részletek</string>
     <string name="home_detail_output_path_label">Kimeneti útvonal</string>
     <string name="home_detail_using_label">Forrás</string>

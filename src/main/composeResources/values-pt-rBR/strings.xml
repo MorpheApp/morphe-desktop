@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Não foi possível baixar %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">baixando %1$s</string>
     <string name="home_detail_resolving_patch_files">resolvendo arquivos de patches</string>
-    <string name="home_detail_downloading_percent">Baixando %1$d%%</string>
+    <string name="home_detail_downloading_percent">Baixando %1$d%</string>
     <string name="home_detail_details_title">Detalhes</string>
     <string name="home_detail_output_path_label">Caminho de saída</string>
     <string name="home_detail_using_label">Usando</string>

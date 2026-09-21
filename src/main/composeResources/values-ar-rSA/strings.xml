@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">تعذّر تنزيل %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">جارٍ تنزيل %1$s</string>
     <string name="home_detail_resolving_patch_files">جارٍ حلّ ملفات التصحيح</string>
-    <string name="home_detail_downloading_percent">جارٍ التنزيل %1$d%%</string>
+    <string name="home_detail_downloading_percent">جارٍ التنزيل %1$d٪</string>
     <string name="home_detail_details_title">التفاصيل</string>
     <string name="home_detail_output_path_label">مسار الإخراج</string>
     <string name="home_detail_using_label">باستخدام</string>

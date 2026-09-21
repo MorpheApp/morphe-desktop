@@ -304,7 +304,7 @@
     <string name="home_detail_error_download_bundle">Impossible de télécharger %1$s %2$s : %3$s</string>
     <string name="home_detail_downloading_patch">téléchargement de %1$s</string>
     <string name="home_detail_resolving_patch_files">résolution des fichiers de patchs</string>
-    <string name="home_detail_downloading_percent">Téléchargement à %1$d%%</string>
+    <string name="home_detail_downloading_percent">Téléchargement %1$d%</string>
     <string name="home_detail_details_title">Détails</string>
     <string name="home_detail_output_path_label">Chemin de sortie</string>
     <string name="home_detail_using_label">Utilisation</string>
@@ -323,7 +323,7 @@
     <string name="home_detail_loading_versions">Chargement des versions…</string>
     <string name="home_detail_no_other_versions">Aucune autre version disponible</string>
     <string name="home_detail_app_version_label">Version de l'application</string>
-    <string name="home_detail_newer_patch_available_note">Un correctif plus récent est disponible et pourrait prendre en charge une version plus récente de l'application. Cliquez sur Mettre à jour pour vérifier.</string>
+    <string name="home_detail_newer_patch_available_note">Un patch plus récent est disponible et peut prendre en charge une version plus récente de l'application. Cliquez sur 'Mettre à jour' pour vérifier</string>
     <string name="home_detail_section_patches_applied">Patchs appliqués</string>
     <string name="home_detail_section_options">Options</string>
     <string name="home_detail_output_size_label">Taille de sortie</string>
@@ -507,7 +507,7 @@
     <string name="icon_studio_preview_adaptive">Adaptative</string>
     <string name="icon_studio_preview_monochrome">Monochrome</string>
     <string name="icon_studio_preview_shapes">Aperçu des formes</string>
-    <string name="icon_studio_preview_shapes_hint">Chaque lanceur choisit sa propre forme, cliquez pour prévisualiser comment elle sera recadrée</string>
+    <string name="icon_studio_preview_shapes_hint">Chaque lanceur choisit sa propre forme, cliquez pour voir un aperçu de la façon dont elle sera recadrée</string>
     <string name="icon_studio_preview_notification_status_bar">Notification / Barre d'état</string>
     <string name="icon_studio_layer_label">Calque</string>
     <string name="icon_studio_duplicate_button">Dupliquer</string>

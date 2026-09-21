@@ -294,7 +294,7 @@
     <string name="home_action_update">Aktualizuj</string>
     <string name="home_action_repatch">Modyfikuj ponownie</string>
     <string name="home_action_uninstalling">Odinstalowywanie…</string>
-    <string name="home_detail_source_apk_label">Odinstalowywanie…</string>
+    <string name="home_detail_source_apk_label">Źródłowy plik APK</string>
     <string name="home_detail_patch_bundle_label">Pakiet modyfikacji</string>
     <string name="home_detail_no_sources_enabled">Brak włączonych źródeł</string>
     <string name="home_detail_enable_or_add_source">włącz lub dodaj jedno poniżej</string>
@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Nie udało się pobrać %1$s %2$s: %3$s</string>
     <string name="home_detail_downloading_patch">pobieranie: %1$s</string>
     <string name="home_detail_resolving_patch_files">odnajdywanie plików modyfikacji</string>
-    <string name="home_detail_downloading_percent">Pobieranie: %1$d%%</string>
+    <string name="home_detail_downloading_percent">Pobieranie: %1$d%</string>
     <string name="home_detail_details_title">Szczegóły</string>
     <string name="home_detail_output_path_label">Ścieżka wyjściowa</string>
     <string name="home_detail_using_label">Używane</string>
@@ -594,7 +594,7 @@
     <string name="patch_source_dialog_experimental_title">Eksperymentalne wersje aplikacji</string>
     <string name="patch_source_dialog_experimental_hint">Nadaje priorytet eksperymentalnym wersjom aplikacji, jeśli są dostępne</string>
     <string name="patch_source_dialog_error_name_required">Nazwa jest wymagana</string>
-    <string name="patch_source_dialog_error_invalid_url">Wprowadź prawidłowy adres URL GitHub lub GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Wprowadź prawidłowy adres GitHub lub GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Wybierz prawidłowy plik .mpp</string>
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Edytuj źródło</string>

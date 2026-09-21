@@ -302,7 +302,7 @@
     <string name="home_detail_error_download_bundle">Níorbh fhéidir %1$s %2$s a íoslódáil: %3$s</string>
     <string name="home_detail_downloading_patch">ag íoslódáil %1$s</string>
     <string name="home_detail_resolving_patch_files">ag réiteach comhaid phaistí</string>
-    <string name="home_detail_downloading_percent">Ag íoslódáil %1$d%%</string>
+    <string name="home_detail_downloading_percent">Ag íoslódáil %1$d%</string>
     <string name="home_detail_details_title">Sonraí</string>
     <string name="home_detail_output_path_label">Cosán aschuir</string>
     <string name="home_detail_using_label">Ag úsáid</string>

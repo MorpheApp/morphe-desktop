@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="home_header_sources_failed">
-        <item quantity="one">%1$d vir popravkov se ni naložil. Uporabljamo tiste, ki so se uspešno naložili</item>
-        <item quantity="two">%1$d vira popravkov se nista naložila. Uporabljamo tiste, ki so se uspešno naložili</item>
-        <item quantity="few">%1$d viri popravkov se niso naložili. Uporabljamo tiste, ki so se uspešno naložili</item>
-        <item quantity="other">%1$d virov popravkov se ni naložilo. Uporabljamo tiste, ki so se uspešno naložili</item>
+        <item quantity="one">%1$d vir popravkov se ni naložil. Uporabljeni so tisti, ki so se uspešno naložili</item>
+        <item quantity="two">%1$d vira popravkov se nista naložila. Uporabljeni so tisti, ki so se uspešno naložili</item>
+        <item quantity="few">%1$d viri popravkov se niso naložili. Uporabljeni so tisti, ki so se uspešno naložili</item>
+        <item quantity="other">%1$d virov popravkov se ni naložilo. Uporabljeni so tisti, ki so se uspešno naložili</item>
     </plurals>
     <plurals name="home_banner_update_available">
-        <item quantity="one">%1$d aplikacija s popravki ima na voljo posodobitev</item>
-        <item quantity="two">%1$d aplikaciji s popravki imata na voljo posodobitvi</item>
-        <item quantity="few">%1$d aplikacije s popravki imajo na voljo posodobitve</item>
-        <item quantity="other">%1$d aplikacij s popravki ima na voljo posodobitve</item>
+        <item quantity="one">%1$d popravljena aplikacija ima na voljo posodobitev</item>
+        <item quantity="two">%1$d popravljeni aplikaciji imata na voljo posodobitve</item>
+        <item quantity="few">%1$d popravljene aplikacije imajo na voljo posodobitve</item>
+        <item quantity="other">%1$d popravljenih aplikacij ima na voljo posodobitve</item>
     </plurals>
     <plurals name="settings_runtime_logs_saved_success">
         <item quantity="one">Shranjena je bila %1$d vrstica v %2$s</item>
@@ -20,9 +20,9 @@
     </plurals>
     <plurals name="count_sources">
         <item quantity="one">%1$d vir</item>
-        <item quantity="two">%1$d Vira</item>
+        <item quantity="two">%1$d vira</item>
         <item quantity="few">%1$d viri</item>
-        <item quantity="other">%1$d Virov</item>
+        <item quantity="other">%1$d virov</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_applied_summary">
         <item quantity="one">%1$d popravek bo uporabljen</item>
@@ -62,9 +62,9 @@
     </plurals>
     <plurals name="patch_selection_group_patch_count">
         <item quantity="one">%1$d popravek</item>
-        <item quantity="two">%1$d Popravka</item>
-        <item quantity="few">%1$d Popravkih</item>
-        <item quantity="other">%1$d Popravkih</item>
+        <item quantity="two">%1$d popravka</item>
+        <item quantity="few">%1$d popravki</item>
+        <item quantity="other">%1$d popravkov</item>
     </plurals>
     <plurals name="settings_app_cards_override_count">
         <item quantity="one">%1$d kartica to preglasi</item>
