@@ -165,16 +165,22 @@ class PatchSourceManager(
         if (source.type == PatchSourceType.LOCAL) return null
 
         return repositories.getOrPut(source.id) {
-            val repoPath = extractRepoPath(source)
-            // Map the GUI's persisted source type to the engine's provider
-            // enum. DEFAULT inherits GitHub (Morphe Patches lives there).
-            val provider = when (source.type) {
-                PatchSourceType.GITLAB -> PatchProvider.GITLAB
-                else -> PatchProvider.GITHUB
+            val remote = if (!source.url.isNullOrBlank()) {
+                RemotePatchSourceFactory.from(source.url, httpClient)
+            } else null
+
+            val finalRemote = remote ?: run {
+                val repoPath = extractRepoPath(source)
+                // Map the GUI's persisted source type to the engine's provider
+                // enum. DEFAULT inherits GitHub (Morphe Patches lives there).
+                val provider = when (source.type) {
+                    PatchSourceType.GITLAB -> PatchProvider.GITLAB
+                    else -> PatchProvider.GITHUB
+                }
+                RemotePatchSourceFactory.build(provider, repoPath, httpClient)
             }
-            Logger.info("Creating PatchRepository for source '${source.name}' (repo=$repoPath, provider=$provider)")
-            val remote = RemotePatchSourceFactory.build(provider, repoPath, httpClient)
-            PatchRepository(remote)
+            Logger.info("Creating PatchRepository for source '${source.name}' (repo=${finalRemote.repoPath}, provider=${finalRemote.provider})")
+            PatchRepository(finalRemote)
         }
     }
 

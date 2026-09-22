@@ -24,14 +24,14 @@ import java.util.logging.Logger
  * the shared [HttpService]. This class only owns GitHub's URL shapes and the
  * fact that its release JSON maps straight onto our [Release] model.
  */
-class GitHubPatchSource(
-    private val http: HttpService,
+open class GitHubPatchSource(
+    protected val http: HttpService,
     override val repoPath: String,
 ) : RemotePatchSource {
 
     override val provider = PatchProvider.GITHUB
 
-    private val logger = Logger.getLogger(GitHubPatchSource::class.java.name)
+    protected val logger: Logger = Logger.getLogger(GitHubPatchSource::class.java.name)
     private val releasesEndpoint = "$API_BASE/repos/$repoPath/releases"
 
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {

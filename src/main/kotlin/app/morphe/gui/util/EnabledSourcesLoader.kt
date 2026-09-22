@@ -6,8 +6,11 @@
 package app.morphe.gui.util
 
 import androidx.compose.runtime.Composable
+import app.morphe.engine.GitHubPatMissingException
 import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.model.Release
+import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.patches.PullRequestPatchSource
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchSource
@@ -167,7 +170,7 @@ object EnabledSourcesLoader {
         }
     }
 
-    private suspend fun resolveLocal(source: PatchSource, excludedMppPatterns: List<String>): ResolvedSource {
+    private fun resolveLocal(source: PatchSource, excludedMppPatterns: List<String>): ResolvedSource {
         val path = source.filePath
         if (path.isNullOrBlank()) {
             return ResolvedSource(
@@ -199,10 +202,11 @@ object EnabledSourcesLoader {
         } else {
             target
         }
+        val manifestVersion = PatchBundleLoader.extractVersion(file)
         return ResolvedSource(
             source = source,
             patchFile = file,
-            resolvedVersion = file.nameWithoutExtension,
+            resolvedVersion = manifestVersion ?: file.nameWithoutExtension,
             isOffline = false,
             // A local file has no release channel, so tag it LOCAL rather than letting
             // it fall through to the STABLE_LATEST default used for remote sources.
@@ -282,22 +286,60 @@ object EnabledSourcesLoader {
         //    (it only touches the API if the source ships no manifest), so following
         //    sources cost 0 API calls on startup.
         //  - PINNED → needs the full release list (API) to locate the exact old tag.
+        val isPrSource = repo.remoteSource is PullRequestPatchSource
         val release: Release?
         val latestStableTag: String?
         val latestDevTag: String?
 
         if (pref?.mode == FollowMode.PINNED) {
-            val releases = repo.fetchReleases().getOrNull()
-            if (releases.isNullOrEmpty()) return offlineOrError(source, repo)
+            val releasesResult = repo.fetchReleases()
+            val releases = releasesResult.getOrNull()
+            if (releases.isNullOrEmpty()) {
+                if (isPrSource) {
+                    val ex = releasesResult.exceptionOrNull()
+                    val errorRes = when {
+                        ex is GitHubPatMissingException || ex?.message?.contains("A GitHub PAT is required", ignoreCase = true) == true ->
+                            Res.string.source_error_github_pat_required
+                        ex?.message?.contains("No artifacts found", ignoreCase = true) == true ||
+                            ex?.message?.contains("No GitHub Actions run found", ignoreCase = true) == true ->
+                            Res.string.source_error_pr_no_artifact
+                        else -> null
+                    }
+                    return ResolvedSource(
+                        source = source,
+                        error = ex?.message ?: "No artifacts found for pull request",
+                        errorRes = errorRes,
+                    )
+                }
+                return offlineOrError(source, repo)
+            }
             val latestStable = releases.firstOrNull { !it.isDevRelease() }
             release = releases.find { it.tagName == pref.pinnedTag } ?: latestStable ?: releases.firstOrNull()
             latestStableTag = latestStable?.tagName
             latestDevTag = releases.firstOrNull { it.isDevRelease() }?.tagName
         } else {
-            val (stable, dev) = coroutineScope {
-                val stableAsync = async { repo.getLatestStableRelease().getOrNull() }
-                val devAsync = async { repo.getLatestDevRelease().getOrNull() }
+            val (stableResult, devResult) = coroutineScope {
+                val stableAsync = async { repo.getLatestStableRelease() }
+                val devAsync = async { repo.getLatestDevRelease() }
                 stableAsync.await() to devAsync.await()
+            }
+            val stable = stableResult.getOrNull()
+            val dev = devResult.getOrNull()
+            if (isPrSource && dev == null && stable == null) {
+                val ex = devResult.exceptionOrNull() ?: stableResult.exceptionOrNull()
+                val errorRes = when {
+                    ex is GitHubPatMissingException || ex?.message?.contains("A GitHub PAT is required", ignoreCase = true) == true ->
+                        Res.string.source_error_github_pat_required
+                    ex?.message?.contains("No artifacts found", ignoreCase = true) == true ||
+                        ex?.message?.contains("No GitHub Actions run found", ignoreCase = true) == true ->
+                        Res.string.source_error_pr_no_artifact
+                    else -> null
+                }
+                return ResolvedSource(
+                    source = source,
+                    error = ex?.message ?: "No artifacts found for pull request",
+                    errorRes = errorRes,
+                )
             }
             release = if (source.usePreRelease) newerRelease(dev, stable) else (stable ?: dev)
             latestStableTag = stable?.tagName
@@ -320,31 +362,56 @@ object EnabledSourcesLoader {
             onDownloadProgress?.invoke(source.name, pct)
         }
         val patchFile = downloadResult.getOrNull()
-            ?: return ResolvedSource(
-                source = source,
-                error = "Download failed: ${downloadResult.exceptionOrNull()?.message ?: ""}",
-                errorRes = Res.string.source_error_download_failed,
-                errorArgs = listOf(downloadResult.exceptionOrNull()?.message ?: ""),
-            )
+            ?: run {
+                val ex = downloadResult.exceptionOrNull()
+                val errorRes = when {
+                    ex is GitHubPatMissingException || ex?.message?.contains("A GitHub PAT is required", ignoreCase = true) == true ->
+                        Res.string.source_error_github_pat_required
+                    ex?.message?.contains("No artifacts found", ignoreCase = true) == true ||
+                        ex?.message?.contains("No GitHub Actions run found", ignoreCase = true) == true ->
+                        Res.string.source_error_pr_no_artifact
+                    else -> null
+                }
+                return ResolvedSource(
+                    source = source,
+                    error = ex?.message ?: "",
+                    errorRes = errorRes,
+                )
+            }
+
+        val manifestVersion = PatchBundleLoader.extractVersion(patchFile)
+        val resolvedVersion = if (isPrSource) {
+            manifestVersion ?: release.tagName
+        } else {
+            release.tagName
+        }
 
         return ResolvedSource(
             source = source,
             patchFile = patchFile,
-            resolvedVersion = release.tagName,
-            latestAvailableVersion = if (release.isDevRelease()) latestDevTag else latestStableTag,
+            resolvedVersion = resolvedVersion,
+            latestAvailableVersion = if (isPrSource) resolvedVersion else (if (release.isDevRelease()) latestDevTag else latestStableTag),
             isOffline = false,
             channel = channel,
         )
     }
 
     /** Offline / no-releases fallback: use the newest cached .mpp/.jar for this source. */
-    private suspend fun offlineOrError(source: PatchSource, repo: PatchRepository): ResolvedSource {
+    private fun offlineOrError(source: PatchSource, repo: PatchRepository): ResolvedSource {
         val cached = findCachedPatchFile(repo)
         return if (cached != null) {
+            val isPrSource = repo.remoteSource is PullRequestPatchSource
+            val manifestVersion = PatchBundleLoader.extractVersion(cached)
+            val resolvedVersion = if (isPrSource) {
+                manifestVersion ?: versionFromFilename(cached)
+            } else {
+                versionFromFilename(cached)
+            }
             ResolvedSource(
                 source = source,
                 patchFile = cached,
-                resolvedVersion = versionFromFilename(cached),
+                resolvedVersion = resolvedVersion,
+                latestAvailableVersion = if (isPrSource) resolvedVersion else null,
                 isOffline = true,
             )
         } else {
@@ -358,9 +425,17 @@ object EnabledSourcesLoader {
 
     private fun findCachedPatchFile(repo: PatchRepository): File? {
         val cacheDir = repo.getCacheDir()
+        val prSource = repo.remoteSource as? PullRequestPatchSource
+        val prPrefix = prSource?.let { "pr-${it.prNumber}-" }
         return cacheDir.listFiles { file ->
             val ext = file.extension.lowercase()
-            (ext == "mpp" || ext == "jar") && file.length() > 0
+            val isMpp = (ext == "mpp" || ext == "jar") && file.length() > 0
+            if (!isMpp) return@listFiles false
+            if (prPrefix != null) {
+                file.name.startsWith(prPrefix)
+            } else {
+                !file.name.startsWith("pr-")
+            }
         }?.maxByOrNull { it.lastModified() }
     }
 

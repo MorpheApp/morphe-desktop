@@ -145,6 +145,7 @@ data class AppConfig(
     // (only applies when a rename patch was used and stock is installed). Default
     // OFF. It reaches into a stock app's behavior.
     val disableStockLinksAfterInstall: Boolean = false,
+    val gitHubPat: String = "",
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {

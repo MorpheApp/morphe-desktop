@@ -113,14 +113,13 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     // matching morphe-manager which doesn't gate source management on expert mode.
     val patchSourceManager: PatchSourceManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
+    val sourceVersion by patchSourceManager.sourceVersion.collectAsState()
     val pickerScope = rememberCoroutineScope()
     var showSourcePicker by remember { mutableStateOf(false) }
     var showLogViewer by remember { mutableStateOf(false) }
     var activeSourceId by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(uiState.patchSourceName, allSources) {
-        // Resolve the current active source's id by name for radio selection.
-        activeSourceId = allSources.firstOrNull { it.name == uiState.patchSourceName }?.id
-            ?: patchSourceManager.getActiveSource().id
+    LaunchedEffect(sourceVersion, allSources, uiState.patchSourceName) {
+        activeSourceId = patchSourceManager.getActiveSource().id
     }
 
     val corners = LocalMorpheCorners.current

@@ -8,6 +8,8 @@ package app.morphe.engine.patches
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.loadPatchesFromJar
 import java.io.File
+import java.util.jar.JarFile
+import java.util.zip.ZipInputStream
 
 /**
  * One .mpp file's worth of patches, paired with the file they came from.
@@ -54,4 +56,32 @@ object PatchBundleLoader {
      */
     fun loadFlat(files: Iterable<File>): Set<Patch<*>> =
         loadEach(files).flatMap { it.patches }.toSet()
+
+    /**
+     * Extracts the bundle version from `META-INF/MANIFEST.MF` in [file] (.mpp or .jar).
+     * Opens the archive, parses its manifest, and extracts the value of the `Version:` attribute.
+     */
+    fun extractVersion(file: File): String? = runCatching {
+        if (!file.exists() || file.length() == 0L) return@runCatching null
+        JarFile(file).use { jar ->
+            jar.manifest?.mainAttributes?.getValue("Version")?.trim()?.takeUnless { it.isBlank() }
+        }
+    }.getOrNull() ?: runCatching {
+        file.inputStream().use { fis ->
+            ZipInputStream(fis).use { zip ->
+                var entry = zip.nextEntry
+                while (entry != null) {
+                    if (entry.name == "META-INF/MANIFEST.MF") {
+                        val manifest = zip.bufferedReader().readText()
+                        return@runCatching manifest.lineSequence()
+                            .firstOrNull { it.substringBefore(':', "").trim().equals("Version", ignoreCase = true) }
+                            ?.substringAfter(':')?.trim()
+                            ?.takeUnless { it.isBlank() || it.equals("na", ignoreCase = true) }
+                    }
+                    entry = zip.nextEntry
+                }
+                null
+            }
+        }
+    }.getOrNull()
 }
