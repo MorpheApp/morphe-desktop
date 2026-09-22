@@ -1,3 +1,10 @@
+# [1.17.0-dev.8](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.7...v1.17.0-dev.8) (2026-09-22)
+
+
+### Features
+
+* Add GitHub Pull Request patch sources and PAT configuration ([#322](https://github.com/MorpheApp/morphe-desktop/issues/322)) ([47a70db](https://github.com/MorpheApp/morphe-desktop/commit/47a70db674325eba0bf7dac3c605da54596220fe))
+
 # [1.17.0-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0-dev.6...v1.17.0-dev.7) (2026-09-21)
 
 
