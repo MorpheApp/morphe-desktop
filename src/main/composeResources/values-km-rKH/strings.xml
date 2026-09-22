@@ -62,6 +62,7 @@
     <!-- Settings - Signing -->
     <!-- Settings - Keystore Info Dialog -->
     <!-- Settings - Runtime Logs -->
+    <!-- Settings - GitHub PAT -->
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">វេបសាយ</string>
     <!-- Changelog Dialog -->

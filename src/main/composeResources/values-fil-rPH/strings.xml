@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Hindi nahanap ang lokal na patch path: %1$s</string>
     <string name="source_error_local_no_mpp">Walang nakitang .mpp file sa folder: %1$s</string>
     <string name="source_error_no_repository">Walang naka-configure na repository para sa source</string>
-    <string name="source_error_download_failed">Hindi ma-download ang mga patch: %1$s</string>
     <string name="source_error_fetch_releases">Hindi makuha ang mga release</string>
     <string name="source_error_failed_to_load">Nabigo ang pag-load</string>
+    <string name="source_error_github_pat_required">Kinakailangan ang GitHub PAT upang i-download ang mga source ng pull request</string>
+    <string name="source_error_pr_no_artifact">Walang nakitang artifact para sa pull request</string>
     <string name="source_sheet_manage_description">Pamahalaan ang mga patch source</string>
     <string name="source_sheet_local_label">Lokal</string>
     <string name="source_sheet_remote_label">Remote</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Idagdag</string>
     <string name="patch_source_dialog_edit_title">I-edit ang source</string>
     <string name="patch_source_dialog_type_github_repo">Repository ng GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Pull Request sa GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repository ng GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp file o folder</string>
     <string name="patch_source_dialog_mpp_label">.mpp file</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Nabigo ang pag-save ng mga log</string>
     <string name="settings_runtime_logs_cleared_success">Na-clear ang mga log sa device</string>
     <string name="settings_runtime_logs_nothing_captured">Wala pang nakuha. Patakbuhin ang na-patch na app sa iyong phone, pagkatapos ay i-save muli</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Kinakailangan ang GitHub Personal Access Token (PAT) na may saklaw na public_repo upang ma-download ang mga artifact ng pull request. Gumawa ng PAT na may saklaw na public_repo sa %1$s</string>
+    <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Website</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

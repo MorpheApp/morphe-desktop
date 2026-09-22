@@ -199,6 +199,8 @@
     <string name="settings_signing_export_button">خروجی‌گرفتن</string>
     <!-- Settings - Keystore Info Dialog -->
     <!-- Settings - Runtime Logs -->
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">PAT گیت‌هاب</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">وب‌سایت</string>
     <string name="app_info_description">پروژه‌ای متن‌باز برای پچ‌کردن مدرن و سادهٔ برنامه‌های محبوب Android که با بازخورد و مشارکت جامعه پیش می‌رود</string>

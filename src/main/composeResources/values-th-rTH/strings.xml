@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">ไม่พบเส้นทางแพตช์ในเครื่อง: %1$s</string>
     <string name="source_error_local_no_mpp">ไม่พบไฟล์ .mpp ในโฟลเดอร์: %1$s</string>
     <string name="source_error_no_repository">ไม่ได้กำหนดค่าที่เก็บสำหรับแหล่ง</string>
-    <string name="source_error_download_failed">ไม่สามารถดาวน์โหลดแพตช์: %1$s</string>
     <string name="source_error_fetch_releases">ไม่สามารถดึงรีลีสได้</string>
     <string name="source_error_failed_to_load">โหลดไม่สำเร็จ</string>
+    <string name="source_error_github_pat_required">จำเป็นต้องใช้ GitHub PAT เพื่อดาวน์โหลดแหล่งที่มาของ pull request</string>
+    <string name="source_error_pr_no_artifact">ไม่พบอาร์ติแฟกต์สำหรับ pull request</string>
     <string name="source_sheet_manage_description">จัดการแหล่งแพตช์</string>
     <string name="source_sheet_local_label">อุปกรณ์</string>
     <string name="source_sheet_remote_label">รีโมต</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">เพิ่ม</string>
     <string name="patch_source_dialog_edit_title">แก้ไขแหล่ง</string>
     <string name="patch_source_dialog_type_github_repo">ที่เก็บ GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Pull Request ของ GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">ที่เก็บ GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp file หรือโฟลเดอร์</string>
     <string name="patch_source_dialog_mpp_label">ไฟล์ .mpp</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">บันทึกบันทึกไม่สำเร็จ</string>
     <string name="settings_runtime_logs_cleared_success">ล้างบันทึกบนอุปกรณ์แล้ว</string>
     <string name="settings_runtime_logs_nothing_captured">ยังไม่มีข้อมูลที่จับได้ รันแอปที่แพตช์แล้วบนโทรศัพท์ แล้วบันทึกอีกครั้ง</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">โทเคน GitHub PAT</string>
+    <string name="settings_github_pat_desc">จำเป็นต้องมี GitHub Personal Access Token (PAT) ที่มีสิทธิ์ public_repo เพื่อดาวน์โหลดอาร์ติแฟกต์ของ pull request. สร้าง PAT ที่มีสิทธิ์ public_repo บน %1$s</string>
+    <string name="settings_github_pat_label">โทเค็นการเข้าถึงส่วนบุคคล</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">เว็บไซต์</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

@@ -377,7 +377,7 @@
     <string name="patch_selection_icon_none">Власну іконку не встановлено</string>
     <string name="patch_selection_icon_dialog_delete_title">Видалити власну іконку?</string>
     <string name="patch_selection_icon_dialog_delete_message">Це очистить іконку та видалить її збережений проєкт і згенеровані файли. Цю дію не можна скасувати</string>
-    <string name="patch_selection_custom_icon_hint">Вам не доведеться створювати цю папку самостійно! Натисніть на піктограму Design/Edit, щоб створіти їі в Icon Studio або імпортувати з менеджера</string>
+    <string name="patch_selection_custom_icon_hint">Вам не доведеться створювати цю папку самостійно! Натисніть на піктограму Design/Edit, щоб створити її в Icon Studio або імпортувати з менеджера</string>
     <string name="patch_selection_option_enabled">Увімкнено</string>
     <string name="patch_selection_option_disabled">Вимкнена</string>
     <string name="patch_selection_mode_your_defaults">Ваші типові налаштування</string>
@@ -413,7 +413,7 @@
     <string name="patch_selection_option_hint_number">число</string>
     <string name="patch_selection_option_hint_text">текст</string>
     <string name="patch_selection_run_info_title">Цей запуск</string>
-    <string name="patch_selection_run_info_app_group">Додаток</string>
+    <string name="patch_selection_run_info_app_group">Застосунок</string>
     <string name="patch_selection_run_info_bundles_group">Пакети патчів</string>
     <string name="patch_selection_run_info_no_bundles">Не знайдено жодного набору</string>
     <string name="patch_selection_group_universal">Універсальний</string>
@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Локальний шлях до патчів не знайдено: %1$s</string>
     <string name="source_error_local_no_mpp">У папці не знайдено файлів .mpp: %1$s</string>
     <string name="source_error_no_repository">Для джерела не налаштовано репозиторій</string>
-    <string name="source_error_download_failed">Не вдалося завантажити патчі: %1$s</string>
     <string name="source_error_fetch_releases">Не вдалося отримати релізи</string>
     <string name="source_error_failed_to_load">Не вдалося завантажити</string>
+    <string name="source_error_github_pat_required">Для завантаження джерел pull request потрібен PAT GitHub</string>
+    <string name="source_error_pr_no_artifact">Не знайдено артефактів для pull request</string>
     <string name="source_sheet_manage_description">Керування джерелами патчів</string>
     <string name="source_sheet_local_label">Локальне</string>
     <string name="source_sheet_remote_label">Віддалене</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Додати</string>
     <string name="patch_source_dialog_edit_title">Редагувати джерело</string>
     <string name="patch_source_dialog_type_github_repo">Репозиторій GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Репозиторій GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-файл або папка</string>
     <string name="patch_source_dialog_mpp_label">.mpp-файл</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Не вдалося зберегти журнали</string>
     <string name="settings_runtime_logs_cleared_success">Журнали на пристрої очищено</string>
     <string name="settings_runtime_logs_nothing_captured">Поки що нічого не записано. Запустіть пропатчений застосунок на телфоні, а потім збережіть знову</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Для завантаження артефактів pull request потрібен Personal Access Token (PAT) GitHub з областю дії public_repo. Створіть PAT з областю дії public_repo на %1$s</string>
+    <string name="settings_github_pat_label">Персональний токен доступу</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Вебсайт</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

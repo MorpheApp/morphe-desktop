@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Paikallista paikkauspolkua ei löytynyt: %1$s</string>
     <string name="source_error_local_no_mpp">Ei .mpp-tiedostoja kansiossa: %1$s</string>
     <string name="source_error_no_repository">Ei arkistoa määritetty lähteelle</string>
-    <string name="source_error_download_failed">Paikkausten lataus epäonnistui: %1$s</string>
     <string name="source_error_fetch_releases">Julkaisujen nouto epäonnistui</string>
     <string name="source_error_failed_to_load">Lataus epäonnistui</string>
+    <string name="source_error_github_pat_required">GitHub PAT vaaditaan pull request -lähteiden lataamiseen</string>
+    <string name="source_error_pr_no_artifact">Pull requestille ei löytynyt artefakteja</string>
     <string name="source_sheet_manage_description">Hallinnoi paikkauslähteitä</string>
     <string name="source_sheet_local_label">Paikallinen</string>
     <string name="source_sheet_remote_label">Etälähde</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Lisää</string>
     <string name="patch_source_dialog_edit_title">Muokkaa lähdettä</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-arkisto</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-arkisto</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-tiedosto tai kansio</string>
     <string name="patch_source_dialog_mpp_label">.mpp-tiedosto</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Lokien tallennus epäonnistui</string>
     <string name="settings_runtime_logs_cleared_success">Lokit tyhjennetty laitteella</string>
     <string name="settings_runtime_logs_nothing_captured">Ei vielä tallennettua. Suorita paikattu sovellus puhelimessasi ja tallenna uudelleen</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHubin henkilökohtainen käyttöoikeustunnus</string>
+    <string name="settings_github_pat_desc">Pull request -artefaktien lataamiseen tarvitaan GitHubin henkilökohtainen käyttöoikeustunnus (PAT), jolla on public_repo-oikeus. Luo public_repo-oikeuden sisältävä PAT osoitteessa %1$s.</string>
+    <string name="settings_github_pat_label">Henkilökohtainen käyttöoikeustunnus</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Verkkosivusto</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

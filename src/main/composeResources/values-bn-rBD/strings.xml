@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">লোকাল প্যাচ পাথ পাওয়া যায়নি: %1$s</string>
     <string name="source_error_local_no_mpp">ফোল্ডারে কোনো .mpp ফাইল পাওয়া যায়নি: %1$s</string>
     <string name="source_error_no_repository">সোর্সের জন্য কোনো রিপোজিটরি কনফিগার করা নেই</string>
-    <string name="source_error_download_failed">প্যাচ ডাউনলোড করা যায়নি: %1$s</string>
     <string name="source_error_fetch_releases">রিলিজ আনা যায়নি</string>
     <string name="source_error_failed_to_load">লোড ব্যর্থ হয়েছে</string>
+    <string name="source_error_github_pat_required">পুল রিকোয়েস্টের সোর্স ডাউনলোড করতে একটি GitHub PAT প্রয়োজন</string>
+    <string name="source_error_pr_no_artifact">পুল রিকোয়েস্টের জন্য কোনো আর্টিফ্যাক্ট পাওয়া যায়নি</string>
     <string name="source_sheet_manage_description">প্যাচ সোর্স পরিচালনা করুন</string>
     <string name="source_sheet_local_label">লোকাল</string>
     <string name="source_sheet_remote_label">রিমোট</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">যোগ করুন</string>
     <string name="patch_source_dialog_edit_title">সোর্স সম্পাদনা করুন</string>
     <string name="patch_source_dialog_type_github_repo">GitHub রিপোজিটরি</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub পুল রিকোয়েস্ট</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab রিপোজিটরি</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ফাইল বা ফোল্ডার</string>
     <string name="patch_source_dialog_mpp_label">.mpp ফাইল</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">লগ সংরক্ষণ করা ব্যর্থ হয়েছে</string>
     <string name="settings_runtime_logs_cleared_success">ডিভাইসে লগ পরিষ্কার হয়েছে</string>
     <string name="settings_runtime_logs_nothing_captured">এখনও কিছু ক্যাপচার হয়নি। আপনার ফোনে প্যাচ করা অ্যাপ চালান, তারপর আবার সংরক্ষণ করুন</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">পুল রিকোয়েস্ট আর্টিফ্যাক্ট ডাউনলোড করতে public_repo স্কোপসহ একটি GitHub ব্যক্তিগত অ্যাক্সেস টোকেন (PAT) প্রয়োজন। %1$s-এ public_repo স্কোপসহ একটি PAT তৈরি করুন।</string>
+    <string name="settings_github_pat_label">ব্যক্তিগত অ্যাক্সেস টোকেন</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">ওয়েবসাইট</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

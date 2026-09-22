@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Η τοπική δ ιαδρομή patch δεν βρέθηκε: %1$s</string>
     <string name="source_error_local_no_mpp">Δεν βρέθηκαν αρχεία .mpp στον φάκελο: %1$s</string>
     <string name="source_error_no_repository">Δεν έχε ι ρυθμιστε ί αποθετήρ ιο γ ια την πηγή</string>
-    <string name="source_error_download_failed">Δεν ήτ αν δυνατή η λήψη patches: %1$s</string>
     <string name="source_error_fetch_releases">Δεν ήτ αν δυνατή η λήψη εκδόσεων</string>
     <string name="source_error_failed_to_load">Απέτυχε η φόρτωση</string>
+    <string name="source_error_github_pat_required">Απαιτείται GitHub PAT για τη λήψη των πηγών του pull request</string>
+    <string name="source_error_pr_no_artifact">Δεν βρέθηκαν artifacts για το pull request</string>
     <string name="source_sheet_manage_description">Διαχείριση πηγών patch</string>
     <string name="source_sheet_local_label">Τοπική</string>
     <string name="source_sheet_remote_label">Απομακρυσμένη</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Προσθήκη</string>
     <string name="patch_source_dialog_edit_title">Επεξεργασία πηγής</string>
     <string name="patch_source_dialog_type_github_repo">Αποθετήριο GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Αίτημα έλξης GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Αποθετήριο GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp αρχείο ή φάκελος</string>
     <string name="patch_source_dialog_mpp_label">.mpp αρχείο</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Απέτυχε η αποθήκευση αρχείων καταγραφής</string>
     <string name="settings_runtime_logs_cleared_success">Τα αρχεία καταγραφής καθαρίστηκαν στη συσκευή</string>
     <string name="settings_runtime_logs_nothing_captured">Δεν έχει καταγραφεί τίποτα ακόμα. Εκτελέστε την εφαρμογή με patch στο τηλέφωνό σας και μετά αποθηκεύστε ξανά</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Απαιτείται ένα Προσωπικό κωδικό πρόσβασης (PAT) του GitHub με εμβέλεια public_repo για τη λήψη artifacts από pull requests. Δημιουργήστε ένα PAT με εμβέλεια public_repo στο %1$s</string>
+    <string name="settings_github_pat_label">Προσωπικό κωδικό πρόσβασης</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Ιστότοπος</string>
     <string name="app_info_version_gui">Γραφική διεπαφή: %1$s</string>

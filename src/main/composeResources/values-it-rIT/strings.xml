@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Percorso delle patch locale non trovato: %1$s</string>
     <string name="source_error_local_no_mpp">Nessun file .mpp trovato nella cartella: %1$s</string>
     <string name="source_error_no_repository">Nessun repository configurato per la sorgente</string>
-    <string name="source_error_download_failed">Impossibile scaricare le patch: %1$s</string>
     <string name="source_error_fetch_releases">Impossibile recuperare le release</string>
     <string name="source_error_failed_to_load">Caricamento non riuscito</string>
+    <string name="source_error_github_pat_required">È richiesto un PAT GitHub per scaricare le sorgenti delle pull request</string>
+    <string name="source_error_pr_no_artifact">Nessun artefatto trovato per la pull request</string>
     <string name="source_sheet_manage_description">Gestisci sorgenti di patch</string>
     <string name="source_sheet_local_label">Locale</string>
     <string name="source_sheet_remote_label">A distanza</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Aggiungi</string>
     <string name="patch_source_dialog_edit_title">Modifica sorgente</string>
     <string name="patch_source_dialog_type_github_repo">Repository GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Pull request GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repository GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp file o cartella</string>
     <string name="patch_source_dialog_mpp_label">.mpp file</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Salvataggio dei log non riuscito</string>
     <string name="settings_runtime_logs_cleared_success">Log svuotati sul dispositivo</string>
     <string name="settings_runtime_logs_nothing_captured">Niente ancora acquisito. Esegui l'app patchata sul telefono, poi salva di nuovo</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">PAT GitHub</string>
+    <string name="settings_github_pat_desc">Per scaricare gli artefatti delle pull request è necessario un GitHub Personal Access Token (PAT) con ambito public_repo. Crea un PAT con ambito public_repo su %1$s</string>
+    <string name="settings_github_pat_label">Token di accesso personale</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Sito web</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

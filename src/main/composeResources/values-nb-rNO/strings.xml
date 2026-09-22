@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Lokal patch-bane ikke funnet: %1$s</string>
     <string name="source_error_local_no_mpp">Ingen .mpp-filer funnet i mappen: %1$s</string>
     <string name="source_error_no_repository">Ingen repositories konfigurert for kilden</string>
-    <string name="source_error_download_failed">Kunne ikke laste ned patcher: %1$s</string>
     <string name="source_error_fetch_releases">Kunne ikke hente utgivelser</string>
     <string name="source_error_failed_to_load">Kunne ikke laste inn</string>
+    <string name="source_error_github_pat_required">En GitHub PAT er påkrevd for å laste ned pull request-kilder.</string>
+    <string name="source_error_pr_no_artifact">Ingen artefakter funnet for pull request.</string>
     <string name="source_sheet_manage_description">Administrer patch-kilder</string>
     <string name="source_sheet_local_label">Lokal</string>
     <string name="source_sheet_remote_label">Ekstern</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Legg til</string>
     <string name="patch_source_dialog_edit_title">Rediger kilde</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-repository</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-repository</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-fil eller mappe</string>
     <string name="patch_source_dialog_mpp_label">.mpp-fil</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Kunne ikke lagre logger</string>
     <string name="settings_runtime_logs_cleared_success">Logger tømt på enheten</string>
     <string name="settings_runtime_logs_nothing_captured">Ingenting fanget ennå. Kjør den patchede appen på telefonen, og lagre deretter på nytt</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Et personlig GitHub-tilgangstoken (PAT) med omfanget public_repo er nødvendig for å laste ned pull request-artefakter. Opprett et PAT med omfanget public_repo på %1$s</string>
+    <string name="settings_github_pat_label">Personlig tilgangstoken</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Nettsted</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Lokalna putanja zakrpe nije pronađena: %1$s</string>
     <string name="source_error_local_no_mpp">Nema .mpp datoteka u fascikli: %1$s</string>
     <string name="source_error_no_repository">Nema konfigurisanog repozitorijuma za izvor</string>
-    <string name="source_error_download_failed">Preuzimanje zakrpa nije uspelo: %1$s</string>
     <string name="source_error_fetch_releases">Preuzimanje izdanja nije uspelo</string>
     <string name="source_error_failed_to_load">Učitavanje nije uspelo</string>
+    <string name="source_error_github_pat_required">GitHub PAT je neophodan za preuzimanje izvora pull request-a</string>
+    <string name="source_error_pr_no_artifact">Nisu pronađeni artefakti za pull request</string>
     <string name="source_sheet_manage_description">Upravljaj izvorima zakrpa</string>
     <string name="source_sheet_local_label">Lokalno</string>
     <string name="source_sheet_remote_label">Udaljeno</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Uredi izvor</string>
     <string name="patch_source_dialog_type_github_repo">GitHub repozitorijum</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab repozitorijum</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp datoteka ili fascikla</string>
     <string name="patch_source_dialog_mpp_label">.mpp datoteka</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Čuvanje dnevnika nije uspelo</string>
     <string name="settings_runtime_logs_cleared_success">Dnevnici na uređaju su očišćeni</string>
     <string name="settings_runtime_logs_nothing_captured">Još ništa nije snimljeno. Pokreni zakrpljenu aplikaciju na telefonu, zatim ponovo sačuvaj</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Za preuzimanje artefakata pull request-a neophodan je GitHub lični pristupni token (PAT) sa public_repo opsegom. Kreirajte PAT sa public_repo opsegom na %1$s</string>
+    <string name="settings_github_pat_label">Lični pristupni token</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Veb sajt</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

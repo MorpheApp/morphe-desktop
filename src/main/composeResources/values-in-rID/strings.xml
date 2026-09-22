@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Jalur tambalan lokal tidak ditemukan: %1$s</string>
     <string name="source_error_local_no_mpp">Tidak ada berkas .mpp di folder: %1$s</string>
     <string name="source_error_no_repository">Tidak ada repositori yang dikonfigurasi untuk sumber ini</string>
-    <string name="source_error_download_failed">Tidak dapat mengunduh tambalan: %1$s</string>
     <string name="source_error_fetch_releases">Tidak dapat mengambil rilis</string>
     <string name="source_error_failed_to_load">Gagal memuat</string>
+    <string name="source_error_github_pat_required">PAT GitHub diperlukan untuk mengunduh sumber pull request</string>
+    <string name="source_error_pr_no_artifact">Tidak ada artefak yang ditemukan untuk pull request</string>
     <string name="source_sheet_manage_description">Kelola sumber tambalan</string>
     <string name="source_sheet_local_label">Lokal</string>
     <string name="source_sheet_remote_label">Daring</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Tambah</string>
     <string name="patch_source_dialog_edit_title">Edit sumber</string>
     <string name="patch_source_dialog_type_github_repo">Repositori GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Pull Request GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositori GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Berkas MPP atau folder</string>
     <string name="patch_source_dialog_mpp_label">Berkas MPP</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Gagal menyimpan log</string>
     <string name="settings_runtime_logs_cleared_success">Log dibersihkan di perangkat</string>
     <string name="settings_runtime_logs_nothing_captured">Belum ada yang direkam. Jalankan aplikasi hasil tambalan di ponsel Anda, lalu simpan lagi</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">PAT GitHub</string>
+    <string name="settings_github_pat_desc">Token Akses Pribadi GitHub (PAT) dengan cakupan public_repo diperlukan untuk mengunduh artefak pull request. Buat PAT dengan cakupan public_repo di %1$s.</string>
+    <string name="settings_github_pat_label">Token Akses Pribadi</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Situs web</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

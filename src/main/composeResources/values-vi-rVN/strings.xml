@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Không tìm thấy đường dẫn bản vá cục bộ: %1$s</string>
     <string name="source_error_local_no_mpp">Không tìm thấy tệp .mpp nào trong thư mục: %1$s</string>
     <string name="source_error_no_repository">Chưa cấu hình kho lưu trữ cho nguồn</string>
-    <string name="source_error_download_failed">Không thể tải xuống các bản vá: %1$s</string>
     <string name="source_error_fetch_releases">Không thể lấy danh sách bản phát hành</string>
     <string name="source_error_failed_to_load">Tải thất bại</string>
+    <string name="source_error_github_pat_required">Cần có GitHub PAT để tải xuống mã nguồn của pull request</string>
+    <string name="source_error_pr_no_artifact">Không tìm thấy artifacts nào cho pull request</string>
     <string name="source_sheet_manage_description">Quản lý nguồn bản vá</string>
     <string name="source_sheet_local_label">Từ bộ nhớ trong</string>
     <string name="source_sheet_remote_label">Từ URL</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Thêm</string>
     <string name="patch_source_dialog_edit_title">Chỉnh sửa nguồn</string>
     <string name="patch_source_dialog_type_github_repo">Kho GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Kho GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Tệp .mpp hoặc thư mục</string>
     <string name="patch_source_dialog_mpp_label">Tệp .mpp</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Không thể lưu nhật ký</string>
     <string name="settings_runtime_logs_cleared_success">Đã xóa nhật ký trên thiết bị</string>
     <string name="settings_runtime_logs_nothing_captured">Chưa có gì được ghi lại. Chạy ứng dụng đã vá trên điện thoại, rồi lưu lại</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Cần có Mã thông báo truy cập cá nhân GitHub (PAT) với phạm vi public_repo để tải xuống các artifact của pull request. Tạo PAT với phạm vi public_repo tại %1$s</string>
+    <string name="settings_github_pat_label">Mã thông báo truy cập cá nhân</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Trang web</string>
     <string name="app_info_version_gui">Giao diện: %1$s</string>

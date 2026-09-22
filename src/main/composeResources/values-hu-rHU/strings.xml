@@ -559,9 +559,10 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="source_error_local_not_found">A helyi javítási útvonal nem található: %1$s</string>
     <string name="source_error_local_no_mpp">Nem találhatók .mpp fájlok ebben a mappában: %1$s</string>
     <string name="source_error_no_repository">Nincs repository beállítva a forráshoz</string>
-    <string name="source_error_download_failed">A javítások letöltése nem sikerült: %1$s</string>
     <string name="source_error_fetch_releases">A kiadások lekérése nem sikerült</string>
     <string name="source_error_failed_to_load">A betöltés sikertelen</string>
+    <string name="source_error_github_pat_required">A pull request forrásainak letöltéséhez GitHub PAT szükséges</string>
+    <string name="source_error_pr_no_artifact">Nem találhatók összetevők a pull requesthez</string>
     <string name="source_sheet_manage_description">Javításforrások kezelése</string>
     <string name="source_sheet_local_label">Helyi</string>
     <string name="source_sheet_remote_label">Távoli</string>
@@ -602,6 +603,7 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patch_source_dialog_add_button">Hozzáadás</string>
     <string name="patch_source_dialog_edit_title">Forrás szerkesztése</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-tároló</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub pull request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-tároló</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp fájl vagy mappa</string>
     <string name="patch_source_dialog_mpp_label">.mpp fájl</string>
@@ -801,6 +803,10 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="settings_runtime_logs_failed_to_save">A naplók mentése sikertelen</string>
     <string name="settings_runtime_logs_cleared_success">A naplók törölve az eszközön</string>
     <string name="settings_runtime_logs_nothing_captured">Még semmi nincs rögzítve. Futtasd a javított alkalmazást a telefonodon, majd ments újra</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">A pull request-összeállítások letöltéséhez public_repo hatókörű GitHub Personal Access Tokenre (PAT) van szükség. Hozzon létre egy public_repo hatókörű PAT-ot a(z) %1$s oldalon.</string>
+    <string name="settings_github_pat_label">Személyes hozzáférési token</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Weboldal</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Lokal patch-sti ikke fundet: %1$s</string>
     <string name="source_error_local_no_mpp">Ingen .mpp-filer fundet i mappen: %1$s</string>
     <string name="source_error_no_repository">Intet repository konfigureret for kilden</string>
-    <string name="source_error_download_failed">Kunne ikke downloade patches: %1$s</string>
     <string name="source_error_fetch_releases">Kunne ikke hente releases</string>
     <string name="source_error_failed_to_load">Indlæsning mislykkedes</string>
+    <string name="source_error_github_pat_required">Der kræves en GitHub PAT for at downloade pull request-kilder</string>
+    <string name="source_error_pr_no_artifact">Ingen artefakter fundet til pull request</string>
     <string name="source_sheet_manage_description">Administrer patch-kilder</string>
     <string name="source_sheet_local_label">Lokal</string>
     <string name="source_sheet_remote_label">Fjernt</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Tilføj</string>
     <string name="patch_source_dialog_edit_title">Redigér kilde</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-repository</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-repository</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-fil eller mappe</string>
     <string name="patch_source_dialog_mpp_label">.mpp-fil</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Kunne ikke gemme logfiler</string>
     <string name="settings_runtime_logs_cleared_success">Logfiler ryddet på enheden</string>
     <string name="settings_runtime_logs_nothing_captured">Intet indsamlet endnu. Kør den patchede app på din telefon, og gem derefter igen</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Der kræves et GitHub Personal Access Token (PAT) med public_repo-scope for at downloade pull request-artefakter. Opret et PAT med scope public_repo på %1$s</string>
+    <string name="settings_github_pat_label">Personligt adgangstoken</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Hjemmeside</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

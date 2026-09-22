@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Ní bhfuarthas cosán paiste áitiúil: %1$s</string>
     <string name="source_error_local_no_mpp">Níor aimsíodh aon chomhad .mpp san fhillteán: %1$s</string>
     <string name="source_error_no_repository">Níl aon stórlann cumraithe don fhoinse</string>
-    <string name="source_error_download_failed">Níorbh fhéidir paistí a íoslódáil: %1$s</string>
     <string name="source_error_fetch_releases">Níorbh fhéidir eisiúintí a fháil</string>
     <string name="source_error_failed_to_load">Teip ar luchtú</string>
+    <string name="source_error_github_pat_required">Teastaíonn PAT GitHub chun foinsí an iarratais tarraingthe a íoslódáil.</string>
+    <string name="source_error_pr_no_artifact">Níor aimsíodh aon déantán don iarratas tarraingthe.</string>
     <string name="source_sheet_manage_description">Bainistigh foinsí paiste</string>
     <string name="source_sheet_local_label">Áitiúil</string>
     <string name="source_sheet_remote_label">Cianda</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Cuir leis</string>
     <string name="patch_source_dialog_edit_title">Cuir foinse in eagar</string>
     <string name="patch_source_dialog_type_github_repo">Stór GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Iarratas Tarraingthe GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Stór GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp comhad nó fillteán</string>
     <string name="patch_source_dialog_mpp_label">.mpp comhad</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Theip ar logaí a shábháil</string>
     <string name="settings_runtime_logs_cleared_success">Logaí glanta ar an ngléas</string>
     <string name="settings_runtime_logs_nothing_captured">Níl aon rud gafa go fóill. Rith an aip phaisteáilte ar do ghuthán, agus sábháil arís ansin.</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">PAT GitHub</string>
+    <string name="settings_github_pat_desc">Tá gá le Comhartha Rochtana Pearsanta GitHub (PAT) a bhfuil raon public_repo aige chun sainghnéithe a íoslódáil ó iarratais tarraingthe. Cruthaigh PAT le raon public_repo ar %1$s</string>
+    <string name="settings_github_pat_label">Comhartha Rochtana Pearsanta</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Suíomh Gréasáin</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

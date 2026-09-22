@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">נתיב הטלאי המקומי לא נמצא: %1$s</string>
     <string name="source_error_local_no_mpp">לא נמצאו קבצי .mpp בתיקייה: %1$s</string>
     <string name="source_error_no_repository">לא הוגדר מאגר עבור המקור</string>
-    <string name="source_error_download_failed">לא ניתן היה להוריד טלאים: %1$s</string>
     <string name="source_error_fetch_releases">לא ניתן היה להביא מהדורות</string>
     <string name="source_error_failed_to_load">הטעינה נכשלה</string>
+    <string name="source_error_github_pat_required">נדרש GitHub PAT כדי להוריד מקורות של בקשת משיכה</string>
+    <string name="source_error_pr_no_artifact">לא נמצאו ארטיפקטים עבור בקשת המשיכה</string>
     <string name="source_sheet_manage_description">נהל מקורות טלאים</string>
     <string name="source_sheet_local_label">מקומי</string>
     <string name="source_sheet_remote_label">מרוחק</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">הוסף</string>
     <string name="patch_source_dialog_edit_title">ערוך מקור</string>
     <string name="patch_source_dialog_type_github_repo">מאגר GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">בקשת משיכה של GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">מאגר GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">קובץ mpp. או תיקייה</string>
     <string name="patch_source_dialog_mpp_label">קובץ mpp.</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">שמירת היומנים נכשלה</string>
     <string name="settings_runtime_logs_cleared_success">היומנים נוקו במכשיר</string>
     <string name="settings_runtime_logs_nothing_captured">עדיין לא נתפס כלום. הרץ את האפליקציה המטולאת בטלפון, ואז שמור שוב</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">כדי להוריד קבצי pull request, נדרש אסימון גישה אישי (PAT) של GitHub עם היקף public_repo. צור PAT עם היקף public_repo ב-%1$s</string>
+    <string name="settings_github_pat_label">אסימון גישה אישי</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">אתר</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

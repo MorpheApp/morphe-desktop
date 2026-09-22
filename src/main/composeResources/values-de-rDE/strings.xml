@@ -559,9 +559,10 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="source_error_local_not_found">Lokaler Patchpfad nicht gefunden: %1$s</string>
     <string name="source_error_local_no_mpp">Keine .mpp-Dateien im Ordner gefunden: %1$s</string>
     <string name="source_error_no_repository">Für die Quelle ist kein Repository konfiguriert</string>
-    <string name="source_error_download_failed">Patches konnten nicht heruntergeladen werden: %1$s</string>
     <string name="source_error_fetch_releases">Releases konnten nicht abgerufen werden</string>
     <string name="source_error_failed_to_load">Laden fehlgeschlagen</string>
+    <string name="source_error_github_pat_required">Zum Herunterladen von Pull-Request-Quellen ist ein GitHub-PAT erforderlich.</string>
+    <string name="source_error_pr_no_artifact">Keine Artefakte für den Pull-Request gefunden.</string>
     <string name="source_sheet_manage_description">Patch-Quellen verwalten</string>
     <string name="source_sheet_local_label">Lokal</string>
     <string name="source_sheet_remote_label">Remote</string>
@@ -602,6 +603,7 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="patch_source_dialog_add_button">Hinzufügen</string>
     <string name="patch_source_dialog_edit_title">Quelle bearbeiten</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-Repository</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub-Pull-Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-Repository</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-Datei oder Ordner</string>
     <string name="patch_source_dialog_mpp_label">.mpp-Datei</string>
@@ -801,6 +803,10 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="settings_runtime_logs_failed_to_save">Fehler beim Speichern der Protokolle</string>
     <string name="settings_runtime_logs_cleared_success">Protokolle auf dem Gerät gelöscht</string>
     <string name="settings_runtime_logs_nothing_captured">Noch nichts erfasst. Führe die gepatchte App auf deinem Smartphone aus und speichere dann erneut</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub-PAT</string>
+    <string name="settings_github_pat_desc">Um Pull-Request-Artefakte herunterzuladen, ist ein GitHub Personal Access Token (PAT) mit dem Bereich public_repo erforderlich. Erstellen Sie ein PAT mit dem Bereich public_repo auf %1$s</string>
+    <string name="settings_github_pat_label">Persönliches Zugriffstoken</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Website</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

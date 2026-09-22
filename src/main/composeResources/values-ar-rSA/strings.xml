@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">مسار التصحيح المحلي غير موجود: %1$s</string>
     <string name="source_error_local_no_mpp">لم يتم العثور على أي ملفات .mpp في المجلد: %1$s</string>
     <string name="source_error_no_repository">لا يوجد مستودع مكوّن للمصدر</string>
-    <string name="source_error_download_failed">تعذّر تنزيل التصحيحات: %1$s</string>
     <string name="source_error_fetch_releases">تعذّر جلب الإصدارات</string>
     <string name="source_error_failed_to_load">فشل التحميل</string>
+    <string name="source_error_github_pat_required">مطلوب رمز وصول شخصي (PAT) من GitHub لتنزيل مصادر طلب السحب</string>
+    <string name="source_error_pr_no_artifact">لم يتم العثور على أي ملفات ناتجة عن طلب السحب</string>
     <string name="source_sheet_manage_description">إدارة مصادر التصحيح</string>
     <string name="source_sheet_local_label">محلي</string>
     <string name="source_sheet_remote_label">عن بُعد</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">إضافة</string>
     <string name="patch_source_dialog_edit_title">تعديل المصدر</string>
     <string name="patch_source_dialog_type_github_repo">مستودع GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">طلب سحب GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">مستودع GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">ملف (.mpp) أو مجلد</string>
     <string name="patch_source_dialog_mpp_label">ملف (.mpp)</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">فشل حفظ السجلات</string>
     <string name="settings_runtime_logs_cleared_success">تم مسح السجلات على الجهاز</string>
     <string name="settings_runtime_logs_nothing_captured">لم يتم التقاط أي شيء بعد. شغّل التطبيق المُصحح على هاتفك، ثم احفظ مرة أخرى</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">رمز GitHub PAT</string>
+    <string name="settings_github_pat_desc">مطلوب رمز الوصول الشخصي لـ GitHub (PAT) بنطاق public_repo لتنزيل عناصر طلب السحب. أنشئ رمز PAT بنطاق public_repo على %1$s</string>
+    <string name="settings_github_pat_label">رمز الوصول الشخصي</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">الموقع الإلكتروني</string>
     <string name="app_info_version_gui">الواجهة الرسومية: %1$s</string>

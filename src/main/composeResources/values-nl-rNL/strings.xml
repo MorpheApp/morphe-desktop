@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Lokaal patchpad niet gevonden: %1$s</string>
     <string name="source_error_local_no_mpp">Geen .mpp-bestanden gevonden in map: %1$s</string>
     <string name="source_error_no_repository">Geen repository geconfigureerd voor bron</string>
-    <string name="source_error_download_failed">Kon patches niet downloaden: %1$s</string>
     <string name="source_error_fetch_releases">Kon releases niet ophalen</string>
     <string name="source_error_failed_to_load">Laden mislukt</string>
+    <string name="source_error_github_pat_required">Een GitHub-PAT is vereist om bronnen van pull requests te downloaden</string>
+    <string name="source_error_pr_no_artifact">Geen artefacten gevonden voor pull request</string>
     <string name="source_sheet_manage_description">Patchbronnen beheren</string>
     <string name="source_sheet_local_label">Lokaal</string>
     <string name="source_sheet_remote_label">Extern</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Toevoegen</string>
     <string name="patch_source_dialog_edit_title">Bron bewerken</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-repository</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub-pullrequest</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-repository</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-bestand of -map</string>
     <string name="patch_source_dialog_mpp_label">.mpp-bestand</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Logs opslaan mislukt</string>
     <string name="settings_runtime_logs_cleared_success">Logs gewist op apparaat</string>
     <string name="settings_runtime_logs_nothing_captured">Nog niets vastgelegd. Voer de gepatchte app uit op je telefoon en sla vervolgens opnieuw op</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub-PAT</string>
+    <string name="settings_github_pat_desc">Er is een GitHub Personal Access Token (PAT) met de scope public_repo vereist om pull request-artefacten te downloaden. Maak op %1$s een PAT met de scope public_repo.</string>
+    <string name="settings_github_pat_label">Persoonlijke toegangstoken</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Website</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

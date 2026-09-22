@@ -580,9 +580,10 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="source_error_local_not_found">Ruta de parches local no encontrada: %1$s</string>
     <string name="source_error_local_no_mpp">No se encontraron archivos .mpp en la carpeta: %1$s</string>
     <string name="source_error_no_repository">No hay repositorio configurado para la fuente</string>
-    <string name="source_error_download_failed">No se pudieron descargar los parches: %1$s</string>
     <string name="source_error_fetch_releases">No se pudieron obtener las versiones</string>
     <string name="source_error_failed_to_load">Error al cargar</string>
+    <string name="source_error_github_pat_required">Se requiere un PAT de GitHub para descargar fuentes de pull request</string>
+    <string name="source_error_pr_no_artifact">No se encontraron artefactos para la pull request</string>
     <string name="source_sheet_manage_description">Gestionar fuentes de parches</string>
     <string name="source_sheet_local_label">Local</string>
     <string name="source_sheet_remote_label">Remota</string>
@@ -623,6 +624,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="patch_source_dialog_add_button">Añadir</string>
     <string name="patch_source_dialog_edit_title">Editar fuente</string>
     <string name="patch_source_dialog_type_github_repo">Repositorio de GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Pull request de GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositorio de GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Archivo .mpp o carpeta</string>
     <string name="patch_source_dialog_mpp_label">Archivo .mpp</string>
@@ -822,6 +824,10 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="settings_runtime_logs_failed_to_save">No se pudieron guardar los registros</string>
     <string name="settings_runtime_logs_cleared_success">Registros borrados en el dispositivo</string>
     <string name="settings_runtime_logs_nothing_captured">Aún no se ha capturado nada. Ejecuta la aplicación parcheada en tu teléfono y vuelve a guardar</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">PAT de GitHub</string>
+    <string name="settings_github_pat_desc">Se requiere un token de acceso personal (PAT) de GitHub con el alcance public_repo para descargar artefactos de pull request. Crea un PAT con el alcance public_repo en %1$s</string>
+    <string name="settings_github_pat_label">Token de acceso personal</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Sitio web</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

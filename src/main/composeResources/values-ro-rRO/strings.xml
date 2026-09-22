@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Calea de patch local nu a fost găsită: %1$s</string>
     <string name="source_error_local_no_mpp">Niciun fișier .mpp găsit în dosarul: %1$s</string>
     <string name="source_error_no_repository">Niciun depozit configurat pentru sursă</string>
-    <string name="source_error_download_failed">Nu s-au putut descărca patch-urile: %1$s</string>
     <string name="source_error_fetch_releases">Nu s-au putut obține versiunile</string>
     <string name="source_error_failed_to_load">Eroare la încărcare</string>
+    <string name="source_error_github_pat_required">Un PAT GitHub este necesar pentru a descărca sursele pull request-urilor</string>
+    <string name="source_error_pr_no_artifact">Nu s-au găsit artefacte pentru pull request</string>
     <string name="source_sheet_manage_description">Gestionează sursele de patch-uri</string>
     <string name="source_sheet_local_label">Local</string>
     <string name="source_sheet_remote_label">De la distanță</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Adaugă</string>
     <string name="patch_source_dialog_edit_title">Editează sursa</string>
     <string name="patch_source_dialog_type_github_repo">Depozit GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">Pull request GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Depozit GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Fișier .mpp sau dosar</string>
     <string name="patch_source_dialog_mpp_label">Fișier .mpp</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Salvarea jurnalelor a eșuat</string>
     <string name="settings_runtime_logs_cleared_success">Jurnale șterse pe dispozitiv</string>
     <string name="settings_runtime_logs_nothing_captured">Nimic capturat încă. Rulează aplicația patch-uită pe telefon, apoi salvează din nou</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">Jeton GitHub</string>
+    <string name="settings_github_pat_desc">Este necesar un Personal Access Token (PAT) GitHub cu scopul public_repo pentru a descărca artefactele cererilor de pull. Creați un PAT cu scopul public_repo pe %1$s.</string>
+    <string name="settings_github_pat_label">Token de acces personal</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Site web</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

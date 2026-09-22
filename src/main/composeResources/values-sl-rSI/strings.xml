@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Pot do lokalnega popravka ni najdena: %1$s</string>
     <string name="source_error_local_no_mpp">V mapi %1$s ni datotek .mpp</string>
     <string name="source_error_no_repository">Za vir ni konfiguriranega skladišča</string>
-    <string name="source_error_download_failed">Ni bilo mogoče prenesti popravkov: %1$s</string>
     <string name="source_error_fetch_releases">Izdaj ni bilo mogoče pridobiti</string>
     <string name="source_error_failed_to_load">Nalaganje ni uspelo</string>
+    <string name="source_error_github_pat_required">GitHub PAT je potreben za prenos virov pull requesta</string>
+    <string name="source_error_pr_no_artifact">Za pull request ni bilo najdenih artefaktov</string>
     <string name="source_sheet_manage_description">Upravljaj vire popravkov</string>
     <string name="source_sheet_local_label">Lokalno</string>
     <string name="source_sheet_remote_label">Oddaljeno</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Uredi vir</string>
     <string name="patch_source_dialog_type_github_repo">Skladišče GitHub</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Skladišče GitLab</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp datoteka ali mapa</string>
     <string name="patch_source_dialog_mpp_label">.mpp datoteka</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Shranjevanje dnevnkov ni uspelo</string>
     <string name="settings_runtime_logs_cleared_success">Dnevniki v napravi so počiščeni</string>
     <string name="settings_runtime_logs_nothing_captured">Nič še ni posneto. Zaženite popravljeno aplikacijo na telefonu in znova shranite</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Za prenos artefaktov pull requestov je potreben GitHub osebni dostopni žeton (PAT) z obsegom public_repo. Ustvarite PAT z obsegom public_repo na %1$s.</string>
+    <string name="settings_github_pat_label">Osebni dostopni žeton</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Spletna stran</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Lokal patchsökväg hittades inte: %1$s</string>
     <string name="source_error_local_no_mpp">Inga .mpp-filer hittades i mappen: %1$s</string>
     <string name="source_error_no_repository">Inget arkiv konfigurerat för källan</string>
-    <string name="source_error_download_failed">Det gick inte att ladda ner patchar: %1$s</string>
     <string name="source_error_fetch_releases">Det gick inte att hämta utgåvor</string>
     <string name="source_error_failed_to_load">Inläsningen misslyckades</string>
+    <string name="source_error_github_pat_required">En GitHub-PAT krävs för att ladda ner källkoden från pull requesten.</string>
+    <string name="source_error_pr_no_artifact">Inga artefakter hittades för pull requesten.</string>
     <string name="source_sheet_manage_description">Hantera patchkällor</string>
     <string name="source_sheet_local_label">Lokal</string>
     <string name="source_sheet_remote_label">Fjärrkälla</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Lägg till</string>
     <string name="patch_source_dialog_edit_title">Redigera källa</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-arkiv</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-arkiv</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-fil eller mapp</string>
     <string name="patch_source_dialog_mpp_label">.mpp-fil</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Det gick inte att spara loggar</string>
     <string name="settings_runtime_logs_cleared_success">Loggar rensade på enheten</string>
     <string name="settings_runtime_logs_nothing_captured">Inget har fångats ännu. Kör den patchade appen på telefonen och spara sedan igen</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">Personlig åtkomsttoken för GitHub</string>
+    <string name="settings_github_pat_desc">En personlig åtkomsttoken (PAT) från GitHub med scopet public_repo krävs för att ladda ner artefakter från pull requests. Skapa en PAT med scopet public_repo på %1$s</string>
+    <string name="settings_github_pat_label">Personlig åtkomsttoken</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Webbplats</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

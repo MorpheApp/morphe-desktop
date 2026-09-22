@@ -559,9 +559,10 @@
     <string name="source_error_local_not_found">Локална путања закрпа није пронађена: %1$s</string>
     <string name="source_error_local_no_mpp">Нема .mpp датотека у фасцикли: %1$s</string>
     <string name="source_error_no_repository">Није конфигурисан репозиторијум за извор</string>
-    <string name="source_error_download_failed">Преузимање закрпа није успело: %1$s</string>
     <string name="source_error_fetch_releases">Добављање издања није успело</string>
     <string name="source_error_failed_to_load">Учитавање није успело</string>
+    <string name="source_error_github_pat_required">За преузимање извора pull request-а потребан је GitHub PAT.</string>
+    <string name="source_error_pr_no_artifact">Нису пронађени артефакти за pull request.</string>
     <string name="source_sheet_manage_description">Управљај изворима закрпа</string>
     <string name="source_sheet_local_label">Локално</string>
     <string name="source_sheet_remote_label">Даљински</string>
@@ -602,6 +603,7 @@
     <string name="patch_source_dialog_add_button">Додај</string>
     <string name="patch_source_dialog_edit_title">Уреди извор</string>
     <string name="patch_source_dialog_type_github_repo">GitHub репозиторијум</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab репозиторијум</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp датотека или фасцикла</string>
     <string name="patch_source_dialog_mpp_label">.mpp датотека</string>
@@ -801,6 +803,10 @@
     <string name="settings_runtime_logs_failed_to_save">Чување дневника није успело</string>
     <string name="settings_runtime_logs_cleared_success">Дневници су очишћени на уређају</string>
     <string name="settings_runtime_logs_nothing_captured">Још ништа није снимљено. Покрените закрпљену апликацију на телефону, па поново сачувајте</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">За преузимање артефаката из pull request-а потребан је GitHub лични приступни токен (PAT) са public_repo опсегом. Креирајте PAT са public_repo опсегом на %1$s</string>
+    <string name="settings_github_pat_label">Лични приступни токен</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Веб сајт</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

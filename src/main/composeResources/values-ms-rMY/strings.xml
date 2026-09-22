@@ -105,6 +105,7 @@
     <!-- Settings - Signing -->
     <!-- Settings - Keystore Info Dialog -->
     <!-- Settings - Runtime Logs -->
+    <!-- Settings - GitHub PAT -->
     <!-- App Info Dialog -->
     <!-- Changelog Dialog -->
 </resources>

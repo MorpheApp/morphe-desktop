@@ -557,9 +557,10 @@
     <string name="source_error_local_not_found">Yerel yama yolu bulunamadı: %1$s</string>
     <string name="source_error_local_no_mpp">%1$s klasöründe .mpp dosyası bulunamadı</string>
     <string name="source_error_no_repository">Kaynak için depo yapılandırılmamış</string>
-    <string name="source_error_download_failed">Yamalar indirilemedi: %1$s</string>
     <string name="source_error_fetch_releases">Sürümler alınamadı</string>
     <string name="source_error_failed_to_load">Yüklenemedi</string>
+    <string name="source_error_github_pat_required">Pull request kaynaklarını indirmek için GitHub PAT gerekli.</string>
+    <string name="source_error_pr_no_artifact">Pull request için hiçbir yapıt bulunamadı.</string>
     <string name="source_sheet_manage_description">Yama kaynaklarını yönet</string>
     <string name="source_sheet_local_label"> Yerel</string>
     <string name="source_sheet_remote_label">Uzak</string>
@@ -600,6 +601,7 @@
     <string name="patch_source_dialog_add_button">Ekle</string>
     <string name="patch_source_dialog_edit_title">Kaynağı düzenle</string>
     <string name="patch_source_dialog_type_github_repo">GitHub Deposu</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab Deposu</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp dosyası veya klasör</string>
     <string name="patch_source_dialog_mpp_label">.mpp dosyası</string>
@@ -799,6 +801,10 @@
     <string name="settings_runtime_logs_failed_to_save">Günlükler kaydedilemedi</string>
     <string name="settings_runtime_logs_cleared_success">Cihazdaki günlükler temizlendi</string>
     <string name="settings_runtime_logs_nothing_captured">Henüz hiçbir şey yakalanmadı. Yamalı uygulamayı telefonunuzda çalıştırın, ardından tekrar kaydedin</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">Çekme isteği yapıtlarını indirmek için public_repo kapsamına sahip bir GitHub Kişisel Erişim Belirteci (PAT) gereklidir. %1$s üzerinde public_repo kapsamına sahip bir PAT oluşturun.</string>
+    <string name="settings_github_pat_label">Kişisel Erişim Belirteci</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Web sitesi</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

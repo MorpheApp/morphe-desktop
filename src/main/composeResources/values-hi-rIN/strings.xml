@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">स्थानीय पैच पथ नहीं मिला: %1$s</string>
     <string name="source_error_local_no_mpp">फ़ोल्डर में कोई .mpp फ़ाइल नहीं मिली: %1$s</string>
     <string name="source_error_no_repository">स्रोत के लिए कोई रिपॉज़िटरी कॉन्फ़िगर नहीं है</string>
-    <string name="source_error_download_failed">पैच डाउनलोड नहीं कर सके: %1$s</string>
     <string name="source_error_fetch_releases">रिलीज़ प्राप्त नहीं कर सके</string>
     <string name="source_error_failed_to_load">लोड करने में विफल</string>
+    <string name="source_error_github_pat_required">पुल रिक्वेस्ट के स्रोत डाउनलोड करने के लिए GitHub PAT आवश्यक है</string>
+    <string name="source_error_pr_no_artifact">पुल रिक्वेस्ट के लिए कोई आर्टिफैक्ट नहीं मिला</string>
     <string name="source_sheet_manage_description">पैच स्रोत प्रबंधित करें</string>
     <string name="source_sheet_local_label">स्थानीय</string>
     <string name="source_sheet_remote_label">दूरस्थ</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">जोड़ें</string>
     <string name="patch_source_dialog_edit_title">स्रोत संपादित करें</string>
     <string name="patch_source_dialog_type_github_repo">गिटहब रिपॉज़िटरी</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub पुल रिक्वेस्ट</string>
     <string name="patch_source_dialog_type_gitlab_repo">गिटलैब रिपॉज़िटरी</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp फ़ाइल या फ़ोल्डर</string>
     <string name="patch_source_dialog_mpp_label">.mpp फ़ाइल</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">लॉग सहेजने में विफल</string>
     <string name="settings_runtime_logs_cleared_success">डिवाइस पर लॉग साफ़ हुए</string>
     <string name="settings_runtime_logs_nothing_captured">अभी तक कुछ कैप्चर नहीं हुआ। अपने फोन पर पैच किया गया ऐप चलाएं, फिर पुनः सहेजें</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">पुल रिक्वेस्ट आर्टिफैक्ट्स डाउनलोड करने के लिए public_repo स्कोप वाले GitHub Personal Access Token (PAT) की आवश्यकता होती है। %1$s पर public_repo स्कोप के साथ एक PAT बनाएँ।</string>
+    <string name="settings_github_pat_label">व्यक्तिगत एक्सेस टोकन</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">वेबसाइट</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

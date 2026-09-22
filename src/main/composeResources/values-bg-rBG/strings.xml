@@ -580,9 +580,10 @@
     <string name="source_error_local_not_found">Локалният път за кръпки не е намерен: %1$s</string>
     <string name="source_error_local_no_mpp">Не са намерени .mpp файлове в папката: %1$s</string>
     <string name="source_error_no_repository">Няма конфигурирано хранилище за източника</string>
-    <string name="source_error_download_failed">Не можаха да се изтеглят кръпки: %1$s</string>
     <string name="source_error_fetch_releases">Не можаха да се извлекат издания</string>
     <string name="source_error_failed_to_load">Неуспешно зареждане</string>
+    <string name="source_error_github_pat_required">Необходим е GitHub PAT за изтегляне на източниците на pull request.</string>
+    <string name="source_error_pr_no_artifact">Не са намерени артефакти за pull request.</string>
     <string name="source_sheet_manage_description">Управление на източници на кръпки</string>
     <string name="source_sheet_local_label">Локален</string>
     <string name="source_sheet_remote_label">Отдалечен</string>
@@ -623,6 +624,7 @@
     <string name="patch_source_dialog_add_button">Добавяне</string>
     <string name="patch_source_dialog_edit_title">Редактиране на източник</string>
     <string name="patch_source_dialog_type_github_repo">GitHub хранилище</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab хранилище</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp файл или папка</string>
     <string name="patch_source_dialog_mpp_label">.mpp файл</string>
@@ -822,6 +824,10 @@
     <string name="settings_runtime_logs_failed_to_save">Неуспех при запазване на журналите</string>
     <string name="settings_runtime_logs_cleared_success">Журналите на устройството са изчистени</string>
     <string name="settings_runtime_logs_nothing_captured">Все още нищо не е записано. Стартирайте приложението с пачове на телефона си и след това запазете отново.</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">За изтегляне на артефакти от pull request е необходим GitHub Personal Access Token (PAT) с обхват public_repo. Създайте PAT с обхват public_repo на %1$s</string>
+    <string name="settings_github_pat_label">Личен токен за достъп</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Уебсайт</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">未找到本地补丁路径：%1$s</string>
     <string name="source_error_local_no_mpp">在文件夹中未找到 .mpp 文件：%1$s</string>
     <string name="source_error_no_repository">未为来源配置仓库</string>
-    <string name="source_error_download_failed">无法下载补丁：%1$s</string>
     <string name="source_error_fetch_releases">无法获取发布版</string>
     <string name="source_error_failed_to_load">加载失败</string>
+    <string name="source_error_github_pat_required">下载拉取请求源需要 GitHub PAT。</string>
+    <string name="source_error_pr_no_artifact">未找到拉取请求的构件。</string>
     <string name="source_sheet_manage_description">管理补丁来源</string>
     <string name="source_sheet_local_label">本地</string>
     <string name="source_sheet_remote_label">远程</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">添加</string>
     <string name="patch_source_dialog_edit_title">编辑来源</string>
     <string name="patch_source_dialog_type_github_repo">GitHub 仓库</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub 拉取请求</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab 仓库</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp 文件或文件夹</string>
     <string name="patch_source_dialog_mpp_label">.mpp 文件</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">保存日志失败</string>
     <string name="settings_runtime_logs_cleared_success">设备上的日志已清除</string>
     <string name="settings_runtime_logs_nothing_captured">尚未捕获任何内容。请在手机上运行已修补的应用，然后再次保存</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub访问令牌</string>
+    <string name="settings_github_pat_desc">需要具有 public_repo 权限的 GitHub 个人访问令牌 (PAT) 才能下载拉取请求工件。请在 %1$s 上创建具有 public_repo 权限的 PAT。</string>
+    <string name="settings_github_pat_label">个人访问令牌</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">网站</string>
     <string name="app_info_version_gui">GUI：%1$s</string>

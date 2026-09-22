@@ -559,9 +559,10 @@
     <string name="source_error_local_not_found">로컬 패치 경로를 찾을 수 없음: %1$s</string>
     <string name="source_error_local_no_mpp">폴더에서 .mpp 파일을 찾을 수 없음: %1$s</string>
     <string name="source_error_no_repository">소스에 대해 구성된 저장소가 없습니다</string>
-    <string name="source_error_download_failed">패치를 다운로드할 수 없습니다: %1$s</string>
     <string name="source_error_fetch_releases">릴리스를 가져올 수 없습니다</string>
     <string name="source_error_failed_to_load">불러오기 실패</string>
+    <string name="source_error_github_pat_required">풀 리퀘스트 소스를 다운로드하려면 GitHub PAT가 필요합니다.</string>
+    <string name="source_error_pr_no_artifact">Pull request에 대한 아티팩트를 찾을 수 없습니다</string>
     <string name="source_sheet_manage_description">패치 소스 관리</string>
     <string name="source_sheet_local_label">로컬</string>
     <string name="source_sheet_remote_label">원격</string>
@@ -602,6 +603,7 @@
     <string name="patch_source_dialog_add_button">추가</string>
     <string name="patch_source_dialog_edit_title">소스 편집</string>
     <string name="patch_source_dialog_type_github_repo">GitHub 저장소</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab 저장소</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp 파일 또는 폴더</string>
     <string name="patch_source_dialog_mpp_label">.mpp 파일</string>
@@ -801,6 +803,10 @@
     <string name="settings_runtime_logs_failed_to_save">로그를 저장하지 못했습니다</string>
     <string name="settings_runtime_logs_cleared_success">기기에서 로그가 지워졌습니다</string>
     <string name="settings_runtime_logs_nothing_captured">아직 캡처된 항목이 없습니다. 휴대폰에서 패치된 앱을 실행한 후 다시 저장하세요</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub 개인 액세스 토큰</string>
+    <string name="settings_github_pat_desc">Pull Request 아티팩트를 다운로드하려면 public_repo 권한 범위가 포함된 GitHub 개인 액세스 토큰(PAT)이 필요합니다. %1$s에서 public_repo 권한 범위로 PAT를 생성하세요</string>
+    <string name="settings_github_pat_label">개인 액세스 토큰</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">웹사이트</string>
     <string name="app_info_version_gui">GUI: %1$s</string>

@@ -556,9 +556,10 @@
     <string name="source_error_local_not_found">Lokale patch-pad nie gevind nie: %1$s</string>
     <string name="source_error_local_no_mpp">Geen .mpp-lêers in vouer gevind nie: %1$s</string>
     <string name="source_error_no_repository">Geen bewaarplek vir die bron gekonfigureer nie</string>
-    <string name="source_error_download_failed">Kon nie patches aflaai nie: %1$s</string>
     <string name="source_error_fetch_releases">Kon nie vrystellings ophaal nie</string>
     <string name="source_error_failed_to_load">Kon nie laai nie</string>
+    <string name="source_error_github_pat_required">'n GitHub PAT word benodig om trekversoek-bronne af te laai</string>
+    <string name="source_error_pr_no_artifact">Geen artefakte vir die trekversoek gevind nie</string>
     <string name="source_sheet_manage_description">Bestuur patch-bronne</string>
     <string name="source_sheet_local_label">Plaaslike</string>
     <string name="source_sheet_remote_label">Afstand</string>
@@ -599,6 +600,7 @@
     <string name="patch_source_dialog_add_button">Voeg by</string>
     <string name="patch_source_dialog_edit_title">Wysig bron</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-bewaarplek</string>
+    <string name="patch_source_dialog_type_github_pr">GitHub-trekversoek</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-bewaarplek</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-lêer of vouer</string>
     <string name="patch_source_dialog_mpp_label">.mpp-lêer</string>
@@ -798,6 +800,10 @@
     <string name="settings_runtime_logs_failed_to_save">Kon nie logboeke stoor nie</string>
     <string name="settings_runtime_logs_cleared_success">Logboeke op toestel skoongemaak</string>
     <string name="settings_runtime_logs_nothing_captured">Nog niks opgevang nie. Hardloop die gepleisterde app op jou foon en stoor dan weer</string>
+    <!-- Settings - GitHub PAT -->
+    <string name="settings_section_github_pat">GitHub PAT</string>
+    <string name="settings_github_pat_desc">'n GitHub-persoonlike toegangstoken (PAT) met die public_repo-omvang is nodig om pull request-artefakte af te laai. Skep 'n PAT met die public_repo-omvang op %1$s</string>
+    <string name="settings_github_pat_label">Persoonlike toegangstoken</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Webwerf</string>
     <string name="app_info_version_gui">Grafiese gebruikerskoppelvlak: %1$s</string>
