@@ -51,9 +51,6 @@ import app.morphe.gui.ui.theme.MorpheAccentColors
 import app.morphe.gui.ui.theme.MorpheCornerStyle
 import app.morphe.gui.ui.components.MorpheDropdown
 import app.morphe.gui.ui.components.MorpheDropdownItem
-import app.morphe.gui.ui.screens.home.HomeAppSortMode
-import app.morphe.gui.ui.screens.home.comparator
-import app.morphe.gui.ui.screens.home.sortKeys
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
