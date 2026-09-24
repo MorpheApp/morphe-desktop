@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Morphe Desktop
+GenericName=Android App Patcher
+Comment=Patch Android apps with Morphe Patcher
+Exec=morphe-desktop
+Icon=morphe-desktop
+Terminal=false
+Categories=Development;Utility;Java;
+Keywords=android;apk;patch;morphe;
+StartupNotify=false
