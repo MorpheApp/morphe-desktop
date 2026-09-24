@@ -3,7 +3,7 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.ui.screens.patches
+package app.morphe.gui.ui.screens.patches.components.selection
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
