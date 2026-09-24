@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d yama kaynağı yüklenemedi. Başarıyla yüklenenler kullanılıyor</item>
+        <item quantity="other">%1$d yama kaynağı yüklenemedi. Başarıyla yüklenenler kullanılıyor</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d yamalı uygulama için güncelleme mevcut</item>
+        <item quantity="other">%1$d yamalı uygulama için güncellemeler mevcut</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%2$s konumuna %1$d satır kaydedildi</item>
+        <item quantity="other">%2$s konumuna %1$d satır kaydedildi</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d kaynak</item>
+        <item quantity="other">%1$d kaynak</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d yama uygulanacak</item>
+        <item quantity="other">%1$d yama uygulanacak</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d hariç tutuldu</item>
+        <item quantity="other">%1$d hariç tutuldu</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d etkinleştirildi</item>
+        <item quantity="other">%1$d etkinleştirildi</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d devre dışı bırakıldı</item>
+        <item quantity="other">%1$d devre dışı bırakıldı</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d kitaplık</item>
+        <item quantity="other">%1$d kitaplık</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d / %2$d seçildi</item>
+        <item quantity="other">%1$d / %2$d seçildi</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d yama</item>
+        <item quantity="other">%1$d yama</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">Bu ayarı %1$d kart geçersiz kılıyor</item>
+        <item quantity="other">Bu ayarı %1$d kart geçersiz kılıyor</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">%1$d paket indir</item>
+        <item quantity="other">%1$d paket indir</item>
+    </plurals>
+</resources>

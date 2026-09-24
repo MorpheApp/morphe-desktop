@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common Components -->
+    <string name="remove">Lêkirin</string>
+    <string name="none">Netû</string>
+    <string name="copy">Copî bike</string>
+    <string name="off">Dabe</string>
+    <string name="on">Bo</string>
+    <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">Bixweber</string>
+    <!-- Quick Patch Screen -->
+    <!-- Patcher Steps -->
+    <!-- ADB Installation Errors -->
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <!-- Version warnings for Quick Patch -->
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <!-- Quick Patch - Supported Apps Row -->
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <!-- Home Screen - SupportedAppsListPane -->
+    <!-- Home Screen - YourAppsPane -->
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_option_enabled">Çalak</string>
+    <string name="patch_selection_option_disabled">Vemirandî</string>
+    <!-- Patching Screen -->
+    <!-- Result Screen -->
+    <!-- Icon Studio -->
+    <string name="icon_studio_adjust_opacity">Astorî</string>
+    <string name="icon_studio_color_label">Reng</string>
+    <!-- Source Management Sheet -->
+    <!-- Patch Source Dialogs -->
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <string name="settings_dialog_title">Nastîn</string>
+    <!-- Settings - Appearance -->
+    <!-- Settings - Advanced -->
+    <!-- Settings - System -->
+    <string name="settings_section_about">Derbarê</string>
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- Settings - GitHub PAT -->
+    <!-- App Info Dialog -->
+    <!-- Changelog Dialog -->
+</resources>

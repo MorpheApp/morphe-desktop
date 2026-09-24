@@ -25,12 +25,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.theme.*
+import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.datatransfer.StringSelection
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -57,7 +60,7 @@ internal fun ErrorContent(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Patching failed",
+            text = stringResource(Res.string.status_patching_failed),
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             fontFamily = font,
@@ -82,16 +85,17 @@ internal fun ErrorContent(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "App info",
+                        text = stringResource(Res.string.app_info_shared_label),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
+                val unknown = stringResource(Res.string.unknown)
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = apkInfo?.packageName ?: "Unknown",
+                    text = apkInfo?.packageName ?: unknown,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = mono,
@@ -99,7 +103,7 @@ internal fun ErrorContent(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = apkInfo?.versionName ?: "Unknown",
+                    text = apkInfo?.versionName ?: unknown,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = mono,
@@ -110,7 +114,7 @@ internal fun ErrorContent(
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
                 )
                 Text(
-                    text = patchSourceName ?: "Unknown",
+                    text = patchSourceName ?: unknown,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = mono,
@@ -118,7 +122,7 @@ internal fun ErrorContent(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = patchesVersion ?: "Unknown",
+                    text = patchesVersion ?: unknown,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = mono,
@@ -153,7 +157,7 @@ internal fun ErrorContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Error log",
+                            text = stringResource(Res.string.error_log_label),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontFamily = font,
@@ -175,6 +179,7 @@ internal fun ErrorContent(
                                 .hoverable(copyHover)
                                 .clip(RoundedCornerShape(corners.small))
                                 .background(copyBg)
+                                .handCursor()
                                 .clickable {
                                     clipboardScope.launch {
                                         clipboard.setClipEntry(
@@ -186,7 +191,7 @@ internal fun ErrorContent(
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = if (copied) "Copied" else "Copy",
+                                text = if (copied) stringResource(Res.string.copied) else stringResource(Res.string.copy),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -204,7 +209,7 @@ internal fun ErrorContent(
                             .wrapContentHeight()
                     ) {
                         Text(
-                            text = errorMessage ?: "Unknown error occurred.",
+                            text = errorMessage ?: stringResource(Res.string.quick_patch_error_unknown_occurred),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = mono,
@@ -238,7 +243,8 @@ internal fun ErrorContent(
                 onClick = onStartOver,
                 modifier = Modifier
                     .weight(1f)
-                    .height(42.dp),
+                    .height(42.dp)
+                    .handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
@@ -247,7 +253,7 @@ internal fun ErrorContent(
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
             ) {
                 Text(
-                    text = "Start over",
+                    text = stringResource(Res.string.quick_patch_screen_start_over_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -259,7 +265,8 @@ internal fun ErrorContent(
                 onClick = onViewLogs,
                 modifier = Modifier
                     .weight(1f)
-                    .height(42.dp),
+                    .height(42.dp)
+                    .handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
                 colors = ButtonDefaults.outlinedButtonColors(
@@ -268,7 +275,7 @@ internal fun ErrorContent(
                 )
             ) {
                 Text(
-                    text = "View full logs",
+                    text = stringResource(Res.string.view_full_logs_button),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,

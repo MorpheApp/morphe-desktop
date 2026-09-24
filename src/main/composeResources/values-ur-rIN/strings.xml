@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common Components -->
+    <string name="copy">کاپی کریں</string>
+    <string name="save">محفوظ کریں</string>
+    <!-- App Card Fill Dialog -->
+    <!-- Quick Patch Screen -->
+    <!-- Patcher Steps -->
+    <!-- ADB Installation Errors -->
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <!-- Version warnings for Quick Patch -->
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <!-- Quick Patch - Supported Apps Row -->
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <string name="home_stage_continue">जारी रखें</string>
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <string name="home_app_row_update_available_badge">اپڈیٹ دستیاب ہے</string>
+    <!-- Home Screen - SupportedAppsListPane -->
+    <!-- Home Screen - YourAppsPane -->
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <!-- Patching Screen -->
+    <!-- Result Screen -->
+    <!-- Icon Studio -->
+    <!-- Source Management Sheet -->
+    <!-- Patch Source Dialogs -->
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <string name="settings_dialog_title">ترتیبات</string>
+    <string name="settings_dialog_reset_button">ریسیٹ</string>
+    <!-- Settings - Appearance -->
+    <string name="settings_language_dialog_title">ایپ کی زبان</string>
+    <!-- Settings - Advanced -->
+    <!-- Settings - System -->
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- Settings - GitHub PAT -->
+    <!-- App Info Dialog -->
+    <string name="app_info_dialog_link_website">ویبسائٹ</string>
+    <!-- Changelog Dialog -->
+</resources>

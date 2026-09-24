@@ -53,6 +53,7 @@ data class SourceVersionPref(
 
 @Serializable
 data class AppConfig(
+    val language: String = "system",
     val themePreference: String = ThemePreference.SYSTEM.name,
     val backgroundType: String = "CIRCLES",
     val enableParallax: Boolean = true,
@@ -85,6 +86,7 @@ data class AppConfig(
     val cardFills: Map<String, MorpheFill> = emptyMap(),
     val globalCardFill: MorpheFill? = null,
     val useSharpCorners: Boolean = false,
+    val groupPatchesByCategory: Boolean = true,
     val homeAppSortMode: String = "RECOMMENDED",
     val preferredPatchChannel: String = PatchChannel.STABLE.name,
     val defaultOutputDirectory: String? = null,
@@ -143,6 +145,7 @@ data class AppConfig(
     // (only applies when a rename patch was used and stock is installed). Default
     // OFF. It reaches into a stock app's behavior.
     val disableStockLinksAfterInstall: Boolean = false,
+    val gitHubPat: String = "",
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {

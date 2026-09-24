@@ -36,6 +36,28 @@ jobs:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
+      - name: Fix workspace ownership
+        run: sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE"
+
+      - name: Checkout Crowdin branch
+        uses: actions/checkout@v7
+        with:
+          ref: crowdin
+          fetch-depth: 0
+
+      - name: Unescape apostrophes in translations
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/dev)" ]; then
+            find src/main/composeResources -type f -name "*.xml" -exec sed -i "s/\\\\'/'/g" {} +
+            if [ -n "$(git status --porcelain)" ]; then
+              git config --local user.name "Crowdin Bot"
+              git config --local user.email "support+bot@crowdin.com"
+              git commit -a --amend --no-edit
+              git push origin crowdin --force
+            fi
+          fi
+
+
   merge:
     name: Squash merge Crowdin into Dev
     if: github.event_name == 'workflow_dispatch'

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Ekki tókst að hlaða %1$d plásturuppsprettu. Nota þær sem tókst að hlaða</item>
+        <item quantity="other">Ekki tókst að hlaða %1$d plásturuppsprettur. Nota þær sem tókst að hlaða</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d plástrað forrit er með uppfærslu í boði</item>
+        <item quantity="other">%1$d plástuð forrit eru með uppfærslur í boði</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Vistaði %1$d línu í %2$s</item>
+        <item quantity="other">Vistaði %1$d línur í %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d uppspretta</item>
+        <item quantity="other">%1$d uppsprettur</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d plástur verður settur á</item>
+        <item quantity="other">%1$d plástrar verða settir á</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d undanskilinn</item>
+        <item quantity="other">%1$d undanskildir</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d virkur</item>
+        <item quantity="other">%1$d virkir</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d óvirkur</item>
+        <item quantity="other">%1$d óvirkir</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d forritasafn</item>
+        <item quantity="other">%1$d forritasöfn</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d af %2$d valinn</item>
+        <item quantity="other">%1$d af %2$d valdir</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d plástur</item>
+        <item quantity="other">%1$d plástrar</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kort yfirskrifar þetta</item>
+        <item quantity="other">%1$d kort yfirskrifa þetta</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Sækja %1$d búnt</item>
+        <item quantity="other">Sækja %1$d búnt</item>
+    </plurals>
+</resources>

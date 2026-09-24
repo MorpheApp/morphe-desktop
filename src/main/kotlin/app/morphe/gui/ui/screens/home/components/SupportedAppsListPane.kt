@@ -54,6 +54,8 @@ import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.screens.home.HomeAppSortMode
 import app.morphe.gui.ui.screens.home.comparator
 import app.morphe.gui.ui.screens.home.sortKeys
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // SUPPORTED APPS LIST PANE
@@ -207,7 +209,7 @@ internal fun SupportedAppsListPane(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                 ) {
                     Text(
-                        text = "Load failed",
+                        text = stringResource(Res.string.home_list_load_failed),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = font,
@@ -228,7 +230,7 @@ internal fun SupportedAppsListPane(
                             shape = RoundedCornerShape(corners.small),
                         ) {
                             Text(
-                                "Retry",
+                                text = stringResource(Res.string.retry),
                                 fontFamily = font,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal
@@ -242,7 +244,7 @@ internal fun SupportedAppsListPane(
                             shape = RoundedCornerShape(corners.small),
                         ) {
                             Text(
-                                "Manage sources",
+                                text = stringResource(Res.string.home_header_manage_sources_button),
                                 fontFamily = font,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -257,8 +259,8 @@ internal fun SupportedAppsListPane(
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = if (searchQuery.isBlank()) "No supported apps"
-                               else "No apps match \"$searchQuery\"",
+                        text = if (searchQuery.isBlank()) stringResource(Res.string.home_list_no_supported_apps)
+                               else stringResource(Res.string.home_list_no_apps_match, searchQuery),
                         fontSize = 13.sp,
                         fontFamily = font,
                         fontWeight = FontWeight.Normal,
@@ -363,6 +365,7 @@ internal fun SlimSearchField(
         textStyle = MaterialTheme.typography.bodySmall.copy(
             fontFamily = font,
             fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface
         ),
@@ -388,11 +391,12 @@ internal fun SlimSearchField(
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Box(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty()) {
                         Text(
-                            "Filter apps…",
+                            text = stringResource(Res.string.filter_apps_hint),
                             fontSize = 11.sp,
+                            lineHeight = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
                             color = muted.copy(alpha = 0.4f)
@@ -411,7 +415,7 @@ internal fun SlimSearchField(
                     ) {
                         Icon(
                             MorpheIcons.Clear,
-                            contentDescription = "Clear",
+                            contentDescription = stringResource(Res.string.clear),
                             tint = muted.copy(alpha = 0.5f),
                             modifier = Modifier.size(12.dp)
                         )

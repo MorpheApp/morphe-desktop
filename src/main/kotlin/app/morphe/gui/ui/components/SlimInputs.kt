@@ -100,6 +100,7 @@ internal fun SlimTextField(
         textStyle = MaterialTheme.typography.bodySmall.copy(
             fontFamily = font,
             fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface,
         ),
@@ -115,11 +116,12 @@ internal fun SlimTextField(
                     .padding(start = 10.dp, end = if (trailing != null) 4.dp else 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty() && placeholder.isNotEmpty()) {
                         Text(
                             text = placeholder,
                             fontSize = 11.sp,
+                            lineHeight = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
                             color = muted.copy(alpha = 0.5f),
@@ -149,7 +151,7 @@ internal fun DialogActionButton(
         onClick = onClick,
         shape = RoundedCornerShape(corners.small),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
-        modifier = Modifier.height(dimens.controlHeight),
+        modifier = Modifier.height(dimens.controlHeight).handCursor(),
     ) {
         Text(
             label,

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="other">%1$d sumber tambalan gagal dimuat. Menggunakan yang berhasil dimuat</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="other">%1$d aplikasi yang ditambal memiliki pembaruan tersedia</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="other">Disimpan %1$d baris ke %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="other">%1$d sumber</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="other">%1$d tambalan akan diterapkan</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="other">%1$d dikecualikan</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="other">%1$d diaktifkan</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="other">%1$d dinonaktifkan</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="other">%1$d pustaka</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="other">%1$d dari %2$d dipilih</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="other">%1$d tambalan</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="other">%1$d kartu menimpa ini</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="other">Unduh %1$d paket</item>
+    </plurals>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d Fonte</item>
+        <item quantity="other">
+%1$d Fontes</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d Mellora</item>
+        <item quantity="other">%1$d Melloras</item>
+    </plurals>
+</resources>

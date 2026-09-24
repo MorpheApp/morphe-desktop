@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="other">%1$d 个补丁源加载失败。正在使用加载成功的补丁源</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="other">%1$d 个已修补的应用有可用更新</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="other">已将 %1$d 行保存到 %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="other">%1$d 个来源</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="other">将应用 %1$d 个补丁</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="other">已排除 %1$d 个补丁</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="other">已启用 %1$d 个补丁</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="other">已禁用 %1$d 个补丁</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="other">%1$d 个库</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="other">%2$d人中以选择%1$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="other">%1$d 个补丁</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="other">有 %1$d 张卡片会覆盖此设置</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="other">下载 %1$d 个补丁包</item>
+    </plurals>
+</resources>

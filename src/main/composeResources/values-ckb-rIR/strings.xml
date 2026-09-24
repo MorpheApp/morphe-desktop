@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common Components -->
+    <string name="search">گەڕان</string>
+    <string name="remove">لابردن</string>
+    <string name="cancel">پاشگەز</string>
+    <string name="none">هیچ</string>
+    <string name="select_image">وێنە دیاریبکە</string>
+    <string name="copy">کۆپی</string>
+    <string name="off">کوژاوە</string>
+    <string name="on">هەڵکراو</string>
+    <string name="status_loading">بارکردن…</string>
+    <string name="download">دابەزاندن</string>
+    <string name="version_label_experimental">تاقیکاری</string>
+    <string name="app_info_shared_label">زانیاری ئەپ</string>
+    <string name="error_log_label">تۆماری هەڵە</string>
+    <string name="custom_color_description">ڕەنگی باو</string>
+    <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">بنەڕەت</string>
+    <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">پینەکان</string>
+    <string name="quick_patch_select_apk">دیاریکردنی APK</string>
+    <!-- Patcher Steps -->
+    <string name="patching_step_loading_patches">بارکردنی پینەکان</string>
+    <string name="patching_step_preparing">ئامادەکردن</string>
+    <string name="patching_step_merging_split_apk">ئاوێتەکردنی APKی دابەشکراو</string>
+    <string name="patching_step_read_apk">خوێندنەوەی پەڕگەی APK</string>
+    <string name="patching_step_applying_patches">جێگیرکردنی پینەکان</string>
+    <string name="patching_step_saving">هەڵگرتن</string>
+    <string name="patching_step_writing_apk">نووسینی فایلی APK پینەکراو</string>
+    <string name="patching_step_signing">واژۆکردنی فایلی APK پینەکراو</string>
+    <!-- ADB Installation Errors -->
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <string name="version_warning_experiment_title">دەتەوێت تاقی بکەیتەوە؟ 🧪</string>
+    <!-- Version warnings for Quick Patch -->
+    <string name="quick_patch_error_unknown_occurred">هەڵەیەکی نەناسراو ڕوویدا</string>
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <!-- Quick Patch - Supported Apps Row -->
+    <string name="quick_patch_supported_apps_version_any">هەر وەشانێک</string>
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <string name="home_stage_continue">بەردەوامبوون</string>
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <!-- Home Screen - SupportedAppsListPane -->
+    <string name="home_list_no_apps_match">هیچ ئەپێک ناگونجێ لەگەڵ \"%1$s\"</string>
+    <string name="home_sort_recommended">پێشنیازکراو</string>
+    <!-- Home Screen - YourAppsPane -->
+    <string name="home_your_apps_status_patched">پینەکراو</string>
+    <string name="home_detail_details_title">وردەکاری</string>
+    <string name="home_detail_section_options">هەڵبژاردەکان</string>
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_no_patches_found">هیچ پینەیەک نەدۆزرایەوە</string>
+    <string name="patch_selection_option_enabled">چالاککراو</string>
+    <string name="patch_selection_option_disabled">لەکارخراو</string>
+    <string name="patch_selection_badge_new">نوێ</string>
+    <!-- Patching Screen -->
+    <string name="patching_status_in_progress">جێگیرکردنی پینەکان</string>
+    <string name="patching_progress_title">پینەکردنی ئەپ</string>
+    <string name="patching_graph_memory_usage">بەکارهێنانی بیرگە</string>
+    <string name="patching_banner_apk_size">قەبارەی APK</string>
+    <string name="patching_banner_patches">پینەکان</string>
+    <!-- Result Screen -->
+    <string name="result_adb_update_successful">نوێکردنەوە سەرکەوتوو بوو!</string>
+    <!-- Icon Studio -->
+    <string name="icon_studio_undo_button">گەڕانەوە</string>
+    <string name="icon_studio_preview_monochrome">منۆكرۆم</string>
+    <string name="icon_studio_adjust_opacity">ناوەڕاستی</string>
+    <string name="icon_studio_color_label">ڕەنگ</string>
+    <!-- Source Management Sheet -->
+    <string name="source_sheet_local_label">ناوخۆ</string>
+    <string name="source_sheet_remote_label">دوورەدەست</string>
+    <string name="add_source">زیادکردنی سەرچاوە</string>
+    <string name="source_sheet_title">سەرچاوەکانی پینە</string>
+    <string name="source_sheet_type_preinstalled">پێشوەختە دامەزراو</string>
+    <!-- Patch Source Dialogs -->
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <!-- Settings -->
+    <string name="settings_dialog_title">ڕێکخستنەکان</string>
+    <string name="settings_nav_appearance">دەرکەوتن</string>
+    <string name="settings_nav_advanced">پێشکەوتوو</string>
+    <string name="settings_nav_system">سیستەم</string>
+    <string name="settings_theme_system">سیستەم</string>
+    <!-- Settings - Appearance -->
+    <string name="settings_language_current_title">زمانی ئێستا</string>
+    <string name="settings_language_dialog_title">زمانی ئەپ</string>
+    <string name="settings_section_theme">تەوەرە</string>
+    <string name="settings_theme_light">ڕووناک</string>
+    <string name="settings_theme_dark">تاریک</string>
+    <string name="settings_section_accent_color">ڕەنگی جیاواز</string>
+    <string name="settings_section_background_animation">ئەنیمەیشتی پاشخان</string>
+    <string name="settings_background_circles">بازنەکان</string>
+    <string name="settings_background_rings">ئەڵقەکان</string>
+    <string name="settings_background_mesh">تۆڕ</string>
+    <string name="settings_background_space">بۆشایی</string>
+    <string name="settings_background_shapes">شێوەچکەکان</string>
+    <string name="settings_background_snow">بەفر</string>
+    <string name="settings_background_grid">تۆڕهێڵ</string>
+    <string name="settings_background_particles">تەنۆلکەکان</string>
+    <string name="settings_toggle_parallax_label">کاریگەری لاڕێ</string>
+    <!-- Settings - Advanced -->
+    <string name="settings_toggle_expert_mode_label">مۆدی شارەزا</string>
+    <!-- Settings - System -->
+    <string name="settings_channel_label">بپشکنە بۆ نوێکردنەوەکان</string>
+    <string name="settings_section_about">دربارە</string>
+    <string name="settings_about_version">وەشانی  %1$s</string>
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- Settings - GitHub PAT -->
+    <!-- App Info Dialog -->
+    <!-- Changelog Dialog -->
+</resources>

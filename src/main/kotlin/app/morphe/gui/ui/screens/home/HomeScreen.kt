@@ -37,12 +37,16 @@ import app.morphe.gui.ui.screens.home.components.UninstallConfirmDialog
 import app.morphe.gui.ui.screens.home.components.VersionWarningDialog
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
+import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.MorpheFilePicker
+import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -54,6 +58,8 @@ import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class HomeScreen : Screen {
@@ -248,7 +254,10 @@ fun HomeScreenContent(
                                 launchPatch(record, apkPath, files, names)
                             }
                             .onFailure {
-                                viewModel.showError(it.message ?: "Couldn't resolve patch files.")
+                                val userMsg = (it as? PatchException)?.getUserMessage()
+                                    ?: (it as? AdbException)?.getUserMessage()
+                                    ?: humanizePatchLoadError(it)
+                                viewModel.showError(userMsg)
                             }
                     } finally {
                         preparingPatch = false
@@ -603,6 +612,6 @@ private fun handleContinue(
 
 private suspend fun openFilePicker(): File? =
     MorpheFilePicker.pickFile(
-        title = "Select APK file",
+        title = getString(Res.string.home_select_apk_file),
         extensions = listOf("apk", "apkm", "xapk", "apks"),
     )

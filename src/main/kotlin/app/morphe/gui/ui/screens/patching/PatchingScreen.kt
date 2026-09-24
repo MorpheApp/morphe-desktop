@@ -45,9 +45,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.ui.components.MorphePanel
 import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.result.ResultScreen
@@ -57,12 +59,17 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheMono
 import app.morphe.gui.ui.theme.MorpheCornerStyle
 import app.morphe.gui.util.FileUtils
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
+import app.morphe.gui.util.currentLocale
+import app.morphe.gui.util.resolveStepName
 import app.morphe.gui.util.rememberZenoProgress
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.desktopScreenEnter
 import app.morphe.gui.ui.theme.desktopScreenExit
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.ui.theme.screenScrim
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -74,6 +81,7 @@ import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.core.parameter.parametersOf
 
 /**
@@ -99,6 +107,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     val font = LocalMorpheFont.current
     val mono = LocalMorpheMono.current
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
+    val patchingCompletedState = LocalPatchingCompleted.current
 
     // Auto-start patching when screen loads
     LaunchedEffect(Unit) {
@@ -110,6 +119,23 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     LaunchedEffect(uiState.logs.size, uiState.status) {
         if (uiState.logs.isNotEmpty()) {
             scrollState.scrollTo(scrollState.maxValue)
+        }
+    }
+
+    LaunchedEffect(uiState.status) {
+        if (uiState.status == PatchingStatus.COMPLETED) {
+            delay(300.milliseconds)
+            patchingCompletedState.value = true
+            delay(2500.milliseconds)
+            patchingCompletedState.value = false
+        } else {
+            patchingCompletedState.value = false
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            patchingCompletedState.value = false
         }
     }
 
@@ -166,8 +192,8 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                 ) {
                     Icon(
                         imageVector = MorpheIcons.ArrowBack,
-                        contentDescription = "Back",
-                        modifier = Modifier.size(16.dp),
+                        contentDescription = stringResource(Res.string.back),
+                        modifier = Modifier.size(16.dp).autoMirrored(),
                         tint = if (uiState.isInProgress)
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
                         else MaterialTheme.colorScheme.onSurfaceVariant
@@ -177,25 +203,13 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                 Spacer(Modifier.width(12.dp))
 
                 // Title + status
-                if (uiState.hasAutoNavigated && (uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = if (uiState.status == PatchingStatus.CANCELLED) "Patching cancelled" else "Patching failed",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 14.sp,
-                            fontFamily = font
-                        )
-                    }
-                } else {
-                    Text(
-                        text = "Patching: ${getStatusText(uiState.status)}",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                Text(
+                    text = getStatusText(uiState.status),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = font,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
 
                 Spacer(Modifier.weight(1f))
 
@@ -220,6 +234,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                             .clip(RoundedCornerShape(corners.small))
                             .border(1.dp, cancelBorder, RoundedCornerShape(corners.small))
                             .background(cancelBg)
+                            .handCursor()
                             .clickable { viewModel.cancelPatching() }
                             .padding(horizontal = 12.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -232,7 +247,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                             tint = MaterialTheme.colorScheme.error
                         )
                         Text(
-                            text = "Cancel",
+                            text = stringResource(Res.string.cancel),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -334,7 +349,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
                                     Text(
-                                        text = "Patching completed - loading result...",
+                                        text = stringResource(Res.string.patching_completed_loading_result),
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = font,
@@ -396,7 +411,7 @@ private fun FailureBottomBar(
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
-            text = if (status == PatchingStatus.CANCELLED) "Patching cancelled - loading result..." else "Patching failed - loading result...",
+            text = if (status == PatchingStatus.CANCELLED) stringResource(Res.string.patching_cancelled_loading_result) else stringResource(Res.string.patching_failed_loading_result),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font,
@@ -474,23 +489,19 @@ private fun LogEntryRow(
     }
 }
 
-private fun formatFileSize(bytes: Long): String {
-    return when {
-        bytes < 1024 -> "$bytes B"
-        bytes < 1024 * 1024 -> "%.1f KB".format(bytes / 1024.0)
-        bytes < 1024 * 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
-        else -> "%.2f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
-    }
-}
+@Composable
+private fun formatFileSize(bytes: Long): String =
+    FormatUtils.formatFileSize(bytes, currentLocale())
 
+@Composable
 private fun getStatusText(status: PatchingStatus): String {
     return when (status) {
-        PatchingStatus.IDLE -> "Ready"
-        PatchingStatus.PREPARING -> "Preparing..."
-        PatchingStatus.PATCHING -> "In progress..."
-        PatchingStatus.COMPLETED -> "Completed"
-        PatchingStatus.FAILED -> "Failed"
-        PatchingStatus.CANCELLED -> "Cancelled"
+        PatchingStatus.IDLE -> stringResource(Res.string.patching_status_ready)
+        PatchingStatus.PREPARING -> stringResource(Res.string.patching_status_preparing)
+        PatchingStatus.PATCHING -> stringResource(Res.string.patching_status_in_progress)
+        PatchingStatus.COMPLETED -> stringResource(Res.string.status_patching_completed)
+        PatchingStatus.FAILED -> stringResource(Res.string.status_patching_failed)
+        PatchingStatus.CANCELLED -> stringResource(Res.string.status_patching_cancelled)
     }
 }
 
@@ -511,9 +522,10 @@ fun LogFileViewerDialog(
     // Read file once on open. Logs are line-oriented text, typically well
     // under a few MB. If a single patching session ever produces something
     // pathologically large we'd notice and tail it then.
-    val content = remember(file) {
+    val failedToReadMessage = stringResource(Res.string.patching_log_viewer_failed_to_read, "%s")
+    val content = remember(file, failedToReadMessage) {
         runCatching { file.readText() }.getOrElse { e ->
-            "Failed to read log file: ${e.message}"
+            failedToReadMessage.format(e.message.orEmpty())
         }
     }
     var copied by remember { mutableStateOf(false) }
@@ -548,7 +560,7 @@ fun LogFileViewerDialog(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Log file",
+                            text = stringResource(Res.string.patching_log_viewer_title),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontFamily = font,
@@ -577,6 +589,7 @@ fun LogFileViewerDialog(
                             .hoverable(openHover)
                             .clip(RoundedCornerShape(corners.small))
                             .background(openBg)
+                            .handCursor()
                             .clickable {
                                 try {
                                     if (Desktop.isDesktopSupported()) {
@@ -589,7 +602,7 @@ fun LogFileViewerDialog(
                             .padding(horizontal = 10.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = "Open folder",
+                            text = stringResource(Res.string.open_folder),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -610,6 +623,7 @@ fun LogFileViewerDialog(
                             .hoverable(copyHover)
                             .clip(RoundedCornerShape(corners.small))
                             .background(copyBg)
+                            .handCursor()
                             .clickable {
                                 clipboardScope.launch {
                                     clipboard.setClipEntry(
@@ -621,7 +635,7 @@ fun LogFileViewerDialog(
                             .padding(horizontal = 10.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = if (copied) "Copied" else "Copy all",
+                            text = if (copied) stringResource(Res.string.copied) else stringResource(Res.string.patching_log_viewer_copy_all),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -642,12 +656,13 @@ fun LogFileViewerDialog(
                             .hoverable(closeHover)
                             .clip(RoundedCornerShape(corners.small))
                             .background(closeBg)
+                            .handCursor()
                             .clickable { onDismiss() }
                             .padding(6.dp)
                     ) {
                         Icon(
                             imageVector = MorpheIcons.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(Res.string.close),
                             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                             modifier = Modifier.size(18.dp)
                         )
@@ -714,7 +729,7 @@ private fun ExpertProgressHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Patching app",
+                text = stringResource(Res.string.patching_progress_title),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = font,
@@ -737,14 +752,14 @@ private fun ExpertProgressHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                val stepNameToDisplay = if (uiState.status == PatchingStatus.COMPLETED) "All done!" else uiState.currentStepName
+                val stepNameToDisplay = if (uiState.status == PatchingStatus.COMPLETED) stringResource(Res.string.patching_step_all_done) else resolveStepName(uiState.currentStepName)
                 AnimatedContent(
                     targetState = stepNameToDisplay,
                     label = "step_name_anim",
                     transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit }
                 ) { targetStep ->
                     Text(
-                        text = targetStep.ifEmpty { "Waiting..." },
+                        text = targetStep.ifEmpty { stringResource(Res.string.patching_step_waiting) },
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         fontFamily = font,
@@ -883,7 +898,7 @@ private fun HeapUsageGraph(
                     Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(barColor))
                 }
                 Text(
-                    text = "Memory usage",
+                    text = stringResource(Res.string.patching_graph_memory_usage),
                     fontFamily = mono,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
                     fontSize = 10.sp,
@@ -972,8 +987,9 @@ private fun IoUsageGraph(
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
     val current = samples.lastOrNull()
+    val locale = currentLocale()
     val formatRate = { kbPerSec: Int -> 
-        if (kbPerSec >= 1024) "%.1f MB/s".format(kbPerSec / 1024f) else "$kbPerSec KB/s"
+        FormatUtils.formatTransferRate(kbPerSec, locale)
     }
 
     MorphePanel(modifier = modifier) {
@@ -992,7 +1008,7 @@ private fun IoUsageGraph(
                     Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(accentColor))
                 }
                 Text(
-                    text = "Storage I/O",
+                    text = stringResource(Res.string.patching_graph_storage_io),
                     fontFamily = mono,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
                     fontSize = 10.sp,
@@ -1001,7 +1017,7 @@ private fun IoUsageGraph(
             }
 
             Text(
-                text = current?.let { formatRate(it.totalKbPerSec) } ?: "0.0 MB/s",
+                text = current?.let { formatRate(it.totalKbPerSec) } ?: formatRate(0),
                 fontFamily = mono,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
@@ -1080,7 +1096,7 @@ private fun CpuUsageGraph(
                     Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(accentColor))
                 }
                 Text(
-                    text = "CPU usage",
+                    text = stringResource(Res.string.patching_graph_cpu_usage),
                     fontFamily = mono,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
                     fontSize = 10.sp,
@@ -1211,7 +1227,7 @@ private fun StartBannerCard(
     uiState: PatchingUiState,
     font: FontFamily
 ) {
-    PatcherInfoCard(title = "Patching started", variant = CardVariant.Start) {
+    PatcherInfoCard(title = stringResource(Res.string.patching_banner_started_title), variant = CardVariant.Start) {
         // App Section (Top)
         // Row 1: APP VERSION, APK SIZE
         Row(
@@ -1219,12 +1235,12 @@ private fun StartBannerCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BannerFieldCell(
-                label = "APP VERSION",
+                label = stringResource(Res.string.patching_banner_app_version),
                 value = uiState.appVersion,
                 font = font,
                 modifier = Modifier.weight(1f))
             BannerFieldCell(
-                label = "APK SIZE",
+                label = stringResource(Res.string.patching_banner_apk_size),
                 value = uiState.apkSizeMb,
                 font = font,
                 modifier = Modifier.weight(1f))
@@ -1236,13 +1252,13 @@ private fun StartBannerCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BannerFieldCell(
-                label = "PATCHES",
+                label = stringResource(Res.string.patching_banner_patches),
                 value = uiState.totalPatches.toString(),
                 font = font,
                 modifier = Modifier.weight(1f))
             BannerFieldCell(
-                label = "SPLIT APK",
-                value = if (uiState.isSplit) "yes" else "no",
+                label = stringResource(Res.string.patching_banner_split_apk),
+                value = if (uiState.isSplit) stringResource(Res.string.patching_banner_yes) else stringResource(Res.string.patching_banner_no),
                 valueColor = if (uiState.isSplit) MaterialTheme.colorScheme.tertiary else null,
                 font = font,
                 modifier = Modifier.weight(1f))
@@ -1254,7 +1270,7 @@ private fun StartBannerCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val sourceName = uiState.patchesSourceName
-            val labelText = if (sourceName.equals("Morphe", ignoreCase = true)) "MORPHE PATCHES" else sourceName
+            val labelText = if (sourceName.equals("Morphe", ignoreCase = true)) stringResource(Res.string.patching_banner_morphe_patches) else sourceName
             BannerFieldCell(
                 label = labelText,
                 value = uiState.patchesVersion,
@@ -1276,12 +1292,12 @@ private fun StartBannerCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BannerFieldCell(
-                label = "DESKTOP",
+                label = stringResource(Res.string.patching_banner_desktop),
                 value = uiState.desktopVersion,
                 font = font,
                 modifier = Modifier.weight(1f))
             BannerFieldCell(
-                label = "PATCHER",
+                label = stringResource(Res.string.patching_banner_patcher),
                 value = uiState.patcherVersion,
                 font = font,
                 modifier = Modifier.weight(1f))
@@ -1307,12 +1323,12 @@ private fun StartBannerCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BannerFieldCell(
-                label = "RUNTIME",
+                label = stringResource(Res.string.patching_banner_runtime),
                 value = runtimeInfo,
                 font = font,
                 modifier = Modifier.weight(1f))
             BannerFieldCell(
-                label = "NATIVE LIBS",
+                label = stringResource(Res.string.patching_banner_native_libs),
                 value = uiState.nativeLibs,
                 font = font,
                 modifier = Modifier.weight(1f))
@@ -1324,12 +1340,12 @@ private fun StartBannerCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BannerFieldCell(
-                label = "OS",
+                label = stringResource(Res.string.patching_banner_os),
                 value = uiState.androidVersion,
                 font = font,
                 modifier = Modifier.weight(1f))
             BannerFieldCell(
-                label = "ARCH",
+                label = stringResource(Res.string.patching_banner_arch),
                 value = uiState.deviceManufacturer,
                 font = font,
                 modifier = Modifier.weight(1f))
@@ -1341,12 +1357,12 @@ private fun StartBannerCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BannerFieldCell(
-                label = "RAM FREE",
+                label = stringResource(Res.string.patching_banner_ram_free),
                 value = uiState.ramFreeInfo,
                 font = font,
                 modifier = Modifier.weight(1f))
             BannerFieldCell(
-                label = "STORAGE FREE",
+                label = stringResource(Res.string.patching_banner_storage_free),
                 value = uiState.storageFreeInfo,
                 font = font,
                 modifier = Modifier.weight(1f))
@@ -1362,19 +1378,19 @@ private fun SuccessSummaryCard(
     val avgMemory = if (uiState.heapSamples.isNotEmpty()) uiState.heapSamples.average().toInt() else 0
     val maxMemory = if (uiState.heapSamples.isNotEmpty()) uiState.heapSamples.maxOrNull() ?: 0 else 0
 
-    PatcherInfoCard(title = "Patching succeeded", variant = CardVariant.Success, badge = "✓") {
+    PatcherInfoCard(title = stringResource(Res.string.patching_success_title), variant = CardVariant.Success, badge = "✓") {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 BannerFieldCell(
-                    label = "Output size",
+                    label = stringResource(Res.string.patching_success_output_size),
                     value = uiState.outputSizeMb ?: "?",
                     font = font,
                     modifier = Modifier.weight(1f))
                 BannerFieldCell(
-                    label = "Time",
+                    label = stringResource(Res.string.patching_success_time),
                     value = uiState.elapsedSec ?: "?",
                     font = font,
                     modifier = Modifier.weight(1f))
@@ -1384,24 +1400,24 @@ private fun SuccessSummaryCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 BannerFieldCell(
-                    label = "Memory average",
+                    label = stringResource(Res.string.patching_success_memory_avg),
                     value = "$avgMemory MB",
                     font = font,
                     modifier = Modifier.weight(1f))
                 BannerFieldCell(
-                    label = "Memory max",
+                    label = stringResource(Res.string.patching_success_memory_max),
                     value = "$maxMemory MB",
                     font = font,
                     modifier = Modifier.weight(1f))
             }
             if (uiState.ioPeakKbPerSec > 0) {
-                val peakRate = if (uiState.ioPeakKbPerSec >= 1024) "%.1f MB/s".format(uiState.ioPeakKbPerSec / 1024f) else "${uiState.ioPeakKbPerSec} KB/s"
+                val peakRate = FormatUtils.formatTransferRate(uiState.ioPeakKbPerSec, currentLocale())
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     BannerFieldCell(
-                        label = "Storage I/O peak",
+                        label = stringResource(Res.string.patching_success_storage_io_peak),
                         value = peakRate,
                         font = font,
                         modifier = Modifier.weight(1f)
@@ -1486,7 +1502,7 @@ private fun ExpertFailureContent(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "App info",
+                        text = stringResource(Res.string.app_info_shared_label),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font,
@@ -1558,7 +1574,7 @@ private fun ExpertFailureContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Error log",
+                            text = stringResource(Res.string.error_log_label),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontFamily = font,
@@ -1587,7 +1603,7 @@ private fun ExpertFailureContent(
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = if (copiedError) "Copied" else "Copy",
+                                text = if (copiedError) stringResource(Res.string.copied) else stringResource(Res.string.copy),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -1652,7 +1668,7 @@ private fun ExpertFailureContent(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Temporary files",
+                        text = stringResource(Res.string.temporary_files_label),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font,
@@ -1660,7 +1676,7 @@ private fun ExpertFailureContent(
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "${formatFileSize(tempFilesSize)} can be freed",
+                        text = stringResource(Res.string.size_can_be_freed_label, formatFileSize(tempFilesSize)),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -1687,7 +1703,7 @@ private fun ExpertFailureContent(
                         .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = "Clean up",
+                        text = stringResource(Res.string.clean_up),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -1706,7 +1722,7 @@ private fun ExpertFailureContent(
                     .padding(12.dp)
             ) {
                 Text(
-                    text = "Temporary files cleaned",
+                    text = stringResource(Res.string.patching_failure_temp_files_cleaned),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,
@@ -1726,7 +1742,7 @@ private fun ExpertFailureContent(
         ) {
             OutlinedButton(
                 onClick = { navigator.popUntilRoot() },
-                modifier = Modifier.weight(1f).height(40.dp),
+                modifier = Modifier.weight(1f).height(40.dp).handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = Color.Transparent,
@@ -1736,7 +1752,7 @@ private fun ExpertFailureContent(
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "Start over",
+                    text = stringResource(Res.string.quick_patch_screen_start_over_button),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal
@@ -1744,7 +1760,7 @@ private fun ExpertFailureContent(
             }
             OutlinedButton(
                 onClick = { showLogViewer = true },
-                modifier = Modifier.weight(1f).height(40.dp),
+                modifier = Modifier.weight(1f).height(40.dp).handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
                 colors = ButtonDefaults.outlinedButtonColors(
@@ -1754,7 +1770,7 @@ private fun ExpertFailureContent(
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "View full logs",
+                    text = stringResource(Res.string.view_full_logs_button),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal

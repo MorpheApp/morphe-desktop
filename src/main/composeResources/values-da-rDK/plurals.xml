@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d patch-kilde kunne ikke indlæses. Bruger den, der blev indlæst korrekt</item>
+        <item quantity="other">%1$d patch-kilder kunne ikke indlæses. Bruger dem, der blev indlæst korrekt</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d patchet app har en opdatering tilgængelig</item>
+        <item quantity="other">%1$d patchede apps har opdateringer tilgængelige</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Gemte %1$d linje til %2$s</item>
+        <item quantity="other">Gemte %1$d linjer til %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d kilde</item>
+        <item quantity="other">%1$d kilder</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d patch vil blive anvendt</item>
+        <item quantity="other">%1$d patches vil blive anvendt</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d ekskluderet</item>
+        <item quantity="other">%1$d ekskluderet</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d aktiveret</item>
+        <item quantity="other">%1$d aktiveret</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d deaktiveret</item>
+        <item quantity="other">%1$d deaktiveret</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d bibliotek</item>
+        <item quantity="other">%1$d biblioteker</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d af %2$d valgt</item>
+        <item quantity="other">%1$d af %2$d valgt</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patches</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kort tilsidesætter dette</item>
+        <item quantity="other">%1$d kort tilsidesætter dette</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Download %1$d bundt</item>
+        <item quantity="other">Download %1$d bundter</item>
+    </plurals>
+</resources>

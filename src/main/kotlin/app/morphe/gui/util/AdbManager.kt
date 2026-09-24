@@ -7,11 +7,14 @@ package app.morphe.gui.util
 
 import app.morphe.engine.util.AppLinkCommands
 import app.morphe.engine.util.SignatureIdentity
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.Socket
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 /**
  * Manages ADB (Android Debug Bridge) operations for installing APKs. Works across macOS, Linux, and Windows.
@@ -181,7 +184,7 @@ class AdbManager {
      */
     suspend fun startServer(): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+            AdbException("ADB binary not found", Res.string.adb_error_not_found)
         )
 
         try {
@@ -204,7 +207,7 @@ class AdbManager {
             val exitCode = process.waitFor()
             if (exitCode != 0) {
                 return@withContext Result.failure(
-                    AdbException("adb start-server exited with code $exitCode")
+                    AdbException("Failed to start ADB server (exit code $exitCode)", Res.string.adb_error_start_server, listOf("exit code $exitCode"))
                 )
             }
 
@@ -220,7 +223,7 @@ class AdbManager {
             Result.success(Unit)
         } catch (e: Exception) {
             Logger.error("Failed to start ADB server", e)
-            Result.failure(AdbException("Failed to start ADB server: ${e.message}"))
+            Result.failure(AdbException("Failed to start ADB server: ${e.message ?: ""}", Res.string.adb_error_start_server, listOf(e.message ?: ""), cause = e))
         }
     }
 
@@ -247,7 +250,7 @@ class AdbManager {
             if (exitCode != 0) {
                 Logger.warn("adb kill-server exited with code $exitCode: $output")
                 return@withContext Result.failure(
-                    AdbException("adb kill-server exited with code $exitCode")
+                    AdbException("Failed to kill ADB server (exit code $exitCode)", Res.string.adb_error_kill_server, listOf("exit code $exitCode"))
                 )
             }
             weStartedDaemon = false
@@ -256,7 +259,7 @@ class AdbManager {
             Result.success(true)
         } catch (e: Exception) {
             Logger.error("Failed to kill ADB server", e)
-            Result.failure(AdbException("Failed to kill ADB server: ${e.message}"))
+            Result.failure(AdbException("Failed to kill ADB server: ${e.message ?: ""}", Res.string.adb_error_kill_server, listOf(e.message ?: ""), cause = e))
         }
     }
 
@@ -266,7 +269,7 @@ class AdbManager {
      */
     suspend fun getConnectedDevices(): Result<List<AdbDevice>> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+            AdbException("ADB binary not found", Res.string.adb_error_not_found)
         )
 
         try {
@@ -280,7 +283,7 @@ class AdbManager {
 
             if (exitCode != 0) {
                 return@withContext Result.failure(
-                    AdbException("Failed to get device list: $output")
+                    AdbException("Failed to get connected devices: $output", Res.string.adb_error_get_devices, listOf(output))
                 )
             }
 
@@ -292,7 +295,7 @@ class AdbManager {
             Result.success(devices)
         } catch (e: Exception) {
             Logger.error("Error getting devices", e)
-            Result.failure(AdbException("Failed to get devices: ${e.message}"))
+            Result.failure(AdbException("Error getting devices: ${e.message ?: ""}", Res.string.adb_error_get_devices, listOf(e.message ?: ""), cause = e))
         }
     }
 
@@ -319,12 +322,12 @@ class AdbManager {
         onProgress: (String) -> Unit = {}
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+            AdbException("ADB binary not found", Res.string.adb_error_not_found)
         )
 
         val apkFile = File(apkPath)
         if (!apkFile.exists()) {
-            return@withContext Result.failure(AdbException("APK file not found: $apkPath"))
+            return@withContext Result.failure(AdbException("APK file not found: $apkPath", Res.string.adb_error_apk_not_found, listOf(apkPath)))
         }
 
         // Check connected devices
@@ -340,9 +343,9 @@ class AdbManager {
             val unauthorized = devices.filter { it.status == DeviceStatus.UNAUTHORIZED }
             return@withContext Result.failure(
                 if (unauthorized.isNotEmpty()) {
-                    AdbException("Device connected but not authorized. Please accept the USB debugging prompt on your device.")
+                    AdbException("Device is unauthorized", Res.string.adb_error_unauthorized)
                 } else {
-                    AdbException("No devices connected. Please connect your Android device with USB debugging enabled.")
+                    AdbException("No connected devices found", Res.string.adb_error_no_devices)
                 }
             )
         }
@@ -350,14 +353,15 @@ class AdbManager {
         // Determine target device
         val targetDevice = if (deviceId != null) {
             authorizedDevices.find { it.id == deviceId }
-                ?: return@withContext Result.failure(AdbException("Device $deviceId not found"))
+                ?: return@withContext Result.failure(AdbException("Device not found: $deviceId", Res.string.adb_error_device_not_found, listOf(deviceId)))
         } else if (authorizedDevices.size == 1) {
             authorizedDevices.first()
         } else {
             return@withContext Result.failure(
                 AdbMultipleDevicesException(
-                    "Multiple devices connected. Please select one.",
-                    authorizedDevices
+                    "Multiple devices connected: ${authorizedDevices.size} devices found",
+                    authorizedDevices,
+                    Res.string.adb_error_multiple_devices,
                 )
             )
         }
@@ -368,7 +372,7 @@ class AdbManager {
         // we'd rather install without Play-update blocking than not install at
         // all. (Validated on Android 12 that an absent `-i` is accepted; this is
         // a safety net for versions we haven't tested.)
-        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
+        suspend fun attemptInstall(withInstaller: Boolean): Result<Unit> {
             val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
             if (allowDowngrade) command.add("-d") // Allow downgrade
             if (withInstaller && !installerPackage.isNullOrBlank()) {
@@ -377,7 +381,7 @@ class AdbManager {
             }
             command.add(apkPath)
 
-            onProgress("Installing on ${targetDevice.displayName}...")
+            onProgress(getString(Res.string.adb_status_installing, targetDevice.displayName))
             Logger.info("Running: ${command.joinToString(" ")}")
 
             return try {
@@ -400,13 +404,13 @@ class AdbManager {
                     Logger.info("APK installed successfully")
                     Result.success(Unit)
                 } else {
-                    val errorMessage = parseInstallError(outputStr)
-                    Logger.error("Installation failed: $errorMessage")
-                    Result.failure(AdbException(errorMessage))
+                    val errorInfo = parseInstallError(outputStr)
+                    Logger.error("Installation failed: ${errorInfo.technicalMessage}")
+                    Result.failure(AdbException(errorInfo.technicalMessage, errorInfo.stringRes, errorInfo.formatArgs))
                 }
             } catch (e: Exception) {
                 Logger.error("Error installing APK", e)
-                Result.failure(AdbException("Installation failed: ${e.message}"))
+                Result.failure(AdbException("Error installing APK: ${e.message ?: ""}", Res.string.adb_error_generic, listOf(e.message ?: ""), cause = e))
             }
         }
 
@@ -433,7 +437,7 @@ class AdbManager {
         deviceId: String,
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+            AdbException("ADB binary not found", Res.string.adb_error_not_found)
         )
         try {
             val process = ProcessBuilder(adb, "-s", deviceId, "uninstall", packageName)
@@ -450,11 +454,11 @@ class AdbManager {
                     output.contains("DELETE_FAILED_INTERNAL_ERROR", ignoreCase = true) &&
                     listInstalledPackages(deviceId).getOrNull()?.contains(packageName) == false ->
                     Result.success(Unit)
-                else -> Result.failure(AdbException("Uninstall failed: ${output.ifBlank { "exit $exitCode" }}"))
+                else -> Result.failure(AdbException("Uninstall failed: ${output.ifBlank { "exit $exitCode" }}", Res.string.adb_error_uninstall, listOf(output.ifBlank { "exit $exitCode" })))
             }
         } catch (e: Exception) {
             Logger.error("Error uninstalling $packageName", e)
-            Result.failure(AdbException("Uninstall failed: ${e.message}"))
+            Result.failure(AdbException("Error uninstalling $packageName: ${e.message ?: ""}", Res.string.adb_error_uninstall, listOf(e.message ?: ""), cause = e))
         }
     }
 
@@ -464,7 +468,7 @@ class AdbManager {
      */
     suspend fun clearLogcat(deviceId: String): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+            AdbException("ADB binary not found", Res.string.adb_error_not_found)
         )
 
         try {
@@ -473,7 +477,7 @@ class AdbManager {
                 .start()
             val mainOutput = main.inputStream.bufferedReader().readText()
             if (main.waitFor() != 0) {
-                return@withContext Result.failure(AdbException("Failed to clear logs: $mainOutput"))
+                return@withContext Result.failure(AdbException("Failed to clear logcat: $mainOutput", Res.string.adb_error_clear_logs, listOf(mainOutput)))
             }
 
             // Best-effort: also clear the crash buffer. Ignore failure.
@@ -489,7 +493,7 @@ class AdbManager {
             Result.success(Unit)
         } catch (e: Exception) {
             Logger.error("Error clearing logcat", e)
-            Result.failure(AdbException("Failed to clear logs: ${e.message}"))
+            Result.failure(AdbException("Error clearing logcat: ${e.message ?: ""}", Res.string.adb_error_clear_logs, listOf(e.message ?: ""), cause = e))
         }
     }
 
@@ -500,7 +504,7 @@ class AdbManager {
      */
     suspend fun captureLogcat(deviceId: String, outputFile: File): Result<Int> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+            AdbException("ADB binary not found", Res.string.adb_error_not_found)
         )
 
         try {
@@ -518,7 +522,7 @@ class AdbManager {
             }
             val exitCode = process.waitFor()
             if (exitCode != 0) {
-                return@withContext Result.failure(AdbException("logcat exited with code $exitCode"))
+                return@withContext Result.failure(AdbException("Failed to capture logcat (exit code $exitCode)", Res.string.adb_error_capture_logs, listOf("exit code $exitCode")))
             }
 
             if (kept.isEmpty()) {
@@ -531,7 +535,7 @@ class AdbManager {
             Result.success(kept.size)
         } catch (e: Exception) {
             Logger.error("Error capturing logcat", e)
-            Result.failure(AdbException("Failed to capture logs: ${e.message}"))
+            Result.failure(AdbException("Error capturing logcat: ${e.message ?: ""}", Res.string.adb_error_capture_logs, listOf(e.message ?: ""), cause = e))
         }
     }
 
@@ -560,7 +564,7 @@ class AdbManager {
         onProgress: (String) -> Unit = {},
     ): Result<LinkHandlingResult> = withContext(Dispatchers.IO) {
         findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB not found. Please install Android SDK Platform Tools.")
+            AdbException("ADB binary not found", Res.string.adb_error_not_found)
         )
 
         // Stock OFF only applies to a genuinely different, installed package.
@@ -570,8 +574,8 @@ class AdbManager {
             stockPackage in installed
 
         onProgress(
-            if (enable) "Routing links to $patchedPackage..."
-            else "Restoring default link handling..."
+            if (enable) getString(Res.string.adb_status_routing_links, patchedPackage)
+            else getString(Res.string.adb_status_restoring_links)
         )
 
         val patchedCommands = if (enable) AppLinkCommands.enablePatched(patchedPackage)
@@ -585,8 +589,8 @@ class AdbManager {
             val stockCommands = if (enable) AppLinkCommands.disableStock(stockPackage)
             else AppLinkCommands.restoreStock(stockPackage)
             onProgress(
-                if (enable) "Disabling links in $stockPackage..."
-                else "Re-enabling links in $stockPackage..."
+                if (enable) getString(Res.string.adb_status_disabling_links, stockPackage)
+                else getString(Res.string.adb_status_enabling_links, stockPackage)
             )
             runShellCommands(deviceId, stockCommands).onFailure {
                 return@withContext Result.failure(it)
@@ -610,7 +614,7 @@ class AdbManager {
         deviceId: String,
         commands: List<List<String>>,
     ): Result<Unit> = withContext(Dispatchers.IO) {
-        val adb = findAdb() ?: return@withContext Result.failure(AdbException("ADB not found"))
+        val adb = findAdb() ?: return@withContext Result.failure(AdbException("ADB binary not found", Res.string.adb_error_not_found))
         for (argv in commands) {
             try {
                 val process = ProcessBuilder(listOf(adb, "-s", deviceId, "shell") + argv)
@@ -624,12 +628,16 @@ class AdbManager {
                     output.contains("Failure", ignoreCase = true)
                 ) {
                     return@withContext Result.failure(
-                        AdbException("Command failed (pm ${argv.getOrNull(1) ?: ""}): ${output.ifBlank { "exit $exitCode" }}")
+                        AdbException(
+                            "ADB shell command failed: pm ${argv.getOrNull(1) ?: ""} - ${output.ifBlank { "exit $exitCode" }}",
+                            Res.string.adb_error_run_command,
+                            listOf("pm ${argv.getOrNull(1) ?: ""} - ${output.ifBlank { "exit $exitCode" }}"),
+                        )
                     )
                 }
             } catch (e: Exception) {
                 Logger.error("Error running adb shell ${argv.joinToString(" ")}", e)
-                return@withContext Result.failure(AdbException("Failed to run command: ${e.message}"))
+                return@withContext Result.failure(AdbException("Error running ADB shell command: ${e.message ?: ""}", Res.string.adb_error_run_command, listOf(e.message ?: ""), cause = e))
             }
         }
         Result.success(Unit)
@@ -639,13 +647,13 @@ class AdbManager {
 
     /** Package names installed on [deviceId] (`pm list packages`). */
     suspend fun listInstalledPackages(deviceId: String): Result<Set<String>> = withContext(Dispatchers.IO) {
-        val adb = findAdb() ?: return@withContext Result.failure(AdbException("ADB not found"))
+        val adb = findAdb() ?: return@withContext Result.failure(AdbException("ADB binary not found", Res.string.adb_error_not_found))
         try {
             val process = ProcessBuilder(adb, "-s", deviceId, "shell", "pm", "list", "packages")
                 .redirectErrorStream(true).start()
             val out = process.inputStream.bufferedReader().readText()
             process.waitFor()
-            if (process.exitValue() != 0) return@withContext Result.failure(AdbException("pm list packages failed"))
+            if (process.exitValue() != 0) return@withContext Result.failure(AdbException("Failed to list packages: exit code ${process.exitValue()}", Res.string.adb_error_pm_list_packages, listOf("exit code ${process.exitValue()}")))
             val packages = out.lineSequence()
                 .map { it.trim() }
                 .filter { it.startsWith("package:") }
@@ -654,7 +662,7 @@ class AdbManager {
                 .toSet()
             Result.success(packages)
         } catch (e: Exception) {
-            Result.failure(AdbException("pm list packages failed: ${e.message}"))
+            Result.failure(AdbException("Error listing packages: ${e.message ?: ""}", Res.string.adb_error_pm_list_packages, listOf(e.message ?: ""), cause = e))
         }
     }
 
@@ -761,31 +769,38 @@ class AdbManager {
         }
     }
 
-    private fun parseInstallError(output: String): String {
+    private data class InstallErrorInfo(
+        val technicalMessage: String,
+        val stringRes: StringResource,
+        val formatArgs: List<Any> = emptyList(),
+    )
+
+    private fun parseInstallError(output: String): InstallErrorInfo {
         // Common ADB install errors
         return when {
             output.contains("INSTALL_FAILED_VERSION_DOWNGRADE") ->
-                "Cannot downgrade - a newer version is installed. Uninstall the existing app first"
+                InstallErrorInfo("Version downgrade not allowed (INSTALL_FAILED_VERSION_DOWNGRADE)", Res.string.adb_error_downgrade)
             output.contains("INSTALL_FAILED_ALREADY_EXISTS") ->
-                "App already exists. Try uninstalling it first"
+                InstallErrorInfo("Application already exists with different signature (INSTALL_FAILED_ALREADY_EXISTS)", Res.string.adb_error_already_exists)
             output.contains("INSTALL_FAILED_INSUFFICIENT_STORAGE") ->
-                "Not enough storage space on device"
+                InstallErrorInfo("Insufficient storage on device (INSTALL_FAILED_INSUFFICIENT_STORAGE)", Res.string.adb_error_storage)
             output.contains("INSTALL_FAILED_INVALID_APK") ->
-                "Invalid APK file"
+                InstallErrorInfo("Invalid APK file (INSTALL_FAILED_INVALID_APK)", Res.string.adb_error_invalid_apk)
             output.contains("INSTALL_PARSE_FAILED_NO_CERTIFICATES") ->
-                "APK is not signed properly"
+                InstallErrorInfo("APK is not signed or certificates are missing (INSTALL_PARSE_FAILED_NO_CERTIFICATES)", Res.string.adb_error_no_certificates)
             output.contains("INSTALL_FAILED_UPDATE_INCOMPATIBLE") ->
-                "Incompatible update - signatures don't match. Uninstall the existing app first"
+                InstallErrorInfo("Update is incompatible with currently installed version (INSTALL_FAILED_UPDATE_INCOMPATIBLE)", Res.string.adb_error_update_incompatible)
             output.contains("INSTALL_FAILED_USER_RESTRICTED") ->
-                "Installation restricted by user settings"
+                InstallErrorInfo("Installation restricted by user or policy (INSTALL_FAILED_USER_RESTRICTED)", Res.string.adb_error_user_restricted)
             output.contains("INSTALL_FAILED_VERIFICATION_FAILURE") ->
-                "Package verification failed"
+                InstallErrorInfo("Package verification failed (INSTALL_FAILED_VERIFICATION_FAILURE)", Res.string.adb_error_verification_failure)
             output.contains("Failure") -> {
                 // Extract the failure reason
                 val match = Regex("Failure \\[(.+)]").find(output)
-                match?.groupValues?.get(1) ?: "Installation failed: $output"
+                val failureMessage = match?.groupValues?.get(1) ?: output
+                InstallErrorInfo("Installation failed: $failureMessage", Res.string.adb_error_generic, listOf(failureMessage))
             }
-            else -> "Installation failed: $output"
+            else -> InstallErrorInfo("Installation failed: $output", Res.string.adb_error_generic, listOf(output))
         }
     }
 }
@@ -799,19 +814,6 @@ data class AdbDevice(
     /** Device name (model or ID if model unknown) */
     val displayName: String
         get() = model?.takeIf { it.isNotBlank() } ?: id
-
-    /** Full display with status for UI */
-    val displayNameWithStatus: String
-        get() {
-            val name = displayName
-            val arch = architecture?.let { " ($it)" } ?: ""
-            return when (status) {
-                DeviceStatus.DEVICE -> "$name$arch (Connected)"
-                DeviceStatus.UNAUTHORIZED -> "$name (Unauthorized - check device)"
-                DeviceStatus.OFFLINE -> "$name (Offline)"
-                DeviceStatus.UNKNOWN -> "$name (Unknown status)"
-            }
-        }
 
     /** Whether device is ready for installation */
     val isReady: Boolean
@@ -834,9 +836,19 @@ data class LinkHandlingResult(
     val stockChanged: Boolean,
 )
 
-open class AdbException(message: String) : Exception(message)
+open class AdbException(
+    message: String,
+    val stringRes: StringResource? = null,
+    val formatArgs: List<Any> = emptyList(),
+    cause: Throwable? = null,
+) : Exception(message, cause) {
+    suspend fun getUserMessage(): String =
+        stringRes?.let { getString(it, *formatArgs.toTypedArray()) } ?: (message ?: "")
+}
 
 class AdbMultipleDevicesException(
     message: String,
-    val devices: List<AdbDevice>
-) : AdbException(message)
+    val devices: List<AdbDevice>,
+    stringRes: StringResource? = null,
+    formatArgs: List<Any> = emptyList(),
+) : AdbException(message, stringRes = stringRes, formatArgs = formatArgs)

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d поправка</item>
+        <item quantity="other">%1$d поправки</item>
+    </plurals>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d উত্‍স</item>
+        <item quantity="other">%1$d টা উত্‍স</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d  টা প্যাচ</item>
+        <item quantity="other">%1$d টা প্যাচ</item>
+    </plurals>
+</resources>

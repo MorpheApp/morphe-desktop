@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="other">ไม่สามารถโหลดแหล่งแพตช์ %1$d รายการได้ จึงใช้แหล่งที่โหลดสำเร็จ</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="other">แอปที่แพตช์แล้ว %1$d รายการมีอัปเดตให้ใช้งาน</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="other">บันทึก %1$d บรรทัดไปยัง %2$s แล้ว</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="other">%1$d แหล่งที่มา</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="other">จะนำแพตช์ %1$d รายการไปใช้</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="other">ไม่รวม %1$d รายการ</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="other">เปิดใช้ %1$d รายการ</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="other">ปิดใช้ %1$d รายการ</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="other">ไลบรารี %1$d รายการ</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="other">เลือกแล้ว %1$d จาก %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="other">%1$d แพตซ์</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="other">การ์ด %1$d ใบแทนที่การตั้งค่านี้</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="other">ดาวน์โหลด %1$d ชุด</item>
+    </plurals>
+</resources>

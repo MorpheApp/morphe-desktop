@@ -5,10 +5,12 @@
 
 package app.morphe.engine.network
 
+import app.morphe.engine.GitHubPatMissingException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.head
+import io.ktor.client.request.headers
 import io.ktor.client.request.prepareGet
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsChannel
@@ -17,18 +19,22 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
 import io.ktor.utils.io.jvm.javaio.toInputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.util.logging.Logger
+import java.util.zip.ZipInputStream
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import kotlin.time.Duration.Companion.milliseconds
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
-import java.util.logging.Logger
 
 /**
  * Central HTTP layer for the desktop/JVM engine, wrapping a shared Ktor
@@ -132,6 +138,177 @@ class HttpService(
             if (saveLocation.exists()) saveLocation.delete()
             if (!part.renameTo(saveLocation)) {
                 part.copyTo(saveLocation, overwrite = true); part.delete()
+            }
+            return saveLocation
+        } catch (t: Throwable) {
+            runCatching { if (part.exists()) part.delete() }
+            throw t
+        }
+    }
+
+    /**
+     * Resolves the patch artifact for a GitHub pull request.
+     *
+     * 3-step API resolution flow:
+     * a. Fetch https://api.github.com/repos/{owner}/{repo}/pulls/{prNumber} to get the head.sha.
+     * b. Fetch workflow runs (/actions/runs) and find the run matching that head.sha.
+     * c. Fetch the artifacts for that run (/actions/runs/{run_id}/artifacts) and extract the artifact's download URL.
+     */
+    suspend fun getAssetFromPullRequest(
+        owner: String,
+        repo: String,
+        pullRequestNumber: String,
+        pat: String? = null,
+    ): GitHubPrAsset {
+        val pullUrl = "https://api.github.com/repos/$owner/$repo/pulls/$pullRequestNumber"
+        val pull: GitHubPull = request(pullUrl) {
+            headers {
+                append(HttpHeaders.Accept, "application/vnd.github+json")
+                append("X-GitHub-Api-Version", "2022-11-28")
+                if (!pat.isNullOrBlank()) {
+                    append(HttpHeaders.Authorization, "Bearer $pat")
+                }
+            }
+        }
+        val targetSha = pull.head.sha
+        if (targetSha.isBlank()) {
+            throw IllegalStateException("Failed to resolve HEAD commit SHA for PR #$pullRequestNumber")
+        }
+
+        var page = 1
+        var matchingRun: GitHubWorkflowRun? = null
+
+        while (page <= 10) {
+            val runsUrl = "https://api.github.com/repos/$owner/$repo/actions/runs?per_page=100&page=$page"
+            val runs: GitHubWorkflowRunsResponse = request(runsUrl) {
+                headers {
+                    append(HttpHeaders.Accept, "application/vnd.github+json")
+                    append("X-GitHub-Api-Version", "2022-11-28")
+                    if (!pat.isNullOrBlank()) {
+                        append(HttpHeaders.Authorization, "Bearer $pat")
+                    }
+                }
+            }
+
+            matchingRun = runs.workflowRuns.firstOrNull { it.headSha == targetSha }
+            if (matchingRun != null) break
+            if (runs.workflowRuns.isEmpty()) break
+            page++
+        }
+
+        val run = matchingRun
+            ?: throw IllegalStateException("No GitHub Actions run found for PR #$pullRequestNumber (SHA: $targetSha)")
+
+        val artifactsUrl = "https://api.github.com/repos/$owner/$repo/actions/runs/${run.id}/artifacts"
+        val artifactsResponse: GitHubArtifactsResponse = request(artifactsUrl) {
+            headers {
+                append(HttpHeaders.Accept, "application/vnd.github+json")
+                append("X-GitHub-Api-Version", "2022-11-28")
+                if (!pat.isNullOrBlank()) {
+                    append(HttpHeaders.Authorization, "Bearer $pat")
+                }
+            }
+        }
+
+        val artifact = artifactsResponse.artifacts.firstOrNull {
+            it.name.contains("patch", ignoreCase = true) || it.name.endsWith(".mpp", ignoreCase = true)
+        } ?: artifactsResponse.artifacts.firstOrNull()
+            ?: throw IllegalStateException("No artifacts found for PR #$pullRequestNumber - did the GitHub Action run successfully?")
+
+        return GitHubPrAsset(
+            downloadUrl = artifact.archiveDownloadUrl,
+            headSha = run.headSha,
+            artifactName = artifact.name,
+            sizeInBytes = artifact.sizeInBytes,
+            createdAt = artifact.createdAt,
+            title = run.displayTitle ?: pull.title,
+            pageUrl = "https://github.com/$owner/$repo/pull/$pullRequestNumber"
+        )
+    }
+
+    /**
+     * Downloads an artifact for a GitHub PR source.
+     * Authenticates with GitHub using [pat], and unpacks the `.mpp` patch bundle
+     * from the GitHub Actions zip archive.
+     */
+    suspend fun downloadPrArtifactToFile(
+        url: String,
+        saveLocation: File,
+        pat: String,
+        onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)? = null,
+    ): File {
+        if (pat.isBlank()) {
+            throw GitHubPatMissingException()
+        }
+        saveLocation.parentFile?.mkdirs()
+        val part = File(saveLocation.parentFile, "${saveLocation.name}.part")
+        try {
+            withRetry("download PR artifact ${saveLocation.name}") {
+                FileOutputStream(part, false).use { out ->
+                    http.prepareGet(url) {
+                        headers {
+                            append(HttpHeaders.Authorization, "Bearer $pat")
+                            append(HttpHeaders.Accept, "application/vnd.github+json")
+                        }
+                    }.execute { response ->
+                        response.throwIfError(url)
+                        val contentType = response.headers[HttpHeaders.ContentType] ?: ""
+                        val contentLength = response.headers[HttpHeaders.ContentLength]?.toLongOrNull()
+                        val isZip = contentType.contains("zip", ignoreCase = true) || url.endsWith(".zip", ignoreCase = true)
+
+                        withContext(Dispatchers.IO) {
+                            if (isZip) {
+                                val zis = ZipInputStream(response.bodyAsChannel().toInputStream())
+                                zis.use { zip ->
+                                    val buffer = ByteArray(64 * 1024)
+                                    var copiedBytes = 0L
+                                    var lastBytes = 0L
+                                    var lastAt = 0L
+                                    var foundMpp = false
+
+                                    var entry = zip.nextEntry
+                                    while (entry != null) {
+                                        if (!entry.isDirectory && entry.name.endsWith(".mpp", ignoreCase = true)) {
+                                            foundMpp = true
+                                            val entrySize = entry.size.takeIf { it > 0 }
+                                            while (true) {
+                                                val read = zip.read(buffer)
+                                                if (read == -1) break
+                                                out.write(buffer, 0, read)
+                                                copiedBytes += read
+                                                if (onProgress != null) {
+                                                    val now = System.currentTimeMillis()
+                                                    if (copiedBytes - lastBytes >= PROGRESS_MIN_BYTES || now - lastAt >= PROGRESS_INTERVAL_MS) {
+                                                        lastBytes = copiedBytes
+                                                        lastAt = now
+                                                        onProgress(copiedBytes, entrySize ?: contentLength)
+                                                    }
+                                                }
+                                            }
+                                            break
+                                        }
+                                        zip.closeEntry()
+                                        entry = zip.nextEntry
+                                    }
+                                    if (!foundMpp || copiedBytes == 0L) {
+                                        throw IOException("No .mpp file found in the PR artifact")
+                                    }
+                                    onProgress?.invoke(copiedBytes, copiedBytes)
+                                }
+                            } else {
+                                response.bodyAsChannel().toInputStream().use { input ->
+                                    copyStreaming(input, out, contentLength, onProgress)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (part.length() == 0L) throw HttpException(null, url, "download returned 0 bytes")
+            if (saveLocation.exists()) saveLocation.delete()
+            if (!part.renameTo(saveLocation)) {
+                part.copyTo(saveLocation, overwrite = true)
+                part.delete()
             }
             return saveLocation
         } catch (t: Throwable) {
@@ -263,3 +440,56 @@ class HttpService(
         private const val PROGRESS_INTERVAL_MS = 200L
     }
 }
+
+/**
+ * Resolved artifact descriptor for a GitHub Pull Request.
+ */
+@Serializable
+data class GitHubPrAsset(
+    val downloadUrl: String,
+    val headSha: String,
+    val artifactName: String,
+    val sizeInBytes: Long = 0L,
+    val createdAt: String? = null,
+    val title: String? = null,
+    val pageUrl: String? = null,
+)
+
+@Serializable
+private data class GitHubPullHead(
+    val sha: String = "",
+)
+
+@Serializable
+private data class GitHubPull(
+    val head: GitHubPullHead = GitHubPullHead(),
+    val title: String? = null,
+)
+
+@Serializable
+private data class GitHubWorkflowRun(
+    val id: Long = 0L,
+    @SerialName("head_sha") val headSha: String = "",
+    @SerialName("display_title") val displayTitle: String? = null,
+)
+
+@Serializable
+private data class GitHubWorkflowRunsResponse(
+    @SerialName("total_count") val totalCount: Int = 0,
+    @SerialName("workflow_runs") val workflowRuns: List<GitHubWorkflowRun> = emptyList(),
+)
+
+@Serializable
+private data class GitHubArtifact(
+    val id: Long = 0L,
+    val name: String = "",
+    @SerialName("size_in_bytes") val sizeInBytes: Long = 0L,
+    @SerialName("archive_download_url") val archiveDownloadUrl: String = "",
+    @SerialName("created_at") val createdAt: String? = null,
+)
+
+@Serializable
+private data class GitHubArtifactsResponse(
+    @SerialName("total_count") val totalCount: Int = 0,
+    val artifacts: List<GitHubArtifact> = emptyList(),
+)

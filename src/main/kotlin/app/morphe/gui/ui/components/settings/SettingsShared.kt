@@ -42,7 +42,10 @@ import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.MorpheSwitch
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun AccentSwatch(
@@ -111,7 +114,7 @@ internal fun AccentSwatch(
             ) {
                 Icon(
                     imageVector = MorpheIcons.Close,
-                    contentDescription = "Remove saved color",
+                    contentDescription = stringResource(Res.string.settings_accent_remove_color_description),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(10.dp),
                 )
@@ -167,8 +170,8 @@ internal fun AboutRow(
         Icon(
             imageVector = MorpheIcons.KeyboardArrowRight,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(16.dp)
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(16.dp).autoMirrored()
         )
     }
 }
@@ -259,7 +262,7 @@ internal fun CollapsibleSection(
         }
         Icon(
             imageVector = MorpheIcons.KeyboardArrowLeft,
-            contentDescription = if (expanded) "Collapse" else "Expand",
+            contentDescription = if (expanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
             modifier = Modifier
                 .size(16.dp)
                 .graphicsLayer { rotationZ = rotationAngle },
@@ -329,7 +332,7 @@ internal fun SettingToggleRow(
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    text = if (!enabled) "Disabled while patching" else description,
+                    text = if (!enabled) stringResource(Res.string.disabled_while_patching) else description,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),

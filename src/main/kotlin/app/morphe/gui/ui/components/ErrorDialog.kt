@@ -5,20 +5,18 @@
 
 package app.morphe.gui.ui.components
 
-import app.morphe.gui.ui.icons.MorpheIcons
-
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.MorpheColors
+import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 enum class ErrorType {
     NETWORK,
@@ -34,11 +32,9 @@ fun ErrorDialog(
     errorType: ErrorType = ErrorType.GENERIC,
     onDismiss: () -> Unit,
     onRetry: (() -> Unit)? = null,
-    dismissText: String = "OK",
-    retryText: String = "Retry"
+    dismissText: String = stringResource(Res.string.ok),
+    retryText: String = stringResource(Res.string.retry)
 ) {
-    val font = LocalMorpheFont.current
-    val corners = LocalMorpheCorners.current
     val icon = when (errorType) {
         ErrorType.NETWORK -> MorpheIcons.WifiOff
         ErrorType.FILE -> MorpheIcons.Error
@@ -46,65 +42,34 @@ fun ErrorDialog(
         ErrorType.GENERIC -> MorpheIcons.Warning
     }
 
-    MorpheAlertDialog(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        onDismiss = onDismiss,
-        icon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(48.dp)
+    MorpheDialogCard(onDismiss = onDismiss, title = title) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.error,
+            modifier = Modifier.size(28.dp),
+        )
+        MorpheDialogText(message)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            MorpheDialogButton(
+                label = dismissText,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                filled = false,
+                onClick = onDismiss,
             )
-        },
-        title = {
-            Text(
-                text = title,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
-                textAlign = TextAlign.Center
-            )
-        },
-        text = {
-            Text(
-                text = message,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        },
-        confirmButton = {
             if (onRetry != null) {
-                Button(
+                MorpheDialogButton(
+                    label = retryText,
+                    color = MaterialTheme.colorScheme.error,
+                    filled = true,
                     onClick = onRetry,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MorpheColors.Blue
-                    ),
-                    shape = RoundedCornerShape(corners.small)
-                ) {
-                    Text(retryText, fontFamily = font)
-                }
-            } else {
-                Button(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MorpheColors.Blue
-                    ),
-                    shape = RoundedCornerShape(corners.small)
-                ) {
-                    Text(dismissText, fontFamily = font)
-                }
+                )
             }
-        },
-        dismissButton = if (onRetry != null) {
-            {
-                TextButton(onClick = onDismiss) {
-                    Text(dismissText, fontFamily = font)
-                }
-            }
-        } else null
-    )
+        }
+    }
 }
 
 /**
@@ -136,26 +101,27 @@ fun getErrorType(error: String): ErrorType {
 /**
  * Get user-friendly error message.
  */
+@Composable
 fun getFriendlyErrorMessage(error: String): String {
     val lowerError = error.lowercase()
     return when {
         lowerError.contains("timeout") ->
-            "The connection timed out. Please check your internet connection and try again"
+            stringResource(Res.string.error_dialog_timeout)
 
         lowerError.contains("unreachable") || lowerError.contains("connect") ->
-            "Unable to connect to the server. Please check your internet connection"
+            stringResource(Res.string.error_dialog_unreachable)
 
         lowerError.contains("permission") || lowerError.contains("access denied") ->
-            "Permission denied. Please check that you have access to the file or folder"
+            stringResource(Res.string.error_dialog_permission_denied)
 
         lowerError.contains("not found") ->
-            "The requested file or resource was not found"
+            stringResource(Res.string.error_dialog_not_found)
 
         lowerError.contains("disk full") || lowerError.contains("no space") ->
-            "Not enough disk space. Please free up some space and try again"
+            stringResource(Res.string.error_dialog_disk_full)
 
         lowerError.contains("exit code") ->
-            "The patching process encountered an error. Check the logs for details"
+            stringResource(Res.string.error_dialog_exit_code)
 
         else -> error
     }

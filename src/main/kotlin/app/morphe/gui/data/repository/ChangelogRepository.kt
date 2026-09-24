@@ -58,6 +58,7 @@ class ChangelogRepository(
                 "$GITHUB_RAW_BASE/${parsed.repoPath}/$branch/$CHANGELOG_FILE"
             PatchProvider.GITLAB ->
                 "$GITLAB_BASE/${parsed.repoPath}/-/raw/$branch/$CHANGELOG_FILE"
+            PatchProvider.GITHUB_PR -> null
         }
     }
 

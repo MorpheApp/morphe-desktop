@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="other">%1$d nguồn patch không thể tải. Sử dụng các nguồn đã tải thành công</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="other">%1$d ứng dụng đã vá có bản cập nhật</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="other">Đã lưu %1$d dòng vào %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="other">%1$d nguồn</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="other">%1$d patch sẽ được áp dụng</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="other">%1$d bị loại trừ</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="other">%1$d được bật</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="other">%1$d bị tắt</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="other">%1$d thư viện</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="other">Đã chọn %1$d/%2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="other">%1$d bản vá</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="other">%1$d thẻ ghi đè cái này</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="other">Tải xuống %1$d gói</item>
+    </plurals>
+</resources>

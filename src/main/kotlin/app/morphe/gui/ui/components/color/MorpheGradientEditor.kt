@@ -26,6 +26,8 @@ import app.morphe.gui.ui.components.MorpheChoiceChip
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 private const val MIN_STOPS = 2
 
@@ -71,7 +73,7 @@ fun MorpheGradientEditor(
                     ) {
                         Icon(
                             MorpheIcons.Delete,
-                            contentDescription = "Remove stop",
+                            contentDescription = stringResource(Res.string.gradient_remove_stop_description),
                             tint = accents.primary,
                             modifier = Modifier.size(15.dp),
                         )
@@ -80,13 +82,13 @@ fun MorpheGradientEditor(
             }
         }
 
-        MorpheChoiceChip(text = "+ Stop", active = false, font = font) {
+        MorpheChoiceChip(text = stringResource(Res.string.gradient_add_stop), active = false, font = font) {
             onChange(gradient.copy(stops = gradient.stops + MorpheFill.Stop(0.5f, 0xFFFFFFFF.toInt())))
         }
 
         if (gradient.type != GradientType.RADIAL) {
             MorpheAdjustRow(
-                label = "Angle",
+                label = stringResource(Res.string.gradient_angle),
                 value = gradient.angleDeg,
                 range = 0f..360f,
                 font = font,
@@ -96,10 +98,11 @@ fun MorpheGradientEditor(
 }
 
 private val GradientType.label: String
+    @Composable
     get() = when (this) {
-        GradientType.LINEAR -> "Linear"
-        GradientType.RADIAL -> "Radial"
-        GradientType.CONIC -> "Conic"
+        GradientType.LINEAR -> stringResource(Res.string.gradient_linear)
+        GradientType.RADIAL -> stringResource(Res.string.gradient_radial)
+        GradientType.CONIC -> stringResource(Res.string.gradient_conic)
     }
 
 private fun MorpheFill.Gradient.mapStop(

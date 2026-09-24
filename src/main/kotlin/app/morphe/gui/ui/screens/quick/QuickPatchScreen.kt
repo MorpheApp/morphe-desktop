@@ -40,16 +40,21 @@ import app.morphe.gui.ui.screens.quick.components.PatchingContent
 import app.morphe.gui.ui.screens.quick.components.ReadyContent
 import app.morphe.gui.ui.screens.quick.components.SupportedAppsRow
 import app.morphe.gui.ui.theme.*
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.MorpheFilePicker
+import app.morphe.gui.util.currentLocale
+import app.morphe.gui.util.resolveStepName
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class QuickPatchScreen : Screen {
@@ -108,14 +113,13 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     // matching morphe-manager which doesn't gate source management on expert mode.
     val patchSourceManager: PatchSourceManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
+    val sourceVersion by patchSourceManager.sourceVersion.collectAsState()
     val pickerScope = rememberCoroutineScope()
     var showSourcePicker by remember { mutableStateOf(false) }
     var showLogViewer by remember { mutableStateOf(false) }
     var activeSourceId by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(uiState.patchSourceName, allSources) {
-        // Resolve the current active source's id by name for radio selection.
-        activeSourceId = allSources.firstOrNull { it.name == uiState.patchSourceName }?.id
-            ?: patchSourceManager.getActiveSource().id
+    LaunchedEffect(sourceVersion, allSources, uiState.patchSourceName) {
+        activeSourceId = patchSourceManager.getActiveSource().id
     }
 
     val corners = LocalMorpheCorners.current
@@ -267,10 +271,11 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                     ) { phase ->
                         when (phase) {
                             QuickPatchPhase.IDLE, QuickPatchPhase.ANALYZING -> {
+                                val selectApkTitle = stringResource(Res.string.quick_patch_select_apk)
                                 IdleContent(
                                     isAnalyzing = phase == QuickPatchPhase.ANALYZING,
                                     isDragHovering = uiState.isDragHovering,
-                                    onBrowse = { pickerScope.launch { openFilePicker()?.let { viewModel.onFileSelected(it) } } }
+                                    onBrowse = { pickerScope.launch { openFilePicker(selectApkTitle)?.let { viewModel.onFileSelected(it) } } }
                                 )
                             }
                             QuickPatchPhase.READY -> {
@@ -290,7 +295,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                     progress = uiState.progress,
                                     completedPatches = uiState.completedPatches,
                                     totalPatches = uiState.totalPatches,
-                                    statusMessage = uiState.statusMessage,
+                                    statusMessage = resolveStepName(uiState.statusMessage),
                                     onCancel = { viewModel.cancelPatching() }
                                 )
                             }
@@ -309,7 +314,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                 val detailedError = uiState.logs
                                     .filter { it.level == LogLevel.ERROR }
                                     .joinToString("\n") { it.message }
-                                    .ifBlank { uiState.error ?: "Unknown error" }
+                                    .ifBlank { uiState.error ?: stringResource(Res.string.error_patching_unknown) }
                                 ErrorContent(
                                     errorMessage = detailedError,
                                     apkInfo = uiState.apkInfo ?: lastApkInfo,
@@ -341,16 +346,15 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
             // Error/warning bar
             if (uiState.phase != QuickPatchPhase.ERROR) {
                 uiState.error?.let { error ->
-                    val isUnsupportedWarning = error.contains("not supported in Quick Patch")
-                MorpheErrorBar(
-                    message = error,
-                    onDismiss = { viewModel.clearError() },
-                    isWarning = isUnsupportedWarning,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(horizontal = 24.dp, vertical = 20.dp)
-                )
-            }
+                    MorpheErrorBar(
+                        message = error,
+                        onDismiss = { viewModel.clearError() },
+                        isWarning = uiState.isErrorWarning,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(horizontal = 24.dp, vertical = 20.dp)
+                    )
+                }
             }
         }
     }
@@ -360,17 +364,12 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
 //  UTILITIES
 // ════════════════════════════════════════════════════════════════════
 
-private suspend fun openFilePicker(): File? =
+private suspend fun openFilePicker(title: String): File? =
     MorpheFilePicker.pickFile(
-        title = "Select APK",
+        title = title,
         extensions = listOf("apk", "apkm", "xapk", "apks"),
     )
 
-internal fun formatFileSize(bytes: Long): String {
-    return when {
-        bytes < 1024 -> "$bytes B"
-        bytes < 1024 * 1024 -> "%.1f KB".format(bytes / 1024.0)
-        bytes < 1024 * 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
-        else -> "%.2f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
-    }
-}
+@Composable
+internal fun formatFileSize(bytes: Long): String =
+    FormatUtils.formatFileSize(bytes, currentLocale())

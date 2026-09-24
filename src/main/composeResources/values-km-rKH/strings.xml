@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common Components -->
+    <string name="remove">ដកចេញ</string>
+    <string name="cancel">បោះបង់</string>
+    <string name="none">ឥតមាន</string>
+    <string name="copy">ចម្លង</string>
+    <string name="off">បិទ</string>
+    <string name="on">បើក</string>
+    <string name="save">រក្សាទុក</string>
+    <string name="download">ដោនឡូដ</string>
+    <!-- App Card Fill Dialog -->
+    <!-- Quick Patch Screen -->
+    <!-- Patcher Steps -->
+    <!-- ADB Installation Errors -->
+    <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <!-- Version Warning Dialogs -->
+    <!-- Version warnings for Quick Patch -->
+    <!-- Quick Patch - Patching Content -->
+    <!-- Quick Patch - Ready Content -->
+    <!-- Quick Patch - Supported Apps Row -->
+    <!-- Home Screen -->
+    <!-- Home Screen - ApkInfoCard -->
+    <!-- Home Screen - Dialogs -->
+    <!-- Home Screen - HomeHeader -->
+    <!-- Home Screen - SupportedAppListRow -->
+    <!-- Home Screen - SupportedAppsListPane -->
+    <!-- Home Screen - YourAppsPane -->
+    <string name="home_detail_details_title">ព័ត៌មានលម្អិត</string>
+    <string name="home_detail_section_options">ជម្រើស</string>
+    <!-- Patches Screen -->
+    <!-- Patch Selection Screen -->
+    <string name="patch_selection_option_enabled">បានបើក</string>
+    <string name="patch_selection_option_disabled">បានផ្ដាច់</string>
+    <string name="patch_selection_group_selected_count">%1$d ដែលបានរើស</string>
+    <!-- Patching Screen -->
+    <!-- Result Screen -->
+    <!-- Icon Studio -->
+    <string name="icon_studio_undo_button">អាន់ឌូ</string>
+    <!-- Source Management Sheet -->
+    <string name="source_sheet_title">ប្រភពបំណះ</string>
+    <!-- Patch Source Dialogs -->
+    <!-- Device Indicator -->
+    <!-- Error Dialog -->
+    <!-- Banners -->
+    <!-- Tools Dialog -->
+    <!-- Licenses Dialog -->
+    <string name="licenses_notice_title">កំណត់សម្គាល់ Morphe</string>
+    <!-- Settings -->
+    <string name="settings_dialog_title">ការកំណត់</string>
+    <string name="settings_nav_advanced">កម្រិតខ្ពស់</string>
+    <string name="settings_nav_system">ប្រព័ន្ធ</string>
+    <string name="settings_dialog_reset_button">កំណត់សាថ្មី</string>
+    <string name="settings_theme_system">ប្រព័ន្ធ</string>
+    <!-- Settings - Appearance -->
+    <string name="settings_language_dialog_title">ភាសាកម្មវិធី</string>
+    <!-- Settings - Advanced -->
+    <!-- Settings - System -->
+    <string name="settings_section_about">អំពីកម្មវិធីនេះ</string>
+    <string name="settings_about_version">កំណែ %1$s</string>
+    <!-- Settings - Strip Libs -->
+    <!-- Settings - Signing -->
+    <!-- Settings - Keystore Info Dialog -->
+    <!-- Settings - Runtime Logs -->
+    <!-- Settings - GitHub PAT -->
+    <!-- App Info Dialog -->
+    <string name="app_info_dialog_link_website">វេបសាយ</string>
+    <!-- Changelog Dialog -->
+</resources>

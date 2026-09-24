@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 object MorpheBannerDefaults {
     val Inset: Dp = 10.dp
@@ -158,7 +160,7 @@ fun MorpheBannerDismiss(
     ) {
         Icon(
             imageVector = MorpheIcons.Clear,
-            contentDescription = "Dismiss",
+            contentDescription = stringResource(Res.string.dismiss),
             tint = LocalContentColor.current.copy(alpha = if (isHovered) 1f else 0.85f),
             modifier = Modifier.size(14.dp),
         )

@@ -21,6 +21,7 @@ import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.components.MorpheDialogButton
 import app.morphe.gui.ui.components.MorpheDialogCard
 import app.morphe.gui.ui.components.MorpheDialogText
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
@@ -29,7 +30,10 @@ import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveVersionWarningContent
 import app.morphe.gui.util.toColor
+import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // HOME DIALOGS
@@ -61,8 +65,8 @@ internal fun VersionWarningDialog(
         )
         MorpheDialogText(warningContent.message)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Continue anyway", warnColor, filled = true, onClick = onConfirm)
+            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
+            MorpheDialogButton(stringResource(Res.string.home_dialog_continue_anyway), warnColor, filled = true, onClick = onConfirm)
         }
     }
 }
@@ -74,14 +78,13 @@ internal fun ForgetConfirmDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    MorpheDialogCard(onDismiss = onDismiss, title = "Forget ${record.displayName}?") {
+    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_forget_title, record.displayName)) {
         MorpheDialogText(
-            "This removes ${record.displayName} from your patched-app history. " +
-                "It doesn't touch any files - repatching the app adds it back"
+            stringResource(Res.string.home_dialog_forget_message, record.displayName)
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Forget", DangerRed, filled = true, onClick = onConfirm)
+            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
+            MorpheDialogButton(stringResource(Res.string.home_dialog_forget_button), DangerRed, filled = true, onClick = onConfirm)
         }
     }
 }
@@ -101,17 +104,17 @@ internal fun UninstallConfirmDialog(
     val font = LocalMorpheFont.current
     MorpheDialogCard(
         onDismiss = onDismiss,
-        title = "Uninstall ${record.displayName}?",
+        title = stringResource(Res.string.home_dialog_uninstall_title, record.displayName),
     ) {
         MorpheDialogText(
-            "This removes ${record.displayName} from the connected device. " +
-                "The patched APK on disk and your history are kept unless you choose otherwise below"
+            stringResource(Res.string.home_dialog_uninstall_message, record.displayName)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
+                .handCursor()
                 .clickable { onAlsoForgetChange(!alsoForget) }
                 .padding(vertical = 4.dp),
         ) {
@@ -123,7 +126,7 @@ internal fun UninstallConfirmDialog(
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                "Also remove from Your apps",
+                text = stringResource(Res.string.home_dialog_uninstall_also_forget),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -131,8 +134,8 @@ internal fun UninstallConfirmDialog(
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Uninstall", DangerRed, filled = true, onClick = onConfirm)
+            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
+            MorpheDialogButton(stringResource(Res.string.home_dialog_uninstall_button), DangerRed, filled = true, onClick = onConfirm)
         }
     }
 }
@@ -148,17 +151,16 @@ internal fun RepatchMissingApkDialog(
     onApkPicked: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    MorpheDialogCard(onDismiss = onDismiss, title = "Original APK not found") {
+    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_missing_apk_title)) {
         MorpheDialogText(
-            "The input APK for ${record.displayName} is no longer at:\n" +
-                "${record.inputApkPath}\n\nSelect the APK again to repatch with your saved settings."
+            stringResource(Res.string.home_dialog_missing_apk_message, record.displayName, record.inputApkPath)
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton("Cancel", MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton("Select APK…", LocalMorpheAccents.current.primary, filled = true) {
+            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
+            MorpheDialogButton(stringResource(Res.string.home_dialog_select_apk), LocalMorpheAccents.current.primary, filled = true) {
                 scope.launch {
                     val picked = MorpheFilePicker.pickFile(
-                        title = "Select APK to repatch",
+                        title = getString(Res.string.home_dialog_select_apk_to_repatch),
                         extensions = listOf("apk", "apkm", "xapk", "apks"),
                     )
                     onDismiss()

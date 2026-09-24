@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Nabigong mag-load ang %1$d na pinagmulan ng patch. Ginagamit ang mga pinagmulang matagumpay na nag-load</item>
+        <item quantity="other">Nabigong mag-load ang %1$d na mga pinagmulan ng patch. Ginagamit ang mga pinagmulang matagumpay na nag-load</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">May available na update ang %1$d na naka-patch na app</item>
+        <item quantity="other">May available na mga update ang %1$d na naka-patch na mga app</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Na-save ang %1$d na linya sa %2$s</item>
+        <item quantity="other">Na-save ang %1$d na mga linya sa %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d mapagkukunan</item>
+        <item quantity="other">%1$d mga mapagkukunan</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Ilalapat ang %1$d na patch</item>
+        <item quantity="other">Ilalapat ang %1$d na mga patch</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d ang hindi kasama</item>
+        <item quantity="other">%1$d ang hindi kasama</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d ang naka-enable</item>
+        <item quantity="other">%1$d ang naka-enable</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d ang naka-disable</item>
+        <item quantity="other">%1$d ang naka-disable</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d na library</item>
+        <item quantity="other">%1$d na library</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d sa %2$d ang napili</item>
+        <item quantity="other">%1$d sa %2$d ang napili</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d na-patch</item>
+        <item quantity="other">%1$d mga na-patch</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d na card ang nag-o-override dito</item>
+        <item quantity="other">%1$d na card ang nag-o-override dito</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">I-download ang %1$d na bundle</item>
+        <item quantity="other">I-download ang %1$d na bundle</item>
+    </plurals>
+</resources>

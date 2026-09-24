@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d źródło modyfikacji nie zostało wczytane. Używane są tylko te wczytane pomyślnie</item>
+        <item quantity="few">%1$d źródła modyfikacji nie zostały wczytane. Używane są tylko te wczytane pomyślnie</item>
+        <item quantity="many">%1$d źródeł modyfikacji nie zostało wczytanych. Używane są tylko te wczytane pomyślnie</item>
+        <item quantity="other">%1$d źródeł modyfikacji nie zostało wczytanych. Używane są tylko te wczytane pomyślnie</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d zmodyfikowana aplikacja ma dostępną aktualizację</item>
+        <item quantity="few">%1$d zmodyfikowane aplikacje mają dostępne aktualizacje</item>
+        <item quantity="many">%1$d zmodyfikowanych aplikacji ma dostępne aktualizacje</item>
+        <item quantity="other">%1$d zmodyfikowanych aplikacji ma dostępne aktualizacje</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Zapisano %1$d wiersz do %2$s</item>
+        <item quantity="few">Zapisano %1$d wiersze do %2$s</item>
+        <item quantity="many">Zapisano %1$d wierszy do %2$s</item>
+        <item quantity="other">Zapisano %1$d wierszy do %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d źródło</item>
+        <item quantity="few">%1$d źródła</item>
+        <item quantity="many">%1$d źródeł</item>
+        <item quantity="other">%1$d źródeł</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Zostanie zastosowana %1$d modyfikacja</item>
+        <item quantity="few">Zostaną zastosowane %1$d modyfikacje</item>
+        <item quantity="many">Zostanie zastosowanych %1$d modyfikacji</item>
+        <item quantity="other">Zostanie zastosowanych %1$d modyfikacji</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d wykluczona</item>
+        <item quantity="few">%1$d wykluczone</item>
+        <item quantity="many">%1$d wykluczonych</item>
+        <item quantity="other">%1$d wykluczonych</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d włączona</item>
+        <item quantity="few">%1$d włączone</item>
+        <item quantity="many">%1$d włączonych</item>
+        <item quantity="other">%1$d włączonych</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d wyłączona</item>
+        <item quantity="few">%1$d wyłączone</item>
+        <item quantity="many">%1$d wyłączonych</item>
+        <item quantity="other">%1$d wyłączonych</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d biblioteka</item>
+        <item quantity="few">%1$d biblioteki</item>
+        <item quantity="many">%1$d bibliotek</item>
+        <item quantity="other">%1$d bibliotek</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Wybrano %1$d z %2$d</item>
+        <item quantity="few">Wybrano %1$d z %2$d</item>
+        <item quantity="many">Wybrano %1$d z %2$d</item>
+        <item quantity="other">Wybrano %1$d z %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d modyfikacja</item>
+        <item quantity="few">%1$d modyfikacje</item>
+        <item quantity="many">%1$d modyfikacji</item>
+        <item quantity="other">%1$d modyfikacji</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d karta to nadpisuje</item>
+        <item quantity="few">%1$d karty to nadpisują</item>
+        <item quantity="many">%1$d kart to nadpisuje</item>
+        <item quantity="other">%1$d kart to nadpisuje</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Pobierz %1$d pakiet</item>
+        <item quantity="few">Pobierz %1$d pakiety</item>
+        <item quantity="many">Pobierz %1$d pakietów</item>
+        <item quantity="other">Pobierz %1$d pakietów</item>
+    </plurals>
+</resources>

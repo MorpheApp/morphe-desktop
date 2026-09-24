@@ -49,3 +49,11 @@ class PatchSourceLoadException(
     message: String,
     cause: Throwable? = null,
 ) : Exception(message, cause)
+
+/**
+ * Thrown when attempting to resolve or download a GitHub Pull Request source
+ * without a configured Personal Access Token (PAT).
+ */
+class GitHubPatMissingException(
+    message: String = "A GitHub PAT is required to download pull request sources"
+) : Exception(message)

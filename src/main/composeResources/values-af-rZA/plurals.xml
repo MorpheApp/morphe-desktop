@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d patchbron kon nie gelaai word nie. Gebruik dié wat suksesvol gelaai is</item>
+        <item quantity="other">%1$d patchbronne kon nie gelaai word nie. Gebruik dié wat suksesvol gelaai is</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d gepatchte app het 'n opdatering beskikbaar</item>
+        <item quantity="other">%1$d gepatchte apps het opdaterings beskikbaar</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d reël is na %2$s gestoor</item>
+        <item quantity="other">%1$d reëls is na %2$s gestoor</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d oorsprong</item>
+        <item quantity="other">%1$d oorspronge</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d patch sal toegepas word</item>
+        <item quantity="other">%1$d patches sal toegepas word</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d uitgesluit</item>
+        <item quantity="other">%1$d uitgesluit</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d geaktiveer</item>
+        <item quantity="other">%1$d geaktiveer</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d gedeaktiveer</item>
+        <item quantity="other">%1$d gedeaktiveer</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d biblioteek</item>
+        <item quantity="other">%1$d biblioteke</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d van %2$d geselekteer</item>
+        <item quantity="other">%1$d van %2$d geselekteer</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d verandering</item>
+        <item quantity="other">%1$d veranderinge</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kaart het voorrang oor hierdie</item>
+        <item quantity="other">%1$d kaarte het voorrang oor hierdie</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Laai %1$d bondel af</item>
+        <item quantity="other">Laai %1$d bondels af</item>
+    </plurals>
+</resources>

@@ -50,16 +50,21 @@ import app.morphe.gui.ui.components.getFriendlyErrorMessage
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.MorpheFilePicker
+import app.morphe.gui.util.currentLocale
+import app.morphe.morphe_desktop.generated.resources.*
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import java.io.File
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.core.parameter.parametersOf
 
 /**
@@ -100,7 +105,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
     // Error dialog
     if (showErrorDialog && currentError != null) {
         ErrorDialog(
-            title = "Error",
+            title = stringResource(Res.string.patches_dialog_error_title),
             message = getFriendlyErrorMessage(currentError!!),
             errorType = getErrorType(currentError!!),
             onDismiss = {
@@ -157,9 +162,9 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
             ) {
                 Icon(
                     imageVector = MorpheIcons.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(Res.string.back),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp).autoMirrored()
                 )
             }
 
@@ -168,7 +173,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
             // Title block
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Select bundle version",
+                    text = stringResource(Res.string.patches_title_select_bundle_version),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = font,
@@ -215,7 +220,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Refresh,
-                        contentDescription = "Refresh",
+                        contentDescription = stringResource(Res.string.patches_refresh_description),
                         tint = if (uiState.isLoading) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
                         else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
@@ -275,11 +280,11 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                             )
                             Spacer(modifier = Modifier.height(14.dp))
                             Text(
-                                text = "Fetching releases",
-                                fontSize = 11.sp,
+                                text = stringResource(Res.string.patches_fetching_releases),
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
                     }
@@ -291,21 +296,22 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "No releases found",
-                                fontSize = 11.sp,
+                                text = stringResource(Res.string.patches_no_releases_found),
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             OutlinedButton(
                                 onClick = { viewModel.loadReleases() },
+                                modifier = Modifier.handCursor(),
                                 shape = RoundedCornerShape(corners.small),
                                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)),
                                 colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant)
                             ) {
                                 Text(
-                                    "Retry",
+                                    text = stringResource(Res.string.retry),
                                     fontFamily = font,
                                     fontWeight = FontWeight.Normal,
                                     fontSize = 11.sp
@@ -353,6 +359,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         )
                     }
 
+                    val exportOptionsTitle = stringResource(Res.string.patches_export_options_title)
                     // Bottom action bar
                     BottomActionBar(
                         uiState = uiState,
@@ -365,7 +372,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         onExportJsonClick = {
                             scope.launch {
                                 val dest = MorpheFilePicker.saveFile(
-                                    title = "Export options.json",
+                                    title = exportOptionsTitle,
                                     baseName = "options",
                                     extension = "json",
                                 ) ?: return@launch
@@ -398,7 +405,7 @@ private fun ChannelSelector(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         ChannelChip(
-            label = "Stable",
+            label = stringResource(Res.string.version_label_stable),
             count = stableCount,
             isSelected = selectedChannel == ReleaseChannel.STABLE,
             onClick = { onChannelSelected(ReleaseChannel.STABLE) },
@@ -406,7 +413,7 @@ private fun ChannelSelector(
             modifier = Modifier.weight(1f)
         )
         ChannelChip(
-            label = "Dev",
+            label = stringResource(Res.string.version_label_experimental),
             count = devCount,
             isSelected = selectedChannel == ReleaseChannel.DEV,
             onClick = { onChannelSelected(ReleaseChannel.DEV) },
@@ -569,13 +576,13 @@ private fun ReleaseCard(
                             else MaterialTheme.colorScheme.onSurface
                         )
                         if (isLatest) {
-                            MorpheBadge(text = "Latest", tone = MorpheBadgeTone.Primary)
+                            MorpheBadge(text = stringResource(Res.string.patches_latest_badge), tone = MorpheBadgeTone.Primary)
                         }
                         if (release.isDevRelease()) {
-                            MorpheBadge(text = "Dev", tone = MorpheBadgeTone.Warning)
+                            MorpheBadge(text = stringResource(Res.string.version_label_experimental), tone = MorpheBadgeTone.Warning)
                         }
                         if (isDownloaded) {
-                            MorpheBadge(text = "Cached")
+                            MorpheBadge(text = stringResource(Res.string.patches_cached_badge))
                         }
                     }
 
@@ -584,7 +591,7 @@ private fun ReleaseCard(
                     // Patch file info
                     release.assets.find { it.isPatchFile() }?.let { patchAsset ->
                         Text(
-                            text = "${patchAsset.name} (${patchAsset.getFormattedSize()})",
+                            text = "${patchAsset.name} (${FormatUtils.formatFileSize(patchAsset.size, currentLocale())})",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -595,7 +602,8 @@ private fun ReleaseCard(
                     val formattedDate = release.publishedAt?.let { formatDate(it) } ?: ""
                     if (formattedDate.isNotEmpty()) {
                         Text(
-                            text = "${if (isOffline) "Cached:" else "Published:"} $formattedDate",
+                            text = if (isOffline) stringResource(Res.string.patches_date_cached, formattedDate)
+                                   else stringResource(Res.string.patches_date_published, formattedDate),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
@@ -628,7 +636,8 @@ private fun ReleaseCard(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = if (isExpanded) "Hide notes" else "Patch notes",
+                                text = if (isExpanded) stringResource(Res.string.patches_hide_notes)
+                                       else stringResource(Res.string.patches_patch_notes),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -707,7 +716,7 @@ private fun BottomActionBar(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Downloading…",
+                text = stringResource(Res.string.patches_downloading),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -732,7 +741,8 @@ private fun BottomActionBar(
                     shape = RoundedCornerShape(corners.small)
                 ) {
                     Text(
-                        text = if (uiState.isDownloading) "Downloading…" else "Download",
+                        text = if (uiState.isDownloading) stringResource(Res.string.patches_downloading)
+                               else stringResource(Res.string.download),
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
                         fontSize = 11.sp,
@@ -749,7 +759,7 @@ private fun BottomActionBar(
                     shape = RoundedCornerShape(corners.small)
                 ) {
                     Text(
-                        text = "Select",
+                        text = stringResource(Res.string.patches_select),
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
                         fontSize = 11.sp,
@@ -777,7 +787,7 @@ private fun BottomActionBar(
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = accents.primary)
                     ) {
                         Text(
-                            text = "Export JSON",
+                            text = stringResource(Res.string.patches_export_json),
                             fontWeight = FontWeight.Normal,
                             fontFamily = font,
                             fontSize = 11.sp,
@@ -835,7 +845,7 @@ private fun LocalSourceBanner(
                 )
                 Column {
                     Text(
-                        text = "Local patch file",
+                        text = stringResource(Res.string.patches_local_patch_file),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = font,
@@ -856,30 +866,6 @@ private fun LocalSourceBanner(
     }
 }
 
-private fun formatDate(isoDate: String): String {
-    return try {
-        // Takes "2024-01-15T10:30:00Z" and returns "Jan 15, 2024 at 10:30 AM"
-        val datePart = isoDate.substringBefore("T")
-        val timePart = isoDate.substringAfter("T").substringBefore("Z").substringBefore("+")
-        val parts = datePart.split("-")
-        if (parts.size == 3) {
-            val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-            val month = months.getOrElse(parts[1].toInt() - 1) { "???" }
-            val day = parts[2].toInt()
-            val year = parts[0]
-            val timeParts = timePart.split(":")
-            val timeStr = if (timeParts.size >= 2) {
-                val hour = timeParts[0].toInt()
-                val minute = timeParts[1]
-                val amPm = if (hour >= 12) "PM" else "AM"
-                val hour12 = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
-                " at $hour12:$minute $amPm UTC"
-            } else ""
-            "$month $day, $year$timeStr"
-        } else {
-            datePart
-        }
-    } catch (e: Exception) {
-        isoDate
-    }
-}
+@Composable
+private fun formatDate(isoDate: String): String =
+    FormatUtils.formatIsoDateTime(isoDate, currentLocale())

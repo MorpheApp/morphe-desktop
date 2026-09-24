@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d извор закрпа није успео да се учита. Користим оне који су се успешно учитали</item>
+        <item quantity="few">%1$d извора закрпа нису успела да се учитају. Користим оне који су се успешно учитали</item>
+        <item quantity="other">%1$d извора закрпа није успело да се учита. Користим оне који су се успешно учитали</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d закрпљена апликација има доступно ажурирање</item>
+        <item quantity="few">%1$d закрпљене апликације имају доступна ажурирања</item>
+        <item quantity="other">%1$d закрпљених апликација има доступна ажурирања</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Сачуван је %1$d ред у %2$s</item>
+        <item quantity="few">Сачувана су %1$d реда у %2$s</item>
+        <item quantity="other">Сачувано је %1$d редова у %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d извор</item>
+        <item quantity="few">%1$d извор</item>
+        <item quantity="other">%1$d извор</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d закрпа ће бити примењена</item>
+        <item quantity="few">%1$d закрпе ће бити примењене</item>
+        <item quantity="other">%1$d закрпа ће бити примењено</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d искључена</item>
+        <item quantity="few">%1$d искључене</item>
+        <item quantity="other">%1$d искључено</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d омогућена</item>
+        <item quantity="few">%1$d омогућене</item>
+        <item quantity="other">%1$d омогућено</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d онемогућена</item>
+        <item quantity="few">%1$d онемогућене</item>
+        <item quantity="other">%1$d онемогућено</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d библиотека</item>
+        <item quantity="few">%1$d библиотеке</item>
+        <item quantity="other">%1$d библиотека</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Изабрано: %1$d од %2$d</item>
+        <item quantity="few">Изабрано: %1$d од %2$d</item>
+        <item quantity="other">Изабрано: %1$d од %2$d</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d закрпа</item>
+        <item quantity="few">%1$d исправка</item>
+        <item quantity="other">%1$d исправка</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d картица има предност над овим</item>
+        <item quantity="few">%1$d картице имају предност над овим</item>
+        <item quantity="other">%1$d картица има предност над овим</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Преузми %1$d пакет</item>
+        <item quantity="few">Преузми %1$d пакета</item>
+        <item quantity="other">Преузми %1$d пакета</item>
+    </plurals>
+</resources>

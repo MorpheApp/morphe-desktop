@@ -29,8 +29,11 @@ import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.util.MorpheFilePicker
+import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun OutputFolderSection(
@@ -49,12 +52,12 @@ internal fun OutputFolderSection(
     val outputDirExists = outputDir?.isDirectory == true
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        SectionLabel("Output folder", font, icon = icon)
+        SectionLabel(stringResource(Res.string.settings_section_output_folder), font, icon = icon)
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = if (!enabled) "Disabled while patching"
-                   else "Where patched APKs are saved. A per-app subfolder is created inside",
+            text = if (!enabled) stringResource(Res.string.disabled_while_patching)
+                   else stringResource(Res.string.settings_output_folder_desc),
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
@@ -78,7 +81,7 @@ internal fun OutputFolderSection(
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
-                    text = outputDir?.name ?: "APK's folder (default)",
+                    text = outputDir?.name ?: stringResource(Res.string.settings_output_folder_default),
                     fontSize = 11.sp,
                     fontFamily = font,
                     fontWeight = FontWeight.Normal,
@@ -92,7 +95,7 @@ internal fun OutputFolderSection(
                 onClick = {
                     scope.launch {
                         MorpheFilePicker.pickDirectory(
-                            title = "Select output folder",
+                            title = getString(Res.string.settings_output_folder_picker_title),
                             startDir = outputDir?.takeIf { it.isDirectory },
                         )?.let { onDefaultOutputDirectoryChange(it.absolutePath) }
                     }
@@ -104,7 +107,7 @@ internal fun OutputFolderSection(
                 modifier = Modifier.fillMaxHeight().handCursor()
             ) {
                 Text(
-                    "Browse",
+                    stringResource(Res.string.browse),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -122,7 +125,7 @@ internal fun OutputFolderSection(
                     modifier = Modifier.fillMaxHeight().handCursor()
                 ) {
                     Text(
-                        "Reset",
+                        stringResource(Res.string.settings_dialog_reset_button),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -134,7 +137,7 @@ internal fun OutputFolderSection(
 
         if (defaultOutputDirectory != null && !outputDirExists) {
             Text(
-                text = "Folder not found - will be created on next patch",
+                text = stringResource(Res.string.settings_output_folder_not_found),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = font,
@@ -159,7 +162,7 @@ internal fun OutputFolderSection(
             )
             if (isBundleRelative) {
                 Text(
-                    text = "Resolves to: $defaultOutputDirectory",
+                    text = stringResource(Res.string.settings_dialog_resolves_to_message, defaultOutputDirectory),
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font,

@@ -5,6 +5,7 @@
 
 package app.morphe.engine.util
 
+import app.morphe.engine.patches.PatchBundleLoader
 import java.io.File
 
 /**
@@ -122,7 +123,8 @@ object ApkOutputNaming {
                 ?: extractApkVersionFromFilename(inputApk.name)
                 ?: "patched"
         )
-        val patchesVersion = patchesFile?.name?.let { extractPatchesVersion(it) }
+        val patchesVersion = patchesFile?.let { PatchBundleLoader.extractVersion(it) }
+            ?: patchesFile?.name?.let { extractPatchesVersion(it) }
         val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
         return File(outputDir, "${appFolderName}-${version}${patchesSuffix}.apk")
     }

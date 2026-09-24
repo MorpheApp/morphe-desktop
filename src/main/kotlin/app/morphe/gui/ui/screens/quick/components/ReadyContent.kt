@@ -8,6 +8,7 @@ package app.morphe.gui.ui.screens.quick.components
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
@@ -42,11 +43,16 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.StatusColorType
+import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay
 import app.morphe.gui.util.toColor
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
 // READY CONTENT (apk info + patch action)
@@ -164,8 +170,11 @@ internal fun ReadyContent(
                             Text(
                                 text = buildString {
                                     append("v${apkInfo.versionName}")
-                                    apkInfo.versionCode?.let { append(" (build $it)") }
-                                    append(" · ${apkInfo.formattedSize}")
+                                    apkInfo.versionCode?.let {
+                                        append(" ")
+                                        append(stringResource(Res.string.quick_patch_ready_version_build, it))
+                                    }
+                                    append(" · ${FormatUtils.formatFileSize(apkInfo.fileSize, currentLocale())}")
                                 },
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
@@ -188,12 +197,13 @@ internal fun ReadyContent(
                                 .hoverable(closeHover)
                                 .clip(RoundedCornerShape(corners.small))
                                 .background(closeBg)
+                                .handCursor()
                                 .clickable(onClick = onClear),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = MorpheIcons.Close,
-                                contentDescription = "Clear",
+                                contentDescription = stringResource(Res.string.clear),
                                 tint = if (isCloseHovered) MaterialTheme.colorScheme.error
                                        else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                                 modifier = Modifier.size(16.dp)
@@ -276,7 +286,7 @@ internal fun ReadyContent(
                             val highlightArch = if (hasMultipleArchs && deviceArch != null) deviceArch else null
 
                             Text(
-                                text = "Arch",
+                                text = stringResource(Res.string.app_info_arch_label),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -331,7 +341,7 @@ internal fun ReadyContent(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "Min SDK",
+                                text = stringResource(Res.string.app_info_min_sdk_label),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -369,7 +379,7 @@ internal fun ReadyContent(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No compatible patches for this app",
+                                text = stringResource(Res.string.quick_patch_ready_no_compatible_patches),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -385,12 +395,13 @@ internal fun ReadyContent(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .handCursor()
                                 .clickable { patchesExpanded = !patchesExpanded }
                                 .padding(horizontal = 20.dp, vertical = 14.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Patches",
+                                text = stringResource(Res.string.quick_patch_patches_label),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = font,
@@ -398,7 +409,7 @@ internal fun ReadyContent(
                             )
                             Spacer(Modifier.width(10.dp))
                             Text(
-                                text = "${enabledPatches.size} enabled",
+                                text = pluralStringResource(Res.plurals.quick_patch_ready_patches_enabled, enabledPatches.size, enabledPatches.size),
                                 fontSize = 11.sp,
                                 fontFamily = font,
                                 fontWeight = FontWeight.Normal,
@@ -415,7 +426,7 @@ internal fun ReadyContent(
                                 )
                                 Spacer(Modifier.width(6.dp))
                                 Text(
-                                    text = "${disabledPatches.size} disabled",
+                                    text = pluralStringResource(Res.plurals.quick_patch_ready_patches_disabled, disabledPatches.size, disabledPatches.size),
                                     fontSize = 11.sp,
                                     fontFamily = font,
                                     fontWeight = FontWeight.Normal,
@@ -425,7 +436,7 @@ internal fun ReadyContent(
                             Spacer(Modifier.weight(1f))
                             Icon(
                                 imageVector = MorpheIcons.KeyboardArrowDown,
-                                contentDescription = if (patchesExpanded) "Collapse patches" else "Expand patches",
+                                contentDescription = if (patchesExpanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                                 modifier = Modifier
                                     .size(18.dp)
@@ -469,6 +480,7 @@ internal fun ReadyContent(
                                     textStyle = MaterialTheme.typography.bodySmall.copy(
                                         fontFamily = font,
                                         fontSize = 11.sp,
+                                        lineHeight = 14.sp,
                                         fontWeight = FontWeight.Normal,
                                         color = MaterialTheme.colorScheme.onSurface
                                     ),
@@ -492,11 +504,12 @@ internal fun ReadyContent(
                                                 modifier = Modifier.size(14.dp)
                                             )
                                             Spacer(modifier = Modifier.width(8.dp))
-                                            Box(modifier = Modifier.weight(1f)) {
+                                            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                                                 if (patchSearchQuery.isEmpty()) {
                                                     Text(
-                                                        "Search patches…",
+                                                        stringResource(Res.string.patches_search_hint),
                                                         fontSize = 11.sp,
+                                                        lineHeight = 14.sp,
                                                         fontFamily = font,
                                                         fontWeight = FontWeight.Normal,
                                                         color = muted.copy(alpha = 0.4f)
@@ -515,7 +528,7 @@ internal fun ReadyContent(
                                                 ) {
                                                     Icon(
                                                         MorpheIcons.Clear,
-                                                        contentDescription = "Clear",
+                                                        contentDescription = stringResource(Res.string.clear),
                                                         tint = muted.copy(alpha = 0.5f),
                                                         modifier = Modifier.size(12.dp)
                                                     )
@@ -571,7 +584,7 @@ internal fun ReadyContent(
                                 if (filteredPatches.isEmpty() && patchSearchQuery.isNotBlank()) {
                                     Spacer(Modifier.height(8.dp))
                                     Text(
-                                        text = "No patches matching \"$patchSearchQuery\"",
+                                        text = stringResource(Res.string.quick_patch_ready_no_matching_patches, patchSearchQuery),
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = font,
@@ -598,13 +611,14 @@ internal fun ReadyContent(
                 onClick = onPatch,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp),
+                    .height(48.dp)
+                    .handCursor(),
                 colors = buttonColors,
                 border = BorderStroke(1.dp, buttonBorderColor.copy(alpha = 0.35f)),
                 shape = RoundedCornerShape(corners.small)
             ) {
                 Text(
-                    text = "Patch with defaults",
+                    text = stringResource(Res.string.quick_patch_ready_patch_with_defaults),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = font
@@ -613,9 +627,16 @@ internal fun ReadyContent(
 
             Spacer(modifier = Modifier.height(6.dp))
 
+            val appliedText = pluralStringResource(Res.plurals.quick_patch_ready_patches_applied_summary, enabledPatches.size, enabledPatches.size)
+            val summaryText = if (disabledPatches.isNotEmpty()) {
+                val excludedText = pluralStringResource(Res.plurals.quick_patch_ready_patches_excluded, disabledPatches.size, disabledPatches.size)
+                stringResource(Res.string.quick_patch_ready_patches_applied_summary_with_excluded, appliedText, excludedText)
+            } else {
+                appliedText
+            }
+
             Text(
-                text = "${enabledPatches.size} patches will be applied" +
-                    if (disabledPatches.isNotEmpty()) " · ${disabledPatches.size} excluded" else "",
+                text = summaryText,
                 fontSize = 11.sp,
                 fontFamily = font,
                 fontWeight = FontWeight.Normal,

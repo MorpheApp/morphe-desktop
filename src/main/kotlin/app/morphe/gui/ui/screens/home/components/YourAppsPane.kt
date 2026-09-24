@@ -109,15 +109,20 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.contrastingForeground
+import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.currentLocale
+import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.FileDialog
 import java.awt.Frame
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /** Which list the home pane is showing: all supported apps, or only patched ("yours"). */
 enum class AppListFilter { ALL, YOURS }
@@ -144,7 +149,7 @@ fun AppListFilterChips(
         modifier = modifier,
     ) {
         FilterChip(
-            label = "All apps",
+            label = stringResource(Res.string.home_filter_all_apps),
             count = if (allCount > 0) allCount else null,
             selected = filter == AppListFilter.ALL,
             accent = accents.primary,
@@ -153,7 +158,7 @@ fun AppListFilterChips(
             onClick = { onSelect(AppListFilter.ALL) },
         )
         FilterChip(
-            label = "Your apps",
+            label = stringResource(Res.string.home_filter_your_apps),
             count = if (yourCount > 0) yourCount else null,
             selected = filter == AppListFilter.YOURS,
             accent = accents.primary,
@@ -176,11 +181,10 @@ fun PatchedUpdatesBanner(count: Int, onView: () -> Unit) {
         icon = MorpheIcons.Refresh,
     ) {
         MorpheBannerText(
-            text = if (count == 1) "A patch update is available for 1 app"
-                   else "Patch updates are available for $count apps",
+            text = pluralStringResource(Res.plurals.home_banner_update_available, count, count),
             modifier = Modifier.weight(1f),
         )
-        MorpheBannerAction(label = "View", onClick = onView)
+        MorpheBannerAction(label = stringResource(Res.string.home_banner_view), onClick = onView)
     }
 }
 
@@ -308,7 +312,7 @@ fun YourAppRow(
             if (deviceInfo?.installPending == true) {
                 Spacer(Modifier.width(8.dp))
                 MorpheBadge(
-                    text = "Install ready",
+                    text = stringResource(Res.string.home_your_apps_install_ready),
                     containerColor = cardChipInk,
                     onGradient = true,
                 )
@@ -341,31 +345,60 @@ fun YourAppRow(
                 overflow = TextOverflow.Ellipsis,
             )
         } else if (updateInfo != null && updateInfo.sources.any { it.outdated }) {
-            Text(
-                text = "ⓘ Newer patch may bump the app - tap Update to check",
-                fontSize = 11.sp,
-                fontFamily = font,
-                fontWeight = FontWeight.Normal,
-                color = Color.White.copy(alpha = 0.6f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Icon(
+                    imageVector = MorpheIcons.Info,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp),
+                    tint = Color.White.copy(alpha = 0.6f),
+                )
+                Text(
+                    text = stringResource(Res.string.home_your_apps_newer_patch_hint),
+                    fontSize = 11.sp,
+                    fontFamily = font,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White.copy(alpha = 0.6f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
         // Already-patched APK is newer than what's on the device → offer to install
         // it directly (no re-patch needed). Streams away once the device catches up.
         if (deviceInfo?.installPending == true) {
-            Text(
-                text = if (deviceInfo.installed)
-                    "⤓ Patched v${record.apkVersion.removePrefix("v")} ready - device on v${deviceInfo.installedVersion?.removePrefix("v") ?: "?"} (no repatch needed)"
-                else
-                    "⤓ Patched v${record.apkVersion.removePrefix("v")} ready to install (no repatch needed)",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                color = Color.White,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Icon(
+                    imageVector = MorpheIcons.Download,
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp),
+                    tint = Color.White,
+                )
+                Text(
+                    text = if (deviceInfo.installed)
+                        stringResource(
+                            Res.string.home_your_apps_device_version_ready,
+                            record.apkVersion.removePrefix("v"),
+                            deviceInfo.installedVersion?.removePrefix("v") ?: "?"
+                        )
+                    else
+                        stringResource(
+                            Res.string.home_your_apps_install_ready_hint,
+                            record.apkVersion.removePrefix("v")
+                        ),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = font,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
@@ -487,7 +520,7 @@ fun PatchedAppDetailDialog(
 
         val loadedLabel = activeSources.joinToString(", ") { src ->
             "${src.name} ${src.resolvedVersion?.let { "v${it.removePrefix("v")}" } ?: "latest"}"
-        }.ifBlank { "the loaded bundle" }
+        }.ifBlank { stringResource(Res.string.home_detail_the_loaded_bundle) }
         val chosenLabel = bundleChoices.entries
             .mapNotNull { (name, c) ->
                 (c as? BundleChoice.Version)?.let { "$name v${it.tag.removePrefix("v")}" }
@@ -547,7 +580,7 @@ fun PatchedAppDetailDialog(
                             ),
                     ) {
                         AssemblyRow(
-                            label = "Source APK",
+                            label = stringResource(Res.string.home_detail_source_apk_label),
                             primary = record.displayName,
                             version = selectedApkVersion?.let { "v${it.removePrefix("v")}" },
                             previousVersion = apkPrevious,
@@ -581,7 +614,7 @@ fun PatchedAppDetailDialog(
                                             }
                                             result.onFailure {
                                                 bundleDownloadError =
-                                                    "Could not download $name $tag: ${it.message}"
+                                                    getString(Res.string.home_detail_error_download_bundle, name, tag, it.message ?: "")
                                                 return@forEachIndexed
                                             }
                                         }
@@ -597,16 +630,16 @@ fun PatchedAppDetailDialog(
                         }
                         RowDivider()
                         AssemblyRow(
-                            label = "Patch bundle",
+                            label = stringResource(Res.string.home_detail_patch_bundle_label),
                             primary = when (bundleParts.size) {
-                                0 -> "No sources enabled"
+                                0 -> stringResource(Res.string.home_detail_no_sources_enabled)
                                 1 -> bundleParts[0].first
-                                else -> "${bundleParts.size} sources"
+                                else -> pluralStringResource(Res.plurals.count_sources, bundleParts.size, bundleParts.size)
                             },
                             version = bundleParts.singleOrNull()?.second,
                             previousVersion = bundlePrevious,
                             sub = when (bundleParts.size) {
-                                0 -> "enable or add one below"
+                                0 -> stringResource(Res.string.home_detail_enable_or_add_source)
                                 1 -> null
                                 else -> bundleParts.joinToString("  ·  ") { "${it.first} ${it.second}" }
                             },
@@ -644,7 +677,7 @@ fun PatchedAppDetailDialog(
 
                     if (installPending) {
                         ActionBar(
-                            label = if (installing) "Installing…" else "Install to device",
+                            label = if (installing) stringResource(Res.string.home_action_installing) else stringResource(Res.string.home_action_install_to_device),
                             icon = MorpheIcons.Download,
                             color = accents.primary,
                             font = font,
@@ -652,8 +685,15 @@ fun PatchedAppDetailDialog(
                             filled = true,
                             sublabels = listOf(
                                 if (deviceInfo.installed)
-                                    "v${record.apkVersion.removePrefix("v")} ready  ·  device on v${deviceInfo.installedVersion?.removePrefix("v") ?: "?"}"
-                                else "v${record.apkVersion.removePrefix("v")} ready, no repatch needed"
+                                    stringResource(
+                                        Res.string.home_detail_ready_device_version,
+                                        record.apkVersion.removePrefix("v"),
+                                        deviceInfo.installedVersion?.removePrefix("v") ?: "?",
+                                    )
+                                else stringResource(
+                                    Res.string.home_detail_ready_no_repatch,
+                                    record.apkVersion.removePrefix("v"),
+                                )
                             ),
                             onClick = if (installing) ({}) else ({ onInstall() }),
                         )
@@ -661,8 +701,8 @@ fun PatchedAppDetailDialog(
 
                     val downloads = pendingDownloads
                     val patchSubs = when {
-                        patchPrepProgress != null -> listOf("downloading ${patchPrepProgress.first}")
-                        preparingPatch -> listOf("resolving patch files")
+                        patchPrepProgress != null -> listOf(stringResource(Res.string.home_detail_downloading_patch, patchPrepProgress.first))
+                        preparingPatch -> listOf(stringResource(Res.string.home_detail_resolving_patch_files))
                         downloads.isNullOrEmpty() -> emptyList()
                         else -> downloads.map { "↓  $it" }
                     }
@@ -671,10 +711,10 @@ fun PatchedAppDetailDialog(
                     ActionBar(
                         label = when {
                             patchPrepProgress != null ->
-                                "Downloading  ${(patchPrepProgress.second * 100).toInt()}%"
-                            preparingPatch -> "Preparing…"
-                            hasUpdate || inputsChanged -> "Update"
-                            else -> "Repatch"
+                                stringResource(Res.string.home_detail_downloading_percent, (patchPrepProgress.second * 100).toInt())
+                            preparingPatch -> stringResource(Res.string.home_action_preparing)
+                            hasUpdate || inputsChanged -> stringResource(Res.string.home_action_update)
+                            else -> stringResource(Res.string.home_action_repatch)
                         },
                         icon = null,
                         color = accents.primary,
@@ -688,7 +728,7 @@ fun PatchedAppDetailDialog(
 
                     if (deviceInfo?.installed == true) {
                         ActionBar(
-                            label = if (uninstalling) "Uninstalling…" else "Uninstall",
+                            label = if (uninstalling) stringResource(Res.string.home_action_uninstalling) else stringResource(Res.string.home_dialog_uninstall_button),
                             icon = MorpheIcons.Delete,
                             color = Color(0xFFE0504D),
                             font = font,
@@ -708,7 +748,7 @@ fun PatchedAppDetailDialog(
                 var patchesExpanded by remember { mutableStateOf(false) }
                 var patchSearch by remember { mutableStateOf("") }
                 DisclosureHeader(
-                    label = "Details",
+                    label = stringResource(Res.string.home_detail_details_title),
                     color = accents.primary,
                     font = font,
                     corner = corners.small,
@@ -721,9 +761,9 @@ fun PatchedAppDetailDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    StatCell("Patched", fullDate(record.patchedAt), font)
+                    StatCell(stringResource(Res.string.home_your_apps_status_patched), fullDate(record.patchedAt), font)
                     StatCell(
-                        "App version",
+                        stringResource(Res.string.home_detail_app_version_label),
                         buildString {
                             append("v${record.apkVersion.removePrefix("v")}")
                             record.apkVersionCode?.let { append(" ($it)") }
@@ -732,15 +772,15 @@ fun PatchedAppDetailDialog(
                     )
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    StatCell("Morphe", record.patchedWithMorpheVersion, font)
-                    StatCell("Output size", humanSize(record.outputApkSize), font)
+                    StatCell(stringResource(Res.string.app_name), record.patchedWithMorpheVersion, font)
+                    StatCell(stringResource(Res.string.home_detail_output_size_label), humanSize(record.outputApkSize), font)
                 }
-                record.outputApkSha256?.let { CopyableStat("SHA-256", it, font, corners.small) }
-                CopyableStat("Output path", record.outputApkPath, font, corners.small)
+                record.outputApkSha256?.let { CopyableStat(stringResource(Res.string.home_detail_sha256_label), it, font, corners.small) }
+                CopyableStat(stringResource(Res.string.home_detail_output_path_label), record.outputApkPath, font, corners.small)
                 }
                 }
                 DisclosureHeader(
-                    label = "Patches applied",
+                    label = stringResource(Res.string.home_detail_section_patches_applied),
                     color = accents.primary,
                     font = font,
                     corner = corners.small,
@@ -783,7 +823,7 @@ fun PatchedAppDetailDialog(
                     }
                     if (record.patchOptionValues.isNotEmpty() && patchSearch.isBlank()) {
                         Text(
-                            text = "Options",
+                            text = stringResource(Res.string.home_detail_section_options),
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = font,
@@ -810,11 +850,11 @@ fun PatchedAppDetailDialog(
                         .padding(start = 8.dp, end = 20.dp, top = 6.dp, bottom = 12.dp),
                 ) {
                     DetailActionPill(
-                        "Folder", MorpheIcons.OpenInNew, accents.primary, font, corners.small,
+                        stringResource(Res.string.folder), MorpheIcons.OpenInNew, accents.primary, font, corners.small,
                         modifier = Modifier.weight(1f), onClick = onOpenFolder,
                     )
                     DetailActionPill(
-                        "Customise", MorpheIcons.Palette, accents.primary, font, corners.small,
+                        stringResource(Res.string.customize), MorpheIcons.Palette, accents.primary, font, corners.small,
                         modifier = Modifier.weight(1f),
                     ) {
                         cardFills.requestEdit(
@@ -824,7 +864,7 @@ fun PatchedAppDetailDialog(
                         )
                     }
                     DetailActionPill(
-                        "Forget", MorpheIcons.Delete,
+                        stringResource(Res.string.home_dialog_forget_button), MorpheIcons.Delete,
                         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f), font, corners.small,
                         modifier = Modifier.weight(1f),
                     ) { onDismiss(); onForget() }
@@ -911,7 +951,7 @@ private fun IdentityBand(
         if (advice != null) {
             UpdateHint(advice.first, font, recommended = advice.second)
         } else if (updateInfo != null && updateInfo.sources.any { it.outdated }) {
-            InfoNote("A newer patch bundle is available. Update to take it.", font)
+            InfoNote(stringResource(Res.string.home_detail_newer_patch_available_note), font)
         }
     }
 }
@@ -1224,6 +1264,15 @@ private fun CopyableStat(label: String, value: String, font: FontFamily, corner:
     val hover = remember { MutableInteractionSource() }
     val isHovered by hover.collectIsHoveredAsState()
     val accents = LocalMorpheAccents.current
+    var copied by remember { mutableStateOf(false) }
+
+    LaunchedEffect(copied) {
+        if (copied) {
+            delay(1500.milliseconds)
+            copied = false
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(2.dp),
         modifier = Modifier
@@ -1235,6 +1284,7 @@ private fun CopyableStat(label: String, value: String, font: FontFamily, corner:
             .clickable {
                 Toolkit.getDefaultToolkit().systemClipboard
                     .setContents(StringSelection(value), null)
+                copied = true
             }
             .padding(horizontal = 6.dp, vertical = 4.dp),
     ) {
@@ -1246,9 +1296,17 @@ private fun CopyableStat(label: String, value: String, font: FontFamily, corner:
                 fontFamily = font,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
             )
-            if (isHovered) {
+            if (copied) {
                 Text(
-                    text = "Click to copy",
+                    text = stringResource(Res.string.copied),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = font,
+                    color = accents.primary,
+                )
+            } else if (isHovered) {
+                Text(
+                    text = stringResource(Res.string.click_to_copy),
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = font,
@@ -1301,6 +1359,7 @@ private fun PatchSearchField(
         singleLine = true,
         textStyle = TextStyle(
             fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontFamily = font,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface,
@@ -1320,8 +1379,9 @@ private fun PatchSearchField(
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty()) {
                         Text(
-                            "Search patches…",
+                            text = stringResource(Res.string.patches_search_hint),
                             fontSize = 11.sp,
+                            lineHeight = 14.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
@@ -1338,15 +1398,27 @@ private fun PatchSearchField(
 @Composable
 private fun UpdateHint(text: String, font: FontFamily, recommended: Boolean = false) {
     val accents = LocalMorpheAccents.current
-    Text(
-        text = "↑ $text",
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Normal,
-        fontFamily = font,
-        color = if (recommended) accents.warning else accents.primary,
-        lineHeight = 14.sp,
+    val color = if (recommended) accents.warning else accents.primary
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
-    )
+    ) {
+        Icon(
+            imageVector = MorpheIcons.ArrowUpward,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(11.dp),
+        )
+        Text(
+            text = text,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Normal,
+            fontFamily = font,
+            color = color,
+            lineHeight = 14.sp,
+        )
+    }
 }
 
 /**
@@ -1354,9 +1426,10 @@ private fun UpdateHint(text: String, font: FontFamily, recommended: Boolean = fa
  * recommended): recommended=true (amber) when the version is unsupported or a newer
  * stable is out. False (blue) for an optional experimental bump.
  */
+@Composable
 private fun appAdvice(u: RecallUpdateInfo): Pair<String, Boolean>? {
     if (u.appUsedSupported) return null
-    return "v${u.appUsedVersion.removePrefix("v")} is no longer supported by the latest patches" to true
+    return stringResource(Res.string.home_advice_unsupported_by_patches, u.appUsedVersion.removePrefix("v")) to true
 }
 
 /**
@@ -1467,7 +1540,7 @@ private fun ApkSourceSection(
 
     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
-            text = "Using",
+            text = stringResource(Res.string.home_detail_using_label),
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             fontFamily = font,
@@ -1486,7 +1559,7 @@ private fun ApkSourceSection(
     if (recordedExists && selectedApkPath != recordedApkPath) {
         ChoiceRow(
             label = "v${recordedVersion.removePrefix("v")}  ·  ${File(recordedApkPath).name}",
-            sub = "the APK this app was patched from",
+            sub = stringResource(Res.string.home_detail_apk_origin_sub),
             selected = false,
             font = font,
             corner = corner,
@@ -1497,7 +1570,7 @@ private fun ApkSourceSection(
     val muted = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
     if (loading) {
         Text(
-            text = "Reading the chosen bundle…",
+            text = stringResource(Res.string.home_detail_reading_chosen_bundle),
             fontSize = 10.sp,
             fontFamily = font,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
@@ -1510,16 +1583,8 @@ private fun ApkSourceSection(
                     withStyle(SpanStyle(color = accents.warning, fontWeight = FontWeight.Bold)) {
                         append("⚠  ")
                     }
-                    withStyle(SpanStyle(color = muted)) { append("Versions below are what ") }
-                    withStyle(SpanStyle(color = accents.primary, fontWeight = FontWeight.Bold)) {
-                        append(loadedLabel)
-                    }
-                    withStyle(SpanStyle(color = muted)) { append(" supports. You picked ") }
-                    withStyle(SpanStyle(color = accents.warning, fontWeight = FontWeight.Bold)) {
-                        append(chosen)
-                    }
                     withStyle(SpanStyle(color = muted)) {
-                        append(", which is not downloaded, so what it supports is unknown.")
+                        append(stringResource(Res.string.home_detail_bundle_not_downloaded_warning, loadedLabel, chosen))
                     }
                 },
                 fontSize = 10.sp,
@@ -1527,8 +1592,8 @@ private fun ApkSourceSection(
                 lineHeight = 15.sp,
             )
             DetailActionPill(
-                if (downloadProgress != null) "Downloading  ${(downloadProgress * 100).toInt()}%"
-                else if (missing.size > 1) "Download ${missing.size} bundles" else "Download bundle",
+                if (downloadProgress != null) stringResource(Res.string.home_detail_downloading_percent, (downloadProgress * 100).toInt())
+                else pluralStringResource(Res.plurals.home_detail_download_bundles, missing.size, missing.size),
                 MorpheIcons.Download, accents.primary, font, corner,
                 progress = downloadProgress,
                 onClick = if (downloadProgress != null) ({}) else onDownloadMissing,
@@ -1549,14 +1614,9 @@ private fun ApkSourceSection(
                 withStyle(SpanStyle(color = accents.warning, fontWeight = FontWeight.Bold)) {
                     append("⚠  ")
                 }
-                withStyle(SpanStyle(color = accents.primary, fontWeight = FontWeight.Bold)) {
-                    append(chosenLabel ?: loadedLabel)
+                withStyle(SpanStyle(color = muted)) {
+                    append(stringResource(Res.string.home_detail_bundle_does_not_support_warning, chosenLabel ?: loadedLabel, "v${selectedVersion?.removePrefix("v")}"))
                 }
-                withStyle(SpanStyle(color = muted)) { append(" does not support ") }
-                withStyle(SpanStyle(color = accents.warning, fontWeight = FontWeight.Bold)) {
-                    append("v${selectedVersion?.removePrefix("v")}")
-                }
-                withStyle(SpanStyle(color = muted)) { append(". Pick one of these instead.") }
             },
             fontSize = 10.sp,
             fontFamily = font,
@@ -1564,22 +1624,17 @@ private fun ApkSourceSection(
         )
     } else if (chosenLabel != null) {
         Text(
-            text = buildAnnotatedString {
-                withStyle(SpanStyle(color = muted)) { append("Versions below are what ") }
-                withStyle(SpanStyle(color = accents.primary, fontWeight = FontWeight.Bold)) {
-                    append(chosenLabel)
-                }
-                withStyle(SpanStyle(color = muted)) { append(" supports.") }
-            },
+            text = stringResource(Res.string.home_detail_versions_what_bundle_supports, chosenLabel),
             fontSize = 10.sp,
             fontFamily = font,
+            color = muted,
             lineHeight = 15.sp,
         )
     }
 
     if (app != null) {
         if (app.supportedVersions.isNotEmpty()) {
-            SectionLabel(text = "Stable", font = font, color = accents.primary)
+            SectionLabel(text = stringResource(Res.string.version_label_stable), font = font, color = accents.primary)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -1596,7 +1651,7 @@ private fun ApkSourceSection(
             }
         }
         if (app.experimentalVersions.isNotEmpty()) {
-            SectionLabel(text = "Experimental", font = font, color = accents.warning)
+            SectionLabel(text = stringResource(Res.string.version_label_experimental), font = font, color = accents.warning)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -1614,12 +1669,13 @@ private fun ApkSourceSection(
         }
     }
 
+    val selectApkTitle = stringResource(Res.string.home_detail_select_apk_title)
     DetailActionPill(
-        "Choose APK",
+        stringResource(Res.string.home_detail_choose_apk_button),
         MorpheIcons.FolderOpen, accents.primary, font, corner,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        val fd = FileDialog(null as Frame?, "Select an APK to patch", FileDialog.LOAD)
+        val fd = FileDialog(null as Frame?, selectApkTitle, FileDialog.LOAD)
         fd.isVisible = true
         val picked = fd.file?.let { File(fd.directory, it) }
         if (picked != null && picked.exists()) onApkSelected(picked.absolutePath)
@@ -1634,18 +1690,19 @@ private fun AddSourceControl(
     onAddLocalBundle: (String) -> Unit,
 ) {
     val accents = LocalMorpheAccents.current
+    val selectBundleTitle = stringResource(Res.string.home_detail_select_patch_bundle_title)
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
         DetailActionPill(
-            "New source", MorpheIcons.Add, accents.primary, font, corner,
+            stringResource(Res.string.home_detail_new_source_button), MorpheIcons.Add, accents.primary, font, corner,
             modifier = Modifier.weight(1f),
         ) {
             onAddSource()
         }
         DetailActionPill(
-            "Local .mpp", MorpheIcons.FolderOpen, accents.primary, font, corner,
+            stringResource(Res.string.home_detail_local_mpp_button), MorpheIcons.FolderOpen, accents.primary, font, corner,
             modifier = Modifier.weight(1f),
         ) {
-            val fd = FileDialog(null as Frame?, "Select a patch bundle", FileDialog.LOAD)
+            val fd = FileDialog(null as Frame?, selectBundleTitle, FileDialog.LOAD)
             fd.isVisible = true
             val picked = fd.file?.let { File(fd.directory, it) }
             if (picked != null && picked.exists()) onAddLocalBundle(picked.absolutePath)
@@ -1726,14 +1783,14 @@ private fun PatchSourceSection(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
                         Text(
-                            text = "Using",
+                            text = stringResource(Res.string.home_detail_using_label),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Medium,
                             fontFamily = font,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
                         )
                         Text(
-                            text = using?.let { "v${it.removePrefix("v")}" } ?: "latest available",
+                            text = using?.let { "v${it.removePrefix("v")}" } ?: stringResource(Res.string.home_detail_latest_available),
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = font,
@@ -1765,7 +1822,7 @@ private fun PatchSourceSection(
                                     modifier = Modifier.size(9.dp),
                                 )
                                 Text(
-                                    text = "Pinned",
+                                    text = stringResource(Res.string.home_detail_pinned_badge),
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Medium,
                                     fontFamily = font,
@@ -1789,23 +1846,23 @@ private fun PatchSourceSection(
 
                 when {
                     availableVersions == null -> Text(
-                        text = "Loading versions…",
+                        text = stringResource(Res.string.home_detail_loading_versions),
                         fontSize = 10.sp,
                         fontFamily = font,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     )
                     availableVersions.isEmpty() -> Text(
-                        text = "No other versions available",
+                        text = stringResource(Res.string.home_detail_no_other_versions),
                         fontSize = 10.sp,
                         fontFamily = font,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     )
                     else -> {
                         listOf(
-                            "Stable" to accents.primary,
-                            "Dev" to accents.warning,
-                        ).forEach { (label, color) ->
-                            val group = availableVersions.filter { it.isDev == (label == "Dev") }
+                            Triple(stringResource(Res.string.version_label_stable), accents.primary, false),
+                            Triple(stringResource(Res.string.version_label_dev), accents.warning, true),
+                        ).forEach { (label, color, isDev) ->
+                            val group = availableVersions.filter { it.isDev == isDev }
                             if (group.isEmpty()) return@forEach
                             SectionLabel(text = label, font = font, color = color)
                             FlowRow(
@@ -1832,11 +1889,11 @@ private fun PatchSourceSection(
                             }
                         }
                     }
-            }
-            }
-        }
+                }
             }
         }
+    }
+}
 
 @Composable
 private fun ChoiceRow(
@@ -1898,11 +1955,22 @@ private fun ChoiceRow(
 /** Shared device-install line (mirrors the supported-row variant). */
 @Composable
 private fun DeviceLine(info: DeviceAppInfo, font: FontFamily, mutedColor: Color, activeColor: Color) {
-    val version = info.installedVersion?.let { " · v${it.removePrefix("v")}" } ?: ""
-    val (text, color) = when {
-        !info.installed -> "Not on this device" to mutedColor
-        info.signedByMorphe == false -> "On device$version · not Morphe-signed" to Color(0xFFE0504D)
-        else -> "On device$version" to activeColor
+    val version = info.installedVersion?.removePrefix("v")
+    val text = when {
+        !info.installed -> stringResource(Res.string.home_app_row_not_on_device)
+        info.signedByMorphe == false -> {
+            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version_not_signed, version)
+            else stringResource(Res.string.home_app_row_on_device_not_signed)
+        }
+        else -> {
+            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version, version)
+            else stringResource(Res.string.home_app_row_on_device)
+        }
+    }
+    val color = when {
+        !info.installed -> mutedColor
+        info.signedByMorphe == false -> Color(0xFFE0504D)
+        else -> activeColor
     }
     Text(
         text = text,
@@ -1916,24 +1984,27 @@ private fun DeviceLine(info: DeviceAppInfo, font: FontFamily, mutedColor: Color,
 private fun patchDisplayName(uniqueId: String): String =
     uniqueId.substringBeforeLast('|').substringBeforeLast('|')
 
+@Composable
 private fun fullDate(millis: Long): String =
-    SimpleDateFormat("MMM d, yyyy · h:mm a", Locale.US).format(Date(millis))
+    FormatUtils.formatDateTime(millis, currentLocale())
 
+/** "today / yesterday / 3d ago / MMM d" — compact for the list row. */
+@Composable
 private fun relativeOrShortDate(millis: Long): String {
     val now = System.currentTimeMillis()
     val days = ((now - millis) / 86_400_000L).toInt()
     return when {
-        days <= 0 -> "today"
-        days == 1 -> "yesterday"
-        days < 7 -> "${days}d ago"
-        else -> SimpleDateFormat("MMM d", Locale.US).format(Date(millis))
+        days <= 0 -> stringResource(Res.string.home_date_today)
+        days == 1 -> stringResource(Res.string.home_date_yesterday)
+        days < 7 -> stringResource(Res.string.home_date_days_ago, days)
+        else -> FormatUtils.formatShortDate(millis, currentLocale())
     }
 }
 
+@Composable
 private fun humanSize(bytes: Long): String {
     if (bytes <= 0) return "-"
-    val mb = bytes / 1_048_576.0
-    return if (mb >= 1) "%.1f MB".format(mb) else "%.0f KB".format(bytes / 1024.0)
+    return FormatUtils.formatFileSize(bytes, currentLocale())
 }
 
 // ============================================================================
@@ -1962,13 +2033,13 @@ internal fun YourAppsListBody(
     val font = LocalMorpheFont.current
     when {
         patchedRecords.isEmpty() -> YourAppsEmptyHint(
-            title = "No patched apps yet",
-            subtitle = "Patch an app and it shows up here",
+            title = stringResource(Res.string.home_your_apps_empty_title),
+            subtitle = stringResource(Res.string.home_your_apps_empty_subtitle),
             font = font,
         )
         filteredRecords.isEmpty() -> YourAppsEmptyHint(
-            title = "No matches",
-            subtitle = "Nothing matches \"$searchQuery\"",
+            title = stringResource(Res.string.no_matches),
+            subtitle = stringResource(Res.string.home_your_apps_no_matches_subtitle, searchQuery),
             font = font,
         )
         else -> {

@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun AdvancedTab(
@@ -37,6 +39,8 @@ internal fun AdvancedTab(
     onDeveloperOptionsChange: (Boolean) -> Unit,
     collapsibleSectionStates: Map<String, Boolean>,
     onCollapsibleSectionToggle: (id: String, expanded: Boolean) -> Unit,
+    gitHubPat: String = "",
+    onGitHubPatChange: (String) -> Unit = {},
     isPatching: Boolean,
     borderColor: Color,
 ) {
@@ -44,8 +48,8 @@ internal fun AdvancedTab(
     val accents = LocalMorpheAccents.current
 
     SettingToggleRow(
-        label = "Expert mode",
-        description = "Full control over patch selection and configuration",
+        label = stringResource(Res.string.settings_toggle_expert_mode_label),
+        description = stringResource(Res.string.settings_toggle_expert_mode_desc),
         checked = useExpertMode,
         onCheckedChange = onExpertModeChange,
         accentColor = accents.primary,
@@ -57,8 +61,8 @@ internal fun AdvancedTab(
     SettingsDivider(borderColor)
 
     SettingToggleRow(
-        label = "Route links to patched app",
-        description = "After installing via ADB, make the patched app open its supported web links instead of the browser or the stock/default app",
+        label = stringResource(Res.string.settings_toggle_route_links_label),
+        description = stringResource(Res.string.settings_toggle_route_links_desc),
         checked = autoRouteLinksAfterInstall,
         onCheckedChange = onAutoRouteLinksChange,
         accentColor = accents.primary,
@@ -70,9 +74,8 @@ internal fun AdvancedTab(
         Column {
             Spacer(Modifier.height(12.dp))
             SettingToggleRow(
-                label = "Disable stock app's links",
-                description = "Also stop the original app from opening these links (only when a " +
-                    "rename patch was used and the stock app is installed). Reversible.",
+                label = stringResource(Res.string.settings_toggle_disable_stock_links_label),
+                description = stringResource(Res.string.settings_toggle_disable_stock_links_desc),
                 checked = disableStockLinksAfterInstall,
                 onCheckedChange = onDisableStockLinksChange,
                 accentColor = accents.primary,
@@ -117,8 +120,8 @@ internal fun AdvancedTab(
     SettingsDivider(borderColor)
 
     SettingToggleRow(
-        label = "Developer options",
-        description = "For patch developers. Unlocks a suite of workflow options for building and testing patches (see the documentation for the full list). For now, that's pointing a local source at a folder so Morphe always loads its newest .mpp",
+        label = stringResource(Res.string.settings_toggle_developer_options_label),
+        description = stringResource(Res.string.settings_toggle_developer_options_desc),
         checked = developerOptions,
         onCheckedChange = onDeveloperOptionsChange,
         accentColor = accents.primary,
@@ -137,5 +140,18 @@ internal fun AdvancedTab(
         expanded = collapsibleSectionStates["Runtime logs"] == true,
         icon = MorpheIcons.DeployedCode,
         onExpandedChange = { onCollapsibleSectionToggle("Runtime logs", it) }
+    )
+
+    SettingsDivider(borderColor)
+
+    GitHubPatSection(
+        gitHubPat = gitHubPat,
+        onGitHubPatChange = onGitHubPatChange,
+        font = font,
+        accentColor = accents.primary,
+        enabled = !isPatching,
+        expanded = collapsibleSectionStates["GitHub PAT"] == true,
+        icon = MorpheIcons.Key,
+        onExpandedChange = { onCollapsibleSectionToggle("GitHub PAT", it) }
     )
 }
