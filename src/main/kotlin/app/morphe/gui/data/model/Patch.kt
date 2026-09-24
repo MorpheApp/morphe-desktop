@@ -63,6 +63,23 @@ data class CompatiblePackage(
     val versionBuildCodes: Map<String, Set<Int>> = emptyMap()
 )
 
+/**
+ * Semantic UI hint produced by a typed patcher option subclass.
+ * Null when the underlying option is a plain untyped option.
+ */
+enum class ExplicitOptionKind {
+    Folder, FilePath, Files, Image, Color, IntSlider, FloatSlider, IntRange, FloatRange
+}
+
+/** Recommended pixel dimensions for an [ExplicitOptionKind.Image] option. */
+data class ImageSize(val width: Int, val height: Int)
+
+/**
+ * Bounds declared by a slider option, normalized so one carrier serves the integer and the
+ * floating point kinds alike.
+ */
+data class SliderBounds(val min: Float, val max: Float, val step: Float?)
+
 @Serializable
 data class PatchOption(
     val key: String,
@@ -73,6 +90,12 @@ data class PatchOption(
     val required: Boolean = false,
     /** The type the patch declared. [type] cannot express a list's element type. */
     @Transient val valueType: KType? = null,
+    @Transient val explicitKind: ExplicitOptionKind? = null,
+    @Transient val allowedExtensions: List<String>? = null,
+    @Transient val recommendedSize: ImageSize? = null,
+    @Transient val sliderBounds: SliderBounds? = null,
+    @Transient val presets: Map<String, Any?>? = null,
+    @Transient val rawDefault: Any? = null,
 )
 
 @Serializable

@@ -525,6 +525,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                                         onToggle = { viewModel.togglePatch(bundle.bundleId, patch.uniqueId) },
                                                         sourceName = null,
                                                         packageName = targetPackage,
+                                                        patchOptionValues = uiState.patchOptionValues,
                                                         getOptionValue = { optionKey, default ->
                                                             viewModel.getOptionValue(patch.name, optionKey, default)
                                                         },
@@ -546,6 +547,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                                     onToggle = { viewModel.togglePatch(bundle.bundleId, patch.uniqueId) },
                                                     sourceName = null,
                                                     packageName = targetPackage,
+                                                    patchOptionValues = uiState.patchOptionValues,
                                                     getOptionValue = { optionKey, default ->
                                                         viewModel.getOptionValue(patch.name, optionKey, default)
                                                     },
