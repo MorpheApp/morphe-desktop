@@ -166,20 +166,25 @@ class PatchSelectionViewModel(
             val patchesResult = loadFromAllPaths()
 
             patchesResult.fold(
-                onSuccess = { bundles ->
+                onSuccess = { rawBundles ->
                     Logger.info(
-                        "Loaded ${bundles.size} bundle(s), " +
-                            "${bundles.sumOf { it.patches.size }} total patches for $packageName"
+                        "Loaded ${rawBundles.size} bundle(s), " +
+                            "${rawBundles.sumOf { it.patches.size }} total patches for $packageName"
                     )
+
+                    // Sort bundles by descending number of compatible patches for the selected APK version.
+                    val anyBundleHasCompatible = apkVersion.isNotBlank() && rawBundles.any { compatiblePatchCount(it) > 0 }
+                    val bundles = if (anyBundleHasCompatible) {
+                        rawBundles.sortedWith(compareByDescending { compatiblePatchCount(it) })
+                    } else {
+                        rawBundles
+                    }
 
                     // For each bundle, derive its default selection (use=true) and
                     // its saved selection (if any). Persistence is per-bundle
                     // keyed by bundleName. Single load per bundle.
                     val defaultsByBundle = bundles.associate { bundle ->
-                        bundle.bundleId to bundle.patches
-                            .filter { it.isEnabled }
-                            .map { it.uniqueId }
-                            .toSet()
+                        bundle.bundleId to computeBundleDefaults(bundle, anyBundleHasCompatible)
                     }
                     val savedByBundle = mutableMapOf<String, Set<String>>()
                     val initialOptions = mutableMapOf<String, String>()
@@ -203,7 +208,6 @@ class PatchSelectionViewModel(
                         for ((bundleId, bundleName, patches) in bundles) {
                             val saved = preferencesRepository.get(bundleName, packageName)
                             if (saved != null) {
-                                anyBundleHasSaved = true
                                 val byName = patches.associateBy { it.name }
                                 val selected = saved.patches
                                     .filter { (_, entry) -> entry.enabled }
@@ -217,8 +221,25 @@ class PatchSelectionViewModel(
                                 if (fresh.isNotEmpty()) {
                                     newByBundle[bundleId] = fresh.mapTo(mutableSetOf()) { it.uniqueId }
                                 }
-                                savedByBundle[bundleId] = selected +
+                                val combined = selected +
                                     fresh.filter { it.isEnabled }.map { it.uniqueId }
+
+                                // When an APK version is supported by at least one bundle, do not auto-restore
+                                // selections from a bundle that has zero compatible patches for that version.
+                                val bundleIncompatible = anyBundleHasCompatible && compatiblePatchCount(bundleId, patches) == 0
+                                if (bundleIncompatible) {
+                                    savedByBundle[bundleId] = combined
+                                } else {
+                                    anyBundleHasSaved = true
+                                    val compatibleOnly = if (apkVersion.isNotBlank()) {
+                                        val compatibleIds = patches.filter { isPatchCompatible(it) }.map { it.uniqueId }.toSet()
+                                        combined.intersect(compatibleIds)
+                                    } else {
+                                        combined
+                                    }
+                                    savedByBundle[bundleId] = compatibleOnly
+                                }
+
                                 // Materialize saved option values ("patchName.optionKey" → string).
                                 // Options are per-patch-name, so they are global here.
                                 // Identical patches in two bundles share option values,
@@ -238,10 +259,17 @@ class PatchSelectionViewModel(
                         }
                     }
 
-                    // Initial selection for each bundle: saved if present, else .mpp defaults.
+                    // Initial selection for each bundle:
+                    // If a bundle is incompatible with apkVersion while another bundle is compatible,
+                    // it starts with its empty defaults (no enabled patches).
                     val initialSelectedByBundle = bundles.associate { bundle ->
-                        bundle.bundleId to (savedByBundle[bundle.bundleId]
-                            ?: defaultsByBundle[bundle.bundleId].orEmpty())
+                        val isBundleIncompatible = anyBundleHasCompatible && compatiblePatchCount(bundle) == 0
+                        val initial = if (isBundleIncompatible) {
+                            defaultsByBundle[bundle.bundleId].orEmpty()
+                        } else {
+                            savedByBundle[bundle.bundleId] ?: defaultsByBundle[bundle.bundleId].orEmpty()
+                        }
+                        bundle.bundleId to initial
                     }
 
                     if (anyBundleHasSaved) {
@@ -254,6 +282,7 @@ class PatchSelectionViewModel(
                         bundles = bundles,
                         filteredBundles = bundles,
                         selectedByBundle = initialSelectedByBundle,
+                        defaultsByBundle = defaultsByBundle,
                         savedSelectedByBundle = savedByBundle.ifEmpty { null },
                         hasSavedSelection = anyBundleHasSaved,
                         newPatchesByBundle = newByBundle,
@@ -268,6 +297,28 @@ class PatchSelectionViewModel(
                     Logger.error("Failed to list patches", e)
                 },
             )
+        }
+    }
+
+    fun isPatchCompatible(patch: Patch): Boolean =
+        patch.isUniversal || patch.isCompatibleWith(packageName, apkVersion.ifBlank { null })
+
+    fun compatiblePatchCount(bundle: BundlePatches): Int =
+        compatiblePatchCount(bundle.bundleId, bundle.patches)
+
+    fun compatiblePatchCount(bundleId: String, patches: List<Patch>): Int =
+        patches.count { !it.isUniversal && it.isCompatibleWith(packageName, apkVersion.ifBlank { null }) }
+
+    private fun computeBundleDefaults(bundle: BundlePatches, hasAnyCompatibleBundle: Boolean): Set<String> {
+        return if (apkVersion.isNotBlank() && hasAnyCompatibleBundle) {
+            if (compatiblePatchCount(bundle) == 0) {
+                // Incompatible bundle: no app patches are selected by default.
+                bundle.patches.filter { it.isUniversal && it.isEnabled }.map { it.uniqueId }.toSet()
+            } else {
+                bundle.patches.filter { isPatchCompatible(it) && it.isEnabled }.map { it.uniqueId }.toSet()
+            }
+        } else {
+            bundle.patches.filter { it.isEnabled }.map { it.uniqueId }.toSet()
         }
     }
 
@@ -379,7 +430,9 @@ class PatchSelectionViewModel(
     /** Reset this bundle's selection to its .mpp `use=true/false` defaults. */
     fun applyPatchDefaultsInBundle(bundleId: String) {
         val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
-        val defaults = bundle.patches.filter { it.isEnabled }.map { it.uniqueId }.toSet()
+        val anyBundleHasCompatible = apkVersion.isNotBlank() && _uiState.value.bundles.any { compatiblePatchCount(it) > 0 }
+        val defaults = _uiState.value.defaultsByBundle[bundleId]
+            ?: computeBundleDefaults(bundle, anyBundleHasCompatible)
         _uiState.value = _uiState.value.copy(
             selectedByBundle = _uiState.value.selectedByBundle + (bundleId to defaults),
         )
@@ -801,6 +854,8 @@ data class PatchSelectionUiState(
      *  across bundles share option values (intentional, the same patch means the
      *  same option). */
     val patchOptionValues: Map<String, String> = emptyMap(),
+    /** bundleId → set of patch uniqueIds default-selected in that bundle (version-aware). */
+    val defaultsByBundle: Map<String, Set<String>> = emptyMap(),
 ) {
     /** Total count of patches enabled across all bundles. Patches identical across bundles
      *  are counted once per bundle they're enabled in. Matches what the user toggled. */
@@ -828,13 +883,14 @@ data class PatchSelectionUiState(
         if (bundle.patches.isEmpty()) return SelectionMode.CUSTOM
         val selected = selectedByBundle[bundleId].orEmpty()
         val all = bundle.patches.map { it.uniqueId }.toSet()
-        val defaults = bundle.patches.filter { it.isEnabled }.map { it.uniqueId }.toSet()
+        val defaults = defaultsByBundle[bundleId]
+            ?: bundle.patches.filter { it.isEnabled }.map { it.uniqueId }.toSet()
         val saved = savedSelectedByBundle?.get(bundleId)
         return when {
             saved != null && selected == saved -> SelectionMode.SAVED
+            selected == defaults -> SelectionMode.DEFAULTS
             selected.isEmpty() -> SelectionMode.NONE
             selected == all -> SelectionMode.ALL
-            selected == defaults -> SelectionMode.DEFAULTS
             else -> SelectionMode.CUSTOM
         }
     }
