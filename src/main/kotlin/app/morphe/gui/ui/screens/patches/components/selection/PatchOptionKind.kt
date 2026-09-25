@@ -77,19 +77,18 @@ fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
         // List<String> free-form comma-separated input
         isList && (typeStr.contains("String") || option.type == PatchOptionType.LIST) -> OptionKind.StringList
 
-        // Color: string whose key/title hints "color" or value looks like a color literal
-        isString && (
-            combinedMeta.contains("color") ||
-            desc.contains("color") ||
-            (value is String && (value.startsWith("#") || value.startsWith("@android:color/")))
-        ) -> OptionKind.Color
-
         // Path/folder string with presets: combined dropdown + path picker
         isString && option.presets?.isNotEmpty() == true && (
             desc.contains("folder") ||
             desc.contains("mipmap") ||
             desc.contains("drawable")
         ) -> OptionKind.PathWithPresets
+
+        // Color: string whose key/title hints "color" or value looks like a color literal
+        isString && (
+            combinedMeta.contains("color") ||
+            (value is String && (value.startsWith("#") || value.startsWith("@android:color/")))
+        ) -> OptionKind.Color
 
         // String with presets: pure dropdown
         isString && option.presets?.isNotEmpty() == true -> OptionKind.StringDropdown
@@ -115,6 +114,7 @@ fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
         isString && option.key != "customName" && (
             combinedMeta.contains("icon") ||
             combinedMeta.contains("header") ||
+            combinedMeta.contains("custom") ||
             combinedMeta.contains("folder") ||
             desc.contains("folder") ||
             desc.contains("mipmap") ||

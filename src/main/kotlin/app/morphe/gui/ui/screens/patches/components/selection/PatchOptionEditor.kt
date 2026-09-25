@@ -354,6 +354,7 @@ internal fun PatchOptionEditor(
             OptionKind.PathWithPresets -> {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     val presets = option.presets.orEmpty()
+                    val isPreset = presets.any { (it.value?.toString() ?: "") == value || it.key.equals(value, ignoreCase = true) }
                     val currentLabel = presets.entries.firstOrNull { (it.value?.toString() ?: "") == value || it.key.equals(value, ignoreCase = true) }?.key
                         ?: value.ifBlank { option.default ?: stringResource(Res.string.select_folder) }
                     MorpheDropdown(
@@ -368,9 +369,10 @@ internal fun PatchOptionEditor(
                         backgroundColor = Color.Transparent,
                     )
                     MorphePathInput(
-                        value = value,
+                        value = if (isPreset) "" else value,
                         onValueChange = onValueChange,
                         mode = PathPickerMode.Folder,
+                        placeholder = stringResource(Res.string.select_folder),
                         isInvalid = option.required && value.isBlank(),
                     )
                 }
