@@ -46,7 +46,6 @@ import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.navigator.Navigator
 import java.awt.datatransfer.StringSelection
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -60,7 +59,7 @@ private fun formatFileSize(bytes: Long): String =
 internal fun ExpertFailureContent(
     uiState: PatchingUiState,
     config: PatchConfig,
-    navigator: Navigator
+    onBackToHome: () -> Unit
 ) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
@@ -338,7 +337,7 @@ internal fun ExpertFailureContent(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             OutlinedButton(
-                onClick = { navigator.popUntilRoot() },
+                onClick = onBackToHome,
                 modifier = Modifier.weight(1f).height(40.dp).handCursor(),
                 shape = RoundedCornerShape(corners.small),
                 colors = ButtonDefaults.outlinedButtonColors(

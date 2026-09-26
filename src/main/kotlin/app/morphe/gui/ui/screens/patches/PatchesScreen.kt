@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.LocalNavController
 import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.OfflineBanner
@@ -32,34 +33,28 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 /**
  * Screen for selecting patch version to apply.
  * This is the screen that selects the patches.mpp file
  */
-data class PatchesScreen(
-    val apkPath: String,
-    val apkName: String
-) : Screen {
-
-    @Composable
-    override fun Content() {
-        val viewModel = koinScreenModel<PatchesViewModel> { parametersOf(apkPath, apkName) }
-        PatchesScreenContent(viewModel = viewModel)
-    }
+@Composable
+fun PatchesScreen(
+    apkPath: String,
+    apkName: String,
+    viewModel: PatchesViewModel = koinViewModel { parametersOf(apkPath, apkName) }
+) {
+    PatchesScreenContent(viewModel = viewModel)
 }
 
 @Composable
 fun PatchesScreenContent(viewModel: PatchesViewModel) {
     val corners = LocalMorpheCorners.current
-    val navigator = LocalNavigator.currentOrThrow
+    val navController = LocalNavController.current
     val uiState by viewModel.uiState.collectAsState()
     val font = LocalMorpheFont.current
     val scope = rememberCoroutineScope()
@@ -101,7 +96,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
             apkName = viewModel.getApkName(),
             isLocalSource = uiState.isLocalSource,
             isLoading = uiState.isLoading,
-            onBackClick = { navigator.pop() },
+            onBackClick = { navController.popBackStack() },
             onRefreshClick = { viewModel.loadReleases() }
         )
 
@@ -235,7 +230,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         onDownloadClick = { viewModel.downloadPatches() },
                         onSelectClick = {
                             viewModel.confirmSelection {
-                                navigator.pop()
+                                navController.popBackStack()
                             }
                         },
                         onExportJsonClick = {

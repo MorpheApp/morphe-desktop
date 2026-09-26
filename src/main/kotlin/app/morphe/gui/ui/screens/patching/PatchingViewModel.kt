@@ -5,6 +5,8 @@
 
 package app.morphe.gui.ui.screens.patching
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheComponents
 import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchedAppStore
@@ -21,8 +23,6 @@ import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.PatcherLogInterceptor
 import app.morphe.gui.util.PatcherState
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
 import java.lang.management.ManagementFactory
 import kotlin.time.Duration.Companion.milliseconds
@@ -44,7 +44,7 @@ class PatchingViewModel(
     private val patchService: PatchService,
     private val configRepository: ConfigRepository,
     private val patchedAppStore: PatchedAppStore,
-) : ScreenModel {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PatchingUiState())
     val uiState: StateFlow<PatchingUiState> = _uiState.asStateFlow()
@@ -59,7 +59,7 @@ class PatchingViewModel(
     fun startPatching() {
         if (_uiState.value.status != PatchingStatus.IDLE) return
 
-        patchingJob = screenModelScope.launch {
+        patchingJob = viewModelScope.launch {
             stateMachine = null
             val appConfig = configRepository.loadConfig()
             val locale = FormatUtils.resolveLocale(appConfig.language)
@@ -230,7 +230,7 @@ class PatchingViewModel(
     }
 
     fun cancelPatching() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             patchingJob?.cancel()
             patchingJob = null
             addLog("Patching cancelled by user", LogLevel.WARNING)

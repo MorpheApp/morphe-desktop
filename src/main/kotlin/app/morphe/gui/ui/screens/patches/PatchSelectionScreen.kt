@@ -20,10 +20,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +34,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.LocalGroupPatchesByCategory
+import app.morphe.gui.LocalNavController
+import app.morphe.gui.PatchSelectionParams
+import app.morphe.gui.PatchingScreenRoute
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
@@ -43,61 +48,34 @@ import app.morphe.gui.ui.components.getFriendlyErrorMessage
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.screens.patching.PatchingScreen
 import app.morphe.gui.ui.screens.patches.components.selection.*
+import app.morphe.gui.ui.screens.patching.PatchingScreen
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.screenScrim
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-data class PatchSelectionScreen(
-    val apkPath: String,
-    val apkName: String,
-    /** Primary .mpp file path. Always non-null. In multi-source mode, the first
-     *  enabled source's file. Used for legacy/single-source code paths and as
-     *  the default when [patchesFilePaths] is empty. */
-    val patchesFilePath: String,
-    val packageName: String,
-    val apkArchitectures: List<String> = emptyList(),
-    /** All enabled-source .mpp file paths. Single-element in single-source mode.
-     *  Used by the patching pipeline to feed the engine the union of patches. */
-    val patchesFilePaths: List<String> = emptyList(),
-    /** Parallel to [patchesFilePaths]. Display name per source. Drives badging
-     *  in the patch list. Empty disables badging (legacy single-source). */
-    val patchSourceNames: List<String> = emptyList(),
-    /** One-click repatch seed (source/bundle name → patch uniqueIds). Empty =
-     *  normal flow. Set when entering from a "Your apps" / patched-row Repatch. */
-    val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
-    /** One-click repatch option seed ("patchName.optionKey" → value). */
-    val initialPatchOptions: Map<String, String> = emptyMap(),
-    /** The app's versionName (parsed from the APK), threaded to the output-name helper so
-     *  the filename is unique by app version even for renamed bundles. Blank = not supplied. */
-    val apkVersion: String = "",
-) : Screen {
-
-    @Composable
-    override fun Content() {
-        val effectiveList = patchesFilePaths.takeIf { it.isNotEmpty() } ?: listOf(patchesFilePath)
-        val viewModel = koinScreenModel<PatchSelectionViewModel> {
-            parametersOf(
-                apkPath, apkName, patchesFilePath, packageName, apkArchitectures,
-                effectiveList, patchSourceNames, initialSelectionByBundle, initialPatchOptions,
-                apkVersion,
-            )
-        }
-        PatchSelectionScreenContent(viewModel = viewModel)
+@Composable
+fun PatchSelectionScreen(
+    params: PatchSelectionParams,
+    viewModel: PatchSelectionViewModel = koinViewModel {
+        val effectiveList = params.patchesFilePaths.takeIf { it.isNotEmpty() } ?: listOf(params.patchesFilePath)
+        parametersOf(
+            params.apkPath, params.apkName, params.patchesFilePath, params.packageName, params.apkArchitectures,
+            effectiveList, params.patchSourceNames, params.initialSelectionByBundle, params.initialPatchOptions,
+            params.apkVersion,
+        )
     }
+) {
+    PatchSelectionScreenContent(viewModel = viewModel)
 }
 
 @Composable
@@ -105,7 +83,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
-    val navigator = LocalNavigator.currentOrThrow
+    val navController = LocalNavController.current
     val configRepository: ConfigRepository = koinInject()
     val uiState by viewModel.uiState.collectAsState()
     val targetPackage = viewModel.targetPackage()
@@ -172,7 +150,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             onToggleContinueOnError = { continueOnError = !continueOnError },
             showRunInfo = showRunInfo,
             onShowRunInfo = { showRunInfo = true },
-            onBackClick = { navigator.pop() },
+            onBackClick = { navController.popBackStack() },
             onRefreshStripLibsStatus = { viewModel.refreshStripLibsStatus() },
         )
 
@@ -578,7 +556,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     selectedCount = uiState.selectedCount,
                     onPatchClick = {
                         val config = viewModel.createPatchConfig(continueOnError)
-                        navigator.push(PatchingScreen(config))
+                        navController.navigateComplex(PatchingScreenRoute, config)
                     },
                 )
             }
