@@ -3,11 +3,12 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.ui.screens.home
+package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.runtime.Composable
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.data.model.SupportedApp
+import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
