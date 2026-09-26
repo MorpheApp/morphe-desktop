@@ -560,7 +560,7 @@
     <string name="source_error_no_repository">Aucun dépôt configuré pour la source</string>
     <string name="source_error_fetch_releases">Impossible de récupérer les versions</string>
     <string name="source_error_failed_to_load">Échec du chargement</string>
-    <string name="source_error_github_pat_required">Un jeton d'accès personnel GitHub est nécessaire pour télécharger les sources d'une pull request</string>
+    <string name="source_error_github_pat_required">Un PAT GitHub est nécessaire pour télécharger les sources d'une pull request</string>
     <string name="source_error_pr_no_artifact">Aucun artefact trouvé pour la demande de tirage</string>
     <string name="source_sheet_manage_description">Gérer les sources de patchs</string>
     <string name="source_sheet_local_label">Locale</string>
@@ -803,9 +803,9 @@
     <string name="settings_runtime_logs_cleared_success">Journaux effacés sur l'appareil</string>
     <string name="settings_runtime_logs_nothing_captured">Rien n'a encore été capturé. Lancez l'application patchée sur votre téléphone, puis enregistrez à nouveau</string>
     <!-- Settings - GitHub PAT -->
-    <string name="settings_section_github_pat">Jeton d'accès personnel GitHub</string>
-    <string name="settings_github_pat_desc">Un jeton d'accès personnel GitHub avec le champ public_repo est nécessaire pour télécharger les artefacts d'une pull request. Créez un jeton d'accès personnel avec le champ public_repo sur %1$s</string>
-    <string name="settings_github_pat_label">Jeton d'accès personnel</string>
+    <string name="settings_section_github_pat">PAT GitHub</string>
+    <string name="settings_github_pat_desc">Un GitHub Personal Access Token (PAT) avec le champ public_repo est nécessaire pour télécharger les artefacts d'une pull request. Créez un PAT avec le champ public_repo sur %1$s</string>
+    <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Site Web</string>
     <string name="app_info_version_gui">Interface graphique : %1$s</string>

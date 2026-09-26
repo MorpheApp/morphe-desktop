@@ -590,7 +590,7 @@
     <string name="patch_source_dialog_repo_url_label">URL репозиторію</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">Приймає GitHub, GitLab або посилання morphe.software/add-source</string>
-    <string name="patch_source_dialog_pre_release_title">Передрелізні версії патчів</string>
+    <string name="patch_source_dialog_pre_release_title">Передрелізні патчі</string>
     <string name="patch_source_dialog_pre_release_hint">Отримує ранній доступ до нових експериментальних версій патчів</string>
     <string name="patch_source_dialog_experimental_title">Експериментальні версії застосунків</string>
     <string name="patch_source_dialog_experimental_hint">Надає пріоритет експериментальним версіям застосунку, якщо вони доступні</string>

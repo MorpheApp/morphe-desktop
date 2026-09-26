@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="home_header_sources_failed">
-        <item quantity="one">%1$d पैच स्रोत लोड नहीं हो सका। सफलतापूर्वक लोड हुए स्रोतों का उपयोग किया जा रहा है</item>
-        <item quantity="other">%1$d पैच स्रोत लोड नहीं हुए। सफलतापूर्वक लोड हुए स्रोतों का उपयोग किया जा रहा है</item>
+        <item quantity="one">%1$d पैच सोर्स लोड नहीं हो सका। सफलतापूर्वक लोड हुए सोर्स का उपयोग किया जा रहा है</item>
+        <item quantity="other">%1$d पैच सोर्स लोड नहीं हुए। सफलतापूर्वक लोड हुए सोर्स का उपयोग किया जा रहा है</item>
     </plurals>
     <plurals name="home_banner_update_available">
         <item quantity="one">%1$d पैच किए गए ऐप के लिए अपडेट उपलब्ध है</item>
         <item quantity="other">%1$d पैच किए गए ऐपों के लिए अपडेट उपलब्ध हैं</item>
     </plurals>
     <plurals name="settings_runtime_logs_saved_success">
-        <item quantity="one">%2$s में %1$d लाइन सहेजी गई</item>
-        <item quantity="other">%2$s में %1$d लाइनें सहेजी गईं</item>
+        <item quantity="one">%2$s में %1$d लाइन सेव की गई</item>
+        <item quantity="other">%2$s में %1$d लाइनें सेव की गईं</item>
     </plurals>
     <plurals name="count_sources">
-        <item quantity="one">%1$d स्रोत</item>
-        <item quantity="other">%1$d स्रोत</item>
+        <item quantity="one">%1$d सोर्स</item>
+        <item quantity="other">%1$d सोर्स</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_applied_summary">
         <item quantity="one">%1$d पैच लागू किया जाएगा</item>
         <item quantity="other">%1$d पैच लागू किए जाएँगे</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d बहिष्कृत</item>
-        <item quantity="other">%1$d बहिष्कृत</item>
+        <item quantity="one">%1$d हटाया गया</item>
+        <item quantity="other">%1$d हटाए गए</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d सक्षम</item>
-        <item quantity="other">%1$d सक्षम</item>
+        <item quantity="one">%1$d चालू किया गया</item>
+        <item quantity="other">%1$d चालू किए गए</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d अक्षम</item>
-        <item quantity="other">%1$d अक्षम</item>
+        <item quantity="one">%1$d बंद किया गया</item>
+        <item quantity="other">%1$d बंद किए गए</item>
     </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d लाइब्रेरी</item>
         <item quantity="other">%1$d लाइब्रेरियाँ</item>
     </plurals>
     <plurals name="patch_selection_selected_count">
-        <item quantity="one">%2$d में से %1$d चयनित</item>
-        <item quantity="other">%2$d में से %1$d चयनित</item>
+        <item quantity="one">%2$d में से %1$d चुना गया</item>
+        <item quantity="other">%2$d में से %1$d चुने गए</item>
     </plurals>
     <plurals name="patch_selection_group_patch_count">
         <item quantity="one">%1$d पैच</item>

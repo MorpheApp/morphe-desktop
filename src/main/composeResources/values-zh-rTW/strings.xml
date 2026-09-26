@@ -346,7 +346,7 @@
     <string name="patches_latest_badge">最新</string>
     <string name="patches_cached_badge">已快取</string>
     <string name="patches_date_cached">已快取：%1$s</string>
-    <string name="patches_date_published">發布日期：%1$s</string>
+    <string name="patches_date_published">發佈日期：%1$s</string>
     <string name="patches_hide_notes">隱藏備註</string>
     <string name="patches_patch_notes">修補備註</string>
     <string name="patches_downloading">正在下載…</string>
@@ -590,7 +590,7 @@
     <string name="patch_source_dialog_repo_url_label">儲存庫 URL</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab 或 morphe.software/add-source 連結</string>
-    <string name="patch_source_dialog_pre_release_title">預先發布版修補程式</string>
+    <string name="patch_source_dialog_pre_release_title">預先發佈版修補程式</string>
     <string name="patch_source_dialog_pre_release_hint">搶先取得新實驗性修補程式版本</string>
     <string name="patch_source_dialog_experimental_title">實驗性應用程式版本</string>
     <string name="patch_source_dialog_experimental_hint">若可用，優先使用實驗性應用程式版本</string>

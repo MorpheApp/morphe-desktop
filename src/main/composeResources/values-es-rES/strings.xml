@@ -17,7 +17,7 @@
     <string name="disabled_while_patching">Desactivado durante el parcheo</string>
     <string name="drop_apk_here">Suelta el APK aquí</string>
     <string name="release_to_drop">Suelta para cargar</string>
-    <string name="click_to_browse">o pulsa para explorar</string>
+    <string name="click_to_browse">o haz clic para explorar</string>
     <string name="error_could_not_load_patches">No se pudo cargar ningún parche</string>
     <string name="error_network_timeout">Tiempo de espera de red agotado, comprueba tu conexión e inténtalo de nuevo</string>
     <string name="error_could_not_reach_patch_server">No se pudo conectar al servidor de parches, comprueba tu conexión</string>
@@ -43,7 +43,7 @@
     <string name="failed">Fallido</string>
     <string name="copy">Copiar</string>
     <string name="copied">Copiado</string>
-    <string name="click_to_copy">Pulsa para copiar</string>
+    <string name="click_to_copy">Haz clic para copiar</string>
     <string name="enable_adb_button">Activar ADB</string>
     <string name="drag_to_reorder">Arrastra para reordenar</string>
     <string name="off">Desactivado</string>
@@ -104,8 +104,8 @@
     <string name="quick_patch_screen_start_over_button">Empezar de nuevo</string>
     <string name="quick_patch_patch_another_button">Parchear otra</string>
     <string name="quick_patch_select_apk">Seleccionar APK</string>
-    <string name="quick_patch_analyze_apk_failed">No se pudo analizar el APK</string>
-    <string name="quick_patch_extract_base_apk_failed">No se pudo extraer el APK base del paquete</string>
+    <string name="quick_patch_analyze_apk_failed">Error al analizar el APK</string>
+    <string name="quick_patch_extract_base_apk_failed">Error al extraer el APK base del paquete</string>
     <string name="quick_patch_unsupported_app_error">%1$s no es compatible con el modo Parcheo rápido. Aplicaciones compatibles: %2$s. Usa el modo Normal para aplicaciones no compatibles</string>
     <string name="adb_install_on_button">Instalar en %1$s</string>
     <!-- Patcher Steps -->
@@ -134,13 +134,13 @@
     <string name="adb_error_device_not_found">Dispositivo %1$s no encontrado</string>
     <string name="adb_error_multiple_devices">Hay varios dispositivos conectados. Selecciona uno</string>
     <string name="adb_error_apk_not_found">Archivo APK no encontrado: %1$s</string>
-    <string name="adb_error_start_server">No se pudo iniciar el servidor ADB: %1$s</string>
-    <string name="adb_error_kill_server">No se pudo detener el servidor ADB: %1$s</string>
-    <string name="adb_error_get_devices">No se pudieron obtener los dispositivos: %1$s</string>
+    <string name="adb_error_start_server">Error al iniciar el servidor ADB: %1$s</string>
+    <string name="adb_error_kill_server">Error al detener el servidor ADB: %1$s</string>
+    <string name="adb_error_get_devices">Error al obtener los dispositivos: %1$s</string>
     <string name="adb_error_uninstall">Error al desinstalar: %1$s</string>
-    <string name="adb_error_clear_logs">No se pudieron borrar los registros: %1$s</string>
-    <string name="adb_error_capture_logs">No se pudieron capturar los registros: %1$s</string>
-    <string name="adb_error_run_command">No se pudo ejecutar el comando: %1$s</string>
+    <string name="adb_error_clear_logs">Error al borrar los registros: %1$s</string>
+    <string name="adb_error_capture_logs">Error al capturar los registros: %1$s</string>
+    <string name="adb_error_run_command">Error al ejecutar el comando: %1$s</string>
     <string name="adb_error_pm_list_packages">Error en pm list packages: %1$s</string>
     <string name="adb_status_routing_links">Redirigiendo enlaces a %1$s…</string>
     <string name="adb_status_restoring_links">Restaurando el manejo de enlaces predeterminado…</string>
@@ -205,11 +205,11 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="quick_patch_warning_too_new">Versión demasiado reciente: no compatible oficialmente, es muy probable que los parches fallen</string>
     <string name="quick_patch_warning_too_old">Versión demasiado antigua: no compatible oficialmente, es muy probable que los parches fallen</string>
     <string name="quick_patch_warning_unsupported_between">Versión no compatible: es muy probable que los parches fallen</string>
-    <string name="quick_patch_read_apk_failed">No se pudo leer el APK: %1$s</string>
+    <string name="quick_patch_read_apk_failed">Error al leer el APK: %1$s</string>
     <string name="quick_patch_status_preparing_patches">Preparando parches…</string>
-    <string name="quick_patch_fetch_patches_failed">No se pudieron obtener los parches. Comprueba tu conexión a internet</string>
+    <string name="quick_patch_fetch_patches_failed">Error al obtener los parches. Comprueba tu conexión a internet</string>
     <string name="quick_patch_status_downloading_patches">Descargando parches %1$s…</string>
-    <string name="quick_patch_download_patches_failed">No se pudieron descargar los parches: %1$s</string>
+    <string name="quick_patch_download_patches_failed">Error al descargar los parches: %1$s</string>
     <string name="quick_patch_status_patching">Parcheando…</string>
     <string name="quick_patch_completed_adb_off">ADB desactivado · Actívalo para instalar</string>
     <string name="quick_patch_completed_adb_connect_device">Conecta un dispositivo por USB para instalar con ADB</string>
@@ -308,7 +308,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="home_filter_your_apps">Tus aplicaciones</string>
     <string name="home_banner_view">Ver</string>
     <string name="home_your_apps_install_ready">Lista para instalar</string>
-    <string name="home_your_apps_newer_patch_hint">Un parche más reciente puede actualizar la aplicación, pulsa Actualizar para comprobarlo</string>
+    <string name="home_your_apps_newer_patch_hint">Un parche más reciente puede actualizar la aplicación, haz clic en Actualizar para comprobarlo</string>
     <string name="home_your_apps_device_version_ready">v%1$s parcheada lista, el dispositivo tiene la v%2$s (no hace falta volver a parchear)</string>
     <string name="home_your_apps_install_ready_hint">v%1$s parcheada lista para instalar (no hace falta volver a parchear)</string>
     <string name="home_action_install">Instalar</string>
@@ -345,7 +345,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="home_detail_loading_versions">Cargando versiones…</string>
     <string name="home_detail_no_other_versions">No hay otras versiones disponibles</string>
     <string name="home_detail_app_version_label">Versión de la aplicación</string>
-    <string name="home_detail_newer_patch_available_note">Hay un parche más reciente disponible y puede admitir una versión más reciente de la aplicación. Pulsa Actualizar para comprobarlo</string>
+    <string name="home_detail_newer_patch_available_note">Hay un parche más reciente disponible y puede admitir una versión más reciente de la aplicación. Haz clic en Actualizar para comprobarlo</string>
     <string name="home_detail_section_patches_applied">Parches aplicados</string>
     <string name="home_detail_section_options">Opciones</string>
     <string name="home_detail_output_size_label">Tamaño de salida</string>
@@ -378,9 +378,9 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="patches_export_json">Exportar JSON</string>
     <string name="patches_local_patch_file">Archivo de parches local</string>
     <string name="patches_error_local_file_not_found">Archivo de parches local no encontrado: %1$s</string>
-    <string name="patches_error_failed_to_load_releases">No se pudieron cargar las versiones</string>
-    <string name="patches_error_failed_to_download_patches">No se pudieron descargar los parches</string>
-    <string name="patches_error_failed_to_export_options">No se pudieron exportar las opciones: %1$s</string>
+    <string name="patches_error_failed_to_load_releases">Error al cargar las versiones</string>
+    <string name="patches_error_failed_to_download_patches">Error al descargar los parches</string>
+    <string name="patches_error_failed_to_export_options">Error al exportar las opciones: %1$s</string>
     <!-- Patch Selection Screen -->
     <string name="patch_selection_error_title">Error al cargar los parches</string>
     <string name="patch_selection_title">Seleccionar parches</string>
@@ -401,7 +401,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="patch_selection_icon_none">No hay icono personalizado</string>
     <string name="patch_selection_icon_dialog_delete_title">¿Eliminar el icono personalizado?</string>
     <string name="patch_selection_icon_dialog_delete_message">Esto borra el icono y elimina su proyecto guardado y los archivos generados. No se puede deshacer</string>
-    <string name="patch_selection_custom_icon_hint">No hace falta que crees esta carpeta a mano. Pulsa en Diseñar/Editar icono para crearla en el Estudio de iconos o impórtala desde el Gestor</string>
+    <string name="patch_selection_custom_icon_hint">No hace falta que crees esta carpeta a mano. Haz clic en Diseñar/Editar icono para crearla en el Estudio de iconos o impórtala desde el Gestor</string>
     <string name="patch_selection_option_enabled">Activado</string>
     <string name="patch_selection_option_disabled">Desactivado</string>
     <string name="patch_selection_mode_your_defaults">Tus valores predeterminados</string>
@@ -423,7 +423,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="patch_selection_arch_not_in_apk">no está en el APK</string>
     <string name="patch_selection_no_matches_in_bundle">No hay coincidencias en este paquete</string>
     <string name="patch_selection_error_patches_file_missing">Falta el archivo de parches y no se pudo descargar: %1$s</string>
-    <string name="patch_selection_error_failed_to_list_patches">No se pudieron listar los parches: %1$s</string>
+    <string name="patch_selection_error_failed_to_list_patches">Error al listar los parches: %1$s</string>
     <string name="patch_selection_cmd_preview_tooltip">Vista previa del comando CLI equivalente</string>
     <string name="patch_selection_run_info_tooltip">APK y paquete de parches usados en esta ejecución</string>
     <string name="patch_selection_run_info_description">Información de la ejecución</string>
@@ -450,7 +450,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="patching_completed_loading_result">Parcheo completado, cargando resultado…</string>
     <string name="patching_cancelled_loading_result">Parcheo cancelado, cargando resultado…</string>
     <string name="patching_failed_loading_result">Parcheo fallido, cargando resultado…</string>
-    <string name="patching_log_viewer_failed_to_read">No se pudo leer el archivo de registro: %1$s</string>
+    <string name="patching_log_viewer_failed_to_read">Error al leer el archivo de registro: %1$s</string>
     <string name="patching_log_viewer_title">Archivo de registro</string>
     <string name="patching_log_viewer_copy_all">Copiar todo</string>
     <string name="patching_progress_title">Parcheando la aplicación</string>
@@ -529,7 +529,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="icon_studio_preview_adaptive">Adaptable</string>
     <string name="icon_studio_preview_monochrome">Monocromático</string>
     <string name="icon_studio_preview_shapes">Vista previa de formas</string>
-    <string name="icon_studio_preview_shapes_hint">Cada lanzador elige su propia forma, pulsa para ver cómo se recortará</string>
+    <string name="icon_studio_preview_shapes_hint">Cada lanzador elige su propia forma, haz clic para ver cómo se recortará</string>
     <string name="icon_studio_preview_notification_status_bar">Notificación / Barra de estado</string>
     <string name="icon_studio_layer_label">Capa</string>
     <string name="icon_studio_duplicate_button">Duplicar</string>
@@ -569,7 +569,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="icon_studio_background_solid">Sólido</string>
     <string name="icon_studio_background_image">Imagen</string>
     <string name="icon_studio_background_hint">Rellena todo el lienzo del icono, detrás del primer plano</string>
-    <string name="icon_studio_background_image_set_hint">Fondo de imagen establecido; pulsa en Imagen para reemplazarlo</string>
+    <string name="icon_studio_background_image_set_hint">Fondo de imagen establecido; haz clic en Imagen para reemplazarlo</string>
     <string name="icon_studio_shape_triangle">Triángulo</string>
     <string name="icon_studio_shape_diamond">Rombo</string>
     <string name="icon_studio_shape_pentagon">Pentágono</string>
@@ -679,7 +679,7 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="tools_dialog_confirm_clear_message">Esto eliminará los parches descargados y los archivos de registro. Los parches se volverán a descargar cuando haga falta</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licencias de código abierto</string>
-    <string name="licenses_dialog_empty_failed">// no se pudieron cargar las licencias</string>
+    <string name="licenses_dialog_empty_failed">// error al cargar las licencias</string>
     <string name="licenses_dialog_empty_no_matches">// no hay coincidencias</string>
     <string name="licenses_dialog_footer_matched">%1$d / %2$d coincidencias</string>
     <string name="licenses_search_placeholder">Buscar bibliotecas, id SPDX, uniqueId…</string>
@@ -819,9 +819,9 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="settings_runtime_logs_no_device">No hay ningún dispositivo conectado. Conecta tu teléfono con la depuración USB activada</string>
     <string name="settings_runtime_logs_clearing">Limpiando…</string>
     <string name="settings_runtime_logs_clear_button">Borrar registros del dispositivo</string>
-    <string name="settings_runtime_logs_failed_to_clear">No se pudieron borrar los registros</string>
+    <string name="settings_runtime_logs_failed_to_clear">Error al borrar los registros</string>
     <string name="settings_runtime_logs_save_button">Guardar registros del dispositivo</string>
-    <string name="settings_runtime_logs_failed_to_save">No se pudieron guardar los registros</string>
+    <string name="settings_runtime_logs_failed_to_save">Error al guardar los registros</string>
     <string name="settings_runtime_logs_cleared_success">Registros borrados en el dispositivo</string>
     <string name="settings_runtime_logs_nothing_captured">Aún no se ha capturado nada. Ejecuta la aplicación parcheada en tu teléfono y vuelve a guardar</string>
     <!-- Settings - GitHub PAT -->
