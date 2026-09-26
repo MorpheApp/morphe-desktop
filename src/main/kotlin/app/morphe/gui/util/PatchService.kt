@@ -9,10 +9,22 @@ import app.morphe.desktop.command.model.deserializeOptionValue
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.gui.data.model.CompatiblePackage
+import app.morphe.gui.data.model.ExplicitOptionKind
+import app.morphe.gui.data.model.ImageSize
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchOption
 import app.morphe.gui.data.model.PatchOptionType
+import app.morphe.gui.data.model.SliderBounds
 import app.morphe.patcher.apk.ApkUtils
+import app.morphe.patcher.patch.ColorOption
+import app.morphe.patcher.patch.FilePathOption
+import app.morphe.patcher.patch.FilesOption
+import app.morphe.patcher.patch.FloatRangeOption
+import app.morphe.patcher.patch.FloatSliderOption
+import app.morphe.patcher.patch.FolderOption
+import app.morphe.patcher.patch.ImageOption
+import app.morphe.patcher.patch.IntRangeOption
+import app.morphe.patcher.patch.IntSliderOption
 import app.morphe.patcher.patch.Patch as LibraryPatch
 import app.morphe.patcher.patch.loadPatchesFromJar
 import app.morphe.patcher.resource.CpuArchitecture
@@ -139,10 +151,8 @@ class PatchService {
                         .mapKeys { it.key.removePrefix("$patchName.") }
                         .mapNotNull { (optKey, strValue) ->
                             val kType = patchOptionTypes[patchName]?.get(optKey)
-                            val coerced: Any? = if (kType != null) {
-                                runCatching {
-                                    deserializeOptionValue(optionTextToJson(strValue, kType), kType)
-                                }.getOrElse { strValue }
+                            val coerced = if (kType != null) {
+                                coerceOptionValue(kType, strValue) ?: strValue
                             } else {
                                 strValue
                             }
@@ -300,14 +310,53 @@ class PatchService {
             description = this.description ?: "",
             compatiblePackages = fromNewApi.ifEmpty { fromLegacyApi },
             options = this.options.values.map { opt ->
+                val explicitKind = when (opt) {
+                    is FolderOption -> ExplicitOptionKind.Folder
+                    is FilePathOption -> ExplicitOptionKind.FilePath
+                    is FilesOption -> ExplicitOptionKind.Files
+                    is ImageOption -> ExplicitOptionKind.Image
+                    is ColorOption -> ExplicitOptionKind.Color
+                    is IntSliderOption -> ExplicitOptionKind.IntSlider
+                    is FloatSliderOption -> ExplicitOptionKind.FloatSlider
+                    is IntRangeOption -> ExplicitOptionKind.IntRange
+                    is FloatRangeOption -> ExplicitOptionKind.FloatRange
+                    else -> null
+                }
+                val allowedExtensions = when (opt) {
+                    is FilePathOption -> opt.allowedExtensions
+                    is FilesOption -> opt.allowedExtensions
+                    is ImageOption -> opt.allowedExtensions
+                    else -> null
+                }
+                val recommendedSize = when (opt) {
+                    is ImageOption -> opt.recommendedSize?.let { ImageSize(it.width, it.height) }
+                    else -> null
+                }
+                val sliderBounds = when (opt) {
+                    is IntSliderOption -> SliderBounds(opt.min.toFloat(), opt.max.toFloat(), opt.step.toFloat())
+                    is FloatSliderOption -> SliderBounds(opt.min, opt.max, opt.step)
+                    is IntRangeOption -> SliderBounds(opt.min.toFloat(), opt.max.toFloat(), opt.step.toFloat())
+                    is FloatRangeOption -> SliderBounds(opt.min, opt.max, opt.step)
+                    else -> null
+                }
                 PatchOption(
                     key = opt.key,
                     title = opt.title ?: opt.key,
                     description = opt.description ?: "",
                     type = mapKTypeToOptionType(opt.type, opt.key, opt.title ?: opt.key),
-                    default = opt.default?.toString(),
+                    default = when (val def = opt.default) {
+                        null -> null
+                        is List<*> -> def.joinToString(", ")
+                        else -> def.toString()
+                    },
                     required = opt.required,
                     valueType = opt.type,
+                    explicitKind = explicitKind,
+                    allowedExtensions = allowedExtensions,
+                    recommendedSize = recommendedSize,
+                    sliderBounds = sliderBounds,
+                    presets = opt.values,
+                    rawDefault = opt.default,
                 )
             },
             isEnabled = this.use,

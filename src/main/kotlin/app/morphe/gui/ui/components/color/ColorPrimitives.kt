@@ -124,7 +124,7 @@ fun MorpheSwatchRow(
             ) {
                 Icon(
                     MorpheIcons.Palette,
-                    contentDescription = stringResource(Res.string.custom_color_description),
+                    contentDescription = stringResource(Res.string.custom_color),
                     tint = accents.primary,
                     modifier = Modifier.size(13.dp),
                 )

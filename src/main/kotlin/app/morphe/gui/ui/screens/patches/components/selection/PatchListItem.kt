@@ -73,6 +73,7 @@ internal fun PatchListItem(
     isNew: Boolean = false,
     sourceName: String? = null,
     packageName: String = "",
+    patchOptionValues: Map<String, String> = emptyMap(),
     getOptionValue: (optionKey: String, default: String?) -> String = { _, d -> d ?: "" },
     onOptionValueChange: (optionKey: String, value: String) -> Unit = { _, _ -> }
 ) {
@@ -342,9 +343,11 @@ internal fun PatchListItem(
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     patch.options.forEach { option ->
+                        val optValue = patchOptionValues["${patch.name}.${option.key}"]
+                            ?: getOptionValue(option.key, option.default)
                         PatchOptionEditor(
                             option = option,
-                            value = getOptionValue(option.key, option.default),
+                            value = optValue,
                             packageName = packageName,
                             onValueChange = { onOptionValueChange(option.key, it) }
                         )

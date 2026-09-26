@@ -252,7 +252,7 @@ Some patches can replace the app's launcher icon. When a patch exposes a **custo
 | Control                         | What it does                                                                                   |
 |---------------------------------|------------------------------------------------------------------------------------------------|
 | **Design icon** / **Edit icon** | Open the **Icon Studio** to build a new icon (or re-open the one you saved)                    |
-| **Import folder**               | Point the option at an already-prepared icon folder. E.g. one exported from the Morphe Manager |
+| **Select folder**               | Point the option at an already-prepared icon folder. E.g. one exported from the Morphe Manager |
 | **Delete**                      | Clear the icon and delete its saved project + generated files                                  |
 
 The patch expects a specific icon folder on disk, but you never have to build that by hand. The Icon Studio generates it and sets the option to its path. The row reads **Custom icon ready** once set, **No custom icon set** otherwise.
