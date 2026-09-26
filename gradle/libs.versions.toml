@@ -14,7 +14,7 @@ jadb = "1.2.3"
 compose = "1.12.0"
 
 # Networking
-ktor = "3.5.2"
+ktor = "3.6.0"
 
 # DI
 koin-bom = "4.2.2"
