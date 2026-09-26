@@ -695,6 +695,32 @@ class PatchSelectionViewModel(
         ApkOutputNaming.extractPatchesVersion(patchesFileName)
 
     /**
+     * Resolve the filename of the running Morphe Desktop JAR. Falls back to
+     * "morphe-desktop.jar" if running unpackaged in a development environment.
+     */
+    private fun resolveRunningJarName(): String {
+        return try {
+            val location = PatchSelectionViewModel::class.java.protectionDomain?.codeSource?.location
+            val file = location?.toURI()?.let(::File)
+            if (file?.isFile == true && file.name.endsWith(".jar", ignoreCase = true)) {
+                file.name
+            } else {
+                "morphe-desktop.jar"
+            }
+        } catch (_: Throwable) {
+            "morphe-desktop.jar"
+        }
+    }
+
+    /**
+     * Escape an option value for safe CLI argument usage.
+     */
+    private fun formatOptionArg(key: String, value: String): String {
+        val escaped = value.replace("\"", "\\\"")
+        return "-O$key=\"$escaped\""
+    }
+
+    /**
      * Generate a preview of the CLI command that will be executed.
      * @param cleanMode If true, formats with newlines for readability. If false, compact single-line format.
      */
@@ -706,17 +732,93 @@ class PatchSelectionViewModel(
         keystoreAlias: String? = null,
         keystoreEntryPassword: String? = null,
     ): String {
+        val jarName = resolveRunningJarName()
         val inputFile = File(apkPath)
-        val patchesFile = File(actualPatchesFilePath)
+        val patchesFiles = actualPatchesFilePaths
+            .map { File(it) }
+            .filter { it.name.isNotBlank() }
+            .ifEmpty { listOf(File(actualPatchesFilePath)) }
+        val primaryPatchesFile = patchesFiles.first()
         val appFolderName = apkName.replace(" ", "-")
         val version = extractVersionFromFilename(inputFile.name) ?: "patched"
-        val patchesVersion = extractPatchesVersion(patchesFile.name)
+        val patchesVersion = extractPatchesVersion(primaryPatchesFile.name)
         val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
         val outputFileName = "${appFolderName}-Morphe-${version}${patchesSuffix}.apk"
 
-        val (selectedPatchNames, disabledPatchNames) = flattenSelection()
+        val state = uiState.value
 
-        val useExclusive = selectedPatchNames.size <= disabledPatchNames.size
+        // 1. Collect selected and default-enabled patch names across bundles
+        val selectedPatchNames = mutableSetOf<String>()
+        val defaultEnabledPatchNames = mutableSetOf<String>()
+        val allCompatiblePatches = mutableMapOf<String, Patch>()
+
+        for ((bundleId, _, patches) in state.bundles) {
+            val bundleSelected = state.selectedByBundle[bundleId].orEmpty()
+            val bundleDefaults = state.defaultsByBundle[bundleId]
+                ?: computeBundleDefaults(BundlePatches(bundleId, "", patches), true)
+
+            for (patch in patches) {
+                val isSelected = patch.uniqueId in bundleSelected
+                val isDefault = patch.uniqueId in bundleDefaults
+
+                if (isSelected) {
+                    selectedPatchNames.add(patch.name)
+                }
+                if (isDefault) {
+                    defaultEnabledPatchNames.add(patch.name)
+                }
+                if (patch.name !in allCompatiblePatches) {
+                    allCompatiblePatches[patch.name] = patch
+                }
+            }
+        }
+
+        // 2. Collect customized patch options for selected patches
+        val customOptionsByPatch = mutableMapOf<String, MutableList<Pair<String, String>>>()
+        for (patchName in selectedPatchNames) {
+            val patch = allCompatiblePatches[patchName] ?: continue
+            for (opt in patch.options) {
+                val customVal = state.patchOptionValues["${patch.name}.${opt.key}"]
+                if (!customVal.isNullOrBlank() && customVal != opt.default) {
+                    customOptionsByPatch.getOrPut(patchName) { mutableListOf() }
+                        .add(opt.key to customVal)
+                }
+            }
+        }
+
+        // 3. Compute Delta Mode vs. Exclusive Mode
+        // In delta mode:
+        // - newlyEnabled: default-disabled patches that user selected
+        // - newlyDisabled: default-enabled patches that user deselected
+        // - default-enabled patches with customized options require explicit -e so options attach
+        val newlyEnabled = selectedPatchNames - defaultEnabledPatchNames
+        val newlyDisabled = defaultEnabledPatchNames - selectedPatchNames
+        val defaultEnabledWithCustomOptions = selectedPatchNames.intersect(defaultEnabledPatchNames)
+            .filter { it in customOptionsByPatch }
+
+        val deltaEnabledEntries = (newlyEnabled + defaultEnabledWithCustomOptions).sorted()
+        val deltaDisabledEntries = newlyDisabled.sorted()
+
+        val deltaFlagsCount = deltaEnabledEntries.size + deltaDisabledEntries.size
+        val exclusiveFlagsCount = 1 + selectedPatchNames.size // 1 for --exclusive, plus each selected patch
+
+        val useExclusive = exclusiveFlagsCount < deltaFlagsCount
+
+        val patchEntries = if (useExclusive) {
+            selectedPatchNames.sorted().map { patchName ->
+                val opts = customOptionsByPatch[patchName]?.joinToString(" ") { (k, v) -> formatOptionArg(k, v) }
+                if (opts.isNullOrBlank()) "-e \"$patchName\"" else "-e \"$patchName\" $opts"
+            }
+        } else {
+            val enabled = deltaEnabledEntries.map { patchName ->
+                val opts = customOptionsByPatch[patchName]?.joinToString(" ") { (k, v) -> formatOptionArg(k, v) }
+                if (opts.isNullOrBlank()) "-e \"$patchName\"" else "-e \"$patchName\" $opts"
+            }
+            val disabled = deltaDisabledEntries.map { patchName ->
+                "-d \"$patchName\""
+            }
+            enabled + disabled
+        }
 
         val striplibsArg = (uiState.value.stripLibsStatus as? StripLibsStatus.WillStrip)
             ?.keeping?.joinToString(",")
@@ -725,14 +827,12 @@ class PatchSelectionViewModel(
 
         return if (cleanMode) {
             buildString {
-                appendLine(
-                    """
-                        java -jar morphe-desktop.jar patch \
-                          -p ${patchesFile.name} \
-                          -o $outputFileName \
-                          --force \
-                    """.trimIndent()
-                )
+                appendLine("java -jar $jarName patch \\")
+                patchesFiles.forEach { file ->
+                    appendLine("  -p ${file.name} \\")
+                }
+                appendLine("  -o $outputFileName \\")
+                appendLine("  --force \\")
                 if (continueOnError) appendLine("  --continue-on-error \\")
                 if (useExclusive) appendLine("  --exclusive \\")
                 striplibsArg?.let { appendLine("  --striplibs $it \\") }
@@ -746,29 +846,36 @@ class PatchSelectionViewModel(
                         appendLine("  --keystore-entry-password \"$keystoreEntryPassword\" \\")
                     }
                 }
-                val flagPatches = if (useExclusive) selectedPatchNames else disabledPatchNames
-                val flag = if (useExclusive) "-e" else "-d"
-                flagPatches.forEachIndexed { index, patch ->
-                    val suffix = if (index == flagPatches.lastIndex) "" else " \\"
-                    appendLine("  $flag \"$patch\"$suffix")
+                patchEntries.forEach { entry ->
+                    appendLine("  $entry \\")
                 }
-                append("  ${inputFile.name}")
+                append("  \"${inputFile.name}\"")
             }
         } else {
-            val flagPatches = if (useExclusive) selectedPatchNames else disabledPatchNames
-            val flag = if (useExclusive) "-e" else "-d"
-            val patches = flagPatches.joinToString(" ") { "$flag \"$it\"" }
-            val exclusivePart = if (useExclusive) " --exclusive" else ""
-            val striplibsPart = if (striplibsArg != null) " --striplibs $striplibsArg" else ""
-            val continueOnErrorPart = if (continueOnError) " --continue-on-error" else ""
-            val keystorePart = if (hasCustomKeystore) {
-                val parts = mutableListOf(" --keystore \"$keystorePath\"")
+            val parts = mutableListOf<String>()
+            parts.add("java -jar $jarName patch")
+            patchesFiles.forEach { file ->
+                parts.add("-p ${file.name}")
+            }
+            parts.add("-o $outputFileName")
+            parts.add("--force")
+            if (continueOnError) parts.add("--continue-on-error")
+            if (useExclusive) parts.add("--exclusive")
+            striplibsArg?.let { parts.add("--striplibs $it") }
+            if (hasCustomKeystore) {
+                parts.add("--keystore \"$keystorePath\"")
                 if (keystorePassword != null) parts.add("--keystore-password \"$keystorePassword\"")
-                if (keystoreAlias != null && keystoreAlias != "Morphe") parts.add("--keystore-entry-alias \"$keystoreAlias\"")
-                if (keystoreEntryPassword != null && keystoreEntryPassword != "Morphe") parts.add("--keystore-entry-password \"$keystoreEntryPassword\"")
-                parts.joinToString(" ")
-            } else ""
-            "java -jar morphe-desktop.jar patch -p ${patchesFile.name} -o $outputFileName --force$continueOnErrorPart$exclusivePart$striplibsPart$keystorePart $patches ${inputFile.name}"
+                if (keystoreAlias != null && keystoreAlias != DEFAULT_KEYSTORE_ALIAS) {
+                    parts.add("--keystore-entry-alias \"$keystoreAlias\"")
+                }
+                if (keystoreEntryPassword != null && keystoreEntryPassword != DEFAULT_KEYSTORE_PASSWORD) {
+                    parts.add("--keystore-entry-password \"$keystoreEntryPassword\"")
+                }
+            }
+            parts.addAll(patchEntries)
+            parts.add("\"${inputFile.name}\"")
+
+            parts.joinToString(" ")
         }
     }
 

@@ -177,7 +177,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
         )
 
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
-            val commandPreview = remember(uiState.selectedByBundle, uiState.stripLibsStatus, cleanMode, continueOnError, keystorePath) {
+            val commandPreview = remember(uiState.selectedByBundle, uiState.patchOptionValues, uiState.stripLibsStatus, cleanMode, continueOnError, keystorePath) {
                 viewModel.getCommandPreview(cleanMode, continueOnError, keystorePath, keystorePassword, keystoreAlias, keystoreEntryPassword)
             }
             AnimatedVisibility(
