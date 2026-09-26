@@ -20,8 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import app.morphe.gui.ui.theme.desktopScreenEnter
-import app.morphe.gui.ui.theme.desktopScreenExit
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -178,7 +176,7 @@ internal fun PatchingContent(
 
         AnimatedContent(
             targetState = statusMessage,
-            transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit },
+            transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit },
             label = "statusMessageAnim"
         ) { targetMessage ->
             Text(

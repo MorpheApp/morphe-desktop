@@ -5,20 +5,22 @@
 
 package app.morphe.gui.ui.screens.home.components
 
+import androidx.navigation.NavController
+import app.morphe.gui.PatchSelectionParams
+import app.morphe.gui.PatchSelectionScreenRoute
+import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.screens.home.HomeUiState
 import app.morphe.gui.ui.screens.home.HomeViewModel
-import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.VersionStatus
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.navigator.Navigator
 import java.io.File
 import org.jetbrains.compose.resources.getString
 
 internal fun handleContinue(
     uiState: HomeUiState,
     viewModel: HomeViewModel,
-    navigator: Navigator,
+    navController: NavController,
     showWarning: () -> Unit
 ) {
     val patchesFile = viewModel.getCachedPatchesFile() ?: return
@@ -27,16 +29,19 @@ internal fun handleContinue(
         showWarning()
     } else {
         uiState.apkInfo?.let { info ->
-            navigator.push(PatchSelectionScreen(
-                apkPath = info.filePath,
-                apkName = info.appName,
-                patchesFilePath = patchesFile.absolutePath,
-                packageName = info.packageName,
-                apkArchitectures = info.architectures,
-                apkVersion = info.versionName,
-                patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
-                patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
-            ))
+            navController.navigateComplex(
+                PatchSelectionScreenRoute,
+                PatchSelectionParams(
+                    apkPath = info.filePath,
+                    apkName = info.appName,
+                    patchesFilePath = patchesFile.absolutePath,
+                    packageName = info.packageName,
+                    apkArchitectures = info.architectures,
+                    apkVersion = info.versionName,
+                    patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
+                    patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
+                )
+            )
         }
     }
 }

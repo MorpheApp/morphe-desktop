@@ -6,6 +6,9 @@
 package app.morphe.gui
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,21 +16,36 @@ import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.ui.components.CardFillHost
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import app.morphe.gui.data.model.MorpheFill
+import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.isRtlLanguage
 import app.morphe.gui.di.appModule
+import app.morphe.gui.ui.components.CardFillHost
 import app.morphe.gui.ui.components.LocalFrameWindowScope
 import app.morphe.gui.ui.components.SettingsDialogHost
 import app.morphe.gui.ui.screens.home.HomeScreen
+import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
+import app.morphe.gui.ui.screens.patches.PatchesScreen
+import app.morphe.gui.ui.screens.patching.PatchingScreen
 import app.morphe.gui.ui.screens.quick.QuickPatchScreen
+import app.morphe.gui.ui.screens.result.ResultScreen
+import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemePreference
@@ -36,21 +54,68 @@ import app.morphe.gui.ui.theme.backgrounds.AnimatedBackground
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
 import app.morphe.gui.ui.theme.backgrounds.rememberParallaxState
-import app.morphe.gui.ui.theme.desktopScreenEnter
-import app.morphe.gui.ui.theme.desktopScreenExit
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.applyTitleBarTint
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.ScreenTransition
 import java.util.Locale
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.core.logger.Level as KoinLevel
 import org.koin.core.logger.Logger as KoinLogger
 import org.koin.core.logger.MESSAGE
 import org.koin.dsl.koinConfiguration
+
+@Serializable
+data object HomeScreenRoute
+
+@Serializable
+data object QuickPatchScreenRoute
+
+@Serializable
+data class PatchesScreenRoute(
+    val apkPath: String,
+    val apkName: String,
+)
+
+@Serializable
+data object PatchSelectionScreenRoute
+
+@Serializable
+data object PatchingScreenRoute
+
+@Serializable
+data class ResultScreenRoute(
+    val outputPath: String,
+)
+
+@Serializable
+data object SettingsScreenRoute
+
+data class PatchSelectionParams(
+    val apkPath: String,
+    val apkName: String,
+    val patchesFilePath: String,
+    val packageName: String,
+    val apkArchitectures: List<String> = emptyList(),
+    val patchesFilePaths: List<String> = emptyList(),
+    val patchSourceNames: List<String> = emptyList(),
+    val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
+    val initialPatchOptions: Map<String, String> = emptyMap(),
+    val apkVersion: String = "",
+)
+
+val LocalNavController = compositionLocalOf<NavHostController> {
+    error("LocalNavController not provided")
+}
+
+fun <T : Any, R : Any> NavController.navigateComplex(route: R, data: T) {
+    navigate(route)
+    getBackStackEntry(route).savedStateHandle["args"] = data
+}
+
+fun <T : Any> NavBackStackEntry.getComplexArg(): T? = savedStateHandle["args"]
 
 private val systemDefaultLocale = Locale.getDefault()
 
@@ -392,29 +457,101 @@ private fun appContent(
                                     patchingCompleted = { patchingCompletedState.value }
                                 )
 
-                                key(appLanguage) {
-                                    SettingsDialogHost()
-                                }
+                                val navController = rememberNavController()
 
-                                if (!isLoading) {
-                                    val initialScreen = remember {
-                                        if (isSimplifiedMode) QuickPatchScreen() else HomeScreen()
+                                CompositionLocalProvider(LocalNavController provides navController) {
+                                    key(appLanguage) {
+                                        SettingsDialogHost()
                                     }
 
-                                    Navigator(initialScreen) { navigator ->
-                                        LaunchedEffect(isSimplifiedMode) {
-                                            val isCurrentlyQuick = navigator.lastItem is QuickPatchScreen
-                                            if (isSimplifiedMode && !isCurrentlyQuick) {
-                                                navigator.replaceAll(QuickPatchScreen())
-                                            } else if (!isSimplifiedMode && isCurrentlyQuick) {
-                                                navigator.replaceAll(HomeScreen())
+                                    if (!isLoading) {
+                                        NavHost(
+                                            navController = navController,
+                                            startDestination = if (isSimplifiedMode) QuickPatchScreenRoute else HomeScreenRoute,
+                                            enterTransition = { Animations.screenEnter },
+                                            exitTransition = { Animations.screenExit },
+                                            popEnterTransition = { Animations.screenEnter },
+                                            popExitTransition = { Animations.screenExit }
+                                        ) {
+                                            composable<HomeScreenRoute> {
+                                                HomeScreen()
+                                            }
+                                            composable<QuickPatchScreenRoute> {
+                                                QuickPatchScreen()
+                                            }
+                                            composable<PatchesScreenRoute> { backStackEntry ->
+                                                val route = backStackEntry.toRoute<PatchesScreenRoute>()
+                                                PatchesScreen(apkPath = route.apkPath, apkName = route.apkName)
+                                            }
+                                            composable<PatchSelectionScreenRoute> { backStackEntry ->
+                                                val params = backStackEntry.getComplexArg<PatchSelectionParams>()
+                                                if (params != null) {
+                                                    PatchSelectionScreen(params = params)
+                                                }
+                                            }
+                                            composable<PatchingScreenRoute>(
+                                                exitTransition = {
+                                                    if (targetState.destination.hasRoute<ResultScreenRoute>()) {
+                                                        fadeOut(tween(800))
+                                                    } else {
+                                                        Animations.screenExit
+                                                    }
+                                                },
+                                                popEnterTransition = {
+                                                    if (initialState.destination.hasRoute<ResultScreenRoute>()) {
+                                                        fadeIn(tween(800))
+                                                    } else {
+                                                        Animations.screenEnter
+                                                    }
+                                                }
+                                            ) { backStackEntry ->
+                                                val config = backStackEntry.getComplexArg<PatchConfig>()
+                                                if (config != null) {
+                                                    PatchingScreen(config = config)
+                                                }
+                                            }
+                                            composable<ResultScreenRoute>(
+                                                enterTransition = {
+                                                    if (initialState.destination.hasRoute<PatchingScreenRoute>()) {
+                                                        fadeIn(tween(800))
+                                                    } else {
+                                                        Animations.screenEnter
+                                                    }
+                                                },
+                                                popExitTransition = {
+                                                    if (targetState.destination.hasRoute<PatchingScreenRoute>()) {
+                                                        fadeOut(tween(800))
+                                                    } else {
+                                                        Animations.screenExit
+                                                    }
+                                                }
+                                            ) { backStackEntry ->
+                                                val route = backStackEntry.toRoute<ResultScreenRoute>()
+                                                ResultScreen(outputPath = route.outputPath)
+                                            }
+                                            composable<SettingsScreenRoute>(
+                                                enterTransition = { Animations.pushEnter },
+                                                exitTransition = { Animations.pushExit },
+                                                popEnterTransition = { Animations.pushEnter },
+                                                popExitTransition = { Animations.pushExit }
+                                            ) {
+                                                // Available for push settings route
                                             }
                                         }
 
-                                        ScreenTransition(
-                                            navigator = navigator,
-                                            transition = { desktopScreenEnter togetherWith desktopScreenExit }
-                                        )
+                                        LaunchedEffect(isSimplifiedMode) {
+                                            val currentRoute = navController.currentBackStackEntry?.destination?.route
+                                            val isQuick = currentRoute?.endsWith("QuickPatchScreenRoute") == true
+                                            if (isSimplifiedMode && !isQuick) {
+                                                navController.navigate(QuickPatchScreenRoute) {
+                                                    popUpTo(0) { inclusive = true }
+                                                }
+                                            } else if (!isSimplifiedMode && isQuick) {
+                                                navController.navigate(HomeScreenRoute) {
+                                                    popUpTo(0) { inclusive = true }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }

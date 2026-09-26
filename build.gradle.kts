@@ -124,10 +124,9 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
 
-    implementation(libs.voyager.navigator)
-    implementation(libs.voyager.screenmodel)
-    implementation(libs.voyager.koin)
-    implementation(libs.voyager.transitions)
+    implementation(libs.navigation.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.viewmodel.navigation)
 
     // -- JNA (Windows DWM title bar tinting) -------------------------------
     implementation(libs.jna.core)

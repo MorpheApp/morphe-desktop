@@ -31,11 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.screens.patching.PatchingStatus
 import app.morphe.gui.ui.screens.patching.PatchingUiState
+import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.desktopScreenEnter
-import app.morphe.gui.ui.theme.desktopScreenExit
 import app.morphe.gui.util.rememberZenoProgress
 import app.morphe.gui.util.resolveStepName
 import app.morphe.morphe_desktop.generated.resources.*
@@ -97,7 +96,7 @@ internal fun ExpertProgressHeader(
                 AnimatedContent(
                     targetState = stepNameToDisplay,
                     label = "step_name_anim",
-                    transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit }
+                    transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit }
                 ) { targetStep ->
                     Text(
                         text = targetStep.ifEmpty { stringResource(Res.string.patching_step_waiting) },

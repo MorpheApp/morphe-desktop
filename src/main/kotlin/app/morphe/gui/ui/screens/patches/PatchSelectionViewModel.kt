@@ -5,6 +5,8 @@
 
 package app.morphe.gui.ui.screens.patches
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot
@@ -13,19 +15,17 @@ import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchPreferencesRepository
-import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.PatchRepository
+import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import app.morphe.gui.util.Logger
-import app.morphe.gui.util.optionValueFromJson
-import app.morphe.gui.util.optionValueToJson
-import app.morphe.gui.util.optionValueOrNull
 import app.morphe.gui.util.PatchService
+import app.morphe.gui.util.optionValueFromJson
+import app.morphe.gui.util.optionValueOrNull
+import app.morphe.gui.util.optionValueToJson
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.resource.CpuArchitecture
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -89,7 +89,7 @@ class PatchSelectionViewModel(
     private val seenPatchesRepository: SeenPatchesRepository = SeenPatchesRepository(),
     /** Configured source name to its stable id, so a record can store the id rather than a label. */
     private val sourceIdsByName: Map<String, String> = emptyMap(),
-) : ScreenModel {
+) : ViewModel() {
 
     // Actual path to use for the primary file. May differ from patchesFilePath
     // if we had to re-download (cache cleared, etc.)
@@ -112,7 +112,7 @@ class PatchSelectionViewModel(
     }
 
     private fun loadStripLibsPreference() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val config = configRepository.loadConfig()
             // Store the resolved absolute path so the lookup at line ~487 can
             // pass it straight into File(...) without re-resolving.
@@ -139,7 +139,7 @@ class PatchSelectionViewModel(
     // ── Loading ──────────────────────────────────────────────────────────────
 
     fun loadPatches() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
             // First, ensure the patches file exists - download if missing
@@ -504,7 +504,7 @@ class PatchSelectionViewModel(
                 if (typed == null) JsonPrimitive(value) else optionValueToJson(typed)
         }
 
-        screenModelScope.launch {
+        viewModelScope.launch {
             for ((bundleId, bundleName, patches) in state.bundles) {
                 val selected = state.selectedByBundle[bundleId].orEmpty()
                 val enabledNames = patches
