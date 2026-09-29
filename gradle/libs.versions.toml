@@ -6,7 +6,7 @@ kotlin = "2.4.20"
 # CLI
 picocli = "4.7.7"
 arsclib = "a28c6fb2a7"
-morphe-patcher = "1.15.0-dev.9"
+morphe-patcher = "1.15.0-dev.11"
 morphe-library = "1.4.0"
 jadb = "1.2.3"
 
@@ -48,7 +48,7 @@ oshi = "7.6.1"
 
 [libraries]
 # Morphe Core
-arsclib = { module = "com.github.REAndroid:ARSCLib", version.ref = "arsclib" }
+arsclib = { module = "com.github.MorpheApp:ARSCLib", version.ref = "arsclib" }
 junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 morphe-patcher = { module = "app.morphe:morphe-patcher", version.ref = "morphe-patcher" }
