@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.util.ApkManifestReader
+import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalAdbPreference
+import app.morphe.gui.LocalNavController
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.result.components.*
@@ -37,9 +39,6 @@ import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,19 +50,16 @@ import org.koin.compose.koinInject
 /**
  * Screen showing the result of patching.
  */
-data class ResultScreen(
-    val outputPath: String
-) : Screen {
-
-    @Composable
-    override fun Content() {
-        ResultScreenContent(outputPath = outputPath)
-    }
+@Composable
+fun ResultScreen(
+    outputPath: String
+) {
+    ResultScreenContent(outputPath = outputPath)
 }
 
 @Composable
 fun ResultScreenContent(outputPath: String) {
-    val navigator = LocalNavigator.currentOrThrow
+    val navController = LocalNavController.current
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -216,7 +212,7 @@ fun ResultScreenContent(outputPath: String) {
             .fillMaxSize()
             .background(screenScrim)
     ) {
-        ResultHeader(onBackClick = { navigator.pop() })
+        ResultHeader(onBackClick = { navController.popBackStack() })
 
         BoxWithConstraints(
             modifier = Modifier
@@ -332,7 +328,7 @@ fun ResultScreenContent(outputPath: String) {
 
                 // Patch Another button
                 Spacer(Modifier.height(4.dp))
-                PatchAnotherButton(onClick = { navigator.popUntilRoot() })
+                PatchAnotherButton(onClick = { navController.popBackStack(HomeScreenRoute, inclusive = false) })
 
                 Spacer(Modifier.height(8.dp))
             }

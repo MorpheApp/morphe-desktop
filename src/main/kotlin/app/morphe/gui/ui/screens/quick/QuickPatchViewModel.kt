@@ -5,6 +5,8 @@
 
 package app.morphe.gui.ui.screens.quick
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateChecker
@@ -21,11 +23,11 @@ import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.patching.LogEntry
 import app.morphe.gui.ui.screens.patching.LogLevel
 import app.morphe.gui.util.ChecksumStatus
-import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
@@ -40,8 +42,6 @@ import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.resolveVersionStatus
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
@@ -68,7 +68,7 @@ class QuickPatchViewModel(
     private val updateCheckRepository: UpdateCheckRepository,
     private val patchedAppStore: PatchedAppStore = PatchedAppStore.shared,
     private val seenPatchesRepository: SeenPatchesRepository = SeenPatchesRepository(),
-) : ScreenModel {
+) : ViewModel() {
 
     private var patchRepository: PatchRepository = patchSourceManager.getActiveRepositorySync()
     private var localPatchFilePath: String? = patchSourceManager.getLocalFilePath()
@@ -102,7 +102,7 @@ class QuickPatchViewModel(
     private var cachedSourcesResult: EnabledSourcesLoader.Result? = null
 
     init {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val info = updateCheckRepository.getUpdateInfo()
             val dismissed = configRepository.loadConfig().dismissedUpdateVersion
             _uiState.value = _uiState.value.copy(
@@ -116,7 +116,7 @@ class QuickPatchViewModel(
         // "VM was just constructed while QUICK is active" case (replacing
         // the old unconditional init-block load) AND the "user switched
         // back to Quick after being in Expert" case.
-        screenModelScope.launch {
+        viewModelScope.launch {
             patchSourceManager.activeMode.collect { mode ->
                 if (mode == ActiveMode.QUICK) {
                     loadPatchesAndSupportedApps()
@@ -125,7 +125,7 @@ class QuickPatchViewModel(
         }
 
         // Observe source changes
-        screenModelScope.launch {
+        viewModelScope.launch {
             patchSourceManager.sourceVersion.drop(1).collect {
                 // Skip when Expert mode is active, as HomeViewModel will handle
                 // the multi-source reload. QuickVM still lives in memory
@@ -159,7 +159,7 @@ class QuickPatchViewModel(
      */
     fun refreshUpdateCheck() {
         Logger.info("QuickVM: refreshUpdateCheck() called")
-        screenModelScope.launch {
+        viewModelScope.launch {
             updateCheckRepository.clearCache()
             val info = updateCheckRepository.getUpdateInfo()
             val dismissed = configRepository.loadConfig().dismissedUpdateVersion
@@ -187,7 +187,7 @@ class QuickPatchViewModel(
     fun dismissUpdateForVersion() {
         val target = _uiState.value.updateInfo?.latestVersion ?: return
         _uiState.value = _uiState.value.copy(dismissedUpdateVersion = target)
-        screenModelScope.launch {
+        viewModelScope.launch {
             configRepository.setDismissedUpdateVersion(target)
         }
     }
@@ -199,7 +199,7 @@ class QuickPatchViewModel(
      */
     private fun loadPatchesAndSupportedApps() {
         loadJob?.cancel()
-        loadJob = screenModelScope.launch {
+        loadJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoadingPatches = true, patchLoadError = null) }
 
             try {
@@ -316,14 +316,14 @@ class QuickPatchViewModel(
         if (apkFile != null) {
             onFileSelected(apkFile)
         } else {
-            screenModelScope.launch {
+            viewModelScope.launch {
                 setError(getString(Res.string.error_drop_valid_apk))
             }
         }
     }
 
     fun onFileSelected(file: File) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 phase = QuickPatchPhase.ANALYZING,
                 error = null
@@ -491,7 +491,7 @@ class QuickPatchViewModel(
         val apkFile = _uiState.value.apkFile ?: return
         val apkInfo = _uiState.value.apkInfo ?: return
 
-        patchingJob = screenModelScope.launch {
+        patchingJob = viewModelScope.launch {
             stateMachine = null
             _uiState.value = _uiState.value.copy(
                 phase = QuickPatchPhase.DOWNLOADING,
@@ -763,7 +763,7 @@ class QuickPatchViewModel(
     fun cancelPatching() {
         patchingJob?.cancel()
         patchingJob = null
-        screenModelScope.launch {
+        viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 phase = QuickPatchPhase.READY,
                 statusMessage = getString(Res.string.status_patching_cancelled),

@@ -30,6 +30,7 @@ import java.net.Inet4Address
 import kotlinx.serialization.json.Json
 import okhttp3.Dns
 import okhttp3.Protocol
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 /**
@@ -99,15 +100,15 @@ val appModule = module {
     single { ChangelogRepository(get()) }
     single { PatchedAppStore.shared }
 
-    // ViewModels (ScreenModels)
+    // ViewModels
     // ViewModels observe PatchSourceManager.sourceVersion and reload on source changes.
-    factory {
+    viewModel {
         HomeViewModel(get(), get(), get(), get(), get(), get())
     }
-    factory {
+    viewModel {
         QuickPatchViewModel(get(), get(), get(), get())
     }
-    factory { params ->
+    viewModel { params ->
         val psm = get<PatchSourceManager>()
         PatchesViewModel(
             params.get(),
@@ -118,7 +119,7 @@ val appModule = module {
             psm
         )
     }
-    factory { params ->
+    viewModel { params ->
         val psm = get<PatchSourceManager>()
         PatchSelectionViewModel(
             params.get(),
@@ -140,7 +141,7 @@ val appModule = module {
             sourceIdsByName = psm.getEnabledSourcesSync().associate { it.name to it.id },
         )
     }
-    factory { params ->
+    viewModel { params ->
         PatchingViewModel(
             params.get(),
             get(),

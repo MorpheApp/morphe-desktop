@@ -11,10 +11,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.gui.LocalNavController
+import app.morphe.gui.PatchSelectionParams
+import app.morphe.gui.PatchSelectionScreenRoute
+import app.morphe.gui.PatchesScreenRoute
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.AddPatchSourceDialog
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.SourceLedState
@@ -41,10 +47,6 @@ import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import java.awt.Desktop
 import java.io.File
 import java.util.UUID
@@ -53,21 +55,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
-class HomeScreen : Screen {
-
-    @Composable
-    override fun Content() {
-        val viewModel = koinScreenModel<HomeViewModel>()
-        HomeScreenContent(viewModel = viewModel)
-    }
+@Composable
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel()
+) {
+    HomeScreenContent(viewModel = viewModel)
 }
 
 @Composable
 fun HomeScreenContent(
     viewModel: HomeViewModel
 ) {
-    val navigator = LocalNavigator.currentOrThrow
+    val navController = LocalNavController.current
     val uiState by viewModel.uiState.collectAsState()
 
     // Device install-state is polled (adb), not streamed.
@@ -93,8 +94,9 @@ fun HomeScreenContent(
         sourceNames: List<String>,
     ) {
         if (patchFilePaths.isEmpty()) return // patches not loaded yet
-        navigator.push(
-            PatchSelectionScreen(
+        navController.navigateComplex(
+            PatchSelectionScreenRoute,
+            PatchSelectionParams(
                 apkPath = apkPath,
                 apkName = record.displayName,
                 patchesFilePath = patchFilePaths.first(),
@@ -281,8 +283,8 @@ fun HomeScreenContent(
         }
     }
 
-    val navStackSize = navigator.items.size
-    LaunchedEffect(navStackSize) {
+    val currentEntry by navController.currentBackStackEntryAsState()
+    LaunchedEffect(currentEntry) {
         viewModel.refreshPatchesIfNeeded()
     }
 
@@ -326,7 +328,7 @@ fun HomeScreenContent(
                 pendingReopenSheet = true
                 coroutineScope.launch {
                     patchSourceManager.switchSource(sourceId)
-                    navigator.push(PatchesScreen(
+                    navController.navigate(PatchesScreenRoute(
                         apkPath = uiState.apkInfo?.filePath ?: "",
                         apkName = uiState.apkInfo?.appName ?: ""
                     ))
@@ -366,16 +368,19 @@ fun HomeScreenContent(
                         showVersionWarningDialog = false
                         val patchesFile = viewModel.getCachedPatchesFile()
                         if (patchesFile != null) {
-                            navigator.push(PatchSelectionScreen(
-                                apkPath = uiState.apkInfo!!.filePath,
-                                apkName = uiState.apkInfo!!.appName,
-                                patchesFilePath = patchesFile.absolutePath,
-                                packageName = uiState.apkInfo!!.packageName,
-                                apkArchitectures = uiState.apkInfo!!.architectures,
-                                apkVersion = uiState.apkInfo!!.versionName,
-                                patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
-                                patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
-                            ))
+                            navController.navigateComplex(
+                                PatchSelectionScreenRoute,
+                                PatchSelectionParams(
+                                    apkPath = uiState.apkInfo!!.filePath,
+                                    apkName = uiState.apkInfo!!.appName,
+                                    patchesFilePath = patchesFile.absolutePath,
+                                    packageName = uiState.apkInfo!!.packageName,
+                                    apkArchitectures = uiState.apkInfo!!.architectures,
+                                    apkVersion = uiState.apkInfo!!.versionName,
+                                    patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
+                                    patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
+                                )
+                            )
                         }
                     },
                     onDismiss = { showVersionWarningDialog = false }
@@ -383,12 +388,6 @@ fun HomeScreenContent(
             }
 
             val patchesLoaded = !uiState.isLoadingPatches && viewModel.getCachedPatchesFile() != null
-//            val onChangePatchesClick: () -> Unit = {
-//                navigator.push(PatchesScreen(
-//                    apkPath = uiState.apkInfo?.filePath ?: "",
-//                    apkName = uiState.apkInfo?.appName ?: "Select APK first"
-//                ))
-//            }
             val onRetry: () -> Unit = { viewModel.retryLoadPatches() }
             val onClearClick: () -> Unit = { viewModel.clearSelection() }
             val onChangeClick: () -> Unit = {
@@ -399,7 +398,7 @@ fun HomeScreenContent(
                 }
             }
             val onContinueClick: () -> Unit = {
-                handleContinue(uiState, viewModel, navigator) {
+                handleContinue(uiState, viewModel, navController) {
                     showVersionWarningDialog = true
                 }
             }

@@ -27,49 +27,45 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.gui.HomeScreenRoute
+import app.morphe.gui.LocalNavController
 import app.morphe.gui.LocalPatchingCompleted
+import app.morphe.gui.ResultScreenRoute
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.patching.components.*
 import app.morphe.gui.ui.screens.result.ResultScreen
+import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheMono
 import app.morphe.gui.ui.theme.MorpheCornerStyle
-import app.morphe.gui.ui.theme.desktopScreenEnter
-import app.morphe.gui.ui.theme.desktopScreenExit
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.ui.theme.screenScrim
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 /**
  * Screen showing patching progress with real-time logs.
  */
-data class PatchingScreen(
-    val config: PatchConfig
-) : Screen {
-
-    @Composable
-    override fun Content() {
-        val viewModel = koinScreenModel<PatchingViewModel> { parametersOf(config) }
-        PatchingScreenContent(viewModel = viewModel)
-    }
+@Composable
+fun PatchingScreen(
+    config: PatchConfig,
+    viewModel: PatchingViewModel = koinViewModel { parametersOf(config) }
+) {
+    PatchingScreenContent(viewModel = viewModel)
 }
 
 @Composable
 fun PatchingScreenContent(viewModel: PatchingViewModel) {
     val accents = LocalMorpheAccents.current
-    val navigator = LocalNavigator.currentOrThrow
+    val navController = LocalNavController.current
     val uiState by viewModel.uiState.collectAsState()
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
@@ -91,7 +87,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     }
 
     LaunchedEffect(uiState.status) {
-        if (uiState.status == PatchingStatus.COMPLETED) {
+        if (uiState.status == PatchingStatus.COMPLETED && !uiState.hasAutoNavigated) {
             delay(300.milliseconds)
             patchingCompletedState.value = true
             delay(2500.milliseconds)
@@ -113,7 +109,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
             // Small delay to let user see the success message
             delay(1500.milliseconds)
             viewModel.markAutoNavigated()
-            navigator.push(ResultScreen(outputPath = uiState.outputPath!!))
+            navController.navigate(ResultScreenRoute(outputPath = uiState.outputPath!!))
         } else if ((uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED) && !uiState.hasAutoNavigated) {
             delay(1500.milliseconds)
             viewModel.markAutoNavigated()
@@ -127,7 +123,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     ) {
         PatchingHeader(
             uiState = uiState,
-            onBackClick = { navigator.pop() },
+            onBackClick = { navController.popBackStack() },
             onCancelClick = { viewModel.cancelPatching() }
         )
 
@@ -135,11 +131,15 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
         AnimatedContent(
             targetState = uiState.hasAutoNavigated && (uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED),
             modifier = Modifier.weight(1f).fillMaxWidth(),
-            transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit }
+            transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit }
         ) { isFailed ->
             if (isFailed) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    ExpertFailureContent(uiState, viewModel.getConfig(), navigator)
+                    ExpertFailureContent(
+                        uiState = uiState,
+                        config = viewModel.getConfig(),
+                        onBackToHome = { navController.popBackStack(HomeScreenRoute, inclusive = false) }
+                    )
                 }
             } else {
                 Column(modifier = Modifier.fillMaxSize()) {

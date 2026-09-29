@@ -5,6 +5,8 @@
 
 package app.morphe.gui.ui.screens.home
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheData
 import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
@@ -15,8 +17,8 @@ import app.morphe.engine.readableMessage
 import app.morphe.engine.util.ApkManifestReader
 import app.morphe.engine.util.SignatureIdentity
 import app.morphe.gui.data.constants.AppConstants
-import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.FollowMode
+import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ActiveMode
@@ -29,24 +31,22 @@ import app.morphe.gui.ui.screens.home.components.AppListFilter
 import app.morphe.gui.ui.screens.home.components.HomeAppSortMode
 import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.AdbManager
+import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
-import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.PatchException
+import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.SupportedAppExtractor
-import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.VersionResolution
 import app.morphe.gui.util.VersionStatus
-import app.morphe.gui.util.isNewerVersion
 import app.morphe.gui.util.humanizePatchLoadError
+import app.morphe.gui.util.isNewerVersion
 import app.morphe.gui.util.resolveVersionStatus
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +71,7 @@ class HomeViewModel(
     private val patchedAppStore: PatchedAppStore,
     private val changelogRepository: ChangelogRepository,
     private val adbManager: AdbManager = AdbManager(),
-) : ScreenModel {
+) : ViewModel() {
 
     private var patchRepository: PatchRepository = patchSourceManager.getActiveRepositorySync()
     private var localPatchFilePath: String? = patchSourceManager.getLocalFilePath()
@@ -103,7 +103,7 @@ class HomeViewModel(
             ?: emptyList()
 
     init {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val config = configRepository.loadConfig()
             val info = updateCheckRepository.getUpdateInfo()
             val dismissed = config.dismissedUpdateVersion
@@ -122,14 +122,14 @@ class HomeViewModel(
 
         // React to history changes (a patch just completed, a record forgotten)
         // so badges + device state update immediately. No leave-and-return needed.
-        screenModelScope.launch {
+        viewModelScope.launch {
             patchedAppStore.changes.collect { refreshPatchedState() }
         }
 
         // Optional device layer: when the selected ADB device changes (connect,
         // disconnect, authorize), refresh which patched apps are installed on it.
         // distinctUntilChanged on (id, ready) avoids re-querying on noisy emits.
-        screenModelScope.launch {
+        viewModelScope.launch {
             DeviceMonitor.state
                 .map { it.selectedDevice?.id to (it.selectedDevice?.isReady == true) }
                 .distinctUntilChanged()
@@ -143,7 +143,7 @@ class HomeViewModel(
         // user was actually in Quick mode (we don't construct HomeVM in
         // pure Quick sessions today, but Voyager keeps it alive across
         // mode switches, so the gate prevents wasted reloads on return).
-        screenModelScope.launch {
+        viewModelScope.launch {
             patchSourceManager.activeMode.collect { mode ->
                 if (mode == ActiveMode.EXPERT) {
                     loadPatchesAndSupportedApps()
@@ -151,7 +151,7 @@ class HomeViewModel(
             }
         }
 
-        screenModelScope.launch {
+        viewModelScope.launch {
             patchSourceManager.sourceVersion.drop(1).collect {
                 // Skip when Quick mode is active. QuickPatchViewModel will
                 // handle the reload for its (single) active source. Without
@@ -185,7 +185,7 @@ class HomeViewModel(
      */
     fun refreshUpdateCheck() {
         Logger.info("HomeVM: refreshUpdateCheck() called")
-        screenModelScope.launch {
+        viewModelScope.launch {
             updateCheckRepository.clearCache()
             val info = updateCheckRepository.getUpdateInfo()
             val dismissed = configRepository.loadConfig().dismissedUpdateVersion
@@ -212,7 +212,7 @@ class HomeViewModel(
      */
     fun dismissMultiSourceHint() {
         _uiState.value = _uiState.value.copy(showMultiSourceHint = false)
-        screenModelScope.launch {
+        viewModelScope.launch {
             configRepository.setMultiSourceHintDismissed()
         }
     }
@@ -239,7 +239,7 @@ class HomeViewModel(
         val device = DeviceMonitor.state.value.selectedDevice ?: return
         if (!device.isReady || _uiState.value.installingPackage != null) return
         _uiState.value = _uiState.value.copy(installingPackage = packageName)
-        screenModelScope.launch {
+        viewModelScope.launch {
             // Always record a non-Play installer so the Play Store won't clobber
             // the patched app with an official update.
             val installer = adbManager.resolveSpoofInstaller(device.id)
@@ -286,7 +286,7 @@ class HomeViewModel(
         val device = DeviceMonitor.state.value.selectedDevice ?: return
         if (!device.isReady || _uiState.value.uninstallingPackage != null) return
         _uiState.value = _uiState.value.copy(uninstallingPackage = packageName)
-        screenModelScope.launch {
+        viewModelScope.launch {
             val result = adbManager.uninstallApk(record.installedPackageName, device.id)
             if (result.isSuccess && alsoForget) {
                 patchedAppStore.delete(packageName)
@@ -306,14 +306,14 @@ class HomeViewModel(
     fun setSortMode(mode: HomeAppSortMode) {
         if (_uiState.value.sortMode == mode) return
         _uiState.value = _uiState.value.copy(sortMode = mode)
-        screenModelScope.launch { configRepository.setHomeAppSortMode(mode.name) }
+        viewModelScope.launch { configRepository.setHomeAppSortMode(mode.name) }
     }
 
     /** Switch the home apps tab (ALL/YOURS) and remember it for next launch. */
     fun setAppListFilter(filter: AppListFilter) {
         if (_uiState.value.appListFilter == filter) return
         _uiState.value = _uiState.value.copy(appListFilter = filter)
-        screenModelScope.launch { configRepository.setHomeAppListFilter(filter.name) }
+        viewModelScope.launch { configRepository.setHomeAppListFilter(filter.name) }
     }
 
     /**
@@ -324,7 +324,7 @@ class HomeViewModel(
     fun dismissUpdateForVersion() {
         val target = _uiState.value.updateInfo?.latestVersion ?: return
         _uiState.value = _uiState.value.copy(dismissedUpdateVersion = target)
-        screenModelScope.launch {
+        viewModelScope.launch {
             configRepository.setDismissedUpdateVersion(target)
         }
     }
@@ -342,7 +342,7 @@ class HomeViewModel(
      */
     private fun loadPatchesAndSupportedApps(forceRefresh: Boolean = false) {
         loadJob?.cancel()
-        loadJob = screenModelScope.launch {
+        loadJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoadingPatches = true, patchLoadError = null, showSourcesFailedBanner = false)
 
             try {
@@ -550,7 +550,7 @@ class HomeViewModel(
                 isNewerVersion(it.latestAvailableVersion ?: it.resolvedVersion, it.resolvedVersion)
         } == true
         if (!anyBehind || patchedRecordsByPackage.isEmpty()) return
-        screenModelScope.launch {
+        viewModelScope.launch {
             try {
                 val enabled = patchSourceManager.getEnabledRepositories()
                 val result = EnabledSourcesLoader.loadAll(enabled, patchService, emptyMap(), configRepository.loadConfig().excludedMppPatterns)
@@ -646,7 +646,7 @@ class HomeViewModel(
      */
     fun forgetPatchedApp(packageName: String) {
         // delete() emits a change → the store observer refreshes badges/device state.
-        screenModelScope.launch { patchedAppStore.delete(packageName) }
+        viewModelScope.launch { patchedAppStore.delete(packageName) }
     }
 
     /**
@@ -655,7 +655,7 @@ class HomeViewModel(
      * this is the live-refresh path, distinct from a full patches reload.
      */
     private fun refreshPatchedState() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val states = computePatchedStates(_uiState.value.supportedApps)
             _uiState.value = _uiState.value.copy(
                 patchedStates = states,
@@ -925,7 +925,7 @@ class HomeViewModel(
      * ready → clears the info (the offline JSON view stands on its own).
      */
     fun refreshDeviceInfo() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val device = DeviceMonitor.state.value.selectedDevice
             if (device == null || !device.isReady) {
                 if (_uiState.value.deviceAppInfo.isNotEmpty()) {
@@ -1003,7 +1003,7 @@ class HomeViewModel(
      * PatchesScreen). Called when returning to HomeScreen from another screen.
      */
     fun refreshPatchesIfNeeded() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val saved = configRepository.getSourceVersionPrefs()
             if (saved != lastLoadedVersionsBySource) {
                 Logger.info("Patches versions changed across sources: $lastLoadedVersionsBySource -> $saved, reloading...")
@@ -1025,7 +1025,7 @@ class HomeViewModel(
     }
 
     fun onFileSelected(file: File) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             Logger.info("File selected: ${file.absolutePath}")
 
             _uiState.value = _uiState.value.copy(isAnalyzing = true)
@@ -1061,7 +1061,7 @@ class HomeViewModel(
         if (apkFile != null) {
             onFileSelected(apkFile)
         } else {
-            screenModelScope.launch {
+            viewModelScope.launch {
                 _uiState.value = _uiState.value.copy(
                     error = getString(Res.string.error_drop_valid_apk),
                     isReady = false
