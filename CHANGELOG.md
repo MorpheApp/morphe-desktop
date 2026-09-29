@@ -1,3 +1,10 @@
+# [1.18.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.0-dev.1...v1.18.0-dev.2) (2026-09-29)
+
+
+### Features
+
+* Use vector `MorpheLogo` with dynamic accent tint ([#338](https://github.com/MorpheApp/morphe-desktop/issues/338)) ([33799f5](https://github.com/MorpheApp/morphe-desktop/commit/33799f504a83efb4c2fc94f30ae995c57a98a500))
+
 # [1.18.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.1-dev.3...v1.18.0-dev.1) (2026-09-29)
 
 
