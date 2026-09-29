@@ -51,6 +51,7 @@
     <string name="on">On</string>
     <string name="browse">Browse</string>
     <string name="save">Save</string>
+    <string name="select_folder">Select folder</string>
     <string name="status_loading">Loading…</string>
     <string name="download">Download</string>
     <string name="status_offline">Offline</string>
@@ -82,7 +83,7 @@
     <string name="output_file_label">Output file</string>
     <string name="color_picker_saved">Saved</string>
     <string name="dropdown_search_placeholder">Search…</string>
-    <string name="custom_color_description">Custom color</string>
+    <string name="custom_color">Custom color</string>
     <string name="gradient_linear">Linear</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Conic</string>
@@ -392,7 +393,6 @@
     <string name="patch_selection_configure_options_description">Configure options</string>
     <string name="patch_selection_icon_edit">Edit icon</string>
     <string name="patch_selection_icon_design">Design icon</string>
-    <string name="patch_selection_icon_import_folder">Import folder</string>
     <string name="patch_selection_icon_select_folder_title">Select an icon folder</string>
     <string name="patch_selection_icon_ready">Custom icon ready</string>
     <string name="patch_selection_icon_none">No custom icon set</string>
@@ -433,6 +433,13 @@
     <string name="patch_selection_option_hint_whole_number">a whole number</string>
     <string name="patch_selection_option_hint_number">a number</string>
     <string name="patch_selection_option_hint_text">text</string>
+    <string name="patch_option_recommended_size">Recommended: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Value cannot be empty</string>
+    <string name="patch_option_list_duplicate">Item already in list</string>
+    <string name="patch_option_list_empty_state">No items added yet</string>
+    <string name="patch_option_enter_value">Enter value…</string>
+    <string name="patch_option_add_item">Add item</string>
+    <string name="patch_option_edit_list">Edit list</string>
     <string name="patch_selection_run_info_title">This run</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch bundles</string>

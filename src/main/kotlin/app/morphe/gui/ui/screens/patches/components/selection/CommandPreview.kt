@@ -5,6 +5,7 @@
 
 package app.morphe.gui.ui.screens.patches.components.selection
 
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -27,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.handCursor
+import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
@@ -164,20 +167,37 @@ internal fun CommandPreview(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Command text
+        val scrollState = rememberScrollState()
+        val hasScroll = scrollState.maxValue > 0
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 120.dp)
-                .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = command,
-                fontSize = 11.sp,
-                fontFamily = mono,
-                fontWeight = FontWeight.Normal,
-                color = terminalText,
-                lineHeight = 16.sp
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = if (hasScroll) 10.dp else 0.dp)
+                    .verticalScroll(scrollState)
+            ) {
+                Text(
+                    text = command,
+                    fontSize = 11.sp,
+                    fontFamily = mono,
+                    fontWeight = FontWeight.Normal,
+                    color = terminalText,
+                    lineHeight = 16.sp
+                )
+            }
+            if (hasScroll) {
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(scrollState),
+                    style = morpheScrollbarStyle()
+                )
+            }
         }
     }
 }
