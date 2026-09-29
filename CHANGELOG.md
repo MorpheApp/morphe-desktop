@@ -1,3 +1,11 @@
+# [1.18.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.1-dev.3...v1.18.0-dev.1) (2026-09-29)
+
+
+### Features
+
+* Add support for new patch option types ([#331](https://github.com/MorpheApp/morphe-desktop/issues/331)) ([66b42df](https://github.com/MorpheApp/morphe-desktop/commit/66b42df7dd5e8927e8d9c207724fcca479ab4314))
+* Migrate to Compose Navigation and port Manager screen transitions ([#337](https://github.com/MorpheApp/morphe-desktop/issues/337)) ([9ae9214](https://github.com/MorpheApp/morphe-desktop/commit/9ae921485db292411e6632931292406d0ea31dcb))
+
 ## [1.17.1-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.1-dev.2...v1.17.1-dev.3) (2026-09-28)
 
 
