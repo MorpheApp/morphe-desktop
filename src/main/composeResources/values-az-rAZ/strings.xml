@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="select_folder">Qovluq seç</string>
+    <string name="custom_color">Xüsusi rəng</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
@@ -20,6 +22,7 @@
     <!-- Home Screen - YourAppsPane -->
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
+    <string name="patch_option_list_empty">Dəyər boş ola bilməz</string>
     <!-- Patching Screen -->
     <!-- Result Screen -->
     <!-- Icon Studio -->

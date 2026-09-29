@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="home_header_sources_failed">
-        <item quantity="other">パッチソース%1$d個の読み込みに失敗しました。読み込みに成功したものを使っています</item>
+        <item quantity="other">%1$d 件のパッチソースの読み込みに失敗しました。正常に読み込まれたものを使用します</item>
     </plurals>
     <plurals name="home_banner_update_available">
-        <item quantity="other">パッチ適用済みのアプリ%1$d個にアップデートがあります</item>
+        <item quantity="other">%1$d 個のパッチ適用済みアプリに利用可能なアップデートがあります</item>
     </plurals>
     <plurals name="settings_runtime_logs_saved_success">
-        <item quantity="other">%2$sに%1$d行を保存しました</item>
+        <item quantity="other">%1$d 行を %2$s に保存しました</item>
     </plurals>
     <plurals name="count_sources">
-        <item quantity="other">ソース %1$d 件</item>
+        <item quantity="other">%1$d 件のソース</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="other">%1$d個のパッチが適用されます</item>
+        <item quantity="other">%1$d 個のパッチが適用されます</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="other">%1$d個が除外されています</item>
+        <item quantity="other">除外: %1$d 個</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="other">%1$d個が有効です</item>
+        <item quantity="other">有効: %1$d 個</item>
     </plurals>
     <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="other">%1$d個が無効です</item>
+        <item quantity="other">無効: %1$d 個</item>
     </plurals>
     <plurals name="licenses_dialog_footer_count">
-        <item quantity="other">%1$d個のライブラリ</item>
+        <item quantity="other">%1$d 件のライブラリ</item>
     </plurals>
     <plurals name="patch_selection_selected_count">
-        <item quantity="other">%1$d / %2$d を選択中</item>
+        <item quantity="other">%2$d 個中 %1$d 個選択中</item>
     </plurals>
     <plurals name="patch_selection_group_patch_count">
         <item quantity="other">%1$d 個のパッチ</item>
     </plurals>
     <plurals name="settings_app_cards_override_count">
-        <item quantity="other">この設定を上書きするカードが%1$d枚あります</item>
+        <item quantity="other">%1$d 個のカードがこの設定を上書きします</item>
     </plurals>
     <plurals name="home_detail_download_bundles">
-        <item quantity="other">バンドルを%1$d個ダウンロード</item>
+        <item quantity="other">バンドルを %1$d 個ダウンロード</item>
     </plurals>
 </resources>

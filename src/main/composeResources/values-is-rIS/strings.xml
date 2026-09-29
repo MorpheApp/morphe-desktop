@@ -50,6 +50,7 @@
     <string name="on">Á</string>
     <string name="browse">Fletta</string>
     <string name="save">Vista</string>
+    <string name="select_folder">Veldu möppu</string>
     <string name="status_loading">Hleð…</string>
     <string name="download">Sækja</string>
     <string name="status_offline">Ónettengdur</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Úttaksskrá</string>
     <string name="color_picker_saved">Vistað</string>
     <string name="dropdown_search_placeholder">Leita…</string>
-    <string name="custom_color_description">Sérsniðinn litur</string>
+    <string name="custom_color">Sérsniðinn litur</string>
     <string name="gradient_linear">Línulegur</string>
     <string name="gradient_radial">Radíal</string>
     <string name="gradient_conic">Keilulaga</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Stilla valkosti</string>
     <string name="patch_selection_icon_edit">Breyta tákni</string>
     <string name="patch_selection_icon_design">Hanna tákn</string>
-    <string name="patch_selection_icon_import_folder">Flytja inn möppu</string>
     <string name="patch_selection_icon_select_folder_title">Veldu táknmöppu</string>
     <string name="patch_selection_icon_ready">Sérsniðið tákn tilbúið</string>
     <string name="patch_selection_icon_none">Ekkert sérsniðið tákn stillt</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">heiltala</string>
     <string name="patch_selection_option_hint_number">tala</string>
     <string name="patch_selection_option_hint_text">texti</string>
+    <string name="patch_option_recommended_size">Mælt með: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Gildi getur ekki verið tómt</string>
+    <string name="patch_option_list_duplicate">Atriði er þegar á listanum</string>
+    <string name="patch_option_list_empty_state">Engin atriði bætt við enn</string>
+    <string name="patch_option_enter_value">Sláðu inn gildi…</string>
+    <string name="patch_option_add_item">Bæta við atriði</string>
+    <string name="patch_option_edit_list">Breyta lista</string>
     <string name="patch_selection_run_info_title">Þessi keyrsla</string>
     <string name="patch_selection_run_info_app_group">Forrit</string>
     <string name="patch_selection_run_info_bundles_group">Plástrasöfn</string>

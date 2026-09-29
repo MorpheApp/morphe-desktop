@@ -50,6 +50,7 @@
     <string name="on">Bật</string>
     <string name="browse">Duyệt</string>
     <string name="save">Lưu</string>
+    <string name="select_folder">Chọn thư mục</string>
     <string name="status_loading">Đang tải…</string>
     <string name="download">Tải về</string>
     <string name="status_offline">Ngoại tuyến</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Tệp đầu ra</string>
     <string name="color_picker_saved">Đã lưu</string>
     <string name="dropdown_search_placeholder">Tìm kiếm…</string>
-    <string name="custom_color_description">Tùy chỉnh màu</string>
+    <string name="custom_color">Tùy chỉnh màu</string>
     <string name="gradient_linear">Tuyến tính</string>
     <string name="gradient_radial">Tỏa tròn</string>
     <string name="gradient_conic">Hình nón</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Cấu hình tùy chọn</string>
     <string name="patch_selection_icon_edit">Chỉnh sửa biểu tượng</string>
     <string name="patch_selection_icon_design">Thiết kế biểu tượng</string>
-    <string name="patch_selection_icon_import_folder">Nhập thư mục</string>
     <string name="patch_selection_icon_select_folder_title">Chọn thư mục biểu tượng</string>
     <string name="patch_selection_icon_ready">Biểu tượng tùy chỉnh đã sẵn sàng</string>
     <string name="patch_selection_icon_none">Chưa đặt biểu tượng tùy chỉnh</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">một số nguyên</string>
     <string name="patch_selection_option_hint_number">một số</string>
     <string name="patch_selection_option_hint_text">văn bản</string>
+    <string name="patch_option_recommended_size">Khuyến nghị: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Không được để trống</string>
+    <string name="patch_option_list_duplicate">Mục đã có trong danh sách</string>
+    <string name="patch_option_list_empty_state">Chưa có mục nào được thêm</string>
+    <string name="patch_option_enter_value">Nhập giá trị…</string>
+    <string name="patch_option_add_item">Thêm mục</string>
+    <string name="patch_option_edit_list">Chỉnh sửa danh sách</string>
     <string name="patch_selection_run_info_title">Lần chạy này</string>
     <string name="patch_selection_run_info_app_group">Ứng dụng</string>
     <string name="patch_selection_run_info_bundles_group">Gói bản vá</string>
@@ -564,7 +571,7 @@
     <string name="source_sheet_local_label">Từ bộ nhớ trong</string>
     <string name="source_sheet_remote_label">Từ URL</string>
     <string name="add_source">Thêm nguồn</string>
-    <string name="source_sheet_title">Mã nguồn bản \"độ\"</string>
+    <string name="source_sheet_title">Nguồn vá</string>
     <string name="source_sheet_reload_description">Tải lại các bản vá</string>
     <string name="source_sheet_quick_mode_hint">Chọn nguồn mà Vá nhanh sử dụng. Hỗ trợ nhiều nguồn trong chế độ Chuyên gia</string>
     <string name="source_sheet_multi_mode_hint">Bật/Tắt bất kỳ tổ hợp nào. Các bản vá từ tất cả nguồn đã bật được hợp nhất</string>

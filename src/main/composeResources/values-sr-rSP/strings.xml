@@ -50,6 +50,7 @@
     <string name="on">Укључено</string>
     <string name="browse">Прегледај</string>
     <string name="save">Сачувај</string>
+    <string name="select_folder">Изабери фасциклу</string>
     <string name="status_loading">Учитавање…</string>
     <string name="download">Преузми</string>
     <string name="status_offline">Ван мреже</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Излазна датотека</string>
     <string name="color_picker_saved">Сачувано</string>
     <string name="dropdown_search_placeholder">Претрага…</string>
-    <string name="custom_color_description">Прилагођена боја</string>
+    <string name="custom_color">Прилагођена боја</string>
     <string name="gradient_linear">Линеарно</string>
     <string name="gradient_radial">Радијално</string>
     <string name="gradient_conic">Конусно</string>
@@ -374,7 +375,6 @@
     <string name="patch_selection_configure_options_description">Подеси опције</string>
     <string name="patch_selection_icon_edit">Уреди икону</string>
     <string name="patch_selection_icon_design">Дизајнирај икону</string>
-    <string name="patch_selection_icon_import_folder">Увези фасциклу</string>
     <string name="patch_selection_icon_select_folder_title">Изаберите фасциклу са иконама</string>
     <string name="patch_selection_icon_ready">Прилагођена икона је спремна</string>
     <string name="patch_selection_icon_none">Није постављена прилагођена икона</string>
@@ -415,6 +415,13 @@
     <string name="patch_selection_option_hint_whole_number">цео број</string>
     <string name="patch_selection_option_hint_number">број</string>
     <string name="patch_selection_option_hint_text">текст</string>
+    <string name="patch_option_recommended_size">Препоручено: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Вредност не може бити празна</string>
+    <string name="patch_option_list_duplicate">Ставка је већ на списку</string>
+    <string name="patch_option_list_empty_state">Још није додата ниједна ставка</string>
+    <string name="patch_option_enter_value">Унесите вредност…</string>
+    <string name="patch_option_add_item">Додај ставку</string>
+    <string name="patch_option_edit_list">Уреди списак</string>
     <string name="patch_selection_run_info_title">Овај покушај</string>
     <string name="patch_selection_run_info_app_group">Апликација</string>
     <string name="patch_selection_run_info_bundles_group">Пакети закрпа</string>

@@ -50,6 +50,7 @@
     <string name="on">Увімк.</string>
     <string name="browse">Переглянути</string>
     <string name="save">Зберегти</string>
+    <string name="select_folder">Вибрати теку</string>
     <string name="status_loading">Завантаження…</string>
     <string name="download">Завантажити</string>
     <string name="status_offline">Офлайн</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Вихідний файл</string>
     <string name="color_picker_saved">Збережено</string>
     <string name="dropdown_search_placeholder">Пошук…</string>
-    <string name="custom_color_description">Власний колір</string>
+    <string name="custom_color">Власний колір</string>
     <string name="gradient_linear">Лінійний</string>
     <string name="gradient_radial">Радіальний</string>
     <string name="gradient_conic">Конічний</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Налаштувати параметри</string>
     <string name="patch_selection_icon_edit">Редагувати іконку</string>
     <string name="patch_selection_icon_design">Дизайн іконки</string>
-    <string name="patch_selection_icon_import_folder">Імпортувати папку</string>
     <string name="patch_selection_icon_select_folder_title">Виберіть папку з іконкою</string>
     <string name="patch_selection_icon_ready">Власна іконка готова</string>
     <string name="patch_selection_icon_none">Власну іконку не встановлено</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">ціле число</string>
     <string name="patch_selection_option_hint_number">число</string>
     <string name="patch_selection_option_hint_text">текст</string>
+    <string name="patch_option_recommended_size">Рекомендовано: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Значення не може бути порожнім</string>
+    <string name="patch_option_list_duplicate">Елемент уже в списку</string>
+    <string name="patch_option_list_empty_state">Ще не додано жодного елемента</string>
+    <string name="patch_option_enter_value">Введіть значення…</string>
+    <string name="patch_option_add_item">Додати елемент</string>
+    <string name="patch_option_edit_list">Редагувати список</string>
     <string name="patch_selection_run_info_title">Цей запуск</string>
     <string name="patch_selection_run_info_app_group">Застосунок</string>
     <string name="patch_selection_run_info_bundles_group">Пакети патчів</string>
@@ -590,7 +597,7 @@
     <string name="patch_source_dialog_repo_url_label">URL репозиторію</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">Приймає GitHub, GitLab або посилання morphe.software/add-source</string>
-    <string name="patch_source_dialog_pre_release_title">Передрелізні версії патчів</string>
+    <string name="patch_source_dialog_pre_release_title">Передрелізні патчі</string>
     <string name="patch_source_dialog_pre_release_hint">Отримує ранній доступ до нових експериментальних версій патчів</string>
     <string name="patch_source_dialog_experimental_title">Експериментальні версії застосунків</string>
     <string name="patch_source_dialog_experimental_hint">Надає пріоритет експериментальним версіям застосунку, якщо вони доступні</string>

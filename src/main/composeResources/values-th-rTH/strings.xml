@@ -50,6 +50,7 @@
     <string name="on">เปิด</string>
     <string name="browse">เรียกดู</string>
     <string name="save">บันทึก</string>
+    <string name="select_folder">เลือกโฟลเดอร์</string>
     <string name="status_loading">กำลังโหลด…</string>
     <string name="download">ดาวน์โหลด</string>
     <string name="status_offline">ออฟไลน์</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">ไฟล์เอาต์พุต</string>
     <string name="color_picker_saved">บันทึกแล้ว</string>
     <string name="dropdown_search_placeholder">ค้นหา…</string>
-    <string name="custom_color_description">สีกำหนดเอง</string>
+    <string name="custom_color">สีที่กำหนดเอง</string>
     <string name="gradient_linear">แบบเส้นตรง</string>
     <string name="gradient_radial">แบบรัศมี</string>
     <string name="gradient_conic">แบบกรวย</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">กำหนดค่าตัวเลือก</string>
     <string name="patch_selection_icon_edit">แก้ไขไอคอน</string>
     <string name="patch_selection_icon_design">ออกแบบไอคอน</string>
-    <string name="patch_selection_icon_import_folder">นำเข้าโฟลเดอร์</string>
     <string name="patch_selection_icon_select_folder_title">เลือกโฟลเดอร์ไอคอน</string>
     <string name="patch_selection_icon_ready">ไอคอนกำหนดเองพร้อมแล้ว</string>
     <string name="patch_selection_icon_none">ไม่ได้ตั้งไอคอนกำหนดเอง</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">จำนวนเต็ม</string>
     <string name="patch_selection_option_hint_number">ตัวเลข</string>
     <string name="patch_selection_option_hint_text">ข้อความ</string>
+    <string name="patch_option_recommended_size">ขนาดที่แนะนำ: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">ค่าต้องไม่เว้นว่าง</string>
+    <string name="patch_option_list_duplicate">มีรายการนี้อยู่แล้ว</string>
+    <string name="patch_option_list_empty_state">ยังไม่ได้เพิ่มรายการ</string>
+    <string name="patch_option_enter_value">ป้อนค่า…</string>
+    <string name="patch_option_add_item">เพิ่มรายการ</string>
+    <string name="patch_option_edit_list">แก้ไขรายการ</string>
     <string name="patch_selection_run_info_title">การรันนี้</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">บันเดิลแพตช์</string>

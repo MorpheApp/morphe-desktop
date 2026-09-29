@@ -11,7 +11,7 @@
     <string name="version_label_experimental">Uji kaji</string>
     <string name="app_info_shared_label">Maklumat aplikasi</string>
     <string name="error_log_label">Log ralat</string>
-    <string name="custom_color_description">Warna tersuai</string>
+    <string name="custom_color">Warna tersuai</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_mode_default">Lalai</string>
     <!-- Quick Patch Screen -->
@@ -60,6 +60,7 @@
     <string name="patch_selection_option_enabled">Didayakan</string>
     <string name="patch_selection_option_disabled">Dilumpuhkan</string>
     <string name="patch_selection_badge_new">Baharu</string>
+    <string name="patch_option_list_empty">Nilai tidak boleh kosong</string>
     <!-- Patching Screen -->
     <string name="patching_status_in_progress">Memasang tampalan</string>
     <string name="patching_progress_title">Menampal aplikasi</string>

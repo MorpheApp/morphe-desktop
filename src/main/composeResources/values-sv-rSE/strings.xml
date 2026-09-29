@@ -50,6 +50,7 @@
     <string name="on">På</string>
     <string name="browse">Bläddra</string>
     <string name="save">Spara</string>
+    <string name="select_folder">Välj mapp</string>
     <string name="status_loading">Läser in …</string>
     <string name="download">Ladda ned</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Utdatafil</string>
     <string name="color_picker_saved">Sparad</string>
     <string name="dropdown_search_placeholder">Sök …</string>
-    <string name="custom_color_description">Anpassad färg</string>
+    <string name="custom_color">Anpassad färg</string>
     <string name="gradient_linear">Linjär</string>
     <string name="gradient_radial">Radiell</string>
     <string name="gradient_conic">Konisk</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfigurera alternativ</string>
     <string name="patch_selection_icon_edit">Redigera ikon</string>
     <string name="patch_selection_icon_design">Designa ikon</string>
-    <string name="patch_selection_icon_import_folder">Importera mapp</string>
     <string name="patch_selection_icon_select_folder_title">Välj en ikonmapp</string>
     <string name="patch_selection_icon_ready">Anpassad ikon klar</string>
     <string name="patch_selection_icon_none">Ingen anpassad ikon angiven</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">ett heltal</string>
     <string name="patch_selection_option_hint_number">ett tal</string>
     <string name="patch_selection_option_hint_text">text</string>
+    <string name="patch_option_recommended_size">Rekommenderad: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Värdet kan inte vara tomt</string>
+    <string name="patch_option_list_duplicate">Objektet finns redan i listan</string>
+    <string name="patch_option_list_empty_state">Inga objekt har lagts till ännu</string>
+    <string name="patch_option_enter_value">Ange värde…</string>
+    <string name="patch_option_add_item">Lägg till objekt</string>
+    <string name="patch_option_edit_list">Redigera lista</string>
     <string name="patch_selection_run_info_title">Den här körningen</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Tilläggsarkiv</string>

@@ -50,6 +50,7 @@
     <string name="on">Uključen</string>
     <string name="browse">Pregledaj</string>
     <string name="save">Sačuvaj</string>
+    <string name="select_folder">Izaberi fasciklu</string>
     <string name="status_loading">Učitavanje…</string>
     <string name="download">Preuzmi</string>
     <string name="status_offline">Van mreže</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Izlazna datoteka</string>
     <string name="color_picker_saved">Sačuvano</string>
     <string name="dropdown_search_placeholder">Pretraga…</string>
-    <string name="custom_color_description">Prilagođena boja</string>
+    <string name="custom_color">Prilagođena boja</string>
     <string name="gradient_linear">Linearno</string>
     <string name="gradient_radial">Radijalno</string>
     <string name="gradient_conic">Konično</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfiguriši opcije</string>
     <string name="patch_selection_icon_edit">Uredi ikonicu</string>
     <string name="patch_selection_icon_design">Dizajniraj ikonicu</string>
-    <string name="patch_selection_icon_import_folder">Uvezi fasciklu</string>
     <string name="patch_selection_icon_select_folder_title">Izaberi fasciklu sa ikonicama</string>
     <string name="patch_selection_icon_ready">Prilagođena ikonica je spremna</string>
     <string name="patch_selection_icon_none">Nije postavljena prilagođena ikonica</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">ceo broj</string>
     <string name="patch_selection_option_hint_number">broj</string>
     <string name="patch_selection_option_hint_text">tekst</string>
+    <string name="patch_option_recommended_size">Preporučeno: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Vrednost ne može biti prazna</string>
+    <string name="patch_option_list_duplicate">Stavka je već na listi</string>
+    <string name="patch_option_list_empty_state">Još nema dodatih stavki</string>
+    <string name="patch_option_enter_value">Unesite vrednost…</string>
+    <string name="patch_option_add_item">Dodaj stavku</string>
+    <string name="patch_option_edit_list">Uredi listu</string>
     <string name="patch_selection_run_info_title">Ovo pokretanje</string>
     <string name="patch_selection_run_info_app_group">Aplikacija</string>
     <string name="patch_selection_run_info_bundles_group">Paketi zakrpa</string>

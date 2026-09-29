@@ -50,6 +50,7 @@
     <string name="on">Açık</string>
     <string name="browse">Göz At</string>
     <string name="save">Kaydet</string>
+    <string name="select_folder">Klasör seç</string>
     <string name="status_loading">Yükleniyor...</string>
     <string name="download">İndir</string>
     <string name="status_offline">Çevrimdışı</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Çıktı dosyası</string>
     <string name="color_picker_saved">Kaydedildi</string>
     <string name="dropdown_search_placeholder">Ara…</string>
-    <string name="custom_color_description">Özel renk</string>
+    <string name="custom_color">Özel renk</string>
     <string name="gradient_linear">Doğrusal</string>
     <string name="gradient_radial">Radyal</string>
     <string name="gradient_conic">Konik</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Seçenekleri yapılandır</string>
     <string name="patch_selection_icon_edit">Simgeyi düzenle</string>
     <string name="patch_selection_icon_design">Simge tasarla</string>
-    <string name="patch_selection_icon_import_folder">Klasör içe aktar</string>
     <string name="patch_selection_icon_select_folder_title">Bir simge klasörü seç</string>
     <string name="patch_selection_icon_ready">Özel simge hazır</string>
     <string name="patch_selection_icon_none">Özel simge ayarlanmamış</string>
@@ -413,6 +413,13 @@
     <string name="patch_selection_option_hint_whole_number">tam sayı</string>
     <string name="patch_selection_option_hint_number">bir sayı</string>
     <string name="patch_selection_option_hint_text">metin</string>
+    <string name="patch_option_recommended_size">Önerilen: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Değer boş olamaz</string>
+    <string name="patch_option_list_duplicate">Öğe zaten listede</string>
+    <string name="patch_option_list_empty_state">Henüz öğe eklenmedi</string>
+    <string name="patch_option_enter_value">Değer girin…</string>
+    <string name="patch_option_add_item">Öğe ekle</string>
+    <string name="patch_option_edit_list">Listeyi düzenle</string>
     <string name="patch_selection_run_info_title">Bu çalıştırma</string>
     <string name="patch_selection_run_info_app_group">Uygulama</string>
     <string name="patch_selection_run_info_bundles_group">Yama bundle'ları</string>

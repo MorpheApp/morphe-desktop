@@ -14,7 +14,7 @@
     <string name="app_info_shared_label">Programos inform</string>
     <string name="status_patching_failed">Pataisyti nepavyko</string>
     <string name="error_log_label">Klaidų žurnalas</string>
-    <string name="custom_color_description">Pasirinktinė spalva</string>
+    <string name="custom_color">Pasirinktinė spalva</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_mode_default">Numatytasis</string>
     <!-- Quick Patch Screen -->
@@ -57,6 +57,7 @@
     <string name="patch_selection_option_enabled">Įjungtas</string>
     <string name="patch_selection_option_disabled">Išjungtas</string>
     <string name="patch_selection_badge_new">Nauja</string>
+    <string name="patch_option_list_empty">Negalima palikti laukelio tuščio</string>
     <!-- Patching Screen -->
     <string name="patching_status_in_progress">Pritaikomi pataisymai</string>
     <string name="patching_progress_title">Programėlė taisoma</string>

@@ -50,6 +50,7 @@
     <string name="on">চালু</string>
     <string name="browse">ব্রাউজ</string>
     <string name="save">সংরক্ষণ করুন</string>
+    <string name="select_folder">ফোল্ডার নির্বাচন করুন</string>
     <string name="status_loading">লোড হচ্ছে…</string>
     <string name="download">ডাউনলোড</string>
     <string name="status_offline">অফলাইন</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">আউটপুট ফাইল</string>
     <string name="color_picker_saved">সংরক্ষিত</string>
     <string name="dropdown_search_placeholder">অনুসন্ধান…</string>
-    <string name="custom_color_description">কাস্টম রং</string>
+    <string name="custom_color">কাস্টম রঙ</string>
     <string name="gradient_linear">রৈখিক</string>
     <string name="gradient_radial">রেডিয়াল</string>
     <string name="gradient_conic">কোনিক</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">বিকল্প কনফিগার করুন</string>
     <string name="patch_selection_icon_edit">আইকন সম্পাদনা করুন</string>
     <string name="patch_selection_icon_design">আইকন ডিজাইন করুন</string>
-    <string name="patch_selection_icon_import_folder">ফোল্ডার ইমপোর্ট করুন</string>
     <string name="patch_selection_icon_select_folder_title">একটি আইকন ফোল্ডার নির্বাচন করুন</string>
     <string name="patch_selection_icon_ready">কাস্টম আইকন প্রস্তুত</string>
     <string name="patch_selection_icon_none">কোনো কাস্টম আইকন সেট নেই</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">একটি পূর্ণসংখ্যা</string>
     <string name="patch_selection_option_hint_number">একটি সংখ্যা</string>
     <string name="patch_selection_option_hint_text">টেক্সট</string>
+    <string name="patch_option_recommended_size">প্রস্তাবিত: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">মান খালি রাখা যাবে না</string>
+    <string name="patch_option_list_duplicate">আইটেমটি ইতিমধ্যে তালিকায় রয়েছে</string>
+    <string name="patch_option_list_empty_state">এখনও কোনো আইটেম যোগ করা হয়নি</string>
+    <string name="patch_option_enter_value">মান লিখুন…</string>
+    <string name="patch_option_add_item">আইটেম যোগ করুন</string>
+    <string name="patch_option_edit_list">তালিকা সম্পাদনা করুন</string>
     <string name="patch_selection_run_info_title">এই রান</string>
     <string name="patch_selection_run_info_app_group">অ্যাপ</string>
     <string name="patch_selection_run_info_bundles_group">প্যাচ বান্ডেল</string>

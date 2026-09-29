@@ -50,6 +50,7 @@
     <string name="on">Be</string>
     <string name="browse">Tallózás</string>
     <string name="save">Mentés</string>
+    <string name="select_folder">Mappa kiválasztása</string>
     <string name="status_loading">Betöltés…</string>
     <string name="download">Letöltés</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Kimeneti fájl</string>
     <string name="color_picker_saved">Mentett</string>
     <string name="dropdown_search_placeholder">Keresés…</string>
-    <string name="custom_color_description">Egyedi szín</string>
+    <string name="custom_color">Egyedi szín</string>
     <string name="gradient_linear">Lineáris</string>
     <string name="gradient_radial">Sugárirányú</string>
     <string name="gradient_conic">Kúpos</string>
@@ -374,7 +375,6 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patch_selection_configure_options_description">Opciók konfigurálása</string>
     <string name="patch_selection_icon_edit">Ikon szerkesztése</string>
     <string name="patch_selection_icon_design">Ikon tervezése</string>
-    <string name="patch_selection_icon_import_folder">Mappa importálása</string>
     <string name="patch_selection_icon_select_folder_title">Válassz egy ikonmappát</string>
     <string name="patch_selection_icon_ready">Egyéni ikon kész</string>
     <string name="patch_selection_icon_none">Nincs egyéni ikon beállítva</string>
@@ -415,6 +415,13 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patch_selection_option_hint_whole_number">egész szám</string>
     <string name="patch_selection_option_hint_number">egy szám</string>
     <string name="patch_selection_option_hint_text">szöveg</string>
+    <string name="patch_option_recommended_size">Ajánlott: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Az érték nem lehet üres</string>
+    <string name="patch_option_list_duplicate">Az elem már a listában van</string>
+    <string name="patch_option_list_empty_state">Még nincsenek elemek hozzáadva</string>
+    <string name="patch_option_enter_value">Érték megadása…</string>
+    <string name="patch_option_add_item">Elem hozzáadása</string>
+    <string name="patch_option_edit_list">Lista szerkesztése</string>
     <string name="patch_selection_run_info_title">Ez a futtatás</string>
     <string name="patch_selection_run_info_app_group">Alkalmazás</string>
     <string name="patch_selection_run_info_bundles_group">Javítócsomagok</string>

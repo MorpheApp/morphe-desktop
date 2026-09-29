@@ -50,6 +50,7 @@
     <string name="on">Attivo</string>
     <string name="browse">Sfoglia</string>
     <string name="save">Salva</string>
+    <string name="select_folder">Seleziona cartella</string>
     <string name="status_loading">Caricamento…</string>
     <string name="download">Scarica</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">File di output</string>
     <string name="color_picker_saved">Salvato</string>
     <string name="dropdown_search_placeholder">Cerca…</string>
-    <string name="custom_color_description">Colore personalizzato</string>
+    <string name="custom_color">Colore personalizzato</string>
     <string name="gradient_linear">Lineare</string>
     <string name="gradient_radial">Radiale</string>
     <string name="gradient_conic">Conico</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Configura opzioni</string>
     <string name="patch_selection_icon_edit">Modifica icona</string>
     <string name="patch_selection_icon_design">Progetta icona</string>
-    <string name="patch_selection_icon_import_folder">Importa cartella</string>
     <string name="patch_selection_icon_select_folder_title">Seleziona una cartella di icone</string>
     <string name="patch_selection_icon_ready">Icona personalizzata pronta</string>
     <string name="patch_selection_icon_none">Nessuna icona personalizzata impostata</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">un numero intero</string>
     <string name="patch_selection_option_hint_number">un numero</string>
     <string name="patch_selection_option_hint_text">testo</string>
+    <string name="patch_option_recommended_size">Consigliato: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Il valore non può essere vuoto</string>
+    <string name="patch_option_list_duplicate">Elemento già presente nell'elenco</string>
+    <string name="patch_option_list_empty_state">Nessun elemento aggiunto ancora</string>
+    <string name="patch_option_enter_value">Inserisci valore…</string>
+    <string name="patch_option_add_item">Aggiungi elemento</string>
+    <string name="patch_option_edit_list">Modifica elenco</string>
     <string name="patch_selection_run_info_title">Questa esecuzione</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Bundle di patch</string>

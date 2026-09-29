@@ -50,6 +50,7 @@
     <string name="on">開啟</string>
     <string name="browse">瀏覽</string>
     <string name="save">儲存</string>
+    <string name="select_folder">選擇資料夾</string>
     <string name="status_loading">正在載入……</string>
     <string name="download">下載</string>
     <string name="status_offline">離線</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">輸出檔案</string>
     <string name="color_picker_saved">已儲存</string>
     <string name="dropdown_search_placeholder">搜尋……</string>
-    <string name="custom_color_description">自訂顏色</string>
+    <string name="custom_color">自訂顏色</string>
     <string name="gradient_linear">線性</string>
     <string name="gradient_radial">放射狀</string>
     <string name="gradient_conic">錐形</string>
@@ -346,7 +347,7 @@
     <string name="patches_latest_badge">最新</string>
     <string name="patches_cached_badge">已快取</string>
     <string name="patches_date_cached">已快取：%1$s</string>
-    <string name="patches_date_published">發布日期：%1$s</string>
+    <string name="patches_date_published">發佈日期：%1$s</string>
     <string name="patches_hide_notes">隱藏備註</string>
     <string name="patches_patch_notes">修補備註</string>
     <string name="patches_downloading">正在下載…</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">設定選項</string>
     <string name="patch_selection_icon_edit">編輯圖示</string>
     <string name="patch_selection_icon_design">設計圖示</string>
-    <string name="patch_selection_icon_import_folder">匯入資料夾</string>
     <string name="patch_selection_icon_select_folder_title">選取圖示資料夾</string>
     <string name="patch_selection_icon_ready">自訂圖示準備就緒</string>
     <string name="patch_selection_icon_none">未設定自訂圖示</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">一個整數</string>
     <string name="patch_selection_option_hint_number">一個數字</string>
     <string name="patch_selection_option_hint_text">文字</string>
+    <string name="patch_option_recommended_size">建議：%1$dx%2$d</string>
+    <string name="patch_option_list_empty">值不可為空</string>
+    <string name="patch_option_list_duplicate">項目已在清單中</string>
+    <string name="patch_option_list_empty_state">尚未新增任何項目</string>
+    <string name="patch_option_enter_value">輸入值…</string>
+    <string name="patch_option_add_item">新增項目</string>
+    <string name="patch_option_edit_list">編輯清單</string>
     <string name="patch_selection_run_info_title">這個執行</string>
     <string name="patch_selection_run_info_app_group">應用程式</string>
     <string name="patch_selection_run_info_bundles_group">修補包</string>
@@ -590,7 +597,7 @@
     <string name="patch_source_dialog_repo_url_label">儲存庫 URL</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab 或 morphe.software/add-source 連結</string>
-    <string name="patch_source_dialog_pre_release_title">預先發布版修補程式</string>
+    <string name="patch_source_dialog_pre_release_title">預先發佈版修補程式</string>
     <string name="patch_source_dialog_pre_release_hint">搶先取得新實驗性修補程式版本</string>
     <string name="patch_source_dialog_experimental_title">實驗性應用程式版本</string>
     <string name="patch_source_dialog_experimental_hint">若可用，優先使用實驗性應用程式版本</string>

@@ -50,6 +50,7 @@
     <string name="on">켜짐</string>
     <string name="browse">찾아보기</string>
     <string name="save">저장하기</string>
+    <string name="select_folder">폴더 선택</string>
     <string name="status_loading">불러오는 중…</string>
     <string name="download">다운로드</string>
     <string name="status_offline">오프라인</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">출력 파일</string>
     <string name="color_picker_saved">저장됨</string>
     <string name="dropdown_search_placeholder">검색…</string>
-    <string name="custom_color_description">사용자 정의 색상</string>
+    <string name="custom_color">사용자 정의 색상</string>
     <string name="gradient_linear">선형</string>
     <string name="gradient_radial">방사형</string>
     <string name="gradient_conic">원뿔형</string>
@@ -374,7 +375,6 @@
     <string name="patch_selection_configure_options_description">옵션 구성</string>
     <string name="patch_selection_icon_edit">아이콘 편집</string>
     <string name="patch_selection_icon_design">아이콘 디자인</string>
-    <string name="patch_selection_icon_import_folder">폴더 가져오기</string>
     <string name="patch_selection_icon_select_folder_title">아이콘 폴더 선택</string>
     <string name="patch_selection_icon_ready">사용자 지정 아이콘 준비 완료</string>
     <string name="patch_selection_icon_none">설정된 사용자 지정 아이콘 없음</string>
@@ -415,6 +415,13 @@
     <string name="patch_selection_option_hint_whole_number">정수</string>
     <string name="patch_selection_option_hint_number">숫자</string>
     <string name="patch_selection_option_hint_text">텍스트</string>
+    <string name="patch_option_recommended_size">권장: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">값을 비워 둘 수 없습니다</string>
+    <string name="patch_option_list_duplicate">이미 목록에 있는 항목입니다</string>
+    <string name="patch_option_list_empty_state">아직 추가된 항목이 없습니다</string>
+    <string name="patch_option_enter_value">값 입력…</string>
+    <string name="patch_option_add_item">항목 추가</string>
+    <string name="patch_option_edit_list">목록 편집</string>
     <string name="patch_selection_run_info_title">이번 실행</string>
     <string name="patch_selection_run_info_app_group">앱</string>
     <string name="patch_selection_run_info_bundles_group">패치 번들</string>
@@ -561,7 +568,7 @@
     <string name="source_error_no_repository">소스에 대해 구성된 저장소가 없습니다</string>
     <string name="source_error_fetch_releases">릴리스를 가져올 수 없습니다</string>
     <string name="source_error_failed_to_load">불러오기 실패</string>
-    <string name="source_error_github_pat_required">풀 리퀘스트 소스를 다운로드하려면 GitHub PAT가 필요합니다.</string>
+    <string name="source_error_github_pat_required">Pull requests 소스를 다운로드하려면 GitHub PAT가 필요합니다</string>
     <string name="source_error_pr_no_artifact">Pull request에 대한 아티팩트를 찾을 수 없습니다</string>
     <string name="source_sheet_manage_description">패치 소스 관리</string>
     <string name="source_sheet_local_label">로컬</string>
@@ -694,7 +701,7 @@
     <string name="settings_theme_dark">어두운</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_toggle_sharp_corners_label">날카로운 모서리</string>
-    <string name="settings_toggle_sharp_corners_desc">카드, 대화상자, 버튼의 모서리를 각지게 만듭니다</string>
+    <string name="settings_toggle_sharp_corners_desc">카드, 대화 상자, 버튼의 모서리를 각지게 만듭니다</string>
     <string name="settings_section_accent_color">강조 색상</string>
     <string name="settings_accent_clear_description">강조 색상 지우기</string>
     <string name="settings_accent_custom_description">사용자 지정 강조 색상</string>

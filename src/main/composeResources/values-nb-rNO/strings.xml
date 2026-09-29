@@ -50,6 +50,7 @@
     <string name="on">På</string>
     <string name="browse">Bla gjennom</string>
     <string name="save">Lagre</string>
+    <string name="select_folder">Velg mappe</string>
     <string name="status_loading">Laster…</string>
     <string name="download">Last ned</string>
     <string name="status_offline">Frakoblet</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Utdatafil</string>
     <string name="color_picker_saved">Lagret</string>
     <string name="dropdown_search_placeholder">Søk…</string>
-    <string name="custom_color_description">Egen farge</string>
+    <string name="custom_color">Egendefinert farge</string>
     <string name="gradient_linear">Lineær</string>
     <string name="gradient_radial">Radiell</string>
     <string name="gradient_conic">Konisk</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfigurer alternativer</string>
     <string name="patch_selection_icon_edit">Rediger ikon</string>
     <string name="patch_selection_icon_design">Design ikon</string>
-    <string name="patch_selection_icon_import_folder">Importer mappe</string>
     <string name="patch_selection_icon_select_folder_title">Velg en ikonmappe</string>
     <string name="patch_selection_icon_ready">Eget ikon klart</string>
     <string name="patch_selection_icon_none">Ingen egendefinert ikon angitt</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">et heltall</string>
     <string name="patch_selection_option_hint_number">et tall</string>
     <string name="patch_selection_option_hint_text">tekst</string>
+    <string name="patch_option_recommended_size">Anbefalt: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Verdien kan ikke være tom</string>
+    <string name="patch_option_list_duplicate">Elementet finnes allerede i listen</string>
+    <string name="patch_option_list_empty_state">Ingen elementer lagt til ennå</string>
+    <string name="patch_option_enter_value">Skriv inn verdi…</string>
+    <string name="patch_option_add_item">Legg til element</string>
+    <string name="patch_option_edit_list">Rediger liste</string>
     <string name="patch_selection_run_info_title">Denne kjøringen</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch-pakker</string>

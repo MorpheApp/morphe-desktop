@@ -5,7 +5,7 @@
     <string name="unknown">અજ્ઞાત</string>
     <string name="installing">ઇન્સ્ટોલ કરી રહ્યું છે...</string>
     <string name="none">કોઈપણ નહિ </string>
-    <string name="custom_color_description">કસ્ટમ રંગ</string>
+    <string name="custom_color">કસ્ટમ રંગ</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_mode_default">ડિફૉલ્ટ</string>
     <!-- Quick Patch Screen -->

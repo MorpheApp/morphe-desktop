@@ -50,6 +50,7 @@
     <string name="on">Включено</string>
     <string name="browse">Разглеждане</string>
     <string name="save">Запази</string>
+    <string name="select_folder">Изберете папка</string>
     <string name="status_loading">Зареждане…</string>
     <string name="download">Изтегляне</string>
     <string name="status_offline">Офлайн</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Изходен файл</string>
     <string name="color_picker_saved">Запазено</string>
     <string name="dropdown_search_placeholder">Търсене…</string>
-    <string name="custom_color_description">Персонализиран цвят</string>
+    <string name="custom_color">Персонализиран цвят</string>
     <string name="gradient_linear">Линейно</string>
     <string name="gradient_radial">Радиално</string>
     <string name="gradient_conic">Конично</string>
@@ -395,7 +396,6 @@
     <string name="patch_selection_configure_options_description">Конфигуриране на опции</string>
     <string name="patch_selection_icon_edit">Редактиране на икона</string>
     <string name="patch_selection_icon_design">Проектиране на икона</string>
-    <string name="patch_selection_icon_import_folder">Импортиране на папка</string>
     <string name="patch_selection_icon_select_folder_title">Изберете папка с икони</string>
     <string name="patch_selection_icon_ready">Персонализираната икона е готова</string>
     <string name="patch_selection_icon_none">Няма зададена персонализирана икона</string>
@@ -436,6 +436,13 @@
     <string name="patch_selection_option_hint_whole_number">цяло число</string>
     <string name="patch_selection_option_hint_number">число</string>
     <string name="patch_selection_option_hint_text">текст</string>
+    <string name="patch_option_recommended_size">Препоръчително: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Стойността не може да бъде празна</string>
+    <string name="patch_option_list_duplicate">Елементът вече е в списъка</string>
+    <string name="patch_option_list_empty_state">Все още няма добавени елементи</string>
+    <string name="patch_option_enter_value">Въведете стойност…</string>
+    <string name="patch_option_add_item">Добави елемент</string>
+    <string name="patch_option_edit_list">Редактиране на списъка</string>
     <string name="patch_selection_run_info_title">Това изпълнение</string>
     <string name="patch_selection_run_info_app_group">Приложение</string>
     <string name="patch_selection_run_info_bundles_group">Пакети с кръпки</string>

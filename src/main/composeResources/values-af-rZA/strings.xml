@@ -50,6 +50,7 @@
     <string name="on">Aan</string>
     <string name="browse">Blaai</string>
     <string name="save">Stoor</string>
+    <string name="select_folder">Kies gids</string>
     <string name="status_loading">Laai…</string>
     <string name="download">Aflaai</string>
     <string name="status_offline">Vanlyn</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Uitsetlêer</string>
     <string name="color_picker_saved">Gestoor</string>
     <string name="dropdown_search_placeholder">Soek…</string>
-    <string name="custom_color_description">Pasgemaakte kleur</string>
+    <string name="custom_color">Aangepaste kleur</string>
     <string name="gradient_linear">Lineêr</string>
     <string name="gradient_radial">Radiaal</string>
     <string name="gradient_conic">Konies</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfigureer opsies</string>
     <string name="patch_selection_icon_edit"> iconography wysig</string>
     <string name="patch_selection_icon_design"> iconography ontwerp</string>
-    <string name="patch_selection_icon_import_folder">Vouerstuur</string>
     <string name="patch_selection_icon_select_folder_title">Kies 'n ikoon-vouer</string>
     <string name="patch_selection_icon_ready">Gepasmaakte ikoon gereed</string>
     <string name="patch_selection_icon_none">Geen gepasmaakte ikoon gestel nie</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">'n Heelgetal</string>
     <string name="patch_selection_option_hint_number">'n Getal</string>
     <string name="patch_selection_option_hint_text">teks</string>
+    <string name="patch_option_recommended_size">Aanbevole: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Waarde kan nie leeg wees nie</string>
+    <string name="patch_option_list_duplicate">Item is reeds in die lys</string>
+    <string name="patch_option_list_empty_state">Nog geen items bygevoeg nie</string>
+    <string name="patch_option_enter_value">Voer waarde in…</string>
+    <string name="patch_option_add_item">Voeg item by</string>
+    <string name="patch_option_edit_list">Wysig lys</string>
     <string name="patch_selection_run_info_title">Hierdie run</string>
     <string name="patch_selection_run_info_app_group">Program</string>
     <string name="patch_selection_run_info_bundles_group">Veranderingsbundels</string>

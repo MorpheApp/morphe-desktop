@@ -13,7 +13,7 @@
     <string name="download">Descargar</string>
     <string name="version_label_experimental">Experimental</string>
     <string name="error_log_label">Rexistro de erros</string>
-    <string name="custom_color_description">Cor personalizada</string>
+    <string name="custom_color">Cor personalizada</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_mode_default">Predefinido</string>
     <!-- Quick Patch Screen -->
@@ -53,6 +53,7 @@
     <string name="patch_selection_option_enabled">Activado</string>
     <string name="patch_selection_option_disabled">Desactivado</string>
     <string name="patch_selection_badge_new">Novo</string>
+    <string name="patch_option_list_empty">O valor non pode estar baleiro</string>
     <!-- Patching Screen -->
     <string name="patching_banner_apk_size">Tamaño da APK</string>
     <string name="patching_banner_patches">Parches</string>

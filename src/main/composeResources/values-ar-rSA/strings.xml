@@ -50,6 +50,7 @@
     <string name="on">تشغيل</string>
     <string name="browse">استعراض</string>
     <string name="save">حفظ</string>
+    <string name="select_folder">اختر مجلد</string>
     <string name="status_loading">جارٍ التحميل…</string>
     <string name="download">تنزيل</string>
     <string name="status_offline">غير متصل</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">ملف الإخراج</string>
     <string name="color_picker_saved">محفوظة</string>
     <string name="dropdown_search_placeholder">بحث…</string>
-    <string name="custom_color_description">اللون المخصص</string>
+    <string name="custom_color">اللون المخصص</string>
     <string name="gradient_linear">خطي</string>
     <string name="gradient_radial">قطري</string>
     <string name="gradient_conic">مخروطي</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">تكوين الخيارات</string>
     <string name="patch_selection_icon_edit">تحرير الأيقونة</string>
     <string name="patch_selection_icon_design">تصميم الأيقونة</string>
-    <string name="patch_selection_icon_import_folder">استيراد مجلد</string>
     <string name="patch_selection_icon_select_folder_title">اختر مجلد الأيقونة</string>
     <string name="patch_selection_icon_ready">الأيقونة المخصصة جاهزة</string>
     <string name="patch_selection_icon_none">لا توجد أيقونة مخصصة مضبوطة</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">رقم صحيح</string>
     <string name="patch_selection_option_hint_number">رقم</string>
     <string name="patch_selection_option_hint_text">نص</string>
+    <string name="patch_option_recommended_size">مُوصّى به: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">لا يمكن أن تكون القيمة فارغة</string>
+    <string name="patch_option_list_duplicate">العنصر موجود بالفعل في القائمة</string>
+    <string name="patch_option_list_empty_state">لا توجد عناصر مضافة بعد</string>
+    <string name="patch_option_enter_value">أدخل قيمة…</string>
+    <string name="patch_option_add_item">إضافة عنصر</string>
+    <string name="patch_option_edit_list">تعديل القائمة</string>
     <string name="patch_selection_run_info_title">هذه الجلسة</string>
     <string name="patch_selection_run_info_app_group">التطبيق</string>
     <string name="patch_selection_run_info_bundles_group">حُزم التعديل</string>

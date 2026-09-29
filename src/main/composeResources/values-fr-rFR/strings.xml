@@ -50,6 +50,7 @@
     <string name="on">Activé</string>
     <string name="browse">Parcourir</string>
     <string name="save">Enregistrer</string>
+    <string name="select_folder">Sélectionner un dossier</string>
     <string name="status_loading">Chargement…</string>
     <string name="download">Télécharger</string>
     <string name="status_offline">Hors ligne</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Fichier de sortie</string>
     <string name="color_picker_saved">Enregistré</string>
     <string name="dropdown_search_placeholder">Rechercher…</string>
-    <string name="custom_color_description">Couleur personnalisée</string>
+    <string name="custom_color">Couleur personnalisée</string>
     <string name="gradient_linear">Linéaire</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Conique</string>
@@ -373,7 +374,6 @@
     <string name="patch_selection_configure_options_description">Configurer les options</string>
     <string name="patch_selection_icon_edit">Modifier l'icône</string>
     <string name="patch_selection_icon_design">Concevoir l'icône</string>
-    <string name="patch_selection_icon_import_folder">Dossier d'importation</string>
     <string name="patch_selection_icon_select_folder_title">Sélectionnez un dossier d'icônes</string>
     <string name="patch_selection_icon_ready">Icône personnalisée prête</string>
     <string name="patch_selection_icon_none">Aucune icône personnalisée définie</string>
@@ -414,6 +414,13 @@
     <string name="patch_selection_option_hint_whole_number">un nombre entier</string>
     <string name="patch_selection_option_hint_number">un nombre</string>
     <string name="patch_selection_option_hint_text">texte</string>
+    <string name="patch_option_recommended_size">Recommandé : %1$dx%2$d</string>
+    <string name="patch_option_list_empty">La valeur ne peut pas être vide</string>
+    <string name="patch_option_list_duplicate">Élément déjà dans la liste</string>
+    <string name="patch_option_list_empty_state">Aucun élément ajouté pour le moment</string>
+    <string name="patch_option_enter_value">Saisir une valeur…</string>
+    <string name="patch_option_add_item">Ajouter un élément</string>
+    <string name="patch_option_edit_list">Modifier la liste</string>
     <string name="patch_selection_run_info_title">Cette exécution</string>
     <string name="patch_selection_run_info_app_group">Application</string>
     <string name="patch_selection_run_info_bundles_group">Bundles de patchs</string>
@@ -560,7 +567,7 @@
     <string name="source_error_no_repository">Aucun dépôt configuré pour la source</string>
     <string name="source_error_fetch_releases">Impossible de récupérer les versions</string>
     <string name="source_error_failed_to_load">Échec du chargement</string>
-    <string name="source_error_github_pat_required">Un jeton d'accès personnel GitHub est nécessaire pour télécharger les sources d'une pull request</string>
+    <string name="source_error_github_pat_required">Un PAT GitHub est nécessaire pour télécharger les sources d'une pull request</string>
     <string name="source_error_pr_no_artifact">Aucun artefact trouvé pour la demande de tirage</string>
     <string name="source_sheet_manage_description">Gérer les sources de patchs</string>
     <string name="source_sheet_local_label">Locale</string>
@@ -803,9 +810,9 @@
     <string name="settings_runtime_logs_cleared_success">Journaux effacés sur l'appareil</string>
     <string name="settings_runtime_logs_nothing_captured">Rien n'a encore été capturé. Lancez l'application patchée sur votre téléphone, puis enregistrez à nouveau</string>
     <!-- Settings - GitHub PAT -->
-    <string name="settings_section_github_pat">Jeton d'accès personnel GitHub</string>
-    <string name="settings_github_pat_desc">Un jeton d'accès personnel GitHub avec le champ public_repo est nécessaire pour télécharger les artefacts d'une pull request. Créez un jeton d'accès personnel avec le champ public_repo sur %1$s</string>
-    <string name="settings_github_pat_label">Jeton d'accès personnel</string>
+    <string name="settings_section_github_pat">PAT GitHub</string>
+    <string name="settings_github_pat_desc">Un GitHub Personal Access Token (PAT) avec le champ public_repo est nécessaire pour télécharger les artefacts d'une pull request. Créez un PAT avec le champ public_repo sur %1$s</string>
+    <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Site Web</string>
     <string name="app_info_version_gui">Interface graphique : %1$s</string>

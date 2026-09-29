@@ -50,6 +50,7 @@
     <string name="on">Vklopljeno</string>
     <string name="browse">Prebrskaj</string>
     <string name="save">Shrani</string>
+    <string name="select_folder">Izberi mapo</string>
     <string name="status_loading">Nalaganje…</string>
     <string name="download">Prenesi</string>
     <string name="status_offline">Brez povezave</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Izhodna datoteka</string>
     <string name="color_picker_saved">Shranjeno</string>
     <string name="dropdown_search_placeholder">Išči…</string>
-    <string name="custom_color_description">Barva po meri</string>
+    <string name="custom_color">Barva po meri</string>
     <string name="gradient_linear">Linearno</string>
     <string name="gradient_radial">Radialno</string>
     <string name="gradient_conic">Stožčno</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Nastavi možnosti</string>
     <string name="patch_selection_icon_edit">Uredi ikono</string>
     <string name="patch_selection_icon_design">Oblikuj ikono</string>
-    <string name="patch_selection_icon_import_folder">Uvozi mapo</string>
     <string name="patch_selection_icon_select_folder_title">Izberite mapo z ikonami</string>
     <string name="patch_selection_icon_ready">Ikona po meri je pripravljena</string>
     <string name="patch_selection_icon_none">Ni nastavljene ikone po meri</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">celo število</string>
     <string name="patch_selection_option_hint_number">število</string>
     <string name="patch_selection_option_hint_text">besedilo</string>
+    <string name="patch_option_recommended_size">Priporočena velikost: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Vrednost ne sme biti prazna</string>
+    <string name="patch_option_list_duplicate">Element je že na seznamu</string>
+    <string name="patch_option_list_empty_state">Ni še dodanih elementov</string>
+    <string name="patch_option_enter_value">Vnesite vrednost…</string>
+    <string name="patch_option_add_item">Dodaj element</string>
+    <string name="patch_option_edit_list">Uredi seznam</string>
     <string name="patch_selection_run_info_title">Ta zagon</string>
     <string name="patch_selection_run_info_app_group">Aplikacija</string>
     <string name="patch_selection_run_info_bundles_group">Svežnji popravkov</string>

@@ -50,6 +50,7 @@
     <string name="on">Ar</string>
     <string name="browse">Brabhsáil</string>
     <string name="save">Sábháil</string>
+    <string name="select_folder">Roghnaigh fillteán</string>
     <string name="status_loading">Ag lódáil…</string>
     <string name="download">Íoslódáil</string>
     <string name="status_offline">As líne</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Comhad aschuir</string>
     <string name="color_picker_saved">Sábháilte</string>
     <string name="dropdown_search_placeholder">Cuardaigh…</string>
-    <string name="custom_color_description">Dath saincheaptha</string>
+    <string name="custom_color">Dath saincheaptha</string>
     <string name="gradient_linear">Líneach</string>
     <string name="gradient_radial">Gathach</string>
     <string name="gradient_conic">Cónúil</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Cumraigh roghanna</string>
     <string name="patch_selection_icon_edit">Cuir deilbhín in eagar</string>
     <string name="patch_selection_icon_design">Íocón dearaidh</string>
-    <string name="patch_selection_icon_import_folder">Fillteán allmhairiúcháin</string>
     <string name="patch_selection_icon_select_folder_title">Roghnaigh fillteán deilbhíní</string>
     <string name="patch_selection_icon_ready">Deilbhín saincheaptha réidh</string>
     <string name="patch_selection_icon_none">Gan tacar deilbhíní saincheaptha</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">uimhir iomlán</string>
     <string name="patch_selection_option_hint_number">uimhir</string>
     <string name="patch_selection_option_hint_text">téacs</string>
+    <string name="patch_option_recommended_size">Molta: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Ní féidir luach a fhágáil folamh</string>
+    <string name="patch_option_list_duplicate">Tá an mhír ar an liosta cheana</string>
+    <string name="patch_option_list_empty_state">Níl aon mhír curtha leis fós</string>
+    <string name="patch_option_enter_value">Cuir isteach luach…</string>
+    <string name="patch_option_add_item">Cuir mír leis</string>
+    <string name="patch_option_edit_list">Cuir an liosta in eagar</string>
     <string name="patch_selection_run_info_title">An rith seo</string>
     <string name="patch_selection_run_info_app_group">Aip</string>
     <string name="patch_selection_run_info_bundles_group">Bearta paiste</string>

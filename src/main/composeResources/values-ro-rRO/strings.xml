@@ -50,6 +50,7 @@
     <string name="on">Pornit</string>
     <string name="browse">Răsfoiți</string>
     <string name="save">Salvează</string>
+    <string name="select_folder">Selectați folderul</string>
     <string name="status_loading">Se încarcă…</string>
     <string name="download">Descărcare</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Fișier de ieșire</string>
     <string name="color_picker_saved">Salvat</string>
     <string name="dropdown_search_placeholder">Căutare…</string>
-    <string name="custom_color_description">Culoare personalizată</string>
+    <string name="custom_color">Culoare personalizată</string>
     <string name="gradient_linear">Liniar</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Conic</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Configurează opțiunile</string>
     <string name="patch_selection_icon_edit">Editează iconița</string>
     <string name="patch_selection_icon_design">Proiectează iconița</string>
-    <string name="patch_selection_icon_import_folder">Importă dosarul</string>
     <string name="patch_selection_icon_select_folder_title">Selectează un dosar de iconițe</string>
     <string name="patch_selection_icon_ready">Iconiță personalizată gata</string>
     <string name="patch_selection_icon_none">Nicio iconiță personalizată setată</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">un număr întreg</string>
     <string name="patch_selection_option_hint_number">un număr</string>
     <string name="patch_selection_option_hint_text">text</string>
+    <string name="patch_option_recommended_size">Recomandat: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Valoarea nu poate fi goală</string>
+    <string name="patch_option_list_duplicate">Elementul există deja în listă</string>
+    <string name="patch_option_list_empty_state">Nu s-au adăugat încă elemente</string>
+    <string name="patch_option_enter_value">Introdu valoarea…</string>
+    <string name="patch_option_add_item">Adaugă element</string>
+    <string name="patch_option_edit_list">Editează lista</string>
     <string name="patch_selection_run_info_title">Această rulare</string>
     <string name="patch_selection_run_info_app_group">Aplicație</string>
     <string name="patch_selection_run_info_bundles_group">Pachete de patch-uri</string>
