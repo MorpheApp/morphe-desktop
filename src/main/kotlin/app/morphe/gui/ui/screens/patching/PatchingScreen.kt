@@ -70,7 +70,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     val corners = LocalMorpheCorners.current
     val font = LocalMorpheFont.current
     val mono = LocalMorpheMono.current
-    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
+    val borderColor = MaterialTheme.colorScheme.outlineVariant
     val patchingCompletedState = LocalPatchingCompleted.current
 
     // Auto-start patching when screen loads

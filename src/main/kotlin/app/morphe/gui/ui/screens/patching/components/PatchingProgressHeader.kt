@@ -62,79 +62,71 @@ internal fun ExpertProgressHeader(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Title + percentage badge
+        // Step title on the left + badges (counter and percentage) on the right
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = stringResource(Res.string.patching_progress_title),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onBackground,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f, fill = false)
-            )
+            val stepNameToDisplay = if (uiState.status == PatchingStatus.COMPLETED) {
+                stringResource(Res.string.patching_step_all_done)
+            } else {
+                resolveStepName(uiState.currentStepName)
+            }
 
-            PercentageBadge(progress = smoothProgress, status = uiState.status)
+            AnimatedContent(
+                targetState = stepNameToDisplay,
+                label = "step_name_anim",
+                transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit },
+                modifier = Modifier.weight(1f, fill = false)
+            ) { targetStep ->
+                Text(
+                    text = targetStep.ifEmpty { stringResource(Res.string.patching_step_waiting) },
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = font,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (uiState.totalPatches > 0) {
+                    Surface(
+                        shape = RoundedCornerShape(LocalMorpheCorners.current.small),
+                        color = if (uiState.status == PatchingStatus.COMPLETED) {
+                            progressGradient().second.copy(alpha = 0.18f)
+                        } else {
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
+                        }
+                    ) {
+                        Text(
+                            text = "${uiState.patchedCount} / ${uiState.totalPatches}",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = font,
+                            color = if (uiState.status == PatchingStatus.COMPLETED) {
+                                progressGradient().second
+                            } else {
+                                MaterialTheme.colorScheme.primary
+                            },
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+
+                PercentageBadge(progress = smoothProgress, status = uiState.status)
+            }
         }
 
         // Progress bar
         ExpertLinearProgressBar(progress = smoothProgress)
-
-        // Current step name + patch counter
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                val stepNameToDisplay = if (uiState.status == PatchingStatus.COMPLETED) stringResource(Res.string.patching_step_all_done) else resolveStepName(uiState.currentStepName)
-                AnimatedContent(
-                    targetState = stepNameToDisplay,
-                    label = "step_name_anim",
-                    transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit }
-                ) { targetStep ->
-                    Text(
-                        text = targetStep.ifEmpty { stringResource(Res.string.patching_step_waiting) },
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.primary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-            }
-
-            if (uiState.totalPatches > 0) {
-                Surface(
-                    shape = RoundedCornerShape(LocalMorpheCorners.current.small),
-                    color = if (uiState.status == PatchingStatus.COMPLETED) {
-                        progressGradient().second.copy(alpha = 0.18f)
-                    } else {
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
-                    }
-                ) {
-                    Text(
-                        text = "${uiState.patchedCount} / ${uiState.totalPatches}",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = font,
-                        color = if (uiState.status == PatchingStatus.COMPLETED) {
-                            progressGradient().second
-                        } else {
-                            MaterialTheme.colorScheme.primary
-                        },
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                    )
-                }
-            }
-        }
 
         // Memory graph
         AnimatedVisibility(
@@ -155,7 +147,8 @@ internal fun ExpertProgressHeader(
                 CpuUsageGraph(
                     coreLoads = uiState.cpuCoreLoads,
                     modifier = Modifier.weight(1f),
-                    font = font
+                    font = font,
+                    coreCount = uiState.logicalCoreCount
                 )
             }
         }

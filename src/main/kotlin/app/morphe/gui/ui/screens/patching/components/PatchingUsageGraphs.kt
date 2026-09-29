@@ -30,6 +30,7 @@ import app.morphe.gui.ui.theme.LocalMorpheMono
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -54,19 +55,34 @@ internal fun HeapUsageGraph(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.Top
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(modifier = Modifier.height(12.dp), contentAlignment = Alignment.Center) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(barColor))
+                    Text(
+                        text = stringResource(Res.string.patching_graph_memory_usage),
+                        fontFamily = font,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    )
                 }
-                Text(
-                    text = stringResource(Res.string.patching_graph_memory_usage),
-                    fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
-                )
+
+                if (maxHeapMb > 0) {
+                    val usedMb = samples.lastOrNull() ?: 0
+                    val percent = ((usedMb.toFloat() / maxHeapMb) * 100).toInt().coerceIn(0, 100)
+                    Text(
+                        text = stringResource(Res.string.patching_graph_memory_detail, percent, maxHeapMb),
+                        fontFamily = mono,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                        fontSize = 9.sp,
+                        lineHeight = 11.sp
+                    )
+                }
             }
 
             Text(
@@ -164,18 +180,31 @@ internal fun IoUsageGraph(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.Top
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(modifier = Modifier.height(12.dp), contentAlignment = Alignment.Center) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(accentColor))
+                    Text(
+                        text = stringResource(Res.string.patching_graph_storage_io),
+                        fontFamily = font,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    )
                 }
+
+                val readStr = current?.let { formatRate(it.readKbPerSec) } ?: formatRate(0)
+                val writeStr = current?.let { formatRate(it.writeKbPerSec) } ?: formatRate(0)
                 Text(
-                    text = stringResource(Res.string.patching_graph_storage_io),
+                    text = "↓ $readStr  ↑ $writeStr",
                     fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    fontSize = 9.sp,
+                    lineHeight = 11.sp
                 )
             }
 
@@ -233,7 +262,8 @@ internal fun IoUsageGraph(
 internal fun CpuUsageGraph(
     coreLoads: List<Int>,
     modifier: Modifier = Modifier,
-    font: FontFamily
+    font: FontFamily,
+    coreCount: Int = 0
 ) {
     val corners = LocalMorpheCorners.current
     val mono = LocalMorpheMono.current
@@ -242,6 +272,7 @@ internal fun CpuUsageGraph(
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
     val average = if (coreLoads.isNotEmpty()) coreLoads.average().toInt() else 0
+    val totalCores = if (coreCount > 0) coreCount else if (coreLoads.isNotEmpty()) coreLoads.size else Runtime.getRuntime().availableProcessors()
 
     MorphePanel(modifier = modifier) {
         Column(
@@ -252,18 +283,29 @@ internal fun CpuUsageGraph(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.Top
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(modifier = Modifier.height(12.dp), contentAlignment = Alignment.Center) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(accentColor))
+                    Text(
+                        text = stringResource(Res.string.patching_graph_cpu_usage),
+                        fontFamily = font,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    )
                 }
+
                 Text(
-                    text = stringResource(Res.string.patching_graph_cpu_usage),
+                    text = pluralStringResource(Res.plurals.patching_graph_cpu_cores_detail, totalCores, totalCores),
                     fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    fontSize = 9.sp,
+                    lineHeight = 11.sp
                 )
             }
 
