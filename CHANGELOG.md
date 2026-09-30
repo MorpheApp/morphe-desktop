@@ -1,3 +1,10 @@
+# [1.18.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.0-dev.5...v1.18.0-dev.6) (2026-09-30)
+
+
+### Features
+
+* Modernize patching progress header layout and system usage graphs ([#339](https://github.com/MorpheApp/morphe-desktop/issues/339)) ([f48969a](https://github.com/MorpheApp/morphe-desktop/commit/f48969a984f26577d8eff96d13bd3d2d15487c3a))
+
 # [1.18.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.0-dev.4...v1.18.0-dev.5) (2026-09-30)
 
 
