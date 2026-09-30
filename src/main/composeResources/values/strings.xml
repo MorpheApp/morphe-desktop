@@ -458,10 +458,10 @@
     <string name="patching_log_viewer_failed_to_read">Failed to read log file: %1$s</string>
     <string name="patching_log_viewer_title">Log file</string>
     <string name="patching_log_viewer_copy_all">Copy all</string>
-    <string name="patching_progress_title">Patching app</string>
     <string name="patching_step_all_done">All done!</string>
     <string name="patching_step_waiting">Waiting…</string>
     <string name="patching_graph_memory_usage">Memory usage</string>
+    <string name="patching_graph_memory_detail">%1$d% of %2$d MB</string>
     <string name="patching_graph_storage_io">Storage I/O</string>
     <string name="patching_graph_cpu_usage">CPU usage</string>
     <string name="patching_banner_started_title">Patching started</string>
