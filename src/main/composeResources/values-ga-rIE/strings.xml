@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Teip ar léamh an chomhaid logála: %1$s</string>
     <string name="patching_log_viewer_title">Comhad logála</string>
     <string name="patching_log_viewer_copy_all">Cóipeáil gach rud</string>
-    <string name="patching_progress_title">Aip paisteála</string>
     <string name="patching_step_all_done">Gach rud déanta!</string>
     <string name="patching_step_waiting">Ag fanacht…</string>
     <string name="patching_graph_memory_usage">Úsáid chuimhne</string>
+    <string name="patching_graph_memory_detail">%1$d% de %2$d MB</string>
     <string name="patching_graph_storage_io">Stóráil I/O</string>
     <string name="patching_graph_cpu_usage">Úsáid LAP</string>
     <string name="patching_banner_started_title">Tosaíodh ar phaisteáil</string>

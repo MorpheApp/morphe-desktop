@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Čitanje datoteke dnevnika nije uspelo: %1$s</string>
     <string name="patching_log_viewer_title">Datoteka dnevnika</string>
     <string name="patching_log_viewer_copy_all">Kopiraj sve</string>
-    <string name="patching_progress_title">Zakrpljivanje aplikacije</string>
     <string name="patching_step_all_done">Sve gotovo!</string>
     <string name="patching_step_waiting">Čekanje…</string>
     <string name="patching_graph_memory_usage">Upotreba memorije</string>
+    <string name="patching_graph_memory_detail">%1$d%% od %2$d MB</string>
     <string name="patching_graph_storage_io">U/I skladišta</string>
     <string name="patching_graph_cpu_usage">Upotreba procesora</string>
     <string name="patching_banner_started_title">Zakrpljivanje je počelo</string>

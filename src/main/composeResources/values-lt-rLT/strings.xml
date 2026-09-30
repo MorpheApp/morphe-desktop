@@ -60,7 +60,6 @@
     <string name="patch_option_list_empty">Negalima palikti laukelio tuščio</string>
     <!-- Patching Screen -->
     <string name="patching_status_in_progress">Pritaikomi pataisymai</string>
-    <string name="patching_progress_title">Programėlė taisoma</string>
     <string name="patching_step_all_done">Baigta!</string>
     <string name="patching_graph_memory_usage">Atminties naudojimas</string>
     <string name="patching_banner_apk_size">APK dydis</string>

@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Misluk om logboeklêer te lees: %1$s</string>
     <string name="patching_log_viewer_title">Logboeklêer</string>
     <string name="patching_log_viewer_copy_all">Kopieer alles</string>
-    <string name="patching_progress_title">Besig om app te pleister</string>
     <string name="patching_step_all_done">Alles klaar!</string>
     <string name="patching_step_waiting">Wag…</string>
     <string name="patching_graph_memory_usage">Geheuegebruik</string>
+    <string name="patching_graph_memory_detail">%1$d% van %2$d MB</string>
     <string name="patching_graph_storage_io">Stoorage I/O</string>
     <string name="patching_graph_cpu_usage">Sentrale verwerkingseenheid (SVE) gebruik</string>
     <string name="patching_banner_started_title">Verandering begin</string>

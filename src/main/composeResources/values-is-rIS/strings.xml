@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Mistókst að lesa annálsskrá: %1$s</string>
     <string name="patching_log_viewer_title">Annálsskrá</string>
     <string name="patching_log_viewer_copy_all">Afrita allt</string>
-    <string name="patching_progress_title">Plástra forrit</string>
     <string name="patching_step_all_done">Allt klárt!</string>
     <string name="patching_step_waiting">Bíð…</string>
     <string name="patching_graph_memory_usage">Minnisnotkun</string>
+    <string name="patching_graph_memory_detail">%1$d% af %2$d MB</string>
     <string name="patching_graph_storage_io">Geymslu I/O</string>
     <string name="patching_graph_cpu_usage">Örgjörvanotkun</string>
     <string name="patching_banner_started_title">Plástrun hófst</string>

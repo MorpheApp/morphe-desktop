@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Nepodařilo se přečíst soubor protokolu: %1$s</string>
     <string name="patching_log_viewer_title">Soubor protokolu</string>
     <string name="patching_log_viewer_copy_all">Kopírovat vše</string>
-    <string name="patching_progress_title">Záplatování aplikace</string>
     <string name="patching_step_all_done">Hotovo!</string>
     <string name="patching_step_waiting">Čekání…</string>
     <string name="patching_graph_memory_usage">Využití paměti</string>
+    <string name="patching_graph_memory_detail">%1$d% z %2$d MB</string>
     <string name="patching_graph_storage_io">I/O úložiště</string>
     <string name="patching_graph_cpu_usage">Využití CPU</string>
     <string name="patching_banner_started_title">Záplatování zaháčeno</string>

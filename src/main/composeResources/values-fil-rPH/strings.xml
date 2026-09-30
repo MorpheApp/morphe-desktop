@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Nabigo ang pagbasa ng log file: %1$s</string>
     <string name="patching_log_viewer_title">Log file</string>
     <string name="patching_log_viewer_copy_all">Kopyahin lahat</string>
-    <string name="patching_progress_title">Pina-patch ang app</string>
     <string name="patching_step_all_done">Tapos na lahat!</string>
     <string name="patching_step_waiting">Naghihintay…</string>
     <string name="patching_graph_memory_usage">Paggamit ng memory</string>
+    <string name="patching_graph_memory_detail">%1$d% ng %2$d MB</string>
     <string name="patching_graph_storage_io">I/O ng storage</string>
     <string name="patching_graph_cpu_usage">Paggamit ng CPU</string>
     <string name="patching_banner_started_title">Nagsimula ang pag-patch</string>

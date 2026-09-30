@@ -460,10 +460,10 @@ Ponovno odaberite APK za ponovno krpanje sa svojim spremljenim postavkama</strin
     <string name="patching_log_viewer_failed_to_read">Čitanje datoteke dnevnika nije uspjelo: %1$s</string>
     <string name="patching_log_viewer_title">Datoteka dnevnika</string>
     <string name="patching_log_viewer_copy_all">Kopiraj sve</string>
-    <string name="patching_progress_title">Patchanje aplikacije</string>
     <string name="patching_step_all_done">Sve je gotovo!</string>
     <string name="patching_step_waiting">Čekanje…</string>
     <string name="patching_graph_memory_usage">Korištenje memorije</string>
+    <string name="patching_graph_memory_detail">%1$d% od %2$d MB</string>
     <string name="patching_graph_storage_io">Pohrana I/O</string>
     <string name="patching_graph_cpu_usage">Upotreba CPU-a</string>
     <string name="patching_banner_started_title">Primjena zakrpa je započela</string>

@@ -439,10 +439,10 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patching_log_viewer_failed_to_read">A naplófájl olvasása sikertelen: %1$s</string>
     <string name="patching_log_viewer_title">Naplófájl</string>
     <string name="patching_log_viewer_copy_all">Összes másolása</string>
-    <string name="patching_progress_title">Alkalmazás módosítása</string>
     <string name="patching_step_all_done">Minden kész!</string>
     <string name="patching_step_waiting">Várakozás…</string>
     <string name="patching_graph_memory_usage">Memóriahasználat</string>
+    <string name="patching_graph_memory_detail">%1$d%% / %2$d MB</string>
     <string name="patching_graph_storage_io">Tárhely I/O</string>
     <string name="patching_graph_cpu_usage">CPU-használat</string>
     <string name="patching_banner_started_title">A javítás megkezdődött</string>

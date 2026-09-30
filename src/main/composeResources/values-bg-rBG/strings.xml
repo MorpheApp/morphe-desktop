@@ -460,10 +460,10 @@
     <string name="patching_log_viewer_failed_to_read">Неуспешно четене на журналния файл: %1$s</string>
     <string name="patching_log_viewer_title">Журнален файл</string>
     <string name="patching_log_viewer_copy_all">Копирай всичко</string>
-    <string name="patching_progress_title">Пачване на приложението</string>
     <string name="patching_step_all_done">Всичко е готово!</string>
     <string name="patching_step_waiting">Изчакване…</string>
     <string name="patching_graph_memory_usage">Използване на памет</string>
+    <string name="patching_graph_memory_detail">%1$d% от %2$d MB</string>
     <string name="patching_graph_storage_io">Дисков вход/изход</string>
     <string name="patching_graph_cpu_usage">Използване на процесора</string>
     <string name="patching_banner_started_title">Пачването започна</string>

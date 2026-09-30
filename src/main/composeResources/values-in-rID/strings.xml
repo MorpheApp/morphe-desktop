@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Gagal membaca berkas log: %1$s</string>
     <string name="patching_log_viewer_title">Berkas log</string>
     <string name="patching_log_viewer_copy_all">Salin semua</string>
-    <string name="patching_progress_title">Menambal aplikasi</string>
     <string name="patching_step_all_done">Semua selesai!</string>
     <string name="patching_step_waiting">Menunggu…</string>
     <string name="patching_graph_memory_usage">Penggunaan memori</string>
+    <string name="patching_graph_memory_detail">%1$d% dari %2$d MB</string>
     <string name="patching_graph_storage_io">I/O penyimpanan</string>
     <string name="patching_graph_cpu_usage">Penggunaan CPU</string>
     <string name="patching_banner_started_title">Penambalan dimulai</string>

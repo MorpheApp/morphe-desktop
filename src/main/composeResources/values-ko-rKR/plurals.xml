@@ -39,4 +39,7 @@
     <plurals name="home_detail_download_bundles">
         <item quantity="other">%1$d 개의 번들 다운로드</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="other">%1$d 개의 코어</item>
+    </plurals>
 </resources>

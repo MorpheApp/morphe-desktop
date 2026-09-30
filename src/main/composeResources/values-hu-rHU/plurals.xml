@@ -52,4 +52,8 @@
         <item quantity="one">%1$d csomag letöltése</item>
         <item quantity="other">%1$d csomag letöltése</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d mag</item>
+        <item quantity="other">%1$d mag</item>
+    </plurals>
 </resources>

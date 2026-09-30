@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">קריאת קובץ היומן נכשלה: %1$s</string>
     <string name="patching_log_viewer_title">קובץ יומן</string>
     <string name="patching_log_viewer_copy_all">העתק הכל</string>
-    <string name="patching_progress_title">מחיל טלאים על האפליקציה</string>
     <string name="patching_step_all_done">הכל הושלם!</string>
     <string name="patching_step_waiting">ממתין…</string>
     <string name="patching_graph_memory_usage">שימוש בזיכרון</string>
+    <string name="patching_graph_memory_detail">%1$d% מתוך %2$d MB</string>
     <string name="patching_graph_storage_io">קלט/פלט אחסון</string>
     <string name="patching_graph_cpu_usage">שימוש במעבד</string>
     <string name="patching_banner_started_title">התיקון החל</string>

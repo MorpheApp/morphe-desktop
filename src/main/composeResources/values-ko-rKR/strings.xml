@@ -439,10 +439,10 @@
     <string name="patching_log_viewer_failed_to_read">로그 파일을 읽지 못했습니다: %1$s</string>
     <string name="patching_log_viewer_title">로그 파일</string>
     <string name="patching_log_viewer_copy_all">모두 복사</string>
-    <string name="patching_progress_title">앱 패치</string>
     <string name="patching_step_all_done">모두 완료!</string>
     <string name="patching_step_waiting">대기 중…</string>
     <string name="patching_graph_memory_usage">메모리 사용량</string>
+    <string name="patching_graph_memory_detail">%2$d MB 중 %1$d%%</string>
     <string name="patching_graph_storage_io">저장소 I/O</string>
     <string name="patching_graph_cpu_usage">CPU 사용량</string>
     <string name="patching_banner_started_title">패치 시작</string>

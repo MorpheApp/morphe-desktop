@@ -50,6 +50,7 @@
     <string name="on">オン</string>
     <string name="browse">参照</string>
     <string name="save">適用</string>
+    <string name="select_folder">フォルダを選択</string>
     <string name="status_loading">読み込み中…</string>
     <string name="download">ダウンロード</string>
     <string name="status_offline">オフライン</string>
@@ -81,6 +82,7 @@
     <string name="output_file_label">出力ファイル</string>
     <string name="color_picker_saved">保存済み</string>
     <string name="dropdown_search_placeholder">検索…</string>
+    <string name="custom_color">カスタムカラー</string>
     <string name="gradient_linear">線形</string>
     <string name="gradient_radial">放射</string>
     <string name="gradient_conic">円錐</string>
@@ -410,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">整数</string>
     <string name="patch_selection_option_hint_number">数値</string>
     <string name="patch_selection_option_hint_text">テキスト</string>
+    <string name="patch_option_recommended_size">推奨: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">値を空にすることはできません</string>
+    <string name="patch_option_list_duplicate">項目は既にリストに存在します</string>
+    <string name="patch_option_list_empty_state">まだ項目が追加されていません</string>
+    <string name="patch_option_enter_value">値を入力…</string>
+    <string name="patch_option_add_item">項目を追加</string>
+    <string name="patch_option_edit_list">リストを編集</string>
     <string name="patch_selection_run_info_title">この実行</string>
     <string name="patch_selection_run_info_app_group">アプリ</string>
     <string name="patch_selection_run_info_bundles_group">パッチバンドル</string>
@@ -427,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">ログファイルを読み込めませんでした: %1$s</string>
     <string name="patching_log_viewer_title">ログファイル</string>
     <string name="patching_log_viewer_copy_all">すべてコピー</string>
-    <string name="patching_progress_title">アプリにパッチを適用中</string>
     <string name="patching_step_all_done">すべて完了しました！</string>
     <string name="patching_step_waiting">待機中…</string>
     <string name="patching_graph_memory_usage">メモリ使用量</string>
+    <string name="patching_graph_memory_detail">%2$d MB の %1$d%%</string>
     <string name="patching_graph_storage_io">ストレージ I/O</string>
     <string name="patching_graph_cpu_usage">CPU 使用率</string>
     <string name="patching_banner_started_title">パッチ適用を開始しました</string>

@@ -437,10 +437,10 @@
     <string name="patching_log_viewer_failed_to_read">Günlük dosyası okunamadı: %1$s</string>
     <string name="patching_log_viewer_title">Günlük dosyası</string>
     <string name="patching_log_viewer_copy_all">Tümünü kopyala</string>
-    <string name="patching_progress_title">Uygulama yamalanıyor</string>
     <string name="patching_step_all_done">Hepsi tamam!</string>
     <string name="patching_step_waiting">Bekleniyor…</string>
     <string name="patching_graph_memory_usage"> Bellek kullanımı</string>
+    <string name="patching_graph_memory_detail">%2$d MB / %1$d%</string>
     <string name="patching_graph_storage_io">Depolama G/Ç</string>
     <string name="patching_graph_cpu_usage">CPU kullanımı</string>
     <string name="patching_banner_started_title">Yamalama başladı</string>

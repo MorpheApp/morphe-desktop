@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Không thể đọc tệp nhật ký: %1$s</string>
     <string name="patching_log_viewer_title">Tệp nhật ký</string>
     <string name="patching_log_viewer_copy_all">Sao chép tất cả</string>
-    <string name="patching_progress_title">Đang vá ứng dụng</string>
     <string name="patching_step_all_done">Hoàn tất!</string>
     <string name="patching_step_waiting">Đang chờ…</string>
     <string name="patching_graph_memory_usage">Bộ nhớ đã dùng</string>
+    <string name="patching_graph_memory_detail">%1$d% trong tổng số %2$d MB</string>
     <string name="patching_graph_storage_io">I/O lưu trữ</string>
     <string name="patching_graph_cpu_usage">Mức sử dụng CPU</string>
     <string name="patching_banner_started_title">Đã bắt đầu vá</string>

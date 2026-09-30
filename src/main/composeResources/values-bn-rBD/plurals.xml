@@ -52,4 +52,8 @@
         <item quantity="one">%1$d বান্ডল ডাউনলোড করুন</item>
         <item quantity="other">%1$d বান্ডল ডাউনলোড করুন</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$dটি কোর</item>
+        <item quantity="other">%1$dটি কোর</item>
+    </plurals>
 </resources>

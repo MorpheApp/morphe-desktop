@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Branje datoteke dnevnika ni uspelo: %1$s</string>
     <string name="patching_log_viewer_title">Datoteka dnevnika</string>
     <string name="patching_log_viewer_copy_all">Kopiraj vse</string>
-    <string name="patching_progress_title">Popravljanje aplikacije</string>
     <string name="patching_step_all_done">Vse je končano!</string>
     <string name="patching_step_waiting">Čakanje…</string>
     <string name="patching_graph_memory_usage">Uporaba pomnilnika</string>
+    <string name="patching_graph_memory_detail">%1$d % od %2$d MB</string>
     <string name="patching_graph_storage_io">V/I shranjevanja</string>
     <string name="patching_graph_cpu_usage">Uporaba CP U</string>
     <string name="patching_banner_started_title">Popravljanje se je začelo</string>

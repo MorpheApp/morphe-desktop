@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">فشل قراءة ملف السجل: %1$s</string>
     <string name="patching_log_viewer_title">ملف السجل</string>
     <string name="patching_log_viewer_copy_all">نسخ الكل</string>
-    <string name="patching_progress_title">تعديل التطبيق</string>
     <string name="patching_step_all_done">تم الانتهاء!</string>
     <string name="patching_step_waiting">جارٍ الانتظار…</string>
     <string name="patching_graph_memory_usage">استخدام الذاكرة</string>
+    <string name="patching_graph_memory_detail">%1$d٪ من %2$d ميجابايت</string>
     <string name="patching_graph_storage_io">قراءة/كتابة التخزين</string>
     <string name="patching_graph_cpu_usage">استخدام المعالج</string>
     <string name="patching_banner_started_title">بدأَ التعديل</string>

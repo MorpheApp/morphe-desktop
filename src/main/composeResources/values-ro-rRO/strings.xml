@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Eroare la citirea fișierului de jurnal: %1$s</string>
     <string name="patching_log_viewer_title">Fișier de jurnal</string>
     <string name="patching_log_viewer_copy_all">Copiază tot</string>
-    <string name="patching_progress_title">Se patch-uiește aplicația</string>
     <string name="patching_step_all_done">Totul este gata!</string>
     <string name="patching_step_waiting">Se așteaptă…</string>
     <string name="patching_graph_memory_usage">Utilizarea memoriei</string>
+    <string name="patching_graph_memory_detail">%1$d%% din %2$d MB</string>
     <string name="patching_graph_storage_io">I/O de stocare</string>
     <string name="patching_graph_cpu_usage">Utilizare CPU</string>
     <string name="patching_banner_started_title">Patch-area a început</string>

@@ -78,4 +78,10 @@
         <item quantity="few">Prenesi %1$d pakete</item>
         <item quantity="other">Prenesi %1$d paketov</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d jedro</item>
+        <item quantity="two">%1$d jedri</item>
+        <item quantity="few">%1$d jedra</item>
+        <item quantity="other">%1$d jeder</item>
+    </plurals>
 </resources>

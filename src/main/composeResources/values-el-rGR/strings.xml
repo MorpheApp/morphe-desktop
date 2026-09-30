@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Απέτυχε η ανάγνωση του αρχείου καταγρα φής: %1$s</string>
     <string name="patching_log_viewer_title">Αρχείο καταγραφής</string>
     <string name="patching_log_viewer_copy_all">Αντιγραφή όλων</string>
-    <string name="patching_progress_title">Τροποποίηση εφαρμογής</string>
     <string name="patching_step_all_done">Όλα έτοιμα!</string>
     <string name="patching_step_waiting">Αναμονή…</string>
     <string name="patching_graph_memory_usage">Χρήση μνήμης</string>
+    <string name="patching_graph_memory_detail">%1$d% από %2$d MB</string>
     <string name="patching_graph_storage_io">Είσοδος/Έξοδος αποθήκευσης</string>
     <string name="patching_graph_cpu_usage">Χρήση CPU</string>
     <string name="patching_banner_started_title">Το patch ξεκίνησε</string>

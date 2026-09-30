@@ -52,4 +52,8 @@
         <item quantity="one">Download %1$d bundel</item>
         <item quantity="other">Download %1$d bundels</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d kern</item>
+        <item quantity="other">%1$d kernen</item>
+    </plurals>
 </resources>

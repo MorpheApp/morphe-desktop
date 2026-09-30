@@ -439,10 +439,10 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="patching_log_viewer_failed_to_read">Logdatei konnte nicht gelesen werden: %1$s</string>
     <string name="patching_log_viewer_title">Logdatei</string>
     <string name="patching_log_viewer_copy_all">Alles kopieren</string>
-    <string name="patching_progress_title">App wird gepatcht</string>
     <string name="patching_step_all_done">Alles erledigt!</string>
     <string name="patching_step_waiting">Warten…</string>
     <string name="patching_graph_memory_usage">Speichernutzung</string>
+    <string name="patching_graph_memory_detail">%1$d% von %2$d MB</string>
     <string name="patching_graph_storage_io">Speicher-I/O</string>
     <string name="patching_graph_cpu_usage">CPU-Auslastung</string>
     <string name="patching_banner_started_title">Patchen gestartet</string>

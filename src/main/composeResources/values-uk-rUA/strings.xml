@@ -414,8 +414,8 @@
     <string name="patch_selection_option_hint_text">текст</string>
     <string name="patch_option_recommended_size">Рекомендовано: %1$dx%2$d</string>
     <string name="patch_option_list_empty">Значення не може бути порожнім</string>
-    <string name="patch_option_list_duplicate">Елемент уже в списку</string>
-    <string name="patch_option_list_empty_state">Ще не додано жодного елемента</string>
+    <string name="patch_option_list_duplicate">Елемент вже є у списку</string>
+    <string name="patch_option_list_empty_state">Елементи ще не додано</string>
     <string name="patch_option_enter_value">Введіть значення…</string>
     <string name="patch_option_add_item">Додати елемент</string>
     <string name="patch_option_edit_list">Редагувати список</string>
@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Не вдалося прочитати файл журналу: %1$s</string>
     <string name="patching_log_viewer_title">Файл журналу</string>
     <string name="patching_log_viewer_copy_all">Копіювати все</string>
-    <string name="patching_progress_title">Патчинг застосунку</string>
     <string name="patching_step_all_done">Все готово!</string>
     <string name="patching_step_waiting">Очікування…</string>
     <string name="patching_graph_memory_usage">Використання пам'яті</string>
+    <string name="patching_graph_memory_detail">%1$d%% від %2$d МБ</string>
     <string name="patching_graph_storage_io">Введення-виведення сховища</string>
     <string name="patching_graph_cpu_usage">Використання ЦП</string>
     <string name="patching_banner_started_title">Патчинг розпочато</string>

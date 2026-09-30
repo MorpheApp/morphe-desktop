@@ -63,7 +63,6 @@
     <string name="patch_option_list_empty">Nilai tidak boleh kosong</string>
     <!-- Patching Screen -->
     <string name="patching_status_in_progress">Memasang tampalan</string>
-    <string name="patching_progress_title">Menampal aplikasi</string>
     <string name="patching_graph_memory_usage">Penggunaan memori</string>
     <string name="patching_banner_apk_size">Saiz APK</string>
     <string name="patching_banner_patches">Tampalan</string>

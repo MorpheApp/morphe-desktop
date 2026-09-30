@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Det gick inte att läsa loggfilen: %1$s</string>
     <string name="patching_log_viewer_title">Loggfil</string>
     <string name="patching_log_viewer_copy_all">Kopiera allt</string>
-    <string name="patching_progress_title">Modifierar appen</string>
     <string name="patching_step_all_done">Allt är klart!</string>
     <string name="patching_step_waiting">Väntar…</string>
     <string name="patching_graph_memory_usage">Minnesanvändning</string>
+    <string name="patching_graph_memory_detail">%1$d% av %2$d MB</string>
     <string name="patching_graph_storage_io">Lagrings-I/O</string>
     <string name="patching_graph_cpu_usage">CPU-användning</string>
     <string name="patching_banner_started_title">Modifieringen startade</string>

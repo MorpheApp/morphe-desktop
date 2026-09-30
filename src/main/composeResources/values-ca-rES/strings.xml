@@ -3,6 +3,8 @@
     <!-- Common Components -->
     <string name="unknown">Desconegut</string>
     <string name="off">Apagat</string>
+    <string name="select_folder">Selecciona una carpeta</string>
+    <string name="custom_color">Color personalitzat</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
@@ -23,6 +25,13 @@
     <string name="home_detail_patch_bundle_label">Conjunt de pedaços</string>
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
+    <string name="patch_option_recommended_size">Recomanat: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">El valor no es pot deixar buit</string>
+    <string name="patch_option_list_duplicate">Aquest element ja està a la llista</string>
+    <string name="patch_option_list_empty_state">Encara no s'ha afegit cap element</string>
+    <string name="patch_option_enter_value">Introdueix un valor...</string>
+    <string name="patch_option_add_item">Afegeix un element</string>
+    <string name="patch_option_edit_list">Edita la llista</string>
     <!-- Patching Screen -->
     <!-- Result Screen -->
     <!-- Icon Studio -->

@@ -52,4 +52,8 @@
         <item quantity="one">Ladda ner %1$d paket</item>
         <item quantity="other">Ladda ner %1$d paket</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d kärna</item>
+        <item quantity="other">%1$d kärnor</item>
+    </plurals>
 </resources>

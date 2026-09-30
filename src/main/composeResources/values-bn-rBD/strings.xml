@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">লগ ফাইল পড়া ব্যর্থ হয়েছে: %1$s</string>
     <string name="patching_log_viewer_title">লগ ফাইল</string>
     <string name="patching_log_viewer_copy_all">সব কপি করুন</string>
-    <string name="patching_progress_title">অ্যাপ প্যাচ করা হচ্ছে</string>
     <string name="patching_step_all_done">সব সম্পন্ন!</string>
     <string name="patching_step_waiting">অপেক্ষা করা হচ্ছে…</string>
     <string name="patching_graph_memory_usage">মেমরি ব্যবহার</string>
+    <string name="patching_graph_memory_detail">%2$d MB-এর %1$d%</string>
     <string name="patching_graph_storage_io">স্টোরেজ I/O</string>
     <string name="patching_graph_cpu_usage">CPU ব্যবহার</string>
     <string name="patching_banner_started_title">প্যাচিং শুরু হয়েছে</string>

@@ -65,4 +65,9 @@
         <item quantity="few">Descarcă %1$d pachete</item>
         <item quantity="other">Descarcă %1$d de pachete</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d nucleu</item>
+        <item quantity="few">%1$d nuclee</item>
+        <item quantity="other">%1$d de nuclee</item>
+    </plurals>
 </resources>

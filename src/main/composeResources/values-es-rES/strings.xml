@@ -460,10 +460,10 @@ Selecciona el APK de nuevo para volver a parchear con tus ajustes guardados</str
     <string name="patching_log_viewer_failed_to_read">Error al leer el archivo de registro: %1$s</string>
     <string name="patching_log_viewer_title">Archivo de registro</string>
     <string name="patching_log_viewer_copy_all">Copiar todo</string>
-    <string name="patching_progress_title">Parcheando la aplicación</string>
     <string name="patching_step_all_done">¡Todo listo!</string>
     <string name="patching_step_waiting">Esperando…</string>
     <string name="patching_graph_memory_usage">Uso de memoria</string>
+    <string name="patching_graph_memory_detail">%1$d% de %2$d MB</string>
     <string name="patching_graph_storage_io">E/S de almacenamiento</string>
     <string name="patching_graph_cpu_usage">Uso de CPU</string>
     <string name="patching_banner_started_title">Parcheo iniciado</string>

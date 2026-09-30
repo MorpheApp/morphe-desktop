@@ -106,7 +106,6 @@
     <string name="patch_selection_group_selected_count">%1$d مورد انتخاب شد</string>
     <!-- Patching Screen -->
     <string name="patching_status_in_progress">در حال اعمال پچ‌ها</string>
-    <string name="patching_progress_title">در حال پچ‌کردن برنامه</string>
     <string name="patching_step_all_done">تمام شد!</string>
     <string name="patching_graph_memory_usage">مصرف حافظه</string>
     <string name="patching_graph_storage_io">ورودی/خروجی ذخیره‌سازی</string>

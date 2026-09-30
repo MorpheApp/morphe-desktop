@@ -52,4 +52,8 @@
         <item quantity="one">Laai %1$d bondel af</item>
         <item quantity="other">Laai %1$d bondels af</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d kern</item>
+        <item quantity="other">%1$d kerne</item>
+    </plurals>
 </resources>

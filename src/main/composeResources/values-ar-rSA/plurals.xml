@@ -104,4 +104,12 @@
         <item quantity="many">تنزيل %1$d حزمةً</item>
         <item quantity="other">تنزيل %1$d حزمةً</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="zero">%1$d نواة</item>
+        <item quantity="one">%1$d نواة</item>
+        <item quantity="two">%1$d نواتان</item>
+        <item quantity="few">%1$d أنوية</item>
+        <item quantity="many">%1$d نواة</item>
+        <item quantity="other">%1$d نواة</item>
+    </plurals>
 </resources>

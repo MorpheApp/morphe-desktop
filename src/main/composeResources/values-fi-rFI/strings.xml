@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Lokitiedoston lukeminen epäonnistui: %1$s</string>
     <string name="patching_log_viewer_title">Lokitiedosto</string>
     <string name="patching_log_viewer_copy_all">Kopioi kaikki</string>
-    <string name="patching_progress_title">Muokataan sovellusta</string>
     <string name="patching_step_all_done">Kaikki valmista!</string>
     <string name="patching_step_waiting">Odotetaan…</string>
     <string name="patching_graph_memory_usage">Muistin käyttö</string>
+    <string name="patching_graph_memory_detail">%1$d%% %2$d Mt:sta</string>
     <string name="patching_graph_storage_io">Tallennus I/O</string>
     <string name="patching_graph_cpu_usage">CPU:n käyttö</string>
     <string name="patching_banner_started_title">Paikkaus alkoi</string>

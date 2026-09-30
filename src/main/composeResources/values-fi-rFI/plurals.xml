@@ -52,4 +52,8 @@
         <item quantity="one">Lataa %1$d paketti</item>
         <item quantity="other">Lataa %1$d pakettia</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d ydin</item>
+        <item quantity="other">%1$d ydintä</item>
+    </plurals>
 </resources>

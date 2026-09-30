@@ -52,4 +52,8 @@
         <item quantity="one">%1$d Bundle herunterladen</item>
         <item quantity="other">%1$d Bundles herunterladen</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d Kern</item>
+        <item quantity="other">%1$d Kerne</item>
+    </plurals>
 </resources>

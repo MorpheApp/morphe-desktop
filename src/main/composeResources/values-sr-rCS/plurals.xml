@@ -65,4 +65,9 @@
         <item quantity="few">Preuzmi %1$d paketa</item>
         <item quantity="other">Preuzmi %1$d paketa</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d jezgro</item>
+        <item quantity="few">%1$d jezgra</item>
+        <item quantity="other">%1$d jezgara</item>
+    </plurals>
 </resources>

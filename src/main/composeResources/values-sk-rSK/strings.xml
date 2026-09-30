@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Čítanie súboru protokolu zlyhalo: %1$s</string>
     <string name="patching_log_viewer_title">Súbor protokolu</string>
     <string name="patching_log_viewer_copy_all">Kopírovať všetko</string>
-    <string name="patching_progress_title">Plátam aplikáciu</string>
     <string name="patching_step_all_done">Hotovo!</string>
     <string name="patching_step_waiting">Čaká sa…</string>
     <string name="patching_graph_memory_usage">Využitie pamäte</string>
+    <string name="patching_graph_memory_detail">%1$d%% z %2$d MB</string>
     <string name="patching_graph_storage_io">Vstup/výstup úložiska</string>
     <string name="patching_graph_cpu_usage">Využitie CPU</string>
     <string name="patching_banner_started_title">Záplatovanie sa začalo</string>

@@ -61,7 +61,6 @@
     <string name="patch_option_list_empty">بەها ناتواندرێ بەتاڵ بێت</string>
     <!-- Patching Screen -->
     <string name="patching_status_in_progress">جێگیرکردنی پینەکان</string>
-    <string name="patching_progress_title">پینەکردنی ئەپ</string>
     <string name="patching_graph_memory_usage">بەکارهێنانی بیرگە</string>
     <string name="patching_banner_apk_size">قەبارەی APK</string>
     <string name="patching_banner_patches">پینەکان</string>

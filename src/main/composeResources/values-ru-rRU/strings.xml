@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Не удалось прочитать файл журнала: %1$s</string>
     <string name="patching_log_viewer_title">Файл журнала</string>
     <string name="patching_log_viewer_copy_all">Скопировать все</string>
-    <string name="patching_progress_title">Патчинг приложения</string>
     <string name="patching_step_all_done">Готово!</string>
     <string name="patching_step_waiting">Ожидание…</string>
     <string name="patching_graph_memory_usage">Использование памяти</string>
+    <string name="patching_graph_memory_detail">%1$d%% от %2$d МБ</string>
     <string name="patching_graph_storage_io">Ввод/вывод хранилища</string>
     <string name="patching_graph_cpu_usage">Использование ЦП</string>
     <string name="patching_banner_started_title">Патчинг начат</string>

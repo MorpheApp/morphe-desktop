@@ -39,4 +39,7 @@
     <plurals name="home_detail_download_bundles">
         <item quantity="other">バンドルを %1$d 個ダウンロード</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="other">%1$d コア</item>
+    </plurals>
 </resources>

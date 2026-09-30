@@ -78,4 +78,10 @@
         <item quantity="many">Скачать %1$d пакетов</item>
         <item quantity="other">Скачать %1$d пакета</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d ядро</item>
+        <item quantity="few">%1$d ядра</item>
+        <item quantity="many">%1$d ядер</item>
+        <item quantity="other">%1$d ядра</item>
+    </plurals>
 </resources>

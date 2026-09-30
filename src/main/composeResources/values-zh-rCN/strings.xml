@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">读取日志文件失败：%1$s</string>
     <string name="patching_log_viewer_title">日志文件</string>
     <string name="patching_log_viewer_copy_all">全部复制</string>
-    <string name="patching_progress_title">正在修补应用</string>
     <string name="patching_step_all_done">全部完成！</string>
     <string name="patching_step_waiting">正在等待……</string>
     <string name="patching_graph_memory_usage">内存使用量</string>
+    <string name="patching_graph_memory_detail">占 %2$d MB 的 %1$d%%</string>
     <string name="patching_graph_storage_io">存储 I/O</string>
     <string name="patching_graph_cpu_usage">CPU 使用率</string>
     <string name="patching_banner_started_title">修补已开始</string>

@@ -439,10 +439,10 @@
     <string name="patching_log_viewer_failed_to_read">Читање датотеке дневника није успело: %1$s</string>
     <string name="patching_log_viewer_title">Датотека дневника</string>
     <string name="patching_log_viewer_copy_all">Копирај све</string>
-    <string name="patching_progress_title">Примена закрпа на апликацији</string>
     <string name="patching_step_all_done">Све готово!</string>
     <string name="patching_step_waiting">Чекање…</string>
     <string name="patching_graph_memory_usage">Употреба меморије</string>
+    <string name="patching_graph_memory_detail">%1$d% од %2$d MB</string>
     <string name="patching_graph_storage_io">У/И складишта</string>
     <string name="patching_graph_cpu_usage">Употреба процесора</string>
     <string name="patching_banner_started_title">Закрпљивање је почело</string>

@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Lettura del file di log non riuscita: %1$s</string>
     <string name="patching_log_viewer_title">File di log</string>
     <string name="patching_log_viewer_copy_all">Copia tutto</string>
-    <string name="patching_progress_title">Applicazione patch all'app</string>
     <string name="patching_step_all_done">Tutto fatto!</string>
     <string name="patching_step_waiting">In attesa…</string>
     <string name="patching_graph_memory_usage">Utilizzo memoria</string>
+    <string name="patching_graph_memory_detail">%1$d% di %2$d MB</string>
     <string name="patching_graph_storage_io">I/O di archiviazione</string>
     <string name="patching_graph_cpu_usage">Utilizzo CPU</string>
     <string name="patching_banner_started_title">Applicazione patch avviata</string>

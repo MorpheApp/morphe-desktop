@@ -414,11 +414,11 @@
     <string name="patch_selection_option_hint_whole_number">un nombre entier</string>
     <string name="patch_selection_option_hint_number">un nombre</string>
     <string name="patch_selection_option_hint_text">texte</string>
-    <string name="patch_option_recommended_size">Recommandé : %1$dx%2$d</string>
+    <string name="patch_option_recommended_size">Recommandée : %1$dx%2$d</string>
     <string name="patch_option_list_empty">La valeur ne peut pas être vide</string>
     <string name="patch_option_list_duplicate">Élément déjà dans la liste</string>
     <string name="patch_option_list_empty_state">Aucun élément ajouté pour le moment</string>
-    <string name="patch_option_enter_value">Saisir une valeur…</string>
+    <string name="patch_option_enter_value">Entrer une valeur…</string>
     <string name="patch_option_add_item">Ajouter un élément</string>
     <string name="patch_option_edit_list">Modifier la liste</string>
     <string name="patch_selection_run_info_title">Cette exécution</string>
@@ -438,10 +438,10 @@
     <string name="patching_log_viewer_failed_to_read">Échec de la lecture du fichier journal : %1$s</string>
     <string name="patching_log_viewer_title">Fichier journal</string>
     <string name="patching_log_viewer_copy_all">Tout copier</string>
-    <string name="patching_progress_title">Patching de l'application</string>
     <string name="patching_step_all_done">Terminé !</string>
     <string name="patching_step_waiting">En attente…</string>
     <string name="patching_graph_memory_usage">Utilisation de la mémoire</string>
+    <string name="patching_graph_memory_detail">%1$d%% de %2$d Mo</string>
     <string name="patching_graph_storage_io">E/S du stockage</string>
     <string name="patching_graph_cpu_usage">Utilisation du processeur</string>
     <string name="patching_banner_started_title">Le patching a commencé</string>

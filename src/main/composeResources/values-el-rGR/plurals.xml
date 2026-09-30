@@ -52,4 +52,8 @@
         <item quantity="one">Λήψη %1$d πακέτου</item>
         <item quantity="other">Λήψη %1$d πακέτων</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d πυρήνας</item>
+        <item quantity="other">%1$d πυρήνες</item>
+    </plurals>
 </resources>

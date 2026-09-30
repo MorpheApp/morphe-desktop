@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Kunne ikke læse logfil: %1$s</string>
     <string name="patching_log_viewer_title">Logfil</string>
     <string name="patching_log_viewer_copy_all">Kopiér alt</string>
-    <string name="patching_progress_title">Patcher appen</string>
     <string name="patching_step_all_done">Alt fuldført!</string>
     <string name="patching_step_waiting">Venter…</string>
     <string name="patching_graph_memory_usage">Hukommelsesforbrug</string>
+    <string name="patching_graph_memory_detail">%1$d%% af %2$d MB</string>
     <string name="patching_graph_storage_io">Lagring I/O</string>
     <string name="patching_graph_cpu_usage">CPU-brug</string>
     <string name="patching_banner_started_title">Patchning startet</string>

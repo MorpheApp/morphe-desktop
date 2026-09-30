@@ -436,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">อ่านไฟล์บันทึกไม่สำเร็จ: %1$s</string>
     <string name="patching_log_viewer_title">ไฟล์บันทึก</string>
     <string name="patching_log_viewer_copy_all">คัดลอกทั้งหมด</string>
-    <string name="patching_progress_title">กำลังแพตช์แอป</string>
     <string name="patching_step_all_done">เสร็จเรียบร้อย!</string>
     <string name="patching_step_waiting">กำลังรอ…</string>
     <string name="patching_graph_memory_usage">การใช้งานหน่วยความจำ</string>
+    <string name="patching_graph_memory_detail">%1$d%% ของ %2$d MB</string>
     <string name="patching_graph_storage_io">I/O พื้นที่จัดเก็บ</string>
     <string name="patching_graph_cpu_usage">การใช้งาน CPU</string>
     <string name="patching_banner_started_title">Patching started</string>

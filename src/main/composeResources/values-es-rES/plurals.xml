@@ -52,4 +52,8 @@
         <item quantity="one">Descargar %1$d paquete</item>
         <item quantity="other">Descargar %1$d paquetes</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d núcleo</item>
+        <item quantity="other">%1$d núcleos</item>
+    </plurals>
 </resources>
