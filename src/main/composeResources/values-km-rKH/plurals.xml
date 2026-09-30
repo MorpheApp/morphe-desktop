@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="other">បានរក្សាទុក %1$d បន្ទាត់ ទៅ %2$s</item>
+    </plurals>
     <plurals name="patch_selection_group_patch_count">
         <item quantity="other">បំណះ %1$d</item>
     </plurals>

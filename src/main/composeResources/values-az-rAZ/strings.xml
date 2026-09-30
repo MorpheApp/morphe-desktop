@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="morphe_logo_content_description">Morphe Simvolu</string>
+    <string name="dismiss">Ləğv et</string>
+    <string name="ok">Oldu</string>
+    <string name="retry">Təkrar sına</string>
+    <string name="clear">Təmizlə</string>
+    <string name="search">Axtarış</string>
+    <string name="select_folder">Qovluq seç</string>
+    <string name="custom_color">Fərdi rəng</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
@@ -20,6 +28,7 @@
     <!-- Home Screen - YourAppsPane -->
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
+    <string name="patch_option_list_empty">Dəyər boş ola bilməz</string>
     <!-- Patching Screen -->
     <!-- Result Screen -->
     <!-- Icon Studio -->

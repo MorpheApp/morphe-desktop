@@ -78,4 +78,10 @@
         <item quantity="many">Pobierz %1$d pakietów</item>
         <item quantity="other">Pobierz %1$d pakietów</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d rdzeń</item>
+        <item quantity="few">%1$d rdzenie</item>
+        <item quantity="many">%1$d rdzeni</item>
+        <item quantity="other">%1$d rdzeni</item>
+    </plurals>
 </resources>

@@ -5,20 +5,20 @@
 
 package app.morphe.gui.ui.screens.patches
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.morphe.desktop.command.model.toPatchBundle
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
 import app.morphe.gui.data.model.FollowMode
-import app.morphe.gui.util.newerRelease
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.util.Logger
+import app.morphe.gui.util.newerRelease
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.patch.loadPatchesFromJar
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
 import java.time.Instant
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,7 @@ class PatchesViewModel(
     private val configRepository: ConfigRepository,
     private val localPatchFilePath: String? = null,
     private val patchSourceManager: PatchSourceManager? = null
-) : ScreenModel {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PatchesUiState())
     val uiState: StateFlow<PatchesUiState> = _uiState.asStateFlow()
@@ -48,7 +48,7 @@ class PatchesViewModel(
 
         // Observe cache clears / source changes
         patchSourceManager?.let { psm ->
-            screenModelScope.launch {
+            viewModelScope.launch {
                 psm.sourceVersion.drop(1).collect {
                     Logger.info("PatchesVM: Source changed, reloading...")
                     _uiState.value = PatchesUiState()
@@ -59,7 +59,7 @@ class PatchesViewModel(
     }
 
     fun loadReleases() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
             // LOCAL source: skip GitHub, use the file directly
@@ -322,7 +322,7 @@ class PatchesViewModel(
     fun downloadPatches() {
         val release = _uiState.value.selectedRelease ?: return
 
-        screenModelScope.launch {
+        viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isDownloading = true,
                 downloadProgress = 0f,
@@ -388,7 +388,7 @@ class PatchesViewModel(
             onComplete()
             return
         }
-        screenModelScope.launch {
+        viewModelScope.launch {
             val activeSource = patchSourceManager?.getActiveSource()
             val activeSourceId = activeSource?.id
             if (activeSourceId != null) {
@@ -436,7 +436,7 @@ class PatchesViewModel(
     fun exportOptionsJson(outputFile: File) {
         val patchFile = _uiState.value.downloadedPatchFile ?: return
 
-        screenModelScope.launch {
+        viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isExporting = true)
             try {
                 withContext(Dispatchers.IO) {

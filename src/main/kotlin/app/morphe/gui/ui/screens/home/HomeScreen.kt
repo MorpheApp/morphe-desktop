@@ -6,76 +6,69 @@
 package app.morphe.gui.ui.screens.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.gui.LocalNavController
+import app.morphe.gui.PatchSelectionParams
+import app.morphe.gui.PatchSelectionScreenRoute
+import app.morphe.gui.PatchesScreenRoute
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.AddPatchSourceDialog
-import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.SourceLedState
 import app.morphe.gui.ui.components.SourceManagementSheet
-import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.components.sourceLedState
 import app.morphe.gui.ui.screens.home.components.ForgetConfirmDialog
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.screens.home.components.HeaderBar
-import app.morphe.gui.ui.screens.home.components.MiddleContent
-import app.morphe.gui.ui.screens.home.components.MultiSourceHintBanner
+import app.morphe.gui.ui.screens.home.components.HomeBanners
+import app.morphe.gui.ui.screens.home.components.HomeSplitLayout
 import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
 import app.morphe.gui.ui.screens.home.components.RepatchMissingApkDialog
-import app.morphe.gui.ui.screens.home.components.SourcesFailedBanner
-import app.morphe.gui.ui.screens.home.components.SupportedAppsListPane
 import app.morphe.gui.ui.screens.home.components.UninstallConfirmDialog
 import app.morphe.gui.ui.screens.home.components.VersionWarningDialog
+import app.morphe.gui.ui.screens.home.components.handleContinue
+import app.morphe.gui.ui.screens.home.components.openFilePicker
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
 import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.EnabledSourcesLoader
-import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.PatchException
-import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import java.awt.Desktop
 import java.io.File
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
-class HomeScreen : Screen {
-
-    @Composable
-    override fun Content() {
-        val viewModel = koinScreenModel<HomeViewModel>()
-        HomeScreenContent(viewModel = viewModel)
-    }
+@Composable
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel()
+) {
+    HomeScreenContent(viewModel = viewModel)
 }
 
 @Composable
 fun HomeScreenContent(
     viewModel: HomeViewModel
 ) {
-    val navigator = LocalNavigator.currentOrThrow
+    val navController = LocalNavController.current
     val uiState by viewModel.uiState.collectAsState()
 
     // Device install-state is polled (adb), not streamed.
@@ -101,8 +94,9 @@ fun HomeScreenContent(
         sourceNames: List<String>,
     ) {
         if (patchFilePaths.isEmpty()) return // patches not loaded yet
-        navigator.push(
-            PatchSelectionScreen(
+        navController.navigateComplex(
+            PatchSelectionScreenRoute,
+            PatchSelectionParams(
                 apkPath = apkPath,
                 apkName = record.displayName,
                 patchesFilePath = patchFilePaths.first(),
@@ -289,8 +283,8 @@ fun HomeScreenContent(
         }
     }
 
-    val navStackSize = navigator.items.size
-    LaunchedEffect(navStackSize) {
+    val currentEntry by navController.currentBackStackEntryAsState()
+    LaunchedEffect(currentEntry) {
         viewModel.refreshPatchesIfNeeded()
     }
 
@@ -334,7 +328,7 @@ fun HomeScreenContent(
                 pendingReopenSheet = true
                 coroutineScope.launch {
                     patchSourceManager.switchSource(sourceId)
-                    navigator.push(PatchesScreen(
+                    navController.navigate(PatchesScreenRoute(
                         apkPath = uiState.apkInfo?.filePath ?: "",
                         apkName = uiState.apkInfo?.appName ?: ""
                     ))
@@ -374,16 +368,19 @@ fun HomeScreenContent(
                         showVersionWarningDialog = false
                         val patchesFile = viewModel.getCachedPatchesFile()
                         if (patchesFile != null) {
-                            navigator.push(PatchSelectionScreen(
-                                apkPath = uiState.apkInfo!!.filePath,
-                                apkName = uiState.apkInfo!!.appName,
-                                patchesFilePath = patchesFile.absolutePath,
-                                packageName = uiState.apkInfo!!.packageName,
-                                apkArchitectures = uiState.apkInfo!!.architectures,
-                                apkVersion = uiState.apkInfo!!.versionName,
-                                patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
-                                patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
-                            ))
+                            navController.navigateComplex(
+                                PatchSelectionScreenRoute,
+                                PatchSelectionParams(
+                                    apkPath = uiState.apkInfo!!.filePath,
+                                    apkName = uiState.apkInfo!!.appName,
+                                    patchesFilePath = patchesFile.absolutePath,
+                                    packageName = uiState.apkInfo!!.packageName,
+                                    apkArchitectures = uiState.apkInfo!!.architectures,
+                                    apkVersion = uiState.apkInfo!!.versionName,
+                                    patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
+                                    patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
+                                )
+                            )
                         }
                     },
                     onDismiss = { showVersionWarningDialog = false }
@@ -391,12 +388,6 @@ fun HomeScreenContent(
             }
 
             val patchesLoaded = !uiState.isLoadingPatches && viewModel.getCachedPatchesFile() != null
-//            val onChangePatchesClick: () -> Unit = {
-//                navigator.push(PatchesScreen(
-//                    apkPath = uiState.apkInfo?.filePath ?: "",
-//                    apkName = uiState.apkInfo?.appName ?: "Select APK first"
-//                ))
-//            }
             val onRetry: () -> Unit = { viewModel.retryLoadPatches() }
             val onClearClick: () -> Unit = { viewModel.clearSelection() }
             val onChangeClick: () -> Unit = {
@@ -407,7 +398,7 @@ fun HomeScreenContent(
                 }
             }
             val onContinueClick: () -> Unit = {
-                handleContinue(uiState, viewModel, navigator) {
+                handleContinue(uiState, viewModel, navController) {
                     showVersionWarningDialog = true
                 }
             }
@@ -470,98 +461,30 @@ fun HomeScreenContent(
                     // ── Body: drop zone / APK info on one side, supported-apps
                     // list on the other. The list pane owns its own scroll. ──
                     Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                            if (uiState.showUpdateBanner ||
-                                uiState.showMultiSourceHint ||
-                                uiState.showSourcesFailedBanner
-                            ) {
-                                MorpheBanners {
-                                    if (uiState.showUpdateBanner) {
-                                        UpdateBanner(
-                                            info = uiState.updateInfo!!,
-                                            onDismissForSession = { viewModel.dismissUpdateForSession() },
-                                            onDismissForVersion = { viewModel.dismissUpdateForVersion() },
-                                        )
-                                    }
-                                    if (uiState.showMultiSourceHint) {
-                                        MultiSourceHintBanner(
-                                            onDismiss = { viewModel.dismissMultiSourceHint() },
-                                        )
-                                    }
-                                    if (uiState.showSourcesFailedBanner) {
-                                        SourcesFailedBanner(
-                                            count = uiState.failedSourcesCount,
-                                            onManageSources = { showSourceManagementSheet = true },
-                                            onDismiss = { viewModel.dismissSourcesFailedBanner() },
-                                        )
-                                    }
-                                }
-                            }
-                            BoxWithConstraints(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth()
-                                    // Small cute padding for small cute space
-                                    // between the HeaderBar's bottom
-                                    // divider and the actual body section.
-                                    .padding(
-                                        start = 10.dp,
-                                        end = padding,
-                                        top = 4.dp,
-                                        bottom = padding,
-                                    ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                            val bodyViewport = this.maxHeight
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(padding),
-                                verticalAlignment = Alignment.Top,
-                            ) {
-                                // Left: browse/discover supported apps (wizard step 1).
-                                SupportedAppsListPane(
-                                    supportedApps = uiState.supportedApps,
-                                    patchedStates = uiState.patchedStates,
-                                    patchedRecords = uiState.patchedRecords,
-                                    deviceAppInfo = uiState.deviceAppInfo,
-                                    updateInfoByPackage = uiState.updateInfoByPackage,
-                                    sortMode = uiState.sortMode,
-                                    onSortModeChange = { viewModel.setSortMode(it) },
-                                    onShowDetail = onShowDetail,
-                                    filter = uiState.appListFilter,
-                                    onFilterChange = { viewModel.setAppListFilter(it) },
-                                    sourceNamesByPackage = sourceNamesByPackage,
-                                    isLoading = uiState.isLoadingPatches,
-                                    loadError = uiState.patchLoadError,
-                                    onRetry = onRetry,
-                                    onManageSources = { showSourceManagementSheet = true },
-                                    modifier = Modifier
-                                        .weight(1.2f)
-                                        .heightIn(max = bodyViewport),
-                                )
-                                // Right: APK info / drop zone (wizard step 2, pick the
-                                // APK you want patched). Content centers vertically when
-                                // it fits, scrolls when it doesn't, so the CONTINUE
-                                // button is never clipped off the bottom.
-                                Column(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .align(Alignment.CenterVertically)
-                                        .heightIn(max = bodyViewport)
-                                        .padding(top = 16.dp)
-                                        .verticalScroll(rememberScrollState()),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    MiddleContent(
-                                        uiState = uiState,
-                                        patchesLoaded = patchesLoaded,
-                                        onClearClick = onClearClick,
-                                        onChangeClick = onChangeClick,
-                                        onContinueClick = onContinueClick,
-                                        patchSourceNames = patchSourcesForSelectedApk,
-                                    )
-                                }
-                            }
-                            }
+                        HomeBanners(
+                            uiState = uiState,
+                            onDismissUpdateSession = { viewModel.dismissUpdateForSession() },
+                            onDismissUpdateVersion = { viewModel.dismissUpdateForVersion() },
+                            onDismissMultiSourceHint = { viewModel.dismissMultiSourceHint() },
+                            onManageSources = { showSourceManagementSheet = true },
+                            onDismissSourcesFailed = { viewModel.dismissSourcesFailedBanner() },
+                        )
+                        HomeSplitLayout(
+                            uiState = uiState,
+                            padding = padding,
+                            sourceNamesByPackage = sourceNamesByPackage,
+                            patchSourcesForSelectedApk = patchSourcesForSelectedApk,
+                            patchesLoaded = patchesLoaded,
+                            onSortModeChange = { viewModel.setSortMode(it) },
+                            onShowDetail = onShowDetail,
+                            onFilterChange = { viewModel.setAppListFilter(it) },
+                            onRetry = onRetry,
+                            onManageSources = { showSourceManagementSheet = true },
+                            onClearClick = onClearClick,
+                            onChangeClick = onChangeClick,
+                            onContinueClick = onContinueClick,
+                            modifier = Modifier.weight(1f).fillMaxWidth(),
+                        )
                     }
                 }
 
@@ -583,35 +506,3 @@ fun HomeScreenContent(
         }
     }
 }
-
-private fun handleContinue(
-    uiState: HomeUiState,
-    viewModel: HomeViewModel,
-    navigator: Navigator,
-    showWarning: () -> Unit
-) {
-    val patchesFile = viewModel.getCachedPatchesFile() ?: return
-    val versionStatus = uiState.apkInfo?.versionStatus
-    if (versionStatus != null && versionStatus != VersionStatus.LATEST_STABLE && versionStatus != VersionStatus.UNKNOWN) {
-        showWarning()
-    } else {
-        uiState.apkInfo?.let { info ->
-            navigator.push(PatchSelectionScreen(
-                apkPath = info.filePath,
-                apkName = info.appName,
-                patchesFilePath = patchesFile.absolutePath,
-                packageName = info.packageName,
-                apkArchitectures = info.architectures,
-                apkVersion = info.versionName,
-                patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
-                patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
-            ))
-        }
-    }
-}
-
-private suspend fun openFilePicker(): File? =
-    MorpheFilePicker.pickFile(
-        title = getString(Res.string.home_select_apk_file),
-        extensions = listOf("apk", "apkm", "xapk", "apks"),
-    )

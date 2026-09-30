@@ -50,6 +50,7 @@
     <string name="on">Aktif</string>
     <string name="browse">Jelajahi</string>
     <string name="save">Simpan</string>
+    <string name="select_folder">Pilih folder</string>
     <string name="status_loading">Memuat…</string>
     <string name="download">Unduh</string>
     <string name="status_offline">Luring</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Berkas keluaran</string>
     <string name="color_picker_saved">Tersimpan</string>
     <string name="dropdown_search_placeholder">Cari…</string>
-    <string name="custom_color_description">Warna kustom</string>
+    <string name="custom_color">Warna kustom</string>
     <string name="gradient_linear">Linear</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Kerucut</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfigurasi opsi</string>
     <string name="patch_selection_icon_edit">Edit ikon</string>
     <string name="patch_selection_icon_design">Desain ikon</string>
-    <string name="patch_selection_icon_import_folder">Impor folder</string>
     <string name="patch_selection_icon_select_folder_title">Pilih folder ikon</string>
     <string name="patch_selection_icon_ready">Ikon kustom siap</string>
     <string name="patch_selection_icon_none">Tidak ada ikon kustom yang disetel</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">bilangan bulat</string>
     <string name="patch_selection_option_hint_number">angka</string>
     <string name="patch_selection_option_hint_text">teks</string>
+    <string name="patch_option_recommended_size">Disarankan: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Nilai tidak boleh kosong</string>
+    <string name="patch_option_list_duplicate">Item sudah ada dalam daftar</string>
+    <string name="patch_option_list_empty_state">Belum ada item yang ditambahkan</string>
+    <string name="patch_option_enter_value">Masukkan nilai…</string>
+    <string name="patch_option_add_item">Tambah item</string>
+    <string name="patch_option_edit_list">Edit daftar</string>
     <string name="patch_selection_run_info_title">Proses ini</string>
     <string name="patch_selection_run_info_app_group">Aplikasi</string>
     <string name="patch_selection_run_info_bundles_group">Paket tambalan</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Gagal membaca berkas log: %1$s</string>
     <string name="patching_log_viewer_title">Berkas log</string>
     <string name="patching_log_viewer_copy_all">Salin semua</string>
-    <string name="patching_progress_title">Menambal aplikasi</string>
     <string name="patching_step_all_done">Semua selesai!</string>
     <string name="patching_step_waiting">Menunggu…</string>
     <string name="patching_graph_memory_usage">Penggunaan memori</string>
+    <string name="patching_graph_memory_detail">%1$d% dari %2$d MB</string>
     <string name="patching_graph_storage_io">I/O penyimpanan</string>
     <string name="patching_graph_cpu_usage">Penggunaan CPU</string>
     <string name="patching_banner_started_title">Penambalan dimulai</string>

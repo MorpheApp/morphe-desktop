@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components.settings
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +28,6 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -112,9 +110,10 @@ internal fun SystemTab(
             font = font,
             onClick = onShowAppInfo,
         ) {
-            Image(
-                painter = painterResource(Res.drawable.morphe_logo),
-                contentDescription = stringResource(Res.string.morphe_logo_content_description),
+            Icon(
+                imageVector = MorpheIcons.MorpheLogo,
+                contentDescription = null,
+                tint = accents.primary,
                 modifier = Modifier.size(18.dp)
             )
         }

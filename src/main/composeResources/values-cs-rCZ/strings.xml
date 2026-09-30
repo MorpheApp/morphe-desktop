@@ -50,6 +50,7 @@
     <string name="on">Zapnuto</string>
     <string name="browse">Procházet</string>
     <string name="save">Uložit</string>
+    <string name="select_folder">Vybrat složku</string>
     <string name="status_loading">Načítám…</string>
     <string name="download">Stáhnout</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Výstupní soubor</string>
     <string name="color_picker_saved">Uloženo</string>
     <string name="dropdown_search_placeholder">Hledat…</string>
-    <string name="custom_color_description">Vlastní barva</string>
+    <string name="custom_color">Vlastní barva</string>
     <string name="gradient_linear">Lineární</string>
     <string name="gradient_radial">Radiální</string>
     <string name="gradient_conic">Konická</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfigurovat možnosti</string>
     <string name="patch_selection_icon_edit">Upravit ikonu</string>
     <string name="patch_selection_icon_design">Navrhnout ikonu</string>
-    <string name="patch_selection_icon_import_folder">Importovat složku</string>
     <string name="patch_selection_icon_select_folder_title">Vyberte složku s ikonami</string>
     <string name="patch_selection_icon_ready">Vlastní ikona připravena</string>
     <string name="patch_selection_icon_none">Žádná vlastní ikona nastavena</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">celé číslo</string>
     <string name="patch_selection_option_hint_number">číslo</string>
     <string name="patch_selection_option_hint_text">text</string>
+    <string name="patch_option_recommended_size">Doporučeno: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Hodnota nesmí být prázdná</string>
+    <string name="patch_option_list_duplicate">Položka je již v seznamu</string>
+    <string name="patch_option_list_empty_state">Zatím nebyly přidány žádné položky</string>
+    <string name="patch_option_enter_value">Zadejte hodnotu…</string>
+    <string name="patch_option_add_item">Přidat položku</string>
+    <string name="patch_option_edit_list">Upravit seznam</string>
     <string name="patch_selection_run_info_title">Tento průběh</string>
     <string name="patch_selection_run_info_app_group">Aplikace</string>
     <string name="patch_selection_run_info_bundles_group">Balíčky záplat</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Nepodařilo se přečíst soubor protokolu: %1$s</string>
     <string name="patching_log_viewer_title">Soubor protokolu</string>
     <string name="patching_log_viewer_copy_all">Kopírovat vše</string>
-    <string name="patching_progress_title">Záplatování aplikace</string>
     <string name="patching_step_all_done">Hotovo!</string>
     <string name="patching_step_waiting">Čekání…</string>
     <string name="patching_graph_memory_usage">Využití paměti</string>
+    <string name="patching_graph_memory_detail">%1$d% z %2$d MB</string>
     <string name="patching_graph_storage_io">I/O úložiště</string>
     <string name="patching_graph_cpu_usage">Využití CPU</string>
     <string name="patching_banner_started_title">Záplatování zaháčeno</string>

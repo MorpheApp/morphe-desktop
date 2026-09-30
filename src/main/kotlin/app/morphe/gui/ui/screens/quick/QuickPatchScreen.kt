@@ -21,12 +21,12 @@ import app.morphe.engine.MorpheData
 import app.morphe.gui.LocalBackgroundSpeed
 import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.SourceManagementSheet
 import app.morphe.gui.ui.components.SourceSheetMode
 import app.morphe.gui.ui.components.TopBarRow
-import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.screens.patching.LogFileViewerDialog
@@ -48,21 +48,19 @@ import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
-class QuickPatchScreen : Screen {
-    @Composable
-    override fun Content() {
-        val viewModel = koinScreenModel<QuickPatchViewModel>()
-        QuickPatchContent(viewModel)
-    }
+@Composable
+fun QuickPatchScreen(
+    viewModel: QuickPatchViewModel = koinViewModel()
+) {
+    QuickPatchContent(viewModel)
 }
 
 @Composable
@@ -267,7 +265,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                     AnimatedContent(
                         targetState = uiState.phase,
                         modifier = Modifier.weight(1f),
-                        transitionSpec = { desktopScreenEnter togetherWith desktopScreenExit }
+                        transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit }
                     ) { phase ->
                         when (phase) {
                             QuickPatchPhase.IDLE, QuickPatchPhase.ANALYZING -> {

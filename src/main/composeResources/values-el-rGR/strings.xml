@@ -50,6 +50,7 @@
     <string name="on">Ενεργό</string>
     <string name="browse">Περιήγηση</string>
     <string name="save">Αποθήκευση</string>
+    <string name="select_folder">Επιλογή φακέλου</string>
     <string name="status_loading">Φόρτωση…</string>
     <string name="download">Λήψη</string>
     <string name="status_offline">Εκτός σύνδεσης</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Αρχείο εξόδου</string>
     <string name="color_picker_saved">Αποθηκεύτηκε</string>
     <string name="dropdown_search_placeholder">Αναζήτηση…</string>
-    <string name="custom_color_description">Προσαρμοσμένο χρώμα</string>
+    <string name="custom_color">Προσαρμοσμένο χρώμα</string>
     <string name="gradient_linear">Γραμμική</string>
     <string name="gradient_radial">Ακτινική</string>
     <string name="gradient_conic">Κωνική</string>
@@ -190,7 +191,7 @@
     <string name="quick_patch_status_downloading_patches">Λήψη patches %1$s…</string>
     <string name="quick_patch_download_patches_failed">Απέτυχε η λήψη patches: %1$s</string>
     <string name="quick_patch_status_patching">Εφαρμογή patch…</string>
-    <string name="quick_patch_completed_adb_off">ADB εκτός · Ενεργοποιήστε για εγκατάσταση</string>
+    <string name="quick_patch_completed_adb_off">ADB ανενεργό · Ενεργοποιήστε για εγκατάσταση</string>
     <string name="quick_patch_completed_adb_connect_device">Συνδέστε μια συσκευή μέσω USB για εγκατάσταση με ADB</string>
     <string name="quick_patch_error_unknown_occurred">Παρουσιάστηκε άγνωστο σφάλμα</string>
     <!-- Quick Patch - Patching Content -->
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Διαμόρφωση επιλογών</string>
     <string name="patch_selection_icon_edit">Επεξεργασία εικονιδίου</string>
     <string name="patch_selection_icon_design">Σχεδιασμός εικονιδίου</string>
-    <string name="patch_selection_icon_import_folder">Εισαγωγή φακέλου</string>
     <string name="patch_selection_icon_select_folder_title">Επιλέξτε ένα φάκελο εικονιδίων</string>
     <string name="patch_selection_icon_ready">Προσαρμοσμένο εικονίδιο έτοιμο</string>
     <string name="patch_selection_icon_none">Δεν έχει οριστεί προσαρμοσμένο εικονίδιο</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">ένας ακέραιος αριθμός</string>
     <string name="patch_selection_option_hint_number">ένας αριθμός</string>
     <string name="patch_selection_option_hint_text">κείμενο</string>
+    <string name="patch_option_recommended_size">Προτεινόμενο μέγεθος: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Η τιμή δεν μπορεί να είναι κενή</string>
+    <string name="patch_option_list_duplicate">Το στοιχείο υπάρχει ήδη στη λίστα</string>
+    <string name="patch_option_list_empty_state">Δεν έχουν προστεθεί ακόμη στοιχεία</string>
+    <string name="patch_option_enter_value">Εισαγάγετε τιμή…</string>
+    <string name="patch_option_add_item">Προσθήκη στοιχείου</string>
+    <string name="patch_option_edit_list">Επεξεργασία λίστας</string>
     <string name="patch_selection_run_info_title">Αυτή η δ ιαδικασία</string>
     <string name="patch_selection_run_info_app_group">Εφαρμογή</string>
     <string name="patch_selection_run_info_bundles_group">Πακέτα patch</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Απέτυχε η ανάγνωση του αρχείου καταγρα φής: %1$s</string>
     <string name="patching_log_viewer_title">Αρχείο καταγραφής</string>
     <string name="patching_log_viewer_copy_all">Αντιγραφή όλων</string>
-    <string name="patching_progress_title">Τροποποίηση εφαρμογής</string>
     <string name="patching_step_all_done">Όλα έτοιμα!</string>
     <string name="patching_step_waiting">Αναμονή…</string>
     <string name="patching_graph_memory_usage">Χρήση μνήμης</string>
+    <string name="patching_graph_memory_detail">%1$d% από %2$d MB</string>
     <string name="patching_graph_storage_io">Είσοδος/Έξοδος αποθήκευσης</string>
     <string name="patching_graph_cpu_usage">Χρήση CPU</string>
     <string name="patching_banner_started_title">Το patch ξεκίνησε</string>
@@ -485,7 +492,7 @@
     <string name="result_cleanup_cleaned_title">Τα προσωρινά αρχεία καθαρίστηκαν</string>
     <string name="result_cleanup_auto_enabled">Η αυτόματη εκκαθάριση είνα ι ενεργοπο ιημένη</string>
     <string name="result_cleanup_freed">Ελευθερώθηκαν %1$s</string>
-    <string name="result_adb_disabled_title">Το ADB είναι απενεργοποιημένο. Η εγκατάσταση στη συσκευή είναι απενεργοποιημένη</string>
+    <string name="result_adb_disabled_title">Το ADB είναι ανενεργό. Η εγκατάσταση στη συσκευή είναι απενεργοποιημένη</string>
     <string name="result_adb_disabled_subtitle">Ενεργοποιήστε το ADB στις Ρυθμίσεις για να προωθείτε απευθείας APK με patch</string>
     <!-- Icon Studio -->
     <string name="icon_studio_title">Icon Studio</string>
@@ -611,12 +618,12 @@
     <string name="patch_source_dialog_picker_select_folder">Επιλέξτε έναν φάκελο (χρησιμοποιείται το νεότερο .mpp)</string>
     <string name="patch_source_dialog_folder_hint">Επιλέξτε έναν φάκελο για να φορτώνεται πάντα το νεότερο .mpp μέσα σε αυτόν - βολικό όταν αναδημιουργείτε patches</string>
     <!-- Device Indicator -->
-    <string name="device_indicator_adb_off">ADB εκτός</string>
+    <string name="device_indicator_adb_off">ADB ανενεργό</string>
     <string name="device_indicator_checking">Έλεγχος…</string>
     <string name="device_indicator_no_adb">Χωρίς ADB</string>
     <string name="device_indicator_no_device">Δεν υπάρχει συσκευή</string>
     <string name="device_indicator_details_description">Λεπτομέρειες συσκευής</string>
-    <string name="device_indicator_adb_is_off_title">Το ADB είναι εκτός</string>
+    <string name="device_indicator_adb_is_off_title">Το ADB είναι ανενεργό</string>
     <string name="device_indicator_adb_is_off_subtitle">Το Morphe δεν παρακολουθεί συνδεδεμένες συσκευές</string>
     <string name="device_indicator_adb_not_found_title">Το ADB δεν βρέθηκε</string>
     <string name="device_indicator_adb_not_found_subtitle">Εγκαταστήστε τα Android SDK Platform Tools</string>

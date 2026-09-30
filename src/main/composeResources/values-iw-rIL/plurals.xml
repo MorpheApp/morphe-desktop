@@ -65,4 +65,9 @@
         <item quantity="two">הורד %1$d חבילות</item>
         <item quantity="other">הורד %1$d חבילות</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d ליבה</item>
+        <item quantity="two">%1$d ליבות</item>
+        <item quantity="other">%1$d ליבות</item>
+    </plurals>
 </resources>

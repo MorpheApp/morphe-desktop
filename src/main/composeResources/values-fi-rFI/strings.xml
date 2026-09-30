@@ -50,6 +50,7 @@
     <string name="on">Päällä</string>
     <string name="browse">Selaa</string>
     <string name="save">Tallenna</string>
+    <string name="select_folder">Valitse kansio</string>
     <string name="status_loading">Ladataan…</string>
     <string name="download">Lataa</string>
     <string name="status_offline">Offline-tila</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Tulostiedosto</string>
     <string name="color_picker_saved">Tallennettu</string>
     <string name="dropdown_search_placeholder">Hae…</string>
-    <string name="custom_color_description">Oma väri</string>
+    <string name="custom_color">Oma väri</string>
     <string name="gradient_linear">Lineaarinen</string>
     <string name="gradient_radial">Säteittäinen</string>
     <string name="gradient_conic">Kartiomainen</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Määritä asetukset</string>
     <string name="patch_selection_icon_edit">Muokkaa kuvaketta</string>
     <string name="patch_selection_icon_design">Suunnittele kuvake</string>
-    <string name="patch_selection_icon_import_folder">Tuo kansio</string>
     <string name="patch_selection_icon_select_folder_title">Valitse kuvakekansio</string>
     <string name="patch_selection_icon_ready">Mukautettu kuvake valmis</string>
     <string name="patch_selection_icon_none">Ei mukautettua kuvaketta</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">kokonaisluku</string>
     <string name="patch_selection_option_hint_number">luku</string>
     <string name="patch_selection_option_hint_text">teksti</string>
+    <string name="patch_option_recommended_size">Suositeltu: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Arvo ei voi olla tyhjä</string>
+    <string name="patch_option_list_duplicate">Kohde on jo luettelossa</string>
+    <string name="patch_option_list_empty_state">Ei vielä lisättyjä kohteita</string>
+    <string name="patch_option_enter_value">Syötä arvo…</string>
+    <string name="patch_option_add_item">Lisää kohde</string>
+    <string name="patch_option_edit_list">Muokkaa luetteloa</string>
     <string name="patch_selection_run_info_title">Tämä suoritus</string>
     <string name="patch_selection_run_info_app_group">Sovellus</string>
     <string name="patch_selection_run_info_bundles_group">Paikkausniput</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Lokitiedoston lukeminen epäonnistui: %1$s</string>
     <string name="patching_log_viewer_title">Lokitiedosto</string>
     <string name="patching_log_viewer_copy_all">Kopioi kaikki</string>
-    <string name="patching_progress_title">Muokataan sovellusta</string>
     <string name="patching_step_all_done">Kaikki valmista!</string>
     <string name="patching_step_waiting">Odotetaan…</string>
     <string name="patching_graph_memory_usage">Muistin käyttö</string>
+    <string name="patching_graph_memory_detail">%1$d%% %2$d Mt:sta</string>
     <string name="patching_graph_storage_io">Tallennus I/O</string>
     <string name="patching_graph_cpu_usage">CPU:n käyttö</string>
     <string name="patching_banner_started_title">Paikkaus alkoi</string>

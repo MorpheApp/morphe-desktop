@@ -39,4 +39,7 @@
     <plurals name="home_detail_download_bundles">
         <item quantity="other">ดาวน์โหลด %1$d ชุด</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="other">%1$d คอร์</item>
+    </plurals>
 </resources>

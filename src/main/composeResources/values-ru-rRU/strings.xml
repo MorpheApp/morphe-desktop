@@ -50,6 +50,7 @@
     <string name="on">Вкл</string>
     <string name="browse">Обзор</string>
     <string name="save">Сохранить</string>
+    <string name="select_folder">Выбрать папку</string>
     <string name="status_loading">Загрузка…</string>
     <string name="download">Скачать</string>
     <string name="status_offline">Офлайн</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Выходной файл</string>
     <string name="color_picker_saved">Сохранено</string>
     <string name="dropdown_search_placeholder">Поиск…</string>
-    <string name="custom_color_description">Свой цвет</string>
+    <string name="custom_color">Свой цвет</string>
     <string name="gradient_linear">Линейный</string>
     <string name="gradient_radial">Радиальный</string>
     <string name="gradient_conic">Конический</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Настроить параметры</string>
     <string name="patch_selection_icon_edit">Редактировать иконку</string>
     <string name="patch_selection_icon_design">Создать иконку</string>
-    <string name="patch_selection_icon_import_folder">Импортировать папку</string>
     <string name="patch_selection_icon_select_folder_title">Выберите папку с иконками</string>
     <string name="patch_selection_icon_ready">Пользовательская иконка готова</string>
     <string name="patch_selection_icon_none">Пользовательская иконка не установлена</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">целое число</string>
     <string name="patch_selection_option_hint_number">число</string>
     <string name="patch_selection_option_hint_text">текст</string>
+    <string name="patch_option_recommended_size">Рекомендуемый размер: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Значение не может быть пустым</string>
+    <string name="patch_option_list_duplicate">Элемент уже в списке</string>
+    <string name="patch_option_list_empty_state">Элементы ещё не добавлены</string>
+    <string name="patch_option_enter_value">Введите значение…</string>
+    <string name="patch_option_add_item">Добавить элемент</string>
+    <string name="patch_option_edit_list">Редактировать список</string>
     <string name="patch_selection_run_info_title">Этот запуск</string>
     <string name="patch_selection_run_info_app_group">Приложение</string>
     <string name="patch_selection_run_info_bundles_group">Пакеты патчей</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Не удалось прочитать файл журнала: %1$s</string>
     <string name="patching_log_viewer_title">Файл журнала</string>
     <string name="patching_log_viewer_copy_all">Скопировать все</string>
-    <string name="patching_progress_title">Патчинг приложения</string>
     <string name="patching_step_all_done">Готово!</string>
     <string name="patching_step_waiting">Ожидание…</string>
     <string name="patching_graph_memory_usage">Использование памяти</string>
+    <string name="patching_graph_memory_detail">%1$d%% от %2$d МБ</string>
     <string name="patching_graph_storage_io">Ввод/вывод хранилища</string>
     <string name="patching_graph_cpu_usage">Использование ЦП</string>
     <string name="patching_banner_started_title">Патчинг начат</string>

@@ -65,4 +65,9 @@
         <item quantity="few">Преузми %1$d пакета</item>
         <item quantity="other">Преузми %1$d пакета</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d језгро</item>
+        <item quantity="few">%1$d језгра</item>
+        <item quantity="other">%1$d језгара</item>
+    </plurals>
 </resources>

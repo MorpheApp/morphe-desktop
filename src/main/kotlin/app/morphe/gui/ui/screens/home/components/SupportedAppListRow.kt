@@ -262,7 +262,7 @@ private fun VersionCardChip(
 }
 
 /** Body that drops down below the collapsed row when [SupportedAppListRow.isExpanded]
- *  is true. Sections: PATCHES FROM, ALSO STABLE, EXPERIMENTAL. */
+ *  is true. Sections: PATCHES FROM, STABLE, EXPERIMENTAL. */
 @Composable
 private fun ExpandedBody(
     app: SupportedApp,
@@ -271,8 +271,7 @@ private fun ExpandedBody(
     font: FontFamily,
     cornerSmall: Dp,
 ) {
-    // "Other stable" = supported versions other than the recommended latest.
-    val otherStable = app.supportedVersions.filter { it != app.recommendedVersion }
+    val stableVersions = app.supportedVersions
     val maxPills = 16
     val uriHandler = LocalUriHandler.current
 
@@ -294,13 +293,13 @@ private fun ExpandedBody(
             }
         }
 
-        if (otherStable.isNotEmpty()) {
+        if (stableVersions.isNotEmpty()) {
             SectionLabel(text = stringResource(Res.string.version_label_stable), font = font, color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                otherStable.take(maxPills).forEach { v ->
+                stableVersions.take(maxPills).forEach { v ->
                     // URL is a pure function of package + version. Compute
                     // per pill rather than pre-storing all of them on the model.
                     val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
@@ -310,9 +309,9 @@ private fun ExpandedBody(
                         onClick = url?.let { { uriHandler.openUri(it) } },
                     )
                 }
-                if (otherStable.size > maxPills) {
+                if (stableVersions.size > maxPills) {
                     Text(
-                        text = "+${otherStable.size - maxPills}",
+                        text = "+${stableVersions.size - maxPills}",
                         fontSize = 11.sp,
                         fontFamily = font,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),

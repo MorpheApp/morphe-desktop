@@ -23,6 +23,7 @@
     <string name="off">خاموش</string>
     <string name="on">روشن</string>
     <string name="save">ذخیره</string>
+    <string name="select_folder">انتخاب پوشه</string>
     <string name="status_loading">در حال بارگیری…</string>
     <string name="download">دانلود</string>
     <string name="status_ready">آماده</string>
@@ -32,7 +33,7 @@
     <string name="back">بازگشت</string>
     <string name="temporary_files_label">فایل‌های موقت</string>
     <string name="color_picker_saved">ذخیره‌شده</string>
-    <string name="custom_color_description">رنگ سفارشی</string>
+    <string name="custom_color">رنگ سفارشی</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_mode_default">پیش‌فرض</string>
     <string name="card_fill_mode_accent">تأکیدی</string>
@@ -99,12 +100,12 @@
     <string name="patch_selection_option_disabled">غیرفعال</string>
     <string name="patch_selection_mode_all">همه</string>
     <string name="patch_selection_badge_new">جدید</string>
+    <string name="patch_option_list_empty">مقدار نمی‌تواند خالی باشد</string>
     <string name="patch_selection_run_info_app_group">برنامه</string>
     <string name="patch_selection_run_info_bundles_group">بسته‌های پچ</string>
     <string name="patch_selection_group_selected_count">%1$d مورد انتخاب شد</string>
     <!-- Patching Screen -->
     <string name="patching_status_in_progress">در حال اعمال پچ‌ها</string>
-    <string name="patching_progress_title">در حال پچ‌کردن برنامه</string>
     <string name="patching_step_all_done">تمام شد!</string>
     <string name="patching_graph_memory_usage">مصرف حافظه</string>
     <string name="patching_graph_storage_io">ورودی/خروجی ذخیره‌سازی</string>

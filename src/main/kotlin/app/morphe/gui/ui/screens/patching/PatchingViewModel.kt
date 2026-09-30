@@ -5,6 +5,8 @@
 
 package app.morphe.gui.ui.screens.patching
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheComponents
 import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchedAppStore
@@ -21,8 +23,6 @@ import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.PatcherLogInterceptor
 import app.morphe.gui.util.PatcherState
 import app.morphe.morphe_desktop.generated.resources.*
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import java.io.File
 import java.lang.management.ManagementFactory
 import kotlin.time.Duration.Companion.milliseconds
@@ -37,14 +37,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
-import oshi.software.os.OSProcess
 
 class PatchingViewModel(
     private val config: PatchConfig,
     private val patchService: PatchService,
     private val configRepository: ConfigRepository,
     private val patchedAppStore: PatchedAppStore,
-) : ScreenModel {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PatchingUiState())
     val uiState: StateFlow<PatchingUiState> = _uiState.asStateFlow()
@@ -59,7 +58,7 @@ class PatchingViewModel(
     fun startPatching() {
         if (_uiState.value.status != PatchingStatus.IDLE) return
 
-        patchingJob = screenModelScope.launch {
+        patchingJob = viewModelScope.launch {
             stateMachine = null
             val appConfig = configRepository.loadConfig()
             val locale = FormatUtils.resolveLocale(appConfig.language)
@@ -84,6 +83,9 @@ class PatchingViewModel(
             val osBean = ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean
             val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, locale)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, locale)}"
 
+            val cpuSampler = CpuUsageSampler()
+            val ioSampler = IoUsageSampler()
+
             _uiState.value = _uiState.value.copy(
                 status = PatchingStatus.PREPARING,
                 logs = emptyList(),
@@ -100,12 +102,11 @@ class PatchingViewModel(
                 ramFreeInfo = ramFreeInfo,
                 desktopVersion = desktopVersion,
                 patcherVersion = patcherVersion,
-                nativeLibs = nativeLibs
+                nativeLibs = nativeLibs,
+                logicalCoreCount = cpuSampler.logicalProcessorCount
             )
             
             val startTime = System.currentTimeMillis()
-            val cpuSampler = CpuUsageSampler()
-            val ioSampler = IoUsageSampler()
 
             val memoryJob = launch(Dispatchers.Default) {
                 while (true) {
@@ -230,7 +231,7 @@ class PatchingViewModel(
     }
 
     fun cancelPatching() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             patchingJob?.cancel()
             patchingJob = null
             addLog("Patching cancelled by user", LogLevel.WARNING)
@@ -384,7 +385,8 @@ data class PatchingUiState(
     val patcherVersion: String = "?",
     val nativeLibs: String = "?",
     val outputSizeMb: String? = null,
-    val elapsedSec: String? = null
+    val elapsedSec: String? = null,
+    val logicalCoreCount: Int = 0
 ) {
     val isInProgress: Boolean
         get() = status == PatchingStatus.PREPARING || status == PatchingStatus.PATCHING
@@ -397,43 +399,39 @@ data class PatchingUiState(
 data class IoUsage(val readKbPerSec: Int, val writeKbPerSec: Int, val totalKbPerSec: Int = readKbPerSec + writeKbPerSec)
 
 /**
- * Storage throughput of the patcher process.
+ * Storage throughput across physical disk stores.
  * Uses OSHI for cross-platform compatibility (Windows, macOS, Linux).
  */
 class IoUsageSampler {
-    private val os = SystemInfo().operatingSystem
-    private val currentProcess: OSProcess? = try {
-        os.currentProcess
-    } catch (e: Exception) {
-        null
-    }
-
+    private val hal = SystemInfo().hardware
+    private var diskStores = runCatching { hal.diskStores }.getOrElse { emptyList() }
     private var previousRead = -1L
     private var previousWrite = -1L
     private var previousUptimeMs = 0L
 
     fun sample(): IoUsage? {
-        val p = currentProcess ?: return null
-
-        val updated = try {
-            p.updateAttributes()
-        } catch (e: Exception) {
-            false
+        if (diskStores.isEmpty()) {
+            diskStores = runCatching { hal.diskStores }.getOrElse { emptyList() }
+            if (diskStores.isEmpty()) return null
         }
 
-        if (!updated) return null
+        var totalRead = 0L
+        var totalWrite = 0L
 
-        val read = p.bytesRead
-        val write = p.bytesWritten
+        for (disk in diskStores) {
+            runCatching { disk.updateAttributes() }
+            totalRead += disk.readBytes
+            totalWrite += disk.writeBytes
+        }
 
         val uptimeMs = System.currentTimeMillis()
         val elapsed = uptimeMs - previousUptimeMs
         val hadReading = previousRead >= 0L
-        val readDelta = read - previousRead
-        val writeDelta = write - previousWrite
+        val readDelta = maxOf(0L, totalRead - previousRead)
+        val writeDelta = maxOf(0L, totalWrite - previousWrite)
 
-        previousRead = read
-        previousWrite = write
+        previousRead = totalRead
+        previousWrite = totalWrite
         previousUptimeMs = uptimeMs
 
         if (!hadReading || elapsed <= 0L) return null
@@ -455,6 +453,7 @@ class IoUsageSampler {
 class CpuUsageSampler {
     private val processor = SystemInfo().hardware.processor
     private var previousTicks = processor.processorCpuLoadTicks
+    val logicalProcessorCount: Int = processor.logicalProcessorCount
 
     fun sample(): List<Int> {
         val loads = processor.getProcessorCpuLoadBetweenTicks(previousTicks)

@@ -50,6 +50,7 @@
     <string name="on">Włączone</string>
     <string name="browse">Przeglądaj</string>
     <string name="save">Zapisz</string>
+    <string name="select_folder">Wybierz folder</string>
     <string name="status_loading">Wczytywanie…</string>
     <string name="download">Pobierz</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Plik wyjściowy</string>
     <string name="color_picker_saved">Zapisano</string>
     <string name="dropdown_search_placeholder">Szukaj…</string>
-    <string name="custom_color_description">Własny kolor</string>
+    <string name="custom_color">Własny kolor</string>
     <string name="gradient_linear">Liniowy</string>
     <string name="gradient_radial">Promienisty</string>
     <string name="gradient_conic">Stożkowy</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Skonfiguruj opcje</string>
     <string name="patch_selection_icon_edit">Edytuj ikonę</string>
     <string name="patch_selection_icon_design">Zaprojektuj ikonę</string>
-    <string name="patch_selection_icon_import_folder">Importuj folder</string>
     <string name="patch_selection_icon_select_folder_title">Wybierz folder z ikoną</string>
     <string name="patch_selection_icon_ready">Własna ikona gotowa</string>
     <string name="patch_selection_icon_none">Nie ustawiono własnej ikony</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">liczba całkowita</string>
     <string name="patch_selection_option_hint_number">liczba</string>
     <string name="patch_selection_option_hint_text">tekst</string>
+    <string name="patch_option_recommended_size">Zalecane: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Wartość nie może być pusta</string>
+    <string name="patch_option_list_duplicate">Element jest już na liście</string>
+    <string name="patch_option_list_empty_state">Nie dodano jeszcze żadnych elementów</string>
+    <string name="patch_option_enter_value">Wprowadź wartość…</string>
+    <string name="patch_option_add_item">Dodaj element</string>
+    <string name="patch_option_edit_list">Edytuj listę</string>
     <string name="patch_selection_run_info_title">To uruchomienie</string>
     <string name="patch_selection_run_info_app_group">Aplikacja</string>
     <string name="patch_selection_run_info_bundles_group">Pakiety modyfikacji</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Nie udało się odczytać pliku logów: %1$s</string>
     <string name="patching_log_viewer_title">Plik logów</string>
     <string name="patching_log_viewer_copy_all">Skopiuj wszystko</string>
-    <string name="patching_progress_title">Modyfikowanie aplikacji</string>
     <string name="patching_step_all_done">Wszystko gotowe!</string>
     <string name="patching_step_waiting">Oczekiwanie…</string>
     <string name="patching_graph_memory_usage">Zużycie pamięci</string>
+    <string name="patching_graph_memory_detail">%1$d% z %2$d MB</string>
     <string name="patching_graph_storage_io">Zapis/odczyt danych</string>
     <string name="patching_graph_cpu_usage">Zużycie procesora</string>
     <string name="patching_banner_started_title">Rozpoczęto modyfikowanie</string>

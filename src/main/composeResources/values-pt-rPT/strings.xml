@@ -50,6 +50,7 @@
     <string name="on">Ligado</string>
     <string name="browse">Procurar</string>
     <string name="save">Guardar</string>
+    <string name="select_folder">Selecionar pasta</string>
     <string name="status_loading">Carregando…</string>
     <string name="download">Transferir</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Arquivo de saída</string>
     <string name="color_picker_saved">Guardado</string>
     <string name="dropdown_search_placeholder">Pesquisar…</string>
-    <string name="custom_color_description">Cor personalizada</string>
+    <string name="custom_color">Cor personalizada</string>
     <string name="gradient_linear">Linear</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Cônico</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Configurar opções</string>
     <string name="patch_selection_icon_edit">Editar ícone</string>
     <string name="patch_selection_icon_design">Projetar ícone</string>
-    <string name="patch_selection_icon_import_folder">Importar pasta</string>
     <string name="patch_selection_icon_select_folder_title">Selecione uma pasta de ícone</string>
     <string name="patch_selection_icon_ready">Ícone personalizado pronto</string>
     <string name="patch_selection_icon_none">Nenhum ícone personalizado definido</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">um número inteiro</string>
     <string name="patch_selection_option_hint_number">um número</string>
     <string name="patch_selection_option_hint_text">texto</string>
+    <string name="patch_option_recommended_size">Recomendado: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">O valor não pode estar vazio</string>
+    <string name="patch_option_list_duplicate">O item já está na lista</string>
+    <string name="patch_option_list_empty_state">Nenhum item adicionado ainda</string>
+    <string name="patch_option_enter_value">Insira o valor…</string>
+    <string name="patch_option_add_item">Adicionar item</string>
+    <string name="patch_option_edit_list">Editar lista</string>
     <string name="patch_selection_run_info_title">Esta execução</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Pacotes de patches</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Falha ao ler o arquivo de log: %1$s</string>
     <string name="patching_log_viewer_title">Arquivo de log</string>
     <string name="patching_log_viewer_copy_all">Copiar tudo</string>
-    <string name="patching_progress_title">A modificar aplicação</string>
     <string name="patching_step_all_done">Tudo pronto!</string>
     <string name="patching_step_waiting">Aguardando…</string>
     <string name="patching_graph_memory_usage">Uso de memória</string>
+    <string name="patching_graph_memory_detail">%1$d%% de %2$d MB</string>
     <string name="patching_graph_storage_io">E/S de armazenamento</string>
     <string name="patching_graph_cpu_usage">Uso de CPU</string>
     <string name="patching_banner_started_title">Aplicação de patches iniciada</string>

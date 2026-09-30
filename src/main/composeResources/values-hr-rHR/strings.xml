@@ -50,6 +50,7 @@
     <string name="on">Uključeno</string>
     <string name="browse">Pretraži</string>
     <string name="save">Spremi</string>
+    <string name="select_folder">Odaberite mapu</string>
     <string name="status_loading">Samo trenutak…</string>
     <string name="download">Preuzmi</string>
     <string name="status_offline">Izvan mreže</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Izlazna datoteka</string>
     <string name="color_picker_saved">Spremljeno</string>
     <string name="dropdown_search_placeholder">Pretraži…</string>
-    <string name="custom_color_description">Prilagođena boja</string>
+    <string name="custom_color">Prilagođena boja</string>
     <string name="gradient_linear">Linearni</string>
     <string name="gradient_radial">Radijalni</string>
     <string name="gradient_conic">Konusni</string>
@@ -395,7 +396,6 @@ Ponovno odaberite APK za ponovno krpanje sa svojim spremljenim postavkama</strin
     <string name="patch_selection_configure_options_description">Konfiguriraj opcije</string>
     <string name="patch_selection_icon_edit">Uredi ikonu</string>
     <string name="patch_selection_icon_design">Dizajniraj ikonu</string>
-    <string name="patch_selection_icon_import_folder">Uvezi mapu</string>
     <string name="patch_selection_icon_select_folder_title">Odaberi mapu s ikonama</string>
     <string name="patch_selection_icon_ready">Prilagođena ikona spremna</string>
     <string name="patch_selection_icon_none">Nije postavljena prilagođena ikona</string>
@@ -436,6 +436,13 @@ Ponovno odaberite APK za ponovno krpanje sa svojim spremljenim postavkama</strin
     <string name="patch_selection_option_hint_whole_number">cijeli broj</string>
     <string name="patch_selection_option_hint_number">broj</string>
     <string name="patch_selection_option_hint_text">tekst</string>
+    <string name="patch_option_recommended_size">Preporučeno: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Vrijednost ne može biti prazna</string>
+    <string name="patch_option_list_duplicate">Stavka se već nalazi na popisu</string>
+    <string name="patch_option_list_empty_state">Još nema dodanih stavki</string>
+    <string name="patch_option_enter_value">Unesite vrijednost…</string>
+    <string name="patch_option_add_item">Dodaj stavku</string>
+    <string name="patch_option_edit_list">Uredi popis</string>
     <string name="patch_selection_run_info_title">Ovo pokretanje</string>
     <string name="patch_selection_run_info_app_group">Aplikacija</string>
     <string name="patch_selection_run_info_bundles_group">Paketi patcheva</string>
@@ -453,10 +460,10 @@ Ponovno odaberite APK za ponovno krpanje sa svojim spremljenim postavkama</strin
     <string name="patching_log_viewer_failed_to_read">Čitanje datoteke dnevnika nije uspjelo: %1$s</string>
     <string name="patching_log_viewer_title">Datoteka dnevnika</string>
     <string name="patching_log_viewer_copy_all">Kopiraj sve</string>
-    <string name="patching_progress_title">Patchanje aplikacije</string>
     <string name="patching_step_all_done">Sve je gotovo!</string>
     <string name="patching_step_waiting">Čekanje…</string>
     <string name="patching_graph_memory_usage">Korištenje memorije</string>
+    <string name="patching_graph_memory_detail">%1$d% od %2$d MB</string>
     <string name="patching_graph_storage_io">Pohrana I/O</string>
     <string name="patching_graph_cpu_usage">Upotreba CPU-a</string>
     <string name="patching_banner_started_title">Primjena zakrpa je započela</string>

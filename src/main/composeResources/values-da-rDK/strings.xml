@@ -50,6 +50,7 @@
     <string name="on">Til</string>
     <string name="browse">Gennemse</string>
     <string name="save">Gem</string>
+    <string name="select_folder">Vælg mappe</string>
     <string name="status_loading">Indlæser…</string>
     <string name="download">Hent</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Outputfil</string>
     <string name="color_picker_saved">Gemt</string>
     <string name="dropdown_search_placeholder">Søg…</string>
-    <string name="custom_color_description">Brugerdefineret farve</string>
+    <string name="custom_color">Brugerdefineret farve</string>
     <string name="gradient_linear">Lineær</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Konisk</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfigurér indstillinger</string>
     <string name="patch_selection_icon_edit">Redigér ikon</string>
     <string name="patch_selection_icon_design">Design ikon</string>
-    <string name="patch_selection_icon_import_folder">Importér mappe</string>
     <string name="patch_selection_icon_select_folder_title">Vælg en ikonmappe</string>
     <string name="patch_selection_icon_ready">Brugerdefineret ikon klar</string>
     <string name="patch_selection_icon_none">Ingen brugerdefineret ikon angivet</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">et heltal</string>
     <string name="patch_selection_option_hint_number">et tal</string>
     <string name="patch_selection_option_hint_text">tekst</string>
+    <string name="patch_option_recommended_size">Anbefalet: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Værdien kan ikke være tom</string>
+    <string name="patch_option_list_duplicate">Elementet er allerede på listen</string>
+    <string name="patch_option_list_empty_state">Ingen elementer tilføjet endnu</string>
+    <string name="patch_option_enter_value">Indtast værdi…</string>
+    <string name="patch_option_add_item">Tilføj element</string>
+    <string name="patch_option_edit_list">Rediger liste</string>
     <string name="patch_selection_run_info_title">Denne kørsel</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch-bundter</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Kunne ikke læse logfil: %1$s</string>
     <string name="patching_log_viewer_title">Logfil</string>
     <string name="patching_log_viewer_copy_all">Kopiér alt</string>
-    <string name="patching_progress_title">Patcher appen</string>
     <string name="patching_step_all_done">Alt fuldført!</string>
     <string name="patching_step_waiting">Venter…</string>
     <string name="patching_graph_memory_usage">Hukommelsesforbrug</string>
+    <string name="patching_graph_memory_detail">%1$d%% af %2$d MB</string>
     <string name="patching_graph_storage_io">Lagring I/O</string>
     <string name="patching_graph_cpu_usage">CPU-brug</string>
     <string name="patching_banner_started_title">Patchning startet</string>

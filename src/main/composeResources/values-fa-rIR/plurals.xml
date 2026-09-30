@@ -8,4 +8,8 @@
         <item quantity="one">%1$d وصله</item>
         <item quantity="other">%1$d وصله</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d هسته</item>
+        <item quantity="other">%1$d هسته</item>
+    </plurals>
 </resources>

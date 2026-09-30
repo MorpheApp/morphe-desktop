@@ -50,6 +50,7 @@
     <string name="on">Aan</string>
     <string name="browse">Bladeren</string>
     <string name="save">Opslaan</string>
+    <string name="select_folder">Map selecteren</string>
     <string name="status_loading">Bezig met laden…</string>
     <string name="download">Download</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Uitvoerbestand</string>
     <string name="color_picker_saved">Opgeslagen</string>
     <string name="dropdown_search_placeholder">Zoeken…</string>
-    <string name="custom_color_description">Aangepaste kleur</string>
+    <string name="custom_color">Aangepaste kleur</string>
     <string name="gradient_linear">Lineair</string>
     <string name="gradient_radial">Radiaal</string>
     <string name="gradient_conic">Conisch</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Opties configureren</string>
     <string name="patch_selection_icon_edit">Pictogram bewerken</string>
     <string name="patch_selection_icon_design">Pictogram ontwerpen</string>
-    <string name="patch_selection_icon_import_folder">Map importeren</string>
     <string name="patch_selection_icon_select_folder_title">Selecteer een pictogrammap</string>
     <string name="patch_selection_icon_ready">Aangepast pictogram klaar</string>
     <string name="patch_selection_icon_none">Geen aangepast pictogram ingesteld</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">een geheel getal</string>
     <string name="patch_selection_option_hint_number">een getal</string>
     <string name="patch_selection_option_hint_text">tekst</string>
+    <string name="patch_option_recommended_size">Aanbevolen: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Waarde mag niet leeg zijn</string>
+    <string name="patch_option_list_duplicate">Item staat al in de lijst</string>
+    <string name="patch_option_list_empty_state">Nog geen items toegevoegd</string>
+    <string name="patch_option_enter_value">Voer waarde in…</string>
+    <string name="patch_option_add_item">Item toevoegen</string>
+    <string name="patch_option_edit_list">Lijst bewerken</string>
     <string name="patch_selection_run_info_title">Deze run</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patchbundels</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Logbestand lezen mislukt: %1$s</string>
     <string name="patching_log_viewer_title">Logbestand</string>
     <string name="patching_log_viewer_copy_all">Alles kopiëren</string>
-    <string name="patching_progress_title">App patchen</string>
     <string name="patching_step_all_done">Alles klaar!</string>
     <string name="patching_step_waiting">Wachten…</string>
     <string name="patching_graph_memory_usage">Geheugengebruik</string>
+    <string name="patching_graph_memory_detail">%1$d% van %2$d MB</string>
     <string name="patching_graph_storage_io">Opslag I/O</string>
     <string name="patching_graph_cpu_usage">CPU-gebruik</string>
     <string name="patching_banner_started_title">Patchen begonnen</string>

@@ -52,4 +52,8 @@
         <item quantity="one">Last ned %1$d pakke</item>
         <item quantity="other">Last ned %1$d pakker</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d kjerne</item>
+        <item quantity="other">%1$d kjerner</item>
+    </plurals>
 </resources>

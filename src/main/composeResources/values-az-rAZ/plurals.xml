@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d nüvə</item>
+        <item quantity="other">%1$d nüvə</item>
+    </plurals>
+</resources>

@@ -39,4 +39,7 @@
     <plurals name="home_detail_download_bundles">
         <item quantity="other">下载 %1$d 个补丁包</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="other">%1$d 个核心</item>
+    </plurals>
 </resources>

@@ -8,6 +8,7 @@ package app.morphe.gui.util
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import io.github.vinceglb.filekit.dialogs.openFilePicker
@@ -59,6 +60,29 @@ object MorpheFilePicker {
         }
         val type = if (extensions.isEmpty()) FileKitType.File() else FileKitType.File(extensions)
         return FileKit.openFilePicker(type = type, directory = initial, dialogSettings = settings)?.file
+    }
+
+    /**
+     * Native multiple file picker. Returns the chosen files, or null if the user cancelled.
+     */
+    suspend fun pickFiles(
+        title: String? = null,
+        startDir: File? = null,
+        extensions: List<String> = emptyList(),
+    ): List<File>? {
+        val initial = startDir?.takeIf { it.isDirectory }?.let { PlatformFile(it) }
+        val settings = if (title != null) {
+            FileKitDialogSettings(title = title)
+        } else {
+            FileKitDialogSettings.createDefault()
+        }
+        val type = if (extensions.isEmpty()) FileKitType.File() else FileKitType.File(extensions)
+        return FileKit.openFilePicker(
+            type = type,
+            mode = FileKitMode.Multiple(),
+            directory = initial,
+            dialogSettings = settings
+        )?.map { it.file }
     }
 
     /**

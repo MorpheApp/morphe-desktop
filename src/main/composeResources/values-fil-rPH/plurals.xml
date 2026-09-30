@@ -52,4 +52,8 @@
         <item quantity="one">I-download ang %1$d na bundle</item>
         <item quantity="other">I-download ang %1$d na bundle</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d na core</item>
+        <item quantity="other">%1$d na core</item>
+    </plurals>
 </resources>

@@ -50,6 +50,7 @@
     <string name="on">Zapnuté</string>
     <string name="browse">Prehľadávať</string>
     <string name="save">Uložiť</string>
+    <string name="select_folder">Vybrať priečinok</string>
     <string name="status_loading">Načítava sa…</string>
     <string name="download">Stiahnuť</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Výstupný súbor</string>
     <string name="color_picker_saved">Uložené</string>
     <string name="dropdown_search_placeholder">Hľadať…</string>
-    <string name="custom_color_description">Vlastná farba</string>
+    <string name="custom_color">Vlastná farba</string>
     <string name="gradient_linear">Lineárny</string>
     <string name="gradient_radial">Radiálny</string>
     <string name="gradient_conic">Kužeľový</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">Konfigurovať možnosti</string>
     <string name="patch_selection_icon_edit">Upraviť ikonu</string>
     <string name="patch_selection_icon_design">Navrhnúť ikonu</string>
-    <string name="patch_selection_icon_import_folder">Importovať priečinok</string>
     <string name="patch_selection_icon_select_folder_title">Vyberte priečinok s ikonami</string>
     <string name="patch_selection_icon_ready">Vlastná ikona je pripravená</string>
     <string name="patch_selection_icon_none">Nie je nastavená žiadna vlastná ikona</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">celé číslo</string>
     <string name="patch_selection_option_hint_number">číslo</string>
     <string name="patch_selection_option_hint_text">text</string>
+    <string name="patch_option_recommended_size">Odporúčané: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Hodnota nesmie byť prázdna</string>
+    <string name="patch_option_list_duplicate">Položka už je v zozname</string>
+    <string name="patch_option_list_empty_state">Zatiaľ neboli pridané žiadne položky</string>
+    <string name="patch_option_enter_value">Zadajte hodnotu…</string>
+    <string name="patch_option_add_item">Pridať položku</string>
+    <string name="patch_option_edit_list">Upraviť zoznam</string>
     <string name="patch_selection_run_info_title">Toto spustenie</string>
     <string name="patch_selection_run_info_app_group">Aplikácia</string>
     <string name="patch_selection_run_info_bundles_group">Balíky záplat</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Čítanie súboru protokolu zlyhalo: %1$s</string>
     <string name="patching_log_viewer_title">Súbor protokolu</string>
     <string name="patching_log_viewer_copy_all">Kopírovať všetko</string>
-    <string name="patching_progress_title">Plátam aplikáciu</string>
     <string name="patching_step_all_done">Hotovo!</string>
     <string name="patching_step_waiting">Čaká sa…</string>
     <string name="patching_graph_memory_usage">Využitie pamäte</string>
+    <string name="patching_graph_memory_detail">%1$d%% z %2$d MB</string>
     <string name="patching_graph_storage_io">Vstup/výstup úložiska</string>
     <string name="patching_graph_cpu_usage">Využitie CPU</string>
     <string name="patching_banner_started_title">Záplatovanie sa začalo</string>

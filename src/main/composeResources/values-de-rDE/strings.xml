@@ -50,6 +50,7 @@
     <string name="on">Ein</string>
     <string name="browse">Durchsuchen</string>
     <string name="save">Speichern</string>
+    <string name="select_folder">Ordner auswählen</string>
     <string name="status_loading">Laden…</string>
     <string name="download">Herunterladen</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Ausgabedatei</string>
     <string name="color_picker_saved">Gespeichert</string>
     <string name="dropdown_search_placeholder">Suchen…</string>
-    <string name="custom_color_description">Benutzerdefinierte Farbe</string>
+    <string name="custom_color">Benutzerdefinierte Farbe</string>
     <string name="gradient_linear">Linear</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Konisch</string>
@@ -374,7 +375,6 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="patch_selection_configure_options_description">Optionen konfigurieren</string>
     <string name="patch_selection_icon_edit">Symbol bearbeiten</string>
     <string name="patch_selection_icon_design">Symbol gestalten</string>
-    <string name="patch_selection_icon_import_folder">Ordner importieren</string>
     <string name="patch_selection_icon_select_folder_title">Symbolordner auswählen</string>
     <string name="patch_selection_icon_ready">Benutzerdefiniertes Symbol bereit</string>
     <string name="patch_selection_icon_none">Kein benutzerdefiniertes Symbol festgelegt</string>
@@ -415,6 +415,13 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="patch_selection_option_hint_whole_number">eine ganze Zahl</string>
     <string name="patch_selection_option_hint_number">eine Zahl</string>
     <string name="patch_selection_option_hint_text">Text</string>
+    <string name="patch_option_recommended_size">Empfohlen: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Wert darf nicht leer sein</string>
+    <string name="patch_option_list_duplicate">Eintrag bereits in der Liste</string>
+    <string name="patch_option_list_empty_state">Noch keine Einträge hinzugefügt</string>
+    <string name="patch_option_enter_value">Wert eingeben…</string>
+    <string name="patch_option_add_item">Eintrag hinzufügen</string>
+    <string name="patch_option_edit_list">Liste bearbeiten</string>
     <string name="patch_selection_run_info_title">Dieser Lauf</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch-Bundles</string>
@@ -432,10 +439,10 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="patching_log_viewer_failed_to_read">Logdatei konnte nicht gelesen werden: %1$s</string>
     <string name="patching_log_viewer_title">Logdatei</string>
     <string name="patching_log_viewer_copy_all">Alles kopieren</string>
-    <string name="patching_progress_title">App wird gepatcht</string>
     <string name="patching_step_all_done">Alles erledigt!</string>
     <string name="patching_step_waiting">Warten…</string>
     <string name="patching_graph_memory_usage">Speichernutzung</string>
+    <string name="patching_graph_memory_detail">%1$d% von %2$d MB</string>
     <string name="patching_graph_storage_io">Speicher-I/O</string>
     <string name="patching_graph_cpu_usage">CPU-Auslastung</string>
     <string name="patching_banner_started_title">Patchen gestartet</string>

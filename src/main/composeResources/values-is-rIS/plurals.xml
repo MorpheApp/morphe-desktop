@@ -52,4 +52,8 @@
         <item quantity="one">Sækja %1$d búnt</item>
         <item quantity="other">Sækja %1$d búnt</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d kjarni</item>
+        <item quantity="other">%1$d kjarnar</item>
+    </plurals>
 </resources>

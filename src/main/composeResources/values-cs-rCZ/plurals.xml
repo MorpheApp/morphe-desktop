@@ -78,4 +78,10 @@
         <item quantity="many">Stáhnout %1$d balíčků</item>
         <item quantity="other">Stáhnout %1$d balíčků</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d jádro</item>
+        <item quantity="few">%1$d jádra</item>
+        <item quantity="many">%1$d jádra</item>
+        <item quantity="other">%1$d jader</item>
+    </plurals>
 </resources>

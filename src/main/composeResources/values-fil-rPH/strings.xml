@@ -50,6 +50,7 @@
     <string name="on">Naka-on</string>
     <string name="browse">Mag-browse</string>
     <string name="save">I-save</string>
+    <string name="select_folder">Piliin ang folder</string>
     <string name="status_loading">Naglo-load…</string>
     <string name="download">I-download</string>
     <string name="status_offline">Offline</string>
@@ -81,7 +82,7 @@
     <string name="output_file_label">Output na file</string>
     <string name="color_picker_saved">Na-save</string>
     <string name="dropdown_search_placeholder">Maghanap…</string>
-    <string name="custom_color_description">Pasadyang kulay</string>
+    <string name="custom_color">Pasadyang kulay</string>
     <string name="gradient_linear">Linyar</string>
     <string name="gradient_radial">Radyal</string>
     <string name="gradient_conic">Koniko</string>
@@ -371,7 +372,6 @@
     <string name="patch_selection_configure_options_description">I-configure ang mga option</string>
     <string name="patch_selection_icon_edit">I-edit ang icon</string>
     <string name="patch_selection_icon_design">I-design ang icon</string>
-    <string name="patch_selection_icon_import_folder">I-import ang folder</string>
     <string name="patch_selection_icon_select_folder_title">Pumili ng icon folder</string>
     <string name="patch_selection_icon_ready">Handa na ang custom icon</string>
     <string name="patch_selection_icon_none">Walang nakatakdang custom icon</string>
@@ -412,6 +412,13 @@
     <string name="patch_selection_option_hint_whole_number">isang buong numero</string>
     <string name="patch_selection_option_hint_number">isang numero</string>
     <string name="patch_selection_option_hint_text">teksto</string>
+    <string name="patch_option_recommended_size">Inirerekomenda: %1$dx%2$d</string>
+    <string name="patch_option_list_empty">Hindi maaaring walang laman ang halaga</string>
+    <string name="patch_option_list_duplicate">Nasa listahan na ang item</string>
+    <string name="patch_option_list_empty_state">Wala pang idinagdag na mga item</string>
+    <string name="patch_option_enter_value">Maglagay ng halaga…</string>
+    <string name="patch_option_add_item">Magdagdag ng item</string>
+    <string name="patch_option_edit_list">I-edit ang listahan</string>
     <string name="patch_selection_run_info_title">Ang run na ito</string>
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Mga patch bundle</string>
@@ -429,10 +436,10 @@
     <string name="patching_log_viewer_failed_to_read">Nabigo ang pagbasa ng log file: %1$s</string>
     <string name="patching_log_viewer_title">Log file</string>
     <string name="patching_log_viewer_copy_all">Kopyahin lahat</string>
-    <string name="patching_progress_title">Pina-patch ang app</string>
     <string name="patching_step_all_done">Tapos na lahat!</string>
     <string name="patching_step_waiting">Naghihintay…</string>
     <string name="patching_graph_memory_usage">Paggamit ng memory</string>
+    <string name="patching_graph_memory_detail">%1$d% ng %2$d MB</string>
     <string name="patching_graph_storage_io">I/O ng storage</string>
     <string name="patching_graph_cpu_usage">Paggamit ng CPU</string>
     <string name="patching_banner_started_title">Nagsimula ang pag-patch</string>
