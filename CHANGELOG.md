@@ -1,3 +1,23 @@
+# [1.18.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.17.0...v1.18.0) (2026-09-30)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([65211dc](https://github.com/MorpheApp/morphe-desktop/commit/65211dc601ed82cee16ec438ca2f0f7a6577bf32))
+* Update to latest Patcher ([39d0b37](https://github.com/MorpheApp/morphe-desktop/commit/39d0b37fd829450c5c9296e88c42a60cee97eb75))
+* Update to latest Patcher ([4c957b6](https://github.com/MorpheApp/morphe-desktop/commit/4c957b62d0935c1259a8d6830a8dad8d9ca3b885))
+* Update to latest Patcher ([3e6b231](https://github.com/MorpheApp/morphe-desktop/commit/3e6b231f77856391584328520fd37513a31a27e3))
+* Update to latest Patcher ([f7b53d4](https://github.com/MorpheApp/morphe-desktop/commit/f7b53d4fb653521bcc39819bc3295932e98dc689))
+* Update to latest Patcher ([6f9e4da](https://github.com/MorpheApp/morphe-desktop/commit/6f9e4da026e75055551b677d3dea487f397f8a7b))
+
+
+### Features
+
+* Add support for new patch option types ([#331](https://github.com/MorpheApp/morphe-desktop/issues/331)) ([66b42df](https://github.com/MorpheApp/morphe-desktop/commit/66b42df7dd5e8927e8d9c207724fcca479ab4314))
+* Migrate to Compose Navigation and port Manager screen transitions ([#337](https://github.com/MorpheApp/morphe-desktop/issues/337)) ([9ae9214](https://github.com/MorpheApp/morphe-desktop/commit/9ae921485db292411e6632931292406d0ea31dcb))
+* Modernize patching progress header layout and system usage graphs ([#339](https://github.com/MorpheApp/morphe-desktop/issues/339)) ([f48969a](https://github.com/MorpheApp/morphe-desktop/commit/f48969a984f26577d8eff96d13bd3d2d15487c3a))
+* Use vector `MorpheLogo` with dynamic accent tint ([#338](https://github.com/MorpheApp/morphe-desktop/issues/338)) ([33799f5](https://github.com/MorpheApp/morphe-desktop/commit/33799f504a83efb4c2fc94f30ae995c57a98a500))
+
 # [1.18.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.0-dev.5...v1.18.0-dev.6) (2026-09-30)
 
 
