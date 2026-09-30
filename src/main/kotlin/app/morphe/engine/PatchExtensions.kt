@@ -5,34 +5,46 @@
 
 package app.morphe.engine
 
+import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.SupportedAbi
 
 typealias VersionMap = LinkedHashMap<String, Int>
 typealias CompatibleVersionsMap = Map<String, VersionMap>
 
-
-fun Patch<*>.versionCodesFor(
+/**
+ * Unions the version codes declared for [versionName] across every entry that names
+ * [packageName], or is universal, per ABI.
+ *
+ * A patch, or an app target, can name one version through more than one compatibility
+ * entry, one per accepted build (e.g. several arm64-only releases under the same version
+ * string). Both the CLI's `list-versions`/`list-patches` commands and the GUI's supported
+ * app list rely on this to combine every entry's codes instead of only reading the first
+ * one found, or every build but that one would be missing.
+ *
+ * Returns null when no entry declares any codes for the version.
+ */
+fun Iterable<Compatibility>.unionVersionCodes(
     packageName: String?,
     versionName: String,
 ): Map<SupportedAbi, Set<Int>>? {
-    val compat = compatibility ?: return null
-    val declaredCodes = compat
+    val declaredCodes = this
         .filter { packageName == null || it.packageName == null || it.packageName == packageName }
         .flatMap { it.targets }
         .filter { it.version == versionName }
         .mapNotNull { it.versionCodes }
 
-    // A patch can name this version through more than one compatibility entry, one per
-    // accepted build (e.g. several arm64-only releases under the same version string).
-    // Union every entry's codes per ABI instead of only reading the first one found, or
-    // every build but that one would be missing from the listing.
     return declaredCodes
         .flatMap { it.entries }
         .groupBy({ it.key }, { it.value })
         .mapValues { (_, codes) -> codes.toSet() }
         .ifEmpty { null }
 }
+
+fun Patch<*>.versionCodesFor(
+    packageName: String?,
+    versionName: String,
+): Map<SupportedAbi, Set<Int>>? = compatibility?.unionVersionCodes(packageName, versionName)
 
 fun Iterable<Patch<*>>.versionCodesFor(
     packageName: String?,

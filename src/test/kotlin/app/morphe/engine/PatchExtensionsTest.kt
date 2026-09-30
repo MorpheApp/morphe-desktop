@@ -72,4 +72,33 @@ class PatchExtensionsTest {
 
         assertNull(patch.versionCodesFor(packageName, version))
     }
+
+    @Test
+    fun `unionVersionCodes unions a raw list of compatibility entries directly`() {
+        // This is the shape the GUI calls: a plain List<Compatibility> pulled straight off
+        // a Patch, with no Patch involved, unlike the two tests above.
+        val entries = listOf(
+            compatibility(346013387),
+            compatibility(346013440),
+            compatibility(346013442),
+        )
+
+        val codes = entries.unionVersionCodes(packageName, version)
+
+        assertEquals(
+            setOf(346013387, 346013440, 346013442),
+            codes?.get(SupportedAbi.ARM64_V8A)
+        )
+    }
+
+    @Test
+    fun `unionVersionCodes on a single entry returns null when no codes are declared`() {
+        val entry = Compatibility(
+            packageName = packageName,
+            name = "Messenger",
+            targets = listOf(AppTarget(version = version, versionCodes = null)),
+        )
+
+        assertNull(listOf(entry).unionVersionCodes(packageName, version))
+    }
 }

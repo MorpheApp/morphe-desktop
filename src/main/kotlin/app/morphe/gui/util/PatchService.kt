@@ -8,6 +8,7 @@ package app.morphe.gui.util
 import app.morphe.desktop.command.model.deserializeOptionValue
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.unionVersionCodes
 import app.morphe.gui.data.model.CompatiblePackage
 import app.morphe.gui.data.model.ExplicitOptionKind
 import app.morphe.gui.data.model.ImageSize
@@ -277,14 +278,17 @@ class PatchService {
                     experimentalVersions = experimental.mapNotNull { it.version },
                     appIconColor = compatibility.appIconColor
                         ?.let { "#%06X".format(it and 0xFFFFFF) },
+                    // Per-ABI version codes aren't shown in the GUI, so flatten the shared
+                    // engine union down to one set of codes per version.
                     versionBuildCodes = compatibility.targets
-                        .mapNotNull { target ->
-                            val version = target.version ?: return@mapNotNull null
-                            version to target.versionCodes?.values?.toSet().orEmpty()
-                        }
-                        .groupBy({ it.first }, { it.second })
-                        .mapValues { (_, sets) ->
-                            if (sets.any { it.isEmpty() }) emptySet() else sets.flatten().toSet()
+                        .mapNotNull { it.version }
+                        .distinct()
+                        .associateWith { version ->
+                            listOf(compatibility).unionVersionCodes(packageName, version)
+                                ?.values
+                                ?.flatten()
+                                ?.toSet()
+                                .orEmpty()
                         },
                 )
             }
