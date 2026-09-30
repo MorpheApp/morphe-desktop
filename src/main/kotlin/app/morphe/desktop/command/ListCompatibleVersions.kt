@@ -89,7 +89,9 @@ internal class ListCompatibleVersions : Runnable {
 
         fun getVersionCodesString(pkgName: String, versionName: String): String {
             return patches.versionCodesFor(pkgName, versionName)?.let { codes ->
-                " [versionCodes: " + codes.entries.joinToString(", ") { "${it.key.name}=${it.value}" } + "]"
+                " [versionCodes: " +
+                    codes.entries.joinToString(", ") { "${it.key.name}=${it.value.joinToString("/")}" } +
+                    "]"
             } ?: ""
         }
 

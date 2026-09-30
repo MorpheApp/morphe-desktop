@@ -136,7 +136,7 @@ internal object ListPatchesCommand : Runnable {
 
         fun getVersionCodesString(patch: Patch<*>, pkgName: String, versionName: String): String {
             return patch.versionCodesFor(pkgName, versionName)?.let { codes ->
-                codes.entries.joinToString(", ") { "${it.key.name}=${it.value}" }
+                codes.entries.joinToString(", ") { "${it.key.name}=${it.value.joinToString("/")}" }
             } ?: ""
         }
 

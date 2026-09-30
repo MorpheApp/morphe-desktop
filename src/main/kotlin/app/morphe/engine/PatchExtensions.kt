@@ -15,20 +15,37 @@ typealias CompatibleVersionsMap = Map<String, VersionMap>
 fun Patch<*>.versionCodesFor(
     packageName: String?,
     versionName: String,
-): Map<SupportedAbi, Int>? {
+): Map<SupportedAbi, Set<Int>>? {
     val compat = compatibility ?: return null
-    return compat
+    val declaredCodes = compat
         .filter { packageName == null || it.packageName == null || it.packageName == packageName }
         .flatMap { it.targets }
-        .find { it.version == versionName && !it.versionCodes.isNullOrEmpty() }
-        ?.versionCodes
+        .filter { it.version == versionName }
+        .mapNotNull { it.versionCodes }
+
+    // A patch can name this version through more than one compatibility entry, one per
+    // accepted build (e.g. several arm64-only releases under the same version string).
+    // Union every entry's codes per ABI instead of only reading the first one found, or
+    // every build but that one would be missing from the listing.
+    return declaredCodes
+        .flatMap { it.entries }
+        .groupBy({ it.key }, { it.value })
+        .mapValues { (_, codes) -> codes.toSet() }
+        .ifEmpty { null }
 }
 
 fun Iterable<Patch<*>>.versionCodesFor(
     packageName: String?,
     versionName: String,
-): Map<SupportedAbi, Int>? =
-    firstNotNullOfOrNull { it.versionCodesFor(packageName, versionName) }
+): Map<SupportedAbi, Set<Int>>? {
+    val merged = mutableMapOf<SupportedAbi, MutableSet<Int>>()
+    forEach { patch ->
+        patch.versionCodesFor(packageName, versionName)?.forEach { (abi, codes) ->
+            merged.getOrPut(abi) { mutableSetOf() }.addAll(codes)
+        }
+    }
+    return merged.ifEmpty { null }
+}
 
 @Suppress("DEPRECATION")
 fun Patch<*>.versionsFor(
