@@ -9,19 +9,22 @@
 package app.morphe.desktop.command
 
 import app.morphe.desktop.command.model.*
-import app.morphe.desktop.command.CliHttpClient
-import app.morphe.engine.isCompatibleWith
-import app.morphe.engine.compatibleVersionsForDisplay
 import app.morphe.engine.MorpheData
-import app.morphe.engine.supportedVersionsFor
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
 import app.morphe.engine.UpdateChecker
-import app.morphe.engine.util.signWithLegacyFallback
+import app.morphe.engine.compatibleVersionsForDisplay
+import app.morphe.engine.isCompatibleWith
+import app.morphe.engine.options.*
+import app.morphe.engine.supportedVersionsFor
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
-import app.morphe.library.installation.installer.*
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.util.AdbErrorCode
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
+import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.patcher.Patcher
 import app.morphe.patcher.PatcherConfig
 import app.morphe.patcher.apk.ApkMerger
@@ -34,6 +37,12 @@ import app.morphe.patcher.logging.toMorpheLogger
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.setOptions
 import app.morphe.patcher.resource.CpuArchitecture
+import java.io.File
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.util.concurrent.Callable
+import java.util.logging.Logger
+import kotlin.collections.plus
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -44,12 +53,6 @@ import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Help.Visibility.ALWAYS
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
-import java.io.File
-import java.io.PrintWriter
-import java.io.StringWriter
-import java.util.concurrent.Callable
-import java.util.logging.Logger
-import kotlin.collections.plus
 
 @OptIn(ExperimentalSerializationApi::class)
 @VisibleForTesting
@@ -442,30 +445,32 @@ internal object PatchCommand : Callable<Int> {
             }
         }
 
-        val installer = if (deviceSerial != null) {
-            val deviceSerial = deviceSerial!!.ifEmpty { null }
-
-            try {
-                if (mount) {
-                    AdbRootInstaller(deviceSerial)
-                } else {
-                    AdbInstaller(deviceSerial)
+        val adbManager = if (deviceSerial != null) AdbManager() else null
+        val targetDeviceId = if (deviceSerial != null) {
+            val requestedSerial = deviceSerial!!.ifEmpty { null }
+            val verifiedDevice = runBlocking {
+                adbManager!!.startServer().onFailure { e ->
+                    logger.severe(e.message ?: "Failed to start ADB server.")
+                    return@runBlocking null
                 }
-            } catch (_: DeviceNotFoundException) {
-                if (deviceSerial?.isNotEmpty() == true) {
-                    logger.severe(
-                        "Device with serial $deviceSerial not found to install to. " +
-                            "Ensure the device is connected and the serial is correct when using the --install option.",
-                    )
-                } else {
-                    logger.severe(
-                        "No device has been found to install to. " +
-                            "Ensure a device is connected when using the --install option.",
-                    )
+                adbManager.verifyTargetDevice(requestedSerial, mount = mount).getOrElse { e ->
+                    when ((e as? AdbException)?.errorCode) {
+                        AdbErrorCode.DEVICE_NOT_FOUND -> logger.severe(
+                            "Device with serial $requestedSerial not found to install to. " +
+                                "Ensure the device is connected and the serial is correct when using the --install option.",
+                        )
+                        AdbErrorCode.NO_DEVICES,
+                        AdbErrorCode.UNAUTHORIZED_DEVICE -> logger.severe(
+                            "No device has been found to install to. " +
+                                "Ensure a device is connected when using the --install option.",
+                        )
+                        else -> logger.severe(e.message ?: e.toString())
+                    }
+                    adbManager.killServerIfOwned()
+                    return@runBlocking null
                 }
-
-                return EXIT_CODE_ERROR
-            }
+            } ?: return EXIT_CODE_ERROR
+            verifiedDevice.id
         } else {
             null
         }
@@ -482,12 +487,10 @@ internal object PatchCommand : Callable<Int> {
         var patchesSnapshotForFinally: List<PatchBundle> = emptyList()
 
         try {
-            // We resolve each bundle's URL separately.
             bundles.forEach { bundle ->
-                val resolved = PatchFileResolver.resolve(
+                val resolved = PatchResolver.resolveCliFiles(
                     setOf(bundle.patchesFile),
                     prerelease,
-                    CliHttpClient.instance
                 )
                 bundle.patchesFile = resolved.single()
             }
@@ -523,15 +526,13 @@ internal object PatchCommand : Callable<Int> {
             val patchOptionsByFile: Map<File, PatchBundle?> = optionsFilePath?.let { file ->
                 if (file.exists()){
                     logger.info("Reading options from ${file.path}")
-                    val jsonBundles = Json.decodeFromString<List<PatchBundle>>(file.readText())
+                    val jsonBundles = readPatchBundles(file)
                     loadedBundles.associate { lb ->
                         lb.sourceFile to jsonBundles.findMatchingBundle(setOf(lb.sourceFile))
                     }
                 } else {
                     logger.info("Options file ${file.path} does not exist, generating with defaults")
-                    val json = Json { prettyPrint = true }
-                    file.absoluteFile.parentFile?.mkdirs()
-                    file.writeText(json.encodeToString(patchSnapshots))
+                    writePatchBundles(file, patchSnapshots)
                     logger.info("Generated options file at ${file.path}")
                     loadedBundles.zip(patchSnapshots).associate { (lb, b) ->
                         lb.sourceFile to b
@@ -558,28 +559,11 @@ internal object PatchCommand : Callable<Int> {
             val jsonOptionsByFile: Map<File, Map<String, Map<String, Any?>>> =
                 loadedBundles.associate { lb ->
                     val bundle = patchOptionsByFile[lb.sourceFile]
-                    val opts = bundle?.patches?.mapNotNull { (patchName, entry) ->
-                        if (entry.options.isEmpty()) return@mapNotNull null
-                        val patch = lb.patches.firstOrNull {
-                            it.name.equals(patchName, ignoreCase = true)
-                        } ?: return@mapNotNull null
-                        val resolvedName = patch.name ?: return@mapNotNull null
-                        val deserializedOptions = entry.options.mapNotNull { (key, element) ->
-                            if (!patch.options.containsKey(key)) return@mapNotNull null
-                            val option = patch.options[key]
-                            try {
-                                key to deserializeOptionValue(element, option.type)
-                            } catch (e: Exception) {
-                                logger.warning(
-                                    "Failed to deserialize option $key for $patchName in ${lb.sourceFile.name}: ${e.message}"
-                                )
-                                null
-                            }
-                        }.toMap()
-
-                        if (deserializedOptions.isEmpty()) null
-                        else resolvedName to deserializedOptions
-                    }?.toMap() ?: emptyMap()
+                    val opts = bundle?.deserializeOptionsFor(lb.patches) { patchName, key, e ->
+                        logger.warning(
+                            "Failed to deserialize option $key for $patchName in ${lb.sourceFile.name}: ${e.message}"
+                        )
+                    } ?: emptyMap()
                     lb.sourceFile to opts
                 }
 
@@ -637,81 +621,33 @@ internal object PatchCommand : Callable<Int> {
                 if (optionsFilePath?.exists() == true && !updateOptions) {
                     loadedBundles.forEachIndexed { i, lb ->
                         val bundleOpts = patchOptionsByFile[lb.sourceFile] ?: return@forEachIndexed
-                        val bundleSnapshot = patchSnapshots[i]
-                        val bundlePatches = lb.patches
+                        val drift = computeOptionsDrift(
+                            bundlePatches = lb.patches,
+                            bundleSnapshot = patchSnapshots[i],
+                            bundleOpts = bundleOpts,
+                            packageName = packageName,
+                        )
 
-                        val compatiblePatchNames = bundlePatches
-                            .filter { patch ->
-                                patch.isCompatibleWith(
-                                    packageName = packageName,
-                                    includeExperimental = true,
-                                    includeUniversalPatches = true,
-                                )
-                            }
-                            .mapNotNull { it.name?.lowercase() }
-                            .toSet()
-                        // All patch names in this bundle regardless of app compatibility.
-                        // Used for "removed" detection: a patch is only truly removed if
-                        // it's gone from the .mpp entirely, not just incompatible with
-                        // this app.
-                        val allMppPatchNames = bundlePatches.mapNotNull { it.name?.lowercase() }.toSet()
-                        val jsonPatchNames = bundleOpts.patches.keys.map { it.lowercase() }.toSet()
-
-                        val newPatches = compatiblePatchNames - jsonPatchNames
-                        val oldPatches = jsonPatchNames - compatiblePatchNames
-                        val removedPatches = jsonPatchNames - allMppPatchNames
-
-                        // Per-patch option-key drift.
-                        val patchesWithNewOptions = mutableMapOf<String, Set<String>>()
-                        val patchesWithOldOptions = mutableMapOf<String, Set<String>>()
-
-                        for ((patchName, _) in bundleSnapshot.patches) {
-                            if (patchName.lowercase() !in compatiblePatchNames) continue
-                            val jsonEntry = bundleOpts.patches.entries
-                                .firstOrNull { it.key.equals(patchName, ignoreCase = true) }?.value
-                                ?: continue
-
-                            // Compare against the live patch in this bundle (not the snapshot)
-                            // so multi-app patches with the same name aren't merged together.
-                            val actualPatch = bundlePatches.find { patch ->
-                                if (!patch.name.equals(patchName, ignoreCase = true)) return@find false
-                                patch.isCompatibleWith(
-                                    packageName = packageName,
-                                    includeExperimental = true,
-                                    includeUniversalPatches = true,
-                                )
-                            }
-                            val actualOptionKeys = actualPatch?.options?.keys ?: emptySet()
-
-                            val newOptionKeys = actualOptionKeys - jsonEntry.options.keys
-                            if (newOptionKeys.isNotEmpty()) patchesWithNewOptions[patchName] = newOptionKeys
-
-                            val oldOptionKeys = jsonEntry.options.keys - actualOptionKeys
-                            if (oldOptionKeys.isNotEmpty()) patchesWithOldOptions[patchName] = oldOptionKeys
-                        }
-
-                        if (newPatches.isNotEmpty() || oldPatches.isNotEmpty() || removedPatches.isNotEmpty() ||
-                            patchesWithNewOptions.isNotEmpty() || patchesWithOldOptions.isNotEmpty()
-                        ) {
+                        if (drift.hasDrift) {
                             logger.warning("Options file is out of date for ${lb.sourceFile.name}:")
-                            if (newPatches.isNotEmpty()) {
-                                logger.warning("  ${newPatches.size} new patches not in your options file, default patch values will be applied. New patches are:")
-                                newPatches.forEach { logger.warning("    - $it") }
+                            if (drift.newPatches.isNotEmpty()) {
+                                logger.warning("  ${drift.newPatches.size} new patches not in your options file, default patch values will be applied. New patches are:")
+                                drift.newPatches.forEach { logger.warning("    - $it") }
                             }
-                            if (removedPatches.isNotEmpty()) {
-                                logger.warning("  ${removedPatches.size} patches in your options file no longer exist and will be ignored")
+                            if (drift.removedPatches.isNotEmpty()) {
+                                logger.warning("  ${drift.removedPatches.size} patches in your options file no longer exist and will be ignored")
                             }
-                            if (oldPatches.isNotEmpty()) {
-                                logger.warning("  ${oldPatches.size} patches in your options file are not compatible with the app:")
-                                oldPatches.forEach { logger.warning("    - $it") }
+                            if (drift.oldPatches.isNotEmpty()) {
+                                logger.warning("  ${drift.oldPatches.size} patches in your options file are not compatible with the app:")
+                                drift.oldPatches.forEach { logger.warning("    - $it") }
                             }
-                            if (patchesWithNewOptions.isNotEmpty()) {
-                                patchesWithNewOptions.forEach { (patch, key) ->
+                            if (drift.patchesWithNewOptions.isNotEmpty()) {
+                                drift.patchesWithNewOptions.forEach { (patch, key) ->
                                     logger.warning(" \"$patch\" has new options: ${key.joinToString(", ")}")
                                 }
                             }
-                            if (patchesWithOldOptions.isNotEmpty()) {
-                                patchesWithOldOptions.forEach { (patch, key) ->
+                            if (drift.patchesWithOldOptions.isNotEmpty()) {
+                                drift.patchesWithOldOptions.forEach { (patch, key) ->
                                     logger.warning(" \"$patch\" has old options: ${key.joinToString(", ")} that were removed.")
                                 }
                             }
@@ -858,20 +794,20 @@ internal object PatchCommand : Callable<Int> {
 
             // region Install.
 
-            deviceSerial?.let {
+            targetDeviceId?.let { deviceId ->
                 patchingResult.addStepResult(PatchingStep.INSTALLING) {
                     runBlocking {
-                        when (val result = installer!!.install(Installer.Apk(outputFilePath, packageName))) {
-                            RootInstallerResult.FAILURE -> {
-                                logger.severe("Failed to mount the patched APK file")
-                                throw IllegalStateException("Failed to mount the patched APK file")
-                            }
-                            is AdbInstallerResult.Failure -> {
-                                logger.severe(result.exception.toString())
-                                throw result.exception
-                            }
-                            else -> logger.info("Installed the patched APK file")
+                        val installResult = if (mount) {
+                            adbManager!!.mountApk(outputFilePath, packageName, deviceId)
+                        } else {
+                            val spoof = adbManager!!.resolveSpoofInstaller(deviceId)
+                            adbManager.installApk(
+                                apkPath = outputFilePath.absolutePath,
+                                deviceId = deviceId,
+                                installerPackage = spoof,
+                            )
                         }
+                        installResult.getOrThrow()
                     }
                 }
             }
@@ -883,12 +819,18 @@ internal object PatchCommand : Callable<Int> {
                 "Use --continue-on-error to skip failed patches and continue patching"
             )
             return EXIT_CODE_ERROR
+        } catch (_: AdbException) {
+            return EXIT_CODE_ERROR
         } catch (e: Exception) {
             // Should never happen.
             logger.severe("An unexpected error occurred: ${e.message}")
             e.printStackTrace()
             return EXIT_CODE_ERROR
         } finally {
+            adbManager?.let {
+                runBlocking { it.killServerIfOwned() }
+            }
+
             patchingResultOutputFilePath?.let { outputFile ->
                 outputFile.outputStream().use { outputStream ->
                     Json.encodeToStream(patchingResult, outputStream)
@@ -900,27 +842,7 @@ internal object PatchCommand : Callable<Int> {
             // (no DEX references). One JSON entry per .mpp, matched by source.
             if (optionsFilePath != null && updateOptions && patchesSnapshotForFinally.isNotEmpty()) {
                 try {
-                    val existingBundles = optionsFilePath!!.let { file ->
-                        if (file.exists()) {
-                            try { Json.decodeFromString<List<PatchBundle>>(file.readText()) }
-                            catch (e: Exception) { emptyList() }
-                        } else emptyList()
-                    }
-                    // Walk each bundle's snapshot, merge against its matching
-                    // existing entry (by sha256 / source name), and splice the
-                    // updated entry back into the list. Bundles without a prior
-                    // entry get appended.
-                    var updatedBundles = existingBundles
-                    patchesSnapshotForFinally.forEach { snapshot ->
-                        val sourceFile = snapshot.meta.source?.let { File(it) }
-                        val existing = if (sourceFile != null) {
-                            updatedBundles.findMatchingBundle(setOf(sourceFile))
-                        } else null
-                        val updated = snapshot.mergeWith(existing)
-                        updatedBundles = updatedBundles.withUpdatedBundle(updated)
-                    }
-                    val json = Json { prettyPrint = true }
-                    optionsFilePath!!.writeText(json.encodeToString(updatedBundles))
+                    updateOptionsFileFromSnapshots(optionsFilePath!!, patchesSnapshotForFinally)
                     logger.info("Updated options file ${optionsFilePath!!.path}")
                 } catch (e: Exception) {
                     logger.warning("Failed to update options file: ${e.message}")

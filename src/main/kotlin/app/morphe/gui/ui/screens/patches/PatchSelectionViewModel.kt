@@ -10,20 +10,21 @@ import androidx.lifecycle.viewModelScope
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot
+import app.morphe.engine.options.PatchPreferencesRepository
+import app.morphe.engine.options.coerceOptionValue
+import app.morphe.engine.options.optionValueFromJson
+import app.morphe.engine.options.optionValueToJson
+import app.morphe.engine.patches.PatchRepository
+import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.util.ApkOutputNaming
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchPreferencesRepository
-import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
-import app.morphe.gui.util.optionValueFromJson
-import app.morphe.gui.util.optionValueOrNull
-import app.morphe.gui.util.optionValueToJson
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
@@ -552,7 +553,7 @@ class PatchSelectionViewModel(
             val patchName = compoundKey.substring(0, dotIdx)
             val optKey = compoundKey.substring(dotIdx + 1)
             val type = declaredTypes[patchName]?.get(optKey)
-            val typed = type?.let { optionValueOrNull(value, it) }
+            val typed = type?.let { coerceOptionValue(it, value) }
             groupedOptions.getOrPut(patchName) { mutableMapOf() }[optKey] =
                 if (typed == null) JsonPrimitive(value) else optionValueToJson(typed)
         }
@@ -885,37 +886,24 @@ class PatchSelectionViewModel(
      */
     private suspend fun downloadMissingPatches(expectedFilename: String): Result<File> {
         if (localPatchFilePath != null) {
-            val localFile = File(localPatchFilePath)
-            return if (localFile.exists()) Result.success(localFile)
-            else Result.failure(Exception("Local patch file not found: ${localFile.name}"))
+            val localRes = PatchResolver.resolveLocal(localPatchFilePath)
+            return localRes.patchFile?.let { Result.success(it) }
+                ?: Result.failure(Exception(localRes.error?.message ?: "Local patch file not found"))
         }
 
-        val versionRegex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
-        val versionMatch = versionRegex.find(expectedFilename)
-        val expectedVersion = versionMatch?.groupValues?.get(1)
+        val expectedVersion = expectedFilename.substringBefore("__").takeIf { expectedFilename.contains("__") }
+            ?: Regex("""v?(\d+\.\d+\.\d+(?:-dev\.\d+)?)""").find(expectedFilename)?.value
 
         Logger.info("Looking for patches version: ${expectedVersion ?: "latest"}")
 
-        val targetRelease = if (expectedVersion != null) {
-            // A specific version is expected (repatch/update) → the full release list
-            // (API) is the only way to locate that exact tag.
-            val releasesResult = patchRepository.fetchReleases()
-            if (releasesResult.isFailure) {
-                return Result.failure(releasesResult.exceptionOrNull() ?: Exception("Failed to fetch releases"))
-            }
-            val releases = releasesResult.getOrNull() ?: emptyList()
-            if (releases.isEmpty()) return Result.failure(Exception("No releases found"))
-            releases.find { it.tagName.contains(expectedVersion) }
-                ?: releases.firstOrNull { !it.isDevRelease() }
-                ?: return Result.failure(Exception("No suitable release found"))
-        } else {
-            // Just need the latest stable → resolve via the raw manifest (no API call).
-            patchRepository.getLatestStableRelease().getOrNull()
-                ?: return Result.failure(Exception("No suitable release found"))
-        }
-
-        Logger.info("Downloading patches from release: ${targetRelease.tagName}")
-        return patchRepository.downloadPatches(targetRelease)
+        val remoteRes = PatchResolver.resolveRemote(
+            repo = patchRepository,
+            usePreRelease = expectedVersion?.contains("dev", ignoreCase = true) == true,
+            pinnedTag = expectedVersion,
+            strictPin = false,
+        )
+        return remoteRes.patchFile?.let { Result.success(it) }
+            ?: Result.failure(Exception(remoteRes.error?.message ?: "No suitable release found"))
     }
 }
 

@@ -6,10 +6,10 @@
 package app.morphe.desktop.command.utility
 
 import app.morphe.engine.CacheManager
-import picocli.CommandLine.Command
-import picocli.CommandLine.Option
 import java.util.concurrent.Callable
 import java.util.logging.Logger
+import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 
 @Command(
     name = "clear-cache",

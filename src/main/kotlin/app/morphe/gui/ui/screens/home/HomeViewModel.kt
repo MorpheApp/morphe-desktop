@@ -13,9 +13,14 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateInfo
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.patches.PatchCache
+import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.readableMessage
 import app.morphe.engine.util.ApkManifestReader
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
 import app.morphe.engine.util.SignatureIdentity
+import app.morphe.engine.util.isNewerVersion
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.Patch
@@ -24,13 +29,10 @@ import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.home.components.AppListFilter
 import app.morphe.gui.ui.screens.home.components.HomeAppSortMode
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
@@ -43,8 +45,8 @@ import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.SupportedAppExtractor
 import app.morphe.gui.util.VersionResolution
 import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
-import app.morphe.gui.util.isNewerVersion
 import app.morphe.gui.util.resolveVersionStatus
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -260,8 +262,7 @@ class HomeViewModel(
             }
 
             val installError = result.exceptionOrNull()?.let {
-                val detail = (it as? AdbException)?.getUserMessage() ?: it.message ?: ""
-                getString(Res.string.home_install_failed, detail)
+                (it as? AdbException)?.getUserMessage() ?: getString(Res.string.home_install_failed, it.message ?: "")
             } ?: _uiState.value.error
             _uiState.value = _uiState.value.copy(
                 installingPackage = null,
@@ -292,8 +293,7 @@ class HomeViewModel(
                 patchedAppStore.delete(packageName)
             }
             val uninstallError = result.exceptionOrNull()?.let {
-                val detail = (it as? AdbException)?.getUserMessage() ?: it.message ?: ""
-                getString(Res.string.home_uninstall_failed, detail)
+                (it as? AdbException)?.getUserMessage() ?: getString(Res.string.home_uninstall_failed, it.message ?: "")
             } ?: _uiState.value.error
             _uiState.value = _uiState.value.copy(
                 uninstallingPackage = null,
@@ -366,12 +366,16 @@ class HomeViewModel(
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
                     val rawTechnicalError = firstThrowable?.message
                         ?: result.resolved.firstNotNullOfOrNull { it.error }
-                        ?: "Failed to load any patches"
+                    val logMessage = when {
+                        rawTechnicalError.isNullOrBlank() -> "Failed to load any patches"
+                        rawTechnicalError.startsWith("Failed to load", ignoreCase = true) -> rawTechnicalError
+                        else -> "Failed to load any patches: $rawTechnicalError"
+                    }
                     // Log the real throwable (full stack). Never only a null/blank .message.
                     if (firstThrowable != null) {
-                        Logger.error("Failed to load any patches: $rawTechnicalError", firstThrowable)
+                        Logger.error(logMessage, firstThrowable)
                     } else {
-                        Logger.warn("Failed to load any patches: $rawTechnicalError")
+                        Logger.warn(logMessage)
                     }
 
                     val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
@@ -746,7 +750,7 @@ class HomeViewModel(
             .firstOrNull { (source, _) -> source.name == sourceName }
             ?.second
             ?: return true
-        return repo.getCachedPatches(tag) != null
+        return PatchCache.findCachedByVersion(repo.repoPath, tag) != null
     }
 
     private val bundleSupportCache = mutableMapOf<String, List<SupportedApp>>()
@@ -768,7 +772,7 @@ class HomeViewModel(
             when (val choice = overrides[source.name]) {
                 is BundleChoice.Version -> {
                     if (choice.tag != resolved?.resolvedVersion) isCurrent = false
-                    val cached = repo?.getCachedPatches(choice.tag)
+                    val cached = repo?.let { PatchCache.findCachedByVersion(it.repoPath, choice.tag) }
                     when {
                         cached != null ->
                             inputs += MultiSourceLoader.SourceInput(source.id, source.name, cached)

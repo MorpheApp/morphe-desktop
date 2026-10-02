@@ -12,6 +12,7 @@ import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.UpdateInfo
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.util.ApkManifestReader
 import app.morphe.engine.util.ApkOutputNaming
 import app.morphe.engine.util.FileChecksum
@@ -21,7 +22,6 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.UpdateCheckRepository
@@ -223,11 +223,16 @@ class QuickPatchViewModel(
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
                     val technicalError = firstThrowable?.message
                         ?: result.resolved.firstNotNullOfOrNull { it.error }
-                        ?: "Failed to load any patches"
+                    val logMessage = when {
+                        technicalError.isNullOrBlank() -> "Quick mode: Failed to load any patches"
+                        technicalError.startsWith("Quick mode:", ignoreCase = true) -> technicalError
+                        technicalError.startsWith("Failed to load", ignoreCase = true) -> "Quick mode: $technicalError"
+                        else -> "Quick mode: Failed to load any patches: $technicalError"
+                    }
                     if (firstThrowable != null) {
-                        Logger.error("Quick mode: Failed to load any patches: $technicalError", firstThrowable)
+                        Logger.error(logMessage, firstThrowable)
                     } else {
-                        Logger.warn("Quick mode: Failed to load any patches: $technicalError")
+                        Logger.warn(logMessage)
                     }
                     val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }

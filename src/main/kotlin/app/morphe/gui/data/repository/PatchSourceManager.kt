@@ -6,6 +6,7 @@
 package app.morphe.gui.data.repository
 
 import app.morphe.engine.patches.PatchProvider
+import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType

@@ -3,32 +3,34 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.data.repository
+package app.morphe.engine.options
 
-import app.morphe.desktop.command.model.PatchBundle
-import app.morphe.desktop.command.model.PatchBundleMeta
-import app.morphe.desktop.command.model.PatchEntry
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.Logger
+import app.morphe.engine.MorpheData
 import java.io.File
 import java.time.Instant
 import java.time.format.DateTimeFormatter
+import java.util.logging.Level
+import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+
 /**
  * Stores per-(source, package) patch selections and option values across sessions.
  *
- * On disk: <app-data>/patch-preferences.json
- * Schema:  Map<sourceName, Map<packageName, PatchBundle>>
+ * On disk: `<morphe-data>/patch-preferences.json`
+ * Schema:  `Map<sourceName, Map<packageName, PatchBundle>>`
  *
- * The on-disk shape reuses [PatchBundle] / [PatchEntry] from the CLI options file
+ * The on-disk shape reuses [PatchBundle] / [PatchEntry] from the options file
  * format, so prefs files are interchangeable with `patch --options-file` input/output.
  */
-class PatchPreferencesRepository {
+class PatchPreferencesRepository(
+    private val file: File = File(MorpheData.root, FILE_NAME),
+) {
+    private val logger = Logger.getLogger(PatchPreferencesRepository::class.java.name)
 
     private val json = Json {
         prettyPrint = true
@@ -39,11 +41,8 @@ class PatchPreferencesRepository {
     private val mutex = Mutex()
     private var cache: MutableMap<String, MutableMap<String, PatchBundle>>? = null
 
-    private fun prefsFile(): File = File(FileUtils.getAppDataDir(), "patch-preferences.json")
-
     private fun load(): MutableMap<String, MutableMap<String, PatchBundle>> {
         cache?.let { return it }
-        val file = prefsFile()
         val parsed = try {
             if (file.exists()) {
                 json.decodeFromString<Map<String, Map<String, PatchBundle>>>(file.readText())
@@ -53,7 +52,7 @@ class PatchPreferencesRepository {
                 mutableMapOf()
             }
         } catch (e: Exception) {
-            Logger.error("Failed to load patch preferences, starting fresh", e)
+            logger.log(Level.WARNING, "Failed to load patch preferences, starting fresh", e)
             mutableMapOf()
         }
         cache = parsed
@@ -124,13 +123,16 @@ class PatchPreferencesRepository {
             byPkg[packageName] = bundle
 
             try {
-                val file = prefsFile()
                 file.parentFile?.mkdirs()
                 file.writeText(json.encodeToString(all as Map<String, Map<String, PatchBundle>>))
-                Logger.info("Saved patch preferences for $sourceName / $packageName (${patches.size} entries)")
+                logger.info("Saved patch preferences for $sourceName / $packageName (${patches.size} entries)")
             } catch (e: Exception) {
-                Logger.error("Failed to write patch preferences", e)
+                logger.log(Level.SEVERE, "Failed to write patch preferences", e)
             }
         }
+    }
+
+    companion object {
+        const val FILE_NAME = "patch-preferences.json"
     }
 }

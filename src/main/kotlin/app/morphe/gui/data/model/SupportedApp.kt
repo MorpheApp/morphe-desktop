@@ -5,6 +5,7 @@
 
 package app.morphe.gui.data.model
 
+import app.morphe.engine.util.compareVersions
 import app.morphe.gui.util.DownloadUrlResolver
 
 /**
@@ -80,22 +81,6 @@ data class SupportedApp(
             return versions.sortedWith { v1, v2 ->
                 compareVersions(v2, v1) // Descending order
             }.firstOrNull()
-        }
-
-        /**
-         * Compare two version strings.
-         * Returns positive if v1 > v2, negative if v1 < v2, 0 if equal.
-         */
-        private fun compareVersions(v1: String, v2: String): Int {
-            val parts1 = v1.split(".").mapNotNull { it.toIntOrNull() }
-            val parts2 = v2.split(".").mapNotNull { it.toIntOrNull() }
-
-            for (i in 0 until maxOf(parts1.size, parts2.size)) {
-                val p1 = parts1.getOrElse(i) { 0 }
-                val p2 = parts2.getOrElse(i) { 0 }
-                if (p1 != p2) return p1.compareTo(p2)
-            }
-            return 0
         }
     }
 }

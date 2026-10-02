@@ -6,15 +6,13 @@
 package app.morphe.desktop.command.utility
 
 import app.morphe.engine.util.ApkManifestReader
-import app.morphe.engine.util.AppLinkCommands
-import app.morphe.library.installation.installer.*
+import app.morphe.engine.util.AdbManager
+import java.io.File
+import java.util.logging.Logger
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import picocli.CommandLine.*
-import se.vidstige.jadb.JadbConnection
-import java.io.File
-import java.util.logging.Logger
 
 @Command(
     name = "install",
@@ -55,60 +53,53 @@ internal object InstallCommand : Runnable {
     private var stockPackage: String? = null
 
     override fun run() {
+        val adbManager = AdbManager()
+
         suspend fun install(deviceSerial: String? = null) {
-            val result = try {
-                if (packageName != null) {
-                    AdbRootInstaller(deviceSerial)
-                } else {
-                    AdbInstaller(deviceSerial)
-                }.install(Installer.Apk(apk, packageName))
-            } catch (e: Exception) {
-                logger.severe(e.toString())
+            val targetDevice = adbManager.resolveTargetDevice(deviceSerial).getOrElse { e ->
+                logger.severe(e.message ?: e.toString())
                 return
             }
 
-            when (result) {
-                RootInstallerResult.FAILURE -> {
-                    logger.severe("Failed to mount the APK file")
-                    return
-                }
-                is AdbInstallerResult.Failure -> {
-                    logger.severe(result.exception.toString())
-                    return
-                }
-                else -> logger.info("Installed the APK file")
+            val installResult = if (packageName != null) {
+                adbManager.mountApk(apk, packageName!!, targetDevice.id)
+            } else {
+                val spoof = adbManager.resolveSpoofInstaller(targetDevice.id)
+                adbManager.installApk(
+                    apkPath = apk.absolutePath,
+                    deviceId = targetDevice.id,
+                    installerPackage = spoof,
+                )
             }
 
-            if (routeLinks) routeLinks(deviceSerial)
+            if (installResult.isFailure) return
+
+            if (routeLinks) {
+                val patched = ApkManifestReader.read(apk)?.packageName ?: run {
+                    logger.severe("Could not read package name from APK; skipping link routing")
+                    return
+                }
+                adbManager.setLinkHandling(
+                    deviceId = targetDevice.id,
+                    patchedPackage = patched,
+                    stockPackage = stockPackage,
+                    enable = true,
+                ).onFailure { e ->
+                    logger.severe(e.message ?: e.toString())
+                }
+            }
         }
 
         runBlocking {
-            deviceSerials?.map { async { install(it) } }?.awaitAll() ?: install()
-        }
-    }
-
-    private fun routeLinks(deviceSerial: String?) {
-        val patched = ApkManifestReader.read(apk)?.packageName ?: run {
-            logger.severe("Could not read package name from APK; skipping link routing")
-            return
-        }
-        val commands = AppLinkCommands.enablePatched(patched) +
-            (stockPackage?.let { AppLinkCommands.disableStock(it) } ?: emptyList())
-
-        val devices = JadbConnection().devices
-        val device = deviceSerial?.let { s -> devices.firstOrNull { it.serial == s } }
-            ?: devices.firstOrNull()
-            ?: run { logger.severe("No ADB device for link routing"); return }
-
-        commands.forEach { argv ->
-            val cmd = argv.joinToString(" ")
-            val process = device.shellProcessBuilder(cmd).start()
-            val out = process.inputStream.bufferedReader().readText().trim()
-            val exit = process.waitFor()
-            if (exit != 0 || out.contains("Error", true) || out.contains("Failure", true)) {
-                logger.severe("Link command failed: $cmd -> ${out.ifBlank { "exit $exit" }}")
+            adbManager.startServer().onFailure { e ->
+                logger.severe(e.message ?: "Failed to start ADB server")
+                return@runBlocking
+            }
+            try {
+                deviceSerials?.takeIf { it.isNotEmpty() }?.map { async { install(it) } }?.awaitAll() ?: install()
+            } finally {
+                adbManager.killServerIfOwned()
             }
         }
-        logger.info("Routed links to $patched")
     }
 }

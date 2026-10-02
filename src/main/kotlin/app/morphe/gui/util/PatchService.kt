@@ -5,32 +5,18 @@
 
 package app.morphe.gui.util
 
-import app.morphe.desktop.command.model.deserializeOptionValue
 import app.morphe.engine.PatchEngine
+import app.morphe.engine.options.resolveFlatPatchOptions
+import app.morphe.engine.options.toPatchOption
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.gui.data.model.CompatiblePackage
-import app.morphe.gui.data.model.ExplicitOptionKind
-import app.morphe.gui.data.model.ImageSize
 import app.morphe.gui.data.model.Patch
-import app.morphe.gui.data.model.PatchOption
-import app.morphe.gui.data.model.PatchOptionType
-import app.morphe.gui.data.model.SliderBounds
 import app.morphe.patcher.apk.ApkUtils
-import app.morphe.patcher.patch.ColorOption
-import app.morphe.patcher.patch.FilePathOption
-import app.morphe.patcher.patch.FilesOption
-import app.morphe.patcher.patch.FloatRangeOption
-import app.morphe.patcher.patch.FloatSliderOption
-import app.morphe.patcher.patch.FolderOption
-import app.morphe.patcher.patch.ImageOption
-import app.morphe.patcher.patch.IntRangeOption
-import app.morphe.patcher.patch.IntSliderOption
 import app.morphe.patcher.patch.Patch as LibraryPatch
 import app.morphe.patcher.patch.loadPatchesFromJar
 import app.morphe.patcher.resource.CpuArchitecture
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
-import kotlin.reflect.KType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -134,31 +120,7 @@ class PatchService {
             }
             try {
                 val loadedPatches = PatchBundleLoader.loadFlat(tempCopies)
-
-                // Build a lookup: patchName -> (optionKey -> KType) for type-aware coercion.
-                val patchOptionTypes: Map<String, Map<String, KType>> = loadedPatches
-                    .filter { it.name != null }
-                    .associate { patch ->
-                        patch.name!! to patch.options.mapValues { (_, opt) -> opt.type }
-                    }
-
-                // Convert GUI's flat "patchName.optionKey" -> value map
-                // to engine's Map<patchName, Map<optionKey, value>> format.
-                // String values are coerced to the option's native type (Boolean, Int, etc.)
-                // so the patcher receives the expected JVM type, not a raw String.
-                val patchOptions = enabledPatches.associateWith { patchName ->
-                    options.filterKeys { it.startsWith("$patchName.") }
-                        .mapKeys { it.key.removePrefix("$patchName.") }
-                        .mapNotNull { (optKey, strValue) ->
-                            val kType = patchOptionTypes[patchName]?.get(optKey)
-                            val coerced = if (kType != null) {
-                                coerceOptionValue(kType, strValue) ?: strValue
-                            } else {
-                                strValue
-                            }
-                            optKey to coerced
-                        }.toMap()
-                }.filter { it.value.isNotEmpty() }
+                val patchOptions = resolveFlatPatchOptions(loadedPatches, enabledPatches, options)
 
                 val keystoreDetails = if (keystorePath != null) {
                     ApkUtils.KeyStoreDetails(
@@ -309,79 +271,10 @@ class PatchService {
             name = this.name ?: "Unknown",
             description = this.description ?: "",
             compatiblePackages = fromNewApi.ifEmpty { fromLegacyApi },
-            options = this.options.values.map { opt ->
-                val explicitKind = when (opt) {
-                    is FolderOption -> ExplicitOptionKind.Folder
-                    is FilePathOption -> ExplicitOptionKind.FilePath
-                    is FilesOption -> ExplicitOptionKind.Files
-                    is ImageOption -> ExplicitOptionKind.Image
-                    is ColorOption -> ExplicitOptionKind.Color
-                    is IntSliderOption -> ExplicitOptionKind.IntSlider
-                    is FloatSliderOption -> ExplicitOptionKind.FloatSlider
-                    is IntRangeOption -> ExplicitOptionKind.IntRange
-                    is FloatRangeOption -> ExplicitOptionKind.FloatRange
-                    else -> null
-                }
-                val allowedExtensions = when (opt) {
-                    is FilePathOption -> opt.allowedExtensions
-                    is FilesOption -> opt.allowedExtensions
-                    is ImageOption -> opt.allowedExtensions
-                    else -> null
-                }
-                val recommendedSize = when (opt) {
-                    is ImageOption -> opt.recommendedSize?.let { ImageSize(it.width, it.height) }
-                    else -> null
-                }
-                val sliderBounds = when (opt) {
-                    is IntSliderOption -> SliderBounds(opt.min.toFloat(), opt.max.toFloat(), opt.step.toFloat())
-                    is FloatSliderOption -> SliderBounds(opt.min, opt.max, opt.step)
-                    is IntRangeOption -> SliderBounds(opt.min.toFloat(), opt.max.toFloat(), opt.step.toFloat())
-                    is FloatRangeOption -> SliderBounds(opt.min, opt.max, opt.step)
-                    else -> null
-                }
-                PatchOption(
-                    key = opt.key,
-                    title = opt.title ?: opt.key,
-                    description = opt.description ?: "",
-                    type = mapKTypeToOptionType(opt.type, opt.key, opt.title ?: opt.key),
-                    default = when (val def = opt.default) {
-                        null -> null
-                        is List<*> -> def.joinToString(", ")
-                        else -> def.toString()
-                    },
-                    required = opt.required,
-                    valueType = opt.type,
-                    explicitKind = explicitKind,
-                    allowedExtensions = allowedExtensions,
-                    recommendedSize = recommendedSize,
-                    sliderBounds = sliderBounds,
-                    presets = opt.values,
-                    rawDefault = opt.default,
-                )
-            },
+            options = this.options.values.map { it.toPatchOption() },
             isEnabled = this.use,
             category = this.category?.takeIf { it.isNotBlank() }
         )
-    }
-
-    /**
-     * Map Kotlin KType to GUI PatchOptionType.
-     */
-    private fun mapKTypeToOptionType(kType: KType, key: String, title: String): PatchOptionType {
-        val typeName = kType.toString()
-        return when {
-            typeName.contains("Boolean") -> PatchOptionType.BOOLEAN
-            typeName.contains("Int") -> PatchOptionType.INT
-            typeName.contains("Long") -> PatchOptionType.LONG
-            typeName.contains("Float") || typeName.contains("Double") -> PatchOptionType.FLOAT
-            typeName.contains("List") || typeName.contains("Array") || typeName.contains("Set") -> PatchOptionType.LIST
-            typeName.contains("File") || typeName.contains("Path") || typeName.contains("InputStream") -> PatchOptionType.FILE
-            else -> {
-                val combined = "$key $title".lowercase()
-                val fileKeywords = listOf("icon", "image", "logo", "banner", "path", "file", "png", "jpg")
-                if (fileKeywords.any { it in combined }) PatchOptionType.FILE else PatchOptionType.STRING
-            }
-        }
     }
 }
 

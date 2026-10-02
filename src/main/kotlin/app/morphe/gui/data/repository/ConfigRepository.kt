@@ -6,6 +6,7 @@
 package app.morphe.gui.data.repository
 
 import app.morphe.engine.util.PortablePaths
+import app.morphe.engine.util.isDevTag
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.FollowMode
@@ -17,7 +18,6 @@ import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
-import app.morphe.gui.util.isDevTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json

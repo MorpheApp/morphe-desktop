@@ -6,10 +6,9 @@
 package app.morphe.gui.data.model
 
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.options.PatchOption
 import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.serialization.Serializable
-import kotlin.reflect.KType
-import kotlinx.serialization.Transient
 
 /**
  * Represents a single patch from Morphe patches bundle.
@@ -62,52 +61,6 @@ data class CompatiblePackage(
     val appIconColor: String? = null,
     val versionBuildCodes: Map<String, Set<Int>> = emptyMap()
 )
-
-/**
- * Semantic UI hint produced by a typed patcher option subclass.
- * Null when the underlying option is a plain untyped option.
- */
-enum class ExplicitOptionKind {
-    Folder, FilePath, Files, Image, Color, IntSlider, FloatSlider, IntRange, FloatRange
-}
-
-/** Recommended pixel dimensions for an [ExplicitOptionKind.Image] option. */
-data class ImageSize(val width: Int, val height: Int)
-
-/**
- * Bounds declared by a slider option, normalized so one carrier serves the integer and the
- * floating point kinds alike.
- */
-data class SliderBounds(val min: Float, val max: Float, val step: Float?)
-
-@Serializable
-data class PatchOption(
-    val key: String,
-    val title: String,
-    val description: String = "",
-    val type: PatchOptionType = PatchOptionType.STRING,
-    val default: String? = null,
-    val required: Boolean = false,
-    /** The type the patch declared. [type] cannot express a list's element type. */
-    @Transient val valueType: KType? = null,
-    @Transient val explicitKind: ExplicitOptionKind? = null,
-    @Transient val allowedExtensions: List<String>? = null,
-    @Transient val recommendedSize: ImageSize? = null,
-    @Transient val sliderBounds: SliderBounds? = null,
-    @Transient val presets: Map<String, Any?>? = null,
-    @Transient val rawDefault: Any? = null,
-)
-
-@Serializable
-enum class PatchOptionType {
-    STRING,
-    BOOLEAN,
-    INT,
-    LONG,
-    FLOAT,
-    LIST,
-    FILE
-}
 
 /**
  * Configuration for a patching session.

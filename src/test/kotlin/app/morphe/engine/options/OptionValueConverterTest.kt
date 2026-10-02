@@ -3,9 +3,15 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.desktop.command
+package app.morphe.engine.options
 
+import kotlin.reflect.typeOf
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
 
 class OptionValueConverterTest {
     @Test
@@ -74,6 +80,36 @@ class OptionValueConverterTest {
         "[\"\\\"\"]" convertsTo listOf("\"") because "Escaped quotes in strings should be converted to quotes"
         "[[\"\\\"\"]]" convertsTo listOf(listOf("\"")) because "Escaped quotes in strings nested in lists should be converted to quotes"
         "[.1,.2f,,true,FALSE]" convertsTo listOf(.1, .2f, "", true, false) because "Values in lists should be converted to the correct type"
+    }
+
+    @Test
+    fun `coerceOptionValue coerces scalars and lists`() {
+        assertEquals(true, coerceOptionValue(typeOf<Boolean>(), "true"))
+        assertEquals(false, coerceOptionValue(typeOf<Boolean>(), "FALSE"))
+        assertNull(coerceOptionValue(typeOf<Boolean>(), "not-a-bool"))
+
+        assertEquals(42, coerceOptionValue(typeOf<Int>(), "42"))
+        assertEquals(42, coerceOptionValue(typeOf<Int>(), 42.0))
+        assertNull(coerceOptionValue(typeOf<Int>(), "42.5"))
+
+        assertEquals(1.5f, coerceOptionValue(typeOf<Float>(), "1.5"))
+        assertEquals(listOf("a", "b", "c"), coerceOptionValue(typeOf<List<String>>(), "a, b, c"))
+        assertEquals(listOf(1, 2, 3), coerceOptionValue(typeOf<List<Int>>(), "1, 2, 3"))
+        assertNull(coerceOptionValue(typeOf<List<Int>>(), "1, nope, 3"))
+    }
+
+    @Test
+    fun `optionValueToJson and optionValueFromJson roundtrip`() {
+        assertEquals(JsonNull, optionValueToJson(null))
+        assertEquals("", optionValueFromJson(JsonNull))
+
+        val boolJson = optionValueToJson(true)
+        assertEquals(JsonPrimitive(true), boolJson)
+        assertEquals("true", optionValueFromJson(boolJson))
+
+        val listJson = optionValueToJson(listOf("one", "two"))
+        assertEquals(JsonArray(listOf(JsonPrimitive("one"), JsonPrimitive("two"))), listJson)
+        assertEquals("one, two", optionValueFromJson(listJson))
     }
 
     private val convert = OptionValueConverter()::convert

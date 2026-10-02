@@ -3,7 +3,7 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.util
+package app.morphe.engine.util
 
 import app.morphe.engine.model.Release
 import kotlin.test.Test

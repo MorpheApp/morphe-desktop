@@ -5,6 +5,7 @@
 
 package app.morphe.desktop.command.model
 
+import app.morphe.engine.options.optionValueToJson
 import app.morphe.patcher.patch.Patch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
@@ -16,7 +17,6 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonEncoder
-import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
@@ -33,40 +33,12 @@ data class SerializablePatch(
 fun Patch<*>.toSerializablePatch(): SerializablePatch {
     return SerializablePatch(
         name = this.name,
-        options = this.options.mapValues { PatchSerializer.serializeValue(it.value.value) }
+        options = this.options.mapValues { optionValueToJson(it.value.value) }
     )
 }
 
 @ExperimentalSerializationApi
 object PatchSerializer : KSerializer<SerializablePatch> {
-    fun serializeValue(value: Any?): JsonElement {
-        return when (value) {
-            null -> JsonNull
-            is JsonElement -> value
-            is Boolean -> JsonPrimitive(value)
-            is Number -> JsonPrimitive(value)
-            is String -> JsonPrimitive(value)
-            is List<*> -> {
-                buildJsonArray {
-                    value.forEach { item ->
-                        add(serializeValue(item))
-                    }
-                }
-            }
-            is Map<*, *> -> {
-                buildJsonObject {
-                    value.forEach {
-                        require(it.key is String) {
-                            "Map keys must be of type String for serialization, but found: ${it.key?.let { k -> k::class }}"
-                        }
-                        put(it.key as String, serializeValue(it.value))
-                    }
-                }
-            }
-            else -> JsonPrimitive(value.toString())
-        }
-    }
-
     override fun serialize(encoder: Encoder, value: SerializablePatch) {
         require(encoder is JsonEncoder)
 
