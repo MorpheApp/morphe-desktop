@@ -61,7 +61,7 @@ object ApkManifestReader {
                 )
             }
         } catch (e: Exception) {
-            logger.warning("Failed to read manifest from ${apkFile.name}: ${e.message}")
+            logger.warning("Failed to read manifest from ${apkFile.name}: ${e.message ?: e::class.simpleName}")
             null
         }
     }

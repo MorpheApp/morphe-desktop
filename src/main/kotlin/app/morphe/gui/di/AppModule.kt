@@ -103,8 +103,6 @@ val appModule = module {
         PatchingViewModel(
             params.get(),
             get(),
-            get(),
-            get()
         )
     }
 }

@@ -198,10 +198,13 @@ object PatchCache {
             var failedCount = 0
             patchesDir.listFiles()?.forEach { file ->
                 try {
-                    if (!file.deleteRecursively()) throw Exception("Could not delete")
+                    if (!file.deleteRecursively()) {
+                        failedCount++
+                        logger.warning("Failed to delete ${file.name}")
+                    }
                 } catch (e: Exception) {
                     failedCount++
-                    logger.warning("Failed to delete ${file.name}: ${e.message}")
+                    logger.warning("Failed to delete ${file.name}: ${e.message ?: e::class.simpleName}")
                 }
             }
             if (failedCount > 0) {
@@ -212,7 +215,7 @@ object PatchCache {
                 true
             }
         } catch (e: Exception) {
-            logger.warning("Failed to clear patches cache for $repoPath: ${e.message}")
+            logger.warning("Failed to clear patches cache for $repoPath: ${e.message ?: e::class.simpleName}")
             false
         }
     }
