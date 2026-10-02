@@ -5,7 +5,7 @@
 
 package app.morphe.desktop.command.utility
 
-import app.morphe.engine.util.ApkManifestReader
+import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.util.AdbManager
 import java.io.File
 import java.util.logging.Logger
@@ -75,7 +75,7 @@ internal object InstallCommand : Runnable {
             if (installResult.isFailure) return
 
             if (routeLinks) {
-                val patched = ApkManifestReader.read(apk)?.packageName ?: run {
+                val patched = ApkInspector.inspect(apk)?.packageName ?: run {
                     logger.severe("Could not read package name from APK; skipping link routing")
                     return
                 }

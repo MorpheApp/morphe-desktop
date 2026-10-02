@@ -10,10 +10,11 @@ import androidx.lifecycle.viewModelScope
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.UpdateInfo
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
+import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.patches.PatchRepository
-import app.morphe.engine.util.ApkManifestReader
-import app.morphe.engine.util.ApkOutputNaming
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchSource
@@ -27,7 +28,6 @@ import app.morphe.gui.ui.screens.patching.LogEntry
 import app.morphe.gui.ui.screens.patching.LogLevel
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.EnabledSourcesLoader
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
@@ -313,7 +313,7 @@ class QuickPatchViewModel(
      * Handle file drop or selection.
      */
     fun onFilesDropped(files: List<File>) {
-        val apkFile = files.firstOrNull { FileUtils.isApkFile(it) }
+        val apkFile = files.firstOrNull { BundleFormats.isApkOrBundle(it) }
         if (apkFile != null) {
             onFileSelected(apkFile)
         } else {
@@ -354,28 +354,19 @@ class QuickPatchViewModel(
      * Analyze the APK file using dynamic data from patches.
      */
     private suspend fun analyzeApk(file: File): QuickApkInfo? = withContext(Dispatchers.IO) {
-        if (!file.exists() || !FileUtils.isApkFile(file)) {
+        if (!file.exists() || !BundleFormats.isApkOrBundle(file)) {
             _uiState.value = _uiState.value.copy(error = getString(Res.string.error_drop_valid_apk))
             return@withContext null
         }
 
-        // For split APK bundles (.apkm, .xapk, .apks), extract base.apk first
-        val isBundleFormat = FileUtils.isBundleFormat(file)
-        val apkToParse = if (isBundleFormat) {
-            FileUtils.extractBaseApkFromBundle(file) ?: run {
-                _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_extract_base_apk_failed))
-                return@withContext null
-            }
-        } else {
-            file
+        val inspection = ApkInspector.inspect(file) ?: run {
+            _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_analyze_apk_failed))
+            return@withContext null
         }
 
         try {
-            val manifest = ApkManifestReader.read(apkToParse)
-                ?: throw IllegalStateException("ARSCLib couldn't read manifest")
-
-            val packageName = manifest.packageName
-            val versionName = manifest.versionName ?: getString(Res.string.unknown)
+            val packageName = inspection.packageName
+            val versionName = inspection.versionName ?: getString(Res.string.unknown)
 
             // Check if supported using dynamic data
             val dynamicAppInfo = cachedSupportedApps.find { it.packageName == packageName }
@@ -389,7 +380,7 @@ class QuickPatchViewModel(
                 }
 
                 if (packageName !in supportedPackages) {
-                    val appName = SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
+                    val appName = SupportedApp.resolveDisplayName(packageName, inspection.applicationLabel)
                     val supportedNames = cachedSupportedApps.map { it.displayName }
                         .ifEmpty { AppConstants.FALLBACK_PACKAGES.map(SupportedApp::getDisplayName) }
                         .joinToString(", ")
@@ -404,7 +395,7 @@ class QuickPatchViewModel(
 
             // Get display name and recommended version from dynamic data, fallback to constants
             val displayName = dynamicAppInfo?.displayName
-                ?: SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
+                ?: SupportedApp.resolveDisplayName(packageName, inspection.applicationLabel)
 
             val useExperimental = patchSourceManager.getActiveSource().useExperimentalVersions
             val hasExperimental = dynamicAppInfo?.experimentalVersions?.isNotEmpty() == true
@@ -418,7 +409,7 @@ class QuickPatchViewModel(
             // Resolve version status against the supported app's stable +
             // experimental version lists.
             val versionResolution = if (dynamicAppInfo != null) {
-                resolveVersionStatus(versionName, dynamicAppInfo, manifest.versionCode)
+                resolveVersionStatus(versionName, dynamicAppInfo, inspection.versionCode)
             } else {
                 VersionResolution(VersionStatus.UNKNOWN, null)
             }
@@ -450,16 +441,16 @@ class QuickPatchViewModel(
             // TODO: Re-enable when checksums are provided via .mpp files
             val checksumStatus = ChecksumStatus.NotConfigured
 
-            val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
-            val minSdk = manifest.minSdkVersion
+            val architectures = inspection.architectures.toList()
+            val minSdk = inspection.minSdkVersion
 
-            Logger.info("Quick mode: Analyzed $displayName v${manifest.versionName ?: "unknown"} (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
+            Logger.info("Quick mode: Analyzed $displayName v${inspection.versionName ?: "unknown"} (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
 
             QuickApkInfo(
                 fileName = file.name,
                 packageName = packageName,
                 versionName = versionName,
-                versionCode = manifest.versionCode,
+                versionCode = inspection.versionCode,
                 fileSize = file.length(),
                 displayName = displayName,
                 recommendedVersion = recommendedVersion,
@@ -475,8 +466,6 @@ class QuickPatchViewModel(
             Logger.error("Quick mode: Failed to analyze APK", e)
             _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_read_apk_failed, e.message ?: ""))
             null
-        } finally {
-            if (isBundleFormat) apkToParse.delete()
         }
     }
 

@@ -3,7 +3,7 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.engine.util
+package app.morphe.engine.apk
 
 import java.io.File
 
@@ -12,10 +12,8 @@ import java.io.File
  * config/density/abi split APKs (`.apkm` from APKMirror, `.xapk` from APKPure,
  * `.apks` from bundletool/SAI).
  *
- * Single source of truth for "is this a bundle?" so the engine, GUI, and CLI
- * all agree. Lives in `engine.util` because it's a pure data check with no UI
- * or CLI dependencies, and the GUI/CLI both depend on the engine (not the
- * reverse).
+ * Single source of truth for "is this a bundle or APK?" so the engine, GUI, and CLI
+ * all agree.
  */
 object BundleFormats {
     /** Bundle file extensions, lowercase, without the leading dot. */
@@ -23,4 +21,11 @@ object BundleFormats {
 
     /** True if [file]'s extension is a split-APK bundle format. */
     fun isBundle(file: File): Boolean = file.extension.lowercase() in EXTENSIONS
+
+    /** True if [file] is a standalone APK or a split-APK bundle format. */
+    fun isApkOrBundle(file: File): Boolean {
+        if (!file.isFile) return false
+        val ext = file.extension.lowercase()
+        return ext == "apk" || ext in EXTENSIONS
+    }
 }

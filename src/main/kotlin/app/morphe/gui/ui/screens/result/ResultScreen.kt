@@ -21,9 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
-import app.morphe.engine.util.ApkManifestReader
 import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.LocalNavController
@@ -86,7 +86,7 @@ fun ResultScreenContent(outputPath: String) {
     var alreadyInstalled by remember { mutableStateOf(false) }
     LaunchedEffect(outputPath) {
         outputPackage = withContext(Dispatchers.IO) {
-            runCatching { ApkManifestReader.read(outputFile)?.packageName }.getOrNull()
+            runCatching { ApkInspector.inspect(outputFile)?.packageName }.getOrNull()
         }
     }
     LaunchedEffect(monitorState.selectedDevice?.id, monitorState.selectedDevice?.isReady, outputPackage) {

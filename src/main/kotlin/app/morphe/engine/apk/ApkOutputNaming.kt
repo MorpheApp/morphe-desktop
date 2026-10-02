@@ -3,7 +3,7 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.engine.util
+package app.morphe.engine.apk
 
 import app.morphe.engine.patches.PatchBundleLoader
 import java.io.File
@@ -15,9 +15,7 @@ import java.io.File
  * produce identical output paths — no surprises when users switch between
  * surfaces.
  *
- * Lives in `engine.util` because output naming is a pure data transformation
- * with no UI or CLI dependencies, and consolidating it in the engine moves
- * one more thing toward the long-term "engine is the heart" architecture.
+ * Lives in `engine.apk` alongside [ApkInspector] and [BundleFormats].
  */
 object ApkOutputNaming {
 
@@ -57,25 +55,23 @@ object ApkOutputNaming {
         patchesVersionRegex.find(patchesFileName)?.groupValues?.get(1)
 
     /**
-     * Resolve the human-friendly app label from an APK file via ARSCLib
-     * (engine [ApkManifestReader]). Returns null when:
-     *  - the manifest can't be read at all (corrupt APK)
+     * Resolve the human-friendly app label from an APK or bundle archive via ARSCLib
+     * (engine [ApkInspector]). Returns null when:
+     *  - the manifest can't be read at all (corrupt archive)
      *  - the manifest has no label
      *  - the label is stored as a resource reference (`@string/app_name`)
      *    instead of a literal string — common for big apps. Callers should
      *    fall back to a supported-apps lookup or filename in that case.
      */
     fun resolveAppDisplayName(apkFile: File): String? =
-        ApkManifestReader.read(apkFile)?.applicationLabel?.takeIf { it.isNotBlank() }
+        ApkInspector.inspect(apkFile)?.applicationLabel?.takeIf { it.isNotBlank() }
 
     /**
-     * The app's versionName from its manifest (engine [ApkManifestReader]), or null when it
-     * can't be read or is blank. The reliable source of the app version, unlike
-     * [extractApkVersionFromFilename], which only works when the input file follows the
-     * APKMirror naming convention.
+     * The app's versionName from its manifest (engine [ApkInspector]), or null when it
+     * can't be read or is blank. Supports both standalone APKs and split APK bundles.
      */
     fun resolveAppVersion(apkFile: File): String? =
-        ApkManifestReader.read(apkFile)?.versionName?.takeIf { it.isNotBlank() }
+        ApkInspector.inspect(apkFile)?.versionName?.takeIf { it.isNotBlank() }
 
     /**
      * Compute the unified output APK path. Layout:

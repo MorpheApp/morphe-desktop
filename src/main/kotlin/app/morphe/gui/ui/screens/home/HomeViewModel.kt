@@ -12,11 +12,12 @@ import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateInfo
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.readableMessage
-import app.morphe.engine.util.ApkManifestReader
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
 import app.morphe.engine.util.SignatureIdentity
@@ -1061,7 +1062,7 @@ class HomeViewModel(
     }
 
     fun onFilesDropped(files: List<File>) {
-        val apkFile = files.firstOrNull { FileUtils.isApkFile(it) }
+        val apkFile = files.firstOrNull { BundleFormats.isApkOrBundle(it) }
         if (apkFile != null) {
             onFileSelected(apkFile)
         } else {
@@ -1116,7 +1117,7 @@ class HomeViewModel(
             )
         }
 
-        if (!FileUtils.isApkFile(file)) {
+        if (!BundleFormats.isApkOrBundle(file)) {
             return ApkValidationResult(
                 isValid = false,
                 errorMessage = "Invalid APK file extension: ${file.name}",
@@ -1151,29 +1152,19 @@ class HomeViewModel(
      * This works with APKs from any source, not just APKMirror.
      */
     private suspend fun parseApkManifest(file: File): ApkInfo? {
-        // For split APK bundles (.apkm, .xapk, .apks), extract base.apk first
-        val isBundleFormat = FileUtils.isBundleFormat(file)
-        val apkToParse = if (isBundleFormat) {
-            FileUtils.extractBaseApkFromBundle(file) ?: run {
-                Logger.error("Failed to extract base APK from bundle: ${file.name}")
-                return null
-            }
-        } else {
-            file
+        val inspection = ApkInspector.inspect(file) ?: run {
+            Logger.warn(
+                "Full APK manifest parse failed for ${file.name}. " +
+                    "Falling back to limited-info mode (filename heuristics + fuzzy match)."
+            )
+            return parseApkManifestMinimal(file)
         }
 
         return try {
-            // ARSCLib reader (in engine). Same library morphe-patcher uses.
-            // Handles split APKs cleanly because we only read direct string
-            // attributes (no resource resolution that crashes apk-parser on
-            // cross-split references).
-            val manifest = ApkManifestReader.read(apkToParse)
-                ?: throw IllegalStateException("ARSCLib couldn't read manifest")
-
-            val packageName = manifest.packageName
-            val versionName = manifest.versionName ?: getString(Res.string.unknown)
-            val versionCode = manifest.versionCode
-            val minSdk = manifest.minSdkVersion
+            val packageName = inspection.packageName
+            val versionName = inspection.versionName ?: getString(Res.string.unknown)
+            val versionCode = inspection.versionCode
+            val minSdk = inspection.minSdkVersion
 
             val loadedApps = _uiState.value.supportedApps
             val dynamicSupportedApp = loadedApps.find { it.packageName == packageName }
@@ -1188,7 +1179,7 @@ class HomeViewModel(
             // literal label (null for resource-referenced labels like SoundCloud's
             // `@string/app_name`). Last resort: derived from package.
             val appName = dynamicSupportedApp?.displayName
-                ?: SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
+                ?: SupportedApp.resolveDisplayName(packageName, inspection.applicationLabel)
 
             val versionResolution = if (dynamicSupportedApp != null) {
                 resolveVersionStatus(versionName, dynamicSupportedApp, versionCode)
@@ -1198,15 +1189,13 @@ class HomeViewModel(
             val suggestedVersion = versionResolution.suggestedVersion
             val versionStatus = versionResolution.status
 
-            // Get supported architectures from native libraries.
-            // For split bundles, scan the original bundle (splits hold native libs, not base.apk).
-            val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
+            val architectures = inspection.architectures.toList()
 
             // TODO: Re-enable when checksums are provided via .mpp files
             val checksumStatus = ChecksumStatus.NotConfigured
 
             Logger.info(
-                "Parsed APK: $packageName v${manifest.versionName ?: "unknown"}" +
+                "Parsed APK: $packageName v${inspection.versionName ?: "unknown"}" +
                     (versionCode?.let { " build $it" } ?: "") +
                     " (recommended=$suggestedVersion, minSdk=$minSdk, archs=$architectures)"
             )
@@ -1227,24 +1216,11 @@ class HomeViewModel(
                 isUnsupportedApp = !isSupported
             )
         } catch (e: Exception) {
-            // apk-parser commonly chokes on split-APK base.apks whose resource
-            // references point into other splits (SoundCloud and similar). The
-            // base.apk is structurally valid. Android installs it fine, the
-            // patcher merges + patches it fine. But apk-parser can't resolve
-            // cross-split references from an isolated file.
-            //
-            // Fall back to a "limited info" parse: extract package/version from
-            // the filename (APKMirror naming convention), fuzzy-match supported
-            // apps by display name, and let the user proceed to patching
-            // regardless. ApkInfo.hasLimitedInfo=true so the UI can warn that
-            // card details may be approximate.
             Logger.warn(
                 "Full APK manifest parse failed for ${file.name}: ${e.message}. " +
                     "Falling back to limited-info mode (filename heuristics + fuzzy match)."
             )
-            parseApkManifestMinimal(file, isBundleFormat)
-        } finally {
-            if (isBundleFormat) apkToParse.delete()
+            parseApkManifestMinimal(file)
         }
     }
 
@@ -1257,7 +1233,7 @@ class HomeViewModel(
      * Patching still works regardless. The patcher merges splits first and reads
      * the manifest from the merged APK via its own (working) reader.
      */
-    private suspend fun parseApkManifestMinimal(file: File, isBundleFormat: Boolean): ApkInfo {
+    private suspend fun parseApkManifestMinimal(file: File): ApkInfo {
         val (packageFromName, versionFromName) = parseFromApkMirrorFilename(file.name)
         val supportedApps = _uiState.value.supportedApps
 
@@ -1280,7 +1256,7 @@ class HomeViewModel(
             VersionResolution(VersionStatus.UNKNOWN, null)
         }
 
-        val architectures = FileUtils.extractArchitectures(file)
+        val architectures = ApkInspector.extractArchitectures(file).toList()
 
         Logger.info(
             "Limited-info parse for ${file.name}: package=$packageName, " +

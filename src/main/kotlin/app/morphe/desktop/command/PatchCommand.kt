@@ -14,13 +14,14 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.options.OptionKeyConverter
 import app.morphe.engine.options.OptionValueConverter
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.util.AdbErrorCode
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
-import app.morphe.engine.util.ApkOutputNaming
 import app.morphe.patcher.apk.ApkUtils
 import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.resource.CpuArchitecture
@@ -377,11 +378,13 @@ internal object PatchCommand : Callable<Int> {
         UpdateChecker.check(logger)?.let { logger.info(it) }
 
         val outputFilePath = outputFilePath ?: run {
-            val displayName = ApkOutputNaming.resolveAppDisplayName(apk)
+            val inspection = ApkInspector.inspect(apk)
+            val displayName = inspection?.applicationLabel
             ApkOutputNaming.outputApkPath(
                 inputApk = apk,
                 patchesFile = bundles.firstOrNull()?.patchesFile,
                 appDisplayName = displayName,
+                appVersion = inspection?.versionName,
             )
         }
 

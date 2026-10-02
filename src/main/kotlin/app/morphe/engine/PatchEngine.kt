@@ -8,6 +8,9 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
+import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.options.PatchBundle
 import app.morphe.engine.options.computeOptionsDrift
@@ -20,9 +23,6 @@ import app.morphe.engine.options.updateOptionsFileFromSnapshots
 import app.morphe.engine.options.writePatchBundles
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
-import app.morphe.engine.util.ApkManifestReader
-import app.morphe.engine.util.ApkOutputNaming
-import app.morphe.engine.util.BundleFormats
 import app.morphe.engine.util.FileChecksum
 import app.morphe.engine.util.KeystoreImporter
 import app.morphe.engine.util.signWithLegacyFallback
@@ -622,7 +622,7 @@ object PatchEngine {
                 if (config.recordHistory && isSuccess) {
                     try {
                         val (sha, size) = FileChecksum.fingerprintOrNull(finalOutputApk.absolutePath)
-                        val manifest = runCatching { ApkManifestReader.read(finalOutputApk) }.getOrNull()
+                        val manifest = runCatching { ApkInspector.inspect(finalOutputApk) }.getOrNull()
                         val record = PatchedAppRecord(
                             packageName = config.historyMetadata?.originalPackageName?.takeIf { it.isNotBlank() } ?: packageName,
                             currentPackageName = manifest?.packageName,

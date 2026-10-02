@@ -10,7 +10,8 @@ import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheComponents
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.UpdateChecker
-import app.morphe.engine.util.ApkManifestReader
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.BundleFormats
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
@@ -61,10 +62,10 @@ class PatchingViewModel(
             val inputApkFile = File(config.inputApkPath)
             val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), locale) else "?"
             
-            val appVersion = config.appVersion ?: ApkManifestReader.read(inputApkFile)?.versionName ?: "?"
+            val appVersion = config.appVersion ?: ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
             val patchesSourceName = config.patchesSourceName ?: "MORPHE PATCHES"
             val patchesVersion = config.patchesVersion ?: config.sourcesSnapshot.firstOrNull()?.version ?: "?"
-            val isSplit = config.inputApkPath.endsWith(".apkm", true) || config.inputApkPath.endsWith(".xapk", true) || config.inputApkPath.endsWith(".apks", true) || inputApkFile.isDirectory
+            val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
             
             val parentFile = File(config.outputApkPath).parentFile ?: File(System.getProperty("user.home"))
             val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, locale)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, locale)}"

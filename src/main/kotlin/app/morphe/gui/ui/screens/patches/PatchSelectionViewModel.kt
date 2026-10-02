@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
+import app.morphe.engine.apk.AndroidArchitectures
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot
 import app.morphe.engine.options.PatchPreferencesRepository
 import app.morphe.engine.options.coerceOptionValue
@@ -16,13 +19,10 @@ import app.morphe.engine.options.optionValueFromJson
 import app.morphe.engine.options.optionValueToJson
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
-import app.morphe.engine.util.ApkOutputNaming
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.SeenPatchesRepository
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatchService
 import app.morphe.morphe_desktop.generated.resources.*
@@ -102,7 +102,7 @@ class PatchSelectionViewModel(
     private val _uiState = MutableStateFlow(
         PatchSelectionUiState(
             apkArchitectures = apkArchitectures,
-            stripLibsStatus = computeStripLibsStatus(apkArchitectures, ANDROID_ARCHITECTURES),
+            stripLibsStatus = computeStripLibsStatus(apkArchitectures, AndroidArchitectures.ALL),
         )
     )
     val uiState: StateFlow<PatchSelectionUiState> = _uiState.asStateFlow()
@@ -123,7 +123,7 @@ class PatchSelectionViewModel(
             // option isn't lost. Also correct for an Update's freshly-downloaded APK.
             val arches = apkArchitectures.ifEmpty {
                 withContext(Dispatchers.IO) {
-                    runCatching { FileUtils.extractArchitectures(File(apkPath)) }
+                    runCatching { ApkInspector.extractArchitectures(File(apkPath)).toList() }
                         .getOrDefault(emptyList())
                 }
             }
