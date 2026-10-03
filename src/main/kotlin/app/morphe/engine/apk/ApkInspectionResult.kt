@@ -5,7 +5,6 @@
 
 package app.morphe.engine.apk
 
-import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
 
 /**
@@ -20,17 +19,5 @@ data class ApkInspectionResult(
     val applicationLabel: String?,
     val architectures: Set<String>,
     val isBundle: Boolean,
-) {
-    /**
-     * Patcher [CpuArchitecture]s matching detected native libraries.
-     * Empty if the APK is pure-DEX or uses unrecognized architectures.
-     */
-    val cpuArchitectures: Set<CpuArchitecture>
-        get() = architectures.mapNotNull { CpuArchitecture.valueOfOrNull(it) }.toSet()
+)
 
-    /**
-     * Whether this APK has no native CPU architecture constraints.
-     */
-    val isUniversal: Boolean
-        get() = architectures.isEmpty() || architectures.contains(AndroidArchitectures.UNIVERSAL)
-}

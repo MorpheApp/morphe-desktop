@@ -33,10 +33,6 @@ import org.jetbrains.compose.resources.stringResource
  */
 object EnabledSourcesLoader {
 
-    /** What channel the resolved release is on. Used by the home pill LEDs and
-     *  the sheet's channel badge so we don't keep re-deriving from tag strings. */
-    enum class Channel { STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, LOCAL, UNKNOWN }
-
     data class ResolvedSource(
         val source: PatchSource,
         val patchFile: File? = null,
@@ -44,7 +40,7 @@ object EnabledSourcesLoader {
         val latestAvailableVersion: String? = null,
         val isOffline: Boolean = false,
         val error: String? = null,
-        val channel: Channel = Channel.UNKNOWN,
+        val channel: PatchResolver.Channel = PatchResolver.Channel.UNKNOWN,
         val errorRes: StringResource? = null,
         val errorArgs: List<Any> = emptyList(),
     ) {
@@ -155,21 +151,13 @@ object EnabledSourcesLoader {
     }
 
     private fun PatchResolver.ResolutionResult.toResolvedSource(source: PatchSource): ResolvedSource {
-        val mappedChannel = when (channel) {
-            PatchResolver.Channel.STABLE_LATEST -> Channel.STABLE_LATEST
-            PatchResolver.Channel.STABLE_OLDER -> Channel.STABLE_OLDER
-            PatchResolver.Channel.DEV_LATEST -> Channel.DEV_LATEST
-            PatchResolver.Channel.DEV_OLDER -> Channel.DEV_OLDER
-            PatchResolver.Channel.LOCAL -> Channel.LOCAL
-            PatchResolver.Channel.UNKNOWN -> Channel.UNKNOWN
-        }
         val err = error ?: return ResolvedSource(
             source = source,
             patchFile = patchFile,
             resolvedVersion = resolvedVersion,
             latestAvailableVersion = latestAvailableVersion,
             isOffline = isOffline,
-            channel = mappedChannel,
+            channel = channel,
         )
 
         val (res, args) = when (err) {
@@ -189,7 +177,7 @@ object EnabledSourcesLoader {
             error = err.message,
             errorRes = res,
             errorArgs = args,
-            channel = mappedChannel,
+            channel = channel,
         )
     }
 }
@@ -203,7 +191,7 @@ fun EnabledSourcesLoader.Result?.sourceVersionMap(): Map<String, String?> =
     this?.resolved?.associate { it.source.id to it.resolvedVersion } ?: emptyMap()
 
 /** sourceId to the channel its resolved release sits on. Drives the sheet badge. */
-fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, EnabledSourcesLoader.Channel?> =
+fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, PatchResolver.Channel?> =
     this?.resolved?.associate { it.source.id to it.channel } ?: emptyMap()
 
 /**

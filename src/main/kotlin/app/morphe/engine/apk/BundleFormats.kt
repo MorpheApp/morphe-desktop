@@ -19,6 +19,9 @@ object BundleFormats {
     /** Bundle file extensions, lowercase, without the leading dot. */
     val EXTENSIONS = setOf("apkm", "xapk", "apks")
 
+    /** All supported APK & bundle file extensions, lowercase, without the leading dot. */
+    val SUPPORTED_EXTENSIONS = listOf("apk") + EXTENSIONS.toList()
+
     /** True if [file]'s extension is a split-APK bundle format. */
     fun isBundle(file: File): Boolean = file.extension.lowercase() in EXTENSIONS
 

@@ -19,7 +19,6 @@ import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
-import picocli.CommandLine
 
 /**
  * Returns [value] coerced to [type], or null when it cannot stand for one, since the patcher
@@ -180,104 +179,125 @@ fun resolveFlatPatchOptions(
     }.filter { it.value.isNotEmpty() }
 }
 
-class OptionKeyConverter : CommandLine.ITypeConverter<String> {
-    override fun convert(value: String): String = value
+/**
+ * Groups flat `"patchName.optKey" -> rawStringValue` entries into a structured
+ * `Map<patchName, Map<optKey, JsonElement>>` suitable for preference persistence,
+ * coercing values to their declared [KType]s if known.
+ */
+fun groupFlatOptionsToJson(
+    flatOptions: Map<String, String>,
+    declaredTypes: Map<String, Map<String, KType?>> = emptyMap(),
+): Map<String, Map<String, JsonElement>> {
+    val grouped = mutableMapOf<String, MutableMap<String, JsonElement>>()
+    for ((compoundKey, value) in flatOptions) {
+        val dotIdx = compoundKey.indexOf('.')
+        if (dotIdx <= 0) continue
+        val patchName = compoundKey.substring(0, dotIdx)
+        val optKey = compoundKey.substring(dotIdx + 1)
+        val type = declaredTypes[patchName]?.get(optKey)
+        val typed = type?.let { coerceOptionValue(it, value) }
+        grouped.getOrPut(patchName) { mutableMapOf() }[optKey] =
+            if (typed == null) JsonPrimitive(value) else optionValueToJson(typed)
+    }
+    return grouped
 }
 
-class OptionValueConverter : CommandLine.ITypeConverter<Any?> {
-    override fun convert(value: String?): Any? {
-        value ?: return null
+/**
+ * Parses a raw string value from CLI option flags (`-O`) into typed primitives, lists,
+ * or strings according to literal syntax (`[a, b]`, numbers, booleans, quotes).
+ */
+fun parseCliOptionValue(value: String?): Any? {
+    value ?: return null
 
-        return when {
-            value.startsWith("[") && value.endsWith("]") -> {
-                val innerValue = value.substring(1, value.length - 1)
+    return when {
+        value.startsWith("[") && value.endsWith("]") -> {
+            val innerValue = value.substring(1, value.length - 1)
 
-                buildList {
-                    var nestLevel = 0
-                    var insideQuote = false
-                    var escaped = false
+            buildList {
+                var nestLevel = 0
+                var insideQuote = false
+                var escaped = false
 
-                    val item = buildString {
-                        for (char in innerValue) {
-                            when (char) {
-                                '\\' -> {
-                                    if (escaped || nestLevel != 0) {
-                                        append(char)
-                                    }
-
-                                    escaped = !escaped
-                                }
-
-                                '"', '\'' -> {
-                                    if (!escaped) {
-                                        insideQuote = !insideQuote
-                                    } else {
-                                        escaped = false
-                                    }
-
+                val item = buildString {
+                    for (char in innerValue) {
+                        when (char) {
+                            '\\' -> {
+                                if (escaped || nestLevel != 0) {
                                     append(char)
                                 }
 
-                                '[' -> {
-                                    if (!insideQuote) {
-                                        nestLevel++
-                                    }
-
-                                    append(char)
-                                }
-
-                                ']' -> {
-                                    if (!insideQuote) {
-                                        nestLevel--
-
-                                        if (nestLevel == -1) {
-                                            return value
-                                        }
-                                    }
-
-                                    append(char)
-                                }
-
-                                ',' -> if (nestLevel == 0) {
-                                    if (insideQuote) {
-                                        append(char)
-                                    } else {
-                                        add(convert(toString()))
-                                        setLength(0)
-                                    }
-                                } else {
-                                    append(char)
-                                }
-
-                                else -> append(char)
+                                escaped = !escaped
                             }
+
+                            '"', '\'' -> {
+                                if (!escaped) {
+                                    insideQuote = !insideQuote
+                                } else {
+                                    escaped = false
+                                }
+
+                                append(char)
+                            }
+
+                            '[' -> {
+                                if (!insideQuote) {
+                                    nestLevel++
+                                }
+
+                                append(char)
+                            }
+
+                            ']' -> {
+                                if (!insideQuote) {
+                                    nestLevel--
+
+                                    if (nestLevel == -1) {
+                                        return value
+                                    }
+                                }
+
+                                append(char)
+                            }
+
+                            ',' -> if (nestLevel == 0) {
+                                if (insideQuote) {
+                                    append(char)
+                                } else {
+                                    add(parseCliOptionValue(toString()))
+                                    setLength(0)
+                                }
+                            } else {
+                                append(char)
+                            }
+
+                            else -> append(char)
                         }
                     }
+                }
 
-                    if (item.isNotEmpty()) {
-                        add(convert(item))
-                    }
+                if (item.isNotEmpty()) {
+                    add(parseCliOptionValue(item))
                 }
             }
-
-            value.startsWith("\"") && value.endsWith("\"") -> value.substring(1, value.length - 1)
-            value.startsWith("'") && value.endsWith("'") -> value.substring(1, value.length - 1)
-            value.endsWith("f") -> value.dropLast(1).toFloat()
-            value.endsWith("L") -> value.dropLast(1).toLong()
-            value.equals("true", ignoreCase = true) -> true
-            value.equals("false", ignoreCase = true) -> false
-            value.toIntOrNull() != null -> value.toInt()
-            value.toLongOrNull() != null -> value.toLong()
-            value.toDoubleOrNull() != null -> value.toDouble()
-            value.toFloatOrNull() != null -> value.toFloat()
-            value == "null" -> null
-            value == "int[]" -> emptyList<Int>()
-            value == "long[]" -> emptyList<Long>()
-            value == "double[]" -> emptyList<Double>()
-            value == "float[]" -> emptyList<Float>()
-            value == "boolean[]" -> emptyList<Boolean>()
-            value == "string[]" -> emptyList<String>()
-            else -> value
         }
+
+        value.startsWith("\"") && value.endsWith("\"") -> value.substring(1, value.length - 1)
+        value.startsWith("'") && value.endsWith("'") -> value.substring(1, value.length - 1)
+        value.endsWith("f") -> value.dropLast(1).toFloat()
+        value.endsWith("L") -> value.dropLast(1).toLong()
+        value.equals("true", ignoreCase = true) -> true
+        value.equals("false", ignoreCase = true) -> false
+        value.toIntOrNull() != null -> value.toInt()
+        value.toLongOrNull() != null -> value.toLong()
+        value.toDoubleOrNull() != null -> value.toDouble()
+        value.toFloatOrNull() != null -> value.toFloat()
+        value == "null" -> null
+        value == "int[]" -> emptyList<Int>()
+        value == "long[]" -> emptyList<Long>()
+        value == "double[]" -> emptyList<Double>()
+        value == "float[]" -> emptyList<Float>()
+        value == "boolean[]" -> emptyList<Boolean>()
+        value == "string[]" -> emptyList<String>()
+        else -> value
     }
 }

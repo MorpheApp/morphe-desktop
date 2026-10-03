@@ -12,12 +12,10 @@ import app.morphe.engine.PatchEngine
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.BundleFormats
-import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatcherState
-import app.morphe.patcher.apk.ApkUtils
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import java.lang.management.ManagementFactory
@@ -30,12 +28,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
 
 class PatchingViewModel(
-    private val config: PatchConfig,
+    private val config: PatchEngine.Config,
     private val configRepository: ConfigRepository,
 ) : ViewModel() {
 
@@ -59,20 +56,21 @@ class PatchingViewModel(
             val osName = System.getProperty("os.name") ?: "Unknown OS"
             val osArch = System.getProperty("os.arch") ?: "Unknown Arch"
             val maxMemoryMb = (Runtime.getRuntime().maxMemory() / (1024 * 1024)).toInt()
-            val inputApkFile = File(config.inputApkPath)
+            val inputApkFile = config.inputApk
             val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), locale) else "?"
             
-            val appVersion = config.appVersion ?: ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
-            val patchesSourceName = config.patchesSourceName ?: "MORPHE PATCHES"
-            val patchesVersion = config.patchesVersion ?: config.sourcesSnapshot.firstOrNull()?.version ?: "?"
+            val appVersion = ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
+            val sourcesSnapshot = config.historyMetadata?.sourcesSnapshot
+            val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE PATCHES"
+            val patchesVersion = sourcesSnapshot?.firstOrNull()?.version ?: "?"
             val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
             
-            val parentFile = File(config.outputApkPath).parentFile ?: File(System.getProperty("user.home"))
+            val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
             val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, locale)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, locale)}"
 
             val desktopVersion = UpdateChecker.currentVersion() ?: "?"
             val patcherVersion = MorpheComponents.patcherVersion ?: "?"
-            val nativeLibs = if (config.keepArchitectures.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
+            val nativeLibs = if (config.architecturesToKeep.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
 
             val osBean = ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean
             val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, locale)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, locale)}"
@@ -130,38 +128,12 @@ class PatchingViewModel(
 
             // Keystore: pass user-configured keystore if present, or null to let PatchEngine
             // use the shared MorpheData default keystore.
-            val userKeystore = appConfig.resolvedKeystorePath()
-            val keystoreDetails = userKeystore?.let { ks ->
-                ApkUtils.KeyStoreDetails(
-                    keyStore = ks,
-                    keyStorePassword = appConfig.keystorePassword,
-                    alias = appConfig.keystoreAlias.ifEmpty { PatchEngine.Config.DEFAULT_KEYSTORE_ALIAS },
-                    password = appConfig.keystoreEntryPassword.ifEmpty { PatchEngine.Config.DEFAULT_KEYSTORE_PASSWORD },
-                )
+            val userKeystoreDetails = appConfig.toKeyStoreDetails()
+            val engineConfig = if (config.keystoreDetails == null && userKeystoreDetails != null) {
+                config.copy(keystoreDetails = userKeystoreDetails)
+            } else {
+                config
             }
-
-            val engineConfig = PatchEngine.Config(
-                inputApk = inputApkFile,
-                outputApk = File(config.outputApkPath),
-                patchFiles = config.patchesFilePaths.map { File(it) },
-                enabledPatches = config.enabledPatches.toSet(),
-                disabledPatches = config.disabledPatches.toSet(),
-                flatPatchOptions = config.patchOptions,
-                exclusiveMode = config.useExclusiveMode,
-                forceCompatibility = true,
-                architecturesToKeep = config.keepArchitectures,
-                failOnError = !config.continueOnError,
-                keystoreDetails = keystoreDetails,
-                recordHistory = true,
-                appDisplayName = config.appDisplayName,
-                historyMetadata = PatchEngine.HistoryMetadata(
-                    originalPackageName = config.packageName,
-                    displayName = config.appDisplayName,
-                    patchSelectionByBundle = config.patchSelectionByBundle,
-                    patchOptionValues = config.patchOptions,
-                    sourcesSnapshot = config.sourcesSnapshot,
-                ),
-            )
 
             val result = try {
                 runCatching {
@@ -194,17 +166,17 @@ class PatchingViewModel(
                 onSuccess = { engineResult ->
                     if (engineResult.success) {
                         val elapsedMs = System.currentTimeMillis() - startTime
-                        val outputApkFile = File(config.outputApkPath)
+                        val outputApkFile = config.outputApk ?: File(engineResult.outputPath)
                         val outSizeMb = if (outputApkFile.exists()) FormatUtils.formatFileSize(outputApkFile.length(), locale) else "?"
 
                         _uiState.value = _uiState.value.copy(
                             status = PatchingStatus.COMPLETED,
-                            outputPath = config.outputApkPath,
+                            outputPath = engineResult.outputPath,
                             progress = 1f,
                             outputSizeMb = outSizeMb,
                             elapsedSec = formatElapsed(elapsedMs)
                         )
-                        Logger.info("Patching completed: ${config.outputApkPath}")
+                        Logger.info("Patching completed: ${engineResult.outputPath}")
                     } else {
                         val reason = engineResult.failureDetail
                             ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
@@ -287,7 +259,7 @@ class PatchingViewModel(
         ) }
     }
 
-    fun getConfig(): PatchConfig = config
+    fun getConfig(): PatchEngine.Config = config
     
     private fun formatElapsed(ms: Long): String {
         val totalSec = ms / 1000

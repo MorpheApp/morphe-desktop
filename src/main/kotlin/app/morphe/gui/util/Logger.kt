@@ -6,6 +6,7 @@
 package app.morphe.gui.util
 
 import app.morphe.engine.MorpheComponents
+import app.morphe.engine.MorpheData
 import app.morphe.gui.data.constants.AppConstants
 import java.io.File
 import java.io.PrintWriter
@@ -50,7 +51,7 @@ object Logger {
             // Install JUL bridge early so logs during startup (e.g. MorpheData) are unified
             installJulBridge()
 
-            val logsDir = FileUtils.getLogsDir()
+            val logsDir = MorpheData.logsDir
             logFile = File(logsDir, LOG_FILE_NAME)
 
             // Trim log file if it's too large (keep only last N lines)
@@ -69,7 +70,7 @@ object Logger {
             info("Java: ${System.getProperty("java.version")} (${System.getProperty("java.vendor")}) ${System.getProperty("sun.arch.data.model")}-bit")
             info("Memory: ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB max")
             info("User: ${System.getProperty("user.name")}")
-            info("App Data: ${FileUtils.getAppDataDir().absolutePath}")
+            info("App Data: ${MorpheData.root.absolutePath}")
             info("Working Dir: ${System.getProperty("user.dir")}")
             info("=".repeat(60))
 
@@ -234,7 +235,7 @@ object Logger {
      * Get all log files for export.
      */
     fun getAllLogFiles(): List<File> {
-        val logsDir = FileUtils.getLogsDir()
+        val logsDir = MorpheData.logsDir
         return logsDir.listFiles()
             ?.filter { it.name.startsWith(LOG_FILE_NAME) }
             ?.sortedByDescending { it.lastModified() }
@@ -272,7 +273,7 @@ object Logger {
      */
     fun clearLogs(): Boolean {
         return try {
-            val logsDir = FileUtils.getLogsDir()
+            val logsDir = MorpheData.logsDir
             logsDir.listFiles()?.forEach { it.delete() }
             logFile?.createNewFile()
             info("Logs cleared")
@@ -288,7 +289,7 @@ object Logger {
      */
     fun getLogsSize(): Long {
         return try {
-            FileUtils.getLogsDir().walkTopDown()
+            MorpheData.logsDir.walkTopDown()
                 .filter { it.isFile }
                 .sumOf { it.length() }
         } catch (e: Exception) {

@@ -8,16 +8,12 @@
 
 package app.morphe.desktop.command
 
-import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
 import app.morphe.engine.UpdateChecker
-import app.morphe.engine.apk.ApkInspector
-import app.morphe.engine.apk.ApkOutputNaming
-import app.morphe.engine.options.OptionKeyConverter
-import app.morphe.engine.options.OptionValueConverter
+import app.morphe.engine.options.parseCliOptionValue
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.util.AdbErrorCode
 import app.morphe.engine.util.AdbException
@@ -377,17 +373,6 @@ internal object PatchCommand : Callable<Int> {
         // Check for any newer version
         UpdateChecker.check(logger)?.let { logger.info(it) }
 
-        val outputFilePath = outputFilePath ?: run {
-            val inspection = ApkInspector.inspect(apk)
-            val displayName = inspection?.applicationLabel
-            ApkOutputNaming.outputApkPath(
-                inputApk = apk,
-                patchesFile = bundles.firstOrNull()?.patchesFile,
-                appDisplayName = displayName,
-                appVersion = inspection?.versionName,
-            )
-        }
-
         val adbManager = if (deviceSerial != null) AdbManager() else null
         val targetDeviceId = if (deviceSerial != null) {
             val requestedSerial = deviceSerial!!.ifEmpty { null }
@@ -485,8 +470,8 @@ internal object PatchCommand : Callable<Int> {
             recordHistory = true,
         )
 
-        val engineResult = try {
-            runBlocking {
+        try {
+            val engineResult = runBlocking {
                 PatchEngine.patch(
                     config = engineConfig,
                     onProgress = { line ->
@@ -498,47 +483,51 @@ internal object PatchCommand : Callable<Int> {
                     },
                 )
             }
+
+            patchingResultOutputFilePath?.let { outputFile ->
+                outputFile.outputStream().use { outputStream ->
+                    Json.encodeToStream(engineResult, outputStream)
+                }
+                logger.info("Patching result saved to $outputFile")
+            }
+
+            if (engineResult.success) {
+                if (targetDeviceId != null) {
+                    val finalApkFile = File(engineResult.outputPath)
+                    val installSuccess = runBlocking {
+                        val installResult = if (mount) {
+                            adbManager!!.mountApk(finalApkFile, engineResult.packageName, targetDeviceId)
+                        } else {
+                            adbManager!!.installApk(
+                                apkPath = finalApkFile.absolutePath,
+                                deviceId = targetDeviceId,
+                            )
+                        }
+                        installResult.isSuccess
+                    }
+                    if (!installSuccess) return EXIT_CODE_ERROR
+                }
+
+                return EXIT_CODE_SUCCESS
+            } else {
+                logger.severe("Patching aborted: ${engineResult.failureReason ?: "Unknown error"}")
+                if (!continueOnError && engineResult.failedPatches.isNotEmpty()) {
+                    logger.info("Use --continue-on-error to skip failed patches and continue patching")
+                }
+                return EXIT_CODE_ERROR
+            }
         } finally {
             adbManager?.let {
                 runBlocking { it.killServerIfOwned() }
             }
         }
-
-        patchingResultOutputFilePath?.let { outputFile ->
-            outputFile.outputStream().use { outputStream ->
-                Json.encodeToStream(engineResult, outputStream)
-            }
-            logger.info("Patching result saved to $outputFile")
-        }
-
-        if (engineResult.success) {
-            if (targetDeviceId != null) {
-                val finalApkFile = File(engineResult.outputPath)
-                val installSuccess = runBlocking {
-                    val installResult = if (mount) {
-                        adbManager!!.mountApk(finalApkFile, engineResult.packageName, targetDeviceId)
-                    } else {
-                        val spoof = adbManager!!.resolveSpoofInstaller(targetDeviceId)
-                        adbManager.installApk(
-                            apkPath = finalApkFile.absolutePath,
-                            deviceId = targetDeviceId,
-                            installerPackage = spoof,
-                        )
-                    }
-                    installResult.onFailure { e ->
-                        logger.severe("Installation failed: ${e.message}")
-                    }.isSuccess
-                }
-                if (!installSuccess) return EXIT_CODE_ERROR
-            }
-
-            return EXIT_CODE_SUCCESS
-        } else {
-            logger.severe("Patching aborted: ${engineResult.failureReason ?: "Unknown error"}")
-            if (!continueOnError && engineResult.failedPatches.isNotEmpty()) {
-                logger.info("Use --continue-on-error to skip failed patches and continue patching")
-            }
-            return EXIT_CODE_ERROR
-        }
     }
+}
+
+class OptionKeyConverter : CommandLine.ITypeConverter<String> {
+    override fun convert(value: String): String = value
+}
+
+class OptionValueConverter : CommandLine.ITypeConverter<Any?> {
+    override fun convert(value: String?): Any? = parseCliOptionValue(value)
 }

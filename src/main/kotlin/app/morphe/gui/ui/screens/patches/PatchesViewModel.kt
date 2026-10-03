@@ -7,6 +7,7 @@ package app.morphe.gui.ui.screens.patches
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.morphe.engine.ReleaseChannel
 import app.morphe.engine.model.Release
 import app.morphe.engine.options.toPatchBundle
 import app.morphe.engine.options.writePatchBundles
@@ -368,11 +369,6 @@ class PatchesViewModel(
 
     fun getApkPath(): String = apkPath
     fun getApkName(): String = apkName
-}
-
-enum class ReleaseChannel {
-    STABLE,
-    DEV
 }
 
 data class PatchesUiState(

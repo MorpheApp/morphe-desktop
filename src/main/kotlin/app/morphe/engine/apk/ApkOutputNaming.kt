@@ -29,20 +29,52 @@ object ApkOutputNaming {
      * filenames that don't follow this convention.
      */
     fun extractApkVersionFromFilename(fileName: String): String? = try {
-        // Strip the bundle extension first so it doesn't leak into the version.
-        // File.nameWithoutExtension handles single extensions cleanly; we list
-        // the .apk-family ones explicitly because filenames like
-        // `soundcloud_2026.04.27.apkm` have multiple "extensions" in a row
-        // (the version dots look like extensions to nameWithoutExtension).
-        val withoutExt = fileName
-            .removeSuffix(".apk")
-            .removeSuffix(".apkm")
-            .removeSuffix(".xapk")
-            .removeSuffix(".apks")
+        val withoutExt = stripKnownExtension(fileName)
         val afterPackage = withoutExt.substringAfter("_")
         afterPackage.substringBefore("-").takeIf { it.isNotEmpty() }
     } catch (e: Exception) {
         null
+    }
+
+    /**
+     * Best-effort package + version extraction from APKMirror-style filenames:
+     *   `com.google.android.youtube_19.20.30-12345.apk` → `("com.google.android.youtube", "19.20.30")`
+     *
+     * Returns `(null, null)` when the filename doesn't match a package_version pattern.
+     * Scans for semver / date patterns as fallback when not in standard APKMirror format.
+     */
+    fun extractPackageAndVersionFromFilename(fileName: String): Pair<String?, String?> = try {
+        val withoutExt = stripKnownExtension(fileName)
+        val splitOnUnderscore = withoutExt.split('_', limit = 2)
+
+        val packageCandidate = splitOnUnderscore.getOrNull(0)
+        val afterUnderscore = splitOnUnderscore.getOrNull(1)
+
+        val looksLikePackage = packageCandidate != null &&
+            packageCandidate.contains('.') &&
+            packageCandidate.split('.').all { segment ->
+                segment.isNotEmpty() && segment.all { c -> c.isLowerCase() || c.isDigit() || c == '_' }
+            }
+
+        val packageName = if (looksLikePackage) packageCandidate else null
+
+        val versionAfterUnderscore = afterUnderscore?.substringBefore('-')?.takeIf { it.isNotBlank() }
+        val version = versionAfterUnderscore
+            ?: Regex("""\d+\.\d+\.\d+(?:-dev\.\d+)?""").find(withoutExt)?.value
+            ?: Regex("""\d+\.\d+(?:\.\d+)?""").find(withoutExt)?.value
+
+        packageName to version
+    } catch (e: Exception) {
+        null to null
+    }
+
+    private fun stripKnownExtension(fileName: String): String {
+        for (ext in BundleFormats.SUPPORTED_EXTENSIONS) {
+            if (fileName.endsWith(".$ext", ignoreCase = true)) {
+                return fileName.dropLast(ext.length + 1)
+            }
+        }
+        return fileName.substringBeforeLast('.')
     }
 
     /**

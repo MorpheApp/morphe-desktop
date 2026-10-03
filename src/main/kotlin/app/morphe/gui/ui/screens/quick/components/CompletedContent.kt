@@ -293,11 +293,9 @@ internal fun CompletedContent(
                                 scope.launch {
                                     isInstalling = true
                                     installError = null
-                                    val installer = adbManager.resolveSpoofInstaller(device.id)
                                     val result = adbManager.installApk(
                                         apkPath = outputPath,
                                         deviceId = device.id,
-                                        installerPackage = installer,
                                     )
                                     result.fold(
                                         onSuccess = {

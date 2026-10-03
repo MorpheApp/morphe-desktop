@@ -27,6 +27,8 @@ import io.ktor.client.HttpClient
  */
 object RemotePatchSourceFactory {
 
+    const val DEFAULT_REPO_PATH = "MorpheApp/morphe-patches"
+
     private val githubTagRegex = Regex("""github\.com/[^/]+/[^/]+/releases?/tag/([^/?#]+)""")
     private val gitlabTagRegex = Regex("""gitlab\.com/[^/]+/[^/]+(?:/-)?/releases/([^/?#]+)""")
 

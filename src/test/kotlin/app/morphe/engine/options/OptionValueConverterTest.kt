@@ -112,7 +112,31 @@ class OptionValueConverterTest {
         assertEquals("one, two", optionValueFromJson(listJson))
     }
 
-    private val convert = OptionValueConverter()::convert
+    @Test
+    fun `groupFlatOptionsToJson groups and coerces values`() {
+        val flat = mapOf(
+            "Custom branding.appIcon" to "play_black",
+            "Custom branding.iconSize" to "48",
+            "Theme.darkTheme" to "true",
+            "malformedKey" to "ignored",
+        )
+        val declaredTypes = mapOf(
+            "Custom branding" to mapOf(
+                "iconSize" to typeOf<Int>(),
+            ),
+            "Theme" to mapOf(
+                "darkTheme" to typeOf<Boolean>(),
+            ),
+        )
+
+        val result = groupFlatOptionsToJson(flat, declaredTypes)
+        assertEquals(2, result.size)
+        assertEquals(JsonPrimitive("play_black"), result["Custom branding"]?.get("appIcon"))
+        assertEquals(JsonPrimitive(48), result["Custom branding"]?.get("iconSize"))
+        assertEquals(JsonPrimitive(true), result["Theme"]?.get("darkTheme"))
+    }
+
+    private val convert = ::parseCliOptionValue
 
     private infix fun String.convertsTo(to: Any?) = convert(this) to to
     private infix fun Pair<Any?, Any?>.because(reason: String) = assert(this.first == this.second) { reason }

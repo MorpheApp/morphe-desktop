@@ -13,10 +13,12 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateInfo
 import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.PatchRepository
+import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.readableMessage
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
@@ -243,10 +245,7 @@ class HomeViewModel(
         if (!device.isReady || _uiState.value.installingPackage != null) return
         _uiState.value = _uiState.value.copy(installingPackage = packageName)
         viewModelScope.launch {
-            // Always record a non-Play installer so the Play Store won't clobber
-            // the patched app with an official update.
-            val installer = adbManager.resolveSpoofInstaller(device.id)
-            val result = adbManager.installApk(record.outputApkPath, device.id, installerPackage = installer)
+            val result = adbManager.installApk(record.outputApkPath, device.id)
 
             // Mirror ResultScreen: if the user opted into auto-routing links,
             // point the patched app at its web links right after a good install.
@@ -900,8 +899,8 @@ class HomeViewModel(
 
                 val resolved = resolvedByName[sourceName]
                 if (resolved == null) { add(sourceName); continue }
-                val prerelease = resolved.channel == EnabledSourcesLoader.Channel.DEV_LATEST ||
-                    resolved.channel == EnabledSourcesLoader.Channel.DEV_OLDER
+                val prerelease = resolved.channel == PatchResolver.Channel.DEV_LATEST ||
+                    resolved.channel == PatchResolver.Channel.DEV_OLDER
                 val entries = changelogRepository.entriesFor(resolved.source, prerelease)
                 if (entries == null) { add(sourceName); continue }
                 if (names.isEmpty()) { add(sourceName); continue }
@@ -1234,7 +1233,7 @@ class HomeViewModel(
      * the manifest from the merged APK via its own (working) reader.
      */
     private suspend fun parseApkManifestMinimal(file: File): ApkInfo {
-        val (packageFromName, versionFromName) = parseFromApkMirrorFilename(file.name)
+        val (packageFromName, versionFromName) = ApkOutputNaming.extractPackageAndVersionFromFilename(file.name)
         val supportedApps = _uiState.value.supportedApps
 
         // Match against supported apps: by exact package first, then fuzzy name
@@ -1278,42 +1277,6 @@ class HomeViewModel(
             isUnsupportedApp = matched == null,
             hasLimitedInfo = true,
         )
-    }
-
-    /**
-     * Best-effort package + version extraction from APKMirror-style filenames:
-     *   com.google.android.youtube_19.20.30-12345.apk
-     *   → ("com.google.android.youtube", "19.20.30")
-     *
-     * Returns (null, null) when the filename doesn't look like a package_version
-     * pattern. The version-only path also tries a generic semver / date regex
-     * against the whole filename for files like `soundcloud_2026.04.27.apkm`.
-     */
-    private fun parseFromApkMirrorFilename(filename: String): Pair<String?, String?> {
-        val noExt = filename.substringBeforeLast('.')
-        val splitOnUnderscore = noExt.split('_', limit = 2)
-
-        val packageCandidate = splitOnUnderscore.getOrNull(0)
-        val afterUnderscore = splitOnUnderscore.getOrNull(1)
-
-        // A package name has at least one dot + only lowercase/digits/underscore in
-        // each segment. Filters out "soundcloud" while accepting "com.foo.bar".
-        val looksLikePackage = packageCandidate != null &&
-            packageCandidate.contains('.') &&
-            packageCandidate.split('.').all { segment ->
-                segment.isNotEmpty() && segment.all { c -> c.isLowerCase() || c.isDigit() || c == '_' }
-            }
-
-        val packageName = if (looksLikePackage) packageCandidate else null
-
-        // Version: prefer the token right after "_" (APKMirror convention), else
-        // scan the whole filename for a semver / date pattern.
-        val versionAfterUnderscore = afterUnderscore?.substringBefore('-')?.takeIf { it.isNotBlank() }
-        val version = versionAfterUnderscore
-            ?: Regex("""\d+\.\d+\.\d+(?:-dev\.\d+)?""").find(noExt)?.value
-            ?: Regex("""\d+\.\d+(?:\.\d+)?""").find(noExt)?.value
-
-        return packageName to version
     }
 
     /**
@@ -1454,7 +1417,7 @@ data class HomeUiState(
     val uninstallingPackage: String? = null,
     val deviceAppInfo: Map<String, DeviceAppInfo> = emptyMap(),
     val patchesVersion: String? = null,
-    val patchesChannel: EnabledSourcesLoader.Channel? = null,
+    val patchesChannel: PatchResolver.Channel? = null,
     val patchSourceName: String? = null,
     val patchLoadError: String? = null,
     val updateInfo: UpdateInfo? = null,

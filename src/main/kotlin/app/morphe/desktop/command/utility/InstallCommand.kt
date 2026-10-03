@@ -64,11 +64,9 @@ internal object InstallCommand : Runnable {
             val installResult = if (packageName != null) {
                 adbManager.mountApk(apk, packageName!!, targetDevice.id)
             } else {
-                val spoof = adbManager.resolveSpoofInstaller(targetDevice.id)
                 adbManager.installApk(
                     apkPath = apk.absolutePath,
                     deviceId = targetDevice.id,
-                    installerPackage = spoof,
                 )
             }
 

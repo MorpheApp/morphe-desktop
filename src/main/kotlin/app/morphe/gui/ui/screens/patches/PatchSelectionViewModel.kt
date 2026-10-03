@@ -7,6 +7,7 @@ package app.morphe.gui.ui.screens.patches
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.apk.AndroidArchitectures
@@ -14,13 +15,11 @@ import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot
 import app.morphe.engine.options.PatchPreferencesRepository
-import app.morphe.engine.options.coerceOptionValue
+import app.morphe.engine.options.groupFlatOptionsToJson
 import app.morphe.engine.options.optionValueFromJson
-import app.morphe.engine.options.optionValueToJson
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.gui.data.model.Patch
-import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.Logger
@@ -519,7 +518,7 @@ class PatchSelectionViewModel(
     fun runInfo(): RunInfo = RunInfo(
         appName = apkName,
         appVersion = apkVersion.takeIf { it.isNotBlank() }
-            ?: extractVersionFromFilename(File(apkPath).name).orEmpty(),
+            ?: ApkOutputNaming.extractApkVersionFromFilename(File(apkPath).name).orEmpty(),
         apkFileName = File(apkPath).name,
         apkPath = apkPath,
         packageName = packageName,
@@ -527,7 +526,7 @@ class PatchSelectionViewModel(
             val file = File(path)
             RunInfo.Bundle(
                 name = patchSourceNames.getOrNull(i) ?: file.nameWithoutExtension,
-                version = extractPatchesVersion(file.name),
+                version = ApkOutputNaming.extractPatchesVersion(file.name),
                 fileName = file.name,
             )
         },
@@ -546,17 +545,7 @@ class PatchSelectionViewModel(
         val declaredTypes = state.bundles
             .flatMap { it.patches }
             .associate { patch -> patch.name to patch.options.associate { it.key to it.valueType } }
-        val groupedOptions = mutableMapOf<String, MutableMap<String, JsonElement>>()
-        for ((compoundKey, value) in state.patchOptionValues) {
-            val dotIdx = compoundKey.indexOf('.')
-            if (dotIdx <= 0) continue
-            val patchName = compoundKey.substring(0, dotIdx)
-            val optKey = compoundKey.substring(dotIdx + 1)
-            val type = declaredTypes[patchName]?.get(optKey)
-            val typed = type?.let { coerceOptionValue(it, value) }
-            groupedOptions.getOrPut(patchName) { mutableMapOf() }[optKey] =
-                if (typed == null) JsonPrimitive(value) else optionValueToJson(typed)
-        }
+        val groupedOptions = groupFlatOptionsToJson(state.patchOptionValues, declaredTypes)
 
         viewModelScope.launch {
             for ((bundleId, bundleName, patches) in state.bundles) {
@@ -597,20 +586,20 @@ class PatchSelectionViewModel(
 
     // ── Patcher integration ─────────────────────────────────────────────────
 
-    fun createPatchConfig(continueOnError: Boolean = false): PatchConfig {
+    fun createPatchConfig(continueOnError: Boolean = false): PatchEngine.Config {
         saveCurrentSelection()
 
         // Delegate to the shared engine helper. Same path the CLI computes.
         // Passing apkName as the display name preserves the friendly label
         // (e.g. "Youtube") instead of falling back to the filename.
         val inputFile = File(apkPath)
-        val outputPath = ApkOutputNaming.outputApkPath(
+        val outputFile = ApkOutputNaming.outputApkPath(
             inputApk = inputFile,
             patchesFile = File(actualPatchesFilePath),
             baseOutputDir = defaultOutputDirectory?.let { File(it) },
             appDisplayName = apkName,
             appVersion = apkVersion,
-        ).absolutePath
+        )
 
         // Flatten across bundles: the engine takes a single flat enable/disable
         // list and dedups identical patches at apply time, so the union of
@@ -634,33 +623,34 @@ class PatchSelectionViewModel(
             PatchedSourceSnapshot(
                 sourceId = sourceIdsByName[name] ?: name,
                 sourceName = name,
-                version = extractPatchesVersion(File(path).name) ?: "unknown",
+                version = ApkOutputNaming.extractPatchesVersion(File(path).name) ?: "unknown",
             )
         }
 
         val activeSources = fullSourcesSnapshot.filter { snapshot ->
             selectionByBundle[snapshot.sourceName]?.isNotEmpty() == true
         }
-        
-        val displaySources = activeSources.takeIf { it.isNotEmpty() } ?: fullSourcesSnapshot.take(1)
 
-        return PatchConfig(
-            inputApkPath = apkPath,
-            outputApkPath = outputPath,
-            patchesFilePaths = actualPatchesFilePaths,
-            enabledPatches = selectedPatchNames,
-            disabledPatches = disabledPatchNames,
-            patchOptions = _uiState.value.patchOptionValues,
-            useExclusiveMode = true,
-            keepArchitectures = keepArches,
-            continueOnError = continueOnError,
-            packageName = packageName,
+        return PatchEngine.Config(
+            inputApk = inputFile,
+            outputApk = outputFile,
+            patchFiles = actualPatchesFilePaths.map { File(it) },
+            enabledPatches = selectedPatchNames.toSet(),
+            disabledPatches = disabledPatchNames.toSet(),
+            flatPatchOptions = _uiState.value.patchOptionValues,
+            exclusiveMode = true,
+            forceCompatibility = true,
+            architecturesToKeep = keepArches,
+            failOnError = !continueOnError,
+            recordHistory = true,
             appDisplayName = apkName,
-            patchSelectionByBundle = selectionByBundle,
-            sourcesSnapshot = activeSources,
-            appVersion = apkVersion.takeIf { it.isNotBlank() },
-            patchesSourceName = displaySources.joinToString(", ") { it.sourceName },
-            patchesVersion = displaySources.joinToString(", ") { it.version }
+            historyMetadata = PatchEngine.HistoryMetadata(
+                originalPackageName = packageName,
+                displayName = apkName,
+                patchSelectionByBundle = selectionByBundle,
+                patchOptionValues = _uiState.value.patchOptionValues,
+                sourcesSnapshot = activeSources,
+            ),
         )
     }
 
@@ -685,15 +675,6 @@ class PatchSelectionViewModel(
         disabled.removeAll(selected)
         return selected.toList() to disabled.toList()
     }
-
-    // Delegate to the shared engine helper so GUI and CLI agree on filename
-    // parsing. Returning these as instance methods (not direct calls) keeps
-    // existing call sites in this file unchanged.
-    private fun extractVersionFromFilename(fileName: String): String? =
-        ApkOutputNaming.extractApkVersionFromFilename(fileName)
-
-    private fun extractPatchesVersion(patchesFileName: String): String? =
-        ApkOutputNaming.extractPatchesVersion(patchesFileName)
 
     /**
      * Resolve the filename of the running Morphe Desktop JAR. Falls back to
@@ -740,11 +721,12 @@ class PatchSelectionViewModel(
             .filter { it.name.isNotBlank() }
             .ifEmpty { listOf(File(actualPatchesFilePath)) }
         val primaryPatchesFile = patchesFiles.first()
-        val appFolderName = apkName.replace(" ", "-")
-        val version = extractVersionFromFilename(inputFile.name) ?: "patched"
-        val patchesVersion = extractPatchesVersion(primaryPatchesFile.name)
-        val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
-        val outputFileName = "${appFolderName}-Morphe-${version}${patchesSuffix}.apk"
+        val outputFileName = ApkOutputNaming.outputApkPath(
+            inputApk = inputFile,
+            patchesFile = primaryPatchesFile,
+            appDisplayName = apkName,
+            appVersion = apkVersion,
+        ).name
 
         val state = uiState.value
 

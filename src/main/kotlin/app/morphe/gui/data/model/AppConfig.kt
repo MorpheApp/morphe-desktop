@@ -10,6 +10,7 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.util.PortablePaths
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.patcher.apk.ApkUtils
 import java.io.File
 import kotlinx.serialization.Serializable
 
@@ -178,6 +179,16 @@ data class AppConfig(
      */
     fun resolvedKeystorePath(): File? =
         keystorePath?.let(PortablePaths::resolve)
+
+    fun toKeyStoreDetails(): ApkUtils.KeyStoreDetails? {
+        val ks = resolvedKeystorePath() ?: return null
+        return ApkUtils.KeyStoreDetails(
+            keyStore = ks,
+            keyStorePassword = keystorePassword,
+            alias = keystoreAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+            password = keystoreEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
+        )
+    }
 }
 
 @Serializable

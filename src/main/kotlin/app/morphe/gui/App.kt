@@ -29,8 +29,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import app.morphe.engine.PatchEngine
 import app.morphe.gui.data.model.MorpheFill
-import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -505,7 +505,7 @@ private fun appContent(
                                                     }
                                                 }
                                             ) { backStackEntry ->
-                                                val config = backStackEntry.getComplexArg<PatchConfig>()
+                                                val config = backStackEntry.getComplexArg<PatchEngine.Config>()
                                                 if (config != null) {
                                                     PatchingScreen(config = config)
                                                 }

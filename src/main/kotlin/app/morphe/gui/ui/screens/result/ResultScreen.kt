@@ -145,13 +145,9 @@ fun ResultScreenContent(outputPath: String) {
             installError = null
             installProgress = if (alreadyInstalled) getString(Res.string.result_adb_updating_on_device, device.displayName) else getString(Res.string.adb_status_installing, device.displayName)
 
-            // Always record a non-Play installer so the Play Store won't clobber
-            // the patched app with an official update.
-            val installer = adbManager.resolveSpoofInstaller(device.id)
             val result = adbManager.installApk(
                 apkPath = outputPath,
                 deviceId = device.id,
-                installerPackage = installer,
                 onProgress = { installProgress = it }
             )
 

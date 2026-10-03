@@ -59,28 +59,6 @@ object ApkInspector {
         return inspect(file)?.architectures ?: emptySet()
     }
 
-    /**
-     * Optional utility to extract base.apk from a split bundle to a target file.
-     * Inspection itself does NOT use this method and operates purely in-memory.
-     */
-    fun extractBaseApk(bundleFile: File, destinationFile: File): File? {
-        return try {
-            ZipFile(bundleFile).use { zip ->
-                val baseEntry = findBaseApkEntry(zip) ?: return null
-                destinationFile.parentFile?.mkdirs()
-                zip.getInputStream(baseEntry).use { input ->
-                    destinationFile.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
-                }
-                destinationFile
-            }
-        } catch (e: Exception) {
-            logger.warning("Failed to extract base APK from ${bundleFile.name}: ${e.message}")
-            null
-        }
-    }
-
     private fun inspectApk(file: File): ApkInspectionResult? {
         ZipFile(file).use { zip ->
             val manifestEntry = zip.getEntry("AndroidManifest.xml") ?: run {

@@ -31,33 +31,6 @@ fun Iterable<Patch<*>>.versionCodesFor(
     firstNotNullOfOrNull { it.versionCodesFor(packageName, versionName) }
 
 @Suppress("DEPRECATION")
-fun Patch<*>.versionsFor(
-    packageName: String?,
-    includeExperimental: Boolean,
-): List<String> {
-    val compat = compatibility
-
-    if (!compat.isNullOrEmpty()) {
-        val matchingEntries = compat.filter { entry ->
-            packageName == null || entry.packageName == null || entry.packageName == packageName
-        }
-        return matchingEntries.flatMap { entry ->
-            entry.targets
-                .filter { target -> includeExperimental || !target.isExperimental }
-                .mapNotNull { it.version }
-        }
-    }
-
-    val legacyPackages = compatiblePackages ?: return emptyList()
-    val matchingPkgs = if (packageName == null) {
-        legacyPackages
-    } else {
-        legacyPackages.filter { (name, _) -> name == packageName }
-    }
-    return matchingPkgs.flatMap { (_, versions) -> versions?.toList() ?: emptyList() }
-}
-
-@Suppress("DEPRECATION")
 fun Patch<*>.isCompatibleWith(
     packageName: String,
     includeExperimental: Boolean,

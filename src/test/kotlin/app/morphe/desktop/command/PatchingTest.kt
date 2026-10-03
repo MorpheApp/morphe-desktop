@@ -365,10 +365,6 @@ class PatchingTest {
             apkFile.absolutePath
         )
 
-        if (!useArsclib) {
-            args += "--force-apktool"
-        }
-
         return CommandLine(MainCommand).execute(*args)
     }
 }

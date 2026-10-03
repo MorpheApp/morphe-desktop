@@ -15,6 +15,7 @@ import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.patches.PatchRepository
+import app.morphe.engine.patches.PatchResolver
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchSource
@@ -548,15 +549,7 @@ class QuickPatchViewModel(
 
             // Keystore: pass user-configured keystore if present, or null to let PatchEngine
             // use the shared MorpheData default keystore.
-            val userKeystore = appConfig.resolvedKeystorePath()
-            val keystoreDetails = userKeystore?.let { ks ->
-                ApkUtils.KeyStoreDetails(
-                    keyStore = ks,
-                    keyStorePassword = appConfig.keystorePassword,
-                    alias = appConfig.keystoreAlias.ifEmpty { PatchEngine.Config.DEFAULT_KEYSTORE_ALIAS },
-                    password = appConfig.keystoreEntryPassword.ifEmpty { PatchEngine.Config.DEFAULT_KEYSTORE_PASSWORD },
-                )
-            }
+            val keystoreDetails = appConfig.toKeyStoreDetails()
 
             // Resolve sources snapshot for history recording
             val resolvedSources = cachedSourcesResult?.resolved?.filter { it.patchFile != null }
@@ -832,7 +825,7 @@ data class QuickPatchUiState(
     val isLoadingPatches: Boolean = true,
     val supportedApps: List<SupportedApp> = emptyList(),
     val patchesVersion: String? = null,
-    val patchesChannel: EnabledSourcesLoader.Channel? = null,
+    val patchesChannel: PatchResolver.Channel? = null,
     val patchSourceName: String? = null,
     val patchLoadError: String? = null,
     val isOffline: Boolean = false,

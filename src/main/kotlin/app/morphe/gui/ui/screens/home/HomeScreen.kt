@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.util.AdbException
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
@@ -409,7 +410,7 @@ fun HomeScreenContent(
 //                ?.resolved
 //                ?.associate { it.source.id to it.resolvedVersion }
 //                ?: emptyMap()
-            val channelsBySource: Map<String, EnabledSourcesLoader.Channel?> =
+            val channelsBySource: Map<String, PatchResolver.Channel?> =
                 resolvedSnapshot
                     ?.resolved
                     ?.associate { it.source.id to it.channel }

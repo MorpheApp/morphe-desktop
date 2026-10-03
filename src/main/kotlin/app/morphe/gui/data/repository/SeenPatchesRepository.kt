@@ -5,7 +5,7 @@
 
 package app.morphe.gui.data.repository
 
-import app.morphe.gui.util.FileUtils
+import app.morphe.engine.MorpheData
 import app.morphe.gui.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -19,7 +19,7 @@ class SeenPatchesRepository {
     private val mutex = Mutex()
     private val json = Json { ignoreUnknownKeys = true; prettyPrint = true }
 
-    private fun file(): File = File(FileUtils.getAppDataDir(), "seen-patches.json")
+    private fun file(): File = File(MorpheData.root, "seen-patches.json")
 
     private fun load(): MutableMap<String, MutableMap<String, List<String>>> {
         val f = file()

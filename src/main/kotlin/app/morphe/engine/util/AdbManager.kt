@@ -26,7 +26,9 @@ class AdbManager {
     private val logger = Logger.getLogger(AdbManager::class.java.name)
     private var adbPath: String? = null
 
-    internal companion object {
+    companion object {
+        const val AUTO_SPOOF = "__AUTO_SPOOF__"
+
         /* Popular store packages. The spoof installer is the first one NOT on the device — see [resolveSpoofInstaller]. */
         internal val SPOOF_STORE_CANDIDATES = listOf(
             "com.amazon.venezia",              // Amazon Appstore
@@ -398,14 +400,17 @@ class AdbManager {
 
     /**
      * Install an APK on the specified device (or default device if only one connected).
+     *
+     * [installerPackage] specifies the recorded installer source (`pm install -i`).
+     * Defaults to [AUTO_SPOOF], which automatically resolves a non-Play store package
+     * for [deviceId] to stop the Play Store from auto-updating the patched app.
+     * Pass explicit `null` to disable installer attribution.
      */
     suspend fun installApk(
         apkPath: String,
         deviceId: String? = null,
         allowDowngrade: Boolean = true,
-        /** Set the recorded installer package (`pm install -i`). A non-Play value
-         *  stops the Play Store from auto-updating (and clobbering) the patched app. */
-        installerPackage: String? = null,
+        installerPackage: String? = AUTO_SPOOF,
         onProgress: (String) -> Unit = {}
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
@@ -425,6 +430,12 @@ class AdbManager {
             return@withContext Result.failure(it)
         }
 
+        val effectiveInstaller = if (installerPackage == AUTO_SPOOF) {
+            resolveSpoofInstaller(targetDevice.id)
+        } else {
+            installerPackage
+        }
+
         // Build + run the install, factored so we can transparently retry
         // without installer attribution. Stricter Android builds could reject an
         // `-i` pointing at a store the user doesn't have; if that's what failed,
@@ -434,9 +445,9 @@ class AdbManager {
         fun attemptInstall(withInstaller: Boolean): Result<Unit> {
             val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
             if (allowDowngrade) command.add("-d") // Allow downgrade
-            if (withInstaller && !installerPackage.isNullOrBlank()) {
+            if (withInstaller && !effectiveInstaller.isNullOrBlank()) {
                 command.add("-i") // Record installer source (blocks Play auto-update)
-                command.add(installerPackage)
+                command.add(effectiveInstaller)
             }
             command.add(apkPath)
 
@@ -478,14 +489,14 @@ class AdbManager {
             }
         }
 
-        val withInstaller = !installerPackage.isNullOrBlank()
+        val withInstaller = !effectiveInstaller.isNullOrBlank()
         val first = attemptInstall(withInstaller = withInstaller)
         val finalResult = if (
             first.isFailure &&
             withInstaller &&
             (first.exceptionOrNull() as? AdbException)?.errorCode == AdbErrorCode.INSTALL_GENERIC
         ) {
-            logger.info("Install with '-i $installerPackage' failed; retrying without installer attribution")
+            logger.info("Install with '-i $effectiveInstaller' failed; retrying without installer attribution")
             attemptInstall(withInstaller = false)
         } else {
             first
