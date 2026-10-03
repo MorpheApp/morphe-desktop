@@ -5,7 +5,9 @@
 
 package app.morphe.gui.data.repository
 
+import app.morphe.engine.MorpheData
 import app.morphe.engine.util.PortablePaths
+import app.morphe.engine.util.isDevTag
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.FollowMode
@@ -15,9 +17,7 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.theme.ThemePreference
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
-import app.morphe.gui.util.isDevTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -46,7 +46,7 @@ open class ConfigRepository {
         // unified morphe-data location. Runs once and is a no-op thereafter.
         ConfigMigration.runIfNeeded()
 
-        val configFile = FileUtils.getConfigFile()
+        val configFile = MorpheData.configFile
 
         try {
             if (configFile.exists()) {
@@ -72,7 +72,7 @@ open class ConfigRepository {
      */
     suspend fun saveConfig(config: AppConfig) = withContext(Dispatchers.IO) {
         try {
-            val configFile = FileUtils.getConfigFile()
+            val configFile = MorpheData.configFile
             val content = json.encodeToString(AppConfig.serializer(), config)
             configFile.writeText(content)
             cachedConfig = config

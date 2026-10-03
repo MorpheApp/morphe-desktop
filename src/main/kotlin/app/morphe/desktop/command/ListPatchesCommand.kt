@@ -8,21 +8,21 @@
 
 package app.morphe.desktop.command
 
-import app.morphe.desktop.command.CliHttpClient
 import app.morphe.engine.compatibleVersionsForDisplay
 import app.morphe.engine.isCompatibleWith
+import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.versionCodesFor
+import app.morphe.patcher.patch.Option as PatchOption
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.loadPatchesFromJar
+import java.io.File
+import java.util.logging.Logger
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Spec
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Help.Visibility.ALWAYS
-import java.io.File
-import java.util.logging.Logger
-import app.morphe.patcher.patch.Option as PatchOption
 
 @Command(
     name = "list-patches",
@@ -202,10 +202,9 @@ internal object ListPatchesCommand : Runnable {
 
 
         try {
-            patchesFiles = PatchFileResolver.resolve(
+            patchesFiles = PatchResolver.resolveCliFiles(
                 patchesFiles,
                 prerelease,
-                CliHttpClient.instance
             )
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(

@@ -6,15 +6,16 @@
 package app.morphe.engine.patches
 
 import app.morphe.engine.GitHubPatMissingException
+import app.morphe.engine.MorpheData
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
 import app.morphe.engine.network.HttpService
-import app.morphe.gui.data.model.AppConfig
-import app.morphe.gui.data.repository.ConfigRepository
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.context.GlobalContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * Remote patch source for GitHub Pull Requests.
@@ -27,19 +28,12 @@ class PullRequestPatchSource(
     val owner: String,
     val repo: String,
     val prNumber: String,
-    private val configRepository: ConfigRepository? = null,
+    private val patProvider: suspend () -> String? = ::defaultGitHubPatProvider,
 ) : GitHubPatchSource(http, "$owner/$repo") {
 
     override val provider: PatchProvider = PatchProvider.GITHUB_PR
 
     private var cachedRelease: Release? = null
-
-    private suspend fun getConfig(): AppConfig {
-        val repo = configRepository
-            ?: runCatching { GlobalContext.get().get<ConfigRepository>() }.getOrNull()
-            ?: ConfigRepository()
-        return repo.loadConfig()
-    }
 
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {
         try {
@@ -48,7 +42,6 @@ class PullRequestPatchSource(
             cachedRelease = release
             Result.success(listOf(release))
         } catch (e: Exception) {
-            logger.warning("GitHub PR: release resolution failed for $repoPath#$prNumber: ${e.message}")
             Result.failure(e)
         }
     }
@@ -60,17 +53,11 @@ class PullRequestPatchSource(
             cachedRelease = release
             Result.success(release)
         } catch (e: Exception) {
-            logger.warning("GitHub PR: manifest/asset resolution failed for $repoPath#$prNumber: ${e.message}")
             Result.failure(e)
         }
     }
 
-    private suspend fun getGitHubPat(): String? {
-        val config = getConfig()
-        return config.gitHubPat.trim().takeIf { it.isNotEmpty() }
-            ?: System.getenv("GITHUB_TOKEN")?.trim()?.takeIf { it.isNotEmpty() }
-            ?: System.getenv("GH_TOKEN")?.trim()?.takeIf { it.isNotEmpty() }
-    }
+    private suspend fun getGitHubPat(): String? = patProvider()
 
     private suspend fun resolvePrRelease(): Release {
         val pat = getGitHubPat()
@@ -87,7 +74,7 @@ class PullRequestPatchSource(
             id = 0L,
             name = assetName,
             downloadUrl = prAsset.downloadUrl,
-            size = 0L, // 0L prevents PatchRepository cache checks from failing against unzipped file size
+            size = 0L, // 0L prevents cache checks from failing against unzipped file size
             contentType = "application/zip",
         )
 
@@ -119,8 +106,30 @@ class PullRequestPatchSource(
             logger.info("GitHub PR: downloaded ${file.length()} bytes to ${file.absolutePath}")
             Result.success(file)
         } catch (e: Exception) {
-            logger.warning("GitHub PR download failed: ${e.message}")
             Result.failure(e)
+        }
+    }
+
+    companion object {
+        private val lenientJson = Json { ignoreUnknownKeys = true; isLenient = true }
+
+        /**
+         * Reads the GitHub PAT from `morphe-data/config.json` (if configured via GUI)
+         * or falls back to `GITHUB_TOKEN` / `GH_TOKEN` environment variables.
+         */
+        suspend fun defaultGitHubPatProvider(): String? = withContext(Dispatchers.IO) {
+            val fromConfig = runCatching {
+                val configFile = MorpheData.configFile
+                if (configFile.exists()) {
+                    lenientJson.parseToJsonElement(configFile.readText())
+                        .jsonObject["gitHubPat"]?.jsonPrimitive?.content
+                        ?.trim()?.takeIf { it.isNotEmpty() }
+                } else null
+            }.getOrNull()
+
+            fromConfig
+                ?: System.getenv("GITHUB_TOKEN")?.trim()?.takeIf { it.isNotEmpty() }
+                ?: System.getenv("GH_TOKEN")?.trim()?.takeIf { it.isNotEmpty() }
         }
     }
 }

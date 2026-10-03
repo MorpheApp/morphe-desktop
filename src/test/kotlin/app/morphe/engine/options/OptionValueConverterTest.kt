@@ -3,9 +3,15 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.desktop.command
+package app.morphe.engine.options
 
+import kotlin.reflect.typeOf
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
 
 class OptionValueConverterTest {
     @Test
@@ -76,7 +82,61 @@ class OptionValueConverterTest {
         "[.1,.2f,,true,FALSE]" convertsTo listOf(.1, .2f, "", true, false) because "Values in lists should be converted to the correct type"
     }
 
-    private val convert = OptionValueConverter()::convert
+    @Test
+    fun `coerceOptionValue coerces scalars and lists`() {
+        assertEquals(true, coerceOptionValue(typeOf<Boolean>(), "true"))
+        assertEquals(false, coerceOptionValue(typeOf<Boolean>(), "FALSE"))
+        assertNull(coerceOptionValue(typeOf<Boolean>(), "not-a-bool"))
+
+        assertEquals(42, coerceOptionValue(typeOf<Int>(), "42"))
+        assertEquals(42, coerceOptionValue(typeOf<Int>(), 42.0))
+        assertNull(coerceOptionValue(typeOf<Int>(), "42.5"))
+
+        assertEquals(1.5f, coerceOptionValue(typeOf<Float>(), "1.5"))
+        assertEquals(listOf("a", "b", "c"), coerceOptionValue(typeOf<List<String>>(), "a, b, c"))
+        assertEquals(listOf(1, 2, 3), coerceOptionValue(typeOf<List<Int>>(), "1, 2, 3"))
+        assertNull(coerceOptionValue(typeOf<List<Int>>(), "1, nope, 3"))
+    }
+
+    @Test
+    fun `optionValueToJson and optionValueFromJson roundtrip`() {
+        assertEquals(JsonNull, optionValueToJson(null))
+        assertEquals("", optionValueFromJson(JsonNull))
+
+        val boolJson = optionValueToJson(true)
+        assertEquals(JsonPrimitive(true), boolJson)
+        assertEquals("true", optionValueFromJson(boolJson))
+
+        val listJson = optionValueToJson(listOf("one", "two"))
+        assertEquals(JsonArray(listOf(JsonPrimitive("one"), JsonPrimitive("two"))), listJson)
+        assertEquals("one, two", optionValueFromJson(listJson))
+    }
+
+    @Test
+    fun `groupFlatOptionsToJson groups and coerces values`() {
+        val flat = mapOf(
+            "Custom branding.appIcon" to "play_black",
+            "Custom branding.iconSize" to "48",
+            "Theme.darkTheme" to "true",
+            "malformedKey" to "ignored",
+        )
+        val declaredTypes = mapOf(
+            "Custom branding" to mapOf(
+                "iconSize" to typeOf<Int>(),
+            ),
+            "Theme" to mapOf(
+                "darkTheme" to typeOf<Boolean>(),
+            ),
+        )
+
+        val result = groupFlatOptionsToJson(flat, declaredTypes)
+        assertEquals(2, result.size)
+        assertEquals(JsonPrimitive("play_black"), result["Custom branding"]?.get("appIcon"))
+        assertEquals(JsonPrimitive(48), result["Custom branding"]?.get("iconSize"))
+        assertEquals(JsonPrimitive(true), result["Theme"]?.get("darkTheme"))
+    }
+
+    private val convert = ::parseCliOptionValue
 
     private infix fun String.convertsTo(to: Any?) = convert(this) to to
     private infix fun Pair<Any?, Any?>.because(reason: String) = assert(this.first == this.second) { reason }

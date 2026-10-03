@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.ConfigRepository
@@ -101,7 +102,7 @@ fun SourceManagementSheet(
     /** sourceId → resolved version label (e.g. "v1.27.0-dev.2"). Empty when not loaded. */
     sourceVersions: Map<String, String?> = emptyMap(),
     /** sourceId → channel classification of the resolved release. Drives the badge. */
-    sourceChannels: Map<String, EnabledSourcesLoader.Channel?> = emptyMap(),
+    sourceChannels: Map<String, Channel?> = emptyMap(),
     /** True while patches are being (re)loaded. Drives the per-row spinner shown
      *  in place of the version/badge for enabled sources whose data isn't yet
      *  in [sourceVersions]. */
@@ -357,7 +358,7 @@ fun SourceManagementSheet(
 private fun SourceRow(
     source: PatchSource,
     version: String?,
-    channel: EnabledSourcesLoader.Channel?,
+    channel: Channel?,
     isLoading: Boolean,
     error: String? = null,
     accentColor: Color,
@@ -700,14 +701,14 @@ private fun ReorderArrow(
 
 @Composable
 private fun ChannelBadge(
-    channel: EnabledSourcesLoader.Channel?,
+    channel: Channel?,
 ) {
     val label = when (channel) {
-        EnabledSourcesLoader.Channel.STABLE_LATEST -> stringResource(Res.string.version_label_latest_stable)
-        EnabledSourcesLoader.Channel.STABLE_OLDER -> stringResource(Res.string.source_sheet_channel_older_stable)
-        EnabledSourcesLoader.Channel.DEV_LATEST -> stringResource(Res.string.version_label_latest_dev)
-        EnabledSourcesLoader.Channel.DEV_OLDER -> stringResource(Res.string.source_sheet_channel_older_dev)
-        EnabledSourcesLoader.Channel.LOCAL -> stringResource(Res.string.source_sheet_local_label)
+        Channel.STABLE_LATEST -> stringResource(Res.string.version_label_latest_stable)
+        Channel.STABLE_OLDER -> stringResource(Res.string.source_sheet_channel_older_stable)
+        Channel.DEV_LATEST -> stringResource(Res.string.version_label_latest_dev)
+        Channel.DEV_OLDER -> stringResource(Res.string.source_sheet_channel_older_dev)
+        Channel.LOCAL -> stringResource(Res.string.source_sheet_local_label)
         else -> stringResource(Res.string.version_label_latest_stable)
     }
     val color = channelColor(channel)

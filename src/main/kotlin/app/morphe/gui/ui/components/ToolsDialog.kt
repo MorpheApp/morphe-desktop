@@ -19,11 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.CacheManager
+import app.morphe.engine.MorpheData
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheColors
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.currentLocale
@@ -79,7 +79,7 @@ fun ToolsDialog(
                     borderColor = borderColor,
                     onClick = {
                         try {
-                            val logsDir = FileUtils.getLogsDir()
+                            val logsDir = MorpheData.logsDir
                             if (Desktop.isDesktopSupported()) {
                                 Desktop.getDesktop().open(logsDir)
                             }
@@ -98,7 +98,7 @@ fun ToolsDialog(
                     borderColor = borderColor,
                     onClick = {
                         try {
-                            val appDataDir = FileUtils.getAppDataDir()
+                            val appDataDir = MorpheData.root
                             if (Desktop.isDesktopSupported()) {
                                 Desktop.getDesktop().open(appDataDir)
                             }
@@ -237,8 +237,8 @@ fun ToolsDialog(
 }
 
 private fun getCacheSizeBytes(): Long {
-    val patchesSize = FileUtils.getPatchesDir().walkTopDown().filter { it.isFile }.sumOf { it.length() }
-    val logsSize = FileUtils.getLogsDir().walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    val patchesSize = MorpheData.patchesDir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    val logsSize = MorpheData.logsDir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
     return patchesSize + logsSize
 }
 

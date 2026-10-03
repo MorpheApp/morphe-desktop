@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.data.model.PatchConfig
+import app.morphe.engine.PatchEngine
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.patching.PatchingUiState
@@ -58,7 +58,7 @@ private fun formatFileSize(bytes: Long): String =
 @Composable
 internal fun ExpertFailureContent(
     uiState: PatchingUiState,
-    config: PatchConfig,
+    config: PatchEngine.Config,
     onBackToHome: () -> Unit
 ) {
     val corners = LocalMorpheCorners.current
@@ -107,7 +107,7 @@ internal fun ExpertFailureContent(
                 }
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = config.packageName,
+                    text = config.historyMetadata?.originalPackageName ?: config.appDisplayName ?: "",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = mono,

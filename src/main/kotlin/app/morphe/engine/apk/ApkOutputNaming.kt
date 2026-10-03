@@ -3,7 +3,7 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.engine.util
+package app.morphe.engine.apk
 
 import app.morphe.engine.patches.PatchBundleLoader
 import java.io.File
@@ -15,9 +15,7 @@ import java.io.File
  * produce identical output paths — no surprises when users switch between
  * surfaces.
  *
- * Lives in `engine.util` because output naming is a pure data transformation
- * with no UI or CLI dependencies, and consolidating it in the engine moves
- * one more thing toward the long-term "engine is the heart" architecture.
+ * Lives in `engine.apk` alongside [ApkInspector] and [BundleFormats].
  */
 object ApkOutputNaming {
 
@@ -31,20 +29,52 @@ object ApkOutputNaming {
      * filenames that don't follow this convention.
      */
     fun extractApkVersionFromFilename(fileName: String): String? = try {
-        // Strip the bundle extension first so it doesn't leak into the version.
-        // File.nameWithoutExtension handles single extensions cleanly; we list
-        // the .apk-family ones explicitly because filenames like
-        // `soundcloud_2026.04.27.apkm` have multiple "extensions" in a row
-        // (the version dots look like extensions to nameWithoutExtension).
-        val withoutExt = fileName
-            .removeSuffix(".apk")
-            .removeSuffix(".apkm")
-            .removeSuffix(".xapk")
-            .removeSuffix(".apks")
+        val withoutExt = stripKnownExtension(fileName)
         val afterPackage = withoutExt.substringAfter("_")
         afterPackage.substringBefore("-").takeIf { it.isNotEmpty() }
     } catch (e: Exception) {
         null
+    }
+
+    /**
+     * Best-effort package + version extraction from APKMirror-style filenames:
+     *   `com.google.android.youtube_19.20.30-12345.apk` → `("com.google.android.youtube", "19.20.30")`
+     *
+     * Returns `(null, null)` when the filename doesn't match a package_version pattern.
+     * Scans for semver / date patterns as fallback when not in standard APKMirror format.
+     */
+    fun extractPackageAndVersionFromFilename(fileName: String): Pair<String?, String?> = try {
+        val withoutExt = stripKnownExtension(fileName)
+        val splitOnUnderscore = withoutExt.split('_', limit = 2)
+
+        val packageCandidate = splitOnUnderscore.getOrNull(0)
+        val afterUnderscore = splitOnUnderscore.getOrNull(1)
+
+        val looksLikePackage = packageCandidate != null &&
+            packageCandidate.contains('.') &&
+            packageCandidate.split('.').all { segment ->
+                segment.isNotEmpty() && segment.all { c -> c.isLowerCase() || c.isDigit() || c == '_' }
+            }
+
+        val packageName = if (looksLikePackage) packageCandidate else null
+
+        val versionAfterUnderscore = afterUnderscore?.substringBefore('-')?.takeIf { it.isNotBlank() }
+        val version = versionAfterUnderscore
+            ?: Regex("""\d+\.\d+\.\d+(?:-dev\.\d+)?""").find(withoutExt)?.value
+            ?: Regex("""\d+\.\d+(?:\.\d+)?""").find(withoutExt)?.value
+
+        packageName to version
+    } catch (e: Exception) {
+        null to null
+    }
+
+    private fun stripKnownExtension(fileName: String): String {
+        for (ext in BundleFormats.SUPPORTED_EXTENSIONS) {
+            if (fileName.endsWith(".$ext", ignoreCase = true)) {
+                return fileName.dropLast(ext.length + 1)
+            }
+        }
+        return fileName.substringBeforeLast('.')
     }
 
     /**
@@ -57,25 +87,23 @@ object ApkOutputNaming {
         patchesVersionRegex.find(patchesFileName)?.groupValues?.get(1)
 
     /**
-     * Resolve the human-friendly app label from an APK file via ARSCLib
-     * (engine [ApkManifestReader]). Returns null when:
-     *  - the manifest can't be read at all (corrupt APK)
+     * Resolve the human-friendly app label from an APK or bundle archive via ARSCLib
+     * (engine [ApkInspector]). Returns null when:
+     *  - the manifest can't be read at all (corrupt archive)
      *  - the manifest has no label
      *  - the label is stored as a resource reference (`@string/app_name`)
      *    instead of a literal string — common for big apps. Callers should
      *    fall back to a supported-apps lookup or filename in that case.
      */
     fun resolveAppDisplayName(apkFile: File): String? =
-        ApkManifestReader.read(apkFile)?.applicationLabel?.takeIf { it.isNotBlank() }
+        ApkInspector.inspect(apkFile)?.applicationLabel?.takeIf { it.isNotBlank() }
 
     /**
-     * The app's versionName from its manifest (engine [ApkManifestReader]), or null when it
-     * can't be read or is blank. The reliable source of the app version, unlike
-     * [extractApkVersionFromFilename], which only works when the input file follows the
-     * APKMirror naming convention.
+     * The app's versionName from its manifest (engine [ApkInspector]), or null when it
+     * can't be read or is blank. Supports both standalone APKs and split APK bundles.
      */
     fun resolveAppVersion(apkFile: File): String? =
-        ApkManifestReader.read(apkFile)?.versionName?.takeIf { it.isNotBlank() }
+        ApkInspector.inspect(apkFile)?.versionName?.takeIf { it.isNotBlank() }
 
     /**
      * Compute the unified output APK path. Layout:

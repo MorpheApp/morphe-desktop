@@ -13,6 +13,9 @@ import io.ktor.client.request.headers
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
+import java.io.File
+import java.net.URLEncoder
+import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -24,9 +27,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import java.io.File
-import java.net.URLEncoder
-import java.util.logging.Logger
 
 /**
  * GitLab provider. Hits gitlab.com/api/v4/projects/{owner%2Frepo}/releases for
@@ -71,15 +71,16 @@ class GitLabPatchSource(
     }
 
     override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> = withContext(Dispatchers.IO) {
+        val branch = if (prerelease) "dev" else "main"
         try {
-            val branch = if (prerelease) "dev" else "main"
             val url = "$RAW_BASE/$repoPath/-/raw/$branch/patches-bundle.json"
             logger.info("GitLab: fetching patches-bundle.json from $url")
             val bundle: PatchesBundle = http.request(url)
             logger.info("GitLab: bundle ($branch) → v${bundle.version} @ ${bundle.downloadUrl}")
             Result.success(bundle.toRelease(prerelease))
         } catch (e: Exception) {
-            logger.info("GitLab: no usable patches-bundle.json for $repoPath (${e.message}); will fall back to releases API")
+            val reason = (e as? HttpService.HttpException)?.status?.toString() ?: (e.message ?: "unknown error")
+            logger.info("GitLab: no usable patches-bundle.json ($branch) for $repoPath ($reason); falling back to releases API")
             Result.failure(e)
         }
     }
@@ -97,7 +98,6 @@ class GitLabPatchSource(
             logger.info("GitLab: wrote ${file.length()} bytes to ${file.absolutePath}")
             Result.success(file)
         } catch (e: Exception) {
-            logger.warning("GitLab download failed (${e::class.simpleName}): ${e.message}")
             Result.failure(e)
         }
     }

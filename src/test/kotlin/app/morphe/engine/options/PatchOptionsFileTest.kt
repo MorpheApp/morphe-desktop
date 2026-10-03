@@ -3,22 +3,19 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.desktop.command
+package app.morphe.engine.options
 
-import app.morphe.desktop.command.model.PatchBundle
-import app.morphe.desktop.command.model.PatchBundleMeta
-import app.morphe.desktop.command.model.PatchEntry
-import app.morphe.desktop.command.model.findMatchingBundle
-import app.morphe.desktop.command.model.mergeWithBundle
-import app.morphe.desktop.command.model.sha256
-import app.morphe.desktop.command.model.withUpdatedBundle
+import app.morphe.engine.util.FileChecksum
 import app.morphe.patcher.patch.option
 import app.morphe.patcher.patch.rawResourcePatch
-import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
+import kotlin.reflect.typeOf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
 
 class PatchOptionsFileTest {
     // findMatchingBundle section ------------------
@@ -44,7 +41,7 @@ class PatchOptionsFileTest {
         val tmpFile = File.createTempFile("test", ".mpp")
         tmpFile.writeText("test content")
         tmpFile.deleteOnExit()
-        val hash = tmpFile.sha256() // We use SHA to get our exact patch options
+        val hash = FileChecksum.sha256(tmpFile) // We use SHA to get our exact patch options
 
         val bundle1 = PatchBundle(
             meta = PatchBundleMeta(sha256 = "some-wrong-hash"),
@@ -179,5 +176,18 @@ class PatchOptionsFileTest {
         assertEquals(1, result.patches.size)
         assertEquals(false, result.patches["Theme"]!!.enabled)
         assertNull(result.patches["AdBlocker"])
+    }
+
+    @Test
+    fun `deserializeOptionValue deserializes primitives and arrays`() {
+        assertEquals("hello", deserializeOptionValue(JsonPrimitive("hello"), typeOf<String>()))
+        assertEquals(42, deserializeOptionValue(JsonPrimitive(42), typeOf<Int>()))
+        assertEquals(42L, deserializeOptionValue(JsonPrimitive(42L), typeOf<Long>()))
+        assertEquals(3.5f, deserializeOptionValue(JsonPrimitive(3.5f), typeOf<Float>()))
+        assertEquals(true, deserializeOptionValue(JsonPrimitive(true), typeOf<Boolean>()))
+        assertNull(deserializeOptionValue(JsonNull, typeOf<String?>()))
+
+        val arr = JsonArray(listOf(JsonPrimitive("a"), JsonPrimitive("b")))
+        assertEquals(listOf("a", "b"), deserializeOptionValue(arr, typeOf<List<String>>()))
     }
 }

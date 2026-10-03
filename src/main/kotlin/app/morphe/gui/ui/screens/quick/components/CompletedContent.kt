@@ -31,6 +31,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.repository.ConfigRepository
@@ -38,9 +40,8 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.screens.quick.formatFileSize
 import app.morphe.gui.ui.theme.*
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.getUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
@@ -294,7 +295,7 @@ internal fun CompletedContent(
                                     installError = null
                                     val result = adbManager.installApk(
                                         apkPath = outputPath,
-                                        deviceId = device.id
+                                        deviceId = device.id,
                                     )
                                     result.fold(
                                         onSuccess = {

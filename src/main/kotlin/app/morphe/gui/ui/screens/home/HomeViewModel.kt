@@ -12,10 +12,18 @@ import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateInfo
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
+import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.patches.PatchCache
+import app.morphe.engine.patches.PatchRepository
+import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.readableMessage
-import app.morphe.engine.util.ApkManifestReader
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
 import app.morphe.engine.util.SignatureIdentity
+import app.morphe.engine.util.isNewerVersion
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.Patch
@@ -24,13 +32,10 @@ import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.home.components.AppListFilter
 import app.morphe.gui.ui.screens.home.components.HomeAppSortMode
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
@@ -43,8 +48,8 @@ import app.morphe.gui.util.PatchService
 import app.morphe.gui.util.SupportedAppExtractor
 import app.morphe.gui.util.VersionResolution
 import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
-import app.morphe.gui.util.isNewerVersion
 import app.morphe.gui.util.resolveVersionStatus
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -240,10 +245,7 @@ class HomeViewModel(
         if (!device.isReady || _uiState.value.installingPackage != null) return
         _uiState.value = _uiState.value.copy(installingPackage = packageName)
         viewModelScope.launch {
-            // Always record a non-Play installer so the Play Store won't clobber
-            // the patched app with an official update.
-            val installer = adbManager.resolveSpoofInstaller(device.id)
-            val result = adbManager.installApk(record.outputApkPath, device.id, installerPackage = installer)
+            val result = adbManager.installApk(record.outputApkPath, device.id)
 
             // Mirror ResultScreen: if the user opted into auto-routing links,
             // point the patched app at its web links right after a good install.
@@ -260,8 +262,7 @@ class HomeViewModel(
             }
 
             val installError = result.exceptionOrNull()?.let {
-                val detail = (it as? AdbException)?.getUserMessage() ?: it.message ?: ""
-                getString(Res.string.home_install_failed, detail)
+                (it as? AdbException)?.getUserMessage() ?: getString(Res.string.home_install_failed, it.message ?: "")
             } ?: _uiState.value.error
             _uiState.value = _uiState.value.copy(
                 installingPackage = null,
@@ -292,8 +293,7 @@ class HomeViewModel(
                 patchedAppStore.delete(packageName)
             }
             val uninstallError = result.exceptionOrNull()?.let {
-                val detail = (it as? AdbException)?.getUserMessage() ?: it.message ?: ""
-                getString(Res.string.home_uninstall_failed, detail)
+                (it as? AdbException)?.getUserMessage() ?: getString(Res.string.home_uninstall_failed, it.message ?: "")
             } ?: _uiState.value.error
             _uiState.value = _uiState.value.copy(
                 uninstallingPackage = null,
@@ -366,12 +366,16 @@ class HomeViewModel(
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
                     val rawTechnicalError = firstThrowable?.message
                         ?: result.resolved.firstNotNullOfOrNull { it.error }
-                        ?: "Failed to load any patches"
+                    val logMessage = when {
+                        rawTechnicalError.isNullOrBlank() -> "Failed to load any patches"
+                        rawTechnicalError.startsWith("Failed to load", ignoreCase = true) -> rawTechnicalError
+                        else -> "Failed to load any patches: $rawTechnicalError"
+                    }
                     // Log the real throwable (full stack). Never only a null/blank .message.
                     if (firstThrowable != null) {
-                        Logger.error("Failed to load any patches: $rawTechnicalError", firstThrowable)
+                        Logger.error(logMessage, firstThrowable)
                     } else {
-                        Logger.warn("Failed to load any patches: $rawTechnicalError")
+                        Logger.warn(logMessage)
                     }
 
                     val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
@@ -746,7 +750,7 @@ class HomeViewModel(
             .firstOrNull { (source, _) -> source.name == sourceName }
             ?.second
             ?: return true
-        return repo.getCachedPatches(tag) != null
+        return PatchCache.findCachedByVersion(repo.repoPath, tag) != null
     }
 
     private val bundleSupportCache = mutableMapOf<String, List<SupportedApp>>()
@@ -768,7 +772,7 @@ class HomeViewModel(
             when (val choice = overrides[source.name]) {
                 is BundleChoice.Version -> {
                     if (choice.tag != resolved?.resolvedVersion) isCurrent = false
-                    val cached = repo?.getCachedPatches(choice.tag)
+                    val cached = repo?.let { PatchCache.findCachedByVersion(it.repoPath, choice.tag) }
                     when {
                         cached != null ->
                             inputs += MultiSourceLoader.SourceInput(source.id, source.name, cached)
@@ -895,8 +899,8 @@ class HomeViewModel(
 
                 val resolved = resolvedByName[sourceName]
                 if (resolved == null) { add(sourceName); continue }
-                val prerelease = resolved.channel == EnabledSourcesLoader.Channel.DEV_LATEST ||
-                    resolved.channel == EnabledSourcesLoader.Channel.DEV_OLDER
+                val prerelease = resolved.channel == PatchResolver.Channel.DEV_LATEST ||
+                    resolved.channel == PatchResolver.Channel.DEV_OLDER
                 val entries = changelogRepository.entriesFor(resolved.source, prerelease)
                 if (entries == null) { add(sourceName); continue }
                 if (names.isEmpty()) { add(sourceName); continue }
@@ -1057,7 +1061,7 @@ class HomeViewModel(
     }
 
     fun onFilesDropped(files: List<File>) {
-        val apkFile = files.firstOrNull { FileUtils.isApkFile(it) }
+        val apkFile = files.firstOrNull { BundleFormats.isApkOrBundle(it) }
         if (apkFile != null) {
             onFileSelected(apkFile)
         } else {
@@ -1112,7 +1116,7 @@ class HomeViewModel(
             )
         }
 
-        if (!FileUtils.isApkFile(file)) {
+        if (!BundleFormats.isApkOrBundle(file)) {
             return ApkValidationResult(
                 isValid = false,
                 errorMessage = "Invalid APK file extension: ${file.name}",
@@ -1147,29 +1151,19 @@ class HomeViewModel(
      * This works with APKs from any source, not just APKMirror.
      */
     private suspend fun parseApkManifest(file: File): ApkInfo? {
-        // For split APK bundles (.apkm, .xapk, .apks), extract base.apk first
-        val isBundleFormat = FileUtils.isBundleFormat(file)
-        val apkToParse = if (isBundleFormat) {
-            FileUtils.extractBaseApkFromBundle(file) ?: run {
-                Logger.error("Failed to extract base APK from bundle: ${file.name}")
-                return null
-            }
-        } else {
-            file
+        val inspection = ApkInspector.inspect(file) ?: run {
+            Logger.warn(
+                "Full APK manifest parse failed for ${file.name}. " +
+                    "Falling back to limited-info mode (filename heuristics + fuzzy match)."
+            )
+            return parseApkManifestMinimal(file)
         }
 
         return try {
-            // ARSCLib reader (in engine). Same library morphe-patcher uses.
-            // Handles split APKs cleanly because we only read direct string
-            // attributes (no resource resolution that crashes apk-parser on
-            // cross-split references).
-            val manifest = ApkManifestReader.read(apkToParse)
-                ?: throw IllegalStateException("ARSCLib couldn't read manifest")
-
-            val packageName = manifest.packageName
-            val versionName = manifest.versionName ?: getString(Res.string.unknown)
-            val versionCode = manifest.versionCode
-            val minSdk = manifest.minSdkVersion
+            val packageName = inspection.packageName
+            val versionName = inspection.versionName ?: getString(Res.string.unknown)
+            val versionCode = inspection.versionCode
+            val minSdk = inspection.minSdkVersion
 
             val loadedApps = _uiState.value.supportedApps
             val dynamicSupportedApp = loadedApps.find { it.packageName == packageName }
@@ -1184,7 +1178,7 @@ class HomeViewModel(
             // literal label (null for resource-referenced labels like SoundCloud's
             // `@string/app_name`). Last resort: derived from package.
             val appName = dynamicSupportedApp?.displayName
-                ?: SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
+                ?: SupportedApp.resolveDisplayName(packageName, inspection.applicationLabel)
 
             val versionResolution = if (dynamicSupportedApp != null) {
                 resolveVersionStatus(versionName, dynamicSupportedApp, versionCode)
@@ -1194,15 +1188,13 @@ class HomeViewModel(
             val suggestedVersion = versionResolution.suggestedVersion
             val versionStatus = versionResolution.status
 
-            // Get supported architectures from native libraries.
-            // For split bundles, scan the original bundle (splits hold native libs, not base.apk).
-            val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
+            val architectures = inspection.architectures.toList()
 
             // TODO: Re-enable when checksums are provided via .mpp files
             val checksumStatus = ChecksumStatus.NotConfigured
 
             Logger.info(
-                "Parsed APK: $packageName v${manifest.versionName ?: "unknown"}" +
+                "Parsed APK: $packageName v${inspection.versionName ?: "unknown"}" +
                     (versionCode?.let { " build $it" } ?: "") +
                     " (recommended=$suggestedVersion, minSdk=$minSdk, archs=$architectures)"
             )
@@ -1223,24 +1215,11 @@ class HomeViewModel(
                 isUnsupportedApp = !isSupported
             )
         } catch (e: Exception) {
-            // apk-parser commonly chokes on split-APK base.apks whose resource
-            // references point into other splits (SoundCloud and similar). The
-            // base.apk is structurally valid. Android installs it fine, the
-            // patcher merges + patches it fine. But apk-parser can't resolve
-            // cross-split references from an isolated file.
-            //
-            // Fall back to a "limited info" parse: extract package/version from
-            // the filename (APKMirror naming convention), fuzzy-match supported
-            // apps by display name, and let the user proceed to patching
-            // regardless. ApkInfo.hasLimitedInfo=true so the UI can warn that
-            // card details may be approximate.
             Logger.warn(
                 "Full APK manifest parse failed for ${file.name}: ${e.message}. " +
                     "Falling back to limited-info mode (filename heuristics + fuzzy match)."
             )
-            parseApkManifestMinimal(file, isBundleFormat)
-        } finally {
-            if (isBundleFormat) apkToParse.delete()
+            parseApkManifestMinimal(file)
         }
     }
 
@@ -1253,8 +1232,8 @@ class HomeViewModel(
      * Patching still works regardless. The patcher merges splits first and reads
      * the manifest from the merged APK via its own (working) reader.
      */
-    private suspend fun parseApkManifestMinimal(file: File, isBundleFormat: Boolean): ApkInfo {
-        val (packageFromName, versionFromName) = parseFromApkMirrorFilename(file.name)
+    private suspend fun parseApkManifestMinimal(file: File): ApkInfo {
+        val (packageFromName, versionFromName) = ApkOutputNaming.extractPackageAndVersionFromFilename(file.name)
         val supportedApps = _uiState.value.supportedApps
 
         // Match against supported apps: by exact package first, then fuzzy name
@@ -1276,7 +1255,7 @@ class HomeViewModel(
             VersionResolution(VersionStatus.UNKNOWN, null)
         }
 
-        val architectures = FileUtils.extractArchitectures(file)
+        val architectures = ApkInspector.extractArchitectures(file).toList()
 
         Logger.info(
             "Limited-info parse for ${file.name}: package=$packageName, " +
@@ -1298,42 +1277,6 @@ class HomeViewModel(
             isUnsupportedApp = matched == null,
             hasLimitedInfo = true,
         )
-    }
-
-    /**
-     * Best-effort package + version extraction from APKMirror-style filenames:
-     *   com.google.android.youtube_19.20.30-12345.apk
-     *   → ("com.google.android.youtube", "19.20.30")
-     *
-     * Returns (null, null) when the filename doesn't look like a package_version
-     * pattern. The version-only path also tries a generic semver / date regex
-     * against the whole filename for files like `soundcloud_2026.04.27.apkm`.
-     */
-    private fun parseFromApkMirrorFilename(filename: String): Pair<String?, String?> {
-        val noExt = filename.substringBeforeLast('.')
-        val splitOnUnderscore = noExt.split('_', limit = 2)
-
-        val packageCandidate = splitOnUnderscore.getOrNull(0)
-        val afterUnderscore = splitOnUnderscore.getOrNull(1)
-
-        // A package name has at least one dot + only lowercase/digits/underscore in
-        // each segment. Filters out "soundcloud" while accepting "com.foo.bar".
-        val looksLikePackage = packageCandidate != null &&
-            packageCandidate.contains('.') &&
-            packageCandidate.split('.').all { segment ->
-                segment.isNotEmpty() && segment.all { c -> c.isLowerCase() || c.isDigit() || c == '_' }
-            }
-
-        val packageName = if (looksLikePackage) packageCandidate else null
-
-        // Version: prefer the token right after "_" (APKMirror convention), else
-        // scan the whole filename for a semver / date pattern.
-        val versionAfterUnderscore = afterUnderscore?.substringBefore('-')?.takeIf { it.isNotBlank() }
-        val version = versionAfterUnderscore
-            ?: Regex("""\d+\.\d+\.\d+(?:-dev\.\d+)?""").find(noExt)?.value
-            ?: Regex("""\d+\.\d+(?:\.\d+)?""").find(noExt)?.value
-
-        return packageName to version
     }
 
     /**
@@ -1474,7 +1417,7 @@ data class HomeUiState(
     val uninstallingPackage: String? = null,
     val deviceAppInfo: Map<String, DeviceAppInfo> = emptyMap(),
     val patchesVersion: String? = null,
-    val patchesChannel: EnabledSourcesLoader.Channel? = null,
+    val patchesChannel: PatchResolver.Channel? = null,
     val patchSourceName: String? = null,
     val patchLoadError: String? = null,
     val updateInfo: UpdateInfo? = null,

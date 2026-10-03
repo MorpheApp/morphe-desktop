@@ -21,7 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
-import app.morphe.engine.util.ApkManifestReader
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
 import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.LocalNavController
@@ -31,13 +33,13 @@ import app.morphe.gui.ui.screens.result.components.*
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.screenScrim
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.currentLocale
+import app.morphe.gui.util.getUserMessage
+import app.morphe.gui.util.toUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.Dispatchers
@@ -84,7 +86,7 @@ fun ResultScreenContent(outputPath: String) {
     var alreadyInstalled by remember { mutableStateOf(false) }
     LaunchedEffect(outputPath) {
         outputPackage = withContext(Dispatchers.IO) {
-            runCatching { ApkManifestReader.read(outputFile)?.packageName }.getOrNull()
+            runCatching { ApkInspector.inspect(outputFile)?.packageName }.getOrNull()
         }
     }
     LaunchedEffect(monitorState.selectedDevice?.id, monitorState.selectedDevice?.isReady, outputPackage) {
@@ -143,13 +145,9 @@ fun ResultScreenContent(outputPath: String) {
             installError = null
             installProgress = if (alreadyInstalled) getString(Res.string.result_adb_updating_on_device, device.displayName) else getString(Res.string.adb_status_installing, device.displayName)
 
-            // Always record a non-Play installer so the Play Store won't clobber
-            // the patched app with an official update.
-            val installer = adbManager.resolveSpoofInstaller(device.id)
             val result = adbManager.installApk(
                 apkPath = outputPath,
                 deviceId = device.id,
-                installerPackage = installer,
                 onProgress = { installProgress = it }
             )
 
@@ -178,7 +176,7 @@ fun ResultScreenContent(outputPath: String) {
                 patchedPackage = patched,
                 stockPackage = if (disableStockLinks) stockPackage else null,
                 enable = enable,
-                onProgress = { linkProgress = it },
+                onProgress = { linkProgress = it.toUserMessage() },
             )
             result.fold(
                 onSuccess = { outcome ->
