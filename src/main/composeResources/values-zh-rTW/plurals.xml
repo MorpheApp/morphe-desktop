@@ -40,6 +40,6 @@
         <item quantity="other">下載 %1$d 個套件</item>
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
-        <item quantity="other">%1$d 核心</item>
+        <item quantity="other">%1$d個核心</item>
     </plurals>
 </resources>

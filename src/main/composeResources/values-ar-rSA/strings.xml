@@ -439,7 +439,7 @@
     <string name="patching_step_all_done">تم الانتهاء!</string>
     <string name="patching_step_waiting">جارٍ الانتظار…</string>
     <string name="patching_graph_memory_usage">استخدام الذاكرة</string>
-    <string name="patching_graph_memory_detail">%1$d٪ من %2$d ميجابايت</string>
+    <string name="patching_graph_memory_detail">%1$d٪ من %2$d م.ب</string>
     <string name="patching_graph_storage_io">قراءة/كتابة التخزين</string>
     <string name="patching_graph_cpu_usage">استخدام المعالج</string>
     <string name="patching_banner_started_title">بدأَ التعديل</string>

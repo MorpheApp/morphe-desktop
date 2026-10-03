@@ -441,7 +441,7 @@
     <string name="patching_step_all_done">Terminé !</string>
     <string name="patching_step_waiting">En attente…</string>
     <string name="patching_graph_memory_usage">Utilisation de la mémoire</string>
-    <string name="patching_graph_memory_detail">%1$d%% de %2$d Mo</string>
+    <string name="patching_graph_memory_detail">%1$d% sur %2$d Mo</string>
     <string name="patching_graph_storage_io">E/S du stockage</string>
     <string name="patching_graph_cpu_usage">Utilisation du processeur</string>
     <string name="patching_banner_started_title">Le patching a commencé</string>
