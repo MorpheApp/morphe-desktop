@@ -9,6 +9,7 @@
 package app.morphe.engine
 
 import app.morphe.engine.util.BundleFormats
+import app.morphe.engine.util.deleteRecursivelyInParallel
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.patcher.Patcher
 import app.morphe.patcher.PatcherConfig
@@ -283,7 +284,7 @@ object PatchEngine {
             mergedApkToCleanup?.delete()
             if (config.tempDir == null) {
                 try {
-                    tempDir.deleteRecursively()
+                    tempDir.deleteRecursivelyInParallel()
                 } catch (_: Exception) {
                     // Best effort cleanup
                 }
