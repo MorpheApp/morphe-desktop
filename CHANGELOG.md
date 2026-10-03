@@ -1,3 +1,10 @@
+## [1.18.1-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.1-dev.2...v1.18.1-dev.3) (2026-10-03)
+
+
+### Performance Improvements
+
+* Use multi-threaded file cleanup ([6976ee6](https://github.com/MorpheApp/morphe-desktop/commit/6976ee6795d316b93a9a9ab3b6e4e7637b4999a2))
+
 ## [1.18.1-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.1-dev.1...v1.18.1-dev.2) (2026-10-03)
 
 
