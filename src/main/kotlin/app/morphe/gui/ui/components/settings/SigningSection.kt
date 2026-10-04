@@ -32,6 +32,8 @@ import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.util.KeystoreImporter
+import app.morphe.engine.util.KeystoreService
+import app.morphe.engine.util.KeystoreWarning
 import app.morphe.engine.util.PortablePaths
 import app.morphe.gui.ui.components.LabeledField
 import app.morphe.gui.ui.components.SlimTextField
@@ -43,10 +45,8 @@ import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.MorpheFilePicker
-import app.morphe.patcher.apk.ApkSigner
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
-import java.util.Date
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -396,8 +396,8 @@ internal fun SigningSection(
                     verifyResult = null
                     verifySuccess = false
                     scope.launch {
-                        val result = readKeystoreInfo(
-                            keystorePath,
+                        val result = KeystoreService.shared.inspectKeystore(
+                            File(keystorePath),
                             localPassword.ifEmpty { null },
                             localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
                             localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
@@ -485,20 +485,12 @@ internal fun SigningSection(
 
                         try {
                             val file = File(path)
-                            file.parentFile?.mkdirs()
-                            val keyPair = ApkSigner.newPrivateKeyCertificatePair(
-                                "Morphe",
-                                Date(System.currentTimeMillis() + 8L * 365 * 24 * 60 * 60 * 1000))
-                            val ks = ApkSigner.newKeyStore(setOf(
-                                ApkSigner.KeyStoreEntry(
-                                    localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
-                                    localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
-                                    keyPair
-                                )
-                            ))
-                            file.outputStream().use {
-                                ks.store(it, localPassword.ifEmpty { null }?.toCharArray())
-                            }
+                            KeystoreService.shared.generateKeystore(
+                                destination = file,
+                                alias = localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                                storePassword = localPassword.ifEmpty { null },
+                                entryPassword = localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
+                            )
                             // Save credentials to config
                             onCredentialsChange(
                                 localPassword.ifEmpty { null },

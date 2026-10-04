@@ -23,20 +23,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.util.KeystoreService
+import app.morphe.engine.util.KeystoreWarning
 import app.morphe.gui.ui.components.MorpheAlertDialog
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
-import java.security.KeyStore
-import java.security.MessageDigest
-import java.security.Provider
-import java.security.Security
-import java.security.cert.X509Certificate
-import java.util.Locale
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -53,7 +48,7 @@ internal fun KeystoreInfoDialog(
 
     val locale = currentLocale()
     val info = remember(keystorePath, password, alias, entryPassword, locale) {
-        readKeystoreInfo(keystorePath, password, alias, entryPassword, locale)
+        KeystoreService.shared.inspectKeystore(File(keystorePath), password, alias, entryPassword, locale)
     }
 
     MorpheAlertDialog(
@@ -188,111 +183,4 @@ private fun CertInfoRow(
             color = MaterialTheme.colorScheme.onSurface
         )
     }
-}
-
-internal sealed interface KeystoreWarning {
-    data class AliasNotFound(val alias: String) : KeystoreWarning
-    data class KeyPasswordIncorrect(val alias: String) : KeystoreWarning
-}
-
-internal data class KeystoreInfoResult(
-    val alias: String,
-    val issuer: String,
-    val validFrom: String,
-    val validTo: String,
-    val sha256Fingerprint: String,
-    val sha1Fingerprint: String,
-    val warnings: List<KeystoreWarning> = emptyList()
-)
-
-internal fun readKeystoreInfo(
-    keystorePath: String,
-    password: String?,
-    alias: String,
-    entryPassword: String? = null,
-    locale: Locale = Locale.getDefault()
-): KeystoreInfoResult? {
-    val file = File(keystorePath)
-    if (!file.exists()) return null
-
-    val passwordChars = password?.toCharArray() ?: charArrayOf()
-
-    // Ensure BouncyCastle provider is registered (needed for BKS keystores)
-    try {
-        if (Security.getProvider("BC") == null) {
-            Security.addProvider(
-                Class.forName("org.bouncycastle.jce.provider.BouncyCastleProvider")
-                    .getDeclaredConstructor().newInstance() as Provider
-            )
-        }
-    } catch (_: Exception) {
-    }
-
-    // Try multiple keystore types: BKS (what Morphe generates), then JKS, then PKCS12
-    // BKS requires the BouncyCastle provider. Try with the name, fall back without
-    val types = listOf("BKS" to "BC", "BKS" to null, "JKS" to null, "PKCS12" to null)
-    for ((type, provider) in types) {
-        try {
-            val ks = if (provider != null) {
-                KeyStore.getInstance(type, provider)
-            } else {
-                KeyStore.getInstance(type)
-            }
-
-            file.inputStream().use { ks.load(it, passwordChars) }
-
-            val warnings = mutableListOf<KeystoreWarning>()
-
-            // Alias must match exactly
-            if (!ks.containsAlias(alias)) {
-                return KeystoreInfoResult(
-                    alias = alias,
-                    issuer = "",
-                    validFrom = "",
-                    validTo = "",
-                    sha256Fingerprint = "",
-                    sha1Fingerprint = "",
-                    warnings = listOf(KeystoreWarning.AliasNotFound(alias))
-                )
-            }
-
-            val cert = ks.getCertificate(alias) as? X509Certificate ?: continue
-
-            // Verify the entry password actually works
-            try {
-                ks.getKey(alias, entryPassword?.toCharArray() ?: charArrayOf())
-            } catch (_: Exception) {
-                return KeystoreInfoResult(
-                    alias = alias,
-                    issuer = "",
-                    validFrom = "",
-                    validTo = "",
-                    sha256Fingerprint = "",
-                    sha1Fingerprint = "",
-                    warnings = listOf(KeystoreWarning.KeyPasswordIncorrect(alias))
-                )
-            }
-
-            val sha256 = MessageDigest.getInstance("SHA-256")
-                .digest(cert.encoded)
-                .joinToString(":") { "%02X".format(it) }
-
-            val sha1 = MessageDigest.getInstance("SHA-1")
-                .digest(cert.encoded)
-                .joinToString(":") { "%02X".format(it) }
-
-            return KeystoreInfoResult(
-                alias = alias,
-                issuer = cert.issuerX500Principal.name,
-                validFrom = FormatUtils.formatDate(cert.notBefore, locale),
-                validTo = FormatUtils.formatDate(cert.notAfter, locale),
-                sha256Fingerprint = sha256,
-                sha1Fingerprint = sha1,
-                warnings = warnings
-            )
-        } catch (_: Exception) {
-            continue
-        }
-    }
-    return null
 }

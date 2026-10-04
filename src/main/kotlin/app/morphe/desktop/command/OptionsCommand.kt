@@ -5,24 +5,25 @@
 
 package app.morphe.desktop.command
 
-import app.morphe.desktop.command.model.PatchBundle
-import app.morphe.engine.isCompatibleWith
+import app.morphe.engine.options.PatchBundle
+import app.morphe.engine.options.findMatchingBundle
+import app.morphe.engine.options.mergeWithBundle
+import app.morphe.engine.options.readPatchBundles
+import app.morphe.engine.options.withUpdatedBundle
+import app.morphe.engine.options.writePatchBundles
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
-import app.morphe.desktop.command.model.findMatchingBundle
-import app.morphe.desktop.command.model.mergeWithBundle
-import app.morphe.desktop.command.model.withUpdatedBundle
-import app.morphe.desktop.command.CliHttpClient
-import kotlinx.serialization.json.Json
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.patches.isCompatibleWith
+import java.io.File
+import java.util.concurrent.Callable
+import java.util.logging.Logger
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Help.Visibility.ALWAYS
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
-import java.io.File
-import java.util.concurrent.Callable
-import java.util.logging.Logger
 
 @Command(
     name = "options-create",
@@ -70,19 +71,12 @@ internal object OptionsCommand : Callable<Int> {
     )
     private var packageName: String? = null
 
-    private val json = Json { prettyPrint = true }
-
     override fun call(): Int {
         try {
-            // Since we could have many URLs, we resolve each of them separately
-            patchesFiles = patchesFiles.map { file ->
-                val resolved = PatchFileResolver.resolve(
-                    setOf(file),
-                    prerelease,
-                    CliHttpClient.instance
-                )
-                resolved.single()
-            }.toSet()
+            patchesFiles = PatchResolver.resolveCliFiles(
+                patchesFiles,
+                prerelease,
+            )
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(
                 spec.commandLine(),
@@ -101,7 +95,7 @@ internal object OptionsCommand : Callable<Int> {
             val existingBundles: List<PatchBundle> = if (outputFile.exists())
             {
                 try {
-                    Json.decodeFromString<List<PatchBundle>>(outputFile.readText())
+                    readPatchBundles(outputFile)
                 } catch (e: Exception) {
                     logger.warning(
                         "Could not parse existing file, creating fresh: ${e.message}"
@@ -148,8 +142,7 @@ internal object OptionsCommand : Callable<Int> {
                 }
             }
 
-            outputFile.absoluteFile.parentFile?.mkdirs()
-            outputFile.writeText(json.encodeToString(updatedBundles))
+            writePatchBundles(outputFile, updatedBundles)
 
             logger.info("Options file saved to ${outputFile.path}")
 

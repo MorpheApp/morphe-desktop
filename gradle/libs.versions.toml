@@ -8,7 +8,6 @@ picocli = "4.7.7"
 arsclib = "9b742c412d"
 morphe-patcher = "1.15.1"
 morphe-library = "1.4.0"
-jadb = "1.2.3"
 
 # Compose Desktop
 compose = "1.12.1"
@@ -53,7 +52,6 @@ junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref 
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 morphe-patcher = { module = "app.morphe:morphe-patcher", version.ref = "morphe-patcher" }
 morphe-library = { module = "app.morphe:morphe-library-jvm", version.ref = "morphe-library" }
-jadb = { module = "app.morphe:jadb", version.ref = "jadb" }
 
 # Ktor Client
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

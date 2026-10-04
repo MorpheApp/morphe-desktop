@@ -12,6 +12,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import app.morphe.engine.workspace.WorkspaceManager
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -23,8 +24,7 @@ import java.util.logging.Logger
  * GUI/CLI consumers that want to badge or filter by origin.
  *
  * Lives in the engine package so the CLI can consume the same multi-source
- * loading path when it adopts multi-source. GUI-specific aggregation (display
- * name resolution, icon color picking) lives in the GUI layer.
+ * loading path when it adopts multi-source.
  */
 object MultiSourceLoader {
 
@@ -59,8 +59,7 @@ object MultiSourceLoader {
 
     /**
      * Load patches from each input in parallel. Each .mpp is copied to a temp file
-     * before loading to work around Windows URLClassLoader file-locking (mirrors
-     * the same workaround in PatchService.kt).
+     * before loading to work around Windows URLClassLoader file-locking.
      */
     suspend fun load(inputs: List<SourceInput>): Result = coroutineScope {
         val loaded = inputs.map { input ->
@@ -85,9 +84,8 @@ object MultiSourceLoader {
     }
 
     private suspend fun loadOne(input: SourceInput): LoadedSource = withContext(Dispatchers.IO) {
-        val tempCopy = File.createTempFile("morphe-mp-${input.sourceId}-", ".mpp")
+        val tempCopy = WorkspaceManager.createShadowCopy(input.patchFile, prefix = "morphe-mp-${input.sourceId}")
         try {
-            input.patchFile.copyTo(tempCopy, overwrite = true)
             val patches = loadPatchesFromJar(setOf(tempCopy))
             logger.info("MultiSourceLoader: loaded ${patches.size} patches from '${input.sourceName}'")
             LoadedSource(
@@ -126,8 +124,6 @@ object MultiSourceLoader {
                 patches = emptySet(),
                 error = error,
             )
-        } finally {
-            tempCopy.deleteOnExit()
         }
     }
 }

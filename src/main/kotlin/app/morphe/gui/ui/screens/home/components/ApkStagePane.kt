@@ -36,8 +36,8 @@ import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.util.StatusColorType
-import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*

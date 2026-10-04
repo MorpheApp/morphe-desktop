@@ -29,8 +29,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import app.morphe.engine.PatchEngine
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.data.model.MorpheFill
-import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -232,6 +233,7 @@ private fun appContent(
     initialSimplifiedMode: Boolean
 ) {
     val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
     val patchSourceManager: PatchSourceManager = koinInject()
     val scope = rememberCoroutineScope()
     val enableParallaxState = remember { mutableStateOf(true) }
@@ -273,7 +275,7 @@ private fun appContent(
         appLanguage = config.language
         applyLocale(config.language)
 
-        autoStartAdb = config.autoStartAdb
+        autoStartAdb = engineConfigRepository.loadConfig().autoStartAdb
         // Publish the initial active mode BEFORE the VMs subscribe so their
         // activeMode listener fires with the correct value on first emit.
         patchSourceManager.setActiveMode(
@@ -320,7 +322,7 @@ private fun appContent(
     val onAutoStartAdbChange: (Boolean) -> Unit = { enabled ->
         autoStartAdb = enabled
         scope.launch {
-            configRepository.setAutoStartAdb(enabled)
+            engineConfigRepository.setAutoStartAdb(enabled)
             if (enabled) {
                 DeviceMonitor.startMonitoring()
             } else {
@@ -505,7 +507,7 @@ private fun appContent(
                                                     }
                                                 }
                                             ) { backStackEntry ->
-                                                val config = backStackEntry.getComplexArg<PatchConfig>()
+                                                val config = backStackEntry.getComplexArg<PatchEngine.Config>()
                                                 if (config != null) {
                                                     PatchingScreen(config = config)
                                                 }

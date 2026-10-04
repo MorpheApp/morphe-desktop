@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
-import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheDimens
@@ -55,12 +55,12 @@ internal fun AddPatchSourceDialog(
     var error by remember { mutableStateOf<String?>(null) }
     var usePreRelease by remember { mutableStateOf(false) }
     var useExperimentalVersions by remember { mutableStateOf(false) }
-    val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
     val scope = rememberCoroutineScope()
     var developerOptions by remember { mutableStateOf(false) }
     var lastLocalPatchDir by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
-        val cfg = configRepository.loadConfig()
+        val cfg = engineConfigRepository.loadConfig()
         developerOptions = cfg.developerOptions
         lastLocalPatchDir = cfg.lastLocalPatchDir
     }
@@ -232,7 +232,7 @@ internal fun AddPatchSourceDialog(
                                 filePath = path
                                 if (name.isBlank()) name = suggested
                                 error = null
-                                scope.launch { configRepository.setLastLocalPatchDir(dirToRemember(path)) }
+                                scope.launch { engineConfigRepository.setLastLocalPatchDir(dirToRemember(path)) }
                             },
                             font = font,
                             accents = accents,
@@ -346,12 +346,12 @@ internal fun EditPatchSourceDialog(
     var error by remember { mutableStateOf<String?>(null) }
     var usePreRelease by remember { mutableStateOf(source.usePreRelease) }
     var useExperimentalVersions by remember { mutableStateOf(source.useExperimentalVersions) }
-    val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
     val scope = rememberCoroutineScope()
     var developerOptions by remember { mutableStateOf(false) }
     var lastLocalPatchDir by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
-        val cfg = configRepository.loadConfig()
+        val cfg = engineConfigRepository.loadConfig()
         developerOptions = cfg.developerOptions
         lastLocalPatchDir = cfg.lastLocalPatchDir
     }
@@ -421,7 +421,7 @@ internal fun EditPatchSourceDialog(
                                 onPicked = { path, _ ->
                                     filePath = path
                                     error = null
-                                    scope.launch { configRepository.setLastLocalPatchDir(dirToRemember(path)) }
+                                    scope.launch { engineConfigRepository.setLastLocalPatchDir(dirToRemember(path)) }
                                 },
                                 font = font,
                                 accents = accents,

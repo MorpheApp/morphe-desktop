@@ -417,7 +417,22 @@ class HttpService(
             append("HTTP request failed")
             if (status != null) append(" with status $status")
             if (requestUrl != null) append(" for $requestUrl")
-            if (responseBodySnippet != null) append(": ${responseBodySnippet.take(200)}")
+            if (responseBodySnippet != null) {
+                val trimmed = responseBodySnippet.trim()
+                val snippet = if (trimmed.startsWith("<")) {
+                    Regex("<title>(.*?)</title>", RegexOption.IGNORE_CASE)
+                        .find(trimmed)?.groupValues?.get(1)?.trim()
+                        ?: "HTML response"
+                } else {
+                    val formatted = runCatching {
+                        Json.parseToJsonElement(trimmed).toString()
+                    }.getOrElse {
+                        trimmed.replace(Regex("\\s+"), " ")
+                    }
+                    formatted.take(300)
+                }
+                append(": $snippet")
+            }
         },
         cause,
     ) {

@@ -38,8 +38,8 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FormatUtils
+import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.util.StatusColorType
-import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay

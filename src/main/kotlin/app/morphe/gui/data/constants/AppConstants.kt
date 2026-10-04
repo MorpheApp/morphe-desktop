@@ -27,7 +27,7 @@ object AppConstants {
     }
 
     // ==================== API ====================
-    const val MORPHE_API_URL = "https://api.morphe.software"
+    const val MORPHE_API_URL = app.morphe.engine.MorpheConstants.MORPHE_API_URL
 
     const val WEBSITE_URL = "https://morphe.software"
     /** A dev build carries a prerelease suffix, and an unpackaged run reports "dev". */
@@ -37,13 +37,6 @@ object AppConstants {
         val branch = if (IS_DEV_BUILD) "dev" else "main"
         "https://github.com/MorpheApp/morphe-desktop/blob/$branch/docs/documentation.md"
     }
-
-    val FALLBACK_PACKAGES = listOf(
-        "com.google.android.youtube",
-        "com.google.android.apps.youtube.music",
-        "com.reddit.frontpage",
-    )
-
     // TODO: Checksum verification will be re-enabled when checksums are added to .mpp files
     // For now, checksums are not validated. See ChecksumUtils.kt for the verification logic.
 }

@@ -11,10 +11,10 @@ import app.morphe.engine.model.ReleaseAsset
 import app.morphe.engine.network.HttpService
 import io.ktor.client.request.headers
 import io.ktor.http.HttpHeaders
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.logging.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * GitHub provider. Hits api.github.com/repos/{owner}/{repo}/releases for the
@@ -52,15 +52,16 @@ open class GitHubPatchSource(
     }
 
     override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> = withContext(Dispatchers.IO) {
+        val branch = if (prerelease) "dev" else "main"
         try {
-            val branch = if (prerelease) "dev" else "main"
             val url = "$RAW_BASE/$repoPath/$branch/patches-bundle.json"
             logger.info("GitHub: fetching patches-bundle.json from $url")
             val bundle: PatchesBundle = http.request(url)
             logger.info("GitHub: bundle ($branch) → v${bundle.version} @ ${bundle.downloadUrl}")
             Result.success(bundle.toRelease(prerelease))
         } catch (e: Exception) {
-            logger.info("GitHub: no usable patches-bundle.json for $repoPath (${e.message}). Falling back to releases API")
+            val reason = (e as? HttpService.HttpException)?.status?.toString() ?: (e.message ?: "unknown error")
+            logger.info("GitHub: no usable patches-bundle.json ($branch) for $repoPath ($reason); falling back to releases API")
             Result.failure(e)
         }
     }
@@ -78,7 +79,6 @@ open class GitHubPatchSource(
             logger.info("GitHub: wrote ${file.length()} bytes to ${file.absolutePath}")
             Result.success(file)
         } catch (e: Exception) {
-            logger.warning("GitHub download failed (${e::class.simpleName}): ${e.message}")
             Result.failure(e)
         }
     }

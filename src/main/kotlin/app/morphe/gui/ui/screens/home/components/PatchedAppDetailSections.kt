@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.model.SupportedApp
 import app.morphe.gui.data.model.PatchSource
-import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.components.MorpheCardChip
 import app.morphe.gui.ui.components.MorpheSwitch
 import app.morphe.gui.ui.components.handCursor

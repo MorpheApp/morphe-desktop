@@ -8,19 +8,14 @@ package app.morphe.gui.ui.screens.patching
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheComponents
-import app.morphe.engine.MorpheData
-import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.PatchEngine
 import app.morphe.engine.UpdateChecker
-import app.morphe.engine.model.PatchedAppRecord
-import app.morphe.engine.util.ApkManifestReader
-import app.morphe.engine.util.FileChecksum
-import app.morphe.gui.data.model.PatchConfig
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.BundleFormats
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
-import app.morphe.gui.util.PatchResult
-import app.morphe.gui.util.PatchService
-import app.morphe.gui.util.PatcherLogInterceptor
 import app.morphe.gui.util.PatcherState
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -34,15 +29,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
 
 class PatchingViewModel(
-    private val config: PatchConfig,
-    private val patchService: PatchService,
+    private val config: PatchEngine.Config,
     private val configRepository: ConfigRepository,
-    private val patchedAppStore: PatchedAppStore,
+    private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PatchingUiState())
@@ -65,20 +58,21 @@ class PatchingViewModel(
             val osName = System.getProperty("os.name") ?: "Unknown OS"
             val osArch = System.getProperty("os.arch") ?: "Unknown Arch"
             val maxMemoryMb = (Runtime.getRuntime().maxMemory() / (1024 * 1024)).toInt()
-            val inputApkFile = File(config.inputApkPath)
+            val inputApkFile = config.inputApk
             val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), locale) else "?"
             
-            val appVersion = config.appVersion ?: ApkManifestReader.read(inputApkFile)?.versionName ?: "?"
-            val patchesSourceName = config.patchesSourceName ?: "MORPHE PATCHES"
-            val patchesVersion = config.patchesVersion ?: config.sourcesSnapshot.firstOrNull()?.version ?: "?"
-            val isSplit = config.inputApkPath.endsWith(".apkm", true) || config.inputApkPath.endsWith(".xapk", true) || config.inputApkPath.endsWith(".apks", true) || inputApkFile.isDirectory
+            val appVersion = ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
+            val sourcesSnapshot = config.historyMetadata?.sourcesSnapshot
+            val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE PATCHES"
+            val patchesVersion = sourcesSnapshot?.firstOrNull()?.version ?: "?"
+            val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
             
-            val parentFile = File(config.outputApkPath).parentFile ?: File(System.getProperty("user.home"))
+            val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
             val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, locale)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, locale)}"
 
             val desktopVersion = UpdateChecker.currentVersion() ?: "?"
             val patcherVersion = MorpheComponents.patcherVersion ?: "?"
-            val nativeLibs = if (config.keepArchitectures.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
+            val nativeLibs = if (config.architecturesToKeep.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
 
             val osBean = ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean
             val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, locale)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, locale)}"
@@ -134,84 +128,67 @@ class PatchingViewModel(
                 progress = 0f
             )
 
-            // Resolve keystore. Two modes:
-            //  - User configured one in Settings, so use it and fail loudly if the
-            //    file is missing (don't silently swap in our default, that
-            //    would produce APKs signed by a different identity than the
-            //    user picked, breaking on-device updates without explanation).
-            //  - Otherwise → use the shared MorpheData default keystore. The
-            //    patcher library creates it on first sign if missing, reused
-            //    every patch session so all Morphe-patched apps share one
-            //    signing identity.
-            val userKeystore = appConfig.resolvedKeystorePath()
-            if (userKeystore != null && !userKeystore.exists()) {
-                val rawMsg = "Keystore file not found at ${userKeystore.absolutePath}"
-                val uiMsg = getString(Res.string.settings_signing_error_not_found, userKeystore.absolutePath)
-                addLog(rawMsg, LogLevel.ERROR)
-                _uiState.value = _uiState.value.copy(status = PatchingStatus.FAILED, error = uiMsg)
-                Logger.error("Patching aborted: $rawMsg")
-                return@launch
-            }
-            val resolvedKeystorePath = (userKeystore ?: MorpheData.defaultKeystoreFile).absolutePath
-
-            // Attach a custom handler to capture standard patcher logs for parsing
-            val logHandler = PatcherLogInterceptor.attach { message ->
-                launch(Dispatchers.Main) {
-                    parseAndAddLog(message)
-                }
+            // Keystore: pass user-configured keystore if present, or null to let PatchEngine
+            // use the shared MorpheData default keystore.
+            val userKeystoreDetails = engineConfigRepository.loadConfig().toKeyStoreDetails()
+            val engineConfig = if (config.keystoreDetails == null && userKeystoreDetails != null) {
+                config.copy(keystoreDetails = userKeystoreDetails)
+            } else {
+                config
             }
 
             val result = try {
-                patchService.patch(
-                    patchesFilePaths = config.patchesFilePaths,
-                    inputApkPath = config.inputApkPath,
-                    outputApkPath = config.outputApkPath,
-                    enabledPatches = config.enabledPatches,
-                    disabledPatches = config.disabledPatches,
-                    options = config.patchOptions,
-                    exclusiveMode = config.useExclusiveMode,
-                    keepArchitectures = config.keepArchitectures,
-                    continueOnError = config.continueOnError,
-                    keystorePath = resolvedKeystorePath,
-                    keystorePassword = appConfig.keystorePassword,
-                    keystoreAlias = appConfig.keystoreAlias,
-                    keystoreEntryPassword = appConfig.keystoreEntryPassword,
-                    onProgress = { message ->
-                        parseAndAddLog(message)
-                    }
-                )
+                runCatching {
+                    PatchEngine.patch(
+                        config = engineConfig,
+                        onProgress = { message ->
+                            val (cleanMessage, level) = when {
+                                message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
+                                message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
+                                message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
+                                message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
+                                else -> message to LogLevel.INFO
+                            }
+                            when (level) {
+                                LogLevel.ERROR -> Logger.error(cleanMessage)
+                                LogLevel.WARNING -> Logger.warn(cleanMessage)
+                                LogLevel.INFO -> Logger.info(cleanMessage)
+                            }
+                            viewModelScope.launch(Dispatchers.Main) {
+                                parseAndAddLog(message)
+                            }
+                        }
+                    )
+                }
             } finally {
-                PatcherLogInterceptor.detach(logHandler)
                 memoryJob.cancel()
             }
 
             result.fold(
-                onSuccess = { patchResult ->
-                    if (patchResult.success) {
-                        // Distinguish clean success from "continue-on-error" partial success:
-                        // the APK was built, but some patches were skipped. Log the skipped
-                        // ones as a warning so the user sees what didn't apply.
-                        
+                onSuccess = { engineResult ->
+                    if (engineResult.success) {
                         val elapsedMs = System.currentTimeMillis() - startTime
-                        val outputApkFile = File(config.outputApkPath)
+                        val outputApkFile = config.outputApk ?: File(engineResult.outputPath)
                         val outSizeMb = if (outputApkFile.exists()) FormatUtils.formatFileSize(outputApkFile.length(), locale) else "?"
 
                         _uiState.value = _uiState.value.copy(
                             status = PatchingStatus.COMPLETED,
-                            outputPath = config.outputApkPath,
+                            outputPath = engineResult.outputPath,
                             progress = 1f,
                             outputSizeMb = outSizeMb,
                             elapsedSec = formatElapsed(elapsedMs)
                         )
-                        Logger.info("Patching completed: ${config.outputApkPath}")
-                        recordPatchedApp(patchResult)
+                        Logger.info("Patching completed: ${engineResult.outputPath}")
                     } else {
-                        val reason = patchResult.failureDetail
-                            ?: patchResult.getLocalizedFailureReason()
-                            ?: if (patchResult.failedPatches.isNotEmpty())
-                                getString(Res.string.patching_error_failed_patches, patchResult.failedPatches.joinToString(", "))
+                        val reason = engineResult.failureDetail
+                            ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
+                                val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
+                                getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
+                            }
+                            ?: if (engineResult.failedPatches.isNotEmpty())
+                                getString(Res.string.patching_error_failed_patches, engineResult.failedPatches.joinToString(", ") { it.name })
                             else getString(Res.string.error_patching_unknown)
-                        addLog("Patching failed: ${patchResult.failureReason ?: "Unknown reason"}", LogLevel.ERROR)
+                        addLog("Patching failed: ${engineResult.failureReason ?: "Unknown reason"}", LogLevel.ERROR)
                         _uiState.value = _uiState.value.copy(
                             status = PatchingStatus.FAILED,
                             error = reason,
@@ -242,48 +219,6 @@ class PatchingViewModel(
         }
     }
 
-    /**
-     * Record this patch in the shared patched-app history (see [PatchedAppStore]).
-     * Best-effort: a history-write failure must never disrupt the success UX.
-     */
-    private suspend fun recordPatchedApp(patchResult: PatchResult) {
-        try {
-            val pkg = config.packageName.ifEmpty { patchResult.packageName }
-            if (pkg.isEmpty()) return // nothing useful to key on
-            val (sha, size) = withContext(Dispatchers.IO) {
-                FileChecksum.fingerprintOrNull(config.outputApkPath)
-            }
-            // Read the output APK's manifest once: post-rename package (for device
-            // matching) + versionName (fallback so the APK version number always shows).
-            val manifest = withContext(Dispatchers.IO) {
-                runCatching { ApkManifestReader.read(File(config.outputApkPath)) }.getOrNull()
-            }
-            patchedAppStore.upsert(
-                PatchedAppRecord(
-                    packageName = pkg,
-                    currentPackageName = manifest?.packageName,
-                    displayName = config.appDisplayName.ifEmpty { pkg },
-                    // Prefer the manifest's versionName (e.g. "21.20.400"). The patch
-                    // result's packageVersion can be the numeric versionCode, which breaks
-                    // version comparisons for update detection.
-                    apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: patchResult.packageVersion,
-                    apkVersionCode = manifest?.versionCode,
-                    inputApkPath = config.inputApkPath,
-                    outputApkPath = config.outputApkPath,
-                    outputApkSha256 = sha,
-                    outputApkSize = size,
-                    patchSelectionByBundle = config.patchSelectionByBundle,
-                    patchOptionValues = config.patchOptions,
-                    sourcesSnapshot = config.sourcesSnapshot,
-                    patchedAt = System.currentTimeMillis(),
-                    patchedWithMorpheVersion = UpdateChecker.currentVersion() ?: "unknown",
-                )
-            )
-        } catch (e: Exception) {
-            Logger.error("Failed to record patched app", e)
-        }
-    }
-
     private fun addLog(message: String, level: LogLevel) {
         val entry = LogEntry(message, level)
         _uiState.update { it.copy(
@@ -292,18 +227,22 @@ class PatchingViewModel(
     }
 
     private fun parseAndAddLog(line: String) {
-        val level = when {
-            line.contains("error", ignoreCase = true) -> LogLevel.ERROR
-            line.contains("warning", ignoreCase = true) -> LogLevel.WARNING
+        val (cleanMessage, level) = when {
+            line.startsWith("ERROR: ", ignoreCase = true) -> line.substring(7) to LogLevel.ERROR
+            line.startsWith("WARNING: ", ignoreCase = true) -> line.substring(9) to LogLevel.WARNING
+            line.startsWith("ERROR:", ignoreCase = true) -> line.substring(6).trimStart() to LogLevel.ERROR
+            line.startsWith("WARNING:", ignoreCase = true) -> line.substring(8).trimStart() to LogLevel.WARNING
+            line.contains("error", ignoreCase = true) -> line to LogLevel.ERROR
+            line.contains("warning", ignoreCase = true) -> line to LogLevel.WARNING
             line.contains("success", ignoreCase = true) ||
             line.contains("completed", ignoreCase = true) ||
             line.contains("done", ignoreCase = true) ||
             line.contains("patching", ignoreCase = true) ||
-            line.contains("applying", ignoreCase = true) -> LogLevel.INFO
-            else -> LogLevel.INFO
+            line.contains("applying", ignoreCase = true) -> line to LogLevel.INFO
+            else -> line to LogLevel.INFO
         }
-        if (!line.startsWith("FAILED: ", ignoreCase = true)) {
-            addLog(line, level)
+        if (!cleanMessage.startsWith("FAILED: ", ignoreCase = true)) {
+            addLog(cleanMessage, level)
         }
 
         // Extract progress information using State Machine
@@ -311,7 +250,7 @@ class PatchingViewModel(
             val total = if (_uiState.value.totalPatches > 0) _uiState.value.totalPatches else config.enabledPatches.size
             stateMachine = PatcherState(total, _uiState.value.isSplit)
         }
-        stateMachine?.processLogLine(line)
+        stateMachine?.processLogLine(cleanMessage)
 
         _uiState.update { it.copy(
             progress = maxOf(it.progress, stateMachine?.currentProgress ?: 0f),
@@ -322,7 +261,7 @@ class PatchingViewModel(
         ) }
     }
 
-    fun getConfig(): PatchConfig = config
+    fun getConfig(): PatchEngine.Config = config
     
     private fun formatElapsed(ms: Long): String {
         val totalSec = ms / 1000

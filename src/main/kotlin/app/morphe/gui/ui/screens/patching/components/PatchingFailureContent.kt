@@ -32,7 +32,8 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.data.model.PatchConfig
+import app.morphe.engine.PatchEngine
+import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.patching.PatchingUiState
@@ -41,7 +42,6 @@ import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalMorpheMono
 import app.morphe.gui.ui.theme.panelFill
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.Logger
 import app.morphe.gui.util.currentLocale
@@ -58,7 +58,7 @@ private fun formatFileSize(bytes: Long): String =
 @Composable
 internal fun ExpertFailureContent(
     uiState: PatchingUiState,
-    config: PatchConfig,
+    config: PatchEngine.Config,
     onBackToHome: () -> Unit
 ) {
     val corners = LocalMorpheCorners.current
@@ -68,8 +68,8 @@ internal fun ExpertFailureContent(
     val borderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
     
     val logFile = remember { Logger.getLogFile() }
-    val hasTempFiles = remember { FileUtils.hasTempFiles() }
-    val tempFilesSize = remember { FileUtils.getTempDirSize() }
+    val hasTempFiles = remember { WorkspaceManager.hasScratchFiles() }
+    val tempFilesSize = remember { WorkspaceManager.getScratchSize() }
     var tempFilesCleared by remember { mutableStateOf(false) }
     var showLogViewer by remember { mutableStateOf(false) }
 
@@ -107,7 +107,7 @@ internal fun ExpertFailureContent(
                 }
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = config.packageName,
+                    text = config.historyMetadata?.originalPackageName ?: config.appDisplayName ?: "",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = mono,
@@ -292,7 +292,7 @@ internal fun ExpertFailureContent(
                         .clip(RoundedCornerShape(corners.small))
                         .background(cleanBg)
                         .clickable {
-                            FileUtils.cleanupAllTempDirs()
+                            WorkspaceManager.clearScratch()
                             tempFilesCleared = true
                             Logger.info("Cleaned temp files after failed patching")
                         }

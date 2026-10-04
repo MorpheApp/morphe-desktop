@@ -5,7 +5,8 @@
 
 package app.morphe.gui.data.repository
 
-import app.morphe.engine.util.PortablePaths
+import app.morphe.engine.MorpheData
+import app.morphe.engine.util.isDevTag
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.FollowMode
@@ -15,12 +16,14 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.theme.ThemePreference
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.Logger
-import app.morphe.gui.util.isDevTag
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonObject
 
 /**
  * Repository for managing app configuration (config.json)
@@ -46,7 +49,7 @@ open class ConfigRepository {
         // unified morphe-data location. Runs once and is a no-op thereafter.
         ConfigMigration.runIfNeeded()
 
-        val configFile = FileUtils.getConfigFile()
+        val configFile = MorpheData.configFile
 
         try {
             if (configFile.exists()) {
@@ -61,6 +64,8 @@ open class ConfigRepository {
                 saveConfig(default)
                 default
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Logger.error("Failed to load config, using defaults", e)
             AppConfig()
@@ -72,9 +77,18 @@ open class ConfigRepository {
      */
     suspend fun saveConfig(config: AppConfig) = withContext(Dispatchers.IO) {
         try {
-            val configFile = FileUtils.getConfigFile()
-            val content = json.encodeToString(AppConfig.serializer(), config)
-            configFile.writeText(content)
+            val configFile = MorpheData.configFile
+            val existingObj = if (configFile.exists()) {
+                runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
+            } else JsonObject(emptyMap())
+
+            val guiObj = json.encodeToJsonElement(AppConfig.serializer(), config).jsonObject
+            val mergedMap = existingObj.toMutableMap()
+            guiObj.forEach { (k, v) -> mergedMap[k] = v }
+            val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
+
+            configFile.parentFile?.mkdirs()
+            configFile.writeText(mergedJson)
             cachedConfig = config
             Logger.info("Config saved to ${configFile.absolutePath}")
         } catch (e: Exception) {
@@ -279,51 +293,11 @@ open class ConfigRepository {
     }
 
     /**
-     * Update default output directory.
-     */
-    suspend fun setDefaultOutputDirectory(path: String?) {
-        val current = loadConfig()
-        saveConfig(current.copy(defaultOutputDirectory = path?.let(PortablePaths::storableForm)))
-    }
-
-    /**
-     * Update auto-cleanup temp files setting.
-     */
-    suspend fun setAutoCleanupTempFiles(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(autoCleanupTempFiles = enabled))
-    }
-
-    /**
-     * Update the "route links to patched app after install" setting.
-     */
-    suspend fun setAutoRouteLinksAfterInstall(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(autoRouteLinksAfterInstall = enabled))
-    }
-
-    /**
-     * Update the "also disable stock app's links" sub-setting.
-     */
-    suspend fun setDisableStockLinksAfterInstall(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(disableStockLinksAfterInstall = enabled))
-    }
-
-    /**
      * Update simplified mode setting.
      */
     suspend fun setUseSimplifiedMode(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(useSimplifiedMode = enabled))
-    }
-
-    /**
-     * Update the user's global keep-architectures list for strip libs.
-     */
-    suspend fun setKeepArchitectures(keep: Set<String>) {
-        val current = loadConfig()
-        saveConfig(current.copy(keepArchitectures = keep))
     }
 
     /**
@@ -334,32 +308,6 @@ open class ConfigRepository {
         val current = loadConfig()
         val updated = current.collapsibleSectionStates + (id to expanded)
         saveConfig(current.copy(collapsibleSectionStates = updated))
-    }
-
-    /**
-     * Update keystore path only (used for auto-remember on first creation).
-     */
-    suspend fun setKeystorePath(path: String?) {
-        val current = loadConfig()
-        saveConfig(current.copy(keystorePath = path?.let(PortablePaths::storableForm)))
-    }
-
-    /**
-     * Update all keystore details at once.
-     */
-    suspend fun setKeystoreDetails(
-        path: String?,
-        password: String?,
-        alias: String,
-        entryPassword: String
-    ) {
-        val current = loadConfig()
-        saveConfig(current.copy(
-            keystorePath = path?.let(PortablePaths::storableForm),
-            keystorePassword = password,
-            keystoreAlias = alias,
-            keystoreEntryPassword = entryPassword
-        ))
     }
 
     /**
@@ -427,31 +375,7 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = reordered))
     }
 
-    /**
-     * Update whether Morphe auto-starts the ADB daemon at GUI launch.
-     */
-    suspend fun setAutoStartAdb(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(autoStartAdb = enabled))
-    }
 
-    /** Toggle patch-developer options (unlocks folder-based local sources). */
-    suspend fun setDeveloperOptions(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(developerOptions = enabled))
-    }
-
-    /** Remember the last folder used in the local .mpp picker. */
-    suspend fun setLastLocalPatchDir(path: String?) {
-        val current = loadConfig()
-        saveConfig(current.copy(lastLocalPatchDir = path))
-    }
-
-    /** User-added glob patterns for .mpp files a developer folder source should skip. */
-    suspend fun setExcludedMppPatterns(patterns: List<String>) {
-        val current = loadConfig()
-        saveConfig(current.copy(excludedMppPatterns = patterns))
-    }
 
     /**
      * Mark the multi-source upgrade hint as dismissed. One-shot, never resets.
@@ -516,18 +440,7 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = updatedSources, activePatchSourceId = newActiveId))
     }
 
-    /**
-     * Update GitHub Personal Access Token (PAT).
-     */
-    suspend fun setGitHubPat(pat: String) {
-        val current = loadConfig()
-        saveConfig(current.copy(gitHubPat = pat))
-    }
 
-    /**
-     * Get the configured GitHub Personal Access Token (PAT).
-     */
-    suspend fun getGitHubPat(): String = loadConfig().gitHubPat
 
     /**
      * Clear cached config (for testing).

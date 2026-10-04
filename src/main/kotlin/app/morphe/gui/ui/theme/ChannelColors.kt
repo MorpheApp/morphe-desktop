@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
-import app.morphe.gui.util.EnabledSourcesLoader.Channel
+import app.morphe.engine.patches.PatchResolver.Channel
 
 /**
  * Semantic color for a patch source's release channel. Single source of truth so

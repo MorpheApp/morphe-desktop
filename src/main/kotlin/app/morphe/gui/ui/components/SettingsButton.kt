@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.LocalCustomAccentColor
 import app.morphe.gui.LocalIsPatching
@@ -62,6 +63,7 @@ fun SettingsDialogHost() {
     val languageState = LocalLanguageState.current
     val adbPreference = LocalAdbPreference.current
     val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
     val updateCheckRepository: UpdateCheckRepository = koinInject()
     val scope = rememberCoroutineScope()
 
@@ -83,21 +85,22 @@ fun SettingsDialogHost() {
     LaunchedEffect(showSettingsDialog) {
         if (showSettingsDialog) {
             val config = configRepository.loadConfig()
-            autoCleanupTempFiles = config.autoCleanupTempFiles
+            val engineConfig = engineConfigRepository.loadConfig()
+            autoCleanupTempFiles = engineConfig.autoCleanupTempFiles
             // Display the resolved absolute form even though storage may be
             // bundle-relative. Users expect to see a real filesystem path in
             // the field, not a cryptic basename.
-            defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
-            keystorePath = config.resolvedKeystorePath()?.absolutePath
-            keystorePassword = config.keystorePassword
-            keystoreAlias = config.keystoreAlias
-            keystoreEntryPassword = config.keystoreEntryPassword
-            keepArchitectures = config.keepArchitectures
+            defaultOutputDirectory = engineConfig.resolvedDefaultOutputDirectory()?.absolutePath
+            keystorePath = engineConfig.resolvedKeystorePath()?.absolutePath
+            keystorePassword = engineConfig.keystorePassword
+            keystoreAlias = engineConfig.keystoreAlias
+            keystoreEntryPassword = engineConfig.keystoreEntryPassword
+            keepArchitectures = engineConfig.keepArchitectures
             collapsibleSectionStates = config.collapsibleSectionStates
-            autoRouteLinksAfterInstall = config.autoRouteLinksAfterInstall
-            disableStockLinksAfterInstall = config.disableStockLinksAfterInstall
-            developerOptions = config.developerOptions
-            gitHubPat = config.gitHubPat
+            autoRouteLinksAfterInstall = engineConfig.autoRouteLinksAfterInstall
+            disableStockLinksAfterInstall = engineConfig.disableStockLinksAfterInstall
+            developerOptions = engineConfig.developerOptions
+            gitHubPat = engineConfig.gitHubPat
             // Resolve the smart-default if the user has never picked a channel
             // (returns DEV when the running build is dev, STABLE otherwise).
             updateChannelPreference = configRepository.getOrInitUpdateChannelPreference(
@@ -119,13 +122,13 @@ fun SettingsDialogHost() {
             onAutoCleanupChange = { enabled ->
                 autoCleanupTempFiles = enabled
                 scope.launch {
-                    configRepository.setAutoCleanupTempFiles(enabled)
+                    engineConfigRepository.setAutoCleanupTempFiles(enabled)
                 }
             },
             defaultOutputDirectory = defaultOutputDirectory,
             onDefaultOutputDirectoryChange = { path ->
                 defaultOutputDirectory = path
-                scope.launch { configRepository.setDefaultOutputDirectory(path) }
+                scope.launch { engineConfigRepository.setDefaultOutputDirectory(path) }
             },
             useExpertMode = !modeState.isSimplified,
             onExpertModeChange = { enabled ->
@@ -134,7 +137,7 @@ fun SettingsDialogHost() {
             developerOptions = developerOptions,
             onDeveloperOptionsChange = { enabled ->
                 developerOptions = enabled
-                scope.launch { configRepository.setDeveloperOptions(enabled) }
+                scope.launch { engineConfigRepository.setDeveloperOptions(enabled) }
             },
             onDismiss = {
                 showSettingsDialog = false
@@ -147,14 +150,14 @@ fun SettingsDialogHost() {
             keystoreEntryPassword = keystoreEntryPassword,
             onKeystorePathChange = { path ->
                 keystorePath = path
-                scope.launch { configRepository.setKeystorePath(path) }
+                scope.launch { engineConfigRepository.setKeystorePath(path) }
             },
             onKeystoreCredentialsChange = { pwd, alias, entryPwd ->
                 keystorePassword = pwd
                 keystoreAlias = alias
-                keystoreEntryPassword = entryPwd
+                entryPwd.let { keystoreEntryPassword = it }
                 scope.launch {
-                    configRepository.setKeystoreDetails(
+                    engineConfigRepository.setKeystoreDetails(
                         path = keystorePath,
                         password = pwd,
                         alias = alias,
@@ -165,7 +168,7 @@ fun SettingsDialogHost() {
             keepArchitectures = keepArchitectures,
             onKeepArchitecturesChange = { updated ->
                 keepArchitectures = updated
-                scope.launch { configRepository.setKeepArchitectures(updated) }
+                scope.launch { engineConfigRepository.setKeepArchitectures(updated) }
             },
             updateChannelPreference = updateChannelPreference,
             onUpdateChannelChange = { pref ->
@@ -187,12 +190,12 @@ fun SettingsDialogHost() {
             autoRouteLinksAfterInstall = autoRouteLinksAfterInstall,
             onAutoRouteLinksChange = { enabled ->
                 autoRouteLinksAfterInstall = enabled
-                scope.launch { configRepository.setAutoRouteLinksAfterInstall(enabled) }
+                scope.launch { engineConfigRepository.setAutoRouteLinksAfterInstall(enabled) }
             },
             disableStockLinksAfterInstall = disableStockLinksAfterInstall,
             onDisableStockLinksChange = { enabled ->
                 disableStockLinksAfterInstall = enabled
-                scope.launch { configRepository.setDisableStockLinksAfterInstall(enabled) }
+                scope.launch { engineConfigRepository.setDisableStockLinksAfterInstall(enabled) }
             },
             collapsibleSectionStates = collapsibleSectionStates,
             onCollapsibleSectionToggle = { id, expanded ->
@@ -202,7 +205,7 @@ fun SettingsDialogHost() {
             gitHubPat = gitHubPat,
             onGitHubPatChange = { pat ->
                 gitHubPat = pat
-                scope.launch { configRepository.setGitHubPat(pat) }
+                scope.launch { engineConfigRepository.setGitHubPat(pat) }
             },
             customAccentColorArgb = customAccentColorArgb,
             onCustomAccentColorChange = {

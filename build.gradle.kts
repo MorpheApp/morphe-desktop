@@ -77,9 +77,6 @@ dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
     implementation(libs.morphe.library)
-    implementation(libs.jadb) {
-        exclude(group = "org.mockito")
-    }
     implementation(libs.picocli)
 
     // -- Bootstrap (Code Generation) ---------------------------------------

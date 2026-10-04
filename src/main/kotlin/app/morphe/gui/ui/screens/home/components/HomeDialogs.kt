@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.components.MorpheDialogButton
 import app.morphe.gui.ui.components.MorpheDialogCard
@@ -26,8 +27,8 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.util.MorpheFilePicker
-import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveVersionWarningContent
 import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*
@@ -161,7 +162,7 @@ internal fun RepatchMissingApkDialog(
                 scope.launch {
                     val picked = MorpheFilePicker.pickFile(
                         title = getString(Res.string.home_dialog_select_apk_to_repatch),
-                        extensions = listOf("apk", "apkm", "xapk", "apks"),
+                        extensions = BundleFormats.SUPPORTED_EXTENSIONS,
                     )
                     onDismiss()
                     if (picked != null && picked.exists()) onApkPicked(picked.absolutePath)
