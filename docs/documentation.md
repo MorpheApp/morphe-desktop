@@ -36,7 +36,9 @@ Now that you've done your first run, let's dig deeper into how the magic happens
 
 1. Java Runtime Environment 21 or above ([Azul Zulu JRE](https://www.azul.com/downloads/?version=java-21-lts&package=jre#zulu), [Temurin](https://adoptium.net/temurin/releases?version=21&os=any&arch=any) or [OpenJDK](https://jdk.java.net/archive/)).
 2. Morphe Desktop jar file (morphe-desktop-*-all.jar). Download the latest from [here](https://github.com/MorpheApp/morphe-desktop/releases/latest).
-3. If using CLI: Patches mpp file (patches-*.mpp). Download the latest Morphe official patch files from [here](https://github.com/MorpheApp/morphe-patches/releases/latest).
+
+   **Alternative: Homebrew (macOS/Linux).** Install [Homebrew](https://brew.sh), then run `brew install morphe`. Homebrew installs OpenJDK as a dependency. Run `morphe --help` to get started. See the [Morphe formula](https://formulae.brew.sh/formula/morphe).
+3. If using CLI: Patches MPP file (patches-*.mpp). Download the latest Morphe official patch files from [here](https://github.com/MorpheApp/morphe-patches/releases/latest).
 4. If using CLI: Desired app file (app.apk or app.apkm). Download your apk from [APK Mirror](https://www.apkmirror.com/).
 5. [Optional] [Android Debug Bridge (ADB)](https://developer.android.com/studio/command-line/adb) If you want to install the patched APK file to your device directly from your computer.
 
@@ -46,6 +48,8 @@ Morphe keeps its runtime data: cached patch files, logs, scratch space for patch
 If that location isn't writable (e.g. running from an IDE, or from a read-only install path), Morphe falls back to **`~/morphe/`**. The startup logs print which one is in use (look for `Morphe data root: ...`).
 
 You can override the location entirely with the **`MORPHE_DATA_DIR`** environment variable. Point it at a writable directory and Morphe uses that as the data root, ahead of both the JAR-adjacent default and the `~/morphe/` fallback. This is meant for read-only or package-manager installs, where the JAR's own folder isn't writable and you'd rather choose the location than land in `~/morphe/`. If the path you set isn't writable, Morphe logs a warning and ignores it.
+
+Homebrew sets `MORPHE_DATA_DIR` to `$(brew --prefix)/var/morphe` by default, so Morphe's data persists separately from the installed application. You can override it by setting `MORPHE_DATA_DIR` before running `morphe`.
 
 ```
 morphe-data/
@@ -534,7 +538,11 @@ It has some general flags but is mainly divided into 5 main sub-commands (and th
 Shows all the general flags and sub commands available.
 
 ```
+# Downloaded JAR:
 java -jar morphe-desktop-*-all.jar --help
+
+# Homebrew:
+morphe --help
 ```
 
 #### `-V`, `--version`:
@@ -550,7 +558,11 @@ java -jar morphe-desktop-*-all.jar --version
 This is the most fundamental sub-command. Add the `patch` keyword to run this sub-command.
 
 ```
+# Downloaded JAR:
 java -jar morphe-desktop-*-all.jar patch [flag/s]
+
+# Homebrew:
+morphe patch [flag/s]
 ```
 
 Here is a quick lookup for all the flags under this subcommand:

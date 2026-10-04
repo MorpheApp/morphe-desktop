@@ -29,7 +29,9 @@ All modifications made by Morphe can be found in the Git history.
 ## Prerequisites
 1. Java Runtime Environment 21 or above ([Azul Zulu JRE](https://www.azul.com/downloads/?version=java-21-lts&package=jre#zulu), [Temurin](https://adoptium.net/temurin/releases?version=21&os=any&arch=any) or [OpenJDK](https://jdk.java.net/archive/)).
 2. Morphe Desktop jar file (morphe-desktop-*-all.jar). Download the latest from [here](https://github.com/MorpheApp/morphe-desktop/releases/latest).
-3. If using CLI: Patches mpp file (patches-*.mpp). Download the latest Morphe official patch files from [here](https://github.com/MorpheApp/morphe-patches/releases/latest).
+
+   **Alternative: Homebrew (macOS/Linux).** Install [Homebrew](https://brew.sh), then run `brew install morphe`. Homebrew installs OpenJDK as a dependency. Run `morphe --help` to get started. See the [Morphe formula](https://formulae.brew.sh/formula/morphe).
+3. If using CLI: Patches MPP file (patches-*.mpp). Download the latest Morphe official patch files from [here](https://github.com/MorpheApp/morphe-patches/releases/latest).
 4. Desired app file (app.apk or app.apkm). Download your apk from [APK Mirror](https://www.apkmirror.com/).
 5. [Optional] [Android Debug Bridge (ADB)](https://developer.android.com/studio/command-line/adb) If you want to install the patched APK file to your device directly from your computer.
 
@@ -98,8 +100,12 @@ Ideally place both of these files and your desired apk (preferably YouTube for y
 2. Run the `ls` command if required to check the contents of the folder and confirm that you have all the files over there.
 
 3. Now run the patch command to instruct the morphe-desktop.jar to run the patching process by using the patch command on your apk file like this:
-    ```
+    ```sh
+    # Downloaded JAR:
     java -jar morphe-desktop-*-all.jar patch -p patches-*.mpp your_app.apk
+
+    # Homebrew:
+    morphe patch -p patches-*.mpp your_app.apk
     ```
 4. This should start the patching process. You should be able to see a bunch of patches being applied like such:
     ```
