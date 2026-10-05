@@ -1,3 +1,18 @@
+## [1.18.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.0...v1.18.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([c7b8a0d](https://github.com/MorpheApp/morphe-desktop/commit/c7b8a0de49c604bf33ba2f2f8c13b91863dc824e))
+* Update to latest Patcher ([40e7444](https://github.com/MorpheApp/morphe-desktop/commit/40e744442ef43054649ddec6b27c6953d12bfa5a))
+* Update to latest Patcher ([ce033f8](https://github.com/MorpheApp/morphe-desktop/commit/ce033f871761dae283237b4b616c34b695c1ce8a))
+* Update to latest Patcher ([dfc1d55](https://github.com/MorpheApp/morphe-desktop/commit/dfc1d553921609b4ebd5ece420e3293c9c406cdf))
+
+
+### Performance Improvements
+
+* Use multi-threaded file cleanup ([6976ee6](https://github.com/MorpheApp/morphe-desktop/commit/6976ee6795d316b93a9a9ab3b6e4e7637b4999a2))
+
 ## [1.18.1-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.1-dev.4...v1.18.1-dev.5) (2026-10-04)
 
 
