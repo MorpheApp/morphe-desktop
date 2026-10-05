@@ -5,8 +5,8 @@ kotlin = "2.4.20"
 
 # CLI
 picocli = "4.7.7"
-arsclib = "a28c6fb2a7"
-morphe-patcher = "1.15.0"
+arsclib = "9b742c412d"
+morphe-patcher = "1.15.1"
 morphe-library = "1.4.0"
 jadb = "1.2.3"
 
@@ -44,7 +44,7 @@ slf4j = "2.0.20"
 
 # Libraries
 about-libraries = "15.2.0"
-oshi = "7.6.1"
+oshi = "7.7.0"
 
 [libraries]
 # Morphe Core

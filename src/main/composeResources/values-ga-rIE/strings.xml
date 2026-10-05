@@ -413,7 +413,7 @@
     <string name="patch_selection_option_hint_number">uimhir</string>
     <string name="patch_selection_option_hint_text">téacs</string>
     <string name="patch_option_recommended_size">Molta: %1$dx%2$d</string>
-    <string name="patch_option_list_empty">Ní féidir luach a fhágáil folamh</string>
+    <string name="patch_option_list_empty">Ní féidir leis an luach a bheith folamh</string>
     <string name="patch_option_list_duplicate">Tá an mhír ar an liosta cheana</string>
     <string name="patch_option_list_empty_state">Níl aon mhír curtha leis fós</string>
     <string name="patch_option_enter_value">Cuir isteach luach…</string>

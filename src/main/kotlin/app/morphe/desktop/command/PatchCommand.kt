@@ -18,6 +18,7 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.util.deleteRecursivelyInParallel
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
@@ -931,7 +932,7 @@ internal object PatchCommand : Callable<Int> {
                 // Scope: only THIS session's tmp subfolder. Cached patches,
                 // logs, config, and other in-flight sessions (CLI or GUI) are
                 // never touched.
-                if (patcherTemporaryFilesPath.deleteRecursively()) {
+                if (patcherTemporaryFilesPath.deleteRecursivelyInParallel()) {
                     logger.info("Purged this session's temp files: ${patcherTemporaryFilesPath.name}")
                 } else {
                     logger.warning("Failed to purge ${patcherTemporaryFilesPath.path}")

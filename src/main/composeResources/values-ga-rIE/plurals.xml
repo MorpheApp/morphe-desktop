@@ -92,10 +92,10 @@
         <item quantity="other">Íoslódáil %1$d beartáin</item>
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
-        <item quantity="one">%1$d croí</item>
-        <item quantity="two">%1$d chroílár</item>
-        <item quantity="few">%1$d chroílár</item>
-        <item quantity="many">%1$d chroílár</item>
-        <item quantity="other">%1$d chroílár</item>
+        <item quantity="one">%1$d cór</item>
+        <item quantity="two">%1$d cóir</item>
+        <item quantity="few">%1$d cóir</item>
+        <item quantity="many">%1$d cóir</item>
+        <item quantity="other">%1$d cóir</item>
     </plurals>
 </resources>

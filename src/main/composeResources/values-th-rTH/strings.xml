@@ -92,7 +92,7 @@
     <!-- App Card Fill Dialog -->
     <string name="card_fill_title">ปรับแต่งการ์ด</string>
     <string name="card_fill_example_app_name">ตัวอย่างชื่อแอป</string>
-    <string name="card_fill_mode_default">ค่าเริ่มต้นThe</string>
+    <string name="card_fill_mode_default">ค่าเริ่มต้น</string>
     <string name="card_fill_mode_default_blurb">สีที่มาพร้อมกับชุดแพตช์</string>
     <string name="card_fill_mode_accent">สีเน้น</string>
     <string name="card_fill_mode_accent_blurb">ตามสีเน้น และเปลี่ยนเมื่อสีเน้นเปลี่ยน</string>
