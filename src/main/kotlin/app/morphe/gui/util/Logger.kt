@@ -109,26 +109,22 @@ object Logger {
                 } else rawMessage
             }.getOrDefault(rawMessage)
 
-            val loggerName = record.loggerName ?: ""
-            val isPatcher = loggerName.startsWith("app.morphe.patcher")
-            val taggedMessage = if (isPatcher) "[PATCH] $message" else message
-
             when {
                 record.level.intValue() >= JVLevel.SEVERE.intValue() -> {
                     if (record.thrown != null) {
-                        error(taggedMessage, record.thrown)
+                        error(message, record.thrown)
                     } else {
-                        error(taggedMessage)
+                        error(message)
                     }
                 }
                 record.level.intValue() >= JVLevel.WARNING.intValue() -> {
-                    warn(taggedMessage)
+                    warn(message)
                 }
                 record.level.intValue() >= JVLevel.INFO.intValue() -> {
-                    info(taggedMessage)
+                    info(message)
                 }
                 else -> {
-                    debug(taggedMessage)
+                    debug(message)
                 }
             }
         }
