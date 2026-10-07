@@ -23,10 +23,7 @@ group = "app.morphe"
 // JVM / Kotlin Configuration
 // ============================================================================
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-        vendor.set(JvmVendorSpec.JETBRAINS)
-    }
+    jvmToolchain(21)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
     }
@@ -229,7 +226,7 @@ tasks {
     test {
         useJUnitPlatform()
         testLogging {
-            events("PASSED", "SKIPPED", "FAILED")
+            events("FAILED")
         }
     }
 
