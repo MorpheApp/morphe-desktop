@@ -8,14 +8,11 @@ package app.morphe.engine.patches
 import app.morphe.engine.GitHubPatMissingException
 import app.morphe.engine.model.Release
 import app.morphe.engine.network.sharedHttpClient
-import app.morphe.engine.util.newerRelease
 import app.morphe.engine.util.normalizeVersion
 import io.ktor.client.HttpClient
 import java.io.File
 import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
@@ -138,25 +135,17 @@ object PatchResolver {
             latestStableTag = null
             latestDevTag = prRelease.tagName
         } else {
-            val (stableResult, devResult) = coroutineScope {
-                val stableAsync = async { repo.getLatestStableRelease() }
-                val devAsync = async { repo.getLatestDevRelease() }
-                stableAsync.await() to devAsync.await()
-            }
-            val stable = stableResult.getOrNull()
-            val dev = devResult.getOrNull()
-            release = if (usePreRelease) newerRelease(dev, stable) else (stable ?: dev)
-            latestStableTag = stable?.tagName
-            latestDevTag = dev?.tagName
+            val primary = if (usePreRelease) repo.getLatestDevRelease() else repo.getLatestStableRelease()
+            val fallback = if (primary.getOrNull() == null) {
+                if (usePreRelease) repo.getLatestStableRelease() else repo.getLatestDevRelease()
+            } else null
 
-            if (release == null) {
-                val cause = if (usePreRelease) {
-                    devResult.exceptionOrNull() ?: stableResult.exceptionOrNull()
-                } else {
-                    stableResult.exceptionOrNull() ?: devResult.exceptionOrNull()
-                }
-                return@withContext offlineOrError(repo, cause)
-            }
+            val chosen = primary.getOrNull() ?: fallback?.getOrNull()
+                ?: return@withContext offlineOrError(repo, primary.exceptionOrNull() ?: fallback?.exceptionOrNull())
+
+            release = chosen
+            latestDevTag = if (chosen.isDevRelease()) chosen.tagName else null
+            latestStableTag = if (!chosen.isDevRelease()) chosen.tagName else null
         }
 
         if (release == null) {

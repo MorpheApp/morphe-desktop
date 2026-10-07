@@ -111,11 +111,17 @@ internal class ListCompatibleVersions : Runnable {
                 appendLine(versions.buildVersionsString(name).prependIndent("\t"))
             }
 
-        SupportedAppCatalog.getCompatibilityMap(
+        val compatibilityMap = SupportedAppCatalog.getCompatibilityMap(
             packageNames = packageNames,
             countUnusedPatches = countUnusedPatches,
             includeExperimental = includeExperimental,
             patches = patches,
-        ).entries.joinToString("\n", transform = ::buildString).let(logger::info)
+        )
+
+        if (compatibilityMap.isEmpty()) {
+            logger.warning("No compatible versions found in: ${patchesFiles.joinToString(", ") { it.path }}")
+        } else {
+            logger.info(compatibilityMap.entries.joinToString("\n", transform = ::buildString))
+        }
     }
 }

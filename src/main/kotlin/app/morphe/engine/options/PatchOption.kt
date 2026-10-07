@@ -62,7 +62,18 @@ enum class PatchOptionType {
     LONG,
     FLOAT,
     LIST,
-    FILE
+    FILE;
+
+    val displayName: String
+        get() = when (this) {
+            STRING -> "String"
+            BOOLEAN -> "Boolean"
+            INT -> "Int"
+            LONG -> "Long"
+            FLOAT -> "Float"
+            LIST -> "List"
+            FILE -> "File"
+        }
 }
 
 /**

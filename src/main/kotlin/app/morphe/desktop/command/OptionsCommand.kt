@@ -96,9 +96,9 @@ internal object OptionsCommand : Callable<Int> {
             {
                 try {
                     readPatchBundles(outputFile)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     logger.warning(
-                        "Could not parse existing file, creating fresh: ${e.message}"
+                        "Could not parse existing '${outputFile.name}' (invalid JSON), creating fresh."
                     )
                     emptyList()
                 }

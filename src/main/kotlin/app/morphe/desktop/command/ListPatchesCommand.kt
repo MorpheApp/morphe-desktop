@@ -8,6 +8,7 @@
 
 package app.morphe.desktop.command
 
+import app.morphe.engine.options.toPatchOption
 import app.morphe.engine.patches.compatibleVersionsForDisplay
 import app.morphe.engine.patches.isCompatibleWith
 import app.morphe.engine.patches.versionCodesFor
@@ -131,7 +132,7 @@ internal object ListPatchesCommand : Runnable {
                     append(values.map { "${it.value} (${it.key})" }.joinToString("\n").prependIndent("\t"))
                 }
 
-                append("\nType: $type")
+                append("\nType: ${toPatchOption().type.displayName}")
             }
 
         fun getVersionCodesString(patch: Patch<*>, pkgName: String, versionName: String): String {
@@ -222,7 +223,7 @@ internal object ListPatchesCommand : Runnable {
         val finalOutput = filtered.joinToString("\n\n") {it.buildString()}
 
         if (filtered.isEmpty()) {
-            logger.warning("No compatible patches found in: $patchesFiles")
+            logger.warning("No compatible patches found in: ${patchesFiles.joinToString(", ") { it.path }}")
         } else {
             if (outputFile == null) {
                 logger.info(finalOutput)
