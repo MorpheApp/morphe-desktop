@@ -5,10 +5,10 @@
 
 package app.morphe.engine.apk
 
+import app.morphe.engine.util.Logger
 import com.reandroid.arsc.chunk.xml.AndroidManifestBlock
 import java.io.ByteArrayInputStream
 import java.io.File
-import java.util.logging.Logger
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
@@ -30,7 +30,6 @@ object AndroidArchitectures {
  * All operations execute in-memory with zero temporary disk writes.
  */
 object ApkInspector {
-    private val logger = Logger.getLogger(ApkInspector::class.java.name)
     private val splitPatterns = listOf("split_config", "config.", "split_")
 
     /**
@@ -47,7 +46,7 @@ object ApkInspector {
                 inspectApk(file)
             }
         } catch (e: Exception) {
-            logger.warning("Failed to inspect ${file.name}: ${e.message ?: e::class.simpleName}")
+            Logger.warn("Failed to inspect ${file.name}: ${e.message ?: e::class.simpleName}")
             null
         }
     }
@@ -62,7 +61,7 @@ object ApkInspector {
     private fun inspectApk(file: File): ApkInspectionResult? {
         ZipFile(file).use { zip ->
             val manifestEntry = zip.getEntry("AndroidManifest.xml") ?: run {
-                logger.warning("No AndroidManifest.xml found in APK ${file.name}")
+                Logger.warn("No AndroidManifest.xml found in APK ${file.name}")
                 return null
             }
 
@@ -71,7 +70,7 @@ object ApkInspector {
             }
 
             val packageName = block.packageName ?: run {
-                logger.warning("No package name in manifest of ${file.name}")
+                Logger.warn("No package name in manifest of ${file.name}")
                 return null
             }
 
@@ -108,7 +107,7 @@ object ApkInspector {
     private fun inspectBundle(file: File): ApkInspectionResult? {
         ZipFile(file).use { zip ->
             val baseEntry = findBaseApkEntry(zip) ?: run {
-                logger.warning("Could not find base APK inside bundle ${file.name}")
+                Logger.warn("Could not find base APK inside bundle ${file.name}")
                 return null
             }
 
@@ -136,12 +135,12 @@ object ApkInspector {
             }
 
             val block = manifestBlock ?: run {
-                logger.warning("No AndroidManifest.xml found inside base APK of bundle ${file.name}")
+                Logger.warn("No AndroidManifest.xml found inside base APK of bundle ${file.name}")
                 return null
             }
 
             val packageName = block.packageName ?: run {
-                logger.warning("No package name in manifest of bundle ${file.name}")
+                Logger.warn("No package name in manifest of bundle ${file.name}")
                 return null
             }
 

@@ -10,8 +10,8 @@ import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.VersionMap
 import app.morphe.engine.patches.versionCodesFor
+import app.morphe.engine.util.Logger
 import java.io.File
-import java.util.logging.Logger
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Help.Visibility.ALWAYS
@@ -27,7 +27,6 @@ import picocli.CommandLine.Spec
     ],
 )
 internal class ListCompatibleVersions : Runnable {
-    private val logger = Logger.getLogger(this::class.java.name)
 
     @Option(
         names = ["--patches"],
@@ -119,9 +118,9 @@ internal class ListCompatibleVersions : Runnable {
         )
 
         if (compatibilityMap.isEmpty()) {
-            logger.warning("No compatible versions found in: ${patchesFiles.joinToString(", ") { it.path }}")
+            Logger.warn("No compatible versions found in: ${patchesFiles.joinToString(", ") { it.path }}")
         } else {
-            logger.info(compatibilityMap.entries.joinToString("\n", transform = ::buildString))
+            Logger.info(compatibilityMap.entries.joinToString("\n", transform = ::buildString))
         }
     }
 }

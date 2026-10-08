@@ -21,12 +21,12 @@ import app.morphe.engine.util.AdbErrorCode
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
 import app.morphe.engine.util.KeystoreService
+import app.morphe.engine.util.Logger
 import app.morphe.patcher.apk.ApkUtils
 import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
 import java.util.concurrent.Callable
-import java.util.logging.Logger
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -48,8 +48,6 @@ internal object PatchCommand : Callable<Int> {
 
     private const val EXIT_CODE_SUCCESS = 0
     private const val EXIT_CODE_ERROR = 1
-
-    private val logger = Logger.getLogger(this::class.java.name)
 
     @Spec
     private lateinit var spec: CommandSpec
@@ -374,28 +372,28 @@ internal object PatchCommand : Callable<Int> {
 
     override fun call(): Int {
         // Check for any newer version
-        UpdateChecker.check(logger)?.let { logger.info(it) }
+        UpdateChecker.check()?.let { Logger.info(it) }
 
         val adbManager = if (deviceSerial != null) AdbManager() else null
         val targetDeviceId = if (deviceSerial != null) {
             val requestedSerial = deviceSerial!!.ifEmpty { null }
             val verifiedDevice = runBlocking {
                 adbManager!!.startServer().onFailure { e ->
-                    logger.severe(e.message ?: "Failed to start ADB server.")
+                    Logger.error(e.message ?: "Failed to start ADB server.")
                     return@runBlocking null
                 }
                 adbManager.verifyTargetDevice(requestedSerial, mount = mount).getOrElse { e ->
                     when ((e as? AdbException)?.errorCode) {
-                        AdbErrorCode.DEVICE_NOT_FOUND -> logger.severe(
+                        AdbErrorCode.DEVICE_NOT_FOUND -> Logger.error(
                             "Device with serial $requestedSerial not found to install to. " +
                                 "Ensure the device is connected and the serial is correct when using the --install option.",
                         )
                         AdbErrorCode.NO_DEVICES,
-                        AdbErrorCode.UNAUTHORIZED_DEVICE -> logger.severe(
+                        AdbErrorCode.UNAUTHORIZED_DEVICE -> Logger.error(
                             "No device has been found to install to. " +
                                 "Ensure a device is connected when using the --install option.",
                         )
-                        else -> logger.severe(e.message ?: e.toString())
+                        else -> Logger.error(e.message ?: e.toString())
                     }
                     adbManager.killServerIfOwned()
                     return@runBlocking null
@@ -496,9 +494,9 @@ internal object PatchCommand : Callable<Int> {
                     config = engineConfig,
                     onProgress = { line ->
                         when {
-                            line.startsWith("ERROR:", ignoreCase = true) || line.startsWith("FAILED:", ignoreCase = true) -> logger.severe(line)
-                            line.startsWith("WARNING:", ignoreCase = true) -> logger.warning(line)
-                            else -> logger.info(line)
+                            line.startsWith("ERROR:", ignoreCase = true) || line.startsWith("FAILED:", ignoreCase = true) -> Logger.error(line)
+                            line.startsWith("WARNING:", ignoreCase = true) -> Logger.warn(line)
+                            else -> Logger.info(line)
                         }
                     },
                 )
@@ -508,7 +506,7 @@ internal object PatchCommand : Callable<Int> {
                 outputFile.outputStream().use { outputStream ->
                     Json.encodeToStream(engineResult, outputStream)
                 }
-                logger.info("Patching result saved to $outputFile")
+                Logger.info("Patching result saved to $outputFile")
             }
 
             if (engineResult.success) {
@@ -530,9 +528,9 @@ internal object PatchCommand : Callable<Int> {
 
                 return EXIT_CODE_SUCCESS
             } else {
-                logger.severe("Patching aborted: ${engineResult.failureReason ?: "Unknown error"}")
+                Logger.error("Patching aborted: ${engineResult.failureReason ?: "Unknown error"}")
                 if (!continueOnError && engineResult.failedPatches.isNotEmpty()) {
-                    logger.info("Use --continue-on-error to skip failed patches and continue patching")
+                    Logger.info("Use --continue-on-error to skip failed patches and continue patching")
                 }
                 return EXIT_CODE_ERROR
             }

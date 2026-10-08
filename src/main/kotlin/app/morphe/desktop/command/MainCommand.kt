@@ -7,7 +7,6 @@ package app.morphe.desktop.command
 
 import app.morphe.desktop.command.utility.UtilityCommand
 import app.morphe.engine.workspace.WorkspaceManager
-import app.morphe.library.logging.Logger
 import java.util.Properties
 import kotlin.system.exitProcess
 import org.jetbrains.annotations.VisibleForTesting
@@ -16,7 +15,6 @@ import picocli.CommandLine.Command
 import picocli.CommandLine.IVersionProvider
 
 fun desktopMain(args: Array<String>) {
-    Logger.setDefault()
     runCatching { WorkspaceManager.reapStaleWorkspaces() }
     val exitCode = CommandLine(MainCommand).execute(*args)
     exitProcess(exitCode)

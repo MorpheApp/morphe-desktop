@@ -5,6 +5,8 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.loadPatchesFromJar
 import kotlinx.coroutines.Dispatchers
@@ -12,10 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import app.morphe.engine.workspace.WorkspaceManager
 import java.io.File
-import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * Loads patches from one or more `.mpp` files in parallel and tags each loaded
@@ -27,8 +26,6 @@ import java.util.logging.Logger
  * loading path when it adopts multi-source.
  */
 object MultiSourceLoader {
-
-    private val logger = Logger.getLogger(this::class.java.name)
 
     data class SourceInput(
         val sourceId: String,
@@ -87,7 +84,7 @@ object MultiSourceLoader {
         val tempCopy = WorkspaceManager.createShadowCopy(input.patchFile, prefix = "morphe-mp-${input.sourceId}")
         try {
             val patches = loadPatchesFromJar(setOf(tempCopy))
-            logger.info("MultiSourceLoader: loaded ${patches.size} patches from '${input.sourceName}'")
+            Logger.info("MultiSourceLoader: loaded ${patches.size} patches from '${input.sourceName}'")
             LoadedSource(
                 sourceId = input.sourceId,
                 sourceName = input.sourceName,
@@ -110,8 +107,7 @@ object MultiSourceLoader {
             } else {
                 PatchSourceLoadException(e.readableMessage(), e)
             }
-            logger.log(
-                Level.WARNING,
+            Logger.warn(
                 "MultiSourceLoader: failed to load '${input.sourceName}': ${error.message}",
                 e,
             )

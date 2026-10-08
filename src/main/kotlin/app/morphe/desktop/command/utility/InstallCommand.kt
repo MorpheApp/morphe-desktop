@@ -7,8 +7,8 @@ package app.morphe.desktop.command.utility
 
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.util.AdbManager
+import app.morphe.engine.util.Logger
 import java.io.File
-import java.util.logging.Logger
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -19,8 +19,6 @@ import picocli.CommandLine.*
     description = ["Install an APK file."],
 )
 internal object InstallCommand : Runnable {
-    private val logger = Logger.getLogger(this::class.java.name)
-
     @Parameters(
         description = ["Serial of ADB devices. If not supplied, the first connected device will be used."],
         arity = "0..*",
@@ -57,7 +55,7 @@ internal object InstallCommand : Runnable {
 
         suspend fun install(deviceSerial: String? = null) {
             val targetDevice = adbManager.resolveTargetDevice(deviceSerial).getOrElse { e ->
-                logger.severe(e.message ?: e.toString())
+                Logger.error(e.message ?: e.toString())
                 return
             }
 
@@ -74,7 +72,7 @@ internal object InstallCommand : Runnable {
 
             if (routeLinks) {
                 val patched = ApkInspector.inspect(apk)?.packageName ?: run {
-                    logger.severe("Could not read package name from APK; skipping link routing")
+                    Logger.error("Could not read package name from APK; skipping link routing")
                     return
                 }
                 adbManager.setLinkHandling(
@@ -83,14 +81,14 @@ internal object InstallCommand : Runnable {
                     stockPackage = stockPackage,
                     enable = true,
                 ).onFailure { e ->
-                    logger.severe(e.message ?: e.toString())
+                    Logger.error(e.message ?: e.toString())
                 }
             }
         }
 
         runBlocking {
             adbManager.startServer().onFailure { e ->
-                logger.severe(e.message ?: "Failed to start ADB server")
+                Logger.error(e.message ?: "Failed to start ADB server")
                 return@runBlocking
             }
             try {

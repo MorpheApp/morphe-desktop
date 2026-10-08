@@ -22,8 +22,8 @@ import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.repository.SeenPatchesRepository
-import app.morphe.gui.util.Logger
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File

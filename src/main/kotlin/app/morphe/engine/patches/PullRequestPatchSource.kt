@@ -10,6 +10,7 @@ import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
 import app.morphe.engine.network.HttpService
+import app.morphe.engine.util.Logger
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +60,7 @@ class PullRequestPatchSource(
 
     private suspend fun resolvePrRelease(): Release {
         val pat = getGitHubPat()
-        logger.info("GitHub PR: resolving artifact for $owner/$repo#$prNumber (auth=${pat != null})")
+        Logger.info("GitHub PR: resolving artifact for $owner/$repo#$prNumber (auth=${pat != null})")
         val prAsset = http.getAssetFromPullRequest(owner, repo, prNumber, pat)
 
         val assetName = if (prAsset.artifactName.endsWith(".mpp", ignoreCase = true)) {
@@ -99,9 +100,9 @@ class PullRequestPatchSource(
                 throw GitHubPatMissingException("A GitHub PAT is required to download pull request sources")
             }
 
-            logger.info("GitHub PR: downloading ${asset.name} for $repoPath#$prNumber from ${asset.downloadUrl}")
+            Logger.info("GitHub PR: downloading ${asset.name} for $repoPath#$prNumber from ${asset.downloadUrl}")
             val file = http.downloadPrArtifactToFile(asset.downloadUrl, targetFile, pat, onProgress)
-            logger.info("GitHub PR: downloaded ${file.length()} bytes to ${file.absolutePath}")
+            Logger.info("GitHub PR: downloaded ${file.length()} bytes to ${file.absolutePath}")
             Result.success(file)
         } catch (e: Exception) {
             Result.failure(e)

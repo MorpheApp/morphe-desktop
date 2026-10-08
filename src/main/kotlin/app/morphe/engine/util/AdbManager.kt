@@ -5,6 +5,7 @@
 
 package app.morphe.engine.util
 
+import app.morphe.engine.util.Logger
 import app.morphe.library.installation.installer.AdbRootInstaller
 import app.morphe.library.installation.installer.DeviceNotFoundException
 import app.morphe.library.installation.installer.Installer
@@ -12,8 +13,6 @@ import app.morphe.library.installation.installer.RootInstallerResult
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.util.logging.Level
-import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -23,7 +22,6 @@ import kotlinx.coroutines.withContext
  */
 class AdbManager {
 
-    private val logger = Logger.getLogger(AdbManager::class.java.name)
     private var adbPath: String? = null
 
     companion object {
@@ -139,7 +137,7 @@ class AdbManager {
         for (path in searchPaths) {
             val file = File(path)
             if (file.exists() && file.canExecute()) {
-                logger.info("Found ADB at: $path")
+                Logger.info("Found ADB at: $path")
                 adbPath = path
                 return@withContext path
             }
@@ -157,16 +155,16 @@ class AdbManager {
             if (process.exitValue() == 0 && result.isNotEmpty()) {
                 val path = result.lines().first()
                 if (File(path).exists()) {
-                    logger.info("Found ADB in PATH: $path")
+                    Logger.info("Found ADB in PATH: $path")
                     adbPath = path
                     return@withContext path
                 }
             }
         } catch (e: Exception) {
-            logger.fine("Could not find ADB in PATH: ${e.message}")
+            Logger.debug("Could not find ADB in PATH: ${e.message}")
         }
 
-        logger.warning("ADB not found")
+        Logger.warn("ADB not found")
         null
     }
 
@@ -201,7 +199,7 @@ class AdbManager {
                 // Don't touch the ownership flag (a prior tick may have set
                 // it to true and the daemon is still ours).
                 if (!weStartedDaemon && !loggedAttachOnce) {
-                    logger.info("ADB daemon was already running - leaving it alone on shutdown")
+                    Logger.info("ADB daemon was already running - leaving it alone on shutdown")
                     loggedAttachOnce = true
                 }
                 return@withContext Result.success(Unit)
@@ -225,16 +223,16 @@ class AdbManager {
 
             if (isDaemonAlive()) {
                 if (!weStartedDaemon) {
-                    logger.info("ADB daemon spawned by Morphe - will kill on shutdown")
+                    Logger.info("ADB daemon spawned by Morphe - will kill on shutdown")
                 }
                 weStartedDaemon = true
                 loggedAttachOnce = false
             } else {
-                logger.warning("adb start-server returned success but port 5037 is still closed")
+                Logger.warn("adb start-server returned success but port 5037 is still closed")
             }
             Result.success(Unit)
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Failed to start ADB server", e)
+            Logger.error("Failed to start ADB server", e)
             Result.failure(
                 AdbException(
                     "Failed to start ADB server: ${e.message ?: ""}",
@@ -255,7 +253,7 @@ class AdbManager {
      */
     suspend fun killServerIfOwned(): Result<Boolean> = withContext(Dispatchers.IO) {
         if (!weStartedDaemon) {
-            logger.fine("Skipping adb kill-server - daemon wasn't started by Morphe")
+            Logger.debug("Skipping adb kill-server - daemon wasn't started by Morphe")
             return@withContext Result.success(false)
         }
         val adb = findAdb() ?: return@withContext Result.success(false)
@@ -267,7 +265,7 @@ class AdbManager {
             val output = process.inputStream.bufferedReader().readText()
             val exitCode = process.waitFor()
             if (exitCode != 0) {
-                logger.warning("adb kill-server exited with code $exitCode: $output")
+                Logger.warn("adb kill-server exited with code $exitCode: $output")
                 return@withContext Result.failure(
                     AdbException(
                         "Failed to kill ADB server (exit code $exitCode)",
@@ -278,10 +276,10 @@ class AdbManager {
             }
             weStartedDaemon = false
             loggedAttachOnce = false // next attach (if any) re-logs once
-            logger.info("ADB daemon killed by Morphe")
+            Logger.info("ADB daemon killed by Morphe")
             Result.success(true)
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Failed to kill ADB server", e)
+            Logger.error("Failed to kill ADB server", e)
             Result.failure(
                 AdbException(
                     "Failed to kill ADB server: ${e.message ?: ""}",
@@ -328,7 +326,7 @@ class AdbManager {
             // DeviceMonitor.refreshDevices instead.
             Result.success(devices)
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Error getting devices", e)
+            Logger.error("Error getting devices", e)
             Result.failure(
                 AdbException(
                     "Error getting devices: ${e.message ?: ""}",
@@ -420,7 +418,7 @@ class AdbManager {
         val apkFile = File(apkPath)
         if (!apkFile.exists()) {
             val msg = "APK file not found: $apkPath"
-            logger.severe(msg)
+            Logger.error(msg)
             return@withContext Result.failure(
                 AdbException(msg, AdbErrorCode.APK_NOT_FOUND, listOf(apkPath))
             )
@@ -451,7 +449,7 @@ class AdbManager {
             }
             command.add(apkPath)
 
-            logger.info("Running: ${command.joinToString(" ")}")
+            Logger.info("Running: ${command.joinToString(" ")}")
 
             return try {
                 val process = ProcessBuilder(command)
@@ -463,21 +461,21 @@ class AdbManager {
                 process.inputStream.bufferedReader().forEachLine { line ->
                     output.appendLine(line)
                     onProgress(line)
-                    logger.fine("ADB: $line")
+                    Logger.debug("ADB: $line")
                 }
 
                 val exitCode = process.waitFor()
                 val outputStr = output.toString()
 
                 if (exitCode == 0 && outputStr.contains("Success")) {
-                    logger.info("APK installed successfully")
+                    Logger.info("APK installed successfully")
                     Result.success(Unit)
                 } else {
                     val errorInfo = parseInstallError(outputStr)
                     Result.failure(AdbException(errorInfo.technicalMessage, errorInfo.errorCode, errorInfo.formatArgs))
                 }
             } catch (e: Exception) {
-                logger.log(Level.SEVERE, "Error installing APK", e)
+                Logger.error("Error installing APK", e)
                 Result.failure(
                     AdbException(
                         "Error installing APK: ${e.message ?: ""}",
@@ -496,14 +494,14 @@ class AdbManager {
             withInstaller &&
             (first.exceptionOrNull() as? AdbException)?.errorCode == AdbErrorCode.INSTALL_GENERIC
         ) {
-            logger.info("Install with '-i $effectiveInstaller' failed; retrying without installer attribution")
+            Logger.info("Install with '-i $effectiveInstaller' failed; retrying without installer attribution")
             attemptInstall(withInstaller = false)
         } else {
             first
         }
         finalResult.onFailure { e ->
             if (e is AdbException && e.cause == null) {
-                logger.severe("Installation failed: ${e.message}")
+                Logger.error("Installation failed: ${e.message}")
             }
         }
         finalResult
@@ -556,7 +554,7 @@ class AdbManager {
     ): Result<Unit> = withContext(Dispatchers.IO) {
         if (!apkFile.exists()) {
             val msg = "APK file not found: ${apkFile.path}"
-            logger.severe(msg)
+            Logger.error(msg)
             return@withContext Result.failure(
                 AdbException(msg, AdbErrorCode.APK_NOT_FOUND, listOf(apkFile.path))
             )
@@ -567,14 +565,14 @@ class AdbManager {
         try {
             val result = AdbRootInstaller(targetDevice.id).install(Installer.Apk(apkFile, packageName))
             if (result == RootInstallerResult.FAILURE) {
-                logger.severe("Failed to mount the APK file")
+                Logger.error("Failed to mount the APK file")
                 Result.failure(AdbException("Failed to mount the APK file", AdbErrorCode.ROOT_MOUNT_FAILED))
             } else {
-                logger.info("Mounted the APK file on ${targetDevice.id}")
+                Logger.info("Mounted the APK file on ${targetDevice.id}")
                 Result.success(Unit)
             }
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Error mounting APK", e)
+            Logger.error("Error mounting APK", e)
             Result.failure(
                 AdbException(
                     "Error mounting APK: ${e.message ?: e}",
@@ -599,14 +597,14 @@ class AdbManager {
         try {
             val result = AdbRootInstaller(targetDevice.id).uninstall(packageName)
             if (result == RootInstallerResult.FAILURE) {
-                logger.severe("Failed to unmount the patched APK file")
+                Logger.error("Failed to unmount the patched APK file")
                 Result.failure(AdbException("Failed to unmount the patched APK file", AdbErrorCode.ROOT_UNMOUNT_FAILED))
             } else {
-                logger.info("Unmounted the patched APK file from ${targetDevice.id}")
+                Logger.info("Unmounted the patched APK file from ${targetDevice.id}")
                 Result.success(Unit)
             }
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Error unmounting $packageName", e)
+            Logger.error("Error unmounting $packageName", e)
             Result.failure(
                 AdbException(
                     "Error unmounting $packageName: ${e.message ?: e}",
@@ -644,23 +642,23 @@ class AdbManager {
                 .start()
             val output = process.inputStream.bufferedReader().readText().trim()
             val exitCode = process.waitFor()
-            logger.fine("uninstall $packageName on $targetDeviceId -> exit $exitCode: $output")
+            Logger.debug("uninstall $packageName on $targetDeviceId -> exit $exitCode: $output")
 
             when {
                 exitCode == 0 && output.contains("Success") -> {
-                    logger.info("Uninstalled $packageName from $targetDeviceId")
+                    Logger.info("Uninstalled $packageName from $targetDeviceId")
                     Result.success(Unit)
                 }
                 // Already gone is the end state we wanted.
                 output.contains("not installed", ignoreCase = true) ||
                     output.contains("DELETE_FAILED_INTERNAL_ERROR", ignoreCase = true) &&
                     listInstalledPackages(targetDeviceId).getOrNull()?.contains(packageName) == false -> {
-                    logger.info("$packageName is already uninstalled on $targetDeviceId")
+                    Logger.info("$packageName is already uninstalled on $targetDeviceId")
                     Result.success(Unit)
                 }
                 else -> {
                     val detail = output.ifBlank { "exit $exitCode" }
-                    logger.severe("Uninstall failed: $detail")
+                    Logger.error("Uninstall failed: $detail")
                     Result.failure(
                         AdbException(
                             "Uninstall failed: $detail",
@@ -671,7 +669,7 @@ class AdbManager {
                 }
             }
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Error uninstalling $packageName", e)
+            Logger.error("Error uninstalling $packageName", e)
             Result.failure(
                 AdbException(
                     "Error uninstalling $packageName: ${e.message ?: ""}",
@@ -716,10 +714,10 @@ class AdbManager {
                 crash.waitFor()
             } catch (_: Exception) { /* older devices may not have crash buffer */ }
 
-            logger.info("Cleared logcat on $deviceId")
+            Logger.info("Cleared logcat on $deviceId")
             Result.success(Unit)
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Error clearing logcat", e)
+            Logger.error("Error clearing logcat", e)
             Result.failure(
                 AdbException(
                     "Error clearing logcat: ${e.message ?: ""}",
@@ -766,15 +764,15 @@ class AdbManager {
             }
 
             if (kept.isEmpty()) {
-                logger.info("No matching logcat lines on $deviceId - skipping file write")
+                Logger.info("No matching logcat lines on $deviceId - skipping file write")
             } else {
                 outputFile.parentFile?.mkdirs()
                 outputFile.writeText(kept.joinToString("\n") + "\n")
-                logger.info("Captured ${kept.size} logcat line(s) to ${outputFile.absolutePath}")
+                Logger.info("Captured ${kept.size} logcat line(s) to ${outputFile.absolutePath}")
             }
             Result.success(kept.size)
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "Error capturing logcat", e)
+            Logger.error("Error capturing logcat", e)
             Result.failure(
                 AdbException(
                     "Error capturing logcat: ${e.message ?: ""}",
@@ -839,7 +837,7 @@ class AdbManager {
             stockChanged = true
         }
 
-        logger.info(
+        Logger.info(
             "Link handling ${if (enable) "enabled" else "restored"} for $patchedPackage" +
                 (if (stockChanged) " (stock $stockPackage toggled)" else "")
         )
@@ -865,7 +863,7 @@ class AdbManager {
                     .start()
                 val output = process.inputStream.bufferedReader().readText().trim()
                 val exitCode = process.waitFor()
-                logger.fine("ADB shell ${argv.joinToString(" ")} -> exit $exitCode${if (output.isNotBlank()) ": $output" else ""}")
+                Logger.debug("ADB shell ${argv.joinToString(" ")} -> exit $exitCode${if (output.isNotBlank()) ": $output" else ""}")
                 if (exitCode != 0 ||
                     output.contains("Error", ignoreCase = true) ||
                     output.contains("Failure", ignoreCase = true)
@@ -880,7 +878,7 @@ class AdbManager {
                     )
                 }
             } catch (e: Exception) {
-                logger.log(Level.SEVERE, "Error running adb shell ${argv.joinToString(" ")}", e)
+                Logger.error("Error running adb shell ${argv.joinToString(" ")}", e)
                 return@withContext Result.failure(
                     AdbException(
                         "Error running ADB shell command: ${e.message ?: ""}",

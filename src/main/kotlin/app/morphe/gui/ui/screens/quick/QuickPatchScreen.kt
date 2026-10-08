@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.MorpheData
 import app.morphe.engine.apk.BundleFormats
+import app.morphe.engine.util.Logger
 import app.morphe.gui.LocalBackgroundSpeed
 import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -161,7 +162,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     }
 
     if (showLogViewer) {
-        val logFile = File(MorpheData.root, "logs/morphe-gui.log")
+        val logFile = Logger.getLogFile() ?: File(MorpheData.logsDir, "morphe.log")
         LogFileViewerDialog(
             file = logFile,
             corners = corners,

@@ -10,14 +10,12 @@ import io.ktor.http.encodeURLParameter
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.URI
-import java.util.logging.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 object DownloadUrlResolver {
-    private val logger = Logger.getLogger(DownloadUrlResolver::class.java.name)
 
     fun getWebSearchDownloadLink(packageName: String, version: String, architecture: String? = null): String {
         val architectureString = architecture ?: "all"
@@ -51,7 +49,7 @@ object DownloadUrlResolver {
                 val location = connection.getHeaderField("Location")
 
                 if (location.isNullOrBlank()) {
-                    logger.info("Location tag is blank: ${connection.responseMessage}")
+                    Logger.info("Location tag is blank: ${connection.responseMessage}")
                     return url
                 }
 
@@ -70,9 +68,9 @@ object DownloadUrlResolver {
                 return resolveRedirects(resolved, maxRedirectsToFollow - 1)
             }
         } catch (ex: SocketTimeoutException) {
-            logger.info("Timeout while resolving search redirect: $ex")
+            Logger.info("Timeout while resolving search redirect: $ex")
         } catch (ex: Exception) {
-            logger.info("Exception while resolving search redirect: $ex")
+            Logger.info("Exception while resolving search redirect: $ex")
         }
 
         return url

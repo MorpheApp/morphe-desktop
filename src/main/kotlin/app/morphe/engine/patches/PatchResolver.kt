@@ -8,10 +8,10 @@ package app.morphe.engine.patches
 import app.morphe.engine.GitHubPatMissingException
 import app.morphe.engine.model.Release
 import app.morphe.engine.network.sharedHttpClient
+import app.morphe.engine.util.Logger
 import app.morphe.engine.util.normalizeVersion
 import io.ktor.client.HttpClient
 import java.io.File
-import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -27,7 +27,6 @@ import kotlinx.coroutines.withContext
  *   - Size-verified on-disk caching and offline fallback via [PatchCache]
  */
 object PatchResolver {
-    private val logger = Logger.getLogger(PatchResolver::class.java.name)
 
     /** Release channel classification for a resolved patch bundle. */
     enum class Channel { STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, LOCAL, UNKNOWN }
@@ -219,7 +218,7 @@ object PatchResolver {
                 val res = resolveLocal(entry.path)
                 val file = res.patchFile
                     ?: throw IllegalArgumentException(res.error?.message ?: "No .mpp file found in ${entry.path}")
-                logger.info("Resolved local directory ${entry.path} to ${file.absolutePath}")
+                Logger.info("Resolved local directory ${entry.path} to ${file.absolutePath}")
                 return file
             }
             return entry
@@ -244,11 +243,11 @@ object PatchResolver {
             )
 
         if (res.isOffline) {
-            logger.warning(
+            Logger.warn(
                 "Offline or rate-limited — using cached patch file at ${resolvedFile.absolutePath} (${res.resolvedVersion ?: resolvedFile.name})"
             )
         } else {
-            logger.info("Resolved patches (${res.resolvedVersion ?: resolvedFile.name}) at ${resolvedFile.absolutePath}")
+            Logger.info("Resolved patches (${res.resolvedVersion ?: resolvedFile.name}) at ${resolvedFile.absolutePath}")
         }
         return resolvedFile
     }

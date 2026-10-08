@@ -6,11 +6,10 @@
 package app.morphe.engine.options
 
 import app.morphe.engine.MorpheData
+import app.morphe.engine.util.Logger
 import java.io.File
 import java.time.Instant
 import java.time.format.DateTimeFormatter
-import java.util.logging.Level
-import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -30,8 +29,6 @@ import kotlinx.serialization.json.JsonElement
 class PatchPreferencesRepository(
     private val file: File = File(MorpheData.root, FILE_NAME),
 ) {
-    private val logger = Logger.getLogger(PatchPreferencesRepository::class.java.name)
-
     private val json = Json {
         prettyPrint = true
         ignoreUnknownKeys = true
@@ -52,7 +49,7 @@ class PatchPreferencesRepository(
                 mutableMapOf()
             }
         } catch (e: Exception) {
-            logger.log(Level.WARNING, "Failed to load patch preferences, starting fresh", e)
+            Logger.warn("Failed to load patch preferences, starting fresh", e)
             mutableMapOf()
         }
         cache = parsed
@@ -125,9 +122,9 @@ class PatchPreferencesRepository(
             try {
                 file.parentFile?.mkdirs()
                 file.writeText(json.encodeToString(all as Map<String, Map<String, PatchBundle>>))
-                logger.info("Saved patch preferences for $sourceName / $packageName (${patches.size} entries)")
+                Logger.info("Saved patch preferences for $sourceName / $packageName (${patches.size} entries)")
             } catch (e: Exception) {
-                logger.log(Level.SEVERE, "Failed to write patch preferences", e)
+                Logger.error("Failed to write patch preferences", e)
             }
         }
     }

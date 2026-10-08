@@ -6,7 +6,7 @@
 package app.morphe.desktop.command.utility
 
 import app.morphe.engine.util.AdbManager
-import java.util.logging.Logger
+import app.morphe.engine.util.Logger
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -18,8 +18,6 @@ import picocli.CommandLine.Help.Visibility.ALWAYS
     description = ["Uninstall a patched app."],
 )
 internal object UninstallCommand : Runnable {
-    private val logger = Logger.getLogger(this::class.java.name)
-
     @Parameters(
         description = ["Serial of ADB devices. If not supplied, the first connected device will be used."],
         arity = "0..*",
@@ -45,7 +43,7 @@ internal object UninstallCommand : Runnable {
 
         suspend fun uninstall(deviceSerial: String? = null) {
             val targetDevice = adbManager.resolveTargetDevice(deviceSerial).getOrElse { e ->
-                logger.severe(e.message ?: e.toString())
+                Logger.error(e.message ?: e.toString())
                 return
             }
 
@@ -58,7 +56,7 @@ internal object UninstallCommand : Runnable {
 
         runBlocking {
             adbManager.startServer().onFailure { e ->
-                logger.severe(e.message ?: "Failed to start ADB server")
+                Logger.error(e.message ?: "Failed to start ADB server")
                 return@runBlocking
             }
             try {

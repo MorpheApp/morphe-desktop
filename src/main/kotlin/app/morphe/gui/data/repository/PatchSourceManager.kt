@@ -8,9 +8,9 @@ package app.morphe.gui.data.repository
 import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
-import app.morphe.gui.util.Logger
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -3,37 +3,34 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.util
+package app.morphe.engine.util
 
 import app.morphe.engine.MorpheComponents
 import app.morphe.engine.MorpheData
-import app.morphe.gui.data.constants.AppConstants
+import app.morphe.engine.UpdateChecker
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.text.MessageFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.logging.Handler
-import java.util.logging.Level as JVLevel
+import java.util.logging.Level as JulLevel
 import java.util.logging.LogRecord
-import java.util.logging.Logger as JVLogger
+import java.util.logging.Logger as JulLogger
 
 /**
- * Simple file logger with rotation support.
+ * Unified logger for both CLI and GUI.
  *
- * Log file location: `<MorpheData.root>/logs/morphe-gui.log` — JAR-adjacent
+ * Log file location: `<MorpheData.root>/logs/morphe-<timestamp>.log` — JAR-adjacent
  * `morphe-data/logs/` for shipped jars, `~/morphe/logs/` for IDE/dev runs.
  * See [app.morphe.engine.MorpheData] for the full resolution + fallback rules.
  */
 object Logger {
 
-    private const val MAX_LOG_SIZE = 2 * 1024 * 1024 // 2 MB
-    private const val MAX_LOG_FILES = 3
-    private const val MAX_LINES_TO_KEEP = 5000 // Keep last 5000 lines on startup
-    private const val LOG_FILE_NAME = "morphe-gui.log"
-
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
+    private val fileTimestampFormat = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US)
     private var logFile: File? = null
     private var initialized = false
 
@@ -42,7 +39,7 @@ object Logger {
     }
 
     /**
-     * Initialize the logger. Call once at app startup.
+     * Initialize the GUI logger. Call once at GUI application startup.
      */
     fun init() {
         if (initialized) return
@@ -52,27 +49,25 @@ object Logger {
             installJulBridge()
 
             val logsDir = MorpheData.logsDir
-            logFile = File(logsDir, LOG_FILE_NAME)
+            val timestamp = fileTimestampFormat.format(Date())
+            logFile = File(logsDir, "morphe-$timestamp.log")
 
-            // Trim log file if it's too large (keep only last N lines)
-            trimLogFile()
-
-            // Rotate if needed
-            rotateIfNeeded()
-
-            // Log startup info
-            info("=".repeat(60))
-            info("Morphe-GUI Started")
-            info("Version: ${AppConstants.APP_VERSION}")
-            info("morphe-patcher: ${MorpheComponents.patcherVersion ?: "unknown"}")
-            info("morphe-library: ${MorpheComponents.libraryVersion ?: "unknown"}")
-            info("OS: ${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})")
-            info("Java: ${System.getProperty("java.version")} (${System.getProperty("java.vendor")}) ${System.getProperty("sun.arch.data.model")}-bit")
-            info("Memory: ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB max")
-            info("User: ${System.getProperty("user.name")}")
-            info("App Data: ${MorpheData.root.absolutePath}")
-            info("Working Dir: ${System.getProperty("user.dir")}")
-            info("=".repeat(60))
+            // Write startup diagnostic banner directly to the log file (never to console)
+            val banner = buildString {
+                appendLine("=".repeat(60))
+                appendLine("Morphe-GUI Started")
+                appendLine("Version: ${UpdateChecker.currentVersion() ?: "dev"}")
+                appendLine("morphe-patcher: ${MorpheComponents.patcherVersion ?: "unknown"}")
+                appendLine("morphe-library: ${MorpheComponents.libraryVersion ?: "unknown"}")
+                appendLine("OS: ${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})")
+                appendLine("Java: ${System.getProperty("java.version")} (${System.getProperty("java.vendor")}) ${System.getProperty("sun.arch.data.model")}-bit")
+                appendLine("Memory: ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB max")
+                appendLine("User: ${System.getProperty("user.name")}")
+                appendLine("App Data: ${MorpheData.root.absolutePath}")
+                appendLine("Working Dir: ${System.getProperty("user.dir")}")
+                appendLine("=".repeat(60))
+            }
+            logFile?.appendText(banner)
 
             initialized = true
         } catch (e: Exception) {
@@ -85,7 +80,7 @@ object Logger {
      * Sets useParentHandlers = false on "app.morphe" to isolate it from the root ConsoleHandler.
      */
     private fun installJulBridge() {
-        val morpheLogger = JVLogger.getLogger("app.morphe")
+        val morpheLogger = JulLogger.getLogger("app.morphe")
         morpheLogger.useParentHandlers = false
 
         for (handler in morpheLogger.handlers.toList()) {
@@ -110,17 +105,17 @@ object Logger {
             }.getOrDefault(rawMessage)
 
             when {
-                record.level.intValue() >= JVLevel.SEVERE.intValue() -> {
+                record.level.intValue() >= JulLevel.SEVERE.intValue() -> {
                     if (record.thrown != null) {
                         error(message, record.thrown)
                     } else {
                         error(message)
                     }
                 }
-                record.level.intValue() >= JVLevel.WARNING.intValue() -> {
+                record.level.intValue() >= JulLevel.WARNING.intValue() -> {
                     warn(message)
                 }
-                record.level.intValue() >= JVLevel.INFO.intValue() -> {
+                record.level.intValue() >= JulLevel.INFO.intValue() -> {
                     info(message)
                 }
                 else -> {
@@ -133,28 +128,16 @@ object Logger {
         override fun close() {}
     }
 
-    /**
-     * Trim log file to keep only the last MAX_LINES_TO_KEEP lines.
-     */
-    private fun trimLogFile() {
-        val file = logFile ?: return
-        if (!file.exists()) return
-
-        try {
-            val lines = file.readLines()
-            if (lines.size > MAX_LINES_TO_KEEP) {
-                val trimmedLines = lines.takeLast(MAX_LINES_TO_KEEP)
-                file.writeText(trimmedLines.joinToString("\n") + "\n")
-            }
-        } catch (e: Exception) {
-            System.err.println("Failed to trim log file: ${e.message}")
-        }
-    }
-
     fun debug(message: String) = log(Level.DEBUG, message)
     fun info(message: String) = log(Level.INFO, message)
     fun warn(message: String) = log(Level.WARN, message)
     fun error(message: String) = log(Level.ERROR, message)
+
+    fun warn(message: String, throwable: Throwable) {
+        val sw = StringWriter()
+        throwable.printStackTrace(PrintWriter(sw))
+        log(Level.WARN, "$message\n$sw")
+    }
 
     fun error(message: String, throwable: Throwable) {
         val sw = StringWriter()
@@ -179,8 +162,12 @@ object Logger {
     }
 
     private fun log(level: Level, message: String) {
-        val timestamp = dateFormat.format(Date())
-        val logLine = "[$timestamp] [${level.name}] $message"
+        val logLine = if (logFile != null) {
+            val timestamp = dateFormat.format(Date())
+            "[$timestamp] [${level.name}] $message"
+        } else {
+            "${level.name}: $message"
+        }
 
         // Print to console
         when (level) {
@@ -190,50 +177,24 @@ object Logger {
 
         // Write to file
         try {
-            logFile?.let { file ->
-                rotateIfNeeded()
-                file.appendText("$logLine\n")
-            }
+            logFile?.appendText("$logLine\n")
         } catch (e: Exception) {
             System.err.println("Failed to write to log file: ${e.message}")
         }
     }
 
-    private fun rotateIfNeeded() {
-        val file = logFile ?: return
-        if (!file.exists()) return
-        if (file.length() < MAX_LOG_SIZE) return
-
-        try {
-            // Shift existing log files
-            for (i in MAX_LOG_FILES - 1 downTo 1) {
-                val older = File(file.parent, "$LOG_FILE_NAME.$i")
-                val newer = if (i == 1) file else File(file.parent, "$LOG_FILE_NAME.${i - 1}")
-                if (newer.exists()) {
-                    if (older.exists()) older.delete()
-                    newer.renameTo(older)
-                }
-            }
-
-            // Create fresh log file
-            file.createNewFile()
-        } catch (e: Exception) {
-            System.err.println("Failed to rotate logs: ${e.message}")
-        }
-    }
-
     /**
-     * Get the current log file for export.
+     * Get the current session's log file for export or viewing.
      */
     fun getLogFile(): File? = logFile
 
     /**
-     * Get all log files for export.
+     * Get all log files in the logs directory.
      */
     fun getAllLogFiles(): List<File> {
         val logsDir = MorpheData.logsDir
         return logsDir.listFiles()
-            ?.filter { it.name.startsWith(LOG_FILE_NAME) }
+            ?.filter { it.name.startsWith("morphe-") && it.name.endsWith(".log") }
             ?.sortedByDescending { it.lastModified() }
             ?: emptyList()
     }

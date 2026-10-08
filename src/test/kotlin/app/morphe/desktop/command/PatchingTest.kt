@@ -5,18 +5,16 @@
 
 package app.morphe.desktop.command
 
+import app.morphe.engine.util.Logger
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import picocli.CommandLine
 import java.io.File
-import java.util.logging.Logger
 import kotlin.io.path.createTempDirectory
 
 class PatchingTest {
-    private val logger = Logger.getLogger(PatchingTest::class.java.name)
-
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     @Disabled("Need to create lighter weight patch bundle")
@@ -34,7 +32,7 @@ class PatchingTest {
         val outputApk = tempDir.resolve("${apkFile.nameWithoutExtension}-merged.apk")
         val resultFile = tempDir.resolve("results.json")
 
-        logger.info("Starting to patch")
+        Logger.info("Starting to patch")
         val patchStartTime = System.currentTimeMillis()
         val exitCode = patchApk(
             apkFile = apkFile,
@@ -45,7 +43,7 @@ class PatchingTest {
             useArsclib = useArsclib,
         )
         val duration = System.currentTimeMillis() - patchStartTime
-        logger.info("Patching completed in ${duration}ms")
+        Logger.info("Patching completed in ${duration}ms")
 
         Assertions.assertTrue(exitCode == 0, "Patching with ARSCLib failed with exit code $exitCode")
         Assertions.assertTrue(outputApk.exists(), "Output APK was not created")

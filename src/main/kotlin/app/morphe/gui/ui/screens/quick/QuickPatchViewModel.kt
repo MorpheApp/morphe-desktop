@@ -24,6 +24,7 @@ import app.morphe.engine.model.VersionResolution
 import app.morphe.engine.model.VersionStatus
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ActiveMode
@@ -36,7 +37,6 @@ import app.morphe.gui.ui.screens.patching.LogLevel
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FormatUtils
-import app.morphe.gui.util.Logger
 import app.morphe.gui.util.PatcherState
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.morphe_desktop.generated.resources.*

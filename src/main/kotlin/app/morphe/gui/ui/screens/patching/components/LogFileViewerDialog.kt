@@ -40,13 +40,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import app.morphe.engine.util.Logger
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheMono
 import app.morphe.gui.ui.theme.MorpheCornerStyle
-import app.morphe.gui.util.Logger
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.awt.datatransfer.StringSelection

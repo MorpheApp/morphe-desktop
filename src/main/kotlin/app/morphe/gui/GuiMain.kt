@@ -17,11 +17,11 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import app.morphe.engine.MorpheData
+import app.morphe.engine.util.Logger
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.ui.components.LocalFrameWindowScope
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.Logger
 import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import java.awt.Taskbar

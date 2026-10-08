@@ -34,6 +34,7 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.util.KeystoreImporter
 import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.KeystoreWarning
+import app.morphe.engine.util.Logger
 import app.morphe.engine.util.PortablePaths
 import app.morphe.gui.ui.components.LabeledField
 import app.morphe.gui.ui.components.SlimTextField
@@ -43,7 +44,6 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheDimens
 import app.morphe.gui.ui.theme.MorpheColors
-import app.morphe.gui.util.Logger
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File

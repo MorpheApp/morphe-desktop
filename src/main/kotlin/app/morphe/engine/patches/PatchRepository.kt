@@ -6,8 +6,8 @@
 package app.morphe.engine.patches
 
 import app.morphe.engine.model.Release
+import app.morphe.engine.util.Logger
 import java.io.File
-import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -29,7 +29,6 @@ class PatchRepository(
     companion object {
         private const val CACHE_TTL_MS = 5 * 60 * 1000L // 5 minutes
         private const val FAILURE_TTL_MS = 10 * 1000L // 10 seconds to coalesce concurrent callers on failure
-        private val logger = Logger.getLogger(PatchRepository::class.java.name)
     }
 
     private val fetchMutex = Mutex()
@@ -55,7 +54,7 @@ class PatchRepository(
                     val age = (now - cacheTimestamp) / 1000
                     if (now - lastCacheHitLogTimestamp >= 2000L) {
                         lastCacheHitLogTimestamp = now
-                        logger.info("Using cached releases from $repoPath (${cached.size} releases, age=${age}s)")
+                        Logger.info("Using cached releases from $repoPath (${cached.size} releases, age=${age}s)")
                     }
                     return@withContext Result.success(cached)
                 }
@@ -85,7 +84,7 @@ class PatchRepository(
                     lastFailureResult = result
                     val stale = cachedReleases
                     if (stale != null) {
-                        logger.info("Returning stale cached releases from $repoPath after fetch failure")
+                        Logger.info("Returning stale cached releases from $repoPath after fetch failure")
                         return@withContext Result.success(stale)
                     }
                 }
@@ -115,7 +114,7 @@ class PatchRepository(
     private suspend fun latestFromManifestOrApi(prerelease: Boolean): Result<Release?> =
         withContext(Dispatchers.IO) {
             remoteSource.fetchLatestFromManifest(prerelease).getOrNull()?.let {
-                logger.info("Latest ${if (prerelease) "dev" else "stable"} via patches-bundle.json: ${it.tagName}")
+                Logger.info("Latest ${if (prerelease) "dev" else "stable"} via patches-bundle.json: ${it.tagName}")
                 return@withContext Result.success(it)
             }
             if (prerelease) fetchDevReleases().map { it.firstOrNull() }
@@ -136,7 +135,7 @@ class PatchRepository(
             )
 
         PatchCache.getCachedFile(repoPath, release)?.let { cachedFile ->
-            logger.info("Using cached patches: ${cachedFile.absolutePath} (${cachedFile.length()} bytes)")
+            Logger.info("Using cached patches: ${cachedFile.absolutePath} (${cachedFile.length()} bytes)")
             onProgress(1f)
             return@withContext Result.success(cachedFile)
         }

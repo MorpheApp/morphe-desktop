@@ -10,6 +10,7 @@ import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.network.createHttpClient
 import app.morphe.engine.options.PatchPreferencesRepository
 import app.morphe.engine.util.KeystoreService
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
@@ -21,7 +22,6 @@ import app.morphe.gui.ui.screens.patches.PatchSelectionViewModel
 import app.morphe.gui.ui.screens.patches.PatchesViewModel
 import app.morphe.gui.ui.screens.patching.PatchingViewModel
 import app.morphe.gui.ui.screens.quick.QuickPatchViewModel
-import app.morphe.gui.util.Logger as MorpheLogger
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -44,7 +44,7 @@ val appModule = module {
     // Ktor HTTP Client
     single {
         createHttpClient(json = get()) { message ->
-            MorpheLogger.debug("HTTP: $message")
+            Logger.debug("HTTP: $message")
         }
     }
 

@@ -14,10 +14,10 @@ import app.morphe.engine.patches.isCompatibleWith
 import app.morphe.engine.patches.versionCodesFor
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.util.Logger
 import app.morphe.patcher.patch.Option as PatchOption
 import app.morphe.patcher.patch.Patch
 import java.io.File
-import java.util.logging.Logger
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -30,7 +30,6 @@ import picocli.CommandLine.Help.Visibility.ALWAYS
     description = ["List patches from supplied MPP files."],
 )
 internal object ListPatchesCommand : Runnable {
-    private val logger = Logger.getLogger(this::class.java.name)
 
     // Patches is now flag based rather than position based
     @Option(
@@ -223,12 +222,12 @@ internal object ListPatchesCommand : Runnable {
         val finalOutput = filtered.joinToString("\n\n") {it.buildString()}
 
         if (filtered.isEmpty()) {
-            logger.warning("No compatible patches found in: ${patchesFiles.joinToString(", ") { it.path }}")
+            Logger.warn("No compatible patches found in: ${patchesFiles.joinToString(", ") { it.path }}")
         } else {
             if (outputFile == null) {
-                logger.info(finalOutput)
+                Logger.info(finalOutput)
             } else {
-                logger.info("Created new output file at ${outputFile!!.path}")
+                Logger.info("Created new output file at ${outputFile!!.path}")
                 outputFile!!.writeText(finalOutput)
             }
         }

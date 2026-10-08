@@ -26,6 +26,7 @@ import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.supportedVersionsFor
 import app.morphe.engine.util.FileChecksum
 import app.morphe.engine.util.KeystoreImporter
+import app.morphe.engine.util.Logger
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.patcher.Patcher
@@ -54,7 +55,7 @@ import java.io.StringWriter
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
-import java.util.logging.Logger
+import java.util.logging.Logger as JulLogger
 
 /**
  * Single patching pipeline shared directly by CLI and GUI.
@@ -139,8 +140,6 @@ object PatchEngine {
     @Serializable
     data class FailedPatch(val name: String, val error: String)
 
-    private val logger = Logger.getLogger(this::class.java.name)
-
     /**
      * The single unified patching pipeline.
      * CLI wraps with runBlocking, GUI calls from coroutine scope.
@@ -205,7 +204,7 @@ object PatchEngine {
         var patchesSnapshotForFinally: List<PatchBundle> = emptyList()
 
         // Capture internal logs from morphe-patcher and pipe to onProgress
-        val patcherLogger = Logger.getLogger("app.morphe.patcher")
+        val patcherLogger = JulLogger.getLogger("app.morphe.patcher")
         val prevUseParentHandlers = patcherLogger.useParentHandlers
         patcherLogger.useParentHandlers = false
         val patcherLogHandler = object : Handler() {
@@ -229,7 +228,7 @@ object PatchEngine {
             val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
                 onProgress("Merging split APK bundle...")
                 val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
-                ApkMerger(Logger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger()).merge(
+                ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger()).merge(
                     inputFile = config.inputApk,
                     outputFile = mergedApk,
                     cleanMetaInf = false,
@@ -327,22 +326,22 @@ object PatchEngine {
                                 packageName = packageName,
                             )
                             if (drift.hasDrift) {
-                                logger.warning("Options file is out of date for ${lb.sourceFile.name}")
+                                Logger.warn("Options file is out of date for ${lb.sourceFile.name}")
                                 if (drift.oldPatches.isNotEmpty()) {
-                                    logger.warning("  ${drift.oldPatches.size} patches in your options file are not compatible with the app:")
-                                    drift.oldPatches.forEach { logger.warning("    - $it") }
+                                    Logger.warn("  ${drift.oldPatches.size} patches in your options file are not compatible with the app:")
+                                    drift.oldPatches.forEach { Logger.warn("    - $it") }
                                 }
                                 if (drift.patchesWithNewOptions.isNotEmpty()) {
                                     drift.patchesWithNewOptions.forEach { (patch, key) ->
-                                        logger.warning(" \"$patch\" has new options: ${key.joinToString(", ")}")
+                                        Logger.warn(" \"$patch\" has new options: ${key.joinToString(", ")}")
                                     }
                                 }
                                 if (drift.patchesWithOldOptions.isNotEmpty()) {
                                     drift.patchesWithOldOptions.forEach { (patch, key) ->
-                                        logger.warning(" \"$patch\" has old options: ${key.joinToString(", ")} that were removed.")
+                                        Logger.warn(" \"$patch\" has old options: ${key.joinToString(", ")} that were removed.")
                                     }
                                 }
-                                logger.warning("  Use --options-update parameter to sync, or use 'options-create' command to regenerate.")
+                                Logger.warn("  Use --options-update parameter to sync, or use 'options-create' command to regenerate.")
                             }
                         }
                     }
@@ -356,7 +355,7 @@ object PatchEngine {
                     val jsonOptionsByFile = loadedBundles.associate { lb ->
                         val bundle = patchOptionsByFile[lb.sourceFile]
                         val opts = bundle?.deserializeOptionsFor(lb.patches) { patchName, key, e ->
-                            logger.warning("Failed to deserialize option $key for $patchName in ${lb.sourceFile.name}: ${e.message ?: e::class.simpleName}")
+                            Logger.warn("Failed to deserialize option $key for $patchName in ${lb.sourceFile.name}: ${e.message ?: e::class.simpleName}")
                         } ?: emptyMap()
                         lb.sourceFile to opts
                     }
@@ -450,7 +449,7 @@ object PatchEngine {
                         onProgress("Reading options from ${file.path}")
                         val jsonBundles = readPatchBundles(file)
                         jsonBundles.firstOrNull()?.deserializeOptionsFor(config.patches) { patchName, key, e ->
-                            logger.warning("Failed to deserialize option $key for $patchName: ${e.message ?: e::class.simpleName}")
+                            Logger.warn("Failed to deserialize option $key for $patchName: ${e.message ?: e::class.simpleName}")
                         } ?: emptyMap()
                     } ?: emptyMap()
 
@@ -556,7 +555,7 @@ object PatchEngine {
                         when (importResult) {
                             is KeystoreImporter.Result.AlreadyBks -> importResult.file
                             is KeystoreImporter.Result.Converted -> {
-                                logger.info("Converted ${importResult.sourceFormat.displayName} keystore → BKS: ${importResult.file.absolutePath}")
+                                Logger.info("Converted ${importResult.sourceFormat.displayName} keystore → BKS: ${importResult.file.absolutePath}")
                                 importResult.file
                             }
                             is KeystoreImporter.Result.Failed -> {
@@ -582,7 +581,6 @@ object PatchEngine {
                             allowLegacyFallback = config.keystoreDetails == null ||
                                 (finalKeystoreDetails.alias == Config.DEFAULT_KEYSTORE_ALIAS &&
                                  finalKeystoreDetails.password == Config.DEFAULT_KEYSTORE_PASSWORD),
-                            logger = logger,
                         ) { details ->
                             ApkUtils.signApk(
                                 rebuiltApk,
@@ -609,7 +607,7 @@ object PatchEngine {
                         onProgress("Verifying APK with Android SDK...")
                         verifier.verifyApkFile(tempOutput)
                     } catch (e: Exception) {
-                        logger.warning("SDK DEX Verification warning: ${e.message}")
+                        Logger.warn("SDK DEX Verification warning: ${e.message}")
                     }
                 }
 
@@ -649,7 +647,7 @@ object PatchEngine {
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Exception) {
-                        logger.warning("Failed to record patched app to store: ${e.message ?: e::class.simpleName}")
+                        Logger.warn("Failed to record patched app to store: ${e.message ?: e::class.simpleName}")
                     }
                 }
 
@@ -695,7 +693,7 @@ object PatchEngine {
                 try {
                     updateOptionsFileFromSnapshots(config.optionsFile, patchesSnapshotForFinally)
                 } catch (e: Exception) {
-                    logger.warning("Failed to update options file: ${e.message ?: e::class.simpleName}")
+                    Logger.warn("Failed to update options file: ${e.message ?: e::class.simpleName}")
                 }
             }
         }

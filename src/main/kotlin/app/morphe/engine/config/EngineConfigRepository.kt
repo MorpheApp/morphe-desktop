@@ -6,9 +6,9 @@
 package app.morphe.engine.config
 
 import app.morphe.engine.MorpheData
+import app.morphe.engine.util.Logger
 import app.morphe.engine.util.PortablePaths
 import java.io.File
-import java.util.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -22,7 +22,6 @@ import kotlinx.serialization.json.jsonObject
 open class EngineConfigRepository(
     private val configFile: File = MorpheData.configFile,
 ) {
-    private val logger = Logger.getLogger(EngineConfigRepository::class.java.name)
     private val mutex = Mutex()
     private var cachedConfig: EngineConfig? = null
 
@@ -46,7 +45,7 @@ open class EngineConfigRepository(
                 cachedConfig = config
                 config
             } catch (e: Exception) {
-                logger.warning("Failed to parse engine config from ${configFile.absolutePath}: ${e.message}")
+                Logger.warn("Failed to parse engine config from ${configFile.absolutePath}: ${e.message}")
                 EngineConfig()
             }
         }

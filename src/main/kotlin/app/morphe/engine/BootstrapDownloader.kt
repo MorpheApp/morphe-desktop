@@ -5,18 +5,16 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.Logger
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URI
 import java.security.MessageDigest
-import java.util.logging.Logger
 
 /**
  * Handles deferred downloading of GUI dependencies to keep the base CLI as small as possible.
  */
 object BootstrapDownloader {
-    private val logger = Logger.getLogger("app.morphe.engine.BootstrapDownloader")
-
     // Remote Dependencies
     data class RemoteDependency(val fileName: String, val url: String, val expectedHash: String)
 
@@ -62,7 +60,7 @@ object BootstrapDownloader {
         val expectedFileNames = dependencies.map { it.fileName }.toSet()
         binDir.listFiles()?.forEach { file ->
             if (file.isFile && file.name !in expectedFileNames) {
-                logger.info("Removing obsolete dependency: ${file.name}")
+                Logger.info("Removing obsolete dependency: ${file.name}")
                 file.delete()
             }
         }
@@ -85,11 +83,11 @@ object BootstrapDownloader {
                 continue
             }
             if (target.exists()) {
-                logger.warning("Cache invalid for ${dep.fileName}, redownloading.")
+                Logger.warn("Cache invalid for ${dep.fileName}, redownloading.")
                 target.delete()
             }
 
-            logger.info("Downloading ${dep.fileName}...")
+            Logger.info("Downloading ${dep.fileName}...")
             val current = index
             try {
                 downloadWithProgress(dep, target) { done, total ->
@@ -98,7 +96,7 @@ object BootstrapDownloader {
             } catch (e: Exception) {
                 target.delete()
                 val message = "Failed to download ${dep.fileName}: ${e.message}"
-                logger.severe(message)
+                Logger.error(message)
                 listener?.onError(message)
                 throw BootstrapException(message, e)
             }
@@ -106,7 +104,7 @@ object BootstrapDownloader {
             if (!verifyHash(target, dep.expectedHash)) {
                 target.delete()
                 val message = "Checksum mismatch for ${dep.fileName}."
-                logger.severe(message)
+                Logger.error(message)
                 listener?.onError(message)
                 throw BootstrapException(message)
             }
@@ -116,7 +114,7 @@ object BootstrapDownloader {
         }
 
         listener?.onComplete()
-        logger.info("All GUI dependencies ready.")
+        Logger.info("All GUI dependencies ready.")
         return downloadedFiles
     }
 

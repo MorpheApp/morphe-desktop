@@ -8,12 +8,12 @@ package app.morphe.engine.patches
 import app.morphe.engine.MorpheData
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
+import app.morphe.engine.util.Logger
 import app.morphe.engine.util.compareVersions
 import app.morphe.engine.util.isDevTag
 import app.morphe.engine.util.normalizeVersion
 import java.io.File
 import java.time.Instant
-import java.util.logging.Logger
 
 /**
  * Shared on-disk cache and local `.mpp` discovery layer for patch bundles.
@@ -24,7 +24,6 @@ import java.util.logging.Logger
  * Layout: `<MorpheData.patchesDir>/<owner>-<repo>/<tag>__<asset>.mpp`
  */
 object PatchCache {
-    private val logger = Logger.getLogger(PatchCache::class.java.name)
 
     /**
      * Build-output classifiers a patch build emits alongside the real bundle (same
@@ -200,22 +199,22 @@ object PatchCache {
                 try {
                     if (!file.deleteRecursively()) {
                         failedCount++
-                        logger.warning("Failed to delete ${file.name}")
+                        Logger.warn("Failed to delete ${file.name}")
                     }
                 } catch (e: Exception) {
                     failedCount++
-                    logger.warning("Failed to delete ${file.name}: ${e.message ?: e::class.simpleName}")
+                    Logger.warn("Failed to delete ${file.name}: ${e.message ?: e::class.simpleName}")
                 }
             }
             if (failedCount > 0) {
-                logger.warning("Patches cache clear incomplete for $repoPath: $failedCount file(s) locked")
+                Logger.warn("Patches cache clear incomplete for $repoPath: $failedCount file(s) locked")
                 false
             } else {
-                logger.info("Patches cache cleared for $repoPath")
+                Logger.info("Patches cache cleared for $repoPath")
                 true
             }
         } catch (e: Exception) {
-            logger.warning("Failed to clear patches cache for $repoPath: ${e.message ?: e::class.simpleName}")
+            Logger.warn("Failed to clear patches cache for $repoPath: ${e.message ?: e::class.simpleName}")
             false
         }
     }

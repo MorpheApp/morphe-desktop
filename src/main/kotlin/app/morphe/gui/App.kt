@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.config.EngineConfigRepository
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
@@ -56,7 +57,6 @@ import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
 import app.morphe.gui.ui.theme.backgrounds.rememberParallaxState
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.Logger
 import app.morphe.gui.util.applyTitleBarTint
 import java.util.Locale
 import kotlinx.coroutines.launch
@@ -203,10 +203,6 @@ val LocalAdbPreference = staticCompositionLocalOf<AdbPreferenceState> {
 fun app(
     initialSimplifiedMode: Boolean = true
 ) {
-    LaunchedEffect(Unit) {
-        Logger.init()
-    }
-
     KoinApplication(koinConfiguration {
         logger(KoinLoggerAdapter)
         modules(appModule)
