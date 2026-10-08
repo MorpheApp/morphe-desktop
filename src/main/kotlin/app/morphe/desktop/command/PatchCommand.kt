@@ -97,7 +97,7 @@ internal object PatchCommand : Callable<Int> {
                 mapFallbackValue = CommandLine.Option.NULL_VALUE,
                 converter = [OptionKeyConverter::class, OptionValueConverter::class],
             )
-            internal var options = mutableMapOf<String, Any?>()
+            internal var options: MutableMap<String, Any?>? = null
         }
 
         @ArgGroup(exclusive = false)
@@ -425,11 +425,11 @@ internal object PatchCommand : Callable<Int> {
             val disabledNames = bundleArg.selections.mapNotNull { it.disable?.selector?.name }.toSet()
             val disabledIndices = bundleArg.selections.mapNotNull { it.disable?.selector?.index }.toSet()
             val patchOptionsByName = bundleArg.selections
-                .filter { it.enabled?.selector?.name != null && it.enabled!!.options.isNotEmpty() }
-                .associate { it.enabled!!.selector.name!! to it.enabled!!.options }
+                .filter { it.enabled?.selector?.name != null && !it.enabled!!.options.isNullOrEmpty() }
+                .associate { it.enabled!!.selector.name!! to it.enabled!!.options!! }
             val patchOptionIndices = bundleArg.selections
-                .filter { it.enabled?.selector?.index != null && it.enabled!!.options.isNotEmpty() }
-                .associate { it.enabled!!.selector.index!! to it.enabled!!.options }
+                .filter { it.enabled?.selector?.index != null && !it.enabled!!.options.isNullOrEmpty() }
+                .associate { it.enabled!!.selector.index!! to it.enabled!!.options!! }
 
             PatchEngine.BundleScope(
                 bundleFile = bundleArg.patchesFile,
