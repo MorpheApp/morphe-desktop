@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.ui.components.MorpheDialogButton
 import app.morphe.gui.ui.components.MorpheDialogCard
 import app.morphe.gui.ui.components.MorpheDialogText
@@ -27,7 +28,6 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.resolveVersionWarningContent
 import app.morphe.gui.util.toColor

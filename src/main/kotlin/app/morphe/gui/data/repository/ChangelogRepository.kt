@@ -14,6 +14,7 @@ import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.util.ChangelogEntry
 import app.morphe.gui.util.ChangelogParser
 import io.ktor.client.HttpClient
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -31,9 +32,11 @@ class ChangelogRepository(
             val url = changelogUrl(source, prerelease) ?: return@withContext null
             mutex.withLock {
                 cache[url]?.let { return@withContext it }
-                val entries = runCatching {
+                val entries = try {
                     ChangelogParser.parse(http.request<String>(url))
-                }.getOrElse { e ->
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
                     Logger.debug("Changelog unavailable for '${source.name}' at $url: ${e.message}")
                     return@withContext null
                 }

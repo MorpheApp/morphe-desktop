@@ -5,6 +5,7 @@
 
 package app.morphe.gui.data.constants
 
+import app.morphe.engine.MorpheConstants
 import java.util.Properties
 
 /**
@@ -27,7 +28,7 @@ object AppConstants {
     }
 
     // ==================== API ====================
-    const val MORPHE_API_URL = app.morphe.engine.MorpheConstants.MORPHE_API_URL
+    const val MORPHE_API_URL = MorpheConstants.MORPHE_API_URL
 
     const val WEBSITE_URL = "https://morphe.software"
     /** A dev build carries a prerelease suffix, and an unpackaged run reports "dev". */

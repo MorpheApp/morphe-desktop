@@ -28,15 +28,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.HomeUiState
-import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.engine.model.VersionStatus
+import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.util.StatusColorType
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.toColor

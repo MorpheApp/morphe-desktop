@@ -19,8 +19,8 @@ class PatchingTest {
     @ValueSource(booleans = [true, false])
     @Disabled("Need to create lighter weight patch bundle")
     fun `patch example apk`(useArsclib: Boolean) {
-        val apkFileStream = javaClass.getResourceAsStream("/nowinandroid-apk")
-        val patchesFileStream = javaClass.getResourceAsStream("/patches.mpp")
+        val apkFileStream = checkNotNull(javaClass.getResourceAsStream("/nowinandroid-apk"))
+        val patchesFileStream = checkNotNull(javaClass.getResourceAsStream("/patches.mpp"))
 
         // Create output directories
         val tempDir = createTempDirectory().toFile()
