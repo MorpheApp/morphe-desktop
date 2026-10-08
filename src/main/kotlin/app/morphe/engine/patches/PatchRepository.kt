@@ -38,6 +38,7 @@ class PatchRepository(
     private var cachedReleases: List<Release>? = null
     private var lastFailureResult: Result<List<Release>>? = null
     private var cacheTimestamp: Long = 0L
+    private var lastCacheHitLogTimestamp: Long = 0L
 
     /**
      * Fetch all releases. Returns cached result if still fresh.
@@ -47,17 +48,22 @@ class PatchRepository(
         withContext(Dispatchers.IO) {
             fetchMutex.withLock {
                 val cached = cachedReleases
+                val now = System.currentTimeMillis()
                 if (!forceRefresh && cached != null &&
-                    (System.currentTimeMillis() - cacheTimestamp) < CACHE_TTL_MS
+                    (now - cacheTimestamp) < CACHE_TTL_MS
                 ) {
-                    logger.info("Using cached releases (${cached.size} releases, age=${(System.currentTimeMillis() - cacheTimestamp) / 1000}s)")
+                    val age = (now - cacheTimestamp) / 1000
+                    if (now - lastCacheHitLogTimestamp >= 2000L) {
+                        lastCacheHitLogTimestamp = now
+                        logger.info("Using cached releases from $repoPath (${cached.size} releases, age=${age}s)")
+                    }
                     return@withContext Result.success(cached)
                 }
 
                 // If a fetch failed within the last FAILURE_TTL_MS, reuse that failure instead of
                 // spamming concurrent API calls to the same failing endpoint.
                 if (!forceRefresh && lastFailureResult != null &&
-                    (System.currentTimeMillis() - cacheTimestamp) < FAILURE_TTL_MS
+                    (now - cacheTimestamp) < FAILURE_TTL_MS
                 ) {
                     val stale = cachedReleases
                     if (stale != null) {
@@ -68,6 +74,7 @@ class PatchRepository(
 
                 val result = remoteSource.listReleases()
                 cacheTimestamp = System.currentTimeMillis()
+                lastCacheHitLogTimestamp = cacheTimestamp
                 result.onSuccess { fresh ->
                     cachedReleases = fresh
                     lastFailureResult = null
@@ -78,7 +85,7 @@ class PatchRepository(
                     lastFailureResult = result
                     val stale = cachedReleases
                     if (stale != null) {
-                        logger.info("Returning stale cached releases after fetch failure")
+                        logger.info("Returning stale cached releases from $repoPath after fetch failure")
                         return@withContext Result.success(stale)
                     }
                 }
@@ -148,6 +155,7 @@ class PatchRepository(
     fun clearCache(): Boolean {
         cachedReleases = null
         cacheTimestamp = 0L
+        lastCacheHitLogTimestamp = 0L
         return PatchCache.clearSource(repoPath)
     }
 }

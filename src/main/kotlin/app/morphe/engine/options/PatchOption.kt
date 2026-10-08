@@ -111,9 +111,11 @@ fun Option<*>.toPatchOption(): PatchOption {
         is FloatRangeOption -> SliderBounds(this.min, this.max, this.step)
         else -> null
     }
+    @Suppress("DEPRECATION")
+    val optionTitle = this.title?.takeIf { it.isNotBlank() } ?: this.name
     return PatchOption(
         key = this.name,
-        title = this.name,
+        title = optionTitle,
         description = this.description ?: "",
         type = mapKTypeToOptionType(this.type, this.name, this.name),
         default = when (val def = this.default) {
