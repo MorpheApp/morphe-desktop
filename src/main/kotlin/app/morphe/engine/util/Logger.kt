@@ -52,7 +52,7 @@ object Logger {
             val timestamp = fileTimestampFormat.format(Date())
             logFile = File(logsDir, "morphe-$timestamp.log")
 
-            // Write startup diagnostic banner directly to the log file (never to console)
+            // Write startup diagnostic banner to console and log file (without log markers)
             val banner = buildString {
                 appendLine("=".repeat(60))
                 appendLine("Morphe-GUI Started")
@@ -67,6 +67,7 @@ object Logger {
                 appendLine("Working Dir: ${System.getProperty("user.dir")}")
                 appendLine("=".repeat(60))
             }
+            print(banner)
             logFile?.appendText(banner)
 
             initialized = true
