@@ -595,79 +595,81 @@ class QuickPatchViewModel(
                 ),
             )
 
-            val patchResult = runCatching {
+            val engineResult = try {
                 PatchEngine.patch(
                     config = engineConfig,
                     onProgress = { message ->
-                        val (cleanMessage, level) = when {
-                            message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
-                            message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
-                            message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
-                            message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
-                            else -> message to LogLevel.INFO
-                        }
-                        when (level) {
-                            LogLevel.ERROR -> Logger.error(cleanMessage)
-                            LogLevel.WARNING -> Logger.warn(cleanMessage)
-                            LogLevel.INFO -> Logger.info(cleanMessage)
-                        }
-                        viewModelScope.launch(Dispatchers.Main) {
-                            val entry = LogEntry(cleanMessage, level)
-                            _uiState.value = _uiState.value.copy(
-                                statusMessage = cleanMessage.take(60),
-                                logs = _uiState.value.logs + entry
-                            )
-                            parseProgress(cleanMessage)
+                        if (_uiState.value.phase == QuickPatchPhase.PATCHING) {
+                            val (cleanMessage, level) = when {
+                                message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
+                                message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
+                                message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
+                                message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
+                                else -> message to LogLevel.INFO
+                            }
+                            when (level) {
+                                LogLevel.ERROR -> Logger.error(cleanMessage)
+                                LogLevel.WARNING -> Logger.warn(cleanMessage)
+                                LogLevel.INFO -> Logger.info(cleanMessage)
+                            }
+                            viewModelScope.launch(Dispatchers.Main) {
+                                val entry = LogEntry(cleanMessage, level)
+                                _uiState.value = _uiState.value.copy(
+                                    statusMessage = cleanMessage.take(60),
+                                    logs = _uiState.value.logs + entry
+                                )
+                                parseProgress(cleanMessage)
+                            }
                         }
                     }
                 )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                val exceptionStr = e.stackTraceToString()
+                val newLogs = _uiState.value.logs + LogEntry(exceptionStr, LogLevel.ERROR)
+                _uiState.value = _uiState.value.copy(
+                    phase = QuickPatchPhase.ERROR,
+                    error = getString(Res.string.error_patching_general, e.message ?: ""),
+                    logs = newLogs
+                )
+                return@launch
             }
 
-            patchResult.fold(
-                onSuccess = { engineResult ->
-                    if (engineResult.success) {
-                        // Force 100% progress immediately upon engine success
-                        _uiState.value = _uiState.value.copy(
-                            progress = 1.0f,
-                            statusMessage = "",
-                            isAllStepsDone = true
-                        )
+            if (_uiState.value.phase != QuickPatchPhase.PATCHING) return@launch
 
-                        // Delay transition so the 90% -> 100% animation can visually finish
-                        delay(1500.milliseconds)
+            if (engineResult.success) {
+                // Force 100% progress immediately upon engine success
+                _uiState.value = _uiState.value.copy(
+                    progress = 1.0f,
+                    statusMessage = "",
+                    isAllStepsDone = true
+                )
 
-                        _uiState.value = _uiState.value.copy(
-                            phase = QuickPatchPhase.COMPLETED,
-                            outputPath = outputPath,
-                            progress = 1f,
-                            statusMessage = ""
-                        )
-                        Logger.info("Quick mode: Patching completed - $outputPath (${engineResult.appliedPatches.size} patches)")
-                        recordSeenPatches(apkInfo.packageName)
-                    } else {
-                        val errorMsg = engineResult.failureDetail
-                            ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
-                                val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
-                                getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
-                            }
-                            ?: engineResult.failureReason
-                            ?: getString(Res.string.error_patching_unknown)
-                        _uiState.value = _uiState.value.copy(
-                            phase = QuickPatchPhase.ERROR,
-                            error = errorMsg
-                        )
+                // Delay transition so the 90% -> 100% animation can visually finish
+                delay(1500.milliseconds)
+
+                _uiState.value = _uiState.value.copy(
+                    phase = QuickPatchPhase.COMPLETED,
+                    outputPath = outputPath,
+                    progress = 1f,
+                    statusMessage = ""
+                )
+                Logger.info("Quick mode: Patching completed - $outputPath (${engineResult.appliedPatches.size} patches)")
+                recordSeenPatches(apkInfo.packageName)
+            } else {
+                val errorMsg = engineResult.failureDetail
+                    ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
+                        val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
+                        getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
                     }
-                },
-                onFailure = { e ->
-                    val exceptionStr = e.stackTraceToString()
-                    val newLogs = _uiState.value.logs + LogEntry(exceptionStr, LogLevel.ERROR)
-                    _uiState.value = _uiState.value.copy(
-                        phase = QuickPatchPhase.ERROR,
-                        error = getString(Res.string.error_patching_general, e.message ?: ""),
-                        logs = newLogs
-                    )
-                }
-            )
+                    ?: engineResult.failureReason
+                    ?: getString(Res.string.error_patching_unknown)
+                _uiState.value = _uiState.value.copy(
+                    phase = QuickPatchPhase.ERROR,
+                    error = errorMsg
+                )
+            }
         }
     }
 
@@ -692,6 +694,7 @@ class QuickPatchViewModel(
      */
     @Synchronized
     private fun parseProgress(line: String) {
+        if (_uiState.value.phase != QuickPatchPhase.PATCHING) return
         val currentState = _uiState.value
         
         // Detect Split APK dynamically based on CLI lines if not already set

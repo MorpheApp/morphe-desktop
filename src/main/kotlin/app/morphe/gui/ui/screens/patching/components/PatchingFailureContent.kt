@@ -294,7 +294,7 @@ internal fun ExpertFailureContent(
                         .clickable {
                             WorkspaceManager.clearScratch()
                             tempFilesCleared = true
-                            Logger.info("Cleaned temp files after failed patching")
+                            Logger.info("Cleaned temp files after failed/cancelled patching")
                         }
                         .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {

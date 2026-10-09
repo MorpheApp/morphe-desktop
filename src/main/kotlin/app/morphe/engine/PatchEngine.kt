@@ -45,6 +45,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.job
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
@@ -198,35 +199,49 @@ object PatchEngine {
         ) { session ->
             val tempDir = session.root
             var mergedApkToCleanup: File? = null
-        val stepResults = mutableListOf<StepResult>()
-        val appliedPatches = mutableListOf<String>()
-        val failedPatches = mutableListOf<FailedPatch>()
-        var patchesSnapshotForFinally: List<PatchBundle> = emptyList()
+            val stepResults = mutableListOf<StepResult>()
+            val appliedPatches = mutableListOf<String>()
+            val failedPatches = mutableListOf<FailedPatch>()
+            var patchesSnapshotForFinally: List<PatchBundle> = emptyList()
 
-        // Capture internal logs from morphe-patcher and pipe to onProgress
-        val patcherLogger = JulLogger.getLogger("app.morphe.patcher")
-        val prevUseParentHandlers = patcherLogger.useParentHandlers
-        patcherLogger.useParentHandlers = false
-        val patcherLogHandler = object : Handler() {
-            override fun publish(record: LogRecord) {
-                val rawMessage = record.message ?: return
-                if (rawMessage.isBlank()) return
-                val prefix = when (record.level) {
-                    Level.SEVERE -> "ERROR: "
-                    Level.WARNING -> "WARNING: "
-                    else -> ""
+            val scopeContext = coroutineContext
+            val workerThread = Thread.currentThread()
+            val cancelHandle = scopeContext.job.invokeOnCompletion { cause ->
+                if (cause is CancellationException) {
+                    workerThread.interrupt()
                 }
-                onProgress("$prefix$rawMessage")
             }
-            override fun flush() {}
-            override fun close() {}
-        }
-        patcherLogger.addHandler(patcherLogHandler)
 
-        try {
-            // 1. Handle split-APK bundles (.apkm/.xapk/.apks)
-            val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
-                onProgress("Merging split APK bundle...")
+            val reportProgress: (String) -> Unit = { message ->
+                scopeContext.ensureActive()
+                onProgress(message)
+            }
+
+            // Capture internal logs from morphe-patcher and pipe to onProgress
+            val patcherLogger = JulLogger.getLogger("app.morphe.patcher")
+            val prevUseParentHandlers = patcherLogger.useParentHandlers
+            patcherLogger.useParentHandlers = false
+            val patcherLogHandler = object : Handler() {
+                override fun publish(record: LogRecord) {
+                    scopeContext.ensureActive()
+                    val rawMessage = record.message ?: return
+                    if (rawMessage.isBlank()) return
+                    val prefix = when (record.level) {
+                        Level.SEVERE -> "ERROR: "
+                        Level.WARNING -> "WARNING: "
+                        else -> ""
+                    }
+                    reportProgress("$prefix$rawMessage")
+                }
+                override fun flush() {}
+                override fun close() {}
+            }
+            patcherLogger.addHandler(patcherLogHandler)
+
+            try {
+                // 1. Handle split-APK bundles (.apkm/.xapk/.apks)
+                val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
+                    reportProgress("Merging split APK bundle...")
                 val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
                 ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger()).merge(
                     inputFile = config.inputApk,
@@ -484,6 +499,7 @@ object PatchEngine {
                 onProgress("Applying ${finalPatches.size} patches...")
                 try {
                     patcher().collect { patchResult ->
+                        currentCoroutineContext().ensureActive()
                         val patchName = patchResult.patch.name ?: "Unknown"
                         patchResult.exception?.let { exception ->
                             val error = StringWriter().use { writer ->
@@ -521,6 +537,8 @@ object PatchEngine {
                     actualInputApk.copyTo(rebuiltApk, overwrite = true)
                     patcherResult.applyTo(rebuiltApk)
                     stepResults.add(StepResult(PatchStep.REBUILDING, true))
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     stepResults.add(StepResult(PatchStep.REBUILDING, false, e.toString()))
                     val sw = StringWriter().also { e.printStackTrace(PrintWriter(it)) }.toString()
@@ -590,6 +608,8 @@ object PatchEngine {
                             )
                         }
                         stepResults.add(StepResult(PatchStep.SIGNING, true))
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         stepResults.add(StepResult(PatchStep.SIGNING, false, e.toString()))
                         val sw = StringWriter().also { e.printStackTrace(PrintWriter(it)) }.toString()
@@ -606,6 +626,8 @@ object PatchEngine {
                     try {
                         onProgress("Verifying APK with Android SDK...")
                         verifier.verifyApkFile(tempOutput)
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Logger.warn("SDK DEX Verification warning: ${e.message}")
                     }
@@ -683,6 +705,8 @@ object PatchEngine {
                 )
             }
         } finally {
+            cancelHandle.dispose()
+            Thread.interrupted()
             patcherLogger.removeHandler(patcherLogHandler)
             patcherLogger.useParentHandlers = prevUseParentHandlers
             if (!session.retain) {

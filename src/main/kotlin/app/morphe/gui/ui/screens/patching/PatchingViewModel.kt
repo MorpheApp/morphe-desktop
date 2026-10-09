@@ -21,6 +21,7 @@ import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import java.lang.management.ManagementFactory
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -137,11 +138,11 @@ class PatchingViewModel(
                 config
             }
 
-            val result = try {
-                runCatching {
-                    PatchEngine.patch(
-                        config = engineConfig,
-                        onProgress = { message ->
+            val engineResult = try {
+                PatchEngine.patch(
+                    config = engineConfig,
+                    onProgress = { message ->
+                        if (_uiState.value.status != PatchingStatus.CANCELLED) {
                             val (cleanMessage, level) = when {
                                 message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
                                 message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
@@ -158,65 +159,63 @@ class PatchingViewModel(
                                 parseAndAddLog(message)
                             }
                         }
-                    )
-                }
+                    }
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                addLog("Patching error: ${e.message ?: "unknown error"}", LogLevel.ERROR)
+                _uiState.update { it.copy(
+                    status = PatchingStatus.FAILED,
+                    error = e.stackTraceToString()
+                ) }
+                Logger.error("Patching error", e)
+                return@launch
             } finally {
                 memoryJob.cancel()
             }
 
-            result.fold(
-                onSuccess = { engineResult ->
-                    if (engineResult.success) {
-                        val elapsedMs = System.currentTimeMillis() - startTime
-                        val outputApkFile = config.outputApk ?: File(engineResult.outputPath)
-                        val outSizeMb = if (outputApkFile.exists()) FormatUtils.formatFileSize(outputApkFile.length(), locale) else "?"
+            if (_uiState.value.status == PatchingStatus.CANCELLED) return@launch
 
-                        _uiState.value = _uiState.value.copy(
-                            status = PatchingStatus.COMPLETED,
-                            outputPath = engineResult.outputPath,
-                            progress = 1f,
-                            outputSizeMb = outSizeMb,
-                            elapsedSec = formatElapsed(elapsedMs)
-                        )
-                        Logger.info("Patching completed: ${engineResult.outputPath}")
-                    } else {
-                        val reason = engineResult.failureDetail
-                            ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
-                                val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
-                                getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
-                            }
-                            ?: if (engineResult.failedPatches.isNotEmpty())
-                                getString(Res.string.patching_error_failed_patches, engineResult.failedPatches.joinToString(", ") { it.name })
-                            else getString(Res.string.error_patching_unknown)
-                        addLog("Patching failed: ${engineResult.failureReason ?: "Unknown reason"}", LogLevel.ERROR)
-                        _uiState.value = _uiState.value.copy(
-                            status = PatchingStatus.FAILED,
-                            error = reason,
-                        )
+            if (engineResult.success) {
+                val elapsedMs = System.currentTimeMillis() - startTime
+                val outputApkFile = config.outputApk ?: File(engineResult.outputPath)
+                val outSizeMb = if (outputApkFile.exists()) FormatUtils.formatFileSize(outputApkFile.length(), locale) else "?"
+
+                _uiState.value = _uiState.value.copy(
+                    status = PatchingStatus.COMPLETED,
+                    outputPath = engineResult.outputPath,
+                    progress = 1f,
+                    outputSizeMb = outSizeMb,
+                    elapsedSec = formatElapsed(elapsedMs)
+                )
+                Logger.info("Patching completed: ${engineResult.outputPath}")
+            } else {
+                val reason = engineResult.failureDetail
+                    ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
+                        val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
+                        getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
                     }
-                },
-                onFailure = { e ->
-                    addLog("Patching error: ${e.message ?: "unknown error"}", LogLevel.ERROR)
-                    _uiState.value = _uiState.value.copy(
-                        status = PatchingStatus.FAILED,
-                        error = e.stackTraceToString()
-                    )
-                    Logger.error("Patching error", e)
-                }
-            )
+                    ?: if (engineResult.failedPatches.isNotEmpty())
+                        getString(Res.string.patching_error_failed_patches, engineResult.failedPatches.joinToString(", ") { it.name })
+                    else getString(Res.string.error_patching_unknown)
+                addLog("Patching failed: ${engineResult.failureReason ?: "Unknown reason"}", LogLevel.ERROR)
+                _uiState.value = _uiState.value.copy(
+                    status = PatchingStatus.FAILED,
+                    error = reason,
+                )
+            }
         }
     }
 
     fun cancelPatching() {
-        viewModelScope.launch {
-            patchingJob?.cancel()
-            patchingJob = null
-            addLog("Patching cancelled by user", LogLevel.WARNING)
-            _uiState.value = _uiState.value.copy(
-                status = PatchingStatus.CANCELLED
-            )
-            Logger.info("Patching cancelled by user")
-        }
+        patchingJob?.cancel()
+        patchingJob = null
+        addLog("Patching cancelled by user", LogLevel.WARNING)
+        _uiState.update { it.copy(
+            status = PatchingStatus.CANCELLED
+        ) }
+        Logger.info("Patching cancelled by user")
     }
 
     private fun addLog(message: String, level: LogLevel) {
@@ -227,6 +226,7 @@ class PatchingViewModel(
     }
 
     private fun parseAndAddLog(line: String) {
+        if (_uiState.value.status == PatchingStatus.CANCELLED) return
         val (cleanMessage, level) = when {
             line.startsWith("ERROR: ", ignoreCase = true) -> line.substring(7) to LogLevel.ERROR
             line.startsWith("WARNING: ", ignoreCase = true) -> line.substring(9) to LogLevel.WARNING
