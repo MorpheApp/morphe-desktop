@@ -1,3 +1,10 @@
+## [1.18.2-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.1...v1.18.2-dev.2) (2026-10-10)
+
+
+### Bug Fixes
+
+* Revert skiko dependency update ([d17e3ad](https://github.com/MorpheApp/morphe-desktop/commit/d17e3ad929e0d53854ca75fa0dd2021b3a42313c))
+
 ## [1.18.2-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.1...v1.18.2-dev.1) (2026-10-10)
 
 
