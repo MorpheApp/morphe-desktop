@@ -6,18 +6,16 @@
 package app.morphe.desktop.command.utility
 
 import app.morphe.engine.CacheManager
+import app.morphe.engine.util.Logger
+import java.util.concurrent.Callable
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import java.util.concurrent.Callable
-import java.util.logging.Logger
 
 @Command(
     name = "clear-cache",
     description = ["Delete cached patch files, logs, and temporary files."],
 )
 internal object ClearCacheCommand : Callable<Int> {
-    private val logger = Logger.getLogger(this::class.java.name)
-
     private const val EXIT_CODE_SUCCESS = 0
     private const val EXIT_CODE_ERROR = 1
 
@@ -31,7 +29,7 @@ internal object ClearCacheCommand : Callable<Int> {
         val result = CacheManager.clearCaches()
 
         if (info) {
-            logger.info(
+            Logger.info(
                 buildString {
                     appendLine("Cache cleared:")
                     result.perDirectory.forEach { dir ->
@@ -44,14 +42,14 @@ internal object ClearCacheCommand : Callable<Int> {
                 }
             )
         } else {
-            logger.info("Cache cleared.")
+            Logger.info("Cache cleared.")
         }
 
         // Deletion failures always shown, even without --info.
         return if (result.success) {
             EXIT_CODE_SUCCESS
         } else {
-            logger.warning("${result.failedFiles} file(s) could not be deleted (may be locked)")
+            Logger.warn("${result.failedFiles} file(s) could not be deleted (may be locked)")
             EXIT_CODE_ERROR
         }
     }

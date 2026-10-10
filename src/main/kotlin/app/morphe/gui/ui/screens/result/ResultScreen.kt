@@ -21,25 +21,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
-import app.morphe.engine.util.ApkManifestReader
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.config.EngineConfigRepository
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
+import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.LocalNavController
-import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.result.components.*
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.screenScrim
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
-import app.morphe.gui.util.Logger
 import app.morphe.gui.util.currentLocale
+import app.morphe.gui.util.getUserMessage
+import app.morphe.gui.util.toUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,7 +70,7 @@ fun ResultScreenContent(outputPath: String) {
     val outputFile = File(outputPath)
     val scope = rememberCoroutineScope()
     val adbManager = remember { AdbManager() }
-    val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
 
     // ADB state from DeviceMonitor
     val monitorState by DeviceMonitor.state.collectAsState()
@@ -84,7 +87,7 @@ fun ResultScreenContent(outputPath: String) {
     var alreadyInstalled by remember { mutableStateOf(false) }
     LaunchedEffect(outputPath) {
         outputPackage = withContext(Dispatchers.IO) {
-            runCatching { ApkManifestReader.read(outputFile)?.packageName }.getOrNull()
+            runCatching { ApkInspector.inspect(outputFile)?.packageName }.getOrNull()
         }
     }
     LaunchedEffect(monitorState.selectedDevice?.id, monitorState.selectedDevice?.isReady, outputPackage) {
@@ -106,11 +109,15 @@ fun ResultScreenContent(outputPath: String) {
     var autoRouteLinks by remember { mutableStateOf(false) }
     LaunchedEffect(outputPath, outputPackage) {
         stockPackage = withContext(Dispatchers.IO) {
-            runCatching {
+            try {
                 val records = PatchedAppStore.shared.getAll()
                 records.firstOrNull { it.outputApkPath == outputPath }?.packageName
                     ?: outputPackage?.let { pkg -> records.firstOrNull { it.installedPackageName == pkg }?.packageName }
-            }.getOrNull()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 
@@ -121,15 +128,15 @@ fun ResultScreenContent(outputPath: String) {
     var autoCleanupEnabled by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        val config = configRepository.loadConfig()
+        val config = engineConfigRepository.loadConfig()
         autoCleanupEnabled = config.autoCleanupTempFiles
         autoRouteLinks = config.autoRouteLinksAfterInstall
         disableStockLinks = config.disableStockLinksAfterInstall
-        hasTempFiles = FileUtils.hasTempFiles()
-        tempFilesSize = FileUtils.getTempDirSize()
+        hasTempFiles = WorkspaceManager.hasScratchFiles()
+        tempFilesSize = WorkspaceManager.getScratchSize()
 
         if (autoCleanupEnabled && hasTempFiles) {
-            FileUtils.cleanupAllTempDirs()
+            WorkspaceManager.clearScratch()
             hasTempFiles = false
             tempFilesCleared = true
             Logger.info("Auto-cleaned temp files after successful patching")
@@ -143,13 +150,9 @@ fun ResultScreenContent(outputPath: String) {
             installError = null
             installProgress = if (alreadyInstalled) getString(Res.string.result_adb_updating_on_device, device.displayName) else getString(Res.string.adb_status_installing, device.displayName)
 
-            // Always record a non-Play installer so the Play Store won't clobber
-            // the patched app with an official update.
-            val installer = adbManager.resolveSpoofInstaller(device.id)
             val result = adbManager.installApk(
                 apkPath = outputPath,
                 deviceId = device.id,
-                installerPackage = installer,
                 onProgress = { installProgress = it }
             )
 
@@ -178,7 +181,7 @@ fun ResultScreenContent(outputPath: String) {
                 patchedPackage = patched,
                 stockPackage = if (disableStockLinks) stockPackage else null,
                 enable = enable,
-                onProgress = { linkProgress = it },
+                onProgress = { linkProgress = it.toUserMessage() },
             )
             result.fold(
                 onSuccess = { outcome ->
@@ -303,7 +306,7 @@ fun ResultScreenContent(outputPath: String) {
                         font = font,
                         borderColor = borderColor,
                         onCleanupClick = {
-                            FileUtils.cleanupAllTempDirs()
+                            WorkspaceManager.clearScratch()
                             hasTempFiles = false
                             tempFilesCleared = true
                             Logger.info("Manually cleaned temp files after patching")

@@ -23,10 +23,7 @@ group = "app.morphe"
 // JVM / Kotlin Configuration
 // ============================================================================
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-        vendor.set(JvmVendorSpec.JETBRAINS)
-    }
+    jvmToolchain(21)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
     }
@@ -80,9 +77,6 @@ dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
     implementation(libs.morphe.library)
-    implementation(libs.jadb) {
-        exclude(group = "org.mockito")
-    }
     implementation(libs.picocli)
 
     // -- Bootstrap (Code Generation) ---------------------------------------
@@ -229,7 +223,7 @@ tasks {
     test {
         useJUnitPlatform()
         testLogging {
-            events("PASSED", "SKIPPED", "FAILED")
+            events("FAILED")
         }
     }
 

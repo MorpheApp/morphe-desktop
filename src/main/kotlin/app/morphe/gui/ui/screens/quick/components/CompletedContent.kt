@@ -7,9 +7,6 @@ package app.morphe.gui.ui.screens.quick.components
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import app.morphe.gui.ui.components.MorpheActionButton
-import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -31,16 +28,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.LocalAdbPreference
-import app.morphe.gui.data.model.Patch
-import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.ui.components.MorpheActionButton
+import app.morphe.gui.ui.components.handCursor
+import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.screens.quick.formatFileSize
 import app.morphe.gui.ui.theme.*
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.getUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
@@ -65,7 +65,7 @@ internal fun CompletedContent(
     val outputFile = File(outputPath)
     val scope = rememberCoroutineScope()
     val adbManager = remember { AdbManager() }
-    val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
     val monitorState by DeviceMonitor.state.collectAsState()
     val adbPreference = LocalAdbPreference.current
     val isAdbDisabledByUser = !adbPreference.enabled
@@ -294,12 +294,12 @@ internal fun CompletedContent(
                                     installError = null
                                     val result = adbManager.installApk(
                                         apkPath = outputPath,
-                                        deviceId = device.id
+                                        deviceId = device.id,
                                     )
                                     result.fold(
                                         onSuccess = {
                                             installSuccess = true
-                                            val config = configRepository.loadConfig()
+                                            val config = engineConfigRepository.loadConfig()
                                             if (config.autoRouteLinksAfterInstall) {
                                                 val record = PatchedAppStore.shared.getAll()
                                                     .firstOrNull { it.outputApkPath == outputPath }

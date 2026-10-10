@@ -5,11 +5,11 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.Logger
 import java.net.HttpURLConnection
 import java.net.URI
 import java.net.URL
 import java.util.Properties
-import java.util.logging.Logger
 
 /**
  * Resolved release channel that [UpdateChecker] should probe. The user-facing
@@ -32,7 +32,7 @@ object UpdateChecker {
      * behavior — preserved so the CLI's existing call site keeps working).
      * Synchronous — call from a background dispatcher.
      */
-    fun checkInfo(logger: Logger, channel: ReleaseChannel? = null): UpdateInfo? {
+    fun checkInfo(channel: ReleaseChannel? = null): UpdateInfo? {
         try {
             val currentVersion = javaClass.getResourceAsStream("/app/morphe/cli/version.properties")
                 ?.use { stream ->
@@ -75,7 +75,7 @@ object UpdateChecker {
                 downloadLink = downloadLink,
             )
         } catch (ex: Exception) {
-            logger.fine("Could not check for CLI update: $ex")
+            Logger.debug("Could not check for CLI update: $ex")
             return null
         }
     }
@@ -96,8 +96,8 @@ object UpdateChecker {
      * Kept byte-identical so [app.morphe.desktop.command.PatchCommand]'s logger
      * output doesn't change.
      */
-    fun check(logger: Logger): String? {
-        val info = checkInfo(logger) ?: return null
+    fun check(): String? {
+        val info = checkInfo() ?: return null
         val trackChangesMessage = if (info.crossesDevToStable) {
             "\nNotice: The latest CLI is a stable release. Updating to that will stop dev " +
                     "update notifications. To keep receiving dev updates, skip stable update " +

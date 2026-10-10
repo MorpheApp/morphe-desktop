@@ -5,8 +5,8 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.Logger
 import java.io.File
-import java.util.logging.Logger
 
 /**
  * Single source of truth for where Morphe stores its runtime data on disk.
@@ -44,8 +44,6 @@ import java.util.logging.Logger
  * resolution runs **at most once per JVM** — the lazy property caches.
  */
 object MorpheData {
-    private val logger = Logger.getLogger(MorpheData::class.java.name)
-
     private val resolution: Resolution by lazy { resolveRoot() }
 
     /** Root: JAR-adjacent `morphe-data/`, with fallback to `~/morphe/`. */
@@ -116,20 +114,20 @@ object MorpheData {
         // package-manager install can point the data root at a writable, XDG-compliant
         // location. No portable-bundle concept here for now (maybe change in the future?), paths stay absolute.
         envOverrideRoot()?.let { override ->
-            logger.info("Morphe data root: ${override.absolutePath} (MORPHE_DATA_DIR override)")
+            Logger.info("Morphe data root: ${override.absolutePath} (MORPHE_DATA_DIR override)")
             override.mkdirs()
             return Resolution(root = override, bundleRoot = null)
         }
         val (jarAdjacent, fallbackReason) = tryJarAdjacent()
         if (jarAdjacent != null) {
-            logger.info("Morphe data root: ${jarAdjacent.absolutePath} (JAR-adjacent)")
+            Logger.info("Morphe data root: ${jarAdjacent.absolutePath} (JAR-adjacent)")
             jarAdjacent.mkdirs()
             return Resolution(root = jarAdjacent, bundleRoot = jarAdjacent.parentFile)
         }
         val fallback = userHomeFallback()
         // WARNING level — users debugging "I can't find my patches" or "config
         // didn't persist" need to see this to know we fell back and why.
-        logger.warning(
+        Logger.warn(
             "Morphe data root falling back to ${fallback.absolutePath} — " +
                 "primary (JAR-adjacent) unavailable: ${fallbackReason?.message ?: "unknown"}"
         )
@@ -184,7 +182,7 @@ object MorpheData {
         val dir = File(raw)
         val usable = runCatching { dir.mkdirs(); dir.isDirectory && dir.canWrite() }.getOrDefault(false)
         if (!usable) {
-            logger.warning("MORPHE_DATA_DIR is set to '$raw' but it isn't a writable directory — ignoring.")
+            Logger.warn("MORPHE_DATA_DIR is set to '$raw' but it isn't a writable directory — ignoring.")
             return null
         }
         return dir

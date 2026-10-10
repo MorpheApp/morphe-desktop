@@ -568,36 +568,36 @@ morphe patch [flag/s]
 Here is a quick lookup for all the flags under this subcommand:
 
 
-| Flag                           | Description                                                                    |
-|--------------------------------|--------------------------------------------------------------------------------|
-| `-p`, `--patches`              | Paths to .mpp files or GitHub or GitLab repo URLs (repeatable, one per bundle) |
-| `--prerelease`                 | Fetch latest dev pre-release instead of stable release                         |
-| *(positional arg)*             | APK file to patch                                                              |
-| `-o`, `--out`                  | Path to save the patched APK to                                                |
-| `-e`, `--enable`               | Enable a patch by name                                                         |
-| `--ei`                         | Enable a patch by index                                                        |
-| `-d`, `--disable`              | Disable a patch by name                                                        |
-| `--di`                         | Disable a patch by index                                                       |
-| `-O`, `--options`              | Set patch option values (e.g.`-Okey=value`)                                    |
-| `--exclusive`                  | Disable all patches except explicitly enabled ones                             |
-| `-f`, `--force`                | Skip APK version compatibility check                                           |
-| `-i`, `--install`              | Install to ADB device (optional serial)                                        |
-| `--mount`                      | Install by mounting over existing app (requires root)                          |
-| `--keystore`                   | Path to keystore file for signing                                              |
-| `--keystore-password`          | Keystore password                                                              |
-| `--keystore-entry-alias`       | Alias of the key pair in the keystore                                          |
-| `--keystore-entry-password`    | Password for the keystore entry                                                |
-| `--signer`                     | Signer name in the APK signature                                               |
-| `--unsigned`                   | Skip signing the final APK                                                     |
-| `-t`, `--temporary-files-path` | Path to store temp files                                                       |
-| `--disable-purge`              | Keep this run's scratch files (deleted after patching by default)              |
-| `--striplibs`                  | Architectures to keep, comma-separated (e.g.`arm64-v8a,x86`)                   |
-| `--bytecode-mode`              | Bytecode mode:`FULL`, `STRIP_SAFE`, or `STRIP_FAST`                            |
-| `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                |
-| `--continue-on-error`          | Continue patching if a patch fails                                             |
-| `--options-file`               | Path to options JSON file                                                      |
-| `--options-update`             | Auto-update options JSON file after patching                                   |
-| `-r`, `--result-file`          | Path to save patching result JSON                                              |
+| Flag                           | Description                                                                        |
+|--------------------------------|------------------------------------------------------------------------------------|
+| `-p`, `--patches`              | Paths to .mpp files, directories, or remote repos/PRs (repeatable, one per bundle) |
+| `--prerelease`                 | Fetch latest dev pre-release instead of stable release                             |
+| *(positional arg)*             | APK file to patch                                                                  |
+| `-o`, `--out`                  | Path to save the patched APK to                                                    |
+| `-e`, `--enable`               | Enable a patch by name                                                             |
+| `--ei`                         | Enable a patch by index                                                            |
+| `-d`, `--disable`              | Disable a patch by name                                                            |
+| `--di`                         | Disable a patch by index                                                           |
+| `-O`, `--options`              | Set patch option values (e.g.`-Okey=value`)                                        |
+| `--exclusive`                  | Disable all patches except explicitly enabled ones                                 |
+| `-f`, `--force`                | Skip APK version compatibility check                                               |
+| `-i`, `--install`              | Install to ADB device (optional serial)                                            |
+| `--mount`                      | Install by mounting over existing app (requires root)                              |
+| `--keystore`                   | Path to keystore file for signing                                                  |
+| `--keystore-password`          | Keystore password                                                                  |
+| `--keystore-entry-alias`       | Alias of the key pair in the keystore                                              |
+| `--keystore-entry-password`    | Password for the keystore entry                                                    |
+| `--signer`                     | Signer name in the APK signature                                                   |
+| `--unsigned`                   | Skip signing the final APK                                                         |
+| `-t`, `--temporary-files-path` | Path to store temp files                                                           |
+| `--disable-purge`              | Keep this run's scratch files (deleted after patching by default)                  |
+| `--striplibs`                  | Architectures to keep, comma-separated (e.g.`arm64-v8a,x86`)                       |
+| `--bytecode-mode`              | Bytecode mode:`FULL`, `STRIP_SAFE`, or `STRIP_FAST`                                |
+| `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                    |
+| `--continue-on-error`          | Continue patching if a patch fails                                                 |
+| `--options-file`               | Path to options JSON file                                                          |
+| `--options-update`             | Auto-update options JSON file after patching                                       |
+| `-r`, `--result-file`          | Path to save patching result JSON                                                  |
 
 > [!NOTE]
 > The examples used for each flag below only show the usage of that specific flag, but in practice, you'll almost always combine multiple flags together to customize your patching. Here's an example of a more complete command:
@@ -612,10 +612,12 @@ Required: Yes
 
 Default: -
 
-This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths or a GitHub or GitLab repository URL, and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a URL is provided, Morphe automatically downloads the `.mpp` file from the latest release and caches it for future runs.
+This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests), and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
+# Local file or directory:
 java -jar morphe-desktop-*-all.jar patch --patches patches-*.mpp your_app.apk
+java -jar morphe-desktop-*-all.jar patch --patches /path/to/patches/ your_app.apk
 ```
 
 You can also pass a GitHub or GitLab repo URL:
@@ -625,11 +627,20 @@ java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/
 java -jar morphe-desktop-*-all.jar patch --patches https://gitlab.com/MorpheApp/morphe-patches your_app.apk
 ```
 
-Or a specific release URL:
+Or a specific release tag or Pull Request URL:
 
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches/releases/tag/v1.0.0 your_app.apk
+java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches/pull/123 your_app.apk
 ```
+
+> [!NOTE]
+> Downloading patch bundles from GitHub Pull Requests requires a GitHub Personal Access Token (PAT) with `public_repo` scope to access GitHub Actions artifacts.
+>
+> You can create a token at [github.com/settings/tokens](https://github.com/settings/tokens) (classic token with `public_repo` scope) and configure it via:
+>
+> - **Environment variable** (CLI): `export GITHUB_TOKEN="ghp_your_token"` (or `GH_TOKEN`)
+> - **Settings UI / Config**: In the GUI under **Settings &rarr; GitHub Personal Access Token**
 
 <h5 id="using-multiple-bundles">Using multiple patch bundles</h5>
 
@@ -645,10 +656,10 @@ The **name-based** selection flags (`-e`, `-d`, `-O`) apply to the bundle they f
 java -jar morphe-desktop-*-all.jar patch -p patches-a.mpp -e "A patch from bundle A" -p patches-b.mpp -d "A patch from bundle B" your_app.apk
 ```
 
-**Index-based** selections (`--ei`/`--di`) are the exception. Their numbers refer to the combined list across all supplied bundles, not a single one. Run `list-patches` with the same set of `-p` files to see the combined numbering:
+**Index-based** selections (`--ei`/`--di`) are the exception. Their numbers refer to the combined list across all supplied bundles, not a single one. Run `list-patches` with the same set of `--patches` files to see the combined numbering:
 
 ```
-java -jar morphe-desktop-*-all.jar list-patches -p patches-a.mpp -p patches-b.mpp
+java -jar morphe-desktop-*-all.jar list-patches --patches patches-a.mpp --patches patches-b.mpp
 ```
 
 Then enable/disable by those combined indices. The index points to a patch no matter which bundle it came from, so its position relative to each `-p` doesn't matter:
@@ -663,7 +674,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release. If no dev pre-release is found on the repository, Morphe falls back to the latest stable release automatically.
 
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches --prerelease your_app.apk
@@ -688,7 +699,7 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp your_app.apk
 
 Required: No
 
-Default: a subfolder named after the app, created next to the input APK – `<app>/<app>-Morphe-<appVersion>-patches-<patchesVersion>.apk`
+Default: a subfolder named after the app, created next to the input APK – `<app>/<app>-<appVersion>-patches-<patchesVersion>.apk`
 
 Specify a custom output path for the patched APK.
 
@@ -773,9 +784,9 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp -e "Patch name" -Okey1 y
 ```
 
 > [!WARNING]
-> Option values are typed. Setting a value with the wrong type can cause the patch to fail. Use `list-patches --with-options` to see the expected types.
+> Option values are typed. Setting a value with the wrong type can cause the patch to fail. Use `list-patches --with-options` to inspect expected option types.
 >
-> Common types: `string`, `true`/`false`, `123` (integer), `1.0` (double), `[item1,item2]` (list)
+> Common types: `Boolean` (`true`/`false`), `String` (`"text"`), `Int` (`123`), `Long` (`123L`), `Float` (`1.0` / `1.0f`), `List` (`[item1,item2]`), and `File` (`/path/to/file`).
 
 #### `--exclusive`:
 
@@ -813,13 +824,14 @@ Default: -
 
 Automatically install the patched APK to a connected ADB device after patching.
 
-```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i your_app.apk
-```
-
-If no serial is provided, it installs to the first connected device. You can optionally specify a device serial.
+If no serial is provided, Morphe installs to the first connected device. You can optionally specify a device serial.
 
 ```
+# Install to default connected device:
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp your_app.apk -i
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i --mount your_app.apk
+
+# Install to a specific device by serial:
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp -i SERIAL123 your_app.apk
 ```
 
@@ -945,7 +957,7 @@ Required: No
 
 Default: `false`
 
-By default, this run's scratch files are deleted once patching finishes. Pass this flag to keep them instead — useful for debugging a failed patch. Does not affect cached patches, other sessions, or config.
+By default, this run's scratch files are deleted once patching finishes. Pass this flag to keep them instead - useful for debugging a failed patch. Does not affect cached patches, other sessions, or config.
 
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --disable-purge your_app.apk
@@ -994,11 +1006,15 @@ Required: No
 
 Default: - (verification is skipped)
 
-Verify the patched DEX and APK files using a local Android SDK after patching. Helpful for catching corrupt output before installing on a device. Pass a path to your SDK install directory, or pass the flag with no value to let Morphe auto-discover one.
+Verify the patched DEX and APK files using a local Android SDK after patching. Helpful for catching corrupt output before installing on a device. Pass a path to your SDK install directory, or pass the flag without a path to let Morphe auto-discover one.
 
 ```
+# Specify SDK path explicitly:
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --verify-with-sdk /path/to/android-sdk your_app.apk
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --verify-with-sdk your_app.apk
+
+# Auto-discover SDK (place the flag after the APK or before another flag):
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp your_app.apk --verify-with-sdk
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --verify-with-sdk --unsigned your_app.apk
 ```
 
 > [!NOTE]
@@ -1039,6 +1055,9 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --options-file options.j
 
 > [!NOTE]
 > If the file you specify doesn't exist yet, Morphe will automatically generate one with default values at that path and use it for the current patch. This means you can skip `options-create` entirely - just pass a path to a non-existent file and Morphe will create it for you.
+
+> [!NOTE]
+> Command-line flags (`-e`, `-d`, `--ei`, `--di`, `-O`) take precedence over the options and selections defined in `--options-file`.
 
 > [!TIP]
 > The options file is great for repeatable patching. Generate it once (either with `options-create` or by letting `--options-file` auto-generate it), tweak it, and reuse it every time you patch.
@@ -1088,7 +1107,7 @@ Here is a quick lookup for all the flags under this subcommand:
 
 | Flag                             | Description                                            |
 |----------------------------------|--------------------------------------------------------|
-| `--patches`                      | Paths to .mpp files or GitHub or GitLab repo URLs      |
+| `--patches`                      | Paths to .mpp files, directories, or remote repos/PRs  |
 | `--prerelease`                   | Fetch latest dev pre-release instead of stable release |
 | `--out`                          | Write patch list to a file instead of stdout           |
 | `-d`, `--with-descriptions`      | Show patch descriptions                                |
@@ -1106,10 +1125,11 @@ Required: Yes
 
 Default: -
 
-One or more paths to .mpp patch files or GitHub or GitLab repository URLs to list patches from. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests) to list patches from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp
+java -jar morphe-desktop-*-all.jar list-patches --patches /path/to/patches/
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches
 ```
 
@@ -1119,7 +1139,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches --prerelease
@@ -1179,7 +1199,7 @@ Required: No
 
 Default: `false`
 
-Show the configurable options for each patch, including their keys, types, default values, and possible values.
+Show the configurable options for each patch, including their keys, types (`Boolean`, `String`, `Int`, `Long`, `Float`, `List`, `File`), default values, and possible values.
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp --with-options
@@ -1248,7 +1268,7 @@ Here is a quick lookup for all the flags under this subcommand:
 
 | Flag                           | Description                                            |
 |--------------------------------|--------------------------------------------------------|
-| `--patches`                    | Paths to .mpp files or GitHub or GitLab repo URLs      |
+| `--patches`                    | Paths to .mpp files, directories, or remote repos/PRs  |
 | `--prerelease`                 | Fetch latest dev pre-release instead of stable release |
 | `-f`, `--filter-package-names` | Filter by package names                                |
 | `-u`, `--count-unused-patches` | Include unused patches in the version count            |
@@ -1260,10 +1280,11 @@ Required: Yes
 
 Default: -
 
-One or more paths to .mpp patch files or GitHub or GitLab repository URLs. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp
+java -jar morphe-desktop-*-all.jar list-versions --patches /path/to/patches/
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches
 ```
 
@@ -1273,7 +1294,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches --prerelease
@@ -1285,10 +1306,11 @@ Required: No
 
 Default: -
 
-Only show versions for the specified package names. Can be used to check versions for a specific app.
+Only show versions for the specified package names. Can be used to check versions for a specific app, or specified multiple times to filter for multiple apps.
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp -f com.google.android.youtube
+java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp -f com.google.android.youtube -f com.google.android.apps.youtube.music
 ```
 
 #### `-u`, `--count-unused-patches`:
@@ -1330,7 +1352,7 @@ Here is a quick lookup for all the flags under this subcommand:
 
 | Flag                           | Description                                            |
 |--------------------------------|--------------------------------------------------------|
-| `-p`, `--patches`              | Paths to .mpp files or GitHub or GitLab repo URLs      |
+| `--patches`                    | Paths to .mpp files, directories, or remote repos/PRs  |
 | `--prerelease`                 | Fetch latest dev pre-release instead of stable release |
 | `-o`, `--out`                  | Path to the output JSON file                           |
 | `-f`, `--filter-package-name`  | Filter patches by package name                         |
@@ -1341,10 +1363,11 @@ Required: Yes
 
 Default: -
 
-One or more paths to .mpp patch files or GitHub or GitLab repository URLs to generate options from. When a URL is provided, Morphe downloads the .mpp file and caches it for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests) to generate options from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. Multiple `-p` flags can be supplied to include options from multiple bundles in a single file. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p patches.mpp -o options.json
+java -jar morphe-desktop-*-all.jar options-create -p /path/to/patches/ -o options.json
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches -o options.json
 ```
 
@@ -1354,7 +1377,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release.
+When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches --prerelease -o options.json
@@ -1366,7 +1389,7 @@ Required: Yes
 
 Default: -
 
-Path to the output JSON file. If the file already exists, Morphe will merge the current patches into it - preserving your existing settings, adding new patches, and removing patches that no longer exist.
+Path to the output JSON file. If the file already exists, Morphe merges the current patches into it - preserving your existing settings, adding new patches, and removing patches that no longer exist. If the existing file is corrupted or contains invalid JSON, Morphe warns and regenerates a fresh options file.
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p patches.mpp -o options.json

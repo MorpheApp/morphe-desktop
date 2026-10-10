@@ -7,21 +7,28 @@ package app.morphe.gui.ui.screens.quick
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.morphe.engine.MorpheData
-import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.MorpheConstants
+import app.morphe.engine.PatchEngine
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.UpdateInfo
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
+import app.morphe.engine.apk.BundleFormats
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchedAppRecord
-import app.morphe.engine.util.ApkManifestReader
-import app.morphe.engine.util.ApkOutputNaming
-import app.morphe.engine.util.FileChecksum
+import app.morphe.engine.patches.PatchRepository
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.model.SupportedApp
+import app.morphe.engine.model.VersionResolution
+import app.morphe.engine.model.VersionStatus
+import app.morphe.engine.patches.SupportedAppCatalog
+import app.morphe.engine.patches.resolveVersionStatus
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.constants.AppConstants
-import app.morphe.gui.data.model.Patch
 import app.morphe.gui.data.model.PatchSource
-import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.UpdateCheckRepository
@@ -29,19 +36,11 @@ import app.morphe.gui.ui.screens.patching.LogEntry
 import app.morphe.gui.ui.screens.patching.LogLevel
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.EnabledSourcesLoader
-import app.morphe.gui.util.FileUtils
 import app.morphe.gui.util.FormatUtils
-import app.morphe.gui.util.Logger
-import app.morphe.gui.util.PatchResult
-import app.morphe.gui.util.PatchService
-import app.morphe.gui.util.PatcherLogInterceptor
 import app.morphe.gui.util.PatcherState
-import app.morphe.gui.util.SupportedAppExtractor
-import app.morphe.gui.util.VersionResolution
-import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.humanizePatchLoadError
-import app.morphe.gui.util.resolveVersionStatus
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.apk.ApkUtils
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
@@ -63,11 +62,10 @@ import org.jetbrains.compose.resources.getString
  */
 class QuickPatchViewModel(
     private val patchSourceManager: PatchSourceManager,
-    private val patchService: PatchService,
     private val configRepository: ConfigRepository,
     private val updateCheckRepository: UpdateCheckRepository,
-    private val patchedAppStore: PatchedAppStore = PatchedAppStore.shared,
     private val seenPatchesRepository: SeenPatchesRepository = SeenPatchesRepository(),
+    private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
 ) : ViewModel() {
 
     private var patchRepository: PatchRepository = patchSourceManager.getActiveRepositorySync()
@@ -82,7 +80,7 @@ class QuickPatchViewModel(
     private var isSplitApk = false
 
     // Cached dynamic data from patches
-    private var cachedPatches: List<Patch> = emptyList()
+    private var cachedPatches: List<PatchMetadata> = emptyList()
     private var cachedSupportedApps = emptyList<SupportedApp>()
     private var stateMachine: PatcherState? = null
     private var cachedPatchesFile: File? = null
@@ -215,19 +213,23 @@ class QuickPatchViewModel(
 
                 val result = EnabledSourcesLoader.loadAll(
                     listOf(pair),
-                    patchService,
-                    excludedMppPatterns = configRepository.loadConfig().excludedMppPatterns,
+                    excludedMppPatterns = engineConfigRepository.loadConfig().excludedMppPatterns,
                 )
 
                 if (!result.anyLoaded) {
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
                     val technicalError = firstThrowable?.message
                         ?: result.resolved.firstNotNullOfOrNull { it.error }
-                        ?: "Failed to load any patches"
+                    val logMessage = when {
+                        technicalError.isNullOrBlank() -> "Quick mode: Failed to load any patches"
+                        technicalError.startsWith("Quick mode:", ignoreCase = true) -> technicalError
+                        technicalError.startsWith("Failed to load", ignoreCase = true) -> "Quick mode: $technicalError"
+                        else -> "Quick mode: Failed to load any patches: $technicalError"
+                    }
                     if (firstThrowable != null) {
-                        Logger.error("Quick mode: Failed to load any patches: $technicalError", firstThrowable)
+                        Logger.error(logMessage, firstThrowable)
                     } else {
-                        Logger.warn("Quick mode: Failed to load any patches: $technicalError")
+                        Logger.warn(logMessage)
                     }
                     val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }
@@ -247,8 +249,8 @@ class QuickPatchViewModel(
                     return@launch
                 }
 
-                val supportedApps = SupportedAppExtractor.extractSupportedApps(result.unionGuiPatches)
-                cachedPatches = result.unionGuiPatches
+                val supportedApps = SupportedAppCatalog.extractSupportedAppsFromMetadata(result.unionPatches)
+                cachedPatches = result.unionPatches
                 cachedSupportedApps = supportedApps
                 val firstResolved = result.resolved.firstOrNull { it.patchFile != null }
                 cachedPatchesFile = firstResolved?.patchFile
@@ -312,7 +314,7 @@ class QuickPatchViewModel(
      * Handle file drop or selection.
      */
     fun onFilesDropped(files: List<File>) {
-        val apkFile = files.firstOrNull { FileUtils.isApkFile(it) }
+        val apkFile = files.firstOrNull { BundleFormats.isApkOrBundle(it) }
         if (apkFile != null) {
             onFileSelected(apkFile)
         } else {
@@ -353,28 +355,19 @@ class QuickPatchViewModel(
      * Analyze the APK file using dynamic data from patches.
      */
     private suspend fun analyzeApk(file: File): QuickApkInfo? = withContext(Dispatchers.IO) {
-        if (!file.exists() || !FileUtils.isApkFile(file)) {
+        if (!file.exists() || !BundleFormats.isApkOrBundle(file)) {
             _uiState.value = _uiState.value.copy(error = getString(Res.string.error_drop_valid_apk))
             return@withContext null
         }
 
-        // For split APK bundles (.apkm, .xapk, .apks), extract base.apk first
-        val isBundleFormat = FileUtils.isBundleFormat(file)
-        val apkToParse = if (isBundleFormat) {
-            FileUtils.extractBaseApkFromBundle(file) ?: run {
-                _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_extract_base_apk_failed))
-                return@withContext null
-            }
-        } else {
-            file
+        val inspection = ApkInspector.inspect(file) ?: run {
+            _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_analyze_apk_failed))
+            return@withContext null
         }
 
         try {
-            val manifest = ApkManifestReader.read(apkToParse)
-                ?: throw IllegalStateException("ARSCLib couldn't read manifest")
-
-            val packageName = manifest.packageName
-            val versionName = manifest.versionName ?: getString(Res.string.unknown)
+            val packageName = inspection.packageName
+            val versionName = inspection.versionName ?: getString(Res.string.unknown)
 
             // Check if supported using dynamic data
             val dynamicAppInfo = cachedSupportedApps.find { it.packageName == packageName }
@@ -382,15 +375,15 @@ class QuickPatchViewModel(
             if (dynamicAppInfo == null) {
                 // Fallback to hardcoded check if patches not loaded yet
                 val supportedPackages = if (cachedSupportedApps.isEmpty()) {
-                    AppConstants.FALLBACK_PACKAGES
+                    MorpheConstants.FALLBACK_PACKAGES
                 } else {
                     cachedSupportedApps.map { it.packageName }
                 }
 
                 if (packageName !in supportedPackages) {
-                    val appName = SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
+                    val appName = SupportedApp.resolveDisplayName(packageName, inspection.applicationLabel)
                     val supportedNames = cachedSupportedApps.map { it.displayName }
-                        .ifEmpty { AppConstants.FALLBACK_PACKAGES.map(SupportedApp::getDisplayName) }
+                        .ifEmpty { MorpheConstants.FALLBACK_PACKAGES.map(SupportedApp::getDisplayName) }
                         .joinToString(", ")
                     _uiState.value = _uiState.value.copy(
                         error = getString(Res.string.quick_patch_unsupported_app_error, appName, supportedNames),
@@ -403,7 +396,7 @@ class QuickPatchViewModel(
 
             // Get display name and recommended version from dynamic data, fallback to constants
             val displayName = dynamicAppInfo?.displayName
-                ?: SupportedApp.resolveDisplayName(packageName, manifest.applicationLabel)
+                ?: SupportedApp.resolveDisplayName(packageName, inspection.applicationLabel)
 
             val useExperimental = patchSourceManager.getActiveSource().useExperimentalVersions
             val hasExperimental = dynamicAppInfo?.experimentalVersions?.isNotEmpty() == true
@@ -417,7 +410,7 @@ class QuickPatchViewModel(
             // Resolve version status against the supported app's stable +
             // experimental version lists.
             val versionResolution = if (dynamicAppInfo != null) {
-                resolveVersionStatus(versionName, dynamicAppInfo, manifest.versionCode)
+                resolveVersionStatus(versionName, dynamicAppInfo, inspection.versionCode)
             } else {
                 VersionResolution(VersionStatus.UNKNOWN, null)
             }
@@ -449,16 +442,16 @@ class QuickPatchViewModel(
             // TODO: Re-enable when checksums are provided via .mpp files
             val checksumStatus = ChecksumStatus.NotConfigured
 
-            val architectures = FileUtils.extractArchitectures(if (isBundleFormat) file else apkToParse)
-            val minSdk = manifest.minSdkVersion
+            val architectures = inspection.architectures.toList()
+            val minSdk = inspection.minSdkVersion
 
-            Logger.info("Quick mode: Analyzed $displayName v${manifest.versionName ?: "unknown"} (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
+            Logger.info("Quick mode: Analyzed $displayName v${inspection.versionName ?: "unknown"} (recommended: $recommendedVersion, status: $versionStatus, archs: $architectures)")
 
             QuickApkInfo(
                 fileName = file.name,
                 packageName = packageName,
                 versionName = versionName,
-                versionCode = manifest.versionCode,
+                versionCode = inspection.versionCode,
                 fileSize = file.length(),
                 displayName = displayName,
                 recommendedVersion = recommendedVersion,
@@ -470,12 +463,12 @@ class QuickPatchViewModel(
                 architectures = architectures,
                 minSdk = minSdk
             )
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Logger.error("Quick mode: Failed to analyze APK", e)
             _uiState.value = _uiState.value.copy(error = getString(Res.string.quick_patch_read_apk_failed, e.message ?: ""))
             null
-        } finally {
-            if (isBundleFormat) apkToParse.delete()
         }
     }
 
@@ -547,148 +540,20 @@ class QuickPatchViewModel(
             // Generate output path via the shared engine helper, the same path
             // the CLI and Expert mode compute. Passing apkInfo.displayName
             // as the display name preserves the friendly label.
-            val appConfig = configRepository.loadConfig()
+            val engineConfigData = engineConfigRepository.loadConfig()
             val outputPath = ApkOutputNaming.outputApkPath(
                 inputApk = apkFile,
                 patchesFile = patchFile,
-                baseOutputDir = appConfig.resolvedDefaultOutputDirectory(),
+                baseOutputDir = engineConfigData.resolvedDefaultOutputDirectory(),
                 appDisplayName = apkInfo.displayName,
                 appVersion = apkInfo.versionName,
             ).absolutePath
 
-            // Resolve keystore. See PatchingViewModel for the full rationale.
-            // User-configured: use it, and fail loudly if missing.
-            // Default: shared MorpheData keystore, auto-created on first sign.
-            val userKeystore = appConfig.resolvedKeystorePath()
-            if (userKeystore != null && !userKeystore.exists()) {
-                val rawMsg = "Keystore file not found at ${userKeystore.absolutePath}"
-                val uiMsg = getString(Res.string.settings_dialog_error_keystore_not_found, userKeystore.absolutePath)
-                _uiState.value = _uiState.value.copy(phase = QuickPatchPhase.READY, error = uiMsg)
-                Logger.error("Quick patching aborted: $rawMsg")
-                return@launch
-            }
-            val resolvedKeystorePath = (userKeystore ?: MorpheData.defaultKeystoreFile).absolutePath
+            // Keystore: pass user-configured keystore if present, or null to let PatchEngine
+            // use the shared MorpheData default keystore.
+            val keystoreDetails = engineConfigData.toKeyStoreDetails()
 
-            // Intercept internal library logs to drive the Rebuild phase progress bar
-            val logHandler = PatcherLogInterceptor.attach { message ->
-                val level = when {
-                    message.startsWith("ERROR:") -> LogLevel.ERROR
-                    message.startsWith("WARNING:") -> LogLevel.WARNING
-                    else -> LogLevel.INFO
-                }
-                val entry = LogEntry(message, level)
-                _uiState.value = _uiState.value.copy(logs = _uiState.value.logs + entry)
-                parseProgress(message)
-            }
-
-            val patchResult = try {
-                // exclusiveMode = false means the library's patch.use field determines defaults
-                patchService.patch(
-                    patchesFilePaths = currentResolvedPatchFiles().map { it.absolutePath },
-                    inputApkPath = apkFile.absolutePath,
-                    outputApkPath = outputPath,
-                    enabledPatches = emptyList(),
-                    disabledPatches = emptyList(),
-                    options = emptyMap(),
-                    exclusiveMode = false,
-                    keystorePath = resolvedKeystorePath,
-                    keystorePassword = appConfig.keystorePassword,
-                    keystoreAlias = appConfig.keystoreAlias,
-                    keystoreEntryPassword = appConfig.keystoreEntryPassword,
-                    onProgress = { message ->
-                        val entry = LogEntry(message, LogLevel.INFO)
-                        _uiState.value = _uiState.value.copy(
-                            statusMessage = message.take(60),
-                            logs = _uiState.value.logs + entry
-                        )
-                        parseProgress(message)
-                    }
-                )
-            } finally {
-                PatcherLogInterceptor.detach(logHandler)
-            }
-
-            patchResult.fold(
-                onSuccess = { result ->
-                    if (result.success) {
-                        // Force 100% progress immediately upon engine success
-                        _uiState.value = _uiState.value.copy(
-                            progress = 1.0f,
-                            statusMessage = "",
-                            isAllStepsDone = true
-                        )
-
-                        // Delay transition so the 90% -> 100% animation can visually finish
-                        delay(1500.milliseconds)
-
-                        _uiState.value = _uiState.value.copy(
-                            phase = QuickPatchPhase.COMPLETED,
-                            outputPath = outputPath,
-                            progress = 1f,
-                            statusMessage = ""
-                        )
-                        Logger.info("Quick mode: Patching completed - $outputPath (${result.appliedPatches.size} patches)")
-                        recordPatchedApp(result, apkFile.absolutePath, outputPath, apkInfo.displayName)
-                        recordSeenPatches(apkInfo.packageName)
-                    } else {
-                        val errorMsg = result.failureDetail ?: result.getLocalizedFailureReason()
-                            ?: getString(Res.string.error_patching_unknown)
-                        _uiState.value = _uiState.value.copy(
-                            phase = QuickPatchPhase.ERROR,
-                            error = errorMsg
-                        )
-                    }
-                },
-                onFailure = { e ->
-                    val exceptionStr = e.stackTraceToString()
-                    val newLogs = _uiState.value.logs + LogEntry(exceptionStr, LogLevel.ERROR)
-                    _uiState.value = _uiState.value.copy(
-                        phase = QuickPatchPhase.ERROR,
-                        error = getString(Res.string.error_patching_general, e.message ?: ""),
-                        logs = newLogs
-                    )
-                }
-            )
-        }
-    }
-
-    /**
-     * Record this quick-mode patch in the shared patched-app history.
-     * Best-effort: a write failure must never disrupt the success UX. Quick mode
-     * uses the default patch set, so no per-bundle selection is captured.
-     */
-    /**
-     * Snapshot what each source offered for this app, so expert mode can tell a
-     * genuinely new patch from one the user has already seen.
-     */
-    private suspend fun recordSeenPatches(packageName: String) {
-        val sources = cachedSourcesResult?.resolved ?: return
-        sources.forEach { resolved ->
-            val path = resolved.patchFile?.absolutePath ?: return@forEach
-            val names = patchService.listPatches(path, packageName).getOrNull()
-                ?.mapTo(mutableSetOf()) { it.name }
-                ?: return@forEach
-            seenPatchesRepository.save(packageName, resolved.source.name, names)
-        }
-    }
-
-    private suspend fun recordPatchedApp(
-        result: PatchResult,
-        inputApkPath: String,
-        outputApkPath: String,
-        displayName: String,
-    ) {
-        try {
-            val pkg = result.packageName
-            if (pkg.isEmpty()) return
-            val (sha, size) = withContext(Dispatchers.IO) {
-                FileChecksum.fingerprintOrNull(outputApkPath)
-            }
-            val manifest = withContext(Dispatchers.IO) {
-                runCatching { ApkManifestReader.read(File(outputApkPath)) }.getOrNull()
-            }
-            // Must be the configured source name: every update lookup keys off it,
-            // and a bundle filename never matches one.
+            // Resolve sources snapshot for history recording
             val resolvedSources = cachedSourcesResult?.resolved?.filter { it.patchFile != null }
             val sources = if (!resolvedSources.isNullOrEmpty()) {
                 resolvedSources.map { r ->
@@ -709,26 +574,117 @@ class QuickPatchViewModel(
                     )
                 }
             }
-            patchedAppStore.upsert(
-                PatchedAppRecord(
-                    packageName = pkg,
-                    currentPackageName = manifest?.packageName,
-                    displayName = displayName.ifEmpty { pkg },
-                    // Prefer the manifest's versionName (e.g. "21.20.400") over the numeric
-                    // versionCode so update-detection version comparisons work.
-                    apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: result.packageVersion,
-                    apkVersionCode = manifest?.versionCode,
-                    inputApkPath = inputApkPath,
-                    outputApkPath = outputApkPath,
-                    outputApkSha256 = sha,
-                    outputApkSize = size,
+
+            val engineConfig = PatchEngine.Config(
+                inputApk = apkFile,
+                outputApk = File(outputPath),
+                patchFiles = currentResolvedPatchFiles(),
+                enabledPatches = emptySet(),
+                disabledPatches = emptySet(),
+                exclusiveMode = false,
+                forceCompatibility = true,
+                failOnError = true,
+                disablePurge = !engineConfigData.autoCleanupTempFiles,
+                keystoreDetails = keystoreDetails,
+                recordHistory = true,
+                appDisplayName = apkInfo.displayName,
+                historyMetadata = PatchEngine.HistoryMetadata(
+                    originalPackageName = apkInfo.packageName,
+                    displayName = apkInfo.displayName,
                     sourcesSnapshot = sources,
-                    patchedAt = System.currentTimeMillis(),
-                    patchedWithMorpheVersion = UpdateChecker.currentVersion() ?: "unknown",
-                )
+                ),
             )
-        } catch (e: Exception) {
-            Logger.error("Failed to record patched app (quick mode)", e)
+
+            val engineResult = try {
+                PatchEngine.patch(
+                    config = engineConfig,
+                    onProgress = { message ->
+                        if (_uiState.value.phase == QuickPatchPhase.PATCHING) {
+                            val (cleanMessage, level) = when {
+                                message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
+                                message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
+                                message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
+                                message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
+                                else -> message to LogLevel.INFO
+                            }
+                            when (level) {
+                                LogLevel.ERROR -> Logger.error(cleanMessage)
+                                LogLevel.WARNING -> Logger.warn(cleanMessage)
+                                LogLevel.INFO -> Logger.info(cleanMessage)
+                            }
+                            viewModelScope.launch(Dispatchers.Main) {
+                                val entry = LogEntry(cleanMessage, level)
+                                _uiState.value = _uiState.value.copy(
+                                    statusMessage = cleanMessage.take(60),
+                                    logs = _uiState.value.logs + entry
+                                )
+                                parseProgress(cleanMessage)
+                            }
+                        }
+                    }
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                val exceptionStr = e.stackTraceToString()
+                val newLogs = _uiState.value.logs + LogEntry(exceptionStr, LogLevel.ERROR)
+                _uiState.value = _uiState.value.copy(
+                    phase = QuickPatchPhase.ERROR,
+                    error = getString(Res.string.error_patching_general, e.message ?: ""),
+                    logs = newLogs
+                )
+                return@launch
+            }
+
+            if (_uiState.value.phase != QuickPatchPhase.PATCHING) return@launch
+
+            if (engineResult.success) {
+                // Force 100% progress immediately upon engine success
+                _uiState.value = _uiState.value.copy(
+                    progress = 1.0f,
+                    statusMessage = "",
+                    isAllStepsDone = true
+                )
+
+                // Delay transition so the 90% -> 100% animation can visually finish
+                delay(1500.milliseconds)
+
+                _uiState.value = _uiState.value.copy(
+                    phase = QuickPatchPhase.COMPLETED,
+                    outputPath = outputPath,
+                    progress = 1f,
+                    statusMessage = ""
+                )
+                Logger.info("Quick mode: Patching completed - $outputPath (${engineResult.appliedPatches.size} patches)")
+                recordSeenPatches(apkInfo.packageName)
+            } else {
+                val errorMsg = engineResult.failureDetail
+                    ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
+                        val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
+                        getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
+                    }
+                    ?: engineResult.failureReason
+                    ?: getString(Res.string.error_patching_unknown)
+                _uiState.value = _uiState.value.copy(
+                    phase = QuickPatchPhase.ERROR,
+                    error = errorMsg
+                )
+            }
+        }
+    }
+
+    /**
+     * Snapshot what each source offered for this app, so expert mode can tell a
+     * genuinely new patch from one the user has already seen.
+     */
+    private suspend fun recordSeenPatches(packageName: String) {
+        val sources = cachedSourcesResult?.resolved ?: return
+        sources.forEach { resolved ->
+            val path = resolved.patchFile?.absolutePath ?: return@forEach
+            val names = runCatching { SupportedAppCatalog.loadPatches(File(path), packageName) }.getOrNull()
+                ?.mapTo(mutableSetOf()) { it.name }
+                ?: return@forEach
+            seenPatchesRepository.save(packageName, resolved.source.name, names)
         }
     }
 
@@ -738,6 +694,7 @@ class QuickPatchViewModel(
      */
     @Synchronized
     private fun parseProgress(line: String) {
+        if (_uiState.value.phase != QuickPatchPhase.PATCHING) return
         val currentState = _uiState.value
         
         // Detect Split APK dynamically based on CLI lines if not already set
@@ -874,12 +831,12 @@ data class QuickPatchUiState(
     val isLoadingPatches: Boolean = true,
     val supportedApps: List<SupportedApp> = emptyList(),
     val patchesVersion: String? = null,
-    val patchesChannel: EnabledSourcesLoader.Channel? = null,
+    val patchesChannel: PatchResolver.Channel? = null,
     val patchSourceName: String? = null,
     val patchLoadError: String? = null,
     val isOffline: Boolean = false,
     // Compatible patches for the loaded APK
-    val compatiblePatches: List<Patch> = emptyList(),
+    val compatiblePatches: List<PatchMetadata> = emptyList(),
     val updateInfo: UpdateInfo? = null,
     val dismissedUpdateVersion: String? = null,
     val updateBannerSessionDismissed: Boolean = false,

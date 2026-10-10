@@ -1,3 +1,17 @@
+## [1.18.2-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.1...v1.18.2-dev.2) (2026-10-10)
+
+
+### Bug Fixes
+
+* Revert skiko dependency update ([d17e3ad](https://github.com/MorpheApp/morphe-desktop/commit/d17e3ad929e0d53854ca75fa0dd2021b3a42313c))
+
+## [1.18.2-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.1...v1.18.2-dev.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* Unify CLI & GUI logic into engine ([#343](https://github.com/MorpheApp/morphe-desktop/issues/343)) ([5390323](https://github.com/MorpheApp/morphe-desktop/commit/5390323465cb1b8aae87498c34c0c02fdd9d3b1c))
+
 ## [1.18.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.0...v1.18.1) (2026-10-05)
 
 
