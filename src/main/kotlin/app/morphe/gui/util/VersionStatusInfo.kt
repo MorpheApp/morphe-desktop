@@ -8,6 +8,7 @@ package app.morphe.gui.util
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

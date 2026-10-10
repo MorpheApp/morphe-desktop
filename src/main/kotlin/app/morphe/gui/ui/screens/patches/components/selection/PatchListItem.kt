@@ -50,7 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.data.model.Patch
+import app.morphe.engine.model.PatchMetadata
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
 import app.morphe.gui.ui.components.handCursor
@@ -67,7 +67,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun PatchListItem(
-    patch: Patch,
+    patch: PatchMetadata,
     isSelected: Boolean,
     onToggle: () -> Unit,
     isNew: Boolean = false,

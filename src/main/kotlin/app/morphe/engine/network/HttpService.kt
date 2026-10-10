@@ -6,6 +6,7 @@
 package app.morphe.engine.network
 
 import app.morphe.engine.GitHubPatMissingException
+import app.morphe.engine.util.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
@@ -24,7 +25,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.logging.Logger
 import java.util.zip.ZipInputStream
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
@@ -59,8 +59,6 @@ class HttpService(
     @PublishedApi internal val http: HttpClient,
     @PublishedApi internal val json: Json = Json { ignoreUnknownKeys = true },
 ) {
-    @PublishedApi
-    internal val logger: Logger = Logger.getLogger(HttpService::class.java.name)
 
     /**
      * GET [url] and decode the body to [T].
@@ -370,17 +368,17 @@ class HttpService(
                     throw HttpException(HttpStatusCode.TooManyRequests, operation, cause = t)
                 }
                 val wait = (t.retryAfterMillis ?: delayMs).coerceAtMost(MAX_RETRY_DELAY_MS)
-                logger.warning("$operation hit 429 (attempt $attempt/$MAX_RETRY_ATTEMPTS), waiting ${wait}ms")
+                Logger.warn("$operation hit 429 (attempt $attempt/$MAX_RETRY_ATTEMPTS), waiting ${wait}ms")
                 delay(wait.milliseconds)
                 delayMs = (delayMs * 2).coerceAtMost(MAX_RETRY_DELAY_MS)
             } catch (t: HttpException) {
                 if (!t.isRetryable || attempt >= MAX_RETRY_ATTEMPTS) throw t
-                logger.warning("$operation attempt $attempt: retryable HTTP error: ${t.message}")
+                Logger.warn("$operation attempt $attempt: retryable HTTP error: ${t.message}")
                 delay(delayMs.milliseconds)
                 delayMs = (delayMs * 2).coerceAtMost(MAX_RETRY_DELAY_MS)
             } catch (t: Exception) {
                 if (attempt >= MAX_RETRY_ATTEMPTS) throw t
-                logger.warning("$operation attempt $attempt failed: ${t::class.simpleName}: ${t.message}")
+                Logger.warn("$operation attempt $attempt failed: ${t::class.simpleName}: ${t.message}")
                 delay(delayMs.milliseconds)
                 delayMs = (delayMs * 2).coerceAtMost(MAX_RETRY_DELAY_MS)
             }
@@ -417,7 +415,22 @@ class HttpService(
             append("HTTP request failed")
             if (status != null) append(" with status $status")
             if (requestUrl != null) append(" for $requestUrl")
-            if (responseBodySnippet != null) append(": ${responseBodySnippet.take(200)}")
+            if (responseBodySnippet != null) {
+                val trimmed = responseBodySnippet.trim()
+                val snippet = if (trimmed.startsWith("<")) {
+                    Regex("<title>(.*?)</title>", RegexOption.IGNORE_CASE)
+                        .find(trimmed)?.groupValues?.get(1)?.trim()
+                        ?: "HTML response"
+                } else {
+                    val formatted = runCatching {
+                        Json.parseToJsonElement(trimmed).toString()
+                    }.getOrElse {
+                        trimmed.replace(Regex("\\s+"), " ")
+                    }
+                    formatted.take(300)
+                }
+                append(": $snippet")
+            }
         },
         cause,
     ) {

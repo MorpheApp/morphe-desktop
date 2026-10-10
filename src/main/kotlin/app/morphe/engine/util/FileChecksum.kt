@@ -9,10 +9,7 @@ import java.io.File
 import java.security.MessageDigest
 
 /**
- * Canonical file-hashing used across the engine, CLI, and GUI. Lives in the
- * engine layer so non-GUI callers (CLI patch recording, patched-app integrity
- * checks) don't have to depend on `gui.util`. The GUI's `ChecksumUtils`
- * delegates here so there's one implementation.
+ * Canonical file-hashing used across the engine, CLI, and GUI.
  */
 object FileChecksum {
 

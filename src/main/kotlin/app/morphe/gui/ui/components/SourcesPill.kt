@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheAccents
@@ -120,11 +121,11 @@ fun SourcesCountPill(
 private fun SourceLed(state: SourceLedState) {
     val color = when (state) {
         SourceLedState.DISABLED -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-        SourceLedState.STABLE_LATEST -> channelColor(EnabledSourcesLoader.Channel.STABLE_LATEST)
-        SourceLedState.STABLE_OLDER -> channelColor(EnabledSourcesLoader.Channel.STABLE_OLDER)
-        SourceLedState.DEV_LATEST -> channelColor(EnabledSourcesLoader.Channel.DEV_LATEST)
-        SourceLedState.DEV_OLDER -> channelColor(EnabledSourcesLoader.Channel.DEV_OLDER)
-        SourceLedState.LOCAL -> channelColor(EnabledSourcesLoader.Channel.LOCAL)
+        SourceLedState.STABLE_LATEST -> channelColor(Channel.STABLE_LATEST)
+        SourceLedState.STABLE_OLDER -> channelColor(Channel.STABLE_OLDER)
+        SourceLedState.DEV_LATEST -> channelColor(Channel.DEV_LATEST)
+        SourceLedState.DEV_OLDER -> channelColor(Channel.DEV_OLDER)
+        SourceLedState.LOCAL -> channelColor(Channel.LOCAL)
         SourceLedState.ERROR -> MaterialTheme.colorScheme.error
     }
     Box(
@@ -137,7 +138,7 @@ private fun SourceLed(state: SourceLedState) {
 /** Map a [PatchSource] + its resolved channel to a UI LED state. */
 fun sourceLedState(
     source: PatchSource,
-    channel: EnabledSourcesLoader.Channel?,
+    channel: Channel?,
     hasError: Boolean = false,
 ): SourceLedState {
     if (!source.enabled) return SourceLedState.DISABLED
@@ -145,11 +146,11 @@ fun sourceLedState(
     // LOCAL) but failed to load should read red, not its channel color.
     if (hasError) return SourceLedState.ERROR
     return when (channel) {
-        EnabledSourcesLoader.Channel.STABLE_LATEST -> SourceLedState.STABLE_LATEST
-        EnabledSourcesLoader.Channel.STABLE_OLDER -> SourceLedState.STABLE_OLDER
-        EnabledSourcesLoader.Channel.DEV_LATEST -> SourceLedState.DEV_LATEST
-        EnabledSourcesLoader.Channel.DEV_OLDER -> SourceLedState.DEV_OLDER
-        EnabledSourcesLoader.Channel.LOCAL -> SourceLedState.LOCAL
-        null, EnabledSourcesLoader.Channel.UNKNOWN -> SourceLedState.STABLE_LATEST
+        Channel.STABLE_LATEST -> SourceLedState.STABLE_LATEST
+        Channel.STABLE_OLDER -> SourceLedState.STABLE_OLDER
+        Channel.DEV_LATEST -> SourceLedState.DEV_LATEST
+        Channel.DEV_OLDER -> SourceLedState.DEV_OLDER
+        Channel.LOCAL -> SourceLedState.LOCAL
+        null, Channel.UNKNOWN -> SourceLedState.STABLE_LATEST
     }
 }
