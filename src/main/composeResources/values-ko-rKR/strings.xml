@@ -185,7 +185,7 @@
     <string name="quick_patch_warning_too_new">버전이 너무 최신입니다 - 공식 지원되지 않으며 패치가 실패할 가능성이 높습니다</string>
     <string name="quick_patch_warning_too_old">버전이 너무 오래됨 - 공식 지원되지 않으며 패치가 실패할 가능성이 높습니다</string>
     <string name="quick_patch_warning_unsupported_between">지원되지 않는 버전 - 패치가 실패할 가능성이 높습니다</string>
-    <string name="quick_patch_read_apk_failed">APK를 읽지 못했습니다: %1$s</string>
+    <string name="quick_patch_read_apk_failed">APK을 읽을 수 없습니다: %1$s</string>
     <string name="quick_patch_status_preparing_patches">패치를 준비하는 중…</string>
     <string name="quick_patch_fetch_patches_failed">패치를 가져오지 못하였습니다. 인터넷 연결을 확인하세요</string>
     <string name="quick_patch_status_downloading_patches">패치 %1$s를 다운로드하는 중…</string>
@@ -195,18 +195,18 @@
     <string name="quick_patch_completed_adb_connect_device">ADB로 설치하려면 USB로 기기를 연결하세요</string>
     <string name="quick_patch_error_unknown_occurred">알 수 없는 오류가 발생하였습니다</string>
     <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK 분석 중…</string>
+    <string name="quick_patch_idle_analyzing">APK를 분석하는 중…</string>
     <string name="quick_patch_patching_patches_count"> %1$d / %2$d  개의 패치</string>
     <string name="quick_patch_patching_slow_warning">평소보다 오래 걸리고 있습니다. 잠시 기다려 주세요…</string>
     <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
+    <string name="quick_patch_ready_version_build">(빌드 %1$d)</string>
     <string name="quick_patch_ready_no_compatible_patches">이 앱에 호환되는 패치가 없습니다</string>
     <string name="quick_patch_ready_no_matching_patches">'%1$s'에 해당하는 패치가 없습니다</string>
     <string name="quick_patch_ready_patch_with_defaults">기본값으로 패치</string>
     <!-- Quick Patch - Supported Apps Row -->
     <string name="quick_patch_supported_apps_title">지원되는 앱</string>
     <string name="quick_patch_supported_apps_subtitle">지원되는 앱의 정확한 APK 버전을 여기에 놓으세요</string>
-    <string name="quick_patch_supported_apps_loading">지원되는 앱 불러오는 중…</string>
+    <string name="quick_patch_supported_apps_loading">지원되는 앱을 불러오는 중…</string>
     <string name="quick_patch_supported_apps_load_error">지원되는 앱을 불러올 수 없습니다</string>
     <string name="quick_patch_supported_apps_change_source">소스 변경</string>
     <string name="quick_patch_supported_apps_no_matches">일치하는 앱이 없음</string>
@@ -238,7 +238,7 @@
     <string name="home_stage_reading_metadata">앱 메타데이터를 읽는 중…</string>
     <!-- Home Screen - Dialogs -->
     <string name="home_dialog_forget_button">잊기</string>
-    <string name="home_dialog_uninstall_button">설치 제거</string>
+    <string name="home_dialog_uninstall_button">제거</string>
     <string name="home_dialog_continue_anyway">그래도 계속</string>
     <string name="home_dialog_forget_title">%1$s를 잊을까요?</string>
     <string name="home_dialog_forget_message">그러면 패치된 앱 기록에서 %1$s가 제거됩니다. 어떤 파일도 건드리지 않으며, 앱을 다시 패치하면 다시 추가됩니다</string>

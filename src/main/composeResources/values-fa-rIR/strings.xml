@@ -86,6 +86,7 @@
     <string name="home_action_install">نصب</string>
     <string name="home_action_installing">در حال نصب…</string>
     <string name="home_action_update">به‌روزرسانی</string>
+    <string name="home_detail_downloading_patch">درحال دانلود %1$s</string>
     <string name="home_detail_downloading_percent">درحال دانلود %1$d%</string>
     <string name="home_detail_details_title">جزئیات</string>
     <string name="home_detail_section_options">گزینه‌ها</string>
