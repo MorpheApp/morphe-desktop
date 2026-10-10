@@ -32,7 +32,7 @@ jna = "5.19.1"
 filekit = "0.16.0"
 
 # Bootstrap GUI
-skiko = "0.153.0"
+skiko = "0.150.1"
 materialIcons = "1.7.3"
 
 # Testing
