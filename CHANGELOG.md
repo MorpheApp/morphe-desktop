@@ -1,3 +1,10 @@
+## [1.18.2-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.3...v1.18.2-dev.4) (2026-10-11)
+
+
+### Bug Fixes
+
+* Eliminate UI freezes across screens, dialogs, and keystore actions ([#354](https://github.com/MorpheApp/morphe-desktop/issues/354)) ([2bbce0c](https://github.com/MorpheApp/morphe-desktop/commit/2bbce0cb4de192c32c8c7896524350a0f8cd89ea))
+
 ## [1.18.2-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.2...v1.18.2-dev.3) (2026-10-11)
 
 
