@@ -44,6 +44,7 @@ import app.morphe.gui.util.getUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -174,12 +175,14 @@ internal fun CompletedContent(
                                 )
                                 .handCursor()
                                 .clickable {
-                                    try {
-                                        val folder = outputFile.parentFile
-                                        if (folder != null && Desktop.isDesktopSupported()) {
-                                            Desktop.getDesktop().open(folder)
-                                        }
-                                    } catch (_: Exception) {}
+                                    scope.launch(Dispatchers.IO) {
+                                        try {
+                                            val folder = outputFile.parentFile
+                                            if (folder != null && Desktop.isDesktopSupported()) {
+                                                Desktop.getDesktop().open(folder)
+                                            }
+                                        } catch (_: Exception) {}
+                                    }
                                 }
                                 .padding(horizontal = 14.dp, vertical = 8.dp),
                             contentAlignment = Alignment.Center

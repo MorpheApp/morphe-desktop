@@ -36,12 +36,41 @@ class LanguageRepository {
     fun getSupportedLanguages(appLanguageCode: String = SYSTEM_CODE): List<LanguageOption> = getOptionsForLocale(appLanguageCode)
 
     /**
+     * Returns the cached list of supported languages if already computed for [appLanguageCode], or null.
+     */
+    fun getCachedLanguages(appLanguageCode: String = SYSTEM_CODE): List<LanguageOption>? {
+        val targetLocale = if (appLanguageCode.isBlank() || appLanguageCode.equals(SYSTEM_CODE, ignoreCase = true)) {
+            Locale.getDefault()
+        } else {
+            Locale.forLanguageTag(appLanguageCode)
+        }
+        return if (lastTargetLocale == targetLocale) cachedOptions else null
+    }
+
+    /**
      * Finds a [LanguageOption] by its language code, falling back to the System option if not found.
      */
     fun getLanguageByCode(code: String, appLanguageCode: String = SYSTEM_CODE): LanguageOption {
-        val options = getOptionsForLocale(appLanguageCode)
-        return options.firstOrNull { it.code.equals(code, ignoreCase = true) }
-            ?: options.first()
+        if (code.isBlank() || code.equals(SYSTEM_CODE, ignoreCase = true)) {
+            return LanguageOption(
+                code = SYSTEM_CODE,
+                displayName = "System",
+                nativeName = "System",
+                flag = "🌐"
+            )
+        }
+        val locale = Locale.forLanguageTag(code)
+        val targetLocale = if (appLanguageCode.isBlank() || appLanguageCode.equals(SYSTEM_CODE, ignoreCase = true)) {
+            Locale.getDefault()
+        } else {
+            Locale.forLanguageTag(appLanguageCode)
+        }
+        return LanguageOption(
+            code = code,
+            displayName = formatDisplayName(locale, targetLocale),
+            nativeName = formatDisplayName(locale, locale),
+            flag = flagForLocale(locale)
+        )
     }
 
     /**
@@ -130,6 +159,22 @@ class LanguageRepository {
             return name
         }
 
+        private data class InvariantLanguageEntry(
+            val tag: String,
+            val locale: Locale,
+            val nativeName: String,
+            val flag: String,
+        )
+
+        private val INVARIANT_LANGUAGE_ENTRIES: List<InvariantLanguageEntry> by lazy {
+            SUPPORTED_LANGUAGE_TAGS.map { tag ->
+                val locale = Locale.forLanguageTag(tag)
+                val nativeName = formatDisplayName(locale, locale)
+                val flag = flagForLocale(locale)
+                InvariantLanguageEntry(tag, locale, nativeName, flag)
+            }
+        }
+
         private fun buildLanguageOptions(targetLocale: Locale): List<LanguageOption> {
             val systemOption = LanguageOption(
                 code = SYSTEM_CODE,
@@ -138,17 +183,13 @@ class LanguageRepository {
                 flag = "🌐"
             )
 
-            val parsedOptions = SUPPORTED_LANGUAGE_TAGS.map { tag ->
-                val locale = Locale.forLanguageTag(tag)
-                val displayName = formatDisplayName(locale, targetLocale)
-
-                val nativeName = formatDisplayName(locale, locale)
-                val flag = flagForLocale(locale)
+            val parsedOptions = INVARIANT_LANGUAGE_ENTRIES.map { entry ->
+                val displayName = formatDisplayName(entry.locale, targetLocale)
                 LanguageOption(
-                    code = tag,
+                    code = entry.tag,
                     displayName = displayName,
-                    nativeName = nativeName,
-                    flag = flag
+                    nativeName = entry.nativeName,
+                    flag = entry.flag
                 )
             }
 

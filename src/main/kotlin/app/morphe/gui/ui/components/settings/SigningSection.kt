@@ -9,6 +9,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,7 +48,10 @@ import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
@@ -81,8 +85,11 @@ internal fun SigningSection(
     var showKeystoreInfo by remember { mutableStateOf(false) }
     var keystoreError by remember { mutableStateOf<String?>(null) }
 
+    var keystoreExistsTrigger by remember { mutableStateOf(0) }
     val keystoreFile = keystorePath?.let { File(it) }
-    val keystoreExists = keystoreFile?.exists() == true
+    val keystoreExists = remember(keystorePath, keystoreExistsTrigger) {
+        keystoreFile?.exists() == true
+    }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         CollapsibleSection(
@@ -147,12 +154,14 @@ internal fun SigningSection(
                             // (original user file is never mutated). The config
                             // then points at whichever file is BKS. The patcher
                             // only speaks BKS, so this is the only safe input.
-                            val result = KeystoreImporter.ensureBks(
-                                source = selected,
-                                convertedOutput = MorpheData.importedKeystoreFile,
-                                alias = keystoreAlias,
-                                password = keystoreEntryPassword,
-                            )
+                            val result = withContext(Dispatchers.IO) {
+                                KeystoreImporter.ensureBks(
+                                    source = selected,
+                                    convertedOutput = MorpheData.importedKeystoreFile,
+                                    alias = keystoreAlias,
+                                    password = keystoreEntryPassword,
+                                )
+                            }
                             when (result) {
                                 is KeystoreImporter.Result.AlreadyBks -> {
                                     keystoreError = null
@@ -388,37 +397,46 @@ internal fun SigningSection(
         // Verify credentials button
         var verifyResult by remember { mutableStateOf<String?>(null) }
         var verifySuccess by remember { mutableStateOf(false) }
+        var isVerifying by remember { mutableStateOf(false) }
 
         if (keystoreExists) {
             Spacer(Modifier.height(6.dp))
             OutlinedButton(
                 onClick = {
+                    val file = keystoreFile ?: return@OutlinedButton
                     verifyResult = null
                     verifySuccess = false
+                    isVerifying = true
                     scope.launch {
-                        val result = KeystoreService.shared.inspectKeystore(
-                            File(keystorePath),
-                            localPassword.ifEmpty { null },
-                            localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
-                            localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
-                        )
-                        if (result == null) {
-                            verifyResult = getString(Res.string.settings_signing_verify_could_not_open)
-                            verifySuccess = false
-                        } else if (result.warnings.isNotEmpty()) {
-                            verifyResult = when (val w = result.warnings.first()) {
-                                is KeystoreWarning.AliasNotFound -> getString(Res.string.settings_cert_warning_alias_not_found, w.alias)
-                                is KeystoreWarning.KeyPasswordIncorrect -> getString(Res.string.settings_cert_warning_key_password_incorrect, w.alias)
+                        try {
+                            val result = withContext(Dispatchers.IO) {
+                                KeystoreService.shared.inspectKeystore(
+                                    file,
+                                    localPassword.ifEmpty { null },
+                                    localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                                    localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
+                                )
                             }
-                            verifySuccess = false
-                        } else {
-                            verifyResult = getString(Res.string.settings_signing_verify_valid)
-                            verifySuccess = true
+                            if (result == null) {
+                                verifyResult = getString(Res.string.settings_signing_verify_could_not_open)
+                                verifySuccess = false
+                            } else if (result.warnings.isNotEmpty()) {
+                                verifyResult = when (val w = result.warnings.first()) {
+                                    is KeystoreWarning.AliasNotFound -> getString(Res.string.settings_cert_warning_alias_not_found, w.alias)
+                                    is KeystoreWarning.KeyPasswordIncorrect -> getString(Res.string.settings_cert_warning_key_password_incorrect, w.alias)
+                                }
+                                verifySuccess = false
+                            } else {
+                                verifyResult = getString(Res.string.settings_signing_verify_valid)
+                                verifySuccess = true
+                            }
+                        } finally {
+                            isVerifying = false
                         }
                     }
                 },
-                enabled = enabled,
-                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(enabled),
+                enabled = enabled && !isVerifying,
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(enabled && !isVerifying),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(
                     1.dp,
@@ -430,11 +448,19 @@ internal fun SigningSection(
                 ),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
             ) {
-                Icon(
-                    imageVector = MorpheIcons.Check,
-                    contentDescription = null,
-                    modifier = Modifier.size(12.dp)
-                )
+                if (isVerifying) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(12.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Icon(
+                        imageVector = MorpheIcons.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp)
+                    )
+                }
                 Spacer(Modifier.width(6.dp))
                 Text(
                     stringResource(Res.string.settings_signing_verify_button),
@@ -464,33 +490,37 @@ internal fun SigningSection(
         // Generate button (only when no keystore exists yet)
         var generateError by remember { mutableStateOf<String?>(null) }
         var generateSuccess by remember { mutableStateOf(false) }
+        var isGenerating by remember { mutableStateOf(false) }
 
         if (!keystoreExists) {
             OutlinedButton(
                 onClick = {
                     generateError = null
                     generateSuccess = false
+                    isGenerating = true
                     scope.launch {
-                        // If no path set, ask the user where to save
-                        val path = keystorePath ?: run {
-                            val chosen = MorpheFilePicker.saveFile(
-                                title = getString(Res.string.settings_signing_picker_save_keystore),
-                                baseName = "morphe",
-                                extension = "keystore",
-                            ) ?: return@launch // user cancelled
-                            val chosenPath = chosen.absolutePath
-                            onKeystorePathChange(chosenPath)
-                            chosenPath
-                        }
-
                         try {
+                            // If no path set, ask the user where to save
+                            val path = keystorePath ?: run {
+                                val chosen = MorpheFilePicker.saveFile(
+                                    title = getString(Res.string.settings_signing_picker_save_keystore),
+                                    baseName = "morphe",
+                                    extension = "keystore",
+                                ) ?: return@launch // user cancelled
+                                val chosenPath = chosen.absolutePath
+                                onKeystorePathChange(chosenPath)
+                                chosenPath
+                            }
+
                             val file = File(path)
-                            KeystoreService.shared.generateKeystore(
-                                destination = file,
-                                alias = localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
-                                storePassword = localPassword.ifEmpty { null },
-                                entryPassword = localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
-                            )
+                            withContext(Dispatchers.IO) {
+                                KeystoreService.shared.generateKeystore(
+                                    destination = file,
+                                    alias = localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                                    storePassword = localPassword.ifEmpty { null },
+                                    entryPassword = localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
+                                )
+                            }
                             // Save credentials to config
                             onCredentialsChange(
                                 localPassword.ifEmpty { null },
@@ -498,14 +528,19 @@ internal fun SigningSection(
                                 localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD }
                             )
                             generateSuccess = true
+                            keystoreExistsTrigger++
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             generateError = getString(Res.string.settings_signing_failed_to_generate, e.message ?: "")
                             Logger.error("Failed to generate keystore", e)
+                        } finally {
+                            isGenerating = false
                         }
                     }
                 },
-                enabled = enabled,
-                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(enabled),
+                enabled = enabled && !isGenerating,
+                modifier = Modifier.fillMaxWidth().height(dimens.controlHeight).handCursor(enabled && !isGenerating),
                 shape = RoundedCornerShape(corners.small),
                 border = BorderStroke(
                     1.dp, if (generateSuccess)
@@ -514,12 +549,20 @@ internal fun SigningSection(
                 ),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
             ) {
-                Icon(
-                    imageVector = MorpheIcons.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(12.dp),
-                    tint = if (generateSuccess) MorpheColors.Teal else accentColor
-                )
+                if (isGenerating) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(12.dp),
+                        strokeWidth = 2.dp,
+                        color = accentColor
+                    )
+                } else {
+                    Icon(
+                        imageVector = MorpheIcons.Add,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp),
+                        tint = if (generateSuccess) MorpheColors.Teal else accentColor
+                    )
+                }
                 Spacer(Modifier.width(6.dp))
                 Text(
                     stringResource(if (generateSuccess) Res.string.settings_signing_generated_button else Res.string.settings_signing_generate_button),
@@ -596,7 +639,11 @@ internal fun SigningSection(
                             extension = sourceFile.extension.ifEmpty { "keystore" },
                         ) ?: return@launch
                         try {
-                            sourceFile.copyTo(dest, overwrite = true)
+                            withContext(Dispatchers.IO) {
+                                sourceFile.copyTo(dest, overwrite = true)
+                            }
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             Logger.error("Failed to export keystore", e)
                         }

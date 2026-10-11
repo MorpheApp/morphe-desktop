@@ -415,7 +415,14 @@ class HomeViewModel(
                 lastLoadedVersion = firstResolved?.resolvedVersion
                 cachedSourcesResult = result
 
-                val supportedApps = SupportedAppCatalog.extractSupportedAppsFromMetadata(result.unionPatches)
+                val (supportedApps, patchedStates, sortedRecords, updateInfoMap) = withContext(Dispatchers.IO) {
+                    val apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(result.unionPatches)
+                    val states = computePatchedStates(apps)
+                    val records = sortedPatchedRecords()
+                    val updates = buildUpdateInfoMap(apps)
+                    AppCatalogData(apps, states, records, updates)
+                }
+
                 Logger.info(
                     "Loaded ${supportedApps.size} supported apps from " +
                             "${result.resolved.count { it.patchFile != null }} source(s): " +
@@ -436,7 +443,6 @@ class HomeViewModel(
                     getPluralString(Res.plurals.count_sources, count, count)
                 }
 
-                val patchedStates = computePatchedStates(supportedApps)
                 latestResolvedApps = null // fresh load — drop any stale eager-resolved apps
 
                 // Partial-failure surfacing: some sources loaded, but others may have failed
@@ -475,8 +481,8 @@ class HomeViewModel(
                     isOffline = isOffline,
                     supportedApps = supportedApps,
                     patchedStates = patchedStates,
-                    patchedRecords = sortedPatchedRecords(),
-                    updateInfoByPackage = buildUpdateInfoMap(supportedApps),
+                    patchedRecords = sortedRecords,
+                    updateInfoByPackage = updateInfoMap,
                     patchesVersion = displayVersion,
                     patchesChannel = firstResolved?.channel,
                     patchSourceName = sourceName,
@@ -557,9 +563,13 @@ class HomeViewModel(
             try {
                 val enabled = patchSourceManager.getEnabledRepositories()
                 val result = EnabledSourcesLoader.loadAll(enabled, emptyMap(), engineConfigRepository.loadConfig().excludedMppPatterns)
-                val apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(result.unionPatches)
+                val (apps, updateInfo) = withContext(Dispatchers.IO) {
+                    val a = SupportedAppCatalog.extractSupportedAppsFromMetadata(result.unionPatches)
+                    val u = buildUpdateInfoMap(a)
+                    a to u
+                }
                 latestResolvedApps = apps
-                _uiState.value = _uiState.value.copy(updateInfoByPackage = buildUpdateInfoMap(apps))
+                _uiState.value = _uiState.value.copy(updateInfoByPackage = updateInfo)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -659,13 +669,16 @@ class HomeViewModel(
      */
     private fun refreshPatchedState() {
         viewModelScope.launch {
-            val states = computePatchedStates(_uiState.value.supportedApps)
+            val (states, records, updates) = withContext(Dispatchers.IO) {
+                val st = computePatchedStates(_uiState.value.supportedApps)
+                val rec = sortedPatchedRecords()
+                val up = buildUpdateInfoMap(latestResolvedApps ?: _uiState.value.supportedApps)
+                Triple(st, rec, up)
+            }
             _uiState.value = _uiState.value.copy(
                 patchedStates = states,
-                patchedRecords = sortedPatchedRecords(),
-                // Reuse the eagerly-resolved latest apps if we have them, so a store
-                // change (patch/forget) doesn't drop the accurate future versions.
-                updateInfoByPackage = buildUpdateInfoMap(latestResolvedApps ?: _uiState.value.supportedApps),
+                patchedRecords = records,
+                updateInfoByPackage = updates,
             )
             refreshDeviceInfo()
         }
@@ -1448,3 +1461,10 @@ data class ApkValidationResult(
         return getString(res, *errorArgs.toTypedArray())
     }
 }
+
+private data class AppCatalogData(
+    val supportedApps: List<SupportedApp>,
+    val patchedStates: Map<String, PatchedAppState>,
+    val patchedRecords: List<PatchedAppRecord>,
+    val updateInfoByPackage: Map<String, RecallUpdateInfo>,
+)

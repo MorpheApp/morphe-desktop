@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
 
@@ -54,52 +55,62 @@ class PatchingViewModel(
 
         patchingJob = viewModelScope.launch {
             stateMachine = null
-            val appConfig = configRepository.loadConfig()
-            val locale = FormatUtils.resolveLocale(appConfig.language)
-            val osName = System.getProperty("os.name") ?: "Unknown OS"
-            val osArch = System.getProperty("os.arch") ?: "Unknown Arch"
-            val maxMemoryMb = (Runtime.getRuntime().maxMemory() / (1024 * 1024)).toInt()
-            val inputApkFile = config.inputApk
-            val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), locale) else "?"
-            
-            val appVersion = ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
-            val sourcesSnapshot = config.historyMetadata?.sourcesSnapshot
-            val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE PATCHES"
-            val patchesVersion = sourcesSnapshot?.firstOrNull()?.version ?: "?"
-            val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
-            
-            val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
-            val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, locale)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, locale)}"
+            var locale = java.util.Locale.getDefault()
+            val (preparingState, cpuSampler, ioSampler) = withContext(Dispatchers.IO) {
+                val appConfig = configRepository.loadConfig()
+                val loc = FormatUtils.resolveLocale(appConfig.language)
+                locale = loc
+                val osName = System.getProperty("os.name") ?: "Unknown OS"
+                val osArch = System.getProperty("os.arch") ?: "Unknown Arch"
+                val maxMemoryMb = (Runtime.getRuntime().maxMemory() / (1024 * 1024)).toInt()
+                val inputApkFile = config.inputApk
+                val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), loc) else "?"
+                
+                val appVersion = ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
+                val sourcesSnapshot = config.historyMetadata?.sourcesSnapshot
+                val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE PATCHES"
+                val patchesVersion = sourcesSnapshot?.firstOrNull()?.version ?: "?"
+                val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
+                
+                val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
+                val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, loc)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, loc)}"
 
-            val desktopVersion = UpdateChecker.currentVersion() ?: "?"
-            val patcherVersion = MorpheComponents.patcherVersion ?: "?"
-            val nativeLibs = if (config.architecturesToKeep.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
+                val desktopVersion = UpdateChecker.currentVersion() ?: "?"
+                val patcherVersion = MorpheComponents.patcherVersion ?: "?"
+                val nativeLibs = if (config.architecturesToKeep.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
 
-            val osBean = ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean
-            val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, locale)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, locale)}"
+                val osBean = ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean
+                val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, loc)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, loc)}"
 
-            val cpuSampler = CpuUsageSampler()
-            val ioSampler = IoUsageSampler()
+                val cpu = CpuUsageSampler()
+                val io = IoUsageSampler()
 
-            _uiState.value = _uiState.value.copy(
-                status = PatchingStatus.PREPARING,
-                logs = emptyList(),
-                heapLimitMb = maxMemoryMb,
-                apkSizeMb = apkSizeMb,
-                totalPatches = config.enabledPatches.size,
-                androidVersion = osName,
-                deviceManufacturer = osArch,
-                appVersion = appVersion,
-                patchesSourceName = patchesSourceName,
-                patchesVersion = patchesVersion,
-                isSplit = isSplit,
-                storageFreeInfo = storageFreeInfo,
-                ramFreeInfo = ramFreeInfo,
-                desktopVersion = desktopVersion,
-                patcherVersion = patcherVersion,
-                nativeLibs = nativeLibs,
-                logicalCoreCount = cpuSampler.logicalProcessorCount
-            )
+                Triple(
+                    _uiState.value.copy(
+                        status = PatchingStatus.PREPARING,
+                        logs = emptyList(),
+                        heapLimitMb = maxMemoryMb,
+                        apkSizeMb = apkSizeMb,
+                        totalPatches = config.enabledPatches.size,
+                        androidVersion = osName,
+                        deviceManufacturer = osArch,
+                        appVersion = appVersion,
+                        patchesSourceName = patchesSourceName,
+                        patchesVersion = patchesVersion,
+                        isSplit = isSplit,
+                        storageFreeInfo = storageFreeInfo,
+                        ramFreeInfo = ramFreeInfo,
+                        desktopVersion = desktopVersion,
+                        patcherVersion = patcherVersion,
+                        nativeLibs = nativeLibs,
+                        logicalCoreCount = cpu.logicalProcessorCount
+                    ),
+                    cpu,
+                    io
+                )
+            }
+
+            _uiState.value = preparingState
             
             val startTime = System.currentTimeMillis()
 

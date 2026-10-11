@@ -7,12 +7,15 @@ package app.morphe.gui.util
 
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitDialogParent
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.dialogs.openFileSaver
+import java.awt.KeyboardFocusManager
+import java.awt.Window
 import java.io.File
 
 /**
@@ -30,17 +33,22 @@ import java.io.File
  * once at startup — see `GuiMain.launchGui`.
  */
 object MorpheFilePicker {
+    private fun buildDialogSettings(title: String?): FileKitDialogSettings {
+        val activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().activeWindow
+            ?: Window.getWindows().firstOrNull { it.isFocused }
+            ?: Window.getWindows().firstOrNull { it.isVisible }
+        return FileKitDialogSettings(
+            title = title,
+            parent = activeWindow?.let { FileKitDialogParent.awt(it) }
+        )
+    }
 
     /**
      * Native folder picker. Returns the chosen directory, or null if the user cancelled.
      */
     suspend fun pickDirectory(title: String? = null, startDir: File? = null): File? {
         val initial = startDir?.takeIf { it.isDirectory }?.let { PlatformFile(it) }
-        val settings = if (title != null) {
-            FileKitDialogSettings(title = title)
-        } else {
-            FileKitDialogSettings.createDefault()
-        }
+        val settings = buildDialogSettings(title)
         return FileKit.openDirectoryPicker(directory = initial, dialogSettings = settings)?.file
     }
 
@@ -53,11 +61,7 @@ object MorpheFilePicker {
         extensions: List<String> = emptyList(),
     ): File? {
         val initial = startDir?.takeIf { it.isDirectory }?.let { PlatformFile(it) }
-        val settings = if (title != null) {
-            FileKitDialogSettings(title = title)
-        } else {
-            FileKitDialogSettings.createDefault()
-        }
+        val settings = buildDialogSettings(title)
         val type = if (extensions.isEmpty()) FileKitType.File() else FileKitType.File(extensions)
         return FileKit.openFilePicker(type = type, directory = initial, dialogSettings = settings)?.file
     }
@@ -71,11 +75,7 @@ object MorpheFilePicker {
         extensions: List<String> = emptyList(),
     ): List<File>? {
         val initial = startDir?.takeIf { it.isDirectory }?.let { PlatformFile(it) }
-        val settings = if (title != null) {
-            FileKitDialogSettings(title = title)
-        } else {
-            FileKitDialogSettings.createDefault()
-        }
+        val settings = buildDialogSettings(title)
         val type = if (extensions.isEmpty()) FileKitType.File() else FileKitType.File(extensions)
         return FileKit.openFilePicker(
             type = type,
@@ -93,11 +93,7 @@ object MorpheFilePicker {
         baseName: String,
         extension: String,
     ): File? {
-        val settings = if (title != null) {
-            FileKitDialogSettings(title = title)
-        } else {
-            FileKitDialogSettings.createDefault()
-        }
+        val settings = buildDialogSettings(title)
         return FileKit.openFileSaver(
             suggestedName = baseName,
             defaultExtension = extension,

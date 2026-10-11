@@ -677,8 +677,8 @@ class QuickPatchViewModel(
      * Snapshot what each source offered for this app, so expert mode can tell a
      * genuinely new patch from one the user has already seen.
      */
-    private suspend fun recordSeenPatches(packageName: String) {
-        val sources = cachedSourcesResult?.resolved ?: return
+    private suspend fun recordSeenPatches(packageName: String) = withContext(Dispatchers.IO) {
+        val sources = cachedSourcesResult?.resolved ?: return@withContext
         sources.forEach { resolved ->
             val path = resolved.patchFile?.absolutePath ?: return@forEach
             val names = runCatching { SupportedAppCatalog.loadPatches(File(path), packageName) }.getOrNull()

@@ -90,25 +90,37 @@ internal fun SupportedAppsListPane(
     var searchQuery by remember { mutableStateOf("") }
     var expandedPackage by remember { mutableStateOf<String?>(null) }
 
-    val matching = if (searchQuery.isBlank()) supportedApps
-    else supportedApps.filter {
-        it.displayName.contains(searchQuery, ignoreCase = true) ||
-        it.packageName.contains(searchQuery, ignoreCase = true)
+    val matching = remember(searchQuery, supportedApps) {
+        if (searchQuery.isBlank()) supportedApps
+        else supportedApps.filter {
+            it.displayName.contains(searchQuery, ignoreCase = true) ||
+            it.packageName.contains(searchQuery, ignoreCase = true)
+        }
     }
-    val installedPackages = deviceAppInfo.filterValues { it.installed }.keys
-    val patchedAtByPackage = patchedRecords.associate { it.packageName to it.patchedAt }
-    val order = sortMode.comparator()
-    val filtered = matching.sortedWith(
-        compareBy(order) { it.sortKeys(patchedStates, installedPackages, patchedAtByPackage) }
-    )
-    val matchingRecords = if (searchQuery.isBlank()) patchedRecords
-    else patchedRecords.filter {
-        it.displayName.contains(searchQuery, ignoreCase = true) ||
-        it.packageName.contains(searchQuery, ignoreCase = true)
+    val installedPackages = remember(deviceAppInfo) {
+        deviceAppInfo.filterValues { it.installed }.keys
     }
-    val filteredRecords = matchingRecords.sortedWith(
-        compareBy(order) { it.sortKeys(patchedStates, installedPackages) }
-    )
+    val patchedAtByPackage = remember(patchedRecords) {
+        patchedRecords.associate { it.packageName to it.patchedAt }
+    }
+    val order = remember(sortMode) { sortMode.comparator() }
+    val filtered = remember(matching, order, patchedStates, installedPackages, patchedAtByPackage) {
+        matching.sortedWith(
+            compareBy(order) { it.sortKeys(patchedStates, installedPackages, patchedAtByPackage) }
+        )
+    }
+    val matchingRecords = remember(searchQuery, patchedRecords) {
+        if (searchQuery.isBlank()) patchedRecords
+        else patchedRecords.filter {
+            it.displayName.contains(searchQuery, ignoreCase = true) ||
+            it.packageName.contains(searchQuery, ignoreCase = true)
+        }
+    }
+    val filteredRecords = remember(matchingRecords, order, patchedStates, installedPackages) {
+        matchingRecords.sortedWith(
+            compareBy(order) { it.sortKeys(patchedStates, installedPackages) }
+        )
+    }
     val activeCount = if (filter == AppListFilter.YOURS) patchedRecords.size else supportedApps.size
 
     // Collapse if the currently expanded app filters out.

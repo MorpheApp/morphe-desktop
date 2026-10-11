@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +40,8 @@ import app.morphe.gui.ui.screens.result.formatFileSize
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -50,6 +53,7 @@ internal fun OutputFileCard(
     modifier: Modifier = Modifier,
 ) {
     val accents = LocalMorpheAccents.current
+    val scope = rememberCoroutineScope()
     Box(
         modifier = modifier
             .widthIn(max = 520.dp)
@@ -135,12 +139,14 @@ internal fun OutputFileCard(
                         )
                         .handCursor()
                         .clickable {
-                            try {
-                                val folder = outputFile.parentFile
-                                if (folder != null && Desktop.isDesktopSupported()) {
-                                    Desktop.getDesktop().open(folder)
-                                }
-                            } catch (_: Exception) {}
+                            scope.launch(Dispatchers.IO) {
+                                try {
+                                    val folder = outputFile.parentFile
+                                    if (folder != null && Desktop.isDesktopSupported()) {
+                                        Desktop.getDesktop().open(folder)
+                                    }
+                                } catch (_: Exception) {}
+                            }
                         }
                         .padding(horizontal = 14.dp, vertical = 8.dp),
                     contentAlignment = Alignment.Center

@@ -45,7 +45,9 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.morphe_desktop.generated.resources.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -82,31 +84,34 @@ fun SettingsDialogHost() {
     var developerOptions by remember { mutableStateOf(false) }
     var gitHubPat by remember { mutableStateOf("") }
 
-    LaunchedEffect(showSettingsDialog) {
-        if (showSettingsDialog) {
-            val config = configRepository.loadConfig()
-            val engineConfig = engineConfigRepository.loadConfig()
-            autoCleanupTempFiles = engineConfig.autoCleanupTempFiles
-            // Display the resolved absolute form even though storage may be
-            // bundle-relative. Users expect to see a real filesystem path in
-            // the field, not a cryptic basename.
-            defaultOutputDirectory = engineConfig.resolvedDefaultOutputDirectory()?.absolutePath
-            keystorePath = engineConfig.resolvedKeystorePath()?.absolutePath
-            keystorePassword = engineConfig.keystorePassword
-            keystoreAlias = engineConfig.keystoreAlias
-            keystoreEntryPassword = engineConfig.keystoreEntryPassword
-            keepArchitectures = engineConfig.keepArchitectures
-            collapsibleSectionStates = config.collapsibleSectionStates
-            autoRouteLinksAfterInstall = engineConfig.autoRouteLinksAfterInstall
-            disableStockLinksAfterInstall = engineConfig.disableStockLinksAfterInstall
-            developerOptions = engineConfig.developerOptions
-            gitHubPat = engineConfig.gitHubPat
-            // Resolve the smart-default if the user has never picked a channel
-            // (returns DEV when the running build is dev, STABLE otherwise).
-            updateChannelPreference = configRepository.getOrInitUpdateChannelPreference(
-                UpdateChecker.currentVersion() ?: ""
-            )
+    suspend fun loadSettings() {
+        val (config, engineConfig, channel) = withContext(Dispatchers.IO) {
+            val cfg = configRepository.loadConfig()
+            val engCfg = engineConfigRepository.loadConfig()
+            val ver = UpdateChecker.currentVersion() ?: ""
+            val ch = configRepository.getOrInitUpdateChannelPreference(ver)
+            Triple(cfg, engCfg, ch)
         }
+        autoCleanupTempFiles = engineConfig.autoCleanupTempFiles
+        // Display the resolved absolute form even though storage may be
+        // bundle-relative. Users expect to see a real filesystem path in
+        // the field, not a cryptic basename.
+        defaultOutputDirectory = engineConfig.resolvedDefaultOutputDirectory()?.absolutePath
+        keystorePath = engineConfig.resolvedKeystorePath()?.absolutePath
+        keystorePassword = engineConfig.keystorePassword
+        keystoreAlias = engineConfig.keystoreAlias
+        keystoreEntryPassword = engineConfig.keystoreEntryPassword
+        keepArchitectures = engineConfig.keepArchitectures
+        collapsibleSectionStates = config.collapsibleSectionStates
+        autoRouteLinksAfterInstall = engineConfig.autoRouteLinksAfterInstall
+        disableStockLinksAfterInstall = engineConfig.disableStockLinksAfterInstall
+        developerOptions = engineConfig.developerOptions
+        gitHubPat = engineConfig.gitHubPat
+        updateChannelPreference = channel
+    }
+
+    LaunchedEffect(Unit) {
+        loadSettings()
     }
 
     if (showSettingsDialog) {

@@ -128,18 +128,25 @@ fun ResultScreenContent(outputPath: String) {
     var autoCleanupEnabled by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        val config = engineConfigRepository.loadConfig()
+        val (config, scratchExists, scratchSize) = withContext(Dispatchers.IO) {
+            val cfg = engineConfigRepository.loadConfig()
+            val exists = WorkspaceManager.hasScratchFiles()
+            val size = if (exists) WorkspaceManager.getScratchSize() else 0L
+            if (cfg.autoCleanupTempFiles && exists) {
+                WorkspaceManager.clearScratch()
+                Logger.info("Auto-cleaned temp files after successful patching")
+                Triple(cfg, false, 0L)
+            } else {
+                Triple(cfg, exists, size)
+            }
+        }
         autoCleanupEnabled = config.autoCleanupTempFiles
         autoRouteLinks = config.autoRouteLinksAfterInstall
         disableStockLinks = config.disableStockLinksAfterInstall
-        hasTempFiles = WorkspaceManager.hasScratchFiles()
-        tempFilesSize = WorkspaceManager.getScratchSize()
-
-        if (autoCleanupEnabled && hasTempFiles) {
-            WorkspaceManager.clearScratch()
-            hasTempFiles = false
+        hasTempFiles = scratchExists
+        tempFilesSize = scratchSize
+        if (config.autoCleanupTempFiles && !scratchExists) {
             tempFilesCleared = true
-            Logger.info("Auto-cleaned temp files after successful patching")
         }
     }
 
@@ -306,10 +313,14 @@ fun ResultScreenContent(outputPath: String) {
                         font = font,
                         borderColor = borderColor,
                         onCleanupClick = {
-                            WorkspaceManager.clearScratch()
-                            hasTempFiles = false
-                            tempFilesCleared = true
-                            Logger.info("Manually cleaned temp files after patching")
+                            scope.launch(Dispatchers.IO) {
+                                WorkspaceManager.clearScratch()
+                                withContext(Dispatchers.Main) {
+                                    hasTempFiles = false
+                                    tempFilesCleared = true
+                                }
+                                Logger.info("Manually cleaned temp files after patching")
+                            }
                         }
                     )
                 }

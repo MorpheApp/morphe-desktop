@@ -16,6 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +25,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.util.KeystoreInspectionResult
 import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.KeystoreWarning
 import app.morphe.gui.ui.components.MorpheAlertDialog
@@ -32,6 +35,8 @@ import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -47,8 +52,13 @@ internal fun KeystoreInfoDialog(
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
 
     val locale = currentLocale()
-    val info = remember(keystorePath, password, alias, entryPassword, locale) {
-        KeystoreService.shared.inspectKeystore(File(keystorePath), password, alias, entryPassword, locale)
+    val info by produceState<KeystoreInspectionResult?>(
+        initialValue = null,
+        keystorePath, password, alias, entryPassword, locale
+    ) {
+        value = withContext(Dispatchers.IO) {
+            KeystoreService.shared.inspectKeystore(File(keystorePath), password, alias, entryPassword, locale)
+        }
     }
 
     MorpheAlertDialog(
@@ -62,14 +72,15 @@ internal fun KeystoreInfoDialog(
             )
         },
         text = {
-            if (info != null) {
+            val certInfo = info
+            if (certInfo != null) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier.widthIn(min = 300.dp)
                 ) {
                     // Show warnings first if there are any
-                    if (info.warnings.isNotEmpty()) {
-                        info.warnings.forEach { warning ->
+                    if (certInfo.warnings.isNotEmpty()) {
+                        certInfo.warnings.forEach { warning ->
                             val warningText = when (warning) {
                                 is KeystoreWarning.AliasNotFound -> stringResource(Res.string.settings_cert_warning_alias_not_found, warning.alias)
                                 is KeystoreWarning.KeyPasswordIncorrect -> stringResource(Res.string.settings_cert_warning_key_password_incorrect, warning.alias)
@@ -84,14 +95,14 @@ internal fun KeystoreInfoDialog(
                             )
                         }
                         // If no cert data (alias not found), stop here
-                        if (info.sha256Fingerprint.isEmpty()) return@Column
+                        if (certInfo.sha256Fingerprint.isEmpty()) return@Column
                         HorizontalDivider(color = borderColor)
                     }
 
-                    CertInfoRow(stringResource(Res.string.settings_cert_info_alias), info.alias, font)
-                    CertInfoRow(stringResource(Res.string.settings_cert_info_issuer), info.issuer, font)
-                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_from), info.validFrom, font)
-                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_until), info.validTo, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_alias), certInfo.alias, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_issuer), certInfo.issuer, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_from), certInfo.validFrom, font)
+                    CertInfoRow(stringResource(Res.string.settings_cert_info_valid_until), certInfo.validTo, font)
 
                     HorizontalDivider(color = borderColor)
 
@@ -104,7 +115,7 @@ internal fun KeystoreInfoDialog(
                     )
                     SelectionContainer {
                         Text(
-                            text = info.sha256Fingerprint,
+                            text = certInfo.sha256Fingerprint,
                             fontSize = 11.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,
@@ -124,7 +135,7 @@ internal fun KeystoreInfoDialog(
                     )
                     SelectionContainer {
                         Text(
-                            text = info.sha1Fingerprint,
+                            text = certInfo.sha1Fingerprint,
                             fontSize = 11.sp,
                             fontFamily = font,
                             fontWeight = FontWeight.Normal,

@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,10 +60,10 @@ import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
-import java.awt.FileDialog
-import java.awt.Frame
 import java.io.File
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -159,6 +160,7 @@ internal fun ApkSourceSection(
     val uriHandler = LocalUriHandler.current
     val accents2 = LocalMorpheAccents.current
     val recordedExists = remember(recordedApkPath) { File(recordedApkPath).exists() }
+    val scope = rememberCoroutineScope()
 
     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
@@ -297,10 +299,13 @@ internal fun ApkSourceSection(
         MorpheIcons.FolderOpen, accents.primary, font, corner,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        val fd = FileDialog(null as Frame?, selectApkTitle, FileDialog.LOAD)
-        fd.isVisible = true
-        val picked = fd.file?.let { File(fd.directory, it) }
-        if (picked != null && picked.exists()) onApkSelected(picked.absolutePath)
+        scope.launch {
+            val picked = MorpheFilePicker.pickFile(
+                title = selectApkTitle,
+                extensions = listOf("apk"),
+            )
+            if (picked != null && picked.exists()) onApkSelected(picked.absolutePath)
+        }
     }
 }
 
@@ -312,6 +317,7 @@ internal fun AddSourceControl(
     onAddLocalBundle: (String) -> Unit,
 ) {
     val accents = LocalMorpheAccents.current
+    val scope = rememberCoroutineScope()
     val selectBundleTitle = stringResource(Res.string.home_detail_select_patch_bundle_title)
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
         DetailActionPill(
@@ -324,10 +330,13 @@ internal fun AddSourceControl(
             stringResource(Res.string.home_detail_local_mpp_button), MorpheIcons.FolderOpen, accents.primary, font, corner,
             modifier = Modifier.weight(1f),
         ) {
-            val fd = FileDialog(null as Frame?, selectBundleTitle, FileDialog.LOAD)
-            fd.isVisible = true
-            val picked = fd.file?.let { File(fd.directory, it) }
-            if (picked != null && picked.exists()) onAddLocalBundle(picked.absolutePath)
+            scope.launch {
+                val picked = MorpheFilePicker.pickFile(
+                    title = selectBundleTitle,
+                    extensions = listOf("mpp"),
+                )
+                if (picked != null && picked.exists()) onAddLocalBundle(picked.absolutePath)
+            }
         }
     }
 }

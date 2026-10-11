@@ -314,7 +314,7 @@ internal fun ExpertFailureContent(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corners.small))
                     .background(panelFill)
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(corners.small))
+                    .border(1.dp, borderColor, RoundedCornerShape(corners.small))
                     .padding(12.dp)
             ) {
                 Text(

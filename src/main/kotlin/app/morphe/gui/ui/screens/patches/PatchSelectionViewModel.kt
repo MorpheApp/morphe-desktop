@@ -328,10 +328,10 @@ class PatchSelectionViewModel(
      * one [BundlePatches] entry per source. NO cross-bundle dedup. Bundles
      * whose load failed are dropped. The call fails only when ALL bundles fail.
      */
-    private suspend fun loadFromAllPaths(): Result<List<BundlePatches>> = coroutineScope {
+    private suspend fun loadFromAllPaths(): Result<List<BundlePatches>> = withContext(Dispatchers.IO) {
         val pkgFilter = packageName.ifEmpty { null }
         val perFile = actualPatchesFilePaths.mapIndexed { idx, path ->
-            async {
+            async(Dispatchers.IO) {
                 val result = runCatching { SupportedAppCatalog.loadPatches(File(path), pkgFilter) }
                 Triple(idx, path, result)
             }
@@ -350,7 +350,7 @@ class PatchSelectionViewModel(
 
         if (bundles.isEmpty()) {
             val firstError = perFile.firstNotNullOfOrNull { (_, _, r) -> r.exceptionOrNull() }
-            return@coroutineScope if (firstError != null) Result.failure(firstError)
+            return@withContext if (firstError != null) Result.failure(firstError)
                                   else Result.success(emptyList())
         }
         Result.success(bundles)
@@ -548,7 +548,7 @@ class PatchSelectionViewModel(
             .associate { patch -> patch.name to patch.options.associate { it.key to it.valueType } }
         val groupedOptions = groupFlatOptionsToJson(state.patchOptionValues, declaredTypes)
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             for ((bundleId, bundleName, patches) in state.bundles) {
                 val selected = state.selectedByBundle[bundleId].orEmpty()
                 val enabledNames = patches
@@ -578,10 +578,12 @@ class PatchSelectionViewModel(
             // After saving, the live selection IS the saved selection. Refresh
             // the snapshot so the per-bundle "Your Defaults" chips stay
             // highlighted post-patch.
-            _uiState.value = _uiState.value.copy(
-                hasSavedSelection = true,
-                savedSelectedByBundle = state.selectedByBundle,
-            )
+            withContext(Dispatchers.Main) {
+                _uiState.value = _uiState.value.copy(
+                    hasSavedSelection = true,
+                    savedSelectedByBundle = state.selectedByBundle,
+                )
+            }
         }
     }
 
