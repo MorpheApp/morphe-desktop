@@ -53,6 +53,8 @@ import kotlinx.serialization.Transient
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -534,7 +536,7 @@ object PatchEngine {
                 try {
                     onProgress("Rebuilding APK...")
                     val patcherResult = patcher.get()
-                    actualInputApk.copyTo(rebuiltApk, overwrite = true)
+                    Files.copy(actualInputApk.toPath(), rebuiltApk.toPath(), StandardCopyOption.REPLACE_EXISTING)
                     patcherResult.applyTo(rebuiltApk)
                     stepResults.add(StepResult(PatchStep.REBUILDING, true))
                 } catch (e: CancellationException) {
@@ -616,7 +618,7 @@ object PatchEngine {
                         return@withContext earlyResult("Signing failed: ${e.message}", sw)
                     }
                 } else {
-                    rebuiltApk.copyTo(tempOutput, overwrite = true)
+                    Files.copy(rebuiltApk.toPath(), tempOutput.toPath(), StandardCopyOption.REPLACE_EXISTING)
                 }
 
                 currentCoroutineContext().ensureActive()
@@ -635,7 +637,7 @@ object PatchEngine {
 
                 // 9. Copy to final output
                 finalOutputApk.parentFile?.mkdirs()
-                tempOutput.copyTo(finalOutputApk, overwrite = true)
+                Files.copy(tempOutput.toPath(), finalOutputApk.toPath(), StandardCopyOption.REPLACE_EXISTING)
                 onProgress("Saved to ${finalOutputApk.absolutePath}")
 
                 val isSuccess = !config.failOnError || failedPatches.isEmpty()
