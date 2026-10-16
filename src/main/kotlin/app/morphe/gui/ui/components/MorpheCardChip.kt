@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,12 +29,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheDimens
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 
 /**
  * Chip drawn as simple mode has always drawn them. Set [onCard] false off a painted
@@ -51,9 +46,7 @@ fun MorpheCardChip(
     onIconClick: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val shape = RoundedCornerShape(corners.small)
+    val shape = MorpheTheme.shapes.small
     val hover = remember { MutableInteractionSource() }
     val isHovered by hover.collectIsHoveredAsState()
     val interactive = onClick != null
@@ -70,13 +63,13 @@ fun MorpheCardChip(
                 if (interactive && isHovered) 0.16f else 0.10f
             },
         ),
-        animationSpec = tween(150),
+        animationSpec = MorpheMotion.fastTween(),
     )
     // An outline is how every other control in the app says it can be clicked, so
     // only a chip that actually does something gets one.
     val borderColor by animateColorAsState(
         if (interactive) ink.copy(alpha = if (isHovered) 0.7f else 0.45f) else Color.Transparent,
-        animationSpec = tween(150),
+        animationSpec = MorpheMotion.fastTween(),
     )
 
     Row(
@@ -86,12 +79,12 @@ fun MorpheCardChip(
             .border(1.dp, borderColor, shape)
             .hoverable(hover)
             .then(if (onClick != null) Modifier.handCursor().clickable(onClick = onClick) else Modifier)
-            .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .defaultMinSize(minHeight = MorpheTheme.dimens.chipHeight)
+            .padding(horizontal = 10.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Text(text, fontSize = 11.sp, fontFamily = font, fontWeight = FontWeight.Normal, color = ink)
+        Text(text, style = MorpheTheme.typography.labelSmall, color = ink)
         if (icon != null) {
             Icon(
                 icon,

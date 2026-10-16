@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.screens.home.components
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -14,41 +13,30 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
+import app.morphe.gui.ui.components.MorpheButtonVariant
+import app.morphe.gui.ui.components.SlimSearchField
 import app.morphe.gui.ui.components.morpheScrollbarStyle
-import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheDimens
-import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.MorpheAccentColors
-import app.morphe.gui.ui.theme.MorpheCornerStyle
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.components.MorpheDropdown
 import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.morphe_desktop.generated.resources.*
@@ -83,10 +71,6 @@ internal fun SupportedAppsListPane(
     onSortModeChange: (HomeAppSortMode) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-
     var searchQuery by remember { mutableStateOf("") }
     var expandedPackage by remember { mutableStateOf<String?>(null) }
 
@@ -174,10 +158,7 @@ internal fun SupportedAppsListPane(
                 SlimSearchField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    font = font,
-                    corners = corners,
-                    accents = accents,
-                    maxWidth = Dp.Unspecified,
+                    placeholder = stringResource(Res.string.filter_apps_hint),
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -204,7 +185,6 @@ internal fun SupportedAppsListPane(
                 ) {
                     repeat(4) { idx ->
                         SkeletonAppRow(
-                            corners = corners,
                             // Slight stagger: each row pulses 120ms after the previous
                             // so the skeleton list feels alive instead of lock-step.
                             staggerOffsetMs = idx * 120,
@@ -219,46 +199,33 @@ internal fun SupportedAppsListPane(
                 ) {
                     Text(
                         text = stringResource(Res.string.home_list_load_failed),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.error,
+                        style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                        color = MorpheTheme.colors.error,
                     )
                     Spacer(Modifier.height(6.dp))
                     Text(
                         text = loadError,
-                        fontSize = 11.sp,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                     )
                     Spacer(Modifier.height(10.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedButton(
+                        MorpheButton(
                             onClick = onRetry,
-                            shape = RoundedCornerShape(corners.small),
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.retry),
-                                fontFamily = font,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal
-                            )
-                        }
+                            label = stringResource(Res.string.retry),
+                            variant = MorpheButtonVariant.OUTLINED,
+                            size = MorpheButtonSize.COMPACT,
+                        )
                         // Always offer a way to the source manager here: when a bundle is
                         // broken (e.g. needs a newer patcher), fixing it means removing or
                         // re-pointing that source, so it must be reachable from the error.
-                        OutlinedButton(
+                        MorpheButton(
                             onClick = onManageSources,
-                            shape = RoundedCornerShape(corners.small),
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.home_header_manage_sources_button),
-                                fontFamily = font,
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
+                            label = stringResource(Res.string.home_header_manage_sources_button),
+                            variant = MorpheButtonVariant.OUTLINED,
+                            size = MorpheButtonSize.COMPACT,
+                        )
                     }
                 }
             }
@@ -270,9 +237,7 @@ internal fun SupportedAppsListPane(
                     Text(
                         text = if (searchQuery.isBlank()) stringResource(Res.string.home_list_no_supported_apps)
                                else stringResource(Res.string.home_list_no_apps_match, searchQuery),
-                        fontSize = 13.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
+                        style = MorpheTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
@@ -339,106 +304,9 @@ internal fun SupportedAppsListPane(
     }
 }
 
-/**
- * Slim, elongated search field used when third-party patches are loaded.
- * Built on BasicTextField so we can drop below the 56dp minimum height that
- * Material 3's OutlinedTextField enforces internally. Visually mirrors the
- * default OutlinedTextField (border, leading search icon, trailing clear,
- * font placeholder), just thinner and wider.
- */
-@Composable
-internal fun SlimSearchField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    font: FontFamily,
-    corners: MorpheCornerStyle,
-    accents: MorpheAccentColors,
-    maxWidth: Dp = 340.dp,
-) {
-    val dimens = LocalMorpheDimens.current
-    val muted = MaterialTheme.colorScheme.onSurfaceVariant
-    val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState()
-    val borderColor by animateColorAsState(
-        if (isFocused) MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-        else MaterialTheme.colorScheme.outlineVariant,
-        animationSpec = tween(150),
-        label = "slimSearchBorder"
-    )
-
-    BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
-        singleLine = true,
-        interactionSource = interactionSource,
-        textStyle = MaterialTheme.typography.bodySmall.copy(
-            fontFamily = font,
-            fontSize = 11.sp,
-            lineHeight = 14.sp,
-            fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onSurface
-        ),
-        cursorBrush = SolidColor(accents.primary),
-        modifier = Modifier
-            .widthIn(max = maxWidth)
-            .fillMaxWidth()
-            .height(dimens.controlHeight)
-            .clip(RoundedCornerShape(corners.small))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small)),
-        decorationBox = { innerTextField ->
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    MorpheIcons.Search,
-                    contentDescription = null,
-                    tint = muted.copy(alpha = 0.55f),
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                    if (value.isEmpty()) {
-                        Text(
-                            text = stringResource(Res.string.filter_apps_hint),
-                            fontSize = 11.sp,
-                            lineHeight = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = font,
-                            color = muted.copy(alpha = 0.4f)
-                        )
-                    }
-                    innerTextField()
-                }
-                if (value.isNotEmpty()) {
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Box(
-                        modifier = Modifier
-                            .size(18.dp)
-                            .clip(RoundedCornerShape(corners.small))
-                            .clickable { onValueChange("") },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            MorpheIcons.Clear,
-                            contentDescription = stringResource(Res.string.clear),
-                            tint = muted.copy(alpha = 0.5f),
-                            modifier = Modifier.size(12.dp)
-                        )
-                    }
-                }
-            }
-        }
-    )
-}
-
 /** Loading skeleton. Ghost row that mimics SupportedAppListRow's shape. */
 @Composable
 internal fun SkeletonAppRow(
-    corners: MorpheCornerStyle,
     staggerOffsetMs: Int,
 ) {
     val infinite = rememberInfiniteTransition(label = "skeletonPulse")
@@ -458,9 +326,9 @@ internal fun SkeletonAppRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(corners.medium))
+            .clip(MorpheTheme.shapes.medium)
             .background(cardBg)
-            .border(1.dp, outline, RoundedCornerShape(corners.medium))
+            .border(1.dp, outline, MorpheTheme.shapes.medium)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
@@ -469,7 +337,7 @@ internal fun SkeletonAppRow(
             Box(
                 modifier = Modifier
                     .size(28.dp)
-                    .clip(RoundedCornerShape(corners.small))
+                    .clip(MorpheTheme.shapes.small)
                     .background(baseColor),
             )
             Spacer(Modifier.width(10.dp))
@@ -478,14 +346,14 @@ internal fun SkeletonAppRow(
                     modifier = Modifier
                         .height(10.dp)
                         .width(140.dp)
-                        .clip(RoundedCornerShape(corners.small))
+                        .clip(MorpheTheme.shapes.small)
                         .background(baseColor),
                 )
                 Box(
                     modifier = Modifier
                         .height(8.dp)
                         .width(180.dp)
-                        .clip(RoundedCornerShape(corners.small))
+                        .clip(MorpheTheme.shapes.small)
                         .background(baseColor.copy(alpha = alpha * 0.6f)),
                 )
             }
@@ -496,14 +364,14 @@ internal fun SkeletonAppRow(
                 modifier = Modifier
                     .height(20.dp)
                     .width(110.dp)
-                    .clip(RoundedCornerShape(corners.small))
+                    .clip(MorpheTheme.shapes.small)
                     .background(baseColor),
             )
             Box(
                 modifier = Modifier
                     .height(20.dp)
                     .width(130.dp)
-                    .clip(RoundedCornerShape(corners.small))
+                    .clip(MorpheTheme.shapes.small)
                     .background(baseColor.copy(alpha = alpha * 0.7f)),
             )
         }

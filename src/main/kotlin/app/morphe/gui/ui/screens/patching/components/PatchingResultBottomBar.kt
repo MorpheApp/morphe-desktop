@@ -18,26 +18,31 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.screens.patching.PatchingStatus
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.MorpheCornerStyle
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun FailureBottomBar(
+internal fun PatchingResultBottomBar(
     status: PatchingStatus,
-    corners: MorpheCornerStyle,
-    font: FontFamily,
     borderColor: Color,
     modifier: Modifier = Modifier,
 ) {
-    val accents = LocalMorpheAccents.current
-    val statusColor = if (status == PatchingStatus.CANCELLED) accents.warning else MaterialTheme.colorScheme.error
+    val statusColor = when (status) {
+        PatchingStatus.COMPLETED -> MorpheTheme.colors.secondary
+        PatchingStatus.CANCELLED -> MorpheTheme.colors.warning
+        PatchingStatus.FAILED -> MorpheTheme.colors.danger
+        else -> MorpheTheme.colors.primary
+    }
+
+    val statusText = when (status) {
+        PatchingStatus.COMPLETED -> stringResource(Res.string.patching_completed_loading_result)
+        PatchingStatus.CANCELLED -> stringResource(Res.string.patching_cancelled_loading_result)
+        PatchingStatus.FAILED -> stringResource(Res.string.patching_failed_loading_result)
+        else -> ""
+    }
 
     Row(
         modifier = modifier
@@ -64,10 +69,8 @@ internal fun FailureBottomBar(
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
-            text = if (status == PatchingStatus.CANCELLED) stringResource(Res.string.patching_cancelled_loading_result) else stringResource(Res.string.patching_failed_loading_result),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
+            text = statusText,
+            style = MorpheTheme.typography.labelSmall,
             color = statusColor
         )
     }

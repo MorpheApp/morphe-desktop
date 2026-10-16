@@ -5,26 +5,22 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.CacheManager
 import app.morphe.engine.MorpheData
 import app.morphe.engine.util.Logger
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.MorpheColors
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
@@ -47,9 +43,7 @@ fun ToolsDialog(
     allowCacheClear: Boolean = true,
     onCacheCleared: () -> Unit = {},
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
+    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = MorpheTheme.alphas.borderMuted)
 
     var showClearCacheConfirm by remember { mutableStateOf(false) }
     var showLicensesDialog by remember { mutableStateOf(false) }
@@ -61,9 +55,7 @@ fun ToolsDialog(
         title = {
             Text(
                 text = stringResource(Res.string.tools_dialog_title),
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
-                fontSize = 16.sp,
+                style = MorpheTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
         },
@@ -72,10 +64,11 @@ fun ToolsDialog(
                 modifier = Modifier.widthIn(min = 340.dp),
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
-                ActionButton(
+                MorpheButton(
                     label = stringResource(Res.string.tools_dialog_open_logs_button),
                     icon = MorpheIcons.BugReport,
-                    font = font,
+                    variant = MorpheButtonVariant.OUTLINED,
+                    modifier = Modifier.fillMaxWidth(),
                     borderColor = borderColor,
                     onClick = {
                         try {
@@ -91,10 +84,11 @@ fun ToolsDialog(
 
                 Spacer(Modifier.height(6.dp))
 
-                ActionButton(
+                MorpheButton(
                     label = stringResource(Res.string.tools_dialog_open_app_data_button),
                     icon = MorpheIcons.FolderOpen,
-                    font = font,
+                    variant = MorpheButtonVariant.OUTLINED,
+                    modifier = Modifier.fillMaxWidth(),
                     borderColor = borderColor,
                     onClick = {
                         try {
@@ -110,10 +104,11 @@ fun ToolsDialog(
 
                 Spacer(Modifier.height(6.dp))
 
-                ActionButton(
+                MorpheButton(
                     label = stringResource(Res.string.tools_dialog_view_licenses_button),
                     icon = MorpheIcons.Description,
-                    font = font,
+                    variant = MorpheButtonVariant.OUTLINED,
+                    modifier = Modifier.fillMaxWidth(),
                     borderColor = borderColor,
                     onClick = { showLicensesDialog = true }
                 )
@@ -127,14 +122,15 @@ fun ToolsDialog(
                     cacheClearFailed -> MaterialTheme.colorScheme.error
                     else -> MaterialTheme.colorScheme.error
                 }
-                ActionButton(
+                MorpheButton(
                     label = when {
                         cacheCleared -> stringResource(Res.string.tools_dialog_cache_cleared)
                         cacheClearFailed -> stringResource(Res.string.tools_dialog_clear_failed)
                         else -> stringResource(Res.string.tools_dialog_clear_cache_button)
                     },
                     icon = MorpheIcons.Delete,
-                    font = font,
+                    variant = MorpheButtonVariant.OUTLINED,
+                    modifier = Modifier.fillMaxWidth(),
                     borderColor = if (cacheCleared) MorpheColors.Teal.copy(alpha = 0.3f)
                     else MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
                     contentColor = cacheColor,
@@ -147,29 +143,19 @@ fun ToolsDialog(
                 val cacheSize = formatCacheSize(cacheBytes)
                 Text(
                     text = stringResource(Res.string.tools_dialog_cache_summary, cacheSize),
-                    fontSize = 11.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
             }
         },
         confirmButton = {
-            OutlinedButton(
-                modifier = Modifier.handCursor(),
+            MorpheButton(
+                label = stringResource(Res.string.close),
                 onClick = onDismiss,
-                shape = RoundedCornerShape(corners.small),
-                border = BorderStroke(1.dp, borderColor)
-            ) {
-                Text(
-                    stringResource(Res.string.close),
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+                variant = MorpheButtonVariant.OUTLINED,
+                size = MorpheButtonSize.COMPACT,
+            )
         }
     )
 
@@ -180,24 +166,19 @@ fun ToolsDialog(
             title = {
                 Text(
                     stringResource(Res.string.tools_dialog_confirm_clear_title),
-                    fontFamily = font,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp
+                    style = MorpheTheme.typography.titleMedium,
                 )
             },
             text = {
                 Text(
                     stringResource(Res.string.tools_dialog_confirm_clear_message),
-                    fontFamily = font,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
+                    style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 18.sp
                 )
             },
             confirmButton = {
-                Button(
-                    modifier = Modifier.handCursor(),
+                MorpheButton(
+                    label = stringResource(Res.string.clear),
                     onClick = {
                         val success = clearAllCache()
                         cacheCleared = success
@@ -205,28 +186,17 @@ fun ToolsDialog(
                         showClearCacheConfirm = false
                         if (success) onCacheCleared()
                     },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error
-                    ),
-                    shape = RoundedCornerShape(corners.small)
-                ) {
-                    Text(
-                        stringResource(Res.string.clear),
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 11.sp
-                    )
-                }
+                    variant = MorpheButtonVariant.DANGER,
+                    size = MorpheButtonSize.COMPACT,
+                )
             },
             dismissButton = {
-                TextButton(onClick = { showClearCacheConfirm = false }, modifier = Modifier.handCursor()) {
-                    Text(
-                        stringResource(Res.string.cancel),
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 11.sp
-                    )
-                }
+                MorpheButton(
+                    label = stringResource(Res.string.cancel),
+                    onClick = { showClearCacheConfirm = false },
+                    variant = MorpheButtonVariant.GHOST,
+                    size = MorpheButtonSize.COMPACT,
+                )
             }
         )
     }

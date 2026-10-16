@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import app.morphe.engine.model.VersionStatus
-import app.morphe.gui.ui.theme.LocalMorpheAccents
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -21,8 +21,8 @@ enum class StatusColorType { PRIMARY, WARNING, ERROR }
 
 @Composable
 fun StatusColorType.toColor(): Color = when (this) {
-    StatusColorType.PRIMARY -> LocalMorpheAccents.current.primary
-    StatusColorType.WARNING -> LocalMorpheAccents.current.warning
+    StatusColorType.PRIMARY -> MorpheTheme.colors.primary
+    StatusColorType.WARNING -> MorpheTheme.colors.warning
     StatusColorType.ERROR -> MaterialTheme.colorScheme.error
 }
 

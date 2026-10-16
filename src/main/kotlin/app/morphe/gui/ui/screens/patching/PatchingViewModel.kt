@@ -46,6 +46,7 @@ class PatchingViewModel(
 
     private var patchingJob: Job? = null
     private var stateMachine: PatcherState? = null
+    @Volatile private var isCancelledByUser = false
 
     fun markAutoNavigated() {
         _uiState.update { it.copy(hasAutoNavigated = true) }
@@ -55,6 +56,7 @@ class PatchingViewModel(
         if (_uiState.value.status != PatchingStatus.IDLE) return
 
         patchingJob = viewModelScope.launch {
+            isCancelledByUser = false
             stateMachine = null
             var locale = java.util.Locale.getDefault()
             val (preparingState, cpuSampler, ioSampler) = withContext(Dispatchers.IO) {
@@ -69,7 +71,7 @@ class PatchingViewModel(
                 
                 val appVersion = ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
                 val sourcesSnapshot = config.historyMetadata?.sourcesSnapshot
-                val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE PATCHES"
+                val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE"
                 val patchesVersion = sourcesSnapshot?.firstOrNull()?.version ?: "?"
                 val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
                 
@@ -155,18 +157,7 @@ class PatchingViewModel(
                     config = engineConfig,
                     onProgress = { message ->
                         if (_uiState.value.status != PatchingStatus.CANCELLED) {
-                            val (cleanMessage, level) = when {
-                                message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
-                                message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
-                                message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
-                                message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
-                                else -> message to LogLevel.INFO
-                            }
-                            when (level) {
-                                LogLevel.ERROR -> Logger.error(cleanMessage)
-                                LogLevel.WARNING -> Logger.warn(cleanMessage)
-                                LogLevel.INFO -> Logger.info(cleanMessage)
-                            }
+                            parseAndLogEngineMessage(message)
                             viewModelScope.launch(Dispatchers.Main) {
                                 parseAndAddLog(message)
                             }
@@ -176,6 +167,7 @@ class PatchingViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
+                if (isCancelledByUser || _uiState.value.status == PatchingStatus.CANCELLED) return@launch
                 addLog("Patching error: ${e.message ?: "unknown error"}", LogLevel.ERROR)
                 _uiState.update { it.copy(
                     status = PatchingStatus.FAILED,
@@ -187,7 +179,7 @@ class PatchingViewModel(
                 memoryJob.cancel()
             }
 
-            if (_uiState.value.status == PatchingStatus.CANCELLED) return@launch
+            if (isCancelledByUser || _uiState.value.status == PatchingStatus.CANCELLED) return@launch
 
             Logger.info("Patching complete in %.1f seconds".format(Locale.US, (System.currentTimeMillis() - startTime) / 1000.0))
 
@@ -206,10 +198,7 @@ class PatchingViewModel(
                 Logger.info("Patching completed: ${engineResult.outputPath}")
             } else {
                 val reason = engineResult.failureDetail
-                    ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
-                        val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
-                        getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
-                    }
+                    ?: resolveStepFailureMessage(engineResult)
                     ?: if (engineResult.failedPatches.isNotEmpty())
                         getString(Res.string.patching_error_failed_patches, engineResult.failedPatches.joinToString(", ") { it.name })
                     else getString(Res.string.error_patching_unknown)
@@ -223,12 +212,11 @@ class PatchingViewModel(
     }
 
     fun cancelPatching() {
+        isCancelledByUser = true
+        _uiState.update { it.copy(status = PatchingStatus.CANCELLED) }
         patchingJob?.cancel()
         patchingJob = null
         addLog("Patching cancelled by user", LogLevel.WARNING)
-        _uiState.update { it.copy(
-            status = PatchingStatus.CANCELLED
-        ) }
         Logger.info("Patching cancelled by user")
     }
 
@@ -329,7 +317,7 @@ data class PatchingUiState(
     val androidVersion: String = "?",
     val deviceManufacturer: String = "?",
     val appVersion: String = "?",
-    val patchesSourceName: String = "MORPHE PATCHES",
+    val patchesSourceName: String = "MORPHE",
     val patchesVersion: String = "?",
     val isSplit: Boolean = false,
     val ramFreeInfo: String = "?",
@@ -347,6 +335,29 @@ data class PatchingUiState(
     val canCancel: Boolean
         get() = isInProgress
 
+}
+
+internal fun parseAndLogEngineMessage(message: String): Pair<String, LogLevel> {
+    val (cleanMessage, level) = when {
+        message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
+        message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
+        message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
+        message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
+        else -> message to LogLevel.INFO
+    }
+    when (level) {
+        LogLevel.ERROR -> Logger.error(cleanMessage)
+        LogLevel.WARNING -> Logger.warn(cleanMessage)
+        LogLevel.INFO -> Logger.info(cleanMessage)
+    }
+    return cleanMessage to level
+}
+
+internal suspend fun resolveStepFailureMessage(result: PatchEngine.Result): String? {
+    return result.stepResults.lastOrNull { !it.success && it.error != null }?.let {
+        val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
+        getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
+    }
 }
 
 data class IoUsage(val readKbPerSec: Int, val writeKbPerSec: Int, val totalKbPerSec: Int = readKbPerSec + writeKbPerSec)

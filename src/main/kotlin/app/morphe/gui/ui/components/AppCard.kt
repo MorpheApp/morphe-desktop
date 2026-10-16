@@ -41,10 +41,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.components.color.toBrush
-import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.shiftLightness
 import app.morphe.morphe_desktop.generated.resources.*
@@ -60,7 +58,7 @@ fun parseHexColor(hexString: String?, fallback: Color): Color {
             else -> return fallback
         }
         Color(colorInt)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         fallback
     }
 }
@@ -74,7 +72,7 @@ private const val CHIP_INK_WHITEN = 0.8f
 
 /** Ink for chips drawn on a card fill: near-white, still carrying the accent. */
 val cardChipInk: Color
-    @Composable get() = lerp(LocalMorpheAccents.current.primary, Color.White, CHIP_INK_WHITEN)
+    @Composable get() = lerp(MorpheTheme.colors.primary, Color.White, CHIP_INK_WHITEN)
 
 fun MorpheFill?.resolveAccent(accent: Color): MorpheFill? {
     if (this !is MorpheFill.Accent) return this
@@ -144,7 +142,7 @@ private fun CardPalette.withBundleBase(appIconColorHex: String?): CardPalette =
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = LocalMorpheCorners.current.medium,
+    cornerRadius: Dp = MorpheTheme.shapes.mediumDp,
     appIconColorHex: String? = null,
     fill: MorpheFill? = null,
     interactive: Boolean = true,
@@ -166,7 +164,7 @@ fun AppCard(
 
     val shape = RoundedCornerShape(cornerRadius)
 
-    val fill = fill.resolveAccent(LocalMorpheAccents.current.primary)
+    val fill = fill.resolveAccent(MorpheTheme.colors.primary)
     val (baseColor, midColor, endColor) = cardPalette(fill, appIconColorHex, defaultCardPalette())
 
     Box(
@@ -226,8 +224,8 @@ fun AppCard(
         content()
 
         if (onCustomise != null) {
-            val buttonShape = RoundedCornerShape(LocalMorpheCorners.current.small)
-            val buttonFill = LocalMorpheAccents.current.primary.onCardGradient()
+            val buttonShape = MorpheTheme.shapes.small
+            val buttonFill = MorpheTheme.colors.primary.onCardGradient()
             val buttonInk = buttonFill.contrastingForeground()
             AnimatedVisibility(
                 visible = isHovered,

@@ -46,6 +46,7 @@ import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.logIfFailed
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
@@ -362,21 +363,8 @@ class HomeViewModel(
                 val result = EnabledSourcesLoader.loadAll(enabled, prefs, engineConfigRepository.loadConfig().excludedMppPatterns)
 
                 if (!result.anyLoaded) {
+                    result.logIfFailed()
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
-                    val rawTechnicalError = firstThrowable?.message
-                        ?: result.resolved.firstNotNullOfOrNull { it.error }
-                    val logMessage = when {
-                        rawTechnicalError.isNullOrBlank() -> "Failed to load any patches"
-                        rawTechnicalError.startsWith("Failed to load", ignoreCase = true) -> rawTechnicalError
-                        else -> "Failed to load any patches: $rawTechnicalError"
-                    }
-                    // Log the real throwable (full stack). Never only a null/blank .message.
-                    if (firstThrowable != null) {
-                        Logger.error(logMessage, firstThrowable)
-                    } else {
-                        Logger.warn(logMessage)
-                    }
-
                     val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }
                         ?: getString(Res.string.error_could_not_load_patches)

@@ -234,7 +234,6 @@ fun HomeScreenContent(
             onSupportedAppFor = { pkg, overrides -> viewModel.supportedAppFor(pkg, overrides) },
             onDownloadBundle = { name, tag, onProgress -> viewModel.downloadBundle(name, tag, onProgress) },
             onDismiss = { detailRecord = null },
-            onRepatch = { onRepatch(record.packageName) },
             preparingPatch = preparingPatch,
             patchPrepProgress = patchPrepProgress,
             onPatchWith = { apkPath, overrides ->

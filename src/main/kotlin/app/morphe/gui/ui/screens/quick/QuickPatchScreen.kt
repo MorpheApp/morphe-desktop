@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.quick
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import app.morphe.gui.ui.components.rememberSymmetricPadding
 import app.morphe.engine.MorpheData
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.util.Logger
@@ -122,14 +121,8 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
         activeSourceId = patchSourceManager.getActiveSource().id
     }
 
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
-    val density = LocalDensity.current
-    var leadingWidthPx by remember { mutableIntStateOf(0) }
-    var trailingWidthPx by remember { mutableIntStateOf(0) }
-    val centerSidePadding = with(density) { maxOf(leadingWidthPx, trailingWidthPx).toDp() } + 16.dp
+    val paddingState = rememberSymmetricPadding()
 
     if (showSourcePicker) {
         // Same per-source version, channel, and failure data Expert mode feeds the
@@ -165,8 +158,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
         val logFile = Logger.getLogFile() ?: File(MorpheData.logsDir, "morphe.log")
         LogFileViewerDialog(
             file = logFile,
-            corners = corners,
-            font = font,
             borderColor = borderColor,
             onDismiss = { showLogViewer = false }
         )
@@ -201,7 +192,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         modifier = Modifier
                             .align(Alignment.CenterStart)
                             .padding(start = 12.dp)
-                            .onSizeChanged { leadingWidthPx = it.width }
+                            .onSizeChanged { paddingState.leadingWidthPx = it.width }
                     ) {
                         BrandingLogo()
                     }
@@ -212,7 +203,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                     Box(
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .padding(start = centerSidePadding, end = centerSidePadding)
+                            .padding(horizontal = paddingState.centerSidePadding)
                     ) {
                         PatchesVersionBadge(
                             patchesVersion = uiState.patchesVersion,
@@ -227,7 +218,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(end = 12.dp)
-                            .onSizeChanged { trailingWidthPx = it.width }
+                            .onSizeChanged { paddingState.trailingWidthPx = it.width }
                     ) {
                         TopBarRow(
                             allowCacheClear = false,
@@ -300,12 +291,10 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                 )
                             }
                             QuickPatchPhase.COMPLETED -> {
-                                val info = uiState.apkInfo ?: lastApkInfo
                                 val output = uiState.outputPath ?: lastOutputPath
-                                if (info != null && output != null) {
+                                if (output != null) {
                                     CompletedContent(
                                         outputPath = output,
-                                        apkInfo = info,
                                         onPatchAnother = { viewModel.reset() }
                                     )
                                 }

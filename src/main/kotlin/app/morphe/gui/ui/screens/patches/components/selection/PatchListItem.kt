@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.patches.components.selection
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
@@ -21,13 +20,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -53,12 +50,13 @@ import androidx.compose.ui.unit.sp
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
+import app.morphe.gui.ui.components.MorpheIconButton
+import app.morphe.gui.ui.components.MorpheIconButtonSize
+import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheDimens
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -77,25 +75,23 @@ internal fun PatchListItem(
     getOptionValue: (optionKey: String, default: String?) -> String = { _, d -> d ?: "" },
     onOptionValueChange: (optionKey: String, value: String) -> Unit = { _, _ -> }
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
+    val primaryColor = MorpheTheme.colors.primary
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
 
     val colors = MaterialTheme.colorScheme
     val containerColor = when {
-        isSelected -> accents.primary.copy(alpha = 0.22f)
-        isHovered -> accents.primary.copy(alpha = 0.06f)
+        isSelected -> primaryColor.copy(alpha = 0.22f)
+        isHovered -> primaryColor.copy(alpha = 0.06f)
         else -> Color.Transparent
     }
     val borderColor by animateColorAsState(
         when {
-            isSelected -> accents.primary.copy(alpha = 0.7f)
+            isSelected -> primaryColor.copy(alpha = 0.7f)
             isHovered -> colors.outlineVariant
             else -> colors.outlineVariant.copy(alpha = 0.5f)
         },
-        animationSpec = tween(150)
+        animationSpec = MorpheMotion.fastTween()
     )
 
     var showOptions by remember { mutableStateOf(false) }
@@ -104,9 +100,9 @@ internal fun PatchListItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(corners.small))
-            .background(containerColor, RoundedCornerShape(corners.small))
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+            .clip(MorpheTheme.shapes.small)
+            .background(containerColor, MorpheTheme.shapes.small)
+            .border(1.dp, borderColor, MorpheTheme.shapes.small)
             .hoverable(interactionSource)
     ) {
         // The row speaks for its contents, so the New badge has to be read out
@@ -129,12 +125,12 @@ internal fun PatchListItem(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val boxShape = RoundedCornerShape(corners.small)
+            val boxShape = MorpheTheme.shapes.small
             Box(
                 modifier = Modifier
                     .size(18.dp)
                     .clip(boxShape)
-                    .background(if (isSelected) accents.primary else Color.Transparent, boxShape)
+                    .background(if (isSelected) primaryColor else Color.Transparent, boxShape)
                     .then(
                         if (isSelected) Modifier
                         else Modifier.border(
@@ -149,7 +145,7 @@ internal fun PatchListItem(
                     Icon(
                         imageVector = MorpheIcons.Check,
                         contentDescription = null,
-                        tint = accents.primary.contrastingForeground(),
+                        tint = primaryColor.contrastingForeground(),
                         modifier = Modifier.size(12.dp)
                     )
                 }
@@ -163,9 +159,7 @@ internal fun PatchListItem(
                 ) {
                     Text(
                         text = patch.name,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -177,35 +171,10 @@ internal fun PatchListItem(
                     }
 
                     if (sourceName != null) {
-                        val badgeColor = if (isSelected) {
-                            accents.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
-                        Box(
-                            modifier = Modifier
-                                .border(
-                                    1.dp,
-                                    badgeColor.copy(alpha = if (isSelected) 0.3f else 0.2f),
-                                    RoundedCornerShape(corners.small)
-                                )
-                                .background(
-                                    if (isSelected) badgeColor.copy(alpha = 0.06f) else Color.Transparent,
-                                    RoundedCornerShape(corners.small)
-                                )
-                                .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
-                                .padding(horizontal = 8.dp, vertical = 2.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = sourceName,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = badgeColor.copy(alpha = if (isSelected) 1f else 0.7f),
-                                maxLines = 1
-                            )
-                        }
+                        MorpheBadge(
+                            text = sourceName,
+                            tone = if (isSelected) MorpheBadgeTone.Primary else MorpheBadgeTone.Neutral,
+                        )
                     }
 
                     if (patch.compatiblePackages.isNotEmpty()) {
@@ -216,25 +185,10 @@ internal fun PatchListItem(
                                 meaningful.takeLast(2).joinToString(" ")
                                     .replaceFirstChar { it.uppercase() }
                             }
-                            Box(
-                                modifier = Modifier
-                                    .border(
-                                        1.dp,
-                                        MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
-                                        RoundedCornerShape(corners.small)
-                                    )
-                                    .defaultMinSize(minHeight = LocalMorpheDimens.current.chipHeight)
-                                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = displayName,
-                                    fontSize = 11.sp,
-                                    fontFamily = font,
-                                    fontWeight = FontWeight.Normal,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                            MorpheBadge(
+                                text = displayName,
+                                tone = MorpheBadgeTone.Neutral,
+                            )
                         }
                     }
                 }
@@ -243,9 +197,7 @@ internal fun PatchListItem(
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = patch.description,
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
@@ -255,65 +207,35 @@ internal fun PatchListItem(
 
             // Gear button for options
             if (hasOptions) {
-                val gearHover = remember { MutableInteractionSource() }
-                val isGearHovered by gearHover.collectIsHoveredAsState()
-                val gearBorder by animateColorAsState(
-                    when {
-                        showOptions -> accents.primary.copy(alpha = 0.5f)
-                        isGearHovered -> accents.primary.copy(alpha = 0.3f)
-                        else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
-                    },
-                    animationSpec = tween(150)
-                )
-                val gearBg by animateColorAsState(
-                    if (showOptions) accents.primary.copy(alpha = 0.08f)
-                    else Color.Transparent,
-                    animationSpec = tween(150)
-                )
-
                 Box(
                     modifier = Modifier.size(48.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Gear button
                     val layoutDirection = LocalLayoutDirection.current
-                    Box(
-                        modifier = Modifier
-                            .size(44.dp)
-                            .hoverable(gearHover)
-                            .clip(RoundedCornerShape(corners.small))
-                            .border(1.dp, gearBorder, RoundedCornerShape(corners.small))
-                            .background(gearBg, RoundedCornerShape(corners.small))
-                            .handCursor()
-                            .clickable { showOptions = !showOptions },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = MorpheIcons.Settings,
-                            contentDescription = stringResource(Res.string.patch_selection_configure_options_description),
-                            tint = when {
-                                showOptions -> accents.primary
-                                isGearHovered -> accents.primary.copy(alpha = 0.7f)
-                                else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                            },
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
+                    MorpheIconButton(
+                        icon = MorpheIcons.Settings,
+                        contentDescription = stringResource(Res.string.patch_selection_configure_options_description),
+                        size = MorpheIconButtonSize.LARGE,
+                        iconSize = 22.dp,
+                        variant = if (showOptions) MorpheIconButtonVariant.PRIMARY else MorpheIconButtonVariant.OUTLINED,
+                        onClick = { showOptions = !showOptions }
+                    )
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .offset(x = if (layoutDirection == LayoutDirection.Rtl) (-3).dp else 3.dp, y = (-3).dp)
                             .size(18.dp)
-                            .background(accents.primary, RoundedCornerShape(corners.small)),
+                            .background(primaryColor, MorpheTheme.shapes.small),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "${patch.options.size}",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = font,
+                            style = MorpheTheme.typography.labelSmall.copy(
+                                fontSize = 9.sp,
+                                lineHeight = 9.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
                             color = MaterialTheme.colorScheme.onPrimary,
-                            lineHeight = 9.sp
                         )
                     }
                 }
