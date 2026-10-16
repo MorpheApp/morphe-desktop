@@ -24,7 +24,7 @@ import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.ResultScreenRoute
-import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.screens.patching.components.*
 import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -169,7 +169,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                                     .align(Alignment.CenterEnd)
                                     .fillMaxHeight(),
                                 adapter = rememberScrollbarAdapter(scrollState),
-                                style = morpheScrollbarStyle()
+                                style = MorpheScrollbarStyle()
                             )
                         }
                     }

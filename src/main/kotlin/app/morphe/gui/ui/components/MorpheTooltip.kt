@@ -49,6 +49,7 @@ private class AboveAnchor(private val gap: Int) : PopupPositionProvider {
 fun MorpheTooltip(
     text: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val density = LocalDensity.current
@@ -58,7 +59,7 @@ fun MorpheTooltip(
 
     Box(modifier = modifier.hoverable(hover)) {
         content()
-        if (isHovered) {
+        if (isHovered && enabled) {
             Popup(popupPositionProvider = remember(gap) { AboveAnchor(gap) }) {
                 Surface(
                     shape = MorpheTheme.shapes.small,

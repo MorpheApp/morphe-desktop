@@ -28,7 +28,7 @@ import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
-import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.panelFill
@@ -187,7 +187,7 @@ internal fun ExpertFailureContent(
                         VerticalScrollbar(
                             modifier = Modifier.align(Alignment.CenterEnd),
                             adapter = rememberScrollbarAdapter(scrollState),
-                            style = morpheScrollbarStyle()
+                            style = MorpheScrollbarStyle()
                         )
                     }
                 }

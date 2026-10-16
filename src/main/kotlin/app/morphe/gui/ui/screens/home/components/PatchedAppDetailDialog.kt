@@ -49,8 +49,8 @@ import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheDialogSurface
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.SlimSearchField
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ActivePatchSource
 import app.morphe.gui.ui.screens.home.BundleChoice
@@ -527,7 +527,7 @@ fun PatchedAppDetailDialog(
                     .align(Alignment.CenterEnd)
                     .fillMaxHeight()
                     .padding(vertical = 6.dp, horizontal = 3.dp),
-                style = morpheScrollbarStyle(),
+                style = MorpheScrollbarStyle(),
             )
         }
         }

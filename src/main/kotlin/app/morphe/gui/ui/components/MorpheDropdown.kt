@@ -356,7 +356,7 @@ internal fun DropdownMenuPopup(
                             VerticalScrollbar(
                                 modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                                 adapter = rememberScrollbarAdapter(listScroll),
-                                style = morpheScrollbarStyle(),
+                                style = MorpheScrollbarStyle(),
                             )
                         }
                     }

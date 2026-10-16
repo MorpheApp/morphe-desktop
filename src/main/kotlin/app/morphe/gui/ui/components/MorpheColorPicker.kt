@@ -45,7 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 fun MorpheColorPickerCard(
     argb: Int,
     showAlpha: Boolean = true,
-    showSaved: Boolean = true,
+    showSaved: Boolean = false,
     onPick: (Int) -> Unit,
 ) {
     val shapes = MorpheTheme.shapes
@@ -140,12 +140,17 @@ fun MorpheColorPickerCard(
             }
             
             if (showSaved) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(Res.string.color_picker_saved),
-                        style = MorpheTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (CustomSwatches.colors.isNotEmpty()) {
+                        Text(
+                            text = stringResource(Res.string.color_picker_saved),
+                            style = MorpheTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                     
                     Spacer(Modifier.weight(1f))
                     

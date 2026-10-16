@@ -22,13 +22,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -43,6 +46,7 @@ fun MorpheCardChip(
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     onCard: Boolean = true,
+    tooltip: String? = null,
     onIconClick: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
 ) {
@@ -72,34 +76,56 @@ fun MorpheCardChip(
         animationSpec = MorpheMotion.fastTween(),
     )
 
-    Row(
-        modifier = modifier
-            .clip(shape)
-            .background(fill)
-            .border(1.dp, borderColor, shape)
-            .hoverable(hover)
-            .then(if (onClick != null) Modifier.handCursor().clickable(onClick = onClick) else Modifier)
-            .defaultMinSize(minHeight = MorpheTheme.dimens.chipHeight)
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        Text(text, style = MorpheTheme.typography.labelSmall, color = ink)
-        if (icon != null) {
-            Icon(
-                icon,
-                contentDescription = null,
-                tint = ink,
-                modifier = Modifier
-                    .then(
-                        if (onIconClick != null) {
-                            Modifier.handCursor().clickable(onClick = onIconClick)
-                        } else {
-                            Modifier
-                        }
-                    )
-                    .size(12.dp),
+    var isTruncated by remember(text) { mutableStateOf(false) }
+
+    val chipContent = @Composable { chipModifier: Modifier ->
+        Row(
+            modifier = chipModifier
+                .clip(shape)
+                .background(fill)
+                .border(1.dp, borderColor, shape)
+                .hoverable(hover)
+                .then(if (onClick != null) Modifier.handCursor().clickable(onClick = onClick) else Modifier)
+                .defaultMinSize(minHeight = MorpheTheme.dimens.chipHeight)
+                .padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(
+                text = text,
+                style = MorpheTheme.typography.labelSmall,
+                color = ink,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                onTextLayout = { textLayoutResult ->
+                    isTruncated = textLayoutResult.hasVisualOverflow || textLayoutResult.isLineEllipsized(0)
+                },
+                modifier = Modifier.weight(1f, fill = false),
             )
+            if (icon != null) {
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = ink,
+                    modifier = Modifier
+                        .then(
+                            if (onIconClick != null) {
+                                Modifier.handCursor().clickable(onClick = onIconClick)
+                            } else {
+                                Modifier
+                            }
+                        )
+                        .size(12.dp),
+                )
+            }
         }
+    }
+
+    if (tooltip != null) {
+        MorpheTooltip(text = tooltip, enabled = isTruncated, modifier = modifier) {
+            chipContent(Modifier)
+        }
+    } else {
+        chipContent(modifier)
     }
 }

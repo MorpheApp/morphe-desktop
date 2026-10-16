@@ -212,7 +212,7 @@ internal fun CompletedContent(
         VerticalScrollbar(
             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
             adapter = rememberScrollbarAdapter(completedScroll),
-            style = morpheScrollbarStyle(),
+            style = MorpheScrollbarStyle(),
         )
     }
 }

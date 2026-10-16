@@ -16,7 +16,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
  * the active Morphe theme so the scrollbar matches the rest of the geometry.
  */
 @Composable
-fun morpheScrollbarStyle(
+fun MorpheScrollbarStyle(
     thickness: Dp = 6.dp,
     minimalHeight: Dp = 24.dp,
     idleAlpha: Float = 0.55f

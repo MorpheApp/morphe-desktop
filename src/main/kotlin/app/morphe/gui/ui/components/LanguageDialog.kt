@@ -199,7 +199,7 @@ fun LanguageDialog(
                                 .fillMaxHeight()
                                 .padding(vertical = 2.dp),
                             adapter = rememberScrollbarAdapter(listState),
-                            style = morpheScrollbarStyle()
+                            style = MorpheScrollbarStyle()
                         )
                     }
                 }

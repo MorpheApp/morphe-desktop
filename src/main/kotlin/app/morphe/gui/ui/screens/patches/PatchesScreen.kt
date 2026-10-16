@@ -21,9 +21,9 @@ import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.ScreenErrorDialog
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.patches.components.patches.*
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.MorpheFilePicker
@@ -179,7 +179,7 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         VerticalScrollbar(
                             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                             adapter = rememberScrollbarAdapter(releasesListState),
-                            style = morpheScrollbarStyle()
+                            style = MorpheScrollbarStyle()
                         )
                     }
 

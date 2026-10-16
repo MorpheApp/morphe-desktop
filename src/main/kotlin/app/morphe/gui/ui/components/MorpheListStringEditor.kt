@@ -276,7 +276,7 @@ fun MorpheListStringDialog(
                                 .align(Alignment.CenterEnd)
                                 .fillMaxHeight(),
                             adapter = rememberScrollbarAdapter(scrollState),
-                            style = morpheScrollbarStyle(),
+                            style = MorpheScrollbarStyle(),
                         )
                     }
                 }

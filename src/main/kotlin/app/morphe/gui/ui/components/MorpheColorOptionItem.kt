@@ -284,7 +284,6 @@ fun MorpheColorOptionItem(
             MorpheColorPickerCard(
                 argb = argbInt,
                 showAlpha = true,
-                showSaved = true,
                 onPick = { newArgb ->
                     val hexStr = "#%08X".format(newArgb)
                     textInput = hexStr

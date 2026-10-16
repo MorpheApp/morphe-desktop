@@ -59,7 +59,7 @@ import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.components.MorpheIconButton
 import app.morphe.gui.ui.components.MorpheIconButtonSize
 import app.morphe.gui.ui.components.MorpheIconButtonVariant
-import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.MorpheFilePicker
@@ -471,7 +471,7 @@ fun IconStudioDialog(
                         VerticalScrollbar(
                             adapter = rememberScrollbarAdapter(scrollState),
                             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                            style = morpheScrollbarStyle(),
+                            style = MorpheScrollbarStyle(),
                         )
                     }
                 }

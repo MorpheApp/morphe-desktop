@@ -240,6 +240,7 @@ internal fun SupportedAppsRow(
                                     MorpheCardChip(
                                         text = versionToDisplay?.let { "v$it" } ?: stringResource(Res.string.download),
                                         icon = MorpheIcons.OpenInNew,
+                                        tooltip = versionToDisplay?.let { "v$it" },
                                     ) {
                                         openUrlAndFollowRedirects(url) { resolved ->
                                             uriHandler.openUri(resolved)
@@ -256,7 +257,7 @@ internal fun SupportedAppsRow(
                     HorizontalScrollbar(
                         adapter = rememberScrollbarAdapter(cardsScrollState),
                         modifier = Modifier.fillMaxWidth(),
-                        style = morpheScrollbarStyle()
+                        style = MorpheScrollbarStyle()
                     )
                 }
             }

@@ -178,7 +178,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                                     .fillMaxHeight()
                                     .padding(vertical = 6.dp),
                                 adapter = rememberScrollbarAdapter(listState),
-                                style = morpheScrollbarStyle()
+                                style = MorpheScrollbarStyle()
                             )
                         }
                     }
@@ -548,7 +548,7 @@ private fun NoticeTextDialog(onDismiss: () -> Unit) {
                             .fillMaxHeight()
                             .padding(vertical = 6.dp),
                         adapter = rememberScrollbarAdapter(scrollState),
-                        style = morpheScrollbarStyle()
+                        style = MorpheScrollbarStyle()
                     )
                 }
             }
@@ -627,7 +627,7 @@ private fun LicenseTextDialog(license: License, onDismiss: () -> Unit) {
                                 .fillMaxHeight()
                                 .padding(vertical = 6.dp),
                             adapter = rememberScrollbarAdapter(scrollState),
-                            style = morpheScrollbarStyle()
+                            style = MorpheScrollbarStyle()
                         )
                     } else {
                         Column(

@@ -176,7 +176,7 @@ internal fun ErrorContent(
                         VerticalScrollbar(
                             modifier = Modifier.align(Alignment.CenterEnd),
                             adapter = rememberScrollbarAdapter(scrollState),
-                            style = morpheScrollbarStyle()
+                            style = MorpheScrollbarStyle()
                         )
                     }
                 }

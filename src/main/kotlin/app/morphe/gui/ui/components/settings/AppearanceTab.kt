@@ -205,6 +205,7 @@ internal fun AppearanceTab(
                     MorpheColorPickerCard(
                         argb = customAccentColorArgb ?: 0xFFF44336.toInt(),
                         showAlpha = false,
+                        showSaved = true,
                         onPick = { onCustomAccentColorChange(it) }
                     )
                 }

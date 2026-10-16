@@ -103,7 +103,7 @@ fun ChangelogDialog(
                     VerticalScrollbar(
                         modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                         adapter = rememberScrollbarAdapter(changelogScroll),
-                        style = morpheScrollbarStyle(),
+                        style = MorpheScrollbarStyle(),
                     )
                 }
             }

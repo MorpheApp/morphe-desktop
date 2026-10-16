@@ -249,6 +249,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                 )
                             }
                         }
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
                     // ── Main content ──

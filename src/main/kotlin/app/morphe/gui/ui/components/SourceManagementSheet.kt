@@ -291,7 +291,7 @@ fun SourceManagementSheet(
                             .fillMaxHeight()
                             .padding(vertical = 4.dp),
                         adapter = rememberScrollbarAdapter(scrollState),
-                        style = morpheScrollbarStyle()
+                        style = MorpheScrollbarStyle()
                     )
                 }
             }

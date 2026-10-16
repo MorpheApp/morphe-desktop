@@ -334,7 +334,7 @@ fun ResultScreenContent(outputPath: String) {
                         .align(Alignment.CenterEnd)
                         .fillMaxHeight(),
                     adapter = rememberScrollbarAdapter(scrollState),
-                    style = morpheScrollbarStyle()
+                    style = MorpheScrollbarStyle()
                 )
             }
         }

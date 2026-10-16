@@ -82,6 +82,7 @@ fun MorpheButton(
     containerColor: Color? = null,
     contentColor: Color? = null,
     borderColor: Color? = null,
+    contentAlignment: Alignment = Alignment.Center,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -183,7 +184,7 @@ fun MorpheButton(
             .handCursor(enabled)
             .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = size.horizontalPadding, vertical = size.verticalPadding),
-        contentAlignment = Alignment.Center,
+        contentAlignment = contentAlignment,
     ) {
         CompositionLocalProvider(
             LocalContentColor provides resolvedContentColor,
@@ -214,6 +215,7 @@ fun MorpheButton(
     containerColor: Color? = null,
     contentColor: Color? = null,
     borderColor: Color? = null,
+    contentAlignment: Alignment = Alignment.Center,
     onClick: () -> Unit,
 ) {
     MorpheButton(
@@ -226,6 +228,7 @@ fun MorpheButton(
         containerColor = containerColor,
         contentColor = contentColor,
         borderColor = borderColor,
+        contentAlignment = contentAlignment,
     ) {
         if (icon != null) {
             Icon(

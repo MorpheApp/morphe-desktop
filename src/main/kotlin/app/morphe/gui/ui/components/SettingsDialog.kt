@@ -250,7 +250,7 @@ fun SettingsDialog(
                             .offset(x = 8.dp)
                             .fillMaxHeight(),
                         adapter = rememberScrollbarAdapter(contentScroll),
-                        style = morpheScrollbarStyle(),
+                        style = MorpheScrollbarStyle(),
                     )
                 }
             }

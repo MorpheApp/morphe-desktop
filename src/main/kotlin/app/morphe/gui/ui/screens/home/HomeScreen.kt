@@ -34,28 +34,22 @@ import app.morphe.gui.ui.screens.home.components.HeaderBar
 import app.morphe.gui.ui.screens.home.components.HomeBanners
 import app.morphe.gui.ui.screens.home.components.HomeSplitLayout
 import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
-import app.morphe.gui.ui.screens.home.components.RepatchMissingApkDialog
 import app.morphe.gui.ui.screens.home.components.UninstallConfirmDialog
 import app.morphe.gui.ui.screens.home.components.VersionWarningDialog
 import app.morphe.gui.ui.screens.home.components.handleContinue
 import app.morphe.gui.ui.screens.home.components.openFilePicker
-import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
-import app.morphe.gui.ui.screens.patches.PatchesScreen
-import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceVersionMap
-import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -83,10 +77,6 @@ fun HomeScreenContent(
     var showSourceManagementSheet by rememberSaveable { mutableStateOf(false) }
     var pendingReopenSheet by rememberSaveable { mutableStateOf(false) }
 
-    // One-click repatch: a patched-app row's "Re-patch" action. Jump straight to
-    // patch selection with the input APK + the record's saved selection, using
-    // the CURRENT resolved sources (so it repatches against current bundle versions).
-    var repatchMissingRecord by remember { mutableStateOf<PatchedAppRecord?>(null) }
     // Launch patch selection for a record with explicit patch files (re-patch uses
     // the current resolved set. Update passes freshly-resolved latest files).
     fun launchPatch(
@@ -110,22 +100,6 @@ fun HomeScreenContent(
                 apkVersion = record.apkVersion,
             )
         )
-    }
-
-    fun repatchWithApk(record: PatchedAppRecord, apkPath: String) {
-        launchPatch(
-            record, apkPath,
-            viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
-            viewModel.getAllResolvedPatchSourceNames(),
-        )
-    }
-    val onRepatch: (String) -> Unit = onRepatch@{ pkg ->
-        val record = viewModel.getPatchedRecord(pkg) ?: return@onRepatch
-        if (File(record.inputApkPath).exists()) {
-            repatchWithApk(record, record.inputApkPath)
-        } else {
-            repatchMissingRecord = record
-        }
     }
 
     // Explicit "Forget" recovery action. Removes a record from the history.
@@ -160,14 +134,6 @@ fun HomeScreenContent(
                 viewModel.uninstallPatchedApp(record.packageName, alsoForget = uninstallAlsoForget)
                 uninstallConfirm = null
             },
-        )
-    }
-
-    repatchMissingRecord?.let { record ->
-        RepatchMissingApkDialog(
-            record = record,
-            onDismiss = { repatchMissingRecord = null },
-            onApkPicked = { path -> repatchWithApk(record, path) },
         )
     }
 

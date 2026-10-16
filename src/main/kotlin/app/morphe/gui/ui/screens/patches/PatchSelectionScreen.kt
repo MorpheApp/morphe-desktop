@@ -41,9 +41,9 @@ import app.morphe.gui.PatchingScreenRoute
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.ScreenErrorDialog
 import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patches.components.selection.*
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -345,7 +345,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
-                                style = morpheScrollbarStyle()
+                                style = MorpheScrollbarStyle()
                             )
                             Spacer(Modifier.height(4.dp))
                         }
@@ -493,7 +493,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             VerticalScrollbar(
                                 modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                                 adapter = rememberScrollbarAdapter(currentPageList),
-                                style = morpheScrollbarStyle()
+                                style = MorpheScrollbarStyle()
                             )
                         }
                     }

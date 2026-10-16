@@ -31,8 +31,8 @@ import app.morphe.engine.model.SupportedApp
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.SlimSearchField
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
@@ -294,7 +294,7 @@ internal fun SupportedAppsListPane(
                         VerticalScrollbar(
                             modifier = Modifier.fillMaxHeight(),
                             adapter = rememberScrollbarAdapter(listState),
-                            style = morpheScrollbarStyle(),
+                            style = MorpheScrollbarStyle(),
                         )
                     }
                 }

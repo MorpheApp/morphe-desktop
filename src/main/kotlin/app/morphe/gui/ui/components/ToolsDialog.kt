@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.CacheManager
@@ -70,6 +71,7 @@ fun ToolsDialog(
                     variant = MorpheButtonVariant.OUTLINED,
                     modifier = Modifier.fillMaxWidth(),
                     borderColor = borderColor,
+                    contentAlignment = Alignment.CenterStart,
                     onClick = {
                         try {
                             val logsDir = MorpheData.logsDir
@@ -90,6 +92,7 @@ fun ToolsDialog(
                     variant = MorpheButtonVariant.OUTLINED,
                     modifier = Modifier.fillMaxWidth(),
                     borderColor = borderColor,
+                    contentAlignment = Alignment.CenterStart,
                     onClick = {
                         try {
                             val appDataDir = MorpheData.root
@@ -110,6 +113,7 @@ fun ToolsDialog(
                     variant = MorpheButtonVariant.OUTLINED,
                     modifier = Modifier.fillMaxWidth(),
                     borderColor = borderColor,
+                    contentAlignment = Alignment.CenterStart,
                     onClick = { showLicensesDialog = true }
                 )
 
@@ -135,6 +139,7 @@ fun ToolsDialog(
                     else MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
                     contentColor = cacheColor,
                     enabled = allowCacheClear && !cacheCleared && cacheBytes > 0L,
+                    contentAlignment = Alignment.CenterStart,
                     onClick = { showClearCacheConfirm = true }
                 )
 

@@ -62,7 +62,7 @@ fun MorpheColorChip(
                 onDismissRequest = { open = false },
                 properties = PopupProperties(focusable = true),
             ) {
-                MorpheColorPickerCard(argb = argb, onPick = onPick)
+                MorpheColorPickerCard(argb = argb, showSaved = true, onPick = onPick)
             }
         }
     }
@@ -126,7 +126,7 @@ fun MorpheSwatchRow(
                     onDismissRequest = { pickerOpen = false },
                     properties = PopupProperties(focusable = true),
                 ) {
-                    MorpheColorPickerCard(argb = selected, onPick = onPick)
+                    MorpheColorPickerCard(argb = selected, showSaved = true, onPick = onPick)
                 }
             }
         }

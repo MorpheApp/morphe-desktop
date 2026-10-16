@@ -34,7 +34,7 @@ import app.morphe.gui.ui.components.MorpheBanner
 import app.morphe.gui.ui.components.MorpheBannerAction
 import app.morphe.gui.ui.components.MorpheBannerText
 import app.morphe.gui.ui.components.MorpheChoiceChip
-import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
@@ -159,7 +159,7 @@ internal fun YourAppsListBody(
                     VerticalScrollbar(
                         modifier = Modifier.fillMaxHeight(),
                         adapter = rememberScrollbarAdapter(listState),
-                        style = morpheScrollbarStyle(),
+                        style = MorpheScrollbarStyle(),
                     )
                 }
             }
