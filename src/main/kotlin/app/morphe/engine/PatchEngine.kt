@@ -267,10 +267,8 @@ object PatchEngine {
 
             val patcherTempDir = File(tempDir, "patcher").also { it.mkdirs() }
             val patcherConfig = PatcherConfig(
-                actualInputApk,
-                patcherTempDir,
-                patcherTempDir.absolutePath,
-                useArsclib = true,
+                apkFile = actualInputApk,
+                temporaryFilesPath = patcherTempDir,
                 keepArchitectures = config.architecturesToKeep,
                 useBytecodeMode = config.bytecodeMode,
                 fileWorkspacePath = File(tempDir, "workspace").also { it.mkdirs() },

@@ -6,6 +6,7 @@
 package app.morphe.engine.options
 
 import app.morphe.engine.util.FileChecksum
+import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.option
 import app.morphe.patcher.patch.rawResourcePatch
 import java.io.File
@@ -129,8 +130,7 @@ class PatchOptionsFileTest {
         // patches (no compatibleWith) to default = false, so `default = true` is only
         // honored for app-specific patches.
         val adBlockPatch = rawResourcePatch(name = "AdBlocker", description = "Block Ads", default = true) {
-            @Suppress("DEPRECATION")
-            compatibleWith("com.example.app")
+            compatibleWith(Compatibility("com.example.app", "Example"))
         }
 
         val userBundle = PatchBundle(

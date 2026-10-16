@@ -24,12 +24,10 @@ object SupportedAppCatalog {
     /**
      * Convert library [Patch] to agnostic [PatchMetadata] model.
      *
-     * Reads both the modern [Patch.compatibility] API and the deprecated
-     * [Patch.compatiblePackages] field for legacy bundle compatibility.
+     * Reads [Patch.compatibility] API to construct [CompatiblePackage] metadata.
      */
-    @Suppress("DEPRECATION")
     fun Patch<*>.toMetadata(): PatchMetadata {
-        val fromNewApi: List<CompatiblePackage> = this.compatibility
+        val compatiblePackages: List<CompatiblePackage> = this.compatibility
             ?.mapNotNull { compatibility ->
                 val packageName = compatibility.packageName ?: return@mapNotNull null
                 val (experimental, stable) = compatibility.targets.partition { it.isExperimental }
@@ -53,25 +51,12 @@ object SupportedAppCatalog {
             }
             ?: emptyList()
 
-        val fromLegacyApi: List<CompatiblePackage> = if (fromNewApi.isEmpty()) {
-            this.compatiblePackages
-                ?.map { (pkgName, versions) ->
-                    CompatiblePackage(
-                        name = pkgName,
-                        displayName = null,
-                        versions = versions?.toList() ?: emptyList(),
-                        experimentalVersions = emptyList(),
-                    )
-                }
-                ?: emptyList()
-        } else emptyList()
-
         return PatchMetadata(
             name = this.name ?: "Unknown",
             description = this.description ?: "",
-            compatiblePackages = fromNewApi.ifEmpty { fromLegacyApi },
+            compatiblePackages = compatiblePackages,
             options = this.options.values.map { it.toPatchOption() },
-            isEnabled = this.use,
+            isEnabled = this.default,
             category = this.category?.takeIf { it.isNotBlank() }
         )
     }
@@ -211,15 +196,7 @@ object SupportedAppCatalog {
                     }
                 }
             } else {
-                @Suppress("DEPRECATION")
-                val legacy = patch.compatiblePackages
-                legacy?.any { (name, versions) ->
-                    name == packageName && (
-                            versionName == null ||
-                                    versions.isNullOrEmpty() ||
-                                    versions.contains(versionName)
-                            )
-                } ?: includeUniversal
+                includeUniversal
             }
         }
     }
@@ -228,7 +205,6 @@ object SupportedAppCatalog {
      * Calculate frequency map of compatible versions per package across patches.
      * Preserves the frequency count behavior used by CLI `list-versions`.
      */
-    @Suppress("DEPRECATION")
     fun getCompatibilityMap(
         packageNames: Set<String>? = null,
         countUnusedPatches: Boolean = false,
@@ -242,8 +218,6 @@ object SupportedAppCatalog {
                     for ((packageName) in compat) {
                         packageName?.let { add(it) }
                     }
-                } else {
-                    patch.compatiblePackages?.forEach { (name, _) -> add(name) }
                 }
             }
         }
@@ -285,22 +259,7 @@ object SupportedAppCatalog {
                         }
                     }
                 } else {
-                    val legacyPackages = patch.compatiblePackages
-                    if (legacyPackages == null) {
-                        versionCount[""] = (versionCount[""] ?: 0) + 1
-                        continue
-                    }
-                    val matching = legacyPackages.filter { (name, _) -> name == pkgName }
-                    if (matching.isEmpty()) continue
-                    for ((_, versions) in matching) {
-                        if (versions.isNullOrEmpty()) {
-                            versionCount[""] = (versionCount[""] ?: 0) + 1
-                        } else {
-                            for (version in versions) {
-                                versionCount[version] = (versionCount[version] ?: 0) + 1
-                            }
-                        }
-                    }
+                    versionCount[""] = (versionCount[""] ?: 0) + 1
                 }
             }
 
