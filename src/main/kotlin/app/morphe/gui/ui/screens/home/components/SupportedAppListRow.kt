@@ -33,19 +33,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.model.SupportedApp
+import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
 import app.morphe.gui.ui.components.cardChipInk
 import app.morphe.gui.ui.components.MorpheCardChip
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.AppCard
-import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

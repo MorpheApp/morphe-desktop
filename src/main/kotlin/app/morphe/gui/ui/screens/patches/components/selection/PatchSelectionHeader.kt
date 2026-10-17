@@ -135,10 +135,9 @@ internal fun PatchSelectionHeader(
         // Command preview toggle
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
             val cmdHover = remember { MutableInteractionSource() }
-            val cmdActive = showCommandPreview
             val cmdAccent = MaterialTheme.colorScheme.onSurface
             val cmdBorder by animateColorAsState(
-                if (cmdActive) cmdAccent.copy(alpha = 0.5f)
+                if (showCommandPreview) cmdAccent.copy(alpha = 0.5f)
                 else baseBorderColor,
                 animationSpec = tween(150)
             )
@@ -150,7 +149,7 @@ internal fun PatchSelectionHeader(
                         .hoverable(cmdHover)
                         .clip(RoundedCornerShape(corners.small))
                         .background(containerColor)
-                        .background(if (cmdActive) cmdAccent.copy(alpha = 0.08f) else Color.Transparent)
+                        .background(if (showCommandPreview) cmdAccent.copy(alpha = 0.08f) else Color.Transparent)
                         .border(1.dp, cmdBorder, RoundedCornerShape(corners.small))
                         .handCursor()
                         .clickable { onToggleCommandPreview() },
@@ -159,7 +158,7 @@ internal fun PatchSelectionHeader(
                     Icon(
                         imageVector = MorpheIcons.Terminal,
                         contentDescription = stringResource(Res.string.patch_selection_cmd_preview),
-                        tint = if (cmdActive) cmdAccent
+                        tint = if (showCommandPreview) cmdAccent
                                else baseIconTint,
                         modifier = Modifier.size(16.dp)
                     )

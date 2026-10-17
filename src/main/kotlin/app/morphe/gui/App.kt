@@ -6,9 +6,6 @@
 package app.morphe.gui
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,14 +20,15 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import app.morphe.engine.PatchEngine
+import app.morphe.engine.config.EngineConfigRepository
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.MorpheFill
-import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -55,10 +53,11 @@ import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
 import app.morphe.gui.ui.theme.backgrounds.rememberParallaxState
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.Logger
 import app.morphe.gui.util.applyTitleBarTint
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -202,10 +201,6 @@ val LocalAdbPreference = staticCompositionLocalOf<AdbPreferenceState> {
 fun app(
     initialSimplifiedMode: Boolean = true
 ) {
-    LaunchedEffect(Unit) {
-        Logger.init()
-    }
-
     KoinApplication(koinConfiguration {
         logger(KoinLoggerAdapter)
         modules(appModule)
@@ -232,6 +227,7 @@ private fun appContent(
     initialSimplifiedMode: Boolean
 ) {
     val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
     val patchSourceManager: PatchSourceManager = koinInject()
     val scope = rememberCoroutineScope()
     val enableParallaxState = remember { mutableStateOf(true) }
@@ -273,7 +269,7 @@ private fun appContent(
         appLanguage = config.language
         applyLocale(config.language)
 
-        autoStartAdb = config.autoStartAdb
+        autoStartAdb = engineConfigRepository.loadConfig().autoStartAdb
         // Publish the initial active mode BEFORE the VMs subscribe so their
         // activeMode listener fires with the correct value on first emit.
         patchSourceManager.setActiveMode(
@@ -320,7 +316,7 @@ private fun appContent(
     val onAutoStartAdbChange: (Boolean) -> Unit = { enabled ->
         autoStartAdb = enabled
         scope.launch {
-            configRepository.setAutoStartAdb(enabled)
+            withContext(Dispatchers.IO) { engineConfigRepository.setAutoStartAdb(enabled) }
             if (enabled) {
                 DeviceMonitor.startMonitoring()
             } else {
@@ -489,43 +485,13 @@ private fun appContent(
                                                     PatchSelectionScreen(params = params)
                                                 }
                                             }
-                                            composable<PatchingScreenRoute>(
-                                                exitTransition = {
-                                                    if (targetState.destination.hasRoute<ResultScreenRoute>()) {
-                                                        fadeOut(tween(800))
-                                                    } else {
-                                                        Animations.screenExit
-                                                    }
-                                                },
-                                                popEnterTransition = {
-                                                    if (initialState.destination.hasRoute<ResultScreenRoute>()) {
-                                                        fadeIn(tween(800))
-                                                    } else {
-                                                        Animations.screenEnter
-                                                    }
-                                                }
-                                            ) { backStackEntry ->
-                                                val config = backStackEntry.getComplexArg<PatchConfig>()
+                                            composable<PatchingScreenRoute> { backStackEntry ->
+                                                val config = backStackEntry.getComplexArg<PatchEngine.Config>()
                                                 if (config != null) {
                                                     PatchingScreen(config = config)
                                                 }
                                             }
-                                            composable<ResultScreenRoute>(
-                                                enterTransition = {
-                                                    if (initialState.destination.hasRoute<PatchingScreenRoute>()) {
-                                                        fadeIn(tween(800))
-                                                    } else {
-                                                        Animations.screenEnter
-                                                    }
-                                                },
-                                                popExitTransition = {
-                                                    if (targetState.destination.hasRoute<PatchingScreenRoute>()) {
-                                                        fadeOut(tween(800))
-                                                    } else {
-                                                        Animations.screenExit
-                                                    }
-                                                }
-                                            ) { backStackEntry ->
+                                            composable<ResultScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<ResultScreenRoute>()
                                                 ResultScreen(outputPath = route.outputPath)
                                             }

@@ -5,13 +5,8 @@
 
 package app.morphe.gui.data.model
 
-import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
-import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
-import app.morphe.engine.util.PortablePaths
 import app.morphe.gui.ui.theme.ThemePreference
-import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
 import kotlinx.serialization.Serializable
-import java.io.File
 
 /**
  * Application configuration stored in config.json
@@ -89,19 +84,9 @@ data class AppConfig(
     val groupPatchesByCategory: Boolean = true,
     val homeAppSortMode: String = "RECOMMENDED",
     val preferredPatchChannel: String = PatchChannel.STABLE.name,
-    val defaultOutputDirectory: String? = null,
-    val autoCleanupTempFiles: Boolean = true,  // Default ON
     val useSimplifiedMode: Boolean = true, // Default to Quick/Simplified mode
     val patchSource: List<PatchSource> = listOf(DEFAULT_PATCH_SOURCE),
     val activePatchSourceId: String = "morphe-default",
-    val keystorePath: String? = null,
-    val keystorePassword: String? = null,
-    val keystoreAlias: String = DEFAULT_KEYSTORE_ALIAS,
-    val keystoreEntryPassword: String = DEFAULT_KEYSTORE_PASSWORD,
-    // User's global keep-list for strip libs. Defaults to all common modern arches
-    // (equivalent to no stripping). Stripping is only applied when the APK contains
-    // an arch NOT in this set. See PatchSelectionViewModel.computeStripLibsStatus.
-    val keepArchitectures: Set<String> = ANDROID_ARCHITECTURES,
     // Persisted expand/collapse state for each section in the Settings dialog.
     // Keyed by section title (e.g. "STRIP LIBS"). Missing key = section starts collapsed.
     val collapsibleSectionStates: Map<String, Boolean> = emptyMap(),
@@ -118,34 +103,9 @@ data class AppConfig(
     // after upgrading to multi-source builds. Flips to true once the user dismisses
     // the banner, never resets.
     val multiSourceHintDismissed: Boolean = false,
-    // Whether Morphe should auto-start the ADB daemon at GUI launch to monitor
-    // connected devices. Default OFF. Many users never push patched APKs to a
-    // device, so spawning a long-lived adb server unprompted is unwanted noise.
-    // When ON, DeviceMonitor polls devices. If Morphe was the one that started
-    // the daemon, it's killed on toggle-OFF and on window close.
-    val autoStartAdb: Boolean = false,
-    // Patch-developer options. Enables a suite of developers options that patch developers
-    // can use.
-    val developerOptions: Boolean = false,
-    // Last folder browsed when picking a local .mpp, so the file picker reopens there
-    // instead of a system default. Set after a successful pick.
-    val lastLocalPatchDir: String? = null,
-    // Extra glob patterns (e.g. "*-debug.mpp") for .mpp files to skip when a developer
-    // folder source auto-loads the newest .mpp. Layered on top of the always-excluded
-    // build classifiers (*-sources.mpp, *-javadoc.mpp). Patch-developer option.
-    val excludedMppPatterns: List<String> = emptyList(),
     // Which home apps tab the user last viewed ("ALL" or "YOURS"), restored on
     // next launch. Stored as a string so this data layer stays free of UI enums.
     val homeAppListFilter: String = "ALL",
-    // After an ADB install, automatically route the patched app's web links to it
-    // ("open with"). Default OFF. It changes how the device opens links, so it's
-    // opt-in. See AppLinkCommands / AdbManager.setLinkHandling.
-    val autoRouteLinksAfterInstall: Boolean = false,
-    // When auto-routing links, also stop the stock app from opening those links
-    // (only applies when a rename patch was used and stock is installed). Default
-    // OFF. It reaches into a stock app's behavior.
-    val disableStockLinksAfterInstall: Boolean = false,
-    val gitHubPat: String = "",
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {
@@ -164,20 +124,6 @@ data class AppConfig(
             ThemePreference.SYSTEM
         }
     }
-
-    /**
-     * Resolved live [File] for [defaultOutputDirectory]. Goes through
-     * [PortablePaths.resolve] so a stored relative value is anchored to the
-     * bundle, not the JVM's CWD. Use this instead of `File(...)` at call sites.
-     */
-    fun resolvedDefaultOutputDirectory(): File? =
-        defaultOutputDirectory?.let(PortablePaths::resolve)
-
-    /**
-     * Resolved live [File] for [keystorePath]. See [resolvedDefaultOutputDirectory].
-     */
-    fun resolvedKeystorePath(): File? =
-        keystorePath?.let(PortablePaths::resolve)
 }
 
 @Serializable

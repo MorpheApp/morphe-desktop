@@ -5,6 +5,9 @@
 
 package app.morphe.gui.util
 
+import app.morphe.engine.util.isNewerVersion
+import app.morphe.engine.util.normalizeVersion
+
 data class ChangelogEntry(
     val version: String,
     val date: String?,

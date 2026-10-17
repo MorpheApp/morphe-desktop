@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.EnabledSourcesLoader
@@ -49,7 +50,7 @@ internal fun PatchesVersionBadge(
     patchesVersion: String?,
     isLoading: Boolean,
     patchSourceName: String? = null,
-    patchesChannel: EnabledSourcesLoader.Channel? = null,
+    patchesChannel: Channel? = null,
     onClick: (() -> Unit)? = null,
 ) {
     val font = LocalMorpheFont.current
@@ -124,8 +125,8 @@ internal fun PatchesVersionBadge(
                 color = accents.primary
             )
             val latestLabel = when (patchesChannel) {
-                EnabledSourcesLoader.Channel.STABLE_LATEST -> stringResource(Res.string.version_label_latest_stable)
-                EnabledSourcesLoader.Channel.DEV_LATEST -> stringResource(Res.string.version_label_latest_dev)
+                Channel.STABLE_LATEST -> stringResource(Res.string.version_label_latest_stable)
+                Channel.DEV_LATEST -> stringResource(Res.string.version_label_latest_dev)
                 else -> null
             }
             

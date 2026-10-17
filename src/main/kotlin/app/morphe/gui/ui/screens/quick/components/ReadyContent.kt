@@ -8,8 +8,6 @@ package app.morphe.gui.ui.screens.quick.components
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -38,7 +36,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.data.model.Patch
+import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.model.VersionStatus
+import app.morphe.gui.ui.components.handCursor
+import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickApkInfo
 import app.morphe.gui.ui.theme.*
@@ -46,7 +47,6 @@ import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.StatusColorType
 import app.morphe.gui.util.currentLocale
-import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.resolveVersionStatusDisplay
 import app.morphe.gui.util.toColor
@@ -61,7 +61,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun ReadyContent(
     apkInfo: QuickApkInfo,
-    compatiblePatches: List<Patch>,
+    compatiblePatches: List<PatchMetadata>,
     onPatch: () -> Unit,
     onClear: () -> Unit
 ) {

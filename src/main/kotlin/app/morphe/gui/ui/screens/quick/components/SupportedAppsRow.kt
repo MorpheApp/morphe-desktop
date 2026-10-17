@@ -30,14 +30,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.model.SupportedApp
+import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.AppCard
 import app.morphe.gui.ui.components.MorpheCardChip
-import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.*
-import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

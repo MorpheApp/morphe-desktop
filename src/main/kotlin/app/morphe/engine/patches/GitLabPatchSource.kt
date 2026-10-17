@@ -9,10 +9,14 @@ import app.morphe.engine.model.PatchesBundle
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
 import app.morphe.engine.network.HttpService
+import app.morphe.engine.util.Logger
 import io.ktor.client.request.headers
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
+import java.io.File
+import java.net.URLEncoder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -24,9 +28,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import java.io.File
-import java.net.URLEncoder
-import java.util.logging.Logger
 
 /**
  * GitLab provider. Hits gitlab.com/api/v4/projects/{owner%2Frepo}/releases for
@@ -47,8 +48,6 @@ class GitLabPatchSource(
 
     override val provider = PatchProvider.GITLAB
 
-    private val logger = Logger.getLogger(GitLabPatchSource::class.java.name)
-
     // GitLab's projects API expects the path URL-encoded as `owner%2Frepo`.
     private val releasesEndpoint: String = run {
         val encoded = URLEncoder.encode(repoPath, "UTF-8")
@@ -57,29 +56,30 @@ class GitLabPatchSource(
 
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {
         try {
-            logger.info("GitLab: fetching releases from $releasesEndpoint")
+            Logger.info("GitLab: fetching releases from $releasesEndpoint")
             val raw = http.request<String>(releasesEndpoint) {
                 headers { append(HttpHeaders.Accept, "application/json") }
             }
             val releases = parseReleases(raw)
-            logger.info("GitLab: fetched ${releases.size} releases from $repoPath")
+            Logger.info("GitLab: fetched ${releases.size} releases from $repoPath")
             Result.success(releases)
         } catch (e: Exception) {
-            logger.warning("GitLab releases fetch error for $repoPath: ${e.message}")
+            Logger.warn("GitLab releases fetch error for $repoPath: ${e.message}")
             Result.failure(e)
         }
     }
 
     override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> = withContext(Dispatchers.IO) {
+        val branch = if (prerelease) "dev" else "main"
         try {
-            val branch = if (prerelease) "dev" else "main"
             val url = "$RAW_BASE/$repoPath/-/raw/$branch/patches-bundle.json"
-            logger.info("GitLab: fetching patches-bundle.json from $url")
+            Logger.info("GitLab: fetching patches-bundle.json from $url")
             val bundle: PatchesBundle = http.request(url)
-            logger.info("GitLab: bundle ($branch) → v${bundle.version} @ ${bundle.downloadUrl}")
+            Logger.info("GitLab: bundle ($branch) → v${bundle.version} @ ${bundle.downloadUrl}")
             Result.success(bundle.toRelease(prerelease))
         } catch (e: Exception) {
-            logger.info("GitLab: no usable patches-bundle.json for $repoPath (${e.message}); will fall back to releases API")
+            val reason = (e as? HttpService.HttpException)?.status?.toString() ?: (e.message ?: "unknown error")
+            Logger.info("GitLab: no usable patches-bundle.json ($branch) for $repoPath ($reason); falling back to releases API")
             Result.failure(e)
         }
     }
@@ -90,14 +90,13 @@ class GitLabPatchSource(
         onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)?,
     ): Result<File> = withContext(Dispatchers.IO) {
         try {
-            logger.info("GitLab: downloading ${asset.name} from ${asset.downloadUrl}")
+            Logger.info("GitLab: downloading ${asset.name} from ${asset.downloadUrl}")
             val file = http.downloadToFile(asset.downloadUrl, targetFile, onProgress) {
                 headers { append(HttpHeaders.Accept, "application/octet-stream") }
             }
-            logger.info("GitLab: wrote ${file.length()} bytes to ${file.absolutePath}")
+            Logger.info("GitLab: wrote ${file.length()} bytes to ${file.absolutePath}")
             Result.success(file)
         } catch (e: Exception) {
-            logger.warning("GitLab download failed (${e::class.simpleName}): ${e.message}")
             Result.failure(e)
         }
     }
@@ -182,12 +181,14 @@ class GitLabPatchSource(
         return try {
             val response: HttpResponse = http.head(url)
             if (!response.status.isSuccess()) {
-                logger.fine("HEAD $url returned ${response.status}")
+                Logger.debug("HEAD $url returned ${response.status}")
                 return 0L
             }
             response.headers[HttpHeaders.ContentLength]?.toLongOrNull() ?: 0L
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            logger.fine("HEAD failed for $url: ${e.message}")
+            Logger.debug("HEAD failed for $url: ${e.message}")
             0L
         }
     }

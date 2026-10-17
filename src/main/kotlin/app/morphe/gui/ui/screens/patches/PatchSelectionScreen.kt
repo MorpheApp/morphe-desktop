@@ -33,12 +33,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.config.EngineConfigRepository
+import app.morphe.engine.model.PatchMetadata
 import app.morphe.gui.LocalGroupPatchesByCategory
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchingScreenRoute
-import app.morphe.gui.data.model.Patch
-import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.MorpheBadge
@@ -84,7 +84,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val font = LocalMorpheFont.current
     val accents = LocalMorpheAccents.current
     val navController = LocalNavController.current
-    val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
     val uiState by viewModel.uiState.collectAsState()
     val targetPackage = viewModel.targetPackage()
 
@@ -94,7 +94,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     var keystoreAlias by remember { mutableStateOf<String?>(null) }
     var keystoreEntryPassword by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
-        val config = configRepository.loadConfig()
+        val config = engineConfigRepository.loadConfig()
         keystorePath = config.resolvedKeystorePath()?.absolutePath
         keystorePassword = config.keystorePassword
         keystoreAlias = config.keystoreAlias
@@ -568,5 +568,5 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
 
 
 /** New patches float to the top, the rest keep the bundle's own order. */
-private fun List<Patch>.newestFirst(newIds: Set<String>): List<Patch> =
+private fun List<PatchMetadata>.newestFirst(newIds: Set<String>): List<PatchMetadata> =
     if (newIds.isEmpty()) this else sortedByDescending { it.uniqueId in newIds }

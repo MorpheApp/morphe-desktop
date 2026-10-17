@@ -16,11 +16,12 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import app.morphe.engine.MorpheData
+import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.ui.components.LocalFrameWindowScope
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.Logger
 import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import java.awt.Taskbar
@@ -36,6 +37,7 @@ import org.jetbrains.skia.Image
  */
 fun launchGui(args: Array<String>) {
     Logger.init()
+    runCatching { WorkspaceManager.reapStaleWorkspaces() }
 
     // FileKit backs the native OS file/folder pickers (JNA on Windows/macOS,
     // XDG Desktop Portal on Linux). Must run once before any picker is used;
@@ -133,7 +135,7 @@ fun launchGui(args: Array<String>) {
  */
 private fun loadConfigSync(): AppConfig {
     return try {
-        val configFile = FileUtils.getConfigFile()
+        val configFile = MorpheData.configFile
         if (configFile.exists()) {
             val json = Json { ignoreUnknownKeys = true }
             json.decodeFromString<AppConfig>(configFile.readText())

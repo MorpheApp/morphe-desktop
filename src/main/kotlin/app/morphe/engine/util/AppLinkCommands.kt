@@ -10,10 +10,8 @@ package app.morphe.engine.util
  * patched app and, optionally, stop the stock app from grabbing those same
  * links.
  *
- * Pure argv construction only — no process execution. Each frontend runs these
- * through its own adb path (the GUI's `AdbManager`, the CLI's installer), so the
- * "what commands to run" decision lives in one tested place while "how to exec"
- * stays per-frontend.
+ * Pure argv construction only — no process execution. Command execution is
+ * centralized in [AdbManager.setLinkHandling], shared across CLI and GUI.
  *
  * Each returned entry is one `adb shell` invocation's arguments (i.e. everything
  * after `adb -s <serial> shell`). Run them in order.

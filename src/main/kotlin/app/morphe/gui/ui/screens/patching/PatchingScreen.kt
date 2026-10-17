@@ -27,11 +27,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.PatchEngine
 import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.ResultScreenRoute
-import app.morphe.gui.data.model.PatchConfig
 import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.screens.patching.components.*
 import app.morphe.gui.ui.screens.result.ResultScreen
@@ -56,7 +56,7 @@ import org.koin.core.parameter.parametersOf
  */
 @Composable
 fun PatchingScreen(
-    config: PatchConfig,
+    config: PatchEngine.Config,
     viewModel: PatchingViewModel = koinViewModel { parametersOf(config) }
 ) {
     PatchingScreenContent(viewModel = viewModel)
@@ -244,25 +244,4 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
             }
         }
     }
-}
-
-/**
- * Re-export of [LogFileViewerDialog] for external callers (e.g., QuickPatchScreen)
- * to maintain backwards compatibility.
- */
-@Composable
-fun LogFileViewerDialog(
-    file: File,
-    corners: MorpheCornerStyle,
-    font: FontFamily,
-    borderColor: Color,
-    onDismiss: () -> Unit,
-) {
-    LogFileViewerDialog(
-        file = file,
-        corners = corners,
-        font = font,
-        borderColor = borderColor,
-        onDismiss = onDismiss
-    )
 }

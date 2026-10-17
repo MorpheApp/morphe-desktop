@@ -18,6 +18,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.MorpheData
+import app.morphe.engine.apk.BundleFormats
+import app.morphe.engine.util.Logger
 import app.morphe.gui.LocalBackgroundSpeed
 import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -29,7 +31,7 @@ import app.morphe.gui.ui.components.SourceSheetMode
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
-import app.morphe.gui.ui.screens.patching.LogFileViewerDialog
+import app.morphe.gui.ui.screens.patching.components.LogFileViewerDialog
 import app.morphe.gui.ui.screens.patching.LogLevel
 import app.morphe.gui.ui.screens.quick.components.BrandingLogo
 import app.morphe.gui.ui.screens.quick.components.CompletedContent
@@ -160,7 +162,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     }
 
     if (showLogViewer) {
-        val logFile = File(MorpheData.root, "logs/morphe-gui.log")
+        val logFile = Logger.getLogFile() ?: File(MorpheData.logsDir, "morphe.log")
         LogFileViewerDialog(
             file = logFile,
             corners = corners,
@@ -365,7 +367,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
 private suspend fun openFilePicker(title: String): File? =
     MorpheFilePicker.pickFile(
         title = title,
-        extensions = listOf("apk", "apkm", "xapk", "apks"),
+        extensions = BundleFormats.SUPPORTED_EXTENSIONS,
     )
 
 @Composable

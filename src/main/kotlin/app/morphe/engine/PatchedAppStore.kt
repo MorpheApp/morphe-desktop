@@ -6,6 +6,7 @@
 package app.morphe.engine
 
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,7 +19,6 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.util.logging.Logger
 
 /**
  * Persistent store for [PatchedAppRecord]s — the patched-app history shared by
@@ -35,8 +35,6 @@ import java.util.logging.Logger
 class PatchedAppStore(
     private val file: File = File(MorpheData.root, FILE_NAME),
 ) {
-    private val logger = Logger.getLogger(PatchedAppStore::class.java.name)
-
     private val json = Json {
         prettyPrint = true
         ignoreUnknownKeys = true
@@ -98,7 +96,7 @@ class PatchedAppStore(
             } catch (e: Exception) {
                 // Corrupt/incompatible file: don't lose the user's ability to keep
                 // patching — start fresh in memory and let the next write heal it.
-                logger.warning("Could not read patched-app history (${e.message}); starting empty")
+                Logger.warn("Could not read patched-app history (${e.message}); starting empty")
                 emptyList()
             }
         } else {
@@ -127,7 +125,7 @@ class PatchedAppStore(
             }
             cache = records
         } catch (e: Exception) {
-            logger.warning("Failed to write patched-app history: ${e.message}")
+            Logger.warn("Failed to write patched-app history: ${e.message}")
         }
     }
 

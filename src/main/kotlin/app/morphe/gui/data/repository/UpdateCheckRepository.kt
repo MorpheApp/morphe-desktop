@@ -8,13 +8,12 @@ package app.morphe.gui.data.repository
 import app.morphe.engine.ReleaseChannel
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.UpdateInfo
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.UpdateChannelPreference
-import app.morphe.gui.util.Logger as MorpheLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.util.logging.Logger
 
 /**
  * Singleton wrapper around [UpdateChecker] so the network probe runs at most
@@ -28,7 +27,6 @@ class UpdateCheckRepository(
 
     private val mutex = Mutex()
     private var cached: Result<UpdateInfo?>? = null
-    private val logger = Logger.getLogger(UpdateCheckRepository::class.java.name)
 
     /**
      * Fetch the latest update info per the user's channel preference. Returns
@@ -61,9 +59,9 @@ class UpdateCheckRepository(
             }
 
             val info = try {
-                UpdateChecker.checkInfo(logger, channel)
+                UpdateChecker.checkInfo(channel)
             } catch (e: Exception) {
-                MorpheLogger.error("UpdateCheck: threw exception", e)
+                Logger.error("UpdateCheck: threw exception", e)
                 null
             }
             cached = Result.success(info)

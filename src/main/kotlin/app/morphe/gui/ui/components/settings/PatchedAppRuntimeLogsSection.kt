@@ -19,15 +19,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.MorpheData
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
+import app.morphe.engine.util.Logger
 import app.morphe.gui.ui.components.ActionButton
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.Logger
+import app.morphe.gui.util.getUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
@@ -137,7 +138,7 @@ internal fun PatchedAppRuntimeLogsSection(
                     scope.launch {
                         val defaultErrMsg = getString(Res.string.settings_runtime_logs_failed_to_save)
                         val timestamp = SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.US).format(Date())
-                        val outFile = File(FileUtils.getLogsDir(), "device-logcat-$timestamp.txt")
+                        val outFile = File(MorpheData.logsDir, "device-logcat-$timestamp.txt")
                         val result = adbManager.captureLogcat(device.id, outFile)
                         status = result.fold(
                             onSuccess = { count -> RuntimeLogsStatus.Saved(outFile, count) },

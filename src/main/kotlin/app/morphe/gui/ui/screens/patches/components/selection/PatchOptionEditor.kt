@@ -10,9 +10,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -31,11 +28,10 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.morphe.gui.data.model.PatchOption
-import app.morphe.gui.data.model.PatchOptionType
+import app.morphe.engine.options.PatchOption
+import app.morphe.engine.options.coerceOptionValue
 import app.morphe.gui.icon.IconExporter
 import app.morphe.gui.icon.IconStudioDialog
 import app.morphe.gui.ui.components.*
@@ -44,10 +40,9 @@ import app.morphe.gui.ui.theme.LocalMorpheAccents
 import app.morphe.gui.ui.theme.LocalMorpheCorners
 import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.util.MorpheFilePicker
-import app.morphe.gui.util.expectedValueHint
-import app.morphe.gui.util.optionValueOrNull
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.math.roundToInt
+import kotlin.reflect.KType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -417,7 +412,7 @@ internal fun PatchOptionEditor(
                 // unless the patch demands one.
                 val missing = option.required && localText.isBlank()
                 val badType = localText.isNotBlank() && option.valueType?.let {
-                    optionValueOrNull(localText, it) == null
+                    coerceOptionValue(it, localText) == null
                 } == true
                 val invalid = missing || badType
 
@@ -487,4 +482,23 @@ internal fun PatchOptionEditor(
             }
         }
     }
+}
+
+/** What [type] will accept, phrased for someone typing into a field. */
+@Composable
+private fun expectedValueHint(type: KType): String {
+    if (type.classifier == List::class) {
+        val element = type.arguments.firstOrNull()?.type
+        val each = element?.let { scalarHint(it) } ?: stringResource(Res.string.patch_selection_option_hint_value)
+        return stringResource(Res.string.patch_selection_option_hint_list, each)
+    }
+    return scalarHint(type)
+}
+
+@Composable
+private fun scalarHint(type: KType): String = when (type.classifier) {
+    Boolean::class -> stringResource(Res.string.patch_selection_option_hint_boolean)
+    Int::class, Long::class -> stringResource(Res.string.patch_selection_option_hint_whole_number)
+    Float::class, Double::class -> stringResource(Res.string.patch_selection_option_hint_number)
+    else -> stringResource(Res.string.patch_selection_option_hint_text)
 }

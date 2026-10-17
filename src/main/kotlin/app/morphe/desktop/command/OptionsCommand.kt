@@ -5,24 +5,25 @@
 
 package app.morphe.desktop.command
 
-import app.morphe.desktop.command.model.PatchBundle
-import app.morphe.engine.isCompatibleWith
+import app.morphe.engine.options.PatchBundle
+import app.morphe.engine.options.findMatchingBundle
+import app.morphe.engine.options.mergeWithBundle
+import app.morphe.engine.options.readPatchBundles
+import app.morphe.engine.options.withUpdatedBundle
+import app.morphe.engine.options.writePatchBundles
 import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
-import app.morphe.desktop.command.model.findMatchingBundle
-import app.morphe.desktop.command.model.mergeWithBundle
-import app.morphe.desktop.command.model.withUpdatedBundle
-import app.morphe.desktop.command.CliHttpClient
-import kotlinx.serialization.json.Json
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.patches.isCompatibleWith
+import app.morphe.engine.util.Logger
+import java.io.File
+import java.util.concurrent.Callable
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Help.Visibility.ALWAYS
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
-import java.io.File
-import java.util.concurrent.Callable
-import java.util.logging.Logger
 
 @Command(
     name = "options-create",
@@ -32,8 +33,6 @@ internal object OptionsCommand : Callable<Int> {
 
     private const val EXIT_CODE_SUCCESS = 0
     private const val EXIT_CODE_ERROR = 1
-
-    private val logger = Logger.getLogger(this::class.java.name)
 
     @Spec
     private lateinit var spec: CommandSpec
@@ -70,19 +69,12 @@ internal object OptionsCommand : Callable<Int> {
     )
     private var packageName: String? = null
 
-    private val json = Json { prettyPrint = true }
-
     override fun call(): Int {
         try {
-            // Since we could have many URLs, we resolve each of them separately
-            patchesFiles = patchesFiles.map { file ->
-                val resolved = PatchFileResolver.resolve(
-                    setOf(file),
-                    prerelease,
-                    CliHttpClient.instance
-                )
-                resolved.single()
-            }.toSet()
+            patchesFiles = PatchResolver.resolveCliFiles(
+                patchesFiles,
+                prerelease,
+            )
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(
                 spec.commandLine(),
@@ -91,7 +83,7 @@ internal object OptionsCommand : Callable<Int> {
         }
 
         return try {
-            logger.info("Loading patches...")
+            Logger.info("Loading patches...")
 
             // Load each bundle separately so we produce one JSON entry per .mpp
             // matches the shape PatchCommand expects when reading --options-file.
@@ -101,10 +93,10 @@ internal object OptionsCommand : Callable<Int> {
             val existingBundles: List<PatchBundle> = if (outputFile.exists())
             {
                 try {
-                    Json.decodeFromString<List<PatchBundle>>(outputFile.readText())
-                } catch (e: Exception) {
-                    logger.warning(
-                        "Could not parse existing file, creating fresh: ${e.message}"
+                    readPatchBundles(outputFile)
+                } catch (_: Exception) {
+                    Logger.warn(
+                        "Could not parse existing '${outputFile.name}' (invalid JSON), creating fresh."
                     )
                     emptyList()
                 }
@@ -138,24 +130,23 @@ internal object OptionsCommand : Callable<Int> {
                     val removed = existingNames - newNames
                     val kept = newNames.intersect(existingNames)
 
-                    logger.info(
+                    Logger.info(
                         "Updated bundle for ${lb.sourceFile.name}: ${kept.size} preserved, ${added.size} added, ${removed.size} removed"
                     )
                 } else {
-                    logger.info(
+                    Logger.info(
                         "Created new bundle for ${lb.sourceFile.name} with ${updatedBundle.patches.size} patches"
                     )
                 }
             }
 
-            outputFile.absoluteFile.parentFile?.mkdirs()
-            outputFile.writeText(json.encodeToString(updatedBundles))
+            writePatchBundles(outputFile, updatedBundles)
 
-            logger.info("Options file saved to ${outputFile.path}")
+            Logger.info("Options file saved to ${outputFile.path}")
 
             EXIT_CODE_SUCCESS
         } catch (e: Exception) {
-            logger.severe("Failed to export options: ${e.message}")
+            Logger.error("Failed to export options: ${e.message}")
             EXIT_CODE_ERROR
         }
     }

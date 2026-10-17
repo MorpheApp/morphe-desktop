@@ -5,30 +5,6 @@
 
 package app.morphe.gui.util
 
-import app.morphe.engine.util.FileChecksum
-import java.io.File
-
-/**
- * Utility for calculating and verifying file checksums.
- */
-object ChecksumUtils {
-
-    /**
-     * Calculate SHA-256 checksum of a file.
-     * @return Lowercase hex string of the checksum
-     */
-    fun calculateSha256(file: File): String = FileChecksum.sha256(file)
-
-    /**
-     * Verify a file's checksum against expected value.
-     * @return true if checksums match (case-insensitive comparison)
-     */
-    fun verifyChecksum(file: File, expectedChecksum: String): Boolean {
-        val actualChecksum = calculateSha256(file)
-        return actualChecksum.equals(expectedChecksum, ignoreCase = true)
-    }
-}
-
 /**
  * Result of checksum verification.
  */

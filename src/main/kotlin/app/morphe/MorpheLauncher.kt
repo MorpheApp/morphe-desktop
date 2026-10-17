@@ -7,10 +7,9 @@ package app.morphe
 
 import app.morphe.desktop.command.MainCommand
 import app.morphe.engine.BootstrapDownloader
-import app.morphe.library.logging.Logger
+import app.morphe.engine.util.Logger
 import java.awt.GraphicsEnvironment
 import java.io.File
-import java.util.logging.Logger.getLogger as JVLogger
 import kotlin.system.exitProcess
 import picocli.CommandLine
 
@@ -74,11 +73,8 @@ fun main(args: Array<String>) {
             }
         }
     } else {
-        Logger.setDefault()
-
-        if (GraphicsEnvironment.isHeadless() && args.isEmpty()){
-            val logger = JVLogger("app.morphe.MorpheLauncher")
-            logger.info("Running in Headless environment, falling back to CLI mode.")
+        if (GraphicsEnvironment.isHeadless() && args.isEmpty()) {
+            Logger.info("Running in Headless environment, falling back to CLI mode.")
         }
 
         CommandLine(MainCommand)

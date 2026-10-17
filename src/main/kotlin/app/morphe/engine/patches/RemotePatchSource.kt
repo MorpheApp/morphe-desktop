@@ -21,10 +21,9 @@ import java.io.File
  *   - Multi-source orchestration
  *   - UI / progress reporting style
  *
- * This is the engine layer's heart for remote patches. Both the GUI's
- * PatchRepository and the CLI's PatchFileResolver call into a
- * RemotePatchSource to do the real work, while owning their own caching
- * and surface-specific concerns on top.
+ * This is the engine layer's heart for remote patches. Both the unified
+ * [PatchRepository] and [PatchResolver] call into a [RemotePatchSource] to
+ * fetch and download releases across both GUI and CLI surfaces.
  */
 interface RemotePatchSource {
     /** Which remote provider this source talks to. */

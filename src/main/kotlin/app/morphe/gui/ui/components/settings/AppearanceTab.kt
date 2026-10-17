@@ -81,7 +81,7 @@ internal fun AppearanceTab(
 
     val scope = rememberCoroutineScope()
     val configRepo: ConfigRepository = koinInject()
-    val languageRepository: LanguageRepository = remember { LanguageRepository() }
+    val languageRepository: LanguageRepository = koinInject()
     val currentLanguageOption = remember(currentLanguage) {
         languageRepository.getLanguageByCode(currentLanguage, currentLanguage)
     }

@@ -7,7 +7,6 @@ package app.morphe.engine.util
 
 import app.morphe.engine.PatchEngine
 import app.morphe.patcher.apk.ApkUtils
-import java.util.logging.Logger
 
 /**
  * Signs an APK with [primary] credentials, falling back to the legacy ("Morphe Key" / empty password) entry.
@@ -25,7 +24,6 @@ import java.util.logging.Logger
 fun signWithLegacyFallback(
     primary: ApkUtils.KeyStoreDetails,
     allowLegacyFallback: Boolean,
-    logger: Logger,
     sign: (ApkUtils.KeyStoreDetails) -> Unit,
 ) {
     try {
@@ -34,7 +32,7 @@ fun signWithLegacyFallback(
         if (!allowLegacyFallback || !primary.keyStore.exists()) throw primaryError
 
         // Never silently swallow the real cause. Always log it before the back-compat path.
-        logger.info(
+        Logger.info(
             "Default keystore credentials failed (${primaryError.message}). Retrying with legacy credentials"
         )
 

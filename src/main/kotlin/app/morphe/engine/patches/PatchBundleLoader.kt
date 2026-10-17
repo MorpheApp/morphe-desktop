@@ -5,6 +5,7 @@
 
 package app.morphe.engine.patches
 
+import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.loadPatchesFromJar
 import java.io.File
@@ -42,9 +43,10 @@ object PatchBundleLoader {
      */
     fun loadEach(files: Iterable<File>): List<LoadedBundle> =
         files.map { file ->
+            val shadowCopy = WorkspaceManager.createShadowCopy(file, prefix = "bundle-${file.nameWithoutExtension}")
             LoadedBundle(
                 sourceFile = file,
-                patches = loadPatchesFromJar(setOf(file)).toSet(),
+                patches = loadPatchesFromJar(setOf(shadowCopy)).toSet(),
             )
         }
 

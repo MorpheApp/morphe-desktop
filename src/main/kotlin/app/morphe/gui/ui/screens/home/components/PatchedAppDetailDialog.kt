@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.model.SupportedApp
 import app.morphe.gui.data.model.PatchSource
-import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheDialogSurface
 import app.morphe.gui.ui.components.morpheScrollbarStyle

@@ -1,3 +1,59 @@
+# [1.19.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.3...v1.19.0-dev.4) (2026-10-17)
+
+
+### Features
+
+* Add `--validate` CLI argument ([62579bb](https://github.com/MorpheApp/morphe-desktop/commit/62579bbdcb03e287ee947a346e591576d3c530be))
+
+# [1.19.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.2...v1.19.0-dev.3) (2026-10-17)
+
+
+### Bug Fixes
+
+* Log total patching time ([508e110](https://github.com/MorpheApp/morphe-desktop/commit/508e11091c42dadeb9d74a9e6a1015dcca81b160))
+
+# [1.19.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.1...v1.19.0-dev.2) (2026-10-16)
+
+
+### Bug Fixes
+
+* Update to latest patcher ([a1bc2ce](https://github.com/MorpheApp/morphe-desktop/commit/a1bc2ced7abcc555d37c78d87b5b94024d3d5c57))
+
+# [1.19.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.4...v1.19.0-dev.1) (2026-10-16)
+
+
+### Features
+
+* Update to Patcher 2.0.0 ([#357](https://github.com/MorpheApp/morphe-desktop/issues/357)) ([273f5b4](https://github.com/MorpheApp/morphe-desktop/commit/273f5b48ce94d39726b02a499b80520d7c2093cd))
+
+## [1.18.2-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.3...v1.18.2-dev.4) (2026-10-11)
+
+
+### Bug Fixes
+
+* Eliminate UI freezes across screens, dialogs, and keystore actions ([#354](https://github.com/MorpheApp/morphe-desktop/issues/354)) ([2bbce0c](https://github.com/MorpheApp/morphe-desktop/commit/2bbce0cb4de192c32c8c7896524350a0f8cd89ea))
+
+## [1.18.2-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.2...v1.18.2-dev.3) (2026-10-11)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([adacc9d](https://github.com/MorpheApp/morphe-desktop/commit/adacc9d1a393041d38fe5f637425b4e849d4fdca))
+
+## [1.18.2-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.2-dev.1...v1.18.2-dev.2) (2026-10-10)
+
+
+### Bug Fixes
+
+* Revert skiko dependency update ([d17e3ad](https://github.com/MorpheApp/morphe-desktop/commit/d17e3ad929e0d53854ca75fa0dd2021b3a42313c))
+
+## [1.18.2-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.1...v1.18.2-dev.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* Unify CLI & GUI logic into engine ([#343](https://github.com/MorpheApp/morphe-desktop/issues/343)) ([5390323](https://github.com/MorpheApp/morphe-desktop/commit/5390323465cb1b8aae87498c34c0c02fdd9d3b1c))
+
 ## [1.18.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.0...v1.18.1) (2026-10-05)
 
 

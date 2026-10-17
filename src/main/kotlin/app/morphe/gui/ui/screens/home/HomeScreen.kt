@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.util.AdbException
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchSelectionScreenRoute
@@ -39,9 +41,9 @@ import app.morphe.gui.ui.screens.home.components.handleContinue
 import app.morphe.gui.ui.screens.home.components.openFilePicker
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
-import app.morphe.gui.util.AdbException
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.PatchException
+import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
@@ -408,7 +410,7 @@ fun HomeScreenContent(
 //                ?.resolved
 //                ?.associate { it.source.id to it.resolvedVersion }
 //                ?: emptyMap()
-            val channelsBySource: Map<String, EnabledSourcesLoader.Channel?> =
+            val channelsBySource: Map<String, PatchResolver.Channel?> =
                 resolvedSnapshot
                     ?.resolved
                     ?.associate { it.source.id to it.channel }
@@ -417,7 +419,7 @@ fun HomeScreenContent(
             // Used by ApkInfoCard's "FROM" row to surface multi-source provenance.
             val patchSourcesForSelectedApk: List<String> = uiState.apkInfo?.let { info ->
                 val snapshot = resolvedSnapshot ?: return@let null
-                snapshot.guiPatchesBySource.entries
+                snapshot.patchesBySource.entries
                     .filter { (_, patches) ->
                         patches.any { p -> p.compatiblePackages.any { it.name == info.packageName } }
                     }
@@ -433,7 +435,7 @@ fun HomeScreenContent(
             } else {
                 val sourceIdToName = allSources.associate { it.id to it.name }
                 val accum = mutableMapOf<String, MutableList<String>>()
-                resolvedSnapshot.guiPatchesBySource.forEach { (sourceId, patches) ->
+                resolvedSnapshot.patchesBySource.forEach { (sourceId, patches) ->
                     val name = sourceIdToName[sourceId] ?: return@forEach
                     val packages = patches.flatMap { it.compatiblePackages.map { p -> p.name } }
                         .filter { it.isNotBlank() }

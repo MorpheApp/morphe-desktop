@@ -8,6 +8,10 @@ package app.morphe.gui.ui.components.color
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import app.morphe.engine.MorpheData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -23,9 +27,26 @@ object CustomSwatches {
 
     private val file by lazy { File(MorpheData.iconsDir, "swatches.json") }
     private val json = Json { ignoreUnknownKeys = true }
+    private var isLoaded = false
 
-    val colors: SnapshotStateList<Int> = mutableStateListOf<Int>().also { list ->
-        runCatching { if (file.exists()) list.addAll(json.decodeFromString<List<Int>>(file.readText())) }
+    val colors: SnapshotStateList<Int> = mutableStateListOf<Int>().also {
+        load()
+    }
+
+    fun load() {
+        if (isLoaded) return
+        isLoaded = true
+        CoroutineScope(Dispatchers.IO).launch {
+            val loaded = runCatching {
+                if (file.exists()) {
+                    json.decodeFromString<List<Int>>(file.readText())
+                } else null
+            }.getOrNull() ?: return@launch
+            withContext(Dispatchers.Main) {
+                colors.clear()
+                colors.addAll(loaded)
+            }
+        }
     }
 
     val isFull: Boolean get() = colors.size >= MAX
@@ -39,6 +60,9 @@ object CustomSwatches {
     }
 
     private fun save() {
-        runCatching { file.writeText(json.encodeToString(colors.toList())) }
+        val snapshot = colors.toList()
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching { file.writeText(json.encodeToString(snapshot)) }
+        }
     }
 }

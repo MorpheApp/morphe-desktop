@@ -6,11 +6,12 @@
 package app.morphe.gui.data.repository
 
 import app.morphe.engine.patches.PatchProvider
+import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
-import app.morphe.gui.util.Logger
-import io.ktor.client.*
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -142,7 +143,7 @@ class PatchSourceManager(
     private fun defaultMorpheRepository(): PatchRepository {
         val remote = RemotePatchSourceFactory.build(
             PatchProvider.GITHUB,
-            "MorpheApp/morphe-patches",
+            RemotePatchSourceFactory.DEFAULT_REPO_PATH,
             httpClient,
         )
         return PatchRepository(remote)
@@ -170,14 +171,17 @@ class PatchSourceManager(
             } else null
 
             val finalRemote = remote ?: run {
-                val repoPath = extractRepoPath(source)
                 // Map the GUI's persisted source type to the engine's provider
                 // enum. DEFAULT inherits GitHub (Morphe Patches lives there).
                 val provider = when (source.type) {
                     PatchSourceType.GITLAB -> PatchProvider.GITLAB
                     else -> PatchProvider.GITHUB
                 }
-                RemotePatchSourceFactory.build(provider, repoPath, httpClient)
+                RemotePatchSourceFactory.build(
+                    provider,
+                    RemotePatchSourceFactory.DEFAULT_REPO_PATH,
+                    httpClient,
+                )
             }
             Logger.info("Creating PatchRepository for source '${source.name}' (repo=${finalRemote.repoPath}, provider=${finalRemote.provider})")
             PatchRepository(finalRemote)
@@ -189,22 +193,6 @@ class PatchSourceManager(
      */
     suspend fun getActiveSource(): PatchSource {
         return configRepository.getActivePatchSource()
-    }
-
-    /**
-     * Extract "owner/repo" from a PatchSource's URL. Works for both GitHub
-     * and GitLab hosts. Falls back to the built-in default repo when no URL
-     * is configured (e.g. for the DEFAULT source on first launch).
-     */
-    private fun extractRepoPath(source: PatchSource): String {
-        val url = source.url ?: return "MorpheApp/morphe-patches"
-        return url
-            .removePrefix("https://github.com/")
-            .removePrefix("http://github.com/")
-            .removePrefix("https://gitlab.com/")
-            .removePrefix("http://gitlab.com/")
-            .removeSuffix("/")
-            .removeSuffix(".git")
     }
 
     /**

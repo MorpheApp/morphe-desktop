@@ -5,6 +5,7 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.workspace.WorkspaceManager
 import java.io.File
 
 /**
@@ -32,6 +33,24 @@ object CacheManager {
     }
 
     /**
+     * Calculates the total byte size across all cached directories
+     * (patches cache, logs, and workspace scratch).
+     */
+    fun getCacheSizeBytes(): Long =
+        getDirectorySize(MorpheData.patchesDir) +
+            getDirectorySize(MorpheData.logsDir) +
+            WorkspaceManager.getScratchSize()
+
+    /**
+     * Computes the total file size inside [dir].
+     */
+    fun getDirectorySize(dir: File): Long = try {
+        dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    } catch (_: Exception) {
+        0L
+    }
+
+    /**
      * Deletes the contents of the patches cache, logs, and temp scratch
      * directories (keeping the top-level directories themselves).
      *
@@ -41,13 +60,17 @@ object CacheManager {
      */
     fun clearCaches(): ClearResult = ClearResult(
         listOf(
-            clearContents("Patches", MorpheData.patchesDir),
-            clearContents("Logs", MorpheData.logsDir),
-            clearContents("Temp", MorpheData.tmpDir),
+            clearDirectoryContents("Patches", MorpheData.patchesDir),
+            clearDirectoryContents("Logs", MorpheData.logsDir),
+            WorkspaceManager.clearScratch(),
         ),
     )
 
-    private fun clearContents(label: String, dir: File): DirResult {
+    /**
+     * Deletes the contents of [dir] while retaining the directory itself,
+     * returning metrics on files deleted, bytes freed, and failures.
+     */
+    fun clearDirectoryContents(label: String, dir: File): DirResult {
         var bytesFreed = 0L
         var filesDeleted = 0
         var failedFiles = 0

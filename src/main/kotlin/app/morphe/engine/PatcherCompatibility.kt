@@ -5,9 +5,9 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.Logger
 import java.io.File
 import java.util.zip.ZipInputStream
-import java.util.logging.Logger
 
 /**
  * Detects when a patch bundle (.mpp) was built against a newer morphe-patcher than this
@@ -26,8 +26,6 @@ import java.util.logging.Logger
  * returns null so a valid bundle is never wrongly rejected.
  */
 object PatcherCompatibility {
-
-    private val logger = Logger.getLogger(PatcherCompatibility::class.java.name)
 
     /**
      * The morphe-patcher version on the classpath (see [MorpheComponents.patcherVersion]).
@@ -61,7 +59,7 @@ object PatcherCompatibility {
         val required = requiredPatcherVersion(mpp) ?: return null
         val current = currentPatcherVersion ?: return null
         if (!isNewer(required, current)) return null
-        logger.info("Bundle ${mpp.name} needs patcher $required, this build ships $current")
+        Logger.info("Bundle ${mpp.name} needs patcher $required, this build ships $current")
         return "This patch bundle needs Morphe patcher $required, but this build ships $current. " +
             "Update Morphe to use it."
     }
