@@ -346,6 +346,13 @@ internal object PatchCommand : Callable<Int> {
     private var sdkToolsPath: File? = null
 
     @CommandLine.Option(
+        names = ["--validate"],
+        description = ["Validate that each fingerprint matched with match() matches only one method, the same as using matchSingle(). Usage of matchAll() is unaffected. Patching is slower and this is intended for developer verification before release."],
+        showDefaultValue = ALWAYS,
+    )
+    private var validate: Boolean = false
+
+    @CommandLine.Option(
         names = ["--continue-on-error"],
         description = ["Continue patching even if a patch fails. By default, patching stops on the first error."],
         showDefaultValue = ALWAYS,
@@ -482,6 +489,7 @@ internal object PatchCommand : Callable<Int> {
             failOnError = !continueOnError,
             bytecodeMode = bytecodeMode,
             sdkToolsPath = sdkToolsPath,
+            validate = validate,
             disablePurge = disablePurge,
             optionsFile = optionsFilePath,
             updateOptions = updateOptions,
@@ -532,6 +540,9 @@ internal object PatchCommand : Callable<Int> {
                 return EXIT_CODE_SUCCESS
             } else {
                 Logger.error("Patching aborted: ${engineResult.failureReason ?: "Unknown error"}")
+                engineResult.failedPatches.forEach { failedPatch ->
+                    Logger.error(failedPatch.error)
+                }
                 if (!continueOnError && engineResult.failedPatches.isNotEmpty()) {
                     Logger.info("Use --continue-on-error to skip failed patches and continue patching")
                 }

@@ -594,6 +594,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `--striplibs`                  | Architectures to keep, comma-separated (e.g.`arm64-v8a,x86`)                       |
 | `--bytecode-mode`              | Bytecode mode:`FULL`, `STRIP_SAFE`, or `STRIP_FAST`                                |
 | `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                    |
+| `--validate`                   | Verify each fingerprint `match()` matches only one method    |
 | `--continue-on-error`          | Continue patching if a patch fails                                                 |
 | `--options-file`               | Path to options JSON file                                                          |
 | `--options-update`             | Auto-update options JSON file after patching                                       |
@@ -1028,6 +1029,18 @@ java -jar morphe-desktop-*-all.jar patch -p patches.mpp --verify-with-sdk --unsi
 >    - Linux: `~/Android/Sdk`
 >
 > If none of those resolve to a real SDK, Morphe errors out with a hint to either set one of the env vars or supply a path explicitly.
+
+#### `--validate`:
+
+Required: No
+
+Default: `false`
+
+For patch developers. Forces every fingerprint `match()` to behave like `matchSingle()`, so patching fails if a fingerprint matches more than one method. This verifies a fingerprint cannot match a different method if a later version of the app changes the order of its classes or methods. Usage of `matchAll()` is unaffected. Patching is slower, because each fingerprint searches all classes.
+
+```
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --validate your_app.apk
+```
 
 #### `--continue-on-error`:
 

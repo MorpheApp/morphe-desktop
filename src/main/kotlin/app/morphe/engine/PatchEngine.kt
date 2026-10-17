@@ -110,6 +110,7 @@ object PatchEngine {
         val failOnError: Boolean = true,
         val bytecodeMode: BytecodeMode = BytecodeMode.STRIP_FAST,
         val sdkToolsPath: File? = null,
+        val validate: Boolean = false,
         val disablePurge: Boolean = false,
         val optionsFile: File? = null,
         val updateOptions: Boolean = false,
@@ -273,6 +274,7 @@ object PatchEngine {
                 useBytecodeMode = config.bytecodeMode,
                 fileWorkspacePath = File(tempDir, "workspace").also { it.mkdirs() },
                 verifier = verifier,
+                validate = config.validate,
             )
 
             onProgress("Initializing patcher...")
