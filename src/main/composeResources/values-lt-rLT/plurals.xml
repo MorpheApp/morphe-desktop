@@ -1,15 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Nepavyko įkelti %1$d pataisų šaltinio. Naudojami tie, kurie buvo įkelti sėkmingai</item>
+        <item quantity="few">Nepavyko įkelti %1$d pataisų šaltinių. Naudojami tie, kurie buvo įkelti sėkmingai</item>
+        <item quantity="many">Nepavyko įkelti %1$d pataisų šaltinių. Naudojami tie, kurie buvo įkelti sėkmingai</item>
+        <item quantity="other">Nepavyko įkelti %1$d pataisų šaltinio. Naudojami tie, kurie buvo įkelti sėkmingai</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d pataisyta programėlė turi galimą naujinį</item>
+        <item quantity="few">%1$d pataisytos programėlės turi galimus naujinius</item>
+        <item quantity="many">%1$d pataisytų programėlių turi galimus naujinius</item>
+        <item quantity="other">%1$d pataisytos programėlės turi galimą naujinį</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Išsaugota %1$d eilutė į %2$s</item>
+        <item quantity="few">Išsaugotos %1$d eilutės į %2$s</item>
+        <item quantity="many">Išsaugota %1$d eilučių į %2$s</item>
+        <item quantity="other">Išsaugota %1$d eilutės į %2$s</item>
+    </plurals>
     <plurals name="count_sources">
         <item quantity="one">%1$d šaltinis</item>
         <item quantity="few">%1$d šaltiniai</item>
-        <item quantity="many">%1$d šaltiniai</item>
-        <item quantity="other">%1$d šaltiniai</item>
+        <item quantity="many">%1$d šaltinio</item>
+        <item quantity="other">%1$d šaltinių</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d pataisa bus pritaikyta</item>
+        <item quantity="few">%1$d pataisos bus pritaikytos</item>
+        <item quantity="many">%1$d pataisų bus pritaikyta</item>
+        <item quantity="other">%1$d pataisos bus pritaikyta</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d neįtraukta</item>
+        <item quantity="few">%1$d neįtrauktos</item>
+        <item quantity="many">%1$d neįtraukta</item>
+        <item quantity="other">%1$d neįtraukta</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d įjungtas</item>
+        <item quantity="few">%1$d įjungti</item>
+        <item quantity="many">%1$d įjungtos</item>
+        <item quantity="other">%1$d įjungtų</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d išjungta</item>
+        <item quantity="few">%1$d išjungtos</item>
+        <item quantity="many">%1$d išjungta</item>
+        <item quantity="other">%1$d išjungta</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d biblioteka</item>
+        <item quantity="few">%1$d bibliotekos</item>
+        <item quantity="many">%1$d bibliotekos</item>
+        <item quantity="other">%1$d bibliotekų</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">Pasirinkta %1$d iš %2$d</item>
+        <item quantity="few">Pasirinktos %1$d iš %2$d</item>
+        <item quantity="many">Pasirinkta %1$d iš %2$d</item>
+        <item quantity="other">Pasirinkta %1$d iš %2$d</item>
     </plurals>
     <plurals name="patch_selection_group_patch_count">
         <item quantity="one">%1$d pataisa</item>
-        <item quantity="few">%1$d pataisa</item>
-        <item quantity="many">%1$d pataisa</item>
-        <item quantity="other">%1$d pataisymai</item>
+        <item quantity="few">%1$d pataisos</item>
+        <item quantity="many">%1$d pataisos</item>
+        <item quantity="other">%1$d pataisių</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kortelė perrašo tai</item>
+        <item quantity="few">%1$d kortelės perrašo tai</item>
+        <item quantity="many">%1$d kortelių perrašo tai</item>
+        <item quantity="other">%1$d kortelės perrašo tai</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Atsisiųsti %1$d rinkinį</item>
+        <item quantity="few">Atsisiųsti %1$d rinkinius</item>
+        <item quantity="many">Atsisiųsti %1$d rinkinių</item>
+        <item quantity="other">Atsisiųsti %1$d rinkinio</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d branduolys</item>
+        <item quantity="few">%1$d branduoliai</item>
+        <item quantity="many">%1$d branduolio</item>
+        <item quantity="other">%1$d branduolių</item>
     </plurals>
 </resources>

@@ -1,12 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Non foi posible cargar %1$d fonte de parche. Estanse a utilizar as que se cargaron correctamente.</item>
+        <item quantity="other">Non foi posible cargar %1$d fontes de parches. Estanse a utilizar as que se cargaron correctamente.</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d aplicación modificada ten unha actualización dispoñible</item>
+        <item quantity="other">%1$d aplicacións modificadas teñen actualizacións dispoñibles</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Gardouse %1$d liña en %2$s</item>
+        <item quantity="other">Gardáronse %1$d liñas en %2$s</item>
+    </plurals>
     <plurals name="count_sources">
-        <item quantity="one">%1$d Fonte</item>
+        <item quantity="one">%1$d fonte</item>
         <item quantity="other">
-%1$d Fontes</item>
+%1$d fontes</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Aplicarase %1$d parche</item>
+        <item quantity="other">Aplicaranse %1$d parches</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d excluído</item>
+        <item quantity="other">%1$d excluídos</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d activado</item>
+        <item quantity="other">%1$d activados</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d desactivado</item>
+        <item quantity="other">%1$d desactivados</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d biblioteca</item>
+        <item quantity="other">%1$d bibliotecas</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d de %2$d seleccionado</item>
+        <item quantity="other">%1$d de %2$d seleccionados</item>
     </plurals>
     <plurals name="patch_selection_group_patch_count">
-        <item quantity="one">%1$d Mellora</item>
-        <item quantity="other">%1$d Melloras</item>
+        <item quantity="one">%1$d parche</item>
+        <item quantity="other">%1$d parches</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d tarxeta anula isto</item>
+        <item quantity="other">%1$d tarxetas anulan isto</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Descargar %1$d feixe</item>
+        <item quantity="other">Descargar %1$d feixes</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d núcleo</item>
+        <item quantity="other">%1$d núcleos</item>
     </plurals>
 </resources>

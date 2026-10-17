@@ -712,7 +712,7 @@
     <string name="settings_section_background_animation">Анімація фону</string>
     <string name="settings_background_circles">Кола</string>
     <string name="settings_background_rings">Кільця</string>
-    <string name="settings_background_mesh">Сітка</string>
+    <string name="settings_background_mesh">Полігони</string>
     <string name="settings_background_space">Космос</string>
     <string name="settings_background_shapes">Фігури</string>
     <string name="settings_background_snow">Сніг</string>

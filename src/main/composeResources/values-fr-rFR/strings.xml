@@ -575,7 +575,7 @@
     <string name="add_source">Ajouter une source</string>
     <string name="source_sheet_title">Sources de patchs</string>
     <string name="source_sheet_reload_description">Recharger les patchs</string>
-    <string name="source_sheet_quick_mode_hint">Sélectionnez la source utilisée par Quick Patch. Plusieurs sources sont disponibles en mode Expert</string>
+    <string name="source_sheet_quick_mode_hint">Choisissez la source utilisée par Quick Patch. Plusieurs sources sont disponibles en mode Expert</string>
     <string name="source_sheet_multi_mode_hint">Activer/désactiver n'importe quelle combinaison. Les patchs de toutes les sources activées sont regroupés</string>
     <string name="source_sheet_done_button">Terminé</string>
     <string name="source_sheet_type_preinstalled">Préinstallée</string>
@@ -618,7 +618,7 @@
     <string name="patch_source_dialog_file_button">Fichier</string>
     <string name="patch_source_dialog_picker_select_file">Sélectionner un fichier .mpp</string>
     <string name="patch_source_dialog_picker_select_folder">Sélectionnez un dossier (le .mpp le plus récent est utilisé)</string>
-    <string name="patch_source_dialog_folder_hint">Sélectionnez un dossier pour toujours charger le fichier .mpp le plus récent à l'intérieur - pratique lors de la reconstruction des patchs</string>
+    <string name="patch_source_dialog_folder_hint">Choisissez un dossier pour toujours charger le fichier .mpp le plus récent à l'intérieur - pratique lors de la reconstruction des patchs</string>
     <!-- Device Indicator -->
     <string name="device_indicator_adb_off">ADB désactivé</string>
     <string name="device_indicator_checking">Vérification…</string>
