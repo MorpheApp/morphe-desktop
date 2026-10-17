@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
+import java.util.Locale
 
 class PatchingViewModel(
     private val config: PatchEngine.Config,
@@ -187,6 +188,8 @@ class PatchingViewModel(
             }
 
             if (_uiState.value.status == PatchingStatus.CANCELLED) return@launch
+
+            Logger.info("Patching complete in %.1f seconds".format(Locale.US, (System.currentTimeMillis() - startTime) / 1000.0))
 
             if (engineResult.success) {
                 val elapsedMs = System.currentTimeMillis() - startTime

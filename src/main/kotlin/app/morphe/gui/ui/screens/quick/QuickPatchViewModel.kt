@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getPluralString
 import org.jetbrains.compose.resources.getString
+import java.util.Locale
 
 /**
  * ViewModel for Quick Patch mode - handles the entire flow in one screen.
@@ -595,6 +596,7 @@ class QuickPatchViewModel(
                 ),
             )
 
+            val patchStartNanos = System.nanoTime()
             val engineResult = try {
                 PatchEngine.patch(
                     config = engineConfig,
@@ -637,6 +639,8 @@ class QuickPatchViewModel(
             }
 
             if (_uiState.value.phase != QuickPatchPhase.PATCHING) return@launch
+
+            Logger.info("Patching complete in %.1f seconds".format(Locale.US, (System.nanoTime() - patchStartNanos) / 1_000_000_000.0))
 
             if (engineResult.success) {
                 // Force 100% progress immediately upon engine success

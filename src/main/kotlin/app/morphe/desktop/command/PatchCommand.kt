@@ -489,6 +489,7 @@ internal object PatchCommand : Callable<Int> {
         )
 
         try {
+            val startNanos = System.nanoTime()
             val engineResult = runBlocking {
                 PatchEngine.patch(
                     config = engineConfig,
@@ -501,6 +502,8 @@ internal object PatchCommand : Callable<Int> {
                     },
                 )
             }
+
+            Logger.info("Patching took %.1f seconds".format(java.util.Locale.US, (System.nanoTime() - startNanos) / 1_000_000_000.0))
 
             patchingResultOutputFilePath?.let { outputFile ->
                 outputFile.outputStream().use { outputStream ->
