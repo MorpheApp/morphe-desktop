@@ -43,7 +43,7 @@ slf4j = "2.0.20"
 
 # Libraries
 about-libraries = "15.3.0"
-oshi = "7.7.0"
+oshi = "7.7.1"
 
 [libraries]
 # Morphe Core
