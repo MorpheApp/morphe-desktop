@@ -27,9 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.MorpheBadge
-import app.morphe.gui.ui.components.MorpheBadgeSize
 import app.morphe.gui.ui.components.MorpheBadgeTone
-import app.morphe.gui.ui.components.MorpheBadgeVariant
 import app.morphe.gui.ui.screens.patching.PatchingStatus
 import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.Animations
@@ -141,9 +139,7 @@ internal fun ExpertProgressHeader(
 private fun PercentageBadge(progress: Float) {
     MorpheBadge(
         text = "${(progress * 100).toInt()}%",
-        variant = MorpheBadgeVariant.FILLED,
         tone = MorpheBadgeTone.Primary,
-        size = MorpheBadgeSize.LARGE,
     )
 }
 
