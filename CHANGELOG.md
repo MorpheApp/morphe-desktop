@@ -1,3 +1,10 @@
+# [1.19.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.3...v1.19.0-dev.4) (2026-10-17)
+
+
+### Features
+
+* Add `--validate` CLI argument ([62579bb](https://github.com/MorpheApp/morphe-desktop/commit/62579bbdcb03e287ee947a346e591576d3c530be))
+
 # [1.19.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.2...v1.19.0-dev.3) (2026-10-17)
 
 
