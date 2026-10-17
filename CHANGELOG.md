@@ -1,3 +1,10 @@
+# [1.19.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.2...v1.19.0-dev.3) (2026-10-17)
+
+
+### Bug Fixes
+
+* Log total patching time ([508e110](https://github.com/MorpheApp/morphe-desktop/commit/508e11091c42dadeb9d74a9e6a1015dcca81b160))
+
 # [1.19.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.1...v1.19.0-dev.2) (2026-10-16)
 
 
