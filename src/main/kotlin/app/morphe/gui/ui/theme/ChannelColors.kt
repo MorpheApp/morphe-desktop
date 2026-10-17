@@ -26,14 +26,14 @@ import app.morphe.engine.patches.PatchResolver.Channel
 @Composable
 @ReadOnlyComposable
 fun channelColor(channel: Channel?): Color {
-    val accents = LocalMorpheAccents.current
+    val colors = MorpheTheme.colors
     return when (channel) {
-        Channel.STABLE_LATEST -> accents.secondary
-        Channel.STABLE_OLDER -> accents.warning
-        Channel.DEV_LATEST -> accents.tertiary
+        Channel.STABLE_LATEST -> colors.secondary
+        Channel.STABLE_OLDER -> colors.warning
+        Channel.DEV_LATEST -> colors.tertiary
         Channel.DEV_OLDER -> MaterialTheme.colorScheme.error
         // Local files aren't a release channel, so give them their own distinct tint.
-        Channel.LOCAL -> accents.primary
-        null, Channel.UNKNOWN -> accents.secondary
+        Channel.LOCAL -> colors.primary
+        null, Channel.UNKNOWN -> colors.secondary
     }
 }

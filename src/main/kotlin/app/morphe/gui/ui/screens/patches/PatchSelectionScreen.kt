@@ -20,7 +20,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.listSaver
@@ -32,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.gui.LocalGroupPatchesByCategory
@@ -40,19 +39,14 @@ import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchingScreenRoute
 import app.morphe.gui.navigateComplex
-import app.morphe.gui.ui.components.ErrorDialog
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
-import app.morphe.gui.ui.components.getErrorType
-import app.morphe.gui.ui.components.getFriendlyErrorMessage
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
+import app.morphe.gui.ui.components.ScreenErrorDialog
 import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patches.components.selection.*
-import app.morphe.gui.ui.screens.patching.PatchingScreen
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.screenScrim
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Toolkit
@@ -80,65 +74,33 @@ fun PatchSelectionScreen(
 
 @Composable
 fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
+    val primaryColor = MorpheTheme.colors.primary
     val navController = LocalNavController.current
     val engineConfigRepository: EngineConfigRepository = koinInject()
     val uiState by viewModel.uiState.collectAsState()
     val targetPackage = viewModel.targetPackage()
 
     // Load keystore config for CLI preview
-    var keystorePath by remember { mutableStateOf<String?>(null) }
-    var keystorePassword by remember { mutableStateOf<String?>(null) }
-    var keystoreAlias by remember { mutableStateOf<String?>(null) }
-    var keystoreEntryPassword by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(Unit) {
-        val config = engineConfigRepository.loadConfig()
-        keystorePath = config.resolvedKeystorePath()?.absolutePath
-        keystorePassword = config.keystorePassword
-        keystoreAlias = config.keystoreAlias
-        keystoreEntryPassword = config.keystoreEntryPassword
+    val engineConfig by produceState<EngineConfig?>(initialValue = null) {
+        value = engineConfigRepository.loadConfig()
     }
 
-    var showErrorDialog by remember { mutableStateOf(false) }
-    var currentError by remember { mutableStateOf<String?>(null) }
+    ScreenErrorDialog(
+        error = uiState.error,
+        title = stringResource(Res.string.patch_selection_error_title),
+        onDismiss = { viewModel.clearError() },
+        onRetry = { viewModel.loadPatches() }
+    )
 
-    LaunchedEffect(uiState.error) {
-        uiState.error?.let { error ->
-            currentError = error
-            showErrorDialog = true
-        }
-    }
+    var cleanMode by rememberSaveable { mutableStateOf(false) }
+    var showCommandPreview by rememberSaveable { mutableStateOf(false) }
+    var continueOnError by rememberSaveable { mutableStateOf(false) }
 
-    if (showErrorDialog && currentError != null) {
-        ErrorDialog(
-            title = stringResource(Res.string.patch_selection_error_title),
-            message = getFriendlyErrorMessage(currentError!!),
-            errorType = getErrorType(currentError!!),
-            onDismiss = {
-                showErrorDialog = false
-                viewModel.clearError()
-            },
-            onRetry = {
-                showErrorDialog = false
-                viewModel.clearError()
-                viewModel.loadPatches()
-            }
-        )
-    }
-
-    var cleanMode by remember { mutableStateOf(false) }
-    var showCommandPreview by remember { mutableStateOf(false) }
-    var continueOnError by remember { mutableStateOf(false) }
     var showRunInfo by remember { mutableStateOf(false) }
-
     if (showRunInfo) {
         val info = remember(uiState.bundles) { viewModel.runInfo() }
         RunInfoDialog(info = info, onDismiss = { showRunInfo = false })
     }
-
-    val dividerColor = MaterialTheme.colorScheme.outlineVariant
 
     Column(modifier = Modifier.fillMaxSize().background(screenScrim)) {
         // ── Header bar ──
@@ -155,8 +117,22 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
         )
 
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
-            val commandPreview = remember(uiState.selectedByBundle, uiState.patchOptionValues, uiState.stripLibsStatus, cleanMode, continueOnError, keystorePath) {
-                viewModel.getCommandPreview(cleanMode, continueOnError, keystorePath, keystorePassword, keystoreAlias, keystoreEntryPassword)
+            val commandPreview = remember(
+                uiState.selectedByBundle,
+                uiState.patchOptionValues,
+                uiState.stripLibsStatus,
+                cleanMode,
+                continueOnError,
+                engineConfig
+            ) {
+                viewModel.getCommandPreview(
+                    cleanMode = cleanMode,
+                    continueOnError = continueOnError,
+                    keystorePath = engineConfig?.resolvedKeystorePath()?.absolutePath,
+                    keystorePassword = engineConfig?.keystorePassword,
+                    keystoreAlias = engineConfig?.keystoreAlias,
+                    keystoreEntryPassword = engineConfig?.keystoreEntryPassword
+                )
             }
             AnimatedVisibility(
                 visible = showCommandPreview,
@@ -196,15 +172,13 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         CircularProgressIndicator(
-                            color = accents.primary,
+                            color = primaryColor,
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = stringResource(Res.string.patching_step_loading_patches),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = font,
+                            style = MorpheTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -223,9 +197,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     Text(
                         text = if (uiState.bundles.isEmpty()) stringResource(Res.string.patch_selection_no_patches_found)
                                else stringResource(Res.string.patch_selection_no_source_patches_for_app),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                     )
@@ -250,9 +222,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 ) {
                     Text(
                         text = stringResource(Res.string.patch_selection_no_search_matches),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -351,9 +321,8 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                     ) {
                                         Text(
                                             text = bundle.bundleName,
-                                            fontSize = 13.sp,
-                                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                                            fontFamily = font,
+                                            style = if (isSelected) MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                                                    else MorpheTheme.typography.bodyMedium,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )
@@ -376,7 +345,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
-                                style = morpheScrollbarStyle()
+                                style = MorpheScrollbarStyle()
                             )
                             Spacer(Modifier.height(4.dp))
                         }
@@ -395,16 +364,14 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 Icon(
                                     imageVector = MorpheIcons.Source,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = primaryColor,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(Modifier.width(6.dp))
                                 Text(
                                     text = singleBundle.bundleName,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontFamily = font
+                                    style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                                    color = primaryColor,
                                 )
                             }
                         }
@@ -448,8 +415,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 ) {
                                     Text(
                                         text = stringResource(Res.string.patch_selection_no_matches_in_bundle),
-                                        fontSize = 13.sp,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -479,11 +445,12 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                     verticalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
                                     groups.forEach { group ->
-                                        if (group.title != null) {
-                                            val isExpanded = isSearching || sectionState.isExpanded(bundle.bundleId, group)
+                                        val headerTitle = group.title
+                                        val isExpanded = headerTitle == null || isSearching || sectionState.isExpanded(bundle.bundleId, group)
+                                        if (headerTitle != null) {
                                             item(key = "group_${bundle.bundleId}_${group.key}") {
                                                 PatchGroupHeader(
-                                                    title = group.title,
+                                                    title = headerTitle,
                                                     count = group.items.size,
                                                     isExpanded = isExpanded,
                                                     onToggle = if (isSearching) null else ({ sectionState.toggle(bundle.bundleId, group) }),
@@ -491,29 +458,8 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                                     selectedCount = group.selectedCount
                                                 )
                                             }
-                                            if (isExpanded) {
-                                                items(
-                                                    items = group.items,
-                                                    key = { it.uniqueId }
-                                                ) { patch ->
-                                                    PatchListItem(
-                                                        patch = patch,
-                                                        isSelected = selectedInBundle.contains(patch.uniqueId),
-                                                        isNew = patch.uniqueId in newInBundle,
-                                                        onToggle = { viewModel.togglePatch(bundle.bundleId, patch.uniqueId) },
-                                                        sourceName = null,
-                                                        packageName = targetPackage,
-                                                        patchOptionValues = uiState.patchOptionValues,
-                                                        getOptionValue = { optionKey, default ->
-                                                            viewModel.getOptionValue(patch.name, optionKey, default)
-                                                        },
-                                                        onOptionValueChange = { optionKey, value ->
-                                                            viewModel.setOptionValue(patch.name, optionKey, value)
-                                                        }
-                                                    )
-                                                }
-                                            }
-                                        } else {
+                                        }
+                                        if (isExpanded) {
                                             items(
                                                 items = group.items,
                                                 key = { it.uniqueId }
@@ -547,7 +493,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             VerticalScrollbar(
                                 modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                                 adapter = rememberScrollbarAdapter(currentPageList),
-                                style = morpheScrollbarStyle()
+                                style = MorpheScrollbarStyle()
                             )
                         }
                     }

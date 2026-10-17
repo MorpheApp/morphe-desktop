@@ -11,6 +11,7 @@ import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -212,5 +213,26 @@ fun EnabledSourcesLoader.Result?.sourceErrorMap(): Map<String, String> {
                 put(s.sourceId, s.error?.let { resolvePatchLoadError(it) } ?: stringResource(Res.string.source_error_failed_to_load))
             }
         }
+    }
+}
+
+/**
+ * Logs patch source resolution failure with detailed stack trace if available.
+ */
+fun EnabledSourcesLoader.Result.logIfFailed(prefix: String = "") {
+    if (anyLoaded) return
+    val firstThrowable = loaded.perSource.firstNotNullOfOrNull { it.error }
+    val rawTechnicalError = firstThrowable?.message
+        ?: resolved.firstNotNullOfOrNull { it.error }
+    val baseMessage = when {
+        rawTechnicalError.isNullOrBlank() -> "Failed to load any patches"
+        rawTechnicalError.startsWith("Failed to load", ignoreCase = true) -> rawTechnicalError
+        else -> "Failed to load any patches: $rawTechnicalError"
+    }
+    val logMessage = if (prefix.isNotBlank()) "$prefix: $baseMessage" else baseMessage
+    if (firstThrowable != null) {
+        Logger.error(logMessage, firstThrowable)
+    } else {
+        Logger.warn(logMessage)
     }
 }

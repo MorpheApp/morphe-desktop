@@ -18,15 +18,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.MorphePanel
 import app.morphe.gui.ui.screens.patching.IoUsage
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheMono
+import app.morphe.gui.ui.theme.MorpheMonoFamily
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
@@ -37,13 +37,10 @@ import org.jetbrains.compose.resources.stringResource
 internal fun HeapUsageGraph(
     samples: List<Int>,
     maxHeapMb: Int,
-    modifier: Modifier = Modifier,
-    font: FontFamily
+    modifier: Modifier = Modifier
 ) {
-    val corners = LocalMorpheCorners.current
-    val mono = LocalMorpheMono.current
-    val barColor = MaterialTheme.colorScheme.primary
-    val warnColor = MaterialTheme.colorScheme.error
+    val barColor = MorpheTheme.colors.primary
+    val warnColor = MorpheTheme.colors.danger
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
     MorphePanel(modifier = modifier) {
@@ -58,39 +55,26 @@ internal fun HeapUsageGraph(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(barColor))
-                    Text(
-                        text = stringResource(Res.string.patching_graph_memory_usage),
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
-                    )
-                }
+                GraphHeaderDotLabel(
+                    text = stringResource(Res.string.patching_graph_memory_usage),
+                    dotColor = barColor,
+                )
 
                 if (maxHeapMb > 0) {
                     val usedMb = samples.lastOrNull() ?: 0
                     val percent = ((usedMb.toFloat() / maxHeapMb) * 100).toInt().coerceIn(0, 100)
                     Text(
                         text = stringResource(Res.string.patching_graph_memory_detail, percent, maxHeapMb),
-                        fontFamily = mono,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                        fontSize = 9.sp,
-                        lineHeight = 11.sp
+                        style = MorpheTheme.typography.codeExtraSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                     )
                 }
             }
 
             Text(
                 text = "${samples.lastOrNull() ?: 0} MB",
-                fontFamily = mono,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                style = MorpheTheme.typography.titleMedium.copy(fontFamily = MorpheMonoFamily, fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             val slotCount = 60
@@ -102,10 +86,7 @@ internal fun HeapUsageGraph(
                     .height(36.dp)
             ) {
                 if (padded.isEmpty()) return@Canvas
-                val gap = 1.dp.toPx()
-                val barWidth = (size.width - (gap * (slotCount - 1))) / slotCount
-                val corner = CornerRadius(2.dp.toPx())
-                val minimumHeight = size.height * 0.04f
+                val (gap, barWidth, corner, minimumHeight) = calculateTimelineBarMetrics(slotCount)
                 val redThresholdForMaxColor = 1.0f
                 val smoothStart = 0.7f
                 val memoryFractionRollingAverageSamples = 3
@@ -157,12 +138,9 @@ internal fun HeapUsageGraph(
 @Composable
 internal fun IoUsageGraph(
     samples: List<IoUsage>,
-    modifier: Modifier = Modifier,
-    font: FontFamily
+    modifier: Modifier = Modifier
 ) {
-    val corners = LocalMorpheCorners.current
-    val mono = LocalMorpheMono.current
-    val accentColor = MaterialTheme.colorScheme.secondary
+    val accentColor = MorpheTheme.colors.secondary
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
     val current = samples.lastOrNull()
@@ -183,37 +161,24 @@ internal fun IoUsageGraph(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(accentColor))
-                    Text(
-                        text = stringResource(Res.string.patching_graph_storage_io),
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
-                    )
-                }
+                GraphHeaderDotLabel(
+                    text = stringResource(Res.string.patching_graph_storage_io),
+                    dotColor = accentColor,
+                )
 
                 val readStr = current?.let { formatRate(it.readKbPerSec) } ?: formatRate(0)
                 val writeStr = current?.let { formatRate(it.writeKbPerSec) } ?: formatRate(0)
                 Text(
                     text = "↓ $readStr  ↑ $writeStr",
-                    fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                    fontSize = 9.sp,
-                    lineHeight = 11.sp
+                    style = MorpheTheme.typography.codeExtraSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )
             }
 
             Text(
                 text = current?.let { formatRate(it.totalKbPerSec) } ?: formatRate(0),
-                fontFamily = mono,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                style = MorpheTheme.typography.titleMedium.copy(fontFamily = MorpheMonoFamily, fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             val slotCount = 60
@@ -228,10 +193,7 @@ internal fun IoUsageGraph(
                     .height(36.dp)
             ) {
                 if (padded.isEmpty()) return@Canvas
-                val gap = 1.dp.toPx()
-                val barWidth = (size.width - (gap * (slotCount - 1))) / slotCount
-                val corner = CornerRadius(2.dp.toPx())
-                val minimumHeight = size.height * 0.04f
+                val (gap, barWidth, corner, minimumHeight) = calculateTimelineBarMetrics(slotCount)
 
                 padded.forEachIndexed { index, fraction ->
                     val left = index * (barWidth + gap)
@@ -262,13 +224,10 @@ internal fun IoUsageGraph(
 internal fun CpuUsageGraph(
     coreLoads: List<Int>,
     modifier: Modifier = Modifier,
-    font: FontFamily,
     coreCount: Int = 0
 ) {
-    val corners = LocalMorpheCorners.current
-    val mono = LocalMorpheMono.current
     val accentColor = MaterialTheme.colorScheme.tertiary
-    val warnColor = MaterialTheme.colorScheme.error
+    val warnColor = MorpheTheme.colors.danger
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
     val average = if (coreLoads.isNotEmpty()) coreLoads.average().toInt() else 0
@@ -286,35 +245,22 @@ internal fun CpuUsageGraph(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(accentColor))
-                    Text(
-                        text = stringResource(Res.string.patching_graph_cpu_usage),
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
-                    )
-                }
+                GraphHeaderDotLabel(
+                    text = stringResource(Res.string.patching_graph_cpu_usage),
+                    dotColor = accentColor,
+                )
 
                 Text(
                     text = pluralStringResource(Res.plurals.patching_graph_cpu_cores_detail, totalCores, totalCores),
-                    fontFamily = mono,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                    fontSize = 9.sp,
-                    lineHeight = 11.sp
+                    style = MorpheTheme.typography.codeExtraSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )
             }
 
             Text(
                 text = "$average%",
-                fontFamily = mono,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                style = MorpheTheme.typography.titleMedium.copy(fontFamily = MorpheMonoFamily, fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             val slotCount = if (coreLoads.isNotEmpty()) coreLoads.size else 8
@@ -363,3 +309,41 @@ internal fun CpuUsageGraph(
         }
     }
 }
+
+@Composable
+private fun GraphHeaderDotLabel(
+    text: String,
+    dotColor: Color,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(dotColor))
+        Text(
+            text = text,
+            style = MorpheTheme.typography.labelExtraSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
+        )
+    }
+}
+
+private data class TimelineBarMetrics(
+    val gap: Float,
+    val barWidth: Float,
+    val corner: CornerRadius,
+    val minimumHeight: Float,
+)
+
+private fun DrawScope.calculateTimelineBarMetrics(slotCount: Int): TimelineBarMetrics {
+    val gap = 1.dp.toPx()
+    return TimelineBarMetrics(
+        gap = gap,
+        barWidth = (size.width - (gap * (slotCount - 1))) / slotCount,
+        corner = CornerRadius(2.dp.toPx()),
+        minimumHeight = size.height * 0.04f,
+    )
+}
+

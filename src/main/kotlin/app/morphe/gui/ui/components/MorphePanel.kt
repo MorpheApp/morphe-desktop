@@ -6,14 +6,13 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.MorpheTheme
 
 @Composable
 fun MorphePanel(
@@ -24,7 +23,7 @@ fun MorphePanel(
 ) {
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(LocalMorpheCorners.current.medium),
+        shape = MorpheTheme.shapes.medium,
         color = color,
         tonalElevation = 0.dp,
         border = border,

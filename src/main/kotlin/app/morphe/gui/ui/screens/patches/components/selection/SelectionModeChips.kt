@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.components.MorpheChoiceChip
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patches.SelectionMode
-import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -46,30 +44,30 @@ internal fun SelectionModeChips(
         // user could still be on their saved set. We can't tell here without the
         // bundle. For now SAVED highlights only when activeMode == SelectionMode.SAVED
         // (which is set after applySavedDefaults by virtue of the chip being clicked).
-        SelectionModeChip(
-            label = stringResource(Res.string.patch_selection_mode_your_defaults),
+        MorpheChoiceChip(
+            text = stringResource(Res.string.patch_selection_mode_your_defaults),
             icon = MorpheIcons.Bookmark,
             active = activeMode == SelectionMode.SAVED,
             enabled = hasSavedSelection,
             onClick = onApplySaved,
             modifier = Modifier.weight(1f)
         )
-        SelectionModeChip(
-            label = stringResource(Res.string.patch_selection_mode_patch_defaults),
+        MorpheChoiceChip(
+            text = stringResource(Res.string.patch_selection_mode_patch_defaults),
             icon = MorpheIcons.AutoAwesome,
             active = activeMode == SelectionMode.DEFAULTS,
             onClick = onApplyDefaults,
             modifier = Modifier.weight(1f)
         )
-        SelectionModeChip(
-            label = stringResource(Res.string.patch_selection_mode_all),
+        MorpheChoiceChip(
+            text = stringResource(Res.string.patch_selection_mode_all),
             icon = MorpheIcons.DoneAll,
             active = activeMode == SelectionMode.ALL,
             onClick = onApplyAll,
             modifier = Modifier.weight(1f)
         )
-        SelectionModeChip(
-            label = stringResource(Res.string.none),
+        MorpheChoiceChip(
+            text = stringResource(Res.string.none),
             icon = MorpheIcons.RemoveDone,
             active = activeMode == SelectionMode.NONE,
             onClick = onApplyNone,
@@ -77,21 +75,3 @@ internal fun SelectionModeChips(
         )
     }
 }
-
-@Composable
-private fun SelectionModeChip(
-    label: String,
-    icon: ImageVector,
-    active: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) = MorpheChoiceChip(
-    text = label,
-    active = active,
-    font = LocalMorpheFont.current,
-    modifier = modifier,
-    icon = icon,
-    enabled = enabled,
-    onClick = onClick,
-)

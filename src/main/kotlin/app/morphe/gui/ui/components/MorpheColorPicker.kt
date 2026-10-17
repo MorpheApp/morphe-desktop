@@ -14,7 +14,6 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,15 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.components.color.CustomSwatches
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.MorpheAccentColors
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Color.HSBtoRGB
 import java.awt.Color.RGBtoHSB
@@ -50,13 +44,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MorpheColorPickerCard(
     argb: Int,
-    accents: MorpheAccentColors,
-    font: FontFamily,
     showAlpha: Boolean = true,
-    showSaved: Boolean = true,
+    showSaved: Boolean = false,
     onPick: (Int) -> Unit,
 ) {
-    val corners = LocalMorpheCorners.current
+    val shapes = MorpheTheme.shapes
+    val colors = MorpheTheme.colors
     val init = remember { argbToHsva(argb) }
     var h by remember { mutableStateOf(init[0]) }
     var s by remember { mutableStateOf(init[1]) }
@@ -81,9 +74,9 @@ fun MorpheColorPickerCard(
     }
 
     Surface(
-        shape = RoundedCornerShape(corners.medium),
+        shape = shapes.medium,
         color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(1.dp, accents.primary.copy(alpha = 0.4f)),
+        border = BorderStroke(1.dp, colors.primary.copy(alpha = 0.4f)),
         shadowElevation = 8.dp,
         modifier = Modifier.width(220.dp),
     ) {
@@ -97,13 +90,13 @@ fun MorpheColorPickerCard(
                 emit()
             }
             
-            PickerSlider("V", v, font) {
+            PickerSlider("V", v) {
                 v = it
                 emit()
             }
             
             if (showAlpha) {
-                PickerSlider("A", a, font) {
+                PickerSlider("A", a) {
                     a = it
                     emit()
                 }
@@ -116,17 +109,17 @@ fun MorpheColorPickerCard(
                 Box(
                     modifier = Modifier
                         .size(28.dp)
-                        .clip(RoundedCornerShape(corners.small))
+                        .clip(shapes.small)
                         .background(Color(hsvaToArgb(h, s, v, a)))
-                        .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
+                        .border(1.dp, Color.White.copy(alpha = 0.2f), shapes.small)
                 )
                 
                 Row(
                     modifier = Modifier
                         .weight(1f)
                         .height(26.dp)
-                        .clip(RoundedCornerShape(corners.small))
-                        .border(1.dp, accents.primary.copy(alpha = 0.25f), RoundedCornerShape(corners.small))
+                        .clip(shapes.small)
+                        .border(1.dp, colors.primary.copy(alpha = 0.25f), shapes.small)
                         .padding(horizontal = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -137,32 +130,35 @@ fun MorpheColorPickerCard(
                             parseHex(it)?.let { p -> setFrom(p) }
                         },
                         singleLine = true,
-                        textStyle = TextStyle(
-                            fontSize = 11.sp,
-                            lineHeight = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = font,
+                        textStyle = MorpheTheme.typography.labelSmall.copy(
                             color = MaterialTheme.colorScheme.onSurface,
                         ),
-                        cursorBrush = SolidColor(accents.primary),
+                        cursorBrush = SolidColor(colors.primary),
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
             
             if (showSaved) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(Res.string.color_picker_saved),
-                        fontFamily = font,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (CustomSwatches.colors.isNotEmpty()) {
+                        Text(
+                            text = stringResource(Res.string.color_picker_saved),
+                            style = MorpheTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                     
                     Spacer(Modifier.weight(1f))
                     
-                    Toggle(stringResource(Res.string.save), false, accents, font) {
+                    MorpheChoiceChip(
+                        text = stringResource(Res.string.save),
+                        active = false,
+                        dense = true,
+                    ) {
                         if (!CustomSwatches.isFull) {
                             CustomSwatches.add(hsvaToArgb(h, s, v, a))
                         }
@@ -179,9 +175,9 @@ fun MorpheColorPickerCard(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .clip(RoundedCornerShape(corners.small))
+                                        .clip(shapes.small)
                                         .background(Color(c))
-                                        .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
+                                        .border(1.dp, Color.White.copy(alpha = 0.2f), shapes.small)
                                         .clickable { setFrom(c) }
                                  )
                                 Box(
@@ -213,7 +209,6 @@ fun MorpheColorPickerCard(
 private fun PickerSlider(
     label: String,
     value: Float,
-    font: FontFamily,
     onChange: (Float) -> Unit,
 ) {
     Row(
@@ -222,9 +217,7 @@ private fun PickerSlider(
     ) {
         Text(
             text = label,
-            fontFamily = font,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
+            style = MorpheTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.width(10.dp),
         )
@@ -310,13 +303,3 @@ private fun parseHex(s: String): Int? {
         else -> null
     }
 }
-
-@Composable
-private fun Toggle(
-    text: String,
-    active: Boolean,
-    accents: MorpheAccentColors,
-    font: FontFamily,
-    dense: Boolean = false,
-    onClick: () -> Unit,
-) = MorpheChoiceChip(text = text, active = active, font = font, dense = dense, onClick = onClick)

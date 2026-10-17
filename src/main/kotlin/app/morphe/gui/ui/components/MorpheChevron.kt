@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.theme.MorpheMotion
 
 @Composable
 fun MorpheChevron(
@@ -28,7 +28,7 @@ fun MorpheChevron(
 ) {
     val rotation by animateFloatAsState(
         targetValue = if (expanded) 90f else 0f,
-        animationSpec = tween(200),
+        animationSpec = MorpheMotion.mediumTween(),
     )
     Icon(
         imageVector = MorpheIcons.KeyboardArrowRight,

@@ -7,12 +7,11 @@ package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
@@ -34,32 +33,36 @@ internal fun releaseUrl(sourceUrl: String, tag: String): String =
     if (sourceUrl.contains("gitlab", ignoreCase = true)) "$sourceUrl/-/releases/$tag"
     else "$sourceUrl/releases/tag/$tag"
 
-/** Shared device-install line (mirrors the supported-row variant). */
+/** Shared device-install line for supported apps and patched apps. */
 @Composable
-internal fun DeviceLine(info: DeviceAppInfo, font: FontFamily, mutedColor: Color, activeColor: Color) {
+internal fun DeviceLine(
+    info: DeviceAppInfo,
+    mutedColor: Color,
+    activeColor: Color,
+    modifier: Modifier = Modifier,
+) {
     val version = info.installedVersion?.removePrefix("v")
     val text = when {
         !info.installed -> stringResource(Res.string.home_app_row_not_on_device)
         info.signedByMorphe == false -> {
-            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version_not_signed, version)
-            else stringResource(Res.string.home_app_row_on_device_not_signed)
+            version?.let { stringResource(Res.string.home_app_row_on_device_with_version_not_signed, it) }
+                ?: stringResource(Res.string.home_app_row_on_device_not_signed)
         }
         else -> {
-            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version, version)
-            else stringResource(Res.string.home_app_row_on_device)
+            version?.let { stringResource(Res.string.home_app_row_on_device_with_version, it) }
+                ?: stringResource(Res.string.home_app_row_on_device)
         }
     }
     val color = when {
         !info.installed -> mutedColor
-        info.signedByMorphe == false -> Color(0xFFE0504D)
+        info.signedByMorphe == false -> MorpheTheme.colors.error
         else -> activeColor
     }
     Text(
         text = text,
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Normal,
-        fontFamily = font,
-        color = color
+        style = MorpheTheme.typography.bodySmall,
+        color = color,
+        modifier = modifier,
     )
 }
 
