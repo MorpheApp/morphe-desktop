@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.ui.components.MorpheButton
@@ -23,12 +22,9 @@ import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
-import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.gui.util.resolveVersionWarningContent
 import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 // ============================================================================
@@ -142,47 +138,6 @@ internal fun UninstallConfirmDialog(
             onDismiss = onDismiss,
             onConfirm = onConfirm,
         )
-    }
-}
-
-/**
- * Shown when a record's original input APK is gone. Picking a replacement APK
- * hands its absolute path back via [onApkPicked].
- */
-@Composable
-internal fun RepatchMissingApkDialog(
-    record: PatchedAppRecord,
-    onDismiss: () -> Unit,
-    onApkPicked: (String) -> Unit,
-) {
-    val scope = rememberCoroutineScope()
-    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_missing_apk_title)) {
-        MorpheDialogText(
-            stringResource(Res.string.home_dialog_missing_apk_message, record.displayName, record.inputApkPath)
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.OUTLINED,
-                onClick = onDismiss,
-            )
-            MorpheButton(
-                label = stringResource(Res.string.home_dialog_select_apk),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.FILLED,
-                onClick = {
-                    scope.launch {
-                        val picked = MorpheFilePicker.pickFile(
-                            title = getString(Res.string.home_dialog_select_apk_to_repatch),
-                            extensions = BundleFormats.SUPPORTED_EXTENSIONS,
-                        )
-                        onDismiss()
-                        if (picked != null && picked.exists()) onApkPicked(picked.absolutePath)
-                    }
-                },
-            )
-        }
     }
 }
 

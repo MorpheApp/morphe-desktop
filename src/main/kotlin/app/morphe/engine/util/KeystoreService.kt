@@ -9,7 +9,6 @@ import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.config.EngineConfigRepository
-import app.morphe.engine.util.SignatureIdentity
 import app.morphe.patcher.apk.ApkSigner
 import app.morphe.patcher.apk.ApkUtils
 import java.io.File

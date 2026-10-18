@@ -142,8 +142,8 @@ fun SpaceBackground(
         val height = size.height
         val centerX = width / 2f
         val centerY = height / 2f
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
+        val tiltX = if (enableParallax) parallaxState.tiltX.value else 0f
+        val tiltY = if (enableParallax) parallaxState.tiltY.value else 0f
         val fa = flashAlpha.value // 0..1, drives white flash overlay
 
         // Render stars

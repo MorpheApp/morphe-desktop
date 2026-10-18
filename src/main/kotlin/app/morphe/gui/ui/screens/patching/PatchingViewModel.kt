@@ -18,8 +18,10 @@ import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.PatcherState
 import app.morphe.morphe_desktop.generated.resources.*
+import com.sun.management.OperatingSystemMXBean
 import java.io.File
 import java.lang.management.ManagementFactory
+import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +35,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
-import java.util.Locale
 
 class PatchingViewModel(
     private val config: PatchEngine.Config,
@@ -58,7 +59,7 @@ class PatchingViewModel(
         patchingJob = viewModelScope.launch {
             isCancelledByUser = false
             stateMachine = null
-            var locale = java.util.Locale.getDefault()
+            var locale = Locale.getDefault()
             val (preparingState, cpuSampler, ioSampler) = withContext(Dispatchers.IO) {
                 val appConfig = configRepository.loadConfig()
                 val loc = FormatUtils.resolveLocale(appConfig.language)
@@ -82,7 +83,7 @@ class PatchingViewModel(
                 val patcherVersion = MorpheComponents.patcherVersion ?: "?"
                 val nativeLibs = if (config.architecturesToKeep.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
 
-                val osBean = ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean
+                val osBean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
                 val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, loc)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, loc)}"
 
                 val cpu = CpuUsageSampler()

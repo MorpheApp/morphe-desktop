@@ -39,9 +39,8 @@ import org.koin.core.parameter.parametersOf
  */
 @Composable
 fun PatchesScreen(
-    apkPath: String,
     apkName: String,
-    viewModel: PatchesViewModel = koinViewModel { parametersOf(apkPath, apkName) }
+    viewModel: PatchesViewModel = koinViewModel { parametersOf(apkName) }
 ) {
     PatchesScreenContent(viewModel = viewModel)
 }

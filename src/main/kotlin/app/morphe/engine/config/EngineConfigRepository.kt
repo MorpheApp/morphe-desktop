@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
-import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 
 open class EngineConfigRepository(
@@ -60,18 +59,8 @@ open class EngineConfigRepository(
             } else EngineConfig()
 
             val updated = update(current)
-
-            val existingObj = if (configFile.exists()) {
-                runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
-            } else JsonObject(emptyMap())
-
             val engineObj = json.encodeToJsonElement(EngineConfig.serializer(), updated).jsonObject
-            val mergedMap = existingObj.toMutableMap()
-            engineObj.forEach { (k, v) -> mergedMap[k] = v }
-            val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
-
-            configFile.parentFile?.mkdirs()
-            configFile.writeText(mergedJson)
+            mergeAndSaveJsonObject(configFile, json, engineObj)
             cachedConfig = updated
         }
     }
@@ -120,11 +109,24 @@ open class EngineConfigRepository(
     suspend fun setExcludedMppPatterns(patterns: List<String>) =
         saveConfig { it.copy(excludedMppPatterns = patterns) }
 
-    fun clearCache() {
-        cachedConfig = null
-    }
-
     companion object {
         val shared: EngineConfigRepository by lazy { EngineConfigRepository() }
     }
+}
+
+internal fun mergeAndSaveJsonObject(
+    configFile: File,
+    json: Json,
+    newEntries: JsonObject,
+) {
+    val existingObj = if (configFile.exists()) {
+        runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
+    } else JsonObject(emptyMap())
+
+    val mergedMap = existingObj.toMutableMap()
+    newEntries.forEach { (k, v) -> mergedMap[k] = v }
+    val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
+
+    configFile.parentFile?.mkdirs()
+    configFile.writeText(mergedJson)
 }

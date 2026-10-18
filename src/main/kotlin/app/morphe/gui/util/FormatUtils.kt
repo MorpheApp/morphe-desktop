@@ -48,31 +48,11 @@ object FormatUtils {
     }
 
     /**
-     * Formats a date in medium localized style (e.g. "Sep 4, 2026" or "04.09.2026").
-     */
-    fun formatDate(millis: Long, locale: Locale = Locale.getDefault()): String =
-        formatDate(Date(millis), locale)
-
-    /**
      * Formats a nullable [Date] in medium localized style. Returns empty string if [date] is null.
      */
     fun formatDate(date: Date?, locale: Locale = Locale.getDefault()): String {
         if (date == null) return ""
         return DateFormat.getDateInstance(DateFormat.MEDIUM, locale).format(date)
-    }
-
-    /**
-     * Formats a time in short localized style (e.g. "1:30 AM" or "14:10").
-     */
-    fun formatTime(millis: Long, locale: Locale = Locale.getDefault()): String =
-        formatTime(Date(millis), locale)
-
-    /**
-     * Formats a nullable [Date] time in short localized style. Returns empty string if [date] is null.
-     */
-    fun formatTime(date: Date?, locale: Locale = Locale.getDefault()): String {
-        if (date == null) return ""
-        return DateFormat.getTimeInstance(DateFormat.SHORT, locale).format(date)
     }
 
     /**
@@ -87,7 +67,7 @@ object FormatUtils {
     fun formatDateTime(date: Date?, locale: Locale = Locale.getDefault()): String {
         if (date == null) return ""
         val datePart = formatDate(date, locale)
-        val timePart = formatTime(date, locale)
+        val timePart = DateFormat.getTimeInstance(DateFormat.SHORT, locale).format(date)
         return "$datePart · $timePart"
     }
 

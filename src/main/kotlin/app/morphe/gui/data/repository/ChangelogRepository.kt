@@ -49,8 +49,6 @@ class ChangelogRepository(
             }
         }
 
-    suspend fun clearCache() = mutex.withLock { cache.clear() }
-
     private fun changelogUrl(source: PatchSource, prerelease: Boolean): String? {
         if (source.type == PatchSourceType.LOCAL) return null
         val url = source.url?.takeIf { it.isNotBlank() } ?: return null

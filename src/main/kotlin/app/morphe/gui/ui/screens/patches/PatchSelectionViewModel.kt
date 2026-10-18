@@ -30,14 +30,11 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
 import org.jetbrains.compose.resources.getString
 
 /**
@@ -68,7 +65,6 @@ class PatchSelectionViewModel(
     private val patchRepository: PatchRepository,
     private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
     private val preferencesRepository: PatchPreferencesRepository,
-    private val patchSourceName: String,
     private val localPatchFilePath: String? = null,
     /** All enabled-source .mpp file paths. Single-element in single-source mode. */
     private val patchesFilePaths: List<String> = listOf(patchesFilePath),
@@ -133,9 +129,6 @@ class PatchSelectionViewModel(
             )
         }
     }
-
-    fun getApkPath(): String = apkPath
-    fun getApkName(): String = apkName
 
     // ── Loading ──────────────────────────────────────────────────────────────
 
@@ -251,7 +244,7 @@ class PatchSelectionViewModel(
                                         // Drop a stale customIcon whose folder no longer exists (e.g.
                                         // the user deleted the icon) so it doesn't reappear as "ready".
                                         if (optKey.equals("customIcon", ignoreCase = true) &&
-                                            (optValue.isBlank() || !java.io.File(optValue).exists())
+                                            (optValue.isBlank() || !File(optValue).exists())
                                         ) continue
                                         initialOptions["$patchName.$optKey"] = optValue
                                     }
@@ -441,7 +434,7 @@ class PatchSelectionViewModel(
 
     /** Restore this bundle's saved selection. No-op if no saved state for this bundle. */
     fun applySavedDefaultsInBundle(bundleId: String) {
-        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        if (_uiState.value.bundles.none { it.bundleId == bundleId }) return
         val saved = _uiState.value.savedSelectedByBundle?.get(bundleId) ?: return
         _uiState.value = _uiState.value.copy(
             selectedByBundle = _uiState.value.selectedByBundle + (bundleId to saved),
@@ -764,11 +757,11 @@ class PatchSelectionViewModel(
         val customOptionsByPatch = mutableMapOf<String, MutableList<Pair<String, String>>>()
         for (patchName in selectedPatchNames) {
             val patch = allCompatiblePatches[patchName] ?: continue
-            for (opt in patch.options) {
-                val customVal = state.patchOptionValues["${patch.name}.${opt.key}"]
-                if (!customVal.isNullOrBlank() && customVal != opt.default) {
+            for ((key, _, _, _, default) in patch.options) {
+                val customVal = state.patchOptionValues["${patch.name}.$key"]
+                if (!customVal.isNullOrBlank() && customVal != default) {
                     customOptionsByPatch.getOrPut(patchName) { mutableListOf() }
-                        .add(opt.key to customVal)
+                        .add(key to customVal)
                 }
             }
         }

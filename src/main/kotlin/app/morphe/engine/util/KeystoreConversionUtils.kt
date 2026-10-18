@@ -31,9 +31,6 @@ enum class KeystoreInputFormat(
     JKS(".jks (JKS)", listOf("jks"), "JKS");
 
     companion object {
-        fun fromExtension(ext: String): KeystoreInputFormat? =
-            entries.firstOrNull { ext.lowercase() in it.extensions }
-
         /**
          * Sniff the keystore format from the first 4 bytes of the file.
          * Returns null if the header is not recognized.

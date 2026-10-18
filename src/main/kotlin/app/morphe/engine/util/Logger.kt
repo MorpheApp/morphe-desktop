@@ -146,21 +146,7 @@ object Logger {
         log(Level.ERROR, "$message\n$sw")
     }
 
-    /**
-     * Log a CLI command execution.
-     */
-    fun logCliCommand(command: List<String>) {
-        info("CLI Command: ${command.joinToString(" ")}")
-    }
 
-    /**
-     * Log CLI output.
-     */
-    fun logCliOutput(output: String) {
-        if (output.isNotBlank()) {
-            debug("CLI Output: $output")
-        }
-    }
 
     private fun log(level: Level, message: String) {
         val logLine = if (logFile != null) {
@@ -188,41 +174,4 @@ object Logger {
      * Get the current session's log file for export or viewing.
      */
     fun getLogFile(): File? = logFile
-
-    /**
-     * Get all log files in the logs directory.
-     */
-    fun getAllLogFiles(): List<File> {
-        val logsDir = MorpheData.logsDir
-        return logsDir.listFiles()
-            ?.filter { it.name.startsWith("morphe-") && it.name.endsWith(".log") }
-            ?.sortedByDescending { it.lastModified() }
-            ?: emptyList()
-    }
-
-    /**
-     * Export logs to a specified location.
-     */
-    fun exportLogs(destination: File): Boolean {
-        return try {
-            val logs = getAllLogFiles()
-            if (logs.isEmpty()) return false
-
-            if (logs.size == 1) {
-                logs.first().copyTo(destination, overwrite = true)
-            } else {
-                // Combine all logs into one file
-                destination.writeText("")
-                logs.reversed().forEach { log ->
-                    destination.appendText("=== ${log.name} ===\n")
-                    destination.appendText(log.readText())
-                    destination.appendText("\n")
-                }
-            }
-            true
-        } catch (e: Exception) {
-            error("Failed to export logs", e)
-            false
-        }
-    }
 }

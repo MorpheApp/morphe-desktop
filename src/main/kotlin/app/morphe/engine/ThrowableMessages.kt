@@ -5,9 +5,6 @@
 
 package app.morphe.engine
 
-import java.io.PrintWriter
-import java.io.StringWriter
-
 /**
  * Helpers for turning throwables into something a human (or log file) can actually use.
  *
@@ -32,13 +29,6 @@ fun Throwable.readableMessage(): String {
     // Drop pure type-only prefixes once we hit a frame that has a message, but keep the
     // whole chain so nested init/reflection failures stay diagnosable.
     return parts.joinToString("\nCaused by: ").ifBlank { javaClass.name }
-}
-
-/** Full stack trace as a string (for file / stderr logging). */
-fun Throwable.stackTraceString(): String {
-    val sw = StringWriter()
-    printStackTrace(PrintWriter(sw))
-    return sw.toString()
 }
 
 /**

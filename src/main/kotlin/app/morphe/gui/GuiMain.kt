@@ -32,9 +32,10 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
 
 /**
- * Main entry point.
+ * Main GUI entry point. Invoked reflectively by `MorpheLauncher`.
  * The app switches between simplified and full mode dynamically via settings.
  */
+@Suppress("unused")
 fun launchGui(args: Array<String>) {
     Logger.init()
     runCatching { WorkspaceManager.reapStaleWorkspaces() }
@@ -142,7 +143,7 @@ private fun loadConfigSync(): AppConfig {
         } else {
             AppConfig() // Defaults: useSimplifiedMode = true
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         AppConfig() // Defaults on error
     }
 }
@@ -175,7 +176,7 @@ private fun loadAppIcon(): BitmapPainter? {
                         BitmapPainter(Image.makeFromEncoded(it.readBytes()).toComposeImageBitmap())
                     }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // Try next combination
             }
         }

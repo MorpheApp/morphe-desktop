@@ -34,7 +34,6 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 
 class PatchesViewModel(
-    private val apkPath: String,
     private val apkName: String,
     private val patchRepository: PatchRepository,
     private val configRepository: ConfigRepository,
@@ -257,23 +256,7 @@ class PatchesViewModel(
 
                     // Save the version preference PER SOURCE so HomeScreen can pick
                     // it up without contaminating other enabled sources.
-                    val activeSource = patchSourceManager?.getActiveSource()
-                    val activeSourceId = activeSource?.id
-                    if (activeSourceId != null) {
-                        val pref = versionPrefFor(release)
-                        configRepository.setSourceVersionPref(activeSourceId, pref)
-                        
-                        val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
-                        val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
-                        val isDevSelected = release.isDevRelease() && release.tagName == newestDevTag
-                        val isStableSelected = !release.isDevRelease() && release.tagName == newestStableTag
-                        
-                        if (activeSource.usePreRelease != isDevSelected) {
-                            patchSourceManager.updateSource(activeSource.copy(usePreRelease = isDevSelected))
-                        }
-                        
-                        Logger.info("Saved version pref for source '$activeSourceId': $pref")
-                    }
+                    persistReleasePreference(release, "Saved")
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
@@ -301,25 +284,25 @@ class PatchesViewModel(
             return
         }
         viewModelScope.launch {
-            val activeSource = patchSourceManager?.getActiveSource()
-            val activeSourceId = activeSource?.id
-            if (activeSourceId != null) {
-                val pref = versionPrefFor(release)
-                configRepository.setSourceVersionPref(activeSourceId, pref)
-                
-                val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
-                val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
-                val isDevSelected = release.isDevRelease() && release.tagName == newestDevTag
-                val isStableSelected = !release.isDevRelease() && release.tagName == newestStableTag
-                
-                if (activeSource.usePreRelease != isDevSelected) {
-                    patchSourceManager.updateSource(activeSource.copy(usePreRelease = isDevSelected))
-                }
-                
-                Logger.info("Confirmed version pref for source '$activeSourceId': $pref")
-            }
+            persistReleasePreference(release, "Confirmed")
             onComplete()
         }
+    }
+
+    private suspend fun persistReleasePreference(release: Release, actionDescription: String) {
+        val activeSource = patchSourceManager?.getActiveSource() ?: return
+        val activeSourceId = activeSource.id
+        val pref = versionPrefFor(release)
+        configRepository.setSourceVersionPref(activeSourceId, pref)
+
+        val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
+        val isDevSelected = release.isDevRelease() && release.tagName == newestDevTag
+
+        if (activeSource.usePreRelease != isDevSelected) {
+            patchSourceManager.updateSource(activeSource.copy(usePreRelease = isDevSelected))
+        }
+
+        Logger.info("$actionDescription version pref for source '$activeSourceId': $pref")
     }
 
     /**
@@ -370,7 +353,6 @@ class PatchesViewModel(
         }
     }
 
-    fun getApkPath(): String = apkPath
     fun getApkName(): String = apkName
 }
 
@@ -396,7 +378,4 @@ data class PatchesUiState(
                     ReleaseChannel.STABLE -> stableReleases
                     ReleaseChannel.DEV -> devReleases
                 }
-
-    val isReady: Boolean
-        get() = downloadedPatchFile != null
 }

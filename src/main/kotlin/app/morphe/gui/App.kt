@@ -5,8 +5,6 @@
 
 package app.morphe.gui
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -74,7 +72,6 @@ data object QuickPatchScreenRoute
 
 @Serializable
 data class PatchesScreenRoute(
-    val apkPath: String,
     val apkName: String,
 )
 
@@ -156,8 +153,8 @@ val LocalSettingsDialogVisible = compositionLocalOf<MutableState<Boolean>> {
 val LocalIsPatching = compositionLocalOf<MutableState<Boolean>> {
     error("No LocalIsPatching provided")
 }
-val LocalOnSettingsDismiss = compositionLocalOf<() -> Unit> { {} }
-val LocalOnUpdateChannelChanged = compositionLocalOf<() -> Unit> { {} }
+val LocalOnSettingsDismiss = compositionLocalOf { {} }
+val LocalOnUpdateChannelChanged = compositionLocalOf { {} }
 
 val LocalBackgroundType = compositionLocalOf<MutableState<BackgroundType>> { 
     error("No background type provided") 
@@ -186,7 +183,7 @@ val LocalGroupPatchesByCategory = compositionLocalOf<MutableState<Boolean>> {
  * Auto-start ADB preference. Exposed as a composition local so the
  * SettingsDialog (writer) and DeviceIndicator + install buttons (readers)
  * can react without prop-drilling through Voyager screens. App-level
- * lifecycle (start/stop the daemon when this flips) is handled in [App.kt].
+ * lifecycle (start/stop the daemon when this flips) is handled in `App.kt`.
  */
 data class AdbPreferenceState(
     val enabled: Boolean,
@@ -258,7 +255,7 @@ private fun appContent(
         groupPatchesByCategoryState.value = config.groupPatchesByCategory
         backgroundTypeState.value = try {
             BackgroundType.valueOf(config.backgroundType)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             BackgroundType.CIRCLES
         }
         enableParallaxState.value = config.enableParallax
@@ -477,7 +474,7 @@ private fun appContent(
                                             }
                                             composable<PatchesScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<PatchesScreenRoute>()
-                                                PatchesScreen(apkPath = route.apkPath, apkName = route.apkName)
+                                                PatchesScreen(apkName = route.apkName)
                                             }
                                             composable<PatchSelectionScreenRoute> { backStackEntry ->
                                                 val params = backStackEntry.getComplexArg<PatchSelectionParams>()

@@ -275,6 +275,17 @@ private class MatrixColumn(
     }
 }
 
+private fun FloatArray.setQuad(offset: Int, x0: Float, y0: Float, x1: Float, y1: Float) {
+    this[offset + 0] = x0
+    this[offset + 1] = y0
+    this[offset + 2] = x1
+    this[offset + 3] = y0
+    this[offset + 4] = x1
+    this[offset + 5] = y1
+    this[offset + 6] = x0
+    this[offset + 7] = y1
+}
+
 private class MatrixMeshBatch(capacity: Int, rasterCell: Int) {
     private val rCell = rasterCell.toFloat()
     private var glyphCount = 0
@@ -313,28 +324,14 @@ private class MatrixMeshBatch(capacity: Int, rasterCell: Int) {
         val pOffset = i * 8
         if (pOffset + 7 >= positions.size) return
 
-        positions[pOffset + 0] = left
-        positions[pOffset + 1] = top
-        positions[pOffset + 2] = right
-        positions[pOffset + 3] = top
-        positions[pOffset + 4] = right
-        positions[pOffset + 5] = bottom
-        positions[pOffset + 6] = left
-        positions[pOffset + 7] = bottom
+        positions.setQuad(pOffset, left, top, right, bottom)
 
         val u0 = glyph * rCell
         val v0 = 0f
         val u1 = u0 + rCell
         val v1 = rCell
 
-        texCoords[pOffset + 0] = u0
-        texCoords[pOffset + 1] = v0
-        texCoords[pOffset + 2] = u1
-        texCoords[pOffset + 3] = v0
-        texCoords[pOffset + 4] = u1
-        texCoords[pOffset + 5] = v1
-        texCoords[pOffset + 6] = u0
-        texCoords[pOffset + 7] = v1
+        texCoords.setQuad(pOffset, u0, v0, u1, v1)
 
         val cOffset = i * 4
         colors[cOffset + 0] = colorArgb

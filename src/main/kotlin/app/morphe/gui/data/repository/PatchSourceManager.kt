@@ -52,7 +52,8 @@ class PatchSourceManager(
 
     /**
      * Which mode's ViewModel is currently driving the UI. Used by both
-     * [HomeViewModel] (EXPERT) and [QuickPatchViewModel] (QUICK) to skip
+     * [app.morphe.gui.ui.screens.home.HomeViewModel] (EXPERT) and
+     * [app.morphe.gui.ui.screens.quick.QuickPatchViewModel] (QUICK) to skip
      * patch-loading when they're not visible. Both VMs can be alive
      * simultaneously (QuickVM is `remember`-scoped to App.kt, HomeVM is
      * created by Voyager when the Navigator branch composes), and without
@@ -147,15 +148,6 @@ class PatchSourceManager(
             httpClient,
         )
         return PatchRepository(remote)
-    }
-
-    /**
-     * Get the PatchRepository for the currently active source (suspend version).
-     * For LOCAL sources, returns null (caller should use the file path directly).
-     */
-    suspend fun getActiveRepository(): PatchRepository? {
-        val source = configRepository.getActivePatchSource()
-        return getRepositoryForSource(source)
     }
 
     /**

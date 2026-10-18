@@ -9,11 +9,13 @@ import androidx.compose.animation.core.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
+import kotlin.math.PI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -57,7 +59,40 @@ fun CompletionEffect(patchingCompleted: Boolean, onCompleted: () -> Unit) {
     }
 }
 
+/**
+ * Remembers an [Animatable] that animates 0f -> 1f -> 0f when [patchingCompleted] flips to true.
+ */
+@Composable
+fun rememberBurstProgress(
+    patchingCompleted: Boolean,
+    durationUpMillis: Int = 1100,
+    durationDownMillis: Int = 450,
+): Animatable<Float, AnimationVector1D> {
+    val coroutineScope = rememberCoroutineScope()
+    val burstProgress = remember { Animatable(0f) }
+
+    CompletionEffect(patchingCompleted) {
+        coroutineScope.launch {
+            burstProgress.snapTo(0f)
+            burstProgress.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = durationUpMillis, easing = FastOutSlowInEasing)
+            )
+            burstProgress.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = durationDownMillis, easing = FastOutSlowInEasing)
+            )
+        }
+    }
+    return burstProgress
+}
+
 data class ParallaxState(val tiltX: State<Float>, val tiltY: State<Float>)
+
+const val TWO_PI: Float = 2f * PI.toFloat()
+
+fun ParallaxState.tilt(enableParallax: Boolean): Offset =
+    if (enableParallax) Offset(tiltX.value, tiltY.value) else Offset.Zero
 
 val LocalParallaxState = staticCompositionLocalOf<ParallaxState> { 
     error("No parallax state provided")

@@ -27,8 +27,7 @@ data class SupportedApp(
         val codes = versionBuildCodes[version.removePrefix("v")]
             ?: versionBuildCodes[version]
             ?: return true
-        if (codes.isEmpty()) return true
-        return versionCode == null || versionCode in codes
+        return codes.isEmpty() || versionCode == null || versionCode in codes
     }
 
     companion object {

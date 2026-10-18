@@ -119,7 +119,7 @@ class PullRequestPatchSource(
                 EngineConfigRepository.shared.getGitHubPat().trim().takeIf { it.isNotEmpty() }
             } catch (e: CancellationException) {
                 throw e
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
 

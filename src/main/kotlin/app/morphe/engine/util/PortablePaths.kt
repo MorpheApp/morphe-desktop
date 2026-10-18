@@ -40,7 +40,7 @@ object PortablePaths {
         val anchor = MorpheData.bundleRoot?.canonicalFile ?: return absolutePath
         val target = try {
             File(absolutePath).canonicalFile
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return absolutePath
         }
         return if (target.startsWith(anchor)) {

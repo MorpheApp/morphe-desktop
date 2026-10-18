@@ -114,8 +114,8 @@ fun SnowBackground(
     Canvas(modifier = modifier.fillMaxSize()) {
         val width = size.width
         val height = size.height
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
+        val tiltX = if (enableParallax) parallaxState.tiltX.value else 0f
+        val tiltY = if (enableParallax) parallaxState.tiltY.value else 0f
         val globalTime = animatedTime.value % 120000f
 
         // Calculate fade multiplier for smooth loop transition

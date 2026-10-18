@@ -33,6 +33,7 @@ open class GitHubPatchSource(
 
     private val releasesEndpoint = "$API_BASE/repos/$repoPath/releases"
 
+    @Suppress("UastIncorrectHttpHeaderInspection")
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {
         try {
             Logger.info("GitHub: fetching releases from $releasesEndpoint")

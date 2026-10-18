@@ -26,7 +26,7 @@ object ApkOutputNaming {
         val withoutExt = stripKnownExtension(fileName)
         val afterPackage = withoutExt.substringAfter("_")
         afterPackage.substringBefore("-").takeIf { it.isNotEmpty() }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 
@@ -58,7 +58,7 @@ object ApkOutputNaming {
             ?: Regex("""\d+\.\d+(?:\.\d+)?""").find(withoutExt)?.value
 
         packageName to version
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null to null
     }
 

@@ -21,7 +21,6 @@ import app.morphe.engine.options.resolveFlatPatchOptions
 import app.morphe.engine.options.toPatchBundle
 import app.morphe.engine.options.updateOptionsFileFromSnapshots
 import app.morphe.engine.options.writePatchBundles
-import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.supportedVersionsFor
 import app.morphe.engine.util.FileChecksum
@@ -746,17 +745,8 @@ object PatchEngine {
         patches.withIndex().forEach patchLoop@{ (i, patch) ->
             val patchName = patch.name ?: return@patchLoop
             val patchNameLower = patchName.lowercase()
-
-            val supportedVersions = patch.supportedVersionsFor(packageName)
-            when {
-                supportedVersions != null && supportedVersions.isEmpty() -> return@patchLoop
-                supportedVersions != null -> {
-                    val matchesVersion = force || packageVersion in supportedVersions
-                    if (!matchesVersion) {
-                        onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
-                        return@patchLoop
-                    }
-                }
+            if (!isPatchCompatible(patch, patchName, packageName, packageVersion, force, onProgress)) {
+                return@patchLoop
             }
 
             val isCliDisabled = patchNameLower in disabledLower || i in disabledIndices
@@ -801,16 +791,8 @@ object PatchEngine {
             val patchName = patch.name ?: return@patchLoop
             val patchNameLower = patchName.lowercase()
 
-            val supportedVersions = patch.supportedVersionsFor(packageName)
-            when {
-                supportedVersions != null && supportedVersions.isEmpty() -> return@patchLoop
-                supportedVersions != null -> {
-                    val matchesVersion = forceCompatibility || packageVersion in supportedVersions
-                    if (!matchesVersion) {
-                        onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
-                        return@patchLoop
-                    }
-                }
+            if (!isPatchCompatible(patch, patchName, packageName, packageVersion, forceCompatibility, onProgress)) {
+                return@patchLoop
             }
 
             if (patchNameLower in disabledLower) {
@@ -827,6 +809,28 @@ object PatchEngine {
 
             add(patch)
         }
+    }
+
+    private fun isPatchCompatible(
+        patch: Patch<*>,
+        patchName: String,
+        packageName: String,
+        packageVersion: String,
+        force: Boolean,
+        onProgress: (String) -> Unit,
+    ): Boolean {
+        val supportedVersions = patch.supportedVersionsFor(packageName)
+        when {
+            supportedVersions != null && supportedVersions.isEmpty() -> return false
+            supportedVersions != null -> {
+                val matchesVersion = force || packageVersion in supportedVersions
+                if (!matchesVersion) {
+                    onProgress("Skipping \"$patchName\": incompatible with $packageName $packageVersion")
+                    return false
+                }
+            }
+        }
+        return true
     }
 
     private class PatchFailedException(message: String, cause: Throwable) : Exception(message, cause)

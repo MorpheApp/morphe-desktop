@@ -8,6 +8,7 @@ package app.morphe
 import app.morphe.desktop.command.MainCommand
 import app.morphe.engine.BootstrapDownloader
 import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import java.awt.GraphicsEnvironment
 import java.io.File
 import kotlin.system.exitProcess
@@ -45,12 +46,11 @@ fun main(args: Array<String>) {
                 val progress = BootstrapProgressWindow()
                 val downloadedJars = try {
                     BootstrapDownloader.downloadIfMissing(progress)
-                } catch (e: Throwable) {
+                } catch (_: Throwable) {
                     // BootstrapProgressWindow.onError has already shown a dialog and
                     // waited for the user to acknowledge; clean up and exit.
                     progress.close()
                     exitProcess(1)
-                    return
                 }
                 progress.close()
                 val javaHome = System.getProperty("java.home")
@@ -76,6 +76,8 @@ fun main(args: Array<String>) {
         if (GraphicsEnvironment.isHeadless() && args.isEmpty()) {
             Logger.info("Running in Headless environment, falling back to CLI mode.")
         }
+
+        runCatching { WorkspaceManager.reapStaleWorkspaces() }
 
         CommandLine(MainCommand)
             .execute(*args)

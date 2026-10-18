@@ -23,7 +23,8 @@ import kotlinx.coroutines.withContext
  *   - Local `.mpp` files and developer build directories ([PatchCache.newestMppIn])
  *   - Remote sources (GitHub, GitLab, GitHub PRs) via manifest-first `patches-bundle.json`
  *     or release API for pinned tags
- *   - Semantic channel comparison ([newerRelease]) so outdated pre-releases never beat newer stables
+ *   - Semantic channel comparison ([app.morphe.engine.util.newerRelease]) so outdated
+ *     pre-releases never beat newer stables
  *   - Size-verified on-disk caching and offline fallback via [PatchCache]
  */
 object PatchResolver {
@@ -87,7 +88,7 @@ object PatchResolver {
     /**
      * Resolve a remote patch source via [repo].
      *
-     * @param usePreRelease whether to track the dev/pre-release channel (compared via [newerRelease])
+     * @param usePreRelease whether to track the dev/pre-release channel (compared via [app.morphe.engine.util.newerRelease])
      * @param pinnedTag optional tag to pin to instead of following the latest channel release
      * @param strictPin when true (CLI explicit tag URL), fails with [Error.PinnedTagNotFound] if
      *                  [pinnedTag] is missing from both remote releases and the local disk cache.

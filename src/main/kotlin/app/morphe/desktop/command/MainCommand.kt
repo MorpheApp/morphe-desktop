@@ -6,19 +6,10 @@
 package app.morphe.desktop.command
 
 import app.morphe.desktop.command.utility.UtilityCommand
-import app.morphe.engine.workspace.WorkspaceManager
 import java.util.Properties
-import kotlin.system.exitProcess
 import org.jetbrains.annotations.VisibleForTesting
-import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.IVersionProvider
-
-fun desktopMain(args: Array<String>) {
-    runCatching { WorkspaceManager.reapStaleWorkspaces() }
-    val exitCode = CommandLine(MainCommand).execute(*args)
-    exitProcess(exitCode)
-}
 
 private object CLIVersionProvider : IVersionProvider {
     override fun getVersion() =
