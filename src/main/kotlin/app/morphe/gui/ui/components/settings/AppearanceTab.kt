@@ -348,6 +348,7 @@ private val BackgroundType.displayNameRes: StringResource
         BackgroundType.SNOW -> Res.string.settings_background_snow
         BackgroundType.GRID -> Res.string.settings_background_grid
         BackgroundType.PARTICLES -> Res.string.settings_background_particles
+        BackgroundType.LAVA -> Res.string.settings_background_lava
         BackgroundType.MATRIX -> Res.string.settings_background_matrix
         BackgroundType.NONE -> Res.string.none
     }
