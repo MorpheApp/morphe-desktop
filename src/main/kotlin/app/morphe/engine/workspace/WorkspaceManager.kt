@@ -9,6 +9,7 @@ import app.morphe.engine.CacheManager
 import app.morphe.engine.MorpheData
 import app.morphe.engine.util.deleteRecursivelyInParallel
 import java.io.File
+import java.io.IOException
 
 /**
  * Manager for session workspaces, scratch files, and shadow copies.
@@ -30,8 +31,8 @@ object WorkspaceManager {
         disablePurge: Boolean = false,
         block: (SessionWorkspace) -> T,
     ): T {
-        val sessionRoot = customDir ?: File(scratchDir, "$prefix-${System.currentTimeMillis()}").also { it.mkdirs() }
-        val workspace = SessionWorkspace(sessionRoot, isCustom = customDir != null)
+        val sessionRoot = newSessionDirectory(customDir ?: scratchDir, prefix)
+        val workspace = SessionWorkspace(sessionRoot)
         if (disablePurge) {
             workspace.retain = true
         }
@@ -42,6 +43,21 @@ object WorkspaceManager {
             if (!workspace.retain) {
                 workspace.cleanup()
             }
+        }
+    }
+
+    /**
+     * Creates `[prefix]-[milliseconds]` under [parent], moving to the next millisecond when another
+     * process created that name first, so two sessions never share a directory.
+     */
+    fun newSessionDirectory(parent: File, prefix: String): File {
+        parent.mkdirs()
+        var stamp = System.currentTimeMillis()
+        while (true) {
+            val directory = File(parent, "$prefix-$stamp")
+            if (directory.mkdir()) return directory
+            if (!directory.exists()) throw IOException("Cannot create session directory $directory")
+            stamp++
         }
     }
 
