@@ -81,7 +81,7 @@ fun AppListFilterChips(
 }
 
 /**
- * On-open update notice (Phase 7 QoL, mirrors Manager). Shown above the apps list
+ * On-open update notice. Shown above the apps list
  * when one or more patched apps have a newer app version or patch-source version
  * available. Tapping jumps to the "Your apps" list where each is badged.
  */

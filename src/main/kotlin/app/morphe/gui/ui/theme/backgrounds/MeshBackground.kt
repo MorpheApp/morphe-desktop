@@ -37,7 +37,7 @@ fun MeshBackground(
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
-    val tertiaryColor  = MaterialTheme.colorScheme.tertiary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -71,8 +71,8 @@ fun MeshBackground(
     Canvas(modifier = modifier.fillMaxSize()) {
         val width = size.width
         val height = size.height
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
+        val tiltX = if (enableParallax) parallaxState.tiltX.value else 0f
+        val tiltY = if (enableParallax) parallaxState.tiltY.value else 0f
         val rp = rippleProgress.value
 
         val rows = 12

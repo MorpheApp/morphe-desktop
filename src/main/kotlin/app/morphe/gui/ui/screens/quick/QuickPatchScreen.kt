@@ -164,7 +164,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     }
 
     FullScreenDropZone(
-        isDragHovering = uiState.isDragHovering,
         onDragHoverChange = { viewModel.setDragHover(it) },
         onFilesDropped = { viewModel.onFilesDropped(it) },
         enabled = uiState.phase != QuickPatchPhase.ANALYZING

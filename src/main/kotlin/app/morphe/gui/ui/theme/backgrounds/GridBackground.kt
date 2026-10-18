@@ -5,19 +5,13 @@
 
 package app.morphe.gui.ui.theme.backgrounds
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import kotlinx.coroutines.launch
-import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -39,28 +33,16 @@ fun GridBackground(
     val secondaryColor = MaterialTheme.colorScheme.secondary
     val tertiaryColor = MaterialTheme.colorScheme.tertiary
 
-    val coroutineScope = rememberCoroutineScope()
-
     val parallaxState = LocalParallaxState.current
 
     val time = rememberAnimatedTime(speedMultiplier)
 
     // shockwaveProgress 0→1: a burst pulse radiates from center on completion
-    val shockwaveProgress = remember { Animatable(0f) }
-
-    CompletionEffect(patchingCompleted) {
-        coroutineScope.launch {
-            shockwaveProgress.snapTo(0f)
-            shockwaveProgress.animateTo(1f, tween(1100, easing = FastOutSlowInEasing))
-            shockwaveProgress.animateTo(0f, tween(500, easing = FastOutSlowInEasing))
-        }
-    }
+    val shockwaveProgress = rememberBurstProgress(patchingCompleted, durationUpMillis = 1100, durationDownMillis = 500)
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val t = time.value
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
-        val twoPi = 2f * PI.toFloat()
+        val tilt = parallaxState.tilt(enableParallax)
         val sw = shockwaveProgress.value
 
         val cols = 11
@@ -75,8 +57,8 @@ fun GridBackground(
 
         for (row in 0 until rows) {
             for (col in 0 until cols) {
-                val baseX = col * cellW + tiltX * 12f
-                val baseY = row * cellH + tiltY * 12f
+                val baseX = col * cellW + tilt.x * 12f
+                val baseY = row * cellH + tilt.y * 12f
 
                 // Distance from screen center - drives the ripple phase offset
                 val dx = baseX - size.width * 0.5f
@@ -85,13 +67,13 @@ fun GridBackground(
 
                 // Continuous ripple wave: phase offset by distance so wave propagates outward
                 val ripplePhase = dist * 0.012f
-                val wave = sin(t * twoPi / 3800f - ripplePhase)
+                val wave = sin(t * TWO_PI / 3800f - ripplePhase)
 
                 // Base dot radius oscillates with the wave
                 val baseRadius = 5.0f + wave * 2.5f
 
                 // Shockwave: dots near the expanding ring get a strong size boost
-                val distFromWave = kotlin.math.abs(dist - waveRadius)
+                val distFromWave = abs(dist - waveRadius)
                 val shockBoost = if (sw > 0f && distFromWave < waveWidth) {
                     val localPhase = 1f - distFromWave / waveWidth
                     localPhase * localPhase * 6f * (1f - sw * 0.5f)

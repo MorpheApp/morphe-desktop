@@ -26,6 +26,7 @@ import app.morphe.patcher.apk.ApkUtils
 import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
+import java.util.Locale
 import java.util.concurrent.Callable
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -511,7 +512,7 @@ internal object PatchCommand : Callable<Int> {
                 )
             }
 
-            Logger.info("Patching took %.1f seconds".format(java.util.Locale.US, (System.nanoTime() - startNanos) / 1_000_000_000.0))
+            Logger.info("Patching took %.1f seconds".format(Locale.US, (System.nanoTime() - startNanos) / 1_000_000_000.0))
 
             patchingResultOutputFilePath?.let { outputFile ->
                 outputFile.outputStream().use { outputStream ->

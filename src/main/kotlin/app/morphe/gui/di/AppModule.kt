@@ -72,7 +72,6 @@ val appModule = module {
         val psm = get<PatchSourceManager>()
         PatchesViewModel(
             params.get(),
-            params.get(),
             psm.getActiveRepositorySync(),
             get(),
             psm.getLocalFilePath(),
@@ -90,7 +89,6 @@ val appModule = module {
             psm.getActiveRepositorySync(),
             get(),
             get(),
-            psm.getActiveSourceName(),
             psm.getLocalFilePath(),
             params.get(),
             params.get(),

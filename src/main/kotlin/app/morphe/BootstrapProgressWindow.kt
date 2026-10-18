@@ -43,7 +43,7 @@ private fun loadBootstrapFont(resourcePath: String): Font = try {
     BootstrapProgressWindow::class.java.classLoader.getResourceAsStream(resourcePath)!!.use { stream ->
         Font.createFont(Font.TRUETYPE_FONT, stream)
     }
-} catch (e: Exception) {
+} catch (_: Exception) {
     Font(Font.MONOSPACED, Font.PLAIN, 12)
 }
 

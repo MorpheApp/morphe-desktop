@@ -5,7 +5,6 @@
 
 package app.morphe.engine.util
 
-import app.morphe.engine.util.Logger
 import app.morphe.library.installation.installer.AdbRootInstaller
 import app.morphe.library.installation.installer.DeviceNotFoundException
 import app.morphe.library.installation.installer.Installer

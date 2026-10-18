@@ -34,9 +34,9 @@ fun ParticlesBackground(
     speedMultiplier: Float = 1f,
     patchingCompleted: Boolean = false
 ) {
-    val primaryColor   = MaterialTheme.colorScheme.primary
+    val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
-    val tertiaryColor  = MaterialTheme.colorScheme.tertiary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -129,8 +129,8 @@ fun ParticlesBackground(
     }
 
     Canvas(modifier = modifier.fillMaxSize()) {
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
+        val tiltX = if (enableParallax) parallaxState.tiltX.value else 0f
+        val tiltY = if (enableParallax) parallaxState.tiltY.value else 0f
         val ep = explodeProgress.value
         val cx = size.width * 0.5f
         val cy = size.height * 0.5f
@@ -141,7 +141,7 @@ fun ParticlesBackground(
         // Compute screen positions with parallax and explosion offset
         val positions = particles.map { p ->
             val parallaxStrength = 25f
-            val baseX = p.x * size.width  + tiltX * parallaxStrength
+            val baseX = p.x * size.width + tiltX * parallaxStrength
             val baseY = p.y * size.height + tiltY * parallaxStrength
 
             // During explosion push outward from center - ep smoothly goes 0→1→0

@@ -296,7 +296,6 @@ fun HomeScreenContent(
                 coroutineScope.launch {
                     patchSourceManager.switchSource(sourceId)
                     navController.navigate(PatchesScreenRoute(
-                        apkPath = uiState.apkInfo?.filePath ?: "",
                         apkName = uiState.apkInfo?.appName ?: ""
                     ))
                 }
@@ -309,7 +308,6 @@ fun HomeScreenContent(
 
     // Full screen drop zone wrapper
     FullScreenDropZone(
-        isDragHovering = uiState.isDragHovering,
         onDragHoverChange = { viewModel.setDragHover(it) },
         onFilesDropped = { viewModel.onFilesDropped(it) },
         enabled = !uiState.isAnalyzing

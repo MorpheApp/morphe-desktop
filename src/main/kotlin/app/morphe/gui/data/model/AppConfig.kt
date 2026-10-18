@@ -27,10 +27,10 @@ val DEFAULT_PATCH_SOURCE = PatchSource(
  *   releases. The version lives in [SourceVersionPref.pinnedTag].
  * - [FOLLOW_STABLE] / [FOLLOW_DEV]: not pinned, so the channel comes from
  *   [PatchSource.usePreRelease] instead. These two are still written, and they seed
- *   that flag once (see [ConfigRepository.migrateSourceChannelFlags]), but they no
- *   longer decide which release resolves. Read the flag, not the mode.
+ *   that flag once (see [app.morphe.gui.data.repository.ConfigRepository.migrateSourceChannelFlags]),
+ *   but they no longer decide which release resolves. Read the flag, not the mode.
  *
- * A source that is not pinned resolves through [app.morphe.gui.util.newerRelease],
+ * A source that is not pinned resolves through [app.morphe.engine.util.newerRelease],
  * which is why following dev never strands anyone on a stale pre-release.
  */
 @Serializable
@@ -57,14 +57,14 @@ data class AppConfig(
     /**
      * LEGACY single-source version pin. Kept only so it can be migrated (via
      * [lastPatchesVersionBySource]) into [sourceVersionPrefs]. Do not read directly
-     * anywhere new. Go through [ConfigRepository.getSourceVersionPrefs].
+     * anywhere new. Go through [app.morphe.gui.data.repository.ConfigRepository.getSourceVersionPrefs].
      */
     val lastPatchesVersion: String? = null,
     /**
      * LEGACY per-source version pin: sourceId → release tag. Superseded by
      * [sourceVersionPrefs]. Kept only so existing configs can migrate (every old
      * tag becomes a follow-track based on whether it was a dev tag). Do not read
-     * directly. Go through [ConfigRepository.getSourceVersionPrefs].
+     * directly. Go through [app.morphe.gui.data.repository.ConfigRepository.getSourceVersionPrefs].
      */
     val lastPatchesVersionBySource: Map<String, String> = emptyMap(),
     /**
@@ -74,7 +74,7 @@ data class AppConfig(
      * brand-new, untouched source). Otherwise the stored [SourceVersionPref]
      * decides whether the source rides the latest stable, the latest overall
      * (dev/bleeding-edge), or stays frozen on a specific tag. See
-     * [ConfigRepository.getSourceVersionPrefs] / [setSourceVersionPref].
+     * [app.morphe.gui.data.repository.ConfigRepository.getSourceVersionPrefs] / [app.morphe.gui.data.repository.ConfigRepository.setSourceVersionPref].
      */
     val sourceVersionPrefs: Map<String, SourceVersionPref> = emptyMap(),
     val sourceChannelFlagsSeeded: Boolean = false,
@@ -83,7 +83,7 @@ data class AppConfig(
     val useSharpCorners: Boolean = false,
     val groupPatchesByCategory: Boolean = true,
     val homeAppSortMode: String = "RECOMMENDED",
-    val preferredPatchChannel: String = PatchChannel.STABLE.name,
+    val preferredPatchChannel: String = "STABLE",
     val useSimplifiedMode: Boolean = true, // Default to Quick/Simplified mode
     val patchSource: List<PatchSource> = listOf(DEFAULT_PATCH_SOURCE),
     val activePatchSourceId: String = "morphe-default",
@@ -112,7 +112,7 @@ data class AppConfig(
         val raw = updateChannelPreference ?: return null
         return try {
             UpdateChannelPreference.valueOf(raw)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -120,7 +120,7 @@ data class AppConfig(
         if (themePreference == "PURE_BLACK") return ThemePreference.AMOLED
         return try {
             ThemePreference.valueOf(themePreference)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             ThemePreference.SYSTEM
         }
     }
@@ -146,11 +146,6 @@ data class PatchSource (
 @Serializable
 enum class PatchSourceType{
     DEFAULT, GITHUB, GITLAB, LOCAL
-}
-
-enum class PatchChannel {
-    STABLE,
-    DEV
 }
 
 /**

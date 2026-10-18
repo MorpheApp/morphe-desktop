@@ -53,13 +53,13 @@ fun ShapesBackground(
     val parallaxState = LocalParallaxState.current
 
     // Solid configurations
-    // cx/cy   - base center in normalized screen space [0..1]
+    // cx/cy - base center in normalized screen space [0..1]
     // fx1/fx2 - Lissajous X frequencies; fy1/fy2 - Lissajous Y frequencies
-    // ampX/Y  - wander amplitude (normalized screen units)
+    // ampX/Y - wander amplitude (normalized screen units)
     // rotSpeeds - per-axis rotation speed multipliers (X=nod, Y=yaw, Z=roll)
     // solidType - which polyhedron to render
-    // depth   - parallax depth (0=none, 1=max)
-    // scale   - rendered size in pixels
+    // depth - parallax depth (0=none, 1=max)
+    // scale - rendered size in pixels
     // colorIdx - which theme color to use (0=primary, 1=secondary, 2=tertiary)
     val configs = remember {
         listOf(
@@ -95,9 +95,7 @@ fun ShapesBackground(
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val t = time.value
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
-        val twoPi = 2f * PI.toFloat()
+        val tilt = parallaxState.tilt(enableParallax)
         val sp = scatterProgress.value
         val screenCx = size.width * 0.5f
         val screenCy = size.height * 0.5f
@@ -107,10 +105,10 @@ fun ShapesBackground(
         // Compute Lissajous target and lerp in one pass - avoids allocating a
         // temporary rawPositions list each frame.
         configs.forEachIndexed { i, c ->
-            val px = c.cx + c.ampX * sin(t * twoPi * c.fx1 / base) +
-                    c.ampX * 0.25f * sin(t * twoPi * c.fx2 / base + 1.4f)
-            val py = c.cy + c.ampY * sin(t * twoPi * c.fy1 / base + 0.8f) +
-                    c.ampY * 0.20f * cos(t * twoPi * c.fy2 / base + 0.3f)
+            val px = c.cx + c.ampX * sin(t * TWO_PI * c.fx1 / base) +
+                    c.ampX * 0.25f * sin(t * TWO_PI * c.fx2 / base + 1.4f)
+            val py = c.cy + c.ampY * sin(t * TWO_PI * c.fy1 / base + 0.8f) +
+                    c.ampY * 0.20f * cos(t * TWO_PI * c.fy2 / base + 0.3f)
             smoothedPositions[i] = lerp(smoothedPositions[i], Offset(px, py), 0.04f)
         }
 
@@ -119,8 +117,8 @@ fun ShapesBackground(
             val pos = smoothedPositions[index]
 
             val parallaxStrength = config.depth * 45f
-            val baseCx = pos.x * size.width  + tiltX * parallaxStrength
-            val baseCy = pos.y * size.height + tiltY * parallaxStrength
+            val baseCx = pos.x * size.width + tilt.x * parallaxStrength
+            val baseCy = pos.y * size.height + tilt.y * parallaxStrength
 
             // Scatter: fly outward from screen center
             val dirX = baseCx - screenCx
@@ -213,7 +211,7 @@ private fun DrawScope.drawSolid(
     val cosZ = cos(angleZ); val sinZ = sin(angleZ)
 
     // Step 1 - rotate all vertices, project all to screen
-    val rotated   = solid.vertices.map { v -> rotateVertex(v, cosX, sinX, cosY, sinY, cosZ, sinZ) }
+    val rotated = solid.vertices.map { v -> rotateVertex(v, cosX, sinX, cosY, sinY, cosZ, sinZ) }
     val projected = rotated.map { v -> projectVertex(v, cx, cy, scale) }
 
     // Step 2 - compute face info
@@ -221,7 +219,7 @@ private fun DrawScope.drawSolid(
     val faceInfos = solid.faces.map { idx ->
         val v0 = rotated[idx[0]]; val v1 = rotated[idx[1]]; val v2 = rotated[idx[2]]
         val normal = (v1 - v0).cross(v2 - v0).normalized()
-        val depth  = idx.sumOf { rotated[it].z.toDouble() }.toFloat() / idx.size
+        val depth = idx.sumOf { rotated[it].z.toDouble() }.toFloat() / idx.size
         FaceInfo(idx, depth, normal.z)
     }
     // Stable back-to-front sort
@@ -260,9 +258,9 @@ private fun DrawScope.drawSolid(
 
 /**
  * A polyhedron defined by:
- * - [vertices]  - positions in normalized [-1,1] object space
- * - [faces]     - vertex index lists, each wound CCW when viewed from outside
- * - [edges]     - deduplicated pairs (a,b) with a<b, for wireframe drawing
+ * - [vertices] - positions in normalized [-1,1] object space
+ * - [faces] - vertex index lists, each wound CCW when viewed from outside
+ * - [edges] - deduplicated pairs (a,b) with a<b, for wireframe drawing
  */
 private data class SolidDef(
     val vertices: List<Vec3>,
@@ -292,23 +290,23 @@ private enum class SolidType {
 
     private fun buildDef(): SolidDef = when (this) {
 
-        // Vertices:  0=LBB  1=RBB  2=RTB  3=LTB  (B=back, F=front, L=left, R=right, T=top, Bo=bottom)
-        //            4=LBF  5=RBF  6=RTF  7=LTF
+        // Vertices:  0=LBB 1=RBB 2=RTB 3=LTB (B=back, F=front, L=left, R=right, T=top, Bo=bottom)
+        //            4=LBF 5=RBF 6=RTF 7=LTF
         // All faces wound CCW when viewed from outside.
         CUBE -> SolidDef.build(
             vertices = listOf(
                 Vec3(-1f, -1f, -1f), Vec3( 1f, -1f, -1f),
-                Vec3( 1f,  1f, -1f), Vec3(-1f,  1f, -1f),
-                Vec3(-1f, -1f,  1f), Vec3( 1f, -1f,  1f),
-                Vec3( 1f,  1f,  1f), Vec3(-1f,  1f,  1f)
+                Vec3( 1f, 1f, -1f), Vec3(-1f, 1f, -1f),
+                Vec3(-1f, -1f, 1f), Vec3( 1f, -1f, 1f),
+                Vec3( 1f, 1f, 1f), Vec3(-1f, 1f, 1f)
             ),
             faces = listOf(
-                listOf(0, 3, 2, 1), // back   (normal: 0,0,-1)
-                listOf(4, 5, 6, 7), // front  (normal: 0,0,+1)
+                listOf(0, 3, 2, 1), // back (normal: 0,0,-1)
+                listOf(4, 5, 6, 7), // front (normal: 0,0,+1)
                 listOf(0, 1, 5, 4), // bottom (normal: 0,-1,0)
-                listOf(3, 7, 6, 2), // top    (normal: 0,+1,0)
-                listOf(0, 4, 7, 3), // left   (normal:-1,0,0)
-                listOf(1, 2, 6, 5)  // right  (normal:+1,0,0)
+                listOf(3, 7, 6, 2), // top (normal: 0,+1,0)
+                listOf(0, 4, 7, 3), // left (normal:-1,0,0)
+                listOf(1, 2, 6, 5) // right (normal:+1,0,0)
             )
         )
 
@@ -339,7 +337,7 @@ private enum class SolidType {
                 Vec3(0f, 0f, 1f), // front
                 Vec3(-1f, 0f, 0f), // left
                 Vec3(0f, 0f, -1f), // back
-                Vec3(0f, -1f, 0f)  // bottom
+                Vec3(0f, -1f, 0f) // bottom
             ),
             faces = listOf(
                 listOf(0, 1, 2), listOf(0, 2, 3),

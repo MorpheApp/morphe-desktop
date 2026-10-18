@@ -21,7 +21,7 @@ import kotlinx.serialization.json.JsonElement
  * Stores per-(source, package) patch selections and option values across sessions.
  *
  * On disk: `<morphe-data>/patch-preferences.json`
- * Schema:  `Map<sourceName, Map<packageName, PatchBundle>>`
+ * Schema: `Map<sourceName, Map<packageName, PatchBundle>>`
  *
  * The on-disk shape reuses [PatchBundle] / [PatchEntry] from the options file
  * format, so prefs files are interchangeable with `patch --options-file` input/output.

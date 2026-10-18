@@ -7,6 +7,7 @@ package app.morphe.engine.util
 
 import java.io.File
 import java.security.KeyStore
+import java.security.Provider
 import java.security.Security
 import java.security.cert.Certificate
 
@@ -48,7 +49,7 @@ object SignatureIdentity {
             val realAlias = ks.aliases().toList().firstOrNull { it.equals(alias, ignoreCase = true) } ?: alias
             ks.getCertificate(realAlias)?.let { idForCert(it) }
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 
@@ -57,13 +58,13 @@ object SignatureIdentity {
      * `signatures:[HEX]` form (lowercased). Null if not present/unrecognised.
      */
     fun parseDeviceSignatureId(dumpsysOutput: String): String? =
-        Regex("""signatures:\[([0-9a-fA-F]+)\]""").find(dumpsysOutput)?.groupValues?.get(1)?.lowercase()
+        Regex("""signatures:\[([0-9a-fA-F]+)]""").find(dumpsysOutput)?.groupValues?.get(1)?.lowercase()
 
     private fun ensureBouncyCastle() {
         if (Security.getProvider("BC") != null) return
         try {
             val provider = Class.forName("org.bouncycastle.jce.provider.BouncyCastleProvider")
-                .getDeclaredConstructor().newInstance() as java.security.Provider
+                .getDeclaredConstructor().newInstance() as Provider
             Security.addProvider(provider)
         } catch (_: Exception) {
             // BC ships transitively with the patcher; if absent, BKS load fails

@@ -42,7 +42,7 @@ object PatcherCompatibility {
                 var entry = zip.nextEntry
                 while (entry != null) {
                     if (entry.name == "META-INF/MANIFEST.MF") {
-                        return@runCatching manifestAttr(zip.bufferedReader().readText(), "Patcher-Version")
+                        return@runCatching patcherVersionFromManifest(zip.bufferedReader().readText())
                     }
                     entry = zip.nextEntry
                 }
@@ -64,9 +64,9 @@ object PatcherCompatibility {
             "Update Morphe to use it."
     }
 
-    private fun manifestAttr(manifest: String, key: String): String? =
+    private fun patcherVersionFromManifest(manifest: String): String? =
         manifest.lineSequence()
-            .firstOrNull { it.substringBefore(':', "").trim().equals(key, ignoreCase = true) }
+            .firstOrNull { it.substringBefore(':', "").trim().equals("Patcher-Version", ignoreCase = true) }
             ?.substringAfter(':')?.trim()
             ?.takeUnless { it.isBlank() || it.equals("na", ignoreCase = true) }
 

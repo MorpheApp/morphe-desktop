@@ -23,7 +23,7 @@ import java.security.MessageDigest
  * XOR scheme:
  * keystream = SHA1(pwd || salt) || SHA1(pwd || SHA1(pwd || salt)) || ...
  * plaintext = ciphertext XOR keystream
- * integrity  = SHA1(pwd || plaintext) (last 20 bytes of the protected-key blob)
+ * integrity = SHA1(pwd || plaintext) (last 20 bytes of the protected-key blob)
  *
  * Reference: sun.security.provider.KeyProtector (OpenJDK source)
  */

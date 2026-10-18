@@ -57,12 +57,12 @@ val THEME_PRESET_COLORS = listOf(
  * instead of using MorpheColors.Blue/Teal directly.
  */
 data class MorpheAccentColors(
-    val primary: Color,    // Buttons, selections, links (replaces MorpheColors.Blue)
-    val secondary: Color,  // Badges, options, success states (replaces MorpheColors.Teal)
+    val primary: Color, // Buttons, selections, links (replaces MorpheColors.Blue)
+    val secondary: Color, // Badges, options, success states (replaces MorpheColors.Teal)
     val tertiary: Color = Color(0xFF5C6BC0), // Structural emphasis, info accents
-    val warning: Color = Color(0xFFFF9800),  // Warning states
-    val danger: Color = Color(0xFFE0504D),   // Destructive actions, errors, delete
-    val success: Color = Color(0xFF43A047),   // Success notifications, completed states
+    val warning: Color = Color(0xFFFF9800), // Warning states
+    val danger: Color = Color(0xFFE0504D), // Destructive actions, errors, delete
+    val success: Color = Color(0xFF43A047), // Success notifications, completed states
 ) {
     val error: Color get() = danger
 }
@@ -70,21 +70,21 @@ data class MorpheAccentColors(
 val LocalMorpheAccents = compositionLocalOf { MorpheAccentColors(MorpheColors.Blue, MorpheColors.Teal) }
 
 private val DarkAccents = MorpheAccentColors(
-    primary = Color(0xFFA4C9FF),   // Morphe dark primary, light blue
+    primary = Color(0xFFA4C9FF), // Morphe dark primary, light blue
     secondary = Color(0xFF9CCC65), // Success green for dark surfaces
-    tertiary = Color(0xFFD9BDE3),  // Morphe dark tertiary
-    warning = Color(0xFFE0A030),   // Amber
-    danger = Color(0xFFE0504D),    // Red
-    success = Color(0xFF9CCC65),   // Success green
+    tertiary = Color(0xFFD9BDE3), // Morphe dark tertiary
+    warning = Color(0xFFE0A030), // Amber
+    danger = Color(0xFFE0504D), // Red
+    success = Color(0xFF9CCC65), // Success green
 )
 
 private val LightAccents = MorpheAccentColors(
-    primary = Color(0xFF005FAC),   // Morphe Material blue (buttons, links, selections)
+    primary = Color(0xFF005FAC), // Morphe Material blue (buttons, links, selections)
     secondary = Color(0xFF386A20), // Success green
-    tertiary = Color(0xFF6D5677),  // Morphe tertiary, muted purple
-    warning = Color(0xFFB26A00),   // Amber
-    danger = Color(0xFFE0504D),    // Red
-    success = Color(0xFF386A20),   // Success green
+    tertiary = Color(0xFF6D5677), // Morphe tertiary, muted purple
+    warning = Color(0xFFB26A00), // Amber
+    danger = Color(0xFFE0504D), // Red
+    success = Color(0xFF386A20), // Success green
 )
 
 // ════════════════════════════════════════════════════════════════════

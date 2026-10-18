@@ -6,10 +6,11 @@
 package app.morphe.gui.icon
 
 import app.morphe.gui.data.model.MorpheFill
+import java.awt.image.BufferedImage
 import kotlin.test.Test
 
 class IconRendererTest {
-    private fun opaqueCount(img: java.awt.image.BufferedImage): Int {
+    private fun opaqueCount(img: BufferedImage): Int {
         var n = 0
         for (y in 0 until img.height) for (x in 0 until img.width) if (((img.getRGB(x, y) ushr 24) and 0xFF) > 0) n++
         return n

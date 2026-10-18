@@ -36,7 +36,6 @@ object MorpheIcons {
     val ArrowBack: ImageVector by lazy { symbol("ArrowBack", "m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z") }
     val ArrowDropDown: ImageVector by lazy { symbol("ArrowDropDown", "M480-360 280-560h400L480-360Z") }
     val ArrowDropUp: ImageVector by lazy { symbol("ArrowDropUp", "m280-400 200-200 200 200H280Z") }
-    val ArrowForward: ImageVector by lazy { symbol("ArrowForward", "M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z") }
     val ArrowUpward: ImageVector by lazy { symbol("ArrowUpward", "M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z") }
     val Article: ImageVector by lazy { symbol("Article", "M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z") }
     val AutoAwesome: ImageVector by lazy { symbol("AutoAwesome", "m760-600-50-110-110-50 110-50 50-110 50 110 110 50-110 50-50 110Zm0 560-50-110-110-50 110-50 50-110 50 110 110 50-110 50-50 110ZM360-160 260-380 40-480l220-100 100-220 100 220 220 100-220 100-100 220Zm0-194 40-86 86-40-86-40-40-86-40 86-86 40 86 40 40 86Zm0-126Z") }

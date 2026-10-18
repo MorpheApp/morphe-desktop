@@ -30,12 +30,6 @@ class LanguageRepository {
     }
 
     /**
-     * Returns the full list of supported languages, with "System" pinned at index 0,
-     * "English" at index 1, and the remaining options sorted alphabetically by display name.
-     */
-    fun getSupportedLanguages(appLanguageCode: String = SYSTEM_CODE): List<LanguageOption> = getOptionsForLocale(appLanguageCode)
-
-    /**
      * Returns the cached list of supported languages if already computed for [appLanguageCode], or null.
      */
     fun getCachedLanguages(appLanguageCode: String = SYSTEM_CODE): List<LanguageOption>? {

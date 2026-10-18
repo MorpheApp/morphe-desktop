@@ -17,9 +17,9 @@ import app.morphe.engine.patches.PatchResolver.Channel
  *
  * Two axes: channel (stable/dev) and recency (latest/older). Map to four distinct, intuitive hues:
  *  - green (secondary)  stable + latest → recommended, current
- *  - amber (warning)    stable + older  → safe channel, update available
- *  - blue  (tertiary)   dev + latest    → experimental, on the newest build
- *  - red   (error)      dev + older     → experimental AND behind, riskiest
+ *  - amber (warning)    stable + older → safe channel, update available
+ *  - blue (tertiary)    dev + latest → experimental, on the newest build
+ *  - red  (error)       dev + older → experimental AND behind, riskiest
  *
  * UNKNOWN / not-yet-loaded falls back to the "recommended" green.
  */

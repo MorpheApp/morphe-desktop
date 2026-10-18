@@ -45,7 +45,7 @@ data class PatchedAppRecord(
      * Baseline integrity fingerprint of the output APK, captured at patch time.
      * Lets us later detect when the patched APK was changed outside Morphe
      * (hash mismatch) vs untouched. Null only for records written before this
-     * field existed, or if hashing failed. See `patched-app-recall-plan.md` (Phase 6).
+     * field existed, or if hashing failed.
      */
     val outputApkSha256: String? = null,
     /** Size in bytes of the output APK at patch time. */

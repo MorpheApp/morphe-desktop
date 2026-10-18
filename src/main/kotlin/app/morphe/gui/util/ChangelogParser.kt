@@ -15,8 +15,6 @@ data class ChangelogEntry(
     val scopedBullets: Map<String, List<String>> = emptyMap(),
 )
 
-val ChangelogEntry.isPrerelease: Boolean get() = version.contains('-')
-
 object ChangelogParser {
 
     private val VERSION_HEADING = Regex(
@@ -100,7 +98,6 @@ object ChangelogParser {
     ): Boolean {
         if (appNames.isEmpty()) return false
         val newerEntries = entriesNewerThan(entries, installedVersion)
-        if (newerEntries.isEmpty()) return false
         return newerEntries.any { entry ->
             entry.scopedBullets.any { (scope, bullets) ->
                 val scopeMatches = appNames.any { name ->

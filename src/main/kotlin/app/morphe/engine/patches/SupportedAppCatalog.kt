@@ -67,16 +67,6 @@ object SupportedAppCatalog {
     fun extractSupportedApps(patches: Iterable<Patch<*>>): List<SupportedApp> =
         extractSupportedAppsFromMetadata(patches.map { it.toMetadata() })
 
-    /**
-     * Extract supported apps from loaded bundle list.
-     */
-    fun extractSupportedAppsFromBundles(bundles: List<LoadedBundle>): List<SupportedApp> =
-        extractSupportedApps(bundles.flatMap { it.patches })
-
-    /**
-     * Extract all supported apps from a list of patch metadata models.
-     * Groups patches by package name and collects stable + experimental versions.
-     */
     fun extractSupportedAppsFromMetadata(patches: Iterable<PatchMetadata>): List<SupportedApp> {
         val packageVersionsMap = mutableMapOf<String, MutableSet<String>>()
         val packageExperimentalMap = mutableMapOf<String, MutableSet<String>>()
@@ -84,8 +74,8 @@ object SupportedAppCatalog {
         val packageIconColors = mutableMapOf<String, String>()
         val packageBuildCodes = mutableMapOf<String, MutableMap<String, MutableSet<Int>>>()
 
-        for (patch in patches) {
-            for ((packageName, displayName, versions, experimentalVersions, appIconColor, versionBuildCodes) in patch.compatiblePackages) {
+        for ((_, _, compatiblePackages) in patches) {
+            for ((packageName, displayName, versions, experimentalVersions, appIconColor, versionBuildCodes) in compatiblePackages) {
                 if (packageName.isNotBlank()) {
                     packageVersionsMap.getOrPut(packageName) { mutableSetOf() }
                         .addAll(versions)
@@ -137,68 +127,6 @@ object SupportedAppCatalog {
                     .orEmpty()
             )
         }.sortedBy { it.displayName }
-    }
-
-    /**
-     * Get a supported app by package name.
-     */
-    fun getSupportedApp(packageName: String, patches: Iterable<Patch<*>>): SupportedApp? =
-        extractSupportedApps(patches).find { it.packageName == packageName }
-
-    /**
-     * Get a supported app by package name from pre-converted metadata.
-     */
-    fun getSupportedAppFromMetadata(packageName: String, patches: Iterable<PatchMetadata>): SupportedApp? =
-        extractSupportedAppsFromMetadata(patches).find { it.packageName == packageName }
-
-    /**
-     * Get recommended version for a package from patches.
-     */
-    fun getRecommendedVersion(packageName: String, patches: Iterable<Patch<*>>): String? =
-        getSupportedApp(packageName, patches)?.recommendedVersion
-
-    fun getRecommendedVersion(patches: Iterable<Patch<*>>, packageName: String): String? =
-        getSupportedApp(packageName, patches)?.recommendedVersion
-
-    /**
-     * Get recommended version for a package from patch metadata.
-     */
-    fun getRecommendedVersionFromMetadata(packageName: String, patches: Iterable<PatchMetadata>): String? =
-        getSupportedAppFromMetadata(packageName, patches)?.recommendedVersion
-
-    fun getRecommendedVersionFromMetadata(patches: Iterable<PatchMetadata>, packageName: String): String? =
-        getSupportedAppFromMetadata(packageName, patches)?.recommendedVersion
-
-    /**
-     * Find patches compatible with a given package and version/versionCode constraints.
-     */
-    fun findCompatiblePatches(
-        packageName: String,
-        versionName: String? = null,
-        versionCode: Int? = null,
-        includeExperimental: Boolean = false,
-        includeUniversal: Boolean = true,
-        patches: Iterable<Patch<*>>,
-    ): List<Patch<*>> {
-        return patches.filter { patch ->
-            val compat = patch.compatibility
-            if (!compat.isNullOrEmpty()) {
-                compat.any { entry ->
-                    when {
-                        entry.packageName == null -> includeUniversal
-                        entry.packageName != packageName -> false
-                        versionName == null -> entry.targets.any { includeExperimental || !it.isExperimental }
-                        else -> entry.targets.any { target ->
-                            (includeExperimental || !target.isExperimental) &&
-                                    target.version == versionName &&
-                                    (versionCode == null || target.versionCodes.isNullOrEmpty() || versionCode in target.versionCodes!!.values)
-                        }
-                    }
-                }
-            } else {
-                includeUniversal
-            }
-        }
     }
 
     /**

@@ -35,12 +35,6 @@ data class Release(
     val assets: List<ReleaseAsset> = emptyList(),
     val body: String? = null
 ) {
-    /**
-     * Get the version string (removes 'v' prefix if present)
-     */
-    fun getVersion(): String {
-        return tagName.removePrefix("v")
-    }
 
     /**
      * Check if this is a dev/pre-release version. Providers that expose a
@@ -73,14 +67,4 @@ data class ReleaseAsset(
      */
     fun isPatchFile(): Boolean = name.endsWith(".mpp", ignoreCase = true)
 
-    /**
-     * Get human-readable file size
-     */
-    fun getFormattedSize(): String {
-        return when {
-            size < 1024 -> "$size B"
-            size < 1024 * 1024 -> "${size / 1024} KB"
-            else -> "${size / (1024 * 1024)} MB"
-        }
-    }
 }

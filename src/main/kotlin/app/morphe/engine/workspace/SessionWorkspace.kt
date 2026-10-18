@@ -26,26 +26,18 @@ class SessionWorkspace(
     fun file(name: String): File = File(root, name)
 
     /**
-     * Creates and returns a subdirectory within this workspace root.
-     */
-    fun subDir(name: String): File = File(root, name).also { it.mkdirs() }
-
-    /**
      * Cleans up the workspace unless [retain] is true.
      * For auto-generated sessions, deletes the session directory recursively.
      * For user-specified custom directories, clears the contents to preserve the container.
      */
-    fun cleanup(): Boolean {
-        if (retain) return false
-        return try {
-            if (isCustom) {
-                root.listFiles()?.forEach { it.deleteRecursivelyInParallel() }
-                true
-            } else {
-                root.deleteRecursivelyInParallel()
-            }
-        } catch (_: Exception) {
-            false
+    fun cleanup(): Boolean = !retain && try {
+        if (isCustom) {
+            root.listFiles()?.forEach { it.deleteRecursivelyInParallel() }
+            true
+        } else {
+            root.deleteRecursivelyInParallel()
         }
+    } catch (_: Exception) {
+        false
     }
 }

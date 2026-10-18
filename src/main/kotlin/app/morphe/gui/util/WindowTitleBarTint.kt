@@ -32,6 +32,7 @@ import javax.swing.JFrame
  */
 
 private interface Dwmapi : StdCallLibrary {
+    @Suppress("FunctionName")
     fun DwmSetWindowAttribute(
         hwnd: WinDef.HWND,
         dwAttribute: Int,

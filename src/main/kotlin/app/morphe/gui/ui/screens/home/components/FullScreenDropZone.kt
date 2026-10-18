@@ -21,7 +21,6 @@ import java.io.File
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FullScreenDropZone(
-    isDragHovering: Boolean,
     onDragHoverChange: (Boolean) -> Unit,
     onFilesDropped: (List<File>) -> Unit,
     enabled: Boolean = true,
@@ -62,7 +61,7 @@ fun FullScreenDropZone(
                     } else {
                         false
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     false
                 }
             }

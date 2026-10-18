@@ -6,13 +6,13 @@
 package app.morphe.gui.data.repository
 
 import app.morphe.engine.MorpheData
+import app.morphe.engine.config.mergeAndSaveJsonObject
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.isDevTag
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.SourceVersionPref
-import app.morphe.gui.data.model.PatchChannel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.model.MorpheFill
@@ -21,8 +21,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 
 /**
@@ -78,17 +76,8 @@ open class ConfigRepository {
     suspend fun saveConfig(config: AppConfig) = withContext(Dispatchers.IO) {
         try {
             val configFile = MorpheData.configFile
-            val existingObj = if (configFile.exists()) {
-                runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
-            } else JsonObject(emptyMap())
-
             val guiObj = json.encodeToJsonElement(AppConfig.serializer(), config).jsonObject
-            val mergedMap = existingObj.toMutableMap()
-            guiObj.forEach { (k, v) -> mergedMap[k] = v }
-            val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
-
-            configFile.parentFile?.mkdirs()
-            configFile.writeText(mergedJson)
+            mergeAndSaveJsonObject(configFile, json, guiObj)
             cachedConfig = config
             Logger.info("Config saved to ${configFile.absolutePath}")
         } catch (e: Exception) {
@@ -170,22 +159,6 @@ open class ConfigRepository {
     suspend fun setGroupPatchesByCategory(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(groupPatchesByCategory = enabled))
-    }
-
-    /**
-     * Update patch channel preference.
-     */
-    suspend fun setPatchChannel(channel: PatchChannel) {
-        val current = loadConfig()
-        saveConfig(current.copy(preferredPatchChannel = channel.name))
-    }
-
-    /**
-     * Update last used CLI version.
-     */
-    suspend fun setLastCliVersion(version: String) {
-        val current = loadConfig()
-        saveConfig(current.copy(lastCliVersion = version))
     }
 
     /**
@@ -416,13 +389,6 @@ open class ConfigRepository {
     }
 
     /**
-     * Get the list of currently enabled patch sources (in config order).
-     */
-    suspend fun getEnabledPatchSources(): List<PatchSource> {
-        return loadConfig().patchSource.filter { it.enabled }
-    }
-
-    /**
      * Remove a patch source by ID. Cannot remove non-deletable sources.
      */
     suspend fun removePatchSource(id: String) {
@@ -438,15 +404,6 @@ open class ConfigRepository {
             current.activePatchSourceId
         }
         saveConfig(current.copy(patchSource = updatedSources, activePatchSourceId = newActiveId))
-    }
-
-
-
-    /**
-     * Clear cached config (for testing).
-     */
-    fun clearCache() {
-        cachedConfig = null
     }
 }
 

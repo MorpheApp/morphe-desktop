@@ -50,9 +50,7 @@ object MultiSourceLoader {
         // appears in multiple bundles, this set has every contributing source
         // so the UI can render multi-source attribution.
         val patchToSourceIds: Map<Patch<*>, Set<String>>,
-    ) {
-        val hasErrors: Boolean get() = perSource.any { !it.isSuccess }
-    }
+    )
 
     /**
      * Load patches from each input in parallel. Each .mpp is copied to a temp file

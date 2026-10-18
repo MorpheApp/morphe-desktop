@@ -73,8 +73,7 @@ object MorpheData {
      *  Persistent USER CONTENT. Deliberately NOT wiped by clear-cache. */
     val iconsDir: File by lazy { File(root, "icons").also { it.mkdirs() } }
 
-    /** Patcher scratch space. Each patching session gets its own subfolder
-     *  here (see Phase 6 of the unified-data-location plan). */
+    /** Patcher scratch space. Each patching session gets its own subfolder here. */
     val tmpDir: File by lazy { File(root, "tmp").also { it.mkdirs() } }
 
     /** GUI's persisted preferences (theme, enabled sources, etc.). */
@@ -144,7 +143,7 @@ object MorpheData {
         val location = try {
             MorpheData::class.java.protectionDomain.codeSource?.location
                 ?: return null to FallbackReason.NO_JAR_LOCATION
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return null to FallbackReason.EXCEPTION
         }
 
@@ -153,7 +152,7 @@ object MorpheData {
             // often symlink the JAR; we want the cache next to the real file,
             // not next to the symlink.
             File(location.toURI()).canonicalFile
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return null to FallbackReason.EXCEPTION
         }
 

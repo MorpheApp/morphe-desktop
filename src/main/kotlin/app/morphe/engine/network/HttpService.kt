@@ -16,6 +16,7 @@ import io.ktor.client.request.prepareGet
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HeadersBuilder
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
@@ -33,7 +34,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 /**
@@ -47,8 +47,8 @@ import kotlinx.serialization.json.Json
  * complexity (Can add this if required). Timeouts + engine live on the injected client (CIO).
  *
  * Responsibilities:
- *  - [request]: GET + ContentNegotiation decode to [T]
- *  - [getText]: GET raw body text (providers that hand-parse JSON, e.g. GitLab,
+ *  - [request]: GET + ContentNegotiation decode to `T`
+ *  - `request<String>`: GET raw body text (providers that hand-parse JSON, e.g. GitLab,
  *    and raw `patches-bundle.json` which is served as text/plain)
  *  - [head]: HEAD probe (GitLab's cosmetic asset-size resolution)
  *  - [downloadToFile]: stream a response straight to disk (never buffered
@@ -132,12 +132,7 @@ class HttpService(
                     }
                 }
             }
-            if (part.length() == 0L) throw HttpException(null, url, "download returned 0 bytes")
-            if (saveLocation.exists()) saveLocation.delete()
-            if (!part.renameTo(saveLocation)) {
-                part.copyTo(saveLocation, overwrite = true); part.delete()
-            }
-            return saveLocation
+            return finalizePartFile(part, saveLocation, url)
         } catch (t: Throwable) {
             runCatching { if (part.exists()) part.delete() }
             throw t
@@ -160,13 +155,7 @@ class HttpService(
     ): GitHubPrAsset {
         val pullUrl = "https://api.github.com/repos/$owner/$repo/pulls/$pullRequestNumber"
         val pull: GitHubPull = request(pullUrl) {
-            headers {
-                append(HttpHeaders.Accept, "application/vnd.github+json")
-                append("X-GitHub-Api-Version", "2022-11-28")
-                if (!pat.isNullOrBlank()) {
-                    append(HttpHeaders.Authorization, "Bearer $pat")
-                }
-            }
+            headers { applyGitHubApiHeaders(pat) }
         }
         val targetSha = pull.head.sha
         if (targetSha.isBlank()) {
@@ -179,13 +168,7 @@ class HttpService(
         while (page <= 10) {
             val runsUrl = "https://api.github.com/repos/$owner/$repo/actions/runs?per_page=100&page=$page"
             val runs: GitHubWorkflowRunsResponse = request(runsUrl) {
-                headers {
-                    append(HttpHeaders.Accept, "application/vnd.github+json")
-                    append("X-GitHub-Api-Version", "2022-11-28")
-                    if (!pat.isNullOrBlank()) {
-                        append(HttpHeaders.Authorization, "Bearer $pat")
-                    }
-                }
+                headers { applyGitHubApiHeaders(pat) }
             }
 
             matchingRun = runs.workflowRuns.firstOrNull { it.headSha == targetSha }
@@ -199,13 +182,7 @@ class HttpService(
 
         val artifactsUrl = "https://api.github.com/repos/$owner/$repo/actions/runs/${run.id}/artifacts"
         val artifactsResponse: GitHubArtifactsResponse = request(artifactsUrl) {
-            headers {
-                append(HttpHeaders.Accept, "application/vnd.github+json")
-                append("X-GitHub-Api-Version", "2022-11-28")
-                if (!pat.isNullOrBlank()) {
-                    append(HttpHeaders.Authorization, "Bearer $pat")
-                }
-            }
+            headers { applyGitHubApiHeaders(pat) }
         }
 
         val artifact = artifactsResponse.artifacts.firstOrNull {
@@ -222,6 +199,15 @@ class HttpService(
             title = run.displayTitle ?: pull.title,
             pageUrl = "https://github.com/$owner/$repo/pull/$pullRequestNumber"
         )
+    }
+
+    @Suppress("UastIncorrectHttpHeaderInspection")
+    private fun HeadersBuilder.applyGitHubApiHeaders(pat: String?) {
+        append(HttpHeaders.Accept, "application/vnd.github+json")
+        append("X-GitHub-Api-Version", "2022-11-28")
+        if (!pat.isNullOrBlank()) {
+            append(HttpHeaders.Authorization, "Bearer $pat")
+        }
     }
 
     /**
@@ -302,17 +288,21 @@ class HttpService(
                     }
                 }
             }
-            if (part.length() == 0L) throw HttpException(null, url, "download returned 0 bytes")
-            if (saveLocation.exists()) saveLocation.delete()
-            if (!part.renameTo(saveLocation)) {
-                part.copyTo(saveLocation, overwrite = true)
-                part.delete()
-            }
-            return saveLocation
+            return finalizePartFile(part, saveLocation, url)
         } catch (t: Throwable) {
             runCatching { if (part.exists()) part.delete() }
             throw t
         }
+    }
+
+    private fun finalizePartFile(part: File, saveLocation: File, url: String): File {
+        if (part.length() == 0L) throw HttpException(null, url, "download returned 0 bytes")
+        if (saveLocation.exists()) saveLocation.delete()
+        if (!part.renameTo(saveLocation)) {
+            part.copyTo(saveLocation, overwrite = true)
+            part.delete()
+        }
+        return saveLocation
     }
 
     /**
