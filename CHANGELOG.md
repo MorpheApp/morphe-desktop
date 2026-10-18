@@ -1,3 +1,10 @@
+# [1.19.0-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.6...v1.19.0-dev.7) (2026-10-18)
+
+
+### Bug Fixes
+
+* Keep files in the -t directory after patching ([#368](https://github.com/MorpheApp/morphe-desktop/issues/368)) ([c1d3182](https://github.com/MorpheApp/morphe-desktop/commit/c1d318275d7327070d77bd3c546e4d6761a58211))
+
 # [1.19.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.5...v1.19.0-dev.6) (2026-10-18)
 
 
