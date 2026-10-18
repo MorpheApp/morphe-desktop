@@ -31,7 +31,6 @@ import app.morphe.engine.model.VersionStatus
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.Logger
-import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.ActiveMode
@@ -45,7 +44,7 @@ import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.EnabledSourcesLoader
-import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.logIfFailed
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
@@ -177,7 +176,7 @@ class HomeViewModel(
                     updateInfo = carriedUpdate,
                     dismissedUpdateVersion = carriedDismissed,
                 )
-                loadPatchesAndSupportedApps(forceRefresh = true)
+                loadPatchesAndSupportedApps()
             }
         }
     }
@@ -339,7 +338,7 @@ class HomeViewModel(
      * the union supported-apps list. Single-enabled-source case produces output
      * equivalent to the pre-multi-source flow.
      */
-    private fun loadPatchesAndSupportedApps(forceRefresh: Boolean = false) {
+    private fun loadPatchesAndSupportedApps() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoadingPatches = true, patchLoadError = null, showSourcesFailedBanner = false)
@@ -362,21 +361,8 @@ class HomeViewModel(
                 val result = EnabledSourcesLoader.loadAll(enabled, prefs, engineConfigRepository.loadConfig().excludedMppPatterns)
 
                 if (!result.anyLoaded) {
+                    result.logIfFailed()
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
-                    val rawTechnicalError = firstThrowable?.message
-                        ?: result.resolved.firstNotNullOfOrNull { it.error }
-                    val logMessage = when {
-                        rawTechnicalError.isNullOrBlank() -> "Failed to load any patches"
-                        rawTechnicalError.startsWith("Failed to load", ignoreCase = true) -> rawTechnicalError
-                        else -> "Failed to load any patches: $rawTechnicalError"
-                    }
-                    // Log the real throwable (full stack). Never only a null/blank .message.
-                    if (firstThrowable != null) {
-                        Logger.error(logMessage, firstThrowable)
-                    } else {
-                        Logger.warn(logMessage)
-                    }
-
                     val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }
                         ?: getString(Res.string.error_could_not_load_patches)
@@ -744,7 +730,7 @@ class HomeViewModel(
             parseApkManifest(File(path))?.versionName
         } catch (e: CancellationException) {
             throw e
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -1006,7 +992,7 @@ class HomeViewModel(
      * Retry loading patches.
      */
     fun retryLoadPatches() {
-        loadPatchesAndSupportedApps(forceRefresh = true)
+        loadPatchesAndSupportedApps()
     }
 
     /**
@@ -1018,7 +1004,7 @@ class HomeViewModel(
             val saved = configRepository.getSourceVersionPrefs()
             if (saved != lastLoadedVersionsBySource) {
                 Logger.info("Patches versions changed across sources: $lastLoadedVersionsBySource -> $saved, reloading...")
-                loadPatchesAndSupportedApps(forceRefresh = true)
+                loadPatchesAndSupportedApps()
             }
         }
     }
@@ -1443,11 +1429,8 @@ data class ApkInfo(
      *  + fuzzy supported-app matching. Most fields are still populated but may be
      *  less accurate. UI should surface a banner letting the user know they can
      *  still proceed but card info is approximate. */
-    val hasLimitedInfo: Boolean = false
-) {
-    val formattedSize: String
-        get() = FormatUtils.formatFileSize(fileSize)
-}
+    val hasLimitedInfo: Boolean = false,
+)
 
 data class ApkValidationResult(
     val isValid: Boolean,

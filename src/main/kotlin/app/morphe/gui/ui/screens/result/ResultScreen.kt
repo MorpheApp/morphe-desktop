@@ -16,10 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.config.EngineConfigRepository
@@ -30,11 +28,9 @@ import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.LocalNavController
-import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.screens.result.components.*
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.ui.theme.screenScrim
+import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
@@ -63,8 +59,6 @@ fun ResultScreen(
 @Composable
 fun ResultScreenContent(outputPath: String) {
     val navController = LocalNavController.current
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
     val outputFile = File(outputPath)
@@ -76,10 +70,7 @@ fun ResultScreenContent(outputPath: String) {
     val monitorState by DeviceMonitor.state.collectAsState()
     val adbPreference = LocalAdbPreference.current
     val isAdbDisabledByUser = !adbPreference.enabled
-    var isInstalling by remember { mutableStateOf(false) }
-    var installProgress by remember { mutableStateOf("") }
-    var installError by remember { mutableStateOf<String?>(null) }
-    var installSuccess by remember { mutableStateOf(false) }
+    val installState = remember { AsyncActionState() }
 
     // Whether the patched package is already on the selected device → show "Update"
     // instead of "Install" (the install itself already reinstalls with -r).
@@ -102,10 +93,7 @@ fun ResultScreenContent(outputPath: String) {
     // record for this output (which stores original + renamed package names).
     var stockPackage by remember { mutableStateOf<String?>(null) }
     var disableStockLinks by remember { mutableStateOf(false) }
-    var isApplyingLinks by remember { mutableStateOf(false) }
-    var linkProgress by remember { mutableStateOf("") }
-    var linkError by remember { mutableStateOf<String?>(null) }
-    var linkSuccess by remember { mutableStateOf(false) }
+    val linkState = remember { AsyncActionState() }
     var autoRouteLinks by remember { mutableStateOf(false) }
     LaunchedEffect(outputPath, outputPackage) {
         stockPackage = withContext(Dispatchers.IO) {
@@ -115,7 +103,7 @@ fun ResultScreenContent(outputPath: String) {
                     ?: outputPackage?.let { pkg -> records.firstOrNull { it.installedPackageName == pkg }?.packageName }
             } catch (e: CancellationException) {
                 throw e
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
         }
@@ -153,27 +141,27 @@ fun ResultScreenContent(outputPath: String) {
     fun installViaAdb() {
         val device = monitorState.selectedDevice ?: return
         scope.launch {
-            isInstalling = true
-            installError = null
-            installProgress = if (alreadyInstalled) getString(Res.string.result_adb_updating_on_device, device.displayName) else getString(Res.string.adb_status_installing, device.displayName)
+            installState.isRunning = true
+            installState.error = null
+            installState.progress = if (alreadyInstalled) getString(Res.string.result_adb_updating_on_device, device.displayName) else getString(Res.string.adb_status_installing, device.displayName)
 
             val result = adbManager.installApk(
                 apkPath = outputPath,
                 deviceId = device.id,
-                onProgress = { installProgress = it }
+                onProgress = { installState.progress = it }
             )
 
             result.fold(
                 onSuccess = {
-                    installSuccess = true
-                    installProgress = if (alreadyInstalled) getString(Res.string.result_adb_update_successful) else getString(Res.string.result_adb_install_successful)
+                    installState.isSuccess = true
+                    installState.progress = if (alreadyInstalled) getString(Res.string.result_adb_update_successful) else getString(Res.string.result_adb_install_successful)
                 },
                 onFailure = { exception ->
-                    installError = (exception as? AdbException)?.getUserMessage() ?: exception.message ?: getString(Res.string.error_patching_unknown)
+                    installState.error = (exception as? AdbException)?.getUserMessage() ?: exception.message ?: getString(Res.string.error_patching_unknown)
                 }
             )
 
-            isInstalling = false
+            installState.isRunning = false
         }
     }
 
@@ -181,37 +169,37 @@ fun ResultScreenContent(outputPath: String) {
         val device = monitorState.selectedDevice ?: return
         val patched = outputPackage ?: return
         scope.launch {
-            isApplyingLinks = true
-            linkError = null
+            linkState.isRunning = true
+            linkState.error = null
             val result = adbManager.setLinkHandling(
                 deviceId = device.id,
                 patchedPackage = patched,
                 stockPackage = if (disableStockLinks) stockPackage else null,
                 enable = enable,
-                onProgress = { linkProgress = it.toUserMessage() },
+                onProgress = { linkState.progress = it.toUserMessage() },
             )
             result.fold(
                 onSuccess = { outcome ->
-                    linkSuccess = enable
-                    linkProgress = when {
+                    linkState.isSuccess = enable
+                    linkState.progress = when {
                         !enable -> getString(Res.string.result_link_default_restored)
                         outcome.stockChanged -> getString(Res.string.result_link_routed_stock_disabled)
                         else -> getString(Res.string.result_screen_links_routed_label)
                     }
                 },
                 onFailure = { e ->
-                    linkError = (e as? AdbException)?.getUserMessage() ?: e.message ?: getString(Res.string.error_patching_unknown)
+                    linkState.error = (e as? AdbException)?.getUserMessage() ?: e.message ?: getString(Res.string.error_patching_unknown)
                 }
             )
-            isApplyingLinks = false
+            linkState.isRunning = false
         }
     }
 
     // Auto-route links once, right after a successful install, when the global
     // setting is on. outputPackage is required (the apply no-ops without it).
-    LaunchedEffect(installSuccess, autoRouteLinks, outputPackage) {
-        if (installSuccess && autoRouteLinks && outputPackage != null &&
-            !linkSuccess && !isApplyingLinks && linkError == null
+    LaunchedEffect(installState.isSuccess, autoRouteLinks, outputPackage) {
+        if (installState.isSuccess && autoRouteLinks && outputPackage != null &&
+            !linkState.isSuccess && !linkState.isRunning && linkState.error == null
         ) {
             applyLinkHandling(enable = true)
         }
@@ -242,16 +230,12 @@ fun ResultScreenContent(outputPath: String) {
             ) {
                 OutputFileCard(
                     outputFile = outputFile,
-                    corners = corners,
-                    font = font,
                     borderColor = borderColor
                 )
 
                 // ADB Install section
                 if (isAdbDisabledByUser) {
                     AdbDisabledHint(
-                        corners = corners,
-                        font = font,
                         borderColor = borderColor,
                         onEnableClick = { adbPreference.onChange(true) }
                     )
@@ -260,44 +244,38 @@ fun ResultScreenContent(outputPath: String) {
                         devices = monitorState.devices,
                         selectedDevice = monitorState.selectedDevice,
                         alreadyInstalled = alreadyInstalled,
-                        isInstalling = isInstalling,
-                        installProgress = installProgress,
-                        installError = installError,
-                        installSuccess = installSuccess,
-                        corners = corners,
-                        font = font,
+                        isInstalling = installState.isRunning,
+                        installProgress = installState.progress,
+                        installError = installState.error,
+                        installSuccess = installState.isSuccess,
                         borderColor = borderColor,
                         onDeviceSelected = { DeviceMonitor.selectDevice(it) },
                         onInstallClick = { installViaAdb() },
                         onRetryClick = {
-                            installError = null
-                            installSuccess = false
+                            installState.error = null
+                            installState.isSuccess = false
                             installViaAdb()
                         },
-                        onDismissError = { installError = null }
+                        onDismissError = { installState.error = null }
                     )
 
                     // Link handling ("open with"). Only meaningful once the patched
                     // app is on the device, so gate on a successful install (or the
                     // app already being present) + a ready, selected device.
                     val device = monitorState.selectedDevice
-                    if (outputPackage != null && device?.isReady == true && (installSuccess || alreadyInstalled)) {
+                    if (outputPackage != null && device?.isReady == true && (installState.isSuccess || alreadyInstalled)) {
                         LinkHandlingSection(
-                            patchedPackage = outputPackage!!,
                             stockPackage = stockPackage?.takeIf { it != outputPackage },
                             disableStockLinks = disableStockLinks,
                             onToggleDisableStock = { disableStockLinks = it },
-                            isApplying = isApplyingLinks,
-                            progress = linkProgress,
-                            error = linkError,
-                            success = linkSuccess,
-                            selectedDeviceName = device.displayName,
-                            corners = corners,
-                            font = font,
+                            isApplying = linkState.isRunning,
+                            progress = linkState.progress,
+                            error = linkState.error,
+                            success = linkState.isSuccess,
                             borderColor = borderColor,
                             onApply = { applyLinkHandling(enable = true) },
                             onRestore = { applyLinkHandling(enable = false) },
-                            onDismissError = { linkError = null },
+                            onDismissError = { linkState.error = null },
                         )
                     }
                 }
@@ -309,8 +287,6 @@ fun ResultScreenContent(outputPath: String) {
                         tempFilesSize = tempFilesSize,
                         tempFilesCleared = tempFilesCleared,
                         autoCleanupEnabled = autoCleanupEnabled,
-                        corners = corners,
-                        font = font,
                         borderColor = borderColor,
                         onCleanupClick = {
                             scope.launch(Dispatchers.IO) {
@@ -331,9 +307,7 @@ fun ResultScreenContent(outputPath: String) {
                 if (!isAdbDisabledByUser && monitorState.isAdbAvailable == false) {
                     Text(
                         text = stringResource(Res.string.result_adb_not_found_hint),
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.widthIn(max = 520.dp)
@@ -342,7 +316,13 @@ fun ResultScreenContent(outputPath: String) {
 
                 // Patch Another button
                 Spacer(Modifier.height(4.dp))
-                PatchAnotherButton(onClick = { navController.popBackStack(HomeScreenRoute, inclusive = false) })
+                MorpheButton(
+                    label = stringResource(Res.string.result_screen_patch_another_button),
+                    variant = MorpheButtonVariant.PRIMARY,
+                    size = MorpheButtonSize.LARGE,
+                    modifier = Modifier.widthIn(max = 520.dp).fillMaxWidth(),
+                    onClick = { navController.popBackStack(HomeScreenRoute, inclusive = false) }
+                )
 
                 Spacer(Modifier.height(8.dp))
             }
@@ -354,7 +334,7 @@ fun ResultScreenContent(outputPath: String) {
                         .align(Alignment.CenterEnd)
                         .fillMaxHeight(),
                     adapter = rememberScrollbarAdapter(scrollState),
-                    style = morpheScrollbarStyle()
+                    style = MorpheScrollbarStyle()
                 )
             }
         }
@@ -364,3 +344,10 @@ fun ResultScreenContent(outputPath: String) {
 @Composable
 internal fun formatFileSize(bytes: Long): String =
     FormatUtils.formatFileSize(bytes, currentLocale())
+
+private class AsyncActionState {
+    var isRunning by mutableStateOf(false)
+    var progress by mutableStateOf("")
+    var error by mutableStateOf<String?>(null)
+    var isSuccess by mutableStateOf(false)
+}

@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheConstants
 import app.morphe.engine.PatchEngine
-import app.morphe.engine.UpdateChecker
 import app.morphe.engine.UpdateInfo
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.ApkOutputNaming
@@ -25,7 +24,6 @@ import app.morphe.engine.model.VersionStatus
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.Logger
-import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
@@ -34,13 +32,14 @@ import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.patching.LogEntry
 import app.morphe.gui.ui.screens.patching.LogLevel
+import app.morphe.gui.ui.screens.patching.parseAndLogEngineMessage
+import app.morphe.gui.ui.screens.patching.resolveStepFailureMessage
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.EnabledSourcesLoader
-import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.PatcherState
 import app.morphe.gui.util.humanizePatchLoadError
+import app.morphe.gui.util.logIfFailed
 import app.morphe.morphe_desktop.generated.resources.*
-import app.morphe.patcher.apk.ApkUtils
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
@@ -77,6 +76,7 @@ class QuickPatchViewModel(
     val uiState: StateFlow<QuickPatchUiState> = _uiState.asStateFlow()
 
     private var patchingJob: Job? = null
+    @Volatile private var isCancelledByUser = false
     private var loadJob: Job? = null
     private var isSplitApk = false
 
@@ -218,20 +218,8 @@ class QuickPatchViewModel(
                 )
 
                 if (!result.anyLoaded) {
+                    result.logIfFailed(prefix = "Quick mode")
                     val firstThrowable = result.loaded.perSource.firstNotNullOfOrNull { it.error }
-                    val technicalError = firstThrowable?.message
-                        ?: result.resolved.firstNotNullOfOrNull { it.error }
-                    val logMessage = when {
-                        technicalError.isNullOrBlank() -> "Quick mode: Failed to load any patches"
-                        technicalError.startsWith("Quick mode:", ignoreCase = true) -> technicalError
-                        technicalError.startsWith("Failed to load", ignoreCase = true) -> "Quick mode: $technicalError"
-                        else -> "Quick mode: Failed to load any patches: $technicalError"
-                    }
-                    if (firstThrowable != null) {
-                        Logger.error(logMessage, firstThrowable)
-                    } else {
-                        Logger.warn(logMessage)
-                    }
                     val firstError = result.resolved.firstNotNullOfOrNull { it.getUserErrorMessage() }
                         ?: firstThrowable?.let { humanizePatchLoadError(it) }
                         ?: getString(Res.string.error_could_not_load_patches)
@@ -486,6 +474,7 @@ class QuickPatchViewModel(
         val apkInfo = _uiState.value.apkInfo ?: return
 
         patchingJob = viewModelScope.launch {
+            isCancelledByUser = false
             stateMachine = null
             _uiState.value = _uiState.value.copy(
                 phase = QuickPatchPhase.DOWNLOADING,
@@ -602,18 +591,7 @@ class QuickPatchViewModel(
                     config = engineConfig,
                     onProgress = { message ->
                         if (_uiState.value.phase == QuickPatchPhase.PATCHING) {
-                            val (cleanMessage, level) = when {
-                                message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
-                                message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
-                                message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
-                                message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
-                                else -> message to LogLevel.INFO
-                            }
-                            when (level) {
-                                LogLevel.ERROR -> Logger.error(cleanMessage)
-                                LogLevel.WARNING -> Logger.warn(cleanMessage)
-                                LogLevel.INFO -> Logger.info(cleanMessage)
-                            }
+                            val (cleanMessage, level) = parseAndLogEngineMessage(message)
                             viewModelScope.launch(Dispatchers.Main) {
                                 val entry = LogEntry(cleanMessage, level)
                                 _uiState.value = _uiState.value.copy(
@@ -628,6 +606,7 @@ class QuickPatchViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
+                if (isCancelledByUser || _uiState.value.phase != QuickPatchPhase.PATCHING) return@launch
                 val exceptionStr = e.stackTraceToString()
                 val newLogs = _uiState.value.logs + LogEntry(exceptionStr, LogLevel.ERROR)
                 _uiState.value = _uiState.value.copy(
@@ -638,7 +617,7 @@ class QuickPatchViewModel(
                 return@launch
             }
 
-            if (_uiState.value.phase != QuickPatchPhase.PATCHING) return@launch
+            if (isCancelledByUser || _uiState.value.phase != QuickPatchPhase.PATCHING) return@launch
 
             Logger.info("Patching complete in %.1f seconds".format(Locale.US, (System.nanoTime() - patchStartNanos) / 1_000_000_000.0))
 
@@ -663,10 +642,7 @@ class QuickPatchViewModel(
                 recordSeenPatches(apkInfo.packageName)
             } else {
                 val errorMsg = engineResult.failureDetail
-                    ?: engineResult.stepResults.lastOrNull { !it.success && it.error != null }?.let {
-                        val stepDisplay = it.step.name.lowercase().replaceFirstChar { c -> c.uppercase() }
-                        getString(Res.string.error_step_failed, stepDisplay, it.error ?: "")
-                    }
+                    ?: resolveStepFailureMessage(engineResult)
                     ?: engineResult.failureReason
                     ?: getString(Res.string.error_patching_unknown)
                 _uiState.value = _uiState.value.copy(
@@ -722,6 +698,7 @@ class QuickPatchViewModel(
      * Cancel patching.
      */
     fun cancelPatching() {
+        isCancelledByUser = true
         patchingJob?.cancel()
         patchingJob = null
         viewModelScope.launch {
@@ -731,7 +708,6 @@ class QuickPatchViewModel(
                 isAllStepsDone = false
             )
         }
-
     }
 
     /**
@@ -809,10 +785,7 @@ data class QuickApkInfo(
     val checksumStatus: ChecksumStatus,
     val architectures: List<String> = emptyList(),
     val minSdk: Int? = null
-) {
-    val formattedSize: String
-        get() = FormatUtils.formatFileSize(fileSize)
-}
+)
 
 /**
  * UI state for quick patch mode.

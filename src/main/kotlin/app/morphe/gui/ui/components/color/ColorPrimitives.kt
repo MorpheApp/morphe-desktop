@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,14 +30,11 @@ import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.ui.components.MorpheColorPickerCard
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 private val SWATCH_SIZE = 22.dp
-
 private val POPUP_DROP = 26.dp
 
 @Composable
@@ -47,18 +43,15 @@ fun MorpheColorChip(
     modifier: Modifier = Modifier,
     onPick: (Int) -> Unit,
 ) {
-    val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
-    val font = LocalMorpheFont.current
     var open by remember { mutableStateOf(false) }
     val yOff = with(LocalDensity.current) { POPUP_DROP.roundToPx() }
     Box(modifier) {
         Box(
             Modifier
                 .size(SWATCH_SIZE)
-                .clip(RoundedCornerShape(corners.small))
+                .clip(MorpheTheme.shapes.small)
                 .background(Color(argb))
-                .border(1.dp, accents.primary.copy(alpha = 0.5f), RoundedCornerShape(corners.small))
+                .border(1.dp, MorpheTheme.colors.primary.copy(alpha = 0.5f), MorpheTheme.shapes.small)
                 .handCursor()
                 .clickable { open = true }
         )
@@ -69,7 +62,7 @@ fun MorpheColorChip(
                 onDismissRequest = { open = false },
                 properties = PopupProperties(focusable = true),
             ) {
-                MorpheColorPickerCard(argb, accents, font, onPick = onPick)
+                MorpheColorPickerCard(argb = argb, showSaved = true, onPick = onPick)
             }
         }
     }
@@ -81,9 +74,6 @@ fun MorpheSwatchRow(
     modifier: Modifier = Modifier,
     onPick: (Int) -> Unit,
 ) {
-    val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
-    val font = LocalMorpheFont.current
     var pickerOpen by remember { mutableStateOf(false) }
     val yOff = with(LocalDensity.current) { POPUP_DROP.roundToPx() }
 
@@ -93,12 +83,12 @@ fun MorpheSwatchRow(
         Box(
             Modifier
                 .size(SWATCH_SIZE)
-                .clip(RoundedCornerShape(corners.small))
+                .clip(MorpheTheme.shapes.small)
                 .background(Color(argb))
                 .border(
                     if (isSel) 2.dp else 1.dp,
-                    if (isSel) accents.primary else Color.White.copy(alpha = 0.2f),
-                    RoundedCornerShape(corners.small),
+                    if (isSel) MorpheTheme.colors.primary else Color.White.copy(alpha = 0.2f),
+                    MorpheTheme.shapes.small,
                 )
                 .handCursor()
                 .clickable { onPick(argb) }
@@ -116,8 +106,8 @@ fun MorpheSwatchRow(
             Box(
                 Modifier
                     .size(SWATCH_SIZE)
-                    .clip(RoundedCornerShape(corners.small))
-                    .border(1.dp, accents.primary.copy(alpha = 0.4f), RoundedCornerShape(corners.small))
+                    .clip(MorpheTheme.shapes.small)
+                    .border(1.dp, MorpheTheme.colors.primary.copy(alpha = 0.4f), MorpheTheme.shapes.small)
                     .handCursor()
                     .clickable { pickerOpen = true },
                 contentAlignment = Alignment.Center,
@@ -125,7 +115,7 @@ fun MorpheSwatchRow(
                 Icon(
                     MorpheIcons.Palette,
                     contentDescription = stringResource(Res.string.custom_color),
-                    tint = accents.primary,
+                    tint = MorpheTheme.colors.primary,
                     modifier = Modifier.size(13.dp),
                 )
             }
@@ -136,7 +126,7 @@ fun MorpheSwatchRow(
                     onDismissRequest = { pickerOpen = false },
                     properties = PopupProperties(focusable = true),
                 ) {
-                    MorpheColorPickerCard(selected, accents, font, onPick = onPick)
+                    MorpheColorPickerCard(argb = selected, showSaved = true, onPick = onPick)
                 }
             }
         }

@@ -5,27 +5,24 @@
 
 package app.morphe.gui.ui.components.color
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.data.model.GradientType
 import app.morphe.gui.ui.components.MorpheAdjustRow
 import app.morphe.gui.ui.components.MorpheChoiceChip
-import app.morphe.gui.ui.components.handCursor
+import app.morphe.gui.ui.components.MorpheIconButton
+import app.morphe.gui.ui.components.MorpheIconButtonSize
+import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -34,18 +31,16 @@ private const val MIN_STOPS = 2
 @Composable
 fun MorpheGradientEditor(
     gradient: MorpheFill.Gradient,
-    font: FontFamily,
     modifier: Modifier = Modifier,
     onChange: (MorpheFill.Gradient) -> Unit,
 ) {
-    val accents = LocalMorpheAccents.current
+    val colors = MorpheTheme.colors
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             GradientType.entries.forEach { type ->
                 MorpheChoiceChip(
                     text = type.label,
                     active = gradient.type == type,
-                    font = font,
                 ) { onChange(gradient.copy(type = type)) }
             }
         }
@@ -65,24 +60,21 @@ fun MorpheGradientEditor(
                     modifier = Modifier.weight(1f).height(20.dp),
                 )
                 if (gradient.stops.size > MIN_STOPS) {
-                    Box(
-                        Modifier.size(20.dp).handCursor().clickable {
+                    MorpheIconButton(
+                        icon = MorpheIcons.Delete,
+                        contentDescription = stringResource(Res.string.gradient_remove_stop_description),
+                        onClick = {
                             onChange(gradient.copy(stops = gradient.stops.filterIndexed { i, _ -> i != index }))
                         },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            MorpheIcons.Delete,
-                            contentDescription = stringResource(Res.string.gradient_remove_stop_description),
-                            tint = accents.primary,
-                            modifier = Modifier.size(15.dp),
-                        )
-                    }
+                        size = MorpheIconButtonSize.COMPACT,
+                        variant = MorpheIconButtonVariant.GHOST,
+                        tint = colors.primary,
+                    )
                 }
             }
         }
 
-        MorpheChoiceChip(text = stringResource(Res.string.gradient_add_stop), active = false, font = font) {
+        MorpheChoiceChip(text = stringResource(Res.string.gradient_add_stop), active = false) {
             onChange(gradient.copy(stops = gradient.stops + MorpheFill.Stop(0.5f, 0xFFFFFFFF.toInt())))
         }
 
@@ -91,7 +83,6 @@ fun MorpheGradientEditor(
                 label = stringResource(Res.string.gradient_angle),
                 value = gradient.angleDeg,
                 range = 0f..360f,
-                font = font,
             ) { onChange(gradient.copy(angleDeg = it)) }
         }
     }

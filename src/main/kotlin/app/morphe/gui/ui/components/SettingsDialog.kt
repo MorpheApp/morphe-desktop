@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
@@ -14,7 +13,6 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,24 +22,39 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
+import app.morphe.engine.UpdateChecker
+import app.morphe.engine.config.EngineConfigRepository
+import app.morphe.engine.util.Logger
+import app.morphe.gui.LocalAdbPreference
+import app.morphe.gui.LocalCustomAccentColor
+import app.morphe.gui.LocalIsPatching
+import app.morphe.gui.LocalLanguageState
+import app.morphe.gui.LocalModeState
+import app.morphe.gui.LocalOnSettingsDismiss
+import app.morphe.gui.LocalOnUpdateChannelChanged
+import app.morphe.gui.LocalSettingsDialogVisible
 import app.morphe.gui.data.model.UpdateChannelPreference
+import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
+import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.components.settings.AdvancedTab
 import app.morphe.gui.ui.components.settings.AppearanceTab
 import app.morphe.gui.ui.components.settings.SystemTab
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.LocalThemeState
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.morphe_desktop.generated.resources.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun SettingsDialog(
@@ -82,9 +95,7 @@ fun SettingsDialog(
     customAccentColorArgb: Int? = null,
     onCustomAccentColorChange: (Int?) -> Unit = {}
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
+    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = MorpheTheme.alphas.borderMuted)
     var selectedCategory by remember { mutableStateOf("Appearance") }
     val contentScroll = remember(selectedCategory) { ScrollState(0) }
     var showChangelogDialog by remember { mutableStateOf(false) }
@@ -119,9 +130,7 @@ fun SettingsDialog(
         ) {
             Text(
                 text = stringResource(Res.string.settings_dialog_title),
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
-                fontSize = 16.sp,
+                style = MorpheTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Row(
@@ -144,9 +153,9 @@ fun SettingsDialog(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(corners.small))
+                                .clip(MorpheTheme.shapes.small)
                                 .background(
-                                    if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                                    if (isSelected) MorpheTheme.colors.primary.copy(alpha = 0.1f)
                                     else Color.Transparent
                                 )
                                 .hoverable(hoverInteraction)
@@ -158,17 +167,15 @@ fun SettingsDialog(
                             Icon(
                                 imageVector = icon,
                                 contentDescription = null,
-                                tint = if (isSelected) MaterialTheme.colorScheme.primary
+                                tint = if (isSelected) MorpheTheme.colors.primary
                                 else MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(Modifier.width(12.dp))
                             Text(
                                 text = stringResource(labelRes),
-                                fontSize = 13.sp,
-                                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
-                                fontFamily = font,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary
+                                style = if (isSelected) MorpheTheme.typography.labelLarge else MorpheTheme.typography.labelMedium,
+                                color = if (isSelected) MorpheTheme.colors.primary
                                 else MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -243,7 +250,7 @@ fun SettingsDialog(
                             .offset(x = 8.dp)
                             .fillMaxHeight(),
                         adapter = rememberScrollbarAdapter(contentScroll),
-                        style = morpheScrollbarStyle(),
+                        style = MorpheScrollbarStyle(),
                     )
                 }
             }
@@ -251,21 +258,179 @@ fun SettingsDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
-                OutlinedButton(
-                    modifier = Modifier.handCursor(),
+                MorpheButton(
+                    label = stringResource(Res.string.close),
                     onClick = onDismiss,
-                    shape = RoundedCornerShape(corners.small),
-                    border = BorderStroke(1.dp, borderColor)
-                ) {
-                    Text(
-                        stringResource(Res.string.close),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontFamily = font
-                    )
-                }
+                    variant = MorpheButtonVariant.OUTLINED,
+                    size = MorpheButtonSize.COMPACT,
+                )
             }
         }
     }
 }
+
+@Composable
+fun SettingsDialogHost() {
+    val showSettingsDialogState = LocalSettingsDialogVisible.current
+    var showSettingsDialog by showSettingsDialogState
+
+    val isPatching = LocalIsPatching.current.value
+    val onDismiss = LocalOnSettingsDismiss.current
+    val onUpdateChannelChanged = LocalOnUpdateChannelChanged.current
+
+    val themeState = LocalThemeState.current
+    val modeState = LocalModeState.current
+    val languageState = LocalLanguageState.current
+    val adbPreference = LocalAdbPreference.current
+    val configRepository: ConfigRepository = koinInject()
+    val engineConfigRepository: EngineConfigRepository = koinInject()
+    val updateCheckRepository: UpdateCheckRepository = koinInject()
+    val scope = rememberCoroutineScope()
+
+    var customAccentColorArgb by LocalCustomAccentColor.current
+    var autoCleanupTempFiles by remember { mutableStateOf(true) }
+    var defaultOutputDirectory by remember { mutableStateOf<String?>(null) }
+    var keystorePath by remember { mutableStateOf<String?>(null) }
+    var keystorePassword by remember { mutableStateOf<String?>(null) }
+    var keystoreAlias by remember { mutableStateOf(DEFAULT_KEYSTORE_ALIAS) }
+    var keystoreEntryPassword by remember { mutableStateOf(DEFAULT_KEYSTORE_PASSWORD) }
+    var keepArchitectures by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var collapsibleSectionStates by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
+    var updateChannelPreference by remember { mutableStateOf(UpdateChannelPreference.STABLE) }
+    var autoRouteLinksAfterInstall by remember { mutableStateOf(false) }
+    var disableStockLinksAfterInstall by remember { mutableStateOf(false) }
+    var developerOptions by remember { mutableStateOf(false) }
+    var gitHubPat by remember { mutableStateOf("") }
+
+    suspend fun loadSettings() {
+        val (config, engineConfig, channel) = withContext(Dispatchers.IO) {
+            val cfg = configRepository.loadConfig()
+            val engCfg = engineConfigRepository.loadConfig()
+            val ver = UpdateChecker.currentVersion() ?: ""
+            val ch = configRepository.getOrInitUpdateChannelPreference(ver)
+            Triple(cfg, engCfg, ch)
+        }
+        autoCleanupTempFiles = engineConfig.autoCleanupTempFiles
+        defaultOutputDirectory = engineConfig.resolvedDefaultOutputDirectory()?.absolutePath
+        keystorePath = engineConfig.resolvedKeystorePath()?.absolutePath
+        keystorePassword = engineConfig.keystorePassword
+        keystoreAlias = engineConfig.keystoreAlias
+        keystoreEntryPassword = engineConfig.keystoreEntryPassword
+        keepArchitectures = engineConfig.keepArchitectures
+        collapsibleSectionStates = config.collapsibleSectionStates
+        autoRouteLinksAfterInstall = engineConfig.autoRouteLinksAfterInstall
+        disableStockLinksAfterInstall = engineConfig.disableStockLinksAfterInstall
+        developerOptions = engineConfig.developerOptions
+        gitHubPat = engineConfig.gitHubPat
+        updateChannelPreference = channel
+    }
+
+    LaunchedEffect(Unit) {
+        loadSettings()
+    }
+
+    if (showSettingsDialog) {
+        SettingsDialog(
+            currentLanguage = languageState.current,
+            onLanguageChange = { code ->
+                languageState.onChange(code)
+                scope.launch { configRepository.setLanguage(code) }
+            },
+            currentTheme = themeState.current,
+            onThemeChange = { themeState.onChange(it) },
+            autoCleanupTempFiles = autoCleanupTempFiles,
+            onAutoCleanupChange = { enabled ->
+                autoCleanupTempFiles = enabled
+                scope.launch {
+                    engineConfigRepository.setAutoCleanupTempFiles(enabled)
+                }
+            },
+            defaultOutputDirectory = defaultOutputDirectory,
+            onDefaultOutputDirectoryChange = { path ->
+                defaultOutputDirectory = path
+                scope.launch { engineConfigRepository.setDefaultOutputDirectory(path) }
+            },
+            useExpertMode = !modeState.isSimplified,
+            onExpertModeChange = { enabled ->
+                modeState.onChange(!enabled)
+            },
+            developerOptions = developerOptions,
+            onDeveloperOptionsChange = { enabled ->
+                developerOptions = enabled
+                scope.launch { engineConfigRepository.setDeveloperOptions(enabled) }
+            },
+            onDismiss = {
+                showSettingsDialog = false
+                onDismiss()
+            },
+            isPatching = isPatching,
+            keystorePath = keystorePath,
+            keystorePassword = keystorePassword,
+            keystoreAlias = keystoreAlias,
+            keystoreEntryPassword = keystoreEntryPassword,
+            onKeystorePathChange = { path ->
+                keystorePath = path
+                scope.launch { engineConfigRepository.setKeystorePath(path) }
+            },
+            onKeystoreCredentialsChange = { pwd, alias, entryPwd ->
+                keystorePassword = pwd
+                keystoreAlias = alias
+                entryPwd.let { keystoreEntryPassword = it }
+                scope.launch {
+                    engineConfigRepository.setKeystoreDetails(
+                        path = keystorePath,
+                        password = pwd,
+                        alias = alias,
+                        entryPassword = entryPwd
+                    )
+                }
+            },
+            keepArchitectures = keepArchitectures,
+            onKeepArchitecturesChange = { updated ->
+                keepArchitectures = updated
+                scope.launch { engineConfigRepository.setKeepArchitectures(updated) }
+            },
+            updateChannelPreference = updateChannelPreference,
+            onUpdateChannelChange = { pref ->
+                if (pref != updateChannelPreference) {
+                    updateChannelPreference = pref
+                    scope.launch {
+                        Logger.info("Settings: update channel changed to $pref, persisting + notifying host")
+                        configRepository.setUpdateChannelPreference(pref)
+                        updateCheckRepository.clearCache()
+                        onUpdateChannelChanged()
+                        Logger.info("Settings: onUpdateChannelChanged() invoked")
+                    }
+                }
+            },
+            autoStartAdb = adbPreference.enabled,
+            onAutoStartAdbChange = { adbPreference.onChange(it) },
+            autoRouteLinksAfterInstall = autoRouteLinksAfterInstall,
+            onAutoRouteLinksChange = { enabled ->
+                autoRouteLinksAfterInstall = enabled
+                scope.launch { engineConfigRepository.setAutoRouteLinksAfterInstall(enabled) }
+            },
+            disableStockLinksAfterInstall = disableStockLinksAfterInstall,
+            onDisableStockLinksChange = { enabled ->
+                disableStockLinksAfterInstall = enabled
+                scope.launch { engineConfigRepository.setDisableStockLinksAfterInstall(enabled) }
+            },
+            collapsibleSectionStates = collapsibleSectionStates,
+            onCollapsibleSectionToggle = { id, expanded ->
+                collapsibleSectionStates = collapsibleSectionStates + (id to expanded)
+                scope.launch { configRepository.setCollapsibleSectionExpanded(id, expanded) }
+            },
+            gitHubPat = gitHubPat,
+            onGitHubPatChange = { pat ->
+                gitHubPat = pat
+                scope.launch { engineConfigRepository.setGitHubPat(pat) }
+            },
+            customAccentColorArgb = customAccentColorArgb,
+            onCustomAccentColorChange = {
+                customAccentColorArgb = it
+                scope.launch { configRepository.setCustomAccentColorArgb(it) }
+            }
+        )
+    }
+}
+

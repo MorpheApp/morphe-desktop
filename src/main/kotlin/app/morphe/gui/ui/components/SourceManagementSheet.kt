@@ -6,8 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -37,23 +34,19 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.channelColor
-import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Cursor
 import java.io.File
@@ -68,7 +61,7 @@ import org.koin.compose.koinInject
  * cannot be deleted or renamed (mirrors morphe-manager rules). Other sources
  * can be edited or removed.
  *
- * Caller wires actions to [PatchSourceManager] / [ConfigRepository] equivalents.
+ * Caller wires actions to [PatchSourceManager][app.morphe.gui.data.repository.PatchSourceManager] / [ConfigRepository][app.morphe.gui.data.repository.ConfigRepository] equivalents.
  */
 /**
  * How rows in the management sheet behave:
@@ -115,11 +108,6 @@ fun SourceManagementSheet(
     activeSourceId: String? = null,
     onSelectSingle: (sourceId: String) -> Unit = {},
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    val borderColor = MaterialTheme.colorScheme.outlineVariant
-
     var showAddDialog by remember { mutableStateOf(false) }
     var editingSource by remember { mutableStateOf<PatchSource?>(null) }
 
@@ -168,19 +156,18 @@ fun SourceManagementSheet(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    stringResource(Res.string.source_sheet_title),
-                    fontFamily = font,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
+                    text = stringResource(Res.string.source_sheet_title),
+                    style = MorpheTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
-                IconButton(onClick = onRefresh, enabled = enabled, modifier = Modifier.size(28.dp).handCursor(enabled)) {
-                    Icon(
-                        imageVector = MorpheIcons.Refresh,
-                        contentDescription = stringResource(Res.string.source_sheet_reload_description),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (enabled) 0.7f else 0.3f),
-                        modifier = Modifier.size(16.dp),
-                    )
-                }
+                MorpheIconButton(
+                    icon = MorpheIcons.Refresh,
+                    contentDescription = stringResource(Res.string.source_sheet_reload_description),
+                    onClick = onRefresh,
+                    enabled = enabled,
+                    size = MorpheIconButtonSize.COMPACT,
+                    variant = MorpheIconButtonVariant.GHOST,
+                )
             }
         },
         text = {
@@ -207,9 +194,7 @@ fun SourceManagementSheet(
                             stringResource(Res.string.source_sheet_quick_mode_hint)
                         else -> stringResource(Res.string.source_sheet_multi_mode_hint)
                     },
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
@@ -244,7 +229,7 @@ fun SourceManagementSheet(
                                         .coerceIn(0, workingOrder.lastIndex)
                                     if (desired != curIdx) {
                                         workingOrder = workingOrder.toMutableList()
-                                            .apply { add(desired, removeAt(curIdx)) }
+                                             .apply { add(desired, removeAt(curIdx)) }
                                     }
                                 }
                             )
@@ -260,9 +245,6 @@ fun SourceManagementSheet(
                         channel = sourceChannels[source.id],
                         isLoading = isLoading,
                         error = sourceErrors[source.id],
-                        accentColor = accents.primary,
-                        borderColor = borderColor,
-                        font = font,
                         enabled = enabled,
                         mode = mode,
                         isActiveSelection = source.id == activeSourceId,
@@ -287,12 +269,12 @@ fun SourceManagementSheet(
 
                 Spacer(Modifier.height(2.dp))
 
-                MorpheChoiceChip(
-                    text = stringResource(Res.string.add_source),
-                    active = false,
-                    font = font,
-                    modifier = Modifier.fillMaxWidth(),
+                MorpheButton(
+                    label = stringResource(Res.string.add_source),
                     icon = MorpheIcons.Add,
+                    variant = MorpheButtonVariant.OUTLINED,
+                    size = MorpheButtonSize.DEFAULT,
+                    modifier = Modifier.fillMaxWidth(),
                     enabled = enabled,
                     onClick = { showAddDialog = true },
                 )
@@ -309,24 +291,18 @@ fun SourceManagementSheet(
                             .fillMaxHeight()
                             .padding(vertical = 4.dp),
                         adapter = rememberScrollbarAdapter(scrollState),
-                        style = morpheScrollbarStyle()
+                        style = MorpheScrollbarStyle()
                     )
                 }
             }
         },
         confirmButton = {
-            TextButton(
+            MorpheButton(
+                label = stringResource(Res.string.source_sheet_done_button),
                 onClick = onDismiss,
-                shape = RoundedCornerShape(corners.small),
-                modifier = Modifier.handCursor(),
-            ) {
-                Text(
-                    stringResource(Res.string.source_sheet_done_button),
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 11.sp
-                )
-            }
+                variant = MorpheButtonVariant.GHOST,
+                size = MorpheButtonSize.COMPACT,
+            )
         }
     )
 
@@ -361,9 +337,6 @@ private fun SourceRow(
     channel: Channel?,
     isLoading: Boolean,
     error: String? = null,
-    accentColor: Color,
-    borderColor: Color,
-    font: FontFamily,
     enabled: Boolean,
     onToggleEnabled: (Boolean) -> Unit,
     onEdit: () -> Unit,
@@ -383,8 +356,8 @@ private fun SourceRow(
     dragOffsetY: Float,
     onMeasured: (heightPx: Int) -> Unit,
 ) {
-    val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
+    val colors = MorpheTheme.colors
+    val shapes = MorpheTheme.shapes
     val hoverInteraction = remember(source.id) { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
     val isEnabled = source.enabled
@@ -397,28 +370,21 @@ private fun SourceRow(
     // SINGLE_SELECT highlight when this row is the picked one.
     val isHighlighted = if (mode == SourceSheetMode.SINGLE_SELECT) isActiveSelection else isEnabled
 
-    // The status LED reflects the source's state: red on load failure, otherwise its
-    // release-channel color (green stable-latest, amber stable-older, blue dev-latest,
-    // red dev-older, plus the local tint). Same color source as the home pill LEDs, so
-    // the two always agree. While resolving, channelColor's UNKNOWN default applies.
-    val statusColor = if (error != null) MaterialTheme.colorScheme.error
-                      else channelColor(channel)
-
     val animatedBorder by animateColorAsState(
         targetValue = when {
-            isHovered && canInteract -> accentColor.copy(alpha = if (isHighlighted) 0.7f else 0.45f)
-            isHighlighted -> accentColor.copy(alpha = 0.35f)
-            else -> borderColor
+            isHovered && canInteract -> colors.primary.copy(alpha = if (isHighlighted) 0.7f else 0.45f)
+            isHighlighted -> colors.primary.copy(alpha = 0.35f)
+            else -> MaterialTheme.colorScheme.outlineVariant
         },
-        animationSpec = tween(150)
+        animationSpec = MorpheMotion.fastTween()
     )
     val animatedBg by animateColorAsState(
         targetValue = when {
-            isHovered && canInteract -> accentColor.copy(alpha = if (isHighlighted) 0.12f else 0.05f)
-            isHighlighted -> accentColor.copy(alpha = 0.06f)
+            isHovered && canInteract -> colors.primary.copy(alpha = if (isHighlighted) 0.12f else 0.05f)
+            isHighlighted -> colors.primary.copy(alpha = 0.06f)
             else -> Color.Transparent
         },
-        animationSpec = tween(150)
+        animationSpec = MorpheMotion.fastTween()
     )
 
     val baseBg = if (isHighlighted)
@@ -432,14 +398,14 @@ private fun SourceRow(
             .graphicsLayer { translationY = dragOffsetY }
             .onSizeChanged { onMeasured(it.height) }
             .fillMaxWidth()
-            .clip(RoundedCornerShape(corners.medium))
+            .clip(shapes.medium)
             .border(
                 1.dp,
-                if (isDragging) accentColor.copy(alpha = 0.7f) else animatedBorder,
-                RoundedCornerShape(corners.medium)
+                if (isDragging) colors.primary.copy(alpha = 0.7f) else animatedBorder,
+                shapes.medium
             )
             .background(baseBg)
-            .background(if (isDragging) accentColor.copy(alpha = 0.10f) else animatedBg)
+            .background(if (isDragging) colors.primary.copy(alpha = 0.10f) else animatedBg)
             .hoverable(hoverInteraction)
             .then(
                 if (canInteract) Modifier
@@ -463,16 +429,14 @@ private fun SourceRow(
                     Icon(
                         imageVector = MorpheIcons.DragIndicator,
                         contentDescription = stringResource(Res.string.drag_to_reorder),
-                        tint = if (isDragging) accentColor
+                        tint = if (isDragging) colors.primary
                                else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
                         modifier = Modifier.size(15.dp)
                     )
                 }
                 Text(
                     text = position.toString(),
-                    fontSize = 11.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 3.dp, end = 7.dp)
                 )
@@ -482,9 +446,8 @@ private fun SourceRow(
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         text = source.name,
-                        fontSize = 12.sp,
-                        fontWeight = if (isEnabled) FontWeight.SemiBold else FontWeight.Normal,
-                        fontFamily = font,
+                        style = if (isEnabled) MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                                else MorpheTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         // Prevent the name from cramming against the badge by truncating it
                         // with an ellipsis. weight(fill = false) bounds the width so it
@@ -493,23 +456,14 @@ private fun SourceRow(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false),
                     )
-                    Surface(
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(percent = 50),
-                    ) {
-                        Text(
-                            text = when (source.type) {
-                                PatchSourceType.DEFAULT -> stringResource(Res.string.source_sheet_type_preinstalled)
-                                PatchSourceType.GITHUB, PatchSourceType.GITLAB -> stringResource(Res.string.source_sheet_remote_label)
-                                PatchSourceType.LOCAL -> stringResource(Res.string.source_sheet_local_label)
-                            },
-                            fontSize = 10.sp,
-                            fontFamily = font,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                        )
-                    }
+                    MorpheBadge(
+                        text = when (source.type) {
+                            PatchSourceType.DEFAULT -> stringResource(Res.string.source_sheet_type_preinstalled)
+                            PatchSourceType.GITHUB, PatchSourceType.GITLAB -> stringResource(Res.string.source_sheet_remote_label)
+                            PatchSourceType.LOCAL -> stringResource(Res.string.source_sheet_local_label)
+                        },
+                        tone = MorpheBadgeTone.Neutral,
+                    )
                 }
                 val builtinLabel = stringResource(Res.string.source_sheet_builtin)
                 val githubLabel = stringResource(Res.string.github_label)
@@ -522,9 +476,7 @@ private fun SourceRow(
                         PatchSourceType.GITLAB -> source.url?.removePrefix("https://gitlab.com/") ?: gitlabLabel
                         PatchSourceType.LOCAL -> source.filePath?.let { File(it).name } ?: localFileLabel
                     },
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -533,11 +485,8 @@ private fun SourceRow(
                     Spacer(Modifier.height(3.dp))
                     Text(
                         text = error,
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 14.sp,
-                        color = MaterialTheme.colorScheme.error,
+                        style = MorpheTheme.typography.labelSmall,
+                        color = colors.danger,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -552,32 +501,26 @@ private fun SourceRow(
                 if (error != null) {
                     Text(
                         text = stringResource(Res.string.failed),
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.error,
+                        style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                        color = colors.danger,
                     )
                 } else if (isEnabled && version != null) {
                     Text(
                         text = version,
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Medium,
-                        color = accentColor
+                        style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                        color = colors.primary
                     )
                     ChannelBadge(channel = channel)
                 } else if (isEnabled && isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(12.dp),
                         strokeWidth = 2.dp,
-                        color = accentColor,
+                        color = colors.primary,
                     )
                     Text(
                         text = stringResource(Res.string.source_sheet_status_resolving),
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Medium,
-                        color = accentColor,
+                        style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                        color = colors.primary,
                     )
                 }
             }
@@ -588,29 +531,27 @@ private fun SourceRow(
                     canMoveDown = canMoveDown,
                     onMoveUp = onMoveUp,
                     onMoveDown = onMoveDown,
-                    accentColor = accentColor,
+                    accentColor = colors.primary,
                 )
                 Spacer(Modifier.width(2.dp))
             }
             // Edit is shown for all (including default), delete is hidden for default
             if (enabled) {
-                IconButton(onClick = onEdit, modifier = Modifier.size(28.dp)) {
-                    Icon(
-                        imageVector = MorpheIcons.Edit,
-                        contentDescription = stringResource(Res.string.source_sheet_edit_description),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
-                        modifier = Modifier.size(14.dp)
-                    )
-                }
+                MorpheIconButton(
+                    icon = MorpheIcons.Edit,
+                    contentDescription = stringResource(Res.string.source_sheet_edit_description),
+                    onClick = onEdit,
+                    size = MorpheIconButtonSize.COMPACT,
+                    variant = MorpheIconButtonVariant.GHOST,
+                )
                 if (!isDefault) {
-                    IconButton(onClick = onRemove, modifier = Modifier.size(28.dp)) {
-                        Icon(
-                            imageVector = MorpheIcons.Close,
-                            contentDescription = stringResource(Res.string.remove),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
-                            modifier = Modifier.size(14.dp)
-                        )
-                    }
+                    MorpheIconButton(
+                        icon = MorpheIcons.Close,
+                        contentDescription = stringResource(Res.string.remove),
+                        onClick = onRemove,
+                        size = MorpheIconButtonSize.COMPACT,
+                        variant = MorpheIconButtonVariant.GHOST,
+                    )
                 }
                 Spacer(Modifier.width(4.dp))
             }
@@ -618,7 +559,7 @@ private fun SourceRow(
                 SourceSheetMode.MULTI_TOGGLE -> MorpheSwitch(
                     checked = isEnabled,
                     onCheckedChange = onToggleEnabled,
-                    accentColor = accentColor,
+                    accentColor = colors.primary,
                     enabled = enabled,
                     modifier = Modifier.scale(0.8f)
                 )
@@ -631,7 +572,7 @@ private fun SourceRow(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    val containerColor = if (isActiveSelection) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
+                    val containerColor = if (isActiveSelection) colors.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
                     val contentColor = if (isActiveSelection) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     
                     StatusCircleIcon(
@@ -743,7 +684,6 @@ private fun DeveloperMppExclusionsSection(enabled: Boolean) {
 
     if (!loaded || !developerOptions) return
 
-    val font = LocalMorpheFont.current
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Spacer(Modifier.height(4.dp))
         Box(
@@ -753,10 +693,8 @@ private fun DeveloperMppExclusionsSection(enabled: Boolean) {
                 .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
         )
         Text(
-            stringResource(Res.string.source_sheet_ignored_mpp_title),
-            fontFamily = font,
-            fontWeight = FontWeight.Medium,
-            fontSize = 11.sp,
+            text = stringResource(Res.string.source_sheet_ignored_mpp_title),
+            style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
             color = MaterialTheme.colorScheme.onSurface,
         )
         ExcludedPatternsEditor(
@@ -782,9 +720,6 @@ private fun ExcludedPatternsEditor(
     onChange: (List<String>) -> Unit,
     enabled: Boolean,
 ) {
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
     var draft by remember { mutableStateOf("") }
 
     fun commitDraft() {
@@ -798,35 +733,26 @@ private fun ExcludedPatternsEditor(
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = stringResource(Res.string.source_sheet_ignored_mpp_hint),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            lineHeight = 15.sp,
+            style = MorpheTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         SlimTextField(
             value = draft,
             onValueChange = { draft = it },
             placeholder = stringResource(Res.string.source_sheet_ignored_mpp_placeholder),
-            font = font,
-            accents = accents,
-            corners = corners,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth(),
             trailing = {
-                IconButton(
+                MorpheIconButton(
+                    icon = MorpheIcons.Add,
+                    contentDescription = stringResource(Res.string.source_sheet_add_pattern_description),
                     onClick = { commitDraft() },
                     enabled = enabled && draft.isNotBlank(),
-                    modifier = Modifier.size(24.dp),
-                ) {
-                    Icon(
-                        imageVector = MorpheIcons.Add,
-                        contentDescription = stringResource(Res.string.source_sheet_add_pattern_description),
-                        modifier = Modifier.size(16.dp),
-                        tint = if (draft.isNotBlank()) accents.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                    )
-                }
+                    size = MorpheIconButtonSize.COMPACT,
+                    variant = MorpheIconButtonVariant.GHOST,
+                    tint = if (draft.isNotBlank()) MorpheTheme.colors.primary
+                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                )
             },
         )
         patterns.forEach { pat ->
@@ -837,24 +763,18 @@ private fun ExcludedPatternsEditor(
             ) {
                 Text(
                     text = pat,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
+                    style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f),
                 )
-                IconButton(
+                MorpheIconButton(
+                    icon = MorpheIcons.Close,
+                    contentDescription = stringResource(Res.string.source_sheet_remove_pattern_description),
                     onClick = { onChange(patterns.filterNot { it == pat }) },
                     enabled = enabled,
-                    modifier = Modifier.size(20.dp),
-                ) {
-                    Icon(
-                        imageVector = MorpheIcons.Close,
-                        contentDescription = stringResource(Res.string.source_sheet_remove_pattern_description),
-                        modifier = Modifier.size(13.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                    )
-                }
+                    size = MorpheIconButtonSize.COMPACT,
+                    variant = MorpheIconButtonVariant.GHOST,
+                )
             }
         }
     }

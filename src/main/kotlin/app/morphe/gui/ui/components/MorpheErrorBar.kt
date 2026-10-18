@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,12 +33,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -66,18 +61,14 @@ fun MorpheErrorBar(
     modifier: Modifier = Modifier,
     isWarning: Boolean = false,
 ) {
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-
-    val accentColor = if (isWarning) accents.warning else MaterialTheme.colorScheme.error
+    val accentColor = if (isWarning) MorpheTheme.colors.warning else MaterialTheme.colorScheme.error
     val borderCol = accentColor.copy(alpha = 0.4f)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(corners.small))
-            .border(1.dp, borderCol, RoundedCornerShape(corners.small))
+            .clip(MorpheTheme.shapes.small)
+            .border(1.dp, borderCol, MorpheTheme.shapes.small)
             .background(MaterialTheme.colorScheme.surface)
             .background(accentColor.copy(alpha = 0.10f))
             .drawBehind {
@@ -99,10 +90,7 @@ fun MorpheErrorBar(
         Spacer(Modifier.width(12.dp))
         Text(
             text = message,
-            fontFamily = font,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            lineHeight = 16.sp,
+            style = MorpheTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
@@ -113,13 +101,13 @@ fun MorpheErrorBar(
         val dismissBg by animateColorAsState(
             if (isDismissHovered) accentColor.copy(alpha = 0.12f)
             else Color.Transparent,
-            animationSpec = tween(150)
+            animationSpec = MorpheMotion.fastTween()
         )
         Box(
             modifier = Modifier
                 .height(28.dp)
                 .hoverable(dismissHover)
-                .clip(RoundedCornerShape(corners.small))
+                .clip(MorpheTheme.shapes.small)
                 .background(dismissBg)
                 .clickable { onDismiss() }
                 .padding(horizontal = 12.dp),
@@ -127,9 +115,7 @@ fun MorpheErrorBar(
         ) {
             Text(
                 text = stringResource(Res.string.dismiss),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
+                style = MorpheTheme.typography.labelSmall,
                 color = if (isDismissHovered) accentColor
                         else accentColor.copy(alpha = 0.7f)
             )

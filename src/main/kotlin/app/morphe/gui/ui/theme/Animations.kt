@@ -18,6 +18,25 @@ object Defaults {
 }
 
 /**
+ * Canonical motion tokens and animation specs.
+ *
+ * - [DURATION_FAST]: Micro-interactions, quick hover fades, tooltips (120ms).
+ * - [DURATION_MEDIUM]: Standard control state animations, color transitions, selections (180ms).
+ * - [DURATION_NORMAL]: Complex element transitions, expanding accordion panels (250ms).
+ */
+object MorpheMotion {
+    const val DURATION_FAST = 120
+    const val DURATION_MEDIUM = 180
+    const val DURATION_NORMAL = 250
+
+    fun <T> fastTween(easing: Easing = FastOutSlowInEasing): TweenSpec<T> =
+        tween(durationMillis = DURATION_FAST, easing = easing)
+
+    fun <T> mediumTween(easing: Easing = FastOutSlowInEasing): TweenSpec<T> =
+        tween(durationMillis = DURATION_MEDIUM, easing = easing)
+}
+
+/**
  * Screen transition animations used across Compose Navigation and screen content.
  */
 object Animations {
@@ -27,7 +46,6 @@ object Animations {
     ) = tween<T>(duration, easing = easing)
 
     // Base fade animations
-    val fadeIn = fadeIn(animationSpec = defaultTween())
     val fadeOut = fadeOut(animationSpec = defaultTween())
 
     // Screen transitions (zoom + fade)
