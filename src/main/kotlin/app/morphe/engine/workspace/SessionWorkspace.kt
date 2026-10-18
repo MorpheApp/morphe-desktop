@@ -13,7 +13,6 @@ import java.io.File
  */
 class SessionWorkspace(
     val root: File,
-    val isCustom: Boolean,
 ) {
     /**
      * When true, this workspace will not be deleted on exit, preserving files for debugging.
@@ -26,17 +25,10 @@ class SessionWorkspace(
     fun file(name: String): File = File(root, name)
 
     /**
-     * Cleans up the workspace unless [retain] is true.
-     * For auto-generated sessions, deletes the session directory recursively.
-     * For user-specified custom directories, clears the contents to preserve the container.
+     * Deletes the session directory recursively unless [retain] is true.
      */
     fun cleanup(): Boolean = !retain && try {
-        if (isCustom) {
-            root.listFiles()?.forEach { it.deleteRecursivelyInParallel() }
-            true
-        } else {
-            root.deleteRecursivelyInParallel()
-        }
+        root.deleteRecursivelyInParallel()
     } catch (_: Exception) {
         false
     }
