@@ -1,3 +1,10 @@
+# [1.19.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.5...v1.19.0-dev.6) (2026-10-18)
+
+
+### Bug Fixes
+
+* Resolve IDE code inspections ([#366](https://github.com/MorpheApp/morphe-desktop/issues/366)) ([c4d13af](https://github.com/MorpheApp/morphe-desktop/commit/c4d13af90fe773ae02ac0def77dcea665fc2faa8))
+
 # [1.19.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.4...v1.19.0-dev.5) (2026-10-18)
 
 
