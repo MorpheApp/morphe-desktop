@@ -1,3 +1,10 @@
+# [1.19.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.4...v1.19.0-dev.5) (2026-10-18)
+
+
+### Bug Fixes
+
+* Unify design system components ([#358](https://github.com/MorpheApp/morphe-desktop/issues/358)) ([4695c01](https://github.com/MorpheApp/morphe-desktop/commit/4695c0164223b79c9ea0eadd30538d5e1990ad47))
+
 # [1.19.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.3...v1.19.0-dev.4) (2026-10-17)
 
 
