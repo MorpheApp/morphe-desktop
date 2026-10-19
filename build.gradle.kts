@@ -207,6 +207,7 @@ tasks {
 
             // Libraries using ServiceLoader (SPI) or reflection
             exclude(dependency("io.ktor:.*"))
+            exclude(dependency("org.slf4j:.*"))
             exclude(dependency("com.squareup.okhttp3:.*"))
             exclude(dependency("io.insert-koin:.*"))
             exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-swing"))
