@@ -7,8 +7,6 @@
 
 -keep class kotlin.** { *; }
 -keep class kotlinx.** { *; }
--keep class org.jetbrains.skia.** { *; }
--keep class org.jetbrains.skiko.** { *; }
 -keep class org.slf4j.nop.** { *; }
 
 # Bouncy Castle
@@ -31,12 +29,6 @@
 
 # Ktor (Networking - uses reflection/ServiceLoader)
 -keep class io.ktor.** { *; }
-
-# JNA (Native access)
--keep class com.sun.jna.** { *; }
-
-# OSHI (Hardware telemetry)
--keep class oshi.** { *; }
 
 # FileKit (Native file dialogs)
 -keep class io.github.vinceglb.filekit.** { *; }
