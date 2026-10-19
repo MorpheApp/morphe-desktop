@@ -1,3 +1,10 @@
+# [1.19.0-dev.15](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.14...v1.19.0-dev.15) (2026-10-19)
+
+
+### Bug Fixes
+
+* Restore SLF4J service provider in fat JAR ([#376](https://github.com/MorpheApp/morphe-desktop/issues/376)) ([ed07db7](https://github.com/MorpheApp/morphe-desktop/commit/ed07db7a1d20bd05d1dd62de74b4c53d59c97105))
+
 # [1.19.0-dev.14](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.13...v1.19.0-dev.14) (2026-10-19)
 
 
