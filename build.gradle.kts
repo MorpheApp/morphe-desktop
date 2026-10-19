@@ -70,7 +70,8 @@ repositories {
 val bootstrapDependencies = configurations.create("bootstrapDependencies") {
     isCanBeConsumed = false
     isCanBeResolved = true
-    isTransitive = false
+    isTransitive = true
+    extendsFrom(configurations.implementation.get())
 }
 
 dependencies {
@@ -78,15 +79,6 @@ dependencies {
     implementation(libs.arsclib)
     implementation(libs.morphe.library)
     implementation(libs.picocli)
-
-    // -- Bootstrap (Code Generation) ---------------------------------------
-    bootstrapDependencies(libs.jna.core)
-    bootstrapDependencies(libs.jna.platform)
-    bootstrapDependencies(libs.skiko.macos.x64)
-    bootstrapDependencies(libs.skiko.macos.arm64)
-    bootstrapDependencies(libs.skiko.linux.x64)
-    bootstrapDependencies(libs.skiko.linux.arm64)
-    bootstrapDependencies(libs.skiko.windows.x64)
 
     // -- Compose Desktop ---------------------------------------------------
     // Platform-independent: single JAR runs on all supported OSes.
@@ -160,16 +152,23 @@ tasks {
         val artifactFiles = bootstrapDependencies.incoming.files
         inputs.files(artifactFiles)
         
-        val skikoVersion = libs.versions.skiko.get()
+        val skikoVersionProvider = provider {
+            bootstrapDependencies.incoming.resolutionResult.allComponents
+                .mapNotNull { it.moduleVersion }
+                .firstOrNull { it.group == "org.jetbrains.skiko" }
+                ?.version
+                ?: error("Could not resolve Skiko version from Compose dependencies")
+        }
         val jnaVersion = libs.versions.jna.get()
 
-        inputs.property("skikoVersion", skikoVersion)
+        inputs.property("skikoVersion", skikoVersionProvider)
         inputs.property("jnaVersion", jnaVersion)
         
         val outputDir = layout.buildDirectory.dir("generated/source/bootstrap/main/app/morphe/engine")
         outputs.dir(outputDir)
         
         doLast {
+            val skikoVersion = skikoVersionProvider.get()
             val outDir = outputDir.get().asFile
             outDir.mkdirs()
             val outFile = File(outDir, "BootstrapConstants.kt")
@@ -451,19 +450,6 @@ tasks {
     named("shadowDistZip") { dependsOn(overwriteShadowJar) }
     named("shadowDistTar") { dependsOn(overwriteShadowJar) }
     named("startShadowScripts") { dependsOn(overwriteShadowJar) }
-
-    register("printSkikoVersion") {
-        group = "help"
-        description = "Prints the Skiko version resolved by Jetpack Compose"
-        doLast {
-            val skikoVersion = configurations.runtimeClasspath.get().incoming.resolutionResult.allComponents
-                .mapNotNull { it.moduleVersion }
-                .firstOrNull { it.group == "org.jetbrains.skiko" }
-                ?.version
-                ?: "NOT FOUND"
-            println("🎯 REQUIRED SKIKO VERSION: $skikoVersion")
-        }
-    }
 }
 
 // ============================================================================
