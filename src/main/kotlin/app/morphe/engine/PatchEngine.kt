@@ -167,7 +167,9 @@ object PatchEngine {
         }
 
         // Early validation: If custom keystore is configured for signing, it must exist and be readable.
-        if (!config.unsigned && config.keystoreDetails != null) {
+        if (!config.unsigned && config.keystoreDetails != null &&
+            config.keystoreDetails.keyStore != MorpheData.defaultKeystoreFile
+        ) {
             val customKeystore = config.keystoreDetails.keyStore
             if (!customKeystore.exists()) {
                 val msg = "Keystore file not found at ${customKeystore.absolutePath}"
