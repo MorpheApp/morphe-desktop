@@ -1,3 +1,10 @@
+# [1.19.0-dev.8](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.7...v1.19.0-dev.8) (2026-10-19)
+
+
+### Features
+
+* Port `Lava lamp` background animation ([#369](https://github.com/MorpheApp/morphe-desktop/issues/369)) ([6f631e4](https://github.com/MorpheApp/morphe-desktop/commit/6f631e4e3b2a9c0d681746e210fbd794092e754e))
+
 # [1.19.0-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.6...v1.19.0-dev.7) (2026-10-18)
 
 
