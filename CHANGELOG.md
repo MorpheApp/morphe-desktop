@@ -1,3 +1,10 @@
+# [1.19.0-dev.11](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.10...v1.19.0-dev.11) (2026-10-19)
+
+
+### Bug Fixes
+
+* Update patcher dependency ([b02ca08](https://github.com/MorpheApp/morphe-desktop/commit/b02ca08c0f9de7a8f80dd31089e401a6790cdf53))
+
 # [1.19.0-dev.10](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.9...v1.19.0-dev.10) (2026-10-19)
 
 
