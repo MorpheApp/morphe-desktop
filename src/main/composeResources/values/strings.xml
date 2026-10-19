@@ -750,6 +750,7 @@
     <string name="settings_background_snow">Snow</string>
     <string name="settings_background_grid">Grid</string>
     <string name="settings_background_particles">Particles</string>
+    <string name="settings_background_lava">Lava lamp</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Parallax effect</string>
     <string name="settings_toggle_parallax_desc">Smooth background shifting when moving the mouse</string>

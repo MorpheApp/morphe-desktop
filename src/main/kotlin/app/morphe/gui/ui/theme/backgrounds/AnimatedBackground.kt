@@ -27,6 +27,7 @@ enum class BackgroundType {
     SNOW,
     GRID,
     PARTICLES,
+    LAVA,
     MATRIX,
     NONE;
 
@@ -47,6 +48,7 @@ enum class BackgroundType {
             SNOW -> MorpheIcons.AcUnit
             GRID -> MorpheIcons.Apps
             PARTICLES -> MorpheIcons.BubbleChart
+            LAVA -> MorpheIcons.WaterDrop
             MATRIX -> MorpheIcons.Code
             NONE -> MorpheIcons.VisibilityOff
         }
@@ -118,6 +120,12 @@ fun AnimatedBackground(
                 patchingCompleted = resolvedPatchingCompleted
             )
             BackgroundType.PARTICLES -> ParticlesBackground(
+                modifier = Modifier.fillMaxSize(),
+                enableParallax = enableParallax,
+                speedMultiplier = resolvedSpeed,
+                patchingCompleted = resolvedPatchingCompleted
+            )
+            BackgroundType.LAVA -> LavaBackground(
                 modifier = Modifier.fillMaxSize(),
                 enableParallax = enableParallax,
                 speedMultiplier = resolvedSpeed,
