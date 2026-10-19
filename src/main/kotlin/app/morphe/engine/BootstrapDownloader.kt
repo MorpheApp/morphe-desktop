@@ -31,6 +31,12 @@ object BootstrapDownloader {
         )
     }
 
+    private val SKIKO_AWT = RemoteDependency(
+        fileName = "skiko-awt-${BootstrapConstants.SKIKO_VERSION}.jar",
+        url = "https://repo1.maven.org/maven2/org/jetbrains/skiko/skiko-awt/${BootstrapConstants.SKIKO_VERSION}/skiko-awt-${BootstrapConstants.SKIKO_VERSION}.jar",
+        expectedHash = BootstrapConstants.SKIKO_AWT_HASH
+    )
+
     private val JNA = RemoteDependency(
         fileName = "jna-${BootstrapConstants.JNA_VERSION}.jar",
         url = "https://repo1.maven.org/maven2/net/java/dev/jna/jna/${BootstrapConstants.JNA_VERSION}/jna-${BootstrapConstants.JNA_VERSION}.jar",
@@ -41,6 +47,18 @@ object BootstrapDownloader {
         fileName = "jna-platform-${BootstrapConstants.JNA_VERSION}.jar",
         url = "https://repo1.maven.org/maven2/net/java/dev/jna/jna-platform/${BootstrapConstants.JNA_VERSION}/jna-platform-${BootstrapConstants.JNA_VERSION}.jar",
         expectedHash = BootstrapConstants.JNA_PLATFORM_HASH
+    )
+
+    private val OSHI_CORE = RemoteDependency(
+        fileName = "oshi-core-${BootstrapConstants.OSHI_VERSION}.jar",
+        url = "https://repo1.maven.org/maven2/com/github/oshi/oshi-core/${BootstrapConstants.OSHI_VERSION}/oshi-core-${BootstrapConstants.OSHI_VERSION}.jar",
+        expectedHash = BootstrapConstants.OSHI_CORE_HASH
+    )
+
+    private val OSHI_COMMON = RemoteDependency(
+        fileName = "oshi-common-${BootstrapConstants.OSHI_VERSION}.jar",
+        url = "https://repo1.maven.org/maven2/com/github/oshi/oshi-common/${BootstrapConstants.OSHI_VERSION}/oshi-common-${BootstrapConstants.OSHI_VERSION}.jar",
+        expectedHash = BootstrapConstants.OSHI_COMMON_HASH
     )
 
     private data class DownloadPlan(val dep: RemoteDependency, val target: File, val needsDownload: Boolean)
@@ -54,7 +72,7 @@ object BootstrapDownloader {
      *   verification. The caller is responsible for surfacing this to the user.
      */
     fun downloadIfMissing(listener: BootstrapProgressListener? = null): List<File> {
-        val dependencies = listOf(SKIKO, JNA, JNA_PLATFORM)
+        val dependencies = listOf(SKIKO, SKIKO_AWT, JNA, JNA_PLATFORM, OSHI_CORE, OSHI_COMMON)
         val binDir = File(MorpheData.root, "libs").also { it.mkdirs() }
         
         val expectedFileNames = dependencies.map { it.fileName }.toSet()

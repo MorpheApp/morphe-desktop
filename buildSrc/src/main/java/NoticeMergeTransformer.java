@@ -18,21 +18,11 @@ import org.gradle.api.tasks.Internal;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Concatenates matched resource files across dependency JARs into a single
- * output entry. Unlike Shadow's ApacheNoticeResourceTransformer this injects
- * no ASF-branded boilerplate, which is required for a GPL project that must
- * preserve third-party NOTICEs verbatim without falsely attributing itself
- * to the Apache Software Foundation.
- *
- * Path matching is case-insensitive so NOTICE / NOTICE.txt / NOTICE.md are
- * all merged into the same output file. Shadow processes main source set
- * resources before dependency JARs, so when the project's NOTICE is shipped
- * via processResources it naturally appears first in the merged output.
- *
- * Written in Java to avoid Kotlin metadata version conflicts between the
- * buildSrc compiler and the Shadow plugin classes.
+ * Merges dependency NOTICE files verbatim into a single META-INF/NOTICE entry
+ * without adding Apache Software Foundation boilerplate.
  */
 @CacheableTransformer
+@SuppressWarnings("unused")
 public abstract class NoticeMergeTransformer implements ResourceTransformer {
 
     private static final String DEFAULT_SEPARATOR =
@@ -87,11 +77,7 @@ public abstract class NoticeMergeTransformer implements ResourceTransformer {
         if (sectionCount > 0) {
             buffer.write(getSeparator().get().getBytes(StandardCharsets.UTF_8));
         }
-        byte[] readBuf = new byte[8192];
-        int n;
-        while ((n = context.getInputStream().read(readBuf)) != -1) {
-            buffer.write(readBuf, 0, n);
-        }
+        context.getInputStream().transferTo(buffer);
         sectionCount++;
     }
 
