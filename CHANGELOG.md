@@ -1,3 +1,10 @@
+# [1.19.0-dev.17](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.16...v1.19.0-dev.17) (2026-10-20)
+
+
+### Bug Fixes
+
+* Create the default keystore on the first signed run ([#373](https://github.com/MorpheApp/morphe-desktop/issues/373)) ([15ef3d0](https://github.com/MorpheApp/morphe-desktop/commit/15ef3d00c92d520604db3d0423261d6c660df944))
+
 # [1.19.0-dev.16](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.15...v1.19.0-dev.16) (2026-10-20)
 
 
