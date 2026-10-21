@@ -1,3 +1,10 @@
+# [1.19.0-dev.19](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.18...v1.19.0-dev.19) (2026-10-21)
+
+
+### Bug Fixes
+
+* Update ARSCLib dependency ([d3e17ab](https://github.com/MorpheApp/morphe-desktop/commit/d3e17ab72bfd1834c6dd432a477bec98bfb2a8c1))
+
 # [1.19.0-dev.18](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.17...v1.19.0-dev.18) (2026-10-21)
 
 
