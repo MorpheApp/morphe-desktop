@@ -38,11 +38,7 @@ import org.jetbrains.compose.resources.stringResource
 /** Per-source LED state surfaced in [SourcesCountPill]. */
 enum class SourceLedState { DISABLED, STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, LOCAL, ERROR }
 
-/**
- * Header pill showing source count + per-source channel LEDs + trailing "+".
- * Used in expert mode (clickable, opens [SourceManagementSheet]) and in Quick
- * Patch mode (purely informational, pass `onClick = null`).
- */
+/** Header pill displaying configured source count, status indicators, and an optional action. */
 @Composable
 fun SourcesCountPill(
     sourceStates: List<SourceLedState>,
@@ -114,15 +110,14 @@ private fun SourceLed(state: SourceLedState) {
     )
 }
 
-/** Map a [PatchSource] + its resolved channel to a UI LED state. */
+/** Maps a [PatchSource] and resolved channel to a [SourceLedState]. */
 fun sourceLedState(
     source: PatchSource,
     channel: Channel?,
     hasError: Boolean = false,
 ): SourceLedState {
     if (!source.enabled) return SourceLedState.DISABLED
-    // Error wins over channel: a source that resolved (so it still carries a channel, e.g.
-    // LOCAL) but failed to load should read red, not its channel color.
+    // Errors take precedence over release channel state.
     if (hasError) return SourceLedState.ERROR
     return when (channel) {
         Channel.STABLE_LATEST -> SourceLedState.STABLE_LATEST
@@ -134,9 +129,7 @@ fun sourceLedState(
     }
 }
 
-/**
- * Standard indicator pill shown when patch manifests/releases are loading.
- */
+/** Indicator pill displayed while patch manifests and releases are loading. */
 @Composable
 fun PatchesLoadingIndicator(
     modifier: Modifier = Modifier,
@@ -168,9 +161,7 @@ fun PatchesLoadingIndicator(
     }
 }
 
-/**
- * Clickable badge indicating network offline state with retry callback.
- */
+/** Badge indicating offline status with a retry callback. */
 @Composable
 fun OfflineBadge(
     onRetry: () -> Unit,

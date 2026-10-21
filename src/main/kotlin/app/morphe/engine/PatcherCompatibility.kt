@@ -9,33 +9,13 @@ import app.morphe.engine.util.Logger
 import java.io.File
 import java.util.zip.ZipInputStream
 
-/**
- * Detects when a patch bundle (.mpp) was built against a newer morphe-patcher than this
- * build ships. Such a bundle fails to load with a `java.lang.Error` (NoSuchMethodError,
- * NoClassDefFoundError, LinkageError) because it references patcher APIs that do not exist
- * here, which otherwise surfaces as a cryptic failure. This turns it into a clear "update
- * Morphe" message, mirroring how morphe-manager reads the bundle's `Patcher-Version`
- * manifest attribute and compares it to the patcher it ships.
- *
- * The "ships" version is read from the **patcher library on the classpath**
- * (`app/morphe/patcher/version.properties`), not from the desktop app's version catalog.
- * That way a composite/local `morphe-patcher` (or any resolved artifact) reports its own
- * version instead of a stale catalog pin in `libs.versions.toml`.
- *
- * Deliberately lenient: any doubt (missing attribute, unparseable version, unreadable file)
- * returns null so a valid bundle is never wrongly rejected.
- */
+/** Checks patch bundle compatibility against the bundled morphe-patcher version. */
 object PatcherCompatibility {
 
-    /**
-     * The morphe-patcher version on the classpath (see [MorpheComponents.patcherVersion]).
-     */
+    /** Version of morphe-patcher on the classpath. */
     val currentPatcherVersion: String? get() = MorpheComponents.patcherVersion
 
-    /**
-     * The morphe-patcher version [mpp] requires, from its `Patcher-Version` manifest
-     * attribute. Null when the bundle predates that attribute or can't be read.
-     */
+    /** Reads the required patcher version from [mpp]'s manifest, or null if missing. */
     fun requiredPatcherVersion(mpp: File): String? = runCatching {
         mpp.inputStream().use { fis ->
             ZipInputStream(fis).use { zip ->
@@ -51,10 +31,7 @@ object PatcherCompatibility {
         }
     }.getOrNull()
 
-    /**
-     * A user-facing explanation when [mpp] needs a newer patcher than this build ships, or
-     * null when compatible / unknown (never blocks on doubt).
-     */
+    /** Returns an explanation if [mpp] requires a newer patcher than the active build, or null if compatible. */
     fun incompatibilityMessage(mpp: File): String? {
         val required = requiredPatcherVersion(mpp) ?: return null
         val current = currentPatcherVersion ?: return null
@@ -70,7 +47,7 @@ object PatcherCompatibility {
             ?.substringAfter(':')?.trim()
             ?.takeUnless { it.isBlank() || it.equals("na", ignoreCase = true) }
 
-    /** True when version [a] is newer than [b]. Compares numeric components, ignores pre-release. */
+    /** Returns true if version [a] is strictly newer than [b] by numeric components. */
     private fun isNewer(a: String, b: String): Boolean {
         val pa = numericParts(a)
         val pb = numericParts(b)
@@ -86,8 +63,5 @@ object PatcherCompatibility {
         v.substringBefore('-').split('.').map { it.trim().toIntOrNull() ?: 0 }
 }
 
-/**
- * A patch bundle that could not be loaded because it needs a newer patcher than this build
- * ships. Its [message] is already user-facing (from [PatcherCompatibility.incompatibilityMessage]).
- */
+/** Thrown when a patch bundle requires a newer patcher version than the current build. */
 class PatchBundleIncompatibleException(message: String) : Exception(message)

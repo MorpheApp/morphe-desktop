@@ -20,13 +20,7 @@ import java.util.logging.Level as JulLevel
 import java.util.logging.LogRecord
 import java.util.logging.Logger as JulLogger
 
-/**
- * Unified logger for both CLI and GUI.
- *
- * Log file location: `<MorpheData.root>/logs/morphe-<timestamp>.log` — JAR-adjacent
- * `morphe-data/logs/` for shipped jars, `~/morphe/logs/` for IDE/dev runs.
- * See [app.morphe.engine.MorpheData] for the full resolution + fallback rules.
- */
+/** Logs events to file and console. */
 object Logger {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
@@ -38,21 +32,17 @@ object Logger {
         DEBUG, INFO, WARN, ERROR
     }
 
-    /**
-     * Initialize the GUI logger. Call once at GUI application startup.
-     */
+    /** Initializes the logger and session log file. */
     fun init() {
         if (initialized) return
 
         try {
-            // Install JUL bridge early so logs during startup (e.g. MorpheData) are unified
             installJulBridge()
 
             val logsDir = MorpheData.logsDir
             val timestamp = fileTimestampFormat.format(Date())
             logFile = File(logsDir, "morphe-$timestamp.log")
 
-            // Write startup diagnostic banner to console and log file (without log markers)
             val banner = buildString {
                 appendLine("=".repeat(60))
                 appendLine("Morphe-GUI Started")
@@ -76,10 +66,7 @@ object Logger {
         }
     }
 
-    /**
-     * Bridges java.util.logging for `app.morphe` into this Logger.
-     * Sets useParentHandlers = false on "app.morphe" to isolate it from the root ConsoleHandler.
-     */
+    /** Bridges java.util.logging for `app.morphe` into this logger. */
     private fun installJulBridge() {
         val morpheLogger = JulLogger.getLogger("app.morphe")
         morpheLogger.useParentHandlers = false
@@ -156,13 +143,11 @@ object Logger {
             "${level.name}: $message"
         }
 
-        // Print to console
         when (level) {
             Level.ERROR -> System.err.println(logLine)
             else -> println(logLine)
         }
 
-        // Write to file
         try {
             logFile?.appendText("$logLine\n")
         } catch (e: Exception) {
@@ -170,8 +155,6 @@ object Logger {
         }
     }
 
-    /**
-     * Get the current session's log file for export or viewing.
-     */
+    /** Returns the current session log file, or null if uninitialized. */
     fun getLogFile(): File? = logFile
 }

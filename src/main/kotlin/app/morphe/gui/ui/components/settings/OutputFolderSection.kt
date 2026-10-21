@@ -115,9 +115,7 @@ internal fun OutputFolderSection(
             )
         }
 
-        // Stored form first (mirrors config.json), absolute resolution second.
-        // Hides the second line entirely when storage IS absolute, repeating
-        // the same path twice would make no sense now, innit.
+        // Show resolved absolute path when stored path is relative.
         if (defaultOutputDirectory != null) {
             StoredPathResolutionText(defaultOutputDirectory)
         }

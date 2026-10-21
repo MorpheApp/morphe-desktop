@@ -98,21 +98,12 @@ private fun parseMarkdown(markdown: String): List<MdLine> {
         }
 }
 
-/**
- * Strip markdown syntax to plain readable text:
- * - **bold** → bold
- * - [text](url) → text
- * - ([hash](url)) → remove entirely (commit refs)
- */
+/** Strips common markdown formatting and commit links to plain text. */
 private fun cleanMarkdown(text: String): String {
     var result = text
-    // Remove commit refs like ([abc1234](https://...))
     result = result.replace(Regex("""\(\[[\da-f]{7,}]\([^)]*\)\)"""), "")
-    // [text](url) → text
     result = result.replace(Regex("""\[([^]]*?)]\([^)]*\)"""), "$1")
-    // **bold** → bold
     result = result.replace(Regex("""\*\*(.+?)\*\*"""), "$1")
-    // Clean up extra whitespace
     result = result.replace(Regex("""\s+"""), " ").trim()
     return result
 }

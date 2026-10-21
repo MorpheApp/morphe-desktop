@@ -24,12 +24,7 @@ import java.util.Locale
 class KeystoreService(
     private val configRepository: EngineConfigRepository = EngineConfigRepository.shared,
 ) {
-    /**
-     * Resolves the keystore details for signing:
-     * 1. [explicitDetails] if non-null (e.g., CLI --keystore flag).
-     * 2. Configured keystore from [EngineConfigRepository] if valid and file exists.
-     * 3. Fallback to [MorpheData.defaultKeystoreFile] with default alias and password.
-     */
+    /** Resolves keystore signing details from explicit inputs, configuration, or default fallback. */
     suspend fun resolveSigningDetails(explicitDetails: ApkUtils.KeyStoreDetails? = null): ApkUtils.KeyStoreDetails {
         if (explicitDetails != null) return explicitDetails
 

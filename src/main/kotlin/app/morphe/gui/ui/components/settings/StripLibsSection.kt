@@ -16,11 +16,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Architectures exposed in the strip libs settings. Each entry has the
- * patcher-facing value (matching CpuArchitecture.arch) and a short display name.
- * Only modern arches are listed. Legacy mips and armeabi are intentionally omitted.
- */
+/** Supported target architectures for library stripping. */
 private val STRIP_LIBS_ARCHS = listOf(
     "arm64-v8a" to Res.string.settings_strip_libs_arm64,
     "armeabi-v7a" to Res.string.settings_strip_libs_armeabi,

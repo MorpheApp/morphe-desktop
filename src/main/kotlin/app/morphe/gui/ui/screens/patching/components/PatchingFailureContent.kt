@@ -66,8 +66,6 @@ internal fun ExpertFailureContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
-        // App Info Glass Card
         Box(
             modifier = Modifier
                 .widthIn(max = 480.dp)
@@ -120,7 +118,6 @@ internal fun ExpertFailureContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Error log glass card
         if (uiState.error != null) {
             val clipboard = LocalClipboard.current
             val clipboardScope = rememberCoroutineScope()
@@ -202,7 +199,6 @@ internal fun ExpertFailureContent(
             )
         }
 
-        // Cleanup option
         if (hasTempFiles && !tempFilesCleared) {
             Row(
                 modifier = Modifier
@@ -261,7 +257,6 @@ internal fun ExpertFailureContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Action buttons
         Row(
             modifier = Modifier
                 .widthIn(max = 480.dp)

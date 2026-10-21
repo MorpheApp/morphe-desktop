@@ -17,11 +17,7 @@ import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-/**
- * Tools button, the peer of [SettingsButton]. Opens [ToolsDialog]. Wrench icon.
- *
- * @param allowCacheClear forwarded to [ToolsDialog] to gate the Clear Cache action.
- */
+/** Top bar button that opens the [ToolsDialog]. */
 @Composable
 fun ToolsButton(
     modifier: Modifier = Modifier,

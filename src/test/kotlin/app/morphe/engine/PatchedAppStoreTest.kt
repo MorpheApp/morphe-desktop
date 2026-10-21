@@ -81,7 +81,7 @@ class PatchedAppStoreTest {
     @Test
     fun `records persist across store instances`() = runBlocking {
         PatchedAppStore(storeFile).upsert(record("com.a"))
-        // Fresh instance (empty cache) must read the persisted file.
+        // Verify fresh store instance reads persisted file.
         assertEquals("com.a", PatchedAppStore(storeFile).get("com.a")?.packageName)
     }
 
@@ -90,7 +90,7 @@ class PatchedAppStoreTest {
         storeFile.parentFile.mkdirs()
         storeFile.writeText("{ not valid json ")
         val store = PatchedAppStore(storeFile)
-        assertEquals(emptyList(), store.getAll()) // no throw
+        assertEquals(emptyList(), store.getAll())
         store.upsert(record("com.a"))
         assertEquals(1, PatchedAppStore(storeFile).getAll().size)
     }

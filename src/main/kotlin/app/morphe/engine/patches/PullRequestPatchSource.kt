@@ -16,12 +16,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Remote patch source for GitHub Pull Requests.
- *
- * Resolves patch bundles built as GitHub Actions artifacts for a pull request's HEAD commit SHA.
- * Downloads require a Personal Access Token (PAT) with `public_repo` scope.
- */
+/** Remote patch source resolving GitHub Actions build artifacts for a pull request. */
 class PullRequestPatchSource(
     http: HttpService,
     val owner: String,
@@ -110,10 +105,7 @@ class PullRequestPatchSource(
     }
 
     companion object {
-        /**
-         * Reads the GitHub PAT from `EngineConfigRepository` (if configured)
-         * or falls back to `GITHUB_TOKEN` / `GH_TOKEN` environment variables.
-         */
+        /** Reads GitHub PAT from config or GITHUB_TOKEN/GH_TOKEN environment variables. */
         suspend fun defaultGitHubPatProvider(): String? = withContext(Dispatchers.IO) {
             val fromConfig = try {
                 EngineConfigRepository.shared.getGitHubPat().trim().takeIf { it.isNotEmpty() }

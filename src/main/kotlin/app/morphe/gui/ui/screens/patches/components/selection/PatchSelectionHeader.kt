@@ -60,7 +60,6 @@ internal fun PatchSelectionHeader(
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Back button
         MorpheIconButton(
             onClick = onBackClick,
             icon = MorpheIcons.ArrowBack,
@@ -71,7 +70,6 @@ internal fun PatchSelectionHeader(
 
         Spacer(modifier = Modifier.width(14.dp))
 
-        // Title block
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -88,7 +86,6 @@ internal fun PatchSelectionHeader(
             )
         }
 
-        // Command preview toggle
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
             MorpheTooltip(stringResource(Res.string.patch_selection_cmd_preview_tooltip)) {
                 MorpheIconButton(
@@ -102,7 +99,6 @@ internal fun PatchSelectionHeader(
 
             Spacer(modifier = Modifier.width(6.dp))
 
-            // Continue on error toggle
             MorpheTooltip(stringResource(Res.string.patch_selection_continue_on_error_tooltip)) {
                 MorpheIconButton(
                     onClick = onToggleContinueOnError,

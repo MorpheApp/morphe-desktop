@@ -63,10 +63,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-/**
- * Desktop modal dialog for picking the application language.
- * Follows the native Morphe Desktop dialog aesthetic.
- */
+/** Modal dialog for selecting the application language. */
 @Composable
 fun LanguageDialog(
     currentLanguageCode: String,
@@ -89,7 +86,7 @@ fun LanguageDialog(
 
     val listState = rememberLazyListState()
 
-    // Scroll to the currently selected language on initial load
+    // Scroll to selected language on initial load.
     LaunchedEffect(currentLanguageCode, filteredLanguages) {
         val selectedIndex = filteredLanguages.indexOfFirst {
             it.code.equals(currentLanguageCode, ignoreCase = true) ||
@@ -124,7 +121,6 @@ fun LanguageDialog(
                     .fillMaxWidth()
                     .heightIn(max = 420.dp)
             ) {
-                // ── Search Input ──
                 SlimSearchField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -133,7 +129,6 @@ fun LanguageDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                // ── Language List Container ──
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

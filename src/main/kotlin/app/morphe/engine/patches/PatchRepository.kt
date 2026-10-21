@@ -13,14 +13,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-/**
- * Engine-level caching and release-resolution repository wrapping a [RemotePatchSource].
- *
- * Provides:
- *   - 5-minute in-memory TTL on the release listing with stale-on-error fallback
- *   - Manifest-first (`patches-bundle.json`) latest release lookup for stable and dev channels
- *   - Size-validated on-disk `.mpp` caching via [PatchCache]
- */
+/** Caching repository wrapping a [RemotePatchSource] with in-memory TTL, manifest lookup, and on-disk caching. */
 class PatchRepository(
     val remoteSource: RemotePatchSource,
 ) {
@@ -33,16 +26,12 @@ class PatchRepository(
 
     private val fetchMutex = Mutex()
 
-    // In-memory cache so multiple callers don't re-fetch from the remote API
     private var cachedReleases: List<Release>? = null
     private var lastFailureResult: Result<List<Release>>? = null
     private var cacheTimestamp: Long = 0L
     private var lastCacheHitLogTimestamp: Long = 0L
 
-    /**
-     * Fetch all releases. Returns cached result if still fresh.
-     * @param forceRefresh bypass the in-memory cache
-     */
+    /** Fetches releases, returning cached results unless expired or [forceRefresh] is true. */
     suspend fun fetchReleases(forceRefresh: Boolean = false): Result<List<Release>> =
         withContext(Dispatchers.IO) {
             fetchMutex.withLock {
@@ -59,8 +48,7 @@ class PatchRepository(
                     return@withContext Result.success(cached)
                 }
 
-                // If a fetch failed within the last FAILURE_TTL_MS, reuse that failure instead of
-                // spamming concurrent API calls to the same failing endpoint.
+                // Reuse recent failure to coalesce concurrent requests.
                 if (!forceRefresh && lastFailureResult != null &&
                     (now - cacheTimestamp) < FAILURE_TTL_MS
                 ) {
@@ -78,8 +66,7 @@ class PatchRepository(
                     cachedReleases = fresh
                     lastFailureResult = null
                 }
-                // If fetch failed but we still have stale data, prefer the stale
-                // data over a hard error so offline / flaky-network sessions stay usable.
+                // Fall back to stale cache on network failure.
                 if (result.isFailure) {
                     lastFailureResult = result
                     val stale = cachedReleases
@@ -106,11 +93,7 @@ class PatchRepository(
     suspend fun getLatestDevRelease(): Result<Release?> =
         latestFromManifestOrApi(prerelease = true)
 
-    /**
-     * Resolve the latest release for a channel via the repo's `patches-bundle.json`
-     * (raw CDN, no API rate limit); fall back to the releases API only when the source
-     * publishes no manifest. This keeps the 60/hr GitHub API budget for listing older versions.
-     */
+    /** Resolves latest release via manifest CDN, falling back to releases API. */
     private suspend fun latestFromManifestOrApi(prerelease: Boolean): Result<Release?> =
         withContext(Dispatchers.IO) {
             remoteSource.fetchLatestFromManifest(prerelease).getOrNull()?.let {
@@ -121,10 +104,7 @@ class PatchRepository(
             else fetchStableReleases().map { it.firstOrNull() }
         }
 
-    /**
-     * Download the patch `.mpp` file from a release. Uses [PatchCache] —
-     * if a size-verified matching file is already present on disk, skips the network call.
-     */
+    /** Downloads the patch `.mpp` for [release], returning the cached file if already downloaded. */
     suspend fun downloadPatches(
         release: Release,
         onProgress: (Float) -> Unit = {},
@@ -150,7 +130,7 @@ class PatchRepository(
         result
     }
 
-    /** Delete cached patches (both in-memory release list and on-disk files). */
+    /** Deletes cached releases and on-disk patch files. */
     fun clearCache(): Boolean {
         cachedReleases = null
         cacheTimestamp = 0L

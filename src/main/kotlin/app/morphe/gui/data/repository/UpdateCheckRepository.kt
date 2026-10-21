@@ -55,7 +55,7 @@ class UpdateCheckRepository(
             val channel = when (pref) {
                 UpdateChannelPreference.STABLE -> ReleaseChannel.STABLE
                 UpdateChannelPreference.DEV -> ReleaseChannel.DEV
-                UpdateChannelPreference.OFF -> error("unreachable — short-circuited above")
+                UpdateChannelPreference.OFF -> error("unreachable, short-circuited above")
             }
 
             val info = try {

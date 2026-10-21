@@ -106,10 +106,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
         }
     }
 
-    // Source picker state. Quick Patch is single-source by design, so the picker
-    // uses the same SourceManagementSheet as Expert mode but in SINGLE_SELECT
-    // mode (radio behavior). Users can also add/edit/remove sources from here,
-    // matching morphe-manager which doesn't gate source management on expert mode.
+    // Source picker state in single-select mode.
     val patchSourceManager: PatchSourceManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
     val sourceVersion by patchSourceManager.sourceVersion.collectAsState()
@@ -125,9 +122,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     val paddingState = rememberSymmetricPadding()
 
     if (showSourcePicker) {
-        // Same per-source version, channel, and failure data Expert mode feeds the
-        // sheet, so a source that broke reads as FAILED here too instead of looking
-        // healthy but silently contributing no patches.
+        // Pass source versions, channels, and failure states to the sheet.
         val snapshot = viewModel.getResolvedSourcesSnapshot()
         SourceManagementSheet(
             sources = allSources,
@@ -172,7 +167,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // ── Header row, matches expert mode ──
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -186,7 +180,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         }
                         .padding(vertical = 8.dp)
                 ) {
-                    // Logo, left-aligned
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
@@ -196,9 +189,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         BrandingLogo()
                     }
 
-                    // Patches version badge, centered. Click opens the source-management
-                    // sheet in SINGLE_SELECT mode so the user can pick which source Quick
-                    // Patch uses (and add/edit/remove sources too).
+                    // Patches version badge. Clicking opens source management.
                     Box(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -227,7 +218,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                     }
                 }
 
-                // ── Content ──
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -251,7 +241,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         Spacer(modifier = Modifier.height(16.dp))
                     }
 
-                    // ── Main content ──
                     val lastApkInfo = remember(uiState.apkInfo) { uiState.apkInfo }
                     val lastOutputPath = remember(uiState.outputPath) { uiState.outputPath }
 
@@ -316,7 +305,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         }
                     }
 
-                    // ── Supported apps (idle only) ──
                     if (uiState.phase == QuickPatchPhase.IDLE) {
                         Spacer(modifier = Modifier.height(16.dp))
                         SupportedAppsRow(
@@ -332,7 +320,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                 }
             }
 
-            // Error/warning bar
             if (uiState.phase != QuickPatchPhase.ERROR) {
                 uiState.error?.let { error ->
                     MorpheErrorBar(
@@ -348,10 +335,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
         }
     }
 }
-
-// ════════════════════════════════════════════════════════════════════
-//  UTILITIES
-// ════════════════════════════════════════════════════════════════════
 
 private suspend fun openFilePicker(title: String): File? =
     MorpheFilePicker.pickFile(

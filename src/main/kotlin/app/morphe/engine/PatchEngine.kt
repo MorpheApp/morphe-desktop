@@ -59,9 +59,7 @@ import java.util.logging.Level
 import java.util.logging.LogRecord
 import java.util.logging.Logger as JulLogger
 
-/**
- * Single patching pipeline shared directly by CLI and GUI.
- */
+/** Executes APK modification and patching pipeline. */
 object PatchEngine {
 
     enum class PatchStep {
@@ -143,13 +141,7 @@ object PatchEngine {
     @Serializable
     data class FailedPatch(val name: String, val error: String)
 
-    /**
-     * The single unified patching pipeline.
-     * CLI wraps with runBlocking, GUI calls from coroutine scope.
-     *
-     * Always returns a [Result] — does not throw for pipeline step failures.
-     * Only throws for initialization errors (e.g. invalid input file).
-     */
+    /** Executes the patching pipeline according to [config], reporting progress via [onProgress]. */
     suspend fun patch(config: Config, onProgress: (String) -> Unit = {}): Result = withContext(Dispatchers.IO) {
         require(config.inputApk.exists()) { "Input APK file does not exist: ${config.inputApk.absolutePath}" }
 
@@ -166,10 +158,8 @@ object PatchEngine {
             )
         }
 
-        // Early validation: If custom keystore is configured for signing, it must exist and be readable.
-        if (!config.unsigned && config.keystoreDetails != null &&
-            config.keystoreDetails.keyStore != MorpheData.defaultKeystoreFile
-        ) {
+        // Verify custom keystore exists before starting.
+        if (!config.unsigned && config.keystoreDetails != null) {
             val customKeystore = config.keystoreDetails.keyStore
             if (!customKeystore.exists()) {
                 val msg = "Keystore file not found at ${customKeystore.absolutePath}"
@@ -243,7 +233,6 @@ object PatchEngine {
             patcherLogger.addHandler(patcherLogHandler)
 
             try {
-                // 1. Handle split-APK bundles (.apkm/.xapk/.apks)
                 val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
                     reportProgress("Merging split APK bundle...")
                 val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
@@ -260,7 +249,6 @@ object PatchEngine {
 
             currentCoroutineContext().ensureActive()
 
-            // 2. Initialize verifier and patcher
             val verifier = if (config.sdkToolsPath != null) {
                 SdkDexVerifier(config.sdkToolsPath)
             } else {
@@ -297,7 +285,6 @@ object PatchEngine {
                     failureDetail = detail,
                 )
 
-                // 3. Filter patches and apply options
                 val finalPatches = mutableSetOf<Patch<*>>()
 
                 val effectiveBundleScopes = if (config.bundleScopes.isNotEmpty()) {
@@ -316,7 +303,6 @@ object PatchEngine {
                     }
                     patchesSnapshotForFinally = patchSnapshots
 
-                    // Parse options file if present
                     val patchOptionsByFile: Map<File, PatchBundle?> = config.optionsFile?.let { file ->
                         if (file.exists()) {
                             onProgress("Reading options from ${file.path}")
@@ -333,7 +319,6 @@ object PatchEngine {
                         }
                     } ?: emptyMap()
 
-                    // Check options drift
                     if (config.optionsFile?.exists() == true && !config.updateOptions) {
                         loadedBundles.forEachIndexed { i, lb ->
                             val bundleOpts = patchOptionsByFile[lb.sourceFile] ?: return@forEachIndexed
@@ -424,7 +409,7 @@ object PatchEngine {
                             onProgress = onProgress,
                         )
 
-                        // Merge options (JSON + flat + CLI/scope, scope overrides flat overrides JSON)
+                        // Merge options across JSON, flat, and bundle scopes.
                         val mergedOpts = buildSet {
                             addAll(jsonOpts.keys)
                             addAll(flatResolvedOpts.keys)
@@ -529,10 +514,8 @@ object PatchEngine {
 
                 currentCoroutineContext().ensureActive()
 
-                // 5. Memory cleanup: Release DEX classloaders before heavy rebuild
                 finalPatches.clear()
 
-                // 6. Rebuild APK
                 val rebuiltApk = File(tempDir, "rebuilt.apk")
                 try {
                     onProgress("Rebuilding APK...")
@@ -550,7 +533,6 @@ object PatchEngine {
 
                 currentCoroutineContext().ensureActive()
 
-                // 7. Sign APK (unless unsigned)
                 val tempOutput = File(tempDir, finalOutputApk.name)
                 if (!config.unsigned) {
                     val rawKeystore = config.keystoreDetails ?: ApkUtils.KeyStoreDetails(
@@ -624,7 +606,6 @@ object PatchEngine {
 
                 currentCoroutineContext().ensureActive()
 
-                // 8. SDK DEX Verification (if configured)
                 if (config.sdkToolsPath != null) {
                     try {
                         onProgress("Verifying APK with Android SDK...")
@@ -636,14 +617,12 @@ object PatchEngine {
                     }
                 }
 
-                // 9. Copy to final output
                 finalOutputApk.parentFile?.mkdirs()
                 Files.copy(tempOutput.toPath(), finalOutputApk.toPath(), StandardCopyOption.REPLACE_EXISTING)
                 onProgress("Saved to ${finalOutputApk.absolutePath}")
 
                 val isSuccess = !config.failOnError || failedPatches.isEmpty()
 
-                // 10. Record to PatchedAppStore
                 var historyRecord: PatchedAppRecord? = null
                 if (config.recordHistory && isSuccess) {
                     try {

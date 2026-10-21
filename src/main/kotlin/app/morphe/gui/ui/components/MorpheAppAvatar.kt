@@ -27,7 +27,7 @@ enum class MorpheAvatarSize(val size: Dp) {
     SMALL(28.dp),
 }
 
-/* Canonical app avatar badge displaying the initial character of an application */
+/** Avatar badge displaying an app initial. */
 @Composable
 fun MorpheAppAvatar(
     name: String = "",

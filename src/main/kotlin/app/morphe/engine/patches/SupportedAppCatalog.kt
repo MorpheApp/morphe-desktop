@@ -16,16 +16,10 @@ import java.io.FileNotFoundException
 typealias VersionMap = LinkedHashMap<String, Int>
 typealias CompatibleVersionsMap = Map<String, VersionMap>
 
-/**
- * Unified catalog and metadata query service for supported applications and patches.
- */
+/** Catalog and query utilities for supported applications and patches. */
 object SupportedAppCatalog {
 
-    /**
-     * Convert library [Patch] to agnostic [PatchMetadata] model.
-     *
-     * Reads [Patch.compatibility] API to construct [CompatiblePackage] metadata.
-     */
+    /** Converts a library [Patch] to a [PatchMetadata] model. */
     fun Patch<*>.toMetadata(): PatchMetadata {
         val compatiblePackages: List<CompatiblePackage> = this.compatibility
             ?.mapNotNull { compatibility ->
@@ -61,9 +55,7 @@ object SupportedAppCatalog {
         )
     }
 
-    /**
-     * Extract supported apps from a collection of library [Patch] objects.
-     */
+    /** Extracts supported apps from library [Patch] objects. */
     fun extractSupportedApps(patches: Iterable<Patch<*>>): List<SupportedApp> =
         extractSupportedAppsFromMetadata(patches.map { it.toMetadata() })
 
@@ -129,10 +121,7 @@ object SupportedAppCatalog {
         }.sortedBy { it.displayName }
     }
 
-    /**
-     * Calculate frequency map of compatible versions per package across patches.
-     * Preserves the frequency count behavior used by CLI `list-versions`.
-     */
+    /** Builds a frequency map of compatible versions per package across patches. */
     fun getCompatibilityMap(
         packageNames: Set<String>? = null,
         countUnusedPatches: Boolean = false,
@@ -205,10 +194,7 @@ object SupportedAppCatalog {
             .associateTo(LinkedHashMap()) { it.key to it.value }
     }
 
-    /**
-     * Load patches from an .mpp file and convert to [PatchMetadata],
-     * optionally filtered by target package name.
-     */
+    /** Loads patches from an `.mpp` file as [PatchMetadata], optionally filtered by [packageName]. */
     fun loadPatches(
         patchFile: File,
         packageName: String? = null,
@@ -223,12 +209,7 @@ object SupportedAppCatalog {
         }
     }
 
-    /**
-     * Match an APK filename to a [SupportedApp] using the filename's leading token.
-     * Examples:
-     *   "soundcloud_2026.04.27.apkm" -> leading token "soundcloud" -> matches "SoundCloud"
-     *   "YouTube Music_4.81.apkm"    -> leading token "youtube music" -> matches "YouTube Music"
-     */
+    /** Matches an APK filename to a [SupportedApp] using the leading token (e.g. soundcloud_... -> SoundCloud). */
     fun fuzzyMatchApp(
         filename: String,
         supportedApps: List<SupportedApp>,

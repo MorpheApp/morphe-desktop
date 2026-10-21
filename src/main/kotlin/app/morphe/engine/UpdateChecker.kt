@@ -10,11 +10,7 @@ import java.net.HttpURLConnection
 import java.net.URI
 import java.util.Properties
 
-/**
- * Resolved release channel that [UpdateChecker] should probe. The user-facing
- * preference (with `OFF`) lives in the GUI layer; this enum only carries the
- * two channels that actually map to a network probe.
- */
+/** Release channels supported for update checking. */
 enum class ReleaseChannel { STABLE, DEV }
 
 data class UpdateInfo(
@@ -25,12 +21,7 @@ data class UpdateInfo(
 )
 
 object UpdateChecker {
-    /**
-     * Probe GitHub for the latest version on the given channel. When [channel]
-     * is null, derives the channel from the running build's version (legacy
-     * behavior — preserved so the CLI's existing call site keeps working).
-     * Synchronous — call from a background dispatcher.
-     */
+    /** Checks GitHub for newer versions on [channel], defaulting to the current build's channel. */
     fun checkInfo(channel: ReleaseChannel? = null): UpdateInfo? {
         try {
             val currentVersion = javaClass.getResourceAsStream("/app/morphe/cli/version.properties")
@@ -42,8 +33,7 @@ object UpdateChecker {
             val resolvedChannel = channel ?: if (isDev) ReleaseChannel.DEV else ReleaseChannel.STABLE
 
             val url = when (resolvedChannel) {
-                // dev branch tracks main after every stable release, so probing
-                // dev also catches new stables for users on dev builds.
+                // Probing dev also catches new stables following release merges.
                 ReleaseChannel.DEV ->
                     "https://raw.githubusercontent.com/MorpheApp/morphe-desktop/refs/heads/dev/gradle.properties"
                 ReleaseChannel.STABLE ->
@@ -79,22 +69,13 @@ object UpdateChecker {
         }
     }
 
-    /**
-     * Read the current build's version from the bundled resource. Returns null
-     * when the resource is missing (development environments without the
-     * processed properties file). Used by the GUI to decide a smart default
-     * for the update channel preference.
-     */
+    /** Reads the current build version from bundled properties, or null if missing. */
     fun currentVersion(): String? = javaClass.getResourceAsStream("/app/morphe/cli/version.properties")
         ?.use { stream ->
             Properties().apply { load(stream) }.getProperty("version")
         }
 
-    /**
-     * Legacy formatter — returns the same multi-line string the CLI prints.
-     * Kept byte-identical so [app.morphe.desktop.command.PatchCommand]'s logger
-     * output doesn't change.
-     */
+    /** Formats update notification message string, or null if up to date. */
     fun check(): String? {
         val info = checkInfo() ?: return null
         val trackChangesMessage = if (info.crossesDevToStable) {

@@ -16,15 +16,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.io.File
 
-/**
- * Loads patches from one or more `.mpp` files in parallel and tags each loaded
- * Patch instance with the source it came from. The union [Result.allPatches]
- * is what [PatchEngine.patch] expects; the per-source breakdown is for
- * GUI/CLI consumers that want to badge or filter by origin.
- *
- * Lives in the engine package so the CLI can consume the same multi-source
- * loading path when it adopts multi-source.
- */
+/** Loads patches in parallel from multiple patch bundle files. */
 object MultiSourceLoader {
 
     data class SourceInput(
@@ -45,26 +37,17 @@ object MultiSourceLoader {
     data class Result(
         val perSource: List<LoadedSource>,
         val allPatches: Set<Patch<*>>,
-        // Map a deduped patch back to ALL source IDs that contain it. When the
-        // same patch (by Patch.equals, i.e. matching name + body + options)
-        // appears in multiple bundles, this set has every contributing source
-        // so the UI can render multi-source attribution.
+        // Maps each deduplicated patch to the source IDs that contain it.
         val patchToSourceIds: Map<Patch<*>, Set<String>>,
     )
 
-    /**
-     * Load patches from each input in parallel. Each .mpp is copied to a temp file
-     * before loading to work around Windows URLClassLoader file-locking.
-     */
+    /** Loads patches from each input source in parallel using temporary shadow copies. */
     suspend fun load(inputs: List<SourceInput>): Result = coroutineScope {
         val loaded = inputs.map { input ->
             async(Dispatchers.IO) { loadOne(input) }
         }.awaitAll()
 
-        // Dedup intentional: identical patches across sources collapse into
-        // ONE entry — the UI then shows them as a single card with a multi-
-        // source attribution badge. Previously this used `.toMap()` for the
-        // source mapping which silently dropped all but the last source.
+        // Deduplicate identical patches while tracking all contributing sources.
         val allPatches = loaded.flatMap { it.patches }.toSet()
         val patchToSourceIds: Map<Patch<*>, Set<String>> = loaded
             .flatMap { src -> src.patches.map { it to src.sourceId } }
@@ -89,16 +72,7 @@ object MultiSourceLoader {
                 patches = patches,
             )
         } catch (e: Throwable) {
-            // Catch Throwable, not just Exception: a bundle built against a newer patcher
-            // throws java.lang.Error (NoSuchMethodError / NoClassDefFoundError / LinkageError)
-            // because it references patcher APIs missing here. As an Error it would escape a
-            // catch(Exception), sink the whole load, and hang the UI on "loading" forever.
-            // Isolating it per source keeps one bad bundle from taking the others down, and
-            // lets us surface a clear "update Morphe" message (mirrors morphe-manager).
-            //
-            // Do NOT swallow the real failure: many Errors have a null .message (e.g.
-            // ExceptionInInitializerError) with the useful text on .cause. We always store an
-            // exception whose message walks the full cause chain, and log the full stack.
+            // Catch LinkageErrors and exceptions from incompatible patcher bundles without failing other sources.
             val versionMsg = PatcherCompatibility.incompatibilityMessage(input.patchFile)
             val error: Throwable = if (versionMsg != null) {
                 PatchBundleIncompatibleException(versionMsg)
@@ -109,7 +83,6 @@ object MultiSourceLoader {
                 "MultiSourceLoader: failed to load '${input.sourceName}': ${error.message}",
                 e,
             )
-            // Also stderr so IDE runs / headless CLI see the stack even if JUL is unconfigured.
             System.err.println("MultiSourceLoader: failed to load '${input.sourceName}': ${error.message}")
             e.printStackTrace(System.err)
             LoadedSource(

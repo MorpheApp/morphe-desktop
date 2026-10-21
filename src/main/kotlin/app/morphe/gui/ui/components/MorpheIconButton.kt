@@ -40,11 +40,11 @@ enum class MorpheIconButtonSize(val size: Dp, val iconSize: Dp) {
 }
 
 enum class MorpheIconButtonVariant {
-    SURFACE, // Surface elevation background with outline border (like TopBar buttons)
-    OUTLINED, // Transparent background with subtle outline, primary tint on hover
-    GHOST, // Borderless with subtle hover fill (card dismiss buttons)
-    PRIMARY, // Primary tinted background & border
-    DANGER, // Error/danger hover background
+    SURFACE,
+    OUTLINED,
+    GHOST,
+    PRIMARY,
+    DANGER,
 }
 
 @Composable

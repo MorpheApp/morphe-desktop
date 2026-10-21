@@ -53,7 +53,6 @@ internal fun ErrorContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // App info card
         Box(
             modifier = Modifier
                 .widthIn(max = 480.dp)
@@ -107,7 +106,6 @@ internal fun ErrorContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Error log card
         Box(
             modifier = Modifier
                 .widthIn(max = 480.dp)
@@ -185,7 +183,6 @@ internal fun ErrorContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Action buttons
         Row(
             modifier = Modifier
                 .widthIn(max = 480.dp)

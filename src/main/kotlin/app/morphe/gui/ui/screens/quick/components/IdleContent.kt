@@ -27,10 +27,6 @@ import app.morphe.gui.ui.theme.*
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// IDLE CONTENT (drop prompt)
-// ============================================================================
-
 @Composable
 internal fun IdleContent(
     isAnalyzing: Boolean,

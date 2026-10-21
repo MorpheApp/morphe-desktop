@@ -36,10 +36,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// HEADER BAR AND STATUS INDICATORS
-// ============================================================================
-
 @Composable
 internal fun HeaderBar(
     uiState: HomeUiState,
@@ -64,7 +60,6 @@ internal fun HeaderBar(
             }
             .padding(vertical = 8.dp)
     ) {
-        // Logo, left-aligned, compact
         Box(
             modifier = Modifier
                 .align(Alignment.CenterStart)
@@ -74,7 +69,6 @@ internal fun HeaderBar(
             BrandingSection(isCompact = true)
         }
 
-        // Patches version inline, centered
         Box(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -100,7 +94,6 @@ internal fun HeaderBar(
             }
         }
 
-        // Device indicator plus settings, inline in the header
         Box(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -115,8 +108,7 @@ internal fun HeaderBar(
     }
 }
 
-/** One-time intro banner shown when the user first sees multi-source mode.
- *  Persists dismissal in ConfigRepository so it never reappears once dismissed. */
+/** Informational banner displayed when multi-source mode is first encountered. */
 @Composable
 internal fun MultiSourceHintBanner(
     onDismiss: () -> Unit,
@@ -131,11 +123,7 @@ internal fun MultiSourceHintBanner(
     }
 }
 
-/**
- * Non-blocking banner shown when some patch sources loaded but at least one failed.
- * Patching still works with the loaded sources, so this is an informational warning that
- * points at the source manager (where each failed source shows exactly why it broke).
- */
+/** Warning banner displayed when one or more patch sources fail to load. */
 @Composable
 internal fun SourcesFailedBanner(
     count: Int,
@@ -156,10 +144,6 @@ internal fun SourcesFailedBanner(
         MorpheBannerDismiss(onClick = onDismiss)
     }
 }
-
-// SourcesCountPill, PatchesLoadingIndicator, OfflineBadge, SourceLed,
-// SourceLedState, sourceLedState moved to gui/ui/components/SourcesPill.kt
-// for reuse across modes (Quick Patch uses a non-clickable variant).
 
 @Composable
 internal fun BrandingSection(isCompact: Boolean = false) {

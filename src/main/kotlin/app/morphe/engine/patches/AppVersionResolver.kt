@@ -10,10 +10,7 @@ import app.morphe.engine.model.VersionResolution
 import app.morphe.engine.model.VersionStatus
 import app.morphe.engine.util.compareVersions
 
-/**
- * Determine the status of [currentVersion] relative to the stable and
- * experimental versions known for [app].
- */
+/** Resolves compatibility of [currentVersion] against supported versions of [app]. */
 fun resolveVersionStatus(
     currentVersion: String,
     app: SupportedApp,

@@ -181,10 +181,7 @@ class PatcherState(
     }
 }
 
-/**
- * A shared Compose hook that implements the Zeno asymptotic chase loop for smooth
- * progress animation during blocking backend tasks.
- */
+/** Smooths progress updates using asymptotic interpolation. */
 @Composable
 fun rememberZenoProgress(
     progress: Float,

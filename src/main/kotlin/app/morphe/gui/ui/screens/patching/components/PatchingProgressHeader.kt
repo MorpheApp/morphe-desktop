@@ -57,7 +57,6 @@ internal fun ExpertProgressHeader(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Step title on the left + badges (counter and percentage) on the right
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -108,10 +107,8 @@ internal fun ExpertProgressHeader(
             }
         }
 
-        // Progress bar
         ExpertLinearProgressBar(progress = smoothProgress)
 
-        // Memory graph
         AnimatedVisibility(
             visible = uiState.heapSamples.isNotEmpty()
         ) {

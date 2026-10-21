@@ -25,18 +25,12 @@ private val defaultHttpJson = Json {
     isLenient = true
 }
 
-/**
- * Shared lazy [HttpClient] instance for CLI commands and engine utilities
- * that don't manage a separate DI container.
- */
+/** Shared [HttpClient] instance for CLI commands and engine utilities. */
 val sharedHttpClient: HttpClient by lazy { createHttpClient() }
 
 /**
- * Factory for Morphe's standard Ktor [HttpClient] backed by OkHttp:
- * - Prefers IPv4 A records when available so broken IPv6 routes don't stall connects
- * - Pins HTTP/1.1 to avoid intermittent HTTP/2 stream resets on GitHub CDN redirects
- * - Follows HTTP and SSL redirects
- * - Uses idle/socket timeouts (30s connect / 60s socket) without a total wall-clock cap
+ * Creates an OkHttp-backed [HttpClient] configured with IPv4 preference,
+ * HTTP/1.1 pinning (to avoid CDN stream resets), and redirect handling.
  */
 fun createHttpClient(
     json: Json = defaultHttpJson,

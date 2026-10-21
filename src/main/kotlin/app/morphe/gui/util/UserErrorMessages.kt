@@ -12,9 +12,7 @@ import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 
-/**
- * UI-specific exception carrying an optional Compose string resource for localized user display.
- */
+/** UI exception carrying an optional string resource for localized display. */
 open class PatchException(
     message: String,
     val stringRes: StringResource? = null,
@@ -25,9 +23,7 @@ open class PatchException(
         stringRes?.let { getString(it, *formatArgs.toTypedArray()) } ?: (message ?: "")
 }
 
-/**
- * Maps an [AdbErrorCode] to its corresponding localized Compose [StringResource].
- */
+/** Maps [AdbErrorCode] to its localized [StringResource]. */
 fun AdbErrorCode.toStringResource(): StringResource = when (this) {
     AdbErrorCode.ADB_NOT_FOUND -> Res.string.adb_error_not_found
     AdbErrorCode.START_SERVER_FAILED -> Res.string.adb_error_start_server
@@ -56,15 +52,11 @@ fun AdbErrorCode.toStringResource(): StringResource = when (this) {
     AdbErrorCode.PM_LIST_PACKAGES_FAILED -> Res.string.adb_error_pm_list_packages
 }
 
-/**
- * Resolves localized user-facing message for an [AdbException].
- */
+/** Resolves localized message for an [AdbException]. */
 suspend fun AdbException.getUserMessage(): String =
     getString(errorCode.toStringResource(), *formatArgs.toTypedArray())
 
-/**
- * Resolves localized user-facing progress text for link handling operations.
- */
+/** Resolves localized progress text for link handling operations. */
 suspend fun LinkHandlingProgress.toUserMessage(): String = when (this) {
     is LinkHandlingProgress.Patched ->
         if (enable) getString(Res.string.adb_status_routing_links, packageName)

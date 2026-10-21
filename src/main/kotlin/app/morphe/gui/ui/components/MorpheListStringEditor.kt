@@ -27,10 +27,7 @@ import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Reusable list-of-strings editor component.
- * Displays current item count and opens a modal dialog for adding/removing items.
- */
+/** Option component displaying item count and opening a list editor dialog. */
 @Composable
 fun MorpheListStringOption(
     items: List<String>,
@@ -53,7 +50,6 @@ fun MorpheListStringOption(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        // Items count badge / summary box
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -82,7 +78,6 @@ fun MorpheListStringOption(
             }
         }
 
-        // Edit button
         MorpheButton(
             label = stringResource(Res.string.patch_option_edit_list),
             variant = MorpheButtonVariant.OUTLINED,
@@ -91,7 +86,6 @@ fun MorpheListStringOption(
             onClick = { showDialog = true },
         )
 
-        // If it allows file extensions (FilesOption), add direct multi-file Browse button
         if (allowedExtensions != null) {
             MorpheButton(
                 label = stringResource(Res.string.browse),
@@ -162,7 +156,6 @@ fun MorpheListStringDialog(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            // Input row: text field + Add button (+ optional Browse files button)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -212,7 +205,6 @@ fun MorpheListStringDialog(
                 )
             }
 
-            // Scrollable list of items
             val scrollState = rememberScrollState()
             Box(
                 modifier = Modifier
@@ -282,7 +274,6 @@ fun MorpheListStringDialog(
                 }
             }
 
-            // Action buttons row (Cancel / Save)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

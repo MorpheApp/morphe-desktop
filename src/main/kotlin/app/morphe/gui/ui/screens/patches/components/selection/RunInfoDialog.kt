@@ -29,8 +29,6 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ── Run Info Dialog ──
-
 @Composable
 internal fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
     val primaryColor = MorpheTheme.colors.primary

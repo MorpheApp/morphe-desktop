@@ -35,9 +35,6 @@ internal fun HomeSplitLayout(
 ) {
     BoxWithConstraints(
         modifier = modifier
-            // Small cute padding for small cute space
-            // between the HeaderBar's bottom
-            // divider and the actual body section.
             .padding(
                 start = 10.dp,
                 end = padding,
@@ -52,7 +49,6 @@ internal fun HomeSplitLayout(
             horizontalArrangement = Arrangement.spacedBy(padding),
             verticalAlignment = Alignment.Top,
         ) {
-            // Left: browse/discover supported apps (wizard step 1).
             SupportedAppsListPane(
                 supportedApps = uiState.supportedApps,
                 patchedStates = uiState.patchedStates,
@@ -73,10 +69,6 @@ internal fun HomeSplitLayout(
                     .weight(1.2f)
                     .heightIn(max = bodyViewport),
             )
-            // Right: APK info / drop zone (wizard step 2, pick the
-            // APK you want patched). Content centers vertically when
-            // it fits, scrolls when it doesn't, so the CONTINUE
-            // button is never clipped off the bottom.
             Column(
                 modifier = Modifier
                     .weight(1f)

@@ -83,8 +83,6 @@ internal fun StartBannerCard(
     uiState: PatchingUiState
 ) {
     PatcherInfoCard(title = stringResource(Res.string.patching_banner_started_title), variant = CardVariant.Start) {
-        // App Section (Top)
-        // Row 1: APP VERSION, APK SIZE
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -99,7 +97,6 @@ internal fun StartBannerCard(
                 modifier = Modifier.weight(1f))
         }
 
-        // Row 2: PATCHES, SPLIT APK
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -115,7 +112,6 @@ internal fun StartBannerCard(
                 modifier = Modifier.weight(1f))
         }
 
-        // Row 3: PATCHES SOURCE
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -134,8 +130,6 @@ internal fun StartBannerCard(
             modifier = Modifier.padding(vertical = 4.dp)
         )
         
-        // Environment Section (Bottom)
-        // Row 4: DESKTOP, PATCHER
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -164,7 +158,6 @@ internal fun StartBannerCard(
         }
         val runtimeInfo = "$javaName ${System.getProperty("java.version") ?: "?"}"
 
-        // Row 5: RUNTIME, NATIVE LIBS
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -179,7 +172,6 @@ internal fun StartBannerCard(
                 modifier = Modifier.weight(1f))
         }
 
-        // Row 6: OS, ARCH
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -194,7 +186,6 @@ internal fun StartBannerCard(
                 modifier = Modifier.weight(1f))
         }
 
-        // Row 7: RAM FREE, STORAGE FREE
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)

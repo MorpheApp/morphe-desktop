@@ -17,12 +17,7 @@ import app.morphe.gui.ui.screens.patches.SelectionMode
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Quick-action chip row above the patch list. Each chip is a one-click preset that
- * sets the current selection. The chip whose state matches the current selection
- * gets highlighted (accent border + tint) so the user can see at a glance what
- * preset they're on.
- */
+/** Quick-action chip row providing selection presets for the patch list. */
 @Composable
 internal fun SelectionModeChips(
     hasSavedSelection: Boolean,
@@ -37,13 +32,7 @@ internal fun SelectionModeChips(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // SAVED is computed by overlaying the saved-selection check on top of CUSTOM
-        // when hasSavedSelection is true AND the current selection matches the saved
-        // bundle, we treat it as SAVED. The VM only knows ALL/DEFAULTS/NONE/CUSTOM, so
-        // we approximate: if hasSavedSelection is true and activeMode is CUSTOM, the
-        // user could still be on their saved set. We can't tell here without the
-        // bundle. For now SAVED highlights only when activeMode == SelectionMode.SAVED
-        // (which is set after applySavedDefaults by virtue of the chip being clicked).
+        // Highlights SAVED preset when activeMode is explicitly set to SAVED.
         MorpheChoiceChip(
             text = stringResource(Res.string.patch_selection_mode_your_defaults),
             icon = MorpheIcons.Bookmark,

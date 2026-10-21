@@ -8,28 +8,14 @@ package app.morphe.gui.icon
 import app.morphe.gui.data.model.MorpheFill
 import kotlinx.serialization.Serializable
 
-/**
- * The editable state of a custom adaptive app icon.
- *
- * Adaptive icons are TWO layers the launcher composites and masks itself: a
- * [background] that fills the tile, and a foreground (positioned inside the safe
- * zone). Here the foreground is a **stack of [layers]** (images, text, and
- * shapes) composited bottom-to-top. The stack is flattened into the single
- * foreground PNG on export. [background] is exported separately.
- *
- * [Serializable] so a project can be saved to `project.json` and reopened.
- */
+/** Editable state for custom adaptive app icon projects. */
 @Serializable
 data class IconProject(
     val background: MorpheFill = MorpheFill.Solid(0xFFFFFFFF.toInt()),
     val layers: List<Layer> = emptyList(),
 ) {
 
-    /**
-     * One foreground element with its own transform, colour adjust and effects.
-     * [content] is the element (image, text or shape). Everything else is applied
-     * uniformly regardless of element type. Transform is in tile-fraction units.
-     */
+    /** Foreground icon layer containing visual content, transform, and effects. */
     @Serializable
     data class Layer(
         val id: String,
@@ -69,9 +55,9 @@ data class IconProject(
             val italic: Boolean = false,
             val underline: Boolean = false,
             val strikethrough: Boolean = false,
-            val fontName: String? = null,    // a system font family; null = default sans
-            val fontPath: String? = null,    // a custom .ttf/.otf (copied into the project); wins over fontName
-            val letterSpacing: Float = 0f,   // TRACKING, as a fraction of the font size
+            val fontName: String? = null,
+            val fontPath: String? = null,
+            val letterSpacing: Float = 0f,
         ) : LayerContent
 
         @Serializable
@@ -81,15 +67,15 @@ data class IconProject(
     @Serializable
     enum class ShapeKind { CIRCLE, SQUARE, ROUNDED, TRIANGLE, DIAMOND, PENTAGON, HEXAGON, STAR }
 
-    /** Drop shadow. Sizes in tile-fraction units so they scale across densities. */
+    /** Drop shadow effect configuration. */
     @Serializable
     data class Shadow(val offsetX: Float = 0f, val offsetY: Float = 0.03f, val blur: Float = 0.025f, val alpha: Float = 0.45f)
 
-    /** Coloured glow behind the element (centered). */
+    /** Glow effect configuration. */
     @Serializable
     data class Glow(val color: Int = 0xFF00E5FF.toInt(), val blur: Float = 0.035f, val alpha: Float = 0.7f)
 
-    /** Solid outline around the element silhouette. [width] in tile-fraction units. */
+    /** Outline stroke configuration. */
     @Serializable
     data class Stroke(val color: Int = 0xFF000000.toInt(), val width: Float = 0.012f)
 }

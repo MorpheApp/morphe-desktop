@@ -28,18 +28,12 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-/**
- * Renders an [IconProject] to square [BufferedImage]s at a requested tile size.
- * [renderBackground] + [renderForeground] are what [IconExporter] writes (kept
- * separate, as the launcher composites them). [renderForeground] flattens the layer
- * stack, and [renderComposite] draws both together for the studio preview so it's
- * pixel-exact to the export. Transforms + effect sizes are in tile-fraction units.
- */
+/** Renders an [IconProject] to background, foreground, silhouette, and composite bitmaps. */
 object IconRenderer {
 
     private val sourceCache = HashMap<String, Pair<Long, BufferedImage>>()
 
-    /** Background layer at [size]x[size]. */
+    /** Renders background fill into a [size]x[size] bitmap. */
     fun renderBackground(project: IconProject, size: Int): BufferedImage {
         val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
         val g = img.createGraphics()
@@ -77,9 +71,7 @@ object IconRenderer {
                     }
                 }
                 is MorpheFill.Image -> {
-                    // Adaptive backgrounds MUST be fully opaque (the launcher masks them and
-                    // can't handle a see-through background). Fill first so any transparency
-                    // in the imported image is flattened onto an opaque white base.
+                    // Fill white base to ensure background bitmap remains fully opaque.
                     g.color = Color.WHITE; g.fillRect(0, 0, size, size)
                     loadSource(bg.sourcePath)?.let { drawCover(g, it, size) }
                 }
@@ -90,7 +82,7 @@ object IconRenderer {
         return img
     }
 
-    /** Foreground: the layer stack composited bottom-to-top onto a transparent tile. */
+    /** Renders composite foreground layers onto a transparent [size]x[size] tile. */
     fun renderForeground(project: IconProject, size: Int): BufferedImage {
         val tile = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
         val g = tile.createGraphics()
@@ -106,16 +98,7 @@ object IconRenderer {
         return tile
     }
 
-    /** The foreground flattened to a single-colour silhouette (alpha preserved).
-     *  Used for the notification icon (white) and monochrome layer (black).
-     *
-     *  Themed/notification icons are the foreground silhouette. If there is no
-     *  foreground, fall back to the whole composite so a background-only icon still
-     *  yields a recognisable monochrome shape instead of nothing.
-     *
-     *  [safeZone] < 1 fits the silhouette's content into a centered box of that
-     *  fraction (e.g. 0.72), mirroring the manager fitting the notification icon to the
-     *  safe zone so a small status-bar glyph isn't crammed edge to edge or clipped. */
+    /** Renders a single-color silhouette of the foreground fitted within [safeZone]. */
     fun renderSilhouette(project: IconProject, size: Int, colorArgb: Int, safeZone: Float = 1f): BufferedImage {
         val fg = if (project.layers.isEmpty()) renderComposite(project, size) else renderForeground(project, size)
         val w = fg.width; val h = fg.height
@@ -125,12 +108,11 @@ object IconRenderer {
         val sil = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB); sil.setRGB(0, 0, w, h, px, 0, w)
         if (safeZone >= 1f) return sil
 
-        // Fit the opaque content into the central safe-zone box, centered.
         var minX = w; var minY = h; var maxX = -1; var maxY = -1
         for (y in 0 until h) for (x in 0 until w) if (((px[y * w + x] ushr 24) and 0xFF) > 8) {
             if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y
         }
-        if (maxX < 0) return sil  // nothing opaque
+        if (maxX < 0) return sil
         val bw = maxX - minX + 1; val bh = maxY - minY + 1
         val target = size * safeZone
         val s = minOf(target / bw, target / bh)
@@ -154,8 +136,6 @@ object IconRenderer {
         }
         return out
     }
-
-    // ── one layer → transparent tile (position, rotation, colour adjust, effects) ──
 
     private fun renderLayerTile(layer: IconProject.Layer, size: Int): BufferedImage {
         val tile = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
@@ -254,7 +234,7 @@ object IconRenderer {
         return img
     }
 
-    /** Regular N-gon inscribed in the tile, first vertex pointing up. */
+    /** Creates regular N-gon polygon inscribed in the tile. */
     private fun regularPolygon(n: Int, size: Int = 240): Polygon {
         val c = size / 2.0; val r = size / 2.0
         val xs = IntArray(n); val ys = IntArray(n)
@@ -265,7 +245,7 @@ object IconRenderer {
         return Polygon(xs, ys, n)
     }
 
-    /** [points]-pointed star inscribed in the tile. */
+    /** Creates [points]-pointed star polygon inscribed in the tile. */
     private fun starPolygon(points: Int = 5, size: Int = 240): Polygon {
         val c = size / 2.0; val outer = size / 2.0; val inner = outer * 0.42
         val n = points * 2
@@ -277,8 +257,6 @@ object IconRenderer {
         }
         return Polygon(xs, ys, n)
     }
-
-    // ── helpers ──
 
     private fun enableQuality(g: Graphics2D) {
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC)
@@ -299,7 +277,7 @@ object IconRenderer {
         g.drawImage(src, (size - w) / 2, (size - h) / 2, w, h, null)
     }
 
-    /** Sanitise stop positions into the strictly-increasing [0,1] fractions AWT gradients require. */
+    /** Normalizes gradient stop positions to strictly increasing fractions in [0, 1]. */
     private fun normalizeFractions(positions: List<Float>): FloatArray {
         val out = FloatArray(positions.size)
         var prev = -1f

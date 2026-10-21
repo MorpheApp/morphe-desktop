@@ -34,11 +34,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Label-and-input group rendered as a tight Column. Use inside a parent Column
- * that has its own `verticalArrangement = spacedBy(...)` for between-group
- * spacing — this composable's internal label↔field gap stays a fixed 4dp.
- */
+/** Group container that pairs an input component with a top label. */
 @Composable
 internal fun LabeledField(
     label: String,
@@ -54,15 +50,7 @@ internal fun LabeledField(
     }
 }
 
-/**
- * Slim text input matching the cyberdeck aesthetic across the app — pinned to
- * [MorpheDimens.controlHeight][app.morphe.gui.ui.theme.MorpheDimens.controlHeight] so it lines up with the project's standard
- * button height. Uses [BasicTextField] with a custom decoration so we get full
- * control of the height (Material 3's [androidx.compose.material3.OutlinedTextField]
- * has a 56dp minimum that's too chunky for this app).
- *
- * Optional [trailing] slot for things like password-visibility toggles.
- */
+/** Compact single-line text input with custom decoration and optional trailing slot. */
 @Composable
 internal fun SlimTextField(
     value: String,
@@ -128,11 +116,7 @@ internal fun SlimTextField(
     )
 }
 
-/**
- * Canonical slim search field matching the cyberdeck aesthetic across the app.
- * Pinned to [MorpheDimens.controlHeight][app.morphe.gui.ui.theme.MorpheDimens.controlHeight] with standard search icon, animated border,
- * placeholder, and clear button using [MorpheIconButton].
- */
+/** Compact search field with leading search icon, placeholder, and clear button. */
 @Composable
 internal fun SlimSearchField(
     value: String,
@@ -211,10 +195,7 @@ internal fun SlimSearchField(
     )
 }
 
-/**
- * Canonical slim password/secret input with integrated visibility toggle.
- * Built on [SlimTextField] with [PasswordVisualTransformation] and [MorpheIconButton].
- */
+/** Compact password field with integrated visibility toggle button. */
 @Composable
 internal fun SlimPasswordField(
     value: String,

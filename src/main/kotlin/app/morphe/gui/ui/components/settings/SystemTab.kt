@@ -150,11 +150,7 @@ internal fun SystemTab(
     }
 }
 
-/**
- * Inline row letting the user pick which CLI release channel update checks
- * follow. Mirrors [SettingToggleRow]'s layout, label plus dynamic description
- * on the left, chip group on the right where the switch would be.
- */
+/** Settings row for selecting the update release channel. */
 @Composable
 private fun UpdateChannelRow(
     selected: UpdateChannelPreference,

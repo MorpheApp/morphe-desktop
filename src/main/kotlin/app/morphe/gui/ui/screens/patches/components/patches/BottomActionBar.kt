@@ -23,10 +23,6 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ════════════════════════════════════════════════════════════════════
-//  BOTTOM ACTION BAR
-// ════════════════════════════════════════════════════════════════════
-
 @Composable
 internal fun BottomActionBar(
     uiState: PatchesUiState,
@@ -51,7 +47,6 @@ internal fun BottomActionBar(
             .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp)
     ) {
-        // Download progress
         if (uiState.isDownloading) {
             LinearProgressIndicator(
                 progress = { uiState.downloadProgress },
@@ -76,7 +71,6 @@ internal fun BottomActionBar(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             if (uiState.downloadedPatchFile == null) {
-                // Download button
                 MorpheButton(
                     onClick = onDownloadClick,
                     enabled = uiState.selectedRelease != null && !uiState.isDownloading,
@@ -90,7 +84,6 @@ internal fun BottomActionBar(
                     )
                 }
             } else {
-                // Select button
                 MorpheButton(
                     onClick = onSelectClick,
                     variant = MorpheButtonVariant.FILLED,
@@ -100,7 +93,6 @@ internal fun BottomActionBar(
                     Text(text = stringResource(Res.string.patches_select))
                 }
 
-                // Export JSON
                 if (uiState.isExporting) {
                     Box(
                         modifier = Modifier

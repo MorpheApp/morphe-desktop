@@ -5,14 +5,9 @@
 
 package app.morphe.engine
 
-/**
- * Utility to determine the host OS and architecture for resolving platform-specific dependencies.
- */
+/** Detects host operating system and architecture for dependency resolution. */
 object PlatformDetector {
-    /**
-     * The Skiko target name string based on the current platform and architecture.
-     * Examples: macos-arm64, windows-x64, linux-x64
-     */
+    /** Skiko runtime target identifier for the current platform and architecture. */
     val skikoTargetName: String by lazy {
         val osName = System.getProperty("os.name").lowercase()
         val osArch = System.getProperty("os.arch").lowercase()

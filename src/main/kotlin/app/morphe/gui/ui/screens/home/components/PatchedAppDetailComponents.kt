@@ -428,7 +428,7 @@ internal fun RowScope.StatCell(
     }
 }
 
-/** "↑ …" advice line. recommended = warning tone, optional = accent. */
+/** Update hint row with accent or warning coloring based on recommendation level. */
 @Composable
 internal fun UpdateHint(text: String, recommended: Boolean = false) {
     val accents = MorpheTheme.colors

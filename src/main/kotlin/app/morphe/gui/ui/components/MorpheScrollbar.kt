@@ -11,10 +11,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheTheme
 
-/**
- * Shared scrollbar style. Always-visible accent thumb, corners pulled from
- * the active Morphe theme so the scrollbar matches the rest of the geometry.
- */
+/** Scrollbar style matching the active Morphe theme geometry and accent color. */
 @Composable
 fun MorpheScrollbarStyle(
     thickness: Dp = 6.dp,

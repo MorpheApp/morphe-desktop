@@ -13,10 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.unit.sp
 
-/**
- * The standard sans-serif font used for the main UI. Roboto bundled TTF
- * with Skia system fallback for non-Latin characters (CJK, Arabic, etc.).
- */
+/** Standard sans-serif font for the UI with Skia system fallback for non-Latin scripts. */
 val MorpheFontFamily: FontFamily = FontFamily(
     Font(resource = "fonts/Roboto-Light.ttf", weight = FontWeight.Light),
     Font(resource = "fonts/Roboto-Regular.ttf", weight = FontWeight.Normal),
@@ -25,10 +22,7 @@ val MorpheFontFamily: FontFamily = FontFamily(
     Font(resource = "fonts/Roboto-Bold.ttf", weight = FontWeight.Bold),
 )
 
-/**
- * The monospace face for all technical data: versions,
- * package names, architectures, checksums, console output.
- */
+/** Monospace font for technical data and logs. */
 val MorpheMonoFamily: FontFamily = FontFamily(
     Font(resource = "fonts/RobotoMono-Light.ttf", weight = FontWeight.Light),
     Font(resource = "fonts/RobotoMono-Regular.ttf", weight = FontWeight.Normal),
@@ -43,19 +37,7 @@ val RobotoMono: FontFamily = MorpheMonoFamily
 val LocalMorpheFont = compositionLocalOf<FontFamily> { FontFamily.Default }
 val LocalMorpheMono = compositionLocalOf<FontFamily> { FontFamily.Monospace }
 
-/**
- * Desktop-calibrated typography system unifying standard Material 3 text styles with
- * monospace code and hero progress styles:
- * - [Typography.labelSmall]: 12.sp / 15.sp lineHeight / Normal (standard secondary text, metadata)
- * - [Typography.labelMedium]: 13.sp / 17.sp lineHeight / Normal (buttons, chips, tabs)
- * - [Typography.labelLarge]: 14.sp / 18.sp lineHeight / Medium (CTA buttons, key actions)
- * - [Typography.bodySmall]: 13.sp / 18.sp lineHeight / Normal (descriptions, card subtitles)
- * - [Typography.bodyMedium]: 14.sp / 20.sp lineHeight / Normal (default theme text style)
- * - [Typography.bodyLarge]: 16.sp / 22.sp lineHeight / Normal (prominent content)
- * - [Typography.titleSmall]: 16.sp / 22.sp lineHeight / SemiBold (dialog titles, card headers)
- * - [Typography.titleMedium]: 18.sp / 24.sp lineHeight / SemiBold (screen section headers)
- * - [Typography.titleLarge]: 22.sp / 28.sp lineHeight / Bold (screen titles)
- */
+/** Desktop typography system unifying standard Material 3 styles with code and hero styles. */
 data class MorpheTypography(
     val headlineMedium: TextStyle,
     val headlineSmall: TextStyle,
@@ -68,20 +50,16 @@ data class MorpheTypography(
     val labelMedium: TextStyle,
     val labelSmall: TextStyle,
 
-    // Extended technical / technical-readout styles
     val labelExtraSmall: TextStyle,
     val labelMicro: TextStyle,
     val codeSmall: TextStyle,
     val codeExtraSmall: TextStyle,
     val heroProgress: TextStyle,
 
-    // Underlying Material3 Typography for Compose components
     val material: Typography,
 )
 
-/**
- * Constructs a desktop-calibrated [MorpheTypography] system configured with the given [font] and [monoFont].
- */
+/** Constructs a [MorpheTypography] system configured with the given fonts. */
 fun morpheTypography(
     font: FontFamily = MorpheFontFamily,
     monoFont: FontFamily = MorpheMonoFamily,

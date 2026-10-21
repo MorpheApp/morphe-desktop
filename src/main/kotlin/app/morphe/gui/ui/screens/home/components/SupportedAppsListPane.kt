@@ -42,16 +42,7 @@ import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// SUPPORTED APPS LIST PANE
-// ============================================================================
-
-/**
- * Vertical-list variant of the supported-apps display used in the side-by-side
- * layout. Search field at top, scrollable LazyColumn of [SupportedAppListRow]
- * below. Single-expand semantics. Clicking a row expands it and collapses any
- * previously-expanded one.
- */
+/** Pane displaying a searchable, sortable list of supported applications. */
 @Composable
 internal fun SupportedAppsListPane(
     supportedApps: List<SupportedApp>,
@@ -107,7 +98,7 @@ internal fun SupportedAppsListPane(
     }
     val activeCount = if (filter == AppListFilter.YOURS) patchedRecords.size else supportedApps.size
 
-    // Collapse if the currently expanded app filters out.
+    // Collapse selection if the expanded app no longer matches filters.
     LaunchedEffect(searchQuery, filtered) {
         if (expandedPackage != null && filtered.none { it.packageName == expandedPackage }) {
             expandedPackage = null
@@ -122,13 +113,11 @@ internal fun SupportedAppsListPane(
             .wrapContentHeight()
             .align(Alignment.TopCenter),
       ) {
-        // ── On-open update notice: jumps to "Your apps" where each is badged ──
         val updateCount = patchedStates.values.count { it == PatchedAppState.PATCHED_WITH_UPDATES }
         if (filter == AppListFilter.ALL && updateCount > 0) {
             PatchedUpdatesBanner(updateCount) { onFilterChange(AppListFilter.YOURS) }
         }
 
-        // ── Filter: ALL APPS · YOUR APPS ──
         Row(
             modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -149,11 +138,7 @@ internal fun SupportedAppsListPane(
             )
         }
 
-        // ── Search field ──
         if (activeCount > 4) {
-            // Match the LazyColumn's right padding so the field aligns with cards.
-            // Dp.Unspecified disables the default 340dp cap so the field fills
-            // the pane width like the cards below it.
             Box(modifier = Modifier.fillMaxWidth().padding(end = 12.dp)) {
                 SlimSearchField(
                     value = searchQuery,
@@ -185,8 +170,6 @@ internal fun SupportedAppsListPane(
                 ) {
                     repeat(4) { idx ->
                         SkeletonAppRow(
-                            // Slight stagger: each row pulses 120ms after the previous
-                            // so the skeleton list feels alive instead of lock-step.
                             staggerOffsetMs = idx * 120,
                         )
                     }
@@ -217,9 +200,7 @@ internal fun SupportedAppsListPane(
                             variant = MorpheButtonVariant.OUTLINED,
                             size = MorpheButtonSize.COMPACT,
                         )
-                        // Always offer a way to the source manager here: when a bundle is
-                        // broken (e.g. needs a newer patcher), fixing it means removing or
-                        // re-pointing that source, so it must be reachable from the error.
+                        // Provide access to source management to resolve broken bundles.
                         MorpheButton(
                             onClick = onManageSources,
                             label = stringResource(Res.string.home_header_manage_sources_button),
@@ -244,12 +225,6 @@ internal fun SupportedAppsListPane(
             }
             else -> {
                 val listState = rememberLazyListState()
-                // Cap the list at the pane's available height (minus a header
-                // + optional search allowance) so it scrolls when there are
-                // many apps but wraps tight + lets the Column center when few.
-                // Tight estimate: header ~22dp, search field (only shown when
-                // >4 apps) ~46dp. Anything over-budgeted leaves dead space
-                // above the list when content fills, so be precise.
                 val headerSearchAllowance =
                     if (supportedApps.size > 4) 68.dp else 22.dp
                 Box(
@@ -262,9 +237,6 @@ internal fun SupportedAppsListPane(
                 ) {
                     LazyColumn(
                         state = listState,
-                        // Scrollbar is 6dp wide and sits at the Box's right edge.
-                        // 6 (scrollbar width) + 6 (visible gap) = 12dp keeps content
-                        // fully clear of the scrollbar with breathing room.
                         modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
@@ -282,11 +254,6 @@ internal fun SupportedAppsListPane(
                             )
                         }
                     }
-                    // Wrap the scrollbar in a matchParentSize Box so it
-                    // tracks the LazyColumn's wrapped height WITHOUT forcing
-                    // the outer Box to fill its heightIn(max=…) cap. Then
-                    // align CenterEnd + wrap width to keep it pinned at the
-                    // right edge at its natural 6dp thickness.
                     Box(
                         modifier = Modifier.matchParentSize(),
                         contentAlignment = Alignment.CenterEnd,
@@ -304,7 +271,7 @@ internal fun SupportedAppsListPane(
     }
 }
 
-/** Loading skeleton. Ghost row that mimics SupportedAppListRow's shape. */
+/** Loading skeleton matching [SupportedAppListRow] dimensions. */
 @Composable
 internal fun SkeletonAppRow(
     staggerOffsetMs: Int,
@@ -332,7 +299,6 @@ internal fun SkeletonAppRow(
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        // Row 1: avatar + name/package bars
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
@@ -358,7 +324,6 @@ internal fun SkeletonAppRow(
                 )
             }
         }
-        // Row 2: chip placeholders
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Box(
                 modifier = Modifier

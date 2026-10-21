@@ -80,7 +80,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val targetPackage = viewModel.targetPackage()
 
-    // Load keystore config for CLI preview
     val engineConfig by produceState<EngineConfig?>(initialValue = null) {
         value = engineConfigRepository.loadConfig()
     }
@@ -103,7 +102,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     }
 
     Column(modifier = Modifier.fillMaxSize().background(screenScrim)) {
-        // ── Header bar ──
         PatchSelectionHeader(
             uiState = uiState,
             showCommandPreview = showCommandPreview,
@@ -152,7 +150,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             }
         }
 
-        // Search bar
         PatchSearchBar(
             query = uiState.searchQuery,
             onQueryChange = { viewModel.setSearchQuery(it) },
@@ -185,10 +182,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 }
             }
 
-            // Global empty state. When EVERY loaded bundle has zero patches
-            // compatible with this APK. None of the enabled sources contribute
-            // anything for this app's package. Rendering empty bundle boxes
-            // would be pure noise.
+            // No loaded bundles have patches compatible with this app.
             !uiState.isLoading && uiState.bundles.all { it.patches.isEmpty() } -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -204,10 +198,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 }
             }
 
-            // Global "no matches for search" empty state. Only fires when
-            // EVERY bundle that HAS patches has been filtered to empty by
-            // the active search. Bundles with 0 patches for this app are
-            // hidden separately above, so we only consider non-empty sources.
+            // All non-empty bundles filtered out by search query.
             uiState.searchQuery.isNotBlank() && run {
                 val nonEmptySourceIds = uiState.bundles
                     .filter { it.patches.isNotEmpty() }
@@ -286,7 +277,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // 1. Tab row (when multiple bundles are present)
                     if (hasMultipleBundles) {
                         val tabScrollState = rememberScrollState()
 
@@ -377,7 +367,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         }
                     }
 
-                    // 2. Controls fixed below the tab row
                     val currentIndex = pagerState.currentPage
                     val currentBundle = eligibleBundles.getOrNull(currentIndex)
                     if (currentBundle != null) {
@@ -392,7 +381,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         )
                     }
 
-                    // 3. Pager for the patch list
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -499,7 +487,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     }
                 }
 
-                // ── Bottom action bar ──
                 PatchSelectionBottomBar(
                     selectedCount = uiState.selectedCount,
                     onPatchClick = {

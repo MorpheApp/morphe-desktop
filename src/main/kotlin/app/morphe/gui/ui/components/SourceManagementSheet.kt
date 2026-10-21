@@ -55,25 +55,11 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-/**
- * Multi-source management sheet, summoned from the home header `+` button.
- * Lists every configured patch source with an enable toggle. Default source
- * cannot be deleted or renamed (mirrors morphe-manager rules). Other sources
- * can be edited or removed.
- *
- * Caller wires actions to [PatchSourceManager][app.morphe.gui.data.repository.PatchSourceManager] / [ConfigRepository][app.morphe.gui.data.repository.ConfigRepository] equivalents.
- */
-/**
- * How rows in the management sheet behave:
- * - [MULTI_TOGGLE]: each source has an enable Switch. Used by Expert mode where
- *   patches from all enabled sources are unioned.
- * - [SINGLE_SELECT]: each row is a radio. Used by Quick Patch mode where exactly
- *   one source is "active" at a time.
- */
+/** Modal sheet for managing, reordering, adding, and toggling patch sources. */
+/** Selection mode determining whether sources are toggled independently or mutually exclusively. */
 enum class SourceSheetMode { MULTI_TOGGLE, SINGLE_SELECT }
 
-/** 4-way move cursor shown over a source's drag handle so the grab affordance
- *  reads as "draggable", distinct from the plain hand used elsewhere. */
+/** Cursor displayed over source drag handles. */
 private val DragMoveCursor = PointerIcon(Cursor(Cursor.MOVE_CURSOR))
 
 @Composable
@@ -85,25 +71,20 @@ fun SourceManagementSheet(
     onRemove: (id: String) -> Unit,
     onOpenPatches: (sourceId: String) -> Unit,
     onDismiss: () -> Unit,
-    /** Reload all sources: Re-resolves a folder source to its newest .mpp so a
-     *  freshly-built patch is picked up without leaving the screen. */
+    /** Reloads all sources to pick up newly built or updated local patches. */
     onRefresh: () -> Unit = {},
-    /** Persist a new source ordering (ids in desired order). Order affects only
-     *  the display-name tiebreak + UI presentation, not which patches load. */
+    /** Callback invoked when the user persists a new source order. */
     onReorder: (orderedIds: List<String>) -> Unit = {},
     enabled: Boolean = true,
-    /** sourceId → resolved version label (e.g. "v1.27.0-dev.2"). Empty when not loaded. */
+    /** Map of source ID to resolved version label. */
     sourceVersions: Map<String, String?> = emptyMap(),
-    /** sourceId → channel classification of the resolved release. Drives the badge. */
+    /** Map of source ID to channel classification for badge rendering. */
     sourceChannels: Map<String, Channel?> = emptyMap(),
-    /** True while patches are being (re)loaded. Drives the per-row spinner shown
-     *  in place of the version/badge for enabled sources whose data isn't yet
-     *  in [sourceVersions]. */
+    /** Indicates whether source patches are currently being loaded. */
     isLoading: Boolean = false,
-    /** sourceId → load-failure message for sources that failed to load. Drives the per-row
-     *  FAILED state, so a partial multi-source failure shows exactly which source broke. */
+    /** Map of source ID to failure error message. */
     sourceErrors: Map<String, String> = emptyMap(),
-    /** Selection semantics. Defaults to multi-toggle (Expert mode). */
+    /** Selection mode determining row interaction semantics. */
     mode: SourceSheetMode = SourceSheetMode.MULTI_TOGGLE,
     activeSourceId: String? = null,
     onSelectSingle: (sourceId: String) -> Unit = {},
@@ -111,27 +92,16 @@ fun SourceManagementSheet(
     var showAddDialog by remember { mutableStateOf(false) }
     var editingSource by remember { mutableStateOf<PatchSource?>(null) }
 
-    // ── Drag-to-reorder state ──────────────────────────────────────────────
-    // workingOrder is the live ordering the UI renders from. It reseeds only
-    // when the actual id sequence from config changes (List equals is
-    // structural), so a drag we just persisted doesn't get clobbered mid-flight.
+    // Live ordering rendered by the UI.
     val density = LocalDensity.current
     val rowSpacingPx = with(density) { 8.dp.toPx() }
     val sourcesById = remember(sources) { sources.associateBy { it.id } }
-    // Stable identity (no remember key) so the drag gesture's captured reference
-    // never goes stale. We instead adopt external order/membership changes via the
-    // effect below, but only while idle, so an in-flight drag is never clobbered.
     var workingOrder by remember { mutableStateOf(sources.map { it.id }) }
     val rowHeights = remember { mutableStateMapOf<String, Int>() }
     var draggingId by remember { mutableStateOf<String?>(null) }
-    // Raw total cursor displacement since grab, never mutated mid-drag, so no
-    // drift accumulates. Visual offset is derived by subtracting the layout
-    // shift already applied via reordering (see dragOffsetY below).
     var dragDeltaY by remember { mutableStateOf(0f) }
     var dragStartIndex by remember { mutableStateOf(0) }
-    // Pull in source add/remove/rename/external-reorder, but never mid-drag, and
-    // only when the id sequence actually changed (keyed on the id list), so the
-    // order we just persisted from a drag doesn't trigger a snap-back.
+    // Sync external order changes only while not dragging.
     LaunchedEffect(sources.map { it.id }) {
         if (draggingId == null) workingOrder = sources.map { it.id }
     }
@@ -171,19 +141,12 @@ fun SourceManagementSheet(
             }
         },
         text = {
-            // Hoisted so the scrollbar can share the same state as the
-            // scrolling Column. The scrollbar renders only when the
-            // content actually overflows (maxValue > 0), which keeps the
-            // dialog clean for the common case of a handful of sources.
             val scrollState = rememberScrollState()
             Box {
                 Column(
                     modifier = Modifier
                         .verticalScroll(scrollState)
                         .widthIn(min = 360.dp)
-                        // Reserve space so rows don't get covered by the
-                        // scrollbar when it appears, plus a bit of breathing
-                        // room so the scrollbar isn't flush against the rows.
                         .padding(end = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -201,15 +164,10 @@ fun SourceManagementSheet(
                 Spacer(Modifier.height(4.dp))
 
                 orderedSources.forEachIndexed { index, source ->
-                  // Key by source id (not list position) so a mid-drag reorder
-                  // moves the same composable instead of rebinding slots, which
-                  // would otherwise cancel the in-flight drag gesture.
+                  // Key by source ID to preserve gesture state during reorder.
                   key(source.id) {
                     val isDragging = source.id == draggingId
-                    // One slot's pitch (row height + inter-row spacing). Rows vary
-                    // slightly. The dragged row's own height is a fine unit and,
-                    // crucially, the same value drives both the target-index pick
-                    // and the visual offset, so they stay in lockstep.
+                    // Row pitch for drag target selection and offset calculation.
                     val slotPitch = ((rowHeights[source.id] ?: 0) + rowSpacingPx).coerceAtLeast(1f)
                     val dragHandleModifier = if (canReorder) {
                         Modifier.pointerInput(source.id) {
@@ -235,9 +193,7 @@ fun SourceManagementSheet(
                             )
                         }
                     } else Modifier
-                    // Cursor displacement minus the layout shift already realised by
-                    // reordering = the residual the row must translate to sit under
-                    // the cursor. No running subtraction, so nothing drifts.
+                    // Visual translation offset relative to current list index.
                     val dragOffsetY = if (isDragging) dragDeltaY - (index - dragStartIndex) * slotPitch else 0f
                     SourceRow(
                         source = source,
@@ -279,8 +235,7 @@ fun SourceManagementSheet(
                     onClick = { showAddDialog = true },
                 )
 
-                // Patch-developer extras. Sits under the sources it applies to, and
-                // renders only when Developer options are on.
+                // Exclusions section rendered when developer options are enabled.
                 DeveloperMppExclusionsSection(enabled = enabled)
                 }
 
@@ -362,12 +317,8 @@ private fun SourceRow(
     val isHovered by hoverInteraction.collectIsHoveredAsState()
     val isEnabled = source.enabled
     val isDefault = !source.deletable
-    // Card click works regardless of enable state. In MULTI_TOGGLE mode it opens
-    // patches for the source (PatchesScreen). In SINGLE_SELECT mode it picks the
-    // source as the active one for Quick Patch. Disabled only while patching.
     val canInteract = enabled
-    // For visual highlight: in MULTI mode highlight when source is enabled, in
-    // SINGLE_SELECT highlight when this row is the picked one.
+    // Highlight enabled sources in multi-mode or active source in single-select mode.
     val isHighlighted = if (mode == SourceSheetMode.SINGLE_SELECT) isActiveSelection else isEnabled
 
     val animatedBorder by animateColorAsState(
@@ -417,8 +368,6 @@ private fun SourceRow(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (canReorder) {
-                // Drag handle, the only grab point. The rest of the row stays
-                // click-to-open. Position number sits beside it for orientation.
                 Box(
                     modifier = Modifier
                         .pointerHoverIcon(DragMoveCursor)
@@ -449,9 +398,6 @@ private fun SourceRow(
                         style = if (isEnabled) MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
                                 else MorpheTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
-                        // Prevent the name from cramming against the badge by truncating it
-                        // with an ellipsis. weight(fill = false) bounds the width so it
-                        // truncates rather than pushing the badge off.
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false),
@@ -535,7 +481,7 @@ private fun SourceRow(
                 )
                 Spacer(Modifier.width(2.dp))
             }
-            // Edit is shown for all (including default), delete is hidden for default
+            // Edit action is available for all sources; delete is hidden for the default source.
             if (enabled) {
                 MorpheIconButton(
                     icon = MorpheIcons.Edit,
@@ -587,10 +533,7 @@ private fun SourceRow(
     }
 }
 
-/**
- * Compact vertical up/down nudge control, a keyboard-free precise fallback to
- * drag reordering. Arrows dim out at the list ends.
- */
+/** Up/down arrow controls for step-by-step source reordering. */
 @Composable
 private fun ReorderArrows(
     canMoveUp: Boolean,
@@ -660,13 +603,7 @@ private fun ChannelBadge(
     )
 }
 
-/**
- * Developer-only section at the bottom of the source sheet. Lets a patch developer add
- * glob or plain-word patterns for .mpp files that a folder source should ignore when it
- * auto-loads the newest build. Self-contained, it reads and persists through
- * ConfigRepository the same way the add and edit source dialogs pull developer state.
- * Renders nothing unless Developer options are on.
- */
+/** Developer section for configuring excluded .mpp file patterns for folder sources. */
 @Composable
 private fun DeveloperMppExclusionsSection(enabled: Boolean) {
     val engineConfigRepository = koinInject<EngineConfigRepository>()
@@ -708,12 +645,7 @@ private fun DeveloperMppExclusionsSection(enabled: Boolean) {
     }
 }
 
-/**
- * Editor for extra .mpp exclusion patterns. Type a pattern and add it. Each saved pattern
- * shows as a removable row. A plain word matches any file that contains it, and a pattern
- * with a wildcard is treated as a glob. The build classifiers *-sources.mpp and
- * *-javadoc.mpp are always excluded and are not listed here.
- */
+/** Editor for adding and removing custom .mpp exclusion pattern filters. */
 @Composable
 private fun ExcludedPatternsEditor(
     patterns: List<String>,

@@ -58,7 +58,6 @@ internal fun AdbInstallSection(
                 .fillMaxWidth()
                 .padding(20.dp)
         ) {
-            // Header
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -141,7 +140,6 @@ internal fun AdbInstallSection(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     } else {
-                        // Device list
                         (readyDevices + notReadyDevices).forEach { device ->
                             val isSelected = selectedDevice?.id == device.id
                             val enabled = device.isReady
@@ -227,7 +225,6 @@ internal fun AdbInstallSection(
 
                         Spacer(Modifier.height(6.dp))
 
-                        // Install button
                         MorpheButton(
                             label = if (selectedDevice != null) {
                                 if (alreadyInstalled) stringResource(Res.string.result_adb_update_button, selectedDevice.displayName)

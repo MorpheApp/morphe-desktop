@@ -40,7 +40,6 @@ internal fun PatchSearchBar(
             modifier = Modifier.weight(1f),
         )
 
-        // "Selected" filter chip
         MorpheChoiceChip(
             text = stringResource(Res.string.patch_selection_filter_selected),
             active = showOnlySelected,

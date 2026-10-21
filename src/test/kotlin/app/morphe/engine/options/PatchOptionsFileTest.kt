@@ -19,7 +19,6 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 
 class PatchOptionsFileTest {
-    // findMatchingBundle section ------------------
     @Test
     fun `findMatchingBundle returns null for empty list`(){
         val result = emptyList<PatchBundle>().findMatchingBundle(emptySet())
@@ -42,7 +41,7 @@ class PatchOptionsFileTest {
         val tmpFile = File.createTempFile("test", ".mpp")
         tmpFile.writeText("test content")
         tmpFile.deleteOnExit()
-        val hash = FileChecksum.sha256(tmpFile) // We use SHA to get our exact patch options
+        val hash = FileChecksum.sha256(tmpFile)
 
         val bundle1 = PatchBundle(
             meta = PatchBundleMeta(sha256 = "some-wrong-hash"),
@@ -57,10 +56,8 @@ class PatchOptionsFileTest {
         assertEquals(bundle2, result)
     }
 
-    // withUpdateBundle section ------------------
     @Test
     fun `withUpdateBundle replaces matching Bundle`(){
-        // Replace the old patch with same hash with fresh run's results (Both share the same hash)
         val oldBundle = PatchBundle(
             meta = PatchBundleMeta(sha256 = "hash-A"),
             patches = mapOf("Test patch 1" to PatchEntry(enabled = true))
@@ -78,7 +75,6 @@ class PatchOptionsFileTest {
 
     @Test
     fun `withUpdateBundle appends when no matching Bundle`(){
-        // Add the new patch's results to the end of the file because this is a new patch's results
         val oldBundle = PatchBundle(
             meta = PatchBundleMeta(sha256 = "hash-A"),
             patches = mapOf("Test patch 1" to PatchEntry(enabled = true))
@@ -95,15 +91,12 @@ class PatchOptionsFileTest {
         assertEquals(newBundle, result.last())
     }
 
-    // mergeWithBundle section ------------------
     @Test
     fun `mergeWithBundle preserves existing settings`(){
-        // New patch from .mpp files comes with this default (enabled + light)
         val patch = rawResourcePatch(name = "Theme", description = "Change Theme", default = true){
             option<String>(key = "colorScheme", default = "light")
         }
 
-        // User's existing bundle has these settings (disabled + dark)
         val userBundle = PatchBundle(
             meta = PatchBundleMeta(),
             patches = mapOf("Theme" to PatchEntry(
@@ -112,7 +105,6 @@ class PatchOptionsFileTest {
             ))
         )
 
-        // Merge should keep user's settings
         val result = setOf(patch).mergeWithBundle(existing = userBundle)
 
         val themeEntry = result.patches["Theme"]!!
@@ -122,13 +114,9 @@ class PatchOptionsFileTest {
 
     @Test
     fun `mergeWithBundle adds new Patch that didn't exist with default settings`(){
-        // We add new Patch that didn't exist with default values
         val themePatch = rawResourcePatch(name = "Theme", description = "Change Theme", default = true) {}
 
-        // Declare a compatible package so this is NOT a universal patch. As of
-        // morphe-patcher 1.6.1-dev.1, Patch.resolveDefaultValue() forces universal
-        // patches (no compatibleWith) to default = false, so `default = true` is only
-        // honored for app-specific patches.
+        // App-specific patch to verify default=true is preserved (universal patches force default=false).
         val adBlockPatch = rawResourcePatch(name = "AdBlocker", description = "Block Ads", default = true) {
             compatibleWith(Compatibility("com.example.app", "Example"))
         }
@@ -139,15 +127,13 @@ class PatchOptionsFileTest {
         )
         val result = setOf(themePatch,adBlockPatch).mergeWithBundle(existing = userBundle)
         assertEquals(2, result.patches.size)
-        assertEquals(false, result.patches["Theme"]!!.enabled) // This is preserved
-        assertEquals(true, result.patches["AdBlocker"]!!.enabled) // Added with default setting
+        assertEquals(false, result.patches["Theme"]!!.enabled)
+        assertEquals(true, result.patches["AdBlocker"]!!.enabled)
     }
 
     @Test
     fun `mergeWithBundle adds a universal Patch disabled even when it declares default true`(){
-        // A universal patch (no compatibleWith, so it targets any app) marked default = true.
-        // The patcher's Patch.resolveDefaultValue() force-disables universal patches, so even
-        // though we asked for default = true, it must come out DISABLED after the merge.
+        // Universal patches without compatibility entries default to disabled.
         val universalPatch = rawResourcePatch(name = "Universal", description = "Applies to any app", default = true) {}
 
         val userBundle = PatchBundle(
@@ -161,7 +147,6 @@ class PatchOptionsFileTest {
 
     @Test
     fun `mergeWithBundle removes an old patch that no longer exists`(){
-        // We remove an old patch that no longer exists
         val themePatch = rawResourcePatch(name = "Theme", description = "Change Theme", default = true) {}
 
         val userBundle = PatchBundle(

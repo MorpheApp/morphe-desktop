@@ -14,12 +14,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import kotlin.math.sin
 
-/**
- * Rings background - concentric stroke circles with parallax effect.
- * Uses frame-based time so [speedMultiplier] changes smoothly without restarting animations.
- * On patching completion each ring group surges outward in radius and fades - staggered by
- * group index - then eases back to normal.
- */
+/** Animated background rendering concentric stroke rings with parallax and completion surge effects. */
 @Composable
 fun RingsBackground(
     modifier: Modifier = Modifier,
@@ -33,7 +28,6 @@ fun RingsBackground(
 
     val parallaxState = LocalParallaxState.current
 
-    // Ring configurations - defined once, positions oscillate via sin() each frame
     val ringConfigs = remember {
         listOf(
             RingConfig(0.2f, 0.2f, 0.3f, 0.25f, 9000, 8000, listOf(140f, 190f, 240f), 0.8f),
@@ -47,8 +41,7 @@ fun RingsBackground(
 
     val time = rememberAnimatedTime(speedMultiplier)
 
-    // burstProgress 0→1: each ring group expands radius and fades, staggered by group index.
-    // Snaps back to 0f after completion so rings return to normal state.
+    // Ring expansion and fade progress on completion.
     val burstProgress = rememberBurstProgress(patchingCompleted)
 
     Canvas(modifier = modifier.fillMaxSize()) {
@@ -57,7 +50,7 @@ fun RingsBackground(
         val bp = burstProgress.value
 
         ringConfigs.forEachIndexed { index, config ->
-            // Each ring oscillates between start/end using sin - mirrors the original Reverse tween
+            // Sine oscillation between start and end coordinates.
             val halfX = (config.endX - config.startX) / 2f
             val halfY = (config.endY - config.startY) / 2f
             val cx = config.startX + halfX + halfX * sin(t * TWO_PI / config.durationX)
@@ -69,21 +62,18 @@ fun RingsBackground(
                 size.height * cy + tilt.y * parallaxStrength
             )
 
-            // Select color based on index
             val baseColor = when (index % 3) {
                 0 -> primaryColor
                 1 -> secondaryColor
                 else -> tertiaryColor
             }
 
-            // Stagger burst: group 0 starts immediately, last group starts at bp=0.4
+            // Stagger burst timing across ring groups.
             val groupDelay = index / (ringConfigs.size - 1).toFloat() * 0.4f
             val localBp = ((bp - groupDelay) / (1f - groupDelay)).coerceIn(0f, 1f)
-            // Radius surges then fades; alpha fades out during burst
             val radiusScale = if (bp > 0f) 1f + localBp * 1.8f else 1f
             val burstAlpha = if (bp > 0f) (1f - localBp).coerceIn(0f, 1f) else 1f
 
-            // Draw multiple concentric rings per group
             config.radii.forEachIndexed { ringIndex, radius ->
                 val alpha = when (ringIndex) {
                     0 -> 0.14f
@@ -115,5 +105,5 @@ private data class RingConfig(
     val durationX: Int,
     val durationY: Int,
     val radii: List<Float>,
-    val depth: Float // Depth for parallax effect
+    val depth: Float
 )

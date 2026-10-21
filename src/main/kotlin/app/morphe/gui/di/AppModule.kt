@@ -26,12 +26,9 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-/**
- * Main Koin module for dependency injection.
- */
+/** Dependency injection module bindings. */
 val appModule = module {
 
-    // JSON serialization
     single {
         Json {
             prettyPrint = true
@@ -41,14 +38,12 @@ val appModule = module {
         }
     }
 
-    // Ktor HTTP Client
     single {
         createHttpClient(json = get()) { message ->
             Logger.debug("HTTP: $message")
         }
     }
 
-    // Repositories and Services
     single { EngineConfigRepository.shared }
     single { KeystoreService.shared }
     single { ConfigRepository() }
@@ -60,8 +55,6 @@ val appModule = module {
     single { ChangelogRepository(get()) }
     single { PatchedAppStore.shared }
 
-    // ViewModels
-    // ViewModels observe PatchSourceManager.sourceVersion and reload on source changes.
     viewModel {
         HomeViewModel(get(), get(), get(), get(), get())
     }

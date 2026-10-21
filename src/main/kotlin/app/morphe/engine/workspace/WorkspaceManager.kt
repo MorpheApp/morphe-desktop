@@ -11,20 +11,12 @@ import app.morphe.engine.util.deleteRecursivelyInParallel
 import java.io.File
 import java.io.IOException
 
-/**
- * Manager for session workspaces, scratch files, and shadow copies.
- * All temporary and scratch files are rooted strictly under [MorpheData.tmpDir].
- */
+/** Manages session workspaces, scratch files, and shadow bundle copies. */
 object WorkspaceManager {
     val scratchDir: File get() = MorpheData.tmpDir
     private val shadowDir: File get() = File(scratchDir, "shadow").also { it.mkdirs() }
 
-    /**
-     * Executes [block] within an isolated [SessionWorkspace].
-     *
-     * The workspace is guaranteed to be cleaned up on completion unless [disablePurge] is true
-     * or the workspace is explicitly marked to retain.
-     */
+    /** Executes [block] inside a temporary [SessionWorkspace], cleaning it up on completion. */
     inline fun <T> useSession(
         prefix: String = "patching",
         customDir: File? = null,
@@ -46,10 +38,7 @@ object WorkspaceManager {
         }
     }
 
-    /**
-     * Creates `[prefix]-[milliseconds]` under [parent], moving to the next millisecond when another
-     * process created that name first, so two sessions never share a directory.
-     */
+    /** Creates a collision-free session directory with millisecond timestamp suffix. */
     fun newSessionDirectory(parent: File, prefix: String): File {
         parent.mkdirs()
         var stamp = System.currentTimeMillis()
@@ -61,10 +50,7 @@ object WorkspaceManager {
         }
     }
 
-    /**
-     * Creates a safe shadow copy of an .mpp file in `morphe-data/tmp/shadow/`
-     * to avoid Windows `URLClassLoader` file-locking bugs.
-     */
+    /** Creates a temporary shadow copy of [sourceFile] to prevent Windows classloader file locks. */
     fun createShadowCopy(sourceFile: File, prefix: String = "bundle"): File {
         val copy = File(shadowDir, "$prefix-${System.nanoTime()}.mpp")
         copy.deleteOnExit()
@@ -72,30 +58,21 @@ object WorkspaceManager {
         return copy
     }
 
-    /**
-     * Returns the total byte size of all scratch and temporary files in [MorpheData.tmpDir].
-     */
+    /** Returns total byte size of scratch and temporary files. */
     fun getScratchSize(): Long = CacheManager.getDirectorySize(scratchDir)
 
-    /**
-     * Returns true if there are any scratch files or directories in [MorpheData.tmpDir].
-     */
+    /** Checks if any scratch files or directories exist. */
     fun hasScratchFiles(): Boolean = try {
         scratchDir.exists() && (scratchDir.listFiles()?.isNotEmpty() == true)
     } catch (_: Exception) {
         false
     }
 
-    /**
-     * Deletes all scratch and temporary contents under [MorpheData.tmpDir].
-     */
+    /** Deletes all temporary contents in the scratch directory. */
     fun clearScratch(): CacheManager.DirResult =
         CacheManager.clearDirectoryContents("Temp", scratchDir)
 
-    /**
-     * Reaps stale session directories and shadow files left behind by past crashed runs.
-     * Default threshold: 12 hours.
-     */
+    /** Deletes orphaned session directories and shadow files older than [maxAgeMs]. */
     fun reapStaleWorkspaces(maxAgeMs: Long = 12 * 3600 * 1000L): Int {
         val now = System.currentTimeMillis()
         var reaped = 0

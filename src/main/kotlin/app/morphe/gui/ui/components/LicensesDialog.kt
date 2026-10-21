@@ -57,9 +57,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
             val json = stream?.bufferedReader()?.use { it.readText() }
             if (json != null) Libs.Builder().withJson(json).build() else null
         } catch (e: Throwable) {
-            // Throwable, not Exception: a JVM/dep version mismatch surfaces as an
-            // UnsupportedClassVersionError (a LinkageError), which isn't an Exception —
-            // catch it so the viewer degrades to empty instead of taking down the screen.
+            // Catch LinkageError and other non-Exception throwables to avoid crashing the screen.
             Logger.error("Failed to load licenses", e)
             null
         }
@@ -99,7 +97,6 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
             horizontalAlignment = Alignment.Start,
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                // ── Header ──
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -126,7 +123,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        // GPLv3 §7b requires the warranty NOTICE be provided to the user.
+                        // GPLv3 §7b requires providing the warranty notice.
                         NoticeButton(onClick = { showNotice = true })
 
                         MorpheIconButton(
@@ -141,7 +138,6 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
 
                 HorizontalDivider(color = dividerColor)
 
-                // ── Search bar ──
                 Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 12.dp)) {
                     SlimSearchField(
                         value = searchQuery,
@@ -152,7 +148,6 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
 
                 HorizontalDivider(color = dividerColor)
 
-                // ── List ──
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when {
                         libs == null -> EmptyHint(text = stringResource(Res.string.licenses_dialog_empty_failed), isError = true)
@@ -186,7 +181,6 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
 
                 HorizontalDivider(color = dividerColor)
 
-                // ── Footer ──
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -432,10 +426,7 @@ private fun EmptyHint(text: String, isError: Boolean) {
     }
 }
 
-/**
- * Morphe's project NOTICE. Hardcoded on purpose since it never changes. GPLv3 §7b requires this
- * warranty statement reach the user. The NOTICE button in the header shows it.
- */
+/** Morphe project warranty notice text required by GPLv3 §7b. */
 private val MORPHE_NOTICE = """
     Morphe NOTICE
 
@@ -468,7 +459,7 @@ private val MORPHE_NOTICE = """
     service marks, or logos.
 """.trimIndent()
 
-/** Header pill that opens the [NoticeTextDialog]. */
+/** Header button that opens the [NoticeTextDialog]. */
 @Composable
 private fun NoticeButton(
     onClick: () -> Unit,
@@ -481,7 +472,7 @@ private fun NoticeButton(
     )
 }
 
-/** Scrollable viewer for the project [MORPHE_NOTICE] — mirrors [LicenseTextDialog]. */
+/** Modal dialog displaying the project [MORPHE_NOTICE]. */
 @Composable
 private fun NoticeTextDialog(onDismiss: () -> Unit) {
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = MorpheTheme.alphas.borderMuted)
@@ -680,5 +671,5 @@ private fun licenseDisplayLabel(license: License): String {
     license.spdxId?.takeIf { it.isNotBlank() }?.let { return it }
     val hash = license.hash
     if (hash.isNotBlank() && !MD5_HASH_REGEX.matches(hash)) return hash
-    return license.name.ifBlank { "—" }
+    return license.name.ifBlank { "-" }
 }

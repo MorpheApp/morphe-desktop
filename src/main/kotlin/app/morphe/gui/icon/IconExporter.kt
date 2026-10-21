@@ -10,16 +10,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-/**
- * Flattens an [IconProject] into the exact folder the branding patch's `customIcon`
- * option reads. Mirrors morphe-manager's `AdaptiveIconConfig` constants:
- *  - `mipmap-<dpi>/{background,foreground}.png`  — the adaptive icon (required)
- *  - `drawable-<dpi>/notification.png`           — status-bar notification icon
- *  - `drawable/monochrome.xml`                   — Android 13+ themed-icon layer
- *
- * Output lives under `morphe-data/icons/<packageName>/generated/` — persistent user
- * content, deliberately NOT part of clear-cache.
- */
+/** Exports an [IconProject] into density-specific adaptive and notification icon assets. */
 object IconExporter {
 
     private const val BACKGROUND_FILE = "morphe_adaptive_background_custom.png"
@@ -27,7 +18,7 @@ object IconExporter {
     private const val NOTIFICATION_FILE = "morphe_notification_icon_custom.png"
     private const val MONOCHROME_FILE = "morphe_adaptive_monochrome_custom.xml"
     private const val MONO_VIEWPORT = 108
-    private const val SAFE_ZONE = 0.72f  // notification-icon content fraction (padding, like the manager)
+    private const val SAFE_ZONE = 0.72f
 
     private val DENSITIES = listOf(
         "mipmap-mdpi" to 108, "mipmap-hdpi" to 162, "mipmap-xhdpi" to 216,
@@ -38,35 +29,29 @@ object IconExporter {
         "drawable-xxhdpi" to 72, "drawable-xxxhdpi" to 96,
     )
 
-    /** Per-package project directory: `morphe-data/icons/<packageName>/`. */
+    /** Returns the project storage directory for [packageName]. */
     fun projectDir(packageName: String): File =
         File(MorpheData.iconsDir, packageName).also { it.mkdirs() }
 
-    /**
-     * Render [project] at all densities and write the mipmap folder (+ notification
-     * icon + monochrome layer) for [packageName]. Returns the folder to set as the
-     * `customIcon` option value.
-     */
+    /** Exports rendered adaptive and notification icon assets for [packageName]. */
     fun export(project: IconProject, packageName: String): File {
         val generated = File(projectDir(packageName), "generated")
         generated.deleteRecursively()
         generated.mkdirs()
 
-        // Adaptive icon: separate background + foreground per density.
         for ((folder, size) in DENSITIES) {
             val dir = File(generated, folder).also { it.mkdirs() }
             ImageIO.write(IconRenderer.renderBackground(project, size), "png", File(dir, BACKGROUND_FILE))
             ImageIO.write(IconRenderer.renderForeground(project, size), "png", File(dir, FOREGROUND_FILE))
         }
 
-        // Notification icon: white foreground silhouette, fitted to the safe zone so the
-        // small status-bar glyph has padding and isn't clipped.
+        // Render notification icon silhouette fitted within safe bounds.
         for ((folder, size) in NOTIFICATION_DENSITIES) {
             val dir = File(generated, folder).also { it.mkdirs() }
             ImageIO.write(IconRenderer.renderSilhouette(project, size, 0xFFFFFFFF.toInt(), SAFE_ZONE), "png", File(dir, NOTIFICATION_FILE))
         }
 
-        // Monochrome themed-icon layer: a VectorDrawable of the foreground silhouette.
+        // Render monochrome vector layer.
         val drawableDir = File(generated, "drawable").also { it.mkdirs() }
         File(drawableDir, MONOCHROME_FILE).writeText(monochromeXml(project))
 
@@ -88,8 +73,7 @@ object IconExporter {
 </vector>"""
     }
 
-    /** Vectorise an opaque silhouette into VectorDrawable path data — one rectangle
-     *  per horizontal run of opaque pixels (keeps the path compact). */
+    /** Vectorizes opaque pixels of [img] into VectorDrawable path data. */
     private fun silhouetteToPath(img: BufferedImage): String {
         val w = img.width; val h = img.height
         val px = IntArray(w * h); img.getRGB(0, 0, w, h, px, 0, w)

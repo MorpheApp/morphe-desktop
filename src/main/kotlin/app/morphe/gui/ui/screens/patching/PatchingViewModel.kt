@@ -136,7 +136,6 @@ class PatchingViewModel(
                 }
             }
 
-            // Start patching
             _uiState.value = _uiState.value.copy(
                 status = PatchingStatus.PATCHING,
                 totalPatches = config.enabledPatches.size,
@@ -144,8 +143,7 @@ class PatchingViewModel(
                 progress = 0f
             )
 
-            // Keystore: pass user-configured keystore if present, or null to let PatchEngine
-            // use the shared MorpheData default keystore.
+            // Pass user-configured keystore if present; otherwise use default.
             val userKeystoreDetails = engineConfigRepository.loadConfig().toKeyStoreDetails()
             val engineConfig = if (config.keystoreDetails == null && userKeystoreDetails != null) {
                 config.copy(keystoreDetails = userKeystoreDetails)
@@ -248,7 +246,6 @@ class PatchingViewModel(
             addLog(cleanMessage, level)
         }
 
-        // Extract progress information using State Machine
         if (stateMachine == null) {
             val total = if (_uiState.value.totalPatches > 0) _uiState.value.totalPatches else config.enabledPatches.size
             stateMachine = PatcherState(total, _uiState.value.isSplit)
@@ -307,8 +304,7 @@ data class PatchingUiState(
     val currentPatchName: String? = null,
     val hasReceivedProgressUpdate: Boolean = false,
     val hasAutoNavigated: Boolean = false,
-    
-    // Expert Mode Fields
+
     val heapSamples: List<Int> = emptyList(),
     val cpuCoreLoads: List<Int> = emptyList(),
     val ioSamples: List<IoUsage> = emptyList(),
@@ -363,10 +359,7 @@ internal suspend fun resolveStepFailureMessage(result: PatchEngine.Result): Stri
 
 data class IoUsage(val readKbPerSec: Int, val writeKbPerSec: Int, val totalKbPerSec: Int = readKbPerSec + writeKbPerSec)
 
-/**
- * Storage throughput across physical disk stores.
- * Uses OSHI for cross-platform compatibility (Windows, macOS, Linux).
- */
+/** Samples storage throughput across physical disk stores using OSHI. */
 class IoUsageSampler {
     private val hal = SystemInfo().hardware
     private var diskStores = runCatching { hal.diskStores }.getOrElse { emptyList() }
@@ -411,10 +404,7 @@ class IoUsageSampler {
         ((bytes * 1000) / (elapsedMs * 1024)).coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()
 }
 
-/**
- * Per-core CPU load.
- * Uses OSHI for cross-platform compatibility (Windows, macOS, Linux).
- */
+/** Samples per-core CPU load percentages using OSHI. */
 class CpuUsageSampler {
     private val processor = SystemInfo().hardware.processor
     private var previousTicks = processor.processorCpuLoadTicks

@@ -28,10 +28,6 @@ import app.morphe.gui.ui.theme.*
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// SUPPORTED APPS ROW
-// ============================================================================
-
 @Composable
 internal fun SupportedAppsRow(
     supportedApps: List<SupportedApp>,
@@ -107,9 +103,7 @@ internal fun SupportedAppsRow(
                         variant = MorpheButtonVariant.OUTLINED,
                         onClick = onRetry
                     )
-                    // Retrying a source that is itself broken (bad URL, corrupt .mpp,
-                    // needs a newer patcher) loops forever, so the picker has to be
-                    // reachable from the error itself and not only from the header badge.
+                    // Allow switching sources if retrying a broken source fails.
                     Spacer(modifier = Modifier.width(6.dp))
                     MorpheButton(
                         label = stringResource(Res.string.quick_patch_supported_apps_change_source),
@@ -120,7 +114,6 @@ internal fun SupportedAppsRow(
                 }
             }
             else -> {
-                // Search bar for many apps
                 var searchQuery by remember { mutableStateOf("") }
                 val filteredApps = if (searchQuery.isBlank()) supportedApps
                 else supportedApps.filter {
@@ -154,7 +147,6 @@ internal fun SupportedAppsRow(
                     return@Column
                 }
 
-                // Horizontal scrolling cards
                 val useScrolling = filteredApps.size > 4
                 val cardsScrollState = rememberScrollState()
                 Row(
@@ -162,13 +154,7 @@ internal fun SupportedAppsRow(
                         .fillMaxWidth()
                         .then(if (useScrolling) Modifier.horizontalScroll(cardsScrollState) else Modifier)
                         .height(IntrinsicSize.Max)
-                        // detectTapGestures (not .clickable) so scroll-wheel /
-                        // two-finger gestures over this Row aren't swallowed.
-                        // .clickable wraps the modifier chain in a pointer-input
-                        // node that consumes scroll events on Linux/Skiko,
-                        // breaking both the inner horizontalScroll and the
-                        // outer page-level verticalScroll. Taps still clear
-                        // the search-bar focus.
+                        // Use detectTapGestures instead of clickable to avoid swallowing scroll events.
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = { focusManager.clearFocus() })
                         },

@@ -30,10 +30,6 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// PATCHING CONTENT (progress)
-// ============================================================================
-
 @Composable
 internal fun PatchingContent(
     phase: QuickPatchPhase,
@@ -76,7 +72,6 @@ internal fun PatchingContent(
                 val topLeft = Offset(arcCenter.x - arcRadius, arcCenter.y - arcRadius)
                 val arcSize = Size(arcRadius * 2f, arcRadius * 2f)
 
-                // Background track
                 drawArc(
                     color = trackColor,
                     startAngle = 0f,
@@ -87,7 +82,6 @@ internal fun PatchingContent(
                     style = Stroke(width = strokePx, cap = StrokeCap.Butt)
                 )
 
-                // Active progress arc
                 if (smoothProgress > 0f) {
                     drawArc(
                         color = primaryColor,
@@ -99,7 +93,7 @@ internal fun PatchingContent(
                         style = Stroke(width = strokePx, cap = StrokeCap.Round)
                     )
 
-                    // Static rounded cap at starting coordinate to eliminate anti-aliasing artifact
+                    // Rounded cap at starting point to avoid anti-aliasing artifacts.
                     drawCircle(
                         color = primaryColor,
                         radius = strokePx / 2f,

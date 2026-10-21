@@ -28,8 +28,7 @@ class IconRendererTest {
 
     @Test
     fun backgroundOnlyIconFallsBackToComposite() {
-        // No foreground layers, so a background-only icon should still yield a silhouette
-        // (falls back to the whole composite) rather than an empty notification icon.
+        // Background-only icon should fall back to composite silhouette.
         val project = IconProject(background = MorpheFill.Gradient())
         val sil = IconRenderer.renderSilhouette(project, 128, 0xFFFFFFFF.toInt())
         println("BACKGROUND_ONLY_SILHOUETTE_OPAQUE=${opaqueCount(sil)}")

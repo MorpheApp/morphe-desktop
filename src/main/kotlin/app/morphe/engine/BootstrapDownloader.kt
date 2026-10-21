@@ -11,11 +11,8 @@ import java.io.FileOutputStream
 import java.net.URI
 import java.security.MessageDigest
 
-/**
- * Handles deferred downloading of GUI dependencies to keep the base CLI as small as possible.
- */
+/** Downloads runtime dependencies on demand and verifies integrity. */
 object BootstrapDownloader {
-    // Remote Dependencies
     data class RemoteDependency(val fileName: String, val url: String, val expectedHash: String)
 
     private val SKIKO by lazy {
@@ -63,14 +60,7 @@ object BootstrapDownloader {
 
     private data class DownloadPlan(val dep: RemoteDependency, val target: File, val needsDownload: Boolean)
 
-    /**
-     * Downloads the required GUI dependencies if missing or invalid, reporting to
-     * an optional [listener] so the caller can show progress.
-     *
-     * @return the list of downloaded (or cached) dependency files.
-     * @throws BootstrapException if a component cannot be downloaded or fails
-     *   verification. The caller is responsible for surfacing this to the user.
-     */
+    /** Downloads missing or corrupted dependencies, reporting progress to [listener]. */
     fun downloadIfMissing(listener: BootstrapProgressListener? = null): List<File> {
         val dependencies = listOf(SKIKO, SKIKO_AWT, JNA, JNA_PLATFORM, OSHI_CORE, OSHI_COMMON)
         val binDir = File(MorpheData.root, "libs").also { it.mkdirs() }
@@ -85,8 +75,7 @@ object BootstrapDownloader {
         
         val downloadedFiles = mutableListOf<File>()
 
-        // Decide up front which components need fetching, hashing each cached file
-        // only once, so the UI only appears when there is real work to do.
+        // Determine which dependencies need fetching before notifying listener.
         val plans = dependencies.map { dep ->
             val file = File(binDir, dep.fileName)
             DownloadPlan(dep, file, needsDownload = !(file.exists() && verifyHash(file, dep.expectedHash)))
@@ -136,11 +125,7 @@ object BootstrapDownloader {
         return downloadedFiles
     }
 
-    /**
-     * Streams [dep] to [target], invoking [onBytes] with (bytesDownloaded, totalBytes)
-     * as it goes (totalBytes is negative when the server sends no Content-Length).
-     * Callbacks are throttled to roughly every 256 KB so a listener is not flooded.
-     */
+    /** Streams [dep] to [target], reporting throttled progress to [onBytes]. */
     private fun downloadWithProgress(dep: RemoteDependency, target: File, onBytes: (Long, Long) -> Unit) {
         val connection = URI(dep.url).toURL().openConnection().apply {
             connectTimeout = 15_000

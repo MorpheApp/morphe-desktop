@@ -33,10 +33,8 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * One collapsible block of a patch list.
- *
- * A null [title] is the ungrouped remainder: it carries no header and is always drawn.
- * [key] is what the fold state is stored under.
+ * Collapsible section of a patch list, keyed by [key].
+ * A null [title] represents ungrouped items rendered without a header.
  */
 @Immutable
 data class PatchGroup<T>(
@@ -52,11 +50,8 @@ const val UNIVERSAL_GROUP_KEY = "universal"
 const val UNGROUPED_GROUP_KEY = "ungrouped"
 
 /**
- * Splits [patches] into the blocks a list is drawn as: uncategorized patches,
- * followed by declared category blocks (alphabetically), followed by universal patches.
- *
- * When [groupByCategory] is false, uncategorized patches have [PatchGroup.title] as null
- * (rendered flat without a header).
+ * Groups [patches] into uncategorized, alphabetical category, and universal blocks.
+ * When [groupByCategory] is false, uncategorized items have a null title and render flat.
  */
 fun <T> buildPatchGroups(
     patches: List<T>,
@@ -116,9 +111,7 @@ fun <T> buildPatchGroups(
     }
 }
 
-/**
- * The folds of a patch list, as an immutable snapshot.
- */
+/** Immutable snapshot of patch group expansion states. */
 @Immutable
 class PatchFolds(private val overrides: Map<String, Boolean> = emptyMap()) {
     fun isExpanded(sectionKey: Any, group: PatchGroup<*>): Boolean =
@@ -130,9 +123,7 @@ class PatchFolds(private val overrides: Map<String, Boolean> = emptyMap()) {
 
 private fun foldKey(sectionKey: Any, groupKey: String) = "$sectionKey:$groupKey"
 
-/**
- * Tracks which blocks of a patch list the user has folded open or shut.
- */
+/** Tracks expansion states for collapsible patch groups. */
 @Stable
 class PatchSectionState {
     var folds by mutableStateOf(PatchFolds())
@@ -153,9 +144,7 @@ class PatchSectionState {
 @Composable
 fun rememberPatchSectionState() = remember { PatchSectionState() }
 
-/**
- * Collapsible header for a category group in the patch list.
- */
+/** Collapsible header for a patch category group. */
 @Composable
 fun PatchGroupHeader(
     title: String,

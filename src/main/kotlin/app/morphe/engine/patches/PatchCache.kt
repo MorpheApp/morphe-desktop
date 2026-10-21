@@ -16,57 +16,34 @@ import java.io.File
 import java.time.Instant
 
 /**
- * Shared on-disk cache and local `.mpp` discovery layer for patch bundles.
- *
- * Both the GUI and the CLI resolve and validate their cached patch files through
- * this object so a patch file downloaded by one surface is reused by the other.
- *
+ * On-disk cache and discovery layer for patch bundles.
  * Layout: `<MorpheData.patchesDir>/<owner>-<repo>/<tag>__<asset>.mpp`
  */
 object PatchCache {
 
-    /**
-     * Build-output classifiers a patch build emits alongside the real bundle (same
-     * convention as Maven's `-sources.jar` / `-javadoc.jar`). Always excluded when
-     * auto-picking the newest `.mpp` in a developer directory.
-     */
+    /** Auxiliary build artifacts excluded when selecting patch bundles. */
     val DEFAULT_EXCLUDED_MPP_GLOBS = listOf("*-sources.mpp", "*-javadoc.mpp")
 
     private val versionRegex = Regex("""v?(\d+\.\d+\.\d+(?:[-._][A-Za-z0-9.]+)?)""")
 
-    /** Per-source cache directory, e.g. `morphe-data/patches/MorpheApp-morphe-patches/`. */
+    /** Per-source cache directory. */
     fun sourceDir(repoPath: String): File =
         File(MorpheData.patchesDir, repoPath.replace("/", "-")).also { it.mkdirs() }
 
-    /**
-     * Per-release cache filename, prefixed with the release tag.
-     *
-     * Many sources name their `.mpp` asset the same string across versions
-     * (e.g. `morphe-patches.mpp`); prefixing with the tag keeps versions from
-     * overwriting each other in the cache.
-     */
+    /** Constructs cache filename prefixed with release tag to prevent cross-version collisions. */
     fun cachedFileName(release: Release, asset: ReleaseAsset): String =
         if (asset.name.startsWith("${release.tagName}__")) asset.name
         else "${release.tagName}__${asset.name}"
 
-    /** Target cache [File] for a given [repoPath], [release], and [asset]. */
+    /** Target cache file for a release asset. */
     fun cachedFile(repoPath: String, release: Release, asset: ReleaseAsset): File =
         File(sourceDir(repoPath), cachedFileName(release, asset))
 
-    /**
-     * Cache-hit check:
-     * - File must exist and be non-empty (`length() > 0L`).
-     * - When [expectedSize] is known (`> 0L`), file length must match [expectedSize] exactly.
-     * - When [expectedSize] is `0L` (unknown size, e.g. GitLab or PR zip artifacts), any non-empty file is valid.
-     */
+    /** Checks whether [file] exists, is non-empty, and matches [expectedSize] (if known). */
     fun isValidCachedFile(file: File, expectedSize: Long = 0L): Boolean =
         file.exists() && file.length() > 0L && (expectedSize <= 0L || file.length() == expectedSize)
 
-    /**
-     * Return the cached `.mpp` file for [release] in [repoPath] if it is already downloaded
-     * and passes size validation, or `null` on a cache miss.
-     * Also supports synthetic offline releases whose asset name is already the on-disk filename.
-     */
+    /** Returns cached `.mpp` for [release] if valid, or null on cache miss. */
     fun getCachedFile(repoPath: String, release: Release): File? {
         val asset = release.findPatchAsset() ?: release.assets.firstOrNull() ?: return null
         val dir = sourceDir(repoPath)
@@ -78,12 +55,7 @@ object PatchCache {
         return null
     }
 
-    /**
-     * List all non-empty cached `.mpp` / `.jar` files for [repoPath].
-     *
-     * @param prNumber when non-null, returns only cached files for that PR (`pr-<prNumber>-*`).
-     *                 When null, excludes `pr-*` files unless [includePrs] is true.
-     */
+    /** Lists non-empty cached `.mpp` and `.jar` files for [repoPath]. */
     fun listCachedFiles(
         repoPath: String,
         prNumber: String? = null,
@@ -103,14 +75,11 @@ object PatchCache {
         }?.toList() ?: emptyList()
     }
 
-    /** Return the most recently modified cached patch file for [repoPath], or `null` if none exists. */
+    /** Finds the latest cached patch file for [repoPath], or null if none. */
     fun findLatestCachedFile(repoPath: String, prNumber: String? = null): File? =
         listCachedFiles(repoPath, prNumber).maxByOrNull { it.lastModified() }
 
-    /**
-     * Find a cached patch file for a specific [version] or tag in [repoPath].
-     * Checks the `<tag>__` filename prefix first, then filename substring, then `MANIFEST.MF` `Version`.
-     */
+    /** Finds a cached patch file for [version] by tag prefix, filename, or manifest version. */
     fun findCachedByVersion(repoPath: String, version: String): File? {
         val cleanTarget = version.normalizeVersion()
         if (cleanTarget.isBlank()) return null
@@ -130,9 +99,7 @@ object PatchCache {
         }.maxByOrNull { it.lastModified() }
     }
 
-    /**
-     * Extract a display/resolution version label from a cached or local `.mpp` [file].
-     */
+    /** Extracts version label from a cached or local `.mpp` [file]. */
     fun extractVersionLabel(file: File, isPrSource: Boolean = false): String {
         if (isPrSource) {
             PatchBundleLoader.extractVersion(file)?.let { return it }
@@ -146,19 +113,14 @@ object PatchCache {
         return PatchBundleLoader.extractVersion(file) ?: file.nameWithoutExtension
     }
 
-    /**
-     * Synthesize offline [Release] objects from cached `.mpp` files in [repoPath],
-     * sorted from newest to oldest version via [compareVersions].
-     */
+    /** Builds offline [Release] list from cached bundles, sorted by version descending. */
     fun listOfflineReleases(repoPath: String, prNumber: String? = null): List<Release> {
         return listCachedFiles(repoPath, prNumber)
             .mapNotNull { buildOfflineRelease(it) }
             .sortedWith { a, b -> compareVersions(b.tagName, a.tagName) }
     }
 
-    /**
-     * Build a synthetic [Release] from a cached `.mpp` file for offline display and selection.
-     */
+    /** Builds a synthetic [Release] from a cached `.mpp` file for offline use. */
     fun buildOfflineRelease(file: File): Release? {
         val rawVersion = if (file.name.contains("__")) {
             file.name.substringBefore("__").takeIf { it.isNotBlank() }
@@ -187,10 +149,7 @@ object PatchCache {
         )
     }
 
-    /**
-     * Delete all cached patch files for [repoPath].
-     * @return `true` if all files in the source's cache directory were deleted.
-     */
+    /** Deletes all cached patch files for [repoPath]. */
     fun clearSource(repoPath: String): Boolean {
         return try {
             val patchesDir = sourceDir(repoPath)
@@ -219,11 +178,7 @@ object PatchCache {
         }
     }
 
-    /**
-     * Newest loadable `.mpp` file directly inside [dir] (by last-modified time), or `null`
-     * when the folder contains none. Ignores non-`.mpp` files, [DEFAULT_EXCLUDED_MPP_GLOBS],
-     * and any [extraExcludedPatterns].
-     */
+    /** Finds newest `.mpp` in [dir], ignoring non-patch files and exclusions. */
     fun newestMppIn(dir: File, extraExcludedPatterns: List<String> = emptyList()): File? {
         val matchers = (DEFAULT_EXCLUDED_MPP_GLOBS + extraExcludedPatterns)
             .mapNotNull { p -> p.trim().takeIf { it.isNotEmpty() }?.let(::toExclusionMatcher) }

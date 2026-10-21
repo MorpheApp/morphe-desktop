@@ -31,15 +31,11 @@ fun main(args: Array<String>) {
             val isJar = location?.path?.endsWith(".jar") == true
 
             if (!isJar) {
-                // Running from IDE/classpath, Skiko is likely already available
+                // Running from classpath/IDE without bundled bootstrap.
                 launchGuiReflectively(args)
                 return
             } else {
-                // This parent process only shows the setup UI and then babysits the
-                // child GUI process (it stays alive on waitFor for the whole session).
-                // On macOS, "java" dock icon lingers next to Morphe's until the
-                // app quits on first launch. Mark the parent as a UI agent so it has no dock icon of
-                // its own. The child process still shows the real Morphe icon.
+                // Suppress dock icon for launcher parent process on macOS.
                 if (System.getProperty("os.name").startsWith("Mac")) {
                     System.setProperty("apple.awt.UIElement", "true")
                 }
@@ -47,8 +43,6 @@ fun main(args: Array<String>) {
                 val downloadedJars = try {
                     BootstrapDownloader.downloadIfMissing(progress)
                 } catch (_: Throwable) {
-                    // BootstrapProgressWindow.onError has already shown a dialog and
-                    // waited for the user to acknowledge; clean up and exit.
                     progress.close()
                     exitProcess(1)
                 }

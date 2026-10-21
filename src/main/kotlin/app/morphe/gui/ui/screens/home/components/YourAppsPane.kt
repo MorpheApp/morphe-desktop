@@ -47,11 +47,7 @@ import org.jetbrains.compose.resources.stringResource
 /** Which list the home pane is showing: all supported apps, or only patched ("yours"). */
 enum class AppListFilter { ALL, YOURS }
 
-/**
- * Segmented filter at the top of the apps pane: ALL APPS · YOUR APPS. Replaces the
- * old static "SUPPORTED APPS" header. The "Your apps" tab carries a count badge so
- * the history is discoverable even before it's selected.
- */
+/** Filter chips for toggling between all supported applications and user patched apps. */
 @Composable
 fun AppListFilterChips(
     filter: AppListFilter,
@@ -80,11 +76,7 @@ fun AppListFilterChips(
     }
 }
 
-/**
- * On-open update notice. Shown above the apps list
- * when one or more patched apps have a newer app version or patch-source version
- * available. Tapping jumps to the "Your apps" list where each is badged.
- */
+/** Banner notifying the user when updates are available for previously patched apps. */
 @Composable
 fun PatchedUpdatesBanner(count: Int, onView: () -> Unit) {
     MorpheBanner(
@@ -99,16 +91,7 @@ fun PatchedUpdatesBanner(count: Int, onView: () -> Unit) {
     }
 }
 
-// ============================================================================
-// YOUR APPS LIST BODY
-// ============================================================================
-
-/**
- * "Your apps" list body. The patched-app history (Phase 7). Same scroll/scrollbar
- * treatment as the supported-apps list, but rows are [YourAppRow]s sourced from the
- * records (not the supported-apps list), so apps patched via a since-removed source
- * still appear. Tapping a row opens the detail dialog.
- */
+/** Scrollable list displaying previously patched applications and update statuses. */
 @Composable
 internal fun YourAppsListBody(
     patchedRecords: List<PatchedAppRecord>,

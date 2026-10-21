@@ -20,9 +20,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheTheme
 import kotlin.math.roundToInt
 
-/**
- * Reusable single-value slider option for typed Int/Float slider options.
- */
+/** Single-value slider option with companion numeric text field. */
 @Composable
 fun MorpheSliderOption(
     value: Float,
@@ -62,9 +60,7 @@ fun MorpheSliderOption(
     }
 }
 
-/**
- * Reusable range slider option for typed Int/Float range options.
- */
+/** Range slider option with min and max value badges. */
 @Composable
 fun MorpheRangeSliderOption(
     value: ClosedFloatingPointRange<Float>,
@@ -98,7 +94,6 @@ fun MorpheRangeSliderOption(
             modifier = Modifier.weight(1f).height(24.dp),
         )
 
-        // Min and Max value chips
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -117,11 +112,7 @@ fun MorpheRangeSliderOption(
     }
 }
 
-/**
- * Calculates the number of internal discrete steps for a slider.
- * Only returns discrete steps when there are a small number of intervals (<= 20)
- * to prevent dense crowding into an unsightly dotted line.
- */
+/** Calculates discrete slider steps, capping at 20 intervals to avoid crowded ticks. */
 private fun calculateSliderSteps(min: Float, max: Float, step: Float?): Int {
     val totalSteps = if (step != null && step > 0f) {
         val count = ((max - min) / step).roundToInt() - 1

@@ -47,7 +47,7 @@ class PatchesViewModel(
     init {
         loadReleases()
 
-        // Observe cache clears / source changes
+        // Observe patch source changes and reload.
         patchSourceManager?.let { psm ->
             viewModelScope.launch {
                 psm.sourceVersion.drop(1).collect {
@@ -63,7 +63,7 @@ class PatchesViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            // LOCAL source: skip GitHub, use the file directly
+            // For local sources, use the file directly.
             if (localPatchFilePath != null) {
                 val localFile = File(localPatchFilePath)
                 if (localFile.exists()) {
@@ -102,9 +102,8 @@ class PatchesViewModel(
                         }
                     }
 
-                    // Find the saved release, or fall back to latest stable
+                    // Resolve saved release or fall back to latest release.
                     val initialRelease = if (savedVersion != null) {
-                        // Try to find in stable first, then dev
                         stableReleases.find { it.tagName == savedVersion }
                             ?: devReleases.find { it.tagName == savedVersion }
                             ?: stableReleases.firstOrNull()
@@ -116,17 +115,14 @@ class PatchesViewModel(
                         }
                     }
 
-                    // Determine initial channel based on selected release
                     val initialChannel = if (initialRelease != null && initialRelease.isDevRelease()) {
                         ReleaseChannel.DEV
                     } else {
                         ReleaseChannel.STABLE
                     }
 
-                    // Check if patches for the initial release are already cached
                     val cachedFile = initialRelease?.let { PatchCache.getCachedFile(patchRepository.repoPath, it) }
 
-                    // Build set of all cached release versions
                     val cachedVersions = releases
                         .filter { PatchCache.getCachedFile(patchRepository.repoPath, it) != null }
                         .map { it.tagName }
@@ -166,7 +162,7 @@ class PatchesViewModel(
                             }
                         }
 
-                        // Pre-select the saved version, or fall back to the first (most recent)
+                        // Select saved version or fall back to most recent offline release.
                         val initialRelease = if (savedVersion != null) {
                             offlineReleases.find { it.tagName == savedVersion }
                         } else null
@@ -190,7 +186,7 @@ class PatchesViewModel(
                             cachedReleaseVersions = offlineReleases.map { it.tagName }.toSet(),
                             error = null
                         )
-                        Logger.info("Offline - found ${offlineReleases.size} cached release(s), selected=${selected?.tagName}")
+                        Logger.info("Offline, found ${offlineReleases.size} cached release(s), selected=${selected?.tagName}")
                     } else {
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
@@ -220,7 +216,6 @@ class PatchesViewModel(
             ReleaseChannel.DEV -> _uiState.value.devReleases.firstOrNull()
         }
 
-        // Check if patches for the new release are already cached
         val cachedFile = newRelease?.let { PatchCache.getCachedFile(patchRepository.repoPath, it) }
 
         _uiState.value = _uiState.value.copy(
@@ -254,8 +249,7 @@ class PatchesViewModel(
                     )
                     Logger.info("Patches downloaded: ${patchFile.absolutePath}")
 
-                    // Save the version preference PER SOURCE so HomeScreen can pick
-                    // it up without contaminating other enabled sources.
+                    // Persist release preference for this source.
                     persistReleasePreference(release, "Saved")
                 },
                 onFailure = { e ->
@@ -273,10 +267,7 @@ class PatchesViewModel(
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-    /**
-     * Confirm the current selection and save it to config.
-     * Called when user clicks "Select" button.
-     */
+    /** Confirms the current release selection and persists the preference. */
     fun confirmSelection(onComplete: () -> Unit = {}) {
         val release = _uiState.value.selectedRelease
         if (release == null) {
@@ -305,15 +296,7 @@ class PatchesViewModel(
         Logger.info("$actionDescription version pref for source '$activeSourceId': $pref")
     }
 
-    /**
-     * Turn a user-selected release into a [SourceVersionPref]:
-     *  - the newest stable  → [FollowMode.FOLLOW_STABLE] (ride latest stable)
-     *  - the newest dev      → [FollowMode.FOLLOW_DEV] (ride newest overall)
-     *  - anything older      → [FollowMode.PINNED] to that exact tag
-     *
-     * "Picked the latest of a channel" is read as "stay on that channel's latest,"
-     * which is what auto-updates the source going forward.
-     */
+    /** Converts a selected release into a [SourceVersionPref] (channel follow or pinned tag). */
     private fun versionPrefFor(release: Release): SourceVersionPref {
         val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
         val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
@@ -325,9 +308,7 @@ class PatchesViewModel(
         return SourceVersionPref(mode = mode, pinnedTag = release.tagName.takeIf { mode == FollowMode.PINNED })
     }
 
-    /**
-     * Export patch options from the downloaded .mpp file to a JSON file.
-     */
+    /** Exports patch options from the downloaded bundle to a JSON file. */
     fun exportOptionsJson(outputFile: File) {
         val patchFile = _uiState.value.downloadedPatchFile ?: return
 

@@ -44,10 +44,6 @@ import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// READY CONTENT (apk info + patch action)
-// ============================================================================
-
 @Composable
 internal fun ReadyContent(
     apkInfo: QuickApkInfo,
@@ -73,9 +69,7 @@ internal fun ReadyContent(
     val enabledPatches = compatiblePatches.filter { it.isEnabled }
     val disabledPatches = compatiblePatches.filter { !it.isEnabled }
     var patchSearchQuery by remember { mutableStateOf("") }
-    // Patches list is collapsed by default, the chip flow can grow long enough
-    // to overwhelm the simplified flow's "just hit PATCH" intent. Users who
-    // want to inspect or search expand it manually.
+    // Patches list is collapsed by default to keep the initial view concise.
     var patchesExpanded by remember { mutableStateOf(false) }
 
     val readyScrollState = rememberScrollState()

@@ -27,8 +27,7 @@ import kotlin.reflect.KType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-/** Launcher for the `customIcon` option: shows status + opens the Icon Studio,
- *  which exports the mipmap folder and sets the option to that folder path. */
+/** Launcher for the customIcon option, providing Icon Studio access and folder selection. */
 @Composable
 private fun IconStudioOption(
     value: String,
@@ -54,7 +53,7 @@ private fun IconStudioOption(
             variant = MorpheButtonVariant.PRIMARY,
             onClick = { showStudio = true },
         )
-        // Import an already-prepared folder (e.g. one made in the Manager).
+        // Select an existing prepared folder.
         MorpheButton(
             label = stringResource(Res.string.select_folder),
             icon = MorpheIcons.FolderOpen,
@@ -160,7 +159,7 @@ internal fun PatchOptionEditor(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        // For customIcon, add our own note: the Icon Studio builds this folder for you.
+        // Display Icon Studio hint for customIcon option.
         if (option.key.equals("customIcon", ignoreCase = true)) {
             Text(
                 text = stringResource(Res.string.patch_selection_custom_icon_hint),
@@ -373,8 +372,7 @@ internal fun PatchOptionEditor(
                     if (localText != value) localText = value
                 }
 
-                // Blank clears the option, so the patch keeps its own default,
-                // unless the patch demands one.
+                // A blank value keeps the patch default unless the option is required.
                 val missing = option.required && localText.isBlank()
                 val badType = localText.isNotBlank() && option.valueType?.let {
                     coerceOptionValue(it, localText) == null
@@ -408,7 +406,7 @@ internal fun PatchOptionEditor(
     }
 }
 
-/** What [type] will accept, phrased for someone typing into a field. */
+/** Returns a user-friendly hint describing the expected format for [type]. */
 @Composable
 private fun expectedValueHint(type: KType): String {
     if (type.classifier == List::class) {

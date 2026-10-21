@@ -39,21 +39,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Cyberdeck-aesthetic error/warning bar — single-line message with an accent
- * stripe and a DISMISS action. Shared across screens so error feedback looks
- * identical everywhere.
- *
- * Intentionally uses raw Compose primitives (Box/Row/Text) instead of
- * Material3 [androidx.compose.material3.SnackbarHost], because the latter
- * reaches `SnackbarKt` through Compose-generated invocation paths that the
- * shadow `minimize` reachability analyzer can't trace — it gets stripped and
- * the GUI crashes with NoClassDefFoundError at runtime. Keeping this custom
- * lets us drop the material3 minimize exclude and shrink the shadow jar.
- *
- * Callers control positioning via [modifier] (usually `Modifier.align(...)`
- * inside a Box, plus padding).
- */
+/** Error and warning banner with an accent stripe and dismiss action. */
 @Composable
 fun MorpheErrorBar(
     message: String,

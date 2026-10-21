@@ -16,18 +16,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
-/**
- * App-local icons, replacing the deprecated material-icons-extended dependency.
- * Each is the filled Material Symbols SVG from fonts.google.com/icons, built as an
- * ImageVector. Material Symbols use a 0 -960 960 960 viewBox (origin shifted up),
- * so [symbol] translates the paths into the 0..960 viewport before drawing. Icons
- * are tinted by the calling Icon() composable, so the baked fill is just black.
- */
-
- /*  [!IMPORTANT] To add an icon: run `scripts/add-icon.sh <CamelCaseName>` (e.g scripts/add-icon.sh CloudDownload)
- * and paste the printed line below (preferably in alphabetic order), then use it as `MorpheIcons.<Name>`.
- * PLEASE REFER THE [add-icon.sh] file before adding anything here.
- */
+/** Material Symbols vector icons used across the application. */
+// To add an icon, run scripts/add-icon.sh <CamelCaseName> and insert alphabetically below.
 object MorpheIcons {
     val AcUnit: ImageVector by lazy { symbol("AcUnit", "M440-80v-166L310-118l-56-56 186-186v-80h-80L174-254l-56-56 128-130H80v-80h166L118-650l56-56 186 186h80v-80L254-786l56-56 130 128v-166h80v166l130-128 56 56-186 186v80h80l186-186 56 56-128 130h166v80H714l128 130-56 56-186-186h-80v80l186 186-56 56-130-128v166h-80Z") }
     val ADB: ImageVector by lazy { symbol("ADB", "M200-520v-40q0-72 32.5-131.5T320-789l-75-75 35-36 85 85q26-12 55.5-18.5T480-840q30 0 59.5 6.5T595-815l85-85 35 36-75 75q55 38 87.5 97.5T760-560v40H200Zm428.5-91.5Q640-623 640-640t-11.5-28.5Q617-680 600-680t-28.5 11.5Q560-657 560-640t11.5 28.5Q583-600 600-600t28.5-11.5Zm-240 0Q400-623 400-640t-11.5-28.5Q377-680 360-680t-28.5 11.5Q320-657 320-640t11.5 28.5Q343-600 360-600t28.5-11.5Zm-107 490Q200-203 200-320v-160h560v160q0 117-81.5 198.5T480-40q-117 0-198.5-81.5Z") }

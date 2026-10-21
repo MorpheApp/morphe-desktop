@@ -27,16 +27,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.gui.ui.theme.MorpheTheme
 
-/**
- * Dialog chrome alone: shape, surface colour, padding, spacing.
- * Use [MorpheDialogCard] for a plain confirm or message dialog. Sheets needing
- * their own header, scrolling or left-aligned content SHOULD build on this.
- *
- * @param modifier applied to the surface, for sizing.
- * @param contentModifier applied to the inner column, for scroll or height caps.
- * @param contentPadding inset around the content. Zero it for full-bleed bands.
- * @param verticalArrangement gap between top-level children.
- */
+/** Base dialog surface container providing shape, elevation, and content padding. */
 @Composable
 fun MorpheDialogSurface(
     modifier: Modifier = Modifier,
@@ -99,10 +90,7 @@ fun MorpheAlertDialog(
     }
 }
 
-/**
- * Morphe-styled modal card (Dialog + Surface), the house replacement for stock
- * Material `AlertDialog`s.
- */
+/** Modal dialog card with standard title and surface styling. */
 @Composable
 fun MorpheDialogCard(
     onDismiss: () -> Unit,

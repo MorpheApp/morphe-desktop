@@ -19,21 +19,14 @@ import kotlin.reflect.KType
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
-/**
- * Semantic UI hint produced by a typed patcher option subclass.
- * Null when the underlying option is a plain untyped option.
- */
+/** UI hint describing the specialized control type for a patch option. */
 enum class ExplicitOptionKind {
     Folder, FilePath, Files, Image, Color, IntSlider, FloatSlider, IntRange, FloatRange
 }
 
-/** Recommended pixel dimensions for an [ExplicitOptionKind.Image] option. */
 data class ImageSize(val width: Int, val height: Int)
 
-/**
- * Bounds declared by a slider option, normalized so one carrier serves the integer and the
- * floating point kinds alike.
- */
+/** Range and step bounds for slider options (integer or float). */
 data class SliderBounds(val min: Float, val max: Float, val step: Float?)
 
 @Serializable
@@ -44,7 +37,7 @@ data class PatchOption(
     val type: PatchOptionType = PatchOptionType.STRING,
     val default: String? = null,
     val required: Boolean = false,
-    /** The type the patch declared. [type] cannot express a list's element type. */
+    /** Declared reflection type, preserving generic element types for lists. */
     @Transient val valueType: KType? = null,
     @Transient val explicitKind: ExplicitOptionKind? = null,
     @Transient val allowedExtensions: List<String>? = null,
@@ -76,11 +69,7 @@ enum class PatchOptionType {
         }
 }
 
-/**
- * Converts a `morphe-patcher` [Option] into the shared [PatchOption] metadata model,
- * preserving explicit option subclass hints, allowed file extensions, image dimensions,
- * slider bounds, and presets.
- */
+/** Converts a patcher [Option] into the shared [PatchOption] model. */
 fun Option<*>.toPatchOption(): PatchOption {
     val explicitKind = when (this) {
         is FolderOption -> ExplicitOptionKind.Folder
@@ -134,18 +123,14 @@ fun Option<*>.toPatchOption(): PatchOption {
     )
 }
 
-/**
- * Shared heuristic keywords for classifying untyped options (files, folders, images).
- */
+/** Keyword heuristics for classifying untyped options. */
 object OptionKeywords {
     val IMAGE = listOf("image", "wallpaper", "banner", "logo")
     val ASSET_FOLDER = listOf("folder", "mipmap", "drawable")
     val FILE = listOf("icon", "image", "logo", "banner", "path", "file", "png", "jpg")
 }
 
-/**
- * Maps a Kotlin [KType] (plus key/title fallback heuristics) to [PatchOptionType].
- */
+/** Maps a [KType] and option name heuristics to a [PatchOptionType]. */
 fun mapKTypeToOptionType(kType: KType, key: String, title: String): PatchOptionType {
     val typeName = kType.toString()
     return when {

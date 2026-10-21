@@ -53,7 +53,6 @@ internal fun OutputFileCard(
                 .fillMaxWidth()
                 .padding(start = 3.dp)
         ) {
-            // File name (first line) + size (second line)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,7 +91,6 @@ internal fun OutputFileCard(
                 }
             }
 
-            // Open folder button row
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

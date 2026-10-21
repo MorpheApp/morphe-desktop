@@ -19,15 +19,11 @@ import kotlin.math.PI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-/**
- * Frame-based time accumulator that respects a [speedMultiplier].
- * Returns a [State<Float>] that increases every frame by (deltaMs * speedMultiplier).
- * This allows smooth speed changes without restarting animations.
- */
+/** Frame-based time accumulator scaled by [speedMultiplier] without resetting on changes. */
 @Composable
 fun rememberAnimatedTime(speedMultiplier: Float): State<Float> {
     val time = remember { mutableFloatStateOf(0f) }
-    // targetSpeed is updated every recomposition via SideEffect (composition thread, safe to read in frame callback)
+    // Keep targetSpeed updated with latest speedMultiplier.
     val targetSpeed = remember { mutableFloatStateOf(speedMultiplier) }
     SideEffect { targetSpeed.floatValue = speedMultiplier }
 
@@ -38,8 +34,7 @@ fun rememberAnimatedTime(speedMultiplier: Float): State<Float> {
             withInfiniteAnimationFrameMillis { frameMs ->
                 val delta = (frameMs - lastFrameMs).coerceIn(0L, 64L).toFloat()
                 lastFrameMs = frameMs
-                // Smooth lerp: 2.5/sec ramp — ~0.8s to reach target speed.
-                // High enough to feel reactive, low enough to avoid jarring jumps.
+                // Smoothly ramp speed toward target (~0.8s transition).
                 currentSpeed += (targetSpeed.floatValue - currentSpeed) * (delta / 1000f) * 2.5f
                 time.floatValue += delta * currentSpeed
             }
@@ -48,10 +43,7 @@ fun rememberAnimatedTime(speedMultiplier: Float): State<Float> {
     return time
 }
 
-/**
- * Fires [onCompleted] exactly once when [patchingCompleted] flips to true.
- * Named with uppercase as required by Compose convention for Unit-returning Composables.
- */
+/** Fires [onCompleted] once when [patchingCompleted] transitions to true. */
 @Composable
 fun CompletionEffect(patchingCompleted: Boolean, onCompleted: () -> Unit) {
     LaunchedEffect(patchingCompleted) {
@@ -59,9 +51,7 @@ fun CompletionEffect(patchingCompleted: Boolean, onCompleted: () -> Unit) {
     }
 }
 
-/**
- * Remembers an [Animatable] that animates 0f -> 1f -> 0f when [patchingCompleted] flips to true.
- */
+/** Remembers an [Animatable] that pulses 0f -> 1f -> 0f when [patchingCompleted] flips to true. */
 @Composable
 fun rememberBurstProgress(
     patchingCompleted: Boolean,
@@ -123,7 +113,7 @@ fun rememberParallaxState(
                 val position = event.changes.first().position
                 val centerX = componentSize.width / 2f
                 val centerY = componentSize.height / 2f
-                // Normalize to roughly -10f..10f to match Android accelerometer scale
+                // Normalize to -10f..10f range.
                 val rawTiltX = ((position.x - centerX) / centerX) * 10f
                 val rawTiltY = ((position.y - centerY) / centerY) * 10f
 

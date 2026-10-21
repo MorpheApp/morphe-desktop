@@ -61,8 +61,6 @@ import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ── Patch List Item ──
-
 @Composable
 internal fun PatchListItem(
     patch: PatchMetadata,
@@ -105,8 +103,7 @@ internal fun PatchListItem(
             .border(1.dp, borderColor, MorpheTheme.shapes.small)
             .hoverable(interactionSource)
     ) {
-        // The row speaks for its contents, so the New badge has to be read out
-        // here or it is never announced.
+        // Include badge status in row content description for accessibility.
         val enabledString = stringResource(Res.string.patch_selection_option_enabled)
         val disabledString = stringResource(Res.string.patch_selection_option_disabled)
         val newString = stringResource(Res.string.patch_selection_badge_new)
@@ -152,7 +149,6 @@ internal fun PatchListItem(
             }
 
             Column(modifier = Modifier.weight(1f)) {
-                // Name + app chips on same line
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -205,7 +201,6 @@ internal fun PatchListItem(
                 }
             }
 
-            // Gear button for options
             if (hasOptions) {
                 Box(
                     modifier = Modifier.size(48.dp),
@@ -242,7 +237,6 @@ internal fun PatchListItem(
             }
         }
 
-        // Expandable options section
         if (hasOptions) {
             val optionDivider = MaterialTheme.colorScheme.outline.copy(alpha = 0.06f)
 

@@ -15,10 +15,7 @@ import java.net.Socket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Manages ADB (Android Debug Bridge) operations shared across the CLI and GUI.
- * Works across macOS, Linux, and Windows.
- */
+/** Manages Android Debug Bridge (ADB) operations. */
 class AdbManager {
 
     private var adbPath: String? = null
@@ -26,54 +23,30 @@ class AdbManager {
     companion object {
         const val AUTO_SPOOF = "__AUTO_SPOOF__"
 
-        /* Popular store packages. The spoof installer is the first one NOT on the device — see [resolveSpoofInstaller]. */
+        // Candidate store packages to spoof installer attribution when blocking Play Store updates.
         internal val SPOOF_STORE_CANDIDATES = listOf(
-            "com.amazon.venezia",              // Amazon Appstore
+            "com.amazon.venezia", // Amazon Appstore
             "com.sec.android.app.samsungapps", // Samsung Galaxy Store
-            "com.huawei.appmarket",            // Huawei AppGallery
-            "com.apkpure.aegon",               // APKPure
-            "com.aurora.store",                // Aurora Store
-            "org.fdroid.fdroid",               // F-Droid
+            "com.huawei.appmarket", // Huawei AppGallery
+            "com.apkpure.aegon", // APKPure
+            "com.aurora.store", // Aurora Store
+            "org.fdroid.fdroid", // F-Droid
         )
 
         internal fun selectSpoofInstaller(installedPackages: Set<String>): String =
             SPOOF_STORE_CANDIDATES.firstOrNull { it !in installedPackages } ?: SPOOF_STORE_CANDIDATES.first()
     }
 
-    /**
-     * Set to true once [startServer] confirms Morphe was the process that
-     * spawned the ADB daemon (vs. attaching to one that was already running —
-     * Android Studio, scrcpy, a prior shell session). Gates [killServerIfOwned]
-     * so we never nuke a daemon someone else is depending on.
-     *
-     * Updated on every [startServer] call: if we attach to a pre-existing
-     * daemon and that daemon later dies + our next [startServer] tick
-     * respawns it, ownership correctly flips from false → true. Without that, the
-     * polling loop's implicit respawns would leak a daemon Morphe is
-     * actively maintaining.
-     */
+    /** True if Morphe spawned the active ADB daemon rather than attaching to an existing one. */
     @Volatile
     var weStartedDaemon: Boolean = false
         private set
 
-    /**
-     * One-shot log dedup for the "we attached to a pre-existing daemon"
-     * message — without this, the polling loop would log it every 5s.
-     * Reset by [killServerIfOwned] so a re-attach after a kill cycle
-     * re-logs once.
-     */
+    // Deduplicates daemon attachment log messages across polling intervals.
     @Volatile
     private var loggedAttachOnce: Boolean = false
 
-    /**
-     * Cheap probe to check if the ADB daemon is listening on its conventional
-     * loopback port (5037). Used by [startServer] to detect ownership without
-     * relying on adb's stderr output (which varies across versions and can be
-     * suppressed when invoked programmatically).
-     *
-     * Short timeout keeps the polling loop snappy; localhost connects in <1ms
-     * when alive, refuses immediately when down.
-     */
+    /** Checks if the ADB daemon is listening on port 5037. */
     private fun isDaemonAlive(): Boolean = try {
         Socket().use { socket ->
             socket.connect(InetSocketAddress("127.0.0.1", 5037), 250)
@@ -83,10 +56,7 @@ class AdbManager {
         false
     }
 
-    /**
-     * Find ADB binary in common locations or PATH.
-     * Returns the path to ADB if found, null otherwise.
-     */
+    /** Finds the ADB binary in common platform directories or PATH. */
     suspend fun findAdb(): String? = withContext(Dispatchers.IO) {
         // Return cached path if already found
         adbPath?.let {
@@ -98,11 +68,9 @@ class AdbManager {
         val isMac = os.contains("mac")
         val adbName = if (isWindows) "adb.exe" else "adb"
 
-        // Common ADB locations by platform
         val searchPaths = mutableListOf<String>()
 
         if (isMac) {
-            // macOS paths
             val home = System.getProperty("user.home")
             searchPaths.addAll(listOf(
                 "$home/Library/Android/sdk/platform-tools/$adbName",
@@ -111,7 +79,6 @@ class AdbManager {
                 "/Applications/Android Studio.app/Contents/platform-tools/$adbName"
             ))
         } else if (isWindows) {
-            // Windows paths
             val localAppData = System.getenv("LOCALAPPDATA") ?: ""
             val userProfile = System.getenv("USERPROFILE") ?: ""
             searchPaths.addAll(listOf(
@@ -121,7 +88,6 @@ class AdbManager {
                 "C:\\Program Files\\Android\\platform-tools\\$adbName"
             ))
         } else {
-            // Linux paths
             val home = System.getProperty("user.home")
             searchPaths.addAll(listOf(
                 "$home/Android/Sdk/platform-tools/$adbName",
@@ -132,7 +98,6 @@ class AdbManager {
             ))
         }
 
-        // Check each path
         for (path in searchPaths) {
             val file = File(path)
             if (file.exists() && file.canExecute()) {
@@ -172,21 +137,7 @@ class AdbManager {
      */
     suspend fun isAdbAvailable(): Boolean = findAdb() != null
 
-    /**
-     * Ensure the ADB daemon is running, and record whether Morphe was the
-     * process that spawned the *current* daemon. Idempotent and cheap — safe
-     * to call on every poll tick.
-     *
-     * Detection is a TCP probe of 127.0.0.1:5037 (adb's conventional listen
-     * port). Before: alive? After invoking `adb start-server`: alive?
-     *   - was-down + now-up → we own it (set [weStartedDaemon] = true).
-     *   - was-up           → no-op; ownership flag unchanged.
-     *
-     * Re-detection on every call matters: if Morphe initially attached to a
-     * pre-existing daemon (flag = false) and that daemon dies mid-session,
-     * the *next* tick's call will spawn a fresh one and flip the flag to
-     * true — so a subsequent [killServerIfOwned] correctly tears it down.
-     */
+    /** Ensures the ADB daemon is running and tracks whether Morphe spawned it. */
     suspend fun startServer(): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
@@ -198,7 +149,7 @@ class AdbManager {
                 // Don't touch the ownership flag (a prior tick may have set
                 // it to true and the daemon is still ours).
                 if (!weStartedDaemon && !loggedAttachOnce) {
-                    Logger.info("ADB daemon was already running - leaving it alone on shutdown")
+                    Logger.info("ADB daemon was already running, leaving it alone on shutdown")
                     loggedAttachOnce = true
                 }
                 return@withContext Result.success(Unit)
@@ -222,7 +173,7 @@ class AdbManager {
 
             if (isDaemonAlive()) {
                 if (!weStartedDaemon) {
-                    Logger.info("ADB daemon spawned by Morphe - will kill on shutdown")
+                    Logger.info("ADB daemon spawned by Morphe, will kill on shutdown")
                 }
                 weStartedDaemon = true
                 loggedAttachOnce = false
@@ -243,16 +194,10 @@ class AdbManager {
         }
     }
 
-    /**
-     * Kill the ADB server, but only if [weStartedDaemon] — i.e. Morphe was
-     * the one that spawned it. Refusing to kill a daemon we attached to
-     * keeps Android Studio / scrcpy / other concurrent users alive.
-     *
-     * Clears [weStartedDaemon] on success so repeated calls are idempotent.
-     */
+    /** Kills the ADB server if it was spawned by Morphe. */
     suspend fun killServerIfOwned(): Result<Boolean> = withContext(Dispatchers.IO) {
         if (!weStartedDaemon) {
-            Logger.debug("Skipping adb kill-server - daemon wasn't started by Morphe")
+            Logger.debug("Skipping adb kill-server, daemon wasn't started by Morphe")
             return@withContext Result.success(false)
         }
         val adb = findAdb() ?: return@withContext Result.success(false)
@@ -290,17 +235,13 @@ class AdbManager {
         }
     }
 
-    /**
-     * Get list of connected devices.
-     * Returns list of device IDs and their status.
-     */
+    /** Returns all connected ADB devices and their current status. */
     suspend fun getConnectedDevices(): Result<List<AdbDevice>> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
         )
 
         try {
-            // Use -l flag to get detailed device info including model
             val process = ProcessBuilder(adb, "devices", "-l")
                 .redirectErrorStream(true)
                 .start()
@@ -395,14 +336,7 @@ class AdbManager {
         return selectSpoofInstaller(installed)
     }
 
-    /**
-     * Install an APK on the specified device (or default device if only one connected).
-     *
-     * [installerPackage] specifies the recorded installer source (`pm install -i`).
-     * Defaults to [AUTO_SPOOF], which automatically resolves a non-Play store package
-     * for [deviceId] to stop the Play Store from auto-updating the patched app.
-     * Pass explicit `null` to disable installer attribution.
-     */
+    /** Installs an APK on [deviceId], optionally spoofing the installer package to block Play updates. */
     suspend fun installApk(
         apkPath: String,
         deviceId: String? = null,
@@ -433,12 +367,7 @@ class AdbManager {
             installerPackage
         }
 
-        // Build + run the install, factored so we can transparently retry
-        // without installer attribution. Stricter Android builds could reject an
-        // `-i` pointing at a store the user doesn't have; if that's what failed,
-        // we'd rather install without Play-update blocking than not install at
-        // all. (Validated on Android 12 that an absent `-i` is accepted; this is
-        // a safety net for versions we haven't tested.)
+        // Retries install without '-i' if the device rejects unknown installer packages.
         fun attemptInstall(withInstaller: Boolean): Result<Unit> {
             val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
             if (allowDowngrade) command.add("-d") // Allow downgrade
@@ -506,10 +435,7 @@ class AdbManager {
         finalResult
     }
 
-    /**
-     * Verify that the target device (or sole connected device) is reachable and
-     * ready for root mount installation when [mount] is true.
-     */
+    /** Verifies that the target device is connected and ready for installation. */
     suspend fun verifyTargetDevice(
         deviceId: String? = null,
         mount: Boolean = false,
@@ -543,9 +469,7 @@ class AdbManager {
         Result.success(targetDevice)
     }
 
-    /**
-     * Mount [apkFile] over [packageName] on a rooted device using [AdbRootInstaller].
-     */
+    /** Mounts [apkFile] over [packageName] on a rooted device. */
     suspend fun mountApk(
         apkFile: File,
         packageName: String,
@@ -583,9 +507,7 @@ class AdbManager {
         }
     }
 
-    /**
-     * Unmount a root-mounted patched APK for [packageName] using [AdbRootInstaller].
-     */
+    /** Unmounts a root-mounted patched APK for [packageName]. */
     suspend fun unmountApk(
         packageName: String,
         deviceId: String? = null,
@@ -615,13 +537,7 @@ class AdbManager {
         }
     }
 
-    /**
-     * Uninstall [packageName] from [deviceId] (or default device if only one connected).
-     * Used by the "Your apps" cards and CLI `utility uninstall`.
-     *
-     * Treats "package not installed" as success — the desired end state (app gone)
-     * already holds, so the caller can refresh and move on.
-     */
+    /** Uninstalls [packageName] from [deviceId], treating missing packages as success. */
     suspend fun uninstallApk(
         packageName: String,
         deviceId: String? = null,
@@ -648,7 +564,6 @@ class AdbManager {
                     Logger.info("Uninstalled $packageName from $targetDeviceId")
                     Result.success(Unit)
                 }
-                // Already gone is the end state we wanted.
                 output.contains("not installed", ignoreCase = true) ||
                     output.contains("DELETE_FAILED_INTERNAL_ERROR", ignoreCase = true) &&
                     listInstalledPackages(targetDeviceId).getOrNull()?.contains(packageName) == false -> {
@@ -680,10 +595,7 @@ class AdbManager {
         }
     }
 
-    /**
-     * Clear the device's logcat buffers (main + crash).
-     * Crash buffer clear is best-effort — older devices may not have it.
-     */
+    /** Clears device logcat buffers (main and crash). */
     suspend fun clearLogcat(deviceId: String): Result<Unit> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
@@ -704,14 +616,13 @@ class AdbManager {
                 )
             }
 
-            // Best-effort: also clear the crash buffer. Ignore failure.
             try {
                 val crash = ProcessBuilder(adb, "-s", deviceId, "logcat", "-b", "crash", "-c")
                     .redirectErrorStream(true)
                     .start()
                 crash.inputStream.bufferedReader().readText()
                 crash.waitFor()
-            } catch (_: Exception) { /* older devices may not have crash buffer */ }
+            } catch (_: Exception) {}
 
             Logger.info("Cleared logcat on $deviceId")
             Result.success(Unit)
@@ -728,11 +639,7 @@ class AdbManager {
         }
     }
 
-    /**
-     * Capture a logcat snapshot from the device, filtered to lines that contain
-     * "morphe:" or "AndroidRuntime", and write them to [outputFile].
-     * Returns the number of lines written.
-     */
+    /** Captures relevant logcat lines to [outputFile], returning lines written. */
     suspend fun captureLogcat(deviceId: String, outputFile: File): Result<Int> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
@@ -763,7 +670,7 @@ class AdbManager {
             }
 
             if (kept.isEmpty()) {
-                Logger.info("No matching logcat lines on $deviceId - skipping file write")
+                Logger.info("No matching logcat lines on $deviceId, skipping file write")
             } else {
                 outputFile.parentFile?.mkdirs()
                 outputFile.writeText(kept.joinToString("\n") + "\n")
@@ -783,23 +690,7 @@ class AdbManager {
         }
     }
 
-    // ── Link handling ("open with") ──────────────────────────────────────────
-
-    /**
-     * Route the patched app's declared web links to it, and optionally stop the
-     * stock app from handling those same links. Reverse with [enable] = false.
-     *
-     * The OFF half (stock) only runs when [stockPackage] is a real, different,
-     * *installed* package — i.e. a rename patch was used and stock is present.
-     * Otherwise it's skipped (reported via [LinkHandlingResult.stockChanged]),
-     * never silently no-op'd.
-     *
-     * Commands come from [AppLinkCommands] so the CLI and GUI share one source
-     * of truth; here we just execute them through `adb -s <serial> shell`.
-     *
-     * Must be called AFTER the patched app is installed — the package has to
-     * exist on the device for `pm set-app-links-*` to take effect.
-     */
+    /** Routes web links to [patchedPackage] and optionally disables them on [stockPackage]. */
     suspend fun setLinkHandling(
         deviceId: String,
         patchedPackage: String,
@@ -811,7 +702,6 @@ class AdbManager {
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
         )
 
-        // Stock OFF only applies to a genuinely different, installed package.
         val installed = listInstalledPackages(deviceId).getOrNull() ?: emptySet()
         val stockEligible = !stockPackage.isNullOrBlank() &&
             stockPackage != patchedPackage &&
@@ -843,11 +733,7 @@ class AdbManager {
         Result.success(LinkHandlingResult(patchedChanged = true, stockChanged = stockChanged))
     }
 
-    /**
-     * Run a sequence of `adb -s <serial> shell <argv>` commands, stopping at the
-     * first failure. `pm set-app-links-*` print nothing on success and exit 0; a
-     * non-zero exit (or "Error"/"Failure" in output) is treated as a failure.
-     */
+    /** Runs a sequence of ADB shell commands, stopping on first failure. */
     private suspend fun runShellCommands(
         deviceId: String,
         commands: List<List<String>>,
@@ -893,7 +779,7 @@ class AdbManager {
 
     // ── Patched-app recall: device-side queries ──────────────────────────────
 
-    /** Package names installed on [deviceId] (`pm list packages`). */
+    /** Lists installed package names on [deviceId]. */
     suspend fun listInstalledPackages(deviceId: String): Result<Set<String>> = withContext(Dispatchers.IO) {
         val adb = findAdb() ?: return@withContext Result.failure(
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
@@ -931,11 +817,7 @@ class AdbManager {
         }
     }
 
-    /**
-     * Installed `versionName` and signing-cert id of [pkg] on [deviceId] from a
-     * single `dumpsys package` call. Returns `(versionName, signatureId)` (either
-     * may be null if absent/unparseable), or null if the package isn't dumpable.
-     */
+    /** Returns installed version name and signing certificate ID for [pkg] on [deviceId]. */
     suspend fun getInstalledPackageInfo(deviceId: String, pkg: String): Pair<String?, String?>? =
         withContext(Dispatchers.IO) {
             val out = dumpsysPackage(deviceId, pkg) ?: return@withContext null
@@ -957,13 +839,10 @@ class AdbManager {
         }
     }
 
-    /**
-     * Parse output from 'adb devices -l' command.
-     * Example line: "XXXXXXXX device usb:1-1 product:flame model:Pixel_4 device:flame transport_id:1"
-     */
+    /** Parses `adb devices -l` output into [AdbDevice] entries. */
     internal fun parseDeviceList(output: String, adbPath: String?): List<AdbDevice> {
         return output.lines()
-            .drop(1) // Skip "List of devices attached" header
+            .drop(1)
             .filter { it.isNotBlank() }
             .mapNotNull { line ->
                 val parts = line.trim().split("\\s+".toRegex())
@@ -986,7 +865,6 @@ class AdbManager {
                         }
                     }
 
-                    // If device is authorized, try to get friendly device name and architecture
                     val deviceName = if (status == DeviceStatus.DEVICE && adbPath != null) {
                         model ?: product ?: getDeviceName(adbPath, id)
                     } else {
@@ -1002,9 +880,7 @@ class AdbManager {
             }
     }
 
-    /**
-     * Get device name using adb shell command.
-     */
+    /** Reads product model property from device. */
     private fun getDeviceName(adbPath: String, deviceId: String): String? {
         return try {
             val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", "ro.product.model")
@@ -1018,9 +894,7 @@ class AdbManager {
         }
     }
 
-    /**
-     * Get device CPU architecture using adb shell command.
-     */
+    /** Reads CPU ABI property from device. */
     private fun getDeviceArchitecture(adbPath: String, deviceId: String): String? {
         return try {
             val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", "ro.product.cpu.abi")
@@ -1041,7 +915,6 @@ class AdbManager {
     )
 
     internal fun parseInstallError(output: String): InstallErrorInfo {
-        // Common ADB install errors
         return when {
             output.contains("INSTALL_FAILED_VERSION_DOWNGRADE") ->
                 InstallErrorInfo(
@@ -1108,34 +981,29 @@ data class AdbDevice(
     val model: String? = null,
     val architecture: String? = null
 ) {
-    /** Device name (model or ID if model unknown) */
+    /** Device model name, or ID if model is unknown. */
     val displayName: String
         get() = model?.takeIf { it.isNotBlank() } ?: id
 
-    /** Whether device is ready for installation */
+    /** True if the device is connected and authorized. */
     val isReady: Boolean
         get() = status == DeviceStatus.DEVICE
 }
 
 enum class DeviceStatus {
-    DEVICE,       // Connected and authorized
-    UNAUTHORIZED, // Connected but not authorized for debugging
-    OFFLINE,      // Device offline
-    UNKNOWN       // Unknown status
+    DEVICE,
+    UNAUTHORIZED,
+    OFFLINE,
+    UNKNOWN
 }
 
-/**
- * Progress step emitted by [AdbManager.setLinkHandling].
- */
+/** Progress update during app link configuration. */
 sealed interface LinkHandlingProgress {
     data class Patched(val packageName: String, val enable: Boolean) : LinkHandlingProgress
     data class Stock(val packageName: String, val enable: Boolean) : LinkHandlingProgress
 }
 
-/**
- * Outcome of [AdbManager.setLinkHandling]. [stockChanged] is false when the
- * stock-app OFF step was skipped (no rename, or stock not installed).
- */
+/** Result of link handling configuration for patched and stock packages. */
 data class LinkHandlingResult(
     val patchedChanged: Boolean,
     val stockChanged: Boolean,

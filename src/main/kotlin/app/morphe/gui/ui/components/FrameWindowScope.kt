@@ -8,9 +8,5 @@ package app.morphe.gui.ui.components
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.window.FrameWindowScope
 
-/**
- * Provides FrameWindowScope so composables deep in the tree can use
- * WindowDraggableArea for native window dragging (e.g. the macOS coloured
- * title bar band in `App.kt`).
- */
+/** Provides [FrameWindowScope] for composables using window dragging areas. */
 val LocalFrameWindowScope = staticCompositionLocalOf<FrameWindowScope?> { null }

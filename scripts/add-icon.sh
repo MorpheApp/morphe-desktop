@@ -1,22 +1,10 @@
 #!/usr/bin/env bash
 #
-# Generates a MorpheIcons entry for a Material Symbols icon.
+# Fetches a Material Symbols SVG from Google and prints a MorpheIcons declaration.
 #
-# Usage:   scripts/add-icon.sh <CamelCaseName> [style]
-# Example: scripts/add-icon.sh CloudDownload
-#          scripts/add-icon.sh Bookmark outline
-#          scripts/add-icon.sh Settings rounded
-#
-# style (optional, default "filled"):
-#   filled | outline | rounded | sharp | rounded-outline | sharp-outline
-#
-# Non-filled styles suffix the val name (Bookmark + outline -> BookmarkOutline),
-# so several variants of the same icon can live side by side.
-#
-# It fetches the SVG from Google and prints the exact line to paste into the
-# MorpheIcons object in src/main/kotlin/app/morphe/gui/ui/icons/MorpheIcons.kt
-#
-# If it prints "Not found", check the exact name at https://fonts.google.com/icons
+# Usage: scripts/add-icon.sh <CamelCaseName> [style]
+# Styles: filled (default), outline, rounded, sharp, rounded-outline, sharp-outline
+# Example: scripts/add-icon.sh Bookmark outline
 
 set -euo pipefail
 

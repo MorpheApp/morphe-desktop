@@ -67,11 +67,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Full recall breakdown for one patched app. Everything is already on the record
- * (date, versions, per-source snapshot, selection, options, integrity). This is a
- * read surface plus the Re-patch / Open folder / Forget actions.
- */
+/** Detailed information dialog displaying metadata, status, and management actions for a patched app. */
 @Composable
 fun PatchedAppDetailDialog(
     record: PatchedAppRecord,
@@ -115,13 +111,11 @@ fun PatchedAppDetailDialog(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                // Tap outside the card to dismiss (the card swallows its own taps below).
+                // Dismiss on outside tap.
                 .pointerInput(Unit) { detectTapGestures { onDismiss() } },
             contentAlignment = Alignment.Center,
         ) {
-        // Grow with content, but cap at ~90% of the window height so the dialog
-        // can use a tall screen like Settings does, instead of the old fixed
-        // 560dp cap, while still wrapping shorter content.
+        // Constrain dialog height to viewport bounds.
         val maxDialogHeight = maxHeight * 0.9f
         val maxDialogWidth = (maxWidth * 0.7f).coerceIn(480.dp, 860.dp)
 
