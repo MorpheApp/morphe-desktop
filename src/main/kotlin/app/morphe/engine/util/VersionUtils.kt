@@ -7,20 +7,10 @@ package app.morphe.engine.util
 
 import app.morphe.engine.model.Release
 
-/**
- * Strips a leading `v` and surrounding whitespace. GitHub tags, JSON metadata
- * and APK manifests MUST compare equal after this.
- */
+/** Strips leading 'v' and whitespace from a version string. */
 fun String.normalizeVersion(): String = removePrefix("v").removePrefix("V").trim()
 
-/**
- * Compare two version strings. Returns -1 if v1 < v2, 0 if equal, 1 if v1 > v2.
- * Handles dotted app versions ("20.40.45") and semver-ish tags ("v1.39.0-dev.10").
- * Stable outranks a pre-release of the same base. Pre-release ordinals compare
- * numerically, so dev.9 sorts below dev.10.
- *
- * Ported from morphe-manager's VersionUtils. Both projects MUST rank alike.
- */
+/** Compares two semantic version strings, ordering stable releases above pre-releases. */
 fun compareVersions(v1: String?, v2: String?): Int {
     if (v1 == null && v2 == null) return 0
     if (v1 == null) return -1

@@ -46,7 +46,7 @@ object MorpheBannerDefaults {
 
 enum class MorpheBannerTone { Info, Error }
 
-/** Compose only when a banner will show, or its top padding leaves a gap. */
+/** Container for alert banners with consistent spacing and insets. */
 @Composable
 fun MorpheBanners(
     modifier: Modifier = Modifier,
@@ -62,7 +62,7 @@ fun MorpheBanners(
     )
 }
 
-/** Content inherits the tone's on-colour, so children MUST NOT set their own. */
+/** Alert banner styled by [tone] with optional icon and dismiss action. */
 @Composable
 fun MorpheBanner(
     modifier: Modifier = Modifier,

@@ -8,14 +8,10 @@ package app.morphe.engine
 import app.morphe.engine.workspace.WorkspaceManager
 import java.io.File
 
-/**
- * Clears Morphe's on-disk caches. Shared by the GUI's "Clear Cache" action and
- * the CLI's `utility clear-cache` subcommand so both wipe the same set of
- * directories: downloaded patches, logs, and temp scratch.
- */
+/** Manages cache sizing and deletion across patches, logs, and workspace scratch. */
 object CacheManager {
 
-    /** What was cleared from a single directory. */
+    /** Summary of files and bytes cleared from a single directory. */
     data class DirResult(
         val label: String,
         val bytesFreed: Long,
@@ -23,7 +19,7 @@ object CacheManager {
         val failedFiles: Int,
     )
 
-    /** Outcome of a [clearCaches] run, with a per-directory breakdown. */
+    /** Overall outcome of a [clearCaches] run. */
     data class ClearResult(
         val perDirectory: List<DirResult>,
     ) {
@@ -32,32 +28,20 @@ object CacheManager {
         val success: Boolean get() = failedFiles == 0
     }
 
-    /**
-     * Calculates the total byte size across all cached directories
-     * (patches cache, logs, and workspace scratch).
-     */
+    /** Calculates total byte size across patches, logs, and scratch directories. */
     fun getCacheSizeBytes(): Long =
         getDirectorySize(MorpheData.patchesDir) +
             getDirectorySize(MorpheData.logsDir) +
             WorkspaceManager.getScratchSize()
 
-    /**
-     * Computes the total file size inside [dir].
-     */
+    /** Computes total byte size of files inside [dir]. */
     fun getDirectorySize(dir: File): Long = try {
         dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
     } catch (_: Exception) {
         0L
     }
 
-    /**
-     * Deletes the contents of the patches cache, logs, and temp scratch
-     * directories (keeping the top-level directories themselves).
-     *
-     * Best-effort: a file that can't be deleted (e.g. a log still held open by
-     * the running process) is counted in [DirResult.failedFiles] rather than
-     * aborting the rest.
-     */
+    /** Deletes cached patches, logs, and temporary scratch files. */
     fun clearCaches(): ClearResult = ClearResult(
         listOf(
             clearDirectoryContents("Patches", MorpheData.patchesDir),
@@ -66,17 +50,13 @@ object CacheManager {
         ),
     )
 
-    /**
-     * Deletes the contents of [dir] while retaining the directory itself,
-     * returning metrics on files deleted, bytes freed, and failures.
-     */
+    /** Deletes all files inside [dir], returning deletion metrics. */
     fun clearDirectoryContents(label: String, dir: File): DirResult {
         var bytesFreed = 0L
         var filesDeleted = 0
         var failedFiles = 0
 
         dir.listFiles()?.forEach { entry ->
-            // Measure before deleting.
             val files = entry.walkTopDown().filter { it.isFile }.toList()
             val size = files.sumOf { it.length() }
             if (entry.deleteRecursively()) {

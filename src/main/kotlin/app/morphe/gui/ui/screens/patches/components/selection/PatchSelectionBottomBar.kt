@@ -20,8 +20,6 @@ import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ── Bottom action bar ──
-
 @Composable
 internal fun PatchSelectionBottomBar(
     selectedCount: Int,

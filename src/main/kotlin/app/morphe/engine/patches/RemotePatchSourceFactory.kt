@@ -8,23 +8,7 @@ package app.morphe.engine.patches
 import app.morphe.engine.network.HttpService
 import io.ktor.client.HttpClient
 
-/**
- * Centralized URL parsing + provider detection for remote patch sources.
- *
- * Single source of truth for "given some user input, figure out the
- * provider, owner, repo, and optional pinned release tag." Both GUI and CLI
- * call into this — never roll their own URL parsing.
- *
- * Accepted inputs:
- *   - Full URL: `https://github.com/owner/repo[/…]`, `https://gitlab.com/owner/repo[/…]`
- *   - Release tag URL: `https://github.com/owner/repo/releases/tag/v1.0.0`, `https://gitlab.com/owner/repo/-/releases/v1.0.0`
- *   - Pull request URL: `https://github.com/owner/repo/pull/123`
- *   - Bare host path: `github.com/owner/repo`, `gitlab.com/owner/repo`
- *   - Deep-link: `morphe.software/add-source?github=owner/repo` (or `?gitlab=owner/repo`)
- *   - Bare `owner/repo` — defaults to GitHub for backwards compatibility
- *
- * Anything that doesn't match → null.
- */
+/** URL parsing and provider detection for remote patch sources (GitHub, GitLab, pull requests, deep links). */
 object RemotePatchSourceFactory {
 
     const val DEFAULT_REPO_PATH = "MorpheApp/morphe-patches"
@@ -32,10 +16,7 @@ object RemotePatchSourceFactory {
     private val githubTagRegex = Regex("""github\.com/[^/]+/[^/]+/releases?/tag/([^/?#]+)""")
     private val gitlabTagRegex = Regex("""gitlab\.com/[^/]+/[^/]+(?:/-)?/releases/([^/?#]+)""")
 
-    /**
-     * Normalize a raw path or URL string, restoring `https://` / `http://` when
-     * `java.io.File.invariantSeparatorsPath` collapses `https://` into `https:/`.
-     */
+    /** Normalizes a raw path or URL, restoring double slashes if collapsed. */
     fun normalizeInput(input: String): String {
         val trimmed = input.trim()
         return when {
@@ -47,14 +28,7 @@ object RemotePatchSourceFactory {
         }
     }
 
-    /**
-     * Parse a user-entered URL or specifier and return a [Parsed] descriptor on success,
-     * null when the input can't be classified.
-     *
-     * Use [Parsed.instantiate] to turn the descriptor into a working [RemotePatchSource].
-     * Splitting parse from instantiation lets callers validate URLs in
-     * dialogs or CLI option validators without needing an [HttpClient] handy.
-     */
+    /** Parses a user-entered URL or specifier into a [Parsed] descriptor, or null if unclassifiable. */
     fun parse(input: String): Parsed? {
         val normalized = normalizeInput(input)
         if (normalized.isBlank()) return null
@@ -91,8 +65,7 @@ object RemotePatchSourceFactory {
             return buildParsed(match.groupValues[1], PatchProvider.GITLAB, pinnedTag = pinnedTag)
         }
 
-        // Bare "owner/repo" — assume GitHub for backwards compatibility with
-        // the historical default behavior. Exclude file paths (.mpp/.jar or relative path prefixes).
+        // Bare "owner/repo" defaults to GitHub; exclude file paths.
         if (!normalized.startsWith("./") && !normalized.startsWith("../") &&
             !normalized.endsWith(".mpp", ignoreCase = true) && !normalized.endsWith(".jar", ignoreCase = true) &&
             normalized.matches(Regex("""[a-zA-Z0-9][a-zA-Z0-9_-]*/[a-zA-Z0-9._-]+"""))
@@ -103,17 +76,11 @@ object RemotePatchSourceFactory {
         return null
     }
 
-    /**
-     * Convenience: parse and instantiate in one shot.
-     */
+    /** Parses and instantiates a [RemotePatchSource] from [input]. */
     fun from(input: String, httpClient: HttpClient): RemotePatchSource? =
         parse(input)?.instantiate(httpClient)
 
-    /**
-     * Build a source for a known provider + repoPath, skipping URL parsing.
-     * Used by callers that already have the canonical pieces in hand (e.g.
-     * the GUI's PatchSourceManager loading a previously-saved source).
-     */
+    /** Builds a [RemotePatchSource] for known provider and [repoPath] without URL parsing. */
     fun build(provider: PatchProvider, repoPath: String, httpClient: HttpClient): RemotePatchSource {
         if (provider == PatchProvider.GITHUB_PR) {
             val match = Regex("([^/]+)/([^/]+)/pull/(\\d+)").find(repoPath)
@@ -134,10 +101,7 @@ object RemotePatchSourceFactory {
         return Parsed(provider, clean, pinnedTag = pinnedTag)
     }
 
-    /**
-     * Result of parsing — provider + repoPath (+ optional prNumber / pinnedTag)
-     * are all the engine needs to spin up a working source and resolve a release.
-     */
+    /** Parsed remote patch source descriptor. */
     data class Parsed(
         val provider: PatchProvider,
         val repoPath: String,

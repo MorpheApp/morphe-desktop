@@ -72,10 +72,7 @@ fun isMaterialYouColor(colorStr: String): Boolean =
     colorStr.contains("monet", ignoreCase = true)
 
 
-/**
- * Rich Color option UI component with preset buttons, hex text input,
- * and a modal dialog embedding [MorpheColorPickerCard].
- */
+/** Color option component with preset chips, hex text input, and color picker dialog. */
 @Composable
 fun MorpheColorOptionItem(
     value: String,
@@ -111,7 +108,6 @@ fun MorpheColorOptionItem(
     )
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        // Main input bar: Swatch Button + Hex TextField
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -119,7 +115,6 @@ fun MorpheColorOptionItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // Interactive color swatch thumbnail (clicking opens color wheel dialog)
             val swatchShape = shapes.small
             Box(
                 modifier = Modifier
@@ -130,7 +125,6 @@ fun MorpheColorOptionItem(
                     .clickable(enabled = enabled) { showPickerModal = true },
                 contentAlignment = Alignment.Center,
             ) {
-                // Checkerboard background for alpha support
                 if (parsedColor != null && parsedColor.alpha < 0.99f) {
                     Canvas(modifier = Modifier.fillMaxSize()) {
                         val cellSize = 4.dp.toPx()
@@ -148,7 +142,6 @@ fun MorpheColorOptionItem(
                         }
                     }
                 }
-                // Actual color overlay, Material You gradient, or fallback icon
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -179,7 +172,6 @@ fun MorpheColorOptionItem(
                 }
             }
 
-            // Hex editable input
             Row(
                 modifier = Modifier
                     .weight(1f)
@@ -209,7 +201,6 @@ fun MorpheColorOptionItem(
                 )
             }
 
-            // Custom color button with palette icon
             MorpheButton(
                 label = stringResource(Res.string.custom_color),
                 icon = MorpheIcons.Palette,
@@ -220,7 +211,6 @@ fun MorpheColorOptionItem(
             )
         }
 
-        // Presets row if available
         if (!presets.isNullOrEmpty()) {
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -250,7 +240,6 @@ fun MorpheColorOptionItem(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            // Mini swatch
                             Box(
                                 modifier = Modifier
                                     .size(12.dp)
@@ -278,7 +267,6 @@ fun MorpheColorOptionItem(
         }
     }
 
-    // Modal dialog with MorpheColorPickerCard
     if (showPickerModal) {
         Dialog(onDismissRequest = { showPickerModal = false }) {
             MorpheColorPickerCard(

@@ -8,15 +8,11 @@ package app.morphe.engine.workspace
 import app.morphe.engine.util.deleteRecursivelyInParallel
 import java.io.File
 
-/**
- * An active, isolated session workspace for temporary patching/scratch operations.
- */
+/** Isolated session workspace for temporary patching operations. */
 class SessionWorkspace(
     val root: File,
 ) {
-    /**
-     * When true, this workspace will not be deleted on exit, preserving files for debugging.
-     */
+    /** Retains workspace directory after execution for debugging. */
     var retain: Boolean = false
 
     /**
@@ -24,9 +20,7 @@ class SessionWorkspace(
      */
     fun file(name: String): File = File(root, name)
 
-    /**
-     * Deletes the session directory recursively unless [retain] is true.
-     */
+    /** Deletes the workspace directory unless [retain] is true. */
     fun cleanup(): Boolean = !retain && try {
         root.deleteRecursivelyInParallel()
     } catch (_: Exception) {

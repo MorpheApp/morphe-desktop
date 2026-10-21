@@ -27,14 +27,7 @@ import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// HOME DIALOGS
-// ============================================================================
-
-/**
- * Blocking warning shown when the selected APK's version does not match the
- * suggested one. Confirm patches anyway, dismiss to pick a different APK.
- */
+/** Warning dialog displayed when the selected APK version differs from the suggested version. */
 @Composable
 internal fun VersionWarningDialog(
     versionStatus: VersionStatus,
@@ -72,7 +65,7 @@ internal fun VersionWarningDialog(
     }
 }
 
-/** Confirm removing a record from the patched-app history. */
+/** Confirmation dialog for removing a record from patched app history. */
 @Composable
 internal fun ForgetConfirmDialog(
     record: PatchedAppRecord,
@@ -91,10 +84,7 @@ internal fun ForgetConfirmDialog(
     }
 }
 
-/**
- * Confirm uninstalling the patched app from the connected device. The checkbox
- * offers the keep-history vs delete-history choice.
- */
+/** Confirmation dialog for uninstalling a patched app from a connected device. */
 @Composable
 internal fun UninstallConfirmDialog(
     record: PatchedAppRecord,

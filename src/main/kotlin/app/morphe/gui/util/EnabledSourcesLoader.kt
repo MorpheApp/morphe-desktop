@@ -28,11 +28,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * GUI-side orchestrator that resolves each enabled patch source to a downloaded
- * `.mpp` file in parallel via [PatchResolver], then hands the resulting files to
- * [MultiSourceLoader] for patch loading + union.
- */
+/** Resolves enabled patch sources to `.mpp` files and loads them via [MultiSourceLoader]. */
 object EnabledSourcesLoader {
 
     data class ResolvedSource(
@@ -63,13 +59,7 @@ object EnabledSourcesLoader {
         val anyLoaded: Boolean get() = loaded.allPatches.isNotEmpty()
     }
 
-    /**
-     * Resolve and load every enabled source in parallel.
-     *
-     * @param enabled list of (source, repository) pairs from
-     *                [app.morphe.gui.data.repository.PatchSourceManager.getEnabledRepositories].
-     *                Repository is null for LOCAL sources.
-     */
+    /** Resolves and loads every enabled source in parallel. */
     suspend fun loadAll(
         enabled: List<Pair<PatchSource, PatchRepository?>>,
         prefsBySource: Map<String, SourceVersionPref> = emptyMap(),
@@ -183,23 +173,15 @@ object EnabledSourcesLoader {
     }
 }
 
-// ============================================================================
-// SNAPSHOT PROJECTIONS FOR THE SOURCE-MANAGEMENT UI
-// ============================================================================
-
 /** sourceId to resolved version label (e.g. "v1.27.0-dev.2"). */
 fun EnabledSourcesLoader.Result?.sourceVersionMap(): Map<String, String?> =
     this?.resolved?.associate { it.source.id to it.resolvedVersion } ?: emptyMap()
 
-/** sourceId to the channel its resolved release sits on. Drives the sheet badge. */
+/** Maps source IDs to resolved release channels. */
 fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, PatchResolver.Channel?> =
     this?.resolved?.associate { it.source.id to it.channel } ?: emptyMap()
 
-/**
- * sourceId to a load-failure message, covering both the resolve phase (couldn't
- * fetch or find an .mpp) and the load phase (found one, couldn't read it), so a
- * partial multi-source failure shows exactly which source broke and why.
- */
+/** Maps source IDs to load-failure messages across resolve and load phases. */
 @Composable
 fun EnabledSourcesLoader.Result?.sourceErrorMap(): Map<String, String> {
     val snapshot = this ?: return emptyMap()
@@ -216,9 +198,7 @@ fun EnabledSourcesLoader.Result?.sourceErrorMap(): Map<String, String> {
     }
 }
 
-/**
- * Logs patch source resolution failure with detailed stack trace if available.
- */
+/** Logs patch source resolution failure. */
 fun EnabledSourcesLoader.Result.logIfFailed(prefix: String = "") {
     if (anyLoaded) return
     val firstThrowable = loaded.perSource.firstNotNullOfOrNull { it.error }

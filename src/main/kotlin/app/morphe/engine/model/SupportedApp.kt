@@ -8,10 +8,7 @@ package app.morphe.engine.model
 import app.morphe.engine.util.DownloadUrlResolver
 import app.morphe.engine.util.compareVersions
 
-/**
- * Represents a supported app extracted dynamically from patch metadata.
- * This is populated by parsing patch bundle compatible packages.
- */
+/** App target aggregated from patch bundle compatibility metadata. */
 data class SupportedApp(
     val packageName: String,
     val displayName: String,
@@ -35,11 +32,8 @@ data class SupportedApp(
             return providedName?.takeIf { it.isNotBlank() } ?: getDisplayName(packageName)
         }
 
-        /**
-         * Derive display name from package name.
-         */
+        /** Formats a package name into a readable display name when no override exists. */
         fun getDisplayName(packageName: String): String {
-            // Well-known package name mappings
             val knownNames = mapOf(
                 "com.google.android.youtube" to "YouTube",
                 "com.google.android.apps.youtube.music" to "YouTube Music",
@@ -62,18 +56,11 @@ data class SupportedApp(
                 .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
         }
 
-        /**
-         * Get a web download URL for a package name and version.
-         */
         fun getDownloadUrl(packageName: String, version: String?): String? {
             if (version == null) return null
             return DownloadUrlResolver.getWebSearchDownloadLink(packageName, version)
         }
 
-        /**
-         * Get the recommended version from a list of supported versions.
-         * Returns the highest version number.
-         */
         fun getRecommendedVersion(versions: List<String>): String? {
             if (versions.isEmpty()) return null
 

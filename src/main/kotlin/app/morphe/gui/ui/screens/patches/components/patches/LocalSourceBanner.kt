@@ -22,10 +22,6 @@ import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import org.jetbrains.compose.resources.stringResource
 
-// ════════════════════════════════════════════════════════════════════
-//  LOCAL SOURCE BANNER
-// ════════════════════════════════════════════════════════════════════
-
 @Composable
 internal fun LocalSourceBanner(
     patchFile: File?,
@@ -45,7 +41,6 @@ internal fun LocalSourceBanner(
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
         ) {
-            // Left accent stripe
             Box(
                 modifier = Modifier
                     .width(3.dp)

@@ -40,21 +40,17 @@ import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.contrastingForeground
 
-/**
- * Visual weight and styling variant of a [MorpheButton].
- */
+/** Visual weight and styling variants for [MorpheButton]. */
 enum class MorpheButtonVariant {
-    FILLED,     // Solid accent fill with contrasting ink (primary CTA, hero action)
-    PRIMARY,    // Tinted accent fill with accent text and border
-    SECONDARY,  // Tinted secondary fill with secondary text and border
-    OUTLINED,   // Subtle outline with transparent background
-    GHOST,      // Borderless with subtle hover fill
-    DANGER,     // Destructive action red tint
+    FILLED,
+    PRIMARY,
+    SECONDARY,
+    OUTLINED,
+    GHOST,
+    DANGER,
 }
 
-/**
- * Standard sizing presets for [MorpheButton].
- */
+/** Sizing presets for [MorpheButton]. */
 enum class MorpheButtonSize(
     val minHeight: Dp,
     val horizontalPadding: Dp,
@@ -66,11 +62,7 @@ enum class MorpheButtonSize(
     COMPACT(30.dp, 10.dp, 5.dp, 12.dp),
 }
 
-/**
- * Canonical Morphe Button component.
- *
- * Implements token-driven styling, smooth motion, hand cursor, and consistent dimensions.
- */
+/** Button component with customizable variant, size, and styling. */
 @Composable
 fun MorpheButton(
     onClick: () -> Unit,
@@ -200,9 +192,7 @@ fun MorpheButton(
     }
 }
 
-/**
- * Convenience overload of [MorpheButton] with label and optional icon.
- */
+/** Overload of [MorpheButton] with label and optional icon. */
 @Composable
 fun MorpheButton(
     label: String,

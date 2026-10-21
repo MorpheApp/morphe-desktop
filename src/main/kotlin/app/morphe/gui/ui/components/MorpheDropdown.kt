@@ -65,11 +65,7 @@ import org.jetbrains.compose.resources.stringResource
 /** One entry in a [MorpheDropdown]. */
 data class MorpheDropdownItem(val label: String, val onClick: () -> Unit)
 
-/**
- * Our inbuilt inhouse dropdown. A bordered trigger + a fully custom popup menu (NOT
- * Material's `DropdownMenu`, so the surface, item padding, hover and type all match
- * Morphe's look). We also have a searchbar inside. The menu matches the trigger's width and scrolls past [maxHeight].
- */
+/** Dropdown component with bordered trigger and searchable popup menu. */
 @Composable
 fun MorpheDropdown(
     label: String,
@@ -123,13 +119,7 @@ fun MorpheDropdown(
     }
 }
 
-/**
- * An editable dropdown (combo box).
- * Allows typing custom values directly while also providing a dropdown menu for preset selection.
- * When unfocused, displays [displayLabel] (e.g. "Automatic").
- * When focused, allows editing the text directly, showing [placeholder] as a hint when empty.
- * Clicking the arrow on the right opens/toggles the dropdown popup menu.
- */
+/** Editable combo-box dropdown supporting direct text input and preset menu selection. */
 @Composable
 fun MorpheEditableDropdown(
     value: String,
@@ -176,7 +166,6 @@ fun MorpheEditableDropdown(
                 .padding(start = 10.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // The rest of the dropdown space: editable input area
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -240,7 +229,6 @@ fun MorpheEditableDropdown(
                 )
             }
 
-            // Arrow button on the right: clicking arrow toggles the dropdown menu
             val arrowHover = remember { MutableInteractionSource() }
             val isArrowHovered by arrowHover.collectIsHoveredAsState()
             Box(

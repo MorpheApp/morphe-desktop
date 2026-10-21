@@ -20,18 +20,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
-/**
- * Persistent store for [PatchedAppRecord]s — the patched-app history shared by
- * the CLI and GUI (see `patched-app-recall-plan.md`).
- *
- * Lives in the engine layer (not GUI) so **both** pipelines can record into one
- * file: `morphe-data/patched-apps.json`. Reads are cached in memory; writes go
- * through a [Mutex] (in-process safety) and are atomic (temp file + move) so a
- * crash mid-write can't corrupt the history.
- *
- * The [file] is injectable for testing; production code uses the default under
- * [MorpheData.root].
- */
+/** Thread-safe persistent JSON store for [PatchedAppRecord] history. */
 class PatchedAppStore(
     private val file: File = File(MorpheData.root, FILE_NAME),
 ) {
@@ -46,24 +35,20 @@ class PatchedAppStore(
 
     private val _changes = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
-    /**
-     * Emits once whenever the history changes (upsert/delete). Observe this to
-     * refresh UI the moment a patch completes or a record is forgotten, instead
-     * of waiting for a screen to be re-entered.
-     */
+    /** Flow emitting whenever records are added, updated, or deleted. */
     val changes: SharedFlow<Unit> = _changes.asSharedFlow()
 
-    /** All records, most-recently-patched first. */
+    /** Returns all records, ordered most-recently-patched first. */
     suspend fun getAll(): List<PatchedAppRecord> = withContext(Dispatchers.IO) {
         mutex.withLock { load() }
     }
 
-    /** The record for [packageName], or null if the app was never patched. */
+    /** Returns the record for [packageName], or null if not found. */
     suspend fun get(packageName: String): PatchedAppRecord? = withContext(Dispatchers.IO) {
         mutex.withLock { load().firstOrNull { it.packageName == packageName } }
     }
 
-    /** Insert [record], replacing any existing record for the same package. */
+    /** Inserts or updates [record] for its package. */
     suspend fun upsert(record: PatchedAppRecord): Unit = withContext(Dispatchers.IO) {
         mutex.withLock {
             val others = load().filterNot { it.packageName == record.packageName }
@@ -72,7 +57,7 @@ class PatchedAppStore(
         _changes.tryEmit(Unit)
     }
 
-    /** Remove the record for [packageName] if present. */
+    /** Deletes the record for [packageName] if present. */
     suspend fun delete(packageName: String): Unit = withContext(Dispatchers.IO) {
         val changed = mutex.withLock {
             val remaining = load().filterNot { it.packageName == packageName }
@@ -86,16 +71,13 @@ class PatchedAppStore(
         if (changed) _changes.tryEmit(Unit)
     }
 
-    // --- internals (call only while holding [mutex]) ---
-
     private fun load(): List<PatchedAppRecord> {
         cache?.let { return it }
         val records = if (file.exists()) {
             try {
                 json.decodeFromString<StoreFile>(file.readText()).records
             } catch (e: Exception) {
-                // Corrupt/incompatible file: don't lose the user's ability to keep
-                // patching — start fresh in memory and let the next write heal it.
+                // Start with empty history if the file is corrupted or unreadable.
                 Logger.warn("Could not read patched-app history (${e.message}); starting empty")
                 emptyList()
             }
@@ -110,8 +92,7 @@ class PatchedAppStore(
         try {
             file.parentFile?.mkdirs()
             val content = json.encodeToString(StoreFile.serializer(), StoreFile(SCHEMA_VERSION, records))
-            // Atomic write: write a temp file, then move it over the target so a
-            // crash never leaves a half-written history behind.
+            // Write to a temporary file before moving to prevent corrupted writes.
             val tmp = File(file.parentFile, "${file.name}.tmp")
             tmp.writeText(content)
             try {
@@ -120,7 +101,7 @@ class PatchedAppStore(
                     StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE,
                 )
             } catch (_: Exception) {
-                // ATOMIC_MOVE isn't supported on every filesystem — fall back.
+                // Fall back if ATOMIC_MOVE is unsupported on the current filesystem.
                 Files.move(tmp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
             cache = records
@@ -138,15 +119,10 @@ class PatchedAppStore(
     companion object {
         const val FILE_NAME = "patched-apps.json"
 
-        /** Bump when the on-disk shape changes incompatibly; add a migration in [load]. */
+        /** Current schema version of the persistent records file. */
         const val SCHEMA_VERSION = 1
 
-        /**
-         * Process-wide shared instance — use this everywhere in production so the
-         * in-memory cache is coherent (two instances in one process could race
-         * and drop each other's records). Tests construct their own with a
-         * custom [file].
-         */
+        /** Shared singleton instance using the default storage location. */
         val shared: PatchedAppStore by lazy { PatchedAppStore() }
     }
 }

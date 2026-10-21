@@ -9,12 +9,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * The `patches-bundle.json` a patch repo publishes at its root (branch `main` = stable,
- * `dev` = prerelease). Read via the **raw CDN** (`raw.githubusercontent.com` / GitLab
- * raw) so resolving the latest patch doesn't spend a call against the rate-limited
- * releases API.
- *
- * Mirrors morphe manager's `PatchesReleaseInfo`.
+ * Schema for `patches-bundle.json`, published at the repo root to check the latest
+ * patch version without hitting GitHub Releases API rate limits.
  */
 @Serializable
 data class PatchesBundle(
@@ -24,7 +20,7 @@ data class PatchesBundle(
     val description: String? = null,
     @SerialName("signature_download_url") val signatureDownloadUrl: String? = null,
 ) {
-    /** Adapt to the shared [Release] model so the rest of the pipeline is unchanged. */
+    /** Converts this bundle metadata into a [Release]. */
     fun toRelease(prerelease: Boolean): Release {
         val assetName = downloadUrl.substringAfterLast('/').ifBlank { "patches-$version.mpp" }
         return Release(

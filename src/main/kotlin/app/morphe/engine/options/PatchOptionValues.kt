@@ -20,10 +20,7 @@ import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
 
-/**
- * Returns [value] coerced to [type], or null when it cannot stand for one, since the patcher
- * aborts the run over a value of any other type. An unmodelled type is passed through untouched.
- */
+/** Coerces [value] to [type], or returns null if incompatible. */
 fun coerceOptionValue(type: KType, value: Any?): Any? {
     if (value == null) return null
 
@@ -32,7 +29,7 @@ fun coerceOptionValue(type: KType, value: Any?): Any? {
         val elements = when (value) {
             is List<*> -> value
             is Array<*> -> value.asList()
-            // How the list editor and imported profiles carry a list
+            // Comma-delimited list format from UI editors and profiles
             is String -> value.split(',').map(String::trim).filter(String::isNotEmpty)
             else -> return null
         }
@@ -63,7 +60,6 @@ fun coerceOptionValue(type: KType, value: Any?): Any? {
 
 private val INT_RANGE = Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()
 
-/** The whole number [this] stands for, or null when it is none. */
 private fun Any.integralOrNull(): Long? = when (this) {
     is Long -> this
     is Int, is Short, is Byte -> (this as Number).toLong()
@@ -72,20 +68,15 @@ private fun Any.integralOrNull(): Long? = when (this) {
     else -> null
 }
 
-/** The decimal [this] stands for, or null when it is none. */
 private fun Any.decimalOrNull(): Double? = when (this) {
     is Number -> toDouble()
     is String -> trim().toDoubleOrNull()
     else -> null
 }
 
-/** Rejects fractions, NaN and infinities, which no integer option can hold. */
 private fun Double.toWholeOrNull(): Long? = takeIf { it == it.toLong().toDouble() }?.toLong()
 
-/**
- * Serializes an already-typed option value (or default) to a [JsonElement],
- * preserving primitive types, lists/arrays, and string-keyed maps.
- */
+/** Serializes an option value into a [JsonElement]. */
 fun optionValueToJson(value: Any?): JsonElement = when (value) {
     null -> JsonNull
     is JsonElement -> value
@@ -106,9 +97,7 @@ fun optionValueToJson(value: Any?): JsonElement = when (value) {
     else -> JsonPrimitive(value.toString())
 }
 
-/**
- * The text an editor shows for a stored [JsonElement] value, whatever JSON type it was saved as.
- */
+/** Converts a stored [JsonElement] into a display string for editing. */
 fun optionValueFromJson(element: JsonElement): String = when (element) {
     is JsonNull -> ""
     is JsonArray -> element.joinToString(", ") { optionValueFromJson(it) }
@@ -149,9 +138,8 @@ fun deserializeOptionValue(element: JsonElement, type: KType): Any? {
 }
 
 /**
- * Converts a flat `"patchName.optionKey" -> String` map into the engine's nested
- * `Map<patchName, Map<optionKey, Any?>>` format, coercing string values to each
- * option's declared [KType] on [patches].
+ * Converts `"patchName.optionKey" -> String` entries into nested option maps,
+ * coercing values to their declared [KType].
  */
 fun resolveFlatPatchOptions(
     patches: Set<Patch<*>>,
@@ -180,9 +168,7 @@ fun resolveFlatPatchOptions(
 }
 
 /**
- * Groups flat `"patchName.optKey" -> rawStringValue` entries into a structured
- * `Map<patchName, Map<optKey, JsonElement>>` suitable for preference persistence,
- * coercing values to their declared [KType]s if known.
+ * Groups `"patchName.optionKey" -> rawString` entries into nested JSON objects for storage.
  */
 fun groupFlatOptionsToJson(
     flatOptions: Map<String, String>,
@@ -202,10 +188,7 @@ fun groupFlatOptionsToJson(
     return grouped
 }
 
-/**
- * Parses a raw string value from CLI option flags (`-O`) into typed primitives, lists,
- * or strings according to literal syntax (`[a, b]`, numbers, booleans, quotes).
- */
+/** Parses CLI option strings (`-O`) into primitives, lists, or strings. */
 fun parseCliOptionValue(value: String?): Any? {
     value ?: return null
 

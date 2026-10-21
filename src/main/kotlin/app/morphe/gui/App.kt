@@ -125,9 +125,7 @@ private fun applyLocale(language: String) {
     )
 }
 
-/**
- * Mode state for switching between simplified and full mode.
- */
+/** Mode state for switching between simplified and full mode. */
 data class ModeState(
     val isSimplified: Boolean,
     val onChange: (Boolean) -> Unit
@@ -179,12 +177,7 @@ val LocalGroupPatchesByCategory = compositionLocalOf<MutableState<Boolean>> {
     error("No LocalGroupPatchesByCategory provided")
 }
 
-/**
- * Auto-start ADB preference. Exposed as a composition local so the
- * SettingsDialog (writer) and DeviceIndicator + install buttons (readers)
- * can react without prop-drilling through Voyager screens. App-level
- * lifecycle (start/stop the daemon when this flips) is handled in `App.kt`.
- */
+/** Auto-start ADB preference state. */
 data class AdbPreferenceState(
     val enabled: Boolean,
     val onChange: (Boolean) -> Unit,
@@ -246,7 +239,6 @@ private fun appContent(
     val backgroundSpeedState = remember { mutableFloatStateOf(1f) }
     val patchingCompletedState = remember { mutableStateOf(false) }
 
-    // Initialize PatchSourceManager and load config on startup
     LaunchedEffect(Unit) {
         patchSourceManager.initialize()
         val config = configRepository.loadConfig()
@@ -267,8 +259,7 @@ private fun appContent(
         applyLocale(config.language)
 
         autoStartAdb = engineConfigRepository.loadConfig().autoStartAdb
-        // Publish the initial active mode BEFORE the VMs subscribe so their
-        // activeMode listener fires with the correct value on first emit.
+        // Publish initial active mode before view models subscribe.
         patchSourceManager.setActiveMode(
             if (isSimplifiedMode) ActiveMode.QUICK else ActiveMode.EXPERT
         )
@@ -281,7 +272,6 @@ private fun appContent(
         customAccentColorState.value = config.customAccentColorArgb
     }
 
-    // Callback for changing theme
     val onThemeChange: (ThemePreference) -> Unit = { newTheme ->
         themePreference = newTheme
         scope.launch {
@@ -290,13 +280,9 @@ private fun appContent(
         }
     }
 
-    // Callback for changing mode
     val onModeChange: (Boolean) -> Unit = { simplified ->
         isSimplifiedMode = simplified
-        // Update the manager immediately so the now-visible mode's VM
-        // starts reacting to source changes and the now-hidden one stops.
-        // That prevents duplicate parallel loads and the cancellation cascade
-        // that comes with them.
+        // Update active mode to prevent duplicate loads between view models.
         patchSourceManager.setActiveMode(
             if (simplified) ActiveMode.QUICK else ActiveMode.EXPERT
         )
@@ -306,10 +292,7 @@ private fun appContent(
         }
     }
 
-    // Callback for the auto-start ADB toggle. Persists the preference AND
-    // applies the change immediately: ON spins up DeviceMonitor (which
-    // explicitly start-server's adb and records ownership). OFF cancels
-    // polling and kill-server's the daemon if Morphe owns it.
+    // Persist auto-start ADB preference and start/stop device monitoring.
     val onAutoStartAdbChange: (Boolean) -> Unit = { enabled ->
         autoStartAdb = enabled
         scope.launch {
@@ -348,18 +331,13 @@ private fun appContent(
         onChange = onAutoStartAdbChange
     )
 
-    // Initial DeviceMonitor start. Gated on autoStartAdb so users who left
-    // the toggle OFF don't spawn an unwanted adb daemon at launch. Runs once
-    // after config finishes loading. Subsequent live toggles go through
-    // [onAutoStartAdbChange], not this effect.
+    // Start DeviceMonitor once config loads if auto-start ADB is enabled.
     LaunchedEffect(isLoading, autoStartAdb) {
         if (!isLoading && autoStartAdb) {
             DeviceMonitor.startMonitoring()
         }
     }
-    // On Compose teardown (window close → exitApplication), cancel polling.
-    // The kill-if-owned half runs from the JVM shutdown hook in [GuiMain.kt]
-    // so it works even when the user quits via Cmd+Q without disposing.
+    // Cancel device monitoring on disposal.
     DisposableEffect(Unit) {
         onDispose {
             DeviceMonitor.stopMonitoring()
@@ -411,18 +389,14 @@ private fun appContent(
                         scope.launch { configRepository.clearCardFills() }
                     },
                 ) {
-                    // Tint the OS title bar (Windows DWM caption color, macOS traffic
-                    // light contrast) to match the active theme's surface color.
+                    // Tint native OS title bar to match surface color.
                     val titleBarColor = MaterialTheme.colorScheme.surface
                     val frameScope = LocalFrameWindowScope.current
                     LaunchedEffect(titleBarColor, frameScope) {
                         frameScope?.window?.let { applyTitleBarTint(it, titleBarColor) }
                     }
 
-                    // macOS only: render a 28dp colored band at the very top of the
-                    // window, sitting underneath the (now-transparent) OS title bar.
-                    // The traffic lights overlay this band at their default position.
-                    // Wrapped in WindowDraggableArea so the band acts as a drag region.
+                    // macOS draggable title bar band.
                     val isMac = remember {
                         System.getProperty("os.name")?.lowercase()?.contains("mac") == true
                     }
@@ -498,7 +472,6 @@ private fun appContent(
                                                 popEnterTransition = { Animations.pushEnter },
                                                 popExitTransition = { Animations.pushExit }
                                             ) {
-                                                // Available for push settings route
                                             }
                                         }
 

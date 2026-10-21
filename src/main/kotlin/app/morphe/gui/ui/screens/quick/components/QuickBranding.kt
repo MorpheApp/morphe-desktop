@@ -25,10 +25,6 @@ import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// QUICK BRANDING (logo + patches version badge)
-// ============================================================================
-
 @Composable
 internal fun BrandingLogo() {
     val themeState = LocalThemeState.current

@@ -40,10 +40,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Compact summary row for the "Your apps" list. One per [PatchedAppRecord].
- * Tapping opens [PatchedAppDetailDialog] for the full breakdown.
- */
+/** Compact summary row displaying a previously patched application. */
 @Composable
 fun YourAppRow(
     record: PatchedAppRecord,
@@ -146,8 +143,7 @@ fun YourAppRow(
                 )
             }
         }
-        // Already-patched APK is newer than what's on the device → offer to install
-        // it directly (no re-patch needed). Streams away once the device catches up.
+        // Prompt installation when the patched APK is newer than the version on device.
         if (deviceInfo?.installPending == true) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -181,10 +177,7 @@ fun YourAppRow(
 }
 }
 
-/**
- * "label vOld → vNew" with distinct colors: muted label/old/arrow, highlighted new.
- * Reads far better than a single flat accent. When [newVersion] is null, just shows "label vOld".
- */
+/** Displays version transition from current to target release with styled highlighting. */
 @Composable
 private fun VersionBumpText(
     label: String,

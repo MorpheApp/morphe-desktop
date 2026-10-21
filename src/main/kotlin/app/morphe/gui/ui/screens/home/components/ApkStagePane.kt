@@ -36,10 +36,6 @@ import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// APK STAGE (drop zone, APK info, analyzing)
-// ============================================================================
-
 @Composable
 internal fun MiddleContent(
     uiState: HomeUiState,
@@ -72,10 +68,6 @@ internal fun MiddleContent(
     }
 }
 
-// ============================================================================
-// DROP ZONE (corner brackets, scanner/targeting aesthetic)
-// ============================================================================
-
 @Composable
 internal fun DropPromptSection(
     isDragHovering: Boolean,
@@ -94,7 +86,6 @@ internal fun DropPromptSection(
             .fillMaxWidth()
     ) {
         val mediumDp = MorpheTheme.shapes.mediumDp
-        // Drop zone
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -117,10 +108,6 @@ internal fun DropPromptSection(
         }
     }
 }
-
-// ============================================================================
-// APK SELECTED (info card and action buttons)
-// ============================================================================
 
 @Composable
 internal fun ApkSelectedSection(
@@ -190,10 +177,6 @@ internal fun ApkSelectedSection(
         }
     }
 }
-
-// ════════════════════════════════════════════════════════════════════
-//  ANALYZING STATE
-// ════════════════════════════════════════════════════════════════════
 
 @Composable
 internal fun AnalyzingSection() {

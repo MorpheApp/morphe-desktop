@@ -11,10 +11,7 @@ import app.morphe.engine.options.PatchOption
 import app.morphe.engine.options.PatchOptionType
 import app.morphe.engine.options.SliderBounds
 
-/**
- * Represents the resolved UI kind of a patch option.
- * Drives an exhaustive when-expression in the patch options editor.
- */
+/** Resolved UI presentation kind for a patch option editor. */
 sealed interface OptionKind {
     data object StringList : OptionKind
     data object Color : OptionKind
@@ -45,12 +42,9 @@ sealed interface OptionKind {
     data class FloatRangeSlider(val bounds: SliderBounds) : OptionKind
 }
 
-/**
- * Resolves the [OptionKind] for a given [option] and its current [value].
- * All type-detection heuristics live here, keeping the UI when-expression clean and exhaustive.
- */
+/** Resolves the [OptionKind] for [option] based on its type and current [value]. */
 fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
-    // 1. Typed options dispatch to their dedicated picker Kind.
+    // Dispatch typed options to their dedicated picker kind.
     option.explicitKind?.let { kind ->
         val explicit = when (kind) {
             ExplicitOptionKind.Folder -> OptionKind.FolderPicker
@@ -131,10 +125,7 @@ fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
     }
 }
 
-/**
- * A stored range option value read back as a range. Range options hold a two-element list
- * or comma-separated string, e.g. "10, 20".
- */
+/** Converts a stored two-element list or comma-separated string into a float range. */
 fun Any?.asFloatRange(): ClosedFloatingPointRange<Float>? {
     val pair: List<Float> = when (this) {
         is List<*> -> this.mapNotNull { (it as? Number)?.toFloat() ?: it?.toString()?.trim()?.toFloatOrNull() }

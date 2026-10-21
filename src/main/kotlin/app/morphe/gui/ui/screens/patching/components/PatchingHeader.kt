@@ -52,7 +52,6 @@ internal fun PatchingHeader(
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Back button
         MorpheIconButton(
             icon = MorpheIcons.ArrowBack,
             contentDescription = stringResource(Res.string.back),
@@ -65,7 +64,6 @@ internal fun PatchingHeader(
 
         Spacer(Modifier.width(12.dp))
 
-        // Title + status
         Text(
             text = getStatusText(uiState.status),
             style = MorpheTheme.typography.titleSmall,
@@ -74,7 +72,6 @@ internal fun PatchingHeader(
 
         Spacer(Modifier.weight(1f))
 
-        // Cancel button
         if (uiState.canCancel) {
             MorpheButton(
                 label = stringResource(Res.string.cancel),

@@ -85,17 +85,11 @@ open class ConfigRepository {
         }
     }
 
-    /**
-     * Update language preference.
-     */
     suspend fun setLanguage(language: String) {
         val current = loadConfig()
         saveConfig(current.copy(language = language))
     }
 
-    /**
-     * Update theme preference.
-     */
     suspend fun setThemePreference(theme: ThemePreference) {
         val current = loadConfig()
         saveConfig(current.copy(themePreference = theme.name))
@@ -129,61 +123,33 @@ open class ConfigRepository {
         saveConfig(current.copy(cardFills = updated))
     }
 
-    /**
-     * Update background type.
-     */
     suspend fun setBackgroundType(type: String) {
         val current = loadConfig()
         saveConfig(current.copy(backgroundType = type))
     }
 
-    /**
-     * Update parallax enabled state.
-     */
     suspend fun setEnableParallax(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(enableParallax = enabled))
     }
     
-    /**
-     * Update custom accent color.
-     */
     suspend fun setCustomAccentColorArgb(color: Int?) {
         val current = loadConfig()
         saveConfig(current.copy(customAccentColorArgb = color))
     }
 
-    /**
-     * Update group patches by category preference.
-     */
     suspend fun setGroupPatchesByCategory(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(groupPatchesByCategory = enabled))
     }
 
-    /**
-     * Record a source's version preference (called by PatchesScreen when the user
-     * picks a release). Per-source, so sources with overlapping tag names don't
-     * contaminate each other.
-     */
+    /** Sets the version tracking preference for a patch source. */
     suspend fun setSourceVersionPref(sourceId: String, pref: SourceVersionPref) {
         val current = loadConfig()
         saveConfig(current.copy(sourceVersionPrefs = current.sourceVersionPrefs + (sourceId to pref)))
     }
 
-    /**
-     * Returns the per-source version preferences, migrating the legacy tag-only
-     * fields ([AppConfig.lastPatchesVersionBySource] and the even-older single
-     * [AppConfig.lastPatchesVersion]) on first read.
-     *
-     * Those tags were auto-saved on every selection, not deliberate freezes, so a
-     * real pin cannot be told apart from "just used the latest". Each old tag
-     * therefore becomes a *follow track* based on whether it names a pre-release.
-     * Everyone shifts onto the latest of their channel (the fix), at the cost of
-     * un-freezing anyone who had deliberately pinned an old version (they can
-     * re-pin). A dev user parked on a stable tag at migration looks like a stable
-     * user and is migrated as such, an accepted one-time loss.
-     */
+    /** Returns per-source version preferences, migrating legacy fields on first read. */
     suspend fun getSourceVersionPrefs(): Map<String, SourceVersionPref> {
         val current = loadConfig()
         if (current.sourceVersionPrefs.isNotEmpty()) return current.sourceVersionPrefs
@@ -216,21 +182,13 @@ open class ConfigRepository {
         Logger.info("Seeded source pre-release flags: ${seeded.filter { it.usePreRelease }.map { it.name }}")
     }
 
-    /**
-     * Mark the given CLI version as dismissed for the update banner. Pass null to
-     * clear (so the banner reappears for whatever the next-available version is).
-     */
+    /** Records the update version dismissed by the user, or null to clear. */
     suspend fun setDismissedUpdateVersion(version: String?) {
         val current = loadConfig()
         saveConfig(current.copy(dismissedUpdateVersion = version))
     }
 
-    /**
-     * Persist the user's chosen update channel. Marks the choice as explicit
-     * so subsequent reads respect it even if the running build's channel
-     * differs. Also clears any prior [AppConfig.dismissedUpdateVersion]. That
-     * dismissal referred to a specific version on the previous channel.
-     */
+    /** Persists explicit update channel preference and clears prior dismissal. */
     suspend fun setUpdateChannelPreference(pref: UpdateChannelPreference) {
         val current = loadConfig()
         saveConfig(
@@ -242,12 +200,7 @@ open class ConfigRepository {
         )
     }
 
-    /**
-     * Resolve the update-channel preference. When the user has explicitly
-     * picked one (via Settings), respect that. Otherwise re-derive from the
-     * running build's version on every call so swapping between a stable and
-     * dev build flips the default automatically.
-     */
+    /** Returns active update channel preference, deriving from current build if unset. */
     suspend fun getOrInitUpdateChannelPreference(currentVersion: String): UpdateChannelPreference {
         val current = loadConfig()
         val saved = current.getUpdateChannelPreference()
@@ -265,36 +218,26 @@ open class ConfigRepository {
         return derived
     }
 
-    /**
-     * Update simplified mode setting.
-     */
     suspend fun setUseSimplifiedMode(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(useSimplifiedMode = enabled))
     }
 
-    /**
-     * Persist the expand/collapse state of a Settings dialog section so it restores
-     * on next open instead of resetting to collapsed.
-     */
+    /** Persists the expanded state of a settings section. */
     suspend fun setCollapsibleSectionExpanded(id: String, expanded: Boolean) {
         val current = loadConfig()
         val updated = current.collapsibleSectionStates + (id to expanded)
         saveConfig(current.copy(collapsibleSectionStates = updated))
     }
 
-    /**
-     * Get the currently active patch source.
-     */
+    /** Returns the currently active patch source. */
     suspend fun getActivePatchSource(): PatchSource {
         val config = loadConfig()
         return config.patchSource.find { it.id == config.activePatchSourceId }
             ?: DEFAULT_PATCH_SOURCE
     }
 
-    /**
-     * Set the active patch source by ID.
-     */
+    /** Sets the active patch source by ID. */
     suspend fun setActivePatchSource(id: String) {
         val current = loadConfig()
         if (current.patchSource.any { it.id == id }) {
@@ -302,18 +245,14 @@ open class ConfigRepository {
         }
     }
 
-    /**
-     * Add a new patch source.
-     */
+    /** Adds a new patch source to the configuration. */
     suspend fun addPatchSource(source: PatchSource) {
         val current = loadConfig()
         val updated = current.copy(patchSource = current.patchSource + source)
         saveConfig(updated)
     }
 
-    /**
-     * Update an existing patch source. For non-deletable sources, only the pre-release flag can be updated.
-     */
+    /** Updates an existing patch source. */
     suspend fun updatePatchSource(updated: PatchSource) {
         val current = loadConfig()
         val existing = current.patchSource.find { it.id == updated.id }
@@ -332,14 +271,7 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = updatedSources))
     }
 
-    /**
-     * Persist a new source ordering given the ids in their desired order. Order
-     * only affects the app display-name tiebreak (first source wins) and UI
-     * presentation order, not which patches load, so any source, default
-     * included, may be reordered. Ignores the call unless [orderedIds] is a
-     * permutation of the existing sources (guards against a stale UI snapshot
-     * dropping or duplicating a source).
-     */
+    /** Persists reordered patch sources if [orderedIds] matches current sources. */
     suspend fun reorderPatchSources(orderedIds: List<String>) {
         val current = loadConfig()
         val byId = current.patchSource.associateBy { it.id }
@@ -348,29 +280,21 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = reordered))
     }
 
-
-
-    /**
-     * Mark the multi-source upgrade hint as dismissed. One-shot, never resets.
-     */
+    /** Marks multi-source introduction banner as dismissed. */
     suspend fun setMultiSourceHintDismissed() {
         val current = loadConfig()
         if (current.multiSourceHintDismissed) return
         saveConfig(current.copy(multiSourceHintDismissed = true))
     }
 
-    /** Persist which home apps tab ("ALL"/"YOURS") the user is viewing. */
+    /** Persists selected home apps filter tab. */
     suspend fun setHomeAppListFilter(value: String) {
         val current = loadConfig()
         if (current.homeAppListFilter == value) return
         saveConfig(current.copy(homeAppListFilter = value))
     }
 
-    /**
-     * Toggle enablement of a patch source. Safety net: if disabling would leave zero
-     * enabled sources, the default source is force-enabled (mirrors morphe-manager
-     * SourceManagementSheet.kt:142-149 LaunchedEffect).
-     */
+    /** Toggles patch source enablement, ensuring at least one source remains active. */
     suspend fun setPatchSourceEnabled(id: String, enabled: Boolean) {
         val current = loadConfig()
         val updatedSources = current.patchSource.map {
@@ -378,7 +302,6 @@ open class ConfigRepository {
         }
         val anyEnabled = updatedSources.any { it.enabled }
         val finalSources = if (!anyEnabled) {
-            // Safety net: force-enable the default
             updatedSources.map {
                 if (it.id == DEFAULT_PATCH_SOURCE.id) it.copy(enabled = true) else it
             }
@@ -388,16 +311,13 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = finalSources))
     }
 
-    /**
-     * Remove a patch source by ID. Cannot remove non-deletable sources.
-     */
+    /** Removes a patch source by ID if deletable. */
     suspend fun removePatchSource(id: String) {
         val current = loadConfig()
         val source = current.patchSource.find { it.id == id }
         if (source == null || !source.deletable) return
 
         val updatedSources = current.patchSource.filter { it.id != id }
-        // If we removed the active source, fall back to default
         val newActiveId = if (current.activePatchSourceId == id) {
             DEFAULT_PATCH_SOURCE.id
         } else {

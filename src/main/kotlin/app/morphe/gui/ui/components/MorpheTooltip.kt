@@ -28,7 +28,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import app.morphe.gui.ui.theme.MorpheTheme
 
-/** Sits above the anchor, flipping below when the window runs out of room. */
+/** Positions popup above anchor, flipping below if space is insufficient. */
 private class AboveAnchor(private val gap: Int) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,

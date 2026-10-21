@@ -24,12 +24,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Replaces [AdbInstallSection] when the user has the auto-start ADB toggle off.
- * Mirrors the bordered card layout so the result screen doesn't collapse,
- * but the install button is replaced with a clearly-disabled "ENABLE ADB"
- * hint that flips the toggle in one click.
- */
+/** Card shown in place of [AdbInstallSection] when ADB auto-start is disabled. */
 @Composable
 internal fun AdbDisabledHint(
     borderColor: Color = MaterialTheme.colorScheme.outlineVariant,

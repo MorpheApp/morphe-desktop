@@ -28,16 +28,7 @@ import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Desktop
 
-/**
- * Tools dialog, the peer of [SettingsDialog]. One-off actions (open logs, open app
- * data, view licenses, clear cache) and reference info (version). Mirrors the
- * [SettingsDialog] AlertDialog aesthetic.
- *
- * @param allowCacheClear when false the Clear Cache action is disabled (e.g.
- *   while patches are in use during selection).
- * @param onCacheCleared invoked after a successful cache clear so hosts can
- *   refresh dependent state (e.g. patch source listings).
- */
+/** Modal dialog providing diagnostics, cache cleanup, and application tools. */
 @Composable
 fun ToolsDialog(
     onDismiss: () -> Unit,
@@ -119,7 +110,6 @@ fun ToolsDialog(
 
                 Spacer(Modifier.height(6.dp))
 
-                // Clear cache
                 val cacheBytes = remember { CacheManager.getCacheSizeBytes() }
                 val cacheColor = when {
                     cacheCleared -> MorpheColors.Teal
@@ -164,7 +154,6 @@ fun ToolsDialog(
         }
     )
 
-    // Clear cache confirmation
     if (showClearCacheConfirm) {
         MorpheAlertDialog(
             onDismiss = { showClearCacheConfirm = false },

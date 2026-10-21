@@ -24,13 +24,7 @@ import app.morphe.gui.ui.theme.*
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Route the patched app's web links to it (and optionally stop the stock app
- * from grabbing them). Shown only once the patched app is installed on a ready
- * device. The stock-disable checkbox appears only when a rename patch was used
- * (a distinct [stockPackage]). On-device, [app.morphe.engine.util.AdbManager.setLinkHandling] still
- * verifies the stock app is actually installed before touching it.
- */
+/** Section to configure default link handling domains on the connected device. */
 @Composable
 internal fun LinkHandlingSection(
     stockPackage: String?,

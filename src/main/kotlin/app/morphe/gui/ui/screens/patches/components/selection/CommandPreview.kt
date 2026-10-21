@@ -32,8 +32,6 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
-// ── Command Preview ──
-
 @Composable
 internal fun CommandPreview(
     command: String,
@@ -67,7 +65,6 @@ internal fun CommandPreview(
             .background(terminalBg)
             .padding(12.dp)
     ) {
-        // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -94,7 +91,6 @@ internal fun CommandPreview(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Copy button
                 MorpheButton(
                     label = if (showCopied) stringResource(Res.string.copied) else stringResource(Res.string.copy),
                     variant = MorpheButtonVariant.GHOST,
@@ -106,7 +102,6 @@ internal fun CommandPreview(
                     }
                 )
 
-                // Mode toggle
                 MorpheButton(
                     label = if (cleanMode) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
                     variant = MorpheButtonVariant.GHOST,
@@ -119,7 +114,6 @@ internal fun CommandPreview(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Command text
         val scrollState = rememberScrollState()
         val hasScroll = scrollState.maxValue > 0
         Box(

@@ -87,13 +87,7 @@ private val MASKS: List<MaskOption> = listOf(
     MaskOption(Res.string.icon_studio_shape_square, RoundedCornerShape(8)),
 )
 
-/**
- * Icon Studio. A stack of foreground layers (image / text / shape) over a
- * solid/gradient/image background, each with transform, colour adjust and
- * effects. The preview renders through [IconRenderer] (pixel-exact to export)
- * under a multi-mask gallery. Save persists the project and bakes the mipmap
- * folder the branding patch reads.
- */
+/** Dialog for designing, previewing, and exporting custom adaptive app icons. */
 @Composable
 fun IconStudioDialog(
     packageName: String,
@@ -109,8 +103,8 @@ fun IconStudioDialog(
     var selectedId by remember { mutableStateOf(project.layers.lastOrNull()?.id) }
     var busy by remember { mutableStateOf(false) }
     var preview by remember { mutableStateOf<ImageBitmap?>(null) }
-    var silhouette by remember { mutableStateOf<ImageBitmap?>(null) }        // themed/monochrome (adaptive position)
-    var notifSilhouette by remember { mutableStateOf<ImageBitmap?>(null) }   // notification (fitted to safe zone)
+    var silhouette by remember { mutableStateOf<ImageBitmap?>(null) }
+    var notifSilhouette by remember { mutableStateOf<ImageBitmap?>(null) }
     var selectedMask by remember { mutableStateOf(3) }
     var dragging by remember { mutableStateOf(false) }
     var selectedTemplate by remember { mutableStateOf<String?>(null) }
@@ -128,8 +122,7 @@ fun IconStudioDialog(
     val previewPx = with(density) { previewDp.toPx() }
     val previewColWidth = previewDp * 2 + 12.dp  // two previews (adaptive + monochrome) side by side
 
-    // Undo/redo: all mutations funnel through commit(), which time-coalesces rapid
-    // edits (a burst of slider drags = one undo step) so we don't get 100 steps/drag.
+    // Time-coalesce rapid edits into a single undo step.
     val history = remember { mutableStateListOf(project) }
     var histIndex by remember { mutableStateOf(0) }
     var lastCommit by remember { mutableStateOf(0L) }
@@ -137,9 +130,9 @@ fun IconStudioDialog(
     fun commit(new: IconProject) {
         val now = System.currentTimeMillis()
         if (now - lastCommit < 400L && histIndex == history.lastIndex) {
-            history[histIndex] = new                                  // coalesce into current step
+            history[histIndex] = new
         } else {
-            while (history.lastIndex > histIndex) history.removeAt(history.lastIndex)  // drop redo tail
+            while (history.lastIndex > histIndex) history.removeAt(history.lastIndex)
             history.add(new); histIndex = history.lastIndex
         }
         lastCommit = now
@@ -165,7 +158,7 @@ fun IconStudioDialog(
         selectedId = id
     }
 
-    // Reorder within the displayed (top-of-stack-first) order, then map back.
+    // Reorder layers in top-to-bottom visual order.
     fun reorderDisplay(fromD: Int, toD: Int) {
         val display = project.layers.reversed().toMutableList()
         if (fromD !in display.indices) return
@@ -212,7 +205,7 @@ fun IconStudioDialog(
         ForegroundPrep.Outcome.OPAQUE ->
             getString(Res.string.icon_studio_warn_opaque)
         ForegroundPrep.Outcome.UNREADABLE -> getString(Res.string.icon_studio_warn_unreadable)
-        else -> null  // Already transparent. Nothing to warn about
+        else -> null
     }
 
     fun addImageLayer() {
@@ -324,7 +317,6 @@ fun IconStudioDialog(
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(20.dp), modifier = Modifier.weight(1f, fill = false)) {
-                    // ── Previews: adaptive + monochrome side by side, mask gallery, status bar ──
                     Column(Modifier.width(previewColWidth), horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -396,12 +388,10 @@ fun IconStudioDialog(
                         StatusBarPreview(notifSilhouette)
                     }
 
-                    // ── Controls (scrollable, with scrollbar) ──
                     Box(Modifier.weight(1f).fillMaxHeight()) {
                         val scrollState = rememberScrollState()
                         Column(Modifier.fillMaxWidth().verticalScroll(scrollState).padding(end = 12.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                        // Import warning lives inside the scrollable controls so it never
-                        // steals height from the (fixed) preview column and squishes it.
+                        // Position warning within scrollable controls to preserve preview dimensions.
                         importWarning?.let { msg ->
                             Row(
                                 Modifier.fillMaxWidth().clip(shapes.small)
@@ -508,7 +498,7 @@ private fun LayersPanel(
     onReorder: (Int, Int) -> Unit,
     onDelete: () -> Unit,
 ) {
-    val display = layers.reversed()  // top of stack first
+    val display = layers.reversed()
     var dragId by remember { mutableStateOf<String?>(null) }
     var dragDy by remember { mutableStateOf(0f) }
     val rowH = with(LocalDensity.current) { MorpheTheme.dimens.chipHeight.toPx() }
@@ -777,11 +767,7 @@ private fun DrawScope.drawPreview(bitmap: ImageBitmap?) {
     drawImage(image = bitmap, dstOffset = IntOffset.Zero, dstSize = IntSize(s, s))
 }
 
-/**
- * A realistic status bar showing the actual monochrome notification silhouette (with the
- * clipped-slot guide) between the clock and the system icons. This is the output most
- * easily gotten wrong, mirroring how morphe-manager previews it.
- */
+/** Previews status bar notification icon silhouette. */
 @Composable
 private fun StatusBarPreview(silhouette: ImageBitmap?) {
     val shapes = MorpheTheme.shapes

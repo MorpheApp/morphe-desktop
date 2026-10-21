@@ -60,9 +60,7 @@ internal fun AddPatchSourceDialog(
                     listOf(PatchSourceType.GITHUB, PatchSourceType.LOCAL).forEach { type ->
                         val isSelected = sourceType == type
                         val label = when (type) {
-                            // The "REMOTE" tab covers both GitHub and
-                            // GitLab, and the resolver picks the right
-                            // provider from the URL the user pastes.
+                            // Remote tab covers both GitHub and GitLab sources.
                             PatchSourceType.GITHUB -> stringResource(Res.string.source_sheet_remote_label)
                             PatchSourceType.LOCAL -> stringResource(Res.string.patch_source_dialog_local_file_label)
                             else -> ""
@@ -92,9 +90,7 @@ internal fun AddPatchSourceDialog(
                                 onValueChange = { newUrl ->
                                     form.url = newUrl
                                     form.error = null
-                                    // Auto-suggest the name from the repo basename as soon as the URL
-                                    // parses cleanly exactly like the LOCAL file case which derives the name
-                                    // from the .mpp filename. It tires its best :)
+                                    // Suggest name from repository URL if unset.
                                     if (form.name.isBlank()) {
                                         suggestNameFromUrl(newUrl)?.let { form.name = it }
                                     }
@@ -162,9 +158,7 @@ internal fun AddPatchSourceDialog(
                     if (form.name.isBlank()) { form.error = errNameRequired; return@MorpheButton }
                     when (sourceType) {
                         PatchSourceType.GITHUB -> {
-                            // sourceType is the UI's "REMOTE" mode placeholder.
-                            // The actual provider (GITHUB vs GITLAB) is decided
-                            // by the resolver based on the URL the user pasted.
+                            // Resolve actual provider (GitHub vs GitLab) from the entered URL.
                             val resolved = resolveRemoteSourceUrl(form.url.trim())
                             if (resolved == null) {
                                 form.error = errInvalidUrl; return@MorpheButton
@@ -338,9 +332,7 @@ internal fun EditPatchSourceDialog(
                     if (form.name.isBlank()) { form.error = errNameRequired; return@MorpheButton }
                     when (source.type) {
                         PatchSourceType.GITHUB, PatchSourceType.GITLAB -> {
-                            // Re-resolve on save so the user can switch hosts
-                            // by editing the URL (e.g. github → gitlab). The
-                            // provider type updates with the detected host.
+                            // Re-resolve provider from URL in case the host was edited.
                             val resolved = resolveRemoteSourceUrl(form.url.trim())
                             if (resolved == null) {
                                 form.error = errInvalidUrl; return@MorpheButton
@@ -383,23 +375,13 @@ internal fun EditPatchSourceDialog(
     )
 }
 
-/**
- * Result of parsing a user-entered remote source URL. The detected
- * [provider] is the GUI-side persisted type that will be stored on the
- * [PatchSource] config (GITHUB or GITLAB only, never DEFAULT or LOCAL).
- */
+/** Parsed remote source details with canonical URL and provider type. */
 internal data class ResolvedRemoteSource(
     val canonicalUrl: String,
     val provider: PatchSourceType, // GITHUB or GITLAB only
 )
 
-/**
- * Thin GUI-side wrapper around the engine's [RemotePatchSourceFactory.parse].
- * Returns `null` if the engine can't classify the input. The engine owns
- * the actual URL-parsing logic. This function only translates the engine's
- * [app.morphe.engine.patches.PatchProvider] back to the GUI's persisted
- * [PatchSourceType] (which carries DEFAULT/LOCAL too).
- */
+/** Parses and maps a remote source URL to a [ResolvedRemoteSource]. */
 internal fun resolveRemoteSourceUrl(input: String): ResolvedRemoteSource? {
     val parsed = RemotePatchSourceFactory.parse(input) ?: return null
     val type = when (parsed.provider) {
@@ -409,14 +391,7 @@ internal fun resolveRemoteSourceUrl(input: String): ResolvedRemoteSource? {
     return ResolvedRemoteSource(canonicalUrl = parsed.canonicalUrl, provider = type)
 }
 
-/**
- * Suggest a friendly source name from a typed or pasted URL, used to populate
- * the NAME field while the user is filling in REPOSITORY URL, so they don't
- * have to think one up themselves. Returns `<owner>/<repo>` so two sources
- * with similarly-named repos (e.g. forks of `morphe-patches`) stay
- * distinguishable. Returns null when the URL doesn't parse cleanly yet
- * (partial typing, invalid host, etc.).
- */
+/** Suggests a source name in `<owner>/<repo>` format from a remote repository URL. */
 private fun suggestNameFromUrl(input: String): String? {
     val parsed = RemotePatchSourceFactory.parse(input) ?: return null
     if (parsed.prNumber != null) {
@@ -425,27 +400,11 @@ private fun suggestNameFromUrl(input: String): String? {
     return parsed.repoPath.takeIf { it.isNotBlank() }
 }
 
-// LabeledField and SlimTextField moved to SlimInputs.kt for
-// reuse across the codebase (SettingsDialog uses them too).
-
-/** Folder to remember for the next picker: the folder itself if [path] is a directory
- *  source, otherwise the file's parent. */
+/** Returns the directory path to remember for subsequent file picker invocations. */
 private fun dirToRemember(path: String): String? =
     File(path).let { if (it.isDirectory) it.absolutePath else it.parent }
 
-/**
- * Shared local-source picker row for the Add/Edit source dialogs.
- *
- * The file browser always opens at a useful folder: the current path's directory when
- * editing, else the last-used folder, so re-picking a local `.mpp` never starts from a
- * system default. When [developerOptions] is on it also offers a FOLDER picker: a folder
- * source auto-resolves to the newest `.mpp` inside it (see
- * [EnabledSourcesLoader.resolveLocal][app.morphe.gui.util.EnabledSourcesLoader]), so a
- * patch developer who rebuilds never has to re-pick the file.
- *
- * [onPicked] receives the chosen path and a suggested name (file name without extension,
- * or the folder name). Callers use the suggestion only when a name isn't already set.
- */
+/** Local patch source picker row supporting file selection and developer folder sources. */
 @Composable
 private fun LocalSourceRow(
     filePath: String,
@@ -500,8 +459,6 @@ private fun LocalSourceRow(
                         variant = MorpheButtonVariant.OUTLINED,
                         size = MorpheButtonSize.COMPACT,
                         onClick = {
-                            // Native OS folder picker (XDG portal on Linux, native on
-                            // Win/macOS) via the shared MorpheFilePicker wrapper.
                             scope.launch {
                                 MorpheFilePicker.pickDirectory(
                                     title = pickerSelectFolderTitle,

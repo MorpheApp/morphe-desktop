@@ -47,8 +47,7 @@ fun ApkInfoCard(
     apkInfo: ApkInfo,
     onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
-    /** Names of enabled sources whose patches target [ApkInfo.packageName]. When
-     *  more than one, surfaces the multi-source provenance directly on the card. */
+    /** Enabled patch sources providing patches for [ApkInfo.packageName]. */
     patchSourceNames: List<String> = emptyList(),
 ) {
     val accents = MorpheTheme.colors
@@ -75,7 +74,6 @@ fun ApkInfoCard(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            // ── Header: app identity + dismiss ──
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,7 +106,6 @@ fun ApkInfoCard(
                     )
                 }
 
-                // Dismiss button
                 MorpheIconButton(
                     icon = MorpheIcons.Close,
                     contentDescription = stringResource(Res.string.home_apk_info_remove_description),
@@ -118,12 +115,7 @@ fun ApkInfoCard(
                 )
             }
 
-            // ── Limited-info warning ──
-            // Surfaced when full manifest parsing failed (typically split APKs
-            // like SoundCloud where base.apk references resources living in
-            // other splits). Patching still works because the patcher merges
-            // splits first. This banner just tells the user the card details
-            // are approximate.
+            // Shown when manifest parsing failed (e.g. split APKs), indicating details are approximate.
             if (apkInfo.hasLimitedInfo) {
                 Row(
                     modifier = Modifier
@@ -155,7 +147,6 @@ fun ApkInfoCard(
                 }
             }
 
-            // ── Unsupported app warning ──
             if (apkInfo.isUnsupportedApp) {
                 Row(
                     modifier = Modifier
@@ -188,7 +179,6 @@ fun ApkInfoCard(
                 }
             }
 
-            // ── Technical data grid ──
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -233,9 +223,8 @@ fun ApkInfoCard(
                 val deviceState by DeviceMonitor.state.collectAsState()
                 val deviceArch = deviceState.selectedDevice?.architecture
                 val hasMultipleArchs = apkInfo.architectures.size > 1
-                // Highlight the device's arch when connected and APK has multiple archs
+                // Highlight connected device architecture when the APK includes multiple architectures.
                 val highlightArch = if (hasMultipleArchs && deviceArch != null) deviceArch else null
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -270,7 +259,6 @@ fun ApkInfoCard(
                 }
             }
 
-            // ── Patch sources providing patches for this app ──
             if (patchSourceNames.isNotEmpty()) {
                 Row(
                     modifier = Modifier
@@ -307,7 +295,6 @@ fun ApkInfoCard(
                 }
             }
 
-            // ── Status bar ──
             val statusDisplay = resolveVersionStatusDisplay(
                 apkInfo.versionStatus, apkInfo.checksumStatus, apkInfo.suggestedVersion
             )

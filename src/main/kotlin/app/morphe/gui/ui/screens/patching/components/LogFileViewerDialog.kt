@@ -58,9 +58,7 @@ fun LogFileViewerDialog(
     val clipboard = LocalClipboard.current
     val clipboardScope = rememberCoroutineScope()
 
-    // Read file once on open. Logs are line-oriented text, typically well
-    // under a few MB. If a single patching session ever produces something
-    // pathologically large we'd notice and tail it then.
+    // Read log file contents on open.
     val failedToReadMessage = stringResource(Res.string.patching_log_viewer_failed_to_read, "%s")
     val content = remember(file, failedToReadMessage) {
         runCatching { file.readText() }.getOrElse { e ->

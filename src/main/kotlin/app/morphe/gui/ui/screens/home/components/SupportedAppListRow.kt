@@ -35,26 +35,16 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Vertical-list-friendly supported-app row. Two-row collapsed layout:
- *   row 1: initial badge + app name + package name (muted)
- *   row 2: STABLE LATEST chip + EXPERIMENTAL LATEST chip (or a dash placeholder)
- *
- * Whole row is clickable (Phase 3 hooks expansion to it). Version chips are
- * also tappable as quick-download shortcuts. Their clicks are consumed so
- * they don't bubble up and trigger the row click.
- */
+/** List row displaying a supported application with version chips and expandable details. */
 @Composable
 fun SupportedAppListRow(
     app: SupportedApp,
     onClick: () -> Unit = {},
     isExpanded: Boolean = false,
-    /** Source display names whose patches target [SupportedApp.packageName]. Rendered as
-     *  the FROM chips inside the expanded body. Empty hides the FROM section. */
+    /** Display names of patch sources targeting this package. */
     patchSourceNames: List<String> = emptyList(),
     patchedState: PatchedAppState = PatchedAppState.NEVER_PATCHED,
-    /** Optional device-layer info (installed? + version). Null = no device / not patched.
-     *  Recall ACTIONS (Re-patch/Forget) live on the "Your apps" card, not here. */
+    /** Device installation status and version information, if available. */
     deviceInfo: DeviceAppInfo? = null,
     modifier: Modifier = Modifier,
 ) {
@@ -79,7 +69,6 @@ fun SupportedAppListRow(
                 .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-        // ── Row 1: initial + name + package ──
         Row(verticalAlignment = Alignment.CenterVertically) {
             MorpheAppAvatar(
                 name = app.displayName,
@@ -109,14 +98,11 @@ fun SupportedAppListRow(
             }
         }
 
-        // ── Row 2: Stable + Experimental chips ──
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // The URL goes through unconditionally. When recommendedVersion is null
-            // (patches work on Any version) it still points at the app's general
-            // APKMirror page and stays clickable.
+            // Fall back to general download URL when recommended version is null.
             VersionCardChip(
                 channelLabel = stringResource(Res.string.version_label_latest_stable),
                 version = app.recommendedVersion,
@@ -131,7 +117,6 @@ fun SupportedAppListRow(
             )
         }
 
-        // ── Expanded body: PATCHES FROM + ALSO STABLE + EXPERIMENTAL pills ──
         AnimatedVisibility(
             visible = isExpanded,
             enter = DisclosureEnter,
@@ -157,10 +142,7 @@ fun SupportedAppListRow(
 }
 }
 
-/**
- * Small recall badge shown in the row header. Renders nothing for
- * [PatchedAppState.NEVER_PATCHED] (callers gate on that before calling).
- */
+/** Status badge displaying the current patching state of an application. */
 @Composable
 internal fun PatchedStateBadge(
     state: PatchedAppState,
@@ -206,8 +188,7 @@ private fun VersionCardChip(
     )
 }
 
-/** Body that drops down below the collapsed row when [SupportedAppListRow]'s `isExpanded`
- *  is true. Sections: PATCHES FROM, STABLE, EXPERIMENTAL. */
+/** Expanded detail section displaying patch sources and version channels. */
 @Composable
 private fun ExpandedBody(
     app: SupportedApp,

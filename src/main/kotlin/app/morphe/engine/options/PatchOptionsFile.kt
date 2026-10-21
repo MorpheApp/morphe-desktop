@@ -16,9 +16,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
-/**
- * Metadata for a patch bundle entry in the options file.
- */
 @Serializable
 data class PatchBundleMeta(
     @SerialName("created_at")
@@ -29,11 +26,7 @@ data class PatchBundleMeta(
     val sha256: String? = null,
 )
 
-/**
- * A single patch bundle entry in the options file.
- *
- * The options file is a JSON array of [PatchBundle]s.
- */
+/** A patch bundle entry stored in the options file. */
 @Serializable
 data class PatchBundle(
     val meta: PatchBundleMeta = PatchBundleMeta(),
@@ -56,12 +49,7 @@ private fun sha256ForFiles(files: Set<File>): String? = when {
     else -> files.sortedBy { it.name }.joinToString(";") { FileChecksum.sha256(it) }
 }
 
-/**
- * Converts a set of loaded patches to a single [PatchBundle].
- *
- * @param sourceFiles the .mpp file(s) used to load these patches.
- * @param existingMeta optional metadata to preserve (e.g. original [PatchBundleMeta.createdAt]).
- */
+/** Converts loaded patches into a [PatchBundle], capturing default options and metadata. */
 fun Set<Patch<*>>.toPatchBundle(
     sourceFiles: Set<File> = emptySet(),
     existingMeta: PatchBundleMeta? = null,
@@ -88,15 +76,8 @@ fun Set<Patch<*>>.toPatchBundle(
 }
 
 /**
- * Merges patches from the current .mpp with an existing [PatchBundle].
- * - Patches in both: preserves user's enabled/disabled and option values.
- * - New patches (in .mpp but not in existing): added with defaults.
- * - Removed patches (in existing but not in .mpp): dropped.
- * - New option keys within existing patches: added with defaults.
- * - Removed option keys: dropped.
- *
- * @param existing the existing bundle to merge with, or null to create fresh.
- * @param sourceFiles the .mpp file(s) used to load these patches.
+ * Merges loaded patches with an existing [PatchBundle], preserving user selections
+ * and option values while applying defaults for new patches or keys.
  */
 fun Set<Patch<*>>.mergeWithBundle(
     existing: PatchBundle?,
@@ -131,13 +112,7 @@ fun Set<Patch<*>>.mergeWithBundle(
     )
 }
 
-/**
- * Lightweight merge: merges a [PatchBundle] (representing current .mpp defaults) with an
- * existing user bundle. Used in the finally block where heavy [Patch] objects are already
- * cleared and unavailable.
- *
- * @param existing the existing user bundle to merge with, or null to return this as-is.
- */
+/** Merges bundle defaults with existing user selections without requiring live [Patch] instances. */
 fun PatchBundle.mergeWith(existing: PatchBundle?): PatchBundle {
     if (existing == null) return this
 
@@ -164,10 +139,7 @@ fun PatchBundle.mergeWith(existing: PatchBundle?): PatchBundle {
     )
 }
 
-/**
- * Finds the [PatchBundle] in this list that best matches the given source files.
- * Matching priority: sha256 -> source name -> first element (fallback).
- */
+/** Finds the matching bundle by SHA-256 or filename, falling back to the first entry. */
 fun List<PatchBundle>.findMatchingBundle(sourceFiles: Set<File>): PatchBundle? {
     if (isEmpty()) return null
     if (size == 1) return single()
@@ -178,10 +150,7 @@ fun List<PatchBundle>.findMatchingBundle(sourceFiles: Set<File>): PatchBundle? {
         ?: firstOrNull()
 }
 
-/**
- * Returns a copy of this list with [bundle] replacing the existing entry that matches
- * by sha256 or source name, or appended if no match is found.
- */
+/** Returns a copy with [bundle] replaced (by SHA-256 or name) or appended. */
 fun List<PatchBundle>.withUpdatedBundle(bundle: PatchBundle): List<PatchBundle> {
     val idx = indexOfFirst { existing ->
         (bundle.meta.sha256 != null && existing.meta.sha256 == bundle.meta.sha256) ||
@@ -191,9 +160,7 @@ fun List<PatchBundle>.withUpdatedBundle(bundle: PatchBundle): List<PatchBundle> 
     else this + bundle
 }
 
-/**
- * Deserializes a [PatchBundle]'s stored JSON option values using the live [patches] in that bundle.
- */
+/** Deserializes stored JSON option values against live [patches] definitions. */
 fun PatchBundle.deserializeOptionsFor(
     patches: Set<Patch<*>>,
     onError: (patchName: String, key: String, Exception) -> Unit = { _, _, _ -> },
@@ -219,9 +186,6 @@ fun PatchBundle.deserializeOptionsFor(
         else resolvedName to deserializedOptions
     }.toMap()
 
-/**
- * Drift report between a loaded `.mpp` bundle and an existing [PatchBundle] options entry.
- */
 data class OptionsFileDrift(
     val newPatches: Set<String>,
     val oldPatches: Set<String>,
@@ -237,9 +201,7 @@ data class OptionsFileDrift(
             patchesWithOldOptions.isNotEmpty()
 }
 
-/**
- * Computes patch and option-key drift for a single `.mpp` bundle against its JSON [bundleOpts].
- */
+/** Computes patch and option key differences between loaded patches and saved bundle options. */
 fun computeOptionsDrift(
     bundlePatches: Set<Patch<*>>,
     bundleSnapshot: PatchBundle,
@@ -299,23 +261,15 @@ fun computeOptionsDrift(
     )
 }
 
-/**
- * Reads a list of [PatchBundle]s from [file].
- */
 fun readPatchBundles(file: File): List<PatchBundle> =
     Json.decodeFromString<List<PatchBundle>>(file.readText())
 
-/**
- * Writes a pretty-printed list of [PatchBundle]s to [file], creating parent directories if needed.
- */
 fun writePatchBundles(file: File, bundles: List<PatchBundle>) {
     file.absoluteFile.parentFile?.mkdirs()
     file.writeText(optionsJson.encodeToString(bundles))
 }
 
-/**
- * Merges [snapshots] into [file] (preserving existing user settings) and writes the result back.
- */
+/** Merges [snapshots] into [file] while preserving existing user settings. */
 fun updateOptionsFileFromSnapshots(file: File, snapshots: List<PatchBundle>) {
     val existingBundles = if (file.exists()) {
         try {

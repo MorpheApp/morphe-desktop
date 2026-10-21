@@ -37,10 +37,6 @@ import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ════════════════════════════════════════════════════════════════════
-//  RELEASE CARD
-// ════════════════════════════════════════════════════════════════════
-
 @Composable
 internal fun ReleaseCard(
     release: Release,
@@ -121,7 +117,6 @@ internal fun ReleaseCard(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Patch file info
                     release.assets.find { it.isPatchFile() }?.let { patchAsset ->
                         Text(
                             text = "${patchAsset.name} (${FormatUtils.formatFileSize(patchAsset.size, currentLocale())})",
@@ -155,7 +150,6 @@ internal fun ReleaseCard(
                 }
             }
 
-            // Expandable release notes
             if (isExpanded && hasNotes) {
                 val notesDividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.06f)
                 Box(

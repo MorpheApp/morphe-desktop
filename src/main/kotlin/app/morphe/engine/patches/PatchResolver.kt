@@ -16,23 +16,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-/**
- * Patch resolution engine shared by both CLI and GUI.
- *
- * Handles:
- *   - Local `.mpp` files and developer build directories ([PatchCache.newestMppIn])
- *   - Remote sources (GitHub, GitLab, GitHub PRs) via manifest-first `patches-bundle.json`
- *     or release API for pinned tags
- *   - Semantic channel comparison ([app.morphe.engine.util.newerRelease]) so outdated
- *     pre-releases never beat newer stables
- *   - Size-verified on-disk caching and offline fallback via [PatchCache]
- */
+/** Resolves local and remote patch sources into on-disk `.mpp` files. */
 object PatchResolver {
 
-    /** Release channel classification for a resolved patch bundle. */
     enum class Channel { STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, LOCAL, UNKNOWN }
 
-    /** Structured resolution failure reason so callers can format or localize errors. */
     sealed class Error(open val message: String) {
         data object LocalPathEmpty : Error("Local source path is empty")
         data class LocalFileNotFound(val fileName: String) : Error("Local source file not found: $fileName")
@@ -45,7 +33,6 @@ object PatchResolver {
         data class DownloadFailed(override val message: String) : Error(message)
     }
 
-    /** Outcome of resolving a single local or remote patch source. */
     data class ResolutionResult(
         val patchFile: File? = null,
         val resolvedVersion: String? = null,
@@ -55,10 +42,7 @@ object PatchResolver {
         val error: Error? = null,
     )
 
-    /**
-     * Resolve a local `.mpp` file or developer directory (auto-selecting the newest `.mpp`
-     * while excluding build classifiers and [excludedMppPatterns]).
-     */
+    /** Resolves a local `.mpp` file or directory, picking the newest matching bundle. */
     fun resolveLocal(
         path: String?,
         excludedMppPatterns: List<String> = emptyList(),
@@ -85,16 +69,7 @@ object PatchResolver {
         )
     }
 
-    /**
-     * Resolve a remote patch source via [repo].
-     *
-     * @param usePreRelease whether to track the dev/pre-release channel (compared via [app.morphe.engine.util.newerRelease])
-     * @param pinnedTag optional tag to pin to instead of following the latest channel release
-     * @param strictPin when true (CLI explicit tag URL), fails with [Error.PinnedTagNotFound] if
-     *                  [pinnedTag] is missing from both remote releases and the local disk cache.
-     *                  When false (GUI saved version pref), falls back to latest stable if the
-     *                  saved tag was deleted upstream.
-     */
+    /** Resolves a remote patch source, checking channel releases, pinned tags, and offline cache. */
     suspend fun resolveRemote(
         repo: PatchRepository,
         usePreRelease: Boolean,
@@ -192,13 +167,7 @@ object PatchResolver {
         )
     }
 
-    /**
-     * Resolve a set of CLI `--patches` inputs (local `.mpp` files, local directories,
-     * full GitHub/GitLab/PR URLs, deep links, or bare `owner/repo` specifiers).
-     *
-     * Preserves input order while replacing directories and remote specifiers with their
-     * resolved on-disk `.mpp` files.
-     */
+    /** Resolves CLI `--patches` inputs (paths, URLs, or repository coordinates) to on-disk files. */
     fun resolveCliFiles(
         patchFiles: Iterable<File>,
         prerelease: Boolean,
@@ -245,7 +214,7 @@ object PatchResolver {
 
         if (res.isOffline) {
             Logger.warn(
-                "Offline or rate-limited — using cached patch file at ${resolvedFile.absolutePath} (${res.resolvedVersion ?: resolvedFile.name})"
+                "Offline or rate-limited, using cached patch file at ${resolvedFile.absolutePath} (${res.resolvedVersion ?: resolvedFile.name})"
             )
         } else {
             Logger.info("Resolved patches (${res.resolvedVersion ?: resolvedFile.name}) at ${resolvedFile.absolutePath}")

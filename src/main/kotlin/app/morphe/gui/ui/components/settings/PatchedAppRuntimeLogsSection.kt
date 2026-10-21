@@ -76,7 +76,6 @@ internal fun PatchedAppRuntimeLogsSection(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            // Device row
             if (deviceReady) {
                 val deviceInfo = "${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}"
                 Text(
@@ -138,7 +137,6 @@ internal fun PatchedAppRuntimeLogsSection(
                 }
             )
 
-            // Status line
             when (val s = status) {
                 RuntimeLogsStatus.Idle, RuntimeLogsStatus.Clearing, RuntimeLogsStatus.Saving -> Unit
                 RuntimeLogsStatus.Cleared -> Text(

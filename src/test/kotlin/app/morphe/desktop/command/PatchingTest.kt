@@ -22,7 +22,6 @@ class PatchingTest {
         val apkFileStream = checkNotNull(javaClass.getResourceAsStream("/nowinandroid-apk"))
         val patchesFileStream = checkNotNull(javaClass.getResourceAsStream("/patches.mpp"))
 
-        // Create output directories
         val tempDir = createTempDirectory().toFile()
         tempDir.deleteOnExit()
 
@@ -50,9 +49,7 @@ class PatchingTest {
         Assertions.assertTrue(resultFile.exists(), "Result file was not created")
     }
 
-    /**
-     * Patches an APK using the specified configuration.
-     */
+    /** Patches an APK using the specified configuration. */
     private fun patchApk(
         apkFile: File,
         outputApk: File,

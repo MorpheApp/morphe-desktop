@@ -70,7 +70,7 @@ private const val CARD_CONTRAST_FLOOR = 0.40f
 
 private const val CHIP_INK_WHITEN = 0.8f
 
-/** Ink for chips drawn on a card fill: near-white, still carrying the accent. */
+/** Ink color for chips rendered on card fills. */
 val cardChipInk: Color
     @Composable get() = lerp(MorpheTheme.colors.primary, Color.White, CHIP_INK_WHITEN)
 

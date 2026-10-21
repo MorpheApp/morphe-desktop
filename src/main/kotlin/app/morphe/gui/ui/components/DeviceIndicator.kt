@@ -129,7 +129,6 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
             }
         }
 
-        // Popup
         DropdownMenu(
             expanded = showPopup,
             onDismissRequest = { showPopup = false },
@@ -300,7 +299,6 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    // Device status dot
                                     Box(
                                         modifier = Modifier
                                             .size(14.dp)

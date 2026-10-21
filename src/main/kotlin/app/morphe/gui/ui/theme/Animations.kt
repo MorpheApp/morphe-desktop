@@ -17,13 +17,7 @@ object Defaults {
     const val DIALOG_SCALE = 0.92f
 }
 
-/**
- * Canonical motion tokens and animation specs.
- *
- * - [DURATION_FAST]: Micro-interactions, quick hover fades, tooltips (120ms).
- * - [DURATION_MEDIUM]: Standard control state animations, color transitions, selections (180ms).
- * - [DURATION_NORMAL]: Complex element transitions, expanding accordion panels (250ms).
- */
+/** Canonical motion tokens and animation specs. */
 object MorpheMotion {
     const val DURATION_FAST = 120
     const val DURATION_MEDIUM = 180
@@ -36,19 +30,15 @@ object MorpheMotion {
         tween(durationMillis = DURATION_MEDIUM, easing = easing)
 }
 
-/**
- * Screen transition animations used across Compose Navigation and screen content.
- */
+/** Screen transition animations for navigation and content. */
 object Animations {
     private fun <T> defaultTween(
         duration: Int = Defaults.ANIMATION_DURATION,
         easing: Easing = LinearOutSlowInEasing
     ) = tween<T>(duration, easing = easing)
 
-    // Base fade animations
     val fadeOut = fadeOut(animationSpec = defaultTween())
 
-    // Screen transitions (zoom + fade)
     val screenEnter = fadeIn(defaultTween(Defaults.SCREEN_ENTER_DURATION)) +
         scaleIn(
             initialScale = Defaults.DIALOG_SCALE,
@@ -60,7 +50,7 @@ object Animations {
         animationSpec = defaultTween()
     )
 
-    // Push transitions (Settings screen slides up over home, returns by sliding down)
+    // Vertical slide transitions
     val pushEnter = slideInVertically(
         animationSpec = defaultTween(Defaults.SCREEN_ENTER_DURATION, FastOutSlowInEasing)
     ) { it } + fadeIn(defaultTween(Defaults.SCREEN_ENTER_DURATION))

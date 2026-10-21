@@ -129,7 +129,7 @@ object KeystoreImporter {
         return when {
             cause is UnrecoverableKeyException ||
                 msg.contains("password", ignoreCase = true) ->
-                "Couldn't decrypt keystore — wrong password or alias."
+                "Couldn't decrypt keystore, wrong password or alias."
             msg.contains("No entries found", ignoreCase = true) ->
                 "Keystore has no usable key entries."
             else -> "Conversion failed: ${msg.ifBlank { cause.javaClass.simpleName }}"

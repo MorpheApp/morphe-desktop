@@ -46,9 +46,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-/**
- * Screen showing the result of patching.
- */
+/** Screen showing the result of patching. */
 @Composable
 fun ResultScreen(
     outputPath: String
@@ -72,8 +70,7 @@ fun ResultScreenContent(outputPath: String) {
     val isAdbDisabledByUser = !adbPreference.enabled
     val installState = remember { AsyncActionState() }
 
-    // Whether the patched package is already on the selected device → show "Update"
-    // instead of "Install" (the install itself already reinstalls with -r).
+    // Check if the patched package is already installed on the target device.
     var outputPackage by remember { mutableStateOf<String?>(null) }
     var alreadyInstalled by remember { mutableStateOf(false) }
     LaunchedEffect(outputPath) {
@@ -88,9 +85,7 @@ fun ResultScreenContent(outputPath: String) {
             adbManager.listInstalledPackages(device.id).getOrNull()?.contains(pkg) == true
     }
 
-    // Link-handling ("open with") state. The stock package, needed only for the
-    // optional "stop stock from opening links" half, comes from the recall
-    // record for this output (which stores original + renamed package names).
+    // Link-handling state loaded from the patched app recall record.
     var stockPackage by remember { mutableStateOf<String?>(null) }
     var disableStockLinks by remember { mutableStateOf(false) }
     val linkState = remember { AsyncActionState() }
@@ -195,8 +190,7 @@ fun ResultScreenContent(outputPath: String) {
         }
     }
 
-    // Auto-route links once, right after a successful install, when the global
-    // setting is on. outputPackage is required (the apply no-ops without it).
+    // Auto-route links after a successful install if enabled.
     LaunchedEffect(installState.isSuccess, autoRouteLinks, outputPackage) {
         if (installState.isSuccess && autoRouteLinks && outputPackage != null &&
             !linkState.isSuccess && !linkState.isRunning && linkState.error == null
@@ -233,7 +227,6 @@ fun ResultScreenContent(outputPath: String) {
                     borderColor = borderColor
                 )
 
-                // ADB Install section
                 if (isAdbDisabledByUser) {
                     AdbDisabledHint(
                         borderColor = borderColor,
@@ -259,9 +252,7 @@ fun ResultScreenContent(outputPath: String) {
                         onDismissError = { installState.error = null }
                     )
 
-                    // Link handling ("open with"). Only meaningful once the patched
-                    // app is on the device, so gate on a successful install (or the
-                    // app already being present) + a ready, selected device.
+                    // Link handling is only available once installed on a ready device.
                     val device = monitorState.selectedDevice
                     if (outputPackage != null && device?.isReady == true && (installState.isSuccess || alreadyInstalled)) {
                         LinkHandlingSection(
@@ -280,7 +271,6 @@ fun ResultScreenContent(outputPath: String) {
                     }
                 }
 
-                // Cleanup section
                 if (hasTempFiles || tempFilesCleared) {
                     CleanupSection(
                         hasTempFiles = hasTempFiles,
@@ -301,9 +291,7 @@ fun ResultScreenContent(outputPath: String) {
                     )
                 }
 
-                // ADB help text, only when the toggle is ON but the binary is
-                // missing. When the toggle is OFF, AdbDisabledHint above carries
-                // the explanation, so suppress the duplicate "ADB not found" text.
+                // Shown when ADB is enabled in settings but no ADB binary is available.
                 if (!isAdbDisabledByUser && monitorState.isAdbAvailable == false) {
                     Text(
                         text = stringResource(Res.string.result_adb_not_found_hint),
@@ -314,7 +302,6 @@ fun ResultScreenContent(outputPath: String) {
                     )
                 }
 
-                // Patch Another button
                 Spacer(Modifier.height(4.dp))
                 MorpheButton(
                     label = stringResource(Res.string.result_screen_patch_another_button),
@@ -327,7 +314,6 @@ fun ResultScreenContent(outputPath: String) {
                 Spacer(Modifier.height(8.dp))
             }
 
-            // Show scrollbar only when content overflows
             if (scrollState.maxValue > 0) {
                 VerticalScrollbar(
                     modifier = Modifier

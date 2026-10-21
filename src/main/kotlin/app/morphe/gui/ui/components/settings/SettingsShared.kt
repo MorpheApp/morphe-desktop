@@ -361,10 +361,7 @@ internal fun buildLinkedText(
     }
 }
 
-/**
- * Renders a path display row showing the stored form (relative when inside the bundle,
- * absolute otherwise) with an optional "Resolves to: ..." hint when the stored path is relative.
- */
+/** Displays a stored path and its resolved target when relative. */
 @Composable
 internal fun StoredPathResolutionText(
     path: String,

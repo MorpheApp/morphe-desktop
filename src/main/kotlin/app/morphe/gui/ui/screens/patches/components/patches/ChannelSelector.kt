@@ -31,10 +31,6 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ═══════════════════════════════════════════════════════════════════
-//  CHANNEL SELECTOR
-// ═══════════════════════════════════════════════════════════════════
-
 @Composable
 internal fun ChannelSelector(
     selectedChannel: ReleaseChannel,
@@ -111,7 +107,6 @@ private fun ChannelChip(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Selection dot
             if (isSelected) {
                 Box(
                     modifier = Modifier

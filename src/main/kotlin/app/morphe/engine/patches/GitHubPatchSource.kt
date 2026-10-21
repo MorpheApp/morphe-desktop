@@ -16,14 +16,7 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * GitHub provider. Hits api.github.com/repos/{owner}/{repo}/releases for the
- * full version list, and the raw `patches-bundle.json` for the latest.
- *
- * All networking (requests, streaming download, retry/429) is delegated to
- * the shared [HttpService]. This class only owns GitHub's URL shapes and the
- * fact that its release JSON maps straight onto our [Release] model.
- */
+/** Remote patch source fetching releases from GitHub repositories. */
 open class GitHubPatchSource(
     protected val http: HttpService,
     override val repoPath: String,

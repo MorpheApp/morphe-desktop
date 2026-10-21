@@ -13,10 +13,6 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// -----------------------------
-//  STATUS COLOR TYPE
-// -----------------------------
-
 enum class StatusColorType { PRIMARY, WARNING, ERROR }
 
 @Composable
@@ -25,10 +21,6 @@ fun StatusColorType.toColor(): Color = when (this) {
     StatusColorType.WARNING -> MorpheTheme.colors.warning
     StatusColorType.ERROR -> MaterialTheme.colorScheme.error
 }
-
-// -----------------------------
-//  STATUS DISPLAY (label + detail for status bars)
-// -----------------------------
 
 data class VersionStatusDisplay(
     val label: String,
@@ -117,10 +109,6 @@ fun resolveVersionStatusDisplay(
     }
 }
 
-// -----------------------------
-//  STATUS ACCENT COLOR (for card stripes, dots, initials)
-// -----------------------------
-
 fun resolveStatusColorType(
     versionStatus: VersionStatus,
     checksumStatus: ChecksumStatus
@@ -142,10 +130,6 @@ fun resolveStatusColorType(
         VersionStatus.UNSUPPORTED_BETWEEN -> StatusColorType.ERROR
     }
 }
-
-// -----------------------------
-//  WARNING DIALOG CONTENT (title + body for version warning dialogs)
-// -----------------------------
 
 data class VersionWarningContent(
     val title: String,

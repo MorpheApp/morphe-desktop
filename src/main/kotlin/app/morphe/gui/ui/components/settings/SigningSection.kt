@@ -94,7 +94,6 @@ internal fun SigningSection(
 
         Spacer(Modifier.height(8.dp))
 
-        // Keystore path row
         Row(
             modifier = Modifier.fillMaxWidth().height(dimens.controlHeight),
             verticalAlignment = Alignment.CenterVertically,
@@ -130,12 +129,7 @@ internal fun SigningSection(
                         ) ?: return@launch
                         val validExtensions = listOf(".keystore", ".jks", ".bks", ".p12", ".pfx")
                         if (validExtensions.any { selected.name.lowercase().endsWith(it) }) {
-                            // Route the picked file through KeystoreImporter:
-                            // BKS files pass through unchanged. PKCS12 and JKS get
-                            // converted to BKS and saved as MorpheData.importedKeystoreFile
-                            // (original user file is never mutated). The config
-                            // then points at whichever file is BKS. The patcher
-                            // only speaks BKS, so this is the only safe input.
+                            // Convert non-BKS keystores to BKS without mutating original file.
                             val result = withContext(Dispatchers.IO) {
                                 KeystoreImporter.ensureBks(
                                     source = selected,
@@ -157,10 +151,6 @@ internal fun SigningSection(
                                     onKeystorePathChange(result.file.absolutePath)
                                 }
                                 is KeystoreImporter.Result.Failed -> {
-                                    // Most common failure: wrong password. The
-                                    // user's configured entry password didn't
-                                    // match the source file. Surface inline so
-                                    // they can update it and re-import.
                                     keystoreError = result.reason
                                     result.cause?.let {
                                         Logger.error("Keystore import failed for ${selected.name}", it)
@@ -190,9 +180,7 @@ internal fun SigningSection(
             }
         }
 
-        // Warning if keystore path set but file doesn't exist. Patching will
-        // refuse to start with this configured (see PatchingViewModel). The user
-        // must restore the file, pick another, or reset to use Morphe's default.
+        // Warn if configured keystore file does not exist.
         if (keystorePath != null && !keystoreExists) {
             Text(
                 text = stringResource(Res.string.settings_signing_not_found),
@@ -201,7 +189,6 @@ internal fun SigningSection(
             )
         }
 
-        // Error for invalid file type selection
         keystoreError?.let {
             Text(
                 text = it,
@@ -210,19 +197,9 @@ internal fun SigningSection(
             )
         }
 
-        // Either: stored form (relative when inside the bundle, absolute otherwise)
-        // with a "Resolves to: ..." subtitle when relative. Mirrors config.json
-        // so users can see which paths follow the bundle vs which are pinned.
-        // Or: "using default" hint when no user-configured path is set.
         if (keystorePath != null) {
             StoredPathResolutionText(keystorePath)
         } else {
-            // Mirror the storage form treatment used for user-configured paths above.
-            // The default keystore lives in the bundle (`morphe-data/`) in the happy case,
-            // so the storable form will be relative.
-            // Verb is conditional on file existence. Patcher creates the file on first sign,
-            // so on a fresh install the hint accurately says "Will create..."
-            // instead of making up claims like "Using..." an absent file.
             val defaultAbs = MorpheData.defaultKeystoreFile.absolutePath
             val defaultStored = PortablePaths.storableForm(defaultAbs)
             val isBundleRelative = defaultStored != defaultAbs
@@ -370,7 +347,6 @@ internal fun SigningSection(
 
         Spacer(Modifier.height(8.dp))
 
-        // Generate button (only when no keystore exists yet)
         var generateError by remember { mutableStateOf<String?>(null) }
         var generateSuccess by remember { mutableStateOf(false) }
         var isGenerating by remember { mutableStateOf(false) }
@@ -383,13 +359,12 @@ internal fun SigningSection(
                     isGenerating = true
                     scope.launch {
                         try {
-                            // If no path set, ask the user where to save
                             val path = keystorePath ?: run {
                                 val chosen = MorpheFilePicker.saveFile(
                                     title = getString(Res.string.settings_signing_picker_save_keystore),
                                     baseName = "morphe",
                                     extension = "keystore",
-                                ) ?: return@launch // user cancelled
+                                ) ?: return@launch
                                 val chosenPath = chosen.absolutePath
                                 onKeystorePathChange(chosenPath)
                                 chosenPath
@@ -404,7 +379,6 @@ internal fun SigningSection(
                                     entryPassword = localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
                                 )
                             }
-                            // Save credentials to config
                             onCredentialsChange(
                                 localPassword.ifEmpty { null },
                                 localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
@@ -471,12 +445,10 @@ internal fun SigningSection(
             Spacer(Modifier.height(4.dp))
         }
 
-        // Action buttons row
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            // Certificate info
             MorpheButton(
                 label = stringResource(Res.string.settings_signing_certificate_button),
                 icon = MorpheIcons.Info,
@@ -487,7 +459,6 @@ internal fun SigningSection(
                 modifier = Modifier.weight(1f),
             )
 
-            // Export
             MorpheButton(
                 label = stringResource(Res.string.settings_signing_export_button),
                 icon = MorpheIcons.Share,
@@ -517,11 +488,10 @@ internal fun SigningSection(
                 modifier = Modifier.weight(1f),
             )
         }
-        } // inner Column
-        } // CollapsibleSection
+        }
+        }
     }
 
-    // Certificate info dialog
     if (showKeystoreInfo && keystorePath != null) {
         KeystoreInfoDialog(
             keystorePath = keystorePath,

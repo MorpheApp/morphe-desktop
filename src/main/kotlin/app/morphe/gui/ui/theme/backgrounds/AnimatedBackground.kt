@@ -15,9 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.morphe.gui.ui.icons.MorpheIcons
 
-/**
- * Types of animated backgrounds available in the app.
- */
+/** Types of animated backgrounds available in the app. */
 enum class BackgroundType {
     CIRCLES,
     RINGS,
@@ -54,10 +52,7 @@ enum class BackgroundType {
         }
 }
 
-/**
- * Animated background with multiple visual styles.
- * Creates subtle floating effects that can be used across all screens.
- */
+/** Renders an animated background matching [type]. */
 @Composable
 fun AnimatedBackground(
     type: BackgroundType = BackgroundType.CIRCLES,

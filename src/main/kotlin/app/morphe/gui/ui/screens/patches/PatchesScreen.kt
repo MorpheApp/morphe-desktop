@@ -33,10 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-/**
- * Screen for selecting patch version to apply.
- * This is the screen that selects the patches.mpp file
- */
+/** Screen for selecting which patch bundle version to use. */
 @Composable
 fun PatchesScreen(
     apkName: String,
@@ -62,7 +59,6 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        // ── Header bar ──
         PatchesHeader(
             apkName = viewModel.getApkName(),
             isLocalSource = uiState.isLocalSource,
@@ -71,16 +67,13 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
             onRefreshClick = { viewModel.loadReleases() }
         )
 
-        // ── Content area ──
         Column(modifier = Modifier.fillMaxSize()) {
-            // Local source banner
             if (uiState.isLocalSource) {
                 LocalSourceBanner(
                     patchFile = uiState.downloadedPatchFile,
                     modifier = Modifier.padding(16.dp)
                 )
             } else {
-                // Channel selector
                 if (!uiState.isOffline) {
                     ChannelSelector(
                         selectedChannel = uiState.selectedChannel,
@@ -144,7 +137,6 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                     }
                 }
                 else -> {
-                    // Releases list
                     val releasesListState = rememberLazyListState()
                     Box(
                         modifier = Modifier
@@ -183,7 +175,6 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                     }
 
                     val exportOptionsTitle = stringResource(Res.string.patches_export_options_title)
-                    // Bottom action bar
                     BottomActionBar(
                         uiState = uiState,
                         onDownloadClick = { viewModel.downloadPatches() },

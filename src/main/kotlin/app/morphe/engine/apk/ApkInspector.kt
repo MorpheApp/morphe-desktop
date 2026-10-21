@@ -23,19 +23,11 @@ object AndroidArchitectures {
     val ALL = setOf(ARM64_V8A, ARMEABI_V7A, X86, X86_64)
 }
 
-/**
- * Archive inspection engine for standalone APKs and split APK bundles
- * (.apkm, .xapk, .apks).
- *
- * All operations execute in-memory with zero temporary disk writes.
- */
+/** Reads manifest metadata and architectures from APKs and bundles in-memory. */
 object ApkInspector {
     private val splitPatterns = listOf("split_config", "config.", "split_")
 
-    /**
-     * Inspect an APK or bundle archive and extract its manifest attributes and CPU architectures.
-     * Returns null if the file does not exist, is not an archive, or has no valid Android manifest.
-     */
+    /** Extracts manifest attributes and CPU architectures, or null if invalid. */
     fun inspect(file: File): ApkInspectionResult? {
         if (!file.exists() || !file.isFile) return null
 
@@ -51,9 +43,6 @@ object ApkInspector {
         }
     }
 
-    /**
-     * Extract CPU architectures from an APK or bundle.
-     */
     fun extractArchitectures(file: File): Set<String> {
         return inspect(file)?.architectures ?: emptySet()
     }

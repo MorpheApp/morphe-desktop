@@ -8,9 +8,7 @@ package app.morphe.engine.model
 import app.morphe.engine.options.PatchOption
 import kotlinx.serialization.Serializable
 
-/**
- * Represents metadata for a single patch from Morphe patches bundle.
- */
+/** Metadata for a single patch from a patch bundle. */
 @Serializable
 data class PatchMetadata(
     val name: String,
@@ -20,14 +18,11 @@ data class PatchMetadata(
     val isEnabled: Boolean = true,
     val category: String? = null
 ) {
-    /** Whether this patch targets no specific package (applies universally / system-wide). */
+    /** True if the patch applies to any app rather than specific packages. */
     val isUniversal: Boolean
         get() = compatiblePackages.isEmpty()
 
-    /**
-     * Unique identifier for this patch.
-     * Combines name, packages, and description hash for true uniqueness.
-     */
+    /** Unique ID derived from patch name, compatible packages, and description hash. */
     val uniqueId: String
         get() {
             val packages = compatiblePackages.joinToString(",") { it.name }
@@ -35,10 +30,7 @@ data class PatchMetadata(
             return "$name|$packages|$descHash"
         }
 
-    /**
-     * Check if patch is compatible with a given package and version.
-     * Patches with no compatible packages listed are universal (applicable to any app).
-     */
+    /** Checks if this patch explicitly supports the given package and version. */
     fun isCompatibleWith(
         packageName: String,
         versionName: String? = null,

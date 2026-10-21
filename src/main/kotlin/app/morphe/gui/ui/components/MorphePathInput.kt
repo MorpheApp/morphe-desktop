@@ -43,11 +43,7 @@ enum class PathPickerMode {
     Image,
 }
 
-/**
- * Reusable path input component for files, folders, and images in Morphe Desktop.
- * Provides a text field for manually entering/viewing paths, a clear button,
- * and a browse button that invokes native OS pickers via [MorpheFilePicker].
- */
+/** Path input component for files, folders, and images with integrated picker dialog. */
 @Composable
 fun MorphePathInput(
     value: String,
@@ -81,7 +77,6 @@ fun MorphePathInput(
         label = "pathInputBorder",
     )
 
-    // Optional image preview when mode is Image and file exists
     var thumbnailBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     LaunchedEffect(localPath, mode) {
         thumbnailBitmap = if (mode == PathPickerMode.Image && localPath.isNotBlank()) {
@@ -120,7 +115,6 @@ fun MorphePathInput(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // Text field container with optional thumbnail and clear button
             Row(
                 modifier = Modifier
                     .weight(1f)
@@ -203,7 +197,6 @@ fun MorphePathInput(
                 }
             }
 
-            // Browse button
             MorpheButton(
                 label = stringResource(Res.string.browse),
                 variant = MorpheButtonVariant.OUTLINED,
@@ -235,7 +228,6 @@ fun MorphePathInput(
             )
         }
 
-        // Recommended size hint if present
         if (recommendedSize != null) {
             Text(
                 text = stringResource(Res.string.patch_option_recommended_size, recommendedSize.width, recommendedSize.height),

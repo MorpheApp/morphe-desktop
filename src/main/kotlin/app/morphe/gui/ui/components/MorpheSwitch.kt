@@ -19,9 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import app.morphe.gui.ui.theme.MorpheTheme
 
-/**
- * Standard pill switch used in the design.
- */
+/** Standard toggle switch styled with theme accent colors. */
 @Composable
 fun MorpheSwitch(
     checked: Boolean,

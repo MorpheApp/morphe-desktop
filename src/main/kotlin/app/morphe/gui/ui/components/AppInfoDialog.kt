@@ -39,7 +39,6 @@ fun AppInfoDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // App Logo
                 Image(
                     painter = painterResource(Res.drawable.morphe_logo),
                     contentDescription = stringResource(Res.string.morphe_logo_content_description),
@@ -48,14 +47,12 @@ fun AppInfoDialog(
                         .clip(MorpheTheme.shapes.medium)
                 )
 
-                // Main Title
                 Text(
                     text = stringResource(Res.string.app_name),
                     style = MorpheTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                // Versions Block
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -78,7 +75,6 @@ fun AppInfoDialog(
                     )
                 }
 
-                // Description
                 Text(
                     text = stringResource(Res.string.app_info_description),
                     textAlign = TextAlign.Center,
@@ -87,7 +83,6 @@ fun AppInfoDialog(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
-                // Social Icons Row
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {

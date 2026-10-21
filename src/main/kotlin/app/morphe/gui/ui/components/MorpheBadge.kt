@@ -60,18 +60,18 @@ enum class MorpheBadgeTone {
 }
 
 enum class MorpheBadgeVariant {
-    /** Translucent container with a soft outline (default for status pills and counters). */
+    /** Translucent container with a soft outline. */
     SUBTLE,
-    /** Solid vibrant container with high-contrast foreground (prominent hero/percentage stats). */
+    /** Solid container with high-contrast foreground. */
     FILLED,
-    /** Transparent container with a colored outline (secondary or inactive tags). */
+    /** Transparent container with a colored outline. */
     OUTLINED,
 }
 
 enum class MorpheBadgeSize {
-    /** Standard compact badge (24dp min height, labelSmall typography). */
+    /** Standard compact badge. */
     DEFAULT,
-    /** Prominent badge (32dp min height, 16sp bold titleSmall typography). */
+    /** Prominent large badge. */
     LARGE,
 }
 

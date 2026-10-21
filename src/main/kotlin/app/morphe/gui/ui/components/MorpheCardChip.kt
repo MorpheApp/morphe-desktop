@@ -36,10 +36,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
 
-/**
- * Chip drawn as simple mode has always drawn them. Set [onCard] false off a painted
- * card fill: white ink over a white wash disappears on a light theme surface.
- */
+/** Chip component with contrast styling adapted for card fills or plain surfaces. */
 @Composable
 fun MorpheCardChip(
     text: String,
@@ -55,8 +52,7 @@ fun MorpheCardChip(
     val isHovered by hover.collectIsHoveredAsState()
     val interactive = onClick != null
 
-    // A card fill is always dark. Off a card the surface decides: white ink over a
-    // white wash vanishes on a light theme, so only a dark surface gets the card look.
+    // Adapt ink contrast based on whether background is dark.
     val onDark = onCard || MaterialTheme.colorScheme.surface.luminance() < 0.5f
     val ink = if (onDark) Color.White else MaterialTheme.colorScheme.onSurface
     val fill by animateColorAsState(
@@ -69,8 +65,7 @@ fun MorpheCardChip(
         ),
         animationSpec = MorpheMotion.fastTween(),
     )
-    // An outline is how every other control in the app says it can be clicked, so
-    // only a chip that actually does something gets one.
+    // Show border outline only for interactive chips.
     val borderColor by animateColorAsState(
         if (interactive) ink.copy(alpha = if (isHovered) 0.7f else 0.45f) else Color.Transparent,
         animationSpec = MorpheMotion.fastTween(),

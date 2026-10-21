@@ -26,8 +26,6 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ── Header bar ──
-
 @Composable
 internal fun PatchesHeader(
     apkName: String,
@@ -53,7 +51,6 @@ internal fun PatchesHeader(
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Back button
         MorpheIconButton(
             onClick = onBackClick,
             icon = MorpheIcons.ArrowBack,
@@ -64,7 +61,6 @@ internal fun PatchesHeader(
 
         Spacer(modifier = Modifier.width(14.dp))
 
-        // Title block
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = stringResource(Res.string.patches_title_select_bundle_version),
@@ -82,7 +78,6 @@ internal fun PatchesHeader(
             }
         }
 
-        // Actions
         if (!isLocalSource) {
             MorpheIconButton(
                 onClick = onRefreshClick,

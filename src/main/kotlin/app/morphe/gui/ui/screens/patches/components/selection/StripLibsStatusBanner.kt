@@ -26,15 +26,11 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ── Architecture Selector ──
-
 @Composable
 internal fun StripLibsStatusBanner(
     status: StripLibsStatus,
     modifier: Modifier = Modifier
 ) {
-    // Each status variant maps to a BannerDisplay that tells the banner what
-    // headline, description, and arch chips to render.
     val display: BannerDisplay = when (status) {
         is StripLibsStatus.NoNativeLibs -> BannerDisplay(
             headline = stringResource(Res.string.patch_selection_strip_no_libs_headline),
@@ -149,11 +145,7 @@ private fun ArchChip(
     }
 }
 
-/**
- * Per-status display data for the strip-libs banner. Lets the `when(status)` branch
- * stay terse (each variant just fills in what's relevant) and the rendering code
- * below stay uniform.
- */
+/** Display content for the native library stripping status banner. */
 private data class BannerDisplay(
     val headline: String,
     val detail: String,

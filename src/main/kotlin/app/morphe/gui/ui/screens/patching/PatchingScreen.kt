@@ -35,9 +35,7 @@ import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-/**
- * Screen showing patching progress with real-time logs.
- */
+/** Screen showing patching progress with real-time logs. */
 @Composable
 fun PatchingScreen(
     config: PatchEngine.Config,
@@ -53,12 +51,10 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
     val patchingCompletedState = LocalPatchingCompleted.current
 
-    // Auto-start patching when screen loads
     LaunchedEffect(Unit) {
         viewModel.startPatching()
     }
 
-    // Auto-scroll to bottom of logs
     val scrollState = rememberScrollState()
     LaunchedEffect(uiState.logs.size, uiState.status) {
         if (uiState.logs.isNotEmpty()) {
@@ -83,10 +79,8 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
         }
     }
 
-    // Auto-navigate to result screen on successful completion
     LaunchedEffect(uiState.status) {
         if (uiState.status == PatchingStatus.COMPLETED && uiState.outputPath != null && !uiState.hasAutoNavigated) {
-            // Small delay to let user see the success message
             delay(1500.milliseconds)
             viewModel.markAutoNavigated()
             navController.navigate(ResultScreenRoute(outputPath = uiState.outputPath!!))
@@ -107,7 +101,6 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
             onCancelClick = { viewModel.cancelPatching() }
         )
 
-        // Content section
         AnimatedContent(
             targetState = uiState.hasAutoNavigated && (uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED),
             modifier = Modifier.weight(1f).fillMaxWidth(),
@@ -174,7 +167,6 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                         }
                     }
 
-                    // Bottom action bar
                     if (!uiState.hasAutoNavigated) {
                         when (uiState.status) {
                             PatchingStatus.COMPLETED,

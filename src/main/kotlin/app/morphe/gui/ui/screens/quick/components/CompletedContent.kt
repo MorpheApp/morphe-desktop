@@ -34,10 +34,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-// ============================================================================
-// COMPLETED CONTENT (output + actions)
-// ============================================================================
-
 @Composable
 internal fun CompletedContent(
     outputPath: String,

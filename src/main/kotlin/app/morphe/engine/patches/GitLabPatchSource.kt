@@ -29,18 +29,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-/**
- * GitLab provider. Hits gitlab.com/api/v4/projects/{owner%2Frepo}/releases for
- * the full version list, and the raw `patches-bundle.json` for the latest.
- *
- * All networking (requests, streaming download, retry/429) is delegated to the
- * shared [HttpService]. This class owns GitLab's URL shapes and the JSON
- * normalization its release payload needs:
- *  - Assets live under `assets.links[]`, not `assets[]`
- *  - Each asset link uses `direct_asset_url` (or fallback `url`), not `browser_download_url`
- *  - No `prerelease` flag in GitLab. Dev detection falls back to the tag-name heuristic in [Release.isDevRelease]
- *  - No size or content_type in the release payload. We resolve sizes via parallel HEAD requests against the .mpp assets we care about
- */
+/** Remote patch source fetching releases from GitLab projects and normalizing payloads. */
 class GitLabPatchSource(
     private val http: HttpService,
     override val repoPath: String,
@@ -134,9 +123,7 @@ class GitLabPatchSource(
             RawRelease(tagName, name, publishedAt, description, assetPairs)
         }
 
-        // Resolve sizes for .mpp assets via parallel HEAD requests.
-        // GitLab's 2000 req/hr unauth limit means even ~50 HEADs per fetch is comfortably within budget.
-        // Running them in parallel keeps total latency at one round-trip.
+        // Resolve .mpp asset sizes in parallel via HEAD requests.
         val mppUrls: Set<String> = rawReleases
             .flatMap { it.assets }
             .filter { it.first.endsWith(".mpp", ignoreCase = true) }
@@ -153,7 +140,6 @@ class GitLabPatchSource(
             }
         }
 
-        // Build the model with resolved sizes spliced in.
         return rawReleases.map { raw ->
             val releaseAssets = raw.assets.map { (assetName, downloadUrl) ->
                 ReleaseAsset(
@@ -165,7 +151,7 @@ class GitLabPatchSource(
             Release(
                 tagName = raw.tagName,
                 name = raw.name,
-                // GitLab has no prerelease flag. Dev detection falls back to tag-name patterns inside Release.isDevRelease().
+                // GitLab omits prerelease flag; resolved via tag patterns.
                 isPrerelease = false,
                 publishedAt = raw.publishedAt,
                 assets = releaseAssets,
@@ -174,9 +160,7 @@ class GitLabPatchSource(
         }
     }
 
-    /**
-     * HEAD a URL and read Content-Length. Returns 0 on any failure. Size never blocks the release listing.
-     */
+    /** Reads Content-Length via HEAD request, returning 0 on failure. */
     private suspend fun resolveContentLength(url: String): Long {
         return try {
             val response: HttpResponse = http.head(url)

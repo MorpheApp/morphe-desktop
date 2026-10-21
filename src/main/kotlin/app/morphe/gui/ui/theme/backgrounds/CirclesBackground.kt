@@ -15,12 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import kotlin.math.sin
 
-/**
- * Circles background with parallax effect.
- * Uses frame-based time so [speedMultiplier] changes smoothly without restarting animations.
- * On patching completion each circle bursts outward in radius and fades - staggered across
- * circles - then eases back to normal size.
- */
+/** Animated background rendering floating circles with parallax and completion burst effects. */
 @Composable
 fun CirclesBackground(
     modifier: Modifier = Modifier,
@@ -36,8 +31,7 @@ fun CirclesBackground(
 
     val time = rememberAnimatedTime(speedMultiplier)
 
-    // burstProgress 0→1 drives radius scale and alpha fade for each circle.
-    // Snaps back to 0f after completion so circles return to normal state.
+    // Drives radius scale and alpha fade for each circle upon completion.
     val burstProgress = rememberBurstProgress(patchingCompleted)
 
     Canvas(modifier = modifier.fillMaxSize()) {
@@ -45,14 +39,7 @@ fun CirclesBackground(
         val tilt = parallaxState.tilt(enableParallax)
         val bp = burstProgress.value
 
-        // Circle configs with depth for parallax
-        // X/Y oscillate with sin() at their original tween periods - identical motion at speed 1x
-        // Circle 1 - large top left
-        // Circle 2 - medium top right
-        // Circle 3 - small center right
-        // Circle 4 - medium bottom right
-        // Circle 5 - small bottom left
-        // Circle 6 - bottom center
+        // Circle configs oscillating with sine waves and varying parallax depths.
         val circles = listOf(
             CircleData(0.20f + 0.05f * sin(t * TWO_PI / 8000f), 0.225f + 0.025f * sin(t * TWO_PI / 7000f), 400f, primaryColor, 0.05f, 0.8f),
             CircleData(0.85f + 0.03f * sin(t * TWO_PI / 9000f), 0.185f + 0.035f * sin(t * TWO_PI / 6500f), 280f, tertiaryColor, 0.035f, 0.6f),
@@ -69,20 +56,19 @@ fun CirclesBackground(
                 size.height * circle.y + tilt.y * parallaxStrength
             )
 
-            // Stagger burst per circle: index 0 starts at bp=0, index 5 starts at bp=0.35
+            // Stagger burst timing across circles.
             val groupDelay = index / (circles.size - 1).toFloat() * 0.35f
             val localBp = ((bp - groupDelay) / (1f - groupDelay)).coerceIn(0f, 1f)
             val radiusScale = if (bp > 0f) 1f + localBp * 2.2f else 1f
             val burstAlpha = if (bp > 0f) (1f - localBp).coerceIn(0f, 1f) else 1f
 
-            // Filled circle
             drawCircle(
                 color = circle.color.copy(alpha = circle.alpha * burstAlpha),
                 radius = circle.radius * radiusScale,
                 center = center
             )
 
-            // During burst: stroke ring that expands further for a layered depth look
+            // Expanding stroke ring during completion burst.
             if (bp > 0f && localBp > 0f) {
                 val strokeRadius = circle.radius * (1f + localBp * 3.5f)
                 val strokeAlpha = ((1f - localBp) * 0.5f).coerceIn(0f, 1f)
@@ -103,5 +89,5 @@ private data class CircleData(
     val radius: Float,
     val color: Color,
     val alpha: Float,
-    val depth: Float // Depth for parallax effect
+    val depth: Float
 )

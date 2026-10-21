@@ -56,7 +56,6 @@ internal fun ResultHeader(
 
         Spacer(Modifier.width(12.dp))
 
-        // Title
         Text(
             text = stringResource(Res.string.status_patching_completed),
             style = MorpheTheme.typography.titleSmall,

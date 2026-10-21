@@ -7,9 +7,7 @@ package app.morphe.engine.apk
 
 import java.io.File
 
-/**
- * Inspection metadata extracted from an APK or split APK bundle (.apkm, .xapk, .apks).
- */
+/** Metadata extracted from an APK or bundle archive. */
 data class ApkInspectionResult(
     val file: File,
     val packageName: String,

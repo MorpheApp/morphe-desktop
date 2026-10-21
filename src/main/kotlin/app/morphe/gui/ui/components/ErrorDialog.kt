@@ -114,9 +114,7 @@ fun ErrorDialog(
     }
 }
 
-/**
- * Helper function to determine error type from exception or message.
- */
+/** Determines error type from exception or message text. */
 fun getErrorType(error: String): ErrorType {
     val lowerError = error.lowercase()
     return when {
@@ -140,9 +138,7 @@ fun getErrorType(error: String): ErrorType {
     }
 }
 
-/**
- * Get user-friendly error message.
- */
+/** Returns user-friendly localized message for the given error. */
 @Composable
 fun getFriendlyErrorMessage(error: String): String {
     val lowerError = error.lowercase()

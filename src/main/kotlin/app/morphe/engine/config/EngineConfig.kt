@@ -30,21 +30,12 @@ data class EngineConfig(
     val excludedMppPatterns: List<String> = emptyList(),
     val lastLocalPatchDir: String? = null,
 ) {
-    /**
-     * Resolved live [File] for [defaultOutputDirectory] via [PortablePaths.resolve].
-     */
     fun resolvedDefaultOutputDirectory(): File? =
         defaultOutputDirectory?.let(PortablePaths::resolve)
 
-    /**
-     * Resolved live [File] for [keystorePath] via [PortablePaths.resolve].
-     */
     fun resolvedKeystorePath(): File? =
         keystorePath?.let(PortablePaths::resolve)
 
-    /**
-     * Constructs [ApkUtils.KeyStoreDetails] from configured keystore fields, or null if no path configured.
-     */
     fun toKeyStoreDetails(): ApkUtils.KeyStoreDetails? {
         val ks = resolvedKeystorePath() ?: return null
         return ApkUtils.KeyStoreDetails(

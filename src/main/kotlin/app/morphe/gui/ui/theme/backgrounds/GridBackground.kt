@@ -15,13 +15,7 @@ import kotlin.math.abs
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-/**
- * Breathing Grid background - a grid of dots pulses in concentric sine waves
- * radiating from the screen center, like ripples on water.
- * Uses frame-based time so [speedMultiplier] changes smoothly without restarting animations.
- * On patching completion a strong shockwave burst radiates from center, temporarily
- * expanding all dots before settling back.
- */
+/** Animated background rendering a pulsing grid of dots with ripple and shockwave effects. */
 @Composable
 fun GridBackground(
     modifier: Modifier = Modifier,
@@ -37,7 +31,7 @@ fun GridBackground(
 
     val time = rememberAnimatedTime(speedMultiplier)
 
-    // shockwaveProgress 0→1: a burst pulse radiates from center on completion
+    // Radial shockwave progress on completion.
     val shockwaveProgress = rememberBurstProgress(patchingCompleted, durationUpMillis = 1100, durationDownMillis = 500)
 
     Canvas(modifier = modifier.fillMaxSize()) {
@@ -51,7 +45,7 @@ fun GridBackground(
         val cellH = size.height / (rows - 1).toFloat()
         val maxDist = sqrt(size.width * size.width + size.height * size.height) * 0.5f
 
-        // Shockwave: a ring that expands outward - dots near the ring get a size boost
+        // Expanding shockwave ring that boosts dot radius.
         val waveRadius = sw * maxDist * 1.2f
         val waveWidth = maxDist * 0.25f
 
@@ -60,19 +54,19 @@ fun GridBackground(
                 val baseX = col * cellW + tilt.x * 12f
                 val baseY = row * cellH + tilt.y * 12f
 
-                // Distance from screen center - drives the ripple phase offset
+                // Distance from center driving ripple phase offset.
                 val dx = baseX - size.width * 0.5f
                 val dy = baseY - size.height * 0.5f
                 val dist = sqrt(dx * dx + dy * dy)
 
-                // Continuous ripple wave: phase offset by distance so wave propagates outward
+                // Continuous ripple wave propagating outward.
                 val ripplePhase = dist * 0.012f
                 val wave = sin(t * TWO_PI / 3800f - ripplePhase)
 
-                // Base dot radius oscillates with the wave
+                // Base dot radius oscillating with the wave.
                 val baseRadius = 5.0f + wave * 2.5f
 
-                // Shockwave: dots near the expanding ring get a strong size boost
+                // Shockwave size boost for dots near the wave front.
                 val distFromWave = abs(dist - waveRadius)
                 val shockBoost = if (sw > 0f && distFromWave < waveWidth) {
                     val localPhase = 1f - distFromWave / waveWidth
@@ -81,7 +75,7 @@ fun GridBackground(
 
                 val finalRadius = (baseRadius + shockBoost).coerceAtLeast(0.8f)
 
-                // Color cycles gently across the grid
+                // Cyclic color pattern across grid cells.
                 val colorPhase = (col + row) % 3
                 val color = when (colorPhase) {
                     0 -> primaryColor
@@ -89,7 +83,7 @@ fun GridBackground(
                     else -> tertiaryColor
                 }
 
-                // Alpha: dims toward edges, brightens near shockwave ring
+                // Edge dimming and shockwave brightening.
                 val edgeDim = (1f - dist / maxDist).coerceIn(0.55f, 1f)
                 val baseAlpha = 0.30f + wave * 0.10f
                 val shockAlpha = if (sw > 0f && distFromWave < waveWidth) {
