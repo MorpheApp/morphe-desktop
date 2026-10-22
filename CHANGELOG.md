@@ -1,3 +1,10 @@
+# [1.19.0-dev.20](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.19...v1.19.0-dev.20) (2026-10-22)
+
+
+### Bug Fixes
+
+* Clean up temporary directories when cancelling patching ([12d30a5](https://github.com/MorpheApp/morphe-desktop/commit/12d30a5d8ce98e556b980378bd7eb331394e8be1))
+
 # [1.19.0-dev.19](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0-dev.18...v1.19.0-dev.19) (2026-10-21)
 
 
