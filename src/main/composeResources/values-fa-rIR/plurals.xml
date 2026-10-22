@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d منبع پچ بارگذاری نشد. از منابعی که با موفقیت بارگذاری شدند استفاده می‌شود</item>
+        <item quantity="other">%1$d منبع پچ بارگذاری نشد. از منابعی که با موفقیت بارگذاری شدند استفاده می‌شود</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d برنامهٔ پچ‌شده به‌روزرسانی دارد</item>
+        <item quantity="other">%1$d برنامهٔ پچ‌شده به‌روزرسانی دارد</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d خط در %2$s ذخیره شد</item>
+        <item quantity="other">%1$d خط در %2$s ذخیره شدند</item>
+    </plurals>
     <plurals name="count_sources">
         <item quantity="one">%1$d منبع</item>
         <item quantity="other">%1$d منبع</item>
     </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d پچ اعمال خواهد شد</item>
+        <item quantity="other">%1$d پچ اعمال خواهد شد</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d مستثنی‌شده</item>
+        <item quantity="other">%1$d مستثنی‌شده</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d فعال</item>
+        <item quantity="other">%1$d فعال</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d غیرفعال</item>
+        <item quantity="other">%1$d غیرفعال</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d کتابخانه</item>
+        <item quantity="other">%1$d کتابخانه</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d از %2$d انتخاب‌شده</item>
+        <item quantity="other">%1$d از %2$d انتخاب‌شده</item>
+    </plurals>
     <plurals name="patch_selection_group_patch_count">
-        <item quantity="one">%1$d وصله</item>
-        <item quantity="other">%1$d وصله</item>
+        <item quantity="one">%1$d پچ</item>
+        <item quantity="other">%1$d پچ</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d کارت این مورد را بازنویسی می‌کند</item>
+        <item quantity="other">%1$d کارت این مورد را بازنویسی می‌کنند</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">دانلود %1$d باندل</item>
+        <item quantity="other">دانلود %1$d باندل</item>
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d هسته</item>

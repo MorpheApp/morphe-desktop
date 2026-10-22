@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Pronto</string>
     <string name="filter_apps_hint">Filtra app…</string>
+    <string name="version">Versione</string>
     <string name="version_label_stable">Stabile</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Sperimentale</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Rimuovi APK</string>
     <string name="home_apk_info_limited_info_warning">Impossibile leggere completamente il manifest di questo APK (comune per i bundle split). I dettagli sotto sono approssimativi, l'applicazione delle patch dovrebbe funzionare comunque</string>
     <string name="home_apk_info_unsupported_app_warning">Nessuna patch compatibile trovata per questa app. Puoi comunque procedere, ma l'applicazione delle patch potrebbe non avere effetto</string>
-    <string name="home_apk_info_version_label">Versione</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Dimensione</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -241,7 +241,7 @@
     <string name="home_dialog_uninstall_button">Disinstalla</string>
     <string name="home_dialog_continue_anyway">Continua comunque</string>
     <string name="home_dialog_forget_title">Dimenticare %1$s?</string>
-    <string name="home_dialog_forget_message">Questo rimuove %1$s dalla cronologia delle app patchate. Non tocca alcun file: riapplicare le patch all'app la riaggiunge</string>
+    <string name="home_dialog_forget_message">Questo rimuove %1$s dalla cronologia delle applicazioni modificate. Non tocca alcun file: riapplicare le modifiche all'applicazione la riaggiunge</string>
     <string name="home_dialog_uninstall_title">Disinstallare %1$s?</string>
     <string name="home_dialog_uninstall_message">Questo rimuove %1$s dal dispositivo connesso. L'APK patchato su disco e la cronologia vengono mantenuti, a meno che tu non scelga diversamente qui sotto</string>
     <string name="home_dialog_uninstall_also_forget">Rimuovi anche da Le tue app</string>
@@ -270,15 +270,15 @@
     <string name="home_list_no_supported_apps">Nessuna app supportata</string>
     <string name="home_list_no_apps_match">Nessuna app corrisponde a \"%1$s\"</string>
     <string name="home_sort_recommended">Consigliata</string>
-    <string name="home_sort_recommended_desc">Prima le app patchate, poi quelle installate, poi in ordine alfabetico</string>
+    <string name="home_sort_recommended_desc">Prima le applicazioni modificate, poi quelle installate, poi in ordine alfabetico</string>
     <string name="home_sort_name_asc">Nome (A-Z)</string>
     <string name="home_sort_name_asc_desc">Alfabetico</string>
     <string name="home_sort_name_desc">Nome (Z-A)</string>
     <string name="home_sort_name_desc_desc">Alfabetico inverso</string>
     <string name="home_sort_updates_first">Prima gli aggiornamenti delle patch</string>
     <string name="home_sort_updates_first_desc">Prima le app con aggiornamenti delle patch, poi quelle consigliate</string>
-    <string name="home_sort_recently_patched">Patchate di recente</string>
-    <string name="home_sort_recently_patched_desc">Prima le patchate più di recente</string>
+    <string name="home_sort_recently_patched">Modificate di recente</string>
+    <string name="home_sort_recently_patched_desc">Prima le applicazioni modificate più di recenti</string>
     <!-- Home Screen - YourAppsPane -->
     <string name="home_your_apps_status_patched">Patchata</string>
     <string name="home_filter_all_apps">Tutte le app</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">I/O di archiviazione</string>
     <string name="patching_graph_cpu_usage">Utilizzo CPU</string>
     <string name="patching_banner_started_title">Applicazione patch avviata</string>
-    <string name="patching_banner_app_version">Versione app</string>
     <string name="patching_banner_apk_size">Dimensione APK</string>
     <string name="patching_banner_patches">Patch</string>
     <string name="patching_banner_split_apk">Split APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Neve</string>
     <string name="settings_background_grid">Griglia</string>
     <string name="settings_background_particles">Particelle</string>
+    <string name="settings_background_lava">Lampada lava</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Effetto parallasse</string>
     <string name="settings_toggle_parallax_desc">Spostamento fluido dello sfondo quando muovi il mouse</string>

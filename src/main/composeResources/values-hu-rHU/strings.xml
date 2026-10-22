@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Kész</string>
     <string name="filter_apps_hint">Alkalmazások szűrése…</string>
+    <string name="version">Verzió</string>
     <string name="version_label_stable">Stabil</string>
     <string name="version_label_dev">Fejlesztői</string>
     <string name="version_label_experimental">Kísérleti</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK eltávolítása</string>
     <string name="home_apk_info_limited_info_warning">Az APK manifestjének teljes beolvasása nem sikerült (gyakori a split csomagoknál). Az alábbi adatok közelítőek, a javításnak így is működnie kell</string>
     <string name="home_apk_info_unsupported_app_warning">Nem találhatók kompatibilis javítások ehhez az alkalmazáshoz. Folytathatod, de előfordulhat, hogy a javításnak nem lesz hatása</string>
-    <string name="home_apk_info_version_label">Verzió</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Méret</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -446,7 +446,6 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patching_graph_storage_io">Tárhely I/O</string>
     <string name="patching_graph_cpu_usage">CPU-használat</string>
     <string name="patching_banner_started_title">A javítás megkezdődött</string>
-    <string name="patching_banner_app_version">Alkalmazásverzió</string>
     <string name="patching_banner_apk_size">APK mérete</string>
     <string name="patching_banner_patches">Módosítások</string>
     <string name="patching_banner_split_apk">Split APK</string>
@@ -721,6 +720,7 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="settings_background_snow">Hó</string>
     <string name="settings_background_grid">Rács</string>
     <string name="settings_background_particles">Részecskék</string>
+    <string name="settings_background_lava">Lava lámpa</string>
     <string name="settings_background_matrix">Mátrix</string>
     <string name="settings_toggle_parallax_label">Parallax effektus</string>
     <string name="settings_toggle_parallax_desc">A háttér finom elmozdulása az egér mozgatásakor</string>

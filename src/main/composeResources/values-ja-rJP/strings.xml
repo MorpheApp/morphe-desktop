@@ -56,6 +56,7 @@
     <string name="status_offline">オフライン</string>
     <string name="status_ready">準備完了</string>
     <string name="filter_apps_hint">アプリを絞り込む…</string>
+    <string name="version">バージョン</string>
     <string name="version_label_stable">安定版</string>
     <string name="version_label_dev">開発版</string>
     <string name="version_label_experimental">実験版</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK を削除</string>
     <string name="home_apk_info_limited_info_warning">この APK のマニフェストを完全に読み取れませんでした（分割バンドルではよくあることです）。以下の詳細は概算であり、パッチ適用は引き続き有効です</string>
     <string name="home_apk_info_unsupported_app_warning">このアプリに対応するパッチが見つかりません。続行できますが、パッチ適用が効果を発揮しない可能性があります</string>
-    <string name="home_apk_info_version_label">バージョン</string>
     <string name="home_apk_info_build_label">ビルド</string>
     <string name="home_apk_info_size_label">サイズ</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">ストレージ I/O</string>
     <string name="patching_graph_cpu_usage">CPU 使用率</string>
     <string name="patching_banner_started_title">パッチ適用を開始しました</string>
-    <string name="patching_banner_app_version">アプリのバージョン</string>
     <string name="patching_banner_apk_size">APK サイズ</string>
     <string name="patching_banner_patches">パッチ数</string>
     <string name="patching_banner_split_apk">分割 APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">雪</string>
     <string name="settings_background_grid">グリッド</string>
     <string name="settings_background_particles">パーティクル</string>
+    <string name="settings_background_lava">ローラランプ</string>
     <string name="settings_background_matrix">マトリックス</string>
     <string name="settings_toggle_parallax_label">視差効果</string>
     <string name="settings_toggle_parallax_desc">マウスを動かしたときの背景の滑らかな移動</string>

@@ -5,8 +5,8 @@
         <item quantity="other">Non è stato possibile caricare %1$d fonti di patch. Utilizzo quelle caricate correttamente</item>
     </plurals>
     <plurals name="home_banner_update_available">
-        <item quantity="one">%1$d app patchata ha un aggiornamento disponibile</item>
-        <item quantity="other">%1$d app patchate hanno aggiornamenti disponibili</item>
+        <item quantity="one">%1$d applicazione modificata ha un aggiornamento disponibile</item>
+        <item quantity="other">%1$d applicazioni modificate hanno aggiornamenti disponibili</item>
     </plurals>
     <plurals name="settings_runtime_logs_saved_success">
         <item quantity="one">Salvata %1$d riga in %2$s</item>

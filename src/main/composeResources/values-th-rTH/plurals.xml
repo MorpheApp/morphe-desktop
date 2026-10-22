@@ -31,7 +31,7 @@
         <item quantity="other">เลือกแล้ว %1$d จาก %2$d</item>
     </plurals>
     <plurals name="patch_selection_group_patch_count">
-        <item quantity="other">%1$d แพตซ์</item>
+        <item quantity="other">%1$d แพตช์</item>
     </plurals>
     <plurals name="settings_app_cards_override_count">
         <item quantity="other">การ์ด %1$d ใบแทนที่การตั้งค่านี้</item>

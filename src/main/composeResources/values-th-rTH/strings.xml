@@ -56,6 +56,7 @@
     <string name="status_offline">ออฟไลน์</string>
     <string name="status_ready">พร้อม</string>
     <string name="filter_apps_hint">กรองแอป…</string>
+    <string name="version">เวอร์ชัน</string>
     <string name="version_label_stable">เสถียร</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">ทดลอง</string>
@@ -112,7 +113,7 @@
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">กำลังโหลดแพตช์</string>
     <string name="patching_step_preparing">กำลังเตรียม</string>
-    <string name="patching_step_merging_split_apk">รวม APK รูปแบบ Split </string>
+    <string name="patching_step_merging_split_apk">รวม APK แบบแยก</string>
     <string name="patching_step_read_apk">อ่านไฟล์ APK</string>
     <string name="patching_step_applying_patches">กำลังใช้แพตช์</string>
     <string name="patching_step_saving">กำลังบันทึก</string>
@@ -152,11 +153,11 @@
     <string name="version_status_checksum_corrupted">ไฟล์อาจเสียหาย โปรดดาวน์โหลดใหม่จาก APKMirror</string>
     <string name="version_status_checksum_failed">การตรวจสอบเช็คซัมล้มเหลว</string>
     <string name="version_status_checksum_matches">เช็คซัมตรงกับ APKMirror</string>
-    <string name="version_status_older_stable">เสถียรเวอร์ชันเก่า</string>
+    <string name="version_status_older_stable">เวอร์ชันเสถียรที่เก่ากว่า</string>
     <string name="version_status_newer_stable_available">มีเวอร์ชันเสถียรใหม่กว่า v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">มีเวอร์ชันเสถียรใหม่กว่าให้ใช้งาน</string>
     <string name="version_status_experimental_detail">รองรับ แต่อาจทำงานไม่ถูกต้อง</string>
-    <string name="version_status_older_experimental">ทดลองเวอร์ชันเก่า</string>
+    <string name="version_status_older_experimental">เวอร์ชันทดลองที่เก่ากว่า</string>
     <string name="version_status_newer_experimental_available">มีเวอร์ชันทดลองใหม่กว่า v%1$s</string>
     <string name="version_status_newer_experimental_available_fallback">มีบิลด์ทดลองใหม่กว่าให้ใช้งาน</string>
     <string name="version_status_too_new">เวอร์ชันใหม่เกินไป</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">ลบ APK</string>
     <string name="home_apk_info_limited_info_warning">อ่าน manifest ของ APK นี้ไม่ครบถ้วน (พบได้ทั่วไปใน split bundles) รายละเอียดด้านล่างเป็นค่าประมาณ แต่การแพตช์ควรยังทำงานได้</string>
     <string name="home_apk_info_unsupported_app_warning">ไม่พบแพตช์ที่เข้ากันได้กับแอปนี้ คุณยังดำเนินการต่อได้ แต่การแพตช์อาจไม่มีผล</string>
-    <string name="home_apk_info_version_label">เวอร์ชัน</string>
     <string name="home_apk_info_build_label">บิลด์</string>
     <string name="home_apk_info_size_label">ขนาด</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -330,7 +330,7 @@
     <string name="home_detail_ready_device_version">v%1$s พร้อม · อุปกรณ์เป็น v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s พร้อม ไม่ต้องแพตช์ใหม่</string>
     <string name="home_advice_unsupported">ไม่รองรับ v%1$s อีกต่อไป โปรดอัปเดตเป็น v%2$s</string>
-    <string name="home_advice_unsupported_by_patches">v%1$s ไม่รองรับโดยแพตช์ล่าสุดอีกต่อไป</string>
+    <string name="home_advice_unsupported_by_patches">v%1$s ไม่ถูกรองรับโดยแพตช์ล่าสุดอีกต่อไป</string>
     <string name="home_date_today">วันนี้</string>
     <string name="home_date_yesterday">เมื่อวานนี้</string>
     <string name="home_date_days_ago">%1$d วันที่แล้ว</string>
@@ -420,8 +420,8 @@
     <string name="patch_option_add_item">เพิ่มรายการ</string>
     <string name="patch_option_edit_list">แก้ไขรายการ</string>
     <string name="patch_selection_run_info_title">การรันนี้</string>
-    <string name="patch_selection_run_info_app_group">App</string>
-    <string name="patch_selection_run_info_bundles_group">บันเดิลแพตช์</string>
+    <string name="patch_selection_run_info_app_group">แอป</string>
+    <string name="patch_selection_run_info_bundles_group">ชุดแพตช์</string>
     <string name="patch_selection_run_info_no_bundles">ไม่พบชุดแพตช์</string>
     <string name="patch_selection_group_universal">สากล</string>
     <string name="patch_selection_group_ungrouped">ไม่จัดกลุ่ม</string>
@@ -442,8 +442,7 @@
     <string name="patching_graph_memory_detail">%1$d%% ของ %2$d MB</string>
     <string name="patching_graph_storage_io">I/O พื้นที่จัดเก็บ</string>
     <string name="patching_graph_cpu_usage">การใช้งาน CPU</string>
-    <string name="patching_banner_started_title">Patching started</string>
-    <string name="patching_banner_app_version">เวอร์ชันแอป</string>
+    <string name="patching_banner_started_title">เริ่มการแพตช์แล้ว</string>
     <string name="patching_banner_apk_size">ขนาด APK</string>
     <string name="patching_banner_patches">แพตช์</string>
     <string name="patching_banner_split_apk">APK แยกส่วน</string>
@@ -457,7 +456,7 @@
     <string name="patching_banner_arch">สถาปัตยกรรม</string>
     <string name="patching_banner_ram_free">RAM ว่าง</string>
     <string name="patching_banner_storage_free">พื้นที่จัดเก็บว่าง</string>
-    <string name="patching_success_title">Patching succeeded</string>
+    <string name="patching_success_title">การแพตช์สำเร็จ</string>
     <string name="patching_success_output_size">ขนาดผลลัพธ์</string>
     <string name="patching_success_time">เวลา</string>
     <string name="patching_success_memory_avg">หน่วยความจำเฉลี่ย</string>
@@ -568,10 +567,10 @@
     <string name="source_error_github_pat_required">จำเป็นต้องใช้ GitHub PAT เพื่อดาวน์โหลดแหล่งที่มาของ pull request</string>
     <string name="source_error_pr_no_artifact">ไม่พบอาร์ติแฟกต์สำหรับ pull request</string>
     <string name="source_sheet_manage_description">จัดการแหล่งแพตช์</string>
-    <string name="source_sheet_local_label">อุปกรณ์</string>
+    <string name="source_sheet_local_label">ในเครื่อง</string>
     <string name="source_sheet_remote_label">รีโมต</string>
     <string name="add_source">เพิ่มแหล่งที่มา</string>
-    <string name="source_sheet_title">จัดการแหล่งที่มา</string>
+    <string name="source_sheet_title">แหล่งที่มาแพตช์</string>
     <string name="source_sheet_reload_description">โหลดแพตช์ใหม่</string>
     <string name="source_sheet_quick_mode_hint">เลือกแหล่งที่ Quick Patch ใช้ รองรับหลายแหล่งในโหมดผู้เชี่ยวชาญ</string>
     <string name="source_sheet_multi_mode_hint">เปิด/ปิดแหล่งตามต้องการ แพตช์จากทุกแหล่งที่เปิดใช้จะถูกรวมกัน</string>
@@ -609,7 +608,7 @@
     <string name="patch_source_dialog_type_github_repo">ที่เก็บ GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull Request ของ GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">ที่เก็บ GitLab</string>
-    <string name="patch_source_dialog_mpp_or_folder_label">.mpp file หรือโฟลเดอร์</string>
+    <string name="patch_source_dialog_mpp_or_folder_label">ไฟล์ .mpp หรือโฟลเดอร์</string>
     <string name="patch_source_dialog_mpp_label">ไฟล์ .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">เส้นทางไปยัง .mpp หรือโฟลเดอร์</string>
     <string name="patch_source_dialog_path_placeholder">เส้นทางไปยัง .mpp</string>
@@ -668,7 +667,7 @@
     <string name="licenses_search_placeholder">ค้นหาไลบรารี, SPDX id, uniqueId…</string>
     <string name="licenses_row_authors_label">ผู้เขียน</string>
     <string name="licenses_row_org_label">องค์กร</string>
-    <string name="licenses_row_link_source">Source</string>
+    <string name="licenses_row_link_source">แหล่งที่มา</string>
     <string name="licenses_notice_button">ประกาศ</string>
     <string name="licenses_notice_title">ประกาศ Morphe</string>
     <string name="licenses_notice_subtitle">ข้อความแสดงที่มา &amp; คำรับประกันที่จำเป็น (GPLv3 §7)</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">หิมะ</string>
     <string name="settings_background_grid">ตาราง</string>
     <string name="settings_background_particles">อนุภาค</string>
+    <string name="settings_background_lava">โคมไฟลาวา</string>
     <string name="settings_background_matrix">เมทริกซ์</string>
     <string name="settings_toggle_parallax_label">เอฟเฟกต์พารัลแลกซ์</string>
     <string name="settings_toggle_parallax_desc">พื้นหลังเลื่อนอย่างนุ่มนวลเมื่อขยับเมาส์</string>
@@ -755,7 +755,7 @@
     <string name="settings_about_website_title">เยี่ยมชมเว็บไซต์</string>
     <string name="settings_about_website_desc">เยี่ยมชมเว็บไซต์อย่างเป็นทางการของ Morphe</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">ยกเลิกการเลือกสถาปัตยกรรมที่ไม่ต้องการ เมื่อแพตช์ APK เอาต์พุตจะเก็บเฉพาะสถาปัตยกรรมที่มีใน APK และในรายการนี้ หากไม่มี overlap จะไม่ตัดอะไรทิ้งเพื่อหลีกเลี่ยง APK ที่เสียหาย</string>
+    <string name="settings_strip_libs_desc">ยกเลิกการเลือกสถาปัตยกรรมที่ไม่ต้องการ เมื่อแพตช์ APK เอาต์พุตจะเก็บเฉพาะสถาปัตยกรรมที่มีใน APK และในรายการนี้ หากไม่มีการซ้อนทับจะไม่ตัดอะไรทิ้งเพื่อหลีกเลี่ยง APK ที่เสียหาย</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (โทรศัพท์สมัยใหม่ส่วนใหญ่)</string>
     <string name="settings_strip_libs_armeabi">ARM 32-bit (โทรศัพท์รุ่นเก่า)</string>
     <string name="settings_strip_libs_x86_64">Intel 64-bit (อีมูเลเตอร์ / Chromebook)</string>
@@ -792,9 +792,9 @@
     <string name="settings_cert_info_valid_until">หมดอายุ</string>
     <string name="settings_cert_info_sha256">ลายนิ้วมือ SHA-256</string>
     <string name="settings_cert_info_sha1">ลายนิ้วมือ SHA-1</string>
-    <string name="settings_cert_info_could_not_read">ไม่สามารถอ่านคีย์สโตร์ได้ ตรวจสอบรหัสผ่านและ alias</string>
-    <string name="settings_cert_warning_alias_not_found">ไม่พบ alias \"%1$s\" ในคีย์สโตร์</string>
-    <string name="settings_cert_warning_key_password_incorrect">รหัสผ่านคีย์ไม่ถูกต้องสำหรับ alias \"%1$s\"</string>
+    <string name="settings_cert_info_could_not_read">ไม่สามารถอ่านคีย์สโตร์ได้ ตรวจสอบรหัสผ่านและนามแฝง</string>
+    <string name="settings_cert_warning_alias_not_found">ไม่พบนามแฝง \"%1$s\" ในคีย์สโตร์</string>
+    <string name="settings_cert_warning_key_password_incorrect">รหัสผ่านคีย์ไม่ถูกต้องสำหรับนามแฝง \"%1$s\"</string>
     <!-- Settings - Runtime Logs -->
     <string name="settings_runtime_logs_title">บันทึกการรันของแอปที่แพตช์แล้ว</string>
     <string name="settings_runtime_logs_desc">จับบันทึกจากโทรศัพท์หลังจากแอปที่แพตช์แล้วค้างหรือทำงานผิดปกติ ล้างก่อนจำลองบั๊ก จากนั้นบันทึกเอาต์พุตที่กรองแล้วเพื่อแนบไปกับรายงานบั๊ก</string>
@@ -804,11 +804,11 @@
     <string name="settings_runtime_logs_clear_button">ล้างบันทึกอุปกรณ์</string>
     <string name="settings_runtime_logs_failed_to_clear">ล้างบันทึกไม่สำเร็จ</string>
     <string name="settings_runtime_logs_save_button">บันทึกบันทึกอุปกรณ์</string>
-    <string name="settings_runtime_logs_failed_to_save">บันทึกบันทึกไม่สำเร็จ</string>
+    <string name="settings_runtime_logs_failed_to_save">ไม่สามารถบันทึกบันทึกได้</string>
     <string name="settings_runtime_logs_cleared_success">ล้างบันทึกบนอุปกรณ์แล้ว</string>
     <string name="settings_runtime_logs_nothing_captured">ยังไม่มีข้อมูลที่จับได้ รันแอปที่แพตช์แล้วบนโทรศัพท์ แล้วบันทึกอีกครั้ง</string>
     <!-- Settings - GitHub PAT -->
-    <string name="settings_section_github_pat">โทเคน GitHub PAT</string>
+    <string name="settings_section_github_pat">GitHub PAT</string>
     <string name="settings_github_pat_desc">จำเป็นต้องมี GitHub Personal Access Token (PAT) ที่มีสิทธิ์ public_repo เพื่อดาวน์โหลดอาร์ติแฟกต์ของ pull request. สร้าง PAT ที่มีสิทธิ์ public_repo บน %1$s</string>
     <string name="settings_github_pat_label">โทเค็นการเข้าถึงส่วนบุคคล</string>
     <!-- App Info Dialog -->

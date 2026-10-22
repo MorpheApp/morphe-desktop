@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Handa</string>
     <string name="filter_apps_hint">I-filter ang mga app…</string>
+    <string name="version">Bersyon</string>
     <string name="version_label_stable">Stable</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Eksperimental</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Alisin ang APK</string>
     <string name="home_apk_info_limited_info_warning">Hindi ganap na mabasa ang manifest ng APK na ito (karaniwan sa mga split bundle). Ang mga detalye sa ibaba ay tinatayang lamang, dapat pa ring gumana ang pag-patch</string>
     <string name="home_apk_info_unsupported_app_warning">Walang nakitang compatible na mga patch para sa app na ito. Maaari ka pa ring magpatuloy, pero maaaring walang epekto ang pag-patch</string>
-    <string name="home_apk_info_version_label">Bersyon</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Laki</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">I/O ng storage</string>
     <string name="patching_graph_cpu_usage">Paggamit ng CPU</string>
     <string name="patching_banner_started_title">Nagsimula ang pag-patch</string>
-    <string name="patching_banner_app_version">Bersyon ng app</string>
     <string name="patching_banner_apk_size">Laki ng APK</string>
     <string name="patching_banner_patches">Mga patch</string>
     <string name="patching_banner_split_apk">Split APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Niyebe</string>
     <string name="settings_background_grid">Grid</string>
     <string name="settings_background_particles">Mga particle</string>
+    <string name="settings_background_lava">Lava lamp</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Epekto ng parallax</string>
     <string name="settings_toggle_parallax_desc">Makinis na paggalaw ng background kapag ginagalaw ang mouse</string>

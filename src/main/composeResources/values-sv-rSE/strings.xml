@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Redo</string>
     <string name="filter_apps_hint">Filtrera appar …</string>
+    <string name="version">Version</string>
     <string name="version_label_stable">Stabil</string>
     <string name="version_label_dev">Utvecklingsversion</string>
     <string name="version_label_experimental">Experimentell</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Ta bort APK</string>
     <string name="home_apk_info_limited_info_warning">Det gick inte att läsa den här APK-filens manifest fullständigt (vanligt för delade paket). Uppgifterna nedan är ungefärliga, patchning bör fortfarande fungera</string>
     <string name="home_apk_info_unsupported_app_warning">Inga kompatibla patchar hittades för den här appen. Du kan fortsätta, men patchningen kanske inte har någon effekt</string>
-    <string name="home_apk_info_version_label">Version</string>
     <string name="home_apk_info_build_label">Bygge</string>
     <string name="home_apk_info_size_label">Storlek</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Lagrings-I/O</string>
     <string name="patching_graph_cpu_usage">CPU-användning</string>
     <string name="patching_banner_started_title">Modifieringen startade</string>
-    <string name="patching_banner_app_version">Appversion</string>
     <string name="patching_banner_apk_size">Storlek på APK-fil</string>
     <string name="patching_banner_patches">Tillägg</string>
     <string name="patching_banner_split_apk">Split-APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Snö</string>
     <string name="settings_background_grid">Rutnät</string>
     <string name="settings_background_particles">Partiklar</string>
+    <string name="settings_background_lava">Lavafärg</string>
     <string name="settings_background_matrix">Matris</string>
     <string name="settings_toggle_parallax_label">Parallaxeffekt</string>
     <string name="settings_toggle_parallax_desc">Mjuk bakgrundsförskjutning när musen flyttas</string>

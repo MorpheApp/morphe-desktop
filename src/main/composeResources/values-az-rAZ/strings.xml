@@ -56,6 +56,7 @@
     <string name="status_offline">Oflayn</string>
     <string name="status_ready">Hazırdır</string>
     <string name="filter_apps_hint">Tətbiqləri filtrlə…</string>
+    <string name="version">Versiya</string>
     <string name="version_label_stable">Stabil</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Təcrübəvi</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK-nı sil</string>
     <string name="home_apk_info_limited_info_warning">Bu APK-nın manifestini tam oxumaq mümkün olmadı (bölünmüş paketlər üçün adi haldır). Aşağıdakı təfərrüatlar təxminidir, yamaqlama yenə də işləməlidir</string>
     <string name="home_apk_info_unsupported_app_warning">Bu tətbiq üçün uyğun yamaq tapılmadı. Hələ də davam edə bilərsiniz, lakin yamaqlama heç bir təsir göstərməyə bilər</string>
-    <string name="home_apk_info_version_label">Versiya</string>
     <string name="home_apk_info_build_label">Qurulum</string>
     <string name="home_apk_info_size_label">Həcm</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Disk İ/Ç</string>
     <string name="patching_graph_cpu_usage">Mərkəzi Prosessor (CPU) istifadəsi</string>
     <string name="patching_banner_started_title">Yamama başladı</string>
-    <string name="patching_banner_app_version">Tətbiq versiyası</string>
     <string name="patching_banner_apk_size">APK həcmi</string>
     <string name="patching_banner_patches">Yamaqlar</string>
     <string name="patching_banner_split_apk">Bölünmüş APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Qar</string>
     <string name="settings_background_grid">Tor xətləri</string>
     <string name="settings_background_particles">Zərrəciklər</string>
+    <string name="settings_background_lava">Lava çırağı</string>
     <string name="settings_background_matrix">Matris</string>
     <string name="settings_toggle_parallax_label">Paralaks effekti</string>
     <string name="settings_toggle_parallax_desc">Siçanı hərəkət etdirərkən hamar arxa fon sürüşməsi</string>

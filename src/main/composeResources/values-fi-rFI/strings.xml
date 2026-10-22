@@ -56,6 +56,7 @@
     <string name="status_offline">Offline-tila</string>
     <string name="status_ready">Valmis</string>
     <string name="filter_apps_hint">Suodata sovelluksia…</string>
+    <string name="version">Versio</string>
     <string name="version_label_stable">Vakaa</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Kokeellinen</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Poista APK</string>
     <string name="home_apk_info_limited_info_warning">Tämän APK:n manifestia ei voitu lukea kokonaan (yleistä jaetuissa nipuissa). Alla olevat tiedot ovat likimääräisiä, paikkauksen pitäisi silti toimia</string>
     <string name="home_apk_info_unsupported_app_warning">Ei löytynyt yhteensopivia paikkauksia tälle sovellukselle. Voit silti jatkaa, mutta paikkauksella ei välttämättä ole vaikutusta</string>
-    <string name="home_apk_info_version_label">Versio</string>
     <string name="home_apk_info_build_label">Rakennus</string>
     <string name="home_apk_info_size_label">Koko</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Tallennus I/O</string>
     <string name="patching_graph_cpu_usage">CPU:n käyttö</string>
     <string name="patching_banner_started_title">Paikkaus alkoi</string>
-    <string name="patching_banner_app_version">Sovellusversio</string>
     <string name="patching_banner_apk_size">APK:n koko</string>
     <string name="patching_banner_patches">Lisäosat</string>
     <string name="patching_banner_split_apk">Jaettu APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Lumi</string>
     <string name="settings_background_grid">Ruudukko</string>
     <string name="settings_background_particles">Hiukkaset</string>
+    <string name="settings_background_lava">Lavalamppu</string>
     <string name="settings_background_matrix">Matriisi</string>
     <string name="settings_toggle_parallax_label">Parallaksiefekti</string>
     <string name="settings_toggle_parallax_desc">Taustan pehmeä siirtyminen hiirtä liikutettaessa</string>

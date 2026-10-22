@@ -56,6 +56,7 @@
     <string name="status_offline">ऑफ़लाइन</string>
     <string name="status_ready">तैयार</string>
     <string name="filter_apps_hint">ऐप्स फ़िल्टर करें…</string>
+    <string name="version">संस्करण</string>
     <string name="version_label_stable">स्थिर</string>
     <string name="version_label_dev">डेव</string>
     <string name="version_label_experimental">प्रयोगात्मक</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK हटाएँ</string>
     <string name="home_apk_info_limited_info_warning">इस APK की मेनिफेस्ट पूरी तरह पढ़ नहीं सके (स्प्लिट बंडलों में सामान्य)। नीचे दिए गए विवरण अनुमानित हैं, पैचिंग अभी भी काम करनी चाहिए</string>
     <string name="home_apk_info_unsupported_app_warning">इस ऐप के लिए कोई संगत पैच नहीं मिला। आप फिर भी आगे बढ़ सकते हैं, लेकिन पैचिंग का कोई प्रभाव नहीं हो सकता</string>
-    <string name="home_apk_info_version_label">संस्करण</string>
     <string name="home_apk_info_build_label">बिल्ड</string>
     <string name="home_apk_info_size_label">आकार</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">स्टोरेज I/O</string>
     <string name="patching_graph_cpu_usage">CPU उपयोग</string>
     <string name="patching_banner_started_title">पैचिंग शुरू हुई</string>
-    <string name="patching_banner_app_version">ऐप संस्करण</string>
     <string name="patching_banner_apk_size">APK आकार</string>
     <string name="patching_banner_patches">पैच</string>
     <string name="patching_banner_split_apk">स्प्लिट APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">बर्फ</string>
     <string name="settings_background_grid">ग्रिड</string>
     <string name="settings_background_particles">कण</string>
+    <string name="settings_background_lava">लावा लैंप</string>
     <string name="settings_background_matrix">मैट्रिक्स</string>
     <string name="settings_toggle_parallax_label">पैरालैक्स प्रभाव</string>
     <string name="settings_toggle_parallax_desc">माउस घुमाने पर स्मूद पृष्ठभूमि शिफ्टिंग</string>

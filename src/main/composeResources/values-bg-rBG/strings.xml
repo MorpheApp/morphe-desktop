@@ -56,6 +56,7 @@
     <string name="status_offline">Офлайн</string>
     <string name="status_ready">Готово</string>
     <string name="filter_apps_hint">Филтриране на приложения…</string>
+    <string name="version">Версия</string>
     <string name="version_label_stable">Стабилна</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Експериментална</string>
@@ -248,7 +249,6 @@
     <string name="home_apk_info_remove_description">Премахване на APK</string>
     <string name="home_apk_info_limited_info_warning">Не можа да се прочете напълно манифестът на този APK (обичайно за разделени пакети). Детайлите по-долу са приблизителни, пачването трябва да работи</string>
     <string name="home_apk_info_unsupported_app_warning">Не са намерени съвместими кръпки за това приложение. Можете да продължите, но пачването може да няма ефект</string>
-    <string name="home_apk_info_version_label">Версия</string>
     <string name="home_apk_info_build_label">Издание</string>
     <string name="home_apk_info_size_label">Размер</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -467,7 +467,6 @@
     <string name="patching_graph_storage_io">Дисков вход/изход</string>
     <string name="patching_graph_cpu_usage">Използване на процесора</string>
     <string name="patching_banner_started_title">Пачването започна</string>
-    <string name="patching_banner_app_version">Версия на приложението</string>
     <string name="patching_banner_apk_size">Размер на APK</string>
     <string name="patching_banner_patches">Кръпки</string>
     <string name="patching_banner_split_apk">Разделен APK</string>
@@ -742,6 +741,7 @@
     <string name="settings_background_snow">Снег</string>
     <string name="settings_background_grid">Решетка</string>
     <string name="settings_background_particles">Частици</string>
+    <string name="settings_background_lava">Лава лампа</string>
     <string name="settings_background_matrix">Матрица</string>
     <string name="settings_toggle_parallax_label">Паралакс ефект</string>
     <string name="settings_toggle_parallax_desc">Плавно преместване на фона при движение на мишката</string>

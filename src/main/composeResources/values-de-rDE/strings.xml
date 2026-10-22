@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Bereit</string>
     <string name="filter_apps_hint">Apps filtern…</string>
+    <string name="version">Version</string>
     <string name="version_label_stable">Stabil</string>
     <string name="version_label_dev">Entwicklungsversion</string>
     <string name="version_label_experimental">Experimentell</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK entfernen</string>
     <string name="home_apk_info_limited_info_warning">Das Manifest dieser APK konnte nicht vollständig gelesen werden (bei Split-Bundles üblich). Die Details unten sind Näherungswerte; das Patchen sollte trotzdem funktionieren</string>
     <string name="home_apk_info_unsupported_app_warning">Keine kompatiblen Patches für diese App gefunden. Du kannst trotzdem fortfahren, aber das Patchen könnte keine Wirkung haben</string>
-    <string name="home_apk_info_version_label">Version</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Größe</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -446,7 +446,6 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="patching_graph_storage_io">Speicher-I/O</string>
     <string name="patching_graph_cpu_usage">CPU-Auslastung</string>
     <string name="patching_banner_started_title">Patchen gestartet</string>
-    <string name="patching_banner_app_version">App-Version</string>
     <string name="patching_banner_apk_size">APK-Größe</string>
     <string name="patching_banner_patches">Patches</string>
     <string name="patching_banner_split_apk">Split-APK</string>
@@ -721,6 +720,7 @@ Wähle die APK erneut aus, um mit deinen gespeicherten Einstellungen zu patchen<
     <string name="settings_background_snow">Schnee</string>
     <string name="settings_background_grid">Raster</string>
     <string name="settings_background_particles">Partikel</string>
+    <string name="settings_background_lava">Lavalampe</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Parallax-Effekt</string>
     <string name="settings_toggle_parallax_desc">Sanfte Hintergrundverschiebung bei Mausbewegung</string>

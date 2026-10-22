@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Klaar</string>
     <string name="filter_apps_hint">Apps filteren…</string>
+    <string name="version">Versie</string>
     <string name="version_label_stable">Stabiel</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Experimenteel</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK verwijderen</string>
     <string name="home_apk_info_limited_info_warning">Kon het manifest van deze APK niet volledig lezen (gebruikelijk voor splitbundels). Details hieronder zijn bij benadering, patchen zou nog moeten werken</string>
     <string name="home_apk_info_unsupported_app_warning">Geen compatibele patches gevonden voor deze app. Je kunt nog steeds doorgaan, maar patchen heeft mogelijk geen effect</string>
-    <string name="home_apk_info_version_label">Versie</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Grootte</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Opslag I/O</string>
     <string name="patching_graph_cpu_usage">CPU-gebruik</string>
     <string name="patching_banner_started_title">Patchen begonnen</string>
-    <string name="patching_banner_app_version">Appversie</string>
     <string name="patching_banner_apk_size">APK-grootte</string>
     <string name="patching_banner_patches">Patches</string>
     <string name="patching_banner_split_apk">Split-APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Sneeuw</string>
     <string name="settings_background_grid">Raster</string>
     <string name="settings_background_particles">Deeltjes</string>
+    <string name="settings_background_lava">Lavalampe</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Parallax-effect</string>
     <string name="settings_toggle_parallax_desc">Vloeiende achtergrondverschuiving bij het bewegen van de muis</string>
