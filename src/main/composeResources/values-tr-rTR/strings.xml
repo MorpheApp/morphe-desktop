@@ -56,6 +56,7 @@
     <string name="status_offline">Çevrimdışı</string>
     <string name="status_ready">Hazır</string>
     <string name="filter_apps_hint">Uygulamaları filtrele...</string>
+    <string name="version">Sürüm</string>
     <string name="version_label_stable">Stabil</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Deneysel</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK'yı kaldır</string>
     <string name="home_apk_info_limited_info_warning">Bu APK'nın manifesti tam olarak okunamadı (bölünmüş paketlerde yaygındır). Aşağıdaki ayrıntılar yaklaşıktır, yamalama yine de çalışmalıdır</string>
     <string name="home_apk_info_unsupported_app_warning">Bu uygulama için uyumlu yama bulunamadı. Yine de devam edebilirsiniz, ancak yamalamanın etkisi olmayabilir</string>
-    <string name="home_apk_info_version_label">Sürüm</string>
     <string name="home_apk_info_build_label">Derleme</string>
     <string name="home_apk_info_size_label">Boyut</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -444,7 +444,6 @@
     <string name="patching_graph_storage_io">Depolama G/Ç</string>
     <string name="patching_graph_cpu_usage">CPU kullanımı</string>
     <string name="patching_banner_started_title">Yamalama başladı</string>
-    <string name="patching_banner_app_version">Uygulama sürümü</string>
     <string name="patching_banner_apk_size">APK boyutu</string>
     <string name="patching_banner_patches">Yamalar</string>
     <string name="patching_banner_split_apk">Bölünmüş APK</string>
@@ -719,6 +718,7 @@
     <string name="settings_background_snow">Kar</string>
     <string name="settings_background_grid">Izgara</string>
     <string name="settings_background_particles">Parçacıklar</string>
+    <string name="settings_background_lava">Lav lambası</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Paralaks etkisi</string>
     <string name="settings_toggle_parallax_desc">Fare hareket ettirildiğinde arka planın yumuşak kayması</string>

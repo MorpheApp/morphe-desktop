@@ -5,12 +5,20 @@
 
 package app.morphe.gui.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,30 +28,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.components.color.MorpheGradientEditor
 import app.morphe.gui.ui.components.color.MorpheSwatchRow
-import app.morphe.gui.ui.theme.LocalMorpheFont
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
-import androidx.compose.material3.Icon
-import androidx.compose.foundation.layout.size
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -70,7 +65,6 @@ fun AppCardFillDialog(
     onDismiss: () -> Unit,
     onSave: (MorpheFill?) -> Unit,
 ) {
-    val font = LocalMorpheFont.current
     var working by remember { mutableStateOf(initialFill) }
     var mode by remember { mutableStateOf(initialFill.mode) }
     val palette = cardPalette(working, appIconColorHex, defaultCardPalette())
@@ -82,17 +76,13 @@ fun AppCardFillDialog(
             Column {
                 Text(
                     text = stringResource(Res.string.card_fill_title),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 if (appName != null) {
                     Text(
                         text = appName,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
@@ -111,9 +101,7 @@ fun AppCardFillDialog(
                 ) {
                     Text(
                         text = appName ?: stringResource(Res.string.card_fill_example_app_name),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = Color.White,
                         modifier = Modifier.align(Alignment.CenterStart).padding(horizontal = 14.dp),
                     )
@@ -125,7 +113,6 @@ fun AppCardFillDialog(
                             FillModeCard(
                                 option = option,
                                 selected = mode == option,
-                                font = font,
                                 modifier = Modifier.weight(1f),
                             ) {
                                 mode = option
@@ -147,9 +134,7 @@ fun AppCardFillDialog(
 
                 Text(
                     text = stringResource(mode.blurbRes),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
@@ -159,17 +144,27 @@ fun AppCardFillDialog(
                         MorpheSwatchRow(fill.argb) { working = MorpheFill.Solid(it) }
                     }
                     FillMode.GRADIENT -> if (fill is MorpheFill.Gradient) {
-                        MorpheGradientEditor(fill, font) { working = it }
+                        MorpheGradientEditor(fill) { working = it }
                     }
                     else -> Unit
                 }
             }
         },
         dismissButton = {
-            MorpheChoiceChip(stringResource(Res.string.cancel), active = false, font = font, onClick = onDismiss)
+            MorpheButton(
+                label = stringResource(Res.string.cancel),
+                onClick = onDismiss,
+                variant = MorpheButtonVariant.GHOST,
+                size = MorpheButtonSize.COMPACT,
+            )
         },
         confirmButton = {
-            MorpheChoiceChip(stringResource(Res.string.save), active = true, font = font) { onSave(working) }
+            MorpheButton(
+                label = stringResource(Res.string.save),
+                onClick = { onSave(working) },
+                variant = MorpheButtonVariant.PRIMARY,
+                size = MorpheButtonSize.COMPACT,
+            )
         },
     )
 }
@@ -183,17 +178,16 @@ private fun Color.toArgbInt(): Int {
 private fun FillModeCard(
     option: FillMode,
     selected: Boolean,
-    font: FontFamily,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
+    val colors = MorpheTheme.colors
+    val shapes = MorpheTheme.shapes
     val hover = remember { MutableInteractionSource() }
     val isHovered by hover.collectIsHoveredAsState()
-    val shape = RoundedCornerShape(corners.small)
+    val shape = shapes.small
     val border = when {
-        selected -> accents.primary
+        selected -> colors.primary
         isHovered -> MaterialTheme.colorScheme.outline
         else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
     }
@@ -202,7 +196,7 @@ private fun FillModeCard(
             .clip(shape)
             .border(if (selected) 2.dp else 1.dp, border, shape)
             .background(
-                if (selected) accents.primary.copy(alpha = 0.10f) else Color.Transparent
+                if (selected) colors.primary.copy(alpha = 0.10f) else Color.Transparent
             )
             .hoverable(hover)
             .handCursor()
@@ -214,15 +208,15 @@ private fun FillModeCard(
         Icon(
             imageVector = option.icon,
             contentDescription = null,
-            tint = if (selected) accents.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = if (selected) colors.primary else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(18.dp),
         )
         Text(
             text = stringResource(option.labelRes),
-            fontSize = 11.sp,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-            fontFamily = font,
-            color = if (selected) accents.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MorpheTheme.typography.labelSmall.copy(
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+            ),
+            color = if (selected) colors.primary else MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

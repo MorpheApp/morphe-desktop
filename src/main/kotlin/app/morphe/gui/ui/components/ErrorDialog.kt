@@ -12,11 +12,53 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun ScreenErrorDialog(
+    error: String?,
+    title: String,
+    onDismiss: () -> Unit,
+    onRetry: (() -> Unit)? = null,
+) {
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var currentError by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(error) {
+        error?.let {
+            currentError = it
+            showErrorDialog = true
+        }
+    }
+
+    if (showErrorDialog && currentError != null) {
+        ErrorDialog(
+            title = title,
+            message = getFriendlyErrorMessage(currentError!!),
+            errorType = getErrorType(currentError!!),
+            onDismiss = {
+                showErrorDialog = false
+                onDismiss()
+            },
+            onRetry = onRetry?.let { retryAction ->
+                {
+                    showErrorDialog = false
+                    onDismiss()
+                    retryAction()
+                }
+            }
+        )
+    }
+}
 
 enum class ErrorType {
     NETWORK,
@@ -54,17 +96,17 @@ fun ErrorDialog(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            MorpheDialogButton(
+            MorpheButton(
                 label = dismissText,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                filled = false,
+                modifier = Modifier.weight(1f),
+                variant = MorpheButtonVariant.OUTLINED,
                 onClick = onDismiss,
             )
             if (onRetry != null) {
-                MorpheDialogButton(
+                MorpheButton(
                     label = retryText,
-                    color = MaterialTheme.colorScheme.error,
-                    filled = true,
+                    modifier = Modifier.weight(1f),
+                    variant = MorpheButtonVariant.DANGER,
                     onClick = onRetry,
                 )
             }
@@ -72,9 +114,7 @@ fun ErrorDialog(
     }
 }
 
-/**
- * Helper function to determine error type from exception or message.
- */
+/** Determines error type from exception or message text. */
 fun getErrorType(error: String): ErrorType {
     val lowerError = error.lowercase()
     return when {
@@ -98,9 +138,7 @@ fun getErrorType(error: String): ErrorType {
     }
 }
 
-/**
- * Get user-friendly error message.
- */
+/** Returns user-friendly localized message for the given error. */
 @Composable
 fun getFriendlyErrorMessage(error: String): String {
     val lowerError = error.lowercase()

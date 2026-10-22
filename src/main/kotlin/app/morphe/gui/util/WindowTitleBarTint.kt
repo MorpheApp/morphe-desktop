@@ -14,24 +14,9 @@ import com.sun.jna.win32.StdCallLibrary
 import java.awt.Window
 import javax.swing.JFrame
 
-/**
- * Cross-platform title bar tinting helpers.
- *
- * - **macOS**: uses Apple's `apple.awt.appearance` AWT property to switch the
- *   traffic light contrast between light and dark. Available on every macOS
- *   JDK (no JBR required). The actual title bar fill is rendered by Compose
- *   in `App.kt` (a 28dp coloured band sitting under the transparent OS title
- *   bar), so this only affects the traffic light icons themselves.
- *
- * - **Windows**: uses JNA to call `DwmSetWindowAttribute` with two attributes:
- *   - `DWMWA_USE_IMMERSIVE_DARK_MODE` (Win 10 build 19041+) — binary dark/light.
- *   - `DWMWA_CAPTION_COLOR` (Win 11 build 22000+) — arbitrary RGB caption fill.
- *   On older builds these calls silently no-op.
- *
- * - **Linux**: window manager owns the title bar; nothing we can do portably.
- */
-
+/** Cross-platform OS window title bar tinting helpers. */
 private interface Dwmapi : StdCallLibrary {
+    @Suppress("FunctionName")
     fun DwmSetWindowAttribute(
         hwnd: WinDef.HWND,
         dwAttribute: Int,
@@ -61,13 +46,7 @@ private val isWindows: Boolean by lazy {
     System.getProperty("os.name")?.lowercase()?.contains("win") == true
 }
 
-/**
- * Apply the current theme's title bar colour to the OS window.
- *
- * On macOS, this only switches the traffic light contrast (the band is drawn
- * by Compose). On Windows, this sets the actual OS-drawn caption fill colour.
- * On Linux, this is a no-op.
- */
+/** Applies current theme title bar color to the native OS window. */
 fun applyTitleBarTint(window: Window, color: Color) {
     val isDark = color.luminance() < 0.5f
     when {
@@ -94,8 +73,7 @@ private fun applyWindowsCaptionColor(window: Window, color: Color, isDark: Boole
         val pointer = Native.getComponentPointer(window) ?: return
         val hwnd = WinDef.HWND(pointer)
 
-        // Always set the dark mode hint as a fallback for builds where
-        // DWMWA_CAPTION_COLOR isn't supported (Win 10, early Win 11).
+        // Dark mode fallback for Windows 10 and early Windows 11.
         dwm.DwmSetWindowAttribute(
             hwnd,
             Dwmapi.DWMWA_USE_IMMERSIVE_DARK_MODE,
@@ -103,8 +81,7 @@ private fun applyWindowsCaptionColor(window: Window, color: Color, isDark: Boole
             4
         )
 
-        // Try arbitrary caption colour (Win 11 22H2+, build 22000+).
-        // COLORREF is little-endian: 0x00BBGGRR.
+        // Set caption color on Windows 11 (build 22000+).
         val r = (color.red * 255f).toInt().coerceIn(0, 255)
         val g = (color.green * 255f).toInt().coerceIn(0, 255)
         val b = (color.blue * 255f).toInt().coerceIn(0, 255)

@@ -7,44 +7,27 @@ package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.model.PatchedAppRecord
-import app.morphe.gui.ui.components.MorpheDialogButton
+import app.morphe.engine.model.VersionStatus
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheDialogCard
 import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.util.MorpheFilePicker
-import app.morphe.gui.util.VersionStatus
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.resolveVersionWarningContent
 import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
-// ============================================================================
-// HOME DIALOGS
-// ============================================================================
-
-private val DangerRed = Color(0xFFE0504D)
-
-/**
- * Blocking warning shown when the selected APK's version does not match the
- * suggested one. Confirm patches anyway, dismiss to pick a different APK.
- */
+/** Warning dialog displayed when the selected APK version differs from the suggested version. */
 @Composable
 internal fun VersionWarningDialog(
     versionStatus: VersionStatus,
@@ -65,13 +48,24 @@ internal fun VersionWarningDialog(
         )
         MorpheDialogText(warningContent.message)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton(stringResource(Res.string.home_dialog_continue_anyway), warnColor, filled = true, onClick = onConfirm)
+            MorpheButton(
+                label = stringResource(Res.string.cancel),
+                modifier = Modifier.weight(1f),
+                variant = MorpheButtonVariant.OUTLINED,
+                onClick = onDismiss,
+            )
+            MorpheButton(
+                label = stringResource(Res.string.home_dialog_continue_anyway),
+                modifier = Modifier.weight(1f),
+                variant = MorpheButtonVariant.FILLED,
+                customColor = warnColor,
+                onClick = onConfirm,
+            )
         }
     }
 }
 
-/** Confirm removing a record from the patched-app history. */
+/** Confirmation dialog for removing a record from patched app history. */
 @Composable
 internal fun ForgetConfirmDialog(
     record: PatchedAppRecord,
@@ -82,17 +76,15 @@ internal fun ForgetConfirmDialog(
         MorpheDialogText(
             stringResource(Res.string.home_dialog_forget_message, record.displayName)
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton(stringResource(Res.string.home_dialog_forget_button), DangerRed, filled = true, onClick = onConfirm)
-        }
+        DangerDialogActionRow(
+            confirmLabel = stringResource(Res.string.home_dialog_forget_button),
+            onDismiss = onDismiss,
+            onConfirm = onConfirm,
+        )
     }
 }
 
-/**
- * Confirm uninstalling the patched app from the connected device. The checkbox
- * offers the keep-history vs delete-history choice.
- */
+/** Confirmation dialog for uninstalling a patched app from a connected device. */
 @Composable
 internal fun UninstallConfirmDialog(
     record: PatchedAppRecord,
@@ -101,7 +93,7 @@ internal fun UninstallConfirmDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    val font = LocalMorpheFont.current
+    val dangerColor = MorpheTheme.colors.danger
     MorpheDialogCard(
         onDismiss = onDismiss,
         title = stringResource(Res.string.home_dialog_uninstall_title, record.displayName),
@@ -113,7 +105,7 @@ internal fun UninstallConfirmDialog(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
+                .clip(MorpheTheme.shapes.small)
                 .handCursor()
                 .clickable { onAlsoForgetChange(!alsoForget) }
                 .padding(vertical = 4.dp),
@@ -121,52 +113,43 @@ internal fun UninstallConfirmDialog(
             Checkbox(
                 checked = alsoForget,
                 onCheckedChange = onAlsoForgetChange,
-                colors = CheckboxDefaults.colors(checkedColor = DangerRed),
+                colors = CheckboxDefaults.colors(checkedColor = dangerColor),
                 modifier = Modifier.size(20.dp),
             )
             Spacer(Modifier.width(8.dp))
             Text(
                 text = stringResource(Res.string.home_dialog_uninstall_also_forget),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
+                style = MorpheTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton(stringResource(Res.string.home_dialog_uninstall_button), DangerRed, filled = true, onClick = onConfirm)
-        }
+        DangerDialogActionRow(
+            confirmLabel = stringResource(Res.string.home_dialog_uninstall_button),
+            onDismiss = onDismiss,
+            onConfirm = onConfirm,
+        )
     }
 }
 
-/**
- * Shown when a record's original input APK is gone. Picking a replacement APK
- * hands its absolute path back via [onApkPicked].
- */
 @Composable
-internal fun RepatchMissingApkDialog(
-    record: PatchedAppRecord,
+private fun DangerDialogActionRow(
+    confirmLabel: String,
     onDismiss: () -> Unit,
-    onApkPicked: (String) -> Unit,
+    onConfirm: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_missing_apk_title)) {
-        MorpheDialogText(
-            stringResource(Res.string.home_dialog_missing_apk_message, record.displayName, record.inputApkPath)
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+        MorpheButton(
+            label = stringResource(Res.string.cancel),
+            modifier = Modifier.weight(1f),
+            variant = MorpheButtonVariant.OUTLINED,
+            onClick = onDismiss,
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheDialogButton(stringResource(Res.string.cancel), MaterialTheme.colorScheme.onSurfaceVariant, filled = false, onClick = onDismiss)
-            MorpheDialogButton(stringResource(Res.string.home_dialog_select_apk), LocalMorpheAccents.current.primary, filled = true) {
-                scope.launch {
-                    val picked = MorpheFilePicker.pickFile(
-                        title = getString(Res.string.home_dialog_select_apk_to_repatch),
-                        extensions = listOf("apk", "apkm", "xapk", "apks"),
-                    )
-                    onDismiss()
-                    if (picked != null && picked.exists()) onApkPicked(picked.absolutePath)
-                }
-            }
-        }
+        MorpheButton(
+            label = confirmLabel,
+            modifier = Modifier.weight(1f),
+            variant = MorpheButtonVariant.DANGER,
+            onClick = onConfirm,
+        )
     }
 }
+

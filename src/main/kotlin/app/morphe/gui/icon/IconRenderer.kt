@@ -28,18 +28,12 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-/**
- * Renders an [IconProject] to square [BufferedImage]s at a requested tile size.
- * [renderBackground] + [renderForeground] are what [IconExporter] writes (kept
- * separate, as the launcher composites them). [renderForeground] flattens the layer
- * stack, and [renderComposite] draws both together for the studio preview so it's
- * pixel-exact to the export. Transforms + effect sizes are in tile-fraction units.
- */
+/** Renders an [IconProject] to background, foreground, silhouette, and composite bitmaps. */
 object IconRenderer {
 
     private val sourceCache = HashMap<String, Pair<Long, BufferedImage>>()
 
-    /** Background layer at [size]x[size]. */
+    /** Renders background fill into a [size]x[size] bitmap. */
     fun renderBackground(project: IconProject, size: Int): BufferedImage {
         val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
         val g = img.createGraphics()
@@ -77,9 +71,7 @@ object IconRenderer {
                     }
                 }
                 is MorpheFill.Image -> {
-                    // Adaptive backgrounds MUST be fully opaque (the launcher masks them and
-                    // can't handle a see-through background). Fill first so any transparency
-                    // in the imported image is flattened onto an opaque white base.
+                    // Fill white base to ensure background bitmap remains fully opaque.
                     g.color = Color.WHITE; g.fillRect(0, 0, size, size)
                     loadSource(bg.sourcePath)?.let { drawCover(g, it, size) }
                 }
@@ -90,7 +82,7 @@ object IconRenderer {
         return img
     }
 
-    /** Foreground: the layer stack composited bottom-to-top onto a transparent tile. */
+    /** Renders composite foreground layers onto a transparent [size]x[size] tile. */
     fun renderForeground(project: IconProject, size: Int): BufferedImage {
         val tile = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
         val g = tile.createGraphics()
@@ -106,16 +98,7 @@ object IconRenderer {
         return tile
     }
 
-    /** The foreground flattened to a single-colour silhouette (alpha preserved).
-     *  Used for the notification icon (white) and monochrome layer (black).
-     *
-     *  Themed/notification icons are the foreground silhouette. If there is no
-     *  foreground, fall back to the whole composite so a background-only icon still
-     *  yields a recognisable monochrome shape instead of nothing.
-     *
-     *  [safeZone] < 1 fits the silhouette's content into a centered box of that
-     *  fraction (e.g. 0.72), mirroring the manager fitting the notification icon to the
-     *  safe zone so a small status-bar glyph isn't crammed edge to edge or clipped. */
+    /** Renders a single-color silhouette of the foreground fitted within [safeZone]. */
     fun renderSilhouette(project: IconProject, size: Int, colorArgb: Int, safeZone: Float = 1f): BufferedImage {
         val fg = if (project.layers.isEmpty()) renderComposite(project, size) else renderForeground(project, size)
         val w = fg.width; val h = fg.height
@@ -125,12 +108,11 @@ object IconRenderer {
         val sil = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB); sil.setRGB(0, 0, w, h, px, 0, w)
         if (safeZone >= 1f) return sil
 
-        // Fit the opaque content into the central safe-zone box, centered.
         var minX = w; var minY = h; var maxX = -1; var maxY = -1
         for (y in 0 until h) for (x in 0 until w) if (((px[y * w + x] ushr 24) and 0xFF) > 8) {
             if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y
         }
-        if (maxX < 0) return sil  // nothing opaque
+        if (maxX < 0) return sil
         val bw = maxX - minX + 1; val bh = maxY - minY + 1
         val target = size * safeZone
         val s = minOf(target / bw, target / bh)
@@ -154,8 +136,6 @@ object IconRenderer {
         }
         return out
     }
-
-    // ── one layer → transparent tile (position, rotation, colour adjust, effects) ──
 
     private fun renderLayerTile(layer: IconProject.Layer, size: Int): BufferedImage {
         val tile = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
@@ -246,16 +226,16 @@ object IconRenderer {
             IconProject.ShapeKind.ROUNDED -> g.fillRoundRect(0, 0, s, s, s / 3, s / 3)
             IconProject.ShapeKind.TRIANGLE -> g.fillPolygon(intArrayOf(s / 2, s, 0), intArrayOf(0, s, s), 3)
             IconProject.ShapeKind.DIAMOND -> g.fillPolygon(intArrayOf(s / 2, s, s / 2, 0), intArrayOf(0, s / 2, s, s / 2), 4)
-            IconProject.ShapeKind.PENTAGON -> g.fill(regularPolygon(s, 5))
-            IconProject.ShapeKind.HEXAGON -> g.fill(regularPolygon(s, 6))
-            IconProject.ShapeKind.STAR -> g.fill(starPolygon(s, 5))
+            IconProject.ShapeKind.PENTAGON -> g.fill(regularPolygon(5))
+            IconProject.ShapeKind.HEXAGON -> g.fill(regularPolygon(6))
+            IconProject.ShapeKind.STAR -> g.fill(starPolygon())
         }
         g.dispose()
         return img
     }
 
-    /** Regular N-gon inscribed in the tile, first vertex pointing up. */
-    private fun regularPolygon(size: Int, n: Int): Polygon {
+    /** Creates regular N-gon polygon inscribed in the tile. */
+    private fun regularPolygon(n: Int, size: Int = 240): Polygon {
         val c = size / 2.0; val r = size / 2.0
         val xs = IntArray(n); val ys = IntArray(n)
         for (i in 0 until n) {
@@ -265,8 +245,8 @@ object IconRenderer {
         return Polygon(xs, ys, n)
     }
 
-    /** [points]-pointed star inscribed in the tile. */
-    private fun starPolygon(size: Int, points: Int): Polygon {
+    /** Creates [points]-pointed star polygon inscribed in the tile. */
+    private fun starPolygon(points: Int = 5, size: Int = 240): Polygon {
         val c = size / 2.0; val outer = size / 2.0; val inner = outer * 0.42
         val n = points * 2
         val xs = IntArray(n); val ys = IntArray(n)
@@ -277,8 +257,6 @@ object IconRenderer {
         }
         return Polygon(xs, ys, n)
     }
-
-    // ── helpers ──
 
     private fun enableQuality(g: Graphics2D) {
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC)
@@ -299,7 +277,7 @@ object IconRenderer {
         g.drawImage(src, (size - w) / 2, (size - h) / 2, w, h, null)
     }
 
-    /** Sanitise stop positions into the strictly-increasing [0,1] fractions AWT gradients require. */
+    /** Normalizes gradient stop positions to strictly increasing fractions in [0, 1]. */
     private fun normalizeFractions(positions: List<Float>): FloatArray {
         val out = FloatArray(positions.size)
         var prev = -1f
@@ -365,12 +343,21 @@ object IconRenderer {
         return out
     }
 
+    private fun padLayer(layer: BufferedImage, pad: Int): BufferedImage {
+        val sw = layer.width + 2 * pad
+        val shh = layer.height + 2 * pad
+        val img = BufferedImage(sw, shh, BufferedImage.TYPE_INT_ARGB)
+        val g = img.createGraphics()
+        g.drawImage(layer, pad, pad, null)
+        g.dispose()
+        return img
+    }
+
     private fun buildBlurredSilhouette(layer: BufferedImage, colorArgb: Int, blur: Float, alpha: Float, size: Int): Pair<BufferedImage, Int> {
         val radius = ceil(blur * size).toInt()
         val pad = radius + 2
-        val sw = layer.width + 2 * pad; val shh = layer.height + 2 * pad
-        val img = BufferedImage(sw, shh, BufferedImage.TYPE_INT_ARGB)
-        val g = img.createGraphics(); g.drawImage(layer, pad, pad, null); g.dispose()
+        val img = padLayer(layer, pad)
+        val sw = img.width; val shh = img.height
         val cr = (colorArgb ushr 16) and 0xFF; val cg = (colorArgb ushr 8) and 0xFF; val cb = colorArgb and 0xFF
         val px = IntArray(sw * shh); img.getRGB(0, 0, sw, shh, px, 0, sw)
         for (i in px.indices) {
@@ -384,9 +371,8 @@ object IconRenderer {
     private fun buildStroke(layer: BufferedImage, colorArgb: Int, width: Float, size: Int): Pair<BufferedImage, Int> {
         val radius = max(1, ceil(width * size).toInt())
         val pad = radius + 1
-        val sw = layer.width + 2 * pad; val shh = layer.height + 2 * pad
-        val base = BufferedImage(sw, shh, BufferedImage.TYPE_INT_ARGB)
-        val g = base.createGraphics(); g.drawImage(layer, pad, pad, null); g.dispose()
+        val base = padLayer(layer, pad)
+        val sw = base.width; val shh = base.height
         val src = IntArray(sw * shh); base.getRGB(0, 0, sw, shh, src, 0, sw)
         val alpha = IntArray(sw * shh) { (src[it] ushr 24) and 0xFF }
         val dil = dilate(alpha, sw, shh, radius)
@@ -397,18 +383,25 @@ object IconRenderer {
         return out to pad
     }
 
+    private fun maxVal(pix: IntArray, base: Int, from: Int, to: Int, stride: Int): Int {
+        var m = 0
+        var k = from
+        while (k <= to) {
+            val v = pix[base + k * stride]
+            if (v > m) m = v
+            k++
+        }
+        return m
+    }
+
     private fun dilate(a: IntArray, w: Int, h: Int, r: Int): IntArray {
         val tmp = IntArray(w * h)
         for (y in 0 until h) for (x in 0 until w) {
-            var m = 0; var k = max(0, x - r); val e = minOf(w - 1, x + r)
-            while (k <= e) { if (a[y * w + k] > m) m = a[y * w + k]; k++ }
-            tmp[y * w + x] = m
+            tmp[y * w + x] = maxVal(a, y * w, max(0, x - r), minOf(w - 1, x + r), 1)
         }
         val out = IntArray(w * h)
         for (x in 0 until w) for (y in 0 until h) {
-            var m = 0; var k = max(0, y - r); val e = minOf(h - 1, y + r)
-            while (k <= e) { if (tmp[k * w + x] > m) m = tmp[k * w + x]; k++ }
-            out[y * w + x] = m
+            out[y * w + x] = maxVal(tmp, x, max(0, y - r), minOf(h - 1, y + r), w)
         }
         return out
     }
@@ -418,15 +411,15 @@ object IconRenderer {
         val w = src.width; val h = src.height
         val a = IntArray(w * h); src.getRGB(0, 0, w, h, a, 0, w)
         val b = IntArray(w * h)
-        for (y in 0 until h) for (x in 0 until w) b[y * w + x] = average(a, w, y * w, max(0, x - radius), minOf(w - 1, x + radius), 1)
+        for (y in 0 until h) for (x in 0 until w) b[y * w + x] = average(a, y * w, max(0, x - radius), minOf(w - 1, x + radius), 1)
         val c = IntArray(w * h)
-        for (x in 0 until w) for (y in 0 until h) c[y * w + x] = average(b, w, x, max(0, y - radius), minOf(h - 1, y + radius), w)
+        for (x in 0 until w) for (y in 0 until h) c[y * w + x] = average(b, x, max(0, y - radius), minOf(h - 1, y + radius), w)
         val out = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
         out.setRGB(0, 0, w, h, c, 0, w)
         return out
     }
 
-    private fun average(pix: IntArray, w: Int, base: Int, from: Int, to: Int, stride: Int): Int {
+    private fun average(pix: IntArray, base: Int, from: Int, to: Int, stride: Int): Int {
         var ta = 0; var tr = 0; var tg = 0; var tb = 0; var n = 0
         var k = from
         while (k <= to) {
@@ -443,7 +436,7 @@ object IconRenderer {
         sourceCache[path]?.let { (cachedMtime, img) -> if (cachedMtime == mtime) return img }
         return try {
             ImageIO.read(file)?.also { sourceCache[path] = mtime to it }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

@@ -56,6 +56,7 @@
     <string name="status_offline">לא מקוון</string>
     <string name="status_ready">מוכן</string>
     <string name="filter_apps_hint">סנן אפליקציות…</string>
+    <string name="version">גרסה</string>
     <string name="version_label_stable">יציב</string>
     <string name="version_label_dev">פיתוח</string>
     <string name="version_label_experimental">ניסיוני</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">הסר APK</string>
     <string name="home_apk_info_limited_info_warning">לא ניתן היה לקרוא לחלוטין את ה-manifest של ה-APK (נפוץ עבור חבילות מפוצלות). הפרטים להלן משוערים, התיקון אמור עדיין לעבוד</string>
     <string name="home_apk_info_unsupported_app_warning">לא נמצאו טלאים תואמים לאפליקציה זו. אתה יכול להמשיך, אבל ייתכן שלתיקון לא תהיה השפעה</string>
-    <string name="home_apk_info_version_label">גרסה</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">גודל</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">קלט/פלט אחסון</string>
     <string name="patching_graph_cpu_usage">שימוש במעבד</string>
     <string name="patching_banner_started_title">התיקון החל</string>
-    <string name="patching_banner_app_version">גרסת אפליקציה</string>
     <string name="patching_banner_apk_size">גודל APK</string>
     <string name="patching_banner_patches">טלאים</string>
     <string name="patching_banner_split_apk">APK מפוצל</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">שלג</string>
     <string name="settings_background_grid">רשת</string>
     <string name="settings_background_particles">חלקיקים</string>
+    <string name="settings_background_lava">מנורת לבה</string>
     <string name="settings_background_matrix">מטריקס</string>
     <string name="settings_toggle_parallax_label">אפקט פרלקס</string>
     <string name="settings_toggle_parallax_desc">הזזה חלקה של הרקע בעת הזזת העכבר</string>

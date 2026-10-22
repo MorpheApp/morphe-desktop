@@ -6,19 +6,13 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -33,13 +27,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheDimens
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -62,14 +53,6 @@ fun parseColorString(colorStr: String): Color? {
     }
 }
 
-/** Formats a Compose [Color] into a #AARRGGBB hex string. */
-fun Color.toHexArgbString(): String {
-    val a = (alpha * 255).toInt().coerceIn(0, 255)
-    val r = (red * 255).toInt().coerceIn(0, 255)
-    val g = (green * 255).toInt().coerceIn(0, 255)
-    val b = (blue * 255).toInt().coerceIn(0, 255)
-    return "#%02X%02X%02X%02X".format(a, r, g, b)
-}
 
 /** Palette colors for Material You dynamic theming indicator. */
 val MaterialYouColors = listOf(
@@ -89,10 +72,7 @@ fun isMaterialYouColor(colorStr: String): Boolean =
     colorStr.contains("monet", ignoreCase = true)
 
 
-/**
- * Rich Color option UI component with preset buttons, hex text input,
- * and a modal dialog embedding [MorpheColorPickerCard].
- */
+/** Color option component with preset chips, hex text input, and color picker dialog. */
 @Composable
 fun MorpheColorOptionItem(
     value: String,
@@ -101,10 +81,9 @@ fun MorpheColorOptionItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val dimens = LocalMorpheDimens.current
+    val colors = MorpheTheme.colors
+    val shapes = MorpheTheme.shapes
+    val controlHeight = 28.dp
 
     var showPickerModal by remember { mutableStateOf(false) }
     var textInput by remember(value) { mutableStateOf(value) }
@@ -122,33 +101,30 @@ fun MorpheColorOptionItem(
     }
 
     val fieldBorder by animateColorAsState(
-        if (isFocused) accents.primary.copy(alpha = 0.6f)
-        else accents.primary.copy(alpha = 0.2f),
-        animationSpec = tween(150),
+        if (isFocused) colors.primary.copy(alpha = 0.6f)
+        else colors.primary.copy(alpha = 0.2f),
+        animationSpec = MorpheMotion.fastTween(),
         label = "colorFieldBorder",
     )
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        // Main input bar: Swatch Button + Hex TextField
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(dimens.controlHeight),
+                .height(controlHeight),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // Interactive color swatch thumbnail (clicking opens color wheel dialog)
-            val swatchShape = RoundedCornerShape(corners.small)
+            val swatchShape = shapes.small
             Box(
                 modifier = Modifier
-                    .size(dimens.controlHeight)
+                    .size(controlHeight)
                     .clip(swatchShape)
-                    .border(1.dp, accents.primary.copy(alpha = 0.4f), swatchShape)
+                    .border(1.dp, colors.primary.copy(alpha = 0.4f), swatchShape)
                     .handCursor()
                     .clickable(enabled = enabled) { showPickerModal = true },
                 contentAlignment = Alignment.Center,
             ) {
-                // Checkerboard background for alpha support
                 if (parsedColor != null && parsedColor.alpha < 0.99f) {
                     Canvas(modifier = Modifier.fillMaxSize()) {
                         val cellSize = 4.dp.toPx()
@@ -166,7 +142,6 @@ fun MorpheColorOptionItem(
                         }
                     }
                 }
-                // Actual color overlay, Material You gradient, or fallback icon
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -197,13 +172,12 @@ fun MorpheColorOptionItem(
                 }
             }
 
-            // Hex editable input
             Row(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(corners.small))
-                    .border(1.dp, fieldBorder, RoundedCornerShape(corners.small))
+                    .clip(shapes.small)
+                    .border(1.dp, fieldBorder, shapes.small)
                     .padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -217,58 +191,26 @@ fun MorpheColorOptionItem(
                     },
                     singleLine = true,
                     enabled = enabled,
-                    textStyle = LocalTextStyle.current.copy(
-                        fontSize = 11.sp,
-                        lineHeight = 14.sp,
-                        fontFamily = font,
+                    textStyle = MorpheTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurface,
                     ),
-                    cursorBrush = SolidColor(accents.primary),
+                    cursorBrush = SolidColor(colors.primary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged { isFocused = it.isFocused },
                 )
             }
 
-            // Custom color button with palette icon
-            val btnHover = remember { MutableInteractionSource() }
-            val isBtnHovered by btnHover.collectIsHoveredAsState()
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .hoverable(btnHover)
-                    .clip(RoundedCornerShape(corners.small))
-                    .border(
-                        1.dp,
-                        if (isBtnHovered) accents.primary.copy(alpha = 0.5f) else accents.primary.copy(alpha = 0.2f),
-                        RoundedCornerShape(corners.small)
-                    )
-                    .handCursor()
-                    .clickable(enabled = enabled) { showPickerModal = true }
-                    .padding(horizontal = 10.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Icon(
-                        imageVector = MorpheIcons.Palette,
-                        contentDescription = null,
-                        tint = accents.primary,
-                        modifier = Modifier.size(13.dp),
-                    )
-                    Text(
-                        text = stringResource(Res.string.custom_color),
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        color = if (isBtnHovered) accents.primary else accents.primary.copy(alpha = 0.7f),
-                    )
-                }
-            }
+            MorpheButton(
+                label = stringResource(Res.string.custom_color),
+                icon = MorpheIcons.Palette,
+                variant = MorpheButtonVariant.OUTLINED,
+                size = MorpheButtonSize.COMPACT,
+                enabled = enabled,
+                onClick = { showPickerModal = true },
+            )
         }
 
-        // Presets row if available
         if (!presets.isNullOrEmpty()) {
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -281,13 +223,13 @@ fun MorpheColorOptionItem(
                     val presetColor = parseColorString(presetStr)
                     val isSelected = value.equals(presetStr, ignoreCase = true)
 
-                    val chipBorder = if (isSelected) accents.primary else accents.primary.copy(alpha = 0.2f)
-                    val chipBg = if (isSelected) accents.primary.copy(alpha = 0.12f) else Color.Transparent
+                    val chipBorder = if (isSelected) colors.primary else colors.primary.copy(alpha = 0.2f)
+                    val chipBg = if (isSelected) colors.primary.copy(alpha = 0.12f) else Color.Transparent
 
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(corners.small))
-                            .border(1.dp, chipBorder, RoundedCornerShape(corners.small))
+                            .clip(shapes.small)
+                            .border(1.dp, chipBorder, shapes.small)
                             .background(chipBg)
                             .handCursor()
                             .clickable(enabled = enabled) { onValueChange(presetStr) }
@@ -298,11 +240,10 @@ fun MorpheColorOptionItem(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            // Mini swatch
                             Box(
                                 modifier = Modifier
                                     .size(12.dp)
-                                    .clip(RoundedCornerShape(2.dp))
+                                    .clip(shapes.small)
                                     .then(
                                         when {
                                             presetIsMaterialYou -> Modifier.background(MaterialYouBrush)
@@ -310,14 +251,14 @@ fun MorpheColorOptionItem(
                                             else -> Modifier.background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
                                         }
                                     )
-                                    .border(0.5.dp, Color.White.copy(alpha = 0.3f), RoundedCornerShape(2.dp)),
+                                    .border(0.5.dp, Color.White.copy(alpha = 0.3f), shapes.small),
                             )
                             Text(
                                 text = label,
-                                fontSize = 10.sp,
-                                fontFamily = font,
-                                fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
-                                color = if (isSelected) accents.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MorpheTheme.typography.labelExtraSmall.copy(
+                                    fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
+                                ),
+                                color = if (isSelected) colors.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
@@ -326,15 +267,11 @@ fun MorpheColorOptionItem(
         }
     }
 
-    // Modal dialog with MorpheColorPickerCard
     if (showPickerModal) {
         Dialog(onDismissRequest = { showPickerModal = false }) {
             MorpheColorPickerCard(
                 argb = argbInt,
-                accents = accents,
-                font = font,
                 showAlpha = true,
-                showSaved = true,
                 onPick = { newArgb ->
                     val hexStr = "#%08X".format(newArgb)
                     textInput = hexStr

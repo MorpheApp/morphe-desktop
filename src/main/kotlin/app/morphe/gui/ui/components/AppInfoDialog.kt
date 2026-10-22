@@ -7,22 +7,19 @@ package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.MorpheComponents
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -32,8 +29,6 @@ fun AppInfoDialog(
     onDismiss: () -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
 
     MorpheAlertDialog(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,25 +39,20 @@ fun AppInfoDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // App Logo
                 Image(
                     painter = painterResource(Res.drawable.morphe_logo),
                     contentDescription = stringResource(Res.string.morphe_logo_content_description),
                     modifier = Modifier
                         .size(72.dp)
-                        .clip(RoundedCornerShape(corners.medium))
+                        .clip(MorpheTheme.shapes.medium)
                 )
 
-                // Main Title
                 Text(
                     text = stringResource(Res.string.app_name),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                // Versions Block
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -70,69 +60,78 @@ fun AppInfoDialog(
                     val unknownVer = stringResource(Res.string.unknown)
                     Text(
                         text = stringResource(Res.string.app_info_version_gui, AppConstants.APP_VERSION),
-                        fontSize = 12.sp,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.bodySmall,
                         color = aboutColor
                     )
                     Text(
                         text = stringResource(Res.string.app_info_version_patcher, MorpheComponents.patcherVersion ?: unknownVer),
-                        fontSize = 12.sp,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.bodySmall,
                         color = aboutColor
                     )
                     Text(
                         text = stringResource(Res.string.app_info_version_library, MorpheComponents.libraryVersion ?: unknownVer),
-                        fontSize = 12.sp,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.bodySmall,
                         color = aboutColor
                     )
                 }
 
-                // Description
                 Text(
                     text = stringResource(Res.string.app_info_description),
                     textAlign = TextAlign.Center,
-                    fontSize = 12.sp,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
-                // Social Icons Row
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
-                    IconButton(onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) }, modifier = Modifier.handCursor()) {
-                        Icon(imageVector = MorpheIcons.Public, contentDescription = stringResource(Res.string.app_info_dialog_link_website), tint = iconTint)
-                    }
-                    IconButton(onClick = { uriHandler.openUri("https://morphe.software/changelog") }, modifier = Modifier.handCursor()) {
-                        Icon(imageVector = MorpheIcons.Article, contentDescription = stringResource(Res.string.app_info_link_changelog), tint = iconTint)
-                    }
-                    IconButton(onClick = { uriHandler.openUri("https://github.com/MorpheApp") }, modifier = Modifier.handCursor()) {
-                        Icon(imageVector = MorpheIcons.Github, contentDescription = stringResource(Res.string.github_label), tint = iconTint)
-                    }
-                    IconButton(onClick = { uriHandler.openUri("https://reddit.com/r/MorpheApp") }, modifier = Modifier.handCursor()) {
-                        Icon(imageVector = MorpheIcons.Reddit, contentDescription = stringResource(Res.string.app_info_link_reddit), tint = iconTint)
-                    }
-                    IconButton(onClick = { uriHandler.openUri("https://morphe.software/translate") }, modifier = Modifier.handCursor()) {
-                        Icon(imageVector = MorpheIcons.Translate, contentDescription = stringResource(Res.string.app_info_link_translate), tint = iconTint)
-                    }
+                    MorpheIconButton(
+                        icon = MorpheIcons.Public,
+                        contentDescription = stringResource(Res.string.app_info_dialog_link_website),
+                        size = MorpheIconButtonSize.XLARGE,
+                        variant = MorpheIconButtonVariant.GHOST,
+                        onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) }
+                    )
+                    MorpheIconButton(
+                        icon = MorpheIcons.Article,
+                        contentDescription = stringResource(Res.string.app_info_link_changelog),
+                        size = MorpheIconButtonSize.XLARGE,
+                        variant = MorpheIconButtonVariant.GHOST,
+                        onClick = { uriHandler.openUri("https://morphe.software/changelog") }
+                    )
+                    MorpheIconButton(
+                        icon = MorpheIcons.Github,
+                        contentDescription = stringResource(Res.string.github_label),
+                        size = MorpheIconButtonSize.XLARGE,
+                        variant = MorpheIconButtonVariant.GHOST,
+                        onClick = { uriHandler.openUri("https://github.com/MorpheApp") }
+                    )
+                    MorpheIconButton(
+                        icon = MorpheIcons.Reddit,
+                        contentDescription = stringResource(Res.string.app_info_link_reddit),
+                        size = MorpheIconButtonSize.XLARGE,
+                        variant = MorpheIconButtonVariant.GHOST,
+                        onClick = { uriHandler.openUri("https://reddit.com/r/MorpheApp") }
+                    )
+                    MorpheIconButton(
+                        icon = MorpheIcons.Translate,
+                        contentDescription = stringResource(Res.string.app_info_link_translate),
+                        size = MorpheIconButtonSize.XLARGE,
+                        variant = MorpheIconButtonVariant.GHOST,
+                        onClick = { uriHandler.openUri("https://morphe.software/translate") }
+                    )
                 }
             }
         },
         confirmButton = {
-            OutlinedButton(
+            MorpheButton(
+                label = stringResource(Res.string.close),
                 onClick = onDismiss,
-                modifier = Modifier.fillMaxWidth().handCursor(),
-                shape = RoundedCornerShape(corners.small)
-            ) {
-                Text(
-                    text = stringResource(Res.string.close),
-                    fontFamily = font,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+                modifier = Modifier.fillMaxWidth(),
+                variant = MorpheButtonVariant.OUTLINED,
+                size = MorpheButtonSize.LARGE,
+            )
         }
     )
 }

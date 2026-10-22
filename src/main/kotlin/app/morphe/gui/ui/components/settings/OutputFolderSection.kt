@@ -5,12 +5,9 @@
 
 package app.morphe.gui.ui.components.settings
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -19,15 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.morphe.engine.util.PortablePaths
-import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheDimens
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
+import app.morphe.gui.ui.components.MorpheButtonVariant
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -39,29 +33,25 @@ import org.jetbrains.compose.resources.stringResource
 internal fun OutputFolderSection(
     defaultOutputDirectory: String?,
     onDefaultOutputDirectoryChange: (String?) -> Unit,
-    font: FontFamily,
     borderColor: Color,
     enabled: Boolean = true,
     icon: ImageVector? = null,
 ) {
-    val corners = LocalMorpheCorners.current
-    val dimens = LocalMorpheDimens.current
+    val dimens = MorpheTheme.dimens
     val scope = rememberCoroutineScope()
     val alpha = if (enabled) 1f else 0.4f
     val outputDir = defaultOutputDirectory?.let { File(it) }
     val outputDirExists = outputDir?.isDirectory == true
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        SectionLabel(stringResource(Res.string.settings_section_output_folder), font, icon = icon)
+        SectionLabel(stringResource(Res.string.settings_section_output_folder), icon = icon)
         Spacer(Modifier.height(6.dp))
 
         Text(
             text = if (!enabled) stringResource(Res.string.disabled_while_patching)
                    else stringResource(Res.string.settings_output_folder_desc),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
+            style = MorpheTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
-            fontFamily = font
         )
 
         Spacer(Modifier.height(8.dp))
@@ -75,23 +65,22 @@ internal fun OutputFolderSection(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(corners.small))
-                    .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+                    .clip(MorpheTheme.shapes.small)
+                    .border(1.dp, borderColor, MorpheTheme.shapes.small)
                     .padding(horizontal = 10.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
                     text = outputDir?.name ?: stringResource(Res.string.settings_output_folder_default),
-                    fontSize = 11.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             }
 
-            OutlinedButton(
+            MorpheButton(
+                label = stringResource(Res.string.browse),
                 onClick = {
                     scope.launch {
                         MorpheFilePicker.pickDirectory(
@@ -101,76 +90,34 @@ internal fun OutputFolderSection(
                     }
                 },
                 enabled = enabled,
-                shape = RoundedCornerShape(corners.small),
-                border = BorderStroke(1.dp, borderColor),
-                contentPadding = PaddingValues(horizontal = 10.dp),
-                modifier = Modifier.fillMaxHeight().handCursor()
-            ) {
-                Text(
-                    stringResource(Res.string.browse),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontFamily = font
-                )
-            }
+                variant = MorpheButtonVariant.OUTLINED,
+                size = MorpheButtonSize.DEFAULT,
+                modifier = Modifier.fillMaxHeight(),
+            )
 
             if (defaultOutputDirectory != null) {
-                OutlinedButton(
+                MorpheButton(
+                    label = stringResource(Res.string.settings_dialog_reset_button),
                     onClick = { onDefaultOutputDirectoryChange(null) },
                     enabled = enabled,
-                    shape = RoundedCornerShape(corners.small),
-                    border = BorderStroke(1.dp, borderColor),
-                    contentPadding = PaddingValues(horizontal = 10.dp),
-                    modifier = Modifier.fillMaxHeight().handCursor()
-                ) {
-                    Text(
-                        stringResource(Res.string.settings_dialog_reset_button),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontFamily = font
-                    )
-                }
+                    variant = MorpheButtonVariant.OUTLINED,
+                    size = MorpheButtonSize.DEFAULT,
+                    modifier = Modifier.fillMaxHeight(),
+                )
             }
         }
 
         if (defaultOutputDirectory != null && !outputDirExists) {
             Text(
                 text = stringResource(Res.string.settings_output_folder_not_found),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                color = Color(0xFFE0A030)
+                style = MorpheTheme.typography.labelSmall,
+                color = MorpheTheme.colors.warning
             )
         }
 
-        // Stored form first (mirrors config.json), absolute resolution second.
-        // Hides the second line entirely when storage IS absolute, repeating
-        // the same path twice would make no sense now, innit.
+        // Show resolved absolute path when stored path is relative.
         if (defaultOutputDirectory != null) {
-            val stored = PortablePaths.storableForm(defaultOutputDirectory)
-            val isBundleRelative = stored != defaultOutputDirectory
-            Text(
-                text = stored,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (isBundleRelative) {
-                Text(
-                    text = stringResource(Res.string.settings_dialog_resolves_to_message, defaultOutputDirectory),
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            StoredPathResolutionText(defaultOutputDirectory)
         }
     }
 }

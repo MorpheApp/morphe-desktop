@@ -6,6 +6,7 @@
 package app.morphe.engine.network
 
 import app.morphe.engine.GitHubPatMissingException
+import app.morphe.engine.util.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
@@ -15,6 +16,7 @@ import io.ktor.client.request.prepareGet
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HeadersBuilder
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
@@ -24,7 +26,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.logging.Logger
 import java.util.zip.ZipInputStream
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
@@ -33,46 +34,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 /**
- * Central HTTP layer for the desktop/JVM engine, wrapping a shared Ktor
- * [HttpClient]. Both [GitHubPatchSource][app.morphe.engine.patches.GitHubPatchSource]
- * and [GitLabPatchSource][app.morphe.engine.patches.GitLabPatchSource] go
- * through this instead of each hand-rolling request/stream/retry logic.
- *
- * Ported (slimmed) from morphe-manager's `HttpService`. The multipart
- * range-parallel downloader has been intentionally dropped since it avoid the concurrency/range
- * complexity (Can add this if required). Timeouts + engine live on the injected client (CIO).
- *
- * Responsibilities:
- *  - [request]: GET + ContentNegotiation decode to [T]
- *  - [getText]: GET raw body text (providers that hand-parse JSON, e.g. GitLab,
- *    and raw `patches-bundle.json` which is served as text/plain)
- *  - [head]: HEAD probe (GitLab's cosmetic asset-size resolution)
- *  - [downloadToFile]: stream a response straight to disk (never buffered
- *    in memory), via a `.part` file with atomic swap + cleanup on failure
- *  - retry on transient failures + HTTP 429 (honoring `Retry-After`)
+ * HTTP client wrapper providing JSON decoding, direct-to-disk streaming downloads,
+ * and exponential retry logic for transient errors and HTTP 429.
  */
 class HttpService(
     @PublishedApi internal val http: HttpClient,
     @PublishedApi internal val json: Json = Json { ignoreUnknownKeys = true },
 ) {
-    @PublishedApi
-    internal val logger: Logger = Logger.getLogger(HttpService::class.java.name)
 
     /**
-     * GET [url] and decode the body to [T].
-     *
-     * Decoding is done manually (`json.decodeFromString`) off the raw text,
-     * independent of the response's `Content-Type`. So a raw `patches-bundle.json`
-     * served as `text/plain` decodes exactly like an `application/json` API
-     * response, no ContentNegotiation needed. `T == String` returns the raw
-     * body text unparsed (use this for providers that hand-roll JSON, e.g.
-     * GitLab's release list).
-     *
-     * Throws [HttpException] on a non-2xx status after retries are exhausted.
+     * GET [url] and decode response body to [T], or return raw string if `T == String`.
+     * Decodes text directly so JSON served as `text/plain` works without ContentNegotiation.
      */
     suspend inline fun <reified T> request(
         url: String,
@@ -89,11 +64,7 @@ class HttpService(
         }
     }
 
-    /**
-     * HEAD [url] and return the raw [HttpResponse] (headers only). Callers
-     * inspect status/headers themselves. Retries 429. Other statuses are
-     * returned as is (GitLab treats any failure as "unknown size").
-     */
+    /** HEAD [url], returning response headers while retrying on HTTP 429. */
     suspend fun head(
         url: String,
         builder: HttpRequestBuilder.() -> Unit = {},
@@ -106,10 +77,8 @@ class HttpService(
     }
 
     /**
-     * Download [url] to [saveLocation], streaming straight to disk. The
-     * response body is never stored in memory (Pratham's chess patch is 100MB+ and that would
-     * cause issues. This fixes it. Writes to a `.part` file and atomically swaps on success;
-     * removes the partial file on any failure. Throws on failure after retries.
+     * Streams [url] directly to [saveLocation] via a `.part` file, avoiding buffering
+     * large files in memory. Incomplete files are deleted on failure.
      */
     suspend fun downloadToFile(
         url: String,
@@ -121,7 +90,6 @@ class HttpService(
         val part = File(saveLocation.parentFile, "${saveLocation.name}.part")
         try {
             withRetry("download ${saveLocation.name}") {
-                // append=false: each (re)attempt truncates, so restarting is safe.
                 FileOutputStream(part, false).use { out ->
                     http.prepareGet(url) { builder() }.execute { response ->
                         response.throwIfError(url)
@@ -134,26 +102,14 @@ class HttpService(
                     }
                 }
             }
-            if (part.length() == 0L) throw HttpException(null, url, "download returned 0 bytes")
-            if (saveLocation.exists()) saveLocation.delete()
-            if (!part.renameTo(saveLocation)) {
-                part.copyTo(saveLocation, overwrite = true); part.delete()
-            }
-            return saveLocation
+            return finalizePartFile(part, saveLocation, url)
         } catch (t: Throwable) {
             runCatching { if (part.exists()) part.delete() }
             throw t
         }
     }
 
-    /**
-     * Resolves the patch artifact for a GitHub pull request.
-     *
-     * 3-step API resolution flow:
-     * a. Fetch https://api.github.com/repos/{owner}/{repo}/pulls/{prNumber} to get the head.sha.
-     * b. Fetch workflow runs (/actions/runs) and find the run matching that head.sha.
-     * c. Fetch the artifacts for that run (/actions/runs/{run_id}/artifacts) and extract the artifact's download URL.
-     */
+    /** Resolves the built patch artifact URL for a GitHub pull request via Actions runs. */
     suspend fun getAssetFromPullRequest(
         owner: String,
         repo: String,
@@ -162,13 +118,7 @@ class HttpService(
     ): GitHubPrAsset {
         val pullUrl = "https://api.github.com/repos/$owner/$repo/pulls/$pullRequestNumber"
         val pull: GitHubPull = request(pullUrl) {
-            headers {
-                append(HttpHeaders.Accept, "application/vnd.github+json")
-                append("X-GitHub-Api-Version", "2022-11-28")
-                if (!pat.isNullOrBlank()) {
-                    append(HttpHeaders.Authorization, "Bearer $pat")
-                }
-            }
+            headers { applyGitHubApiHeaders(pat) }
         }
         val targetSha = pull.head.sha
         if (targetSha.isBlank()) {
@@ -181,13 +131,7 @@ class HttpService(
         while (page <= 10) {
             val runsUrl = "https://api.github.com/repos/$owner/$repo/actions/runs?per_page=100&page=$page"
             val runs: GitHubWorkflowRunsResponse = request(runsUrl) {
-                headers {
-                    append(HttpHeaders.Accept, "application/vnd.github+json")
-                    append("X-GitHub-Api-Version", "2022-11-28")
-                    if (!pat.isNullOrBlank()) {
-                        append(HttpHeaders.Authorization, "Bearer $pat")
-                    }
-                }
+                headers { applyGitHubApiHeaders(pat) }
             }
 
             matchingRun = runs.workflowRuns.firstOrNull { it.headSha == targetSha }
@@ -201,19 +145,13 @@ class HttpService(
 
         val artifactsUrl = "https://api.github.com/repos/$owner/$repo/actions/runs/${run.id}/artifacts"
         val artifactsResponse: GitHubArtifactsResponse = request(artifactsUrl) {
-            headers {
-                append(HttpHeaders.Accept, "application/vnd.github+json")
-                append("X-GitHub-Api-Version", "2022-11-28")
-                if (!pat.isNullOrBlank()) {
-                    append(HttpHeaders.Authorization, "Bearer $pat")
-                }
-            }
+            headers { applyGitHubApiHeaders(pat) }
         }
 
         val artifact = artifactsResponse.artifacts.firstOrNull {
             it.name.contains("patch", ignoreCase = true) || it.name.endsWith(".mpp", ignoreCase = true)
         } ?: artifactsResponse.artifacts.firstOrNull()
-            ?: throw IllegalStateException("No artifacts found for PR #$pullRequestNumber - did the GitHub Action run successfully?")
+            ?: throw IllegalStateException("No artifacts found for PR #$pullRequestNumber, did the GitHub Action run successfully?")
 
         return GitHubPrAsset(
             downloadUrl = artifact.archiveDownloadUrl,
@@ -226,11 +164,16 @@ class HttpService(
         )
     }
 
-    /**
-     * Downloads an artifact for a GitHub PR source.
-     * Authenticates with GitHub using [pat], and unpacks the `.mpp` patch bundle
-     * from the GitHub Actions zip archive.
-     */
+    @Suppress("UastIncorrectHttpHeaderInspection")
+    private fun HeadersBuilder.applyGitHubApiHeaders(pat: String?) {
+        append(HttpHeaders.Accept, "application/vnd.github+json")
+        append("X-GitHub-Api-Version", "2022-11-28")
+        if (!pat.isNullOrBlank()) {
+            append(HttpHeaders.Authorization, "Bearer $pat")
+        }
+    }
+
+    /** Downloads a GitHub Actions artifact zip for a PR and extracts the contained `.mpp` bundle. */
     suspend fun downloadPrArtifactToFile(
         url: String,
         saveLocation: File,
@@ -304,24 +247,23 @@ class HttpService(
                     }
                 }
             }
-            if (part.length() == 0L) throw HttpException(null, url, "download returned 0 bytes")
-            if (saveLocation.exists()) saveLocation.delete()
-            if (!part.renameTo(saveLocation)) {
-                part.copyTo(saveLocation, overwrite = true)
-                part.delete()
-            }
-            return saveLocation
+            return finalizePartFile(part, saveLocation, url)
         } catch (t: Throwable) {
             runCatching { if (part.exists()) part.delete() }
             throw t
         }
     }
 
-    /**
-     * Copy [input] → [output] in 64 KB chunks (constant memory), reporting byte
-     * progress. Progress is throttled: at most once per [PROGRESS_MIN_BYTES] or
-     * [PROGRESS_INTERVAL_MS], whichever first, plus a guaranteed final call.
-     */
+    private fun finalizePartFile(part: File, saveLocation: File, url: String): File {
+        if (part.length() == 0L) throw HttpException(null, url, "download returned 0 bytes")
+        if (saveLocation.exists()) saveLocation.delete()
+        if (!part.renameTo(saveLocation)) {
+            part.copyTo(saveLocation, overwrite = true)
+            part.delete()
+        }
+        return saveLocation
+    }
+
     private fun copyStreaming(
         input: InputStream,
         output: OutputStream,
@@ -349,12 +291,7 @@ class HttpService(
         onProgress?.invoke(total, contentLength)
     }
 
-    /**
-     * Single retry layer: retries [block] on transient exceptions (connection
-     * reset, DNS, timeout, 5xx) and HTTP 429 (honoring `Retry-After`), with
-     * exponential backoff. Permanent 4xx (404/401/403…) surface immediately;
-     * cancellation is never caught.
-     */
+    /** Executes [block] with exponential backoff on transient errors and HTTP 429. */
     @PublishedApi
     internal suspend fun <T> withRetry(operation: String, block: suspend () -> T): T {
         var attempt = 0
@@ -370,24 +307,23 @@ class HttpService(
                     throw HttpException(HttpStatusCode.TooManyRequests, operation, cause = t)
                 }
                 val wait = (t.retryAfterMillis ?: delayMs).coerceAtMost(MAX_RETRY_DELAY_MS)
-                logger.warning("$operation hit 429 (attempt $attempt/$MAX_RETRY_ATTEMPTS), waiting ${wait}ms")
+                Logger.warn("$operation hit 429 (attempt $attempt/$MAX_RETRY_ATTEMPTS), waiting ${wait}ms")
                 delay(wait.milliseconds)
                 delayMs = (delayMs * 2).coerceAtMost(MAX_RETRY_DELAY_MS)
             } catch (t: HttpException) {
                 if (!t.isRetryable || attempt >= MAX_RETRY_ATTEMPTS) throw t
-                logger.warning("$operation attempt $attempt: retryable HTTP error: ${t.message}")
+                Logger.warn("$operation attempt $attempt: retryable HTTP error: ${t.message}")
                 delay(delayMs.milliseconds)
                 delayMs = (delayMs * 2).coerceAtMost(MAX_RETRY_DELAY_MS)
             } catch (t: Exception) {
                 if (attempt >= MAX_RETRY_ATTEMPTS) throw t
-                logger.warning("$operation attempt $attempt failed: ${t::class.simpleName}: ${t.message}")
+                Logger.warn("$operation attempt $attempt failed: ${t::class.simpleName}: ${t.message}")
                 delay(delayMs.milliseconds)
                 delayMs = (delayMs * 2).coerceAtMost(MAX_RETRY_DELAY_MS)
             }
         }
     }
 
-    /** Throw on 429 (→ retry with Retry-After) or any other non-2xx (→ [HttpException]). */
     @PublishedApi
     internal suspend fun HttpResponse.throwIfError(url: String) {
         if (status == HttpStatusCode.TooManyRequests) throw TooManyRequestsException(retryAfterMillis())
@@ -397,16 +333,11 @@ class HttpService(
         }
     }
 
-    /** `Retry-After` (seconds) → millis, or null when absent/unparseable. */
     @PublishedApi
     internal fun HttpResponse.retryAfterMillis(): Long? =
         headers[HttpHeaders.RetryAfter]?.toLongOrNull()?.coerceAtLeast(0)?.times(1000)
 
-    /**
-     * Preserves the HTTP status (when known), the request URL, and a short
-     * body snippet so callers get real diagnostics. [isRetryable] drives
-     * [withRetry]: timeouts (null status), 5xx, and 429 are transient. Other 4xx are not.
-     */
+    /** HTTP error preserving status, request URL, and response snippet for diagnostics. */
     class HttpException(
         val status: HttpStatusCode?,
         val requestUrl: String? = null,
@@ -417,7 +348,22 @@ class HttpService(
             append("HTTP request failed")
             if (status != null) append(" with status $status")
             if (requestUrl != null) append(" for $requestUrl")
-            if (responseBodySnippet != null) append(": ${responseBodySnippet.take(200)}")
+            if (responseBodySnippet != null) {
+                val trimmed = responseBodySnippet.trim()
+                val snippet = if (trimmed.startsWith("<")) {
+                    Regex("<title>(.*?)</title>", RegexOption.IGNORE_CASE)
+                        .find(trimmed)?.groupValues?.get(1)?.trim()
+                        ?: "HTML response"
+                } else {
+                    val formatted = runCatching {
+                        Json.parseToJsonElement(trimmed).toString()
+                    }.getOrElse {
+                        trimmed.replace(Regex("\\s+"), " ")
+                    }
+                    formatted.take(300)
+                }
+                append(": $snippet")
+            }
         },
         cause,
     ) {
@@ -433,17 +379,11 @@ class HttpService(
         private const val INITIAL_RETRY_DELAY_MS = 1_000L
         private const val MAX_RETRY_DELAY_MS = 30_000L
 
-        /** Min bytes between download-progress callbacks. */
         private const val PROGRESS_MIN_BYTES = 64 * 1024L
-
-        /** Min ms between download-progress callbacks. */
         private const val PROGRESS_INTERVAL_MS = 200L
     }
 }
 
-/**
- * Resolved artifact descriptor for a GitHub Pull Request.
- */
 @Serializable
 data class GitHubPrAsset(
     val downloadUrl: String,

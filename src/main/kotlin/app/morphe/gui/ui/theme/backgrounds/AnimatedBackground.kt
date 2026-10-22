@@ -15,9 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.morphe.gui.ui.icons.MorpheIcons
 
-/**
- * Types of animated backgrounds available in the app.
- */
+/** Types of animated backgrounds available in the app. */
 enum class BackgroundType {
     CIRCLES,
     RINGS,
@@ -27,6 +25,7 @@ enum class BackgroundType {
     SNOW,
     GRID,
     PARTICLES,
+    LAVA,
     MATRIX,
     NONE;
 
@@ -47,15 +46,13 @@ enum class BackgroundType {
             SNOW -> MorpheIcons.AcUnit
             GRID -> MorpheIcons.Apps
             PARTICLES -> MorpheIcons.BubbleChart
+            LAVA -> MorpheIcons.WaterDrop
             MATRIX -> MorpheIcons.Code
             NONE -> MorpheIcons.VisibilityOff
         }
 }
 
-/**
- * Animated background with multiple visual styles.
- * Creates subtle floating effects that can be used across all screens.
- */
+/** Renders an animated background matching [type]. */
 @Composable
 fun AnimatedBackground(
     type: BackgroundType = BackgroundType.CIRCLES,
@@ -118,6 +115,12 @@ fun AnimatedBackground(
                 patchingCompleted = resolvedPatchingCompleted
             )
             BackgroundType.PARTICLES -> ParticlesBackground(
+                modifier = Modifier.fillMaxSize(),
+                enableParallax = enableParallax,
+                speedMultiplier = resolvedSpeed,
+                patchingCompleted = resolvedPatchingCompleted
+            )
+            BackgroundType.LAVA -> LavaBackground(
                 modifier = Modifier.fillMaxSize(),
                 enableParallax = enableParallax,
                 speedMultiplier = resolvedSpeed,

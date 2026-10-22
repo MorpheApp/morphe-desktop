@@ -6,18 +6,15 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,41 +23,34 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.morphe.engine.util.DeviceStatus
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.DeviceStatus
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DeviceIndicator(modifier: Modifier = Modifier) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
     val adbPreference = LocalAdbPreference.current
     val monitorState by DeviceMonitor.state.collectAsState()
 
     val isAdbDisabledByUser = !adbPreference.enabled
     val isAdbAvailable = monitorState.isAdbAvailable
-    val readyDevices = monitorState.devices.filter { it.isReady }
     val unauthorizedDevices = monitorState.devices.filter { it.status == DeviceStatus.UNAUTHORIZED }
     val selectedDevice = monitorState.selectedDevice
 
     var showPopup by remember { mutableStateOf(false) }
 
     val hoverInteraction = remember { MutableInteractionSource() }
-    val isHovered by hoverInteraction.collectIsHoveredAsState()
 
     val dotColor = when {
         isAdbDisabledByUser -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f)
         isAdbAvailable == false -> MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
-        selectedDevice != null && selectedDevice.isReady -> accents.secondary
-        unauthorizedDevices.isNotEmpty() -> accents.warning
+        selectedDevice != null && selectedDevice.isReady -> MorpheTheme.colors.secondary
+        unauthorizedDevices.isNotEmpty() -> MorpheTheme.colors.warning
         else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f)
     }
 
@@ -71,17 +61,17 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
     val borderAlpha = if (isDark) 0.4f else 0.6f
     val borderColor by animateColorAsState(
         MaterialTheme.colorScheme.outline.copy(alpha = borderAlpha),
-        animationSpec = tween(150)
+        animationSpec = MorpheMotion.fastTween()
     )
 
     Box(modifier = modifier) {
         Box(
             modifier = Modifier
-                .height(34.dp)
+                .height(MorpheTheme.dimens.controlHeight)
                 .hoverable(hoverInteraction)
-                .clip(RoundedCornerShape(corners.small))
+                .clip(MorpheTheme.shapes.small)
                 .background(containerColor)
-                .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+                .border(1.dp, borderColor, MorpheTheme.shapes.small)
                 .handCursor()
                 .clickable { showPopup = !showPopup }
         ) {
@@ -117,14 +107,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
 
                 Text(
                     text = displayText,
-                    fontSize = 11.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
+                    style = MorpheTheme.typography.labelSmall,
                     color = when {
                         isAdbDisabledByUser -> MaterialTheme.colorScheme.onSurfaceVariant
                         isAdbAvailable == false -> MaterialTheme.colorScheme.error
                         selectedDevice != null -> MaterialTheme.colorScheme.onSurfaceVariant
-                        unauthorizedDevices.isNotEmpty() -> accents.warning
+                        unauthorizedDevices.isNotEmpty() -> MorpheTheme.colors.warning
                         else -> MaterialTheme.colorScheme.onSurfaceVariant
                     },
                     maxLines = 1,
@@ -141,18 +129,17 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
             }
         }
 
-        // Popup
         DropdownMenu(
             expanded = showPopup,
             onDismissRequest = { showPopup = false },
-            shape = RoundedCornerShape(corners.medium),
+            shape = MorpheTheme.shapes.medium,
             containerColor = MaterialTheme.colorScheme.surface,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
         ) {
             when {
                 isAdbDisabledByUser -> {
                     DropdownMenuItem(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(RoundedCornerShape(corners.small)),
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(MorpheTheme.shapes.small),
                         text = {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -167,16 +154,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 Column {
                                     Text(
                                         text = stringResource(Res.string.device_indicator_adb_is_off_title),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
                                         text = stringResource(Res.string.device_indicator_adb_is_off_subtitle),
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -186,7 +169,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                     DropdownMenuItem(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(RoundedCornerShape(corners.small)),
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(MorpheTheme.shapes.small),
                         text = {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -196,14 +179,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                     imageVector = MorpheIcons.PowerSettingsNew,
                                     contentDescription = null,
                                     modifier = Modifier.size(14.dp),
-                                    tint = accents.primary
+                                    tint = MorpheTheme.colors.primary
                                 )
                                 Text(
                                     text = stringResource(Res.string.enable_adb_button),
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    fontFamily = font,
-                                    color = accents.primary
+                                    style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
+                                    color = MorpheTheme.colors.primary
                                 )
                             }
                         },
@@ -216,7 +197,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
 
                 isAdbAvailable == false -> {
                     DropdownMenuItem(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(RoundedCornerShape(corners.small)),
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(MorpheTheme.shapes.small),
                         text = {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -231,16 +212,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 Column {
                                     Text(
                                         text = stringResource(Res.string.device_indicator_adb_not_found_title),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                                         color = MaterialTheme.colorScheme.error
                                     )
                                     Text(
                                         text = stringResource(Res.string.device_indicator_adb_not_found_subtitle),
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -252,7 +229,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
 
                 monitorState.devices.isEmpty() -> {
                     DropdownMenuItem(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(RoundedCornerShape(corners.small)),
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(MorpheTheme.shapes.small),
                         text = {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -267,16 +244,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 Column {
                                     Text(
                                         text = stringResource(Res.string.device_indicator_no_devices_title),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
                                         text = stringResource(Res.string.device_indicator_no_devices_subtitle),
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -286,7 +259,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                     DropdownMenuItem(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(RoundedCornerShape(corners.small)),
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(MorpheTheme.shapes.small),
                         text = {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -301,16 +274,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 Column {
                                     Text(
                                         text = stringResource(Res.string.device_indicator_enable_debugging_title),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
                                         text = stringResource(Res.string.device_indicator_enable_debugging_subtitle),
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -324,21 +293,20 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                     monitorState.devices.forEach { device ->
                         val isSelected = device.id == selectedDevice?.id
                         DropdownMenuItem(
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(RoundedCornerShape(corners.small)),
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(MorpheTheme.shapes.small),
                             text = {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    // Device status dot
                                     Box(
                                         modifier = Modifier
                                             .size(14.dp)
                                             .background(
                                                 when {
-                                                    isSelected -> accents.secondary
-                                                    device.isReady -> accents.primary
-                                                    device.status == DeviceStatus.UNAUTHORIZED -> accents.warning
+                                                    isSelected -> MorpheTheme.colors.secondary
+                                                    device.isReady -> MorpheTheme.colors.primary
+                                                    device.status == DeviceStatus.UNAUTHORIZED -> MorpheTheme.colors.warning
                                                     else -> MaterialTheme.colorScheme.error
                                                 }.copy(alpha = 0.15f),
                                                 CircleShape
@@ -350,9 +318,9 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                                 .size(6.dp)
                                                 .background(
                                                 when {
-                                                    isSelected -> accents.secondary
-                                                    device.isReady -> accents.primary
-                                                    device.status == DeviceStatus.UNAUTHORIZED -> accents.warning
+                                                    isSelected -> MorpheTheme.colors.secondary
+                                                    device.isReady -> MorpheTheme.colors.primary
+                                                    device.status == DeviceStatus.UNAUTHORIZED -> MorpheTheme.colors.warning
                                                     else -> MaterialTheme.colorScheme.error
                                                 },
                                                 CircleShape
@@ -362,24 +330,18 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
                                             text = device.displayName,
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            fontFamily = font
+                                            style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                                         )
                                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                             device.architecture?.let { arch ->
                                                 Text(
                                                     text = arch,
-                                                    fontSize = 11.sp,
-                                                    fontFamily = font,
-                                                    fontWeight = FontWeight.Normal,
+                                                    style = MorpheTheme.typography.labelSmall,
                                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
                                                 Text(
                                                     text = "·",
-                                                    fontSize = 11.sp,
-                                                    fontFamily = font,
-                                                    fontWeight = FontWeight.Normal,
+                                                    style = MorpheTheme.typography.labelSmall,
                                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
                                             }
@@ -390,12 +352,10 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                                     DeviceStatus.OFFLINE -> stringResource(Res.string.status_offline)
                                                     DeviceStatus.UNKNOWN -> stringResource(Res.string.unknown)
                                                 },
-                                                fontSize = 11.sp,
-                                                fontWeight = FontWeight.Normal,
-                                                fontFamily = font,
+                                                style = MorpheTheme.typography.labelSmall,
                                                 color = when (device.status) {
-                                                    DeviceStatus.DEVICE -> accents.secondary
-                                                    DeviceStatus.UNAUTHORIZED -> accents.warning
+                                                    DeviceStatus.DEVICE -> MorpheTheme.colors.secondary
+                                                    DeviceStatus.UNAUTHORIZED -> MorpheTheme.colors.warning
                                                     else -> MaterialTheme.colorScheme.error
                                                 }
                                             )
@@ -414,7 +374,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
 
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                     DropdownMenuItem(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(RoundedCornerShape(corners.small)),
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp).clip(MorpheTheme.shapes.small),
                         text = {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -429,16 +389,12 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                                 Column {
                                     Text(
                                         text = stringResource(Res.string.device_indicator_not_listed_title),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
                                         text = stringResource(Res.string.device_indicator_not_listed_subtitle),
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        fontFamily = font,
+                                        style = MorpheTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }

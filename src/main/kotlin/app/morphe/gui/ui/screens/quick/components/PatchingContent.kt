@@ -8,7 +8,6 @@ package app.morphe.gui.ui.screens.quick.components
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,14 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.components.handCursor
+import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.quick.QuickPatchPhase
 import app.morphe.gui.ui.theme.*
@@ -32,10 +29,6 @@ import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
-
-// ============================================================================
-// PATCHING CONTENT (progress)
-// ============================================================================
 
 @Composable
 internal fun PatchingContent(
@@ -46,10 +39,6 @@ internal fun PatchingContent(
     statusMessage: String,
     onCancel: () -> Unit
 ) {
-    val font = LocalMorpheFont.current
-    val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
-
     var showSlowWarning by remember { mutableStateOf(false) }
     LaunchedEffect(statusMessage) {
         showSlowWarning = false
@@ -83,7 +72,6 @@ internal fun PatchingContent(
                 val topLeft = Offset(arcCenter.x - arcRadius, arcCenter.y - arcRadius)
                 val arcSize = Size(arcRadius * 2f, arcRadius * 2f)
 
-                // Background track
                 drawArc(
                     color = trackColor,
                     startAngle = 0f,
@@ -94,7 +82,6 @@ internal fun PatchingContent(
                     style = Stroke(width = strokePx, cap = StrokeCap.Butt)
                 )
 
-                // Active progress arc
                 if (smoothProgress > 0f) {
                     drawArc(
                         color = primaryColor,
@@ -106,7 +93,7 @@ internal fun PatchingContent(
                         style = Stroke(width = strokePx, cap = StrokeCap.Round)
                     )
 
-                    // Static rounded cap at starting coordinate to eliminate anti-aliasing artifact
+                    // Rounded cap at starting point to avoid anti-aliasing artifacts.
                     drawCircle(
                         color = primaryColor,
                         radius = strokePx / 2f,
@@ -121,9 +108,7 @@ internal fun PatchingContent(
             ) {
                 Text(
                     text = "${(smoothProgress * 100).toInt()}%",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 56.sp,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.heroProgress,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
@@ -131,9 +116,7 @@ internal fun PatchingContent(
 
                 Text(
                     text = stringResource(Res.string.quick_patch_patching_patches_count, completedPatches, totalPatches),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -151,23 +134,21 @@ internal fun PatchingContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(corners.small))
-                        .background(accents.primary.copy(alpha = 0.14f))
+                        .clip(MorpheTheme.shapes.small)
+                        .background(MorpheTheme.colors.primary.copy(alpha = 0.14f))
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Icon(
                         imageVector = MorpheIcons.Info,
                         contentDescription = null,
                         modifier = Modifier.size(14.dp),
-                        tint = accents.primary
+                        tint = MorpheTheme.colors.primary
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = stringResource(Res.string.quick_patch_patching_slow_warning),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = font,
-                        color = accents.primary
+                        style = MorpheTheme.typography.bodySmall,
+                        color = MorpheTheme.colors.primary
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -181,9 +162,7 @@ internal fun PatchingContent(
         ) { targetMessage ->
             Text(
                 text = targetMessage,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
+                style = MorpheTheme.typography.titleSmall.copy(fontWeight = FontWeight.Normal),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 24.dp)
@@ -194,29 +173,13 @@ internal fun PatchingContent(
 
         val isWrappingUp = progress >= 1f
 
-        OutlinedButton(
-            onClick = onCancel,
+        MorpheButton(
+            label = stringResource(Res.string.cancel),
+            variant = MorpheButtonVariant.DANGER,
+            size = MorpheButtonSize.LARGE,
             enabled = !isWrappingUp,
-            modifier = Modifier
-                .widthIn(min = 160.dp)
-                .height(44.dp)
-                .handCursor(!isWrappingUp),
-            shape = RoundedCornerShape(corners.small),
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.15f),
-                contentColor = MaterialTheme.colorScheme.error,
-                disabledContainerColor = Color.Transparent,
-                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-            ),
-            border = BorderStroke(1.dp, if (isWrappingUp) Color.Transparent else MaterialTheme.colorScheme.error.copy(alpha = 0.35f))
-        ) {
-            Text(
-                text = stringResource(Res.string.cancel),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                color = if (isWrappingUp) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f) else MaterialTheme.colorScheme.error
-            )
-        }
+            modifier = Modifier.widthIn(min = 160.dp),
+            onClick = onCancel
+        )
     }
 }

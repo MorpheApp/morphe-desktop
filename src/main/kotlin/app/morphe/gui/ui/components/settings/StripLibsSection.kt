@@ -10,20 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Architectures exposed in the strip libs settings. Each entry has the
- * patcher-facing value (matching CpuArchitecture.arch) and a short display name.
- * Only modern arches are listed. Legacy mips and armeabi are intentionally omitted.
- */
+/** Supported target architectures for library stripping. */
 private val STRIP_LIBS_ARCHS = listOf(
     "arm64-v8a" to Res.string.settings_strip_libs_arm64,
     "armeabi-v7a" to Res.string.settings_strip_libs_armeabi,
@@ -35,8 +28,6 @@ private val STRIP_LIBS_ARCHS = listOf(
 internal fun StripLibsSection(
     keepArchitectures: Set<String>,
     onChange: (Set<String>) -> Unit,
-    font: FontFamily,
-    accentColor: Color,
     enabled: Boolean = true,
     expanded: Boolean = false,
     icon: ImageVector? = null,
@@ -44,7 +35,6 @@ internal fun StripLibsSection(
 ) {
     CollapsibleSection(
         title = stringResource(Res.string.settings_section_strip_libs),
-        font = font,
         expanded = expanded,
         icon = icon,
         onExpandedChange = onExpandedChange
@@ -54,10 +44,8 @@ internal fun StripLibsSection(
         ) {
             Text(
                 text = stringResource(Res.string.settings_strip_libs_desc),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
+                style = MorpheTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = font
             )
             STRIP_LIBS_ARCHS.forEach { (arch, descRes) ->
                 val checked = arch in keepArchitectures
@@ -70,8 +58,6 @@ internal fun StripLibsSection(
                                       else keepArchitectures - arch
                         onChange(updated)
                     },
-                    accentColor = accentColor,
-                    font = font,
                     enabled = enabled
                 )
             }

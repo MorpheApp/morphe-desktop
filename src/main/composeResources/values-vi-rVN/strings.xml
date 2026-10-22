@@ -56,6 +56,7 @@
     <string name="status_offline">Ngoại tuyến</string>
     <string name="status_ready">Sẵn sàng</string>
     <string name="filter_apps_hint">Lọc ứng dụng…</string>
+    <string name="version">Phiên bản</string>
     <string name="version_label_stable">Ổn định</string>
     <string name="version_label_dev">Bản Dev</string>
     <string name="version_label_experimental">Thử nghiệm</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Xóa APK</string>
     <string name="home_apk_info_limited_info_warning">Không thể đọc toàn bộ manifest của APK này (thường gặp với gói split). Thông tin bên dưới chỉ mang tính tương đối, việc vá vẫn hoạt động</string>
     <string name="home_apk_info_unsupported_app_warning">Không tìm thấy bản vá tương thích nào cho ứng dụng này. Bạn vẫn có thể tiếp tục, nhưng việc vá có thể không có tác dụng</string>
-    <string name="home_apk_info_version_label">Phiên bản</string>
     <string name="home_apk_info_build_label">Bản dựng</string>
     <string name="home_apk_info_size_label">Kích thước</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">I/O lưu trữ</string>
     <string name="patching_graph_cpu_usage">Mức sử dụng CPU</string>
     <string name="patching_banner_started_title">Đã bắt đầu vá</string>
-    <string name="patching_banner_app_version">Phiên bản ứng dụng</string>
     <string name="patching_banner_apk_size">Kích thước APK</string>
     <string name="patching_banner_patches">Số bản vá</string>
     <string name="patching_banner_split_apk">APK phân tách</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Tuyết</string>
     <string name="settings_background_grid">Lưới ô</string>
     <string name="settings_background_particles">Hạt</string>
+    <string name="settings_background_lava">Đèn lava</string>
     <string name="settings_background_matrix">Ma trận</string>
     <string name="settings_toggle_parallax_label">Hiệu ứng thị sai</string>
     <string name="settings_toggle_parallax_desc">Chuyển nền mượt mà khi di chuyển chuột</string>

@@ -1,17 +1,17 @@
 [versions]
 # Core
 junit = "6.1.3"
-kotlin = "2.4.20"
+kotlin = "2.4.21"
 
 # CLI
 picocli = "4.7.7"
-arsclib = "9b742c412d"
-morphe-patcher = "1.15.1"
+arsclib = "10d0708212"
+morphe-patcher = "2.0.0"
 morphe-library = "1.4.0"
-jadb = "1.2.3"
 
 # Compose Desktop
 compose = "1.12.1"
+material3 = "1.9.0"
 
 # Networking
 ktor = "3.6.0"
@@ -32,18 +32,11 @@ jna = "5.19.1"
 # FileKit (native file/folder pickers across Win/macOS/Linux)
 filekit = "0.16.0"
 
-# Bootstrap GUI
-skiko = "0.150.1"
-materialIcons = "1.7.3"
-
-# Testing
-mockk = "1.14.11"
-
 # Logging
 slf4j = "2.0.20"
 
 # Libraries
-about-libraries = "15.2.0"
+about-libraries = "15.3.0"
 oshi = "7.7.0"
 
 [libraries]
@@ -53,7 +46,6 @@ junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref 
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 morphe-patcher = { module = "app.morphe:morphe-patcher", version.ref = "morphe-patcher" }
 morphe-library = { module = "app.morphe:morphe-library-jvm", version.ref = "morphe-library" }
-jadb = { module = "app.morphe:jadb", version.ref = "jadb" }
 
 # Ktor Client
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -72,7 +64,6 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 
 # Koin ViewModel
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
-koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
 
 # Coroutines
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -85,13 +76,6 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 jna-core = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 
-# Skiko Bootstrap
-skiko-macos-x64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-macos-x64", version.ref = "skiko" }
-skiko-macos-arm64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-macos-arm64", version.ref = "skiko" }
-skiko-linux-x64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-linux-x64", version.ref = "skiko" }
-skiko-linux-arm64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64", version.ref = "skiko" }
-skiko-windows-x64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-windows-x64", version.ref = "skiko" }
-
 # Compose Desktop
 compose-desktop-macos-arm64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-macos-arm64", version.ref = "compose" }
 compose-desktop-macos-x64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-macos-x64", version.ref = "compose" }
@@ -99,6 +83,7 @@ compose-desktop-linux-x64 = { module = "org.jetbrains.compose.desktop:desktop-jv
 compose-desktop-linux-arm64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-linux-arm64", version.ref = "compose" }
 compose-desktop-windows-x64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-windows-x64", version.ref = "compose" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 
 # OSHI (cross-platform CPU / I/O telemetry)
 oshi-core = { module = "com.github.oshi:oshi-core", version.ref = "oshi" }
@@ -108,14 +93,21 @@ filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref =
 
 # Testing
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 # Logging
 slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j" }
 
 # About Libraries
 about-libraries-core = { group = "com.mikepenz", name = "aboutlibraries-compose-core", version.ref = "about-libraries" }
-about-libraries-m3 = { group = "com.mikepenz", name = "aboutlibraries-compose-m3", version.ref = "about-libraries" }
+
+[bundles]
+compose-desktop = [
+    "compose-desktop-macos-arm64",
+    "compose-desktop-macos-x64",
+    "compose-desktop-linux-x64",
+    "compose-desktop-linux-arm64",
+    "compose-desktop-windows-x64",
+]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

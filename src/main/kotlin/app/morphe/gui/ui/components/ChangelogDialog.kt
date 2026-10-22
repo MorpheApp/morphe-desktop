@@ -5,12 +5,10 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,15 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.gui.data.constants.AppConstants
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import org.jetbrains.compose.resources.stringResource
@@ -37,16 +31,13 @@ fun ChangelogDialog(
     onDismiss: () -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
-    val font = LocalMorpheFont.current
-    val corners = LocalMorpheCorners.current
-    val accents = LocalMorpheAccents.current
 
     var showAllReleases by remember { mutableStateOf(false) }
 
     val notAvailableMsg = stringResource(Res.string.changelog_not_available)
     val rawChangelog = try {
         File("CHANGELOG.md").readText()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         notAvailableMsg
     }
     
@@ -71,9 +62,7 @@ fun ChangelogDialog(
         ) {
             Text(
                 text = stringResource(Res.string.changelog_dialog_title),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
+                style = MorpheTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Box(modifier = Modifier.fillMaxWidth().heightIn(max = 480.dp)) {
@@ -91,23 +80,15 @@ fun ChangelogDialog(
                             color = MaterialTheme.colorScheme.outline.copy(alpha = 0.12f),
                             thickness = 1.dp
                         )
-                        OutlinedButton(
+                        MorpheButton(
+                            label = stringResource(Res.string.changelog_show_older_button),
                             onClick = { showAllReleases = true },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                                .handCursor(),
-                            shape = RoundedCornerShape(corners.small),
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.changelog_show_older_button),
-                                fontFamily = font,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 11.sp,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                                .padding(horizontal = 8.dp),
+                            variant = MorpheButtonVariant.OUTLINED,
+                            size = MorpheButtonSize.DEFAULT,
+                        )
                     } else if (showAllReleases) {
                         Spacer(modifier = Modifier.height(8.dp))
                         HorizontalDivider(
@@ -122,45 +103,29 @@ fun ChangelogDialog(
                     VerticalScrollbar(
                         modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                         adapter = rememberScrollbarAdapter(changelogScroll),
-                        style = morpheScrollbarStyle(),
+                        style = MorpheScrollbarStyle(),
                     )
                 }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
-                TextButton(
-                    modifier = Modifier.handCursor(),
+                MorpheButton(
+                    label = stringResource(Res.string.changelog_view_on_github_button),
                     onClick = {
                         val version = AppConstants.APP_VERSION.removePrefix("v")
                         uriHandler.openUri("https://github.com/MorpheApp/morphe-desktop/releases/tag/v$version")
                     },
-                    shape = RoundedCornerShape(corners.small),
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(Res.string.changelog_view_on_github_button),
-                        fontFamily = font,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                TextButton(
-                    modifier = Modifier.handCursor(),
+                    variant = MorpheButtonVariant.GHOST,
+                    size = MorpheButtonSize.COMPACT,
+                )
+                MorpheButton(
+                    label = stringResource(Res.string.close),
                     onClick = onDismiss,
-                    shape = RoundedCornerShape(corners.small),
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(Res.string.close),
-                        fontFamily = font,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                    variant = MorpheButtonVariant.GHOST,
+                    size = MorpheButtonSize.COMPACT,
+                )
             }
         }
     }

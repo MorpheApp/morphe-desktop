@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Pripravené</string>
     <string name="filter_apps_hint">Filtrovať aplikácie…</string>
+    <string name="version">Verzia</string>
     <string name="version_label_stable">Stabilná</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Experimentálna</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Odstrániť APK</string>
     <string name="home_apk_info_limited_info_warning">Nepodarilo sa úplne prečítať manifest tohto APK (bežné pri rozdelených balíkoch). Podrobnosti nižšie sú približné, záplatovanie by malo stále fungovať</string>
     <string name="home_apk_info_unsupported_app_warning">Pre túto aplikáciu sa nenašli žiadne kompatibilné záplaty. Môžete pokračovať, ale záplatovanie nemusí mať žiadny účinok</string>
-    <string name="home_apk_info_version_label">Verzia</string>
     <string name="home_apk_info_build_label">Zostava</string>
     <string name="home_apk_info_size_label">Veľkosť</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Vstup/výstup úložiska</string>
     <string name="patching_graph_cpu_usage">Využitie CPU</string>
     <string name="patching_banner_started_title">Záplatovanie sa začalo</string>
-    <string name="patching_banner_app_version">Verzia aplikácie</string>
     <string name="patching_banner_apk_size">Veľkosť APK</string>
     <string name="patching_banner_patches">Záplaty</string>
     <string name="patching_banner_split_apk">Rozdelený APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Sneh</string>
     <string name="settings_background_grid">Mriežka</string>
     <string name="settings_background_particles">Častice</string>
+    <string name="settings_background_lava">Lávová lampa</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Paralaxný efekt</string>
     <string name="settings_toggle_parallax_desc">Plynulé posúvanie pozadia pri pohybe myšou</string>

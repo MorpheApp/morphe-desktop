@@ -2,9 +2,7 @@
  * Copyright 2026 Morphe.
  * https://github.com/MorpheApp/morphe-desktop
  *
- * Ported from morphe-manager — preserved verbatim so a key converted by
- * Morphe Manager and one converted here produce byte-identical output.
- * Manager carries the URV-compat learnings that this parser encodes.
+ * Ported from morphe-manager for byte-identical keystore conversion.
  */
 
 package app.morphe.engine.util
@@ -13,20 +11,7 @@ import java.io.DataInputStream
 import java.io.InputStream
 import java.security.MessageDigest
 
-/**
- * Minimal JKS keystore parser that extracts private key + certificate chain entries.
- *
- * Android's security provider does not include a JKS KeyStoreSpi, so Manager parses
- * the format manually. On desktop JVMs `KeyStore.getInstance("JKS")` typically works,
- * but we keep this parser as the fallback for URV-style JKS variants that the stock
- * SPI has historically choked on. The key protection algorithm is Sun's proprietary
- * XOR scheme:
- * keystream = SHA1(pwd || salt) || SHA1(pwd || SHA1(pwd || salt)) || ...
- * plaintext = ciphertext XOR keystream
- * integrity  = SHA1(pwd || plaintext) (last 20 bytes of the protected-key blob)
- *
- * Reference: sun.security.provider.KeyProtector (OpenJDK source)
- */
+/** Parser extracting private keys and certificates from Sun JKS keystores. */
 object JksKeyStoreParser {
 
     private const val JKS_MAGIC = 0xFEEDFEED.toInt()
@@ -39,13 +24,7 @@ object JksKeyStoreParser {
         val certificatesDer: List<List<Byte>>
     )
 
-    /**
-     * Parses a JKS [inputStream] and returns all private key entries.
-     * [password] is used both to decrypt each key entry and to verify keystore integrity.
-     *
-     * @throws IllegalArgumentException if the stream is not a valid JKS keystore.
-     * @throws SecurityException if key decryption fails (wrong password).
-     */
+    /** Parses private key entries and certificate chains from a JKS [inputStream]. */
     fun parse(inputStream: InputStream, password: String): List<JksEntry> {
         val dis = DataInputStream(inputStream.buffered())
 
@@ -95,13 +74,7 @@ object JksKeyStoreParser {
         dis.skipBytes(len)
     }
 
-    /**
-     * Decrypts a Sun JKS protected key blob.
-     *
-     * Blob layout: [20 salt][ciphertext][20 sha1_check]
-     * Keystream:   SHA1(pwd_utf16be || salt) || SHA1(pwd_utf16be || prev_hash) || ...
-     * Verify:      SHA1(pwd_utf16be || plaintext) == sha1_check
-     */
+    /** Decrypts Sun JKS protected key bytes using XOR keystream. */
     private fun decryptKey(protectedKey: ByteArray, password: String): ByteArray {
         // The EncryptedPrivateKeyInfo DER wraps the actual protected blob.
         // Structure: SEQUENCE { AlgorithmIdentifier(16 bytes from offset 4), OCTET STRING { blob } }
@@ -134,7 +107,7 @@ object JksKeyStoreParser {
         val verify = sha1.digest()
 
         if (!verify.contentEquals(check)) {
-            throw SecurityException("JKS key decryption failed - wrong password for key entry")
+            throw SecurityException("JKS key decryption failed, wrong password for key entry")
         }
 
         return plaintext

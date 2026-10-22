@@ -39,14 +39,13 @@ fun resolveStepName(stepName: String): String {
 }
 
 enum class StepCategory {
-    INITIALIZATION, PATCHING, COMPILATION, SIGNING, DONE
+    INITIALIZATION, PATCHING, COMPILATION, SIGNING
 }
 
 enum class StepId {
     PREPARING, LOAD_PATCHES, PREPARE_SPLIT_APK, READ_APK_1, READ_APK_2, READ_APK_3, EXECUTE_PATCHES,
-    SAVING_1, SAVING_2, SAVING_3, SAVING_4, SAVING_5,
-    WRITING_APK_1, WRITING_APK_2, WRITING_APK_3, WRITING_APK_4, WRITING_APK_5, WRITING_APK_6, WRITING_APK_7,
-    SIGN_PATCHED_APK, DONE
+    SAVING_1, SAVING_2, SAVING_3, SAVING_4, SAVING_5, WRITING_APK_1, WRITING_APK_2, WRITING_APK_3,
+    WRITING_APK_4, WRITING_APK_5, WRITING_APK_6, WRITING_APK_7, SIGN_PATCHED_APK
 }
 
 enum class State {
@@ -182,10 +181,7 @@ class PatcherState(
     }
 }
 
-/**
- * A shared Compose hook that implements the Zeno asymptotic chase loop for smooth
- * progress animation during blocking backend tasks.
- */
+/** Smooths progress updates using asymptotic interpolation. */
 @Composable
 fun rememberZenoProgress(
     progress: Float,

@@ -5,22 +5,23 @@
 
 package app.morphe.gui.data.repository
 
-import app.morphe.engine.util.PortablePaths
+import app.morphe.engine.MorpheData
+import app.morphe.engine.config.mergeAndSaveJsonObject
+import app.morphe.engine.util.Logger
+import app.morphe.engine.util.isDevTag
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.SourceVersionPref
-import app.morphe.gui.data.model.PatchChannel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.theme.ThemePreference
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.Logger
-import app.morphe.gui.util.isDevTag
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 /**
  * Repository for managing app configuration (config.json)
@@ -46,7 +47,7 @@ open class ConfigRepository {
         // unified morphe-data location. Runs once and is a no-op thereafter.
         ConfigMigration.runIfNeeded()
 
-        val configFile = FileUtils.getConfigFile()
+        val configFile = MorpheData.configFile
 
         try {
             if (configFile.exists()) {
@@ -61,6 +62,8 @@ open class ConfigRepository {
                 saveConfig(default)
                 default
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Logger.error("Failed to load config, using defaults", e)
             AppConfig()
@@ -72,9 +75,9 @@ open class ConfigRepository {
      */
     suspend fun saveConfig(config: AppConfig) = withContext(Dispatchers.IO) {
         try {
-            val configFile = FileUtils.getConfigFile()
-            val content = json.encodeToString(AppConfig.serializer(), config)
-            configFile.writeText(content)
+            val configFile = MorpheData.configFile
+            val guiObj = json.encodeToJsonElement(AppConfig.serializer(), config).jsonObject
+            mergeAndSaveJsonObject(configFile, json, guiObj)
             cachedConfig = config
             Logger.info("Config saved to ${configFile.absolutePath}")
         } catch (e: Exception) {
@@ -82,17 +85,11 @@ open class ConfigRepository {
         }
     }
 
-    /**
-     * Update language preference.
-     */
     suspend fun setLanguage(language: String) {
         val current = loadConfig()
         saveConfig(current.copy(language = language))
     }
 
-    /**
-     * Update theme preference.
-     */
     suspend fun setThemePreference(theme: ThemePreference) {
         val current = loadConfig()
         saveConfig(current.copy(themePreference = theme.name))
@@ -126,77 +123,33 @@ open class ConfigRepository {
         saveConfig(current.copy(cardFills = updated))
     }
 
-    /**
-     * Update background type.
-     */
     suspend fun setBackgroundType(type: String) {
         val current = loadConfig()
         saveConfig(current.copy(backgroundType = type))
     }
 
-    /**
-     * Update parallax enabled state.
-     */
     suspend fun setEnableParallax(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(enableParallax = enabled))
     }
     
-    /**
-     * Update custom accent color.
-     */
     suspend fun setCustomAccentColorArgb(color: Int?) {
         val current = loadConfig()
         saveConfig(current.copy(customAccentColorArgb = color))
     }
 
-    /**
-     * Update group patches by category preference.
-     */
     suspend fun setGroupPatchesByCategory(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(groupPatchesByCategory = enabled))
     }
 
-    /**
-     * Update patch channel preference.
-     */
-    suspend fun setPatchChannel(channel: PatchChannel) {
-        val current = loadConfig()
-        saveConfig(current.copy(preferredPatchChannel = channel.name))
-    }
-
-    /**
-     * Update last used CLI version.
-     */
-    suspend fun setLastCliVersion(version: String) {
-        val current = loadConfig()
-        saveConfig(current.copy(lastCliVersion = version))
-    }
-
-    /**
-     * Record a source's version preference (called by PatchesScreen when the user
-     * picks a release). Per-source, so sources with overlapping tag names don't
-     * contaminate each other.
-     */
+    /** Sets the version tracking preference for a patch source. */
     suspend fun setSourceVersionPref(sourceId: String, pref: SourceVersionPref) {
         val current = loadConfig()
         saveConfig(current.copy(sourceVersionPrefs = current.sourceVersionPrefs + (sourceId to pref)))
     }
 
-    /**
-     * Returns the per-source version preferences, migrating the legacy tag-only
-     * fields ([AppConfig.lastPatchesVersionBySource] and the even-older single
-     * [AppConfig.lastPatchesVersion]) on first read.
-     *
-     * Those tags were auto-saved on every selection, not deliberate freezes, so a
-     * real pin cannot be told apart from "just used the latest". Each old tag
-     * therefore becomes a *follow track* based on whether it names a pre-release.
-     * Everyone shifts onto the latest of their channel (the fix), at the cost of
-     * un-freezing anyone who had deliberately pinned an old version (they can
-     * re-pin). A dev user parked on a stable tag at migration looks like a stable
-     * user and is migrated as such, an accepted one-time loss.
-     */
+    /** Returns per-source version preferences, migrating legacy fields on first read. */
     suspend fun getSourceVersionPrefs(): Map<String, SourceVersionPref> {
         val current = loadConfig()
         if (current.sourceVersionPrefs.isNotEmpty()) return current.sourceVersionPrefs
@@ -229,21 +182,13 @@ open class ConfigRepository {
         Logger.info("Seeded source pre-release flags: ${seeded.filter { it.usePreRelease }.map { it.name }}")
     }
 
-    /**
-     * Mark the given CLI version as dismissed for the update banner. Pass null to
-     * clear (so the banner reappears for whatever the next-available version is).
-     */
+    /** Records the update version dismissed by the user, or null to clear. */
     suspend fun setDismissedUpdateVersion(version: String?) {
         val current = loadConfig()
         saveConfig(current.copy(dismissedUpdateVersion = version))
     }
 
-    /**
-     * Persist the user's chosen update channel. Marks the choice as explicit
-     * so subsequent reads respect it even if the running build's channel
-     * differs. Also clears any prior [AppConfig.dismissedUpdateVersion]. That
-     * dismissal referred to a specific version on the previous channel.
-     */
+    /** Persists explicit update channel preference and clears prior dismissal. */
     suspend fun setUpdateChannelPreference(pref: UpdateChannelPreference) {
         val current = loadConfig()
         saveConfig(
@@ -255,12 +200,7 @@ open class ConfigRepository {
         )
     }
 
-    /**
-     * Resolve the update-channel preference. When the user has explicitly
-     * picked one (via Settings), respect that. Otherwise re-derive from the
-     * running build's version on every call so swapping between a stable and
-     * dev build flips the default automatically.
-     */
+    /** Returns active update channel preference, deriving from current build if unset. */
     suspend fun getOrInitUpdateChannelPreference(currentVersion: String): UpdateChannelPreference {
         val current = loadConfig()
         val saved = current.getUpdateChannelPreference()
@@ -278,102 +218,26 @@ open class ConfigRepository {
         return derived
     }
 
-    /**
-     * Update default output directory.
-     */
-    suspend fun setDefaultOutputDirectory(path: String?) {
-        val current = loadConfig()
-        saveConfig(current.copy(defaultOutputDirectory = path?.let(PortablePaths::storableForm)))
-    }
-
-    /**
-     * Update auto-cleanup temp files setting.
-     */
-    suspend fun setAutoCleanupTempFiles(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(autoCleanupTempFiles = enabled))
-    }
-
-    /**
-     * Update the "route links to patched app after install" setting.
-     */
-    suspend fun setAutoRouteLinksAfterInstall(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(autoRouteLinksAfterInstall = enabled))
-    }
-
-    /**
-     * Update the "also disable stock app's links" sub-setting.
-     */
-    suspend fun setDisableStockLinksAfterInstall(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(disableStockLinksAfterInstall = enabled))
-    }
-
-    /**
-     * Update simplified mode setting.
-     */
     suspend fun setUseSimplifiedMode(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(useSimplifiedMode = enabled))
     }
 
-    /**
-     * Update the user's global keep-architectures list for strip libs.
-     */
-    suspend fun setKeepArchitectures(keep: Set<String>) {
-        val current = loadConfig()
-        saveConfig(current.copy(keepArchitectures = keep))
-    }
-
-    /**
-     * Persist the expand/collapse state of a Settings dialog section so it restores
-     * on next open instead of resetting to collapsed.
-     */
+    /** Persists the expanded state of a settings section. */
     suspend fun setCollapsibleSectionExpanded(id: String, expanded: Boolean) {
         val current = loadConfig()
         val updated = current.collapsibleSectionStates + (id to expanded)
         saveConfig(current.copy(collapsibleSectionStates = updated))
     }
 
-    /**
-     * Update keystore path only (used for auto-remember on first creation).
-     */
-    suspend fun setKeystorePath(path: String?) {
-        val current = loadConfig()
-        saveConfig(current.copy(keystorePath = path?.let(PortablePaths::storableForm)))
-    }
-
-    /**
-     * Update all keystore details at once.
-     */
-    suspend fun setKeystoreDetails(
-        path: String?,
-        password: String?,
-        alias: String,
-        entryPassword: String
-    ) {
-        val current = loadConfig()
-        saveConfig(current.copy(
-            keystorePath = path?.let(PortablePaths::storableForm),
-            keystorePassword = password,
-            keystoreAlias = alias,
-            keystoreEntryPassword = entryPassword
-        ))
-    }
-
-    /**
-     * Get the currently active patch source.
-     */
+    /** Returns the currently active patch source. */
     suspend fun getActivePatchSource(): PatchSource {
         val config = loadConfig()
         return config.patchSource.find { it.id == config.activePatchSourceId }
             ?: DEFAULT_PATCH_SOURCE
     }
 
-    /**
-     * Set the active patch source by ID.
-     */
+    /** Sets the active patch source by ID. */
     suspend fun setActivePatchSource(id: String) {
         val current = loadConfig()
         if (current.patchSource.any { it.id == id }) {
@@ -381,18 +245,14 @@ open class ConfigRepository {
         }
     }
 
-    /**
-     * Add a new patch source.
-     */
+    /** Adds a new patch source to the configuration. */
     suspend fun addPatchSource(source: PatchSource) {
         val current = loadConfig()
         val updated = current.copy(patchSource = current.patchSource + source)
         saveConfig(updated)
     }
 
-    /**
-     * Update an existing patch source. For non-deletable sources, only the pre-release flag can be updated.
-     */
+    /** Updates an existing patch source. */
     suspend fun updatePatchSource(updated: PatchSource) {
         val current = loadConfig()
         val existing = current.patchSource.find { it.id == updated.id }
@@ -411,14 +271,7 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = updatedSources))
     }
 
-    /**
-     * Persist a new source ordering given the ids in their desired order. Order
-     * only affects the app display-name tiebreak (first source wins) and UI
-     * presentation order, not which patches load, so any source, default
-     * included, may be reordered. Ignores the call unless [orderedIds] is a
-     * permutation of the existing sources (guards against a stale UI snapshot
-     * dropping or duplicating a source).
-     */
+    /** Persists reordered patch sources if [orderedIds] matches current sources. */
     suspend fun reorderPatchSources(orderedIds: List<String>) {
         val current = loadConfig()
         val byId = current.patchSource.associateBy { it.id }
@@ -427,53 +280,21 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = reordered))
     }
 
-    /**
-     * Update whether Morphe auto-starts the ADB daemon at GUI launch.
-     */
-    suspend fun setAutoStartAdb(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(autoStartAdb = enabled))
-    }
-
-    /** Toggle patch-developer options (unlocks folder-based local sources). */
-    suspend fun setDeveloperOptions(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(developerOptions = enabled))
-    }
-
-    /** Remember the last folder used in the local .mpp picker. */
-    suspend fun setLastLocalPatchDir(path: String?) {
-        val current = loadConfig()
-        saveConfig(current.copy(lastLocalPatchDir = path))
-    }
-
-    /** User-added glob patterns for .mpp files a developer folder source should skip. */
-    suspend fun setExcludedMppPatterns(patterns: List<String>) {
-        val current = loadConfig()
-        saveConfig(current.copy(excludedMppPatterns = patterns))
-    }
-
-    /**
-     * Mark the multi-source upgrade hint as dismissed. One-shot, never resets.
-     */
+    /** Marks multi-source introduction banner as dismissed. */
     suspend fun setMultiSourceHintDismissed() {
         val current = loadConfig()
         if (current.multiSourceHintDismissed) return
         saveConfig(current.copy(multiSourceHintDismissed = true))
     }
 
-    /** Persist which home apps tab ("ALL"/"YOURS") the user is viewing. */
+    /** Persists selected home apps filter tab. */
     suspend fun setHomeAppListFilter(value: String) {
         val current = loadConfig()
         if (current.homeAppListFilter == value) return
         saveConfig(current.copy(homeAppListFilter = value))
     }
 
-    /**
-     * Toggle enablement of a patch source. Safety net: if disabling would leave zero
-     * enabled sources, the default source is force-enabled (mirrors morphe-manager
-     * SourceManagementSheet.kt:142-149 LaunchedEffect).
-     */
+    /** Toggles patch source enablement, ensuring at least one source remains active. */
     suspend fun setPatchSourceEnabled(id: String, enabled: Boolean) {
         val current = loadConfig()
         val updatedSources = current.patchSource.map {
@@ -481,7 +302,6 @@ open class ConfigRepository {
         }
         val anyEnabled = updatedSources.any { it.enabled }
         val finalSources = if (!anyEnabled) {
-            // Safety net: force-enable the default
             updatedSources.map {
                 if (it.id == DEFAULT_PATCH_SOURCE.id) it.copy(enabled = true) else it
             }
@@ -491,49 +311,19 @@ open class ConfigRepository {
         saveConfig(current.copy(patchSource = finalSources))
     }
 
-    /**
-     * Get the list of currently enabled patch sources (in config order).
-     */
-    suspend fun getEnabledPatchSources(): List<PatchSource> {
-        return loadConfig().patchSource.filter { it.enabled }
-    }
-
-    /**
-     * Remove a patch source by ID. Cannot remove non-deletable sources.
-     */
+    /** Removes a patch source by ID if deletable. */
     suspend fun removePatchSource(id: String) {
         val current = loadConfig()
         val source = current.patchSource.find { it.id == id }
         if (source == null || !source.deletable) return
 
         val updatedSources = current.patchSource.filter { it.id != id }
-        // If we removed the active source, fall back to default
         val newActiveId = if (current.activePatchSourceId == id) {
             DEFAULT_PATCH_SOURCE.id
         } else {
             current.activePatchSourceId
         }
         saveConfig(current.copy(patchSource = updatedSources, activePatchSourceId = newActiveId))
-    }
-
-    /**
-     * Update GitHub Personal Access Token (PAT).
-     */
-    suspend fun setGitHubPat(pat: String) {
-        val current = loadConfig()
-        saveConfig(current.copy(gitHubPat = pat))
-    }
-
-    /**
-     * Get the configured GitHub Personal Access Token (PAT).
-     */
-    suspend fun getGitHubPat(): String = loadConfig().gitHubPat
-
-    /**
-     * Clear cached config (for testing).
-     */
-    fun clearCache() {
-        cachedConfig = null
     }
 }
 

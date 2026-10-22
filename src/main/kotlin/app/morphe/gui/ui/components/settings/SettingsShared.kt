@@ -8,7 +8,6 @@ package app.morphe.gui.ui.components.settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -20,7 +19,6 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -35,15 +33,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.morphe.engine.util.PortablePaths
+import app.morphe.gui.ui.components.MorpheIconButton
+import app.morphe.gui.ui.components.MorpheIconButtonSize
+import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.components.MorpheSwitch
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.icons.autoMirrored
-import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -55,7 +64,7 @@ internal fun AccentSwatch(
     onDelete: (() -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
-    val corners = LocalMorpheCorners.current
+    val shapes = MorpheTheme.shapes
     val hoverInteraction = remember { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
     val scale by animateFloatAsState(
@@ -71,6 +80,7 @@ internal fun AccentSwatch(
         targetValue = if (selected) 5.dp else 0.dp,
         label = "accentSwatchInset",
     )
+    val innerCornerRadius = (shapes.smallDp - inset).coerceAtLeast(0.dp)
     Box(
         modifier = Modifier
             .size(42.dp)
@@ -84,8 +94,8 @@ internal fun AccentSwatch(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .clip(RoundedCornerShape(corners.small))
-                .border(2.dp, ring, RoundedCornerShape(corners.small))
+                .clip(shapes.small)
+                .border(2.dp, ring, shapes.small)
                 .handCursor()
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
@@ -94,31 +104,21 @@ internal fun AccentSwatch(
                 modifier = Modifier
                     .matchParentSize()
                     .padding(inset)
-                    .clip(RoundedCornerShape((corners.small - inset).coerceAtLeast(0.dp)))
+                    .clip(RoundedCornerShape(innerCornerRadius))
                     .background(fill)
             )
             content()
         }
 
         if (onDelete != null && isHovered) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .size(16.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surface)
-                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
-                    .handCursor()
-                    .clickable(onClick = onDelete),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = MorpheIcons.Close,
-                    contentDescription = stringResource(Res.string.settings_accent_remove_color_description),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(10.dp),
-                )
-            }
+            MorpheIconButton(
+                icon = MorpheIcons.Close,
+                contentDescription = stringResource(Res.string.settings_accent_remove_color_description),
+                size = MorpheIconButtonSize.TINY,
+                variant = MorpheIconButtonVariant.SURFACE,
+                modifier = Modifier.align(Alignment.TopEnd),
+                onClick = onDelete,
+            )
         }
     }
 }
@@ -127,19 +127,17 @@ internal fun AccentSwatch(
 internal fun AboutRow(
     title: String,
     subtitle: String,
-    font: FontFamily,
     onClick: () -> Unit,
     leading: @Composable () -> Unit,
 ) {
-    val corners = LocalMorpheCorners.current
     val hoverInteraction = remember { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(corners.small))
+            .clip(MorpheTheme.shapes.small)
             .background(
-                if (isHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
+                if (isHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = MorpheTheme.alphas.hover)
                 else Color.Transparent
             )
             .hoverable(hoverInteraction)
@@ -153,18 +151,14 @@ internal fun AboutRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
+                style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                 color = MaterialTheme.colorScheme.onSurface,
-                fontFamily = font,
             )
             Spacer(Modifier.height(2.dp))
             Text(
                 text = subtitle,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
+                style = MorpheTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = font,
             )
         }
         Icon(
@@ -179,7 +173,6 @@ internal fun AboutRow(
 @Composable
 internal fun SectionLabel(
     text: String,
-    font: FontFamily,
     icon: ImageVector? = null
 ) {
     if (icon != null) {
@@ -193,19 +186,15 @@ internal fun SectionLabel(
             Spacer(Modifier.width(6.dp))
             Text(
                 text = text,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = MorpheTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
-                fontFamily = font
             )
         }
     } else {
         Text(
             text = text,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
+            style = MorpheTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
-            fontFamily = font
         )
     }
 }
@@ -213,16 +202,14 @@ internal fun SectionLabel(
 @Composable
 internal fun CollapsibleSection(
     title: String,
-    font: FontFamily,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     icon: ImageVector? = null,
     content: @Composable () -> Unit
 ) {
-    val corners = LocalMorpheCorners.current
     val rotationAngle by animateFloatAsState(
         targetValue = if (expanded) 270f else 180f,
-        animationSpec = tween(200)
+        animationSpec = MorpheMotion.mediumTween()
     )
     val hoverInteraction = remember { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
@@ -230,10 +217,10 @@ internal fun CollapsibleSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(corners.small))
+            .clip(MorpheTheme.shapes.small)
             .hoverable(hoverInteraction)
             .background(
-                if (isHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f)
+                if (isHovered) MaterialTheme.colorScheme.onSurface.copy(alpha = MorpheTheme.alphas.hover)
                 else Color.Transparent
             )
             .handCursor()
@@ -254,10 +241,8 @@ internal fun CollapsibleSection(
             }
             Text(
                 text = title,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = MorpheTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
-                fontFamily = font
             )
         }
         Icon(
@@ -274,12 +259,12 @@ internal fun CollapsibleSection(
         visible = expanded,
         enter = expandVertically(
             expandFrom = Alignment.Top,
-            animationSpec = tween(200)
-        ) + fadeIn(animationSpec = tween(200)),
+            animationSpec = MorpheMotion.mediumTween()
+        ) + fadeIn(animationSpec = MorpheMotion.mediumTween()),
         exit = shrinkVertically(
             shrinkTowards = Alignment.Top,
-            animationSpec = tween(200)
-        ) + fadeOut(animationSpec = tween(150))
+            animationSpec = MorpheMotion.mediumTween()
+        ) + fadeOut(animationSpec = MorpheMotion.fastTween())
     ) {
         Column {
             Spacer(Modifier.height(8.dp))
@@ -301,8 +286,7 @@ internal fun SettingToggleRow(
     description: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    accentColor: Color,
-    font: FontFamily,
+    accentColor: Color = MorpheTheme.colors.primary,
     enabled: Boolean = true,
     icon: ImageVector? = null
 ) {
@@ -325,18 +309,14 @@ internal fun SettingToggleRow(
             Column {
                 Text(
                     text = label,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
-                    fontFamily = font
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = if (!enabled) stringResource(Res.string.disabled_while_patching) else description,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
+                    style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
-                    fontFamily = font
                 )
             }
         }
@@ -349,3 +329,64 @@ internal fun SettingToggleRow(
         )
     }
 }
+
+@Composable
+internal fun buildLinkedText(
+    template: String,
+    linkText: String,
+    url: String,
+    linkColor: Color = MaterialTheme.colorScheme.primary,
+): AnnotatedString {
+    val linkIndex = template.indexOf(linkText)
+    return buildAnnotatedString {
+        if (linkIndex != -1) {
+            append(template.substring(0, linkIndex))
+            withLink(
+                LinkAnnotation.Url(
+                    url,
+                    TextLinkStyles(
+                        style = SpanStyle(
+                            color = linkColor,
+                            textDecoration = TextDecoration.Underline,
+                        )
+                    )
+                )
+            ) {
+                append(linkText)
+            }
+            append(template.substring(linkIndex + linkText.length))
+        } else {
+            append(template)
+        }
+    }
+}
+
+/** Displays a stored path and its resolved target when relative. */
+@Composable
+internal fun StoredPathResolutionText(
+    path: String,
+    modifier: Modifier = Modifier,
+) {
+    val stored = PortablePaths.storableForm(path)
+    val isBundleRelative = stored != path
+    Text(
+        text = stored,
+        style = MorpheTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier,
+    )
+    if (isBundleRelative) {
+        Text(
+            text = stringResource(Res.string.settings_dialog_resolves_to_message, path),
+            style = MorpheTheme.typography.labelExtraSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = modifier,
+        )
+    }
+}
+
+

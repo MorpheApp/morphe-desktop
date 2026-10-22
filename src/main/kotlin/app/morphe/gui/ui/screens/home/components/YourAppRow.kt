@@ -5,10 +5,7 @@
 
 package app.morphe.gui.ui.screens.home.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,41 +13,34 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.components.AppCard
 import app.morphe.gui.ui.components.LocalCardFills
+import app.morphe.gui.ui.components.MorpheAppAvatar
+import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.cardChipInk
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Compact summary row for the "Your apps" list. One per [PatchedAppRecord].
- * Tapping opens [PatchedAppDetailDialog] for the full breakdown.
- */
+/** Compact summary row displaying a previously patched application. */
 @Composable
 fun YourAppRow(
     record: PatchedAppRecord,
@@ -60,17 +50,11 @@ fun YourAppRow(
     onClick: () -> Unit,
     appIconColorHex: String? = null,
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-
-    val initial = record.displayName.firstOrNull()?.uppercase() ?: "?"
-
     val cardFills = LocalCardFills.current
 
     AppCard(
         modifier = Modifier.fillMaxWidth(),
-        cornerRadius = corners.medium,
+        cornerRadius = MorpheTheme.shapes.mediumDp,
         appIconColorHex = appIconColorHex,
         fill = cardFills[record.packageName],
         onClick = onClick,
@@ -85,33 +69,24 @@ fun YourAppRow(
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(RoundedCornerShape(corners.small))
-                    .border(1.dp, Color.White.copy(alpha = 0.35f), RoundedCornerShape(corners.small))
-                    .background(Color.White.copy(alpha = 0.06f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(initial, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = font, color = Color.White)
-            }
+            MorpheAppAvatar(
+                name = record.displayName,
+                size = MorpheAvatarSize.SMALL,
+                onGradient = true,
+            )
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = record.displayName,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = font,
-                    color = Color.White,
+                    style = MorpheTheme.typography.titleSmall.copy(color = Color.White),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = "v${record.apkVersion.removePrefix("v")} · ${relativeOrShortDate(record.patchedAt)}",
-                    fontSize = 10.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.White.copy(alpha = 0.6f),
+                    style = MorpheTheme.typography.labelSmall.copy(
+                        color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
+                    ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -126,17 +101,16 @@ fun YourAppRow(
             }
             if (state != PatchedAppState.NEVER_PATCHED) {
                 Spacer(Modifier.width(8.dp))
-                PatchedStateBadge(state, font)
+                PatchedStateBadge(state)
             }
         }
-        deviceInfo?.let { DeviceLine(it, font, Color.White.copy(alpha = 0.5f), cardChipInk) }
+        deviceInfo?.let { DeviceLine(it, Color.White.copy(alpha = 0.5f), cardChipInk) }
         updateInfo?.sources?.firstOrNull()?.let { s ->
             val more = updateInfo.sources.size - 1
             VersionBumpText(
                 label = "${s.name} ",
                 oldVersion = s.usedVersion,
                 newVersion = if (s.outdated) s.latestAvailableVersion else null,
-                font = font,
                 suffix = if (more > 0) "  +$more" else null,
             )
         }
@@ -144,10 +118,7 @@ fun YourAppRow(
         if (cardAdvice != null) {
             Text(
                 text = cardAdvice.first,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font,
-                color = cardChipInk,
+                style = MorpheTheme.typography.bodySmall.copy(color = cardChipInk),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -160,21 +131,19 @@ fun YourAppRow(
                     imageVector = MorpheIcons.Info,
                     contentDescription = null,
                     modifier = Modifier.size(12.dp),
-                    tint = Color.White.copy(alpha = 0.6f),
+                    tint = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText),
                 )
                 Text(
                     text = stringResource(Res.string.home_your_apps_newer_patch_hint),
-                    fontSize = 11.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.White.copy(alpha = 0.6f),
+                    style = MorpheTheme.typography.bodySmall.copy(
+                        color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
+                    ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
         }
-        // Already-patched APK is newer than what's on the device → offer to install
-        // it directly (no re-patch needed). Streams away once the device catches up.
+        // Prompt installation when the patched APK is newer than the version on device.
         if (deviceInfo?.installPending == true) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -198,10 +167,7 @@ fun YourAppRow(
                             Res.string.home_your_apps_install_ready_hint,
                             record.apkVersion.removePrefix("v")
                         ),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
-                    color = Color.White,
+                    style = MorpheTheme.typography.bodySmall.copy(color = Color.White),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -211,17 +177,12 @@ fun YourAppRow(
 }
 }
 
-/**
- * "label vOld → vNew" with distinct colors: muted label/old/arrow, highlighted new.
- * Reads far better than a single flat accent. [newColor] signals tone (blue = optional,
- * amber = recommended). When [newVersion] is null, just shows "label vOld".
- */
+/** Displays version transition from current to target release with styled highlighting. */
 @Composable
 private fun VersionBumpText(
     label: String,
     oldVersion: String,
     newVersion: String?,
-    font: FontFamily,
     suffix: String? = null,
 ) {
     val labelColor = Color.White
@@ -238,9 +199,7 @@ private fun VersionBumpText(
     }
     Text(
         text = text,
-        fontSize = 11.sp,
-        fontFamily = font,
-        fontWeight = FontWeight.Normal,
+        style = MorpheTheme.typography.bodySmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
     )

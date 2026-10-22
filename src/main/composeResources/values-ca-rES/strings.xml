@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="morphe_logo_content_description">Morphe Logo</string>
+    <string name="dismiss">Descartar</string>
+    <string name="ok">OK</string>
+    <string name="retry">Reintentar</string>
+    <string name="clear">Buida</string>
+    <string name="search">Cercar</string>
+    <string name="no_matches">Sense coincidències</string>
+    <string name="remove">Eliminar</string>
+    <string name="collapse">Plegar</string>
+    <string name="expand">Ampliar</string>
+    <string name="cancel">Cancel·lar</string>
+    <string name="close">Tanca</string>
+    <string name="delete">Eliminar</string>
+    <string name="disabled_while_patching">Desactivat mentre es parxa</string>
+    <string name="drop_apk_here">Solta l'APK aquí</string>
+    <string name="release_to_drop">Deixa anar per soltar</string>
+    <string name="click_to_browse">o fes clic per navegar</string>
+    <string name="error_could_not_load_patches">No s'ha pogut carregar cap pedaç</string>
+    <string name="error_network_timeout">Temps d'espera esgotat, comprova la connexió i torna-ho a provar</string>
+    <string name="error_could_not_reach_patch_server">No s'ha pogut contactar amb el servidor de pedaços, comprova la teva connexió</string>
+    <string name="error_github_rate_limit">S'ha arribat al límit de peticions de GitHub, espera uns minuts i torna-ho a provar</string>
+    <string name="error_connection_dropped">S'ha perdut la connexió mentre es descarregava, torna-ho a intentar</string>
+    <string name="error_network_loading_patches">Error de la xarxa mentre es carregaven els pedaços</string>
+    <string name="error_patch_file_not_found">No s'ha trobat l'arxiu de pedaç: %1$s</string>
     <string name="unknown">Desconegut</string>
     <string name="off">Apagat</string>
     <string name="select_folder">Selecciona una carpeta</string>

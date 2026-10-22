@@ -11,7 +11,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,20 +19,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 
-/** Sits above the anchor, flipping below when the window runs out of room. */
+/** Positions popup above anchor, flipping below if space is insufficient. */
 private class AboveAnchor(private val gap: Int) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
@@ -54,11 +49,9 @@ private class AboveAnchor(private val gap: Int) : PopupPositionProvider {
 fun MorpheTooltip(
     text: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
     val density = LocalDensity.current
     val hover = remember { MutableInteractionSource() }
     val isHovered by hover.collectIsHoveredAsState()
@@ -66,20 +59,18 @@ fun MorpheTooltip(
 
     Box(modifier = modifier.hoverable(hover)) {
         content()
-        if (isHovered) {
+        if (isHovered && enabled) {
             Popup(popupPositionProvider = remember(gap) { AboveAnchor(gap) }) {
                 Surface(
-                    shape = RoundedCornerShape(corners.small),
+                    shape = MorpheTheme.shapes.small,
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, accents.primary.copy(alpha = 0.35f)),
+                    border = BorderStroke(1.dp, MorpheTheme.colors.primary.copy(alpha = 0.35f)),
                     shadowElevation = 8.dp,
                 ) {
                     Text(
                         text = text,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        fontFamily = font,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Normal,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }

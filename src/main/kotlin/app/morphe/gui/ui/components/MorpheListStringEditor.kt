@@ -8,39 +8,26 @@ package app.morphe.gui.ui.components
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheDimens
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Reusable list-of-strings editor component.
- * Displays current item count and opens a modal dialog for adding/removing items.
- */
+/** Option component displaying item count and opening a list editor dialog. */
 @Composable
 fun MorpheListStringOption(
     items: List<String>,
@@ -50,10 +37,8 @@ fun MorpheListStringOption(
     allowedExtensions: List<String>? = null,
     enabled: Boolean = true,
 ) {
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val dimens = LocalMorpheDimens.current
+    val colors = MorpheTheme.colors
+    val shapes = MorpheTheme.shapes
     val scope = rememberCoroutineScope()
 
     var showDialog by remember { mutableStateOf(false) }
@@ -61,17 +46,16 @@ fun MorpheListStringOption(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(dimens.controlHeight),
+            .height(28.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        // Items count badge / summary box
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight()
-                .clip(RoundedCornerShape(corners.small))
-                .border(1.dp, accents.primary.copy(alpha = 0.2f), RoundedCornerShape(corners.small))
+                .clip(shapes.small)
+                .border(1.dp, colors.primary.copy(alpha = 0.2f), shapes.small)
                 .padding(horizontal = 10.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
@@ -86,9 +70,7 @@ fun MorpheListStringOption(
                 Text(
                     text = if (items.isEmpty()) stringResource(Res.string.patch_option_list_empty_state)
                            else items.joinToString(", "),
-                    fontSize = 11.sp,
-                    lineHeight = 14.sp,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -96,20 +78,20 @@ fun MorpheListStringOption(
             }
         }
 
-        // Edit button
-        DialogActionButton(
+        MorpheButton(
             label = stringResource(Res.string.patch_option_edit_list),
-            font = font,
-            corners = corners,
+            variant = MorpheButtonVariant.OUTLINED,
+            size = MorpheButtonSize.COMPACT,
+            enabled = enabled,
             onClick = { showDialog = true },
         )
 
-        // If it allows file extensions (FilesOption), add direct multi-file Browse button
         if (allowedExtensions != null) {
-            DialogActionButton(
+            MorpheButton(
                 label = stringResource(Res.string.browse),
-                font = font,
-                corners = corners,
+                variant = MorpheButtonVariant.OUTLINED,
+                size = MorpheButtonSize.COMPACT,
+                enabled = enabled,
                 onClick = {
                     scope.launch {
                         val picked = MorpheFilePicker.pickFiles(extensions = allowedExtensions) ?: return@launch
@@ -143,9 +125,8 @@ fun MorpheListStringDialog(
     onDismiss: () -> Unit,
     onSave: (List<String>) -> Unit,
 ) {
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
+    val colors = MorpheTheme.colors
+    val shapes = MorpheTheme.shapes
     val scope = rememberCoroutineScope()
 
     val currentItems = remember { mutableStateListOf<String>().apply { addAll(initialItems) } }
@@ -175,7 +156,6 @@ fun MorpheListStringDialog(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            // Input row: text field + Add button (+ optional Browse files button)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -188,24 +168,21 @@ fun MorpheListStringDialog(
                         errorMessage = null
                     },
                     placeholder = stringResource(Res.string.patch_option_enter_value),
-                    font = font,
-                    accents = accents,
-                    corners = corners,
                     modifier = Modifier.weight(1f),
                 )
 
-                DialogActionButton(
+                MorpheButton(
                     label = stringResource(Res.string.patch_option_add_item),
-                    font = font,
-                    corners = corners,
+                    variant = MorpheButtonVariant.OUTLINED,
+                    size = MorpheButtonSize.COMPACT,
                     onClick = { addItem() },
                 )
 
                 if (allowedExtensions != null) {
-                    DialogActionButton(
+                    MorpheButton(
                         label = stringResource(Res.string.browse),
-                        font = font,
-                        corners = corners,
+                        variant = MorpheButtonVariant.OUTLINED,
+                        size = MorpheButtonSize.COMPACT,
                         onClick = {
                             scope.launch {
                                 val picked = MorpheFilePicker.pickFiles(extensions = allowedExtensions) ?: return@launch
@@ -223,20 +200,18 @@ fun MorpheListStringDialog(
             if (errorMessage != null) {
                 Text(
                     text = errorMessage!!,
-                    fontSize = 11.sp,
-                    fontFamily = font,
-                    color = MaterialTheme.colorScheme.error,
+                    style = MorpheTheme.typography.labelSmall,
+                    color = MorpheTheme.colors.danger,
                 )
             }
 
-            // Scrollable list of items
             val scrollState = rememberScrollState()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = 240.dp)
-                    .clip(RoundedCornerShape(corners.small))
-                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f), RoundedCornerShape(corners.small))
+                    .clip(shapes.small)
+                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f), shapes.small)
                     .padding(6.dp),
             ) {
                 if (currentItems.isEmpty()) {
@@ -246,8 +221,7 @@ fun MorpheListStringDialog(
                     ) {
                         Text(
                             text = stringResource(Res.string.patch_option_list_empty_state),
-                            fontSize = 11.sp,
-                            fontFamily = font,
+                            style = MorpheTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         )
                     }
@@ -263,32 +237,27 @@ fun MorpheListStringDialog(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(corners.small))
-                                    .background(accents.primary.copy(alpha = 0.05f))
+                                    .clip(shapes.small)
+                                    .background(colors.primary.copy(alpha = 0.05f))
                                     .padding(horizontal = 8.dp, vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Text(
                                     text = item,
-                                    fontSize = 11.sp,
-                                    fontFamily = font,
+                                    style = MorpheTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.weight(1f),
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
                                 )
-                                IconButton(
+                                MorpheIconButton(
+                                    icon = MorpheIcons.Close,
+                                    contentDescription = stringResource(Res.string.remove),
                                     onClick = { currentItems.removeAt(index) },
-                                    modifier = Modifier.size(20.dp),
-                                ) {
-                                    Icon(
-                                        imageVector = MorpheIcons.Close,
-                                        contentDescription = stringResource(Res.string.remove),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                                        modifier = Modifier.size(12.dp),
-                                    )
-                                }
+                                    size = MorpheIconButtonSize.COMPACT,
+                                    variant = MorpheIconButtonVariant.GHOST,
+                                )
                             }
                         }
                     }
@@ -299,27 +268,28 @@ fun MorpheListStringDialog(
                                 .align(Alignment.CenterEnd)
                                 .fillMaxHeight(),
                             adapter = rememberScrollbarAdapter(scrollState),
-                            style = morpheScrollbarStyle(),
+                            style = MorpheScrollbarStyle(),
                         )
                     }
                 }
             }
 
-            // Action buttons row (Cancel / Save)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                MorpheDialogButton(
+                MorpheButton(
                     label = stringResource(Res.string.cancel),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    filled = false,
+                    modifier = Modifier.weight(1f),
+                    variant = MorpheButtonVariant.OUTLINED,
+                    size = MorpheButtonSize.COMPACT,
                     onClick = onDismiss,
                 )
-                MorpheDialogButton(
+                MorpheButton(
                     label = stringResource(Res.string.save),
-                    color = accents.primary,
-                    filled = true,
+                    modifier = Modifier.weight(1f),
+                    variant = MorpheButtonVariant.FILLED,
+                    size = MorpheButtonSize.COMPACT,
                     onClick = { onSave(currentItems.toList()) },
                 )
             }

@@ -9,14 +9,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-/**
- * Handles an image being imported as a FOREGROUND layer.
- *
- * Foreground logos should have transparency (so the monochrome / notification icons
- * read as a shape, not a solid block). We deliberately DON'T modify the image. Auto
- * background-removal could mangle a real icon, so we just copy it as-is and report whether
- * it has transparency so the UI can warn the user when it doesn't.
- */
+/** Inspects imported foreground images for alpha transparency without altering pixel data. */
 object ForegroundPrep {
 
     enum class Outcome { ALREADY_TRANSPARENT, OPAQUE, UNREADABLE }
@@ -43,6 +36,6 @@ object ForegroundPrep {
         val px = IntArray(w * h); img.getRGB(0, 0, w, h, px, 0, w)
         var transparent = 0
         for (p in px) if (((p ushr 24) and 0xFF) < 250) transparent++
-        return transparent > w * h * 0.01f  // >1% see-through → a real cut-out
+        return transparent > w * h * 0.01f  // At least 1% transparency required for cutout detection.
     }
 }

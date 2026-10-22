@@ -57,6 +57,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Ready</string>
     <string name="filter_apps_hint">Filter apps…</string>
+    <string name="version">Version</string>
     <string name="version_label_stable">Stable</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Experimental</string>
@@ -241,7 +242,6 @@
     <string name="home_apk_info_remove_description">Remove APK</string>
     <string name="home_apk_info_limited_info_warning">Couldn't fully read this APK's manifest (common for split bundles). Details below are approximate, patching should still work</string>
     <string name="home_apk_info_unsupported_app_warning">No compatible patches found for this app. You can still proceed, but patching may have no effect</string>
-    <string name="home_apk_info_version_label">Version</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Size</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -465,13 +465,11 @@
     <string name="patching_graph_storage_io">Storage I/O</string>
     <string name="patching_graph_cpu_usage">CPU usage</string>
     <string name="patching_banner_started_title">Patching started</string>
-    <string name="patching_banner_app_version">App version</string>
     <string name="patching_banner_apk_size">APK size</string>
     <string name="patching_banner_patches">Patches</string>
     <string name="patching_banner_split_apk">Split APK</string>
     <string name="patching_banner_yes">Yes</string>
     <string name="patching_banner_no">No</string>
-    <string name="patching_banner_morphe_patches" translatable="false">Morphe Patches</string>
     <string name="patching_banner_desktop">Desktop</string>
     <string name="patching_banner_patcher">Patcher</string>
     <string name="patching_banner_runtime">Runtime</string>
@@ -752,6 +750,7 @@
     <string name="settings_background_snow">Snow</string>
     <string name="settings_background_grid">Grid</string>
     <string name="settings_background_particles">Particles</string>
+    <string name="settings_background_lava">Lava lamp</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Parallax effect</string>
     <string name="settings_toggle_parallax_desc">Smooth background shifting when moving the mouse</string>

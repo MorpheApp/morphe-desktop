@@ -56,6 +56,7 @@
     <string name="status_offline">오프라인</string>
     <string name="status_ready">준비 완료</string>
     <string name="filter_apps_hint">앱 필터링…</string>
+    <string name="version">버전</string>
     <string name="version_label_stable">안정 버전</string>
     <string name="version_label_dev">개발자 버전</string>
     <string name="version_label_experimental">실험 버전</string>
@@ -185,7 +186,7 @@
     <string name="quick_patch_warning_too_new">버전이 너무 최신입니다 - 공식 지원되지 않으며 패치가 실패할 가능성이 높습니다</string>
     <string name="quick_patch_warning_too_old">버전이 너무 오래됨 - 공식 지원되지 않으며 패치가 실패할 가능성이 높습니다</string>
     <string name="quick_patch_warning_unsupported_between">지원되지 않는 버전 - 패치가 실패할 가능성이 높습니다</string>
-    <string name="quick_patch_read_apk_failed">APK를 읽지 못했습니다: %1$s</string>
+    <string name="quick_patch_read_apk_failed">APK을 읽을 수 없습니다: %1$s</string>
     <string name="quick_patch_status_preparing_patches">패치를 준비하는 중…</string>
     <string name="quick_patch_fetch_patches_failed">패치를 가져오지 못하였습니다. 인터넷 연결을 확인하세요</string>
     <string name="quick_patch_status_downloading_patches">패치 %1$s를 다운로드하는 중…</string>
@@ -195,18 +196,18 @@
     <string name="quick_patch_completed_adb_connect_device">ADB로 설치하려면 USB로 기기를 연결하세요</string>
     <string name="quick_patch_error_unknown_occurred">알 수 없는 오류가 발생하였습니다</string>
     <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK 분석 중…</string>
+    <string name="quick_patch_idle_analyzing">APK를 분석하는 중…</string>
     <string name="quick_patch_patching_patches_count"> %1$d / %2$d  개의 패치</string>
     <string name="quick_patch_patching_slow_warning">평소보다 오래 걸리고 있습니다. 잠시 기다려 주세요…</string>
     <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
+    <string name="quick_patch_ready_version_build">(빌드 %1$d)</string>
     <string name="quick_patch_ready_no_compatible_patches">이 앱에 호환되는 패치가 없습니다</string>
     <string name="quick_patch_ready_no_matching_patches">'%1$s'에 해당하는 패치가 없습니다</string>
     <string name="quick_patch_ready_patch_with_defaults">기본값으로 패치</string>
     <!-- Quick Patch - Supported Apps Row -->
     <string name="quick_patch_supported_apps_title">지원되는 앱</string>
     <string name="quick_patch_supported_apps_subtitle">지원되는 앱의 정확한 APK 버전을 여기에 놓으세요</string>
-    <string name="quick_patch_supported_apps_loading">지원되는 앱 불러오는 중…</string>
+    <string name="quick_patch_supported_apps_loading">지원되는 앱을 불러오는 중…</string>
     <string name="quick_patch_supported_apps_load_error">지원되는 앱을 불러올 수 없습니다</string>
     <string name="quick_patch_supported_apps_change_source">소스 변경</string>
     <string name="quick_patch_supported_apps_no_matches">일치하는 앱이 없음</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">APK 제거</string>
     <string name="home_apk_info_limited_info_warning">이 APK의 매니페스트를 완전히 읽을 수 없습니다 (분할 번들에서 흔함). 아래 세부 정보는 근사치이며, 패치는 여전히 작동합니다</string>
     <string name="home_apk_info_unsupported_app_warning">이 앱에 호환되는 패치를 찾을 수 없습니다. 계속 진행할 수는 있지만 패치가 효과가 없을 수 있습니다</string>
-    <string name="home_apk_info_version_label">버전</string>
     <string name="home_apk_info_build_label">빌드</string>
     <string name="home_apk_info_size_label">크기</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -238,7 +238,7 @@
     <string name="home_stage_reading_metadata">앱 메타데이터를 읽는 중…</string>
     <!-- Home Screen - Dialogs -->
     <string name="home_dialog_forget_button">잊기</string>
-    <string name="home_dialog_uninstall_button">설치 제거</string>
+    <string name="home_dialog_uninstall_button">제거</string>
     <string name="home_dialog_continue_anyway">그래도 계속</string>
     <string name="home_dialog_forget_title">%1$s를 잊을까요?</string>
     <string name="home_dialog_forget_message">그러면 패치된 앱 기록에서 %1$s가 제거됩니다. 어떤 파일도 건드리지 않으며, 앱을 다시 패치하면 다시 추가됩니다</string>
@@ -446,7 +446,6 @@
     <string name="patching_graph_storage_io">저장소 I/O</string>
     <string name="patching_graph_cpu_usage">CPU 사용량</string>
     <string name="patching_banner_started_title">패치 시작</string>
-    <string name="patching_banner_app_version">앱 버전</string>
     <string name="patching_banner_apk_size">APK 크기</string>
     <string name="patching_banner_patches">패치</string>
     <string name="patching_banner_split_apk">분할 APK</string>
@@ -580,7 +579,7 @@
     <string name="source_sheet_multi_mode_hint">원하는 조합으로 사용/사용 안 함을 설정하세요. 사용하도록 설정된 모든 소스의 패치가 통합됩니다</string>
     <string name="source_sheet_done_button">완료</string>
     <string name="source_sheet_type_preinstalled">미리 설치됨</string>
-    <string name="source_sheet_builtin">기본 제공</string>
+    <string name="source_sheet_builtin">내장형</string>
     <string name="source_sheet_gitlab_label">GitLab</string>
     <string name="source_sheet_status_resolving">확인 중…</string>
     <string name="source_sheet_edit_description">편집</string>
@@ -721,6 +720,7 @@
     <string name="settings_background_snow">눈송이</string>
     <string name="settings_background_grid">격자</string>
     <string name="settings_background_particles">입자</string>
+    <string name="settings_background_lava">라바 램프</string>
     <string name="settings_background_matrix">매트릭스</string>
     <string name="settings_toggle_parallax_label">페럴랙스 효과</string>
     <string name="settings_toggle_parallax_desc">마우스를 움직일 때 배경이 부드럽게 이동합니다</string>

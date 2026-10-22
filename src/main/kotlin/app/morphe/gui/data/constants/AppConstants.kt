@@ -7,12 +7,9 @@ package app.morphe.gui.data.constants
 
 import java.util.Properties
 
-/**
- * Centralized configuration for supported apps.
- */
+/** Application-level constants and version metadata. */
 object AppConstants {
 
-    // ==================== APP INFO ====================
     private val pkg by lazy { AppConstants::class.java.`package` }
 
     val APP_VERSION: String by lazy {
@@ -26,24 +23,13 @@ object AppConstants {
         resolvedVersion?.let { "v$it" } ?: "dev"
     }
 
-    // ==================== API ====================
-    const val MORPHE_API_URL = "https://api.morphe.software"
-
     const val WEBSITE_URL = "https://morphe.software"
-    /** A dev build carries a prerelease suffix, and an unpackaged run reports "dev". */
+    /** True if the running version is a prerelease or unpackaged development build. */
     val IS_DEV_BUILD: Boolean by lazy { APP_VERSION == "dev" || APP_VERSION.contains('-') }
 
     val DOCUMENTATION_URL: String by lazy {
         val branch = if (IS_DEV_BUILD) "dev" else "main"
         "https://github.com/MorpheApp/morphe-desktop/blob/$branch/docs/documentation.md"
     }
-
-    val FALLBACK_PACKAGES = listOf(
-        "com.google.android.youtube",
-        "com.google.android.apps.youtube.music",
-        "com.reddit.frontpage",
-    )
-
-    // TODO: Checksum verification will be re-enabled when checksums are added to .mpp files
-    // For now, checksums are not validated. See ChecksumUtils.kt for the verification logic.
+    // TODO: Re-enable checksum verification when checksums are added to .mpp files.
 }

@@ -7,25 +7,15 @@ package app.morphe.engine
 
 import java.util.Properties
 
-/**
- * Versions of Morphe ecosystem components that this desktop build is running against.
- *
- * Prefer each library's own embedded resource when present (so composite/local
- * substitutions report the truth). Fall back to build-time resolved metadata only
- * when a library does not ship a version resource (currently: morphe-library).
- */
+/** Resolves runtime version metadata for bundled Morphe ecosystem components. */
 object MorpheComponents {
 
-    /** morphe-patcher on the classpath (`app/morphe/patcher/version.properties`). */
+    /** Version of morphe-patcher on the classpath. */
     val patcherVersion: String? by lazy {
         readVersionProperty("/app/morphe/patcher/version.properties", "version")
     }
 
-    /**
-     * morphe-library on the classpath.
-     * Prefers `app/morphe/library/version.properties` if the library starts shipping it;
-     * otherwise the build-time resolved version in `app/morphe/cli/components.properties`.
-     */
+    /** Version of morphe-library on the classpath. */
     val libraryVersion: String? by lazy {
         readVersionProperty("/app/morphe/library/version.properties", "version")
             ?: readVersionProperty("/app/morphe/cli/components.properties", "libraryVersion")

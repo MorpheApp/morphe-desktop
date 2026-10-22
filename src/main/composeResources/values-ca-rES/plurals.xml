@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d no s'ha pogut carregar la font del pedaç. S'utilitzen les que s'han carregat correctament</item>
+        <item quantity="other">%1$d no s'han pogut carregar les fonts del pedaç. S'utilitzen les que s'han carregat correctament</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d l'aplicació pedaçada té una actualització disponible</item>
+        <item quantity="other">%1$d les aplicacions pedaçades tenen actualitzacions disponibles</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">S'ha desat la línia %1$d a %2$s</item>
+        <item quantity="other">S'han desat les línies %1$d a %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d font</item>
+        <item quantity="other">%1$d fonts</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d pedaç serà aplicat</item>
+        <item quantity="other">%1$d pedaços seran aplicats</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d exclòs</item>
+        <item quantity="other">%1$d exclòs</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d habilitat</item>
+        <item quantity="other">%1$d habilitat</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d deshabilitat</item>
+        <item quantity="other">%1$d deshabilitat</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d llibreria</item>
+        <item quantity="other">%1$d llibreries</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d de %2$d seleccionats</item>
+        <item quantity="other">%1$d de %2$d seleccionats</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d pedaç</item>
+        <item quantity="other">%1$d pedaços</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d targeta substitueix açò</item>
+        <item quantity="other">%1$d targetes substitueixen açò</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Descarrega %1$d paquet</item>
+        <item quantity="other">Descarrega %1$d paquets</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d nucli</item>
+        <item quantity="other">%1$d nuclis</item>
+    </plurals>
+</resources>

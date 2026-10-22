@@ -7,73 +7,41 @@ package app.morphe.engine.model
 
 import kotlinx.serialization.Serializable
 
-/**
- * A record of one app the user has patched, the "recall" data behind the
- * patched-app history (see `patched-app-recall-plan.md`).
- *
- * Written by both the CLI and the GUI on a successful patch (the store lives in
- * the shared engine layer so the two pipelines feed one history), and read back
- * to surface "you've patched this before / an update is available" UX.
- *
- * Keyed by [packageName], so re-patching the same app overwrites its record.
- * For apps whose package is renamed by a patch, this is the **original**
- * (pre-patch) package name, for consistency with the rest of our schema.
- */
+/** History record for a patched app, keyed by original [packageName]. */
 @Serializable
 data class PatchedAppRecord(
     val packageName: String,
-    /**
-     * Post-patch package as it installs on a device, differing from [packageName]
-     * when a rename patch was applied (e.g. `com.google.android.youtube` →
-     * `app.morphe.android.youtube`). Read from the output APK's manifest at patch
-     * time. Null/blank = no rename (same as [packageName]). Mirrors Manager's
-     * `currentPackageName`.
-     */
+    /** Package name after patching if renamed by a patch. Null if unchanged. */
     val currentPackageName: String? = null,
-    /** Human-readable app name shown in UI. */
     val displayName: String,
-    /** APK version at patch time. */
     val apkVersion: String,
     val apkVersionCode: Int? = null,
 
     /** Input APK path used. May no longer exist on disk. */
     val inputApkPath: String,
-    /** Output APK path we wrote. Its existence is the "is it still here" signal. */
     val outputApkPath: String,
 
-    /**
-     * Baseline integrity fingerprint of the output APK, captured at patch time.
-     * Lets us later detect when the patched APK was changed outside Morphe
-     * (hash mismatch) vs untouched. Null only for records written before this
-     * field existed, or if hashing failed. See `patched-app-recall-plan.md` (Phase 6).
-     */
+    /** SHA-256 hash of the output APK to detect external changes. */
     val outputApkSha256: String? = null,
-    /** Size in bytes of the output APK at patch time. */
     val outputApkSize: Long = 0,
 
-    /** Bundle source id → set of enabled patch unique ids (same shape as the selection state). */
+    /** Source ID to set of enabled patch IDs. */
     val patchSelectionByBundle: Map<String, Set<String>> = emptyMap(),
-    /** "patchName.optionKey" → raw value string (deserialized by patch type at apply time). */
+    /** Map of `"patchName.optionKey"` to option value string. */
     val patchOptionValues: Map<String, String> = emptyMap(),
 
-    /**
-     * Which sources + versions were enabled at patch time. "Update available"
-     * detection compares current source versions against this snapshot.
-     */
+    /** Patch bundle sources and versions captured at patch time. */
     val sourcesSnapshot: List<PatchedSourceSnapshot> = emptyList(),
 
-    /** Epoch millis of when the patch completed. */
     val patchedAt: Long,
     val patchedWithMorpheVersion: String,
 ) {
-    /** Package actually installed on a device (post-rename if applicable). */
     val installedPackageName: String get() = currentPackageName?.takeIf { it.isNotBlank() } ?: packageName
 
     @Serializable
     data class PatchedSourceSnapshot(
         val sourceId: String,
         val sourceName: String,
-        /** `.mpp` release version, e.g. `v1.5.0`. */
         val version: String,
     )
 }

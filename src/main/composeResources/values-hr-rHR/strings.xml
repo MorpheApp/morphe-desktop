@@ -56,6 +56,7 @@
     <string name="status_offline">Izvan mreže</string>
     <string name="status_ready">Spreman</string>
     <string name="filter_apps_hint">Filtriraj aplikacije…</string>
+    <string name="version">Verzija</string>
     <string name="version_label_stable">Stabilna</string>
     <string name="version_label_dev">Razvojna</string>
     <string name="version_label_experimental">Eksperimentalno</string>
@@ -248,7 +249,6 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="home_apk_info_remove_description">Uklonite APK</string>
     <string name="home_apk_info_limited_info_warning">Nije moguće u potpunosti pročitati manifest ovog APK-a (često kod split paketa). Detalji u nastavku su približni, krpanje bi ipak trebalo raditi</string>
     <string name="home_apk_info_unsupported_app_warning">Nisu pronađene kompatibilne zakrpe za ovu aplikaciju. Ipak možete nastaviti, ali krpanje možda neće imati učinka</string>
-    <string name="home_apk_info_version_label">Verzija</string>
     <string name="home_apk_info_build_label">Inačica</string>
     <string name="home_apk_info_size_label">Veličina</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -467,7 +467,6 @@ Ponovno odaberite APK za ponovno krpanje sa svojim spremljenim postavkama</strin
     <string name="patching_graph_storage_io">Pohrana I/O</string>
     <string name="patching_graph_cpu_usage">Upotreba CPU-a</string>
     <string name="patching_banner_started_title">Primjena zakrpa je započela</string>
-    <string name="patching_banner_app_version">Verzija aplikacije</string>
     <string name="patching_banner_apk_size">Veličina APK datoteke</string>
     <string name="patching_banner_patches">Patchevi</string>
     <string name="patching_banner_split_apk">Podijeli APK</string>
@@ -742,6 +741,7 @@ Ponovno odaberite APK za ponovno krpanje sa svojim spremljenim postavkama</strin
     <string name="settings_background_snow">Snijeg</string>
     <string name="settings_background_grid">Mreža</string>
     <string name="settings_background_particles">Čestice</string>
+    <string name="settings_background_lava">Lampa s lavom</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Efekt paralakse</string>
     <string name="settings_toggle_parallax_desc">Glatko pomicanje pozadine prilikom pomicanja miša</string>

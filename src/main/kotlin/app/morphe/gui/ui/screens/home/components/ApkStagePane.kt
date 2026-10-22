@@ -6,14 +6,9 @@
 package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,28 +19,22 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.morphe.engine.model.VersionStatus
+import app.morphe.gui.ui.components.DropPromptContent
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
+import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.HomeUiState
-import app.morphe.gui.ui.theme.contrastingForeground
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.StatusColorType
-import app.morphe.gui.util.VersionStatus
 import app.morphe.gui.util.resolveStatusColorType
 import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-
-// ============================================================================
-// APK STAGE (drop zone, APK info, analyzing)
-// ============================================================================
 
 @Composable
 internal fun MiddleContent(
@@ -79,22 +68,16 @@ internal fun MiddleContent(
     }
 }
 
-// ============================================================================
-// DROP ZONE (corner brackets, scanner/targeting aesthetic)
-// ============================================================================
-
 @Composable
 internal fun DropPromptSection(
     isDragHovering: Boolean,
     onBrowseClick: () -> Unit
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
+    val accents = MorpheTheme.colors
     val bracketColor = if (isDragHovering) accents.primary.copy(alpha = 0.7f)
         else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-    val targetBgColor = if (isDragHovering) accents.primary.copy(alpha = 0.08f) else Color.Transparent
-    val animatedBgColor by animateColorAsState(targetValue = targetBgColor, animationSpec = tween(150))
+    val targetBgColor = if (isDragHovering) accents.primary.copy(alpha = MorpheTheme.alphas.hover) else Color.Transparent
+    val animatedBgColor by animateColorAsState(targetValue = targetBgColor, animationSpec = MorpheMotion.fastTween())
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,12 +85,12 @@ internal fun DropPromptSection(
             .widthIn(max = 440.dp)
             .fillMaxWidth()
     ) {
-        // Drop zone
+        val mediumDp = MorpheTheme.shapes.mediumDp
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1.4f)
-                .clip(RoundedCornerShape(corners.medium))
+                .clip(MorpheTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                 .background(animatedBgColor)
                 .clickable { onBrowseClick() }
@@ -115,55 +98,16 @@ internal fun DropPromptSection(
                 .drawBehind {
                     drawRoundRect(
                         color = bracketColor,
-                        cornerRadius = CornerRadius(corners.medium.toPx()),
+                        cornerRadius = CornerRadius(mediumDp.toPx()),
                         style = Stroke(width = 4f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(24f, 24f), 0f))
                     )
                 },
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    imageVector = MorpheIcons.CloudUpload,
-                    contentDescription = null,
-                    modifier = Modifier.size(44.dp),
-                    tint = if (isDragHovering) accents.primary
-                           else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = if (isDragHovering) stringResource(Res.string.release_to_drop) else stringResource(Res.string.drop_apk_here),
-                    fontSize = 18.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.SemiBold,
-                    color = if (isDragHovering) accents.primary
-                           else MaterialTheme.colorScheme.onSurface
-                )
-                if (!isDragHovering) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = stringResource(Res.string.click_to_browse),
-                        fontSize = 14.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = stringResource(Res.string.app_info_extensions_label),
-                        fontSize = 10.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+            DropPromptContent(isDragHovering = isDragHovering)
         }
     }
 }
-
-// ============================================================================
-// APK SELECTED (info card and action buttons)
-// ============================================================================
 
 @Composable
 internal fun ApkSelectedSection(
@@ -174,30 +118,15 @@ internal fun ApkSelectedSection(
     onContinueClick: () -> Unit,
     patchSourceNames: List<String> = emptyList(),
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
+    val accents = MorpheTheme.colors
     val statusColorType = resolveStatusColorType(apkInfo.versionStatus, apkInfo.checksumStatus)
-    val accentColor = if (statusColorType == StatusColorType.PRIMARY) accents.secondary
-                      else statusColorType.toColor()
     
     val showWarning = apkInfo.versionStatus != VersionStatus.LATEST_STABLE &&
                       apkInfo.versionStatus != VersionStatus.UNKNOWN
     val isWarningState = showWarning || apkInfo.isUnsupportedApp || apkInfo.hasLimitedInfo
-    val buttonColors = when {
-        isWarningState -> {
-            // For unsupported or limited info, use accents.warning instead of statusColorType if status is PRIMARY
-            val warningColor = if (statusColorType == StatusColorType.PRIMARY) accents.warning else statusColorType.toColor()
-            ButtonDefaults.outlinedButtonColors(
-                containerColor = warningColor,
-                contentColor = warningColor.contrastingForeground()
-            )
-        }
-        else -> ButtonDefaults.outlinedButtonColors(
-            containerColor = accents.primary,
-            contentColor = accents.primary.contrastingForeground()
-        )
-    }
+    val buttonColor = if (isWarningState) {
+        if (statusColorType == StatusColorType.PRIMARY) accents.warning else statusColorType.toColor()
+    } else accents.primary
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -213,77 +142,45 @@ internal fun ApkSelectedSection(
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedButton(
+            MorpheButton(
+                label = stringResource(Res.string.home_stage_change_apk),
+                size = MorpheButtonSize.LARGE,
+                variant = MorpheButtonVariant.OUTLINED,
                 onClick = onChangeClick,
-                modifier = Modifier.height(44.dp).handCursor(),
-                shape = RoundedCornerShape(corners.small),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
-            ) {
-                Text(
-                    text = stringResource(Res.string.home_stage_change_apk),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font
-                )
-            }
-            val buttonBorderColor = if (showWarning) {
-                if (statusColorType == StatusColorType.PRIMARY) accents.warning else statusColorType.toColor()
-            } else accents.primary
-            OutlinedButton(
+            )
+            MorpheButton(
                 onClick = onContinueClick,
                 enabled = patchesLoaded,
-                modifier = Modifier.widthIn(min = 160.dp).height(44.dp).handCursor(patchesLoaded),
-                colors = buttonColors,
-                border = BorderStroke(1.dp, buttonBorderColor),
-                shape = RoundedCornerShape(corners.small),
-                interactionSource = remember { MutableInteractionSource() }
+                size = MorpheButtonSize.LARGE,
+                variant = MorpheButtonVariant.FILLED,
+                customColor = buttonColor,
+                modifier = Modifier.widthIn(min = 160.dp),
             ) {
-                ActionButtonContent(patchesLoaded, font)
+                if (!patchesLoaded) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(Res.string.status_loading),
+                        style = MorpheTheme.typography.labelLarge,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(Res.string.home_stage_continue),
+                        style = MorpheTheme.typography.labelLarge,
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-internal fun ActionButtonContent(
-    patchesLoaded: Boolean,
-    font: FontFamily
-) {
-    if (!patchesLoaded) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(16.dp),
-            strokeWidth = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = stringResource(Res.string.status_loading),
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = font
-        )
-    } else {
-        Text(
-            text = stringResource(Res.string.home_stage_continue),
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = font
-        )
-    }
-}
-
-// ════════════════════════════════════════════════════════════════════
-//  ANALYZING STATE
-// ════════════════════════════════════════════════════════════════════
-
-@Composable
 internal fun AnalyzingSection() {
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
+    val accents = MorpheTheme.colors
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -299,9 +196,7 @@ internal fun AnalyzingSection() {
 
         Text(
             text = stringResource(Res.string.home_stage_analyzing_title),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            fontFamily = font,
+            style = MorpheTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface
         )
 
@@ -309,9 +204,7 @@ internal fun AnalyzingSection() {
 
         Text(
             text = stringResource(Res.string.home_stage_reading_metadata),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
+            style = MorpheTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }

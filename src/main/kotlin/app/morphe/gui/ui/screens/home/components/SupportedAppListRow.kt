@@ -6,85 +6,56 @@
 package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.morphe.engine.model.SupportedApp
+import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.ui.components.MorpheAppAvatar
+import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
 import app.morphe.gui.ui.components.cardChipInk
 import app.morphe.gui.ui.components.MorpheCardChip
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.AppCard
-import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
-import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Vertical-list-friendly supported-app row. Two-row collapsed layout:
- *   row 1: initial badge + app name + package name (muted)
- *   row 2: STABLE LATEST chip + EXPERIMENTAL LATEST chip (or a dash placeholder)
- *
- * Whole row is clickable (Phase 3 hooks expansion to it). Version chips are
- * also tappable as quick-download shortcuts. Their clicks are consumed so
- * they don't bubble up and trigger the row click.
- */
+/** List row displaying a supported application with version chips and expandable details. */
 @Composable
 fun SupportedAppListRow(
     app: SupportedApp,
     onClick: () -> Unit = {},
     isExpanded: Boolean = false,
-    /** Source display names whose patches target [app.packageName]. Rendered as
-     *  the FROM chips inside the expanded body. Empty hides the FROM section. */
+    /** Display names of patch sources targeting this package. */
     patchSourceNames: List<String> = emptyList(),
     patchedState: PatchedAppState = PatchedAppState.NEVER_PATCHED,
-    /** Optional device-layer info (installed? + version). Null = no device / not patched.
-     *  Recall ACTIONS (Re-patch/Forget) live on the "Your apps" card, not here. */
+    /** Device installation status and version information, if available. */
     deviceInfo: DeviceAppInfo? = null,
     modifier: Modifier = Modifier,
 ) {
-    val corners = LocalMorpheCorners.current
     val chipInk = cardChipInk
-    val font = LocalMorpheFont.current
-
-    val initial = app.displayName.firstOrNull()?.uppercase() ?: "?"
-    val hasExperimental = app.experimentalVersions.isNotEmpty()
     val latestExperimental = app.experimentalVersions.firstOrNull()
 
     val cardFills = LocalCardFills.current
 
     AppCard(
         modifier = modifier.fillMaxWidth(),
-        cornerRadius = corners.medium,
+        cornerRadius = MorpheTheme.shapes.mediumDp,
         appIconColorHex = app.appIconColor,
         fill = cardFills[app.packageName],
         onClick = onClick,
@@ -98,59 +69,40 @@ fun SupportedAppListRow(
                 .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-        // ── Row 1: initial + name + package ──
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(corners.small))
-                    .border(1.dp, Color.White.copy(alpha = 0.35f), RoundedCornerShape(corners.small))
-                    .background(Color.White.copy(alpha = 0.06f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = initial,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = font,
-                    color = Color.White,
-                )
-            }
+            MorpheAppAvatar(
+                name = app.displayName,
+                size = MorpheAvatarSize.ROW,
+                onGradient = true,
+            )
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = app.displayName,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = font,
-                    color = Color.White,
+                    style = MorpheTheme.typography.titleMedium.copy(color = Color.White),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = app.packageName,
-                    fontSize = 10.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.White.copy(alpha = 0.6f),
+                    style = MorpheTheme.typography.labelSmall.copy(
+                        color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
+                    ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
             if (patchedState != PatchedAppState.NEVER_PATCHED) {
                 Spacer(Modifier.width(8.dp))
-                PatchedStateBadge(patchedState, font)
+                PatchedStateBadge(patchedState)
             }
         }
 
-        // ── Row 2: Stable + Experimental chips ──
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // The URL goes through unconditionally. When recommendedVersion is null
-            // (patches work on Any version) it still points at the app's general
-            // APKMirror page and stays clickable.
+            // Fall back to general download URL when recommended version is null.
             VersionCardChip(
                 channelLabel = stringResource(Res.string.version_label_latest_stable),
                 version = app.recommendedVersion,
@@ -165,68 +117,35 @@ fun SupportedAppListRow(
             )
         }
 
-        // ── Expanded body: PATCHES FROM + ALSO STABLE + EXPERIMENTAL pills ──
         AnimatedVisibility(
             visible = isExpanded,
-            enter = expandVertically(animationSpec = tween(220), expandFrom = Alignment.Top) +
-                    fadeIn(animationSpec = tween(180)),
-            exit = shrinkVertically(animationSpec = tween(180), shrinkTowards = Alignment.Top) +
-                    fadeOut(animationSpec = tween(120)),
+            enter = DisclosureEnter,
+            exit = DisclosureExit,
         ) {
             Column {
                 ExpandedBody(
                     app = app,
                     patchSourceNames = patchSourceNames,
                     chipInk = chipInk,
-                    font = font,
-                    cornerSmall = corners.small,
                 )
-                deviceInfo?.let { DeviceInfoLine(it, font) }
+                deviceInfo?.let {
+                    DeviceLine(
+                        info = it,
+                        mutedColor = Color.White.copy(alpha = 0.5f),
+                        activeColor = Color.White,
+                        modifier = Modifier.padding(top = 6.dp),
+                    )
+                }
             }
         }
     }
 }
 }
 
-/** Optional device-layer line: whether the app is installed on the connected device. */
-@Composable
-private fun DeviceInfoLine(info: DeviceAppInfo, font: FontFamily) {
-    val version = info.installedVersion?.removePrefix("v")
-    val text = when {
-        !info.installed -> stringResource(Res.string.home_app_row_not_on_device)
-        // Installed but signed by a different cert → replaced/re-signed outside Morphe.
-        info.signedByMorphe == false -> {
-            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version_not_signed, version)
-            else stringResource(Res.string.home_app_row_on_device_not_signed)
-        }
-        else -> {
-            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version, version)
-            else stringResource(Res.string.home_app_row_on_device)
-        }
-    }
-    val color = when {
-        !info.installed -> Color.White.copy(alpha = 0.5f)
-        info.signedByMorphe == false -> Color(0xFFE0504D) // red
-        else -> Color.White // ours, or signature undetermined
-    }
-    Text(
-        text = text,
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Normal,
-        fontFamily = font,
-        color = color,
-        modifier = Modifier.padding(top = 6.dp),
-    )
-}
-
-/**
- * Small recall badge shown in the row header. Renders nothing for
- * [PatchedAppState.NEVER_PATCHED] (callers gate on that before calling).
- */
+/** Status badge displaying the current patching state of an application. */
 @Composable
 internal fun PatchedStateBadge(
     state: PatchedAppState,
-    font: FontFamily,
     onGradient: Boolean = true,
 ) {
     val label = when (state) {
@@ -236,11 +155,19 @@ internal fun PatchedStateBadge(
         PatchedAppState.APK_MISSING -> stringResource(Res.string.home_app_row_apk_missing_badge)
         PatchedAppState.NEVER_PATCHED -> return
     }
-    if (!onGradient) {
-        MorpheBadge(text = label, tone = MorpheBadgeTone.Primary)
-        return
+    if (onGradient) {
+        MorpheBadge(
+            text = label,
+            containerColor = Color.White.copy(alpha = 0.20f),
+            contentColor = Color.White,
+            onGradient = false,
+        )
+    } else {
+        MorpheBadge(
+            text = label,
+            tone = MorpheBadgeTone.Primary,
+        )
     }
-    MorpheCardChip(text = label)
 }
 
 @Composable
@@ -261,18 +188,13 @@ private fun VersionCardChip(
     )
 }
 
-/** Body that drops down below the collapsed row when [SupportedAppListRow.isExpanded]
- *  is true. Sections: PATCHES FROM, STABLE, EXPERIMENTAL. */
+/** Expanded detail section displaying patch sources and version channels. */
 @Composable
 private fun ExpandedBody(
     app: SupportedApp,
     patchSourceNames: List<String>,
     chipInk: Color,
-    font: FontFamily,
-    cornerSmall: Dp,
 ) {
-    val stableVersions = app.supportedVersions
-    val maxPills = 16
     val uriHandler = LocalUriHandler.current
 
     Column(
@@ -282,7 +204,7 @@ private fun ExpandedBody(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (patchSourceNames.isNotEmpty()) {
-            SectionLabel(text = stringResource(Res.string.home_app_row_section_patches_from), font = font, color = chipInk)
+            SectionLabel(text = stringResource(Res.string.home_app_row_section_patches_from), color = chipInk)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -293,58 +215,54 @@ private fun ExpandedBody(
             }
         }
 
-        if (stableVersions.isNotEmpty()) {
-            SectionLabel(text = stringResource(Res.string.version_label_stable), font = font, color = chipInk)
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                stableVersions.take(maxPills).forEach { v ->
-                    // URL is a pure function of package + version. Compute
-                    // per pill rather than pre-storing all of them on the model.
-                    val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
-                    MorpheCardChip(
-                        text = v,
-                        icon = if (url != null) MorpheIcons.OpenInNew else null,
-                        onClick = url?.let { { uriHandler.openUri(it) } },
-                    )
-                }
-                if (stableVersions.size > maxPills) {
-                    Text(
-                        text = "+${stableVersions.size - maxPills}",
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                    )
-                }
-            }
-        }
+        VersionChipSection(
+            label = stringResource(Res.string.version_label_stable),
+            color = chipInk,
+            versions = app.supportedVersions,
+            packageName = app.packageName,
+            onOpenUrl = uriHandler::openUri,
+        )
 
-        if (app.experimentalVersions.isNotEmpty()) {
-            SectionLabel(text = stringResource(Res.string.version_label_experimental), font = font, color = chipInk)
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                app.experimentalVersions.take(maxPills).forEach { v ->
-                    val url = remember(v) { SupportedApp.getDownloadUrl(app.packageName, v) }
-                    MorpheCardChip(
-                        text = v,
-                        icon = if (url != null) MorpheIcons.OpenInNew else null,
-                        onClick = url?.let { { uriHandler.openUri(it) } },
-                    )
-                }
-                if (app.experimentalVersions.size > maxPills) {
-                    Text(
-                        text = "+${app.experimentalVersions.size - maxPills}",
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                    )
-                }
-            }
+        VersionChipSection(
+            label = stringResource(Res.string.version_label_experimental),
+            color = chipInk,
+            versions = app.experimentalVersions,
+            packageName = app.packageName,
+            onOpenUrl = uriHandler::openUri,
+        )
+    }
+}
+
+@Composable
+private fun VersionChipSection(
+    label: String,
+    color: Color,
+    versions: List<String>,
+    packageName: String,
+    onOpenUrl: (String) -> Unit,
+    maxPills: Int = 16,
+) {
+    if (versions.isEmpty()) return
+    SectionLabel(text = label, color = color)
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        versions.take(maxPills).forEach { v ->
+            val url = remember(v) { SupportedApp.getDownloadUrl(packageName, v) }
+            MorpheCardChip(
+                text = v,
+                icon = if (url != null) MorpheIcons.OpenInNew else null,
+                onClick = url?.let { { onOpenUrl(it) } },
+            )
+        }
+        if (versions.size > maxPills) {
+            Text(
+                text = "+${versions.size - maxPills}",
+                style = MorpheTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = MorpheTheme.alphas.secondaryText),
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+            )
         }
     }
 }
@@ -352,14 +270,11 @@ private fun ExpandedBody(
 @Composable
 internal fun SectionLabel(
     text: String,
-    font: FontFamily,
     color: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     Text(
         text = text,
-        fontSize = 13.sp,
-        fontWeight = FontWeight.SemiBold,
+        style = MorpheTheme.typography.titleSmall,
         color = color,
-        fontFamily = font,
     )
 }

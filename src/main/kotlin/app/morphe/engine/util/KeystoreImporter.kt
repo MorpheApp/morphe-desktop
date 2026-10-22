@@ -6,7 +6,9 @@
 package app.morphe.engine.util
 
 import java.io.File
+import java.security.Provider
 import java.security.Security
+import java.security.UnrecoverableKeyException
 
 /**
  * The user-facing entry point for "I have a keystore file, make it work with
@@ -114,7 +116,7 @@ object KeystoreImporter {
         try {
             val provider = Class.forName("org.bouncycastle.jce.provider.BouncyCastleProvider")
                 .getDeclaredConstructor()
-                .newInstance() as java.security.Provider
+                .newInstance() as Provider
             Security.addProvider(provider)
         } catch (_: Exception) {
             // If BC isn't on the classpath the patcher itself would fail anyway —
@@ -125,9 +127,9 @@ object KeystoreImporter {
     private fun friendlyConversionError(cause: Throwable): String {
         val msg = cause.message.orEmpty()
         return when {
-            cause is java.security.UnrecoverableKeyException ||
+            cause is UnrecoverableKeyException ||
                 msg.contains("password", ignoreCase = true) ->
-                "Couldn't decrypt keystore — wrong password or alias."
+                "Couldn't decrypt keystore, wrong password or alias."
             msg.contains("No entries found", ignoreCase = true) ->
                 "Keystore has no usable key entries."
             else -> "Conversion failed: ${msg.ifBlank { cause.javaClass.simpleName }}"

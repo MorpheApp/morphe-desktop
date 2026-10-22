@@ -5,19 +5,19 @@
 
 package app.morphe.desktop.command
 
-import app.morphe.desktop.command.CliHttpClient
-import app.morphe.engine.VersionMap
-import app.morphe.engine.mostCommonCompatibleVersions
-import app.morphe.engine.versionCodesFor
-import app.morphe.patcher.patch.loadPatchesFromJar
+import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.patches.SupportedAppCatalog
+import app.morphe.engine.patches.VersionMap
+import app.morphe.engine.patches.versionCodesFor
+import app.morphe.engine.util.Logger
+import java.io.File
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Help.Visibility.ALWAYS
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Option
 import picocli.CommandLine.Spec
-import java.io.File
-import java.util.logging.Logger
 
 @Command(
     name = "list-versions",
@@ -27,7 +27,6 @@ import java.util.logging.Logger
     ],
 )
 internal class ListCompatibleVersions : Runnable {
-    private val logger = Logger.getLogger(this::class.java.name)
 
     @Option(
         names = ["--patches"],
@@ -73,10 +72,9 @@ internal class ListCompatibleVersions : Runnable {
 
     override fun run() {
         try {
-            patchesFiles = PatchFileResolver.resolve(
+            patchesFiles = PatchResolver.resolveCliFiles(
                 patchesFiles,
                 prerelease,
-                CliHttpClient.instance
             )
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(
@@ -85,7 +83,7 @@ internal class ListCompatibleVersions : Runnable {
             )
         }
 
-        val patches = loadPatchesFromJar(patchesFiles)
+        val patches = PatchBundleLoader.loadFlat(patchesFiles)
 
         fun getVersionCodesString(pkgName: String, versionName: String): String {
             return patches.versionCodesFor(pkgName, versionName)?.let { codes ->
@@ -112,10 +110,17 @@ internal class ListCompatibleVersions : Runnable {
                 appendLine(versions.buildVersionsString(name).prependIndent("\t"))
             }
 
-        patches.mostCommonCompatibleVersions(
-            packageNames,
-            countUnusedPatches,
-            includeExperimental,
-        ).entries.joinToString("\n", transform = ::buildString).let(logger::info)
+        val compatibilityMap = SupportedAppCatalog.getCompatibilityMap(
+            packageNames = packageNames,
+            countUnusedPatches = countUnusedPatches,
+            includeExperimental = includeExperimental,
+            patches = patches,
+        )
+
+        if (compatibilityMap.isEmpty()) {
+            Logger.warn("No compatible versions found in: ${patchesFiles.joinToString(", ") { it.path }}")
+        } else {
+            Logger.info(compatibilityMap.entries.joinToString("\n", transform = ::buildString))
+        }
     }
 }

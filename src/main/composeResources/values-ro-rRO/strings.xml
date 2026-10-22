@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Gata</string>
     <string name="filter_apps_hint">Filtrează aplicațiile…</string>
+    <string name="version">Versiune</string>
     <string name="version_label_stable">Stabil</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Experimental</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Elimină APK-ul</string>
     <string name="home_apk_info_limited_info_warning">Nu s-a putut citi complet manifestul acestui APK (frecvent pentru pachetele divizate). Detaliile de mai jos sunt aproximative, patch-area ar trebui să funcționeze în continuare</string>
     <string name="home_apk_info_unsupported_app_warning">Nu s-au găsit patch-uri compatibile pentru această aplicație. Puteți continua, dar patch-area ar putea să nu aibă efect</string>
-    <string name="home_apk_info_version_label">Versiune</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Dimensiune</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">I/O de stocare</string>
     <string name="patching_graph_cpu_usage">Utilizare CPU</string>
     <string name="patching_banner_started_title">Patch-area a început</string>
-    <string name="patching_banner_app_version">Versiunea aplicației</string>
     <string name="patching_banner_apk_size">Dimensiunea APK</string>
     <string name="patching_banner_patches">Patch-uri</string>
     <string name="patching_banner_split_apk">APK divizat</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Zăpadă</string>
     <string name="settings_background_grid">Grilă</string>
     <string name="settings_background_particles">Particule</string>
+    <string name="settings_background_lava">Lampă lava</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Efect de paralaxă</string>
     <string name="settings_toggle_parallax_desc">Deplasare lină a fundalului când mutați mouse-ul</string>

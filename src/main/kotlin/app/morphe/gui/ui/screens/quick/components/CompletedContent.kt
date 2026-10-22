@@ -5,73 +5,50 @@
 
 package app.morphe.gui.ui.screens.quick.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
-import app.morphe.gui.ui.components.MorpheActionButton
-import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.components.morpheScrollbarStyle
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.LocalAdbPreference
-import app.morphe.gui.data.model.Patch
-import app.morphe.gui.data.repository.ConfigRepository
+import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.screens.quick.QuickApkInfo
-import app.morphe.gui.ui.screens.quick.formatFileSize
+import app.morphe.gui.ui.screens.result.components.OutputFileCard
 import app.morphe.gui.ui.theme.*
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.getUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
-import java.awt.Desktop
 import java.io.File
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-// ============================================================================
-// COMPLETED CONTENT (output + actions)
-// ============================================================================
-
 @Composable
 internal fun CompletedContent(
     outputPath: String,
-    apkInfo: QuickApkInfo,
     onPatchAnother: () -> Unit
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    val borderColor = MaterialTheme.colorScheme.outlineVariant
-    val outputFile = File(outputPath)
-    val scope = rememberCoroutineScope()
-    val adbManager = remember { AdbManager() }
-    val configRepository: ConfigRepository = koinInject()
+    val outputFile = remember(outputPath) { File(outputPath) }
     val monitorState by DeviceMonitor.state.collectAsState()
     val adbPreference = LocalAdbPreference.current
     val isAdbDisabledByUser = !adbPreference.enabled
     var isInstalling by remember { mutableStateOf(false) }
     var installError by remember { mutableStateOf<String?>(null) }
     var installSuccess by remember { mutableStateOf(false) }
+    val adbManager = remember { AdbManager() }
+    val engineConfigRepository: EngineConfigRepository = koinInject()
+    val scope = rememberCoroutineScope()
     val completedScroll = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -85,151 +62,29 @@ internal fun CompletedContent(
         ) {
             Text(
                 text = stringResource(Res.string.status_patching_completed),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
+                style = MorpheTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Box(
-                modifier = Modifier
-                    .widthIn(max = 480.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(corners.medium))
-                    .border(1.dp, borderColor, RoundedCornerShape(corners.medium))
-                    .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
-            ) {
-                Box(
-                    modifier = Modifier
-                        .width(3.dp)
-                        .fillMaxHeight()
-                        .background(accents.secondary)
-                        .align(Alignment.CenterStart)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 3.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 14.dp)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.output_file_label),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            fontFamily = font,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = outputFile.name,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = font,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        if (outputFile.exists()) {
-                            Spacer(Modifier.height(6.dp))
-                            Text(
-                                text = formatFileSize(outputFile.length()),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = accents.primary
-                            )
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val folderHover = remember { MutableInteractionSource() }
-                        val isFolderHovered by folderHover.collectIsHoveredAsState()
-                        val folderBg by animateColorAsState(
-                            if (isFolderHovered) accents.primary.copy(alpha = 0.08f)
-                            else Color.Transparent,
-                            animationSpec = tween(150)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .hoverable(folderHover)
-                                .clip(RoundedCornerShape(corners.small))
-                                .background(folderBg, RoundedCornerShape(corners.small))
-                                .border(
-                                    1.dp,
-                                    if (isFolderHovered) accents.primary.copy(alpha = 0.5f) else accents.primary.copy(alpha = 0.25f),
-                                    RoundedCornerShape(corners.small)
-                                )
-                                .handCursor()
-                                .clickable {
-                                    try {
-                                        val folder = outputFile.parentFile
-                                        if (folder != null && Desktop.isDesktopSupported()) {
-                                            Desktop.getDesktop().open(folder)
-                                        }
-                                    } catch (_: Exception) {}
-                                }
-                                .padding(horizontal = 14.dp, vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.open_folder),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = accents.primary
-                            )
-                        }
-                    }
-                }
-            }
+            OutputFileCard(
+                outputFile = outputFile,
+                showFolderPath = false,
+                modifier = Modifier.widthIn(max = 480.dp),
+            )
 
             if (isAdbDisabledByUser) {
                 Spacer(modifier = Modifier.height(12.dp))
-                val enableHover = remember { MutableInteractionSource() }
-                val enableHovered by enableHover.collectIsHoveredAsState()
-                Box(
+                MorpheButton(
+                    label = stringResource(Res.string.quick_patch_completed_adb_off),
+                    variant = MorpheButtonVariant.PRIMARY,
+                    size = MorpheButtonSize.DEFAULT,
                     modifier = Modifier
                         .widthIn(max = 480.dp)
-                        .fillMaxWidth()
-                        .height(38.dp)
-                        .hoverable(enableHover)
-                        .clip(RoundedCornerShape(corners.small))
-                        .background(
-                            if (enableHovered) accents.primary.copy(alpha = 0.12f)
-                            else accents.primary.copy(alpha = 0.06f),
-                            RoundedCornerShape(corners.small)
-                        )
-                        .border(
-                            1.dp,
-                            if (enableHovered) accents.primary.copy(alpha = 0.45f)
-                            else accents.primary.copy(alpha = 0.22f),
-                            RoundedCornerShape(corners.small)
-                        )
-                        .handCursor()
-                        .clickable { adbPreference.onChange(true) },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(Res.string.quick_patch_completed_adb_off),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = font,
-                        color = accents.primary
-                    )
-                }
+                        .fillMaxWidth(),
+                    onClick = { adbPreference.onChange(true) }
+                )
             } else if (monitorState.isAdbAvailable == true) {
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -245,7 +100,7 @@ internal fun CompletedContent(
                             Icon(
                                 imageVector = MorpheIcons.CheckCircle,
                                 contentDescription = null,
-                                tint = accents.secondary,
+                                tint = MorpheTheme.colors.secondary,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(Modifier.width(8.dp))
@@ -254,10 +109,8 @@ internal fun CompletedContent(
                                     Res.string.installed_on,
                                     selectedDevice?.displayName ?: stringResource(Res.string.device_default)
                                 ),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = accents.secondary
+                                style = MorpheTheme.typography.labelSmall,
+                                color = MorpheTheme.colors.secondary
                             )
                         }
                     }
@@ -269,22 +122,22 @@ internal fun CompletedContent(
                             CircularProgressIndicator(
                                 modifier = Modifier.size(14.dp),
                                 strokeWidth = 2.dp,
-                                color = accents.primary
+                                color = MorpheTheme.colors.primary
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = stringResource(Res.string.installing),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
-                                color = accents.primary
+                                style = MorpheTheme.typography.labelSmall,
+                                color = MorpheTheme.colors.primary
                             )
                         }
                     }
                     readyDevices.isNotEmpty() -> {
                         val device = selectedDevice ?: readyDevices.first()
-                        MorpheActionButton(
+                        MorpheButton(
                             label = stringResource(Res.string.adb_install_on_button, device.displayName),
+                            variant = MorpheButtonVariant.FILLED,
+                            size = MorpheButtonSize.LARGE,
                             modifier = Modifier
                                 .widthIn(max = 480.dp)
                                 .fillMaxWidth(),
@@ -294,12 +147,12 @@ internal fun CompletedContent(
                                     installError = null
                                     val result = adbManager.installApk(
                                         apkPath = outputPath,
-                                        deviceId = device.id
+                                        deviceId = device.id,
                                     )
                                     result.fold(
                                         onSuccess = {
                                             installSuccess = true
-                                            val config = configRepository.loadConfig()
+                                            val config = engineConfigRepository.loadConfig()
                                             if (config.autoRouteLinksAfterInstall) {
                                                 val record = PatchedAppStore.shared.getAll()
                                                     .firstOrNull { it.outputApkPath == outputPath }
@@ -323,9 +176,7 @@ internal fun CompletedContent(
                     else -> {
                         Text(
                             text = stringResource(Res.string.quick_patch_completed_adb_connect_device),
-                            fontSize = 11.sp,
-                            fontFamily = font,
-                            fontWeight = FontWeight.Normal,
+                            style = MorpheTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -335,10 +186,8 @@ internal fun CompletedContent(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = error,
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.error,
+                        style = MorpheTheme.typography.labelSmall,
+                        color = MorpheTheme.colors.danger,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -346,32 +195,20 @@ internal fun CompletedContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedButton(
-                onClick = onPatchAnother,
+            MorpheButton(
+                label = stringResource(Res.string.quick_patch_patch_another_button),
+                variant = MorpheButtonVariant.PRIMARY,
+                size = MorpheButtonSize.LARGE,
                 modifier = Modifier
                     .widthIn(max = 480.dp)
-                    .fillMaxWidth()
-                    .height(42.dp)
-                    .handCursor(),
-                shape = RoundedCornerShape(corners.small),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                    contentColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Text(
-                    text = stringResource(Res.string.quick_patch_patch_another_button),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
-                )
-            }
+                    .fillMaxWidth(),
+                onClick = onPatchAnother
+            )
         }
         VerticalScrollbar(
             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
             adapter = rememberScrollbarAdapter(completedScroll),
-            style = morpheScrollbarStyle(),
+            style = MorpheScrollbarStyle(),
         )
     }
 }

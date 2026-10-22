@@ -7,9 +7,7 @@ package app.morphe.gui.data.repository
 
 import java.util.Locale
 
-/**
- * Repository responsible for loading, formatting, and filtering supported desktop languages.
- */
+/** Resolves, formats, and filters supported display languages. */
 class LanguageRepository {
 
     private var lastTargetLocale: Locale? = null
@@ -29,24 +27,41 @@ class LanguageRepository {
         return cachedOptions!!
     }
 
-    /**
-     * Returns the full list of supported languages, with "System" pinned at index 0,
-     * "English" at index 1, and the remaining options sorted alphabetically by display name.
-     */
-    fun getSupportedLanguages(appLanguageCode: String = SYSTEM_CODE): List<LanguageOption> = getOptionsForLocale(appLanguageCode)
-
-    /**
-     * Finds a [LanguageOption] by its language code, falling back to the System option if not found.
-     */
-    fun getLanguageByCode(code: String, appLanguageCode: String = SYSTEM_CODE): LanguageOption {
-        val options = getOptionsForLocale(appLanguageCode)
-        return options.firstOrNull { it.code.equals(code, ignoreCase = true) }
-            ?: options.first()
+    /** Returns cached language options for [appLanguageCode], or null if uncomputed. */
+    fun getCachedLanguages(appLanguageCode: String = SYSTEM_CODE): List<LanguageOption>? {
+        val targetLocale = if (appLanguageCode.isBlank() || appLanguageCode.equals(SYSTEM_CODE, ignoreCase = true)) {
+            Locale.getDefault()
+        } else {
+            Locale.forLanguageTag(appLanguageCode)
+        }
+        return if (lastTargetLocale == targetLocale) cachedOptions else null
     }
 
-    /**
-     * Filters supported languages in real time by language code, display name, or native name.
-     */
+    /** Returns [LanguageOption] for [code], falling back to System if not found. */
+    fun getLanguageByCode(code: String, appLanguageCode: String = SYSTEM_CODE): LanguageOption {
+        if (code.isBlank() || code.equals(SYSTEM_CODE, ignoreCase = true)) {
+            return LanguageOption(
+                code = SYSTEM_CODE,
+                displayName = "System",
+                nativeName = "System",
+                flag = "🌐"
+            )
+        }
+        val locale = Locale.forLanguageTag(code)
+        val targetLocale = if (appLanguageCode.isBlank() || appLanguageCode.equals(SYSTEM_CODE, ignoreCase = true)) {
+            Locale.getDefault()
+        } else {
+            Locale.forLanguageTag(appLanguageCode)
+        }
+        return LanguageOption(
+            code = code,
+            displayName = formatDisplayName(locale, targetLocale),
+            nativeName = formatDisplayName(locale, locale),
+            flag = flagForLocale(locale)
+        )
+    }
+
+    /** Filters supported languages by code, display name, or native name. */
     fun filterLanguages(query: String, appLanguageCode: String = SYSTEM_CODE): List<LanguageOption> {
         val options = getOptionsForLocale(appLanguageCode)
         val trimmed = query.trim()
@@ -76,10 +91,7 @@ class LanguageRepository {
             "uk-UA", "ur-IN", "uz-UZ", "vi-VN", "zh-CN", "zh-TW", "zu-ZA"
         )
 
-        /**
-         * Calculates a 2-letter country flag emoji dynamically using Unicode offsets (0x1F1E6).
-         * Falls back to a globe emoji (🌐) for missing or invalid region codes.
-         */
+        /** Converts a 2-letter country code into its corresponding flag emoji, or globe fallback. */
         fun countryCodeToFlagEmoji(countryCode: String?): String {
             if (countryCode.isNullOrBlank() || countryCode.length != 2) {
                 return "🌐"
@@ -93,9 +105,7 @@ class LanguageRepository {
             return String(Character.toChars(firstCodePoint)) + String(Character.toChars(secondCodePoint))
         }
 
-        /**
-         * Resolves the appropriate flag emoji for a [Locale].
-         */
+        /** Resolves flag emoji for [locale]. */
         fun flagForLocale(locale: Locale): String {
             val country = if (locale.country.isNotBlank()) {
                 locale.country
@@ -130,6 +140,22 @@ class LanguageRepository {
             return name
         }
 
+        private data class InvariantLanguageEntry(
+            val tag: String,
+            val locale: Locale,
+            val nativeName: String,
+            val flag: String,
+        )
+
+        private val INVARIANT_LANGUAGE_ENTRIES: List<InvariantLanguageEntry> by lazy {
+            SUPPORTED_LANGUAGE_TAGS.map { tag ->
+                val locale = Locale.forLanguageTag(tag)
+                val nativeName = formatDisplayName(locale, locale)
+                val flag = flagForLocale(locale)
+                InvariantLanguageEntry(tag, locale, nativeName, flag)
+            }
+        }
+
         private fun buildLanguageOptions(targetLocale: Locale): List<LanguageOption> {
             val systemOption = LanguageOption(
                 code = SYSTEM_CODE,
@@ -138,17 +164,13 @@ class LanguageRepository {
                 flag = "🌐"
             )
 
-            val parsedOptions = SUPPORTED_LANGUAGE_TAGS.map { tag ->
-                val locale = Locale.forLanguageTag(tag)
-                val displayName = formatDisplayName(locale, targetLocale)
-
-                val nativeName = formatDisplayName(locale, locale)
-                val flag = flagForLocale(locale)
+            val parsedOptions = INVARIANT_LANGUAGE_ENTRIES.map { entry ->
+                val displayName = formatDisplayName(entry.locale, targetLocale)
                 LanguageOption(
-                    code = tag,
+                    code = entry.tag,
                     displayName = displayName,
-                    nativeName = nativeName,
-                    flag = flag
+                    nativeName = entry.nativeName,
+                    flag = entry.flag
                 )
             }
 
@@ -162,14 +184,7 @@ class LanguageRepository {
     }
 }
 
-/**
- * Represents a language option for UI display and selection.
- *
- * @property code BCP-47 / ISO language tag, or "system" for system default.
- * @property displayName Language name formatted in English / display language (e.g. "Portuguese (Brazil)").
- * @property nativeName Language name formatted in its native locale (e.g. "Português (Brasil)").
- * @property flag Country flag emoji computed dynamically or "🌐" fallback.
- */
+/** Language metadata and display names for UI selection. */
 data class LanguageOption(
     val code: String,
     val displayName: String,
@@ -178,7 +193,6 @@ data class LanguageOption(
 )
 
 fun String.isRtlLanguage(): Boolean {
-    // Extract the primary subtag (e.g., "ar" from "ar-SA")
     val primaryCode = this.substringBefore('-').lowercase()
     return primaryCode in setOf("ar", "fa", "he", "iw", "ur", "ckb")
 }

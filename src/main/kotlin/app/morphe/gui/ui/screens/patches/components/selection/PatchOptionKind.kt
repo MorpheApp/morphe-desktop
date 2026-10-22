@@ -5,15 +5,13 @@
 
 package app.morphe.gui.ui.screens.patches.components.selection
 
-import app.morphe.gui.data.model.ExplicitOptionKind
-import app.morphe.gui.data.model.PatchOption
-import app.morphe.gui.data.model.PatchOptionType
-import app.morphe.gui.data.model.SliderBounds
+import app.morphe.engine.options.ExplicitOptionKind
+import app.morphe.engine.options.OptionKeywords
+import app.morphe.engine.options.PatchOption
+import app.morphe.engine.options.PatchOptionType
+import app.morphe.engine.options.SliderBounds
 
-/**
- * Represents the resolved UI kind of a patch option.
- * Drives an exhaustive when-expression in the patch options editor.
- */
+/** Resolved UI presentation kind for a patch option editor. */
 sealed interface OptionKind {
     data object StringList : OptionKind
     data object Color : OptionKind
@@ -44,12 +42,9 @@ sealed interface OptionKind {
     data class FloatRangeSlider(val bounds: SliderBounds) : OptionKind
 }
 
-/**
- * Resolves the [OptionKind] for a given [option] and its current [value].
- * All type-detection heuristics live here, keeping the UI when-expression clean and exhaustive.
- */
+/** Resolves the [OptionKind] for [option] based on its type and current [value]. */
 fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
-    // 1. Typed options dispatch to their dedicated picker Kind.
+    // Dispatch typed options to their dedicated picker kind.
     option.explicitKind?.let { kind ->
         val explicit = when (kind) {
             ExplicitOptionKind.Folder -> OptionKind.FolderPicker
@@ -78,11 +73,8 @@ fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
         isList && (typeStr.contains("String") || option.type == PatchOptionType.LIST) -> OptionKind.StringList
 
         // Path/folder string with presets: combined dropdown + path picker
-        isString && option.presets?.isNotEmpty() == true && (
-            desc.contains("folder") ||
-            desc.contains("mipmap") ||
-            desc.contains("drawable")
-        ) -> OptionKind.PathWithPresets
+        isString && option.presets?.isNotEmpty() == true &&
+            OptionKeywords.ASSET_FOLDER.any { it in desc } -> OptionKind.PathWithPresets
 
         // Color: string whose key/title hints "color" or value looks like a color literal
         isString && (
@@ -95,30 +87,18 @@ fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
 
         // Image file detected by heuristics (e.g. "custom wallpaper", "image", "logo", "banner")
         isString && option.presets == null && (
-            combinedMeta.contains("image") ||
-            combinedMeta.contains("wallpaper") ||
-            combinedMeta.contains("banner") ||
-            combinedMeta.contains("logo") ||
-            desc.contains("image") ||
-            desc.contains("wallpaper")
+            OptionKeywords.IMAGE.any { it in combinedMeta || it in desc }
         ) -> OptionKind.Image
 
         // Individual file path string: file picker (not a folder)
         isString && option.presets == null && (
-            desc.contains("file path") ||
-            combinedMeta.contains("file path") ||
-            option.type == PatchOptionType.FILE
-        ) && !desc.contains("folder") && !combinedMeta.contains("folder") && !combinedMeta.contains("customicon") -> OptionKind.FilePath
+            "file path" in desc || "file path" in combinedMeta || option.type == PatchOptionType.FILE
+        ) && !OptionKeywords.ASSET_FOLDER.any { it in desc || it in combinedMeta } && "customicon" !in combinedMeta -> OptionKind.FilePath
 
         // Path/folder string without presets: folder picker
         isString && option.key != "customName" && (
-            combinedMeta.contains("icon") ||
-            combinedMeta.contains("header") ||
-            combinedMeta.contains("custom") ||
-            combinedMeta.contains("folder") ||
-            desc.contains("folder") ||
-            desc.contains("mipmap") ||
-            desc.contains("drawable")
+            listOf("icon", "header", "custom").any { it in combinedMeta } ||
+            OptionKeywords.ASSET_FOLDER.any { it in combinedMeta || it in desc }
         ) -> OptionKind.Path
 
         // Comma-separated string: detected by value content or explicit description hint
@@ -145,10 +125,7 @@ fun resolveOptionKind(option: PatchOption, value: Any?): OptionKind {
     }
 }
 
-/**
- * A stored range option value read back as a range. Range options hold a two-element list
- * or comma-separated string, e.g. "10, 20".
- */
+/** Converts a stored two-element list or comma-separated string into a float range. */
 fun Any?.asFloatRange(): ClosedFloatingPointRange<Float>? {
     val pair: List<Float> = when (this) {
         is List<*> -> this.mapNotNull { (it as? Number)?.toFloat() ?: it?.toString()?.trim()?.toFloatOrNull() }

@@ -12,24 +12,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-/**
- * Snowfall background with layered depth and parallax effect.
- * Uses frame-based time so [speedMultiplier] changes smoothly without restarting animations.
- * On patching completion all snowflakes blast upward in a blizzard burst, then settle
- * back down into normal fall.
- */
+/** Animated background rendering falling snowflakes with layered depth and completion burst. */
 @Composable
 fun SnowBackground(
     modifier: Modifier = Modifier,
@@ -42,32 +37,30 @@ fun SnowBackground(
 
     val parallaxState = LocalParallaxState.current
 
-    // Create cached snowflake bitmaps with different detail levels
     val snowflakeBitmaps = remember(snowColor) {
         listOf(
-            createDetailedSnowflakeBitmap(40, snowColor, DetailLevel.HIGH), // Close - highly detailed
-            createDetailedSnowflakeBitmap(30, snowColor, DetailLevel.MEDIUM), // Middle - medium detail
-            createDetailedSnowflakeBitmap(20, snowColor, DetailLevel.LOW) // Far - simple
+            createDetailedSnowflakeBitmap(40, snowColor, DetailLevel.HIGH),
+            createDetailedSnowflakeBitmap(30, snowColor, DetailLevel.MEDIUM),
+            createDetailedSnowflakeBitmap(20, snowColor, DetailLevel.LOW)
         )
     }
 
-    // Generate snowflakes with depth layers
     val snowflakes = remember {
         List(40) {
             val depth = Random.nextFloat()
             val layer = when {
-                depth < 0.33f -> 0 // Close layer
-                depth < 0.66f -> 1 // Middle layer
-                else -> 2 // Far layer
+                depth < 0.33f -> 0
+                depth < 0.66f -> 1
+                else -> 2
             }
 
             SnowflakeData(
                 x = Random.nextFloat(),
                 initialProgress = Random.nextFloat(),
                 fallSpeed = when (layer) {
-                    0 -> 8000 + Random.nextInt(3000) // Fast (close)
-                    1 -> 12000 + Random.nextInt(4000) // Medium
-                    else -> 16000 + Random.nextInt(5000) // Slow (far)
+                    0 -> 8000 + Random.nextInt(3000)
+                    1 -> 12000 + Random.nextInt(4000)
+                    else -> 16000 + Random.nextInt(5000)
                 },
                 swayAmplitude = when (layer) {
                     0 -> 0.04f + Random.nextFloat() * 0.03f
@@ -76,9 +69,9 @@ fun SnowBackground(
                 },
                 swayFrequency = 1.2f + Random.nextFloat() * 1.0f,
                 size = when (layer) {
-                    0 -> 0.9f + Random.nextFloat() * 0.4f // 0.9-1.3
-                    1 -> 0.7f + Random.nextFloat() * 0.3f // 0.7-1.0
-                    else -> 0.5f + Random.nextFloat() * 0.2f // 0.5-0.7
+                    0 -> 0.9f + Random.nextFloat() * 0.4f
+                    1 -> 0.7f + Random.nextFloat() * 0.3f
+                    else -> 0.5f + Random.nextFloat() * 0.2f
                 },
                 rotationSpeed = 15000 + Random.nextInt(10000),
                 initialRotation = Random.nextFloat() * 360f,
@@ -89,11 +82,10 @@ fun SnowBackground(
         }
     }
 
-    // Frame-based time - accumulates in ms at speed 1x, respects speedMultiplier smoothly.
-    // Wraps at 120 000 ms to keep values manageable (same cycle as original)
+    // Frame-based time wrapping at 120 000 ms.
     val animatedTime = rememberAnimatedTime(speedMultiplier)
 
-    // Blizzard burst: snowflakes suddenly fly upward and fade out on completion
+    // Upward blizzard burst on completion.
     val burstProgress = remember { Animatable(0f) }
 
     CompletionEffect(patchingCompleted) {
@@ -103,7 +95,6 @@ fun SnowBackground(
                 targetValue = 1f,
                 animationSpec = tween(durationMillis = 1400, easing = FastOutSlowInEasing)
             )
-            // Smooth return - snowflakes settle back down and fade in gently
             burstProgress.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
@@ -114,11 +105,11 @@ fun SnowBackground(
     Canvas(modifier = modifier.fillMaxSize()) {
         val width = size.width
         val height = size.height
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
+        val tiltX = if (enableParallax) parallaxState.tiltX.value else 0f
+        val tiltY = if (enableParallax) parallaxState.tiltY.value else 0f
         val globalTime = animatedTime.value % 120000f
 
-        // Calculate fade multiplier for smooth loop transition
+        // Loop fade factor.
         val fadeDuration = 2000f
         val cycleFade = when {
             globalTime < fadeDuration -> globalTime / fadeDuration
@@ -126,43 +117,34 @@ fun SnowBackground(
             else -> 1f
         }
 
-        // Sort snowflakes by depth (far to close) for proper layering
         snowflakes.sortedBy { it.depth }.forEach { flake ->
-            // Calculate continuous fall progress
             val timeProgress = globalTime / flake.fallSpeed
             val fallProgress = (flake.initialProgress + timeProgress) % 1f
 
-            // Calculate sway - continuous wave
             val swayPhase = timeProgress * 2f * PI.toFloat() * flake.swayFrequency + flake.swayPhaseOffset
             val sway = sin(swayPhase) * flake.swayAmplitude
 
-            // Calculate rotation - continuous
             val rotation = (timeProgress * 360000f / flake.rotationSpeed + flake.initialRotation) % 360f
 
-            // Apply parallax with depth-based strength
             val parallaxStrength = flake.depth * 40f
             val parallaxX = tiltX * parallaxStrength
             val parallaxY = tiltY * parallaxStrength
 
-            // Calculate position with smooth wrapping
-            // During burst: flakes fly upward (negative Y offset) proportional to speed
+            // Position with parallax and completion lift.
             val bp = burstProgress.value
             val burstLift = if (bp > 0f) bp * (height + 200f) * (1f + flake.depth * 0.5f) else 0f
             val baseX = (flake.x + sway) * width + parallaxX
             val baseY = fallProgress * (height + 100f) - 50f + parallaxY - burstLift
 
-            // Wrap X position for horizontal parallax
             val centerX = when {
                 baseX < -50f -> baseX + width + 100f
                 baseX > width + 50f -> baseX - width - 100f
                 else -> baseX
             }
 
-            // Get bitmap for this layer
             val bitmap = snowflakeBitmaps[flake.layer]
             val drawSize = bitmap.width.toFloat() * flake.size
 
-            // Calculate alpha with edge fade for seamless loop
             val depthAlpha = 0.35f + (flake.depth * 0.55f)
             val edgeFade = when {
                 baseY < 0f -> ((baseY + 50f) / 50f).coerceIn(0f, 1f)
@@ -170,11 +152,9 @@ fun SnowBackground(
                 else -> 1f
             }
 
-            // Apply cycle fade + burst fade (flakes vanish as they fly up)
             val burstFade = if (burstProgress.value > 0f) (1f - burstProgress.value).coerceIn(0f, 1f) else 1f
             val finalAlpha = depthAlpha * (0.7f + flake.size * 0.3f) * edgeFade * cycleFade * burstFade
 
-            // Only draw if visible
             if (finalAlpha > 0.01f && baseY > -50f && baseY < height + 50f) {
                 drawIntoCanvas { canvas ->
                     canvas.save()
@@ -198,18 +178,14 @@ fun SnowBackground(
     }
 }
 
-/**
- * Detail level for snowflake rendering.
- */
+/** Detail level for snowflake rendering. */
 private enum class DetailLevel {
-    HIGH, // Close - full detail with branches
-    MEDIUM, // Middle - main arms with minimal branches
-    LOW // Far - simple star shape
+    HIGH,
+    MEDIUM,
+    LOW
 }
 
-/**
- * Create snowflake bitmap with varying detail levels.
- */
+/** Creates snowflake bitmap with varying detail levels. */
 private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: DetailLevel): ImageBitmap {
     val bitmap = ImageBitmap(size, size)
     val canvas = Canvas(bitmap)
@@ -223,16 +199,13 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
 
     when (detail) {
         DetailLevel.HIGH -> {
-            // Full detail with branches and decorations
             val branchRadius = mainRadius * 0.4f
 
-            // Draw 6 main arms with branches
             for (i in 0..5) {
                 val angle = (i * 60f) * (PI / 180f).toFloat()
                 val endX = center + cos(angle) * mainRadius
                 val endY = center + sin(angle) * mainRadius
 
-                // Main arm
                 paint.strokeWidth = size / 15f
                 canvas.drawLine(
                     Offset(center, center),
@@ -240,14 +213,12 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
                     paint
                 )
 
-                // Side branches
                 paint.strokeWidth = size / 25f
                 for (j in 1..2) {
                     val branchStart = j / 3f
                     val branchX = center + cos(angle) * mainRadius * branchStart
                     val branchY = center + sin(angle) * mainRadius * branchStart
 
-                    // Left branch
                     val leftAngle = angle - PI.toFloat() / 4
                     val leftEndX = branchX + cos(leftAngle) * branchRadius
                     val leftEndY = branchY + sin(leftAngle) * branchRadius
@@ -257,7 +228,6 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
                         paint
                     )
 
-                    // Right branch
                     val rightAngle = angle + PI.toFloat() / 4
                     val rightEndX = branchX + cos(rightAngle) * branchRadius
                     val rightEndY = branchY + sin(rightAngle) * branchRadius
@@ -268,13 +238,11 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
                     )
                 }
 
-                // Tip decoration
                 paint.style = PaintingStyle.Fill
                 canvas.drawCircle(Offset(endX, endY), size / 20f, paint)
                 paint.style = PaintingStyle.Stroke
             }
 
-            // Center hexagon
             paint.style = PaintingStyle.Fill
             val hexRadius = size / 8f
             val hexPath = Path().apply {
@@ -290,7 +258,6 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
         }
 
         DetailLevel.MEDIUM -> {
-            // Medium detail - main arms with single short branches
             val branchRadius = mainRadius * 0.25f
 
             for (i in 0..5) {
@@ -298,7 +265,6 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
                 val endX = center + cos(angle) * mainRadius
                 val endY = center + sin(angle) * mainRadius
 
-                // Main arm
                 paint.strokeWidth = size / 18f
                 canvas.drawLine(
                     Offset(center, center),
@@ -306,7 +272,6 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
                     paint
                 )
 
-                // Single pair of branches at midpoint
                 paint.strokeWidth = size / 30f
                 val branchStart = 0.5f
                 val branchX = center + cos(angle) * mainRadius * branchStart
@@ -323,13 +288,11 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
                 canvas.drawLine(Offset(branchX, branchY), Offset(rightEndX, rightEndY), paint)
             }
 
-            // Small center dot
             paint.style = PaintingStyle.Fill
             canvas.drawCircle(Offset(center, center), size / 12f, paint)
         }
 
         DetailLevel.LOW -> {
-            // Simple detail - just 6 arms with center dot
             paint.strokeWidth = size / 20f
 
             for (i in 0..5) {
@@ -344,7 +307,6 @@ private fun createDetailedSnowflakeBitmap(size: Int, color: Color, detail: Detai
                 )
             }
 
-            // Center dot
             paint.style = PaintingStyle.Fill
             canvas.drawCircle(Offset(center, center), size / 15f, paint)
         }
@@ -363,5 +325,5 @@ private data class SnowflakeData(
     val initialRotation: Float,
     val swayPhaseOffset: Float,
     val depth: Float,
-    val layer: Int // 0 = close, 1 = middle, 2 = far
+    val layer: Int
 )

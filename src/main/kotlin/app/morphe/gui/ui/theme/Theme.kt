@@ -6,25 +6,27 @@
 package app.morphe.gui.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-// Morphe Brand Colors
 object MorpheColors {
     val Blue = Color(0xFF3B7BF7)
     val Teal = Color(0xFF00D1B2)
 }
 
-// Morphe Preset Colors
 val THEME_PRESET_COLORS = listOf(
     Color(0xFF6750A4),
     Color(0xFF386641),
@@ -44,45 +46,41 @@ val THEME_PRESET_COLORS = listOf(
     Color(0xFF546E7A)
 )
 
-// ════════════════════════════════════════════════════════════════════
-//  ACCENT COLOR SYSTEM
-// ════════════════════════════════════════════════════════════════════
-
-/**
- * Per-theme accent colors. Components should read from LocalMorpheAccents
- * instead of using MorpheColors.Blue/Teal directly.
- */
+/** Per-theme accent colors. */
 data class MorpheAccentColors(
-    val primary: Color,    // Buttons, selections, links (replaces MorpheColors.Blue)
-    val secondary: Color,  // Badges, options, success states (replaces MorpheColors.Teal)
-    val tertiary: Color = Color(0xFF5C6BC0), // Structural emphasis, info accents
-    val warning: Color = Color(0xFFFF9800),  // Warning states (was hardcoded everywhere)
-)
+    val primary: Color,
+    val secondary: Color,
+    val tertiary: Color = Color(0xFF5C6BC0),
+    val warning: Color = Color(0xFFFF9800),
+    val danger: Color = Color(0xFFE0504D),
+    val success: Color = Color(0xFF43A047),
+) {
+    val error: Color get() = danger
+}
 
 val LocalMorpheAccents = compositionLocalOf { MorpheAccentColors(MorpheColors.Blue, MorpheColors.Teal) }
 
 private val DarkAccents = MorpheAccentColors(
-    primary = Color(0xFFA4C9FF),   // Morphe dark primary, light blue
-    secondary = Color(0xFF9CCC65), // Success green for dark surfaces
-    tertiary = Color(0xFFD9BDE3),  // Morphe dark tertiary
-    warning = Color(0xFFE0A030),   // Amber
+    primary = Color(0xFFA4C9FF),
+    secondary = Color(0xFF9CCC65),
+    tertiary = Color(0xFFD9BDE3),
+    warning = Color(0xFFE0A030),
+    danger = Color(0xFFE0504D),
+    success = Color(0xFF9CCC65),
 )
 
 private val LightAccents = MorpheAccentColors(
-    primary = Color(0xFF005FAC),   // Morphe Material blue (buttons, links, selections)
-    secondary = Color(0xFF386A20), // Success green
-    tertiary = Color(0xFF6D5677),  // Morphe tertiary, muted purple
-    warning = Color(0xFFB26A00),   // Amber
+    primary = Color(0xFF005FAC),
+    secondary = Color(0xFF386A20),
+    tertiary = Color(0xFF6D5677),
+    warning = Color(0xFFB26A00),
+    danger = Color(0xFFE0504D),
+    success = Color(0xFF386A20),
 )
 
-// ════════════════════════════════════════════════════════════════════
-//  CORNER / SHAPE STYLE SYSTEM
-// ════════════════════════════════════════════════════════════════════
-
-/**
- * Defines the corner radius style for the current theme.
- */
+/** Defines corner radius style for the current theme. */
 data class MorpheCornerStyle(
+    val extraSmall: Dp = 2.dp,
     val small: Dp = 2.dp,
     val medium: Dp = 2.dp,
     val large: Dp = 2.dp,
@@ -90,51 +88,109 @@ data class MorpheCornerStyle(
 
 val LocalMorpheCorners = compositionLocalOf { MorpheCornerStyle() }
 
-/**
- * Canonical control sizing across the app. Use these instead of hardcoded `.dp`
- * values for buttons, text fields, search bars, and dialog action rows so the
- * same dimensions apply everywhere, with no per-screen drift.
- *
- * - [controlHeight]: standard interactive height (buttons, text fields, pills,
- *   search bars). Matches the height of OPEN LOGS / OPEN APP DATA action buttons.
- * - [chipHeight]: badges and small chips. MUST stay above twice corners.small,
- *   or the radius clamps to half the height and the chip renders as a capsule
- *   instead of picking up the rounded-rectangle corner the buttons have.
- * - [iconInControl]: icon size used inside controlHeight-sized affordances.
- * - [controlHorizontalPadding]: standard horizontal padding inside a control.
- */
+/** Pre-allocated shapes mapped to the current [MorpheCornerStyle]. */
+data class MorpheShapes(
+    val extraSmall: RoundedCornerShape,
+    val small: RoundedCornerShape,
+    val medium: RoundedCornerShape,
+    val large: RoundedCornerShape,
+    val extraSmallDp: Dp = 2.dp,
+    val smallDp: Dp = 2.dp,
+    val mediumDp: Dp = 2.dp,
+    val largeDp: Dp = 2.dp,
+) {
+    constructor(corners: MorpheCornerStyle) : this(
+        extraSmall = RoundedCornerShape(corners.extraSmall),
+        small = RoundedCornerShape(corners.small),
+        medium = RoundedCornerShape(corners.medium),
+        large = RoundedCornerShape(corners.large),
+        extraSmallDp = corners.extraSmall,
+        smallDp = corners.small,
+        mediumDp = corners.medium,
+        largeDp = corners.large,
+    )
+}
+
+val LocalMorpheShapes = compositionLocalOf { MorpheShapes(MorpheCornerStyle()) }
+
+/** Canonical control sizing across the application. */
 data class MorpheDimens(
+    val actionHeight: Dp = 42.dp,
     val controlHeight: Dp = 36.dp,
-    val chipHeight: Dp = 28.dp,
+    val chipHeight: Dp = 34.dp,
+    val badgeHeight: Dp = 24.dp,
+    val iconSmall: Dp = 12.dp,
+    val iconMedium: Dp = 14.dp,
+    val iconStandard: Dp = 16.dp,
+    val iconLarge: Dp = 20.dp,
     val iconInControl: Dp = 14.dp,
     val controlHorizontalPadding: Dp = 12.dp,
+    val dialogPadding: PaddingValues = PaddingValues(20.dp),
 )
 
 val LocalMorpheDimens = compositionLocalOf { MorpheDimens() }
 
-/**
- * Fill for panels that sit over the animated background. Opaque, because motion
- * behind a panel reads through even a few percent of translucency.
- */
+/** Standard semantic alpha values across hover, active, border, and disabled states. */
+data class MorpheAlphas(
+    val hover: Float = 0.08f,
+    val active: Float = 0.16f,
+    val borderDefault: Float = 0.35f,
+    val borderMuted: Float = 0.18f,
+    val borderFocus: Float = 0.60f,
+    val disabled: Float = 0.38f,
+    val secondaryText: Float = 0.60f,
+    val tertiaryText: Float = 0.45f,
+    val hintText: Float = 0.40f,
+)
+
+val LocalMorpheAlphas = compositionLocalOf { MorpheAlphas() }
+
+/** Design system accessors for typography, colors, shapes, dimensions, and alphas. */
+object MorpheTheme {
+    val typography: MorpheTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheTypography.current
+
+    val colors: MorpheAccentColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheAccents.current
+
+    val shapes: MorpheShapes
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheShapes.current
+
+    val corners: MorpheCornerStyle
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheCorners.current
+
+    val dimens: MorpheDimens
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheDimens.current
+
+    val alphas: MorpheAlphas
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheAlphas.current
+}
+
+/** Panel background fill color. */
 val panelFill: Color
     @Composable get() = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
 
-/**
- * Scrim for a screen whose content is dense text. The animated background still
- * reads through it, but not enough to bleed into what is on top.
- */
+/** Background scrim color for screens with dense text content. */
 val screenScrim: Color
     @Composable get() = MaterialTheme.colorScheme.background.copy(alpha = SCREEN_SCRIM_ALPHA)
 
 private const val SCREEN_SCRIM_ALPHA = 0.72f
 
-private val SharpCorners = MorpheCornerStyle(small = 2.dp, medium = 2.dp, large = 2.dp)
+private val SharpCorners = MorpheCornerStyle(extraSmall = 2.dp, small = 2.dp, medium = 2.dp, large = 2.dp)
 
-private val RoundedCorners = MorpheCornerStyle(small = 12.dp, medium = 16.dp, large = 24.dp)
-
-// ════════════════════════════════════════════════════════════════════
-//  COLOR SCHEMES
-// ════════════════════════════════════════════════════════════════════
+private val RoundedCorners = MorpheCornerStyle(extraSmall = 4.dp, small = 8.dp, medium = 12.dp, large = 16.dp)
 
 private val MorpheDarkColorScheme = darkColorScheme(
     primary = Color(0xFFA4C9FF),
@@ -195,27 +251,19 @@ private val MorpheLightColorScheme = lightColorScheme(
     onErrorContainer = Color(0xFF410002),
 )
 
-// ════════════════════════════════════════════════════════════════════
-//  THEME PREFERENCE
-// ════════════════════════════════════════════════════════════════════
-
 enum class ThemePreference {
     LIGHT,
     DARK,
     AMOLED,
     SYSTEM;
 
-    /** Whether this theme uses dark color scheme (for resource qualifiers). */
+    /** Returns true if this preference uses a dark color scheme. */
     fun isDark(): Boolean = when (this) {
         DARK, AMOLED -> true
         LIGHT -> false
-        SYSTEM -> false // caller should check isSystemInDarkTheme()
+        SYSTEM -> false
     }
 }
-
-// ════════════════════════════════════════════════════════════════════
-//  THEME COMPOSABLE
-// ════════════════════════════════════════════════════════════════════
 
 @Composable
 fun MorpheTheme(
@@ -281,18 +329,27 @@ fun MorpheTheme(
         baseAccents
     }
 
+    val shapes = MorpheShapes(corners)
+    val typography = morpheTypography(font = font, monoFont = monoFont)
+
     CompositionLocalProvider(
         LocalMorpheCorners provides corners,
+        LocalMorpheShapes provides shapes,
         LocalMorpheFont provides font,
         LocalMorpheMono provides monoFont,
         LocalMorpheAccents provides accents,
         LocalMorpheDimens provides MorpheDimens(),
+        LocalMorpheAlphas provides MorpheAlphas(),
+        LocalMorpheTypography provides typography,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = morpheTypography(font),
-            content = content
-        )
+            typography = typography.material,
+        ) {
+            ProvideTextStyle(typography.bodyMedium) {
+                content()
+            }
+        }
     }
 }
 

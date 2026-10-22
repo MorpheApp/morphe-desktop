@@ -5,14 +5,15 @@
 
 package app.morphe.gui.util
 
+import app.morphe.engine.util.isNewerVersion
+import app.morphe.engine.util.normalizeVersion
+
 data class ChangelogEntry(
     val version: String,
     val date: String?,
     val content: String,
     val scopedBullets: Map<String, List<String>> = emptyMap(),
 )
-
-val ChangelogEntry.isPrerelease: Boolean get() = version.contains('-')
 
 object ChangelogParser {
 
@@ -97,7 +98,6 @@ object ChangelogParser {
     ): Boolean {
         if (appNames.isEmpty()) return false
         val newerEntries = entriesNewerThan(entries, installedVersion)
-        if (newerEntries.isEmpty()) return false
         return newerEntries.any { entry ->
             entry.scopedBullets.any { (scope, bullets) ->
                 val scopeMatches = appNames.any { name ->

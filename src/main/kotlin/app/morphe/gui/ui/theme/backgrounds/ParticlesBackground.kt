@@ -20,13 +20,7 @@ import kotlin.math.abs
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-/**
- * Particles background - small particles drift with velocity, friction and soft edge bounce.
- * Nearby particles connect with faint lines (same as constellation but more dynamic and dense).
- * Uses a dedicated frame loop so physics run at display rate regardless of [speedMultiplier].
- * [speedMultiplier] controls the drift velocity scale.
- * On patching completion all particles explode outward from the screen center then drift back.
- */
+/** Animated background rendering drifting particles and connection lines with completion burst. */
 @Composable
 fun ParticlesBackground(
     modifier: Modifier = Modifier,
@@ -34,24 +28,22 @@ fun ParticlesBackground(
     speedMultiplier: Float = 1f,
     patchingCompleted: Boolean = false
 ) {
-    val primaryColor   = MaterialTheme.colorScheme.primary
+    val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
-    val tertiaryColor  = MaterialTheme.colorScheme.tertiary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
 
     val coroutineScope = rememberCoroutineScope()
 
     val parallaxState = LocalParallaxState.current
 
-    // Particle state - mutable so physics loop can update positions each frame
     val particles = remember {
         mutableStateListOf<Particle>().apply {
             repeat(65) {
-
-                // Create 3 particle size groups for more natural depth
+                // Vary particle radius across three size groups.
                 val radius = when (Random.nextFloat()) {
-                    in 0f..0.6f -> 2.5f + Random.nextFloat() * 3f // small particles
-                    in 0.6f..0.9f -> 4f + Random.nextFloat() * 4f // medium particles
-                    else -> 7f + Random.nextFloat() * 5f // large particles
+                    in 0f..0.6f -> 2.5f + Random.nextFloat() * 3f
+                    in 0.6f..0.9f -> 4f + Random.nextFloat() * 4f
+                    else -> 7f + Random.nextFloat() * 5f
                 }
 
                 add(
@@ -68,24 +60,21 @@ fun ParticlesBackground(
         }
     }
 
-    // targetSpeedState updated via SideEffect so the physics loop stays reactive
     val targetSpeedState = remember { mutableFloatStateOf(speedMultiplier) }
     SideEffect { targetSpeedState.floatValue = speedMultiplier }
 
-    // explodeProgress 0→1: particles burst from center, then drift back naturally
+    // Outward burst progress on completion.
     val explodeProgress = remember { Animatable(0f) }
 
     CompletionEffect(patchingCompleted) {
         coroutineScope.launch {
             explodeProgress.snapTo(0f)
-            // Burst outward
             explodeProgress.animateTo(1f, tween(500, easing = FastOutSlowInEasing))
-            // Smooth return - ep goes 1→0 so push gradually decreases to zero
             explodeProgress.animateTo(0f, tween(800, easing = FastOutSlowInEasing))
         }
     }
 
-    // Physics loop - runs every display frame independently of Compose animation clock
+    // Frame-rate physics update loop.
     LaunchedEffect(Unit) {
         var lastFrameMs = withInfiniteAnimationFrameMillis { it }
         var currentSpeed = targetSpeedState.floatValue
@@ -94,7 +83,6 @@ fun ParticlesBackground(
                 val delta = (frameMs - lastFrameMs).coerceIn(0L, 64L).toFloat()
                 lastFrameMs = frameMs
 
-                // Lerp speed for smooth transitions
                 currentSpeed += (targetSpeedState.floatValue - currentSpeed) * (delta / 1000f) * 2.5f
                 val speedScale = currentSpeed * (delta / 16.67f)
 
@@ -104,17 +92,16 @@ fun ParticlesBackground(
                     var nvx = p.vx
                     var nvy = p.vy
 
-                    // Soft edge bounce - reverse velocity and nudge back inside
+                    // Boundary reflection.
                     if (nx < 0.02f) { nvx = abs(nvx); nx = 0.02f }
                     if (nx > 0.98f) { nvx = -abs(nvx); nx = 0.98f }
                     if (ny < 0.02f) { nvy = abs(nvy); ny = 0.02f }
                     if (ny > 0.98f) { nvy = -abs(nvy); ny = 0.98f }
 
-                    // Tiny random drift to avoid completely straight paths
                     nvx += (Random.nextFloat() - 0.5f) * 0.000004f
                     nvy += (Random.nextFloat() - 0.5f) * 0.000004f
 
-                    // Speed cap so particles never rocket across the screen
+                    // Cap maximum velocity.
                     val speed = sqrt(nvx * nvx + nvy * nvy)
                     val maxSpeed = 0.00025f
                     if (speed > maxSpeed) {
@@ -129,8 +116,8 @@ fun ParticlesBackground(
     }
 
     Canvas(modifier = modifier.fillMaxSize()) {
-        val tiltX = parallaxState.tiltX.value
-        val tiltY = parallaxState.tiltY.value
+        val tiltX = if (enableParallax) parallaxState.tiltX.value else 0f
+        val tiltY = if (enableParallax) parallaxState.tiltY.value else 0f
         val ep = explodeProgress.value
         val cx = size.width * 0.5f
         val cy = size.height * 0.5f
@@ -138,14 +125,12 @@ fun ParticlesBackground(
         val connectDist = size.width * 0.22f
         val connectDistSq = connectDist * connectDist
 
-        // Compute screen positions with parallax and explosion offset
+        // Apply parallax and outward burst offset from screen center.
         val positions = particles.map { p ->
             val parallaxStrength = 25f
-            val baseX = p.x * size.width  + tiltX * parallaxStrength
+            val baseX = p.x * size.width + tiltX * parallaxStrength
             val baseY = p.y * size.height + tiltY * parallaxStrength
 
-            // During explosion push outward from center - ep smoothly goes 0→1→0
-            // so return is just the same offset shrinking back to zero (no snap)
             if (ep > 0f) {
                 val dirX = baseX - cx
                 val dirY = baseY - cy
@@ -156,7 +141,6 @@ fun ParticlesBackground(
             }
         }
 
-        // Draw connection lines
         for (i in particles.indices) {
             for (j in i + 1 until particles.size) {
                 val dx = positions[i].x - positions[j].x
@@ -180,7 +164,6 @@ fun ParticlesBackground(
             }
         }
 
-        // Draw particles
         particles.forEachIndexed { index, p ->
             val pos = positions[index]
             val color = when (p.colorIndex) {

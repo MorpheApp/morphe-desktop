@@ -6,13 +6,14 @@
 package app.morphe.gui.ui.screens.home.components
 
 import androidx.navigation.NavController
+import app.morphe.engine.apk.BundleFormats
+import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchSelectionScreenRoute
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.screens.home.HomeUiState
 import app.morphe.gui.ui.screens.home.HomeViewModel
 import app.morphe.gui.util.MorpheFilePicker
-import app.morphe.gui.util.VersionStatus
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import org.jetbrains.compose.resources.getString
@@ -49,5 +50,5 @@ internal fun handleContinue(
 internal suspend fun openFilePicker(): File? =
     MorpheFilePicker.pickFile(
         title = getString(Res.string.home_select_apk_file),
-        extensions = listOf("apk", "apkm", "xapk", "apks"),
+        extensions = BundleFormats.SUPPORTED_EXTENSIONS,
     )

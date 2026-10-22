@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -33,25 +32,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 object MorpheBannerDefaults {
     val Inset: Dp = 10.dp
     val Spacing: Dp = 8.dp
-    val TextSize = 11.sp
 }
 
 enum class MorpheBannerTone { Info, Error }
 
-/** Compose only when a banner will show, or its top padding leaves a gap. */
+/** Container for alert banners with consistent spacing and insets. */
 @Composable
 fun MorpheBanners(
     modifier: Modifier = Modifier,
@@ -67,7 +62,7 @@ fun MorpheBanners(
     )
 }
 
-/** Content inherits the tone's on-colour, so children MUST NOT set their own. */
+/** Alert banner styled by [tone] with optional icon and dismiss action. */
 @Composable
 fun MorpheBanner(
     modifier: Modifier = Modifier,
@@ -75,7 +70,6 @@ fun MorpheBanner(
     icon: ImageVector? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val corners = LocalMorpheCorners.current
     val container = when (tone) {
         MorpheBannerTone.Info -> MaterialTheme.colorScheme.primaryContainer
         MorpheBannerTone.Error -> MaterialTheme.colorScheme.errorContainer
@@ -88,7 +82,7 @@ fun MorpheBanner(
         modifier = modifier.fillMaxWidth(),
         color = container,
         contentColor = onContainer,
-        shape = RoundedCornerShape(corners.small),
+        shape = MorpheTheme.shapes.small,
     ) {
         Row(
             modifier = Modifier
@@ -118,9 +112,7 @@ fun MorpheBannerText(
     Text(
         text = text,
         modifier = modifier,
-        fontSize = MorpheBannerDefaults.TextSize,
-        fontFamily = LocalMorpheFont.current,
-        fontWeight = if (emphasis) FontWeight.Medium else FontWeight.Normal,
+        style = if (emphasis) MorpheTheme.typography.labelMedium else MorpheTheme.typography.labelSmall,
         color = LocalContentColor.current,
     )
 }
@@ -135,7 +127,6 @@ fun MorpheBannerAction(
 ) = MorpheChoiceChip(
     text = label,
     active = false,
-    font = LocalMorpheFont.current,
     modifier = modifier,
     icon = icon,
     accent = hoverAccent ?: LocalContentColor.current,
@@ -152,7 +143,7 @@ fun MorpheBannerDismiss(
     Box(
         modifier = modifier
             .size(24.dp)
-            .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
+            .clip(MorpheTheme.shapes.small)
             .hoverable(hover)
             .handCursor()
             .clickable(onClick = onClick),

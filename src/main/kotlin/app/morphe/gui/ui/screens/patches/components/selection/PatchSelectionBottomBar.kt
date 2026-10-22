@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.ui.components.MorpheActionButton
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
+import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-
-// ── Bottom action bar ──
 
 @Composable
 internal fun PatchSelectionBottomBar(
@@ -26,7 +26,7 @@ internal fun PatchSelectionBottomBar(
     onPatchClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dividerColor = MaterialTheme.colorScheme.outlineVariant
+    val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
 
     Box(
         modifier = modifier
@@ -43,9 +43,11 @@ internal fun PatchSelectionBottomBar(
     ) {
         val patchEnabled = selectedCount > 0
 
-        MorpheActionButton(
+        MorpheButton(
             label = stringResource(Res.string.patch_selection_action_patch, selectedCount),
             modifier = Modifier.fillMaxWidth(),
+            variant = MorpheButtonVariant.FILLED,
+            size = MorpheButtonSize.LARGE,
             enabled = patchEnabled,
             onClick = onPatchClick,
         )

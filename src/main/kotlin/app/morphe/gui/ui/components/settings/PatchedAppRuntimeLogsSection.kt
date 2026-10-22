@@ -5,29 +5,26 @@
 
 package app.morphe.gui.ui.components.settings
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.components.ActionButton
-import app.morphe.gui.ui.components.handCursor
+import app.morphe.engine.MorpheData
+import app.morphe.engine.util.AdbException
+import app.morphe.engine.util.AdbManager
+import app.morphe.engine.util.Logger
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
+import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.util.AdbException
-import app.morphe.gui.util.AdbManager
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.Logger
+import app.morphe.gui.util.getUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
@@ -50,8 +47,6 @@ private sealed interface RuntimeLogsStatus {
 
 @Composable
 internal fun PatchedAppRuntimeLogsSection(
-    font: FontFamily,
-    accentColor: Color,
     borderColor: Color,
     enabled: Boolean = true,
     expanded: Boolean = false,
@@ -70,7 +65,6 @@ internal fun PatchedAppRuntimeLogsSection(
 
     CollapsibleSection(
         title = stringResource(Res.string.settings_runtime_logs_title),
-        font = font,
         expanded = expanded,
         icon = icon,
         onExpandedChange = onExpandedChange
@@ -78,40 +72,35 @@ internal fun PatchedAppRuntimeLogsSection(
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(
                 text = stringResource(Res.string.settings_runtime_logs_desc),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
+                style = MorpheTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = font
             )
 
-            // Device row
             if (deviceReady) {
                 val deviceInfo = "${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}"
                 Text(
                     text = stringResource(Res.string.settings_runtime_logs_device_info, deviceInfo),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             } else {
                 Text(
                     text = stringResource(Res.string.settings_runtime_logs_no_device),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
-            ActionButton(
+            MorpheButton(
                 label = stringResource(if (status is RuntimeLogsStatus.Clearing) Res.string.settings_runtime_logs_clearing else Res.string.settings_runtime_logs_clear_button),
                 icon = MorpheIcons.DeleteSweep,
-                font = font,
+                variant = MorpheButtonVariant.OUTLINED,
+                modifier = Modifier.fillMaxWidth(),
                 borderColor = borderColor,
                 enabled = canAct,
+                contentAlignment = Alignment.CenterStart,
                 onClick = {
-                    val device = selectedDevice ?: return@ActionButton
+                    val device = selectedDevice ?: return@MorpheButton
                     status = RuntimeLogsStatus.Clearing
                     scope.launch {
                         val defaultErrMsg = getString(Res.string.settings_runtime_logs_failed_to_clear)
@@ -124,20 +113,21 @@ internal fun PatchedAppRuntimeLogsSection(
                 }
             )
 
-            ActionButton(
+            MorpheButton(
                 label = if (status is RuntimeLogsStatus.Saving) stringResource(Res.string.status_saving) else stringResource(Res.string.settings_runtime_logs_save_button),
                 icon = MorpheIcons.Save,
-                font = font,
-                borderColor = borderColor,
-                contentColor = accentColor,
+                variant = MorpheButtonVariant.OUTLINED,
+                modifier = Modifier.fillMaxWidth(),
+                customColor = MorpheTheme.colors.primary,
                 enabled = canAct,
+                contentAlignment = Alignment.CenterStart,
                 onClick = {
-                    val device = selectedDevice ?: return@ActionButton
+                    val device = selectedDevice ?: return@MorpheButton
                     status = RuntimeLogsStatus.Saving
                     scope.launch {
                         val defaultErrMsg = getString(Res.string.settings_runtime_logs_failed_to_save)
                         val timestamp = SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.US).format(Date())
-                        val outFile = File(FileUtils.getLogsDir(), "device-logcat-$timestamp.txt")
+                        val outFile = File(MorpheData.logsDir, "device-logcat-$timestamp.txt")
                         val result = adbManager.captureLogcat(device.id, outFile)
                         status = result.fold(
                             onSuccess = { count -> RuntimeLogsStatus.Saved(outFile, count) },
@@ -147,15 +137,12 @@ internal fun PatchedAppRuntimeLogsSection(
                 }
             )
 
-            // Status line
             when (val s = status) {
                 RuntimeLogsStatus.Idle, RuntimeLogsStatus.Clearing, RuntimeLogsStatus.Saving -> Unit
                 RuntimeLogsStatus.Cleared -> Text(
                     text = stringResource(Res.string.settings_runtime_logs_cleared_success),
-                    fontSize = 11.sp,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Normal,
-                    color = accentColor
+                    style = MorpheTheme.typography.labelSmall,
+                    color = MorpheTheme.colors.primary
                 )
                 is RuntimeLogsStatus.Saved -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
@@ -163,41 +150,31 @@ internal fun PatchedAppRuntimeLogsSection(
                             stringResource(Res.string.settings_runtime_logs_nothing_captured)
                         else
                             pluralStringResource(Res.plurals.settings_runtime_logs_saved_success, s.lineCount, s.lineCount, s.file.name),
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
+                        style = MorpheTheme.typography.labelSmall,
                         color = if (s.lineCount == 0) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                                else accentColor
+                                else MorpheTheme.colors.primary
                     )
                     if (s.lineCount > 0) {
-                        val cornersLocal = LocalMorpheCorners.current
-                        Text(
-                            text = stringResource(Res.string.settings_dialog_open_logs_button),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = font,
-                            color = accentColor,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(cornersLocal.small))
-                                .handCursor()
-                                .clickable {
-                                    try {
-                                        if (Desktop.isDesktopSupported()) {
-                                            Desktop.getDesktop().open(s.file.parentFile)
-                                        }
-                                    } catch (e: Exception) {
-                                        Logger.error("Failed to reveal logs folder", e)
+                        MorpheButton(
+                            label = stringResource(Res.string.settings_dialog_open_logs_button),
+                            variant = MorpheButtonVariant.GHOST,
+                            size = MorpheButtonSize.COMPACT,
+                            customColor = MorpheTheme.colors.primary,
+                            onClick = {
+                                try {
+                                    if (Desktop.isDesktopSupported()) {
+                                        Desktop.getDesktop().open(s.file.parentFile)
                                     }
+                                } catch (e: Exception) {
+                                    Logger.error("Failed to reveal logs folder", e)
                                 }
-                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                            }
                         )
                     }
                 }
                 is RuntimeLogsStatus.Error -> Text(
                     text = s.message,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error
                 )
             }

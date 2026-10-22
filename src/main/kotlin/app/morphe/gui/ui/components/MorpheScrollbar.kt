@@ -6,30 +6,23 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.ScrollbarStyle
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.MorpheTheme
 
-/**
- * Shared scrollbar style. Always-visible accent thumb, corners pulled from
- * the active Morphe theme so the scrollbar matches the rest of the geometry.
- */
+/** Scrollbar style matching the active Morphe theme geometry and accent color. */
 @Composable
-fun morpheScrollbarStyle(
+fun MorpheScrollbarStyle(
     thickness: Dp = 6.dp,
     minimalHeight: Dp = 24.dp,
     idleAlpha: Float = 0.55f
 ): ScrollbarStyle {
-    val accent = LocalMorpheAccents.current.primary
-    val corners = LocalMorpheCorners.current
+    val accent = MorpheTheme.colors.primary
     return ScrollbarStyle(
         minimalHeight = minimalHeight,
         thickness = thickness,
-        shape = if (corners.small >= 8.dp) RoundedCornerShape(corners.small) else RectangleShape,
+        shape = MorpheTheme.shapes.small,
         hoverDurationMillis = 0,
         unhoverColor = accent.copy(alpha = idleAlpha),
         hoverColor = accent

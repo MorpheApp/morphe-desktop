@@ -56,6 +56,7 @@
     <string name="status_offline">As líne</string>
     <string name="status_ready">Réidh</string>
     <string name="filter_apps_hint">Scag aipeanna…</string>
+    <string name="version">Leagan</string>
     <string name="version_label_stable">Cobhsaí</string>
     <string name="version_label_dev">Forbróir</string>
     <string name="version_label_experimental">Turgnamhach</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Bain APK</string>
     <string name="home_apk_info_limited_info_warning">Níorbh fhéidir comhad 'manifest' an APK seo a léamh go hiomlán (rud coitianta i gcás 'split bundles'). Is meastacháin iad na sonraí thíos, ach ba cheart go n-oibreodh an paisteáil fós.</string>
     <string name="home_apk_info_unsupported_app_warning">Níor aimsíodh aon phaistí comhoiriúnacha don aip seo. Is féidir leat leanúint ar aghaidh fós, ach b’fhéidir nach mbeidh aon éifeacht ag an bpaistiú.</string>
-    <string name="home_apk_info_version_label">Leagan</string>
     <string name="home_apk_info_build_label">Tógáil</string>
     <string name="home_apk_info_size_label">Méid</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Stóráil I/O</string>
     <string name="patching_graph_cpu_usage">Úsáid LAP</string>
     <string name="patching_banner_started_title">Tosaíodh ar phaisteáil</string>
-    <string name="patching_banner_app_version">Leagan aip</string>
     <string name="patching_banner_apk_size">Méid APK</string>
     <string name="patching_banner_patches">Paistí</string>
     <string name="patching_banner_split_apk">APK Scoilte</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Sneachta</string>
     <string name="settings_background_grid">Eangach</string>
     <string name="settings_background_particles">Cáithníní</string>
+    <string name="settings_background_lava">Lampa laibhe</string>
     <string name="settings_background_matrix">Maitrís</string>
     <string name="settings_toggle_parallax_label">Éifeacht pharallacsa</string>
     <string name="settings_toggle_parallax_desc">Aistriú rianúil ar an gcúlra agus an luch á bogadh</string>

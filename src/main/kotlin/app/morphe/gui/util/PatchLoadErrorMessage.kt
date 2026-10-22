@@ -20,19 +20,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Map a load failure exception to a short, user-readable line.
- *
- * The raw `Exception.message` is hostile when the underlying cause is a
- * coroutine/Ktor internal. Users see "StandaloneCoroutine was cancelled"
- * and assume the app crashed. This translates the common network/IO failures
- * into plain English and falls back to the **full cause-chain message** for
- * anything we don't recognize (never a blank "Failed to load").
- *
- * Intentionally does NOT handle CancellationException. That should never
- * reach the UI. Callers must re-throw it from their catch blocks instead of
- * surfacing it as an error.
- */
+/** Maps load failure exceptions to localized or human-readable strings. */
 private inline fun <T> mapPatchLoadError(e: Throwable, onResource: (StringResource) -> T, onText: (String) -> T): T = when (e) {
     is GitHubPatMissingException -> onResource(Res.string.source_error_github_pat_required)
 
@@ -54,7 +42,6 @@ private inline fun <T> mapPatchLoadError(e: Throwable, onResource: (StringResour
         }
     }
 
-    // Already expanded by MultiSourceLoader / PatcherCompatibility
     is PatchBundleIncompatibleException,
     is PatchSourceLoadException -> {
         when {
@@ -67,13 +54,9 @@ private inline fun <T> mapPatchLoadError(e: Throwable, onResource: (StringResour
         }
     }
 
-    // A bundle built against a newer patcher fails at link time with java.lang.Error
-    // subclasses (NoSuchMethodError / NoClassDefFoundError / AbstractMethodError, all
-    // LinkageError). Prefer the concrete type/message chain so the user (and logs) see
-    // *which* symbol is missing, not a generic "update Morphe".
+    // Retain concrete LinkageError symbol messages when bundle is incompatible.
     is LinkageError -> onText(e.readableMessage())
 
-    // ExceptionInInitializerError and friends often have null .message.
     else -> {
         when {
             e.message?.contains("A GitHub PAT is required", ignoreCase = true) == true ->

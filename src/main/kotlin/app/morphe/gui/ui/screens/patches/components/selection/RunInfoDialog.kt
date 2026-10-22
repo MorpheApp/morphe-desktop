@@ -17,26 +17,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import app.morphe.gui.ui.components.MorpheDialogButton
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheDialogSurface
 import app.morphe.gui.ui.screens.patches.RunInfo
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-// ── Run Info Dialog ──
-
 @Composable
 internal fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
+    val primaryColor = MorpheTheme.colors.primary
+    val secondaryColor = MorpheTheme.colors.secondary
+
     Dialog(onDismissRequest = onDismiss) {
         MorpheDialogSurface(
             modifier = Modifier.widthIn(max = 520.dp),
@@ -44,44 +41,44 @@ internal fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
         ) {
             Text(
                 text = stringResource(Res.string.patch_selection_run_info_title),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font,
+                style = MorpheTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
-            RunInfoGroup(label = stringResource(Res.string.patch_selection_run_info_app_group), color = accents.secondary, font = font) {
+            RunInfoGroup(label = stringResource(Res.string.patch_selection_run_info_app_group), color = secondaryColor) {
                 RunInfoHeadline(
                     name = info.appName,
                     version = info.appVersion.takeIf { it.isNotBlank() }
                         ?.let { "v${it.removePrefix("v")}" },
-                    accent = accents.secondary,
-                    font = font,
+                    accent = secondaryColor,
                 )
-                RunInfoDetail(info.packageName, font)
-                RunInfoDetail(info.apkFileName, font)
-                RunInfoDetail(info.apkPath, font)
+                RunInfoDetail(info.packageName)
+                RunInfoDetail(info.apkFileName)
+                RunInfoDetail(info.apkPath)
             }
 
             RunInfoGroup(
                 label = stringResource(Res.string.patch_selection_run_info_bundles_group),
-                color = accents.primary,
-                font = font,
+                color = primaryColor,
             ) {
                 info.bundles.forEach { bundle ->
                     RunInfoHeadline(
                         name = bundle.name,
                         version = bundle.version?.let { "v${it.removePrefix("v")}" },
-                        accent = accents.primary,
-                        font = font,
+                        accent = primaryColor,
                     )
-                    RunInfoDetail(bundle.fileName, font)
+                    RunInfoDetail(bundle.fileName)
                 }
-                if (info.bundles.isEmpty()) RunInfoDetail(stringResource(Res.string.patch_selection_run_info_no_bundles), font)
+                if (info.bundles.isEmpty()) RunInfoDetail(stringResource(Res.string.patch_selection_run_info_no_bundles))
             }
 
             Row(modifier = Modifier.fillMaxWidth()) {
-                MorpheDialogButton(stringResource(Res.string.close), accents.primary, filled = false, onClick = onDismiss)
+                MorpheButton(
+                    label = stringResource(Res.string.close),
+                    modifier = Modifier.fillMaxWidth(),
+                    variant = MorpheButtonVariant.OUTLINED,
+                    onClick = onDismiss,
+                )
             }
         }
     }
@@ -91,7 +88,6 @@ internal fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
 private fun RunInfoGroup(
     label: String,
     color: Color,
-    font: FontFamily,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
@@ -100,9 +96,7 @@ private fun RunInfoGroup(
     ) {
         Text(
             text = label,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Medium,
-            fontFamily = font,
+            style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
             color = color.copy(alpha = 0.85f),
         )
         content()
@@ -110,15 +104,14 @@ private fun RunInfoGroup(
 }
 
 @Composable
-private fun RunInfoHeadline(name: String, version: String?, accent: Color, font: FontFamily) {
+private fun RunInfoHeadline(name: String, version: String?, accent: Color) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = name,
-            fontSize = 13.sp,
-            fontFamily = font,
+            style = MorpheTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -126,9 +119,7 @@ private fun RunInfoHeadline(name: String, version: String?, accent: Color, font:
         )
         Text(
             text = version ?: stringResource(Res.string.unknown),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = font,
+            style = MorpheTheme.typography.titleSmall,
             color = if (version != null) accent
                     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
         )
@@ -136,12 +127,10 @@ private fun RunInfoHeadline(name: String, version: String?, accent: Color, font:
 }
 
 @Composable
-private fun RunInfoDetail(text: String, font: FontFamily) {
+private fun RunInfoDetail(text: String) {
     Text(
         text = text,
-        fontSize = 9.sp,
-        fontFamily = font,
+        style = MorpheTheme.typography.labelExtraSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-        lineHeight = 13.sp,
     )
 }

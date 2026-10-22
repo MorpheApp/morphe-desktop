@@ -56,6 +56,7 @@
     <string name="status_offline">Офлайн</string>
     <string name="status_ready">Готово</string>
     <string name="filter_apps_hint">Фильтр приложений…</string>
+    <string name="version">Версия</string>
     <string name="version_label_stable">Стабильная</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Экспериментальная</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Удалить APK</string>
     <string name="home_apk_info_limited_info_warning">Не удалось полностью прочитать манифест этого APK (обычно для разделённых пакетов). Данные ниже приблизительны, патчинг всё равно должен работать</string>
     <string name="home_apk_info_unsupported_app_warning">Не найдено совместимых патчей для этого приложения. Вы можете продолжить, но патчинг может не дать эффекта</string>
-    <string name="home_apk_info_version_label">Версия</string>
     <string name="home_apk_info_build_label">Сборка</string>
     <string name="home_apk_info_size_label">Размер</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Ввод/вывод хранилища</string>
     <string name="patching_graph_cpu_usage">Использование ЦП</string>
     <string name="patching_banner_started_title">Патчинг начат</string>
-    <string name="patching_banner_app_version">Версия приложения</string>
     <string name="patching_banner_apk_size">Размер APK</string>
     <string name="patching_banner_patches">Патчи</string>
     <string name="patching_banner_split_apk">Разделённый APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Снег</string>
     <string name="settings_background_grid">Сетка</string>
     <string name="settings_background_particles">Частицы</string>
+    <string name="settings_background_lava">Лавовая лампа</string>
     <string name="settings_background_matrix">Матрица</string>
     <string name="settings_toggle_parallax_label">Эффект параллакса</string>
     <string name="settings_toggle_parallax_desc">Плавное смещение фона при движении мыши</string>

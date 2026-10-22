@@ -56,6 +56,7 @@
     <string name="status_offline">Brez povezave</string>
     <string name="status_ready">Pripravljeno</string>
     <string name="filter_apps_hint">Filtriraj aplikacije…</string>
+    <string name="version">Različica</string>
     <string name="version_label_stable">Stabilna</string>
     <string name="version_label_dev">Razvijalska</string>
     <string name="version_label_experimental">Eksperimentalna</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Odstrani APK</string>
     <string name="home_apk_info_limited_info_warning">Manifesta te datoteke APK ni bilo mogoče v celoti prebrati (pogosto pri razdeljenih APK-jih). Spodnji podatki so približni, popravljanje bi moralo še vedno delovati</string>
     <string name="home_apk_info_unsupported_app_warning">Za to aplikacijo ni najdenih združljivih popravkov. Lahko nadaljujete, vendar popravljanje morda ne bo imelo učinka</string>
-    <string name="home_apk_info_version_label">Različica</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Velikost</string>
     <string name="home_apk_info_value_api">AP I %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">V/I shranjevanja</string>
     <string name="patching_graph_cpu_usage">Uporaba CP U</string>
     <string name="patching_banner_started_title">Popravljanje se je začelo</string>
-    <string name="patching_banner_app_version">Različica aplikacije</string>
     <string name="patching_banner_apk_size">Velikost APK</string>
     <string name="patching_banner_patches">Popravki</string>
     <string name="patching_banner_split_apk">Razdeljeni APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Sneg</string>
     <string name="settings_background_grid">Mreža</string>
     <string name="settings_background_particles">Delci</string>
+    <string name="settings_background_lava">Lava svetilka</string>
     <string name="settings_background_matrix">Matrika</string>
     <string name="settings_toggle_parallax_label">Učinek paralakse</string>
     <string name="settings_toggle_parallax_desc">Gladko premikanje ozadja ob premikanju miške</string>

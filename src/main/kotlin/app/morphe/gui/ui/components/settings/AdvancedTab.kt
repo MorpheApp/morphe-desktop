@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -44,16 +42,11 @@ internal fun AdvancedTab(
     isPatching: Boolean,
     borderColor: Color,
 ) {
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-
     SettingToggleRow(
         label = stringResource(Res.string.settings_toggle_expert_mode_label),
         description = stringResource(Res.string.settings_toggle_expert_mode_desc),
         checked = useExpertMode,
         onCheckedChange = onExpertModeChange,
-        accentColor = accents.primary,
-        font = font,
         enabled = !isPatching,
         icon = MorpheIcons.Psychology
     )
@@ -65,8 +58,6 @@ internal fun AdvancedTab(
         description = stringResource(Res.string.settings_toggle_route_links_desc),
         checked = autoRouteLinksAfterInstall,
         onCheckedChange = onAutoRouteLinksChange,
-        accentColor = accents.primary,
-        font = font,
         enabled = !isPatching,
         icon = MorpheIcons.Route
     )
@@ -78,8 +69,6 @@ internal fun AdvancedTab(
                 description = stringResource(Res.string.settings_toggle_disable_stock_links_desc),
                 checked = disableStockLinksAfterInstall,
                 onCheckedChange = onDisableStockLinksChange,
-                accentColor = accents.primary,
-                font = font,
                 enabled = !isPatching,
                 icon = MorpheIcons.LinkOff
             )
@@ -95,8 +84,6 @@ internal fun AdvancedTab(
         keystoreEntryPassword = keystoreEntryPassword,
         onKeystorePathChange = onKeystorePathChange,
         onCredentialsChange = onKeystoreCredentialsChange,
-        font = font,
-        accentColor = accents.primary,
         borderColor = borderColor,
         enabled = !isPatching,
         expanded = collapsibleSectionStates["Signing"] == true,
@@ -109,8 +96,6 @@ internal fun AdvancedTab(
     StripLibsSection(
         keepArchitectures = keepArchitectures,
         onChange = onKeepArchitecturesChange,
-        font = font,
-        accentColor = accents.primary,
         enabled = !isPatching,
         expanded = collapsibleSectionStates["Strip libs"] == true,
         icon = MorpheIcons.LayersClear,
@@ -124,8 +109,6 @@ internal fun AdvancedTab(
         description = stringResource(Res.string.settings_toggle_developer_options_desc),
         checked = developerOptions,
         onCheckedChange = onDeveloperOptionsChange,
-        accentColor = accents.primary,
-        font = font,
         enabled = !isPatching,
         icon = MorpheIcons.CodeXml
     )
@@ -133,8 +116,6 @@ internal fun AdvancedTab(
     SettingsDivider(borderColor)
 
     PatchedAppRuntimeLogsSection(
-        font = font,
-        accentColor = accents.primary,
         borderColor = borderColor,
         enabled = !isPatching,
         expanded = collapsibleSectionStates["Runtime logs"] == true,
@@ -147,8 +128,6 @@ internal fun AdvancedTab(
     GitHubPatSection(
         gitHubPat = gitHubPat,
         onGitHubPatChange = onGitHubPatChange,
-        font = font,
-        accentColor = accents.primary,
         enabled = !isPatching,
         expanded = collapsibleSectionStates["GitHub PAT"] == true,
         icon = MorpheIcons.Key,

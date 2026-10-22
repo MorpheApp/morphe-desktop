@@ -34,7 +34,7 @@
     <string name="device_default">пристрій</string>
     <string name="unknown">Невідомо</string>
     <string name="installing">Інсталяція…</string>
-    <string name="folder">Папка</string>
+    <string name="folder">Тека</string>
     <string name="customize">Налаштувати</string>
     <string name="customize_card_description">Налаштувати картку</string>
     <string name="none">Немає</string>
@@ -56,6 +56,7 @@
     <string name="status_offline">Офлайн</string>
     <string name="status_ready">Готово</string>
     <string name="filter_apps_hint">Фільтрувати застосунки…</string>
+    <string name="version">Версія</string>
     <string name="version_label_stable">Стабільна</string>
     <string name="version_label_dev">Dev</string>
     <string name="version_label_experimental">Експериментальна</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Видалити APK</string>
     <string name="home_apk_info_limited_info_warning">Не вдалося повністю прочитати маніфест цього APK (часто буває для розділених наборів). Деталі нижче приблизні, патчинг усе одно має працювати</string>
     <string name="home_apk_info_unsupported_app_warning">Не знайдено сумісних патчів для цього застосунку. Ви можете продовжити, але патчинг може не мати ефекту</string>
-    <string name="home_apk_info_version_label">Версія</string>
     <string name="home_apk_info_build_label">Збірка</string>
     <string name="home_apk_info_size_label">Розмір</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -386,7 +386,7 @@
     <string name="patch_selection_strip_no_libs_headline">Немає нативних бібліотек</string>
     <string name="patch_selection_strip_no_libs_detail">видалення не застосовується</string>
     <string name="patch_selection_strip_universal_headline">Універсальні бібліотеки</string>
-    <string name="patch_selection_strip_universal_detail">єдина універсальна папка, видалення не застосовується</string>
+    <string name="patch_selection_strip_universal_detail">єдина універсальна тека, видалення не застосовується</string>
     <string name="patch_selection_strip_keep_all_headline">Видалення не потрібне</string>
     <string name="patch_selection_strip_keep_all_detail">список збереження покриває всі архітектури в цьому APK</string>
     <string name="patch_selection_strip_fallback_headline">Запасний варіант: зберегти все</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Введення-виведення сховища</string>
     <string name="patching_graph_cpu_usage">Використання ЦП</string>
     <string name="patching_banner_started_title">Патчинг розпочато</string>
-    <string name="patching_banner_app_version">Версія застосунку</string>
     <string name="patching_banner_apk_size">Розмір APK</string>
     <string name="patching_banner_patches">Патчі</string>
     <string name="patching_banner_split_apk">Split APK</string>
@@ -586,7 +585,7 @@
     <string name="source_sheet_channel_older_stable">Старіша стабільна</string>
     <string name="source_sheet_channel_older_dev">Старіша dev-версія</string>
     <string name="source_sheet_ignored_mpp_title">Ігноровані шаблони .mpp</string>
-    <string name="source_sheet_ignored_mpp_hint">Впливає лише на джерела-папки, які автоматично завантажують найновіший .mpp у папці. Коли вибирається ця найновіша збірка, файли, назви яких збігаються з шаблоном зі списку, пропускаються. Звичайне слово збігається з будь-яким файлом, що містить його (напр. debug). Використовуйте * для глоб-шаблонів (напр. *-debug.mpp). *-sources.mpp і *-javadoc.mpp ігноруються завжди</string>
+    <string name="source_sheet_ignored_mpp_hint">Впливає лише на джерела-теки, які автоматично завантажують найновіший .mpp у теці. Під час вибору найновішої збірки файли, назва яких відповідає наведеному тут шаблону, пропускаються. Просте слово відповідає будь-якому файлу, що його містить (наприклад, debug). Використовуйте * для глобів (наприклад, *-debug.mpp). *-sources.mpp і *-javadoc.mpp ігноруються завжди</string>
     <string name="source_sheet_ignored_mpp_placeholder">напр. debug або *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Додати шаблон</string>
     <string name="source_sheet_remove_pattern_description">Видалити шаблон</string>
@@ -609,9 +608,9 @@
     <string name="patch_source_dialog_type_github_repo">Репозиторій GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Репозиторій GitLab</string>
-    <string name="patch_source_dialog_mpp_or_folder_label">.mpp-файл або папка</string>
+    <string name="patch_source_dialog_mpp_or_folder_label">.mpp-файл або тека</string>
     <string name="patch_source_dialog_mpp_label">.mpp-файл</string>
-    <string name="patch_source_dialog_path_placeholder_dev">Шлях до .mpp або папки</string>
+    <string name="patch_source_dialog_path_placeholder_dev">Шлях до .mpp або теки</string>
     <string name="patch_source_dialog_path_placeholder">Шлях до .mpp</string>
     <string name="patch_source_dialog_file_button">Файл</string>
     <string name="patch_source_dialog_picker_select_file">Виберіть файл .mpp</string>
@@ -638,7 +637,7 @@
     <!-- Error Dialog -->
     <string name="error_dialog_timeout">Час очікування з'єднання минув. Перевірте інтернет-з'єднання та спробуйте знову</string>
     <string name="error_dialog_unreachable">Не вдається з'єднатися з сервером. Перевірте інтернет-з'єднання</string>
-    <string name="error_dialog_permission_denied">Доступ заборонено. Перевірте, чи маєте ви доступ до файлу або папки</string>
+    <string name="error_dialog_permission_denied">Відмовлено в доступі. Перевірте, чи маєте ви доступ до файлу або теки</string>
     <string name="error_dialog_not_found">Запитаний файл або ресурс не знайдено</string>
     <string name="error_dialog_disk_full">Недостатньо місця на диску. Звільніть трохи місця та спробуйте знову</string>
     <string name="error_dialog_exit_code">Під час патчингу сталася помилка. Деталі дивіться в журналах</string>
@@ -712,12 +711,13 @@
     <string name="settings_section_background_animation">Анімація фону</string>
     <string name="settings_background_circles">Кола</string>
     <string name="settings_background_rings">Кільця</string>
-    <string name="settings_background_mesh">Сітка</string>
+    <string name="settings_background_mesh">Полігони</string>
     <string name="settings_background_space">Космос</string>
     <string name="settings_background_shapes">Фігури</string>
     <string name="settings_background_snow">Сніг</string>
     <string name="settings_background_grid">Сітка</string>
     <string name="settings_background_particles">Частинки</string>
+    <string name="settings_background_lava">Лава-лампа</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Ефект паралакса</string>
     <string name="settings_toggle_parallax_desc">Плавне зміщення фону під час руху миші</string>
@@ -739,9 +739,9 @@
     <string name="settings_channel_desc_stable">Ви побачите банер, коли стане доступний новий стабільний реліз</string>
     <string name="settings_channel_desc_dev">Ви побачите банер, коли стане доступний новий dev або стабільний реліз</string>
     <string name="settings_channel_desc_off">Перевірку оновлень вимкнено. Ви можете ввімкнути її тут будь-коли</string>
-    <string name="settings_section_output_folder">Вихідна папка</string>
-    <string name="settings_output_folder_desc">Де зберігаються пропатчені APK. Усередині створюється підпапка для кожного застосунку</string>
-    <string name="settings_output_folder_default">Папка APK (за замовчуванням)</string>
+    <string name="settings_section_output_folder">Тека виведення</string>
+    <string name="settings_output_folder_desc">Де зберігаються пропатчені APK. Усередині створюється підтека для кожного застосунку</string>
+    <string name="settings_output_folder_default">Тека APK (типово)</string>
     <string name="settings_output_folder_picker_title">Виберіть вихідну папку</string>
     <string name="settings_output_folder_not_found">Папку не знайдено, їі буде створено під час наступного патчингу</string>
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>

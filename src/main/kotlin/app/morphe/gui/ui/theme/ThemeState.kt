@@ -7,16 +7,11 @@ package app.morphe.gui.ui.theme
 
 import androidx.compose.runtime.compositionLocalOf
 
-/**
- * Holds the current theme state and callback to change it.
- * Provided via CompositionLocal so any screen can access it.
- */
+/** Current theme preference state and change callback. */
 data class ThemeState(
     val current: ThemePreference = ThemePreference.SYSTEM,
     val onChange: (ThemePreference) -> Unit = {}
 )
 
-/**
- * CompositionLocal for accessing theme state from any composable.
- */
+/** CompositionLocal providing the current [ThemeState]. */
 val LocalThemeState = compositionLocalOf { ThemeState() }

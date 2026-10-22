@@ -16,11 +16,12 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import app.morphe.engine.MorpheData
+import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.ui.components.LocalFrameWindowScope
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.Logger
 import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import java.awt.Taskbar
@@ -30,36 +31,28 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
 
-/**
- * Main entry point.
- * The app switches between simplified and full mode dynamically via settings.
- */
+/** Main GUI entry point invoked reflectively by [app.morphe.MorpheLauncher]. */
+@Suppress("unused")
 fun launchGui(args: Array<String>) {
     Logger.init()
+    runCatching { WorkspaceManager.reapStaleWorkspaces() }
 
-    // FileKit backs the native OS file/folder pickers (JNA on Windows/macOS,
-    // XDG Desktop Portal on Linux). Must run once before any picker is used;
-    // appId doubles as the DBus application id on Linux.
+    // Initialize native file dialogs before use.
     FileKit.init(appId = "app.morphe.desktop")
 
-    // Ensure any residual AWT/Swing surfaces (e.g. Swing fallback
-    // inside FileKit) render with the OS native look instead of Metal.
+    // Use native look and feel for Swing fallbacks.
     runCatching {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     }
 
     application {
-    // Determine initial mode from args or config
     val initialSimplifiedMode = when {
         args.contains("--quick") || args.contains("-q") -> true
         args.contains("--full") || args.contains("-f") -> false
         else -> loadConfigSync().useSimplifiedMode
     }
 
-    // On any JVM-normal exit path (window close, Cmd+Q, SIGTERM),
-    // kill the ADB daemon if Morphe spawned it. Compose's DisposableEffect
-    // already cancels polling; this hook covers shutdown routes
-    // where Compose teardown doesn't reach the suspend kill call.
+    // Shutdown hook to kill ADB daemon if Morphe spawned it.
     remember {
         Runtime.getRuntime().addShutdownHook(Thread {
             runCatching {
@@ -75,7 +68,6 @@ fun launchGui(args: Array<String>) {
 
     val appIcon = remember { loadAppIcon() }
 
-    // Set macOS dock icon
     remember {
         try {
             if (Taskbar.isTaskbarSupported()) {
@@ -88,7 +80,6 @@ fun launchGui(args: Array<String>) {
                 }
             }
         } catch (_: Exception) {
-            // Taskbar not supported or icon loading failed
         }
     }
 
@@ -98,20 +89,10 @@ fun launchGui(args: Array<String>) {
         state = windowState,
         icon = appIcon
     ) {
-        // Min width keeps the single side-by-side Home layout viable — there is no
-        // narrow/stacked variant to fall back to (intentionally removed; one layout
-        // to maintain). 900 is the floor at which the two panes still read well.
+        // Minimum dimensions to preserve side-by-side layout readability.
         window.minimumSize = Dimension(900, 500)
 
-        // macOS: hide the OS-drawn title bar so a Compose-rendered colored
-        // band can take its place. Traffic lights stay where the OS draws
-        // them (top-left of the client area, ~12px from each edge), and the
-        // colored band sits behind them. These three Apple AWT properties
-        // ship with every macOS JDK — no JetBrains Runtime needed.
-        //
-        // Windows / Linux: standard decorated window. The OS title bar is
-        // drawn above the client area as normal. On Windows, its color is
-        // tinted to match the active theme via DWM (see WindowTitleBarTint).
+        // Configure transparent title bar for custom macOS rendering.
         remember {
             val isMac = System.getProperty("os.name")?.lowercase()?.contains("mac") == true
             if (isMac) {
@@ -128,27 +109,22 @@ fun launchGui(args: Array<String>) {
     }
 }
 
-/**
- * Load config synchronously (needed before app starts).
- */
+/** Loads application configuration synchronously before GUI launch. */
 private fun loadConfigSync(): AppConfig {
     return try {
-        val configFile = FileUtils.getConfigFile()
+        val configFile = MorpheData.configFile
         if (configFile.exists()) {
             val json = Json { ignoreUnknownKeys = true }
             json.decodeFromString<AppConfig>(configFile.readText())
         } else {
-            AppConfig() // Defaults: useSimplifiedMode = true
+            AppConfig()
         }
-    } catch (e: Exception) {
-        AppConfig() // Defaults on error
+    } catch (_: Exception) {
+        AppConfig()
     }
 }
 
-/**
- * Load the app icon from resources.
- * Tries multiple classloaders and paths to handle different resource packaging.
- */
+/** Loads application icon from bundled resources across class loaders. */
 private fun loadAppIcon(): BitmapPainter? {
     val possiblePaths = listOf(
         "/morphe_logo.png",
@@ -157,7 +133,6 @@ private fun loadAppIcon(): BitmapPainter? {
         "composeResources/app.morphe.morphe_cli.generated.resources/drawable/morphe_logo.png"
     )
 
-    // Try different classloader approaches
     val classLoaders = listOf(
         { path: String -> object {}.javaClass.getResourceAsStream(path) },
         { path: String -> Thread.currentThread().contextClassLoader.getResourceAsStream(path) },
@@ -173,8 +148,7 @@ private fun loadAppIcon(): BitmapPainter? {
                         BitmapPainter(Image.makeFromEncoded(it.readBytes()).toComposeImageBitmap())
                     }
                 }
-            } catch (e: Exception) {
-                // Try next combination
+            } catch (_: Exception) {
             }
         }
     }

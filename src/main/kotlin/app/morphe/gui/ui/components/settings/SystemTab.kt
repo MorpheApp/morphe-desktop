@@ -15,17 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.ui.components.MorpheDropdown
 import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -46,16 +42,12 @@ internal fun SystemTab(
     onShowChangelog: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
 
     SettingToggleRow(
         label = stringResource(Res.string.settings_toggle_auto_cleanup_label),
         description = stringResource(Res.string.settings_toggle_auto_cleanup_desc),
         checked = autoCleanupTempFiles,
         onCheckedChange = onAutoCleanupChange,
-        accentColor = accents.primary,
-        font = font,
         enabled = !isPatching,
         icon = MorpheIcons.DeleteSweep
     )
@@ -65,9 +57,6 @@ internal fun SystemTab(
     UpdateChannelRow(
         selected = updateChannelPreference,
         onChange = onUpdateChannelChange,
-        accentColor = accents.primary,
-        font = font,
-        borderColor = borderColor,
         enabled = !isPatching,
         icon = MorpheIcons.Update
     )
@@ -77,7 +66,6 @@ internal fun SystemTab(
     OutputFolderSection(
         defaultOutputDirectory = defaultOutputDirectory,
         onDefaultOutputDirectoryChange = onDefaultOutputDirectoryChange,
-        font = font,
         borderColor = borderColor,
         enabled = !isPatching,
         icon = MorpheIcons.FolderOpen
@@ -90,15 +78,13 @@ internal fun SystemTab(
         description = stringResource(Res.string.settings_toggle_auto_start_adb_desc),
         checked = autoStartAdb,
         onCheckedChange = onAutoStartAdbChange,
-        accentColor = accents.primary,
-        font = font,
         enabled = !isPatching,
         icon = MorpheIcons.ADB
     )
 
     SettingsDivider(borderColor)
 
-    SectionLabel(stringResource(Res.string.settings_section_about), font, icon = MorpheIcons.Info)
+    SectionLabel(stringResource(Res.string.settings_section_about), icon = MorpheIcons.Info)
     Spacer(Modifier.height(16.dp))
 
     Column(
@@ -107,13 +93,12 @@ internal fun SystemTab(
         AboutRow(
             title = stringResource(Res.string.app_name),
             subtitle = stringResource(Res.string.settings_about_version, AppConstants.APP_VERSION),
-            font = font,
             onClick = onShowAppInfo,
         ) {
             Icon(
                 imageVector = MorpheIcons.MorpheLogo,
                 contentDescription = null,
-                tint = accents.primary,
+                tint = MorpheTheme.colors.primary,
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -123,13 +108,12 @@ internal fun SystemTab(
         AboutRow(
             title = stringResource(Res.string.settings_about_changelogs_title),
             subtitle = stringResource(Res.string.settings_about_changelogs_desc),
-            font = font,
             onClick = onShowChangelog,
         ) {
             Icon(
                 imageVector = MorpheIcons.Article,
                 contentDescription = null,
-                tint = accents.primary,
+                tint = MorpheTheme.colors.primary,
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -139,13 +123,12 @@ internal fun SystemTab(
         AboutRow(
             title = stringResource(Res.string.settings_about_documentation_title),
             subtitle = stringResource(Res.string.settings_about_documentation_desc),
-            font = font,
             onClick = { uriHandler.openUri(AppConstants.DOCUMENTATION_URL) },
         ) {
             Icon(
                 imageVector = MorpheIcons.MenuBook,
                 contentDescription = null,
-                tint = accents.primary,
+                tint = MorpheTheme.colors.primary,
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -155,31 +138,23 @@ internal fun SystemTab(
         AboutRow(
             title = stringResource(Res.string.settings_about_website_title),
             subtitle = stringResource(Res.string.settings_about_website_desc),
-            font = font,
             onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) },
         ) {
             Icon(
                 imageVector = MorpheIcons.Public,
                 contentDescription = null,
-                tint = accents.primary,
+                tint = MorpheTheme.colors.primary,
                 modifier = Modifier.size(18.dp)
             )
         }
     }
 }
 
-/**
- * Inline row letting the user pick which CLI release channel update checks
- * follow. Mirrors [SettingToggleRow]'s layout, label plus dynamic description
- * on the left, chip group on the right where the switch would be.
- */
+/** Settings row for selecting the update release channel. */
 @Composable
 private fun UpdateChannelRow(
     selected: UpdateChannelPreference,
     onChange: (UpdateChannelPreference) -> Unit,
-    accentColor: Color,
-    font: FontFamily,
-    borderColor: Color,
     enabled: Boolean,
     icon: ImageVector? = null,
 ) {
@@ -204,7 +179,7 @@ private fun UpdateChannelRow(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = accentColor.copy(alpha = alpha),
+                    tint = MorpheTheme.colors.primary.copy(alpha = alpha),
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(12.dp))
@@ -212,18 +187,14 @@ private fun UpdateChannelRow(
             Column {
                 Text(
                     text = stringResource(Res.string.settings_channel_label),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = MorpheTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
-                    fontFamily = font,
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = description,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
+                    style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
-                    fontFamily = font,
                 )
             }
         }

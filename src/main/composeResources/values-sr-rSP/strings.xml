@@ -56,6 +56,7 @@
     <string name="status_offline">Ван мреже</string>
     <string name="status_ready">Спремно</string>
     <string name="filter_apps_hint">Филтрирај апликације…</string>
+    <string name="version">Верзија</string>
     <string name="version_label_stable">Стабилно</string>
     <string name="version_label_dev">Дев</string>
     <string name="version_label_experimental">Експериментално</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Уклони APK</string>
     <string name="home_apk_info_limited_info_warning">Није могуће у потпуности прочитати манифест овог APK-а (уобичајено за подељене пакете). Детаљи испод су приближни, закрпљивање би ипак требало да ради</string>
     <string name="home_apk_info_unsupported_app_warning">Нема компатибилних закрпа за ову апликацију. И даље можете наставити, али закрпљивање можда неће имати ефекта</string>
-    <string name="home_apk_info_version_label">Верзија</string>
     <string name="home_apk_info_build_label">Издање</string>
     <string name="home_apk_info_size_label">Величина</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -446,7 +446,6 @@
     <string name="patching_graph_storage_io">У/И складишта</string>
     <string name="patching_graph_cpu_usage">Употреба процесора</string>
     <string name="patching_banner_started_title">Закрпљивање је почело</string>
-    <string name="patching_banner_app_version">Верзија апликације</string>
     <string name="patching_banner_apk_size">Величина APK-а</string>
     <string name="patching_banner_patches">Закрпе</string>
     <string name="patching_banner_split_apk">Подељени APK</string>
@@ -721,6 +720,7 @@
     <string name="settings_background_snow">Снег</string>
     <string name="settings_background_grid">Решетка</string>
     <string name="settings_background_particles">Честице</string>
+    <string name="settings_background_lava">Лавина лампа</string>
     <string name="settings_background_matrix">Матрица</string>
     <string name="settings_toggle_parallax_label">Паралакс ефекат</string>
     <string name="settings_toggle_parallax_desc">Глатно померање позадине при покрету миша</string>

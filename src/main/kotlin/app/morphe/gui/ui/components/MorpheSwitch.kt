@@ -17,16 +17,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import app.morphe.gui.ui.theme.MorpheTheme
 
-/**
- * Standard pill switch used in the design.
- */
+/** Standard toggle switch styled with theme accent colors. */
 @Composable
 fun MorpheSwitch(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    accentColor: Color,
     modifier: Modifier = Modifier,
+    accentColor: Color = MorpheTheme.colors.primary,
     enabled: Boolean = true,
 ) {
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {

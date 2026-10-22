@@ -56,6 +56,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_ready">Gotowe</string>
     <string name="filter_apps_hint">Filtruj aplikacje…</string>
+    <string name="version">Wersja</string>
     <string name="version_label_stable">Stabilna</string>
     <string name="version_label_dev">Deweloperska</string>
     <string name="version_label_experimental">Eksperymentalna</string>
@@ -178,13 +179,13 @@
     <string name="version_warning_unsupported_message">Obecna: v%1$s\n\nTa wersja nie jest oficjalnie obsługiwana. Modyfikacje najprawdopodobniej nie zadziałają.</string>
     <string name="version_warning_notice_message">Kontynuować z v%1$s?</string>
     <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Starsza stabilna kompilacja - dostępna nowsza stabilna wersja v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Eksperymentalna kompilacja - obsługiwana, ale może nie działać prawidłowo</string>
-    <string name="quick_patch_warning_older_experimental">Starsza kompilacja eksperymentalna - dostępna nowsza eksperymentalna wersja v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Nieobsługiwana kompilacja - tę wersję można zmodyfikować, ale nie tę konkretną kompilację</string>
-    <string name="quick_patch_warning_too_new">Zbyt nowa wersja - nie jest oficjalnie obsługiwana, modyfikacje najprawdopodobniej nie zadziałają</string>
-    <string name="quick_patch_warning_too_old">Zbyt stara wersja - nie jest oficjalnie obsługiwana, modyfikacje najprawdopodobniej nie zadziałają</string>
-    <string name="quick_patch_warning_unsupported_between">Nieobsługiwana wersja - modyfikacje najprawdopodobniej nie zadziałają</string>
+    <string name="quick_patch_warning_older_stable">Starsza stabilna kompilacja. Dostępna nowsza stabilna wersja v%1$s</string>
+    <string name="quick_patch_warning_latest_experimental">Eksperymentalna kompilacja. Obsługiwana, ale może nie działać prawidłowo</string>
+    <string name="quick_patch_warning_older_experimental">Starsza kompilacja eksperymentalna. Dostępna nowsza eksperymentalna wersja v%1$s</string>
+    <string name="quick_patch_warning_build_unsupported">Nieobsługiwana kompilacja. Tę wersję można zmodyfikować, ale nie tę konkretną kompilację</string>
+    <string name="quick_patch_warning_too_new">Zbyt nowa wersja. Nie jest oficjalnie obsługiwana, modyfikacje najprawdopodobniej nie zadziałają</string>
+    <string name="quick_patch_warning_too_old">Zbyt stara wersja. Nie jest oficjalnie obsługiwana, modyfikacje najprawdopodobniej nie zadziałają</string>
+    <string name="quick_patch_warning_unsupported_between">Nieobsługiwana wersja. Modyfikacje najprawdopodobniej nie zadziałają</string>
     <string name="quick_patch_read_apk_failed">Nie udało się odczytać pliku APK: %1$s</string>
     <string name="quick_patch_status_preparing_patches">Przygotowywanie modyfikacji…</string>
     <string name="quick_patch_fetch_patches_failed">Nie udało się pobrać modyfikacji. Sprawdź połączenie z internetem</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Usuń plik APK</string>
     <string name="home_apk_info_limited_info_warning">Nie udało się w pełni odczytać manifestu tego pliku APK (częste zjawisko przy podzielonych plikach APK). Poniższe szczegóły są przybliżone, ale modyfikowanie powinno nadal działać</string>
     <string name="home_apk_info_unsupported_app_warning">Nie znaleziono kompatybilnych modyfikacji dla tej aplikacji. Możesz kontynuować, ale modyfikowanie może nie przynieść żadnego efektu</string>
-    <string name="home_apk_info_version_label">Wersja</string>
     <string name="home_apk_info_build_label">Kompilacja</string>
     <string name="home_apk_info_size_label">Rozmiar</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -241,7 +241,7 @@
     <string name="home_dialog_uninstall_button">Odinstaluj</string>
     <string name="home_dialog_continue_anyway">Kontynuuj mimo to</string>
     <string name="home_dialog_forget_title">Zapomnieć %1$s?</string>
-    <string name="home_dialog_forget_message">Spowoduje to usunięcie %1$s z historii zmodyfikowanych aplikacji. Nie narusza to żadnych plików - ponowne zmodyfikowanie aplikacji przywróci ją na listę</string>
+    <string name="home_dialog_forget_message">Spowoduje to usunięcie %1$s z historii zmodyfikowanych aplikacji. Nie narusza to żadnych plików, ponowne zmodyfikowanie aplikacji przywróci ją na listę</string>
     <string name="home_dialog_uninstall_title">Odinstalować %1$s?</string>
     <string name="home_dialog_uninstall_message">Spowoduje to usunięcie %1$s z podłączonego urządzenia. Zmodyfikowany plik APK na dysku oraz historia zostaną zachowane, chyba że poniżej zaznaczysz inaczej</string>
     <string name="home_dialog_uninstall_also_forget">Usuń również z Twoich aplikacji</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Zapis/odczyt danych</string>
     <string name="patching_graph_cpu_usage">Zużycie procesora</string>
     <string name="patching_banner_started_title">Rozpoczęto modyfikowanie</string>
-    <string name="patching_banner_app_version">Wersja aplikacji</string>
     <string name="patching_banner_apk_size">Rozmiar pliku APK</string>
     <string name="patching_banner_patches">Modyfikacje</string>
     <string name="patching_banner_split_apk">Podzielony plik APK</string>
@@ -538,7 +537,7 @@
     <string name="icon_studio_add_text_button">Tekst</string>
     <string name="icon_studio_add_shape_button">Kształt</string>
     <string name="icon_studio_foreground_hint">Twoje logo, umieszczone w bezpiecznej strefie. Odpowiada za ikony z motywem i powiadomień</string>
-    <string name="icon_studio_no_foreground_hint">Brak pierwszego planu - dodaj warstwę (Obraz / Tekst / Kształt). Ikony z motywem i powiadomień generowane są z pierwszego planu, więc ikona zawierająca tylko tło niczego w tym miejscu nie pokaże (nastąpi awaryjne użycie całej ikony)</string>
+    <string name="icon_studio_no_foreground_hint">Brak pierwszego planu, dodaj warstwę (Obraz / Tekst / Kształt). Ikony z motywem i powiadomień generowane są z pierwszego planu, więc ikona zawierająca tylko tło niczego w tym miejscu nie pokaże (nastąpi awaryjne użycie całej ikony)</string>
     <string name="icon_studio_replace_icon_button">Zamień ikonę</string>
     <string name="icon_studio_text_label">Tekst</string>
     <string name="icon_studio_toggle_bold">Pogrubienie</string>
@@ -616,7 +615,7 @@
     <string name="patch_source_dialog_file_button">Plik</string>
     <string name="patch_source_dialog_picker_select_file">Wybierz plik .mpp</string>
     <string name="patch_source_dialog_picker_select_folder">Wybierz folder (użyty zostanie najnowszy plik .mpp)</string>
-    <string name="patch_source_dialog_folder_hint">Wybierz folder, aby zawsze wczytywać znajdujący się w nim najnowszy plik .mpp - przydatne podczas przebudowywania modyfikacji</string>
+    <string name="patch_source_dialog_folder_hint">Wybierz folder, aby zawsze wczytywać znajdujący się w nim najnowszy plik .mpp. Przydatne podczas przebudowywania modyfikacji</string>
     <!-- Device Indicator -->
     <string name="device_indicator_adb_off">ADB wyłączone</string>
     <string name="device_indicator_checking">Sprawdzanie…</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Śnieg</string>
     <string name="settings_background_grid">Kratka</string>
     <string name="settings_background_particles">Cząsteczki</string>
+    <string name="settings_background_lava">Lampa lawa</string>
     <string name="settings_background_matrix">Matrix</string>
     <string name="settings_toggle_parallax_label">Efekt paralaksy</string>
     <string name="settings_toggle_parallax_desc">Płynne przesuwanie tła podczas poruszania myszką</string>

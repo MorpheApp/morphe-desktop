@@ -7,56 +7,41 @@ package app.morphe.gui.ui.screens.patches
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
+import app.morphe.engine.apk.AndroidArchitectures
+import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot
-import app.morphe.engine.util.ApkOutputNaming
-import app.morphe.gui.data.model.Patch
-import app.morphe.gui.data.model.PatchConfig
-import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchPreferencesRepository
-import app.morphe.gui.data.repository.PatchRepository
+import app.morphe.engine.options.PatchPreferencesRepository
+import app.morphe.engine.options.groupFlatOptionsToJson
+import app.morphe.engine.options.optionValueFromJson
+import app.morphe.engine.patches.PatchRepository
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.patches.SupportedAppCatalog
+import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.util.Logger
 import app.morphe.gui.data.repository.SeenPatchesRepository
-import app.morphe.gui.util.FileUtils
-import app.morphe.gui.util.FileUtils.ANDROID_ARCHITECTURES
-import app.morphe.gui.util.Logger
-import app.morphe.gui.util.PatchService
-import app.morphe.gui.util.optionValueFromJson
-import app.morphe.gui.util.optionValueOrNull
-import app.morphe.gui.util.optionValueToJson
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
 import org.jetbrains.compose.resources.getString
 
-/**
- * Per-bundle view of one source's contribution to the patches-selection screen.
- *
- * - [bundleId] is an internal handle stable for the screen lifetime. The screen
- *   uses it as a map key for selection state and the LazyColumn item key.
- * - [bundleName] is the display label AND the persistence key (matches the
- *   `sourceName` slot inside [PatchPreferencesRepository]). Renaming a source
- *   carries its saved selection with it.
- * - [patches] holds the patches from this bundle ALONE. No cross-bundle dedup.
- *   When two sources ship an identical patch (same name/body/options), each
- *   bundle still has its own entry here, and the user toggles them
- *   independently. The patcher dedups at apply time so this doesn't double-apply.
- */
+/** Per-bundle patches and metadata contributed by a single patch source. */
 data class BundlePatches(
     val bundleId: String,
     val bundleName: String,
-    val patches: List<Patch>,
+    val patches: List<PatchMetadata>,
 )
 
 class PatchSelectionViewModel(
@@ -65,43 +50,36 @@ class PatchSelectionViewModel(
     private val patchesFilePath: String,
     private val packageName: String,
     private val apkArchitectures: List<String>,
-    private val patchService: PatchService,
     private val patchRepository: PatchRepository,
-    private val configRepository: ConfigRepository,
+    private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
     private val preferencesRepository: PatchPreferencesRepository,
-    private val patchSourceName: String,
     private val localPatchFilePath: String? = null,
     /** All enabled-source .mpp file paths. Single-element in single-source mode. */
     private val patchesFilePaths: List<String> = listOf(patchesFilePath),
-    /** Parallel to [patchesFilePaths]. Display name of each source. Used as the
-     *  per-bundle label AND persistence key. */
+    /** Display names corresponding to [patchesFilePaths]. */
     private val patchSourceNames: List<String> = emptyList(),
-    /** One-click repatch seed: source/bundle name → set of patch uniqueIds to
-     *  pre-select. Empty = normal flow (saved prefs / .mpp defaults). */
+    /** Pre-selected patch IDs per bundle for repatching. */
     private val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
-    /** One-click repatch seed: "patchName.optionKey" → option value. */
+    /** Pre-configured patch option values for repatching. */
     private val initialPatchOptions: Map<String, String> = emptyMap(),
-    /** The app's versionName (parsed from the APK upstream). Threaded here so the output
-     *  filename stays unique by app version even for renamed bundles the engine can't
-     *  re-read a version from. Blank falls back to the engine's manifest/filename resolution.
-     *  Non-null (rather than String?) so no null flows through the Koin parametersOf chain. */
+    /** Target app version name used for naming and compatibility checks. */
     private val apkVersion: String = "",
     private val seenPatchesRepository: SeenPatchesRepository = SeenPatchesRepository(),
-    /** Configured source name to its stable id, so a record can store the id rather than a label. */
+    /** Maps source names to stable source IDs. */
     private val sourceIdsByName: Map<String, String> = emptyMap(),
 ) : ViewModel() {
 
-    // Actual path to use for the primary file. May differ from patchesFilePath
-    // if we had to re-download (cache cleared, etc.)
+    // Resolved primary patch file path (may differ if redownloaded).
     private var actualPatchesFilePath: String = patchesFilePath
     private var actualPatchesFilePaths: List<String> = patchesFilePaths
 
     private var defaultOutputDirectory: String? = null
+    private var autoCleanupTempFiles: Boolean = true
 
     private val _uiState = MutableStateFlow(
         PatchSelectionUiState(
             apkArchitectures = apkArchitectures,
-            stripLibsStatus = computeStripLibsStatus(apkArchitectures, ANDROID_ARCHITECTURES),
+            stripLibsStatus = computeStripLibsStatus(apkArchitectures, AndroidArchitectures.ALL),
         )
     )
     val uiState: StateFlow<PatchSelectionUiState> = _uiState.asStateFlow()
@@ -113,16 +91,14 @@ class PatchSelectionViewModel(
 
     private fun loadStripLibsPreference() {
         viewModelScope.launch {
-            val config = configRepository.loadConfig()
-            // Store the resolved absolute path so the lookup at line ~487 can
-            // pass it straight into File(...) without re-resolving.
+            val config = engineConfigRepository.loadConfig()
+            autoCleanupTempFiles = config.autoCleanupTempFiles
+            // Resolved default output directory path.
             defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
-            // Architectures arrive empty from a repatch/update (the caller didn't
-            // pre-analyze the APK). Derive them from the APK itself so the strip-libs
-            // option isn't lost. Also correct for an Update's freshly-downloaded APK.
+            // Derive architectures from the APK if not provided.
             val arches = apkArchitectures.ifEmpty {
                 withContext(Dispatchers.IO) {
-                    runCatching { FileUtils.extractArchitectures(File(apkPath)) }
+                    runCatching { ApkInspector.extractArchitectures(File(apkPath)).toList() }
                         .getOrDefault(emptyList())
                 }
             }
@@ -133,16 +109,11 @@ class PatchSelectionViewModel(
         }
     }
 
-    fun getApkPath(): String = apkPath
-    fun getApkName(): String = apkName
-
-    // ── Loading ──────────────────────────────────────────────────────────────
-
     fun loadPatches() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            // First, ensure the patches file exists - download if missing
+            // Ensure the primary patches file exists.
             val patchesFile = File(patchesFilePath)
             if (!patchesFile.exists()) {
                 Logger.info("Patches file not found at $patchesFilePath, attempting to download...")
@@ -156,8 +127,7 @@ class PatchSelectionViewModel(
                     return@launch
                 }
                 actualPatchesFilePath = downloadResult.getOrNull()!!.absolutePath
-                // Mirror the swap into the multi-paths list so the union load uses
-                // the freshly-downloaded file rather than the missing one.
+                // Update the multi-paths list with the resolved path.
                 actualPatchesFilePaths = actualPatchesFilePaths.map {
                     if (it == patchesFilePath) actualPatchesFilePath else it
                 }
@@ -180,9 +150,7 @@ class PatchSelectionViewModel(
                         rawBundles
                     }
 
-                    // For each bundle, derive its default selection (use=true) and
-                    // its saved selection (if any). Persistence is per-bundle
-                    // keyed by bundleName. Single load per bundle.
+                    // Compute default and saved selections for each bundle.
                     val defaultsByBundle = bundles.associate { bundle ->
                         bundle.bundleId to computeBundleDefaults(bundle, anyBundleHasCompatible)
                     }
@@ -192,10 +160,7 @@ class PatchSelectionViewModel(
                     val newByBundle = mutableMapOf<String, Set<String>>()
 
                     if (initialSelectionByBundle.isNotEmpty()) {
-                        // One-click repatch: seed selection + options from the
-                        // PatchedAppRecord (keyed by source/bundle name). Takes
-                        // precedence over saved prefs. Keep only ids that still
-                        // exist in the current (possibly newer) bundle.
+                        // Seed selection and options from prior patch record.
                         anyBundleHasSaved = true
                         for ((bundleId, bundleName, patches) in bundles) {
                             val seed = initialSelectionByBundle[bundleName] ?: continue
@@ -224,9 +189,8 @@ class PatchSelectionViewModel(
                                 val combined = selected +
                                     fresh.filter { it.isEnabled }.map { it.uniqueId }
 
-                                // When an APK version is supported by at least one bundle, do not auto-restore
-                                // selections from a bundle that has zero compatible patches for that version.
-                                val bundleIncompatible = anyBundleHasCompatible && compatiblePatchCount(bundleId, patches) == 0
+                                // Do not restore selections for a bundle that has no compatible patches.
+                                val bundleIncompatible = anyBundleHasCompatible && compatiblePatchCount(patches) == 0
                                 if (bundleIncompatible) {
                                     savedByBundle[bundleId] = combined
                                 } else {
@@ -240,17 +204,13 @@ class PatchSelectionViewModel(
                                     savedByBundle[bundleId] = compatibleOnly
                                 }
 
-                                // Materialize saved option values ("patchName.optionKey" → string).
-                                // Options are per-patch-name, so they are global here.
-                                // Identical patches in two bundles share option values,
-                                // which is fine, because the same option means the same thing.
+                                // Restore saved option values.
                                 for ((patchName, entry) in saved.patches) {
                                     for ((optKey, jsonValue) in entry.options) {
                                         val optValue = optionValueFromJson(jsonValue)
-                                        // Drop a stale customIcon whose folder no longer exists (e.g.
-                                        // the user deleted the icon) so it doesn't reappear as "ready".
+                                        // Discard custom icon path if the target folder no longer exists.
                                         if (optKey.equals("customIcon", ignoreCase = true) &&
-                                            (optValue.isBlank() || !java.io.File(optValue).exists())
+                                            (optValue.isBlank() || !File(optValue).exists())
                                         ) continue
                                         initialOptions["$patchName.$optKey"] = optValue
                                     }
@@ -259,9 +219,7 @@ class PatchSelectionViewModel(
                         }
                     }
 
-                    // Initial selection for each bundle:
-                    // If a bundle is incompatible with apkVersion while another bundle is compatible,
-                    // it starts with its empty defaults (no enabled patches).
+                    // Set initial bundle selections.
                     val initialSelectedByBundle = bundles.associate { bundle ->
                         val isBundleIncompatible = anyBundleHasCompatible && compatiblePatchCount(bundle) == 0
                         val initial = if (isBundleIncompatible) {
@@ -300,19 +258,19 @@ class PatchSelectionViewModel(
         }
     }
 
-    fun isPatchCompatible(patch: Patch): Boolean =
+    fun isPatchCompatible(patch: PatchMetadata): Boolean =
         patch.isUniversal || patch.isCompatibleWith(packageName, apkVersion.ifBlank { null })
 
     fun compatiblePatchCount(bundle: BundlePatches): Int =
-        compatiblePatchCount(bundle.bundleId, bundle.patches)
+        compatiblePatchCount(bundle.patches)
 
-    fun compatiblePatchCount(bundleId: String, patches: List<Patch>): Int =
+    fun compatiblePatchCount(patches: List<PatchMetadata>): Int =
         patches.count { !it.isUniversal && it.isCompatibleWith(packageName, apkVersion.ifBlank { null }) }
 
     private fun computeBundleDefaults(bundle: BundlePatches, hasAnyCompatibleBundle: Boolean): Set<String> {
         return if (apkVersion.isNotBlank() && hasAnyCompatibleBundle) {
             if (compatiblePatchCount(bundle) == 0) {
-                // Incompatible bundle: no app patches are selected by default.
+                // Incompatible bundle: only universal patches are selected by default.
                 bundle.patches.filter { it.isUniversal && it.isEnabled }.map { it.uniqueId }.toSet()
             } else {
                 bundle.patches.filter { isPatchCompatible(it) && it.isEnabled }.map { it.uniqueId }.toSet()
@@ -322,16 +280,12 @@ class PatchSelectionViewModel(
         }
     }
 
-    /**
-     * Load patches from every resolved enabled-source file in parallel. Returns
-     * one [BundlePatches] entry per source. NO cross-bundle dedup. Bundles
-     * whose load failed are dropped. The call fails only when ALL bundles fail.
-     */
-    private suspend fun loadFromAllPaths(): Result<List<BundlePatches>> = coroutineScope {
+    /** Loads patches from all resolved patch files in parallel. */
+    private suspend fun loadFromAllPaths(): Result<List<BundlePatches>> = withContext(Dispatchers.IO) {
         val pkgFilter = packageName.ifEmpty { null }
         val perFile = actualPatchesFilePaths.mapIndexed { idx, path ->
-            async {
-                val result = patchService.listPatches(path, pkgFilter)
+            async(Dispatchers.IO) {
+                val result = runCatching { SupportedAppCatalog.loadPatches(File(path), pkgFilter) }
                 Triple(idx, path, result)
             }
         }.awaitAll()
@@ -349,22 +303,13 @@ class PatchSelectionViewModel(
 
         if (bundles.isEmpty()) {
             val firstError = perFile.firstNotNullOfOrNull { (_, _, r) -> r.exceptionOrNull() }
-            return@coroutineScope if (firstError != null) Result.failure(firstError)
+            return@withContext if (firstError != null) Result.failure(firstError)
                                   else Result.success(emptyList())
         }
         Result.success(bundles)
     }
 
-    // ── Legacy flat API (shims) ─────────────────────────────────────────────
-    //
-    // These shim methods keep the existing PatchSelectionScreen rendering
-    // compiling while the per-bundle UI is built out in a follow-up commit.
-    // Once the screen renders collapsible bundle boxes, these can be deleted.
-    //
-    // Behavior is best-effort: `togglePatch(patchId)` toggles in EVERY bundle
-    // that contains the patch (so old single-list UI matches old behavior:
-    // one click flips state everywhere). `selectAll`/`deselectAll`/etc. apply
-    // across all bundles in one go.
+    // Legacy flat API shims for single-list callers.
 
     @Deprecated("Per-bundle UI: use togglePatch(bundleId, patchId)")
     fun togglePatch(patchId: String) {
@@ -402,8 +347,6 @@ class PatchSelectionViewModel(
         _uiState.value = _uiState.value.copy(selectedByBundle = saved)
     }
 
-    // ── Per-bundle selection methods ────────────────────────────────────────
-
     fun togglePatch(bundleId: String, patchId: String) {
         val current = _uiState.value.selectedByBundle
         val bundleSet = current[bundleId].orEmpty()
@@ -427,7 +370,7 @@ class PatchSelectionViewModel(
         )
     }
 
-    /** Reset this bundle's selection to its .mpp `use=true/false` defaults. */
+    /** Resets bundle selection to default enabled patches. */
     fun applyPatchDefaultsInBundle(bundleId: String) {
         val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
         val anyBundleHasCompatible = apkVersion.isNotBlank() && _uiState.value.bundles.any { compatiblePatchCount(it) > 0 }
@@ -438,16 +381,14 @@ class PatchSelectionViewModel(
         )
     }
 
-    /** Restore this bundle's saved selection. No-op if no saved state for this bundle. */
+    /** Restores saved patch selection for this bundle. */
     fun applySavedDefaultsInBundle(bundleId: String) {
-        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        if (_uiState.value.bundles.none { it.bundleId == bundleId }) return
         val saved = _uiState.value.savedSelectedByBundle?.get(bundleId) ?: return
         _uiState.value = _uiState.value.copy(
             selectedByBundle = _uiState.value.selectedByBundle + (bundleId to saved),
         )
     }
-
-    // ── Filter / search ─────────────────────────────────────────────────────
 
     fun setSearchQuery(query: String) {
         _uiState.value = _uiState.value.copy(
@@ -463,12 +404,7 @@ class PatchSelectionViewModel(
         )
     }
 
-    /**
-     * Per-bundle filter. Preserves bundle grouping, so a bundle that has zero
-     * matches still appears in [PatchSelectionUiState.filteredBundles] with an
-     * empty `patches` list. The UI uses that to render the "no matches in this
-     * bundle" empty state inside the box.
-     */
+    /** Filters patches within each bundle by query and selection state. */
     private fun computeFilteredBundles(query: String, showOnlySelected: Boolean): List<BundlePatches> {
         val q = query.trim()
         return _uiState.value.bundles.map { bundle ->
@@ -488,19 +424,12 @@ class PatchSelectionViewModel(
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-    /**
-     * Recompute strip-libs status from the latest settings. Called when the user
-     * closes the Settings dialog so the banner stays in sync with preference edits.
-     */
+    /** Refreshes native library stripping status from current settings. */
     fun refreshStripLibsStatus() {
         loadStripLibsPreference()
     }
 
-    /**
-     * Set a patch option value. Key format: "patchName.optionKey". Options are
-     * keyed by patch name, so identical patches across bundles share option
-     * values. Intentional, since the patch IS the same patch.
-     */
+    /** Sets a patch option value using key format "patchName.optionKey". */
     fun setOptionValue(patchName: String, optionKey: String, value: String) {
         val key = "$patchName.$optionKey"
         val current = _uiState.value.patchOptionValues.toMutableMap()
@@ -518,7 +447,7 @@ class PatchSelectionViewModel(
     fun runInfo(): RunInfo = RunInfo(
         appName = apkName,
         appVersion = apkVersion.takeIf { it.isNotBlank() }
-            ?: extractVersionFromFilename(File(apkPath).name).orEmpty(),
+            ?: ApkOutputNaming.extractApkVersionFromFilename(File(apkPath).name).orEmpty(),
         apkFileName = File(apkPath).name,
         apkPath = apkPath,
         packageName = packageName,
@@ -526,38 +455,22 @@ class PatchSelectionViewModel(
             val file = File(path)
             RunInfo.Bundle(
                 name = patchSourceNames.getOrNull(i) ?: file.nameWithoutExtension,
-                version = extractPatchesVersion(file.name),
+                version = ApkOutputNaming.extractPatchesVersion(file.name),
                 fileName = file.name,
             )
         },
     )
 
-    // ── Persistence ─────────────────────────────────────────────────────────
-
-    /**
-     * Persist each bundle's current selection + option values under its own
-     * source name. Called from createPatchConfig (auto-save on Patch click).
-     */
+    /** Persists current patch selections and option values for each bundle. */
     private fun saveCurrentSelection() {
         val state = _uiState.value
-        // Group "patchName.optionKey" -> JsonElement under each patch name, ONCE.
-        // (Option values are global by design. See setOptionValue.)
+        // Group option values by patch name.
         val declaredTypes = state.bundles
             .flatMap { it.patches }
             .associate { patch -> patch.name to patch.options.associate { it.key to it.valueType } }
-        val groupedOptions = mutableMapOf<String, MutableMap<String, JsonElement>>()
-        for ((compoundKey, value) in state.patchOptionValues) {
-            val dotIdx = compoundKey.indexOf('.')
-            if (dotIdx <= 0) continue
-            val patchName = compoundKey.substring(0, dotIdx)
-            val optKey = compoundKey.substring(dotIdx + 1)
-            val type = declaredTypes[patchName]?.get(optKey)
-            val typed = type?.let { optionValueOrNull(value, it) }
-            groupedOptions.getOrPut(patchName) { mutableMapOf() }[optKey] =
-                if (typed == null) JsonPrimitive(value) else optionValueToJson(typed)
-        }
+        val groupedOptions = groupFlatOptionsToJson(state.patchOptionValues, declaredTypes)
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             for ((bundleId, bundleName, patches) in state.bundles) {
                 val selected = state.selectedByBundle[bundleId].orEmpty()
                 val enabledNames = patches
@@ -569,8 +482,7 @@ class PatchSelectionViewModel(
                     .map { it.name }
                     .toSet()
 
-                // Only save options for patches actually in this bundle. Avoids
-                // bleeding bundle A's option into bundle B's preferences.
+                // Only persist options for patches present in this bundle.
                 val patchNamesInBundle = patches.mapTo(mutableSetOf()) { it.name }
                 val scopedOptions = groupedOptions.filterKeys { it in patchNamesInBundle }
 
@@ -584,36 +496,30 @@ class PatchSelectionViewModel(
                 )
             }
 
-            // After saving, the live selection IS the saved selection. Refresh
-            // the snapshot so the per-bundle "Your Defaults" chips stay
-            // highlighted post-patch.
-            _uiState.value = _uiState.value.copy(
-                hasSavedSelection = true,
-                savedSelectedByBundle = state.selectedByBundle,
-            )
+            // Update saved selection state to match current selections.
+            withContext(Dispatchers.Main) {
+                _uiState.value = _uiState.value.copy(
+                    hasSavedSelection = true,
+                    savedSelectedByBundle = state.selectedByBundle,
+                )
+            }
         }
     }
 
-    // ── Patcher integration ─────────────────────────────────────────────────
-
-    fun createPatchConfig(continueOnError: Boolean = false): PatchConfig {
+    fun createPatchConfig(continueOnError: Boolean = false): PatchEngine.Config {
         saveCurrentSelection()
 
-        // Delegate to the shared engine helper. Same path the CLI computes.
-        // Passing apkName as the display name preserves the friendly label
-        // (e.g. "Youtube") instead of falling back to the filename.
+        // Resolve output APK file destination.
         val inputFile = File(apkPath)
-        val outputPath = ApkOutputNaming.outputApkPath(
+        val outputFile = ApkOutputNaming.outputApkPath(
             inputApk = inputFile,
             patchesFile = File(actualPatchesFilePath),
             baseOutputDir = defaultOutputDirectory?.let { File(it) },
             appDisplayName = apkName,
             appVersion = apkVersion,
-        ).absolutePath
+        )
 
-        // Flatten across bundles: the engine takes a single flat enable/disable
-        // list and dedups identical patches at apply time, so the union of
-        // selected patches across bundles is the right input.
+        // Flatten selections across bundles for patch engine execution.
         val (selectedPatchNames, disabledPatchNames) = flattenSelection()
 
         val keepArches = (uiState.value.stripLibsStatus as? StripLibsStatus.WillStrip)
@@ -622,8 +528,7 @@ class PatchSelectionViewModel(
             ?.toSet()
             ?: emptySet()
 
-        // Recall metadata: capture per-bundle selection and the source+version
-        // snapshot so the patching success path can record a PatchedAppRecord.
+        // Capture selection and source snapshots for history tracking.
         val state = _uiState.value
         val selectionByBundle = state.bundles.associate { bundle ->
             bundle.bundleName to state.selectedByBundle[bundle.bundleId].orEmpty()
@@ -633,41 +538,39 @@ class PatchSelectionViewModel(
             PatchedSourceSnapshot(
                 sourceId = sourceIdsByName[name] ?: name,
                 sourceName = name,
-                version = extractPatchesVersion(File(path).name) ?: "unknown",
+                version = ApkOutputNaming.extractPatchesVersion(File(path).name) ?: "unknown",
             )
         }
 
         val activeSources = fullSourcesSnapshot.filter { snapshot ->
             selectionByBundle[snapshot.sourceName]?.isNotEmpty() == true
         }
-        
-        val displaySources = activeSources.takeIf { it.isNotEmpty() } ?: fullSourcesSnapshot.take(1)
 
-        return PatchConfig(
-            inputApkPath = apkPath,
-            outputApkPath = outputPath,
-            patchesFilePaths = actualPatchesFilePaths,
-            enabledPatches = selectedPatchNames,
-            disabledPatches = disabledPatchNames,
-            patchOptions = _uiState.value.patchOptionValues,
-            useExclusiveMode = true,
-            keepArchitectures = keepArches,
-            continueOnError = continueOnError,
-            packageName = packageName,
+        return PatchEngine.Config(
+            inputApk = inputFile,
+            outputApk = outputFile,
+            patchFiles = actualPatchesFilePaths.map { File(it) },
+            enabledPatches = selectedPatchNames.toSet(),
+            disabledPatches = disabledPatchNames.toSet(),
+            flatPatchOptions = _uiState.value.patchOptionValues,
+            exclusiveMode = true,
+            forceCompatibility = true,
+            architecturesToKeep = keepArches,
+            failOnError = !continueOnError,
+            disablePurge = !autoCleanupTempFiles,
+            recordHistory = true,
             appDisplayName = apkName,
-            patchSelectionByBundle = selectionByBundle,
-            sourcesSnapshot = activeSources,
-            appVersion = apkVersion.takeIf { it.isNotBlank() },
-            patchesSourceName = displaySources.joinToString(", ") { it.sourceName },
-            patchesVersion = displaySources.joinToString(", ") { it.version }
+            historyMetadata = PatchEngine.HistoryMetadata(
+                originalPackageName = packageName,
+                displayName = apkName,
+                patchSelectionByBundle = selectionByBundle,
+                patchOptionValues = _uiState.value.patchOptionValues,
+                sourcesSnapshot = activeSources,
+            ),
         )
     }
 
-    /**
-     * Flatten per-bundle selection into the patcher's flat (enabled, disabled)
-     * pair of patch-name lists. `.distinct()` is belt-and-suspenders. The
-     * engine deduplicates again at apply time.
-     */
+    /** Flattens per-bundle patch selections into enabled and disabled patch name lists. */
     private fun flattenSelection(): Pair<List<String>, List<String>> {
         val state = _uiState.value
         val selected = mutableSetOf<String>()
@@ -679,25 +582,12 @@ class PatchSelectionViewModel(
                 else disabled.add(patch.name)
             }
         }
-        // A patch enabled in any bundle wins over its disabled-in-another counterpart
-        // (engine dedup means the patch is one entity at apply time).
+        // A patch enabled in any bundle takes precedence over disabled counterparts.
         disabled.removeAll(selected)
         return selected.toList() to disabled.toList()
     }
 
-    // Delegate to the shared engine helper so GUI and CLI agree on filename
-    // parsing. Returning these as instance methods (not direct calls) keeps
-    // existing call sites in this file unchanged.
-    private fun extractVersionFromFilename(fileName: String): String? =
-        ApkOutputNaming.extractApkVersionFromFilename(fileName)
-
-    private fun extractPatchesVersion(patchesFileName: String): String? =
-        ApkOutputNaming.extractPatchesVersion(patchesFileName)
-
-    /**
-     * Resolve the filename of the running Morphe Desktop JAR. Falls back to
-     * "morphe-desktop.jar" if running unpackaged in a development environment.
-     */
+    /** Resolves the running JAR file name, falling back to default if unavailable. */
     private fun resolveRunningJarName(): String {
         return try {
             val location = PatchSelectionViewModel::class.java.protectionDomain?.codeSource?.location
@@ -712,18 +602,13 @@ class PatchSelectionViewModel(
         }
     }
 
-    /**
-     * Escape an option value for safe CLI argument usage.
-     */
+    /** Formats a patch option key-value pair as a CLI argument. */
     private fun formatOptionArg(key: String, value: String): String {
         val escaped = value.replace("\"", "\\\"")
         return "-O$key=\"$escaped\""
     }
 
-    /**
-     * Generate a preview of the CLI command that will be executed.
-     * @param cleanMode If true, formats with newlines for readability. If false, compact single-line format.
-     */
+    /** Generates a CLI command string corresponding to the current patch configuration. */
     fun getCommandPreview(
         cleanMode: Boolean = false,
         continueOnError: Boolean = false,
@@ -739,18 +624,19 @@ class PatchSelectionViewModel(
             .filter { it.name.isNotBlank() }
             .ifEmpty { listOf(File(actualPatchesFilePath)) }
         val primaryPatchesFile = patchesFiles.first()
-        val appFolderName = apkName.replace(" ", "-")
-        val version = extractVersionFromFilename(inputFile.name) ?: "patched"
-        val patchesVersion = extractPatchesVersion(primaryPatchesFile.name)
-        val patchesSuffix = if (patchesVersion != null) "-patches-$patchesVersion" else ""
-        val outputFileName = "${appFolderName}-Morphe-${version}${patchesSuffix}.apk"
+        val outputFileName = ApkOutputNaming.outputApkPath(
+            inputApk = inputFile,
+            patchesFile = primaryPatchesFile,
+            appDisplayName = apkName,
+            appVersion = apkVersion,
+        ).name
 
         val state = uiState.value
 
-        // 1. Collect selected and default-enabled patch names across bundles
+        // Collect selected and default-enabled patch names.
         val selectedPatchNames = mutableSetOf<String>()
         val defaultEnabledPatchNames = mutableSetOf<String>()
-        val allCompatiblePatches = mutableMapOf<String, Patch>()
+        val allCompatiblePatches = mutableMapOf<String, PatchMetadata>()
 
         for ((bundleId, _, patches) in state.bundles) {
             val bundleSelected = state.selectedByBundle[bundleId].orEmpty()
@@ -773,24 +659,20 @@ class PatchSelectionViewModel(
             }
         }
 
-        // 2. Collect customized patch options for selected patches
+        // Collect customized patch options.
         val customOptionsByPatch = mutableMapOf<String, MutableList<Pair<String, String>>>()
         for (patchName in selectedPatchNames) {
             val patch = allCompatiblePatches[patchName] ?: continue
-            for (opt in patch.options) {
-                val customVal = state.patchOptionValues["${patch.name}.${opt.key}"]
-                if (!customVal.isNullOrBlank() && customVal != opt.default) {
+            for ((key, _, _, _, default) in patch.options) {
+                val customVal = state.patchOptionValues["${patch.name}.$key"]
+                if (!customVal.isNullOrBlank() && customVal != default) {
                     customOptionsByPatch.getOrPut(patchName) { mutableListOf() }
-                        .add(opt.key to customVal)
+                        .add(key to customVal)
                 }
             }
         }
 
-        // 3. Compute Delta Mode vs. Exclusive Mode
-        // In delta mode:
-        // - newlyEnabled: default-disabled patches that user selected
-        // - newlyDisabled: default-enabled patches that user deselected
-        // - default-enabled patches with customized options require explicit -e so options attach
+        // Determine whether delta mode or exclusive mode produces fewer CLI flags.
         val newlyEnabled = selectedPatchNames - defaultEnabledPatchNames
         val newlyDisabled = defaultEnabledPatchNames - selectedPatchNames
         val defaultEnabledWithCustomOptions = selectedPatchNames.intersect(defaultEnabledPatchNames)
@@ -879,47 +761,29 @@ class PatchSelectionViewModel(
         }
     }
 
-    /**
-     * Download patches file if it's missing (e.g., after cache clear).
-     * For LOCAL sources, uses the local file directly.
-     */
+    /** Downloads missing patches file or resolves local path. */
     private suspend fun downloadMissingPatches(expectedFilename: String): Result<File> {
         if (localPatchFilePath != null) {
-            val localFile = File(localPatchFilePath)
-            return if (localFile.exists()) Result.success(localFile)
-            else Result.failure(Exception("Local patch file not found: ${localFile.name}"))
+            val localRes = PatchResolver.resolveLocal(localPatchFilePath)
+            return localRes.patchFile?.let { Result.success(it) }
+                ?: Result.failure(Exception(localRes.error?.message ?: "Local patch file not found"))
         }
 
-        val versionRegex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
-        val versionMatch = versionRegex.find(expectedFilename)
-        val expectedVersion = versionMatch?.groupValues?.get(1)
+        val expectedVersion = expectedFilename.substringBefore("__").takeIf { expectedFilename.contains("__") }
+            ?: Regex("""v?(\d+\.\d+\.\d+(?:-dev\.\d+)?)""").find(expectedFilename)?.value
 
         Logger.info("Looking for patches version: ${expectedVersion ?: "latest"}")
 
-        val targetRelease = if (expectedVersion != null) {
-            // A specific version is expected (repatch/update) → the full release list
-            // (API) is the only way to locate that exact tag.
-            val releasesResult = patchRepository.fetchReleases()
-            if (releasesResult.isFailure) {
-                return Result.failure(releasesResult.exceptionOrNull() ?: Exception("Failed to fetch releases"))
-            }
-            val releases = releasesResult.getOrNull() ?: emptyList()
-            if (releases.isEmpty()) return Result.failure(Exception("No releases found"))
-            releases.find { it.tagName.contains(expectedVersion) }
-                ?: releases.firstOrNull { !it.isDevRelease() }
-                ?: return Result.failure(Exception("No suitable release found"))
-        } else {
-            // Just need the latest stable → resolve via the raw manifest (no API call).
-            patchRepository.getLatestStableRelease().getOrNull()
-                ?: return Result.failure(Exception("No suitable release found"))
-        }
-
-        Logger.info("Downloading patches from release: ${targetRelease.tagName}")
-        return patchRepository.downloadPatches(targetRelease)
+        val remoteRes = PatchResolver.resolveRemote(
+            repo = patchRepository,
+            usePreRelease = expectedVersion?.contains("dev", ignoreCase = true) == true,
+            pinnedTag = expectedVersion,
+            strictPin = false,
+        )
+        return remoteRes.patchFile?.let { Result.success(it) }
+            ?: Result.failure(Exception(remoteRes.error?.message ?: "No suitable release found"))
     }
 }
-
-// ── State / supporting types ────────────────────────────────────────────────
 
 data class RunInfo(
     val appName: String,
@@ -939,52 +803,33 @@ data class RunInfo(
 data class PatchSelectionUiState(
     val isLoading: Boolean = false,
     val bundles: List<BundlePatches> = emptyList(),
-    /** Same shape as [bundles] but each bundle's patches list is post-filter. A bundle with
-     *  zero matches stays in the list with `patches = emptyList()` so the UI can render
-     *  the "no matches in this bundle" empty state inside the box. */
+    /** Filtered bundles matching current search query and selection filters. */
     val filteredBundles: List<BundlePatches> = emptyList(),
-    /** bundleId → set of patch uniqueIds enabled in that bundle. Independent across bundles. */
+    /** Maps bundle ID to enabled patch unique IDs. */
     val selectedByBundle: Map<String, Set<String>> = emptyMap(),
-    /** Snapshot of each bundle's saved selection. Null = no saved state for any bundle. */
+    /** Snapshot of saved patch selections per bundle. */
     val savedSelectedByBundle: Map<String, Set<String>>? = null,
-    /** uniqueIds absent from the last saved preferences, per bundle. Empty on a first run. */
+    /** New patch unique IDs since last saved preferences. */
     val newPatchesByBundle: Map<String, Set<String>> = emptyMap(),
-    /** True when at least ONE bundle has a saved selection. Drives the per-box "Your Defaults"
-     *  chip visibility, though per-box highlighting still uses [selectionModeFor]. */
+    /** True if at least one bundle has saved preferences. */
     val hasSavedSelection: Boolean = false,
     val searchQuery: String = "",
     val showOnlySelected: Boolean = false,
     val error: String? = null,
     val apkArchitectures: List<String> = emptyList(),
     val stripLibsStatus: StripLibsStatus = StripLibsStatus.NoNativeLibs,
-    /** "patchName.optionKey" → value. Options keyed by patch name, so identical patches
-     *  across bundles share option values (intentional, the same patch means the
-     *  same option). */
+    /** Option values keyed by "patchName.optionKey". */
     val patchOptionValues: Map<String, String> = emptyMap(),
-    /** bundleId → set of patch uniqueIds default-selected in that bundle (version-aware). */
+    /** Maps bundle ID to default-selected patch unique IDs. */
     val defaultsByBundle: Map<String, Set<String>> = emptyMap(),
 ) {
-    /** Total count of patches enabled across all bundles. Patches identical across bundles
-     *  are counted once per bundle they're enabled in. Matches what the user toggled. */
+    /** Total count of patches selected across all bundles. */
     val selectedCount: Int get() = selectedByBundle.values.sumOf { it.size }
 
     /** Total count of patches across all bundles. */
     val totalCount: Int get() = bundles.sumOf { it.patches.size }
 
-    // ── Legacy flat shims ────────────────────────────────────────────────
-    //
-    // These let the existing PatchSelectionScreen render against the new
-    // per-bundle state without changes. Deleted once the screen renders
-    // collapsible bundle boxes.
-
-    @Deprecated("Use bundles directly", ReplaceWith("bundles"))
-    val allPatches: List<Patch> get() = bundles.flatMap { it.patches }
-
-    @Deprecated("Use filteredBundles directly", ReplaceWith("filteredBundles"))
-    val filteredPatches: List<Patch> get() = filteredBundles.flatMap { it.patches }
-
-    /** Which preset (if any) the SPECIFIED bundle's selection matches. Each box renders
-     *  its own chip highlighting independently. */
+    /** Returns the active selection mode for [bundleId]. */
     fun selectionModeFor(bundleId: String): SelectionMode {
         val bundle = bundles.firstOrNull { it.bundleId == bundleId } ?: return SelectionMode.CUSTOM
         if (bundle.patches.isEmpty()) return SelectionMode.CUSTOM
@@ -1005,29 +850,18 @@ data class PatchSelectionUiState(
 
 enum class SelectionMode { ALL, DEFAULTS, SAVED, NONE, CUSTOM }
 
-/**
- * What the strip-libs feature will do for the currently loaded APK given the
- * user's global keep-list preference. Computed by `computeStripLibsStatus`.
- */
+/** Native library stripping decision for the current APK and architecture settings. */
 sealed class StripLibsStatus {
     data object NoNativeLibs : StripLibsStatus()
 
     data object Universal : StripLibsStatus()
 
-    /**
-     * User's keep-list covers every arch in the APK. Nothing to strip. `notInApk`
-     * holds any extra arches in the user's keep list that don't appear in the APK,
-     * so the banner can surface "your preference for X has no effect here".
-     */
+    /** All architectures in the APK are kept; [notInApk] lists configured architectures not present. */
     data class KeepAll(val notInApk: List<String>) : StripLibsStatus()
 
     data class Fallback(val apkArches: List<String>) : StripLibsStatus()
 
-    /**
-     * Partial overlap. Patcher will keep `keeping` and strip `stripping`. `notInApk`
-     * lists arches the user selected that this APK doesn't ship, so the banner can
-     * tell the user which of their preferences actually affect this APK.
-     */
+    /** Partial architecture overlap; [keeping] are retained, [stripping] are removed. */
     data class WillStrip(
         val keeping: List<String>,
         val stripping: List<String>,
@@ -1035,13 +869,7 @@ sealed class StripLibsStatus {
     ) : StripLibsStatus()
 }
 
-/**
- * Decide what strip-libs should do given the APK's native arches and the user's
- * global keep-list preference. Pure function, no I/O, no side effects, so the
- * same inputs always produce the same output. Used by both the informational
- * banner in PatchSelectionScreen and by createPatchConfig when dispatching to
- * the patcher, guaranteeing UI and behavior stay in sync.
- */
+/** Computes the native library stripping status based on APK architectures and user preferences. */
 internal fun computeStripLibsStatus(
     apkArches: List<String>,
     userKeep: Set<String>,

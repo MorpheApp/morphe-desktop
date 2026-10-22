@@ -7,10 +7,10 @@ package app.morphe
 
 import app.morphe.desktop.command.MainCommand
 import app.morphe.engine.BootstrapDownloader
-import app.morphe.library.logging.Logger
+import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import java.awt.GraphicsEnvironment
 import java.io.File
-import java.util.logging.Logger.getLogger as JVLogger
 import kotlin.system.exitProcess
 import picocli.CommandLine
 
@@ -31,27 +31,20 @@ fun main(args: Array<String>) {
             val isJar = location?.path?.endsWith(".jar") == true
 
             if (!isJar) {
-                // Running from IDE/classpath, Skiko is likely already available
+                // Running from classpath/IDE without bundled bootstrap.
                 launchGuiReflectively(args)
                 return
             } else {
-                // This parent process only shows the setup UI and then babysits the
-                // child GUI process (it stays alive on waitFor for the whole session).
-                // On macOS, "java" dock icon lingers next to Morphe's until the
-                // app quits on first launch. Mark the parent as a UI agent so it has no dock icon of
-                // its own. The child process still shows the real Morphe icon.
+                // Suppress dock icon for launcher parent process on macOS.
                 if (System.getProperty("os.name").startsWith("Mac")) {
                     System.setProperty("apple.awt.UIElement", "true")
                 }
                 val progress = BootstrapProgressWindow()
                 val downloadedJars = try {
                     BootstrapDownloader.downloadIfMissing(progress)
-                } catch (e: Throwable) {
-                    // BootstrapProgressWindow.onError has already shown a dialog and
-                    // waited for the user to acknowledge; clean up and exit.
+                } catch (_: Throwable) {
                     progress.close()
                     exitProcess(1)
-                    return
                 }
                 progress.close()
                 val javaHome = System.getProperty("java.home")
@@ -74,12 +67,11 @@ fun main(args: Array<String>) {
             }
         }
     } else {
-        Logger.setDefault()
-
-        if (GraphicsEnvironment.isHeadless() && args.isEmpty()){
-            val logger = JVLogger("app.morphe.MorpheLauncher")
-            logger.info("Running in Headless environment, falling back to CLI mode.")
+        if (GraphicsEnvironment.isHeadless() && args.isEmpty()) {
+            Logger.info("Running in Headless environment, falling back to CLI mode.")
         }
+
+        runCatching { WorkspaceManager.reapStaleWorkspaces() }
 
         CommandLine(MainCommand)
             .execute(*args)

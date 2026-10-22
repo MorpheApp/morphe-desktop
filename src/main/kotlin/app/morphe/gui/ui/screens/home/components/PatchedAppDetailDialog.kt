@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,19 +36,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.model.SupportedApp
 import app.morphe.gui.data.model.PatchSource
-import app.morphe.gui.data.model.SupportedApp
 import app.morphe.gui.ui.components.LocalCardFills
+import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
+import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheDialogSurface
-import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.gui.ui.components.MorpheScrollbarStyle
+import app.morphe.gui.ui.components.SlimSearchField
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ActivePatchSource
 import app.morphe.gui.ui.screens.home.BundleChoice
@@ -58,9 +59,7 @@ import app.morphe.gui.ui.screens.home.BundleSupport
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.launch
@@ -68,11 +67,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Full recall breakdown for one patched app. Everything is already on the record
- * (date, versions, per-source snapshot, selection, options, integrity). This is a
- * read surface plus the Re-patch / Open folder / Forget actions.
- */
+/** Detailed information dialog displaying metadata, status, and management actions for a patched app. */
 @Composable
 fun PatchedAppDetailDialog(
     record: PatchedAppRecord,
@@ -95,7 +90,6 @@ fun PatchedAppDetailDialog(
     patchPrepProgress: Pair<String, Float>? = null,
     preparingPatch: Boolean = false,
     onDismiss: () -> Unit,
-    onRepatch: () -> Unit,
     onPatchWith: (apkPath: String, overrides: Map<String, BundleChoice>) -> Unit = { _, _ -> },
     onForget: () -> Unit,
     onOpenFolder: () -> Unit,
@@ -104,9 +98,7 @@ fun PatchedAppDetailDialog(
     installing: Boolean = false,
     uninstalling: Boolean = false,
 ) {
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
+    val accents = MorpheTheme.colors
     val cardFills = LocalCardFills.current
     val patchCount = record.patchSelectionByBundle.values.sumOf { it.size }
     val hasUpdate = updateInfo != null && (updateInfo.appOutdated || updateInfo.patchesChanged)
@@ -119,13 +111,11 @@ fun PatchedAppDetailDialog(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                // Tap outside the card to dismiss (the card swallows its own taps below).
+                // Dismiss on outside tap.
                 .pointerInput(Unit) { detectTapGestures { onDismiss() } },
             contentAlignment = Alignment.Center,
         ) {
-        // Grow with content, but cap at ~90% of the window height so the dialog
-        // can use a tall screen like Settings does, instead of the old fixed
-        // 560dp cap, while still wrapping shorter content.
+        // Constrain dialog height to viewport bounds.
         val maxDialogHeight = maxHeight * 0.9f
         val maxDialogWidth = (maxWidth * 0.7f).coerceIn(480.dp, 860.dp)
 
@@ -226,7 +216,7 @@ fun PatchedAppDetailDialog(
             contentPadding = PaddingValues(0.dp),
             verticalArrangement = Arrangement.spacedBy(0.dp),
         ) {
-                IdentityBand(record, state, deviceInfo, updateInfo, font)
+                IdentityBand(record, state, deviceInfo, updateInfo)
                 BandDivider()
 
                 Column(
@@ -236,11 +226,11 @@ fun PatchedAppDetailDialog(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(corners.small))
+                            .clip(MorpheTheme.shapes.small)
                             .border(
                                 1.dp,
                                 MaterialTheme.colorScheme.outline.copy(alpha = 0.22f),
-                                RoundedCornerShape(corners.small),
+                                MorpheTheme.shapes.small,
                             ),
                     ) {
                         AssemblyRow(
@@ -251,7 +241,6 @@ fun PatchedAppDetailDialog(
                             sub = File(selectedApkPath).name,
                             expanded = apkExpanded,
                             accent = accents.primary,
-                            font = font,
                             warning = apkNeedsAttention,
                             onToggle = { apkExpanded = !apkExpanded },
                         ) {
@@ -287,8 +276,6 @@ fun PatchedAppDetailDialog(
                                     }
                                 },
                                 downloadError = bundleDownloadError,
-                                font = font,
-                                corner = corners.small,
                                 onApkSelected = { selectedApkPath = it },
                             )
                         }
@@ -309,7 +296,6 @@ fun PatchedAppDetailDialog(
                             },
                             expanded = patchExpanded,
                             accent = accents.primary,
-                            font = font,
                             onToggle = { patchExpanded = !patchExpanded },
                         ) {
                             allSources.forEach { src ->
@@ -321,8 +307,6 @@ fun PatchedAppDetailDialog(
                                     sourceUrl = allSources.firstOrNull { it.name == src.name }?.url,
                                     availableVersions = bundleVersionsBySource[src.name],
                                     choice = bundleChoices[src.name],
-                                    font = font,
-                                    corner = corners.small,
                                     onChoose = { c ->
                                         bundleChoices = if (c == null) bundleChoices - src.name
                                         else bundleChoices + (src.name to c)
@@ -331,8 +315,6 @@ fun PatchedAppDetailDialog(
                                 )
                             }
                             AddSourceControl(
-                                font = font,
-                                corner = corners.small,
                                 onAddSource = onAddSource,
                                 onAddLocalBundle = onAddLocalBundle,
                             )
@@ -344,8 +326,6 @@ fun PatchedAppDetailDialog(
                             label = if (installing) stringResource(Res.string.home_action_installing) else stringResource(Res.string.home_action_install_to_device),
                             icon = MorpheIcons.Download,
                             color = accents.primary,
-                            font = font,
-                            corner = corners.small,
                             filled = true,
                             sublabels = listOf(
                                 if (deviceInfo.installed)
@@ -382,8 +362,6 @@ fun PatchedAppDetailDialog(
                         },
                         icon = null,
                         color = accents.primary,
-                        font = font,
-                        corner = corners.small,
                         filled = !installPending,
                         sublabels = patchSubs,
                         progress = if (preparingPatch) (patchPrepProgress?.second ?: 0f) else null,
@@ -394,9 +372,7 @@ fun PatchedAppDetailDialog(
                         ActionBar(
                             label = if (uninstalling) stringResource(Res.string.home_action_uninstalling) else stringResource(Res.string.home_dialog_uninstall_button),
                             icon = MorpheIcons.Delete,
-                            color = Color(0xFFE0504D),
-                            font = font,
-                            corner = corners.small,
+                            color = MorpheTheme.colors.error,
                             filled = false,
                             onClick = if (uninstalling) ({}) else ({ onDismiss(); onUninstall() }),
                         )
@@ -414,8 +390,6 @@ fun PatchedAppDetailDialog(
                 DisclosureHeader(
                     label = stringResource(Res.string.home_detail_details_title),
                     color = accents.primary,
-                    font = font,
-                    corner = corners.small,
                     expanded = detailsExpanded,
                     onToggle = { detailsExpanded = !detailsExpanded },
                 )
@@ -425,29 +399,26 @@ fun PatchedAppDetailDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    StatCell(stringResource(Res.string.home_your_apps_status_patched), fullDate(record.patchedAt), font)
+                    StatCell(stringResource(Res.string.home_your_apps_status_patched), fullDate(record.patchedAt))
                     StatCell(
                         stringResource(Res.string.home_detail_app_version_label),
                         buildString {
                             append("v${record.apkVersion.removePrefix("v")}")
                             record.apkVersionCode?.let { append(" ($it)") }
                         },
-                        font,
                     )
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    StatCell(stringResource(Res.string.app_name), record.patchedWithMorpheVersion, font)
-                    StatCell(stringResource(Res.string.home_detail_output_size_label), humanSize(record.outputApkSize), font)
+                    StatCell(stringResource(Res.string.app_name), record.patchedWithMorpheVersion)
+                    StatCell(stringResource(Res.string.home_detail_output_size_label), humanSize(record.outputApkSize))
                 }
-                record.outputApkSha256?.let { CopyableStat(stringResource(Res.string.home_detail_sha256_label), it, font, corners.small) }
-                CopyableStat(stringResource(Res.string.home_detail_output_path_label), record.outputApkPath, font, corners.small)
+                record.outputApkSha256?.let { CopyableStat(stringResource(Res.string.home_detail_sha256_label), it) }
+                CopyableStat(stringResource(Res.string.home_detail_output_path_label), record.outputApkPath)
                 }
                 }
                 DisclosureHeader(
                     label = stringResource(Res.string.home_detail_section_patches_applied),
                     color = accents.primary,
-                    font = font,
-                    corner = corners.small,
                     expanded = patchesExpanded,
                     trailing = "$patchCount",
                     onToggle = { patchesExpanded = !patchesExpanded },
@@ -458,7 +429,11 @@ fun PatchedAppDetailDialog(
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     if (patchCount > 5) {
-                        PatchSearchField(patchSearch, { patchSearch = it }, font, corners.small, accents.primary)
+                        SlimSearchField(
+                            value = patchSearch,
+                            onValueChange = { patchSearch = it },
+                            placeholder = stringResource(Res.string.patches_search_hint),
+                        )
                     }
                     record.patchSelectionByBundle.forEach { (bundle, patches) ->
                         val shown = patches
@@ -468,17 +443,14 @@ fun PatchedAppDetailDialog(
                         if (shown.isNotEmpty()) {
                             Text(
                                 text = bundle,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Medium,
-                                fontFamily = font,
+                                style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 6.dp, bottom = 2.dp),
                             )
                             shown.forEach { name ->
                                 Text(
                                     text = "• $name",
-                                    fontSize = 10.sp,
-                                    fontFamily = font,
+                                    style = MorpheTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                                     modifier = Modifier.padding(start = 8.dp, top = 1.dp),
                                 )
@@ -488,18 +460,14 @@ fun PatchedAppDetailDialog(
                     if (record.patchOptionValues.isNotEmpty() && patchSearch.isBlank()) {
                         Text(
                             text = stringResource(Res.string.home_detail_section_options),
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = font,
+                            style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             modifier = Modifier.padding(top = 8.dp, bottom = 2.dp),
                         )
                         record.patchOptionValues.forEach { (k, v) ->
                             Text(
                                 text = "• $k = $v",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = font,
+                                style = MorpheTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(start = 8.dp, top = 1.dp),
                             )
@@ -513,25 +481,36 @@ fun PatchedAppDetailDialog(
                     modifier = Modifier.fillMaxWidth()
                         .padding(start = 8.dp, end = 20.dp, top = 6.dp, bottom = 12.dp),
                 ) {
-                    DetailActionPill(
-                        stringResource(Res.string.folder), MorpheIcons.OpenInNew, accents.primary, font, corners.small,
-                        modifier = Modifier.weight(1f), onClick = onOpenFolder,
+                    MorpheButton(
+                        label = stringResource(Res.string.folder),
+                        icon = MorpheIcons.OpenInNew,
+                        variant = MorpheButtonVariant.OUTLINED,
+                        size = MorpheButtonSize.DEFAULT,
+                        modifier = Modifier.weight(1f),
+                        onClick = onOpenFolder,
                     )
-                    DetailActionPill(
-                        stringResource(Res.string.customize), MorpheIcons.Palette, accents.primary, font, corners.small,
+                    MorpheButton(
+                        label = stringResource(Res.string.customize),
+                        icon = MorpheIcons.Palette,
+                        variant = MorpheButtonVariant.OUTLINED,
+                        size = MorpheButtonSize.DEFAULT,
                         modifier = Modifier.weight(1f),
-                    ) {
-                        cardFills.requestEdit(
-                            record.packageName,
-                            record.displayName,
-                            supportedApp?.appIconColor,
-                        )
-                    }
-                    DetailActionPill(
-                        stringResource(Res.string.home_dialog_forget_button), MorpheIcons.Delete,
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f), font, corners.small,
+                        onClick = {
+                            cardFills.requestEdit(
+                                record.packageName,
+                                record.displayName,
+                                supportedApp?.appIconColor,
+                            )
+                        },
+                    )
+                    MorpheButton(
+                        label = stringResource(Res.string.home_dialog_forget_button),
+                        icon = MorpheIcons.Delete,
+                        variant = MorpheButtonVariant.OUTLINED,
+                        size = MorpheButtonSize.DEFAULT,
                         modifier = Modifier.weight(1f),
-                    ) { onDismiss(); onForget() }
+                        onClick = { onDismiss(); onForget() },
+                    )
                 }
                 }
         }
@@ -542,7 +521,7 @@ fun PatchedAppDetailDialog(
                     .align(Alignment.CenterEnd)
                     .fillMaxHeight()
                     .padding(vertical = 6.dp, horizontal = 3.dp),
-                style = morpheScrollbarStyle(),
+                style = MorpheScrollbarStyle(),
             )
         }
         }

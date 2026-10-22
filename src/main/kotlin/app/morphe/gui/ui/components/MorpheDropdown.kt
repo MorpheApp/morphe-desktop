@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
@@ -19,6 +18,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -35,7 +34,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,20 +49,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -72,11 +65,7 @@ import org.jetbrains.compose.resources.stringResource
 /** One entry in a [MorpheDropdown]. */
 data class MorpheDropdownItem(val label: String, val onClick: () -> Unit)
 
-/**
- * Our inbuilt inhouse dropdown. A bordered trigger + a fully custom popup menu (NOT
- * Material's `DropdownMenu`, so the surface, item padding, hover and type all match
- * Morphe's look). We also have a searchbar inside. The menu matches the trigger's width and scrolls past [maxHeight].
- */
+/** Dropdown component with bordered trigger and searchable popup menu. */
 @Composable
 fun MorpheDropdown(
     label: String,
@@ -87,30 +76,32 @@ fun MorpheDropdown(
     maxHeight: Dp = 300.dp,
     backgroundColor: Color = panelFill,
 ) {
-    val accents = LocalMorpheAccents.current
-    val font = LocalMorpheFont.current
-    val corner = RoundedCornerShape(LocalMorpheCorners.current.small)
-    val density = LocalDensity.current
+    val accents = MorpheTheme.colors
+    val corner = MorpheTheme.shapes.small
     var expanded by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
-    val listScroll = rememberScrollState()
     var triggerWidth by remember { mutableStateOf(0) }
     var triggerHeight by remember { mutableStateOf(0) }
 
     Box(modifier) {
         Row(
-            Modifier.fillMaxWidth().clip(corner)
+            Modifier.fillMaxWidth()
+                .defaultMinSize(minHeight = MorpheTheme.dimens.controlHeight)
+                .clip(corner)
                 .background(backgroundColor)
                 .border(1.dp, accents.primary.copy(alpha = if (expanded) 0.6f else 0.3f), corner)
                 .onGloballyPositioned { triggerWidth = it.size.width; triggerHeight = it.size.height }
                 .clickable(enabled = enabled) { expanded = !expanded; query = "" }
                 .handCursor()
-                .padding(horizontal = 8.dp, vertical = 6.dp),
+                .padding(horizontal = 10.dp, vertical = 7.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                label, fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp,
-                color = MaterialTheme.colorScheme.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                text = label,
+                style = MorpheTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
             Icon(MorpheIcons.ArrowDropDown, contentDescription = null, tint = accents.primary.copy(alpha = 0.7f), modifier = Modifier.size(16.dp).rotate(if (expanded) 180f else 0f))
@@ -128,13 +119,7 @@ fun MorpheDropdown(
     }
 }
 
-/**
- * An editable dropdown (combo box).
- * Allows typing custom values directly while also providing a dropdown menu for preset selection.
- * When unfocused, displays [displayLabel] (e.g. "Automatic").
- * When focused, allows editing the text directly, showing [placeholder] as a hint when empty.
- * Clicking the arrow on the right opens/toggles the dropdown popup menu.
- */
+/** Editable combo-box dropdown supporting direct text input and preset menu selection. */
 @Composable
 fun MorpheEditableDropdown(
     value: String,
@@ -149,9 +134,8 @@ fun MorpheEditableDropdown(
     maxHeight: Dp = 300.dp,
     backgroundColor: Color = Color.Transparent,
 ) {
-    val accents = LocalMorpheAccents.current
-    val font = LocalMorpheFont.current
-    val corner = RoundedCornerShape(LocalMorpheCorners.current.small)
+    val accents = MorpheTheme.colors
+    val corner = MorpheTheme.shapes.small
 
     var expanded by remember { mutableStateOf(false) }
     var isFocused by remember { mutableStateOf(false) }
@@ -167,14 +151,14 @@ fun MorpheEditableDropdown(
             expanded || isFocused -> accents.primary.copy(alpha = 0.6f)
             else -> accents.primary.copy(alpha = 0.2f)
         },
-        animationSpec = tween(150),
+        animationSpec = MorpheMotion.fastTween(),
         label = "editableDropdownBorder",
     )
 
     Box(modifier) {
         Row(
             Modifier.fillMaxWidth()
-                .height(32.dp)
+                .height(MorpheTheme.dimens.controlHeight)
                 .clip(corner)
                 .background(backgroundColor)
                 .border(1.dp, fieldBorder, corner)
@@ -182,7 +166,6 @@ fun MorpheEditableDropdown(
                 .padding(start = 10.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // The rest of the dropdown space: editable input area
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -198,10 +181,7 @@ fun MorpheEditableDropdown(
                 if (!isFocused) {
                     Text(
                         text = displayLabel.ifBlank { placeholder },
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 11.sp,
-                        lineHeight = 14.sp,
+                        style = MorpheTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -217,11 +197,7 @@ fun MorpheEditableDropdown(
                     },
                     singleLine = true,
                     enabled = enabled,
-                    textStyle = TextStyle(
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 11.sp,
-                        lineHeight = 14.sp,
-                        fontFamily = font,
+                    textStyle = MorpheTheme.typography.bodySmall.copy(
                         color = if (isFocused) MaterialTheme.colorScheme.onSurface else Color.Transparent,
                     ),
                     cursorBrush = SolidColor(accents.primary),
@@ -239,10 +215,7 @@ fun MorpheEditableDropdown(
                             if (activeText.isEmpty() && placeholder.isNotEmpty()) {
                                 Text(
                                     text = placeholder,
-                                    fontFamily = font,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 11.sp,
-                                    lineHeight = 14.sp,
+                                    style = MorpheTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
@@ -256,13 +229,12 @@ fun MorpheEditableDropdown(
                 )
             }
 
-            // Arrow button on the right: clicking arrow toggles the dropdown menu
             val arrowHover = remember { MutableInteractionSource() }
             val isArrowHovered by arrowHover.collectIsHoveredAsState()
             Box(
                 modifier = Modifier
                     .size(28.dp)
-                    .clip(RoundedCornerShape(LocalMorpheCorners.current.small))
+                    .clip(corner)
                     .hoverable(arrowHover)
                     .clickable(enabled = enabled) {
                         expanded = !expanded
@@ -305,9 +277,8 @@ internal fun DropdownMenuPopup(
     maxHeight: Dp = 300.dp,
 ) {
     if (!expanded) return
-    val accents = LocalMorpheAccents.current
-    val font = LocalMorpheFont.current
-    val corner = RoundedCornerShape(LocalMorpheCorners.current.small)
+    val accents = MorpheTheme.colors
+    val corner = MorpheTheme.shapes.small
     val density = LocalDensity.current
     var query by remember { mutableStateOf("") }
     val listScroll = rememberScrollState()
@@ -327,16 +298,13 @@ internal fun DropdownMenuPopup(
             modifier = Modifier.width(with(density) { triggerWidth.toDp() }),
         ) {
             Column {
-                if (searchable) SearchField(query, font, accents.primary) { query = it }
+                if (searchable) SearchField(query, accents.primary) { query = it }
                 Box(Modifier.heightIn(max = maxHeight)) {
                     Column(Modifier.verticalScroll(listScroll)) {
                         if (shown.isEmpty()) {
                             Text(
                                 stringResource(Res.string.no_matches),
-                                fontFamily = font,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 11.sp,
-                                lineHeight = 14.sp,
+                                style = MorpheTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(10.dp)
                             )
@@ -363,10 +331,7 @@ internal fun DropdownMenuPopup(
                             ) {
                                 Text(
                                     item.label,
-                                    fontFamily = font,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 11.sp,
-                                    lineHeight = 14.sp,
+                                    style = MorpheTheme.typography.bodySmall,
                                     color = if (isHovered) accents.primary else MaterialTheme.colorScheme.onSurface,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
@@ -379,7 +344,7 @@ internal fun DropdownMenuPopup(
                             VerticalScrollbar(
                                 modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                                 adapter = rememberScrollbarAdapter(listScroll),
-                                style = morpheScrollbarStyle(),
+                                style = MorpheScrollbarStyle(),
                             )
                         }
                     }
@@ -390,19 +355,19 @@ internal fun DropdownMenuPopup(
 }
 
 @Composable
-private fun SearchField(query: String, font: FontFamily, accent: Color, onChange: (String) -> Unit) {
+private fun SearchField(query: String, accent: Color, onChange: (String) -> Unit) {
     Row(
-        Modifier.fillMaxWidth().border(1.dp, accent.copy(alpha = 0.15f), RoundedCornerShape(0.dp)).padding(horizontal = 10.dp, vertical = 7.dp),
+        Modifier.fillMaxWidth().border(1.dp, accent.copy(alpha = 0.15f)).padding(horizontal = 10.dp, vertical = 7.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(MorpheIcons.Search, contentDescription = null, tint = accent.copy(alpha = 0.6f), modifier = Modifier.size(13.dp))
         Box(Modifier.weight(1f).padding(start = 6.dp), contentAlignment = Alignment.CenterStart) {
-            if (query.isEmpty()) Text(stringResource(Res.string.dropdown_search_placeholder), fontFamily = font, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+            if (query.isEmpty()) Text(stringResource(Res.string.dropdown_search_placeholder), style = MorpheTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
             BasicTextField(
                 value = query,
                 onValueChange = onChange,
                 singleLine = true,
-                textStyle = TextStyle(fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 14.sp, fontFamily = font, color = MaterialTheme.colorScheme.onSurface),
+                textStyle = MorpheTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface),
                 cursorBrush = SolidColor(accent),
                 modifier = Modifier.fillMaxWidth(),
             )

@@ -27,7 +27,6 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 
-// Palette (to match our design philosophy).
 private val VOID = Color(0x10, 0x10, 0x10)
 private val BORDER = Color(0x2A, 0x2A, 0x2A)
 private val TRACK = Color(0x24, 0x24, 0x24)
@@ -43,16 +42,11 @@ private fun loadBootstrapFont(resourcePath: String): Font = try {
     BootstrapProgressWindow::class.java.classLoader.getResourceAsStream(resourcePath)!!.use { stream ->
         Font.createFont(Font.TRUETYPE_FONT, stream)
     }
-} catch (e: Exception) {
+} catch (_: Exception) {
     Font(Font.MONOSPACED, Font.PLAIN, 12)
 }
 
-/**
- * The first-run setup window shown while [app.morphe.engine.BootstrapDownloader]
- * fetches the GUI dependencies, so a user who double-clicked the jar is not left
- * staring at nothing. It has to be Swing (AWT), not Compose, because Skiko is one
- * of the very components being downloaded here.
- */
+/** Swing setup window displayed while downloading initial GUI dependencies. */
 class BootstrapProgressWindow : BootstrapProgressListener {
 
     private var frame: JFrame? = null
@@ -123,8 +117,7 @@ class BootstrapProgressWindow : BootstrapProgressListener {
 
     override fun onError(message: String) {
         val f = frame ?: return
-        // Swap the window into an on-brand error state and block until the user
-        // acknowledges, so the launcher can then exit.
+        // Display error state and block until acknowledged.
         val acknowledged = CountDownLatch(1)
         SwingUtilities.invokeLater {
             f.isAlwaysOnTop = false

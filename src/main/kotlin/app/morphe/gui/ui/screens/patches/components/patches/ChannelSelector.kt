@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.patches.components.patches
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,7 +14,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -26,18 +24,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.morphe.engine.ReleaseChannel
 import app.morphe.gui.ui.components.handCursor
-import app.morphe.gui.ui.screens.patches.ReleaseChannel
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
+import app.morphe.gui.ui.theme.MorpheMotion
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-
-// ═══════════════════════════════════════════════════════════════════
-//  CHANNEL SELECTOR
-// ═══════════════════════════════════════════════════════════════════
 
 @Composable
 internal fun ChannelSelector(
@@ -47,7 +39,7 @@ internal fun ChannelSelector(
     devCount: Int,
     modifier: Modifier = Modifier
 ) {
-    val accents = LocalMorpheAccents.current
+    val accentColor = MorpheTheme.colors.primary
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -58,7 +50,7 @@ internal fun ChannelSelector(
             count = stableCount,
             isSelected = selectedChannel == ReleaseChannel.STABLE,
             onClick = { onChannelSelected(ReleaseChannel.STABLE) },
-            accentColor = accents.primary,
+            accentColor = accentColor,
             modifier = Modifier.weight(1f)
         )
         ChannelChip(
@@ -66,7 +58,7 @@ internal fun ChannelSelector(
             count = devCount,
             isSelected = selectedChannel == ReleaseChannel.DEV,
             onClick = { onChannelSelected(ReleaseChannel.DEV) },
-            accentColor = accents.primary,
+            accentColor = accentColor,
             modifier = Modifier.weight(1f)
         )
     }
@@ -81,8 +73,6 @@ private fun ChannelChip(
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
     val hoverInteraction = remember { MutableInteractionSource() }
     val isHovered by hoverInteraction.collectIsHoveredAsState()
 
@@ -92,7 +82,7 @@ private fun ChannelChip(
             isHovered -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)
             else -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
         },
-        animationSpec = tween(150)
+        animationSpec = MorpheMotion.fastTween()
     )
     val baseBg = when {
         isSelected -> MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
@@ -102,8 +92,8 @@ private fun ChannelChip(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(corners.small))
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
+            .clip(MorpheTheme.shapes.small)
+            .border(1.dp, borderColor, MorpheTheme.shapes.small)
             .background(baseBg)
             .background(tintColor)
             .hoverable(hoverInteraction)
@@ -117,7 +107,6 @@ private fun ChannelChip(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Selection dot
             if (isSelected) {
                 Box(
                     modifier = Modifier
@@ -128,18 +117,18 @@ private fun ChannelChip(
             }
             Text(
                 text = label,
-                fontSize = 11.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                fontFamily = font,
+                style = MorpheTheme.typography.labelSmall.copy(
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                ),
                 color = if (isSelected) accentColor else MaterialTheme.colorScheme.onSurface,
             )
             if (count > 0) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "$count",
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontFamily = font,
+                    style = MorpheTheme.typography.labelExtraSmall.copy(
+                        fontWeight = FontWeight.Medium
+                    ),
                     color = if (isSelected) accentColor
                     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )

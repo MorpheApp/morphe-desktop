@@ -5,19 +5,14 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.Logger
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URI
 import java.security.MessageDigest
-import java.util.logging.Logger
 
-/**
- * Handles deferred downloading of GUI dependencies to keep the base CLI as small as possible.
- */
+/** Downloads runtime dependencies on demand and verifies integrity. */
 object BootstrapDownloader {
-    private val logger = Logger.getLogger("app.morphe.engine.BootstrapDownloader")
-
-    // Remote Dependencies
     data class RemoteDependency(val fileName: String, val url: String, val expectedHash: String)
 
     private val SKIKO by lazy {
@@ -33,6 +28,12 @@ object BootstrapDownloader {
         )
     }
 
+    private val SKIKO_AWT = RemoteDependency(
+        fileName = "skiko-awt-${BootstrapConstants.SKIKO_VERSION}.jar",
+        url = "https://repo1.maven.org/maven2/org/jetbrains/skiko/skiko-awt/${BootstrapConstants.SKIKO_VERSION}/skiko-awt-${BootstrapConstants.SKIKO_VERSION}.jar",
+        expectedHash = BootstrapConstants.SKIKO_AWT_HASH
+    )
+
     private val JNA = RemoteDependency(
         fileName = "jna-${BootstrapConstants.JNA_VERSION}.jar",
         url = "https://repo1.maven.org/maven2/net/java/dev/jna/jna/${BootstrapConstants.JNA_VERSION}/jna-${BootstrapConstants.JNA_VERSION}.jar",
@@ -45,32 +46,36 @@ object BootstrapDownloader {
         expectedHash = BootstrapConstants.JNA_PLATFORM_HASH
     )
 
+    private val OSHI_CORE = RemoteDependency(
+        fileName = "oshi-core-${BootstrapConstants.OSHI_VERSION}.jar",
+        url = "https://repo1.maven.org/maven2/com/github/oshi/oshi-core/${BootstrapConstants.OSHI_VERSION}/oshi-core-${BootstrapConstants.OSHI_VERSION}.jar",
+        expectedHash = BootstrapConstants.OSHI_CORE_HASH
+    )
+
+    private val OSHI_COMMON = RemoteDependency(
+        fileName = "oshi-common-${BootstrapConstants.OSHI_VERSION}.jar",
+        url = "https://repo1.maven.org/maven2/com/github/oshi/oshi-common/${BootstrapConstants.OSHI_VERSION}/oshi-common-${BootstrapConstants.OSHI_VERSION}.jar",
+        expectedHash = BootstrapConstants.OSHI_COMMON_HASH
+    )
+
     private data class DownloadPlan(val dep: RemoteDependency, val target: File, val needsDownload: Boolean)
 
-    /**
-     * Downloads the required GUI dependencies if missing or invalid, reporting to
-     * an optional [listener] so the caller can show progress.
-     *
-     * @return the list of downloaded (or cached) dependency files.
-     * @throws BootstrapException if a component cannot be downloaded or fails
-     *   verification. The caller is responsible for surfacing this to the user.
-     */
+    /** Downloads missing or corrupted dependencies, reporting progress to [listener]. */
     fun downloadIfMissing(listener: BootstrapProgressListener? = null): List<File> {
-        val dependencies = listOf(SKIKO, JNA, JNA_PLATFORM)
+        val dependencies = listOf(SKIKO, SKIKO_AWT, JNA, JNA_PLATFORM, OSHI_CORE, OSHI_COMMON)
         val binDir = File(MorpheData.root, "libs").also { it.mkdirs() }
         
         val expectedFileNames = dependencies.map { it.fileName }.toSet()
         binDir.listFiles()?.forEach { file ->
             if (file.isFile && file.name !in expectedFileNames) {
-                logger.info("Removing obsolete dependency: ${file.name}")
+                Logger.info("Removing obsolete dependency: ${file.name}")
                 file.delete()
             }
         }
         
         val downloadedFiles = mutableListOf<File>()
 
-        // Decide up front which components need fetching, hashing each cached file
-        // only once, so the UI only appears when there is real work to do.
+        // Determine which dependencies need fetching before notifying listener.
         val plans = dependencies.map { dep ->
             val file = File(binDir, dep.fileName)
             DownloadPlan(dep, file, needsDownload = !(file.exists() && verifyHash(file, dep.expectedHash)))
@@ -85,11 +90,11 @@ object BootstrapDownloader {
                 continue
             }
             if (target.exists()) {
-                logger.warning("Cache invalid for ${dep.fileName}, redownloading.")
+                Logger.warn("Cache invalid for ${dep.fileName}, redownloading.")
                 target.delete()
             }
 
-            logger.info("Downloading ${dep.fileName}...")
+            Logger.info("Downloading ${dep.fileName}...")
             val current = index
             try {
                 downloadWithProgress(dep, target) { done, total ->
@@ -98,7 +103,7 @@ object BootstrapDownloader {
             } catch (e: Exception) {
                 target.delete()
                 val message = "Failed to download ${dep.fileName}: ${e.message}"
-                logger.severe(message)
+                Logger.error(message)
                 listener?.onError(message)
                 throw BootstrapException(message, e)
             }
@@ -106,7 +111,7 @@ object BootstrapDownloader {
             if (!verifyHash(target, dep.expectedHash)) {
                 target.delete()
                 val message = "Checksum mismatch for ${dep.fileName}."
-                logger.severe(message)
+                Logger.error(message)
                 listener?.onError(message)
                 throw BootstrapException(message)
             }
@@ -116,15 +121,11 @@ object BootstrapDownloader {
         }
 
         listener?.onComplete()
-        logger.info("All GUI dependencies ready.")
+        Logger.info("All GUI dependencies ready.")
         return downloadedFiles
     }
 
-    /**
-     * Streams [dep] to [target], invoking [onBytes] with (bytesDownloaded, totalBytes)
-     * as it goes (totalBytes is negative when the server sends no Content-Length).
-     * Callbacks are throttled to roughly every 256 KB so a listener is not flooded.
-     */
+    /** Streams [dep] to [target], reporting throttled progress to [onBytes]. */
     private fun downloadWithProgress(dep: RemoteDependency, target: File, onBytes: (Long, Long) -> Unit) {
         val connection = URI(dep.url).toURL().openConnection().apply {
             connectTimeout = 15_000

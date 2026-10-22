@@ -8,28 +8,28 @@
 
 package app.morphe.desktop.command
 
-import app.morphe.desktop.command.CliHttpClient
-import app.morphe.engine.compatibleVersionsForDisplay
-import app.morphe.engine.isCompatibleWith
-import app.morphe.engine.versionCodesFor
+import app.morphe.engine.options.toPatchOption
+import app.morphe.engine.patches.compatibleVersionsForDisplay
+import app.morphe.engine.patches.isCompatibleWith
+import app.morphe.engine.patches.versionCodesFor
+import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.util.Logger
+import app.morphe.patcher.patch.Option as PatchOption
 import app.morphe.patcher.patch.Patch
-import app.morphe.patcher.patch.loadPatchesFromJar
+import java.io.File
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Spec
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Help.Visibility.ALWAYS
-import java.io.File
-import java.util.logging.Logger
-import app.morphe.patcher.patch.Option as PatchOption
 
 @Command(
     name = "list-patches",
     description = ["List patches from supplied MPP files."],
 )
 internal object ListPatchesCommand : Runnable {
-    private val logger = Logger.getLogger(this::class.java.name)
 
     // Patches is now flag based rather than position based
     @Option(
@@ -131,7 +131,7 @@ internal object ListPatchesCommand : Runnable {
                     append(values.map { "${it.value} (${it.key})" }.joinToString("\n").prependIndent("\t"))
                 }
 
-                append("\nType: $type")
+                append("\nType: ${toPatchOption().type.displayName}")
             }
 
         fun getVersionCodesString(patch: Patch<*>, pkgName: String, versionName: String): String {
@@ -193,19 +193,10 @@ internal object ListPatchesCommand : Runnable {
                 }
             }
 
-        fun Patch<*>.filterCompatiblePackages(name: String) =
-            isCompatibleWith(
-                packageName = name,
-                includeExperimental = includeExperimental,
-                includeUniversalPatches = withUniversalPatches,
-            )
-
-
         try {
-            patchesFiles = PatchFileResolver.resolve(
+            patchesFiles = PatchResolver.resolveCliFiles(
                 patchesFiles,
                 prerelease,
-                CliHttpClient.instance
             )
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(
@@ -214,12 +205,14 @@ internal object ListPatchesCommand : Runnable {
             )
         }
 
-        val patches = loadPatchesFromJar(patchesFiles).withIndex().toList()
+        val patches = PatchBundleLoader.loadFlat(patchesFiles).withIndex().toList()
 
-        val filtered = packageName?.let {
+        val filtered = packageName?.let { name ->
             patches.filter { (_, patch) ->
-                patch.filterCompatiblePackages(
-                    it
+                patch.isCompatibleWith(
+                    packageName = name,
+                    includeExperimental = includeExperimental,
+                    includeUniversalPatches = withUniversalPatches,
                 )
             }
         } ?: patches
@@ -229,12 +222,12 @@ internal object ListPatchesCommand : Runnable {
         val finalOutput = filtered.joinToString("\n\n") {it.buildString()}
 
         if (filtered.isEmpty()) {
-            logger.warning("No compatible patches found in: $patchesFiles")
+            Logger.warn("No compatible patches found in: ${patchesFiles.joinToString(", ") { it.path }}")
         } else {
             if (outputFile == null) {
-                logger.info(finalOutput)
+                Logger.info(finalOutput)
             } else {
-                logger.info("Created new output file at ${outputFile!!.path}")
+                Logger.info("Created new output file at ${outputFile!!.path}")
                 outputFile!!.writeText(finalOutput)
             }
         }

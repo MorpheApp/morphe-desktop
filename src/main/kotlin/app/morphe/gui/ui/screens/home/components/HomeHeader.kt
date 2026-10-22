@@ -5,54 +5,36 @@
 
 package app.morphe.gui.ui.screens.home.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.components.SourceLedState
-import app.morphe.gui.ui.components.SourcesCountPill
-import app.morphe.gui.ui.components.TopBarRow
-import app.morphe.gui.ui.components.sourceLedState
 import app.morphe.gui.ui.components.MorpheBanner
 import app.morphe.gui.ui.components.MorpheBannerAction
 import app.morphe.gui.ui.components.MorpheBannerDismiss
 import app.morphe.gui.ui.components.MorpheBannerText
 import app.morphe.gui.ui.components.MorpheBannerTone
+import app.morphe.gui.ui.components.OfflineBadge
+import app.morphe.gui.ui.components.PatchesLoadingIndicator
+import app.morphe.gui.ui.components.SourceLedState
+import app.morphe.gui.ui.components.SourcesCountPill
+import app.morphe.gui.ui.components.TopBarRow
+import app.morphe.gui.ui.components.rememberSymmetricPadding
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.HomeUiState
-import app.morphe.gui.ui.theme.LocalMorpheCorners
-import app.morphe.gui.ui.theme.LocalMorpheFont
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-
-// ============================================================================
-// HEADER BAR AND STATUS INDICATORS
-// ============================================================================
 
 @Composable
 internal fun HeaderBar(
@@ -63,10 +45,7 @@ internal fun HeaderBar(
     sourceStates: List<SourceLedState> = emptyList(),
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
-    val density = LocalDensity.current
-    var leadingWidthPx by remember { mutableIntStateOf(0) }
-    var trailingWidthPx by remember { mutableIntStateOf(0) }
-    val centerSidePadding = with(density) { maxOf(leadingWidthPx, trailingWidthPx).toDp() } + 16.dp
+    val paddingState = rememberSymmetricPadding()
 
     Box(
         modifier = Modifier
@@ -81,21 +60,19 @@ internal fun HeaderBar(
             }
             .padding(vertical = 8.dp)
     ) {
-        // Logo, left-aligned, compact
         Box(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .padding(start = 12.dp)
-                .onSizeChanged { leadingWidthPx = it.width }
+                .onSizeChanged { paddingState.leadingWidthPx = it.width }
         ) {
             BrandingSection(isCompact = true)
         }
 
-        // Patches version inline, centered
         Box(
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(start = centerSidePadding, end = centerSidePadding)
+                .padding(horizontal = paddingState.centerSidePadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -117,12 +94,11 @@ internal fun HeaderBar(
             }
         }
 
-        // Device indicator plus settings, inline in the header
         Box(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 12.dp)
-                .onSizeChanged { trailingWidthPx = it.width }
+                .onSizeChanged { paddingState.trailingWidthPx = it.width }
         ) {
             TopBarRow(
                 allowCacheClear = true,
@@ -132,8 +108,7 @@ internal fun HeaderBar(
     }
 }
 
-/** One-time intro banner shown when the user first sees multi-source mode.
- *  Persists dismissal in ConfigRepository so it never reappears once dismissed. */
+/** Informational banner displayed when multi-source mode is first encountered. */
 @Composable
 internal fun MultiSourceHintBanner(
     onDismiss: () -> Unit,
@@ -148,11 +123,7 @@ internal fun MultiSourceHintBanner(
     }
 }
 
-/**
- * Non-blocking banner shown when some patch sources loaded but at least one failed.
- * Patching still works with the loaded sources, so this is an informational warning that
- * points at the source manager (where each failed source shows exactly why it broke).
- */
+/** Warning banner displayed when one or more patch sources fail to load. */
 @Composable
 internal fun SourcesFailedBanner(
     count: Int,
@@ -171,82 +142,6 @@ internal fun SourcesFailedBanner(
         )
         MorpheBannerAction(label = stringResource(Res.string.home_header_manage_sources_button), onClick = onManageSources)
         MorpheBannerDismiss(onClick = onDismiss)
-    }
-}
-
-// SourcesCountPill, SourceLed, SourceLedState, sourceLedState moved to
-// gui/ui/components/SourcesPill.kt for reuse across modes (Quick Patch uses
-// a non-clickable variant).
-
-@Composable
-internal fun PatchesLoadingIndicator() {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val isDark = isSystemInDarkTheme()
-    val containerAlpha = if (isDark) 0.35f else 0.6f
-    val containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = containerAlpha)
-    val borderAlpha = if (isDark) 0.4f else 0.6f
-    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = borderAlpha)
-
-    Row(
-        modifier = Modifier
-            .height(34.dp)
-            .clip(RoundedCornerShape(corners.small))
-            .background(containerColor)
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-            .padding(horizontal = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(12.dp),
-            strokeWidth = 1.5.dp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = stringResource(Res.string.status_loading),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-internal fun OfflineBadge(onRetry: () -> Unit) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val hoverInteraction = remember { MutableInteractionSource() }
-    val isHovered by hoverInteraction.collectIsHoveredAsState()
-    val borderColor by animateColorAsState(
-        if (isHovered) MaterialTheme.colorScheme.error.copy(alpha = 0.5f)
-        else MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
-        animationSpec = tween(200)
-    )
-
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(corners.small))
-            .border(1.dp, borderColor, RoundedCornerShape(corners.small))
-            .hoverable(hoverInteraction)
-            .clickable(onClick = onRetry)
-            .padding(horizontal = 10.dp, vertical = 5.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .background(MaterialTheme.colorScheme.error, CircleShape)
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        Text(
-            text = stringResource(Res.string.status_offline),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = MaterialTheme.colorScheme.error,
-        )
     }
 }
 

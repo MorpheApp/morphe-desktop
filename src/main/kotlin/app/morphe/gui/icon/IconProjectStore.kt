@@ -8,19 +8,14 @@ package app.morphe.gui.icon
 import kotlinx.serialization.json.Json
 import java.io.File
 
-/**
- * Persists an [IconProject] to `morphe-data/icons/<packageName>/project.json` so a
- * custom icon can be reopened and edited later instead of rebuilt from scratch.
- * The generated mipmap folder is derived output; this is the editable source.
- */
+/** Persists and reloads editable [IconProject] state from disk. */
 object IconProjectStore {
 
     private val json = Json {
         ignoreUnknownKeys = true
         prettyPrint = true
         encodeDefaults = true
-        // Use a discriminator that can't collide with a data-class property (e.g.
-        // Gradient.type) — a "#"-prefixed key is not a valid Kotlin identifier.
+        // Use prefixed discriminator to prevent collision with data class properties.
         classDiscriminator = "#kind"
     }
 

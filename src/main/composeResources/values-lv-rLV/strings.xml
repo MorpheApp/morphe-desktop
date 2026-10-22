@@ -34,6 +34,7 @@
     <!-- Icon Studio -->
     <string name="icon_studio_undo_button">Atsaukt</string>
     <!-- Source Management Sheet -->
+    <string name="add_source">Pievienot avotu</string>
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
     <!-- Error Dialog -->
@@ -43,9 +44,12 @@
     <!-- Settings -->
     <string name="settings_dialog_title">Iestatījumi</string>
     <string name="settings_nav_appearance">Izskats</string>
+    <string name="settings_nav_advanced">Papildu iestatījumi</string>
     <!-- Settings - Appearance -->
     <!-- Settings - Advanced -->
     <!-- Settings - System -->
+    <string name="settings_section_about">Par</string>
+    <string name="settings_about_version">Versija %1$s</string>
     <!-- Settings - Strip Libs -->
     <!-- Settings - Signing -->
     <!-- Settings - Keystore Info Dialog -->

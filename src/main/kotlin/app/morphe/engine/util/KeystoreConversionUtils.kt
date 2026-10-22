@@ -2,13 +2,7 @@
  * Copyright 2026 Morphe.
  * https://github.com/MorpheApp/morphe-desktop
  *
- * Ported from morphe-manager. Manager wrote this because morphe-patcher only
- * speaks BKS but users (including URV cross-over users) often bring keystores
- * in PKCS12, JKS, or BKS-with-misleading-extensions. Conversion is byte-
- * sniffed, not extension-trusted — URV ships the same key bytes under
- * different extensions, so trusting the suffix would mis-route. Keep this
- * code as close to Manager's as possible so a key converted here and a key
- * converted in Manager produce byte-identical BKS output.
+ * Keystore format conversion utilities ported from morphe-manager.
  */
 
 package app.morphe.engine.util
@@ -31,17 +25,7 @@ enum class KeystoreInputFormat(
     JKS(".jks (JKS)", listOf("jks"), "JKS");
 
     companion object {
-        fun fromExtension(ext: String): KeystoreInputFormat? =
-            entries.firstOrNull { ext.lowercase() in it.extensions }
-
-        /**
-         * Sniff the keystore format from the first 4 bytes of the file.
-         * Returns null if the header is not recognized.
-         *
-         * PKCS12 - ASN.1 SEQUENCE: 0x30 + any BER length byte (0x80–0x84)
-         * JKS    - magic: 0xFEEDFEED
-         * BKS    - 4-byte big-endian version int, value 1 or 2
-         */
+        /** Detects keystore format (PKCS12, JKS, or BKS) from the first 4 bytes of file header. */
         fun detectFromBytes(header: ByteArray): KeystoreInputFormat? {
             if (header.size < 4) return null
             return when {
@@ -60,23 +44,15 @@ enum class KeystoreInputFormat(
 }
 
 sealed interface KeystoreConversionResult {
-    /** Conversion succeeded — [data] is a BKS keystore ready for the patcher. */
+    /** Successful BKS conversion result. */
     data class Success(val data: List<Byte>) : KeystoreConversionResult
-    /** Wrong password/alias, corrupt file, or unsupported format variant. */
+    /** Conversion failure result. */
     data class Error(val cause: Exception) : KeystoreConversionResult
 }
 
 object KeystoreConversionUtils {
 
-    /**
-     * Loads a keystore of [format] from [inputStream] and re-encodes all entries into a
-     * new BKS keystore, returning the raw bytes. The stream is read but not closed.
-     *
-     * When [alias] is blank all entries are transferred. Otherwise, the matching entry is
-     * looked up case-insensitively, falling back to transferring everything if not found.
-     *
-     * [password] is used for both the keystore and the individual key entries.
-     */
+    /** Converts a keystore from [format] into BKS bytes, transferring matching [alias] entries. */
     fun convert(
         inputStream: InputStream,
         format: KeystoreInputFormat,
@@ -85,9 +61,7 @@ object KeystoreConversionUtils {
     ): KeystoreConversionResult = runCatching {
         val pass = password.toCharArray()
 
-        // JKS requires manual parsing — see JksKeyStoreParser. Manager originally added
-        // this because Android's BC has no JKSKeyStoreSpi; we keep it as a fallback for
-        // URV-style JKS variants the stock SPI has historically choked on.
+        // JKS uses custom parser for compatibility with legacy keystore variants.
         if (format == KeystoreInputFormat.JKS) {
             val entries = JksKeyStoreParser.parse(inputStream, password)
             check(entries.isNotEmpty()) { "No entries found in JKS keystore" }
@@ -113,9 +87,7 @@ object KeystoreConversionUtils {
             return@runCatching KeystoreConversionResult.Success(out.toByteArray().toList())
         }
 
-        // PKCS12 / BKS go through standard JCA. BKS source paths shouldn't normally
-        // reach here — callers should short-circuit on BKS detection — but kept as a
-        // safety net so calling convert() with BKS still produces a valid result.
+        // Convert standard JCA formats (PKCS12, BKS).
         val source = KeyStore.getInstance(format.jcaType).apply { load(inputStream, pass) }
 
         val entriesToMigrate = if (alias.isBlank()) {

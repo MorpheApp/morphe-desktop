@@ -22,11 +22,7 @@ import java.util.Locale
 
 object FormatUtils {
 
-    /**
-     * Resolves the [Locale] for the given [languageCode].
-     * Falls back to [Locale.getDefault()] if blank or "system".
-     * Configured with Latin numbering ("nu-latn") to guarantee Western digits (0-9) across all locales.
-     */
+    /** Resolves the [Locale] for [languageCode], configured with Latin numbering. */
     fun resolveLocale(languageCode: String? = null): Locale {
         val baseLocale = if (languageCode.isNullOrBlank() || languageCode.equals(LanguageRepository.SYSTEM_CODE, ignoreCase = true)) {
             Locale.getDefault()
@@ -36,9 +32,7 @@ object FormatUtils {
         return toLatinDigitsLocale(baseLocale)
     }
 
-    /**
-     * Ensures the given [Locale] uses Western digits (0-9) via the Unicode "nu-latn" extension.
-     */
+    /** Ensures [locale] uses Western digits (0-9) via Unicode "nu-latn" extension. */
     fun toLatinDigitsLocale(locale: Locale): Locale {
         return try {
             Locale.Builder().setLocale(locale).setUnicodeLocaleKeyword("nu", "latn").build()
@@ -47,59 +41,29 @@ object FormatUtils {
         }
     }
 
-    /**
-     * Formats a date in medium localized style (e.g. "Sep 4, 2026" or "04.09.2026").
-     */
-    fun formatDate(millis: Long, locale: Locale = Locale.getDefault()): String =
-        formatDate(Date(millis), locale)
-
-    /**
-     * Formats a nullable [Date] in medium localized style. Returns empty string if [date] is null.
-     */
+    /** Formats a nullable [Date] in medium localized style. */
     fun formatDate(date: Date?, locale: Locale = Locale.getDefault()): String {
         if (date == null) return ""
         return DateFormat.getDateInstance(DateFormat.MEDIUM, locale).format(date)
     }
 
-    /**
-     * Formats a time in short localized style (e.g. "1:30 AM" or "14:10").
-     */
-    fun formatTime(millis: Long, locale: Locale = Locale.getDefault()): String =
-        formatTime(Date(millis), locale)
-
-    /**
-     * Formats a nullable [Date] time in short localized style. Returns empty string if [date] is null.
-     */
-    fun formatTime(date: Date?, locale: Locale = Locale.getDefault()): String {
-        if (date == null) return ""
-        return DateFormat.getTimeInstance(DateFormat.SHORT, locale).format(date)
-    }
-
-    /**
-     * Formats a timestamp into localized date and time separated by " · " (e.g. "Sep 4, 2026 · 1:30 AM").
-     */
+    /** Formats a timestamp into localized date and time. */
     fun formatDateTime(millis: Long, locale: Locale = Locale.getDefault()): String =
         formatDateTime(Date(millis), locale)
 
-    /**
-     * Formats a nullable [Date] into localized date and time separated by " · ". Returns empty string if [date] is null.
-     */
+    /** Formats a nullable [Date] into localized date and time. */
     fun formatDateTime(date: Date?, locale: Locale = Locale.getDefault()): String {
         if (date == null) return ""
         val datePart = formatDate(date, locale)
-        val timePart = formatTime(date, locale)
+        val timePart = DateFormat.getTimeInstance(DateFormat.SHORT, locale).format(date)
         return "$datePart · $timePart"
     }
 
-    /**
-     * Formats a short month and day without year (e.g. "Sep 4" in US).
-     */
+    /** Formats a timestamp into short month and day without year. */
     fun formatShortDate(millis: Long, locale: Locale = Locale.getDefault()): String =
         formatShortDate(Date(millis), locale)
 
-    /**
-     * Formats a nullable [Date] into a short month and day without year. Returns empty string if [date] is null.
-     */
+    /** Formats a nullable [Date] into short month and day without year. */
     fun formatShortDate(date: Date?, locale: Locale = Locale.getDefault()): String {
         if (date == null) return ""
         val pattern = try {
@@ -118,11 +82,7 @@ object FormatUtils {
         return SimpleDateFormat(pattern, locale).format(date)
     }
 
-    /**
-     * Formats an ISO-8601 date string (e.g. "2024-01-15T10:30:00Z" or "2024-01-15") into
-     * localized date and time, or localized date if time is not present.
-     * Falls back to [isoDate] if parsing fails.
-     */
+    /** Formats an ISO-8601 date string into localized date/time. */
     fun formatIsoDateTime(isoDate: String?, locale: Locale = Locale.getDefault()): String {
         if (isoDate.isNullOrBlank()) return ""
         return try {
@@ -146,10 +106,7 @@ object FormatUtils {
         }
     }
 
-    /**
-     * Formats a byte count into a human-readable file size string (e.g. "194.3 MB" in US or "194,3 MB" in German/Polish)
-     * according to the given [locale].
-     */
+    /** Formats a byte count into a localized human-readable file size string. */
     fun formatFileSize(bytes: Long, locale: Locale = Locale.getDefault()): String {
         val latnLocale = toLatinDigitsLocale(locale)
         return when {
@@ -161,10 +118,7 @@ object FormatUtils {
         }
     }
 
-    /**
-     * Formats data transfer speed given in KB/s (e.g. "1.5 MB/s" in US or "1,5 MB/s" in German/Polish)
-     * according to the given [locale].
-     */
+    /** Formats data transfer speed in KB/s into a localized string. */
     fun formatTransferRate(kbPerSec: Int, locale: Locale = Locale.getDefault()): String {
         val latnLocale = toLatinDigitsLocale(locale)
         return if (kbPerSec >= 1024) {
@@ -175,9 +129,7 @@ object FormatUtils {
     }
 }
 
-/**
- * Composable helper that resolves the current GUI [Locale] from [LocalLanguageState].
- */
+/** Resolves current GUI [Locale] from [LocalLanguageState]. */
 @Composable
 fun currentLocale(): Locale {
     val langState = LocalLanguageState.current

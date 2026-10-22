@@ -56,6 +56,7 @@
     <string name="status_offline">Frakoblet</string>
     <string name="status_ready">Klar</string>
     <string name="filter_apps_hint">Filtrer apper…</string>
+    <string name="version">Versjon</string>
     <string name="version_label_stable">Stabil</string>
     <string name="version_label_dev">Utvikling</string>
     <string name="version_label_experimental">Eksperimentell</string>
@@ -227,7 +228,6 @@
     <string name="home_apk_info_remove_description">Fjern APK</string>
     <string name="home_apk_info_limited_info_warning">Kunne ikke lese hele manifestet til denne APK-en (vanlig for delte pakker). Detaljene nedenfor er omtrentlige; patching bør fortsatt fungere</string>
     <string name="home_apk_info_unsupported_app_warning">Ingen kompatible patcher funnet for denne appen. Du kan fortsatt fortsette, men patching kan ha ingen effekt</string>
-    <string name="home_apk_info_version_label">Versjon</string>
     <string name="home_apk_info_build_label">Bygg</string>
     <string name="home_apk_info_size_label">Størrelse</string>
     <string name="home_apk_info_value_api">API %1$d</string>
@@ -443,7 +443,6 @@
     <string name="patching_graph_storage_io">Lagrings-I/U</string>
     <string name="patching_graph_cpu_usage">CPU-bruk</string>
     <string name="patching_banner_started_title">Patching startet</string>
-    <string name="patching_banner_app_version">Appversjon</string>
     <string name="patching_banner_apk_size">APK-størrelse</string>
     <string name="patching_banner_patches">Patcher</string>
     <string name="patching_banner_split_apk">Delt APK</string>
@@ -718,6 +717,7 @@
     <string name="settings_background_snow">Snø</string>
     <string name="settings_background_grid">Rutenett</string>
     <string name="settings_background_particles">Partikler</string>
+    <string name="settings_background_lava">Lavalampe</string>
     <string name="settings_background_matrix">Matrise</string>
     <string name="settings_toggle_parallax_label">Parallakseeffekt</string>
     <string name="settings_toggle_parallax_desc">Myk bakgrunnsforskyvning når du beveger musen</string>

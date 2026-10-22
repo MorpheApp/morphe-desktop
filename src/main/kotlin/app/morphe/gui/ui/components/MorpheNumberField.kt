@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,26 +33,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.theme.LocalMorpheAccents
-import app.morphe.gui.ui.theme.LocalMorpheCorners
+import app.morphe.gui.ui.theme.MorpheTheme
 
 @Composable
 fun MorpheNumberField(
     value: Float,
     range: ClosedFloatingPointRange<Float>,
-    font: FontFamily,
     modifier: Modifier = Modifier,
     decimals: Int = 0,
     onValue: (Float) -> Unit,
 ) {
-    val accents = LocalMorpheAccents.current
-    val corners = LocalMorpheCorners.current
+    val colors = MorpheTheme.colors
+    val shapes = MorpheTheme.shapes
     val step = when (decimals) {
         0 -> 1f
         1 -> 0.1f
@@ -68,8 +61,8 @@ fun MorpheNumberField(
         modifier = modifier
             .width(66.dp)
             .height(26.dp)
-            .clip(RoundedCornerShape(corners.small))
-            .border(1.dp, accents.primary.copy(alpha = 0.25f), RoundedCornerShape(corners.small)),
+            .clip(shapes.small)
+            .border(1.dp, colors.primary.copy(alpha = 0.25f), shapes.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         BasicTextField(
@@ -79,14 +72,10 @@ fun MorpheNumberField(
                 entered.trim().toFloatOrNull()?.let { onValue(it.coerceIn(range)) }
             },
             singleLine = true,
-            textStyle = TextStyle(
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 12.sp,
-                fontFamily = font,
+            textStyle = MorpheTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
-            cursorBrush = SolidColor(accents.primary),
+            cursorBrush = SolidColor(colors.primary),
             modifier = Modifier.weight(1f).padding(start = 6.dp),
         )
         Column(Modifier.fillMaxHeight().width(18.dp)) {
@@ -98,7 +87,7 @@ fun MorpheNumberField(
                 Icon(
                     MorpheIcons.ArrowDropUp,
                     contentDescription = null,
-                    tint = accents.primary.copy(alpha = 0.8f),
+                    tint = colors.primary.copy(alpha = 0.8f),
                     modifier = Modifier.size(18.dp).offset(y = 2.dp, x = (-1).dp),
                 )
             }
@@ -110,7 +99,7 @@ fun MorpheNumberField(
                 Icon(
                     MorpheIcons.ArrowDropDown,
                     contentDescription = null,
-                    tint = accents.primary.copy(alpha = 0.8f),
+                    tint = colors.primary.copy(alpha = 0.8f),
                     modifier = Modifier.size(18.dp).offset(y = (-2).dp, x = (-1).dp),
                 )
             }
@@ -123,7 +112,6 @@ fun MorpheAdjustRow(
     label: String,
     value: Float,
     range: ClosedFloatingPointRange<Float>,
-    font: FontFamily,
     modifier: Modifier = Modifier,
     decimals: Int = 0,
     onChange: (Float) -> Unit,
@@ -131,9 +119,7 @@ fun MorpheAdjustRow(
     Column(modifier) {
         Text(
             text = label,
-            fontFamily = font,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
+            style = MorpheTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Row(
@@ -146,7 +132,7 @@ fun MorpheAdjustRow(
                 valueRange = range,
                 modifier = Modifier.weight(1f).height(22.dp),
             )
-            MorpheNumberField(value, range, font, decimals = decimals, onValue = onChange)
+            MorpheNumberField(value = value, range = range, decimals = decimals, onValue = onChange)
         }
     }
 }

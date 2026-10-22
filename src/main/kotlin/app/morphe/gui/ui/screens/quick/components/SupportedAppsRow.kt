@@ -5,23 +5,14 @@
 
 package app.morphe.gui.ui.screens.quick.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
@@ -29,21 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.morphe.gui.ui.components.LocalCardFills
-import app.morphe.gui.ui.components.AppCard
-import app.morphe.gui.ui.components.MorpheCardChip
-import app.morphe.gui.data.model.SupportedApp
-import app.morphe.gui.ui.components.morpheScrollbarStyle
+import app.morphe.engine.model.SupportedApp
+import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.*
-import app.morphe.gui.util.DownloadUrlResolver.openUrlAndFollowRedirects
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-
-// ============================================================================
-// SUPPORTED APPS ROW
-// ============================================================================
 
 @Composable
 internal fun SupportedAppsRow(
@@ -55,9 +38,6 @@ internal fun SupportedAppsRow(
     onRetry: () -> Unit = {},
     onManageSources: () -> Unit = {},
 ) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
     val uriHandler = LocalUriHandler.current
     val focusManager = LocalFocusManager.current
 
@@ -67,9 +47,7 @@ internal fun SupportedAppsRow(
     ) {
         Text(
             text = stringResource(Res.string.quick_patch_supported_apps_title),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = font,
+            style = MorpheTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
@@ -77,9 +55,7 @@ internal fun SupportedAppsRow(
 
         Text(
             text = stringResource(Res.string.quick_patch_supported_apps_subtitle),
-            fontFamily = font,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Normal,
+            style = MorpheTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -99,14 +75,12 @@ internal fun SupportedAppsRow(
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
                         strokeWidth = 2.dp,
-                        color = accents.primary
+                        color = MorpheTheme.colors.primary
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(Res.string.quick_patch_supported_apps_loading),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = font,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -119,22 +93,27 @@ internal fun SupportedAppsRow(
                 ) {
                     Text(
                         text = loadError ?: stringResource(Res.string.quick_patch_supported_apps_load_error),
-                        fontSize = 11.sp,
-                        fontFamily = font,
-                        fontWeight = FontWeight.Normal,
+                        style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    ErrorActionPill(text = stringResource(Res.string.retry), onClick = onRetry)
-                    // Retrying a source that is itself broken (bad URL, corrupt .mpp,
-                    // needs a newer patcher) loops forever, so the picker has to be
-                    // reachable from the error itself and not only from the header badge.
+                    MorpheButton(
+                        label = stringResource(Res.string.retry),
+                        size = MorpheButtonSize.COMPACT,
+                        variant = MorpheButtonVariant.OUTLINED,
+                        onClick = onRetry
+                    )
+                    // Allow switching sources if retrying a broken source fails.
                     Spacer(modifier = Modifier.width(6.dp))
-                    ErrorActionPill(text = stringResource(Res.string.quick_patch_supported_apps_change_source), onClick = onManageSources)
+                    MorpheButton(
+                        label = stringResource(Res.string.quick_patch_supported_apps_change_source),
+                        size = MorpheButtonSize.COMPACT,
+                        variant = MorpheButtonVariant.OUTLINED,
+                        onClick = onManageSources
+                    )
                 }
             }
             else -> {
-                // Search bar for many apps
                 var searchQuery by remember { mutableStateOf("") }
                 val filteredApps = if (searchQuery.isBlank()) supportedApps
                 else supportedApps.filter {
@@ -143,81 +122,11 @@ internal fun SupportedAppsRow(
                 }
 
                 if (supportedApps.size > 4) {
-                    val muted = MaterialTheme.colorScheme.onSurfaceVariant
-                    val searchInteraction = remember { MutableInteractionSource() }
-                    val isSearchFocused by searchInteraction.collectIsFocusedAsState()
-                    val searchBorder by animateColorAsState(
-                        if (isSearchFocused) MaterialTheme.colorScheme.outline.copy(alpha = 0.35f)
-                        else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
-                        animationSpec = tween(150)
-                    )
-
-                    BasicTextField(
+                    SlimSearchField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
-                        singleLine = true,
-                        interactionSource = searchInteraction,
-                        textStyle = MaterialTheme.typography.bodySmall.copy(
-                            fontFamily = font,
-                            fontSize = 11.sp,
-                            lineHeight = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                        cursorBrush = SolidColor(accents.primary),
-                        modifier = Modifier
-                            .widthIn(max = 260.dp)
-                            .fillMaxWidth()
-                            .height(32.dp)
-                            .clip(RoundedCornerShape(corners.small))
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-                            .border(1.dp, searchBorder, RoundedCornerShape(corners.small)),
-                        decorationBox = { innerTextField ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(horizontal = 10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    MorpheIcons.Search,
-                                    contentDescription = null,
-                                    tint = muted.copy(alpha = 0.55f),
-                                    modifier = Modifier.size(14.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                                    if (searchQuery.isEmpty()) {
-                                        Text(
-                                            stringResource(Res.string.filter_apps_hint),
-                                            fontSize = 11.sp,
-                                            lineHeight = 14.sp,
-                                            fontWeight = FontWeight.Normal,
-                                            fontFamily = font,
-                                            color = muted.copy(alpha = 0.4f)
-                                        )
-                                    }
-                                    innerTextField()
-                                }
-                                if (searchQuery.isNotEmpty()) {
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Box(
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .clip(RoundedCornerShape(corners.small))
-                                            .clickable { searchQuery = "" },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            MorpheIcons.Clear,
-                                            contentDescription = stringResource(Res.string.clear),
-                                            tint = muted.copy(alpha = 0.5f),
-                                            modifier = Modifier.size(12.dp)
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        placeholder = stringResource(Res.string.filter_apps_hint),
+                        maxWidth = 260.dp,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -231,16 +140,13 @@ internal fun SupportedAppsRow(
                     ) {
                         Text(
                             text = stringResource(Res.string.quick_patch_supported_apps_no_matches),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = font,
+                            style = MorpheTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                         )
                     }
                     return@Column
                 }
 
-                // Horizontal scrolling cards
                 val useScrolling = filteredApps.size > 4
                 val cardsScrollState = rememberScrollState()
                 Row(
@@ -248,13 +154,7 @@ internal fun SupportedAppsRow(
                         .fillMaxWidth()
                         .then(if (useScrolling) Modifier.horizontalScroll(cardsScrollState) else Modifier)
                         .height(IntrinsicSize.Max)
-                        // detectTapGestures (not .clickable) so scroll-wheel /
-                        // two-finger gestures over this Row aren't swallowed.
-                        // .clickable wraps the modifier chain in a pointer-input
-                        // node that consumes scroll events on Linux/Skiko,
-                        // breaking both the inner horizontalScroll and the
-                        // outer page-level verticalScroll. Taps still clear
-                        // the search-bar focus.
+                        // Use detectTapGestures instead of clickable to avoid swallowing scroll events.
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = { focusManager.clearFocus() })
                         },
@@ -271,7 +171,7 @@ internal fun SupportedAppsRow(
                                     else Modifier.weight(1f)
                                 )
                                 .fillMaxHeight(),
-                            cornerRadius = corners.small,
+                            cornerRadius = MorpheTheme.corners.small,
                             appIconColorHex = app.appIconColor,
                             fill = cardFills[app.packageName],
                             interactive = false,
@@ -293,9 +193,7 @@ internal fun SupportedAppsRow(
                             ) {
                                 Text(
                                     text = app.displayName,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = font,
+                                    style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                                     color = Color.White,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
@@ -315,9 +213,7 @@ internal fun SupportedAppsRow(
                                 
                                 Text(
                                     text = recommendedVersionText,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = font,
+                                    style = MorpheTheme.typography.bodySmall,
                                     color = Color.White.copy(alpha = 0.6f)
                                 )
 
@@ -330,6 +226,7 @@ internal fun SupportedAppsRow(
                                     MorpheCardChip(
                                         text = versionToDisplay?.let { "v$it" } ?: stringResource(Res.string.download),
                                         icon = MorpheIcons.OpenInNew,
+                                        tooltip = versionToDisplay?.let { "v$it" },
                                     ) {
                                         openUrlAndFollowRedirects(url) { resolved ->
                                             uriHandler.openUri(resolved)
@@ -346,49 +243,10 @@ internal fun SupportedAppsRow(
                     HorizontalScrollbar(
                         adapter = rememberScrollbarAdapter(cardsScrollState),
                         modifier = Modifier.fillMaxWidth(),
-                        style = morpheScrollbarStyle()
+                        style = MorpheScrollbarStyle()
                     )
                 }
             }
         }
-    }
-}
-
-// ============================================================================
-// ERROR ACTION PILL
-// ============================================================================
-
-/** Outlined action used in the patch-load error row. Matches the quiet, pill
- *  style of this screen rather than a Material button. */
-@Composable
-private fun ErrorActionPill(
-    text: String,
-    onClick: () -> Unit,
-) {
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val hover = remember { MutableInteractionSource() }
-    val isHovered by hover.collectIsHoveredAsState()
-    Box(
-        modifier = Modifier
-            .hoverable(hover)
-            .clip(RoundedCornerShape(corners.small))
-            .border(
-                1.dp,
-                MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                    alpha = if (isHovered) 0.3f else 0.12f
-                ),
-                RoundedCornerShape(corners.small)
-            )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = text,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Normal,
-            fontFamily = font,
-            color = MaterialTheme.colorScheme.onSurface
-        )
     }
 }

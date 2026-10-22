@@ -7,20 +7,23 @@ package app.morphe.gui.ui.screens.patches
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.morphe.desktop.command.model.toPatchBundle
+import app.morphe.engine.ReleaseChannel
 import app.morphe.engine.model.Release
-import app.morphe.engine.model.ReleaseAsset
+import app.morphe.engine.options.toPatchBundle
+import app.morphe.engine.options.writePatchBundles
+import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.patches.PatchCache
+import app.morphe.engine.patches.PatchRepository
+import app.morphe.engine.patches.PullRequestPatchSource
+import app.morphe.engine.util.Logger
+import app.morphe.engine.util.newerRelease
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.ConfigRepository
-import app.morphe.gui.data.repository.PatchRepository
 import app.morphe.gui.data.repository.PatchSourceManager
-import app.morphe.gui.util.Logger
-import app.morphe.gui.util.newerRelease
 import app.morphe.morphe_desktop.generated.resources.*
-import app.morphe.patcher.patch.loadPatchesFromJar
 import java.io.File
-import java.time.Instant
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,11 +31,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 class PatchesViewModel(
-    private val apkPath: String,
     private val apkName: String,
     private val patchRepository: PatchRepository,
     private val configRepository: ConfigRepository,
@@ -46,7 +47,7 @@ class PatchesViewModel(
     init {
         loadReleases()
 
-        // Observe cache clears / source changes
+        // Observe patch source changes and reload.
         patchSourceManager?.let { psm ->
             viewModelScope.launch {
                 psm.sourceVersion.drop(1).collect {
@@ -62,7 +63,7 @@ class PatchesViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            // LOCAL source: skip GitHub, use the file directly
+            // For local sources, use the file directly.
             if (localPatchFilePath != null) {
                 val localFile = File(localPatchFilePath)
                 if (localFile.exists()) {
@@ -101,9 +102,8 @@ class PatchesViewModel(
                         }
                     }
 
-                    // Find the saved release, or fall back to latest stable
+                    // Resolve saved release or fall back to latest release.
                     val initialRelease = if (savedVersion != null) {
-                        // Try to find in stable first, then dev
                         stableReleases.find { it.tagName == savedVersion }
                             ?: devReleases.find { it.tagName == savedVersion }
                             ?: stableReleases.firstOrNull()
@@ -115,19 +115,16 @@ class PatchesViewModel(
                         }
                     }
 
-                    // Determine initial channel based on selected release
                     val initialChannel = if (initialRelease != null && initialRelease.isDevRelease()) {
                         ReleaseChannel.DEV
                     } else {
                         ReleaseChannel.STABLE
                     }
 
-                    // Check if patches for the initial release are already cached
-                    val cachedFile = initialRelease?.let { checkCachedPatches(it) }
+                    val cachedFile = initialRelease?.let { PatchCache.getCachedFile(patchRepository.repoPath, it) }
 
-                    // Build set of all cached release versions
                     val cachedVersions = releases
-                        .filter { checkCachedPatches(it) != null }
+                        .filter { PatchCache.getCachedFile(patchRepository.repoPath, it) != null }
                         .map { it.tagName }
                         .toSet()
 
@@ -145,15 +142,9 @@ class PatchesViewModel(
                     Logger.info("Loaded ${stableReleases.size} stable and ${devReleases.size} dev releases, saved=$savedVersion, selected=${initialRelease?.tagName}, cached: ${cachedFile != null}")
                 },
                 onFailure = { e ->
-                    // Even when offline, check for cached .mpp files
-                    val cachedFiles = findAllCachedPatchFiles()
-                    if (cachedFiles.isNotEmpty()) {
-                        val offlineReleases = cachedFiles.mapNotNull { buildOfflineRelease(it) }
-                            .sortedByDescending { rel ->
-                                val version = rel.tagName.removePrefix("v")
-                                parseVersionParts(version)
-                                    .fold(0L) { acc, part -> acc * 10000 + part }
-                            }
+                    val prNumber = (patchRepository.remoteSource as? PullRequestPatchSource)?.prNumber
+                    val offlineReleases = PatchCache.listOfflineReleases(patchRepository.repoPath, prNumber)
+                    if (offlineReleases.isNotEmpty()) {
                         val activeSource = patchSourceManager?.getActiveSource()
                         val activeSourceId = activeSource?.id
                         val pref = activeSourceId?.let { configRepository.getSourceVersionPrefs()[it] }
@@ -171,7 +162,7 @@ class PatchesViewModel(
                             }
                         }
 
-                        // Pre-select the saved version, or fall back to the first (most recent)
+                        // Select saved version or fall back to most recent offline release.
                         val initialRelease = if (savedVersion != null) {
                             offlineReleases.find { it.tagName == savedVersion }
                         } else null
@@ -184,11 +175,7 @@ class PatchesViewModel(
                             offlineReleases.firstOrNull { !it.isDevRelease() } ?: offlineReleases.firstOrNull()
                         }
 
-                        // Find the cached file for the selected release
-                        val cachedFile = selected?.let { rel ->
-                            val assetName = rel.assets.firstOrNull()?.name
-                            cachedFiles.find { it.name == assetName }
-                        }
+                        val cachedFile = selected?.let { PatchCache.getCachedFile(patchRepository.repoPath, it) }
 
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
@@ -199,7 +186,7 @@ class PatchesViewModel(
                             cachedReleaseVersions = offlineReleases.map { it.tagName }.toSet(),
                             error = null
                         )
-                        Logger.info("Offline - found ${cachedFiles.size} cached patch file(s), selected=${selected?.tagName}")
+                        Logger.info("Offline, found ${offlineReleases.size} cached release(s), selected=${selected?.tagName}")
                     } else {
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
@@ -214,17 +201,7 @@ class PatchesViewModel(
     }
 
     fun selectRelease(release: Release) {
-        val cachedFile = if (_uiState.value.isOffline) {
-            // In offline mode, find the cached file by matching the asset name
-            val assetName = release.assets.firstOrNull()?.name
-            if (assetName != null) {
-                val patchesDir = patchRepository.getCacheDir()
-                val file = File(patchesDir, assetName)
-                if (file.exists()) file else null
-            } else null
-        } else {
-            checkCachedPatches(release)
-        }
+        val cachedFile = PatchCache.getCachedFile(patchRepository.repoPath, release)
 
         _uiState.value = _uiState.value.copy(
             selectedRelease = release,
@@ -233,84 +210,13 @@ class PatchesViewModel(
         Logger.info("Selected release: ${release.tagName}, cached: ${cachedFile != null}")
     }
 
-    /**
-     * Find all cached .mpp files in the per-source cache directory.
-     */
-    private fun findAllCachedPatchFiles(): List<File> {
-        val patchesDir = patchRepository.getCacheDir()
-        return patchesDir.listFiles { file ->
-            val ext = file.extension.lowercase()
-            ext == "mpp" || ext == "jar"
-        }?.filter { it.length() > 0 } ?: emptyList()
-    }
-
-    private val versionRegex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
-
-    /**
-     * Parse semantic version parts for comparison.
-     * "1.13.0" -> [1, 13, 0], "1.4.0-dev.5" -> [1, 4, 0, 5]
-     */
-    private fun parseVersionParts(version: String): List<Int> {
-        return version.replace("-dev.", ".").split(".").mapNotNull { it.toIntOrNull() }
-    }
-
-    /**
-     * Build a synthetic Release from a cached .mpp file for offline display.
-     * Extracts version from the filename (e.g. "patches-1.13.0.mpp" -> "v1.13.0").
-     * publishedAt is left empty since we don't know the actual release date offline.
-     */
-    private fun buildOfflineRelease(file: File): Release? {
-        val match = versionRegex.find(file.name) ?: return null
-        val version = match.groupValues[1]
-
-        return Release(
-            id = file.name.hashCode().toLong(),
-            tagName = "v$version",
-            name = "v$version",
-            isPrerelease = version.contains("dev"),
-            publishedAt = Instant.ofEpochMilli(file.lastModified()).toString(),
-            assets = listOf(
-                ReleaseAsset(
-                    id = file.name.hashCode().toLong(),
-                    name = file.name,
-                    downloadUrl = "",
-                    size = file.length(),
-                    contentType = "application/octet-stream"
-                )
-            )
-        )
-    }
-
-    /**
-     * Check if patches for a release are already downloaded and valid.
-     */
-    private fun checkCachedPatches(release: Release): File? {
-        val asset = patchRepository.findPatchAsset(release) ?: return null
-        val patchesDir = patchRepository.getCacheDir()
-        // Match the version-prefixed filename PatchRepository.downloadPatches writes.
-        // Looking up by bare asset.name would falsely "find" the latest version's
-        // file for every other version's check (since maintainers commonly reuse
-        // the asset filename across releases). That was the cause of the
-        // "latest stable shows SELECT after Clear Cache" bug.
-        val cachedFile = File(patchesDir, PatchRepository.cachedFileName(release, asset))
-
-        // Verify file exists and size matches (size check acts as basic integrity verification)
-        return if (cachedFile.exists() && cachedFile.length() == asset.size) {
-            Logger.info("Found cached patches: ${cachedFile.absolutePath}")
-            cachedFile
-        } else {
-            null
-        }
-    }
-
     fun setChannel(channel: ReleaseChannel) {
         val newRelease = when (channel) {
             ReleaseChannel.STABLE -> _uiState.value.stableReleases.firstOrNull()
             ReleaseChannel.DEV -> _uiState.value.devReleases.firstOrNull()
         }
 
-        // Check if patches for the new release are already cached
-        val cachedFile = newRelease?.let { checkCachedPatches(it) }
+        val cachedFile = newRelease?.let { PatchCache.getCachedFile(patchRepository.repoPath, it) }
 
         _uiState.value = _uiState.value.copy(
             selectedChannel = channel,
@@ -343,25 +249,8 @@ class PatchesViewModel(
                     )
                     Logger.info("Patches downloaded: ${patchFile.absolutePath}")
 
-                    // Save the version preference PER SOURCE so HomeScreen can pick
-                    // it up without contaminating other enabled sources.
-                    val activeSource = patchSourceManager?.getActiveSource()
-                    val activeSourceId = activeSource?.id
-                    if (activeSourceId != null) {
-                        val pref = versionPrefFor(release)
-                        configRepository.setSourceVersionPref(activeSourceId, pref)
-                        
-                        val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
-                        val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
-                        val isDevSelected = release.isDevRelease() && release.tagName == newestDevTag
-                        val isStableSelected = !release.isDevRelease() && release.tagName == newestStableTag
-                        
-                        if (activeSource.usePreRelease != isDevSelected) {
-                            patchSourceManager.updateSource(activeSource.copy(usePreRelease = isDevSelected))
-                        }
-                        
-                        Logger.info("Saved version pref for source '$activeSourceId': $pref")
-                    }
+                    // Persist release preference for this source.
+                    persistReleasePreference(release, "Saved")
                 },
                 onFailure = { e ->
                     _uiState.value = _uiState.value.copy(
@@ -378,10 +267,7 @@ class PatchesViewModel(
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-    /**
-     * Confirm the current selection and save it to config.
-     * Called when user clicks "Select" button.
-     */
+    /** Confirms the current release selection and persists the preference. */
     fun confirmSelection(onComplete: () -> Unit = {}) {
         val release = _uiState.value.selectedRelease
         if (release == null) {
@@ -389,36 +275,28 @@ class PatchesViewModel(
             return
         }
         viewModelScope.launch {
-            val activeSource = patchSourceManager?.getActiveSource()
-            val activeSourceId = activeSource?.id
-            if (activeSourceId != null) {
-                val pref = versionPrefFor(release)
-                configRepository.setSourceVersionPref(activeSourceId, pref)
-                
-                val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
-                val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
-                val isDevSelected = release.isDevRelease() && release.tagName == newestDevTag
-                val isStableSelected = !release.isDevRelease() && release.tagName == newestStableTag
-                
-                if (activeSource.usePreRelease != isDevSelected) {
-                    patchSourceManager.updateSource(activeSource.copy(usePreRelease = isDevSelected))
-                }
-                
-                Logger.info("Confirmed version pref for source '$activeSourceId': $pref")
-            }
+            persistReleasePreference(release, "Confirmed")
             onComplete()
         }
     }
 
-    /**
-     * Turn a user-selected release into a [SourceVersionPref]:
-     *  - the newest stable  → [FollowMode.FOLLOW_STABLE] (ride latest stable)
-     *  - the newest dev      → [FollowMode.FOLLOW_DEV] (ride newest overall)
-     *  - anything older      → [FollowMode.PINNED] to that exact tag
-     *
-     * "Picked the latest of a channel" is read as "stay on that channel's latest,"
-     * which is what auto-updates the source going forward.
-     */
+    private suspend fun persistReleasePreference(release: Release, actionDescription: String) {
+        val activeSource = patchSourceManager?.getActiveSource() ?: return
+        val activeSourceId = activeSource.id
+        val pref = versionPrefFor(release)
+        configRepository.setSourceVersionPref(activeSourceId, pref)
+
+        val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
+        val isDevSelected = release.isDevRelease() && release.tagName == newestDevTag
+
+        if (activeSource.usePreRelease != isDevSelected) {
+            patchSourceManager.updateSource(activeSource.copy(usePreRelease = isDevSelected))
+        }
+
+        Logger.info("$actionDescription version pref for source '$activeSourceId': $pref")
+    }
+
+    /** Converts a selected release into a [SourceVersionPref] (channel follow or pinned tag). */
     private fun versionPrefFor(release: Release): SourceVersionPref {
         val newestStableTag = _uiState.value.stableReleases.firstOrNull()?.tagName
         val newestDevTag = _uiState.value.devReleases.firstOrNull()?.tagName
@@ -430,9 +308,7 @@ class PatchesViewModel(
         return SourceVersionPref(mode = mode, pinnedTag = release.tagName.takeIf { mode == FollowMode.PINNED })
     }
 
-    /**
-     * Export patch options from the downloaded .mpp file to a JSON file.
-     */
+    /** Exports patch options from the downloaded bundle to a JSON file. */
     fun exportOptionsJson(outputFile: File) {
         val patchFile = _uiState.value.downloadedPatchFile ?: return
 
@@ -440,13 +316,13 @@ class PatchesViewModel(
             _uiState.value = _uiState.value.copy(isExporting = true)
             try {
                 withContext(Dispatchers.IO) {
-                    val patches = loadPatchesFromJar(setOf(patchFile))
+                    val patches = PatchBundleLoader.loadFlat(setOf(patchFile))
                     val bundle = patches.toPatchBundle(sourceFiles = setOf(patchFile))
-                    val json = Json { prettyPrint = true }
-                    outputFile.parentFile?.mkdirs()
-                    outputFile.writeText(json.encodeToString(listOf(bundle)))
+                    writePatchBundles(outputFile, listOf(bundle))
                 }
                 Logger.info("Exported ${_uiState.value.downloadedPatchFile?.name} options to ${outputFile.path}")
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = getString(Res.string.patches_error_failed_to_export_options, e.message ?: "")
@@ -458,13 +334,7 @@ class PatchesViewModel(
         }
     }
 
-    fun getApkPath(): String = apkPath
     fun getApkName(): String = apkName
-}
-
-enum class ReleaseChannel {
-    STABLE,
-    DEV
 }
 
 data class PatchesUiState(
@@ -489,7 +359,4 @@ data class PatchesUiState(
                     ReleaseChannel.STABLE -> stableReleases
                     ReleaseChannel.DEV -> devReleases
                 }
-
-    val isReady: Boolean
-        get() = downloadedPatchFile != null
 }

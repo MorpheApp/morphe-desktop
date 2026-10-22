@@ -7,59 +7,58 @@ package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * App-version advice for a patched app, or null if current. Returns (message,
- * recommended): recommended=true (amber) when the version is unsupported or a newer
- * stable is out. False (blue) for an optional experimental bump.
- */
+/** Returns version guidance for a patched app, or null if currently supported. */
 @Composable
 internal fun appAdvice(u: RecallUpdateInfo): Pair<String, Boolean>? {
     if (u.appUsedSupported) return null
     return stringResource(Res.string.home_advice_unsupported_by_patches, u.appUsedVersion.removePrefix("v")) to true
 }
 
-/** GitLab nests releases under `/-/`, GitHub does not. */
+/** Formats the release URL based on host platform conventions. */
 internal fun releaseUrl(sourceUrl: String, tag: String): String =
     if (sourceUrl.contains("gitlab", ignoreCase = true)) "$sourceUrl/-/releases/$tag"
     else "$sourceUrl/releases/tag/$tag"
 
-/** Shared device-install line (mirrors the supported-row variant). */
+/** Displays device installation status and signing verification. */
 @Composable
-internal fun DeviceLine(info: DeviceAppInfo, font: FontFamily, mutedColor: Color, activeColor: Color) {
+internal fun DeviceLine(
+    info: DeviceAppInfo,
+    mutedColor: Color,
+    activeColor: Color,
+    modifier: Modifier = Modifier,
+) {
     val version = info.installedVersion?.removePrefix("v")
     val text = when {
         !info.installed -> stringResource(Res.string.home_app_row_not_on_device)
         info.signedByMorphe == false -> {
-            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version_not_signed, version)
-            else stringResource(Res.string.home_app_row_on_device_not_signed)
+            version?.let { stringResource(Res.string.home_app_row_on_device_with_version_not_signed, it) }
+                ?: stringResource(Res.string.home_app_row_on_device_not_signed)
         }
         else -> {
-            if (version != null) stringResource(Res.string.home_app_row_on_device_with_version, version)
-            else stringResource(Res.string.home_app_row_on_device)
+            version?.let { stringResource(Res.string.home_app_row_on_device_with_version, it) }
+                ?: stringResource(Res.string.home_app_row_on_device)
         }
     }
     val color = when {
         !info.installed -> mutedColor
-        info.signedByMorphe == false -> Color(0xFFE0504D)
+        info.signedByMorphe == false -> MorpheTheme.colors.error
         else -> activeColor
     }
     Text(
         text = text,
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Normal,
-        fontFamily = font,
-        color = color
+        style = MorpheTheme.typography.bodySmall,
+        color = color,
+        modifier = modifier,
     )
 }
 
@@ -70,7 +69,7 @@ internal fun patchDisplayName(uniqueId: String): String =
 internal fun fullDate(millis: Long): String =
     FormatUtils.formatDateTime(millis, currentLocale())
 
-/** "today / yesterday / 3d ago / MMM d" — compact for the list row. */
+/** Formats a timestamp into a compact relative or short date string. */
 @Composable
 internal fun relativeOrShortDate(millis: Long): String {
     val now = System.currentTimeMillis()

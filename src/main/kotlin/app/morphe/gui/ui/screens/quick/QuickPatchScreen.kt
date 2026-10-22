@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.quick
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import app.morphe.gui.ui.components.rememberSymmetricPadding
 import app.morphe.engine.MorpheData
+import app.morphe.engine.apk.BundleFormats
+import app.morphe.engine.util.Logger
 import app.morphe.gui.LocalBackgroundSpeed
 import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -29,7 +30,7 @@ import app.morphe.gui.ui.components.SourceSheetMode
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.UpdateBanner
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
-import app.morphe.gui.ui.screens.patching.LogFileViewerDialog
+import app.morphe.gui.ui.screens.patching.components.LogFileViewerDialog
 import app.morphe.gui.ui.screens.patching.LogLevel
 import app.morphe.gui.ui.screens.quick.components.BrandingLogo
 import app.morphe.gui.ui.screens.quick.components.CompletedContent
@@ -105,10 +106,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
         }
     }
 
-    // Source picker state. Quick Patch is single-source by design, so the picker
-    // uses the same SourceManagementSheet as Expert mode but in SINGLE_SELECT
-    // mode (radio behavior). Users can also add/edit/remove sources from here,
-    // matching morphe-manager which doesn't gate source management on expert mode.
+    // Source picker state in single-select mode.
     val patchSourceManager: PatchSourceManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
     val sourceVersion by patchSourceManager.sourceVersion.collectAsState()
@@ -120,19 +118,11 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
         activeSourceId = patchSourceManager.getActiveSource().id
     }
 
-    val corners = LocalMorpheCorners.current
-    val font = LocalMorpheFont.current
-    val accents = LocalMorpheAccents.current
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.10f)
-    val density = LocalDensity.current
-    var leadingWidthPx by remember { mutableIntStateOf(0) }
-    var trailingWidthPx by remember { mutableIntStateOf(0) }
-    val centerSidePadding = with(density) { maxOf(leadingWidthPx, trailingWidthPx).toDp() } + 16.dp
+    val paddingState = rememberSymmetricPadding()
 
     if (showSourcePicker) {
-        // Same per-source version, channel, and failure data Expert mode feeds the
-        // sheet, so a source that broke reads as FAILED here too instead of looking
-        // healthy but silently contributing no patches.
+        // Pass source versions, channels, and failure states to the sheet.
         val snapshot = viewModel.getResolvedSourcesSnapshot()
         SourceManagementSheet(
             sources = allSources,
@@ -160,18 +150,15 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     }
 
     if (showLogViewer) {
-        val logFile = File(MorpheData.root, "logs/morphe-gui.log")
+        val logFile = Logger.getLogFile() ?: File(MorpheData.logsDir, "morphe.log")
         LogFileViewerDialog(
             file = logFile,
-            corners = corners,
-            font = font,
             borderColor = borderColor,
             onDismiss = { showLogViewer = false }
         )
     }
 
     FullScreenDropZone(
-        isDragHovering = uiState.isDragHovering,
         onDragHoverChange = { viewModel.setDragHover(it) },
         onFilesDropped = { viewModel.onFilesDropped(it) },
         enabled = uiState.phase != QuickPatchPhase.ANALYZING
@@ -180,7 +167,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // ── Header row, matches expert mode ──
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -194,23 +180,20 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         }
                         .padding(vertical = 8.dp)
                 ) {
-                    // Logo, left-aligned
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
                             .padding(start = 12.dp)
-                            .onSizeChanged { leadingWidthPx = it.width }
+                            .onSizeChanged { paddingState.leadingWidthPx = it.width }
                     ) {
                         BrandingLogo()
                     }
 
-                    // Patches version badge, centered. Click opens the source-management
-                    // sheet in SINGLE_SELECT mode so the user can pick which source Quick
-                    // Patch uses (and add/edit/remove sources too).
+                    // Patches version badge. Clicking opens source management.
                     Box(
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .padding(start = centerSidePadding, end = centerSidePadding)
+                            .padding(horizontal = paddingState.centerSidePadding)
                     ) {
                         PatchesVersionBadge(
                             patchesVersion = uiState.patchesVersion,
@@ -225,7 +208,7 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(end = 12.dp)
-                            .onSizeChanged { trailingWidthPx = it.width }
+                            .onSizeChanged { paddingState.trailingWidthPx = it.width }
                     ) {
                         TopBarRow(
                             allowCacheClear = false,
@@ -235,7 +218,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                     }
                 }
 
-                // ── Content ──
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -256,9 +238,9 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                 )
                             }
                         }
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
-                    // ── Main content ──
                     val lastApkInfo = remember(uiState.apkInfo) { uiState.apkInfo }
                     val lastOutputPath = remember(uiState.outputPath) { uiState.outputPath }
 
@@ -298,12 +280,10 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                                 )
                             }
                             QuickPatchPhase.COMPLETED -> {
-                                val info = uiState.apkInfo ?: lastApkInfo
                                 val output = uiState.outputPath ?: lastOutputPath
-                                if (info != null && output != null) {
+                                if (output != null) {
                                     CompletedContent(
                                         outputPath = output,
-                                        apkInfo = info,
                                         onPatchAnother = { viewModel.reset() }
                                     )
                                 }
@@ -325,7 +305,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                         }
                     }
 
-                    // ── Supported apps (idle only) ──
                     if (uiState.phase == QuickPatchPhase.IDLE) {
                         Spacer(modifier = Modifier.height(16.dp))
                         SupportedAppsRow(
@@ -341,7 +320,6 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
                 }
             }
 
-            // Error/warning bar
             if (uiState.phase != QuickPatchPhase.ERROR) {
                 uiState.error?.let { error ->
                     MorpheErrorBar(
@@ -358,14 +336,10 @@ fun QuickPatchContent(viewModel: QuickPatchViewModel) {
     }
 }
 
-// ════════════════════════════════════════════════════════════════════
-//  UTILITIES
-// ════════════════════════════════════════════════════════════════════
-
 private suspend fun openFilePicker(title: String): File? =
     MorpheFilePicker.pickFile(
         title = title,
-        extensions = listOf("apk", "apkm", "xapk", "apks"),
+        extensions = BundleFormats.SUPPORTED_EXTENSIONS,
     )
 
 @Composable

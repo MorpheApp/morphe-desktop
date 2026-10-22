@@ -5,7 +5,9 @@
 
 package app.morphe.gui.util
 
-import app.morphe.gui.data.model.SupportedApp
+import app.morphe.engine.model.SupportedApp
+import app.morphe.engine.model.VersionStatus
+import app.morphe.engine.patches.resolveVersionStatus
 import kotlin.test.Test
 
 class BuildCodeSupportTest {
