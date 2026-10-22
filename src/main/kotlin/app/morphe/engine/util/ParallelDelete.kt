@@ -75,6 +75,8 @@ private fun deleteFilesInParallel(files: List<Path>): Boolean {
             Callable { chunk.fold(true) { deletedAll, file -> delete(file) && deletedAll } }
         }
         return executor.invokeAll(tasks).fold(true) { deletedAll, result -> result.get() && deletedAll }
+    } catch (_: InterruptedException) {
+        return files.fold(true) { deletedAll, file -> delete(file) && deletedAll }
     } finally {
         executor.shutdownNow()
     }

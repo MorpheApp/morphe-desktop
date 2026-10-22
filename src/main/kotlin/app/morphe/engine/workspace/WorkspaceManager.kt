@@ -29,9 +29,14 @@ object WorkspaceManager {
             workspace.retain = true
         }
 
+        val hook = if (!disablePurge) Thread { workspace.cleanup() }.also {
+            runCatching { Runtime.getRuntime().addShutdownHook(it) }
+        } else null
+
         return try {
             block(workspace)
         } finally {
+            hook?.let { runCatching { Runtime.getRuntime().removeShutdownHook(it) } }
             if (!workspace.retain) {
                 workspace.cleanup()
             }

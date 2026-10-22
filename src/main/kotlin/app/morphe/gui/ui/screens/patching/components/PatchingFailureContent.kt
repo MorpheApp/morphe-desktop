@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.PatchEngine
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.Logger
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.ui.components.MorpheButton
@@ -36,7 +37,9 @@ import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.datatransfer.StringSelection
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -53,10 +56,23 @@ internal fun ExpertFailureContent(
     val borderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
     
     val logFile = remember { Logger.getLogFile() }
-    val hasTempFiles = remember { WorkspaceManager.hasScratchFiles() }
-    val tempFilesSize = remember { WorkspaceManager.getScratchSize() }
+    var hasTempFiles by remember { mutableStateOf(WorkspaceManager.hasScratchFiles()) }
+    var tempFilesSize by remember { mutableStateOf(WorkspaceManager.getScratchSize()) }
     var tempFilesCleared by remember { mutableStateOf(false) }
     var showLogViewer by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            val cfg = EngineConfigRepository.shared.loadConfig()
+            if (cfg.autoCleanupTempFiles && WorkspaceManager.hasScratchFiles()) {
+                WorkspaceManager.clearScratch()
+                tempFilesCleared = true
+                hasTempFiles = false
+                tempFilesSize = 0L
+                Logger.info("Auto-cleaned temp files after failed/cancelled patching")
+            }
+        }
+    }
 
     Column(
         modifier = Modifier

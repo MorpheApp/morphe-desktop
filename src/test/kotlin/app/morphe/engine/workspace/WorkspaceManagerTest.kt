@@ -68,4 +68,22 @@ class WorkspaceManagerTest {
 
         assertTrue(File(sessionRoot, "rebuilt.apk").exists())
     }
+
+    @Test
+    fun `useSession cleans up even when thread is interrupted`() {
+        var sessionRoot: File? = null
+        val thread = Thread {
+            WorkspaceManager.useSession(customDir = customDir) { session ->
+                sessionRoot = session.root
+                for (i in 0..300) {
+                    File(session.root, "file_$i.txt").writeText("content $i")
+                }
+                Thread.currentThread().interrupt()
+            }
+        }
+        thread.start()
+        thread.join()
+
+        assertFalse(sessionRoot != null && sessionRoot.exists())
+    }
 }
