@@ -41,6 +41,7 @@ fun SupportedAppListRow(
     app: SupportedApp,
     onClick: () -> Unit = {},
     isExpanded: Boolean = false,
+    isSimple: Boolean = false,
     /** Display names of patch sources targeting this package. */
     patchSourceNames: List<String> = emptyList(),
     patchedState: PatchedAppState = PatchedAppState.NEVER_PATCHED,
@@ -109,12 +110,14 @@ fun SupportedAppListRow(
                 downloadUrl = app.apkDownloadUrl,
                 nullLabel = stringResource(Res.string.home_app_row_any),
             )
-            VersionCardChip(
-                channelLabel = stringResource(Res.string.home_app_row_latest_experimental),
-                version = latestExperimental,
-                downloadUrl = app.experimentalDownloadUrl,
-                nullLabel = stringResource(Res.string.home_app_row_na),
-            )
+            if (!isSimple) {
+                VersionCardChip(
+                    channelLabel = stringResource(Res.string.home_app_row_latest_experimental),
+                    version = latestExperimental,
+                    downloadUrl = app.experimentalDownloadUrl,
+                    nullLabel = stringResource(Res.string.home_app_row_na),
+                )
+            }
         }
 
         AnimatedVisibility(
@@ -127,6 +130,7 @@ fun SupportedAppListRow(
                     app = app,
                     patchSourceNames = patchSourceNames,
                     chipInk = chipInk,
+                    isSimple = isSimple,
                 )
                 deviceInfo?.let {
                     DeviceLine(
@@ -194,6 +198,7 @@ private fun ExpandedBody(
     app: SupportedApp,
     patchSourceNames: List<String>,
     chipInk: Color,
+    isSimple: Boolean = false,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -215,21 +220,23 @@ private fun ExpandedBody(
             }
         }
 
-        VersionChipSection(
-            label = stringResource(Res.string.version_label_stable),
-            color = chipInk,
-            versions = app.supportedVersions,
-            packageName = app.packageName,
-            onOpenUrl = uriHandler::openUri,
-        )
+        if (!isSimple) {
+            VersionChipSection(
+                label = stringResource(Res.string.version_label_stable),
+                color = chipInk,
+                versions = app.supportedVersions,
+                packageName = app.packageName,
+                onOpenUrl = uriHandler::openUri,
+            )
 
-        VersionChipSection(
-            label = stringResource(Res.string.version_label_experimental),
-            color = chipInk,
-            versions = app.experimentalVersions,
-            packageName = app.packageName,
-            onOpenUrl = uriHandler::openUri,
-        )
+            VersionChipSection(
+                label = stringResource(Res.string.version_label_experimental),
+                color = chipInk,
+                versions = app.experimentalVersions,
+                packageName = app.packageName,
+                onOpenUrl = uriHandler::openUri,
+            )
+        }
     }
 }
 

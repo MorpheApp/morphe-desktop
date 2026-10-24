@@ -63,7 +63,6 @@ private fun applyMacOSAppearance(window: Window, isDark: Boolean) {
             if (isDark) "NSAppearanceNameDarkAqua" else "NSAppearanceNameAqua"
         )
     } catch (_: Throwable) {
-        // Ignore — older JDKs may not support this property.
     }
 }
 
@@ -93,6 +92,5 @@ private fun applyWindowsCaptionColor(window: Window, color: Color, isDark: Boole
             4
         )
     } catch (_: Throwable) {
-        // Ignore — DWM call failures should not crash the app.
     }
 }

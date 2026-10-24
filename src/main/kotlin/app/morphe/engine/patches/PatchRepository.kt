@@ -82,28 +82,31 @@ class PatchRepository(
         }
 
     /** Stable releases only (non-prerelease). */
-    suspend fun fetchStableReleases(): Result<List<Release>> =
-        fetchReleases().map { releases -> releases.filter { !it.isDevRelease() } }
+    suspend fun fetchStableReleases(forceRefresh: Boolean = false): Result<List<Release>> =
+        fetchReleases(forceRefresh = forceRefresh).map { releases -> releases.filter { !it.isDevRelease() } }
 
     /** Dev / prerelease versions only. */
-    suspend fun fetchDevReleases(): Result<List<Release>> =
-        fetchReleases().map { releases -> releases.filter { it.isDevRelease() } }
+    suspend fun fetchDevReleases(forceRefresh: Boolean = false): Result<List<Release>> =
+        fetchReleases(forceRefresh = forceRefresh).map { releases -> releases.filter { it.isDevRelease() } }
 
-    suspend fun getLatestStableRelease(): Result<Release?> =
-        latestFromManifestOrApi(prerelease = false)
+    suspend fun getLatestStableRelease(forceRefresh: Boolean = false): Result<Release?> =
+        latestFromManifestOrApi(prerelease = false, forceRefresh = forceRefresh)
 
-    suspend fun getLatestDevRelease(): Result<Release?> =
-        latestFromManifestOrApi(prerelease = true)
+    suspend fun getLatestDevRelease(forceRefresh: Boolean = false): Result<Release?> =
+        latestFromManifestOrApi(prerelease = true, forceRefresh = forceRefresh)
 
     /** Resolves latest release via manifest CDN, falling back to releases API. */
-    private suspend fun latestFromManifestOrApi(prerelease: Boolean): Result<Release?> =
+    private suspend fun latestFromManifestOrApi(
+        prerelease: Boolean,
+        forceRefresh: Boolean = false,
+    ): Result<Release?> =
         withContext(Dispatchers.IO) {
             remoteSource.fetchLatestFromManifest(prerelease).getOrNull()?.let {
                 Logger.info("Latest ${if (prerelease) "dev" else "stable"} via patches-bundle.json: ${it.tagName}")
                 return@withContext Result.success(it)
             }
-            if (prerelease) fetchDevReleases().map { it.firstOrNull() }
-            else fetchStableReleases().map { it.firstOrNull() }
+            if (prerelease) fetchDevReleases(forceRefresh = forceRefresh).map { it.firstOrNull() }
+            else fetchStableReleases(forceRefresh = forceRefresh).map { it.firstOrNull() }
         }
 
     /** Downloads the patch `.mpp` for [release], returning the cached file if already downloaded. */

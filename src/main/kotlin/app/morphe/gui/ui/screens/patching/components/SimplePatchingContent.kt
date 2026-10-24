@@ -3,7 +3,7 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.ui.screens.quick.components
+package app.morphe.gui.ui.screens.patching.components
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
@@ -22,7 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.screens.quick.QuickPatchPhase
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.rememberZenoProgress
 import app.morphe.morphe_desktop.generated.resources.*
@@ -31,12 +30,12 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun PatchingContent(
-    phase: QuickPatchPhase,
+internal fun SimplePatchingContent(
     progress: Float,
     completedPatches: Int,
     totalPatches: Int,
     statusMessage: String,
+    isActive: Boolean = true,
     onCancel: () -> Unit
 ) {
     var showSlowWarning by remember { mutableStateOf(false) }
@@ -51,8 +50,6 @@ internal fun PatchingContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val currentPhase by rememberUpdatedState(phase)
-        val isActive = currentPhase == QuickPatchPhase.DOWNLOADING || currentPhase == QuickPatchPhase.PATCHING
         val smoothProgress = rememberZenoProgress(
             progress = progress,
             isActive = isActive
@@ -114,11 +111,13 @@ internal fun PatchingContent(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = stringResource(Res.string.quick_patch_patching_patches_count, completedPatches, totalPatches),
-                    style = MorpheTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                if (totalPatches > 0) {
+                    Text(
+                        text = stringResource(Res.string.patching_patches_count, completedPatches, totalPatches),
+                        style = MorpheTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
 
@@ -146,7 +145,7 @@ internal fun PatchingContent(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = stringResource(Res.string.quick_patch_patching_slow_warning),
+                        text = stringResource(Res.string.patching_slow_warning),
                         style = MorpheTheme.typography.bodySmall,
                         color = MorpheTheme.colors.primary
                     )
@@ -177,7 +176,7 @@ internal fun PatchingContent(
             label = stringResource(Res.string.cancel),
             variant = MorpheButtonVariant.DANGER,
             size = MorpheButtonSize.LARGE,
-            enabled = !isWrappingUp,
+            enabled = isActive && !isWrappingUp,
             modifier = Modifier.widthIn(min = 160.dp),
             onClick = onCancel
         )

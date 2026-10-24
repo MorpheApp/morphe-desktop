@@ -11,13 +11,14 @@ import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.util.PatchSourceNaming
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /** Visible UI mode for coordinating patch loading across ViewModels. */
-enum class ActiveMode { QUICK, EXPERT }
+enum class ActiveMode { SIMPLE, EXPERT }
 
 /** Manages [PatchRepository] instances and lifecycle for configured patch sources. */
 class PatchSourceManager(
@@ -38,13 +39,14 @@ class PatchSourceManager(
     val allSources: StateFlow<List<PatchSource>> = _allSources.asStateFlow()
 
     // Active UI mode used to prevent inactive ViewModels from fetching patches.
-    private val _activeMode = MutableStateFlow(ActiveMode.QUICK)
+    private val _activeMode = MutableStateFlow(ActiveMode.SIMPLE)
     val activeMode: StateFlow<ActiveMode> = _activeMode.asStateFlow()
 
     fun setActiveMode(mode: ActiveMode) {
         if (_activeMode.value != mode) {
             Logger.info("PatchSourceManager: active mode → $mode")
             _activeMode.value = mode
+            _sourceVersion.value++
         }
     }
 
@@ -146,12 +148,12 @@ class PatchSourceManager(
         _sourceVersion.value++
     }
 
-    /** Returns snapshot of currently enabled patch sources. */
+    /** Returns snapshot of currently enabled patch sources across all modes. */
     fun getEnabledSourcesSync(): List<PatchSource> = cachedEnabledSources
 
     /** Pairs each enabled source with its corresponding [PatchRepository], or null if local. */
     fun getEnabledRepositories(): List<Pair<PatchSource, PatchRepository?>> =
-        cachedEnabledSources.map { it to getRepositoryForSource(it) }
+        getEnabledSourcesSync().map { it to getRepositoryForSource(it) }
 
     /** Toggles enablement of a patch source and notifies observers. */
     suspend fun setSourceEnabled(id: String, enabled: Boolean) {
@@ -189,6 +191,18 @@ class PatchSourceManager(
         repositories.remove(updated.id)
         refreshEnabledSources()
         _sourceVersion.value++
+    }
+
+    /** Syncs the official source name from the bundle manifest if different. */
+    suspend fun syncSourceNameIfChanged(sourceId: String, newName: String) {
+        val current = _allSources.value.firstOrNull { it.id == sourceId } ?: return
+        if (current.name != newName && newName.isNotBlank() && !PatchSourceNaming.isRawOrCorruptedName(newName)) {
+            Logger.info("Syncing patch source '${current.name}' (id=$sourceId) name from manifest -> '$newName'")
+            configRepository.updatePatchSource(current.copy(name = newName))
+            repositories.remove(sourceId)
+            refreshEnabledSources()
+            _sourceVersion.value++
+        }
     }
 
     private suspend fun refreshEnabledSources() {

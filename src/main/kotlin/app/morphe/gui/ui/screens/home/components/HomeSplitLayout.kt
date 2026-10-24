@@ -31,6 +31,9 @@ internal fun HomeSplitLayout(
     onClearClick: () -> Unit,
     onChangeClick: () -> Unit,
     onContinueClick: () -> Unit,
+    selectedPatchSource: String? = null,
+    onSelectPatchSource: ((String) -> Unit)? = null,
+    isSimple: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(
@@ -65,6 +68,7 @@ internal fun HomeSplitLayout(
                 loadError = uiState.patchLoadError,
                 onRetry = onRetry,
                 onManageSources = onManageSources,
+                isSimple = isSimple,
                 modifier = Modifier
                     .weight(1.2f)
                     .heightIn(max = bodyViewport),
@@ -85,6 +89,9 @@ internal fun HomeSplitLayout(
                     onChangeClick = onChangeClick,
                     onContinueClick = onContinueClick,
                     patchSourceNames = patchSourcesForSelectedApk,
+                    selectedPatchSource = selectedPatchSource,
+                    onSelectPatchSource = onSelectPatchSource,
+                    isSimple = isSimple,
                 )
             }
         }

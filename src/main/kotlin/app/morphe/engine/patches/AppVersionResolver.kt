@@ -20,7 +20,6 @@ fun resolveVersionStatus(
     val experimentalList = app.experimentalVersions
 
     val latestStable = stableList.firstOrNull()
-    val oldestStable = stableList.lastOrNull()
     val latestExperimental = experimentalList.firstOrNull()
 
     if (latestStable == null && latestExperimental == null) {
@@ -29,21 +28,22 @@ fun resolveVersionStatus(
 
     val versionIsKnown = currentVersion in stableList || currentVersion in experimentalList
     if (versionIsKnown && !app.buildCodeSupported(currentVersion, versionCode)) {
-        return VersionResolution(VersionStatus.BUILD_UNSUPPORTED, currentVersion)
+        return VersionResolution(
+            status = VersionStatus.BUILD_UNSUPPORTED,
+            suggestedVersion = currentVersion,
+            requiredBuildCodes = app.requiredBuildCodes(currentVersion),
+        )
     }
 
     // Exact matches in either bucket
     if (latestStable != null && currentVersion == latestStable) {
-        return VersionResolution(VersionStatus.LATEST_STABLE, latestStable)
-    }
-    if (latestExperimental != null && currentVersion == latestExperimental) {
-        return VersionResolution(VersionStatus.LATEST_EXPERIMENTAL, latestExperimental)
+        return VersionResolution(VersionStatus.RECOMMENDED, latestStable)
     }
     if (currentVersion in stableList) {
-        return VersionResolution(VersionStatus.OLDER_STABLE, latestStable)
+        return VersionResolution(VersionStatus.SUPPORTED, latestStable)
     }
     if (currentVersion in experimentalList) {
-        return VersionResolution(VersionStatus.OLDER_EXPERIMENTAL, latestExperimental)
+        return VersionResolution(VersionStatus.EXPERIMENTAL, latestExperimental)
     }
 
     val newestKnown = when {
@@ -53,15 +53,5 @@ fun resolveVersionStatus(
         else -> latestExperimental
     }
 
-    if (compareVersions(currentVersion, newestKnown) > 0) {
-        return VersionResolution(VersionStatus.TOO_NEW, newestKnown)
-    }
-    if (oldestStable != null && compareVersions(currentVersion, oldestStable) < 0) {
-        return VersionResolution(VersionStatus.TOO_OLD, oldestStable)
-    }
-
-    return VersionResolution(
-        VersionStatus.UNSUPPORTED_BETWEEN,
-        latestStable ?: latestExperimental
-    )
+    return VersionResolution(VersionStatus.UNSUPPORTED, newestKnown)
 }

@@ -6,6 +6,8 @@
 package app.morphe.gui.ui.screens.patching
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,12 +23,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.PatchEngine
 import app.morphe.gui.HomeScreenRoute
+import app.morphe.gui.LocalModeState
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.LocalPatchingCompleted
 import app.morphe.gui.ResultScreenRoute
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
+import app.morphe.gui.ui.screens.home.components.SimpleTopBar
 import app.morphe.gui.ui.screens.patching.components.*
 import app.morphe.gui.ui.theme.Animations
+import app.morphe.gui.ui.theme.Defaults
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.ui.theme.screenScrim
@@ -88,6 +93,59 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
             delay(1500.milliseconds)
             viewModel.markAutoNavigated()
         }
+    }
+
+    val isSimple = LocalModeState.current.isSimple
+
+    if (isSimple) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(screenScrim)
+        ) {
+            SimpleTopBar(isPatching = uiState.isInProgress)
+
+            var contentVisible by remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) {
+                contentVisible = true
+            }
+
+            AnimatedContent(
+                targetState = uiState.hasAutoNavigated && (uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit }
+            ) { isFailed ->
+                if (isFailed) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        ExpertFailureContent(
+                            uiState = uiState,
+                            config = viewModel.getConfig(),
+                            onBackToHome = { navController.popBackStack(HomeScreenRoute, inclusive = false) }
+                        )
+                    }
+                } else {
+                    AnimatedVisibility(
+                        visible = contentVisible,
+                        enter = fadeIn(tween(Defaults.SCREEN_ENTER_DURATION)) +
+                            scaleIn(
+                                initialScale = Defaults.DIALOG_SCALE,
+                                animationSpec = tween(Defaults.SCREEN_ENTER_DURATION, easing = FastOutSlowInEasing)
+                            ),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        SimplePatchingContent(
+                            progress = uiState.progress,
+                            completedPatches = uiState.patchedCount,
+                            totalPatches = uiState.totalPatches,
+                            statusMessage = uiState.currentStepName,
+                            isActive = uiState.isInProgress,
+                            onCancel = { viewModel.cancelPatching() }
+                        )
+                    }
+                }
+            }
+        }
+        return
     }
 
     Column(

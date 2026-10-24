@@ -108,7 +108,7 @@ internal fun ReleaseCard(
                             MorpheBadge(text = stringResource(Res.string.patches_latest_badge), tone = MorpheBadgeTone.Primary)
                         }
                         if (release.isDevRelease()) {
-                            MorpheBadge(text = stringResource(Res.string.version_label_experimental), tone = MorpheBadgeTone.Warning)
+                            MorpheBadge(text = stringResource(Res.string.version_label_prerelease), tone = MorpheBadgeTone.Warning)
                         }
                         if (isDownloaded) {
                             MorpheBadge(text = stringResource(Res.string.patches_cached_badge))

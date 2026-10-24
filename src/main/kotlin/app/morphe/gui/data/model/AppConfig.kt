@@ -50,7 +50,7 @@ data class AppConfig(
     val groupPatchesByCategory: Boolean = true,
     val homeAppSortMode: String = "RECOMMENDED",
     val preferredPatchChannel: String = "STABLE",
-    val useSimplifiedMode: Boolean = true,
+    val useSimpleMode: Boolean = true,
     val patchSource: List<PatchSource> = listOf(DEFAULT_PATCH_SOURCE),
     val activePatchSourceId: String = "morphe-default",
     // Persisted expand/collapse state for settings sections.
@@ -64,6 +64,8 @@ data class AppConfig(
     val multiSourceHintDismissed: Boolean = false,
     // Last viewed apps filter tab.
     val homeAppListFilter: String = "ALL",
+    /** Preferred patch source name per app package name for Simple mode. */
+    val preferredPatchSourceByPackage: Map<String, String> = emptyMap(),
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {
@@ -94,7 +96,6 @@ data class PatchSource (
     val deletable: Boolean = true,
     val enabled: Boolean = true,
     val usePreRelease: Boolean = false,
-    val useExperimentalVersions: Boolean = false,
 )
 
 @Serializable

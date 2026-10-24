@@ -35,6 +35,31 @@ object PatchBundleLoader {
     fun loadFlat(files: Iterable<File>): Set<Patch<*>> =
         loadEach(files).flatMap { it.patches }.toSet()
 
+    /** Extracts bundle name from `META-INF/MANIFEST.MF` in [file]. */
+    fun extractName(file: File): String? = runCatching {
+        if (!file.exists() || file.length() == 0L) return@runCatching null
+        JarFile(file).use { jar ->
+            jar.manifest?.mainAttributes?.getValue("Name")?.trim()?.takeUnless { it.isBlank() }
+        }
+    }.getOrNull() ?: runCatching {
+        file.inputStream().use { fis ->
+            ZipInputStream(fis).use { zip ->
+                var entry = zip.nextEntry
+                while (entry != null) {
+                    if (entry.name == "META-INF/MANIFEST.MF") {
+                        val manifest = zip.bufferedReader().readText()
+                        return@runCatching manifest.lineSequence()
+                            .firstOrNull { it.substringBefore(':', "").trim().equals("Name", ignoreCase = true) }
+                            ?.substringAfter(':')?.trim()
+                            ?.takeUnless { it.isBlank() || it.equals("na", ignoreCase = true) }
+                    }
+                    entry = zip.nextEntry
+                }
+                null
+            }
+        }
+    }.getOrNull()
+
     /** Extracts bundle version from `META-INF/MANIFEST.MF` in [file]. */
     fun extractVersion(file: File): String? = runCatching {
         if (!file.exists() || file.length() == 0L) return@runCatching null

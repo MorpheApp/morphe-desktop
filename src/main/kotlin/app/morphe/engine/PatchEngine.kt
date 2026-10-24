@@ -26,6 +26,7 @@ import app.morphe.engine.patches.supportedVersionsFor
 import app.morphe.engine.util.FileChecksum
 import app.morphe.engine.util.KeystoreImporter
 import app.morphe.engine.util.Logger
+import app.morphe.engine.util.deleteRecursivelyInParallel
 import app.morphe.engine.util.signWithLegacyFallback
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.patcher.Patcher
@@ -82,6 +83,7 @@ object PatchEngine {
     data class HistoryMetadata(
         val originalPackageName: String? = null,
         val displayName: String? = null,
+        val appVersion: String? = null,
         val patchSelectionByBundle: Map<String, Set<String>> = emptyMap(),
         val patchOptionValues: Map<String, String> = emptyMap(),
         val sourcesSnapshot: List<PatchedAppRecord.PatchedSourceSnapshot> = emptyList(),
@@ -237,17 +239,44 @@ object PatchEngine {
             try {
                 val actualInputApk = if (BundleFormats.isBundle(config.inputApk)) {
                     reportProgress("Merging split APK bundle...")
-                val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
-                ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger()).merge(
-                    inputFile = config.inputApk,
-                    outputFile = mergedApk,
-                    cleanMetaInf = false,
-                )
-                mergedApkToCleanup = mergedApk
-                mergedApk
-            } else {
-                config.inputApk
-            }
+                    val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
+                    val stagedBundle = if (config.inputApk.parentFile?.canonicalFile == tempDir.canonicalFile) {
+                        config.inputApk
+                    } else {
+                        File(tempDir, config.inputApk.name).also { staged ->
+                            Files.deleteIfExists(staged.toPath())
+                            try {
+                                Files.createSymbolicLink(staged.toPath(), config.inputApk.toPath())
+                            } catch (_: Exception) {
+                                try {
+                                    Files.createLink(staged.toPath(), config.inputApk.toPath())
+                                } catch (_: Exception) {
+                                    config.inputApk.copyTo(staged, overwrite = true)
+                                }
+                            }
+                        }
+                    }
+
+                    try {
+                        ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger()).merge(
+                            inputFile = stagedBundle,
+                            outputFile = mergedApk,
+                            cleanMetaInf = false,
+                        )
+                    } finally {
+                        if (stagedBundle != config.inputApk) {
+                            runCatching { Files.deleteIfExists(stagedBundle.toPath()) }
+                        }
+                        tempDir.listFiles()?.filter { it.name.startsWith("tmp_") }?.forEach {
+                            it.deleteRecursivelyInParallel()
+                        }
+                        cleanupLegacyBundleTmp(config.inputApk)
+                    }
+                    mergedApkToCleanup = mergedApk
+                    mergedApk
+                } else {
+                    config.inputApk
+                }
 
             currentCoroutineContext().ensureActive()
 
@@ -814,6 +843,17 @@ object PatchEngine {
             }
         }
         return true
+    }
+
+    private fun cleanupLegacyBundleTmp(inputApk: File) {
+        runCatching {
+            val parent = inputApk.parentFile ?: return
+            val hex8 = "%08x".format(inputApk.name.hashCode())
+            val prefix = "tmp_$hex8"
+            parent.listFiles()?.filter { file ->
+                file.isDirectory && file.name.startsWith(prefix, ignoreCase = true)
+            }?.forEach { it.deleteRecursivelyInParallel() }
+        }
     }
 
     private class PatchFailedException(message: String, cause: Throwable) : Exception(message, cause)

@@ -8,6 +8,7 @@ package app.morphe.gui.util
 import androidx.compose.runtime.Composable
 import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
@@ -65,11 +66,22 @@ object EnabledSourcesLoader {
         prefsBySource: Map<String, SourceVersionPref> = emptyMap(),
         excludedMppPatterns: List<String> = emptyList(),
         onDownloadProgress: ((String, Float) -> Unit)? = null,
+        forceRefresh: Boolean = false,
     ): Result = supervisorScope {
         val resolved = enabled.map { (source, repo) ->
             async(Dispatchers.IO) {
                 try {
-                    resolve(source, repo, prefsBySource[source.id], excludedMppPatterns, onDownloadProgress)
+                    val resolvedSource = resolve(source, repo, prefsBySource[source.id], excludedMppPatterns, onDownloadProgress, forceRefresh)
+                    val file = resolvedSource.patchFile
+                    val manifestName = file?.let { PatchBundleLoader.extractName(it) }
+                    val effectiveName = manifestName?.takeUnless { it.isBlank() || PatchSourceNaming.isRawOrCorruptedName(it) }
+                        ?: PatchSourceNaming.suggestNameFromUrl(source.url)
+                        ?: source.name
+                    if (effectiveName != resolvedSource.source.name) {
+                        resolvedSource.copy(source = resolvedSource.source.copy(name = effectiveName))
+                    } else {
+                        resolvedSource
+                    }
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
@@ -80,9 +92,13 @@ object EnabledSourcesLoader {
 
         val inputs = resolved.mapNotNull { res ->
             val file = res.patchFile ?: return@mapNotNull null
+            val manifestName = PatchBundleLoader.extractName(file)
+            val effectiveName = manifestName?.takeUnless { it.isBlank() }
+                ?: res.source.name.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
+                ?: PatchSourceNaming.resolveSourceName(file = file, candidateName = res.source.name)
             MultiSourceLoader.SourceInput(
                 sourceId = res.source.id,
-                sourceName = res.source.name,
+                sourceName = effectiveName,
                 patchFile = file,
             )
         }
@@ -117,6 +133,7 @@ object EnabledSourcesLoader {
         pref: SourceVersionPref?,
         excludedMppPatterns: List<String>,
         onDownloadProgress: ((String, Float) -> Unit)? = null,
+        forceRefresh: Boolean = false,
     ): ResolvedSource = withContext(Dispatchers.IO) {
         val engineResult = when (source.type) {
             PatchSourceType.LOCAL -> PatchResolver.resolveLocal(source.filePath, excludedMppPatterns)
@@ -132,9 +149,11 @@ object EnabledSourcesLoader {
                         usePreRelease = source.usePreRelease,
                         pinnedTag = pinnedTag,
                         strictPin = false,
-                    ) { pct ->
-                        onDownloadProgress?.invoke(source.name, pct)
-                    }
+                        onDownloadProgress = { pct ->
+                            onDownloadProgress?.invoke(source.name, pct)
+                        },
+                        forceRefresh = forceRefresh,
+                    )
                 }
             }
         }
@@ -180,6 +199,14 @@ fun EnabledSourcesLoader.Result?.sourceVersionMap(): Map<String, String?> =
 /** Maps source IDs to resolved release channels. */
 fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, PatchResolver.Channel?> =
     this?.resolved?.associate { it.source.id to it.channel } ?: emptyMap()
+
+/** Maps source IDs to available newer version string when an update exists. */
+fun EnabledSourcesLoader.Result?.sourceUpdateMap(): Map<String, String> =
+    this?.resolved?.mapNotNull { r ->
+        val current = r.resolvedVersion ?: return@mapNotNull null
+        val latest = r.latestAvailableVersion ?: return@mapNotNull null
+        if (latest != current) r.source.id to latest else null
+    }?.toMap() ?: emptyMap()
 
 /** Maps source IDs to load-failure messages across resolve and load phases. */
 @Composable

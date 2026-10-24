@@ -218,9 +218,9 @@ open class ConfigRepository {
         return derived
     }
 
-    suspend fun setUseSimplifiedMode(enabled: Boolean) {
+    suspend fun setUseSimpleMode(enabled: Boolean) {
         val current = loadConfig()
-        saveConfig(current.copy(useSimplifiedMode = enabled))
+        saveConfig(current.copy(useSimpleMode = enabled))
     }
 
     /** Persists the expanded state of a settings section. */
@@ -260,8 +260,7 @@ open class ConfigRepository {
 
         val newSource = if (!existing.deletable) {
             existing.copy(
-                usePreRelease = updated.usePreRelease,
-                useExperimentalVersions = updated.useExperimentalVersions
+                usePreRelease = updated.usePreRelease
             )
         } else {
             updated
@@ -292,6 +291,14 @@ open class ConfigRepository {
         val current = loadConfig()
         if (current.homeAppListFilter == value) return
         saveConfig(current.copy(homeAppListFilter = value))
+    }
+
+    /** Persists the preferred patch source name for a given app package in Simple mode. */
+    suspend fun setPreferredPatchSource(packageName: String, sourceName: String) {
+        val current = loadConfig()
+        if (current.preferredPatchSourceByPackage[packageName] == sourceName) return
+        val updated = current.preferredPatchSourceByPackage + (packageName to sourceName)
+        saveConfig(current.copy(preferredPatchSourceByPackage = updated))
     }
 
     /** Toggles patch source enablement, ensuring at least one source remains active. */
