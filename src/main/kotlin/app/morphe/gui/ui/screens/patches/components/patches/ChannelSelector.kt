@@ -54,7 +54,7 @@ internal fun ChannelSelector(
             modifier = Modifier.weight(1f)
         )
         ChannelChip(
-            label = stringResource(Res.string.version_label_experimental),
+            label = stringResource(Res.string.version_label_prerelease),
             count = devCount,
             isSelected = selectedChannel == ReleaseChannel.DEV,
             onClick = { onChannelSelected(ReleaseChannel.DEV) },

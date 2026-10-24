@@ -36,6 +36,9 @@ class VersionUtilsTest {
         assertTrue(compareVersions("1.39.0-dev.4", "1.39.0") < 0)
         assertFalse(isNewerVersion("1.39.0-dev.5", "1.39.0"))
         assertTrue(isNewerVersion("1.39.0", "1.39.0-dev.5"))
+        assertTrue(compareVersions("2.0.0", "2.0.0-dev.22") > 0)
+        assertTrue(isNewerVersion("2.0.0", "2.0.0-dev.22"))
+        assertFalse(isNewerVersion("2.0.0-dev.22", "2.0.0"))
     }
 
     @Test

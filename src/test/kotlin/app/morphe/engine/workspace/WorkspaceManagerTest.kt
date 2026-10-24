@@ -75,6 +75,8 @@ class WorkspaceManagerTest {
         val thread = Thread {
             WorkspaceManager.useSession(customDir = customDir) { session ->
                 sessionRoot = session.root
+                val tmpDir = File(session.root, "tmp_3c7795c3").apply { mkdirs() }
+                File(tmpDir, "split.apk").writeText("split")
                 for (i in 0..300) {
                     File(session.root, "file_$i.txt").writeText("content $i")
                 }

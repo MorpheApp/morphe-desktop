@@ -27,8 +27,10 @@ import app.morphe.engine.util.Logger
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.HomeScreenRoute
 import app.morphe.gui.LocalAdbPreference
+import app.morphe.gui.LocalModeState
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.ui.components.*
+import app.morphe.gui.ui.screens.home.components.SimpleTopBar
 import app.morphe.gui.ui.screens.result.components.*
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DeviceMonitor
@@ -51,7 +53,24 @@ import org.koin.compose.koinInject
 fun ResultScreen(
     outputPath: String
 ) {
-    ResultScreenContent(outputPath = outputPath)
+    val isSimple = LocalModeState.current.isSimple
+    val navController = LocalNavController.current
+    if (isSimple) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(screenScrim)
+        ) {
+            SimpleTopBar(isPatching = false)
+            SimpleResultContent(
+                outputPath = outputPath,
+                onPatchAnother = { navController.popBackStack(HomeScreenRoute, inclusive = false) },
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+            )
+        }
+    } else {
+        ResultScreenContent(outputPath = outputPath)
+    }
 }
 
 @Composable

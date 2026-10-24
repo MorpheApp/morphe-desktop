@@ -132,9 +132,7 @@ class AdbManager {
         null
     }
 
-    /**
-     * Check if ADB is available.
-     */
+    /** Checks if ADB is available. */
     suspend fun isAdbAvailable(): Boolean = findAdb() != null
 
     /** Ensures the ADB daemon is running and tracks whether Morphe spawned it. */
@@ -145,9 +143,7 @@ class AdbManager {
 
         try {
             if (isDaemonAlive()) {
-                // Daemon already up — Morphe is attaching, not spawning.
-                // Don't touch the ownership flag (a prior tick may have set
-                // it to true and the daemon is still ours).
+                // Daemon already running; preserve existing ownership flag.
                 if (!weStartedDaemon && !loggedAttachOnce) {
                     Logger.info("ADB daemon was already running, leaving it alone on shutdown")
                     loggedAttachOnce = true

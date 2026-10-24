@@ -47,7 +47,7 @@ class AppConfigCardFillTest {
         val legacy = """
             {
                 "themePreference": "DARK",
-                "useSimplifiedMode": false
+                "useSimpleMode": false
             }
         """
         val decoded = json.decodeFromString(AppConfig.serializer(), legacy)
@@ -61,5 +61,20 @@ class AppConfigCardFillTest {
         val cleared = withFill.copy(cardFills = withFill.cardFills - "a")
         check("a" !in cleared.cardFills) { "cleared app is still present" }
         check(cleared.cardFills.keys == setOf("b")) { "wrong keys: ${cleared.cardFills.keys}" }
+    }
+
+    @Test
+    fun preferredPatchSourceByPackageSurvivesSerializationRoundTrip() {
+        val config = AppConfig(
+            preferredPatchSourceByPackage = mapOf(
+                "com.discord" to "Discord Patches",
+                "com.google.android.youtube" to "Morphe Patches"
+            )
+        )
+        val text = json.encodeToString(AppConfig.serializer(), config)
+        val back = json.decodeFromString(AppConfig.serializer(), text)
+        check(back.preferredPatchSourceByPackage == config.preferredPatchSourceByPackage) {
+            "preferredPatchSourceByPackage did not round trip: ${back.preferredPatchSourceByPackage}"
+        }
     }
 }

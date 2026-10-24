@@ -5,6 +5,8 @@
 
 package app.morphe.gui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,7 +42,6 @@ import app.morphe.gui.ui.screens.home.HomeScreen
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
 import app.morphe.gui.ui.screens.patching.PatchingScreen
-import app.morphe.gui.ui.screens.quick.QuickPatchScreen
 import app.morphe.gui.ui.screens.result.ResultScreen
 import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.LocalThemeState
@@ -66,9 +68,6 @@ import org.koin.dsl.koinConfiguration
 
 @Serializable
 data object HomeScreenRoute
-
-@Serializable
-data object QuickPatchScreenRoute
 
 @Serializable
 data class PatchesScreenRoute(
@@ -125,9 +124,9 @@ private fun applyLocale(language: String) {
     )
 }
 
-/** Mode state for switching between simplified and full mode. */
+/** Mode state for switching between simple and expert mode. */
 data class ModeState(
-    val isSimplified: Boolean,
+    val isSimple: Boolean,
     val onChange: (Boolean) -> Unit
 )
 
@@ -227,7 +226,7 @@ private fun appContent(
     )
 
     var themePreference by remember { mutableStateOf(ThemePreference.SYSTEM) }
-    var isSimplifiedMode by remember { mutableStateOf(initialSimplifiedMode) }
+    var isSimpleMode by remember { mutableStateOf(initialSimplifiedMode) }
     var appLanguage by remember { mutableStateOf("system") }
     var autoStartAdb by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
@@ -243,7 +242,7 @@ private fun appContent(
         patchSourceManager.initialize()
         val config = configRepository.loadConfig()
         themePreference = config.getThemePreference()
-        isSimplifiedMode = config.useSimplifiedMode
+        isSimpleMode = config.useSimpleMode
         groupPatchesByCategoryState.value = config.groupPatchesByCategory
         backgroundTypeState.value = try {
             BackgroundType.valueOf(config.backgroundType)
@@ -261,7 +260,7 @@ private fun appContent(
         autoStartAdb = engineConfigRepository.loadConfig().autoStartAdb
         // Publish initial active mode before view models subscribe.
         patchSourceManager.setActiveMode(
-            if (isSimplifiedMode) ActiveMode.QUICK else ActiveMode.EXPERT
+            if (isSimpleMode) ActiveMode.SIMPLE else ActiveMode.EXPERT
         )
         isLoading = false
     }
@@ -280,15 +279,15 @@ private fun appContent(
         }
     }
 
-    val onModeChange: (Boolean) -> Unit = { simplified ->
-        isSimplifiedMode = simplified
+    val onModeChange: (Boolean) -> Unit = { simple ->
+        isSimpleMode = simple
         // Update active mode to prevent duplicate loads between view models.
         patchSourceManager.setActiveMode(
-            if (simplified) ActiveMode.QUICK else ActiveMode.EXPERT
+            if (simple) ActiveMode.SIMPLE else ActiveMode.EXPERT
         )
         scope.launch {
-            configRepository.setUseSimplifiedMode(simplified)
-            Logger.info("Mode changed to: ${if (simplified) "Simplified" else "Full"}")
+            configRepository.setUseSimpleMode(simple)
+            Logger.info("Mode changed to: ${if (simple) "Simple" else "Expert"}")
         }
     }
 
@@ -317,7 +316,7 @@ private fun appContent(
     )
 
     val modeState = ModeState(
-        isSimplified = isSimplifiedMode,
+        isSimple = isSimpleMode,
         onChange = onModeChange
     )
 
@@ -434,35 +433,102 @@ private fun appContent(
                                     if (!isLoading) {
                                         NavHost(
                                             navController = navController,
-                                            startDestination = if (isSimplifiedMode) QuickPatchScreenRoute else HomeScreenRoute,
+                                            startDestination = HomeScreenRoute,
                                             enterTransition = { Animations.screenEnter },
                                             exitTransition = { Animations.screenExit },
                                             popEnterTransition = { Animations.screenEnter },
                                             popExitTransition = { Animations.screenExit }
                                         ) {
-                                            composable<HomeScreenRoute> {
+                                            composable<HomeScreenRoute>(
+                                                exitTransition = {
+                                                    if (targetState.destination.hasRoute<PatchingScreenRoute>()) {
+                                                        ExitTransition.None
+                                                    } else {
+                                                        Animations.screenExit
+                                                    }
+                                                },
+                                                popEnterTransition = {
+                                                    if (initialState.destination.hasRoute<PatchingScreenRoute>() ||
+                                                        initialState.destination.hasRoute<ResultScreenRoute>()
+                                                    ) {
+                                                        EnterTransition.None
+                                                    } else {
+                                                        Animations.screenEnter
+                                                    }
+                                                }
+                                            ) {
                                                 HomeScreen()
-                                            }
-                                            composable<QuickPatchScreenRoute> {
-                                                QuickPatchScreen()
                                             }
                                             composable<PatchesScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<PatchesScreenRoute>()
                                                 PatchesScreen(apkName = route.apkName)
                                             }
-                                            composable<PatchSelectionScreenRoute> { backStackEntry ->
+                                            composable<PatchSelectionScreenRoute>(
+                                                exitTransition = {
+                                                    Animations.screenExit
+                                                },
+                                                popEnterTransition = {
+                                                    Animations.screenEnter
+                                                }
+                                            ) { backStackEntry ->
                                                 val params = backStackEntry.getComplexArg<PatchSelectionParams>()
                                                 if (params != null) {
                                                     PatchSelectionScreen(params = params)
                                                 }
                                             }
-                                            composable<PatchingScreenRoute> { backStackEntry ->
+                                            composable<PatchingScreenRoute>(
+                                                enterTransition = {
+                                                    if (initialState.destination.hasRoute<HomeScreenRoute>()) {
+                                                        EnterTransition.None
+                                                    } else {
+                                                        Animations.screenEnter
+                                                    }
+                                                },
+                                                exitTransition = {
+                                                    if (targetState.destination.hasRoute<ResultScreenRoute>()) {
+                                                        ExitTransition.None
+                                                    } else {
+                                                        Animations.screenExit
+                                                    }
+                                                },
+                                                popEnterTransition = {
+                                                    Animations.screenEnter
+                                                },
+                                                popExitTransition = {
+                                                    if (targetState.destination.hasRoute<HomeScreenRoute>()) {
+                                                        ExitTransition.None
+                                                    } else {
+                                                        Animations.screenExit
+                                                    }
+                                                }
+                                            ) { backStackEntry ->
                                                 val config = backStackEntry.getComplexArg<PatchEngine.Config>()
                                                 if (config != null) {
                                                     PatchingScreen(config = config)
                                                 }
                                             }
-                                            composable<ResultScreenRoute> { backStackEntry ->
+                                            composable<ResultScreenRoute>(
+                                                enterTransition = {
+                                                    if (initialState.destination.hasRoute<PatchingScreenRoute>()) {
+                                                        EnterTransition.None
+                                                    } else {
+                                                        Animations.screenEnter
+                                                    }
+                                                },
+                                                exitTransition = {
+                                                    Animations.screenExit
+                                                },
+                                                popEnterTransition = {
+                                                    Animations.screenEnter
+                                                },
+                                                popExitTransition = {
+                                                    if (targetState.destination.hasRoute<HomeScreenRoute>()) {
+                                                        ExitTransition.None
+                                                    } else {
+                                                        Animations.screenExit
+                                                    }
+                                                }
+                                            ) { backStackEntry ->
                                                 val route = backStackEntry.toRoute<ResultScreenRoute>()
                                                 ResultScreen(outputPath = route.outputPath)
                                             }
@@ -472,20 +538,6 @@ private fun appContent(
                                                 popEnterTransition = { Animations.pushEnter },
                                                 popExitTransition = { Animations.pushExit }
                                             ) {
-                                            }
-                                        }
-
-                                        LaunchedEffect(isSimplifiedMode) {
-                                            val currentRoute = navController.currentBackStackEntry?.destination?.route
-                                            val isQuick = currentRoute?.endsWith("QuickPatchScreenRoute") == true
-                                            if (isSimplifiedMode && !isQuick) {
-                                                navController.navigate(QuickPatchScreenRoute) {
-                                                    popUpTo(0) { inclusive = true }
-                                                }
-                                            } else if (!isSimplifiedMode && isQuick) {
-                                                navController.navigate(HomeScreenRoute) {
-                                                    popUpTo(0) { inclusive = true }
-                                                }
                                             }
                                         }
                                     }

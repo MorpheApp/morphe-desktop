@@ -37,6 +37,7 @@ import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -108,7 +109,7 @@ fun YourAppRow(
         updateInfo?.sources?.firstOrNull()?.let { s ->
             val more = updateInfo.sources.size - 1
             VersionBumpText(
-                label = "${s.name} ",
+                label = "${PatchSourceNaming.sanitize(s.name)} ",
                 oldVersion = s.usedVersion,
                 newVersion = if (s.outdated) s.latestAvailableVersion else null,
                 suffix = if (more > 0) "  +$more" else null,

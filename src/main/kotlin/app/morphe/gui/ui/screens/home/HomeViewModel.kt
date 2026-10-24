@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheConstants
 import app.morphe.engine.MultiSourceLoader
+import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateInfo
 import app.morphe.engine.apk.ApkInspector
@@ -16,6 +17,7 @@ import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
@@ -32,8 +34,8 @@ import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
+import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.SourceVersionPref
-import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -44,6 +46,7 @@ import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.EnabledSourcesLoader
+import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.gui.util.logIfFailed
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
@@ -95,12 +98,210 @@ class HomeViewModel(
             ?: listOfNotNull(cachedPatchesFile)
 
     /** Display names for each resolved patch file, ordered matching [getAllResolvedPatchFiles]. */
-    fun getAllResolvedPatchSourceNames(): List<String> =
-        cachedSourcesResult
+    fun getAllResolvedPatchSourceNames(): List<String> {
+        val allSources = patchSourceManager.allSources.value
+        val fromResult = cachedSourcesResult
             ?.resolved
             ?.filter { it.patchFile != null }
-            ?.map { it.source.name }
-            ?: emptyList()
+            ?.map { PatchSourceNaming.resolveSourceName(file = it.patchFile, candidateName = it.source.name, sources = allSources) }
+        if (!fromResult.isNullOrEmpty()) return fromResult
+
+        val files = getAllResolvedPatchFiles()
+        return files.map { f ->
+            PatchSourceNaming.resolveSourceName(file = f, sources = allSources)
+        }
+    }
+
+    /** Creates a [PatchEngine.Config] for simple patch mode with curated defaults. */
+    suspend fun createSimplePatchConfig(
+        apkInfo: ApkInfo,
+        selectedSourceName: String? = null
+    ): PatchEngine.Config {
+        val inputFile = File(apkInfo.filePath)
+        val engineConfigData = engineConfigRepository.loadConfig()
+        val relevantSourceIds = cachedSourcesResult?.patchesBySource?.entries
+            ?.filter { (srcId, patches) ->
+                val matchesPkg = patches.any { p -> p.compatiblePackages.any { it.name == apkInfo.packageName } }
+                if (selectedSourceName != null) {
+                    val src = cachedSourcesResult?.resolved?.firstOrNull { it.source.id == srcId }?.source
+                    matchesPkg && src?.name.equals(selectedSourceName, ignoreCase = true)
+                } else {
+                    matchesPkg
+                }
+            }
+            ?.map { it.key }
+            ?.toSet()
+
+        val relevantResolved = if (!relevantSourceIds.isNullOrEmpty()) {
+            cachedSourcesResult?.resolved?.filter { it.source.id in relevantSourceIds && it.patchFile != null }
+        } else {
+            null
+        }
+
+        val patchFiles = if (!relevantResolved.isNullOrEmpty()) {
+            relevantResolved.mapNotNull { it.patchFile }
+        } else {
+            getAllResolvedPatchFiles()
+        }
+        val primaryPatchFile = patchFiles.firstOrNull() ?: cachedPatchesFile ?: inputFile
+
+        val outputPath = ApkOutputNaming.outputApkPath(
+            inputApk = inputFile,
+            patchesFile = primaryPatchFile,
+            baseOutputDir = engineConfigData.resolvedDefaultOutputDirectory(),
+            appDisplayName = apkInfo.appName,
+            appVersion = apkInfo.versionName,
+        )
+
+        val resolvedSources = if (!relevantResolved.isNullOrEmpty()) {
+            relevantResolved
+        } else {
+            cachedSourcesResult?.resolved?.filter { it.patchFile != null }
+        }
+        val allSources = patchSourceManager.allSources.value
+        val sourcesSnapshot = if (!resolvedSources.isNullOrEmpty()) {
+            resolvedSources.map { r ->
+                val resolvedName = PatchSourceNaming.resolveSourceName(
+                    file = r.patchFile,
+                    candidateName = r.source.name,
+                    sources = allSources
+                )
+                PatchedAppRecord.PatchedSourceSnapshot(
+                    sourceId = r.source.id,
+                    sourceName = resolvedName,
+                    version = r.resolvedVersion
+                        ?: r.patchFile?.name?.let { ApkOutputNaming.extractPatchesVersion(it) }
+                        ?: "unknown",
+                )
+            }
+        } else {
+            patchFiles.map { f ->
+                val resolvedName = PatchSourceNaming.resolveSourceName(file = f, sources = allSources)
+                val matchingSource = allSources.firstOrNull { it.name.equals(resolvedName, ignoreCase = true) }
+                PatchedAppRecord.PatchedSourceSnapshot(
+                    sourceId = matchingSource?.id ?: resolvedName,
+                    sourceName = resolvedName,
+                    version = ApkOutputNaming.extractPatchesVersion(f.name) ?: "unknown",
+                )
+            }
+        }
+
+        val availablePatches = if (!relevantSourceIds.isNullOrEmpty()) {
+            cachedSourcesResult?.patchesBySource?.filterKeys { it in relevantSourceIds }?.values?.flatten()
+                ?: cachedPatches
+        } else {
+            cachedPatches
+        }
+
+        val defaultPatches = availablePatches.filter { patch ->
+            patch.isCompatibleWith(apkInfo.packageName, apkInfo.versionName) && patch.isEnabled
+        }.map { it.name }.toSet()
+
+        return PatchEngine.Config(
+            inputApk = inputFile,
+            outputApk = outputPath,
+            patchFiles = patchFiles,
+            enabledPatches = defaultPatches,
+            disabledPatches = emptySet(),
+            exclusiveMode = false,
+            forceCompatibility = true,
+            failOnError = true,
+            disablePurge = !engineConfigData.autoCleanupTempFiles,
+            keystoreDetails = engineConfigData.toKeyStoreDetails(),
+            recordHistory = true,
+            appDisplayName = apkInfo.appName,
+            historyMetadata = PatchEngine.HistoryMetadata(
+                originalPackageName = apkInfo.packageName,
+                displayName = apkInfo.appName,
+                appVersion = apkInfo.versionName,
+                sourcesSnapshot = sourcesSnapshot,
+            ),
+        )
+    }
+
+    /** Creates a [PatchEngine.Config] for simple repatching from a prior [PatchedAppRecord]. */
+    suspend fun createSimpleRepatchConfig(
+        record: PatchedAppRecord,
+        apkPath: String,
+        patchFiles: List<File>,
+        chosenSourceName: String? = null,
+    ): PatchEngine.Config {
+        val inputFile = File(apkPath)
+        val engineConfigData = engineConfigRepository.loadConfig()
+        val primaryPatchFile = patchFiles.firstOrNull() ?: cachedPatchesFile ?: inputFile
+
+        val outputPath = ApkOutputNaming.outputApkPath(
+            inputApk = inputFile,
+            patchesFile = primaryPatchFile,
+            baseOutputDir = engineConfigData.resolvedDefaultOutputDirectory(),
+            appDisplayName = record.displayName,
+            appVersion = record.apkVersion,
+        )
+
+        val isDifferentSource = chosenSourceName != null &&
+            record.sourcesSnapshot.none { it.sourceName.equals(chosenSourceName, ignoreCase = true) }
+
+        val allSources = patchSourceManager.allSources.value
+        val sourcesSnapshot = patchFiles.map { f ->
+            val resolvedName = PatchSourceNaming.resolveSourceName(
+                file = f,
+                candidateName = chosenSourceName,
+                sources = allSources
+            )
+            val matchingSrc = allSources.firstOrNull { it.name.equals(resolvedName, ignoreCase = true) }
+            val matching = record.sourcesSnapshot.firstOrNull {
+                PatchSourceNaming.sanitize(it.sourceName, allSources).equals(resolvedName, ignoreCase = true)
+            }
+            PatchedAppRecord.PatchedSourceSnapshot(
+                sourceId = matching?.sourceId ?: matchingSrc?.id ?: resolvedName,
+                sourceName = resolvedName,
+                version = ApkOutputNaming.extractPatchesVersion(f.name) ?: matching?.version ?: "unknown",
+            )
+        }.ifEmpty {
+            record.sourcesSnapshot.map {
+                it.copy(sourceName = PatchSourceNaming.sanitize(it.sourceName, allSources))
+            }
+        }
+
+        val enabledPatches = if (!isDifferentSource && record.patchSelectionByBundle.isNotEmpty()) {
+            record.patchSelectionByBundle.values.flatten().toSet()
+        } else {
+            val allSources = patchSourceManager.allSources.value
+            val targetSourceId = chosenSourceName?.let { name ->
+                allSources.firstOrNull { it.name.equals(name, ignoreCase = true) }?.id
+            }
+            val candidatePatches = if (targetSourceId != null) {
+                cachedSourcesResult?.patchesBySource?.get(targetSourceId) ?: cachedPatches
+            } else {
+                cachedPatches
+            }
+            candidatePatches.filter { patch ->
+                patch.isCompatibleWith(record.packageName, record.apkVersion) && patch.isEnabled
+            }.map { it.name }.toSet()
+        }
+
+        return PatchEngine.Config(
+            inputApk = inputFile,
+            outputApk = outputPath,
+            patchFiles = patchFiles,
+            enabledPatches = enabledPatches,
+            disabledPatches = emptySet(),
+            flatPatchOptions = if (isDifferentSource) emptyMap() else record.patchOptionValues,
+            exclusiveMode = false,
+            forceCompatibility = true,
+            failOnError = true,
+            disablePurge = !engineConfigData.autoCleanupTempFiles,
+            keystoreDetails = engineConfigData.toKeyStoreDetails(),
+            recordHistory = true,
+            appDisplayName = record.displayName,
+            historyMetadata = PatchEngine.HistoryMetadata(
+                originalPackageName = record.packageName,
+                displayName = record.displayName,
+                appVersion = record.apkVersion,
+                sourcesSnapshot = sourcesSnapshot,
+            ),
+        )
+    }
 
     init {
         viewModelScope.launch {
@@ -117,6 +318,7 @@ class HomeViewModel(
                     AppListFilter.valueOf(config.homeAppListFilter)
                 }.getOrDefault(AppListFilter.ALL),
                 sortMode = HomeAppSortMode.fromPreference(config.homeAppSortMode),
+                preferredPatchSourceByPackage = config.preferredPatchSourceByPackage,
             )
         }
 
@@ -133,32 +335,32 @@ class HomeViewModel(
                 .collect { refreshDeviceInfo() }
         }
 
-        // Load patches whenever expert mode becomes active.
+        // Load patches on startup and whenever mode changes.
         viewModelScope.launch {
-            patchSourceManager.activeMode.collect { mode ->
-                if (mode == ActiveMode.EXPERT) {
-                    loadPatchesAndSupportedApps()
-                }
+            patchSourceManager.activeMode.collect {
+                loadPatchesAndSupportedApps()
             }
         }
 
         viewModelScope.launch {
             patchSourceManager.sourceVersion.drop(1).collect {
-                // Quick mode handles its own source reload.
-                if (patchSourceManager.activeMode.value != ActiveMode.EXPERT) return@collect
                 Logger.info("HomeVM: Source changed, reloading patches...")
                 patchRepository = patchSourceManager.getActiveRepositorySync()
                 localPatchFilePath = patchSourceManager.getLocalFilePath()
                 isDefaultSource = patchSourceManager.isDefaultSource()
                 lastLoadedVersion = null
                 cachedPatchesFile = null
-                // Preserve update banner state across source changes.
+                // Preserve update banner and navigation state across source changes.
                 val carriedUpdate = _uiState.value.updateInfo
                 val carriedDismissed = _uiState.value.dismissedUpdateVersion
+                val carriedSelectedPage = _uiState.value.selectedPage
+                val carriedAppListFilter = _uiState.value.appListFilter
                 _uiState.value = HomeUiState(
                     isDefaultSource = isDefaultSource,
                     updateInfo = carriedUpdate,
                     dismissedUpdateVersion = carriedDismissed,
+                    selectedPage = carriedSelectedPage,
+                    appListFilter = carriedAppListFilter,
                 )
                 loadPatchesAndSupportedApps()
             }
@@ -275,6 +477,24 @@ class HomeViewModel(
         viewModelScope.launch { configRepository.setHomeAppListFilter(filter.name) }
     }
 
+    /** Remembers the preferred patch source for a package in Simple mode. */
+    fun setPreferredPatchSource(packageName: String, sourceName: String) {
+        val currentMap = _uiState.value.preferredPatchSourceByPackage
+        if (currentMap[packageName] == sourceName) return
+        _uiState.value = _uiState.value.copy(
+            preferredPatchSourceByPackage = currentMap + (packageName to sourceName)
+        )
+        viewModelScope.launch {
+            configRepository.setPreferredPatchSource(packageName, sourceName)
+        }
+    }
+
+    /** Switches the active top-level page between Sources and Apps. */
+    fun selectPage(page: HomePage) {
+        if (_uiState.value.selectedPage == page) return
+        _uiState.value = _uiState.value.copy(selectedPage = page)
+    }
+
     /** Persistently dismisses the update banner for the current version. */
     fun dismissUpdateForVersion() {
         val target = _uiState.value.updateInfo?.latestVersion ?: return
@@ -290,7 +510,7 @@ class HomeViewModel(
     private var lastLoadedVersionsBySource: Map<String, SourceVersionPref> = emptyMap()
 
     /** Loads patches from all enabled sources and aggregates their supported apps. */
-    private fun loadPatchesAndSupportedApps() {
+    private fun loadPatchesAndSupportedApps(forceRefresh: Boolean = false) {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoadingPatches = true, patchLoadError = null, showSourcesFailedBanner = false)
@@ -308,7 +528,12 @@ class HomeViewModel(
                 // Load per-source version preferences.
                 val prefs = configRepository.getSourceVersionPrefs()
                 lastLoadedVersionsBySource = prefs
-                val result = EnabledSourcesLoader.loadAll(enabled, prefs, engineConfigRepository.loadConfig().excludedMppPatterns)
+                val result = EnabledSourcesLoader.loadAll(
+                    enabled = enabled,
+                    prefsBySource = prefs,
+                    excludedMppPatterns = engineConfigRepository.loadConfig().excludedMppPatterns,
+                    forceRefresh = forceRefresh,
+                )
 
                 if (!result.anyLoaded) {
                     result.logIfFailed()
@@ -343,6 +568,17 @@ class HomeViewModel(
                 cachedAllPatchFiles = result.resolved.mapNotNull { it.patchFile }
                 lastLoadedVersion = firstResolved?.resolvedVersion
                 cachedSourcesResult = result
+
+                for ((source, file) in result.resolved) {
+                    if (file == null) continue
+                    val manifestName = PatchBundleLoader.extractName(file)
+                    val effectiveName = manifestName?.takeUnless { it.isBlank() || PatchSourceNaming.isRawOrCorruptedName(it) }
+                        ?: PatchSourceNaming.suggestNameFromUrl(source.url)
+                        ?: source.name
+                    if (!PatchSourceNaming.isRawOrCorruptedName(effectiveName)) {
+                        patchSourceManager.syncSourceNameIfChanged(source.id, effectiveName)
+                    }
+                }
 
                 val (supportedApps, patchedStates, sortedRecords, updateInfoMap) = withContext(Dispatchers.IO) {
                     val apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(result.unionPatches)
@@ -480,6 +716,7 @@ class HomeViewModel(
         val resolvedBySource = resolvedVersionBySource()
         val latestBySource = latestAvailableBySource()
         val changedSources = relevantSourceUpdates[record.packageName].orEmpty()
+        val allSources = patchSourceManager.allSources.value
         val sources = record.sourcesSnapshot
             // Include only sources that provided patches for this record.
             .filter { snap ->
@@ -487,14 +724,16 @@ class HomeViewModel(
                 sel == null || sel.isNotEmpty()
             }
             .map { snap ->
-                val latest = latestBySource[snap.sourceName]
+                val matchingSrc = allSources.firstOrNull { it.id == snap.sourceId }
+                val cleanName = matchingSrc?.name ?: PatchSourceNaming.sanitize(snap.sourceName, allSources)
+                val latest = latestBySource[cleanName] ?: latestBySource[snap.sourceName]
                 RecallUpdateInfo.SourceUpdate(
-                    name = snap.sourceName,
+                    name = cleanName,
                     usedVersion = snap.version,
-                    resolvedVersion = resolvedBySource[snap.sourceName],
+                    resolvedVersion = resolvedBySource[cleanName] ?: resolvedBySource[snap.sourceName],
                     latestAvailableVersion = latest,
                     outdated = isNewerVersion(latest, snap.version),
-                    hasRelevantChanges = snap.sourceName in changedSources,
+                    hasRelevantChanges = cleanName in changedSources || snap.sourceName in changedSources,
                 )
             }
         val app = apps.find { it.packageName == record.packageName }
@@ -625,6 +864,40 @@ class HomeViewModel(
             ?.map { ActivePatchSource(it.source.id, it.source.name, it.resolvedVersion) }
             ?: emptyList()
 
+    /** Returns active patch sources relevant to a specific [PatchedAppRecord], preserving original source scoping. */
+    fun activePatchSourcesFor(record: PatchedAppRecord): List<ActivePatchSource> {
+        val allSources = patchSourceManager.allSources.value
+        val relevantSnapshots = if (record.sourcesSnapshot.isNotEmpty()) {
+            record.sourcesSnapshot.filter { snap ->
+                val sel = record.patchSelectionByBundle[snap.sourceName]
+                sel == null || sel.isNotEmpty()
+            }
+        } else emptyList()
+
+        val recordedIds = relevantSnapshots.map { it.sourceId }.toSet()
+        val recordedNames = relevantSnapshots.map { PatchSourceNaming.sanitize(it.sourceName, allSources) }.ifEmpty {
+            record.patchSelectionByBundle.filterValues { it.isNotEmpty() }.keys.map { PatchSourceNaming.sanitize(it, allSources) }
+        }.toSet()
+
+        if (recordedIds.isEmpty() && recordedNames.isEmpty()) {
+            return activePatchSources()
+        }
+
+        val allActive = activePatchSources()
+        return allActive.filter { it.id in recordedIds || it.name in recordedNames }
+    }
+
+    /** Returns currently enabled patch sources that contain patches compatible with [packageName]. */
+    fun compatiblePatchSourcesFor(packageName: String): List<ActivePatchSource> {
+        val snapshot = cachedSourcesResult ?: return emptyList()
+        val active = activePatchSources().associateBy { it.id }
+        return snapshot.patchesBySource.entries
+            .filter { (_, patches) ->
+                patches.any { p -> p.compatiblePackages.any { it.name == packageName } }
+            }
+            .mapNotNull { (sourceId, _) -> active[sourceId] }
+    }
+
     suspend fun availableBundleVersions(sourceName: String): List<BundleRelease> {
         val repo = patchSourceManager.getEnabledRepositories()
             .firstOrNull { (source, _) -> source.name == sourceName }
@@ -719,11 +992,44 @@ class HomeViewModel(
         return repo.downloadPatches(release, onProgress).map { }
     }
 
-    suspend fun resolvePatchFiles(
+    /** Resolves patch files scoped strictly to the sources recorded in [PatchedAppRecord.sourcesSnapshot] or [chosenSourceName]. */
+    suspend fun resolvePatchFilesFor(
+        record: PatchedAppRecord,
+        overrides: Map<String, BundleChoice>,
+        chosenSourceName: String? = null,
+        onDownloadProgress: ((String, Float) -> Unit)? = null,
+    ): Result<Pair<List<String>, List<String>>> {
+        val allSources = patchSourceManager.allSources.value
+        val allEnabled = patchSourceManager.getEnabledRepositories()
+        val matching = if (chosenSourceName != null) {
+            val sanitizedChosen = PatchSourceNaming.sanitize(chosenSourceName, allSources)
+            allEnabled.filter { (source, _) ->
+                source.name.equals(chosenSourceName, ignoreCase = true) ||
+                source.name.equals(sanitizedChosen, ignoreCase = true)
+            }
+        } else {
+            val activeSources = activePatchSourcesFor(record)
+            val activeIds = activeSources.map { it.id }.toSet()
+            val activeNames = activeSources.map { it.name }.toSet()
+            allEnabled.filter { (source, _) -> source.id in activeIds || source.name in activeNames }
+        }
+        if (matching.isEmpty()) {
+            val targetDesc = chosenSourceName ?: activePatchSourcesFor(record).joinToString { it.name }
+            return Result.failure(
+                PatchException(
+                    "No enabled patch source matching '$targetDesc'",
+                    Res.string.home_detail_no_compatible_source
+                )
+            )
+        }
+        return resolvePatchFilesInternal(matching, overrides, onDownloadProgress)
+    }
+
+    private suspend fun resolvePatchFilesInternal(
+        enabled: List<Pair<PatchSource, PatchRepository?>>,
         overrides: Map<String, BundleChoice>,
         onDownloadProgress: ((String, Float) -> Unit)? = null,
     ): Result<Pair<List<String>, List<String>>> = try {
-        val enabled = patchSourceManager.getEnabledRepositories()
         val idByName = enabled.associate { (source, _) -> source.name to source.id }
         val localFiles = overrides.mapNotNull { (name, choice) ->
             (choice as? BundleChoice.LocalFile)?.let { name to File(it.path) }
@@ -786,8 +1092,7 @@ class HomeViewModel(
 
                 val resolved = resolvedByName[sourceName]
                 if (resolved == null) { add(sourceName); continue }
-                val prerelease = resolved.channel == PatchResolver.Channel.DEV_LATEST ||
-                    resolved.channel == PatchResolver.Channel.DEV_OLDER
+                val prerelease = resolved.channel == PatchResolver.Channel.PRERELEASE
                 val entries = changelogRepository.entriesFor(resolved.source, prerelease)
                 if (entries == null) { add(sourceName); continue }
                 if (names.isEmpty()) { add(sourceName); continue }
@@ -856,8 +1161,8 @@ class HomeViewModel(
     }
 
     /** Retries loading patches and supported apps. */
-    fun retryLoadPatches() {
-        loadPatchesAndSupportedApps()
+    fun retryLoadPatches(forceRefresh: Boolean = false) {
+        loadPatchesAndSupportedApps(forceRefresh = forceRefresh)
     }
 
     /** Reloads patches if version preferences changed while on another screen. */
@@ -909,6 +1214,7 @@ class HomeViewModel(
     fun onFilesDropped(files: List<File>) {
         val apkFile = files.firstOrNull { BundleFormats.isApkOrBundle(it) }
         if (apkFile != null) {
+            selectPage(HomePage.APPS)
             onFileSelected(apkFile)
         } else {
             viewModelScope.launch {
@@ -1050,6 +1356,7 @@ class HomeViewModel(
                 minSdk = minSdk,
                 suggestedVersion = suggestedVersion,
                 versionStatus = versionStatus,
+                requiredBuildCodes = versionResolution.requiredBuildCodes,
                 checksumStatus = checksumStatus,
                 isUnsupportedApp = !isSupported
             )
@@ -1105,6 +1412,7 @@ class HomeViewModel(
             minSdk = null,
             suggestedVersion = versionResolution.suggestedVersion,
             versionStatus = versionResolution.status,
+            requiredBuildCodes = versionResolution.requiredBuildCodes,
             checksumStatus = ChecksumStatus.NotConfigured,
             isUnsupportedApp = matched == null,
             hasLimitedInfo = true,
@@ -1194,7 +1502,11 @@ data class DeviceAppInfo(
     val installPending: Boolean = false,
 )
 
+/** Top-level home screen pages navigated via the central navigation pill. */
+enum class HomePage { SOURCES, APPS }
+
 data class HomeUiState(
+    val selectedPage: HomePage = HomePage.APPS,
     val selectedApk: File? = null,
     val apkInfo: ApkInfo? = null,
     val error: String? = null,
@@ -1232,6 +1544,8 @@ data class HomeUiState(
     val failedSourcesCount: Int = 0,
     /** Source IDs that failed to load. */
     val failedSourceIds: Set<String> = emptySet(),
+    /** Preferred patch source name per app package name for Simple mode. */
+    val preferredPatchSourceByPackage: Map<String, String> = emptyMap(),
 ) {
     /** True if an update is available and has not been dismissed for the session or version. */
     val showUpdateBanner: Boolean
@@ -1253,6 +1567,7 @@ data class ApkInfo(
     val minSdk: Int? = null,
     val suggestedVersion: String? = null,
     val versionStatus: VersionStatus = VersionStatus.UNKNOWN,
+    val requiredBuildCodes: Set<Int> = emptySet(),
     val checksumStatus: ChecksumStatus = ChecksumStatus.NotConfigured,
     val isUnsupportedApp: Boolean = false,
     /** True if manifest parsing fell back to heuristics, producing approximate details. */

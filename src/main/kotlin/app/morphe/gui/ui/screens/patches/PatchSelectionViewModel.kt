@@ -24,6 +24,7 @@ import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.repository.SeenPatchesRepository
+import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
@@ -292,8 +293,10 @@ class PatchSelectionViewModel(
 
         val bundles: List<BundlePatches> = perFile.mapNotNull { (idx, path, result) ->
             val patches = result.getOrNull() ?: return@mapNotNull null
+            val file = File(path)
             val displayName = patchSourceNames.getOrNull(idx)
-                ?: File(path).nameWithoutExtension
+                ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
+                ?: PatchSourceNaming.resolveSourceName(file = file)
             BundlePatches(
                 bundleId = "bundle-$idx-${File(path).nameWithoutExtension}",
                 bundleName = displayName,
@@ -453,8 +456,11 @@ class PatchSelectionViewModel(
         packageName = packageName,
         bundles = actualPatchesFilePaths.mapIndexed { i, path ->
             val file = File(path)
+            val name = patchSourceNames.getOrNull(i)
+                ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
+                ?: PatchSourceNaming.resolveSourceName(file = file)
             RunInfo.Bundle(
-                name = patchSourceNames.getOrNull(i) ?: file.nameWithoutExtension,
+                name = name,
                 version = ApkOutputNaming.extractPatchesVersion(file.name),
                 fileName = file.name,
             )
@@ -534,11 +540,14 @@ class PatchSelectionViewModel(
             bundle.bundleName to state.selectedByBundle[bundle.bundleId].orEmpty()
         }
         val fullSourcesSnapshot = actualPatchesFilePaths.mapIndexed { i, path ->
-            val name = patchSourceNames.getOrNull(i) ?: File(path).nameWithoutExtension
+            val file = File(path)
+            val name = patchSourceNames.getOrNull(i)
+                ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
+                ?: PatchSourceNaming.resolveSourceName(file = file)
             PatchedSourceSnapshot(
                 sourceId = sourceIdsByName[name] ?: name,
                 sourceName = name,
-                version = ApkOutputNaming.extractPatchesVersion(File(path).name) ?: "unknown",
+                version = ApkOutputNaming.extractPatchesVersion(file.name) ?: "unknown",
             )
         }
 
@@ -563,6 +572,7 @@ class PatchSelectionViewModel(
             historyMetadata = PatchEngine.HistoryMetadata(
                 originalPackageName = packageName,
                 displayName = apkName,
+                appVersion = apkVersion.takeIf { it.isNotBlank() },
                 patchSelectionByBundle = selectionByBundle,
                 patchOptionValues = _uiState.value.patchOptionValues,
                 sourcesSnapshot = activeSources,

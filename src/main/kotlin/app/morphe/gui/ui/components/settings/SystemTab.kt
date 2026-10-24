@@ -216,6 +216,6 @@ private fun UpdateChannelRow(
 private val UpdateChannelPreference.displayNameRes: StringResource
     get() = when (this) {
         UpdateChannelPreference.STABLE -> Res.string.version_label_stable
-        UpdateChannelPreference.DEV -> Res.string.version_label_dev
+        UpdateChannelPreference.DEV -> Res.string.version_label_prerelease
         UpdateChannelPreference.OFF -> Res.string.off
     }

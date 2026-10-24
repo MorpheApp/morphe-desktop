@@ -350,7 +350,7 @@ fun SettingsDialogHost() {
                 defaultOutputDirectory = path
                 scope.launch { engineConfigRepository.setDefaultOutputDirectory(path) }
             },
-            useExpertMode = !modeState.isSimplified,
+            useExpertMode = !modeState.isSimple,
             onExpertModeChange = { enabled ->
                 modeState.onChange(!enabled)
             },

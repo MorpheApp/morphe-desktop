@@ -21,7 +21,6 @@ import app.morphe.gui.ui.screens.home.HomeViewModel
 import app.morphe.gui.ui.screens.patches.PatchSelectionViewModel
 import app.morphe.gui.ui.screens.patches.PatchesViewModel
 import app.morphe.gui.ui.screens.patching.PatchingViewModel
-import app.morphe.gui.ui.screens.quick.QuickPatchViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -57,9 +56,6 @@ val appModule = module {
 
     viewModel {
         HomeViewModel(get(), get(), get(), get(), get())
-    }
-    viewModel {
-        QuickPatchViewModel(get(), get(), get())
     }
     viewModel { params ->
         val psm = get<PatchSourceManager>()
