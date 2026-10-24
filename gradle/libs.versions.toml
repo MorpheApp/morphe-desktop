@@ -10,7 +10,7 @@ morphe-patcher = "2.0.0"
 morphe-library = "1.4.0"
 
 # Compose Desktop
-compose = "1.12.1"
+compose = "1.12.2"
 material3 = "1.9.0"
 
 # Networking
