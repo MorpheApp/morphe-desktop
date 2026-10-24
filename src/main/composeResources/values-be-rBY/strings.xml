@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="ok">Ок</string>
+    <string name="retry">Паўтарыць</string>
+    <string name="clear">Ачысціць</string>
+    <string name="search">Пошук</string>
+    <string name="no_matches">Няма супадзенняў</string>
+    <string name="remove">Выдаліць</string>
+    <string name="cancel">Адмяніць</string>
+    <string name="close">Закрыць</string>
+    <string name="delete">Выдаліць</string>
+    <string name="status_saving">Захоўваем…</string>
     <string name="none">Няма</string>
     <string name="off">Выкл.</string>
     <string name="on">Укл.</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">Патчы</string>
     <!-- Patcher Steps -->
     <!-- ADB Installation Errors -->
     <!-- Version Status (ApkInfoCard & Quick Patch) -->

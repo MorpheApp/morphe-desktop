@@ -26,7 +26,9 @@
     <string name="error_network_loading_patches">Error de la xarxa mentre es carregaven els pedaços</string>
     <string name="error_patch_file_not_found">No s'ha trobat l'arxiu de pedaç: %1$s</string>
     <string name="unknown">Desconegut</string>
+    <string name="none">Cap</string>
     <string name="off">Apagat</string>
+    <string name="on">Activat</string>
     <string name="select_folder">Selecciona una carpeta</string>
     <string name="custom_color">Color personalitzat</string>
     <!-- App Card Fill Dialog -->
@@ -49,6 +51,8 @@
     <string name="home_detail_patch_bundle_label">Conjunt de pedaços</string>
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
+    <string name="patch_selection_option_enabled">Habilitat</string>
+    <string name="patch_selection_option_disabled">Deshabilitat</string>
     <string name="patch_option_recommended_size">Recomanat: %1$dx%2$d</string>
     <string name="patch_option_list_empty">El valor no es pot deixar buit</string>
     <string name="patch_option_list_duplicate">Aquest element ja està a la llista</string>
@@ -67,7 +71,10 @@
     <!-- Banners -->
     <!-- Tools Dialog -->
     <!-- Licenses Dialog -->
+    <string name="licenses_dialog_empty_no_matches">// sense coincidències</string>
     <!-- Settings -->
+    <string name="settings_dialog_title">Configuració</string>
+    <string name="settings_nav_advanced">Avançats</string>
     <!-- Settings - Appearance -->
     <!-- Settings - Advanced -->
     <!-- Settings - System -->

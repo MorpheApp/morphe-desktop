@@ -145,6 +145,7 @@
     <string name="home_sort_recommended">Recomendado</string>
     <!-- Home Screen - YourAppsPane -->
     <string name="home_your_apps_status_patched">Parcheado</string>
+    <string name="home_action_installing">Instalando…</string>
     <string name="home_detail_details_title">Detalles</string>
     <string name="home_detail_section_options">Opcións</string>
     <!-- Patches Screen -->
@@ -155,12 +156,18 @@
     <string name="patch_selection_badge_new">Novo</string>
     <string name="patch_option_list_empty">O valor non pode estar baleiro</string>
     <!-- Patching Screen -->
+    <string name="patching_status_in_progress">Aplicando parches</string>
     <string name="patching_banner_apk_size">Tamaño da APK</string>
     <string name="patching_banner_patches">Parches</string>
+    <string name="patching_banner_arch">Arquitectura</string>
     <!-- Result Screen -->
+    <string name="result_screen_patch_another_button">Aplicar outro parche</string>
+    <string name="result_screen_install_on_device_label">Instalar en %1$s</string>
     <string name="result_adb_update_successful">Actualización correcta!</string>
     <!-- Icon Studio -->
+    <string name="icon_studio_background_gradient">Gradiente</string>
     <string name="icon_studio_undo_button">Anular</string>
+    <string name="icon_studio_background_solid">Sólido</string>
     <!-- Source Management Sheet -->
     <string name="source_sheet_local_label">Local</string>
     <string name="source_sheet_remote_label">Remoto</string>
@@ -176,6 +183,7 @@
     <!-- Banners -->
     <!-- Tools Dialog -->
     <!-- Licenses Dialog -->
+    <string name="licenses_dialog_empty_no_matches">// sen coincidencias</string>
     <!-- Settings -->
     <string name="settings_dialog_title">Axustes</string>
     <string name="settings_nav_advanced">Avanzado</string>
