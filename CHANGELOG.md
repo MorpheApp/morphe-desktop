@@ -1,3 +1,10 @@
+## [1.19.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0...v1.19.1-dev.1) (2026-10-23)
+
+
+### Bug Fixes
+
+* Allow APK bundles in app details file picker ([#383](https://github.com/MorpheApp/morphe-desktop/issues/383)) ([5891099](https://github.com/MorpheApp/morphe-desktop/commit/5891099928208aad44a800fa63c66b3edfe73fc5))
+
 # [1.19.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.18.1...v1.19.0) (2026-10-22)
 
 
