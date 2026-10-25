@@ -1,3 +1,10 @@
+## [1.19.1-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.1-dev.2...v1.19.1-dev.3) (2026-10-25)
+
+
+### Bug Fixes
+
+* Sort supported app versions by version number ([#390](https://github.com/MorpheApp/morphe-desktop/issues/390)) ([bc918a3](https://github.com/MorpheApp/morphe-desktop/commit/bc918a395b29aa35d3bf5acfcf18b4101b70a635))
+
 ## [1.19.1-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.1-dev.1...v1.19.1-dev.2) (2026-10-25)
 
 
