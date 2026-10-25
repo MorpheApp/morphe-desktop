@@ -42,6 +42,7 @@ fun PatchesScreen(
     PatchesScreenContent(viewModel = viewModel)
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PatchesScreenContent(viewModel: PatchesViewModel) {
     val navController = LocalNavController.current
@@ -101,12 +102,11 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(28.dp),
+                            LoadingIndicator(
+                                modifier = Modifier.size(48.dp),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                strokeWidth = 2.dp
                             )
-                            Spacer(modifier = Modifier.height(14.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = stringResource(Res.string.patches_fetching_releases),
                                 style = MorpheTheme.typography.bodyMedium,

@@ -7,7 +7,8 @@ package app.morphe.gui.ui.screens.patching.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -24,6 +25,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun PatchingResultBottomBar(
     status: PatchingStatus,
@@ -62,9 +64,8 @@ internal fun PatchingResultBottomBar(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircularProgressIndicator(
+        LoadingIndicator(
             modifier = Modifier.size(16.dp),
-            strokeWidth = 2.dp,
             color = statusColor
         )
         Spacer(modifier = Modifier.width(10.dp))

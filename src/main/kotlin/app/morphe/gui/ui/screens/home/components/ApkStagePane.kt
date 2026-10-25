@@ -115,6 +115,7 @@ internal fun DropPromptSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ApkSelectedSection(
     patchesLoaded: Boolean,
@@ -173,10 +174,9 @@ internal fun ApkSelectedSection(
                 modifier = Modifier.widthIn(min = 160.dp),
             ) {
                 if (!patchesLoaded) {
-                    CircularProgressIndicator(
+                    LoadingIndicator(
                         modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -197,6 +197,7 @@ internal fun ApkSelectedSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun AnalyzingSection() {
     val accents = MorpheTheme.colors
@@ -205,13 +206,12 @@ internal fun AnalyzingSection() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 32.dp)
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(32.dp),
+        LoadingIndicator(
+            modifier = Modifier.size(48.dp),
             color = accents.primary,
-            strokeWidth = 2.dp
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Text(
             text = stringResource(Res.string.home_stage_analyzing_title),

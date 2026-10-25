@@ -72,6 +72,7 @@ fun PatchSelectionScreen(
     PatchSelectionScreenContent(viewModel = viewModel)
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val primaryColor = MorpheTheme.colors.primary
@@ -166,16 +167,15 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        CircularProgressIndicator(
+                        LoadingIndicator(
+                            modifier = Modifier.size(48.dp),
                             color = primaryColor,
-                            strokeWidth = 2.dp,
-                            modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = stringResource(Res.string.patching_step_loading_patches),
-                            style = MorpheTheme.typography.labelSmall,
+                            style = MorpheTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
