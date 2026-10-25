@@ -5,8 +5,6 @@
 
 package app.morphe.gui
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -20,7 +18,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -439,96 +436,26 @@ private fun appContent(
                                             popEnterTransition = { Animations.screenEnter },
                                             popExitTransition = { Animations.screenExit }
                                         ) {
-                                            composable<HomeScreenRoute>(
-                                                exitTransition = {
-                                                    if (targetState.destination.hasRoute<PatchingScreenRoute>()) {
-                                                        ExitTransition.None
-                                                    } else {
-                                                        Animations.screenExit
-                                                    }
-                                                },
-                                                popEnterTransition = {
-                                                    if (initialState.destination.hasRoute<PatchingScreenRoute>() ||
-                                                        initialState.destination.hasRoute<ResultScreenRoute>()
-                                                    ) {
-                                                        EnterTransition.None
-                                                    } else {
-                                                        Animations.screenEnter
-                                                    }
-                                                }
-                                            ) {
+                                            composable<HomeScreenRoute> {
                                                 HomeScreen()
                                             }
                                             composable<PatchesScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<PatchesScreenRoute>()
                                                 PatchesScreen(apkName = route.apkName)
                                             }
-                                            composable<PatchSelectionScreenRoute>(
-                                                exitTransition = {
-                                                    Animations.screenExit
-                                                },
-                                                popEnterTransition = {
-                                                    Animations.screenEnter
-                                                }
-                                            ) { backStackEntry ->
+                                            composable<PatchSelectionScreenRoute> { backStackEntry ->
                                                 val params = backStackEntry.getComplexArg<PatchSelectionParams>()
                                                 if (params != null) {
                                                     PatchSelectionScreen(params = params)
                                                 }
                                             }
-                                            composable<PatchingScreenRoute>(
-                                                enterTransition = {
-                                                    if (initialState.destination.hasRoute<HomeScreenRoute>()) {
-                                                        EnterTransition.None
-                                                    } else {
-                                                        Animations.screenEnter
-                                                    }
-                                                },
-                                                exitTransition = {
-                                                    if (targetState.destination.hasRoute<ResultScreenRoute>()) {
-                                                        ExitTransition.None
-                                                    } else {
-                                                        Animations.screenExit
-                                                    }
-                                                },
-                                                popEnterTransition = {
-                                                    Animations.screenEnter
-                                                },
-                                                popExitTransition = {
-                                                    if (targetState.destination.hasRoute<HomeScreenRoute>()) {
-                                                        ExitTransition.None
-                                                    } else {
-                                                        Animations.screenExit
-                                                    }
-                                                }
-                                            ) { backStackEntry ->
+                                            composable<PatchingScreenRoute> { backStackEntry ->
                                                 val config = backStackEntry.getComplexArg<PatchEngine.Config>()
                                                 if (config != null) {
                                                     PatchingScreen(config = config)
                                                 }
                                             }
-                                            composable<ResultScreenRoute>(
-                                                enterTransition = {
-                                                    if (initialState.destination.hasRoute<PatchingScreenRoute>()) {
-                                                        EnterTransition.None
-                                                    } else {
-                                                        Animations.screenEnter
-                                                    }
-                                                },
-                                                exitTransition = {
-                                                    Animations.screenExit
-                                                },
-                                                popEnterTransition = {
-                                                    Animations.screenEnter
-                                                },
-                                                popExitTransition = {
-                                                    if (targetState.destination.hasRoute<HomeScreenRoute>()) {
-                                                        ExitTransition.None
-                                                    } else {
-                                                        Animations.screenExit
-                                                    }
-                                                }
-                                            ) { backStackEntry ->
+                                            composable<ResultScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<ResultScreenRoute>()
                                                 ResultScreen(outputPath = route.outputPath)
                                             }
