@@ -9,6 +9,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -84,6 +85,7 @@ data class MorpheCornerStyle(
     val small: Dp = 2.dp,
     val medium: Dp = 2.dp,
     val large: Dp = 2.dp,
+    val isSharp: Boolean = false,
 )
 
 val LocalMorpheCorners = compositionLocalOf { MorpheCornerStyle() }
@@ -188,9 +190,9 @@ val screenScrim: Color
 
 private const val SCREEN_SCRIM_ALPHA = 0.72f
 
-private val SharpCorners = MorpheCornerStyle(extraSmall = 2.dp, small = 2.dp, medium = 2.dp, large = 2.dp)
+private val SharpCorners = MorpheCornerStyle(extraSmall = 2.dp, small = 2.dp, medium = 2.dp, large = 2.dp, isSharp = true)
 
-private val RoundedCorners = MorpheCornerStyle(extraSmall = 4.dp, small = 8.dp, medium = 12.dp, large = 16.dp)
+private val RoundedCorners = MorpheCornerStyle(extraSmall = 4.dp, small = 8.dp, medium = 12.dp, large = 16.dp, isSharp = false)
 
 private val MorpheDarkColorScheme = darkColorScheme(
     primary = Color(0xFFA4C9FF),
@@ -344,6 +346,7 @@ fun MorpheTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
+            motionScheme = MotionScheme.expressive(),
             typography = typography.material,
         ) {
             ProvideTextStyle(typography.bodyMedium) {

@@ -6,6 +6,9 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,16 +49,30 @@ fun MorpheChoiceChip(
     modifier: Modifier = Modifier,
     dense: Boolean = false,
     icon: ImageVector? = null,
+    leadingContent: (@Composable () -> Unit)? = null,
+    trailingContent: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
     accent: Color? = null,
     progress: Float? = null,
     onClick: () -> Unit,
 ) {
-    val shapes = MorpheTheme.shapes
     val colors = MorpheTheme.colors
     val typography = MorpheTheme.typography
     val tint = accent ?: colors.primary
-    val shape = shapes.small
+    val isSharp = MorpheTheme.corners.isSharp
+    val targetRadius = if (isSharp) {
+        MorpheTheme.corners.small
+    } else if (active) {
+        MorpheTheme.corners.small
+    } else {
+        if (dense) 13.dp else 16.dp
+    }
+    val cornerRadius by animateDpAsState(
+        targetValue = targetRadius,
+        animationSpec = if (isSharp) snap() else spring(dampingRatio = 0.7f, stiffness = 400f),
+        label = "chipCornerRadius",
+    )
+    val shape = RoundedCornerShape(cornerRadius)
     val hover = remember { MutableInteractionSource() }
     val isHovered by hover.collectIsHoveredAsState()
 
@@ -108,7 +126,9 @@ fun MorpheChoiceChip(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            if (icon != null) {
+            if (leadingContent != null) {
+                leadingContent()
+            } else if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
@@ -125,6 +145,9 @@ fun MorpheChoiceChip(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
+            if (trailingContent != null) {
+                trailingContent()
+            }
         }
     }
 }

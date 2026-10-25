@@ -17,8 +17,9 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -206,6 +207,7 @@ fun NavigationPill(
 }
 
 /** Indicator pill displayed while patch manifests and releases are loading. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PatchesLoadingIndicator(
     modifier: Modifier = Modifier,
@@ -223,10 +225,9 @@ fun PatchesLoadingIndicator(
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(12.dp),
-            strokeWidth = 1.5.dp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        LoadingIndicator(
+            modifier = Modifier.size(14.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(

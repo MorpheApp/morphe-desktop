@@ -278,7 +278,7 @@ internal fun DropdownMenuPopup(
 ) {
     if (!expanded) return
     val accents = MorpheTheme.colors
-    val corner = MorpheTheme.shapes.small
+    val corner = MorpheTheme.shapes.medium
     val density = LocalDensity.current
     var query by remember { mutableStateOf("") }
     val listScroll = rememberScrollState()
@@ -300,7 +300,7 @@ internal fun DropdownMenuPopup(
             Column {
                 if (searchable) SearchField(query, accents.primary) { query = it }
                 Box(Modifier.heightIn(max = maxHeight)) {
-                    Column(Modifier.verticalScroll(listScroll)) {
+                    Column(Modifier.verticalScroll(listScroll).padding(vertical = 4.dp)) {
                         if (shown.isEmpty()) {
                             Text(
                                 stringResource(Res.string.no_matches),
@@ -314,6 +314,8 @@ internal fun DropdownMenuPopup(
                             val isHovered by hover.collectIsHoveredAsState()
                             Row(
                                 Modifier.fillMaxWidth()
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    .clip(MorpheTheme.shapes.extraSmall)
                                     .background(if (isHovered) accents.primary.copy(alpha = 0.14f) else Color.Transparent)
                                     .hoverable(hover)
                                     .handCursor()
@@ -322,8 +324,8 @@ internal fun DropdownMenuPopup(
                                         onDismissRequest()
                                     }
                                     .padding(
-                                        start = 10.dp,
-                                        end = if (listScroll.maxValue > 0) 14.dp else 10.dp,
+                                        start = 8.dp,
+                                        end = if (listScroll.maxValue > 0) 12.dp else 8.dp,
                                         top = 7.dp,
                                         bottom = 7.dp,
                                     ),

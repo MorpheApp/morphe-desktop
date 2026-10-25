@@ -304,6 +304,7 @@ fun SourceManagementContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SourceRow(
     source: PatchSource,
@@ -465,9 +466,8 @@ private fun SourceRow(
                         color = colors.danger,
                     )
                 } else if (isEnabled && isLoading) {
-                    CircularProgressIndicator(
+                    LoadingIndicator(
                         modifier = Modifier.size(12.dp),
-                        strokeWidth = 2.dp,
                         color = colors.primary,
                     )
                     Text(
