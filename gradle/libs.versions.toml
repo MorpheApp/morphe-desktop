@@ -5,12 +5,12 @@ kotlin = "2.4.21"
 
 # CLI
 picocli = "4.7.7"
-arsclib = "10d0708212"
-morphe-patcher = "2.0.0"
+arsclib = "4695b583ef"
+morphe-patcher = "2.0.1"
 morphe-library = "1.4.0"
 
 # Compose Desktop
-compose = "1.12.1"
+compose = "1.12.2"
 material3 = "1.9.0"
 
 # Networking
@@ -24,7 +24,7 @@ navigation = "2.9.2"
 
 # Async / Serialization
 coroutines = "1.11.0"
-kotlinx-serialization = "1.11.0"
+kotlinx-serialization = "1.12.0"
 
 # JNA (Windows DWM title bar tinting)
 jna = "5.19.1"
@@ -37,7 +37,7 @@ slf4j = "2.0.20"
 
 # Libraries
 about-libraries = "15.3.0"
-oshi = "7.7.0"
+oshi = "7.7.2"
 
 [libraries]
 # Morphe Core

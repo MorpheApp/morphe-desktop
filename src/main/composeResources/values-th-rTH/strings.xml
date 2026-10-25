@@ -796,15 +796,15 @@
     <string name="settings_cert_warning_alias_not_found">ไม่พบนามแฝง \"%1$s\" ในคีย์สโตร์</string>
     <string name="settings_cert_warning_key_password_incorrect">รหัสผ่านคีย์ไม่ถูกต้องสำหรับนามแฝง \"%1$s\"</string>
     <!-- Settings - Runtime Logs -->
-    <string name="settings_runtime_logs_title">บันทึกการรันของแอปที่แพตช์แล้ว</string>
+    <string name="settings_runtime_logs_title">บันทึกรันไทม์ของแอปที่แพตช์แล้ว</string>
     <string name="settings_runtime_logs_desc">จับบันทึกจากโทรศัพท์หลังจากแอปที่แพตช์แล้วค้างหรือทำงานผิดปกติ ล้างก่อนจำลองบั๊ก จากนั้นบันทึกเอาต์พุตที่กรองแล้วเพื่อแนบไปกับรายงานบั๊ก</string>
     <string name="settings_runtime_logs_device_info">อุปกรณ์: %1$s</string>
     <string name="settings_runtime_logs_no_device">ไม่มีอุปกรณ์เชื่อมต่อ เสียบโทรศัพท์ที่เปิด USB debugging</string>
     <string name="settings_runtime_logs_clearing">กำลังล้าง…</string>
     <string name="settings_runtime_logs_clear_button">ล้างบันทึกอุปกรณ์</string>
     <string name="settings_runtime_logs_failed_to_clear">ล้างบันทึกไม่สำเร็จ</string>
-    <string name="settings_runtime_logs_save_button">บันทึกบันทึกอุปกรณ์</string>
-    <string name="settings_runtime_logs_failed_to_save">ไม่สามารถบันทึกบันทึกได้</string>
+    <string name="settings_runtime_logs_save_button">บันทึกการบันทึกอุปกรณ์</string>
+    <string name="settings_runtime_logs_failed_to_save">ไม่สามารถบันทึกการบันทึกได้</string>
     <string name="settings_runtime_logs_cleared_success">ล้างบันทึกบนอุปกรณ์แล้ว</string>
     <string name="settings_runtime_logs_nothing_captured">ยังไม่มีข้อมูลที่จับได้ รันแอปที่แพตช์แล้วบนโทรศัพท์ แล้วบันทึกอีกครั้ง</string>
     <!-- Settings - GitHub PAT -->

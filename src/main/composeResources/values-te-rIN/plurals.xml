@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d ప్యాచ్ మూలం లోదపదంలో విఫలమైంది. సఫలంగా లోతైన వాటిని వాడుతున్నారు 
+</item>
+        <item quantity="other">%1$d ప్యాచ్ మూలాలు లోదపదంలో విఫలమైంది. సఫలంగా లోతైన వాటిని వాడుతున్నారు </item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d బ్యాచ్ చేసిన ఆప్ అప్డేట్ అందుబాటులో ఉంది</item>
+        <item quantity="other">%1$d బ్యాచ్ చేసిన ఆప్లు అప్డేట్ అందుబాటులో ఉంది</item>
+    </plurals>
+</resources>

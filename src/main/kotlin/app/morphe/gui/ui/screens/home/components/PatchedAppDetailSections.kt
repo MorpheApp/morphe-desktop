@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
 import app.morphe.gui.ui.components.MorpheAppAvatar
@@ -251,7 +252,7 @@ internal fun ApkSourceSection(
             scope.launch {
                 val picked = MorpheFilePicker.pickFile(
                     title = selectApkTitle,
-                    extensions = listOf("apk"),
+                    extensions = BundleFormats.SUPPORTED_EXTENSIONS,
                 )
                 if (picked != null && picked.exists()) onApkSelected(picked.absolutePath)
             }
