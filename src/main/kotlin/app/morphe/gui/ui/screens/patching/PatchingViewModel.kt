@@ -244,6 +244,7 @@ class PatchingViewModel(
                     status = PatchingStatus.COMPLETED,
                     outputPath = engineResult.outputPath,
                     progress = 1f,
+                    currentStepName = getString(Res.string.status_patching_completed),
                     outputSizeMb = outSizeMb,
                     elapsedSec = formatElapsed(elapsedMs)
                 )

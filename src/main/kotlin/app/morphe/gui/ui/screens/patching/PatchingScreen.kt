@@ -6,8 +6,6 @@
 package app.morphe.gui.ui.screens.patching
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,7 +29,6 @@ import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.screens.home.components.SimpleTopBar
 import app.morphe.gui.ui.screens.patching.components.*
 import app.morphe.gui.ui.theme.Animations
-import app.morphe.gui.ui.theme.Defaults
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.ui.theme.screenScrim
@@ -105,11 +102,6 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
         ) {
             SimpleTopBar(isPatching = uiState.isInProgress)
 
-            var contentVisible by remember { mutableStateOf(false) }
-            LaunchedEffect(Unit) {
-                contentVisible = true
-            }
-
             AnimatedContent(
                 targetState = uiState.hasAutoNavigated && (uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED),
                 modifier = Modifier.weight(1f).fillMaxWidth(),
@@ -124,15 +116,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                         )
                     }
                 } else {
-                    AnimatedVisibility(
-                        visible = contentVisible,
-                        enter = fadeIn(tween(Defaults.SCREEN_ENTER_DURATION)) +
-                            scaleIn(
-                                initialScale = Defaults.DIALOG_SCALE,
-                                animationSpec = tween(Defaults.SCREEN_ENTER_DURATION, easing = FastOutSlowInEasing)
-                            ),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
                         SimplePatchingContent(
                             progress = uiState.progress,
                             completedPatches = uiState.patchedCount,
