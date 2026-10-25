@@ -9,6 +9,7 @@ import app.morphe.engine.model.CompatiblePackage
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.options.toPatchOption
+import app.morphe.engine.util.compareVersions
 import app.morphe.patcher.patch.Patch
 import java.io.File
 import java.io.FileNotFoundException
@@ -96,10 +97,10 @@ object SupportedAppCatalog {
         }
 
         return packageVersionsMap.map { (packageName, versions) ->
-            val versionList = versions.toList().sortedDescending()
+            val versionList = versions.toList().sortedWith { a, b -> compareVersions(b, a) }
             val experimentalList = (packageExperimentalMap[packageName] ?: emptySet())
                 .minus(versions)
-                .toList().sortedDescending()
+                .toList().sortedWith { a, b -> compareVersions(b, a) }
             val recommendedVersion = SupportedApp.getRecommendedVersion(versionList)
             val latestExperimental = experimentalList.firstOrNull()
             SupportedApp(
