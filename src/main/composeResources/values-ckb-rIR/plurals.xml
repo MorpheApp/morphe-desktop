@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">سەرچاوە پاتچی %1$d نەتوانرا لۆد بێت. ئەوانە بەکاردێنین کە بەسەرکەووتوویی لۆد بوون</item>
+        <item quantity="other">سەرچاوە پاتچەکانی %1$d نەتوانرا لۆد بن. ئەوانە بەکاردێنین کە بەسەرکەووتوویی لۆد بوون</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">نوێکردنەوە بۆ %1$d ئەپێکی پاتچکراو بەردەستە</item>
+        <item quantity="other">نوێکردنەوە بۆ %1$d ئەپە پاتچکراوەکان بەردەستە</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d هێڵ بۆ %2$s خەزنکرا</item>
+        <item quantity="other">%1$d هێڵ خەزنکران بۆ %2$s</item>
+    </plurals>
     <plurals name="count_sources">
-        <item quantity="one">%1$d سەرچاوە</item>
-        <item quantity="other">%1$d سەرچاوەکان</item>
+        <item quantity="one">%1$d سەرچاوەیەک</item>
+        <item quantity="other">%1$d سەرچاوە</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d پاتچ جێبەجێ دەکرێت</item>
+        <item quantity="other">%1$d پاتچ جێبەجێ دەکرێن</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d دەرهێنراوە</item>
+        <item quantity="other">%1$d دەرهێنراون</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d چاڵاککراوە</item>
+        <item quantity="other">%1$d چاڵاککراون</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d لەکارخراوە</item>
+        <item quantity="other">%1$d لەکارخراون</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d کتێبخانە</item>
+        <item quantity="other">%1$d کتێبخانەکان</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d لە %2$d هەڵبژێردراوە</item>
+        <item quantity="other">%1$d لە %2$d هەڵبژێردراون</item>
     </plurals>
     <plurals name="patch_selection_group_patch_count">
-        <item quantity="one">%1$d پینە</item>
-        <item quantity="other">%1$d پینەکان</item>
+        <item quantity="one">%1$d پاتچێک</item>
+        <item quantity="other">%1$d پاتچەکان</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d کارت سەرپێچی کردووە</item>
+        <item quantity="other">%1$d کاردە سەرپێچیان کردووە</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one"> چەپکی %1$d دابەزێنە</item>
+        <item quantity="other">چەپکی %1$d دابەزێنە</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d کڕۆکێک</item>
+        <item quantity="other">%1$d کڕۆکەکان</item>
     </plurals>
 </resources>

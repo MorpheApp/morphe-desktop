@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Umthombo we-patch owodwa (%1$d) uhlele ukulayisha. Kusetshenziswa leyo elayishile ngempumelelo</item>
+        <item quantity="other">Imithombo ye-patch (%1$d) ihlele ukulayisha. Kusetshenziswa leyo elayishile ngempumelelo</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">Uhlelo olu-patched olulodwa (%1$d) lunokuvuselelwa okutholakalayo</item>
+        <item quantity="other">Izinhlelo ezi-patched (%1$d) zinokuvuselelwa okutholakalayo</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Kulondlozwe umugqa owodwa (%1$d) ku %2$s</item>
+        <item quantity="other">Kulondlozwe imigqa (%1$d) ku %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">umthombo owodwa (%1$d)</item>
+        <item quantity="other">imithombo (%1$d)</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d i-patch izosetshenziswa</item>
+        <item quantity="other">I-patch %1$d izofakwa</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d kukhishwe</item>
+        <item quantity="other">%1$d kukhishwe</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d kuvunyelwe</item>
+        <item quantity="other">%1$d kuvunyelwe</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d kucishwe</item>
+        <item quantity="other">%1$d kucishwe</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">ilayibrari %1$d</item>
+        <item quantity="other">izilayibrari %1$d</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d kwe-%2$d ukhethiwe</item>
+        <item quantity="other">%1$d kwe-%2$d ukhethiwe</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">i-patch %1$d</item>
+        <item quantity="other">ama-patch %1$d</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">ikhadi %1$d lidlula lokhu</item>
+        <item quantity="other">amakhadi %1$d adlula lokhu</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Landa i-bundle %1$d</item>
+        <item quantity="other">Landa ama-bundle %1$d</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">i-core %1$d</item>
+        <item quantity="other">%1$d cores</item>
+    </plurals>
+</resources>

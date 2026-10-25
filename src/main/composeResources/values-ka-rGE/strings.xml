@@ -2,6 +2,7 @@
 <resources>
     <!-- Common Components -->
     <!-- App Card Fill Dialog -->
+    <string name="card_fill_mode_default">ნაგულისხმები</string>
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
     <!-- ADB Installation Errors -->

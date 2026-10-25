@@ -94,7 +94,7 @@
     <string name="card_fill_title">Personalizar tarjeta</string>
     <string name="card_fill_example_app_name">Nombre de aplicación de ejemplo</string>
     <string name="card_fill_mode_default">Predeterminado</string>
-    <string name="card_fill_mode_default_blurb">El color que incluye el paquete de parches</string>
+    <string name="card_fill_mode_default_blurb">El color que viene con el paquete de parches</string>
     <string name="card_fill_mode_accent">Color de acento</string>
     <string name="card_fill_mode_accent_blurb">Sigue el color de acento y cambia cuando este lo hace</string>
     <string name="card_fill_mode_gradient">Degradado</string>
