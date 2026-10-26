@@ -1,3 +1,10 @@
+# [1.20.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.1...v1.20.0-dev.1) (2026-10-26)
+
+
+### Features
+
+* Verify patch bundle signatures and pin the signing key ([67dcf06](https://github.com/MorpheApp/morphe-desktop/commit/67dcf060f3231570dae3903d237768a372a2146c))
+
 ## [1.19.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0...v1.19.1) (2026-10-25)
 
 
