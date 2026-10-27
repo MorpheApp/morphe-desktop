@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -39,6 +40,10 @@ fun SourcesPage(
     sourceUpdates: Map<String, String> = emptyMap(),
     isLoading: Boolean = false,
     sourceErrors: Map<String, String> = emptyMap(),
+    sourceSigningKeyFingerprints: Map<String, String> = emptyMap(),
+    sourceSigningKeys: Map<String, String> = emptyMap(),
+    sourceSignerChanged: Map<String, PatchBundleSignerChangedException> = emptyMap(),
+    onTrustSigningKey: (sourceId: String, newKey: String?) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
 ) {
     val shapes = MorpheTheme.shapes
@@ -93,6 +98,10 @@ fun SourcesPage(
                 sourceUpdates = sourceUpdates,
                 isLoading = isLoading,
                 sourceErrors = sourceErrors,
+                sourceSigningKeyFingerprints = sourceSigningKeyFingerprints,
+                sourceSigningKeys = sourceSigningKeys,
+                sourceSignerChanged = sourceSignerChanged,
+                onTrustSigningKey = onTrustSigningKey,
                 modifier = Modifier.fillMaxWidth()
             )
         }

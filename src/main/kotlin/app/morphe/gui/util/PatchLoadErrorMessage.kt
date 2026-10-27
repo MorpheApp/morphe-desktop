@@ -11,6 +11,7 @@ import app.morphe.engine.PatchBundleIncompatibleException
 import app.morphe.engine.PatchSourceLoadException
 import app.morphe.engine.PatcherCompatibility
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.readableMessage
 import app.morphe.morphe_desktop.generated.resources.*
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -61,12 +62,17 @@ private inline fun <T> mapPatchLoadError(
         }
     }
 
+    is PatchBundleSignerChangedException ->
+        onResource(Res.string.sources_management_signing_key_changed_hint, emptyArray())
+
     is PatchBundleIncompatibleException ->
         onResource(Res.string.source_error_patcher_incompatible, formatIncompatiblePatcherArgs(e))
 
     is PatchSourceLoadException -> {
         val cause = e.cause
         when {
+            cause is PatchBundleSignerChangedException ->
+                onResource(Res.string.sources_management_signing_key_changed_hint, emptyArray())
             cause is PatchBundleIncompatibleException ->
                 onResource(Res.string.source_error_patcher_incompatible, formatIncompatiblePatcherArgs(cause))
             cause is LinkageError ->

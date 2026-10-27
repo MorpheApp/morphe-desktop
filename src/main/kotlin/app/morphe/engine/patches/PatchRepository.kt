@@ -20,10 +20,17 @@ class PatchRepository(
 ) {
     val repoPath: String get() = remoteSource.repoPath
 
+    /** Trusted signing key pinned for this source, or null if no signed bundle was installed yet. */
+    val signingKey: String? get() = readSigningKey()
+
+    /** [signingKey] in the short fingerprint form, see [PatchBundleSignature.fingerprint]. */
+    val signingKeyFingerprint: String? get() = signingKey?.let(PatchBundleSignature::fingerprint)
+
     companion object {
         private const val CACHE_TTL_MS = 5 * 60 * 1000L // 5 minutes
         private const val FAILURE_TTL_MS = 10 * 1000L // 10 seconds to coalesce concurrent callers on failure
         private const val SIGNING_KEY_FILE = "signing.key"
+        private const val REFUSED_RELEASE_FILE = "refused-release"
     }
 
     private val fetchMutex = Mutex()
@@ -109,6 +116,22 @@ class PatchRepository(
             else fetchStableReleases(forceRefresh = forceRefresh).map { it.firstOrNull() }
         }
 
+    /** Reads the pinned signing key directly from disk. */
+    fun readSigningKey(): String? =
+        File(PatchCache.sourceDir(repoPath), SIGNING_KEY_FILE)
+            .takeIf { it.exists() }?.readText()?.trim()?.takeIf { it.isNotEmpty() }
+
+    /**
+     * Trusts [signer] in place of the current pinned key, clearing any cached refusal so the source
+     * can download releases signed by the new key. A null [signer] lets the source take unsigned bundles.
+     */
+    fun trustSigningKey(signer: String?) {
+        val dir = PatchCache.sourceDir(repoPath)
+        val keyFile = File(dir, SIGNING_KEY_FILE)
+        if (signer == null) keyFile.delete() else keyFile.writeText(signer)
+        File(dir, REFUSED_RELEASE_FILE).delete()
+    }
+
     /** Downloads the patch `.mpp` for [release], returning the cached file if already downloaded. */
     suspend fun downloadPatches(
         release: Release,
@@ -119,10 +142,34 @@ class PatchRepository(
                 Exception("No .mpp patch files found in release ${release.tagName}")
             )
 
+        val refusedFile = File(PatchCache.sourceDir(repoPath), REFUSED_RELEASE_FILE)
+        val releaseMarker = listOf(release.tagName, release.createdAt ?: release.publishedAt.orEmpty(), readSigningKey().orEmpty()).joinToString("|")
+        val refused = refusedFile.takeIf { it.exists() }?.readLines()
+        if (refused?.firstOrNull() == releaseMarker) {
+            val refusedSigner = refused.getOrNull(1)?.takeIf { it.isNotEmpty() }
+            return@withContext Result.failure(PatchBundleSignerChangedException(refusedSigner))
+        }
+
         PatchCache.getCachedFile(repoPath, release)?.let { cachedFile ->
             Logger.info("Using cached patches: ${cachedFile.absolutePath} (${cachedFile.length()} bytes)")
-            onProgress(1f)
-            return@withContext Result.success(cachedFile)
+            return@withContext runCatching {
+                requireTrustedSigner(cachedFile)
+                refusedFile.delete()
+                onProgress(1f)
+                cachedFile
+            }.recoverCatching { e ->
+                when (e) {
+                    is PatchBundleSignerChangedException -> {
+                        refusedFile.writeText(listOf(releaseMarker, e.signer.orEmpty()).joinToString("\n"))
+                        throw e
+                    }
+                    is SecurityException -> {
+                        cachedFile.delete()
+                        throw e
+                    }
+                    else -> throw e
+                }
+            }
         }
 
         val targetFile = PatchCache.cachedFile(repoPath, release, asset)
@@ -135,33 +182,35 @@ class PatchRepository(
         result.mapCatching { file ->
             try {
                 requireTrustedSigner(file)
+                refusedFile.delete()
+                file
+            } catch (e: PatchBundleSignerChangedException) {
+                file.delete()
+                refusedFile.writeText(listOf(releaseMarker, e.signer.orEmpty()).joinToString("\n"))
+                throw e
             } catch (e: SecurityException) {
                 file.delete()
                 throw e
             }
-            file
         }
     }
 
     /**
-     * Trusts the key of the first signed bundle downloaded from this source, and refuses bundles
-     * signed by another key or not signed at all from then on. Clearing the patches cache forgets
-     * the key, which is how a new key is trusted.
+     * Checks that [bundle] is signed by the key this source trusts. The first signed bundle pins
+     * its key, and subsequent bundles must match it. If a mismatch occurs, [PatchBundleSignerChangedException]
+     * is thrown carrying the new signer key.
      */
     private fun requireTrustedSigner(bundle: File) {
-        val keyFile = File(PatchCache.sourceDir(repoPath), SIGNING_KEY_FILE)
-        val trusted = keyFile.takeIf { it.exists() }?.readText()?.trim()
+        val trusted = readSigningKey()
         val signer = PatchBundleSignature.verify(bundle)
 
         if (trusted != null && signer != trusted) {
-            val found = signer?.let { "signed by the key ${PatchBundleSignature.fingerprint(it)}" } ?: "not signed"
-            throw SecurityException(
-                "${bundle.name} is $found, but $repoPath signed its bundles with the key " +
-                    "${PatchBundleSignature.fingerprint(trusted)}. If the developer announced a new key, " +
-                    "clear the cache in Tools to trust it"
-            )
+            throw PatchBundleSignerChangedException(signer)
         }
-        if (signer != null && trusted == null) keyFile.writeText(signer)
+        if (signer != null && trusted == null) {
+            val keyFile = File(PatchCache.sourceDir(repoPath), SIGNING_KEY_FILE)
+            keyFile.writeText(signer)
+        }
     }
 
     /** Deletes cached releases and on-disk patch files. */

@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.morphe.engine.config.EngineConfigRepository
+import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -46,6 +47,8 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.channelColor
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Cursor
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 import java.io.File
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -80,6 +83,14 @@ fun SourceManagementSheet(
     sourceUpdates: Map<String, String> = emptyMap(),
     /** Map of source ID to failure error message. */
     sourceErrors: Map<String, String> = emptyMap(),
+    /** Map of source ID to signing key fingerprint. */
+    sourceSigningKeyFingerprints: Map<String, String> = emptyMap(),
+    /** Map of source ID to signing key (base64 string). */
+    sourceSigningKeys: Map<String, String> = emptyMap(),
+    /** Map of source ID to signer changed exception if verification failed. */
+    sourceSignerChanged: Map<String, PatchBundleSignerChangedException> = emptyMap(),
+    /** Callback to trust a new signing key. */
+    onTrustSigningKey: (sourceId: String, newKey: String?) -> Unit = { _, _ -> },
 ) {
     MorpheAlertDialog(
         onDismiss = onDismiss,
@@ -119,6 +130,10 @@ fun SourceManagementSheet(
                 sourceUpdates = sourceUpdates,
                 isLoading = isLoading,
                 sourceErrors = sourceErrors,
+                sourceSigningKeyFingerprints = sourceSigningKeyFingerprints,
+                sourceSigningKeys = sourceSigningKeys,
+                sourceSignerChanged = sourceSignerChanged,
+                onTrustSigningKey = onTrustSigningKey,
             )
         },
         confirmButton = {
@@ -148,10 +163,19 @@ fun SourceManagementContent(
     sourceUpdates: Map<String, String> = emptyMap(),
     isLoading: Boolean = false,
     sourceErrors: Map<String, String> = emptyMap(),
+    /** Map of source ID to signing key fingerprint. */
+    sourceSigningKeyFingerprints: Map<String, String> = emptyMap(),
+    /** Map of source ID to signing key (base64 string). */
+    sourceSigningKeys: Map<String, String> = emptyMap(),
+    /** Map of source ID to signer changed exception if verification failed. */
+    sourceSignerChanged: Map<String, PatchBundleSignerChangedException> = emptyMap(),
+    /** Callback to trust a new signing key. */
+    onTrustSigningKey: (sourceId: String, newKey: String?) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var editingSource by remember { mutableStateOf<PatchSource?>(null) }
+    var trustingSourceId by remember { mutableStateOf<String?>(null) }
 
     // Live ordering rendered by the UI.
     val density = LocalDensity.current
@@ -235,6 +259,10 @@ fun SourceManagementContent(
                         updateVersion = sourceUpdates[source.id],
                         isLoading = isLoading,
                         error = sourceErrors[source.id],
+                        signingKeyFingerprint = sourceSigningKeyFingerprints[source.id],
+                        signingKey = sourceSigningKeys[source.id],
+                        signerChangedException = sourceSignerChanged[source.id],
+                        onReviewSignerChanged = { trustingSourceId = source.id },
                         enabled = enabled,
                         onToggleEnabled = { newVal -> onToggleEnabled(source.id, newVal) },
                         onEdit = { editingSource = source },
@@ -302,6 +330,24 @@ fun SourceManagementContent(
             }
         )
     }
+
+    trustingSourceId?.let { sourceId ->
+        val source = sourcesById[sourceId]
+        val exception = sourceSignerChanged[sourceId]
+        if (source != null && exception != null) {
+            SigningKeyTrustDialog(
+                sourceName = source.name,
+                expectedFingerprint = sourceSigningKeyFingerprints[sourceId],
+                actualFingerprint = exception.signerFingerprint,
+                actualKey = exception.signer,
+                onDismiss = { trustingSourceId = null },
+                onTrust = {
+                    onTrustSigningKey(source.id, exception.signer)
+                    trustingSourceId = null
+                },
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -313,6 +359,10 @@ private fun SourceRow(
     isLoading: Boolean,
     updateVersion: String? = null,
     error: String? = null,
+    signingKeyFingerprint: String? = null,
+    signingKey: String? = null,
+    signerChangedException: PatchBundleSignerChangedException? = null,
+    onReviewSignerChanged: (() -> Unit)? = null,
     enabled: Boolean,
     onToggleEnabled: (Boolean) -> Unit,
     onEdit: () -> Unit,
@@ -442,7 +492,78 @@ private fun SourceRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (error != null) {
+                if (signingKeyFingerprint != null) {
+                    Spacer(Modifier.height(2.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Icon(
+                            imageVector = MorpheIcons.Verified,
+                            contentDescription = null,
+                            tint = colors.primary,
+                            modifier = Modifier.size(13.dp),
+                        )
+                        Text(
+                            text = stringResource(Res.string.sources_management_signed_by) + ":",
+                            style = MorpheTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Text(
+                            text = signingKeyFingerprint,
+                            style = MorpheTheme.typography.codeSmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        if (signingKey != null) {
+                            var copied by remember { mutableStateOf(false) }
+                            Icon(
+                                imageVector = MorpheIcons.ContentCopy,
+                                contentDescription = if (copied) stringResource(Res.string.copied) else stringResource(Res.string.copy),
+                                tint = if (copied) colors.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .handCursor()
+                                    .clickable {
+                                        try {
+                                            val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+                                            clipboard.setContents(StringSelection(signingKey), null)
+                                            copied = true
+                                        } catch (_: Exception) {}
+                                    },
+                            )
+                        }
+                    }
+                }
+                if (signerChangedException != null) {
+                    Spacer(Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier
+                            .clip(shapes.small)
+                            .background(colors.danger.copy(alpha = 0.1f))
+                            .border(1.dp, colors.danger.copy(alpha = 0.3f), shapes.small)
+                            .then(
+                                if (onReviewSignerChanged != null) Modifier
+                                    .handCursor()
+                                    .clickable(onClick = onReviewSignerChanged)
+                                else Modifier
+                            )
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Icon(
+                            imageVector = MorpheIcons.GppBad,
+                            contentDescription = null,
+                            tint = colors.danger,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Text(
+                            text = stringResource(Res.string.sources_management_signing_key_changed_hint),
+                            style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                            color = colors.danger,
+                        )
+                    }
+                } else if (error != null) {
                     Spacer(Modifier.height(3.dp))
                     Text(
                         text = error,
@@ -459,7 +580,13 @@ private fun SourceRow(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier.padding(horizontal = 6.dp)
             ) {
-                if (error != null) {
+                if (signerChangedException != null) {
+                    Text(
+                        text = stringResource(Res.string.sources_management_signing_key_changed_badge),
+                        style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                        color = colors.danger,
+                    )
+                } else if (error != null) {
                     Text(
                         text = stringResource(Res.string.failed),
                         style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),

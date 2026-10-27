@@ -266,8 +266,15 @@ open class ConfigRepository {
             updated
         }
 
+        val updatedPrefs = if (existing.usePreRelease != updated.usePreRelease) {
+            val newMode = if (updated.usePreRelease) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE
+            current.sourceVersionPrefs + (updated.id to SourceVersionPref(mode = newMode))
+        } else {
+            current.sourceVersionPrefs
+        }
+
         val updatedSources = current.patchSource.map { if (it.id == updated.id) newSource else it }
-        saveConfig(current.copy(patchSource = updatedSources))
+        saveConfig(current.copy(patchSource = updatedSources, sourceVersionPrefs = updatedPrefs))
     }
 
     /** Persists reordered patch sources if [orderedIds] matches current sources. */
