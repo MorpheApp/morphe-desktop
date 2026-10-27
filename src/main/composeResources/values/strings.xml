@@ -14,6 +14,7 @@
     <string name="expand">Expand</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
+    <string name="trust">Trust</string>
     <string name="delete">Delete</string>
     <string name="disabled_while_patching">Disabled while patching</string>
     <string name="drop_apk_here">Drop APK here</string>
@@ -558,6 +559,17 @@
     <string name="source_sheet_ignored_mpp_placeholder">e.g. debug or *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Add pattern</string>
     <string name="source_sheet_remove_pattern_description">Remove pattern</string>
+    <string name="sources_management_signed_by">Signed by</string>
+    <string name="sources_management_signing_key_changed_badge">Key changed</string>
+    <string name="sources_management_signing_key_changed_hint">Signing key changed. Click to review it</string>
+
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' was not updated because its latest release is not signed by the key it used before</string>
+    <string name="sources_signing_key_new">New key</string>
+    <string name="sources_signing_key_trust_message">The latest release is signed by a different key. Either the developer replaced their key, or someone else published this release. Only trust it if the developer announced a new key</string>
+    <string name="sources_signing_key_trust_message_unsigned">The latest release is not signed. Either the developer stopped signing releases, or someone else published this release. Only trust it if the developer announced it</string>
+    <string name="sources_signing_key_trust_title">Trust the new key?</string>
+    <string name="sources_signing_key_trusted">Trusted key</string>
 
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Local file</string>

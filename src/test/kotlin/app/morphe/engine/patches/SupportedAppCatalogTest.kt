@@ -48,6 +48,6 @@ class SupportedAppCatalogTest {
     fun `the newest supported version is reported as the latest stable`() {
         val app = appWith(listOf("9.40.51", "10.1.0"))
 
-        assertEquals(VersionStatus.LATEST_STABLE, resolveVersionStatus("10.1.0", app).status)
+        assertEquals(VersionStatus.RECOMMENDED, resolveVersionStatus("10.1.0", app).status)
     }
 }

@@ -31,6 +31,11 @@ object PatchResolver {
         data class PinnedTagNotFound(val tag: String, val repoPath: String) : Error("Version $tag not found in $repoPath")
         data class ReleaseFetchFailed(override val message: String = "Failed to fetch releases") : Error(message)
         data class DownloadFailed(override val message: String) : Error(message)
+        data class SignerChanged(
+            val signer: String?,
+            val repoPath: String,
+            override val message: String = "The patch bundle is not signed by the key its source trusts"
+        ) : Error(message)
     }
 
     data class ResolutionResult(
@@ -135,6 +140,11 @@ object PatchResolver {
         }
         val patchFile = downloadResult.getOrNull() ?: run {
             val ex = downloadResult.exceptionOrNull()
+            if (ex is PatchBundleSignerChangedException) {
+                return@withContext ResolutionResult(
+                    error = Error.SignerChanged(ex.signer, repo.repoPath)
+                )
+            }
             if (isPrSource) {
                 return@withContext classifyPrOrDownloadError(ex)
             }

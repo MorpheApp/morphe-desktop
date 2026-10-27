@@ -54,6 +54,9 @@ import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
+import app.morphe.gui.util.sourceSignerChangedMap
+import app.morphe.gui.util.sourceSigningKeyFingerprintMap
+import app.morphe.gui.util.sourceSigningKeyMap
 import app.morphe.gui.util.sourceUpdateMap
 import app.morphe.gui.util.sourceVersionMap
 import java.awt.Desktop
@@ -296,6 +299,15 @@ fun HomeScreenContent(
             sourceChannels = snapshot.sourceChannelMap(),
             sourceUpdates = snapshot.sourceUpdateMap(),
             sourceErrors = snapshot.sourceErrorMap(),
+            sourceSigningKeyFingerprints = snapshot.sourceSigningKeyFingerprintMap(),
+            sourceSigningKeys = snapshot.sourceSigningKeyMap(),
+            sourceSignerChanged = snapshot.sourceSignerChangedMap(),
+            onTrustSigningKey = { sourceId, newKey ->
+                coroutineScope.launch {
+                    patchSourceManager.trustNewSigningKey(sourceId, newKey)
+                    viewModel.retryLoadPatches()
+                }
+            },
             isLoading = uiState.isLoadingPatches,
             onToggleEnabled = { id, enabled ->
                 coroutineScope.launch {
@@ -308,7 +320,10 @@ fun HomeScreenContent(
                 coroutineScope.launch { patchSourceManager.addSource(source) }
             },
             onEdit = { updated ->
-                coroutineScope.launch { patchSourceManager.updateSource(updated) }
+                coroutineScope.launch {
+                    patchSourceManager.updateSource(updated)
+                    viewModel.retryLoadPatches(forceRefresh = true)
+                }
             },
             onRemove = { id ->
                 coroutineScope.launch { patchSourceManager.removeSource(id) }
@@ -509,6 +524,15 @@ fun HomeScreenContent(
                                         sourceChannels = snapshot.sourceChannelMap(),
                                         sourceUpdates = snapshot.sourceUpdateMap(),
                                         sourceErrors = snapshot.sourceErrorMap(),
+                                        sourceSigningKeyFingerprints = snapshot.sourceSigningKeyFingerprintMap(),
+                                        sourceSigningKeys = snapshot.sourceSigningKeyMap(),
+                                        sourceSignerChanged = snapshot.sourceSignerChangedMap(),
+                                        onTrustSigningKey = { sourceId, newKey ->
+                                            coroutineScope.launch {
+                                                patchSourceManager.trustNewSigningKey(sourceId, newKey)
+                                                viewModel.retryLoadPatches()
+                                            }
+                                        },
                                         isLoading = uiState.isLoadingPatches,
                                         onToggleEnabled = { id, enabled ->
                                             coroutineScope.launch {
@@ -520,7 +544,10 @@ fun HomeScreenContent(
                                             coroutineScope.launch { patchSourceManager.addSource(source) }
                                         },
                                         onEdit = { updated ->
-                                            coroutineScope.launch { patchSourceManager.updateSource(updated) }
+                                            coroutineScope.launch {
+                                                patchSourceManager.updateSource(updated)
+                                                viewModel.retryLoadPatches(forceRefresh = true)
+                                            }
                                         },
                                         onRemove = { id ->
                                             coroutineScope.launch { patchSourceManager.removeSource(id) }

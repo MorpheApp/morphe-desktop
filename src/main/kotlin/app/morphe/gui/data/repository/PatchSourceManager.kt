@@ -142,6 +142,15 @@ class PatchSourceManager(
         return configRepository.getActivePatchSource()
     }
 
+    /** Trusts [newKey] for [sourceId], invalidates refused release cache, and notifies observers. */
+    fun trustNewSigningKey(sourceId: String, newKey: String?) {
+        val source = _allSources.value.firstOrNull { it.id == sourceId } ?: return
+        val repo = getRepositoryForSource(source) ?: return
+        repo.trustSigningKey(newKey)
+        _sourceVersion.value++
+        Logger.info("Trusted new signing key for source '${source.name}' (id=$sourceId, key=$newKey)")
+    }
+
     /** Clears cached repository data and notifies observers. */
     fun notifyCacheCleared() {
         cachedActiveRepo?.clearCache()
@@ -189,6 +198,10 @@ class PatchSourceManager(
     suspend fun updateSource(updated: PatchSource) {
         configRepository.updatePatchSource(updated)
         repositories.remove(updated.id)
+        if (cachedActiveSource?.id == updated.id) {
+            cachedActiveSource = updated
+            cachedActiveRepo = getRepositoryForSource(updated)
+        }
         refreshEnabledSources()
         _sourceVersion.value++
     }
