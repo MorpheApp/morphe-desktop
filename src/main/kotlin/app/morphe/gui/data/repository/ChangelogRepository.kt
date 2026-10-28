@@ -14,6 +14,7 @@ import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.util.ChangelogEntry
 import app.morphe.gui.util.ChangelogParser
 import io.ktor.client.HttpClient
+import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -46,6 +47,34 @@ class ChangelogRepository(
                 }
                 cache[url] = entries
                 entries
+            }
+        }
+
+    suspend fun desktopEntries(prerelease: Boolean): List<ChangelogEntry>? =
+        withContext(Dispatchers.IO) {
+            val branch = if (prerelease) "dev" else "main"
+            val url = "$GITHUB_RAW_BASE/MorpheApp/morphe-desktop/refs/heads/$branch/$CHANGELOG_FILE"
+            mutex.withLock {
+                cache[url]?.let { return@withContext it }
+                val rawMarkdown = try {
+                    http.request<String>(url)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    Logger.debug("Remote desktop changelog unavailable at $url: ${e.message}, trying local fallback")
+                    try {
+                        File("CHANGELOG.md").takeIf { it.exists() }?.readText()
+                            ?: javaClass.getResourceAsStream("/CHANGELOG.md")?.bufferedReader()?.use { it.readText() }
+                    } catch (_: Exception) {
+                        null
+                    }
+                } ?: return@withContext null
+
+                val entries = ChangelogParser.parse(rawMarkdown)
+                if (entries.isNotEmpty()) {
+                    cache[url] = entries
+                }
+                entries.ifEmpty { null }
             }
         }
 

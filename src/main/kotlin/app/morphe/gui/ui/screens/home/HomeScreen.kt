@@ -34,6 +34,7 @@ import app.morphe.gui.PatchingScreenRoute
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.AddPatchSourceDialog
+import app.morphe.gui.ui.components.ChangelogDialog
 import app.morphe.gui.ui.components.MorpheErrorBar
 import app.morphe.gui.ui.components.SourceManagementSheet
 import app.morphe.gui.ui.components.SourcesPage
@@ -192,6 +193,12 @@ fun HomeScreenContent(
             },
         )
     }
+
+    var showChangelogDialog by remember { mutableStateOf(false) }
+    if (showChangelogDialog) {
+        ChangelogDialog(onDismiss = { showChangelogDialog = false })
+    }
+
     detailRecord?.let { record ->
         val recordSources = remember(record, allSources) { viewModel.activePatchSourcesFor(record) }
         val compSources = remember(record, allSources) { viewModel.compatiblePatchSourcesFor(record.packageName) }
@@ -509,6 +516,7 @@ fun HomeScreenContent(
                             onDismissMultiSourceHint = { viewModel.dismissMultiSourceHint() },
                             onManageSources = { openPage(HomePage.SOURCES) },
                             onDismissSourcesFailed = { viewModel.dismissSourcesFailedBanner() },
+                            onShowChangelog = { showChangelogDialog = true },
                         )
                         HorizontalPager(
                             state = pagerState,

@@ -815,9 +815,21 @@
     <string name="app_info_link_translate">Translate</string>
 
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Changelog not available</string>
+    <string name="changelog_badge_installed">Installed</string>
+    <string name="changelog_badge_latest">Latest</string>
+    <string name="changelog_badge_prerelease">Pre-release</string>
+    <string name="changelog_date_today">Today</string>
+    <string name="changelog_date_yesterday">Yesterday</string>
     <string name="changelog_dialog_title">View changelog</string>
-    <string name="changelog_show_older_button">Show older releases</string>
+    <string name="changelog_not_available">Changelog not available</string>
+    <string name="changelog_section_app_support">App support</string>
+    <string name="changelog_section_fixes">Fixes</string>
+    <string name="changelog_section_improvements">Improvements</string>
+    <string name="changelog_section_new">New</string>
+    <string name="changelog_section_other">Changes</string>
+    <string name="changelog_section_performance">Performance</string>
+    <string name="changelog_show_all">Show all (%1$d)</string>
+    <string name="changelog_show_less">Show less</string>
     <string name="changelog_view_on_github_button">View on GitHub</string>
 
     <!-- Navigation Pill -->
