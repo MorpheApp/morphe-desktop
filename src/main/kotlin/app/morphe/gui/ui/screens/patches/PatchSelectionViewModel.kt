@@ -23,7 +23,10 @@ import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.util.Logger
+import app.morphe.gui.data.model.PatchSource
+import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.SeenPatchesRepository
+import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.resource.CpuArchitecture
@@ -43,6 +46,8 @@ data class BundlePatches(
     val bundleId: String,
     val bundleName: String,
     val patches: List<PatchMetadata>,
+    val sourceType: PatchSourceType = PatchSourceType.DEFAULT,
+    val avatarUrl: String? = null,
 )
 
 class PatchSelectionViewModel(
@@ -68,6 +73,7 @@ class PatchSelectionViewModel(
     private val seenPatchesRepository: SeenPatchesRepository = SeenPatchesRepository(),
     /** Maps source names to stable source IDs. */
     private val sourceIdsByName: Map<String, String> = emptyMap(),
+    private val enabledSources: List<PatchSource> = emptyList(),
 ) : ViewModel() {
 
     // Resolved primary patch file path (may differ if redownloaded).
@@ -297,10 +303,21 @@ class PatchSelectionViewModel(
             val displayName = patchSourceNames.getOrNull(idx)
                 ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
                 ?: PatchSourceNaming.resolveSourceName(file = file)
+            val matchedSource = enabledSources.firstOrNull { it.name.trim().equals(displayName.trim(), ignoreCase = true) }
+                ?: enabledSources.getOrNull(idx)
+            val sourceType = matchedSource?.type ?: if (displayName.trim().equals(PatchSourceNaming.FALLBACK_DEFAULT_NAME, ignoreCase = true)) {
+                PatchSourceType.DEFAULT
+            } else {
+                PatchSourceType.GITHUB
+            }
+            val avatarUrl = matchedSource?.let { AvatarLoader.resolveAvatarUrl(it) }
+
             BundlePatches(
                 bundleId = "bundle-$idx-${File(path).nameWithoutExtension}",
                 bundleName = displayName,
                 patches = patches.sortedBy { it.name.lowercase() },
+                sourceType = sourceType,
+                avatarUrl = avatarUrl,
             )
         }
 

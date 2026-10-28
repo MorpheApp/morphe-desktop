@@ -69,6 +69,7 @@ val appModule = module {
     }
     viewModel { params ->
         val psm = get<PatchSourceManager>()
+        val enabledSources = psm.getEnabledSourcesSync()
         PatchSelectionViewModel(
             params.get(),
             params.get(),
@@ -84,7 +85,8 @@ val appModule = module {
             params.get(),
             params.get(),
             params.get(),
-            sourceIdsByName = psm.getEnabledSourcesSync().associate { it.name to it.id },
+            sourceIdsByName = enabledSources.associate { it.name to it.id },
+            enabledSources = enabledSources,
         )
     }
     viewModel { params ->
