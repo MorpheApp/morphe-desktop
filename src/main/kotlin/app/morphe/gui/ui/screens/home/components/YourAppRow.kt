@@ -11,19 +11,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.components.AppCard
@@ -32,12 +27,10 @@ import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.cardChipInk
-import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
-import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -53,6 +46,29 @@ fun YourAppRow(
 ) {
     val cardFills = LocalCardFills.current
 
+    val versionPart = if (updateInfo?.appOutdated == true && updateInfo.appSuggestedVersion != null) {
+        "v${record.apkVersion.removePrefix("v")} → v${updateInfo.appSuggestedVersion.removePrefix("v")}"
+    } else {
+        "v${record.apkVersion.removePrefix("v")}"
+    }
+    val datePart = relativeOrShortDate(record.patchedAt)
+    val devicePart = if (deviceInfo != null) {
+        when {
+            !deviceInfo.installed -> stringResource(Res.string.home_app_row_not_on_device)
+            deviceInfo.signedByMorphe == false -> stringResource(Res.string.home_app_row_on_device_not_signed)
+            deviceInfo.installedVersion != null && deviceInfo.installedVersion.removePrefix("v") != record.apkVersion.removePrefix("v") ->
+                "Device: v${deviceInfo.installedVersion.removePrefix("v")}"
+            else -> stringResource(Res.string.home_app_row_on_device)
+        }
+    } else null
+
+    val subtitle = remember(versionPart, datePart, devicePart) {
+        listOfNotNull(versionPart, datePart, devicePart).joinToString(" · ")
+    }
+
+    val hasUpdate = (state == PatchedAppState.PATCHED_WITH_UPDATES) ||
+        (updateInfo != null && (updateInfo.appOutdated || updateInfo.sources.any { it.outdated }))
+
     AppCard(
         modifier = Modifier.fillMaxWidth(),
         cornerRadius = MorpheTheme.shapes.mediumDp,
@@ -63,20 +79,22 @@ fun YourAppRow(
             cardFills.requestEdit(record.packageName, record.displayName, appIconColorHex)
         },
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
             MorpheAppAvatar(
                 name = record.displayName,
-                size = MorpheAvatarSize.SMALL,
+                size = MorpheAvatarSize.MEDIUM,
                 onGradient = true,
             )
-            Spacer(Modifier.width(10.dp))
-            Column(modifier = Modifier.weight(1f)) {
+            Spacer(Modifier.width(12.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
                 Text(
                     text = record.displayName,
                     style = MorpheTheme.typography.titleSmall.copy(color = Color.White),
@@ -84,7 +102,7 @@ fun YourAppRow(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = "v${record.apkVersion.removePrefix("v")} · ${relativeOrShortDate(record.patchedAt)}",
+                    text = subtitle,
                     style = MorpheTheme.typography.labelSmall.copy(
                         color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
                     ),
@@ -92,116 +110,25 @@ fun YourAppRow(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            if (deviceInfo?.installPending == true) {
-                Spacer(Modifier.width(8.dp))
-                MorpheBadge(
-                    text = stringResource(Res.string.home_your_apps_install_ready),
-                    containerColor = cardChipInk,
-                    onGradient = true,
-                )
-            }
-            if (state != PatchedAppState.NEVER_PATCHED) {
-                Spacer(Modifier.width(8.dp))
-                PatchedStateBadge(state)
-            }
-        }
-        deviceInfo?.let { DeviceLine(it, Color.White.copy(alpha = 0.5f), cardChipInk) }
-        updateInfo?.sources?.firstOrNull()?.let { s ->
-            val more = updateInfo.sources.size - 1
-            VersionBumpText(
-                label = "${PatchSourceNaming.sanitize(s.name)} ",
-                oldVersion = s.usedVersion,
-                newVersion = if (s.outdated) s.latestAvailableVersion else null,
-                suffix = if (more > 0) "  +$more" else null,
-            )
-        }
-        val cardAdvice = updateInfo?.let { appAdvice(it) }
-        if (cardAdvice != null) {
-            Text(
-                text = cardAdvice.first,
-                style = MorpheTheme.typography.bodySmall.copy(color = cardChipInk),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        } else if (updateInfo != null && updateInfo.sources.any { it.outdated }) {
+            Spacer(Modifier.width(8.dp))
             Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Icon(
-                    imageVector = MorpheIcons.Info,
-                    contentDescription = null,
-                    modifier = Modifier.size(12.dp),
-                    tint = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText),
-                )
-                Text(
-                    text = stringResource(Res.string.home_your_apps_newer_patch_hint),
-                    style = MorpheTheme.typography.bodySmall.copy(
-                        color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
-        // Prompt installation when the patched APK is newer than the version on device.
-        if (deviceInfo?.installPending == true) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Icon(
-                    imageVector = MorpheIcons.Download,
-                    contentDescription = null,
-                    modifier = Modifier.size(12.dp),
-                    tint = Color.White,
-                )
-                Text(
-                    text = if (deviceInfo.installed)
-                        stringResource(
-                            Res.string.home_your_apps_device_version_ready,
-                            record.apkVersion.removePrefix("v"),
-                            deviceInfo.installedVersion?.removePrefix("v") ?: "?"
-                        )
-                    else
-                        stringResource(
-                            Res.string.home_your_apps_install_ready_hint,
-                            record.apkVersion.removePrefix("v")
-                        ),
-                    style = MorpheTheme.typography.bodySmall.copy(color = Color.White),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                if (hasUpdate) {
+                    PatchedStateBadge(PatchedAppState.PATCHED_WITH_UPDATES)
+                }
+                if (deviceInfo?.installPending == true) {
+                    MorpheBadge(
+                        text = stringResource(Res.string.home_your_apps_install_ready),
+                        containerColor = cardChipInk,
+                        onGradient = true,
+                    )
+                }
+                if (state == PatchedAppState.APK_MISSING || state == PatchedAppState.MODIFIED_EXTERNALLY) {
+                    PatchedStateBadge(state)
+                }
             }
         }
     }
-}
-}
-
-/** Displays version transition from current to target release with styled highlighting. */
-@Composable
-private fun VersionBumpText(
-    label: String,
-    oldVersion: String,
-    newVersion: String?,
-    suffix: String? = null,
-) {
-    val labelColor = Color.White
-    val muted = Color.White.copy(alpha = 0.6f)
-    val arrow = Color.White.copy(alpha = 0.6f)
-    val text = buildAnnotatedString {
-        withStyle(SpanStyle(color = labelColor, fontWeight = FontWeight.Bold)) { append(label) }
-        withStyle(SpanStyle(color = muted)) { append("v${oldVersion.removePrefix("v")}") }
-        if (newVersion != null) {
-            withStyle(SpanStyle(color = arrow)) { append("  →  ") }
-            withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) { append("v${newVersion.removePrefix("v")}") }
-        }
-        if (suffix != null) withStyle(SpanStyle(color = muted)) { append(suffix) }
-    }
-    Text(
-        text = text,
-        style = MorpheTheme.typography.bodySmall,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-    )
 }

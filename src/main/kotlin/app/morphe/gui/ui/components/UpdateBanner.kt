@@ -42,7 +42,6 @@ fun UpdateBanner(
         if (onShowChangelog != null) {
             MorpheBannerAction(
                 label = stringResource(Res.string.changelog_dialog_title),
-                icon = MorpheIcons.Article,
                 onClick = onShowChangelog,
             )
         }

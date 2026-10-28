@@ -243,9 +243,6 @@
     <string name="home_filter_your_apps">Your apps</string>
     <string name="home_banner_view">View</string>
     <string name="home_your_apps_install_ready">Install ready</string>
-    <string name="home_your_apps_newer_patch_hint">Newer patch may bump the app, click Update to check</string>
-    <string name="home_your_apps_device_version_ready">Patched v%1$s ready, device on v%2$s (no repatch needed)</string>
-    <string name="home_your_apps_install_ready_hint">Patched v%1$s ready to install (no repatch needed)</string>
     <string name="home_action_install_to_device">Install to device</string>
     <string name="home_action_installing">Installing…</string>
     <string name="home_action_preparing">Preparing…</string>
