@@ -106,4 +106,41 @@ class ChangelogParserTest {
         val foreign = ChangelogParser.parse("# Changelog\n\n- did some stuff\n- did more stuff")
         assertTrue(foreign.isEmpty())
     }
+
+    @Test
+    fun `sections parses features and fixes with proper kinds`() {
+        val markdown = """
+            ### ✨ Features
+            * **Core:** Add new theme option
+            * General performance tune
+
+            ### 🐛 Bug Fixes
+            * **UI:** Fix dialog alignment
+        """.trimIndent()
+
+        val sections = ChangelogParser.sections(markdown)
+        assertEquals(2, sections.size)
+        assertEquals(ChangelogSection.Kind.FEATURES, sections[0].kind)
+        assertEquals(2, sections[0].changeCount)
+        assertEquals("Core", sections[0].items[0].scope)
+        assertEquals("Add new theme option", sections[0].items[0].text)
+        assertEquals(null, sections[0].items[1].scope)
+
+        assertEquals(ChangelogSection.Kind.FIXES, sections[1].kind)
+        assertEquals(1, sections[1].changeCount)
+        assertEquals("UI", sections[1].items[0].scope)
+        assertEquals("Fix dialog alignment", sections[1].items[0].text)
+
+        assertEquals(2, sections.countOf(ChangelogSection.Kind.FEATURES))
+        assertEquals(1, sections.countOf(ChangelogSection.Kind.FIXES))
+        assertEquals(0, sections.countOf(ChangelogSection.Kind.PERFORMANCE))
+    }
+
+    @Test
+    fun `isPrerelease correctly identifies dev and stable versions`() {
+        val devEntry = ChangelogEntry("1.20.0-dev.3", "2026-10-27", "")
+        val stableEntry = ChangelogEntry("1.20.0", "2026-10-27", "")
+        assertTrue(devEntry.isPrerelease)
+        assertFalse(stableEntry.isPrerelease)
+    }
 }

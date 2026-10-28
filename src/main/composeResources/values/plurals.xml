@@ -16,22 +16,6 @@
         <item quantity="one">%1$d source</item>
         <item quantity="other">%1$d sources</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch will be applied</item>
-        <item quantity="other">%1$d patches will be applied</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d excluded</item>
-        <item quantity="other">%1$d excluded</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d enabled</item>
-        <item quantity="other">%1$d enabled</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d disabled</item>
-        <item quantity="other">%1$d disabled</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d library</item>
         <item quantity="other">%1$d libraries</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d core</item>
         <item quantity="other">%1$d cores</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d change</item>
+        <item quantity="other">%1$d changes</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d feature</item>
+        <item quantity="other">%1$d features</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d fix</item>
+        <item quantity="other">%1$d fixes</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimization</item>
+        <item quantity="other">%1$d optimizations</item>
     </plurals>
 </resources>

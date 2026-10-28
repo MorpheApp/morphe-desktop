@@ -24,6 +24,7 @@ internal fun HomeBanners(
     onManageSources: () -> Unit,
     onDismissSourcesFailed: () -> Unit,
     modifier: Modifier = Modifier,
+    onShowChangelog: (() -> Unit)? = null,
 ) {
     if (uiState.showUpdateBanner ||
         uiState.showMultiSourceHint ||
@@ -36,6 +37,7 @@ internal fun HomeBanners(
                         info = uiState.updateInfo!!,
                         onDismissForSession = onDismissUpdateSession,
                         onDismissForVersion = onDismissUpdateVersion,
+                        onShowChangelog = onShowChangelog,
                     )
                 }
                 if (uiState.showMultiSourceHint) {
