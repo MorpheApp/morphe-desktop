@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.components.color.toBrush
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.ThemeStyle
 import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.gui.ui.theme.shiftLightness
 import app.morphe.morphe_desktop.generated.resources.*
@@ -70,9 +74,32 @@ private const val CARD_CONTRAST_FLOOR = 0.40f
 
 private const val CHIP_INK_WHITEN = 0.8f
 
-/** Ink color for chips rendered on card fills. */
-val cardChipInk: Color
-    @Composable get() = lerp(MorpheTheme.colors.primary, Color.White, CHIP_INK_WHITEN)
+@Immutable
+data class AppCardColors(
+    val title: Color,
+    val subtitle: Color,
+    val chipInk: Color,
+    val isMonochrome: Boolean,
+)
+
+@Composable
+fun appCardColors(): AppCardColors {
+    val isMonochrome = LocalThemeState.current.style == ThemeStyle.MONOCHROME
+    return AppCardColors(
+        title = if (isMonochrome) MaterialTheme.colorScheme.onSurface else Color.White,
+        subtitle = if (isMonochrome) {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        } else {
+            Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
+        },
+        chipInk = if (isMonochrome) {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        } else {
+            lerp(MorpheTheme.colors.primary, Color.White, CHIP_INK_WHITEN)
+        },
+        isMonochrome = isMonochrome,
+    )
+}
 
 fun MorpheFill?.resolveAccent(accent: Color): MorpheFill? {
     if (this !is MorpheFill.Accent) return this
@@ -164,8 +191,19 @@ fun AppCard(
 
     val shape = RoundedCornerShape(cornerRadius)
 
+    val cardColors = appCardColors()
+    val isMonochrome = cardColors.isMonochrome
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+
     val fill = fill.resolveAccent(MorpheTheme.colors.primary)
     val (baseColor, midColor, endColor) = cardPalette(fill, appIconColorHex, defaultCardPalette())
+
+    val monoCardFill = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = if (isDark) 0.45f else 0.70f)
+    val monoBorder = if (isHovered && interactive) {
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    } else {
+        MaterialTheme.colorScheme.outlineVariant.copy(alpha = if (isDark) 0.42f else 0.34f)
+    }
 
     Box(
         modifier = modifier
@@ -175,45 +213,59 @@ fun AppCard(
                 val h = size.height
                 val cr = CornerRadius(cornerRadius.toPx())
 
-                val userBrush = fill?.toBrush(size)
-                val isFlatFill = fill is MorpheFill.Solid
-                val lift = hoverProgress * 0.03f
-                drawRoundRect(
-                    brush = userBrush ?: Brush.linearGradient(
-                        colors = listOf(
-                            baseColor.over(CARD_GROUND, CARD_BASE_ALPHA).shiftLightness(lift),
-                            midColor.over(CARD_GROUND, CARD_MID_ALPHA).shiftLightness(lift),
-                            endColor.over(CARD_GROUND, CARD_END_ALPHA).shiftLightness(lift),
-                        ),
-                        start = Offset(0f, h),
-                        end = Offset(w, 0f),
-                    ),
-                    cornerRadius = cr,
-                )
-
-                drawContent()
-
-                val borderBrush = if (isFlatFill) {
-                    Brush.linearGradient(
-                        listOf(Color.White.copy(alpha = 0.30f), Color.White.copy(alpha = 0.30f))
+                if (isMonochrome) {
+                    val lift = hoverProgress * 0.04f
+                    drawRoundRect(
+                        color = monoCardFill.shiftLightness(lift),
+                        cornerRadius = cr,
+                    )
+                    drawContent()
+                    drawRoundRect(
+                        color = monoBorder,
+                        cornerRadius = cr,
+                        style = Stroke(width = 1.dp.toPx())
                     )
                 } else {
-                    Brush.linearGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.65f),
-                            midColor.copy(alpha = 0.30f),
-                            endColor.copy(alpha = 0.15f),
-                            Color.White.copy(alpha = 0.20f)
+                    val userBrush = fill?.toBrush(size)
+                    val isFlatFill = fill is MorpheFill.Solid
+                    val lift = hoverProgress * 0.03f
+                    drawRoundRect(
+                        brush = userBrush ?: Brush.linearGradient(
+                            colors = listOf(
+                                baseColor.over(CARD_GROUND, CARD_BASE_ALPHA).shiftLightness(lift),
+                                midColor.over(CARD_GROUND, CARD_MID_ALPHA).shiftLightness(lift),
+                                endColor.over(CARD_GROUND, CARD_END_ALPHA).shiftLightness(lift),
+                            ),
+                            start = Offset(0f, h),
+                            end = Offset(w, 0f),
                         ),
-                        start = Offset(0f, 0f),
-                        end = Offset(w, h)
+                        cornerRadius = cr,
+                    )
+
+                    drawContent()
+
+                    val borderBrush = if (isFlatFill) {
+                        Brush.linearGradient(
+                            listOf(Color.White.copy(alpha = 0.30f), Color.White.copy(alpha = 0.30f))
+                        )
+                    } else {
+                        Brush.linearGradient(
+                            colors = listOf(
+                                Color.White.copy(alpha = 0.65f),
+                                midColor.copy(alpha = 0.30f),
+                                endColor.copy(alpha = 0.15f),
+                                Color.White.copy(alpha = 0.20f)
+                            ),
+                            start = Offset(0f, 0f),
+                            end = Offset(w, h)
+                        )
+                    }
+                    drawRoundRect(
+                        brush = borderBrush,
+                        cornerRadius = cr,
+                        style = Stroke(width = 1.5.dp.toPx())
                     )
                 }
-                drawRoundRect(
-                    brush = borderBrush,
-                    cornerRadius = cr,
-                    style = Stroke(width = 1.5.dp.toPx())
-                )
             }
             .hoverable(hoverInteraction)
             .then(if (interactive) Modifier
@@ -223,7 +275,7 @@ fun AppCard(
     ) {
         content()
 
-        if (onCustomise != null) {
+        if (onCustomise != null && !isMonochrome) {
             val buttonShape = MorpheTheme.shapes.small
             val buttonFill = MorpheTheme.colors.primary.onCardGradient()
             val buttonInk = buttonFill.contrastingForeground()

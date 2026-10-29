@@ -253,6 +253,88 @@ private val MorpheLightColorScheme = lightColorScheme(
     onErrorContainer = Color(0xFF410002),
 )
 
+private val MonochromeDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFC8CED8),
+    onPrimary = Color(0xFF29313A),
+    primaryContainer = Color(0xFF3E4650),
+    onPrimaryContainer = Color(0xFFE3E8EF),
+    secondary = Color(0xFFC4C9D8),
+    onSecondary = Color(0xFF2D323D),
+    secondaryContainer = Color(0xFF434956),
+    onSecondaryContainer = Color(0xFFE0E5F2),
+    tertiary = Color(0xFFC8CBD3),
+    onTertiary = Color(0xFF2F3138),
+    tertiaryContainer = Color(0xFF464852),
+    onTertiaryContainer = Color(0xFFE5E7EF),
+    background = Color(0xFF0B0C10),
+    onBackground = Color(0xFFE4E6EC),
+    surface = Color(0xFF131418),
+    onSurface = Color(0xFFE4E6EC),
+    surfaceVariant = Color(0xFF444852),
+    onSurfaceVariant = Color(0xFFC5C9D2),
+    outline = Color(0xFF8E929C),
+    error = Color(0xFFFFB4AB),
+    onError = Color(0xFF690005),
+    errorContainer = Color(0xFF93000A),
+    onErrorContainer = Color(0xFFFFDAD6),
+)
+
+private val MonochromeAmoledColorScheme = MonochromeDarkColorScheme.copy(
+    background = Color.Black,
+    surface = Color.Black,
+    surfaceVariant = Color.Black,
+    onSurfaceVariant = Color(0xFFB0B0B0),
+)
+
+private val MonochromeLightColorScheme = lightColorScheme(
+    primary = Color(0xFF565E68),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFDDE3EA),
+    onPrimaryContainer = Color(0xFF141B22),
+    secondary = Color(0xFF5B6170),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFE0E4EA),
+    onSecondaryContainer = Color(0xFF181D28),
+    tertiary = Color(0xFF60616A),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFE4E5EC),
+    onTertiaryContainer = Color(0xFF1B1D24),
+    background = Color(0xFFF7F8FC),
+    onBackground = Color(0xFF191B20),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF191B20),
+    surfaceVariant = Color(0xFFE7EAF1),
+    onSurfaceVariant = Color(0xFF444852),
+    outline = Color(0xFF747984),
+    error = Color(0xFFBA1A1A),
+    onError = Color(0xFFFFFFFF),
+    errorContainer = Color(0xFFFFDAD6),
+    onErrorContainer = Color(0xFF410002),
+)
+
+private val MonochromeDarkAccents = MorpheAccentColors(
+    primary = Color(0xFFC8CED8),
+    secondary = Color(0xFFC4C9D8),
+    tertiary = Color(0xFFC8CBD3),
+    warning = Color(0xFFE0A030),
+    danger = Color(0xFFE0504D),
+    success = Color(0xFF9CCC65),
+)
+
+private val MonochromeLightAccents = MorpheAccentColors(
+    primary = Color(0xFF565E68),
+    secondary = Color(0xFF5B6170),
+    tertiary = Color(0xFF60616A),
+    warning = Color(0xFFB26A00),
+    danger = Color(0xFFE0504D),
+    success = Color(0xFF386A20),
+)
+
+enum class ThemeStyle {
+    MORPHE,
+    MONOCHROME;
+}
+
 enum class ThemePreference {
     LIGHT,
     DARK,
@@ -270,16 +352,27 @@ enum class ThemePreference {
 @Composable
 fun MorpheTheme(
     themePreference: ThemePreference = ThemePreference.SYSTEM,
+    themeStyle: ThemeStyle = ThemeStyle.MORPHE,
     customAccentColorArgb: Int? = null,
     useSharpCorners: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val baseColorScheme = when (themePreference) {
-        ThemePreference.DARK -> MorpheDarkColorScheme
-        ThemePreference.AMOLED -> MorpheAmoledColorScheme
-        ThemePreference.LIGHT -> MorpheLightColorScheme
-        ThemePreference.SYSTEM -> {
-            if (isSystemInDarkTheme()) MorpheDarkColorScheme else MorpheLightColorScheme
+    val baseColorScheme = when (themeStyle) {
+        ThemeStyle.MONOCHROME -> when (themePreference) {
+            ThemePreference.DARK -> MonochromeDarkColorScheme
+            ThemePreference.AMOLED -> MonochromeAmoledColorScheme
+            ThemePreference.LIGHT -> MonochromeLightColorScheme
+            ThemePreference.SYSTEM -> {
+                if (isSystemInDarkTheme()) MonochromeDarkColorScheme else MonochromeLightColorScheme
+            }
+        }
+        ThemeStyle.MORPHE -> when (themePreference) {
+            ThemePreference.DARK -> MorpheDarkColorScheme
+            ThemePreference.AMOLED -> MorpheAmoledColorScheme
+            ThemePreference.LIGHT -> MorpheLightColorScheme
+            ThemePreference.SYSTEM -> {
+                if (isSystemInDarkTheme()) MorpheDarkColorScheme else MorpheLightColorScheme
+            }
         }
     }
 
@@ -312,10 +405,17 @@ fun MorpheTheme(
     val corners = if (useSharpCorners) SharpCorners else RoundedCorners
     val font = Roboto
     val monoFont = RobotoMono
-    val baseAccents = when (themePreference) {
-        ThemePreference.DARK, ThemePreference.AMOLED -> DarkAccents
-        ThemePreference.LIGHT -> LightAccents
-        ThemePreference.SYSTEM -> if (isSystemInDarkTheme()) DarkAccents else LightAccents
+    val baseAccents = when (themeStyle) {
+        ThemeStyle.MONOCHROME -> when (themePreference) {
+            ThemePreference.DARK, ThemePreference.AMOLED -> MonochromeDarkAccents
+            ThemePreference.LIGHT -> MonochromeLightAccents
+            ThemePreference.SYSTEM -> if (isSystemInDarkTheme()) MonochromeDarkAccents else MonochromeLightAccents
+        }
+        ThemeStyle.MORPHE -> when (themePreference) {
+            ThemePreference.DARK, ThemePreference.AMOLED -> DarkAccents
+            ThemePreference.LIGHT -> LightAccents
+            ThemePreference.SYSTEM -> if (isSystemInDarkTheme()) DarkAccents else LightAccents
+        }
     }
 
     val accents = if (customPrimary != null) {

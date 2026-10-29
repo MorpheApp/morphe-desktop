@@ -17,6 +17,7 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.ui.theme.ThemeStyle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -93,6 +94,11 @@ open class ConfigRepository {
     suspend fun setThemePreference(theme: ThemePreference) {
         val current = loadConfig()
         saveConfig(current.copy(themePreference = theme.name))
+    }
+
+    suspend fun setThemeStyle(style: ThemeStyle) {
+        val current = loadConfig()
+        saveConfig(current.copy(themeStyle = style.name))
     }
 
     suspend fun setUseSharpCorners(enabled: Boolean) {

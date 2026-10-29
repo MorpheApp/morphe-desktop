@@ -45,6 +45,7 @@ import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.ui.theme.ThemeState
+import app.morphe.gui.ui.theme.ThemeStyle
 import app.morphe.gui.ui.theme.backgrounds.AnimatedBackground
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
@@ -223,6 +224,7 @@ private fun appContent(
     )
 
     var themePreference by remember { mutableStateOf(ThemePreference.SYSTEM) }
+    var themeStyle by remember { mutableStateOf(ThemeStyle.MORPHE) }
     var isSimpleMode by remember { mutableStateOf(initialSimplifiedMode) }
     var appLanguage by remember { mutableStateOf("system") }
     var autoStartAdb by remember { mutableStateOf(false) }
@@ -239,6 +241,7 @@ private fun appContent(
         patchSourceManager.initialize()
         val config = configRepository.loadConfig()
         themePreference = config.getThemePreference()
+        themeStyle = config.getThemeStyle()
         isSimpleMode = config.useSimpleMode
         groupPatchesByCategoryState.value = config.groupPatchesByCategory
         backgroundTypeState.value = try {
@@ -276,6 +279,14 @@ private fun appContent(
         }
     }
 
+    val onThemeStyleChange: (ThemeStyle) -> Unit = { newStyle ->
+        themeStyle = newStyle
+        scope.launch {
+            configRepository.setThemeStyle(newStyle)
+            Logger.info("Theme style changed to: ${newStyle.name}")
+        }
+    }
+
     val onModeChange: (Boolean) -> Unit = { simple ->
         isSimpleMode = simple
         // Update active mode to prevent duplicate loads between view models.
@@ -309,7 +320,9 @@ private fun appContent(
 
     val themeState = ThemeState(
         current = themePreference,
-        onChange = onThemeChange
+        onChange = onThemeChange,
+        style = themeStyle,
+        onStyleChange = onThemeStyleChange,
     )
 
     val modeState = ModeState(
@@ -348,6 +361,7 @@ private fun appContent(
     CompositionLocalProvider(LocalLayoutDirection provides targetDirection) {
         MorpheTheme(
             themePreference = themePreference,
+            themeStyle = themeStyle,
             customAccentColorArgb = customAccentColorState.value,
             useSharpCorners = sharpCornersState.value
         ) {

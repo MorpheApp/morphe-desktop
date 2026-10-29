@@ -5,6 +5,7 @@
 
 package app.morphe.gui.ui.components.settings
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -36,6 +38,7 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.THEME_PRESET_COLORS
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.ui.theme.ThemeStyle
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
@@ -48,6 +51,8 @@ import org.koin.compose.koinInject
 internal fun AppearanceTab(
     currentTheme: ThemePreference,
     onThemeChange: (ThemePreference) -> Unit,
+    currentThemeStyle: ThemeStyle = ThemeStyle.MORPHE,
+    onThemeStyleChange: (ThemeStyle) -> Unit = {},
     customAccentColorArgb: Int?,
     onCustomAccentColorChange: (Int?) -> Unit,
     borderColor: Color,
@@ -112,6 +117,13 @@ internal fun AppearanceTab(
 
     SectionLabel(stringResource(Res.string.settings_section_theme), icon = MorpheIcons.Palette)
     Spacer(Modifier.height(8.dp))
+
+    Text(
+        text = stringResource(Res.string.settings_appearance_theme_mode),
+        style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    Spacer(Modifier.height(6.dp))
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -125,6 +137,35 @@ internal fun AppearanceTab(
                 onClick = { onThemeChange(theme) },
             )
         }
+    }
+
+    Spacer(Modifier.height(10.dp))
+
+    Text(
+        text = stringResource(Res.string.settings_appearance_color_style),
+        style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    Spacer(Modifier.height(6.dp))
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        val isMorpheSelected = currentThemeStyle == ThemeStyle.MORPHE
+        MorpheChoiceChip(
+            text = stringResource(Res.string.settings_appearance_style_morphe),
+            active = isMorpheSelected,
+            icon = MorpheIcons.Palette,
+            onClick = { onThemeStyleChange(ThemeStyle.MORPHE) },
+        )
+
+        val isMonochromeSelected = currentThemeStyle == ThemeStyle.MONOCHROME
+        MorpheChoiceChip(
+            text = stringResource(Res.string.settings_appearance_monochrome),
+            active = isMonochromeSelected,
+            icon = MorpheIcons.Contrast,
+            onClick = { onThemeStyleChange(ThemeStyle.MONOCHROME) },
+        )
     }
 
     Spacer(Modifier.height(14.dp))
@@ -213,60 +254,64 @@ internal fun AppearanceTab(
         }
     }
 
-    SettingsDivider(borderColor)
+    AnimatedVisibility(visible = currentThemeStyle != ThemeStyle.MONOCHROME) {
+        Column {
+            SettingsDivider(borderColor)
 
-    SectionLabel(stringResource(Res.string.settings_section_app_cards), icon = MorpheIcons.Gradient)
-    Spacer(Modifier.height(8.dp))
+            SectionLabel(stringResource(Res.string.settings_section_app_cards), icon = MorpheIcons.Gradient)
+            Spacer(Modifier.height(8.dp))
 
-    val cardFills = LocalCardFills.current
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        AppCard(
-            modifier = Modifier.width(72.dp).height(MorpheTheme.dimens.chipHeight),
-            cornerRadius = MorpheTheme.corners.small,
-            fill = cardFills.globalFill,
-            interactive = false,
-        ) {}
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = stringResource(Res.string.settings_app_cards_color_all),
-                style = MorpheTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Text(
-                text = stringResource(Res.string.settings_app_cards_color_all_desc),
-                style = MorpheTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-        MorpheChoiceChip(
-            text = stringResource(Res.string.customize),
-            active = false,
-            onClick = { cardFills.requestEditGlobal() },
-        )
-    }
+            val cardFills = LocalCardFills.current
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                AppCard(
+                    modifier = Modifier.width(72.dp).height(MorpheTheme.dimens.chipHeight),
+                    cornerRadius = MorpheTheme.corners.small,
+                    fill = cardFills.globalFill,
+                    interactive = false,
+                ) {}
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(Res.string.settings_app_cards_color_all),
+                        style = MorpheTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = stringResource(Res.string.settings_app_cards_color_all_desc),
+                        style = MorpheTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                MorpheChoiceChip(
+                    text = stringResource(Res.string.customize),
+                    active = false,
+                    onClick = { cardFills.requestEditGlobal() },
+                )
+            }
 
-    if (cardFills.fills.isNotEmpty()) {
-        Spacer(Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Text(
-                text = pluralStringResource(Res.plurals.settings_app_cards_override_count, cardFills.fills.size, cardFills.fills.size),
-                style = MorpheTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.weight(1f),
-            )
-            MorpheChoiceChip(
-                text = stringResource(Res.string.settings_dialog_reset_button),
-                active = false,
-                onClick = { cardFills.onClearAll() },
-            )
+            if (cardFills.fills.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = pluralStringResource(Res.plurals.settings_app_cards_override_count, cardFills.fills.size, cardFills.fills.size),
+                        style = MorpheTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f),
+                    )
+                    MorpheChoiceChip(
+                        text = stringResource(Res.string.settings_dialog_reset_button),
+                        active = false,
+                        onClick = { cardFills.onClearAll() },
+                    )
+                }
+            }
         }
     }
 

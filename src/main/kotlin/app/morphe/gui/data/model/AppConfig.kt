@@ -6,6 +6,7 @@
 package app.morphe.gui.data.model
 
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.ui.theme.ThemeStyle
 import kotlinx.serialization.Serializable
 
 /** Application configuration stored in config.json. */
@@ -33,6 +34,7 @@ data class SourceVersionPref(
 data class AppConfig(
     val language: String = "system",
     val themePreference: String = ThemePreference.SYSTEM.name,
+    val themeStyle: String = ThemeStyle.MORPHE.name,
     val backgroundType: String = "CIRCLES",
     val enableParallax: Boolean = true,
     val customAccentColorArgb: Int? = null,
@@ -82,6 +84,13 @@ data class AppConfig(
             ThemePreference.valueOf(themePreference)
         } catch (_: Exception) {
             ThemePreference.SYSTEM
+        }
+    }
+    fun getThemeStyle(): ThemeStyle {
+        return try {
+            ThemeStyle.valueOf(themeStyle)
+        } catch (_: Exception) {
+            ThemeStyle.MORPHE
         }
     }
 }
