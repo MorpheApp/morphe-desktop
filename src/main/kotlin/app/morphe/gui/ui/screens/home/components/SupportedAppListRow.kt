@@ -20,14 +20,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
-import app.morphe.gui.ui.components.cardChipInk
 import app.morphe.gui.ui.components.MorpheCardChip
-import app.morphe.gui.ui.components.LocalCardFills
-import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.appCardColors
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
@@ -49,7 +49,8 @@ fun SupportedAppListRow(
     deviceInfo: DeviceAppInfo? = null,
     modifier: Modifier = Modifier,
 ) {
-    val chipInk = cardChipInk
+    val cardColors = appCardColors()
+    val chipInk = cardColors.chipInk
     val latestExperimental = app.experimentalVersions.firstOrNull()
 
     val cardFills = LocalCardFills.current
@@ -74,21 +75,19 @@ fun SupportedAppListRow(
             MorpheAppAvatar(
                 name = app.displayName,
                 size = MorpheAvatarSize.ROW,
-                onGradient = true,
+                onGradient = !cardColors.isMonochrome,
             )
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = app.displayName,
-                    style = MorpheTheme.typography.titleMedium.copy(color = Color.White),
+                    style = MorpheTheme.typography.titleMedium.copy(color = cardColors.title),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = app.packageName,
-                    style = MorpheTheme.typography.labelSmall.copy(
-                        color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
-                    ),
+                    style = MorpheTheme.typography.labelSmall.copy(color = cardColors.subtitle),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

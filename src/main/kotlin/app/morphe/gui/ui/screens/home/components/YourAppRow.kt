@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
@@ -26,7 +25,7 @@ import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
-import app.morphe.gui.ui.components.cardChipInk
+import app.morphe.gui.ui.components.appCardColors
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
@@ -69,6 +68,8 @@ fun YourAppRow(
     val hasUpdate = (state == PatchedAppState.PATCHED_WITH_UPDATES) ||
         (updateInfo != null && (updateInfo.appOutdated || updateInfo.sources.any { it.outdated }))
 
+    val cardColors = appCardColors()
+
     AppCard(
         modifier = Modifier.fillMaxWidth(),
         cornerRadius = MorpheTheme.shapes.mediumDp,
@@ -88,7 +89,7 @@ fun YourAppRow(
             MorpheAppAvatar(
                 name = record.displayName,
                 size = MorpheAvatarSize.MEDIUM,
-                onGradient = true,
+                onGradient = !cardColors.isMonochrome,
             )
             Spacer(Modifier.width(12.dp))
             Column(
@@ -97,15 +98,13 @@ fun YourAppRow(
             ) {
                 Text(
                     text = record.displayName,
-                    style = MorpheTheme.typography.titleSmall.copy(color = Color.White),
+                    style = MorpheTheme.typography.titleSmall.copy(color = cardColors.title),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = subtitle,
-                    style = MorpheTheme.typography.labelSmall.copy(
-                        color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
-                    ),
+                    style = MorpheTheme.typography.labelSmall.copy(color = cardColors.subtitle),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -121,7 +120,7 @@ fun YourAppRow(
                 if (deviceInfo?.installPending == true) {
                     MorpheBadge(
                         text = stringResource(Res.string.home_your_apps_install_ready),
-                        containerColor = cardChipInk,
+                        containerColor = cardColors.chipInk,
                         onGradient = true,
                     )
                 }

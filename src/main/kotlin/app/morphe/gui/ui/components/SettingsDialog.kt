@@ -49,6 +49,7 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.ui.theme.ThemeStyle
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,6 +63,8 @@ fun SettingsDialog(
     onLanguageChange: (String) -> Unit = {},
     currentTheme: ThemePreference,
     onThemeChange: (ThemePreference) -> Unit,
+    currentThemeStyle: ThemeStyle = ThemeStyle.MORPHE,
+    onThemeStyleChange: (ThemeStyle) -> Unit = {},
     autoCleanupTempFiles: Boolean,
     onAutoCleanupChange: (Boolean) -> Unit,
     defaultOutputDirectory: String?,
@@ -200,6 +203,8 @@ fun SettingsDialog(
                                 onLanguageChange = onLanguageChange,
                                 currentTheme = currentTheme,
                                 onThemeChange = onThemeChange,
+                                currentThemeStyle = currentThemeStyle,
+                                onThemeStyleChange = onThemeStyleChange,
                                 customAccentColorArgb = customAccentColorArgb,
                                 onCustomAccentColorChange = onCustomAccentColorChange,
                                 borderColor = borderColor,
@@ -338,6 +343,8 @@ fun SettingsDialogHost() {
             },
             currentTheme = themeState.current,
             onThemeChange = { themeState.onChange(it) },
+            currentThemeStyle = themeState.style,
+            onThemeStyleChange = { themeState.onStyleChange(it) },
             autoCleanupTempFiles = autoCleanupTempFiles,
             onAutoCleanupChange = { enabled ->
                 autoCleanupTempFiles = enabled
