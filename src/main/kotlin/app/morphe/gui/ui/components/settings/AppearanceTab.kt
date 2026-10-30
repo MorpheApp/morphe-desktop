@@ -24,7 +24,6 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.LocalBackgroundType
 import app.morphe.gui.LocalEnableParallax
-import app.morphe.gui.LocalGroupPatchesByCategory
 import app.morphe.gui.LocalSharpCorners
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
@@ -314,23 +313,6 @@ internal fun AppearanceTab(
             }
         }
     }
-
-    SettingsDivider(borderColor)
-
-    SectionLabel(stringResource(Res.string.settings_section_patch_list), icon = MorpheIcons.Extension)
-    Spacer(Modifier.height(8.dp))
-
-    val groupPatchesByCategoryState = LocalGroupPatchesByCategory.current
-    SettingToggleRow(
-        label = stringResource(Res.string.settings_toggle_patch_categories_label),
-        description = stringResource(Res.string.settings_toggle_patch_categories_desc),
-        checked = groupPatchesByCategoryState.value,
-        onCheckedChange = { enabled ->
-            groupPatchesByCategoryState.value = enabled
-            scope.launch { configRepo.setGroupPatchesByCategory(enabled) }
-        },
-        icon = MorpheIcons.Category
-    )
 
     SettingsDivider(borderColor)
 

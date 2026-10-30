@@ -691,9 +691,6 @@
     <string name="settings_section_app_cards">App cards</string>
     <string name="settings_app_cards_color_all">Color for every card</string>
     <string name="settings_app_cards_color_all_desc">Cards you have customized individually keep their own color</string>
-    <string name="settings_section_patch_list">Patch list</string>
-    <string name="settings_toggle_patch_categories_label">Patch categories</string>
-    <string name="settings_toggle_patch_categories_desc">Group patches into expandable categories</string>
     <string name="settings_section_background_animation">Background animation</string>
     <string name="settings_background_circles">Circles</string>
     <string name="settings_background_rings">Rings</string>

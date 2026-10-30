@@ -144,11 +144,6 @@ open class ConfigRepository {
         saveConfig(current.copy(customAccentColorArgb = color))
     }
 
-    suspend fun setGroupPatchesByCategory(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(groupPatchesByCategory = enabled))
-    }
-
     /** Sets the version tracking preference for a patch source. */
     suspend fun setSourceVersionPref(sourceId: String, pref: SourceVersionPref) {
         val current = loadConfig()
