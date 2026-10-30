@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchMetadata
-import app.morphe.gui.LocalGroupPatchesByCategory
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchingScreenRoute
@@ -223,7 +222,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     uiState.filteredBundles.associateBy { it.bundleId }
                 }
                 val hasMultipleBundles = eligibleBundles.size > 1
-                val groupByCategory = LocalGroupPatchesByCategory.current.value
                 val sectionState = rememberPatchSectionState()
                 val coroutineScope = rememberCoroutineScope()
                 val pagerState = rememberPagerState { eligibleBundles.size }
@@ -384,10 +382,9 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 }
                                 val universalTitle = stringResource(Res.string.patch_selection_group_universal)
                                 val ungroupedTitle = stringResource(Res.string.patch_selection_group_ungrouped)
-                                val groups = remember(sortedPatches, groupByCategory, selectedInBundle, universalTitle, ungroupedTitle) {
+                                val groups = remember(sortedPatches, selectedInBundle, universalTitle, ungroupedTitle) {
                                     buildPatchGroups(
                                         patches = sortedPatches,
-                                        groupByCategory = groupByCategory,
                                         universalTitle = universalTitle,
                                         ungroupedTitle = ungroupedTitle,
                                         categoryOf = { it.category },
