@@ -1,10 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="morphe_logo_content_description">Лого на Morphe</string>
+    <string name="dismiss">Затвори</string>
+    <string name="ok">Во ред</string>
+    <string name="retry">Повтори</string>
+    <string name="clear">Исчисти</string>
+    <string name="search">Пребарај</string>
+    <string name="no_matches">Нема совпаѓања</string>
     <string name="remove">Отстрани</string>
+    <string name="collapse">Склопи</string>
+    <string name="expand">Прошири</string>
     <string name="cancel">Откажи</string>
+    <string name="close">Затвори</string>
+    <string name="delete">Избриши</string>
+    <string name="disabled_while_patching">Оневозможено за време на закрпувањето</string>
+    <string name="drop_apk_here">Превлечете APK овде</string>
+    <string name="release_to_drop">Пуштете за да испустите</string>
+    <string name="click_to_browse">или кликнете за пребарување</string>
+    <string name="error_could_not_load_patches">Не можеа да се вчитаат закрпи</string>
+    <string name="error_network_loading_patches">Мрежна грешка при вчитање на закрпите</string>
+    <string name="error_patch_file_not_found">Датотеката за закрпа не е пронајдена: %1$s</string>
+    <string name="error_no_patches_files_supplied">Не се доставени датотеки за закрпи</string>
+    <string name="error_input_apk_not_found">Влезниот APK не е пронајден</string>
+    <string name="error_step_failed">%1$s не успеа: %2$s</string>
+    <string name="error_drop_valid_apk">Ве молиме спуштете валидна .apk, .apkm, .xapk или .apks датотека</string>
+    <string name="status_saving">Зачувување…</string>
+    <string name="installed_on">Инсталирано на %1$s</string>
+    <string name="device_default">уред</string>
+    <string name="unknown">Непознато</string>
+    <string name="installing">Инсталирање…</string>
+    <string name="folder">Папка</string>
+    <string name="customize">Прилагоди</string>
+    <string name="customize_card_description">Прилагоди ја картичката</string>
     <string name="none">Ниту едно</string>
+    <string name="select_image">Изберете слика</string>
+    <string name="select_file">Изберете датотека</string>
+    <string name="failed">Неуспешно</string>
     <string name="copy">Копирај</string>
+    <string name="copied">Копирано</string>
+    <string name="click_to_copy">Кликнете за копирање</string>
+    <string name="enable_adb_button">Овозможи ADB</string>
     <string name="off">Исклучено</string>
     <string name="on">Вклучено</string>
     <string name="download">Преземи</string>

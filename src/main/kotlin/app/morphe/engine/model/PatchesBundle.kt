@@ -18,7 +18,6 @@ data class PatchesBundle(
     @SerialName("download_url") val downloadUrl: String,
     @SerialName("created_at") val createdAt: String? = null,
     val description: String? = null,
-    @SerialName("signature_download_url") val signatureDownloadUrl: String? = null,
 ) {
     /** Converts this bundle metadata into a [Release]. */
     fun toRelease(prerelease: Boolean): Release {

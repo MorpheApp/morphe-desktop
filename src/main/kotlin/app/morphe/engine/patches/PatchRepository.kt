@@ -7,6 +7,7 @@ package app.morphe.engine.patches
 
 import app.morphe.engine.model.Release
 import app.morphe.engine.util.Logger
+import app.morphe.patcher.patch.PatchBundleSignature
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -22,6 +23,7 @@ class PatchRepository(
     companion object {
         private const val CACHE_TTL_MS = 5 * 60 * 1000L // 5 minutes
         private const val FAILURE_TTL_MS = 10 * 1000L // 10 seconds to coalesce concurrent callers on failure
+        private const val SIGNING_KEY_FILE = "signing.key"
     }
 
     private val fetchMutex = Mutex()
@@ -127,7 +129,36 @@ class PatchRepository(
             }
         }
         if (result.isSuccess) onProgress(1f)
-        result
+        result.mapCatching { file ->
+            try {
+                requireTrustedSigner(file)
+            } catch (e: SecurityException) {
+                file.delete()
+                throw e
+            }
+            file
+        }
+    }
+
+    /**
+     * Trusts the key of the first signed bundle downloaded from this source, and refuses bundles
+     * signed by another key or not signed at all from then on. Clearing the patches cache forgets
+     * the key, which is how a new key is trusted.
+     */
+    private fun requireTrustedSigner(bundle: File) {
+        val keyFile = File(PatchCache.sourceDir(repoPath), SIGNING_KEY_FILE)
+        val trusted = keyFile.takeIf { it.exists() }?.readText()?.trim()
+        val signer = PatchBundleSignature.verify(bundle)
+
+        if (trusted != null && signer != trusted) {
+            val found = signer?.let { "signed by the key ${PatchBundleSignature.fingerprint(it)}" } ?: "not signed"
+            throw SecurityException(
+                "${bundle.name} is $found, but $repoPath signed its bundles with the key " +
+                    "${PatchBundleSignature.fingerprint(trusted)}. If the developer announced a new key, " +
+                    "clear the cache in Tools to trust it"
+            )
+        }
+        if (signer != null && trusted == null) keyFile.writeText(signer)
     }
 
     /** Deletes cached releases and on-disk patch files. */

@@ -1,3 +1,45 @@
+# [1.20.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0-dev.5...v1.20.0-dev.6) (2026-10-29)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([b470dc2](https://github.com/MorpheApp/morphe-desktop/commit/b470dc21324906a462ffbe6e0a38830b5ba5459f))
+
+# [1.20.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0-dev.4...v1.20.0-dev.5) (2026-10-28)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([cf997cd](https://github.com/MorpheApp/morphe-desktop/commit/cf997cde94fbeb30bb6dc29da5c08869bb066a0f))
+
+# [1.20.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0-dev.3...v1.20.0-dev.4) (2026-10-28)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([730d41b](https://github.com/MorpheApp/morphe-desktop/commit/730d41b3778a2c4c2993de982ad521c3610783bf))
+
+# [1.20.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0-dev.2...v1.20.0-dev.3) (2026-10-27)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([2a0f901](https://github.com/MorpheApp/morphe-desktop/commit/2a0f901d9041b4d5ab4dd49743f3864ebe81daab))
+
+# [1.20.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0-dev.1...v1.20.0-dev.2) (2026-10-26)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([4f580f0](https://github.com/MorpheApp/morphe-desktop/commit/4f580f0cf7eeaf9943c13d685765916a16199c1e))
+
+# [1.20.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.1...v1.20.0-dev.1) (2026-10-26)
+
+
+### Features
+
+* Verify patch bundle signatures and pin the signing key ([67dcf06](https://github.com/MorpheApp/morphe-desktop/commit/67dcf060f3231570dae3903d237768a372a2146c))
+
 ## [1.19.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.0...v1.19.1) (2026-10-25)
 
 

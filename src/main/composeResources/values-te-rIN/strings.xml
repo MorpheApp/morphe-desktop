@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
-    <string name="remove">తొలగించు</string>
-    <string name="cancel">రద్దుచేయి</string>
-    <string name="none">ఏం లేవు</string>
-    <string name="off">ఆపు </string>
-    <string name="on">చేయి </string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
@@ -22,19 +17,13 @@
     <!-- Home Screen - HomeHeader -->
     <!-- Home Screen - SupportedAppListRow -->
     <!-- Home Screen - SupportedAppsListPane -->
-    <string name="home_sort_updates_first">బ్యాచ్ అప్డేట్లు ముందు</string>
-    <string name="home_sort_recently_patched">ఇటీవల బ్యాచ్ చేశారు</string>
     <!-- Home Screen - YourAppsPane -->
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
-    <string name="patch_selection_option_enabled">ప్రారంభించు</string>
-    <string name="patch_selection_option_disabled">నిలిపివే</string>
     <!-- Patching Screen -->
     <!-- Result Screen -->
     <!-- Icon Studio -->
-    <string name="icon_studio_undo_button">చర్య రద్దు</string>
     <!-- Source Management Sheet -->
-    <string name="add_source">మూలాన్ని జోడించు</string>
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
     <!-- Error Dialog -->
@@ -42,12 +31,9 @@
     <!-- Tools Dialog -->
     <!-- Licenses Dialog -->
     <!-- Settings -->
-    <string name="settings_dialog_title">సెట్టింగ్‌లు</string>
-    <string name="settings_nav_advanced">ఆధునికమైన</string>
     <!-- Settings - Appearance -->
     <!-- Settings - Advanced -->
     <!-- Settings - System -->
-    <string name="settings_section_about">మా గురించి</string>
     <!-- Settings - Strip Libs -->
     <!-- Settings - Signing -->
     <!-- Settings - Keystore Info Dialog -->

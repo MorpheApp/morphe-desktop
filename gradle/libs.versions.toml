@@ -6,7 +6,7 @@ kotlin = "2.4.21"
 # CLI
 picocli = "4.7.7"
 arsclib = "4695b583ef"
-morphe-patcher = "2.0.1"
+morphe-patcher = "2.1.0"
 morphe-library = "1.4.0"
 
 # Compose Desktop

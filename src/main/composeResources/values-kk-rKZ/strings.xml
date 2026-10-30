@@ -1,12 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="version_label_latest_stable">Соңғы тұрақты</string>
+    <string name="app_info_arch_label">Архитектура</string>
+    <string name="error_log_label">Қателіктер журналы</string>
+    <string name="open_folder">Папканы ашу</string>
+    <string name="temporary_files_label">Уақытша файлдар</string>
+    <string name="size_can_be_freed_label">%1$s босатылуы мүмкін</string>
+    <string name="clean_up">Тазалау</string>
+    <string name="output_file_label">Шығыс файлы</string>
+    <string name="color_picker_saved">Сақталды</string>
+    <string name="dropdown_search_placeholder">Іздеу…</string>
+    <string name="gradient_linear">Сызықтық</string>
+    <string name="gradient_radial">Сәулелі</string>
+    <string name="gradient_conic">Коникалық</string>
+    <string name="gradient_add_stop">Тоқтауды қосу</string>
+    <string name="gradient_remove_stop_description">Тоқтауды жою</string>
+    <string name="gradient_angle">Бұрышы</string>
     <!-- App Card Fill Dialog -->
+    <string name="card_fill_title">Картаны теңшеу</string>
+    <string name="card_fill_example_app_name">Қосымша атауының мысалы</string>
+    <string name="card_fill_mode_default_blurb">Патч жиынтығымен бірге келетін түс</string>
+    <string name="card_fill_mode_accent">Акцент</string>
+    <string name="card_fill_mode_accent_blurb">Акцент түсін бақылайды және ол өзгергенде бірге өзгереді</string>
+    <string name="card_fill_mode_gradient">Градиент</string>
+    <string name="card_fill_mode_gradient_blurb">Тоқтау нүктелерінің кез келген саны, сызықтық, радиалды немесе коникалы</string>
+    <string name="card_fill_mode_solid">Бір түсті</string>
+    <string name="card_fill_mode_solid_blurb">Бір жазық түс</string>
     <!-- Quick Patch Screen -->
+    <string name="quick_patch_patches_label">Патчтар</string>
+    <string name="quick_patch_screen_start_over_button">Басынан бастау</string>
+    <string name="quick_patch_patch_another_button">Тағы бірін патчтеу</string>
+    <string name="quick_patch_select_apk">APK таңдау</string>
+    <string name="quick_patch_analyze_apk_failed">APK талдау сәтсіз аяқталды</string>
+    <string name="quick_patch_extract_base_apk_failed">Bundle-дан базалық APK-ны алу сәтсіз аяқталды</string>
+    <string name="quick_patch_unsupported_app_error">%1$s Quick Patch режимінде қолдау көрсетілмейді. Қолдау көрсетілетін қолданбалар: %2$s. Қолдау көрсетілмейтін қолданбалар үшін Normal режимін қолданыңыз</string>
+    <string name="adb_install_on_button">%1$s-қа орнату</string>
     <!-- Patcher Steps -->
+    <string name="patching_step_loading_patches">Патчтар жүктелуде</string>
+    <string name="patching_step_preparing">Дайындалуда</string>
+    <string name="patching_step_merging_split_apk">Бөлінген APK-ны біріктіру</string>
+    <string name="patching_step_read_apk">APK файлын оқу</string>
+    <string name="patching_step_applying_patches">Патчтарды қолдану</string>
+    <string name="patching_step_saving">Сақталуда</string>
+    <string name="patching_step_writing_apk">Патчталған APK файлын жазу</string>
+    <string name="patching_step_signing">Патчталған APK файлын қолтаңбалау</string>
     <!-- ADB Installation Errors -->
+    <string name="adb_status_installing">%1$s-қа орнатылуда…</string>
+    <string name="adb_error_already_exists">Қолданба redan бар. Алдымен оны жоюға тырысыңыз</string>
+    <string name="adb_error_storage">Құрылғыда сақтау alanı жеткіліксіз</string>
+    <string name="adb_error_invalid_apk">Жарамсыз APK файлы</string>
+    <string name="adb_error_no_certificates">APK дұрыс қол қойылмаған</string>
+    <string name="adb_error_user_restricted">Орнату пайдаланушы параметрлерімен шектелген</string>
+    <string name="adb_error_verification_failure">Пакетті тексеру сәтсіз аяқталды</string>
+    <string name="adb_error_generic">Орнату сәтсіз аяқталды: %1$s</string>
+    <string name="adb_error_not_found">ADB табылмады. Android SDK Platform Tools құралдарын орнатыңыз</string>
+    <string name="adb_error_unauthorized">Құрылғы қосылған, бірақ авторизацияланбаған. Құрылғыңыздағы USB жөндеу сұранысын қабылдаңыз</string>
+    <string name="adb_error_no_devices">Қосылған құрылғылар жоқ. USB жөндеуі қосулы Android құрылғыңызды қосыңыз</string>
+    <string name="adb_error_device_not_found">%1$s құрылғысы табылмады</string>
+    <string name="adb_error_multiple_devices">Бірнеше құрылғы қосылған. Біреуін таңдаңыз</string>
+    <string name="adb_error_apk_not_found">APK файлы табылмады: %1$s</string>
+    <string name="adb_error_start_server">ADB серверін іске қосу мүмкін болмады: %1$s</string>
+    <string name="adb_error_kill_server">ADB серверін тоқтату мүмкін болмады: %1$s</string>
+    <string name="adb_error_get_devices">Құрылғыларды алу мүмкін болмады: %1$s</string>
+    <string name="adb_error_uninstall">Жою сәтсіз аяқталды: %1$s</string>
+    <string name="adb_error_clear_logs">Логтарды тазалау мүмкін болмады: %1$s</string>
+    <string name="adb_error_capture_logs">Логтарды жазу мүмкін болмады: %1$s</string>
+    <string name="adb_error_run_command">Команданы орындау мүмкін болмады: %1$s</string>
+    <string name="adb_error_pm_list_packages">pm list packages сәтсіз аяқталды: %1$s</string>
+    <string name="adb_status_routing_links">Сілтемелер %1$s адресіне бағытталуда…</string>
+    <string name="adb_status_restoring_links">Әдепкі сілтемелерді өңдеуді қалпына келтіру…</string>
+    <string name="adb_status_disabling_links">%1$s ішіндегі сілтемелерді өшіру…</string>
+    <string name="adb_status_enabling_links">%1$s ішіндегі сілтемелерді қайта қосу…</string>
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
+    <string name="version_status_checksum_mismatch">Контрольдік қосынды сәйкес келмейді</string>
+    <string name="version_status_checksum_corrupted">Файл зақымдалған болуы мүмкін, APKMirror-ден қайта жүктеңіз</string>
+    <string name="version_status_checksum_failed">Контрольдік қосындыны тексеру сәтсіз аяқталды</string>
+    <string name="version_status_checksum_matches">Контрольдік қосынды APKMirror-мен сәйкес келеді</string>
+    <string name="version_status_older_stable">Ескі тұрақты нұсқа</string>
+    <string name="version_status_newer_stable_available">Жаңа тұрақты v%1$s нұсқасы қолжетімді</string>
+    <string name="version_status_newer_stable_available_fallback">Жаңа тұрақты нұсқа қолжетімді</string>
+    <string name="version_status_experimental_detail">Қолдау көрсетіледі, бірақ дұрыс жұмыс істемеуі мүмкін</string>
+    <string name="version_status_older_experimental">Ескі эксперименттік нұсқа</string>
+    <string name="version_status_newer_experimental_available">Жаңарақ эксперименттік v%1$s қолжетімді</string>
+    <string name="version_status_newer_experimental_available_fallback">Жаңарақ эксперименттік құрылым қолжетімді</string>
+    <string name="version_status_too_new">Нұсқа тым жаңа</string>
+    <string name="version_status_too_old">Нұсқа тым ескі</string>
+    <string name="version_status_unsupported">Қолдау көрсетілмейтін нұсқа</string>
+    <string name="version_status_build_unsupported">Құрылым қолдау көрсетілмейді</string>
+    <string name="version_status_build_unsupported_detail">Бұл нұсқа қолдайды, бірақ оның бұл құрылымы қолдау көрсетілмейді. Патчтар мақсатты құрылымды алыңыз</string>
     <!-- Version Warning Dialogs -->
+    <string name="version_warning_notice_title">Нұсқа туралы хабарлама</string>
+    <string name="version_warning_experiment_title">Эксперимент жасағыңыз келе ме? 🧪</string>
+    <string name="version_warning_older_stable_title">Ескі тұрақты нұсқа</string>
+    <string name="version_warning_older_stable_message">Ағынды: v%1$s\nСоңғы тұрақты: v%2$s\n\nБұл нұсқа қолдау көрсетіледі, бірақ жаңарақ тұрақты нұсқа қолжетімді. Сізде соңғы түзетулер болмауы мүмкін.</string>
+    <string name="version_warning_latest_experimental_message">Ағынды: v%1$s\n\nБұл нұсқада ерте эксперименттік қолдау бар\n\n🔧 Патчтар осы қолданба нұсқасы үшін жетілдірілген сайын, қолданбаның ерекше жұмысын немесе белгісіз қателерді күтіңіз.</string>
+    <string name="version_warning_older_experimental_title">Ескі эксперименттік нұсқа\nЭксперимент жасағыңыз келе ме? 🧪</string>
     <!-- Version warnings for Quick Patch -->
     <!-- Quick Patch - Patching Content -->
     <!-- Quick Patch - Ready Content -->
