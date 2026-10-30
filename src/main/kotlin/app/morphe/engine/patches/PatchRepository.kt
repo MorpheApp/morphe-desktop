@@ -20,8 +20,14 @@ class PatchRepository(
 ) {
     val repoPath: String get() = remoteSource.repoPath
 
-    /** Trusted signing key pinned for this source, or null if no signed bundle was installed yet. */
-    val signingKey: String? get() = readSigningKey()
+    /** Key official Morphe Patches releases are signed with when [repoPath] is the default source. */
+    val officialSigningKey: String?
+        get() = if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
+            RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY
+        } else null
+
+    /** Trusted signing key pinned for this source, or the official key if default source, or null. */
+    val signingKey: String? get() = readSigningKey() ?: officialSigningKey
 
     /** [signingKey] in the short fingerprint form, see [PatchBundleSignature.fingerprint]. */
     val signingKeyFingerprint: String? get() = signingKey?.let(PatchBundleSignature::fingerprint)
@@ -110,10 +116,25 @@ class PatchRepository(
         withContext(Dispatchers.IO) {
             remoteSource.fetchLatestFromManifest(prerelease).getOrNull()?.let {
                 Logger.info("Latest ${if (prerelease) "dev" else "stable"} via patches-bundle.json: ${it.tagName}")
-                return@withContext Result.success(it)
+                val release = if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
+                    it.copy(publicKey = it.publicKey ?: RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY)
+                } else it
+                return@withContext Result.success(release)
             }
-            if (prerelease) fetchDevReleases(forceRefresh = forceRefresh).map { it.firstOrNull() }
-            else fetchStableReleases(forceRefresh = forceRefresh).map { it.firstOrNull() }
+            if (prerelease) fetchDevReleases(forceRefresh = forceRefresh).map { list ->
+                list.firstOrNull()?.let {
+                    if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
+                        it.copy(publicKey = it.publicKey ?: RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY)
+                    } else it
+                }
+            }
+            else fetchStableReleases(forceRefresh = forceRefresh).map { list ->
+                list.firstOrNull()?.let {
+                    if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
+                        it.copy(publicKey = it.publicKey ?: RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY)
+                    } else it
+                }
+            }
         }
 
     /** Reads the pinned signing key directly from disk. */
@@ -143,7 +164,7 @@ class PatchRepository(
             )
 
         val refusedFile = File(PatchCache.sourceDir(repoPath), REFUSED_RELEASE_FILE)
-        val releaseMarker = listOf(release.tagName, release.createdAt ?: release.publishedAt.orEmpty(), readSigningKey().orEmpty()).joinToString("|")
+        val releaseMarker = listOf(release.tagName, release.createdAt ?: release.publishedAt.orEmpty(), (readSigningKey() ?: release.publicKey ?: officialSigningKey).orEmpty()).joinToString("|")
         val refused = refusedFile.takeIf { it.exists() }?.readLines()
         if (refused?.firstOrNull() == releaseMarker) {
             val refusedSigner = refused.getOrNull(1)?.takeIf { it.isNotEmpty() }
@@ -153,7 +174,7 @@ class PatchRepository(
         PatchCache.getCachedFile(repoPath, release)?.let { cachedFile ->
             Logger.info("Using cached patches: ${cachedFile.absolutePath} (${cachedFile.length()} bytes)")
             return@withContext runCatching {
-                requireTrustedSigner(cachedFile)
+                requireTrustedSigner(cachedFile, release.publicKey)
                 refusedFile.delete()
                 onProgress(1f)
                 cachedFile
@@ -181,7 +202,7 @@ class PatchRepository(
         if (result.isSuccess) onProgress(1f)
         result.mapCatching { file ->
             try {
-                requireTrustedSigner(file)
+                requireTrustedSigner(file, release.publicKey)
                 refusedFile.delete()
                 file
             } catch (e: PatchBundleSignerChangedException) {
@@ -196,18 +217,19 @@ class PatchRepository(
     }
 
     /**
-     * Checks that [bundle] is signed by the key this source trusts. The first signed bundle pins
-     * its key, and subsequent bundles must match it. If a mismatch occurs, [PatchBundleSignerChangedException]
+     * Checks that [bundle] is signed by the key this source trusts. If no key has been pinned yet,
+     * it falls back to [publishedKey] or [officialSigningKey]. The first signed bundle pins its key,
+     * and subsequent bundles must match it. If a mismatch occurs, [PatchBundleSignerChangedException]
      * is thrown carrying the new signer key.
      */
-    private fun requireTrustedSigner(bundle: File) {
-        val trusted = readSigningKey()
+    private fun requireTrustedSigner(bundle: File, publishedKey: String? = null) {
+        val expected = readSigningKey() ?: publishedKey ?: officialSigningKey
         val signer = PatchBundleSignature.verify(bundle)
 
-        if (trusted != null && signer != trusted) {
+        if (expected != null && signer != expected) {
             throw PatchBundleSignerChangedException(signer)
         }
-        if (signer != null && trusted == null) {
+        if (signer != null && readSigningKey() == null) {
             val keyFile = File(PatchCache.sourceDir(repoPath), SIGNING_KEY_FILE)
             keyFile.writeText(signer)
         }

@@ -22,11 +22,13 @@ class PatchBundleSigningTest {
     @BeforeTest
     fun setUp() {
         PatchCache.sourceDir(repoPath).deleteRecursively()
+        PatchCache.sourceDir(RemotePatchSourceFactory.DEFAULT_REPO_PATH).deleteRecursively()
     }
 
     @AfterTest
     fun tearDown() {
         PatchCache.sourceDir(repoPath).deleteRecursively()
+        PatchCache.sourceDir(RemotePatchSourceFactory.DEFAULT_REPO_PATH).deleteRecursively()
         tempDir.deleteRecursively()
     }
 
@@ -64,7 +66,13 @@ class PatchBundleSigningTest {
         }
     }
 
-    private fun releaseWithAsset(tagName: String, assetName: String, file: File): Pair<Release, MockRemoteSource> {
+    private fun releaseWithAsset(
+        tagName: String,
+        assetName: String,
+        file: File,
+        publicKey: String? = null,
+        targetRepoPath: String = repoPath,
+    ): Pair<Release, MockRemoteSource> {
         val asset = ReleaseAsset(
             name = assetName,
             downloadUrl = "https://example.com/$assetName",
@@ -74,9 +82,10 @@ class PatchBundleSigningTest {
             tagName = tagName,
             name = tagName,
             assets = listOf(asset),
-            publishedAt = "2026-10-26T10:00:00Z"
+            publishedAt = "2026-10-26T10:00:00Z",
+            publicKey = publicKey,
         )
-        val remote = MockRemoteSource(repoPath, mutableMapOf(assetName to file))
+        val remote = MockRemoteSource(targetRepoPath, mutableMapOf(assetName to file))
         return release to remote
     }
 
@@ -223,6 +232,63 @@ class PatchBundleSigningTest {
         assertTrue(res.isFailure, "Cached unsigned bundle must not be trusted when a key is pinned")
         val ex = assertIs<PatchBundleSignerChangedException>(res.exceptionOrNull())
         assertNull(ex.signer)
+    }
+
+    @Test
+    fun `official patches repo falls back to official signing key when unpinned`() {
+        val remote = MockRemoteSource(RemotePatchSourceFactory.DEFAULT_REPO_PATH)
+        val repo = PatchRepository(remote)
+
+        assertEquals(RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY, repo.signingKey)
+        assertEquals("9d49 663c 29c8 9930", repo.signingKeyFingerprint)
+    }
+
+    @Test
+    fun `official patches repo refuses unsigned bundles on first download`() = runBlocking {
+        val bundle = createBundle("unsigned", 1)
+        val (release, remote) = releaseWithAsset(
+            tagName = "v1.0.0",
+            assetName = "patches.mpp",
+            file = bundle,
+            targetRepoPath = RemotePatchSourceFactory.DEFAULT_REPO_PATH,
+        )
+        val repo = PatchRepository(remote)
+
+        val res = repo.downloadPatches(release)
+        assertTrue(res.isFailure)
+        val ex = assertIs<PatchBundleSignerChangedException>(res.exceptionOrNull())
+        assertNull(ex.signer)
+    }
+
+    @Test
+    fun `release declaring published key enforces key on unpinned repo`() = runBlocking {
+        val bundleOther = createBundle("other", 1, OTHER_KEY)
+        val (releaseOther, remoteOther) = releaseWithAsset(
+            tagName = "v1.0.0",
+            assetName = "patches-other.mpp",
+            file = bundleOther,
+            publicKey = PUBLIC_KEY,
+        )
+        val repoOther = PatchRepository(remoteOther)
+
+        val resOther = repoOther.downloadPatches(releaseOther)
+        assertTrue(resOther.isFailure)
+        val ex = assertIs<PatchBundleSignerChangedException>(resOther.exceptionOrNull())
+        assertEquals(OTHER_PUBLIC_KEY, ex.signer)
+
+        // Same source with bundle matching the declared public key
+        val bundleExpected = createBundle("expected", 2, KEY)
+        val (releaseExpected, remoteExpected) = releaseWithAsset(
+            tagName = "v1.0.1",
+            assetName = "patches-expected.mpp",
+            file = bundleExpected,
+            publicKey = PUBLIC_KEY,
+        )
+        val repoExpected = PatchRepository(remoteExpected)
+
+        val resExpected = repoExpected.downloadPatches(releaseExpected)
+        assertTrue(resExpected.isSuccess)
+        assertEquals(PUBLIC_KEY, repoExpected.signingKey)
     }
 
     companion object {
