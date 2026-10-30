@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
-    <string name="copy">सेटिंगहरू सफलतापूर्वक आयात गरियो</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
@@ -24,7 +23,6 @@
     <!-- Patching Screen -->
     <!-- Result Screen -->
     <!-- Icon Studio -->
-    <string name="icon_studio_color_label">रंग</string>
     <!-- Source Management Sheet -->
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
@@ -36,7 +34,6 @@
     <!-- Settings - Appearance -->
     <!-- Settings - Advanced -->
     <!-- Settings - System -->
-    <string name="settings_section_about">के बारे में</string>
     <!-- Settings - Strip Libs -->
     <!-- Settings - Signing -->
     <!-- Settings - Keystore Info Dialog -->

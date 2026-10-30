@@ -515,7 +515,7 @@
     <string name="icon_studio_preview_monochrome">흑백</string>
     <string name="icon_studio_preview_shapes">도형 미리보기</string>
     <string name="icon_studio_preview_shapes_hint">각 런처마다 사용하는 모양이 다릅니다. 탭하면 어떻게 잘려서 표시되는지 미리 볼 수 있습니다</string>
-    <string name="icon_studio_preview_notification_status_bar">알림 / 상태 표시줄</string>
+    <string name="icon_studio_preview_notification_status_bar">알림 / 상태바</string>
     <string name="icon_studio_layer_label">레이어</string>
     <string name="icon_studio_duplicate_button">복제</string>
     <string name="icon_studio_layer_name_placeholder">레이어 이름</string>

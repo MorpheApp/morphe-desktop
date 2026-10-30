@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="morphe_logo_content_description">Morphe лого</string>
+    <string name="dismiss">Хаах</string>
+    <string name="ok">ОК</string>
+    <string name="retry">Дахин оролдох</string>
+    <string name="clear">Цэвэрлэх</string>
+    <string name="search">Хайх</string>
+    <string name="no_matches">Илэрц олдсонгүй</string>
+    <string name="collapse">Нуух</string>
+    <string name="expand">Дэлгэх</string>
+    <string name="close">Хаах</string>
+    <string name="delete">Устгах</string>
+    <string name="disabled_while_patching">Нэвчүүлж байх үед идэвхгүй</string>
+    <string name="drop_apk_here">APK-г энд оруулна уу</string>
+    <string name="release_to_drop">Тавихын тулд суллана уу</string>
+    <string name="click_to_browse">эсвэл хайхын тулд дарна уу</string>
+    <string name="error_could_not_load_patches">Засваруудыг ачаалж чадсангүй</string>
+    <string name="error_network_loading_patches">Засвар ачаалах үед сүлжээний алдаа гарлаа</string>
+    <string name="error_patch_file_not_found">Засварын файл олдсонгүй: %1$s</string>
+    <string name="error_no_patches_files_supplied">Засварын файлууд оруулагдаагүй байна</string>
+    <string name="error_input_apk_not_found">Оруулах APK олдсонгүй</string>
+    <string name="error_step_failed">%1$s амжилтгүй боллоо: %2$s</string>
+    <string name="error_drop_valid_apk">Зөв .apk, .apkm, .xapk, эсвэл .apks файл оруулна уу</string>
+    <string name="status_saving">Хадгалж байна…</string>
+    <string name="installed_on">%1$s дээр суулгасан</string>
+    <string name="device_default">төхөөрөмж</string>
+    <string name="unknown">Тодорхойгүй</string>
+    <string name="installing">Суулгаж байна…</string>
+    <string name="folder">Хавтас</string>
+    <string name="customize">Тохируулах</string>
+    <string name="customize_card_description">Картыг тохируулах</string>
+    <string name="select_image">Зураг сонгох</string>
+    <string name="select_file">Файл сонгох</string>
+    <string name="failed">Амжилтгүй боллоо</string>
+    <string name="copied">Хууллаа</string>
+    <string name="click_to_copy">Хуулахын тулд дарна уу</string>
+    <string name="enable_adb_button">ADB-г идэвхжүүлэх</string>
+    <string name="drag_to_reorder">Дарааллыг өөрчлөхийн тулд чирнэ үү</string>
+    <string name="browse">Хайх</string>
+    <string name="save">Хадгалах</string>
+    <string name="status_loading">Тảiж байна…</string>
+    <string name="status_offline">Офлайн</string>
+    <string name="status_ready">Бэлэн</string>
+    <string name="filter_apps_hint">Апп-уудыг шүүх…</string>
+    <string name="version_label_stable">Тогтвортой</string>
+    <string name="version_label_dev">Хөгжүүлэгчийн</string>
+    <string name="version_label_experimental">Туршилтын</string>
+    <string name="version_label_latest_dev">Хамгийн сүүлийн хөгжүүлэгчийн</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->

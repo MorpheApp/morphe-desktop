@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d პატჩის წყაროს ჩატვირთვა ვერ მოხერხდა. გამოყენებულია ისინი, რომელთა ჩატვირთვაც წარმატებით დასრულდა</item>
+        <item quantity="other">%1$d პატჩის წყაროს ჩატვირთვა ვერ მოხერხდა. გამოყენებულია ისინი, რომელთა ჩატვირთვაც წარმატებით დასრულდა</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d პატჩირებული აპლიკაციისთვის ხელმისაწვდომია განახლება</item>
+        <item quantity="other">%1$d პატჩირებული აპლიკაციისთვის ხელმისაწვდომია განახლებები</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d ხაზი შენახულია %2$s-ში</item>
+        <item quantity="other">%1$d ხაზი შენახულია %2$s-ში</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d წყარო</item>
+        <item quantity="other">%1$d წყარო</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d პატჩი იქნება გამოყენებული</item>
+        <item quantity="other">გამოიყენება %1$d პატჩი</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d გამორიცხულია</item>
+        <item quantity="other">%1$d გამორიცხულია</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d ჩართულია</item>
+        <item quantity="other">%1$d ჩართულია</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d გამორთულია</item>
+        <item quantity="other">%1$d გამორთულია</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d ბიბლიოთეკა</item>
+        <item quantity="other">%1$d ბიბლიოთეკა</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d შერჩეულია %2$d-დან</item>
+        <item quantity="other">%1$d შერჩეულია %2$d-დან</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d პატჩი</item>
+        <item quantity="other">%1$d პატჩი</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d ბარათი ამას ანაცვლებს</item>
+        <item quantity="other">%1$d ბარათი ამას ანაცვლებს</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">ჩამოტვირთეთ %1$d ბანდელი</item>
+        <item quantity="other">ჩამოტვირთეთ %1$d ბანდელი</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d ბირთვი</item>
+        <item quantity="other">%1$d ბირთვი</item>
+    </plurals>
+</resources>

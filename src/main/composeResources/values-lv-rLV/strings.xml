@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
+    <string name="morphe_logo_content_description">Morphe logotips</string>
+    <string name="dismiss">Noraidīt</string>
+    <string name="ok">Labi</string>
+    <string name="retry">Mēģināt vēlreiz</string>
+    <string name="clear">Notīrīt</string>
     <string name="search">Meklēt</string>
+    <string name="no_matches">Sakgrīvumu nav</string>
     <string name="remove">Noņemt</string>
+    <string name="collapse">Salekt</string>
+    <string name="expand">Iz 펼est</string>
     <string name="cancel">Atcelt</string>
+    <string name="close">Aizvērt</string>
+    <string name="delete">Dzēst</string>
+    <string name="disabled_while_patching">Atspringts patchēšanas laikā</string>
+    <string name="drop_apk_here">Nometiet APK šeit</string>
+    <string name="release_to_drop">Atlaidiet, lai nometītu</string>
+    <string name="click_to_browse">vai noklikšķiniet, lai meklētu</string>
+    <string name="error_could_not_load_patches">Neizdevās ielādēt nevienu patchi</string>
+    <string name="error_network_loading_patches">Tīkla kļūda patchu ielādes laikā</string>
+    <string name="error_patch_file_not_found">Lāpīšanas fails neatrasts: %1$s</string>
+    <string name="error_no_patches_files_supplied">Nav sniegti nevieni lāpīšanas faili</string>
+    <string name="error_input_apk_not_found">Ievades APK neatrasts</string>
+    <string name="error_step_failed">%1$s neizdevās: %2$s</string>
+    <string name="error_drop_valid_apk">Lūdzu, ievietojiet derīgu .apk, .apkm, .xapk vai .apks failu</string>
+    <string name="status_saving">Saglabāšana…</string>
+    <string name="installed_on">Installēts %1$s</string>
+    <string name="device_default">ierīce</string>
+    <string name="unknown">Nezināms</string>
+    <string name="installing">Instalēšana…</string>
+    <string name="folder">Mapas</string>
+    <string name="customize">Pielāgot</string>
+    <string name="customize_card_description">Pielāgot karti</string>
     <string name="none">Nav neviena pakalpojuma</string>
+    <string name="select_image">Atlasīt attēlu</string>
+    <string name="select_file">Atlasīt failu</string>
+    <string name="failed">Neizdevās</string>
     <string name="copy">Kopēt</string>
+    <string name="copied">Kopēts</string>
+    <string name="click_to_copy">Noklikšķiniet, lai kopētu</string>
+    <string name="enable_adb_button">Iespējot ADB</string>
+    <string name="drag_to_reorder">Velciet, lai mainītu secību</string>
     <string name="off">Izslēgts</string>
     <string name="on">Ieslēgts</string>
+    <string name="browse">Pārlūkot</string>
+    <string name="save">Saglabāt</string>
+    <string name="status_loading">Ielādē…</string>
+    <string name="status_offline">Bezsaite</string>
+    <string name="status_ready">Gatavs</string>
+    <string name="filter_apps_hint">Filtrēt lietotnes…</string>
+    <string name="version_label_stable">Stabila</string>
+    <string name="version_label_dev">Izstrād.</string>
+    <string name="version_label_experimental">Eksperimentāla</string>
+    <string name="version_label_latest_dev">Jaunākā Dev</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->

@@ -24,7 +24,6 @@
     <!-- Result Screen -->
     <!-- Icon Studio -->
     <!-- Source Management Sheet -->
-    <string name="source_sheet_title">ကိုင်းရှင်း။</string>
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
     <!-- Error Dialog -->
@@ -32,7 +31,6 @@
     <!-- Tools Dialog -->
     <!-- Licenses Dialog -->
     <!-- Settings -->
-    <string name="settings_dialog_title">မ်ားလာေၞး</string>
     <!-- Settings - Appearance -->
     <!-- Settings - Advanced -->
     <!-- Settings - System -->

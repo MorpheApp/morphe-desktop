@@ -17,7 +17,6 @@
     <!-- Home Screen - HomeHeader -->
     <!-- Home Screen - SupportedAppListRow -->
     <!-- Home Screen - SupportedAppsListPane -->
-    <string name="home_list_no_apps_match">No apps match \"%1$s\"</string>
     <!-- Home Screen - YourAppsPane -->
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
@@ -25,7 +24,6 @@
     <!-- Result Screen -->
     <!-- Icon Studio -->
     <!-- Source Management Sheet -->
-    <string name="add_source">මූලාශ්‍රය එක් කරන්න</string>
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
     <!-- Error Dialog -->

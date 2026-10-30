@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
-    <string name="none">எதுவுமில்லை</string>
+    <string name="morphe_logo_content_description">Morphe லோகோ</string>
+    <string name="dismiss">தள்ளு</string>
+    <string name="ok">சரி</string>
+    <string name="retry">மீண்டும் முயற்சிக்கவும்</string>
+    <string name="clear">நீக்கு</string>
+    <string name="search">தேடல்</string>
+    <string name="no_matches">பொருத்தங்கள் இல்லை</string>
+    <string name="collapse">சுருக்கு</string>
+    <string name="expand">விரிவுபடுத்து</string>
+    <string name="close">மூடு</string>
+    <string name="delete">அழி</string>
+    <string name="disabled_while_patching">பேட்ச் செய்யும் போது முடக்கப்பட்டிருக்கும்</string>
+    <string name="drop_apk_here">APK-ஐ இங்கே விடவும்</string>
+    <string name="release_to_drop">விடுவிக்கவும்</string>
+    <string name="click_to_browse">அல்லது தேட கிளிக் செய்யவும்</string>
+    <string name="error_could_not_load_patches">பேட்ச்களை ஏற்ற முடியவில்லை</string>
+    <string name="error_network_loading_patches">பேட்ச்களை ஏற்றும் போது நெட்வொர்க் பிழை ஏற்பட்டது</string>
+    <string name="error_patch_file_not_found">பேட்ச் கோப்பு காணப்படவில்லை: %1$s</string>
+    <string name="error_no_patches_files_supplied">பேட்ச் கோப்புகள் எதுவும் வழங்கப்படவில்லை</string>
+    <string name="error_input_apk_not_found">உள்ளீட்டு APK காணப்படவில்லை</string>
+    <string name="error_step_failed">%1$s தோல்வியுற்றது: %2$s</string>
+    <string name="error_drop_valid_apk">தயவுசெய்து சரியான .apk, .apkm, .xapk அல்லது .apks கோப்பை இழுத்து விடவும்</string>
+    <string name="status_saving">சேமிக்கப்படுகிறது…</string>
+    <string name="installed_on">%1$s இல் நிறுவப்பட்டது</string>
+    <string name="device_default">சாதனம்</string>
+    <string name="unknown">தெரியவில்லை</string>
+    <string name="installing">நிறுவப்படுகிறது…</string>
+    <string name="folder">கோப்புறை</string>
+    <string name="customize">தனிப்பயனாக்கு</string>
+    <string name="customize_card_description">கார்டைத் தனிப்பயனாக்கு</string>
+    <string name="select_image">படத்தைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="select_file">கோப்பைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="failed">தோல்வியுற்றது</string>
+    <string name="copied">நகலெடுக்கப்பட்டது</string>
+    <string name="click_to_copy">நகலெடுக்க கிளிக் செய்யவும்</string>
+    <string name="enable_adb_button">ADB-யை இயக்கு</string>
+    <string name="drag_to_reorder">வரிசையை மாற்ற இழுக்கவும்</string>
+    <string name="browse">உலாவு</string>
+    <string name="save">சேமி</string>
+    <string name="status_loading">பதிவேற்றப்படுகிறது…</string>
+    <string name="status_offline">ஆஃப்லைன்</string>
+    <string name="status_ready">தயார்</string>
+    <string name="filter_apps_hint">செயலிகளை வடிகட்டு…</string>
+    <string name="version_label_stable">நிலையானது</string>
+    <string name="version_label_dev">டெவ்</string>
+    <string name="version_label_experimental">சோதனை முயற்சி</string>
+    <string name="version_label_latest_dev">சமீபத்திய டெவ்</string>
     <!-- App Card Fill Dialog -->
     <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
@@ -10,6 +56,7 @@
     <!-- Version Warning Dialogs -->
     <!-- Version warnings for Quick Patch -->
     <!-- Quick Patch - Patching Content -->
+    <string name="quick_patch_patching_patches_count">%1$d / %2$d பேட்ச்கள்</string>
     <!-- Quick Patch - Ready Content -->
     <!-- Quick Patch - Supported Apps Row -->
     <!-- Home Screen -->
@@ -19,10 +66,10 @@
     <!-- Home Screen - SupportedAppListRow -->
     <!-- Home Screen - SupportedAppsListPane -->
     <!-- Home Screen - YourAppsPane -->
+    <string name="home_date_days_ago">%1$d நாட்களுக்கு முன்பு</string>
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
-    <string name="patch_selection_option_enabled">செயலில்பாட்டில் உள்ளது</string>
-    <string name="patch_selection_option_disabled">முடக்கப்பட்டது</string>
+    <string name="patch_selection_group_selected_count">%1$d தேர்ந்தெடுக்கப்பட்டது</string>
     <!-- Patching Screen -->
     <!-- Result Screen -->
     <!-- Icon Studio -->
@@ -34,11 +81,9 @@
     <!-- Tools Dialog -->
     <!-- Licenses Dialog -->
     <!-- Settings -->
-    <string name="settings_dialog_title">அமைப்புகள்</string>
     <!-- Settings - Appearance -->
     <!-- Settings - Advanced -->
     <!-- Settings - System -->
-    <string name="settings_section_about">விபரம்</string>
     <!-- Settings - Strip Libs -->
     <!-- Settings - Signing -->
     <!-- Settings - Keystore Info Dialog -->

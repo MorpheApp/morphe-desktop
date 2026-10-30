@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d patch-iturri kargatu nahi da. Arrakastaz kargatutakoak erabiliko dira</item>
+        <item quantity="other">%1$d patch-iturri kargatu nahi dira. Arrakastaz kargatutakoak erabiliko dira</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d patchatutako aplikazio batek eguneratze bat du</item>
+        <item quantity="other">%1$d patchatutako aplikazioek eguneratzeak dituzte</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d lerrua %2$s-ean gorde da</item>
+        <item quantity="other">%1$d lerrua %2$s-ean gorde dira</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d iturri</item>
+        <item quantity="other">%1$d iturri</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">%1$d patch aplikatuko da</item>
+        <item quantity="other">%1$d patching aplikatuko dira</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d kanpondu</item>
+        <item quantity="other">%1$d kanpondu</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d aktibatuta</item>
+        <item quantity="other">%1$d aktibatuta</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d desaktibatuta</item>
+        <item quantity="other">%1$d desaktibatuta</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d liburutegia</item>
+        <item quantity="other">%1$d liburutegi</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%2$d-tik %1$d aukeratuta</item>
+        <item quantity="other">%2$d-tik %1$d aukeratuta</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patch</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d txak overriding egiten dio honi</item>
+        <item quantity="other">%1$d txak overriding egiten die honi</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Deskargatu %1$d bundle</item>
+        <item quantity="other">Deskargatu %1$d bundle</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d nukleo</item>
+        <item quantity="other">%1$d nukleo</item>
+    </plurals>
+</resources>

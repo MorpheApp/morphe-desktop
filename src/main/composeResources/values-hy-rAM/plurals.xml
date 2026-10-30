@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d փաթեթի աղբյուրը չհաջողվեց բեռնել: Օգտագործվում են հաջողությամբ բեռնվածները</item>
+        <item quantity="other">%1$d փաթեթի աղբյուրներ չհաջողվեցին բեռնվել: Օգտագործվում են հաջողությամբ բեռնվածները</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d փոփոխված հավելվածի համար թարմացում է հասանելի</item>
+        <item quantity="other">%1$d փոփոխված հավելվածների համար թարմացումներ են հասանելի</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Պահպանվեց %1$d տող %2$s-ում</item>
+        <item quantity="other">Պահպանվեց %1$d տող %2$s-ում</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d աղբյուր</item>
+        <item quantity="other">%1$d աղբյուր</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_applied_summary">
+        <item quantity="one">Կկիրառվի %1$d փոփոխություն</item>
+        <item quantity="other">կիրառվելու է %1$d փաթեթ</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_excluded">
+        <item quantity="one">%1$d բացառված է</item>
+        <item quantity="other">%1$d բացառված է</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_enabled">
+        <item quantity="one">%1$d միացված է</item>
+        <item quantity="other">%1$d միացված է</item>
+    </plurals>
+    <plurals name="quick_patch_ready_patches_disabled">
+        <item quantity="one">%1$d անջատված է</item>
+        <item quantity="other">%1$d անջատված է</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d գրադարան</item>
+        <item quantity="other">%1$d գրադարաններ</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">ընտրված է %1$d-ը %2$d-ից</item>
+        <item quantity="other">ընտրված է %1$d-ը %2$d-ից</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d փաթեթ</item>
+        <item quantity="other">%1$d փաթեթներ</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d քարտը փոխարինում է սրան</item>
+        <item quantity="other">%1$d քարտերը փոխարինում են սրան</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Ներբեռնել %1$d փաթեթ</item>
+        <item quantity="other">Ներբեռնել %1$d փաթեթներ</item>
+    </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d միջուկ</item>
+        <item quantity="other">%1$d միջուկ</item>
+    </plurals>
+</resources>
