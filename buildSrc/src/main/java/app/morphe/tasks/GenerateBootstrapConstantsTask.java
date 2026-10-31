@@ -57,6 +57,7 @@ public abstract class GenerateBootstrapConstantsTask extends DefaultTask {
         String linuxX64 = sha256(files, "skiko-awt-runtime-linux-x64", skikoVer);
         String linuxArm64 = sha256(files, "skiko-awt-runtime-linux-arm64", skikoVer);
         String windowsX64 = sha256(files, "skiko-awt-runtime-windows-x64", skikoVer);
+        String windowsArm64 = sha256(files, "skiko-awt-runtime-windows-arm64", skikoVer);
 
         File outFile = getOutputDir().get().file("BootstrapConstants.kt").getAsFile();
         Files.createDirectories(outFile.getParentFile().toPath());
@@ -80,13 +81,14 @@ public abstract class GenerateBootstrapConstantsTask extends DefaultTask {
                     "macos-arm64" to "%s",
                     "linux-x64" to "%s",
                     "linux-arm64" to "%s",
-                    "windows-x64" to "%s"
+                    "windows-x64" to "%s",
+                    "windows-arm64" to "%s"
                 )
             }
             """.formatted(
                 skikoVer, jnaVer, oshiVer,
                 jnaHash, jnaPlatformHash, skikoAwtHash, oshiCoreHash, oshiCommonHash,
-                macosX64, macosArm64, linuxX64, linuxArm64, windowsX64
+                macosX64, macosArm64, linuxX64, linuxArm64, windowsX64, windowsArm64
             );
 
         Files.writeString(outFile.toPath(), content);

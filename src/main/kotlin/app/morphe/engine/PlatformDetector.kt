@@ -25,6 +25,7 @@ object PlatformDetector {
             isLinux && isArm -> "linux-arm64"
             isLinux && isX64 -> "linux-x64"
             isWindows && isX64 -> "windows-x64"
+            isWindows && isArm -> "windows-arm64"
             else -> error("Unsupported OS/Architecture combination: $osName / $osArch")
         }
     }
