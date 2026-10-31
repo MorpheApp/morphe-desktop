@@ -14,6 +14,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -245,6 +247,7 @@ internal fun AdbInstallSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ResultProgressRow(
     text: String,
@@ -254,9 +257,8 @@ internal fun ResultProgressRow(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircularProgressIndicator(
+        LoadingIndicator(
             modifier = Modifier.size(16.dp),
-            strokeWidth = 2.dp,
             color = MorpheTheme.colors.primary
         )
         Spacer(Modifier.width(10.dp))

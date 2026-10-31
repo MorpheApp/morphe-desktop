@@ -44,6 +44,9 @@ internal fun MiddleContent(
     onChangeClick: () -> Unit,
     onContinueClick: () -> Unit,
     patchSourceNames: List<String> = emptyList(),
+    selectedPatchSource: String? = null,
+    onSelectPatchSource: ((String) -> Unit)? = null,
+    isSimple: Boolean = false,
 ) {
     when {
         uiState.isAnalyzing -> {
@@ -57,6 +60,9 @@ internal fun MiddleContent(
                 onChangeClick = onChangeClick,
                 onContinueClick = onContinueClick,
                 patchSourceNames = patchSourceNames,
+                selectedPatchSource = selectedPatchSource,
+                onSelectPatchSource = onSelectPatchSource,
+                isSimple = isSimple,
             )
         }
         else -> {
@@ -109,6 +115,7 @@ internal fun DropPromptSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ApkSelectedSection(
     patchesLoaded: Boolean,
@@ -117,12 +124,16 @@ internal fun ApkSelectedSection(
     onChangeClick: () -> Unit,
     onContinueClick: () -> Unit,
     patchSourceNames: List<String> = emptyList(),
+    selectedPatchSource: String? = null,
+    onSelectPatchSource: ((String) -> Unit)? = null,
+    isSimple: Boolean = false,
 ) {
     val accents = MorpheTheme.colors
     val statusColorType = resolveStatusColorType(apkInfo.versionStatus, apkInfo.checksumStatus)
     
-    val showWarning = apkInfo.versionStatus != VersionStatus.LATEST_STABLE &&
-                      apkInfo.versionStatus != VersionStatus.UNKNOWN
+    val showWarning = apkInfo.versionStatus == VersionStatus.EXPERIMENTAL ||
+                      apkInfo.versionStatus == VersionStatus.BUILD_UNSUPPORTED ||
+                      apkInfo.versionStatus == VersionStatus.UNSUPPORTED
     val isWarningState = showWarning || apkInfo.isUnsupportedApp || apkInfo.hasLimitedInfo
     val buttonColor = if (isWarningState) {
         if (statusColorType == StatusColorType.PRIMARY) accents.warning else statusColorType.toColor()
@@ -137,11 +148,17 @@ internal fun ApkSelectedSection(
             onClearClick = onClearClick,
             modifier = Modifier.fillMaxWidth(),
             patchSourceNames = patchSourceNames,
+            selectedPatchSource = selectedPatchSource,
+            onSelectPatchSource = onSelectPatchSource,
+            isSimple = isSimple,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            val hasCompatiblePatches = !apkInfo.isUnsupportedApp && patchSourceNames.isNotEmpty()
+            val canProceed = patchesLoaded && (!isSimple || hasCompatiblePatches)
+
             MorpheButton(
                 label = stringResource(Res.string.home_stage_change_apk),
                 size = MorpheButtonSize.LARGE,
@@ -150,17 +167,16 @@ internal fun ApkSelectedSection(
             )
             MorpheButton(
                 onClick = onContinueClick,
-                enabled = patchesLoaded,
+                enabled = canProceed,
                 size = MorpheButtonSize.LARGE,
                 variant = MorpheButtonVariant.FILLED,
                 customColor = buttonColor,
                 modifier = Modifier.widthIn(min = 160.dp),
             ) {
                 if (!patchesLoaded) {
-                    CircularProgressIndicator(
+                    LoadingIndicator(
                         modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -169,7 +185,10 @@ internal fun ApkSelectedSection(
                     )
                 } else {
                     Text(
-                        text = stringResource(Res.string.home_stage_continue),
+                        text = stringResource(
+                            if (isSimple) Res.string.home_stage_patch
+                            else Res.string.home_stage_continue
+                        ),
                         style = MorpheTheme.typography.labelLarge,
                     )
                 }
@@ -178,6 +197,7 @@ internal fun ApkSelectedSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun AnalyzingSection() {
     val accents = MorpheTheme.colors
@@ -186,13 +206,12 @@ internal fun AnalyzingSection() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 32.dp)
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(32.dp),
+        LoadingIndicator(
+            modifier = Modifier.size(48.dp),
             color = accents.primary,
-            strokeWidth = 2.dp
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Text(
             text = stringResource(Res.string.home_stage_analyzing_title),

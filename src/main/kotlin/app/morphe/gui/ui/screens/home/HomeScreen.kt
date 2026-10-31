@@ -5,7 +5,12 @@
 
 package app.morphe.gui.ui.screens.home
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -13,21 +18,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import app.morphe.engine.model.PatchedAppRecord
-import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.model.VersionResolution
+import app.morphe.engine.model.VersionStatus
+import app.morphe.engine.patches.SupportedAppCatalog
+import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.AdbException
+import app.morphe.gui.LocalModeState
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchSelectionScreenRoute
 import app.morphe.gui.PatchesScreenRoute
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.PatchingScreenRoute
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.AddPatchSourceDialog
+import app.morphe.gui.ui.components.ChangelogDialog
 import app.morphe.gui.ui.components.MorpheErrorBar
-import app.morphe.gui.ui.components.SourceLedState
 import app.morphe.gui.ui.components.SourceManagementSheet
-import app.morphe.gui.ui.components.sourceLedState
+import app.morphe.gui.ui.components.SourcesPage
 import app.morphe.gui.ui.screens.home.components.ForgetConfirmDialog
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
 import app.morphe.gui.ui.screens.home.components.HeaderBar
@@ -38,11 +48,17 @@ import app.morphe.gui.ui.screens.home.components.UninstallConfirmDialog
 import app.morphe.gui.ui.screens.home.components.VersionWarningDialog
 import app.morphe.gui.ui.screens.home.components.handleContinue
 import app.morphe.gui.ui.screens.home.components.openFilePicker
+import app.morphe.gui.ui.screens.home.components.proceedToPatching
+import app.morphe.gui.ui.theme.Defaults
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceErrorMap
+import app.morphe.gui.util.sourceSignerChangedMap
+import app.morphe.gui.util.sourceSigningKeyFingerprintMap
+import app.morphe.gui.util.sourceSigningKeyMap
+import app.morphe.gui.util.sourceUpdateMap
 import app.morphe.gui.util.sourceVersionMap
 import java.awt.Desktop
 import java.io.File
@@ -65,6 +81,8 @@ fun HomeScreenContent(
     viewModel: HomeViewModel
 ) {
     val navController = LocalNavController.current
+    val modeState = LocalModeState.current
+    val isSimple = modeState.isSimple
     val uiState by viewModel.uiState.collectAsState()
 
     // Poll device installation state on initial load.
@@ -73,6 +91,20 @@ fun HomeScreenContent(
     val coroutineScope = rememberCoroutineScope()
     val patchSourceManager: PatchSourceManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
+
+    val pagerState = rememberPagerState(initialPage = uiState.selectedPage.ordinal) { HomePage.entries.size }
+    val openPage: (HomePage) -> Unit = { page ->
+        viewModel.selectPage(page)
+        coroutineScope.launch { pagerState.animateScrollToPage(page.ordinal) }
+    }
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.selectPage(HomePage.entries[pagerState.currentPage])
+    }
+    LaunchedEffect(uiState.selectedPage) {
+        if (pagerState.currentPage != uiState.selectedPage.ordinal) {
+            pagerState.animateScrollToPage(uiState.selectedPage.ordinal)
+        }
+    }
 
     var showSourceManagementSheet by rememberSaveable { mutableStateOf(false) }
     var pendingReopenSheet by rememberSaveable { mutableStateOf(false) }
@@ -140,15 +172,17 @@ fun HomeScreenContent(
     var preparingPatch by remember { mutableStateOf(false) }
     var patchPrepProgress by remember { mutableStateOf<Pair<String, Float>?>(null) }
     val activeSources = viewModel.activePatchSources()
-    LaunchedEffect(detailRecord?.packageName, activeSources.map { it.name }) {
+    val detailRecordSources = detailRecord?.let { viewModel.activePatchSourcesFor(it) } ?: activeSources
+    val detailCompatibleSources = detailRecord?.let { viewModel.compatiblePatchSourcesFor(it.packageName) } ?: emptyList()
+    val allDetailSources = (detailRecordSources + detailCompatibleSources).distinctBy { it.name }
+    LaunchedEffect(detailRecord?.packageName, allDetailSources.map { it.name }) {
         if (detailRecord == null) return@LaunchedEffect
-        bundleVersionsBySource = activeSources.associate { src ->
+        bundleVersionsBySource = allDetailSources.associate { src ->
             src.name to viewModel.availableBundleVersions(src.name)
         }
     }
     if (showAddSourceDialog) {
         AddPatchSourceDialog(
-            isQuickMode = false,
             onDismiss = { showAddSourceDialog = false },
             onAdd = { source ->
                 showAddSourceDialog = false
@@ -159,7 +193,15 @@ fun HomeScreenContent(
             },
         )
     }
+
+    var showChangelogDialog by remember { mutableStateOf(false) }
+    if (showChangelogDialog) {
+        ChangelogDialog(onDismiss = { showChangelogDialog = false })
+    }
+
     detailRecord?.let { record ->
+        val recordSources = remember(record, allSources) { viewModel.activePatchSourcesFor(record) }
+        val compSources = remember(record, allSources) { viewModel.compatiblePatchSourcesFor(record.packageName) }
         val updateInfo = remember(record) { viewModel.recallUpdateInfo(record) }
         PatchedAppDetailDialog(
             record = record,
@@ -167,9 +209,11 @@ fun HomeScreenContent(
             deviceInfo = uiState.deviceAppInfo[record.packageName],
             updateInfo = updateInfo,
             supportedApp = uiState.supportedApps.find { it.packageName == record.packageName },
-            activeSources = activeSources,
+            activeSources = recordSources,
+            compatibleSources = compSources,
             allSources = allSources,
             bundleVersionsBySource = bundleVersionsBySource,
+            isSimple = isSimple,
             onSetSourceEnabled = { id, enabled ->
                 coroutineScope.launch {
                     patchSourceManager.setSourceEnabled(id, enabled)
@@ -197,17 +241,22 @@ fun HomeScreenContent(
             onDismiss = { detailRecord = null },
             preparingPatch = preparingPatch,
             patchPrepProgress = patchPrepProgress,
-            onPatchWith = { apkPath, overrides ->
+            onPatchWith = { apkPath, overrides, chosenSource ->
                 coroutineScope.launch {
                     preparingPatch = true
                     patchPrepProgress = null
                     try {
-                        viewModel.resolvePatchFiles(overrides) { name, pct ->
+                        viewModel.resolvePatchFilesFor(record, overrides, chosenSource) { name, pct ->
                             patchPrepProgress = name to pct
                         }
                             .onSuccess { (files, names) ->
                                 detailRecord = null
-                                launchPatch(record, apkPath, files, names)
+                                if (isSimple) {
+                                    val config = viewModel.createSimpleRepatchConfig(record, apkPath, files.map { File(it) }, chosenSource)
+                                    navController.navigateComplex(PatchingScreenRoute, config)
+                                } else {
+                                    launchPatch(record, apkPath, files, names)
+                                }
                             }
                             .onFailure {
                                 val userMsg = (it as? PatchException)?.getUserMessage()
@@ -255,7 +304,17 @@ fun HomeScreenContent(
             sources = allSources,
             sourceVersions = snapshot.sourceVersionMap(),
             sourceChannels = snapshot.sourceChannelMap(),
+            sourceUpdates = snapshot.sourceUpdateMap(),
             sourceErrors = snapshot.sourceErrorMap(),
+            sourceSigningKeyFingerprints = snapshot.sourceSigningKeyFingerprintMap(),
+            sourceSigningKeys = snapshot.sourceSigningKeyMap(),
+            sourceSignerChanged = snapshot.sourceSignerChangedMap(),
+            onTrustSigningKey = { sourceId, newKey ->
+                coroutineScope.launch {
+                    patchSourceManager.trustNewSigningKey(sourceId, newKey)
+                    viewModel.retryLoadPatches()
+                }
+            },
             isLoading = uiState.isLoadingPatches,
             onToggleEnabled = { id, enabled ->
                 coroutineScope.launch {
@@ -268,7 +327,10 @@ fun HomeScreenContent(
                 coroutineScope.launch { patchSourceManager.addSource(source) }
             },
             onEdit = { updated ->
-                coroutineScope.launch { patchSourceManager.updateSource(updated) }
+                coroutineScope.launch {
+                    patchSourceManager.updateSource(updated)
+                    viewModel.retryLoadPatches(forceRefresh = true)
+                }
             },
             onRemove = { id ->
                 coroutineScope.launch { patchSourceManager.removeSource(id) }
@@ -280,7 +342,7 @@ fun HomeScreenContent(
                     viewModel.retryLoadPatches()
                 }
             },
-            onOpenPatches = { sourceId ->
+            onOpenPatches = if (isSimple) null else { sourceId ->
                 // Hide sheet during transition and schedule reopen upon return.
                 showSourceManagementSheet = false
                 pendingReopenSheet = true
@@ -292,7 +354,7 @@ fun HomeScreenContent(
                 }
             },
             onDismiss = { showSourceManagementSheet = false },
-            onRefresh = { viewModel.retryLoadPatches() },
+            onRefresh = { viewModel.retryLoadPatches(forceRefresh = true) },
             enabled = !uiState.isAnalyzing,
         )
     }
@@ -308,31 +370,74 @@ fun HomeScreenContent(
         ) {
             val padding = 24.dp
 
+            val resolvedSnapshot = viewModel.getResolvedSourcesSnapshot()
+            // Patch sources providing patches for the selected APK.
+            val patchSourcesForSelectedApk: List<String> = uiState.apkInfo?.let { info ->
+                val snapshot = resolvedSnapshot ?: return@let null
+                snapshot.patchesBySource.entries
+                    .filter { (_, patches) ->
+                        patches.any { p -> p.compatiblePackages.any { it.name == info.packageName } }
+                    }
+                    .mapNotNull { (sourceId, _) ->
+                        allSources.firstOrNull { it.id == sourceId }?.name
+                    }
+            } ?: emptyList()
+
+            var selectedSimplePatchSource by remember(uiState.apkInfo?.packageName) { mutableStateOf<String?>(null) }
+            val preferredSource = uiState.apkInfo?.packageName?.let { pkg ->
+                uiState.preferredPatchSourceByPackage[pkg]
+            }
+            val effectiveSimplePatchSource = selectedSimplePatchSource?.takeIf { it in patchSourcesForSelectedApk }
+                ?: preferredSource?.let { pref ->
+                    patchSourcesForSelectedApk.firstOrNull { it.equals(pref, ignoreCase = true) }
+                }
+                ?: patchSourcesForSelectedApk.firstOrNull()
+
+            val effectiveApkInfo = remember(uiState.apkInfo, effectiveSimplePatchSource, resolvedSnapshot, isSimple) {
+                val apk = uiState.apkInfo ?: return@remember null
+                if (!isSimple) return@remember apk
+                val sourceName = effectiveSimplePatchSource ?: return@remember apk
+                val sourceId = allSources.firstOrNull { it.name.equals(sourceName, ignoreCase = true) }?.id
+                    ?: return@remember apk
+                val patches = resolvedSnapshot?.patchesBySource?.get(sourceId)
+                    ?: return@remember apk
+                val relevantPatches = patches.filter { p ->
+                    p.compatiblePackages.any { it.name == apk.packageName }
+                }
+                val app = SupportedAppCatalog.extractSupportedAppsFromMetadata(relevantPatches)
+                    .firstOrNull { it.packageName == apk.packageName }
+                val resolution = if (app != null) {
+                    resolveVersionStatus(apk.versionName, app, apk.versionCode)
+                } else {
+                    VersionResolution(VersionStatus.UNKNOWN, null)
+                }
+                apk.copy(
+                    versionStatus = resolution.status,
+                    suggestedVersion = resolution.suggestedVersion,
+                    requiredBuildCodes = resolution.requiredBuildCodes,
+                    isUnsupportedApp = app == null,
+                )
+            }
+            val activeApkInfo = effectiveApkInfo ?: uiState.apkInfo
+
             var showVersionWarningDialog by remember { mutableStateOf(false) }
 
-            if (showVersionWarningDialog && uiState.apkInfo != null) {
+            if (showVersionWarningDialog && activeApkInfo != null) {
                 VersionWarningDialog(
-                    versionStatus = uiState.apkInfo!!.versionStatus,
-                    currentVersion = uiState.apkInfo!!.versionName,
-                    suggestedVersion = uiState.apkInfo!!.suggestedVersion ?: "",
+                    versionStatus = activeApkInfo.versionStatus,
+                    currentVersion = activeApkInfo.versionName,
+                    requiredBuildCodes = activeApkInfo.requiredBuildCodes,
+                    currentBuildCode = activeApkInfo.versionCode?.toString(),
                     onConfirm = {
                         showVersionWarningDialog = false
-                        val patchesFile = viewModel.getCachedPatchesFile()
-                        if (patchesFile != null) {
-                            navController.navigateComplex(
-                                PatchSelectionScreenRoute,
-                                PatchSelectionParams(
-                                    apkPath = uiState.apkInfo!!.filePath,
-                                    apkName = uiState.apkInfo!!.appName,
-                                    patchesFilePath = patchesFile.absolutePath,
-                                    packageName = uiState.apkInfo!!.packageName,
-                                    apkArchitectures = uiState.apkInfo!!.architectures,
-                                    apkVersion = uiState.apkInfo!!.versionName,
-                                    patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
-                                    patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
-                                )
-                            )
-                        }
+                        proceedToPatching(
+                            apkInfo = activeApkInfo,
+                            viewModel = viewModel,
+                            navController = navController,
+                            isSimple = isSimple,
+                            selectedPatchSource = effectiveSimplePatchSource,
+                            coroutineScope = coroutineScope,
+                        )
                     },
                     onDismiss = { showVersionWarningDialog = false }
                 )
@@ -349,28 +454,17 @@ fun HomeScreenContent(
                 }
             }
             val onContinueClick: () -> Unit = {
-                handleContinue(uiState, viewModel, navController) {
+                handleContinue(
+                    uiState = if (activeApkInfo != null) uiState.copy(apkInfo = activeApkInfo) else uiState,
+                    viewModel = viewModel,
+                    navController = navController,
+                    isSimple = isSimple,
+                    selectedPatchSource = effectiveSimplePatchSource,
+                    coroutineScope = coroutineScope,
+                ) {
                     showVersionWarningDialog = true
                 }
             }
-
-            val resolvedSnapshot = viewModel.getResolvedSourcesSnapshot()
-            val channelsBySource: Map<String, PatchResolver.Channel?> =
-                resolvedSnapshot
-                    ?.resolved
-                    ?.associate { it.source.id to it.channel }
-                    ?: emptyMap()
-            // Patch sources providing patches for the selected APK.
-            val patchSourcesForSelectedApk: List<String> = uiState.apkInfo?.let { info ->
-                val snapshot = resolvedSnapshot ?: return@let null
-                snapshot.patchesBySource.entries
-                    .filter { (_, patches) ->
-                        patches.any { p -> p.compatiblePackages.any { it.name == info.packageName } }
-                    }
-                    .mapNotNull { (sourceId, _) ->
-                        allSources.firstOrNull { it.id == sourceId }?.name
-                    }
-            } ?: emptyList()
 
             // Map of package names to their providing patch sources.
             val sourceNamesByPackage: Map<String, List<String>> = if (resolvedSnapshot == null) {
@@ -389,46 +483,134 @@ fun HomeScreenContent(
                 }
                 accum
             }
-            val sourceStates: List<SourceLedState> = allSources.map { src ->
-                sourceLedState(src, channelsBySource[src.id], hasError = src.id in uiState.failedSourceIds)
-            }
             Box(modifier = Modifier.fillMaxSize()) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     HeaderBar(
                         uiState = uiState,
                         onRetry = onRetry,
                         onUpdateChannelChanged = { viewModel.refreshUpdateCheck() },
-                        onManageSourcesClick = { showSourceManagementSheet = true },
-                        sourceStates = sourceStates,
+                        selectedPage = HomePage.entries[pagerState.currentPage],
+                        onSelectPage = openPage,
                     )
 
-                    Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    key(currentEntry) {
+                        var contentVisible by remember { mutableStateOf(false) }
+                        LaunchedEffect(Unit) {
+                            contentVisible = true
+                        }
+
+                        AnimatedVisibility(
+                            visible = contentVisible,
+                            enter = fadeIn(tween(Defaults.SCREEN_ENTER_DURATION)) +
+                                scaleIn(
+                                    initialScale = Defaults.DIALOG_SCALE,
+                                    animationSpec = tween(Defaults.SCREEN_ENTER_DURATION, easing = FastOutSlowInEasing)
+                                ),
+                            modifier = Modifier.weight(1f).fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.fillMaxSize()) {
                         HomeBanners(
                             uiState = uiState,
                             onDismissUpdateSession = { viewModel.dismissUpdateForSession() },
                             onDismissUpdateVersion = { viewModel.dismissUpdateForVersion() },
                             onDismissMultiSourceHint = { viewModel.dismissMultiSourceHint() },
-                            onManageSources = { showSourceManagementSheet = true },
+                            onManageSources = { openPage(HomePage.SOURCES) },
                             onDismissSourcesFailed = { viewModel.dismissSourcesFailedBanner() },
+                            onShowChangelog = { showChangelogDialog = true },
                         )
-                        HomeSplitLayout(
-                            uiState = uiState,
-                            padding = padding,
-                            sourceNamesByPackage = sourceNamesByPackage,
-                            patchSourcesForSelectedApk = patchSourcesForSelectedApk,
-                            patchesLoaded = patchesLoaded,
-                            onSortModeChange = { viewModel.setSortMode(it) },
-                            onShowDetail = onShowDetail,
-                            onFilterChange = { viewModel.setAppListFilter(it) },
-                            onRetry = onRetry,
-                            onManageSources = { showSourceManagementSheet = true },
-                            onClearClick = onClearClick,
-                            onChangeClick = onChangeClick,
-                            onContinueClick = onContinueClick,
+                        HorizontalPager(
+                            state = pagerState,
                             modifier = Modifier.weight(1f).fillMaxWidth(),
-                        )
+                            key = { index -> HomePage.entries[index] }
+                        ) { index ->
+                            when (HomePage.entries[index]) {
+                                HomePage.SOURCES -> {
+                                    val snapshot = viewModel.getResolvedSourcesSnapshot()
+                                    SourcesPage(
+                                        sources = allSources,
+                                        sourceVersions = snapshot.sourceVersionMap(),
+                                        sourceChannels = snapshot.sourceChannelMap(),
+                                        sourceUpdates = snapshot.sourceUpdateMap(),
+                                        sourceErrors = snapshot.sourceErrorMap(),
+                                        sourceSigningKeyFingerprints = snapshot.sourceSigningKeyFingerprintMap(),
+                                        sourceSigningKeys = snapshot.sourceSigningKeyMap(),
+                                        sourceSignerChanged = snapshot.sourceSignerChangedMap(),
+                                        onTrustSigningKey = { sourceId, newKey ->
+                                            coroutineScope.launch {
+                                                patchSourceManager.trustNewSigningKey(sourceId, newKey)
+                                                viewModel.retryLoadPatches()
+                                            }
+                                        },
+                                        isLoading = uiState.isLoadingPatches,
+                                        onToggleEnabled = { id, enabled ->
+                                            coroutineScope.launch {
+                                                patchSourceManager.setSourceEnabled(id, enabled)
+                                                viewModel.retryLoadPatches()
+                                            }
+                                        },
+                                        onAdd = { source ->
+                                            coroutineScope.launch { patchSourceManager.addSource(source) }
+                                        },
+                                        onEdit = { updated ->
+                                            coroutineScope.launch {
+                                                patchSourceManager.updateSource(updated)
+                                                viewModel.retryLoadPatches(forceRefresh = true)
+                                            }
+                                        },
+                                        onRemove = { id ->
+                                            coroutineScope.launch { patchSourceManager.removeSource(id) }
+                                        },
+                                        onReorder = { orderedIds ->
+                                            coroutineScope.launch {
+                                                patchSourceManager.reorderSources(orderedIds)
+                                                viewModel.retryLoadPatches()
+                                            }
+                                        },
+                                        onOpenPatches = if (isSimple) null else { sourceId ->
+                                            coroutineScope.launch {
+                                                patchSourceManager.switchSource(sourceId)
+                                                navController.navigate(PatchesScreenRoute(
+                                                    apkName = uiState.apkInfo?.appName ?: ""
+                                                ))
+                                            }
+                                        },
+                                        onRefresh = { viewModel.retryLoadPatches(forceRefresh = true) },
+                                        enabled = !uiState.isAnalyzing,
+                                        modifier = Modifier.fillMaxSize(),
+                                    )
+                                }
+                                HomePage.APPS -> {
+                                    HomeSplitLayout(
+                                        uiState = if (activeApkInfo != null) uiState.copy(apkInfo = activeApkInfo) else uiState,
+                                        padding = padding,
+                                        sourceNamesByPackage = sourceNamesByPackage,
+                                        patchSourcesForSelectedApk = patchSourcesForSelectedApk,
+                                        selectedPatchSource = effectiveSimplePatchSource,
+                                        onSelectPatchSource = { source ->
+                                            selectedSimplePatchSource = source
+                                            uiState.apkInfo?.packageName?.let { pkg ->
+                                                viewModel.setPreferredPatchSource(pkg, source)
+                                            }
+                                        },
+                                        patchesLoaded = patchesLoaded,
+                                        onSortModeChange = { viewModel.setSortMode(it) },
+                                        onShowDetail = onShowDetail,
+                                        onFilterChange = { viewModel.setAppListFilter(it) },
+                                        onRetry = onRetry,
+                                        onManageSources = { openPage(HomePage.SOURCES) },
+                                        onClearClick = onClearClick,
+                                        onChangeClick = onChangeClick,
+                                        onContinueClick = onContinueClick,
+                                        isSimple = isSimple,
+                                        modifier = Modifier.fillMaxSize(),
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
+            }
+        }
 
                 // Custom error notification bar replacing Material3 Snackbar.
                 uiState.error?.let { error ->

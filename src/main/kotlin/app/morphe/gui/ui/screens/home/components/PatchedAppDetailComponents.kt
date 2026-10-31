@@ -93,6 +93,7 @@ internal fun AssemblyRow(
     expanded: Boolean,
     accent: Color,
     warning: Boolean = false,
+    expandable: Boolean = true,
     onToggle: () -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -106,10 +107,15 @@ internal fun AssemblyRow(
             horizontalArrangement = Arrangement.spacedBy(11.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(accent.copy(alpha = if (expanded) 0.07f else if (isHovered) 0.05f else 0f))
-                .hoverable(hover)
-                .handCursor()
-                .clickable(onClick = onToggle)
+                .then(
+                    if (expandable) {
+                        Modifier
+                            .background(accent.copy(alpha = if (expanded) 0.07f else if (isHovered) 0.05f else 0f))
+                            .hoverable(hover)
+                            .handCursor()
+                            .clickable(onClick = onToggle)
+                    } else Modifier
+                )
                 .padding(horizontal = 12.dp, vertical = 11.dp),
         ) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -168,7 +174,9 @@ internal fun AssemblyRow(
                     )
                 }
             }
-            MorpheChevron(expanded = expanded, tint = accent.copy(alpha = 0.7f))
+            if (expandable) {
+                MorpheChevron(expanded = expanded, tint = accent.copy(alpha = 0.7f))
+            }
         }
         AnimatedVisibility(visible = expanded, enter = DisclosureEnter, exit = DisclosureExit) {
             Column(
@@ -188,6 +196,7 @@ internal fun ActionBar(
     filled: Boolean,
     sublabels: List<String> = emptyList(),
     progress: Float? = null,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     val hover = remember { MutableInteractionSource() }
@@ -195,6 +204,7 @@ internal fun ActionBar(
     val shape = MorpheTheme.shapes.small
     val running = progress != null
     val contentColor = when {
+        !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         running -> MaterialTheme.colorScheme.onSurface
         filled -> color.contrastingForeground()
         else -> color
@@ -206,6 +216,9 @@ internal fun ActionBar(
             .clip(shape)
             .then(
                 when {
+                    !enabled -> Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f), shape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
                     running -> Modifier.background(color.copy(alpha = 0.14f))
                     filled -> Modifier
                         .border(1.dp, color, shape)
@@ -215,9 +228,14 @@ internal fun ActionBar(
                         .background(color.copy(alpha = if (isHovered) 0.08f else 0f))
                 }
             )
-            .hoverable(hover)
-            .handCursor()
-            .clickable(onClick = onClick),
+            .then(
+                if (enabled && !running) {
+                    Modifier
+                        .hoverable(hover)
+                        .handCursor()
+                        .clickable(onClick = onClick)
+                } else Modifier
+            ),
         contentAlignment = Alignment.Center,
     ) {
         if (progress != null) {

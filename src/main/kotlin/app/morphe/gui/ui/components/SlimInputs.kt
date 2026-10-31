@@ -5,7 +5,14 @@
 
 package app.morphe.gui.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -67,6 +75,16 @@ internal fun SlimTextField(
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
+    val borderWidth by animateDpAsState(
+        if (isFocused) 1.5.dp else 1.dp,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 400f),
+        label = "slimFieldBorderWidth",
+    )
+    val containerColor by animateColorAsState(
+        if (isFocused) MorpheTheme.colors.primary.copy(alpha = 0.04f) else Color.Transparent,
+        animationSpec = MorpheMotion.fastTween(),
+        label = "slimFieldBg",
+    )
     val borderColor by animateColorAsState(
         when {
             isError -> MorpheTheme.colors.danger
@@ -92,7 +110,8 @@ internal fun SlimTextField(
         modifier = modifier
             .height(dimens.controlHeight)
             .clip(MorpheTheme.shapes.small)
-            .border(1.dp, borderColor, MorpheTheme.shapes.small),
+            .background(containerColor)
+            .border(borderWidth, borderColor, MorpheTheme.shapes.small),
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier
@@ -130,6 +149,17 @@ internal fun SlimSearchField(
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
+    val borderWidth by animateDpAsState(
+        if (isFocused) 1.5.dp else 1.dp,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 400f),
+        label = "slimSearchBorderWidth",
+    )
+    val searchBg by animateColorAsState(
+        if (isFocused) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.75f)
+        else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
+        animationSpec = MorpheMotion.fastTween(),
+        label = "slimSearchBg",
+    )
     val borderColor by animateColorAsState(
         if (isFocused) MorpheTheme.colors.primary.copy(alpha = MorpheTheme.alphas.borderFocus)
         else MaterialTheme.colorScheme.outline.copy(alpha = MorpheTheme.alphas.borderMuted),
@@ -151,8 +181,8 @@ internal fun SlimSearchField(
             .fillMaxWidth()
             .height(dimens.controlHeight)
             .clip(MorpheTheme.shapes.small)
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-            .border(1.dp, borderColor, MorpheTheme.shapes.small),
+            .background(searchBg)
+            .border(borderWidth, borderColor, MorpheTheme.shapes.small),
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier
@@ -177,15 +207,21 @@ internal fun SlimSearchField(
                     }
                     innerTextField()
                 }
-                if (value.isNotEmpty()) {
-                    Spacer(modifier = Modifier.width(6.dp))
-                    MorpheIconButton(
-                        icon = MorpheIcons.Clear,
-                        contentDescription = stringResource(Res.string.clear),
-                        size = MorpheIconButtonSize.TINY,
-                        variant = MorpheIconButtonVariant.GHOST,
-                        onClick = { onValueChange("") },
-                    )
+                AnimatedVisibility(
+                    visible = value.isNotEmpty(),
+                    enter = fadeIn(MorpheMotion.fastTween()) + scaleIn(MorpheMotion.fastTween()),
+                    exit = fadeOut(MorpheMotion.fastTween()) + scaleOut(MorpheMotion.fastTween()),
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        MorpheIconButton(
+                            icon = MorpheIcons.Clear,
+                            contentDescription = stringResource(Res.string.clear),
+                            size = MorpheIconButtonSize.TINY,
+                            variant = MorpheIconButtonVariant.GHOST,
+                            onClick = { onValueChange("") },
+                        )
+                    }
                 }
                 if (trailing != null) {
                     trailing()

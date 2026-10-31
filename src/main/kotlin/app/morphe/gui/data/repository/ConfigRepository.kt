@@ -17,6 +17,7 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.ui.theme.ThemeStyle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -95,6 +96,11 @@ open class ConfigRepository {
         saveConfig(current.copy(themePreference = theme.name))
     }
 
+    suspend fun setThemeStyle(style: ThemeStyle) {
+        val current = loadConfig()
+        saveConfig(current.copy(themeStyle = style.name))
+    }
+
     suspend fun setUseSharpCorners(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(useSharpCorners = enabled))
@@ -136,11 +142,6 @@ open class ConfigRepository {
     suspend fun setCustomAccentColorArgb(color: Int?) {
         val current = loadConfig()
         saveConfig(current.copy(customAccentColorArgb = color))
-    }
-
-    suspend fun setGroupPatchesByCategory(enabled: Boolean) {
-        val current = loadConfig()
-        saveConfig(current.copy(groupPatchesByCategory = enabled))
     }
 
     /** Sets the version tracking preference for a patch source. */
@@ -218,9 +219,9 @@ open class ConfigRepository {
         return derived
     }
 
-    suspend fun setUseSimplifiedMode(enabled: Boolean) {
+    suspend fun setUseSimpleMode(enabled: Boolean) {
         val current = loadConfig()
-        saveConfig(current.copy(useSimplifiedMode = enabled))
+        saveConfig(current.copy(useSimpleMode = enabled))
     }
 
     /** Persists the expanded state of a settings section. */
@@ -260,15 +261,21 @@ open class ConfigRepository {
 
         val newSource = if (!existing.deletable) {
             existing.copy(
-                usePreRelease = updated.usePreRelease,
-                useExperimentalVersions = updated.useExperimentalVersions
+                usePreRelease = updated.usePreRelease
             )
         } else {
             updated
         }
 
+        val updatedPrefs = if (existing.usePreRelease != updated.usePreRelease) {
+            val newMode = if (updated.usePreRelease) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE
+            current.sourceVersionPrefs + (updated.id to SourceVersionPref(mode = newMode))
+        } else {
+            current.sourceVersionPrefs
+        }
+
         val updatedSources = current.patchSource.map { if (it.id == updated.id) newSource else it }
-        saveConfig(current.copy(patchSource = updatedSources))
+        saveConfig(current.copy(patchSource = updatedSources, sourceVersionPrefs = updatedPrefs))
     }
 
     /** Persists reordered patch sources if [orderedIds] matches current sources. */
@@ -292,6 +299,14 @@ open class ConfigRepository {
         val current = loadConfig()
         if (current.homeAppListFilter == value) return
         saveConfig(current.copy(homeAppListFilter = value))
+    }
+
+    /** Persists the preferred patch source name for a given app package in Simple mode. */
+    suspend fun setPreferredPatchSource(packageName: String, sourceName: String) {
+        val current = loadConfig()
+        if (current.preferredPatchSourceByPackage[packageName] == sourceName) return
+        val updated = current.preferredPatchSourceByPackage + (packageName to sourceName)
+        saveConfig(current.copy(preferredPatchSourceByPackage = updated))
     }
 
     /** Toggles patch source enablement, ensuring at least one source remains active. */

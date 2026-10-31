@@ -29,6 +29,9 @@ object MorpheData {
     /** Directory for custom app icons. */
     val iconsDir: File by lazy { File(root, "icons").also { it.mkdirs() } }
 
+    /** Directory for cached remote avatars. */
+    val avatarsDir: File by lazy { File(root, "avatars").also { it.mkdirs() } }
+
     /** Directory for temporary patcher scratch files. */
     val tmpDir: File by lazy { File(root, "tmp").also { it.mkdirs() } }
 

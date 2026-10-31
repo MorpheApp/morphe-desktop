@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 /** Resolves local and remote patch sources into on-disk `.mpp` files. */
 object PatchResolver {
 
-    enum class Channel { STABLE_LATEST, STABLE_OLDER, DEV_LATEST, DEV_OLDER, LOCAL, UNKNOWN }
+    enum class Channel { STABLE, PRERELEASE, LOCAL, UNKNOWN }
 
     sealed class Error(open val message: String) {
         data object LocalPathEmpty : Error("Local source path is empty")
@@ -31,6 +31,11 @@ object PatchResolver {
         data class PinnedTagNotFound(val tag: String, val repoPath: String) : Error("Version $tag not found in $repoPath")
         data class ReleaseFetchFailed(override val message: String = "Failed to fetch releases") : Error(message)
         data class DownloadFailed(override val message: String) : Error(message)
+        data class SignerChanged(
+            val signer: String?,
+            val repoPath: String,
+            override val message: String = "The patch bundle is not signed by the key its source trusts"
+        ) : Error(message)
     }
 
     data class ResolutionResult(
@@ -76,6 +81,7 @@ object PatchResolver {
         pinnedTag: String? = null,
         strictPin: Boolean = false,
         onDownloadProgress: ((Float) -> Unit)? = null,
+        forceRefresh: Boolean = false,
     ): ResolutionResult = withContext(Dispatchers.IO) {
         val isPrSource = repo.remoteSource is PullRequestPatchSource
         val release: Release?
@@ -83,7 +89,7 @@ object PatchResolver {
         val latestDevTag: String?
 
         if (pinnedTag != null) {
-            val releasesResult = repo.fetchReleases()
+            val releasesResult = repo.fetchReleases(forceRefresh = forceRefresh)
             val releases = releasesResult.getOrNull()
             if (releases.isNullOrEmpty()) {
                 if (isPrSource) {
@@ -103,16 +109,16 @@ object PatchResolver {
             latestStableTag = latestStable?.tagName
             latestDevTag = releases.firstOrNull { it.isDevRelease() }?.tagName
         } else if (isPrSource) {
-            val prReleasesResult = repo.fetchReleases()
+            val prReleasesResult = repo.fetchReleases(forceRefresh = forceRefresh)
             val prRelease = prReleasesResult.getOrNull()?.firstOrNull()
                 ?: return@withContext classifyPrOrFetchError(prReleasesResult.exceptionOrNull())
             release = prRelease
             latestStableTag = null
             latestDevTag = prRelease.tagName
         } else {
-            val primary = if (usePreRelease) repo.getLatestDevRelease() else repo.getLatestStableRelease()
+            val primary = if (usePreRelease) repo.getLatestDevRelease(forceRefresh = forceRefresh) else repo.getLatestStableRelease(forceRefresh = forceRefresh)
             val fallback = if (primary.getOrNull() == null) {
-                if (usePreRelease) repo.getLatestStableRelease() else repo.getLatestDevRelease()
+                if (usePreRelease) repo.getLatestStableRelease(forceRefresh = forceRefresh) else repo.getLatestDevRelease(forceRefresh = forceRefresh)
             } else null
 
             val chosen = primary.getOrNull() ?: fallback?.getOrNull()
@@ -127,18 +133,18 @@ object PatchResolver {
             return@withContext offlineOrError(repo)
         }
 
-        val channel = when {
-            release.isDevRelease() && release.tagName == latestDevTag -> Channel.DEV_LATEST
-            release.isDevRelease() -> Channel.DEV_OLDER
-            release.tagName == latestStableTag -> Channel.STABLE_LATEST
-            else -> Channel.STABLE_OLDER
-        }
+        val channel = if (release.isDevRelease()) Channel.PRERELEASE else Channel.STABLE
 
         val downloadResult = repo.downloadPatches(release) { pct ->
             onDownloadProgress?.invoke(pct)
         }
         val patchFile = downloadResult.getOrNull() ?: run {
             val ex = downloadResult.exceptionOrNull()
+            if (ex is PatchBundleSignerChangedException) {
+                return@withContext ResolutionResult(
+                    error = Error.SignerChanged(ex.signer, repo.repoPath)
+                )
+            }
             if (isPrSource) {
                 return@withContext classifyPrOrDownloadError(ex)
             }

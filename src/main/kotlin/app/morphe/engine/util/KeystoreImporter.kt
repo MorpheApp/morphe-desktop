@@ -10,42 +10,20 @@ import java.security.Provider
 import java.security.Security
 import java.security.UnrecoverableKeyException
 
-/**
- * The user-facing entry point for "I have a keystore file, make it work with
- * morphe-patcher" — which only loads BKS. Wraps [KeystoreConversionUtils.convert]
- * with the safeguards we want everywhere:
- *
- *  1. **Byte-sniff, not extension-trust.** URV ships the same key bytes under
- *     different extensions; extensions lie.
- *  2. **BKS short-circuit.** If the source is already BKS, return the original
- *     file untouched — never round-trip a working keystore through convert(),
- *     no risk of provider differences silently rewriting it.
- *  3. **Never mutate the original.** Conversions write to a separate output
- *     file the caller provides; the user's source file is read-only.
- *  4. **Register BouncyCastle on demand.** convert() needs `KeyStore.getInstance("BKS")`
- *     which requires the BC provider — ensure it's installed before calling.
- */
+/** Entry point to validate and convert imported keystores to BKS format. */
 object KeystoreImporter {
 
     /** Outcome of [ensureBks]. */
     sealed interface Result {
-        /** The provided source was already BKS — no conversion needed. Use [file] directly. */
+        /** Source is already BKS; [file] can be used directly. */
         data class AlreadyBks(val file: File) : Result
-        /** Source was a different format; converted bytes were written to [file]. */
+        /** Source was converted and written to [file]. */
         data class Converted(val file: File, val sourceFormat: KeystoreInputFormat) : Result
-        /** Detection or conversion failed. [reason] is safe to surface to users. */
+        /** Detection or conversion failed with user-facing [reason]. */
         data class Failed(val reason: String, val cause: Throwable? = null) : Result
     }
 
-    /**
-     * Ensure [source] can be passed to morphe-patcher. If already BKS, returns
-     * [Result.AlreadyBks] pointing at the original. Otherwise converts to BKS
-     * and writes the bytes to [convertedOutput], returning [Result.Converted].
-     *
-     * [alias] and [password] are used to read the source. Pass the user's
-     * configured values; an empty alias means "transfer every entry" (Manager's
-     * default behavior — usually what you want for unknown third-party keys).
-     */
+    /** Ensures [source] is in BKS format, converting to [convertedOutput] if necessary. */
     fun ensureBks(
         source: File,
         convertedOutput: File,
@@ -76,7 +54,6 @@ object KeystoreImporter {
             )
 
         if (format == KeystoreInputFormat.BKS || format == KeystoreInputFormat.KEYSTORE) {
-            // BKS short-circuit — never re-encode an already-BKS file.
             return Result.AlreadyBks(source)
         }
 
@@ -105,12 +82,7 @@ object KeystoreImporter {
         }
     }
 
-    /**
-     * Register BouncyCastle if it isn't already — needed for
-     * `KeyStore.getInstance("BKS")`. The patcher already pulls BC transitively,
-     * so the class is always on the classpath; we just have to install it as a
-     * JCA provider. Idempotent.
-     */
+    /** Registers the BouncyCastle security provider if not already installed. */
     private fun ensureBouncyCastleProvider() {
         if (Security.getProvider("BC") != null) return
         try {
@@ -119,8 +91,6 @@ object KeystoreImporter {
                 .newInstance() as Provider
             Security.addProvider(provider)
         } catch (_: Exception) {
-            // If BC isn't on the classpath the patcher itself would fail anyway —
-            // let conversion try and surface its own error rather than guessing here.
         }
     }
 

@@ -23,6 +23,7 @@ import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -116,7 +117,7 @@ internal fun StartBannerCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val sourceName = uiState.patchesSourceName
+            val sourceName = PatchSourceNaming.sanitize(uiState.patchesSourceName)
             BannerFieldCell(
                 label = sourceName.uppercase(),
                 value = uiState.patchesVersion,

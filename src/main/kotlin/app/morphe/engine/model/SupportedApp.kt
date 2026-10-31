@@ -27,6 +27,12 @@ data class SupportedApp(
         return codes.isEmpty() || versionCode == null || versionCode in codes
     }
 
+    fun requiredBuildCodes(version: String): Set<Int> {
+        return versionBuildCodes[version.removePrefix("v")]
+            ?: versionBuildCodes[version]
+            ?: emptySet()
+    }
+
     companion object {
         fun resolveDisplayName(packageName: String, providedName: String?): String {
             return providedName?.takeIf { it.isNotBlank() } ?: getDisplayName(packageName)

@@ -8,6 +8,8 @@ package app.morphe.gui.util
 import androidx.compose.runtime.Composable
 import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
@@ -41,6 +43,9 @@ object EnabledSourcesLoader {
         val channel: PatchResolver.Channel = PatchResolver.Channel.UNKNOWN,
         val errorRes: StringResource? = null,
         val errorArgs: List<Any> = emptyList(),
+        val signingKey: String? = null,
+        val signingKeyFingerprint: String? = null,
+        val signerChangedException: PatchBundleSignerChangedException? = null,
     ) {
         suspend fun getUserErrorMessage(): String? =
             errorRes?.let { getString(it, *errorArgs.toTypedArray()) } ?: error
@@ -65,11 +70,22 @@ object EnabledSourcesLoader {
         prefsBySource: Map<String, SourceVersionPref> = emptyMap(),
         excludedMppPatterns: List<String> = emptyList(),
         onDownloadProgress: ((String, Float) -> Unit)? = null,
+        forceRefresh: Boolean = false,
     ): Result = supervisorScope {
         val resolved = enabled.map { (source, repo) ->
             async(Dispatchers.IO) {
                 try {
-                    resolve(source, repo, prefsBySource[source.id], excludedMppPatterns, onDownloadProgress)
+                    val resolvedSource = resolve(source, repo, prefsBySource[source.id], excludedMppPatterns, onDownloadProgress, forceRefresh)
+                    val file = resolvedSource.patchFile
+                    val manifestName = file?.let { PatchBundleLoader.extractName(it) }
+                    val effectiveName = manifestName?.takeUnless { it.isBlank() || PatchSourceNaming.isRawOrCorruptedName(it) }
+                        ?: PatchSourceNaming.suggestNameFromUrl(source.url)
+                        ?: source.name
+                    if (effectiveName != resolvedSource.source.name) {
+                        resolvedSource.copy(source = resolvedSource.source.copy(name = effectiveName))
+                    } else {
+                        resolvedSource
+                    }
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
@@ -80,9 +96,13 @@ object EnabledSourcesLoader {
 
         val inputs = resolved.mapNotNull { res ->
             val file = res.patchFile ?: return@mapNotNull null
+            val manifestName = PatchBundleLoader.extractName(file)
+            val effectiveName = manifestName?.takeUnless { it.isBlank() }
+                ?: res.source.name.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
+                ?: PatchSourceNaming.resolveSourceName(file = file, candidateName = res.source.name)
             MultiSourceLoader.SourceInput(
                 sourceId = res.source.id,
-                sourceName = res.source.name,
+                sourceName = effectiveName,
                 patchFile = file,
             )
         }
@@ -117,6 +137,7 @@ object EnabledSourcesLoader {
         pref: SourceVersionPref?,
         excludedMppPatterns: List<String>,
         onDownloadProgress: ((String, Float) -> Unit)? = null,
+        forceRefresh: Boolean = false,
     ): ResolvedSource = withContext(Dispatchers.IO) {
         val engineResult = when (source.type) {
             PatchSourceType.LOCAL -> PatchResolver.resolveLocal(source.filePath, excludedMppPatterns)
@@ -132,16 +153,23 @@ object EnabledSourcesLoader {
                         usePreRelease = source.usePreRelease,
                         pinnedTag = pinnedTag,
                         strictPin = false,
-                    ) { pct ->
-                        onDownloadProgress?.invoke(source.name, pct)
-                    }
+                        onDownloadProgress = { pct ->
+                            onDownloadProgress?.invoke(source.name, pct)
+                        },
+                        forceRefresh = forceRefresh,
+                    )
                 }
             }
         }
-        engineResult.toResolvedSource(source)
+        engineResult.toResolvedSource(source, repo)
     }
 
-    private fun PatchResolver.ResolutionResult.toResolvedSource(source: PatchSource): ResolvedSource {
+    private fun PatchResolver.ResolutionResult.toResolvedSource(
+        source: PatchSource,
+        repo: PatchRepository?
+    ): ResolvedSource {
+        val signingKey = repo?.signingKey
+        val signingKeyFingerprint = repo?.signingKeyFingerprint
         val err = error ?: return ResolvedSource(
             source = source,
             patchFile = patchFile,
@@ -149,7 +177,13 @@ object EnabledSourcesLoader {
             latestAvailableVersion = latestAvailableVersion,
             isOffline = isOffline,
             channel = channel,
+            signingKey = signingKey,
+            signingKeyFingerprint = signingKeyFingerprint,
         )
+
+        val signerChangedEx = if (err is PatchResolver.Error.SignerChanged) {
+            PatchBundleSignerChangedException(err.signer)
+        } else null
 
         val (res, args) = when (err) {
             is PatchResolver.Error.LocalPathEmpty -> Res.string.source_error_local_no_path to emptyList()
@@ -159,6 +193,7 @@ object EnabledSourcesLoader {
             is PatchResolver.Error.GitHubPatRequired -> Res.string.source_error_github_pat_required to emptyList()
             is PatchResolver.Error.PrNoArtifact -> Res.string.source_error_pr_no_artifact to emptyList()
             is PatchResolver.Error.ReleaseFetchFailed -> Res.string.source_error_fetch_releases to emptyList()
+            is PatchResolver.Error.SignerChanged -> Res.string.sources_signing_key_changed_named to listOf(source.name)
             is PatchResolver.Error.PinnedTagNotFound,
             is PatchResolver.Error.DownloadFailed -> null to emptyList()
         }
@@ -169,6 +204,9 @@ object EnabledSourcesLoader {
             errorRes = res,
             errorArgs = args,
             channel = channel,
+            signingKey = signingKey,
+            signingKeyFingerprint = signingKeyFingerprint,
+            signerChangedException = signerChangedEx,
         )
     }
 }
@@ -180,6 +218,32 @@ fun EnabledSourcesLoader.Result?.sourceVersionMap(): Map<String, String?> =
 /** Maps source IDs to resolved release channels. */
 fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, PatchResolver.Channel?> =
     this?.resolved?.associate { it.source.id to it.channel } ?: emptyMap()
+
+/** Maps source IDs to pinned signing key fingerprints. */
+fun EnabledSourcesLoader.Result?.sourceSigningKeyFingerprintMap(): Map<String, String> =
+    this?.resolved?.mapNotNull { r ->
+        r.signingKeyFingerprint?.let { r.source.id to it }
+    }?.toMap() ?: emptyMap()
+
+/** Maps source IDs to full pinned signing keys. */
+fun EnabledSourcesLoader.Result?.sourceSigningKeyMap(): Map<String, String> =
+    this?.resolved?.mapNotNull { r ->
+        r.signingKey?.let { r.source.id to it }
+    }?.toMap() ?: emptyMap()
+
+/** Maps source IDs to signer changed exceptions if a release was refused for signer mismatch. */
+fun EnabledSourcesLoader.Result?.sourceSignerChangedMap(): Map<String, PatchBundleSignerChangedException> =
+    this?.resolved?.mapNotNull { r ->
+        r.signerChangedException?.let { r.source.id to it }
+    }?.toMap() ?: emptyMap()
+
+/** Maps source IDs to available newer version string when an update exists. */
+fun EnabledSourcesLoader.Result?.sourceUpdateMap(): Map<String, String> =
+    this?.resolved?.mapNotNull { r ->
+        val current = r.resolvedVersion ?: return@mapNotNull null
+        val latest = r.latestAvailableVersion ?: return@mapNotNull null
+        if (latest != current) r.source.id to latest else null
+    }?.toMap() ?: emptyMap()
 
 /** Maps source IDs to load-failure messages across resolve and load phases. */
 @Composable

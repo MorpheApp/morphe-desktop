@@ -75,7 +75,7 @@ internal fun ReleaseCard(
 
     val tintColor = if (isSelected) selectedColor.copy(alpha = 0.07f) else Color.Transparent
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
@@ -83,87 +83,85 @@ internal fun ReleaseCard(
             .background(baseBg)
             .background(tintColor)
             .hoverable(interactionSource)
-            .handCursor()
-            .clickable(interactionSource = interactionSource, indication = null) { onClick() }
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = release.tagName,
-                            style = MorpheTheme.typography.titleSmall,
-                            color = if (isSelected) selectedColor
-                            else MaterialTheme.colorScheme.onSurface
-                        )
-                        if (isLatest) {
-                            MorpheBadge(text = stringResource(Res.string.patches_latest_badge), tone = MorpheBadgeTone.Primary)
-                        }
-                        if (release.isDevRelease()) {
-                            MorpheBadge(text = stringResource(Res.string.version_label_experimental), tone = MorpheBadgeTone.Warning)
-                        }
-                        if (isDownloaded) {
-                            MorpheBadge(text = stringResource(Res.string.patches_cached_badge))
-                        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .handCursor()
+                .clickable(interactionSource = interactionSource, indication = null) { onClick() }
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = release.tagName,
+                        style = MorpheTheme.typography.titleSmall,
+                        color = if (isSelected) selectedColor
+                        else MaterialTheme.colorScheme.onSurface
+                    )
+                    if (isLatest) {
+                        MorpheBadge(text = stringResource(Res.string.patches_latest_badge), tone = MorpheBadgeTone.Primary)
                     }
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    release.assets.find { it.isPatchFile() }?.let { patchAsset ->
-                        Text(
-                            text = "${patchAsset.name} (${FormatUtils.formatFileSize(patchAsset.size, currentLocale())})",
-                            style = MorpheTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                    if (release.isDevRelease()) {
+                        MorpheBadge(text = stringResource(Res.string.version_label_prerelease), tone = MorpheBadgeTone.Warning)
                     }
-
-                    val formattedDate = release.publishedAt?.let { formatDate(it) } ?: ""
-                    if (formattedDate.isNotEmpty()) {
-                        Text(
-                            text = if (isOffline) stringResource(Res.string.patches_date_cached, formattedDate)
-                                   else stringResource(Res.string.patches_date_published, formattedDate),
-                            style = MorpheTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    if (hasNotes) {
-                        Spacer(modifier = Modifier.height(6.dp))
-                        MorpheChoiceChip(
-                            text = if (isExpanded) stringResource(Res.string.patches_hide_notes)
-                                   else stringResource(Res.string.patches_patch_notes),
-                            active = isExpanded,
-                            accent = accentColor,
-                            icon = if (isExpanded) MorpheIcons.ArrowDropUp else MorpheIcons.ArrowDropDown,
-                            dense = true,
-                            onClick = { isExpanded = !isExpanded },
-                        )
+                    if (isDownloaded) {
+                        MorpheBadge(text = stringResource(Res.string.patches_cached_badge))
                     }
                 }
-            }
 
-            if (isExpanded && hasNotes) {
-                val notesDividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.06f)
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .height(1.dp)
-                        .background(notesDividerColor)
-                )
-                FormattedReleaseNotes(
-                    markdown = release.body,
-                    modifier = Modifier.padding(16.dp)
-                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                release.assets.find { it.isPatchFile() }?.let { patchAsset ->
+                    Text(
+                        text = "${patchAsset.name} (${FormatUtils.formatFileSize(patchAsset.size, currentLocale())})",
+                        style = MorpheTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+
+                val formattedDate = release.publishedAt?.let { formatDate(it) } ?: ""
+                if (formattedDate.isNotEmpty()) {
+                    Text(
+                        text = if (isOffline) stringResource(Res.string.patches_date_cached, formattedDate)
+                               else stringResource(Res.string.patches_date_published, formattedDate),
+                        style = MorpheTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                if (hasNotes) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    MorpheChoiceChip(
+                        text = if (isExpanded) stringResource(Res.string.patches_hide_notes)
+                               else stringResource(Res.string.patches_patch_notes),
+                        active = isExpanded,
+                        accent = accentColor,
+                        icon = if (isExpanded) MorpheIcons.ArrowDropUp else MorpheIcons.ArrowDropDown,
+                        dense = true,
+                        onClick = { isExpanded = !isExpanded },
+                    )
+                }
             }
+        }
+
+        if (isExpanded && hasNotes) {
+            val notesDividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.06f)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .height(1.dp)
+                    .background(notesDividerColor)
+            )
+            FormattedReleaseNotes(
+                markdown = release.body,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }

@@ -17,13 +17,11 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -36,10 +34,10 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.morphe.engine.config.EngineConfigRepository
+import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -49,6 +47,8 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.channelColor
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Cursor
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 import java.io.File
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -56,9 +56,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /** Modal sheet for managing, reordering, adding, and toggling patch sources. */
-/** Selection mode determining whether sources are toggled independently or mutually exclusively. */
-enum class SourceSheetMode { MULTI_TOGGLE, SINGLE_SELECT }
-
 /** Cursor displayed over source drag handles. */
 private val DragMoveCursor = PointerIcon(Cursor(Cursor.MOVE_CURSOR))
 
@@ -69,7 +66,7 @@ fun SourceManagementSheet(
     onAdd: (PatchSource) -> Unit,
     onEdit: (PatchSource) -> Unit,
     onRemove: (id: String) -> Unit,
-    onOpenPatches: (sourceId: String) -> Unit,
+    onOpenPatches: ((sourceId: String) -> Unit)? = null,
     onDismiss: () -> Unit,
     /** Reloads all sources to pick up newly built or updated local patches. */
     onRefresh: () -> Unit = {},
@@ -82,15 +79,103 @@ fun SourceManagementSheet(
     sourceChannels: Map<String, Channel?> = emptyMap(),
     /** Indicates whether source patches are currently being loaded. */
     isLoading: Boolean = false,
+    /** Map of source ID to available newer version string when an update exists. */
+    sourceUpdates: Map<String, String> = emptyMap(),
     /** Map of source ID to failure error message. */
     sourceErrors: Map<String, String> = emptyMap(),
-    /** Selection mode determining row interaction semantics. */
-    mode: SourceSheetMode = SourceSheetMode.MULTI_TOGGLE,
-    activeSourceId: String? = null,
-    onSelectSingle: (sourceId: String) -> Unit = {},
+    /** Map of source ID to signing key fingerprint. */
+    sourceSigningKeyFingerprints: Map<String, String> = emptyMap(),
+    /** Map of source ID to signing key (base64 string). */
+    sourceSigningKeys: Map<String, String> = emptyMap(),
+    /** Map of source ID to signer changed exception if verification failed. */
+    sourceSignerChanged: Map<String, PatchBundleSignerChangedException> = emptyMap(),
+    /** Callback to trust a new signing key. */
+    onTrustSigningKey: (sourceId: String, newKey: String?) -> Unit = { _, _ -> },
+) {
+    MorpheAlertDialog(
+        onDismiss = onDismiss,
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(Res.string.source_sheet_title),
+                    style = MorpheTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                MorpheIconButton(
+                    icon = MorpheIcons.Refresh,
+                    contentDescription = stringResource(Res.string.source_sheet_reload_description),
+                    onClick = onRefresh,
+                    enabled = enabled && !isLoading,
+                    size = MorpheIconButtonSize.COMPACT,
+                    variant = MorpheIconButtonVariant.GHOST,
+                )
+            }
+        },
+        text = {
+            SourceManagementContent(
+                sources = sources,
+                onToggleEnabled = onToggleEnabled,
+                onAdd = onAdd,
+                onEdit = onEdit,
+                onRemove = onRemove,
+                onOpenPatches = onOpenPatches,
+                onReorder = onReorder,
+                enabled = enabled,
+                sourceVersions = sourceVersions,
+                sourceChannels = sourceChannels,
+                sourceUpdates = sourceUpdates,
+                isLoading = isLoading,
+                sourceErrors = sourceErrors,
+                sourceSigningKeyFingerprints = sourceSigningKeyFingerprints,
+                sourceSigningKeys = sourceSigningKeys,
+                sourceSignerChanged = sourceSignerChanged,
+                onTrustSigningKey = onTrustSigningKey,
+            )
+        },
+        confirmButton = {
+            MorpheButton(
+                label = stringResource(Res.string.source_sheet_done_button),
+                onClick = onDismiss,
+                variant = MorpheButtonVariant.GHOST,
+                size = MorpheButtonSize.COMPACT,
+            )
+        }
+    )
+}
+
+/** Reusable source management content used both in [SourceManagementSheet] and on [SourcesPage]. */
+@Composable
+fun SourceManagementContent(
+    sources: List<PatchSource>,
+    onToggleEnabled: (id: String, enabled: Boolean) -> Unit,
+    onAdd: (PatchSource) -> Unit,
+    onEdit: (PatchSource) -> Unit,
+    onRemove: (id: String) -> Unit,
+    onOpenPatches: ((sourceId: String) -> Unit)? = null,
+    onReorder: (orderedIds: List<String>) -> Unit = {},
+    enabled: Boolean = true,
+    sourceVersions: Map<String, String?> = emptyMap(),
+    sourceChannels: Map<String, Channel?> = emptyMap(),
+    sourceUpdates: Map<String, String> = emptyMap(),
+    isLoading: Boolean = false,
+    sourceErrors: Map<String, String> = emptyMap(),
+    /** Map of source ID to signing key fingerprint. */
+    sourceSigningKeyFingerprints: Map<String, String> = emptyMap(),
+    /** Map of source ID to signing key (base64 string). */
+    sourceSigningKeys: Map<String, String> = emptyMap(),
+    /** Map of source ID to signer changed exception if verification failed. */
+    sourceSignerChanged: Map<String, PatchBundleSignerChangedException> = emptyMap(),
+    /** Callback to trust a new signing key. */
+    onTrustSigningKey: (sourceId: String, newKey: String?) -> Unit = { _, _ -> },
+    modifier: Modifier = Modifier,
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var editingSource by remember { mutableStateOf<PatchSource?>(null) }
+    var trustingSourceId by remember { mutableStateOf<String?>(null) }
 
     // Live ordering rendered by the UI.
     val density = LocalDensity.current
@@ -117,55 +202,27 @@ fun SourceManagementSheet(
         onReorder(next)
     }
 
-    MorpheAlertDialog(
-        onDismiss = onDismiss,
-        title = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(Res.string.source_sheet_title),
-                    style = MorpheTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                MorpheIconButton(
-                    icon = MorpheIcons.Refresh,
-                    contentDescription = stringResource(Res.string.source_sheet_reload_description),
-                    onClick = onRefresh,
-                    enabled = enabled,
-                    size = MorpheIconButtonSize.COMPACT,
-                    variant = MorpheIconButtonVariant.GHOST,
-                )
-            }
-        },
-        text = {
-            val scrollState = rememberScrollState()
-            Box {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .widthIn(min = 360.dp)
-                        .padding(end = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                Text(
-                    text = when {
-                        !enabled -> stringResource(Res.string.disabled_while_patching)
-                        mode == SourceSheetMode.SINGLE_SELECT ->
-                            stringResource(Res.string.source_sheet_quick_mode_hint)
-                        else -> stringResource(Res.string.source_sheet_multi_mode_hint)
-                    },
-                    style = MorpheTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+    val scrollState = rememberScrollState()
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .widthIn(min = 360.dp)
+                .padding(end = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = if (!enabled) stringResource(Res.string.disabled_while_patching)
+                       else stringResource(Res.string.source_sheet_multi_mode_hint),
+                style = MorpheTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-                Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(4.dp))
 
-                orderedSources.forEachIndexed { index, source ->
-                  // Key by source ID to preserve gesture state during reorder.
-                  key(source.id) {
+            orderedSources.forEachIndexed { index, source ->
+                // Key by source ID to preserve gesture state during reorder.
+                key(source.id) {
                     val isDragging = source.id == draggingId
                     // Row pitch for drag target selection and offset calculation.
                     val slotPitch = ((rowHeights[source.id] ?: 0) + rowSpacingPx).coerceAtLeast(1f)
@@ -199,16 +256,18 @@ fun SourceManagementSheet(
                         source = source,
                         version = sourceVersions[source.id],
                         channel = sourceChannels[source.id],
+                        updateVersion = sourceUpdates[source.id],
                         isLoading = isLoading,
                         error = sourceErrors[source.id],
+                        signingKeyFingerprint = sourceSigningKeyFingerprints[source.id],
+                        signingKey = sourceSigningKeys[source.id],
+                        signerChangedException = sourceSignerChanged[source.id],
+                        onReviewSignerChanged = { trustingSourceId = source.id },
                         enabled = enabled,
-                        mode = mode,
-                        isActiveSelection = source.id == activeSourceId,
-                        onSelectSingle = { onSelectSingle(source.id) },
                         onToggleEnabled = { newVal -> onToggleEnabled(source.id, newVal) },
                         onEdit = { editingSource = source },
                         onRemove = { onRemove(source.id) },
-                        onOpenPatches = { onOpenPatches(source.id) },
+                        onOpenPatches = onOpenPatches?.let { handler -> { handler(source.id) } },
                         canReorder = canReorder,
                         position = index + 1,
                         canMoveUp = index > 0,
@@ -220,50 +279,39 @@ fun SourceManagementSheet(
                         dragOffsetY = dragOffsetY,
                         onMeasured = { h -> rowHeights[source.id] = h },
                     )
-                  }
-                }
-
-                Spacer(Modifier.height(2.dp))
-
-                MorpheButton(
-                    label = stringResource(Res.string.add_source),
-                    icon = MorpheIcons.Add,
-                    variant = MorpheButtonVariant.OUTLINED,
-                    size = MorpheButtonSize.DEFAULT,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled,
-                    onClick = { showAddDialog = true },
-                )
-
-                // Exclusions section rendered when developer options are enabled.
-                DeveloperMppExclusionsSection(enabled = enabled)
-                }
-
-                if (scrollState.maxValue > 0) {
-                    VerticalScrollbar(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .fillMaxHeight()
-                            .padding(vertical = 4.dp),
-                        adapter = rememberScrollbarAdapter(scrollState),
-                        style = MorpheScrollbarStyle()
-                    )
                 }
             }
-        },
-        confirmButton = {
+
+            Spacer(Modifier.height(2.dp))
+
             MorpheButton(
-                label = stringResource(Res.string.source_sheet_done_button),
-                onClick = onDismiss,
-                variant = MorpheButtonVariant.GHOST,
-                size = MorpheButtonSize.COMPACT,
+                label = stringResource(Res.string.add_source),
+                icon = MorpheIcons.Add,
+                variant = MorpheButtonVariant.OUTLINED,
+                size = MorpheButtonSize.DEFAULT,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = enabled,
+                onClick = { showAddDialog = true },
+            )
+
+            // Exclusions section rendered when developer options are enabled.
+            DeveloperMppExclusionsSection(enabled = enabled)
+        }
+
+        if (scrollState.maxValue > 0) {
+            VerticalScrollbar(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .fillMaxHeight()
+                    .padding(vertical = 4.dp),
+                adapter = rememberScrollbarAdapter(scrollState),
+                style = MorpheScrollbarStyle()
             )
         }
-    )
+    }
 
     if (showAddDialog) {
         AddPatchSourceDialog(
-            isQuickMode = mode == SourceSheetMode.SINGLE_SELECT,
             onDismiss = { showAddDialog = false },
             onAdd = {
                 onAdd(it)
@@ -275,7 +323,6 @@ fun SourceManagementSheet(
     editingSource?.let { src ->
         EditPatchSourceDialog(
             source = src,
-            isQuickMode = mode == SourceSheetMode.SINGLE_SELECT,
             onDismiss = { editingSource = null },
             onSave = {
                 onEdit(it)
@@ -283,23 +330,44 @@ fun SourceManagementSheet(
             }
         )
     }
+
+    trustingSourceId?.let { sourceId ->
+        val source = sourcesById[sourceId]
+        val exception = sourceSignerChanged[sourceId]
+        if (source != null && exception != null) {
+            SigningKeyTrustDialog(
+                sourceName = source.name,
+                expectedFingerprint = sourceSigningKeyFingerprints[sourceId],
+                actualFingerprint = exception.signerFingerprint,
+                actualKey = exception.signer,
+                onDismiss = { trustingSourceId = null },
+                onTrust = {
+                    onTrustSigningKey(source.id, exception.signer)
+                    trustingSourceId = null
+                },
+            )
+        }
+    }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SourceRow(
     source: PatchSource,
     version: String?,
     channel: Channel?,
     isLoading: Boolean,
+    updateVersion: String? = null,
     error: String? = null,
+    signingKeyFingerprint: String? = null,
+    signingKey: String? = null,
+    signerChangedException: PatchBundleSignerChangedException? = null,
+    onReviewSignerChanged: (() -> Unit)? = null,
     enabled: Boolean,
     onToggleEnabled: (Boolean) -> Unit,
     onEdit: () -> Unit,
     onRemove: () -> Unit,
-    onOpenPatches: () -> Unit,
-    mode: SourceSheetMode,
-    isActiveSelection: Boolean,
-    onSelectSingle: () -> Unit,
+    onOpenPatches: (() -> Unit)?,
     canReorder: Boolean,
     position: Int,
     canMoveUp: Boolean,
@@ -317,28 +385,25 @@ private fun SourceRow(
     val isHovered by hoverInteraction.collectIsHoveredAsState()
     val isEnabled = source.enabled
     val isDefault = !source.deletable
-    val canInteract = enabled
-    // Highlight enabled sources in multi-mode or active source in single-select mode.
-    val isHighlighted = if (mode == SourceSheetMode.SINGLE_SELECT) isActiveSelection else isEnabled
 
     val animatedBorder by animateColorAsState(
         targetValue = when {
-            isHovered && canInteract -> colors.primary.copy(alpha = if (isHighlighted) 0.7f else 0.45f)
-            isHighlighted -> colors.primary.copy(alpha = 0.35f)
+            isHovered && enabled -> colors.primary.copy(alpha = if (isEnabled) 0.7f else 0.45f)
+            isEnabled -> colors.primary.copy(alpha = 0.35f)
             else -> MaterialTheme.colorScheme.outlineVariant
         },
         animationSpec = MorpheMotion.fastTween()
     )
     val animatedBg by animateColorAsState(
         targetValue = when {
-            isHovered && canInteract -> colors.primary.copy(alpha = if (isHighlighted) 0.12f else 0.05f)
-            isHighlighted -> colors.primary.copy(alpha = 0.06f)
+            isHovered && enabled -> colors.primary.copy(alpha = if (isEnabled) 0.12f else 0.05f)
+            isEnabled -> colors.primary.copy(alpha = 0.06f)
             else -> Color.Transparent
         },
         animationSpec = MorpheMotion.fastTween()
     )
 
-    val baseBg = if (isHighlighted)
+    val baseBg = if (isEnabled)
         MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
     else
         MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp).copy(alpha = 0.5f)
@@ -359,9 +424,9 @@ private fun SourceRow(
             .background(if (isDragging) colors.primary.copy(alpha = 0.10f) else animatedBg)
             .hoverable(hoverInteraction)
             .then(
-                if (canInteract) Modifier
+                if (enabled && onOpenPatches != null) Modifier
                     .handCursor()
-                    .clickable(onClick = if (mode == SourceSheetMode.SINGLE_SELECT) onSelectSingle else onOpenPatches)
+                    .clickable(onClick = onOpenPatches)
                 else Modifier
             )
             .padding(horizontal = 12.dp, vertical = 10.dp)
@@ -406,7 +471,7 @@ private fun SourceRow(
                         text = when (source.type) {
                             PatchSourceType.DEFAULT -> stringResource(Res.string.source_sheet_type_preinstalled)
                             PatchSourceType.GITHUB, PatchSourceType.GITLAB -> stringResource(Res.string.source_sheet_remote_label)
-                            PatchSourceType.LOCAL -> stringResource(Res.string.source_sheet_local_label)
+                            PatchSourceType.LOCAL -> stringResource(Res.string.version_label_local)
                         },
                         tone = MorpheBadgeTone.Neutral,
                     )
@@ -427,7 +492,78 @@ private fun SourceRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (error != null) {
+                if (signingKeyFingerprint != null) {
+                    Spacer(Modifier.height(2.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Icon(
+                            imageVector = MorpheIcons.Verified,
+                            contentDescription = null,
+                            tint = colors.primary,
+                            modifier = Modifier.size(13.dp),
+                        )
+                        Text(
+                            text = stringResource(Res.string.sources_management_signed_by) + ":",
+                            style = MorpheTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Text(
+                            text = signingKeyFingerprint,
+                            style = MorpheTheme.typography.codeSmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        if (signingKey != null) {
+                            var copied by remember { mutableStateOf(false) }
+                            Icon(
+                                imageVector = MorpheIcons.ContentCopy,
+                                contentDescription = if (copied) stringResource(Res.string.copied) else stringResource(Res.string.copy),
+                                tint = if (copied) colors.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .handCursor()
+                                    .clickable {
+                                        try {
+                                            val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+                                            clipboard.setContents(StringSelection(signingKey), null)
+                                            copied = true
+                                        } catch (_: Exception) {}
+                                    },
+                            )
+                        }
+                    }
+                }
+                if (signerChangedException != null) {
+                    Spacer(Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier
+                            .clip(shapes.small)
+                            .background(colors.danger.copy(alpha = 0.1f))
+                            .border(1.dp, colors.danger.copy(alpha = 0.3f), shapes.small)
+                            .then(
+                                if (onReviewSignerChanged != null) Modifier
+                                    .handCursor()
+                                    .clickable(onClick = onReviewSignerChanged)
+                                else Modifier
+                            )
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Icon(
+                            imageVector = MorpheIcons.GppBad,
+                            contentDescription = null,
+                            tint = colors.danger,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Text(
+                            text = stringResource(Res.string.sources_management_signing_key_changed_hint),
+                            style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                            color = colors.danger,
+                        )
+                    }
+                } else if (error != null) {
                     Spacer(Modifier.height(3.dp))
                     Text(
                         text = error,
@@ -444,11 +580,27 @@ private fun SourceRow(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier.padding(horizontal = 6.dp)
             ) {
-                if (error != null) {
+                if (signerChangedException != null) {
+                    Text(
+                        text = stringResource(Res.string.sources_management_signing_key_changed_badge),
+                        style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                        color = colors.danger,
+                    )
+                } else if (error != null) {
                     Text(
                         text = stringResource(Res.string.failed),
                         style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
                         color = colors.danger,
+                    )
+                } else if (isEnabled && isLoading) {
+                    LoadingIndicator(
+                        modifier = Modifier.size(12.dp),
+                        color = colors.primary,
+                    )
+                    Text(
+                        text = stringResource(Res.string.source_sheet_status_resolving),
+                        style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                        color = colors.primary,
                     )
                 } else if (isEnabled && version != null) {
                     Text(
@@ -457,17 +609,13 @@ private fun SourceRow(
                         color = colors.primary
                     )
                     ChannelBadge(channel = channel)
-                } else if (isEnabled && isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(12.dp),
-                        strokeWidth = 2.dp,
-                        color = colors.primary,
-                    )
-                    Text(
-                        text = stringResource(Res.string.source_sheet_status_resolving),
-                        style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
-                        color = colors.primary,
-                    )
+                    if (updateVersion != null) {
+                        MorpheBadge(
+                            text = stringResource(Res.string.home_action_update),
+                            containerColor = colors.warning.copy(alpha = 0.15f),
+                            contentColor = colors.warning,
+                        )
+                    }
                 }
             }
 
@@ -501,34 +649,13 @@ private fun SourceRow(
                 }
                 Spacer(Modifier.width(4.dp))
             }
-            when (mode) {
-                SourceSheetMode.MULTI_TOGGLE -> MorpheSwitch(
-                    checked = isEnabled,
-                    onCheckedChange = onToggleEnabled,
-                    accentColor = colors.primary,
-                    enabled = enabled,
-                    modifier = Modifier.scale(0.8f)
-                )
-                SourceSheetMode.SINGLE_SELECT -> Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable(
-                            enabled = enabled,
-                            onClick = onSelectSingle
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val containerColor = if (isActiveSelection) colors.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
-                    val contentColor = if (isActiveSelection) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                    
-                    StatusCircleIcon(
-                        icon = MorpheIcons.Check,
-                        containerColor = containerColor,
-                        contentColor = contentColor,
-                        modifier = Modifier.alpha(if (enabled) 1f else 0.38f)
-                    )
-                }
-            }
+            MorpheSwitch(
+                checked = isEnabled,
+                onCheckedChange = onToggleEnabled,
+                accentColor = colors.primary,
+                enabled = enabled,
+                modifier = Modifier.scale(0.8f)
+            )
         }
     }
 }
@@ -588,12 +715,10 @@ private fun ChannelBadge(
     channel: Channel?,
 ) {
     val label = when (channel) {
-        Channel.STABLE_LATEST -> stringResource(Res.string.version_label_latest_stable)
-        Channel.STABLE_OLDER -> stringResource(Res.string.source_sheet_channel_older_stable)
-        Channel.DEV_LATEST -> stringResource(Res.string.version_label_latest_dev)
-        Channel.DEV_OLDER -> stringResource(Res.string.source_sheet_channel_older_dev)
-        Channel.LOCAL -> stringResource(Res.string.source_sheet_local_label)
-        else -> stringResource(Res.string.version_label_latest_stable)
+        Channel.STABLE -> stringResource(Res.string.version_label_stable)
+        Channel.PRERELEASE -> stringResource(Res.string.version_label_prerelease)
+        Channel.LOCAL -> stringResource(Res.string.version_label_local)
+        else -> stringResource(Res.string.version_label_stable)
     }
     val color = channelColor(channel)
     MorpheBadge(
@@ -709,28 +834,5 @@ private fun ExcludedPatternsEditor(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun StatusCircleIcon(
-    icon: ImageVector,
-    containerColor: Color,
-    contentColor: Color,
-    modifier: Modifier = Modifier,
-    size: Dp = 24.dp
-) {
-    Box(
-        modifier = modifier
-            .size(size)
-            .background(containerColor, CircleShape),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(size * 0.6f),
-            tint = contentColor
-        )
     }
 }

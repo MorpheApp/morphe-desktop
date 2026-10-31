@@ -5,6 +5,7 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.util.deleteRecursivelyInParallel
 import app.morphe.engine.workspace.WorkspaceManager
 import java.io.File
 
@@ -56,13 +57,32 @@ object CacheManager {
         var filesDeleted = 0
         var failedFiles = 0
 
-        dir.listFiles()?.forEach { entry ->
-            val files = entry.walkTopDown().filter { it.isFile }.toList()
-            val size = files.sumOf { it.length() }
-            if (entry.deleteRecursively()) {
-                bytesFreed += size
-                filesDeleted += files.size
-            } else {
+        val entries = try {
+            dir.listFiles() ?: emptyArray()
+        } catch (_: Exception) {
+            emptyArray()
+        }
+
+        entries.forEach { entry ->
+            runCatching {
+                val files = try {
+                    entry.walkTopDown().filter { it.isFile }.toList()
+                } catch (_: Exception) {
+                    emptyList()
+                }
+                val size = files.sumOf { it.length() }
+                val deleted = if (entry.isDirectory) {
+                    entry.deleteRecursivelyInParallel()
+                } else {
+                    entry.delete()
+                }
+                if (deleted) {
+                    bytesFreed += size
+                    filesDeleted += if (files.isNotEmpty()) files.size else 1
+                } else {
+                    failedFiles++
+                }
+            }.onFailure {
                 failedFiles++
             }
         }

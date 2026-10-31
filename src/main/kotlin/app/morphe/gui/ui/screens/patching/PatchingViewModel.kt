@@ -11,11 +11,14 @@ import app.morphe.engine.MorpheComponents
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.Logger
+import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.gui.util.PatcherState
 import app.morphe.morphe_desktop.generated.resources.*
 import com.sun.management.OperatingSystemMXBean
@@ -42,8 +45,47 @@ class PatchingViewModel(
     private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PatchingUiState())
+    private var allConfiguredSources: List<PatchSource> = emptyList()
+    private val initialSnapshot = config.historyMetadata?.sourcesSnapshot
+    private val fallbackSourceName = config.patchFiles.firstOrNull()?.let {
+        PatchSourceNaming.resolveSourceName(file = it)
+    } ?: PatchSourceNaming.FALLBACK_DEFAULT_NAME
+    private val initialSourceName = when {
+        initialSnapshot.isNullOrEmpty() -> fallbackSourceName
+        initialSnapshot.size == 1 -> PatchSourceNaming.sanitize(initialSnapshot.first().sourceName)
+        else -> initialSnapshot.joinToString(", ") { PatchSourceNaming.sanitize(it.sourceName) }
+    }
+    private val initialSourceVersion = when {
+        initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let { ApkOutputNaming.extractPatchesVersion(it.name) } ?: "?"
+        initialSnapshot.size == 1 -> initialSnapshot.first().version
+        else -> initialSnapshot.joinToString(", ") { it.version }
+    }
+    private val initialAppVersion = config.historyMetadata?.appVersion ?: "?"
+
+    private val _uiState = MutableStateFlow(
+        PatchingUiState(
+            totalPatches = config.enabledPatches.size,
+            appVersion = initialAppVersion,
+            patchesSourceName = initialSourceName,
+            patchesVersion = initialSourceVersion,
+        )
+    )
     val uiState: StateFlow<PatchingUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val sources = runCatching { configRepository.loadConfig().patchSource }.getOrDefault(emptyList())
+            allConfiguredSources = sources
+            val resolvedName = when {
+                initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let {
+                    PatchSourceNaming.resolveSourceName(file = it, sources = sources)
+                } ?: PatchSourceNaming.FALLBACK_DEFAULT_NAME
+                initialSnapshot.size == 1 -> PatchSourceNaming.sanitize(initialSnapshot.first().sourceName, sources)
+                else -> initialSnapshot.joinToString(", ") { PatchSourceNaming.sanitize(it.sourceName, sources) }
+            }
+            _uiState.update { it.copy(patchesSourceName = resolvedName) }
+        }
+    }
 
     private var patchingJob: Job? = null
     private var stateMachine: PatcherState? = null
@@ -62,6 +104,7 @@ class PatchingViewModel(
             var locale = Locale.getDefault()
             val (preparingState, cpuSampler, ioSampler) = withContext(Dispatchers.IO) {
                 val appConfig = configRepository.loadConfig()
+                allConfiguredSources = appConfig.patchSource
                 val loc = FormatUtils.resolveLocale(appConfig.language)
                 locale = loc
                 val osName = System.getProperty("os.name") ?: "Unknown OS"
@@ -70,10 +113,20 @@ class PatchingViewModel(
                 val inputApkFile = config.inputApk
                 val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), loc) else "?"
                 
-                val appVersion = ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
+                val appVersion = config.historyMetadata?.appVersion
+                    ?: ApkInspector.inspect(inputApkFile)?.versionName
+                    ?: initialAppVersion
                 val sourcesSnapshot = config.historyMetadata?.sourcesSnapshot
-                val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE"
-                val patchesVersion = sourcesSnapshot?.firstOrNull()?.version ?: "?"
+                val patchesSourceName = when {
+                    sourcesSnapshot.isNullOrEmpty() -> initialSourceName
+                    sourcesSnapshot.size == 1 -> PatchSourceNaming.sanitize(sourcesSnapshot.first().sourceName, allConfiguredSources)
+                    else -> sourcesSnapshot.joinToString(", ") { PatchSourceNaming.sanitize(it.sourceName, allConfiguredSources) }
+                }
+                val patchesVersion = when {
+                    sourcesSnapshot.isNullOrEmpty() -> initialSourceVersion
+                    sourcesSnapshot.size == 1 -> sourcesSnapshot.first().version
+                    else -> sourcesSnapshot.joinToString(", ") { it.version }
+                }
                 val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
                 
                 val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
@@ -191,6 +244,7 @@ class PatchingViewModel(
                     status = PatchingStatus.COMPLETED,
                     outputPath = engineResult.outputPath,
                     progress = 1f,
+                    currentStepName = getString(Res.string.status_patching_completed),
                     outputSizeMb = outSizeMb,
                     elapsedSec = formatElapsed(elapsedMs)
                 )
@@ -314,8 +368,8 @@ data class PatchingUiState(
     val androidVersion: String = "?",
     val deviceManufacturer: String = "?",
     val appVersion: String = "?",
-    val patchesSourceName: String = "MORPHE",
-    val patchesVersion: String = "?",
+    val patchesSourceName: String = "",
+    val patchesVersion: String = "",
     val isSplit: Boolean = false,
     val ramFreeInfo: String = "?",
     val storageFreeInfo: String = "?",

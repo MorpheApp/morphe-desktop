@@ -21,6 +21,7 @@ fun UpdateBanner(
     onDismissForSession: () -> Unit,
     onDismissForVersion: () -> Unit,
     modifier: Modifier = Modifier,
+    onShowChangelog: (() -> Unit)? = null,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -38,6 +39,12 @@ fun UpdateBanner(
             },
             modifier = Modifier.weight(1f),
         )
+        if (onShowChangelog != null) {
+            MorpheBannerAction(
+                label = stringResource(Res.string.changelog_dialog_title),
+                onClick = onShowChangelog,
+            )
+        }
         MorpheBannerAction(
             label = stringResource(Res.string.download),
             icon = MorpheIcons.Download,

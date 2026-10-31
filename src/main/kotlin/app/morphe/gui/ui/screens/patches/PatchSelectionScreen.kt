@@ -29,21 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchMetadata
-import app.morphe.gui.LocalGroupPatchesByCategory
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchingScreenRoute
 import app.morphe.gui.navigateComplex
-import app.morphe.gui.ui.components.MorpheBadge
-import app.morphe.gui.ui.components.MorpheBadgeTone
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.ScreenErrorDialog
-import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patches.components.selection.*
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -72,6 +67,7 @@ fun PatchSelectionScreen(
     PatchSelectionScreenContent(viewModel = viewModel)
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val primaryColor = MorpheTheme.colors.primary
@@ -166,16 +162,15 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        CircularProgressIndicator(
+                        LoadingIndicator(
+                            modifier = Modifier.size(48.dp),
                             color = primaryColor,
-                            strokeWidth = 2.dp,
-                            modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = stringResource(Res.string.patching_step_loading_patches),
-                            style = MorpheTheme.typography.labelSmall,
+                            style = MorpheTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -227,7 +222,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     uiState.filteredBundles.associateBy { it.bundleId }
                 }
                 val hasMultipleBundles = eligibleBundles.size > 1
-                val groupByCategory = LocalGroupPatchesByCategory.current.value
                 val sectionState = rememberPatchSectionState()
                 val coroutineScope = rememberCoroutineScope()
                 val pagerState = rememberPagerState { eligibleBundles.size }
@@ -283,10 +277,11 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                         SecondaryScrollableTabRow(
                             selectedTabIndex = pagerState.currentPage.coerceIn(0, (eligibleBundles.size - 1).coerceAtLeast(0)),
                             scrollState = tabScrollState,
-                            edgePadding = 0.dp,
+                            edgePadding = 16.dp,
+                            indicator = {},
                             divider = {},
                             containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
                         ) {
                             eligibleBundles.forEachIndexed { index, bundle ->
                                 val bundleFiltered = filteredBundlesById[bundle.bundleId]?.patches.orEmpty()
@@ -295,36 +290,15 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 val totalCount = bundle.patches.size
                                 val isSelected = pagerState.currentPage == index
 
-                                Tab(
-                                    selected = isSelected,
+                                PatchBundlePill(
+                                    bundle = bundle,
+                                    selectedCount = enabledCount,
+                                    totalCount = totalCount,
+                                    isSelected = isSelected,
+                                    hasResults = hasResults,
                                     onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                                    modifier = Modifier.handCursor(),
-                                    selectedContentColor = MaterialTheme.colorScheme.primary,
-                                    unselectedContentColor = if (hasResults)
-                                        MaterialTheme.colorScheme.onSurfaceVariant
-                                    else
-                                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                                ) {
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
-                                    ) {
-                                        Text(
-                                            text = bundle.bundleName,
-                                            style = if (isSelected) MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
-                                                    else MorpheTheme.typography.bodyMedium,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-
-                                        Spacer(modifier = Modifier.height(2.dp))
-
-                                        MorpheBadge(
-                                            text = "$enabledCount/$totalCount",
-                                            tone = if (isSelected && hasResults) MorpheBadgeTone.Primary else MorpheBadgeTone.Neutral
-                                        )
-                                    }
-                                }
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
                             }
                         }
 
@@ -339,11 +313,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                             )
                             Spacer(Modifier.height(4.dp))
                         }
-
-                        HorizontalDivider(
-                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                            thickness = 0.5.dp
-                        )
                     } else {
                         val singleBundle = eligibleBundles.firstOrNull()
                         if (singleBundle != null) {
@@ -413,10 +382,9 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                 }
                                 val universalTitle = stringResource(Res.string.patch_selection_group_universal)
                                 val ungroupedTitle = stringResource(Res.string.patch_selection_group_ungrouped)
-                                val groups = remember(sortedPatches, groupByCategory, selectedInBundle, universalTitle, ungroupedTitle) {
+                                val groups = remember(sortedPatches, selectedInBundle, universalTitle, ungroupedTitle) {
                                     buildPatchGroups(
                                         patches = sortedPatches,
-                                        groupByCategory = groupByCategory,
                                         universalTitle = universalTitle,
                                         ungroupedTitle = ungroupedTitle,
                                         categoryOf = { it.category },

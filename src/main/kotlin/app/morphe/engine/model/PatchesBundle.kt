@@ -18,6 +18,8 @@ data class PatchesBundle(
     @SerialName("download_url") val downloadUrl: String,
     @SerialName("created_at") val createdAt: String? = null,
     val description: String? = null,
+    /** Key the bundles of the source are signed with, see [app.morphe.patcher.patch.PatchBundleSignature]. */
+    @SerialName("public_key") val publicKey: String? = null,
 ) {
     /** Converts this bundle metadata into a [Release]. */
     fun toRelease(prerelease: Boolean): Release {
@@ -28,6 +30,7 @@ data class PatchesBundle(
             createdAt = createdAt,
             body = description,
             assets = listOf(ReleaseAsset(name = assetName, downloadUrl = downloadUrl)),
+            publicKey = publicKey,
         )
     }
 }

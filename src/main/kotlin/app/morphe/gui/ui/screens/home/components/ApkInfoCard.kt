@@ -25,6 +25,8 @@ import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
+import app.morphe.gui.ui.components.MorpheDropdown
+import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.components.MorpheIconButton
 import app.morphe.gui.ui.components.MorpheIconButtonSize
 import app.morphe.gui.ui.components.MorpheIconButtonVariant
@@ -49,12 +51,16 @@ fun ApkInfoCard(
     modifier: Modifier = Modifier,
     /** Enabled patch sources providing patches for [ApkInfo.packageName]. */
     patchSourceNames: List<String> = emptyList(),
+    selectedPatchSource: String? = null,
+    onSelectPatchSource: ((String) -> Unit)? = null,
+    isSimple: Boolean = false,
 ) {
     val accents = MorpheTheme.colors
     val statusColorType = resolveStatusColorType(apkInfo.versionStatus, apkInfo.checksumStatus)
-    val isWarningState = apkInfo.isUnsupportedApp || apkInfo.hasLimitedInfo || 
-                         (apkInfo.versionStatus != VersionStatus.LATEST_STABLE && 
-                          apkInfo.versionStatus != VersionStatus.UNKNOWN)
+    val isWarningOrError = apkInfo.versionStatus == VersionStatus.EXPERIMENTAL ||
+                         apkInfo.versionStatus == VersionStatus.BUILD_UNSUPPORTED ||
+                         apkInfo.versionStatus == VersionStatus.UNSUPPORTED
+    val isWarningState = apkInfo.isUnsupportedApp || apkInfo.hasLimitedInfo || isWarningOrError
                           
     val accentColor = when {
         isWarningState -> if (statusColorType == StatusColorType.PRIMARY) accents.warning else statusColorType.toColor()
@@ -147,7 +153,7 @@ fun ApkInfoCard(
                 }
             }
 
-            if (apkInfo.isUnsupportedApp) {
+            if (apkInfo.isUnsupportedApp || (isSimple && patchSourceNames.isEmpty())) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -172,7 +178,10 @@ fun ApkInfoCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = stringResource(Res.string.home_apk_info_unsupported_app_warning),
+                        text = stringResource(
+                            if (isSimple) Res.string.home_apk_info_unsupported_app_simple_warning
+                            else Res.string.home_apk_info_unsupported_app_warning
+                        ),
                         style = MorpheTheme.typography.bodySmall,
                         color = warningOrange,
                     )
@@ -219,7 +228,7 @@ fun ApkInfoCard(
                 }
             }
 
-            if (apkInfo.architectures.isNotEmpty()) {
+            if (!isSimple && apkInfo.architectures.isNotEmpty()) {
                 val deviceState by DeviceMonitor.state.collectAsState()
                 val deviceArch = deviceState.selectedDevice?.architecture
                 val hasMultipleArchs = apkInfo.architectures.size > 1
@@ -281,22 +290,38 @@ fun ApkInfoCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.width(4.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        patchSourceNames.forEach { name ->
-                            MorpheBadge(
-                                text = name,
-                                tone = MorpheBadgeTone.Primary,
-                            )
+                    if (isSimple && patchSourceNames.size > 1) {
+                        val currentLabel = selectedPatchSource ?: patchSourceNames.first()
+                        MorpheDropdown(
+                            label = currentLabel,
+                            items = patchSourceNames.map { name ->
+                                MorpheDropdownItem(name) {
+                                    onSelectPatchSource?.invoke(name)
+                                }
+                            },
+                            modifier = Modifier.widthIn(min = 160.dp, max = 280.dp),
+                        )
+                    } else {
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            patchSourceNames.forEach { name ->
+                                MorpheBadge(
+                                    text = name,
+                                    tone = MorpheBadgeTone.Primary,
+                                )
+                            }
                         }
                     }
                 }
             }
 
-            val statusDisplay = resolveVersionStatusDisplay(
-                apkInfo.versionStatus, apkInfo.checksumStatus, apkInfo.suggestedVersion
+            val statusDisplay = if (apkInfo.isUnsupportedApp) null else resolveVersionStatusDisplay(
+                versionStatus = apkInfo.versionStatus,
+                checksumStatus = apkInfo.checksumStatus,
+                suggestedVersion = apkInfo.suggestedVersion,
+                requiredBuildCodes = apkInfo.requiredBuildCodes,
             )
             if (statusDisplay != null) {
                 StatusBar(
