@@ -44,6 +44,8 @@ import app.morphe.morphe_desktop.generated.resources.*
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -51,16 +53,20 @@ import org.jetbrains.compose.resources.stringResource
 internal fun LicensesDialog(onDismiss: () -> Unit) {
     val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
 
-    val libs = remember {
-        try {
-            val stream = Thread.currentThread().contextClassLoader.getResourceAsStream("aboutlibraries.json")
-            val json = stream?.bufferedReader()?.use { it.readText() }
-            if (json != null) Libs.Builder().withJson(json).build() else null
-        } catch (e: Throwable) {
-            // Catch LinkageError and other non-Exception throwables to avoid crashing the screen.
-            Logger.error("Failed to load licenses", e)
-            null
+    var isLoading by remember { mutableStateOf(true) }
+    val libs by produceState<Libs?>(null) {
+        value = withContext(Dispatchers.IO) {
+            try {
+                val stream = Thread.currentThread().contextClassLoader.getResourceAsStream("aboutlibraries.json")
+                val json = stream?.bufferedReader()?.use { it.readText() }
+                if (json != null) Libs.Builder().withJson(json).build() else null
+            } catch (e: Throwable) {
+                // Catch LinkageError and other non-Exception throwables to avoid crashing the screen.
+                Logger.error("Failed to load licenses", e)
+                null
+            }
         }
+        isLoading = false
     }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -150,6 +156,7 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when {
+                        isLoading -> Unit
                         libs == null -> EmptyHint(text = stringResource(Res.string.licenses_dialog_empty_failed), isError = true)
                         filtered.isEmpty() -> EmptyHint(text = stringResource(Res.string.licenses_dialog_empty_no_matches), isError = false)
                         else -> {

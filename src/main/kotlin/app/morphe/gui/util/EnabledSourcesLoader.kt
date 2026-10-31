@@ -71,7 +71,7 @@ object EnabledSourcesLoader {
         excludedMppPatterns: List<String> = emptyList(),
         onDownloadProgress: ((String, Float) -> Unit)? = null,
         forceRefresh: Boolean = false,
-    ): Result = supervisorScope {
+    ): Result = withContext(Dispatchers.IO) { supervisorScope {
         val resolved = enabled.map { (source, repo) ->
             async(Dispatchers.IO) {
                 try {
@@ -129,7 +129,7 @@ object EnabledSourcesLoader {
             unionPatches = unionPatches,
             patchesBySource = patchesBySource,
         )
-    }
+    } }
 
     private suspend fun resolve(
         source: PatchSource,

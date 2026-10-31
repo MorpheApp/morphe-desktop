@@ -569,14 +569,20 @@ class HomeViewModel(
                 lastLoadedVersion = firstResolved?.resolvedVersion
                 cachedSourcesResult = result
 
-                for ((source, file) in result.resolved) {
-                    if (file == null) continue
-                    val manifestName = PatchBundleLoader.extractName(file)
-                    val effectiveName = manifestName?.takeUnless { it.isBlank() || PatchSourceNaming.isRawOrCorruptedName(it) }
-                        ?: PatchSourceNaming.suggestNameFromUrl(source.url)
-                        ?: source.name
+                // Reading bundle manifests opens each .mpp; do it off the UI thread.
+                val effectiveNames = withContext(Dispatchers.IO) {
+                    result.resolved.mapNotNull { (source, file) ->
+                        if (file == null) return@mapNotNull null
+                        val manifestName = PatchBundleLoader.extractName(file)
+                        val effectiveName = manifestName?.takeUnless { it.isBlank() || PatchSourceNaming.isRawOrCorruptedName(it) }
+                            ?: PatchSourceNaming.suggestNameFromUrl(source.url)
+                            ?: source.name
+                        source.id to effectiveName
+                    }
+                }
+                for ((sourceId, effectiveName) in effectiveNames) {
                     if (!PatchSourceNaming.isRawOrCorruptedName(effectiveName)) {
-                        patchSourceManager.syncSourceNameIfChanged(source.id, effectiveName)
+                        patchSourceManager.syncSourceNameIfChanged(sourceId, effectiveName)
                     }
                 }
 

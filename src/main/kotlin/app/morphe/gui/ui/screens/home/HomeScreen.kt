@@ -64,6 +64,7 @@ import java.awt.Desktop
 import java.io.File
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -272,9 +273,11 @@ fun HomeScreenContent(
             },
             onForget = { onForget(record.packageName) },
             onOpenFolder = {
-                runCatching {
-                    val parent = File(record.outputApkPath).parentFile
-                    if (parent != null && parent.exists()) Desktop.getDesktop().open(parent)
+                coroutineScope.launch(Dispatchers.IO) {
+                    runCatching {
+                        val parent = File(record.outputApkPath).parentFile
+                        if (parent != null && parent.exists()) Desktop.getDesktop().open(parent)
+                    }
                 }
             },
             onInstall = { viewModel.installPatchedApp(record.packageName) },

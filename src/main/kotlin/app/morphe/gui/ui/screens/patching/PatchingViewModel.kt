@@ -78,7 +78,7 @@ class PatchingViewModel(
             allConfiguredSources = sources
             val resolvedName = when {
                 initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let {
-                    PatchSourceNaming.resolveSourceName(file = it, sources = sources)
+                    withContext(Dispatchers.IO) { PatchSourceNaming.resolveSourceName(file = it, sources = sources) }
                 } ?: PatchSourceNaming.FALLBACK_DEFAULT_NAME
                 initialSnapshot.size == 1 -> PatchSourceNaming.sanitize(initialSnapshot.first().sourceName, sources)
                 else -> initialSnapshot.joinToString(", ") { PatchSourceNaming.sanitize(it.sourceName, sources) }

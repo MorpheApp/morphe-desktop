@@ -26,7 +26,9 @@ import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import java.util.UUID
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -160,18 +162,21 @@ internal fun AddPatchSourceDialog(
                                 form.error = errInvalidFile; return@MorpheButton
                             }
                             val localFile = File(form.filePath)
-                            val resolvedName = form.name.trim().ifBlank {
-                                PatchBundleLoader.extractName(localFile) ?: localFile.nameWithoutExtension
+                            scope.launch {
+                                val resolvedName = form.name.trim().ifBlank {
+                                    withContext(Dispatchers.IO) { PatchBundleLoader.extractName(localFile) }
+                                        ?: localFile.nameWithoutExtension
+                                }
+                                onAdd(PatchSource(
+                                    id = UUID.randomUUID().toString(),
+                                    name = resolvedName,
+                                    type = sourceType,
+                                    url = null,
+                                    filePath = form.filePath.trim(),
+                                    deletable = true,
+                                    usePreRelease = form.usePreRelease
+                                ))
                             }
-                            onAdd(PatchSource(
-                                id = UUID.randomUUID().toString(),
-                                name = resolvedName,
-                                type = sourceType,
-                                url = null,
-                                filePath = form.filePath.trim(),
-                                deletable = true,
-                                usePreRelease = form.usePreRelease
-                            ))
                         }
                         else -> {}
                     }
@@ -410,7 +415,7 @@ private fun LocalSourceRow(
                                 extensions = listOf("mpp"),
                             )
                             if (picked != null) {
-                                val manifestName = PatchBundleLoader.extractName(picked)
+                                val manifestName = withContext(Dispatchers.IO) { PatchBundleLoader.extractName(picked) }
                                 onPicked(picked.absolutePath, manifestName ?: picked.name.removeSuffix(".mpp"))
                             }
                         }

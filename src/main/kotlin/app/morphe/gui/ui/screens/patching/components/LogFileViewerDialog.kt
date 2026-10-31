@@ -45,7 +45,9 @@ import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.awt.datatransfer.StringSelection
 import java.io.File
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -56,13 +58,15 @@ fun LogFileViewerDialog(
     onDismiss: () -> Unit,
 ) {
     val clipboard = LocalClipboard.current
-    val clipboardScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     // Read log file contents on open.
     val failedToReadMessage = stringResource(Res.string.patching_log_viewer_failed_to_read, "%s")
-    val content = remember(file, failedToReadMessage) {
-        runCatching { file.readText() }.getOrElse { e ->
-            failedToReadMessage.format(e.message.orEmpty())
+    val content by produceState("", file, failedToReadMessage) {
+        value = withContext(Dispatchers.IO) {
+            runCatching { file.readText() }.getOrElse { e ->
+                failedToReadMessage.format(e.message.orEmpty())
+            }
         }
     }
     var copied by remember { mutableStateOf(false) }
@@ -116,12 +120,14 @@ fun LogFileViewerDialog(
                         variant = MorpheButtonVariant.OUTLINED,
                         size = MorpheButtonSize.COMPACT,
                         onClick = {
-                            try {
-                                if (Desktop.isDesktopSupported()) {
-                                    Desktop.getDesktop().open(file.parentFile)
+                            scope.launch(Dispatchers.IO) {
+                                try {
+                                    if (Desktop.isDesktopSupported()) {
+                                        Desktop.getDesktop().open(file.parentFile)
+                                    }
+                                } catch (e: Exception) {
+                                    Logger.error("Failed to open logs folder", e)
                                 }
-                            } catch (e: Exception) {
-                                Logger.error("Failed to open logs folder", e)
                             }
                         }
                     )
@@ -133,7 +139,7 @@ fun LogFileViewerDialog(
                         variant = if (copied) MorpheButtonVariant.SECONDARY else MorpheButtonVariant.PRIMARY,
                         size = MorpheButtonSize.COMPACT,
                         onClick = {
-                            clipboardScope.launch {
+                            scope.launch {
                                 clipboard.setClipEntry(
                                     ClipEntry(StringSelection(content))
                                 )
