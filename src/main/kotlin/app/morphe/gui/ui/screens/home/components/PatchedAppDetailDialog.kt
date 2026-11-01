@@ -49,6 +49,8 @@ import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheDialogSurface
+import app.morphe.gui.ui.components.MorpheDropdown
+import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.SlimSearchField
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -60,6 +62,7 @@ import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.launch
@@ -76,6 +79,7 @@ fun PatchedAppDetailDialog(
     updateInfo: RecallUpdateInfo?,
     supportedApp: SupportedApp? = null,
     activeSources: List<ActivePatchSource> = emptyList(),
+    compatibleSources: List<ActivePatchSource> = emptyList(),
     allSources: List<PatchSource> = emptyList(),
     bundleVersionsBySource: Map<String, List<BundleRelease>> = emptyMap(),
     onSetSourceEnabled: (String, Boolean) -> Unit = { _, _ -> },
@@ -90,13 +94,14 @@ fun PatchedAppDetailDialog(
     patchPrepProgress: Pair<String, Float>? = null,
     preparingPatch: Boolean = false,
     onDismiss: () -> Unit,
-    onPatchWith: (apkPath: String, overrides: Map<String, BundleChoice>) -> Unit = { _, _ -> },
+    onPatchWith: (apkPath: String, overrides: Map<String, BundleChoice>, chosenSource: String?) -> Unit = { _, _, _ -> },
     onForget: () -> Unit,
     onOpenFolder: () -> Unit,
     onInstall: () -> Unit = {},
     onUninstall: () -> Unit = {},
     installing: Boolean = false,
     uninstalling: Boolean = false,
+    isSimple: Boolean = false,
 ) {
     val accents = MorpheTheme.colors
     val cardFills = LocalCardFills.current
@@ -137,7 +142,66 @@ fun PatchedAppDetailDialog(
                 else onResolveApkVersion(selectedApkPath)
         }
 
-        val bundleParts = activeSources.map { src ->
+        val primarySnapshot = record.sourcesSnapshot.firstOrNull()
+        val rawRecordedPrimaryName = remember(record) {
+            primarySnapshot?.sourceName?.let { PatchSourceNaming.sanitize(it) }
+                ?: record.patchSelectionByBundle.keys.firstOrNull()?.let { PatchSourceNaming.sanitize(it) }
+        }
+
+        fun canonicalSourceName(recordedId: String?, recordedName: String?): String? {
+            if (recordedId == null && recordedName.isNullOrBlank()) return null
+            val matched = allSources.firstOrNull { src ->
+                (recordedId != null && src.id == recordedId) ||
+                (recordedName != null && (
+                    src.name.equals(recordedName, ignoreCase = true) ||
+                    PatchSourceNaming.suggestNameFromUrl(src.url).equals(recordedName, ignoreCase = true) ||
+                    src.url?.contains(recordedName, ignoreCase = true) == true ||
+                    PatchSourceNaming.sanitize(src.name).equals(recordedName, ignoreCase = true)
+                ))
+            }
+            return matched?.name ?: PatchSourceNaming.sanitize(recordedName)
+        }
+
+        val recordedPrimaryName = remember(record, allSources) {
+            canonicalSourceName(primarySnapshot?.sourceId, rawRecordedPrimaryName)
+        }
+        val recordedPrimaryVersion = remember(record, rawRecordedPrimaryName, recordedPrimaryName, allSources) {
+            record.sourcesSnapshot.firstOrNull { snapshot ->
+                val sn = PatchSourceNaming.sanitize(snapshot.sourceName)
+                (primarySnapshot != null && snapshot.sourceId == primarySnapshot.sourceId) ||
+                sn.equals(rawRecordedPrimaryName, ignoreCase = true) ||
+                sn.equals(recordedPrimaryName, ignoreCase = true) ||
+                canonicalSourceName(snapshot.sourceId, sn).equals(recordedPrimaryName, ignoreCase = true)
+            }?.version
+        }
+        val isRecordedSourceActive = remember(recordedPrimaryName, activeSources) {
+            recordedPrimaryName != null && activeSources.any {
+                (primarySnapshot != null && it.id == primarySnapshot.sourceId) ||
+                it.name.equals(recordedPrimaryName, ignoreCase = true)
+            }
+        }
+
+        var selectedSourceName by remember(record.packageName) {
+            mutableStateOf(if (isRecordedSourceActive) recordedPrimaryName else null)
+        }
+
+        val effectiveActiveSource = remember(selectedSourceName, compatibleSources) {
+            compatibleSources.firstOrNull { it.name.equals(selectedSourceName, ignoreCase = true) }
+        }
+
+        val canRepatch = if (isSimple) {
+            effectiveActiveSource != null
+        } else {
+            activeSources.isNotEmpty()
+        }
+
+        val relevantSources = if (isSimple) {
+            listOfNotNull(effectiveActiveSource)
+        } else {
+            activeSources
+        }
+
+        val bundleParts = relevantSources.map { src ->
             val label = when (val c = bundleChoices[src.name]) {
                 is BundleChoice.Version -> "v${c.tag.removePrefix("v")}"
                 is BundleChoice.LocalFile -> File(c.path).name
@@ -146,7 +210,7 @@ fun PatchedAppDetailDialog(
             src.name to label
         }
 
-        val bundleTags = activeSources.mapNotNull { src ->
+        val bundleTags = relevantSources.mapNotNull { src ->
             when (val c = bundleChoices[src.name]) {
                 is BundleChoice.Version -> src.name to c.tag
                 is BundleChoice.LocalFile -> null
@@ -166,13 +230,13 @@ fun PatchedAppDetailDialog(
         var bundleDownload by remember(record.packageName) { mutableStateOf<Float?>(null) }
         var supportLoading by remember(record.packageName) { mutableStateOf(false) }
         var bundleDownloadError by remember(record.packageName) { mutableStateOf<String?>(null) }
-        LaunchedEffect(bundleChoices, activeSources, supportEpoch) {
+        LaunchedEffect(bundleChoices, relevantSources, supportEpoch) {
             supportLoading = true
             bundleSupport = onSupportedAppFor(record.packageName, bundleChoices)
             supportLoading = false
         }
 
-        val loadedLabel = activeSources.joinToString(", ") { src ->
+        val loadedLabel = relevantSources.joinToString(", ") { src ->
             "${src.name} ${src.resolvedVersion?.let { "v${it.removePrefix("v")}" } ?: "latest"}"
         }.ifBlank { stringResource(Res.string.home_detail_the_loaded_bundle) }
         val chosenLabel = bundleChoices.entries
@@ -197,7 +261,11 @@ fun PatchedAppDetailDialog(
             .takeIf { stagedVersion != null && it.removePrefix("v") != stagedVersion.removePrefix("v") }
             ?.let { "v${it.removePrefix("v")}" }
         val bundlePrevious = bundleParts.singleOrNull()?.let { (name, current) ->
-            record.sourcesSnapshot.firstOrNull { it.sourceName == name }
+            record.sourcesSnapshot.firstOrNull { snapshot ->
+                val sn = PatchSourceNaming.sanitize(snapshot.sourceName)
+                sn.equals(name, ignoreCase = true) ||
+                canonicalSourceName(snapshot.sourceId, sn).equals(name, ignoreCase = true)
+            }
                 ?.version
                 ?.let { "v${it.removePrefix("v")}" }
                 ?.takeIf { it != current }
@@ -280,44 +348,110 @@ fun PatchedAppDetailDialog(
                             )
                         }
                         RowDivider()
+                        val assemblyPrimary = when {
+                            isSimple && effectiveActiveSource != null -> effectiveActiveSource.name
+                            isSimple && effectiveActiveSource == null ->
+                                "${recordedPrimaryName ?: stringResource(Res.string.home_detail_source_removed)} (${stringResource(Res.string.home_detail_source_disabled)})"
+                            bundleParts.isEmpty() -> stringResource(Res.string.home_detail_no_sources_enabled)
+                            bundleParts.size == 1 -> bundleParts[0].first
+                            else -> pluralStringResource(Res.plurals.count_sources, bundleParts.size, bundleParts.size)
+                        }
+                        val assemblyVersion = when {
+                            isSimple && effectiveActiveSource != null ->
+                                bundleParts.singleOrNull()?.second ?: effectiveActiveSource.resolvedVersion?.let { "v${it.removePrefix("v")}" }
+                            isSimple && effectiveActiveSource == null ->
+                                recordedPrimaryVersion?.let { "v${it.removePrefix("v")}" }
+                            else -> bundleParts.singleOrNull()?.second
+                        }
+                        val assemblyWarning = isSimple && effectiveActiveSource == null
+                        val assemblySub = when {
+                            isSimple && effectiveActiveSource != null -> null
+                            isSimple && effectiveActiveSource == null ->
+                                if (compatibleSources.isNotEmpty()) stringResource(Res.string.home_detail_source_disabled_alternatives_sub)
+                                else stringResource(Res.string.home_detail_source_disabled_sub)
+                            bundleParts.isEmpty() -> stringResource(Res.string.home_detail_enable_or_add_source)
+                            bundleParts.size == 1 -> null
+                            else -> bundleParts.joinToString("  ·  ") { "${it.first} ${it.second}" }
+                        }
+
                         AssemblyRow(
                             label = stringResource(Res.string.home_detail_patch_bundle_label),
-                            primary = when (bundleParts.size) {
-                                0 -> stringResource(Res.string.home_detail_no_sources_enabled)
-                                1 -> bundleParts[0].first
-                                else -> pluralStringResource(Res.plurals.count_sources, bundleParts.size, bundleParts.size)
-                            },
-                            version = bundleParts.singleOrNull()?.second,
+                            primary = assemblyPrimary,
+                            version = assemblyVersion,
                             previousVersion = bundlePrevious,
-                            sub = when (bundleParts.size) {
-                                0 -> stringResource(Res.string.home_detail_enable_or_add_source)
-                                1 -> null
-                                else -> bundleParts.joinToString("  ·  ") { "${it.first} ${it.second}" }
-                            },
-                            expanded = patchExpanded,
+                            sub = assemblySub,
+                            expanded = !isSimple && patchExpanded,
+                            expandable = !isSimple,
                             accent = accents.primary,
-                            onToggle = { patchExpanded = !patchExpanded },
+                            warning = assemblyWarning,
+                            onToggle = if (isSimple) ({}) else ({ patchExpanded = !patchExpanded }),
                         ) {
-                            allSources.forEach { src ->
-                                val active = activeSources.firstOrNull { it.name == src.name }
-                                PatchSourceSection(
-                                    sourceName = src.name,
-                                    enabled = src.enabled,
-                                    resolvedVersion = active?.resolvedVersion,
-                                    sourceUrl = allSources.firstOrNull { it.name == src.name }?.url,
-                                    availableVersions = bundleVersionsBySource[src.name],
-                                    choice = bundleChoices[src.name],
-                                    onChoose = { c ->
-                                        bundleChoices = if (c == null) bundleChoices - src.name
-                                        else bundleChoices + (src.name to c)
-                                    },
-                                    onSetEnabled = { onSetSourceEnabled(src.id, it) },
+                            if (!isSimple) {
+                                allSources.forEach { src ->
+                                    val active = activeSources.firstOrNull { it.name == src.name }
+                                    PatchSourceSection(
+                                        sourceName = src.name,
+                                        enabled = src.enabled,
+                                        resolvedVersion = active?.resolvedVersion,
+                                        sourceUrl = allSources.firstOrNull { it.name == src.name }?.url,
+                                        availableVersions = bundleVersionsBySource[src.name],
+                                        choice = bundleChoices[src.name],
+                                        onChoose = { c ->
+                                            bundleChoices = if (c == null) bundleChoices - src.name
+                                            else bundleChoices + (src.name to c)
+                                        },
+                                        onSetEnabled = { onSetSourceEnabled(src.id, it) },
+                                    )
+                                }
+                                AddSourceControl(
+                                    onAddSource = onAddSource,
+                                    onAddLocalBundle = onAddLocalBundle,
                                 )
                             }
-                            AddSourceControl(
-                                onAddSource = onAddSource,
-                                onAddLocalBundle = onAddLocalBundle,
-                            )
+                        }
+
+                        val showSimpleSourceChoice = isSimple && (compatibleSources.size > 1 || (compatibleSources.isNotEmpty() && !isRecordedSourceActive))
+                        if (showSimpleSourceChoice) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.home_detail_choose_source),
+                                    style = MorpheTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                val currentDropdownLabel = when {
+                                    effectiveActiveSource != null -> "${effectiveActiveSource.name} ${effectiveActiveSource.resolvedVersion?.let { "v${it.removePrefix("v")}" } ?: ""}".trim()
+                                    recordedPrimaryName != null -> "$recordedPrimaryName (${stringResource(Res.string.home_detail_source_disabled)})"
+                                    else -> stringResource(Res.string.home_detail_choose_source)
+                                }
+                                val dropdownItems = buildList {
+                                    if (!isRecordedSourceActive && recordedPrimaryName != null) {
+                                        add(
+                                            MorpheDropdownItem("$recordedPrimaryName (${stringResource(Res.string.home_detail_source_disabled)})") {
+                                                selectedSourceName = null
+                                            }
+                                        )
+                                    }
+                                    compatibleSources.forEach { src ->
+                                        val itemLabel = "${src.name} ${src.resolvedVersion?.let { "v${it.removePrefix("v")}" } ?: ""}".trim()
+                                        add(
+                                            MorpheDropdownItem(itemLabel) {
+                                                selectedSourceName = src.name
+                                            }
+                                        )
+                                    }
+                                }
+                                MorpheDropdown(
+                                    label = currentDropdownLabel,
+                                    items = dropdownItems,
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
                         }
                     }
 
@@ -345,13 +479,15 @@ fun PatchedAppDetailDialog(
 
                     val downloads = pendingDownloads
                     val patchSubs = when {
-                        patchPrepProgress != null -> listOf(stringResource(Res.string.home_detail_downloading_patch, patchPrepProgress.first))
+                        !canRepatch -> listOf(stringResource(Res.string.home_detail_no_compatible_source))
+                        patchPrepProgress != null -> listOf(stringResource(Res.string.home_detail_downloading_patch, PatchSourceNaming.sanitize(patchPrepProgress.first)))
                         preparingPatch -> listOf(stringResource(Res.string.home_detail_resolving_patch_files))
                         downloads.isNullOrEmpty() -> emptyList()
                         else -> downloads.map { "↓  $it" }
                     }
                     val inputsChanged = selectedApkPath != record.inputApkPath ||
-                        bundleChoices.isNotEmpty()
+                        bundleChoices.isNotEmpty() ||
+                        (isSimple && selectedSourceName != null && selectedSourceName != recordedPrimaryName)
                     ActionBar(
                         label = when {
                             patchPrepProgress != null ->
@@ -365,7 +501,10 @@ fun PatchedAppDetailDialog(
                         filled = !installPending,
                         sublabels = patchSubs,
                         progress = if (preparingPatch) (patchPrepProgress?.second ?: 0f) else null,
-                        onClick = if (preparingPatch) ({}) else ({ onPatchWith(selectedApkPath, bundleChoices) }),
+                        enabled = canRepatch && !preparingPatch,
+                        onClick = if (preparingPatch || !canRepatch) ({}) else ({
+                            onPatchWith(selectedApkPath, bundleChoices, if (isSimple) selectedSourceName else null)
+                        }),
                     )
 
                     if (deviceInfo?.installed == true) {
@@ -409,71 +548,77 @@ fun PatchedAppDetailDialog(
                     )
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    StatCell(stringResource(Res.string.app_name), record.patchedWithMorpheVersion)
+                    if (!isSimple) {
+                        StatCell(stringResource(Res.string.app_name), record.patchedWithMorpheVersion)
+                    }
                     StatCell(stringResource(Res.string.home_detail_output_size_label), humanSize(record.outputApkSize))
                 }
-                record.outputApkSha256?.let { CopyableStat(stringResource(Res.string.home_detail_sha256_label), it) }
+                if (!isSimple) {
+                    record.outputApkSha256?.let { CopyableStat(stringResource(Res.string.home_detail_sha256_label), it) }
+                }
                 CopyableStat(stringResource(Res.string.home_detail_output_path_label), record.outputApkPath)
                 }
                 }
-                DisclosureHeader(
-                    label = stringResource(Res.string.home_detail_section_patches_applied),
-                    color = accents.primary,
-                    expanded = patchesExpanded,
-                    trailing = "$patchCount",
-                    onToggle = { patchesExpanded = !patchesExpanded },
-                )
-                AnimatedVisibility(visible = patchesExpanded, enter = DisclosureEnter, exit = DisclosureExit) {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    if (patchCount > 5) {
-                        SlimSearchField(
-                            value = patchSearch,
-                            onValueChange = { patchSearch = it },
-                            placeholder = stringResource(Res.string.patches_search_hint),
-                        )
-                    }
-                    record.patchSelectionByBundle.forEach { (bundle, patches) ->
-                        val shown = patches
-                            .map { patchDisplayName(it) }
-                            .filter { patchSearch.isBlank() || it.contains(patchSearch, ignoreCase = true) }
-                            .sorted()
-                        if (shown.isNotEmpty()) {
-                            Text(
-                                text = bundle,
-                                style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(top = 6.dp, bottom = 2.dp),
+                if (!isSimple) {
+                    DisclosureHeader(
+                        label = stringResource(Res.string.home_detail_section_patches_applied),
+                        color = accents.primary,
+                        expanded = patchesExpanded,
+                        trailing = "$patchCount",
+                        onToggle = { patchesExpanded = !patchesExpanded },
+                    )
+                    AnimatedVisibility(visible = patchesExpanded, enter = DisclosureEnter, exit = DisclosureExit) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        if (patchCount > 5) {
+                            SlimSearchField(
+                                value = patchSearch,
+                                onValueChange = { patchSearch = it },
+                                placeholder = stringResource(Res.string.patches_search_hint),
                             )
-                            shown.forEach { name ->
+                        }
+                        record.patchSelectionByBundle.forEach { (bundle, patches) ->
+                            val shown = patches
+                                .map { patchDisplayName(it) }
+                                .filter { patchSearch.isBlank() || it.contains(patchSearch, ignoreCase = true) }
+                                .sorted()
+                            if (shown.isNotEmpty()) {
                                 Text(
-                                    text = "• $name",
-                                    style = MorpheTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                                    text = PatchSourceNaming.sanitize(bundle),
+                                    style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(top = 6.dp, bottom = 2.dp),
+                                )
+                                shown.forEach { name ->
+                                    Text(
+                                        text = "• $name",
+                                        style = MorpheTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                                        modifier = Modifier.padding(start = 8.dp, top = 1.dp),
+                                    )
+                                }
+                            }
+                        }
+                        if (record.patchOptionValues.isNotEmpty() && patchSearch.isBlank()) {
+                            Text(
+                                text = stringResource(Res.string.home_detail_section_options),
+                                style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                modifier = Modifier.padding(top = 8.dp, bottom = 2.dp),
+                            )
+                            record.patchOptionValues.forEach { (k, v) ->
+                                Text(
+                                    text = "• $k = $v",
+                                    style = MorpheTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.padding(start = 8.dp, top = 1.dp),
                                 )
                             }
                         }
                     }
-                    if (record.patchOptionValues.isNotEmpty() && patchSearch.isBlank()) {
-                        Text(
-                            text = stringResource(Res.string.home_detail_section_options),
-                            style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp),
-                        )
-                        record.patchOptionValues.forEach { (k, v) ->
-                            Text(
-                                text = "• $k = $v",
-                                style = MorpheTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.padding(start = 8.dp, top = 1.dp),
-                            )
-                        }
                     }
-                }
                 }
 
                 Row(

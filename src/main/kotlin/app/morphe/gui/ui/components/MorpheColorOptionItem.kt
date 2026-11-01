@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +24,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -223,23 +221,12 @@ fun MorpheColorOptionItem(
                     val presetColor = parseColorString(presetStr)
                     val isSelected = value.equals(presetStr, ignoreCase = true)
 
-                    val chipBorder = if (isSelected) colors.primary else colors.primary.copy(alpha = 0.2f)
-                    val chipBg = if (isSelected) colors.primary.copy(alpha = 0.12f) else Color.Transparent
-
-                    Box(
-                        modifier = Modifier
-                            .clip(shapes.small)
-                            .border(1.dp, chipBorder, shapes.small)
-                            .background(chipBg)
-                            .handCursor()
-                            .clickable(enabled = enabled) { onValueChange(presetStr) }
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        ) {
+                    MorpheChoiceChip(
+                        text = label,
+                        active = isSelected,
+                        dense = true,
+                        enabled = enabled,
+                        leadingContent = {
                             Box(
                                 modifier = Modifier
                                     .size(12.dp)
@@ -253,15 +240,9 @@ fun MorpheColorOptionItem(
                                     )
                                     .border(0.5.dp, Color.White.copy(alpha = 0.3f), shapes.small),
                             )
-                            Text(
-                                text = label,
-                                style = MorpheTheme.typography.labelExtraSmall.copy(
-                                    fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
-                                ),
-                                color = if (isSelected) colors.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
+                        },
+                        onClick = { onValueChange(presetStr) },
+                    )
                 }
             }
         }

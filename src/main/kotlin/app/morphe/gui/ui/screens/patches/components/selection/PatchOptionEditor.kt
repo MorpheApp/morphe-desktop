@@ -24,7 +24,9 @@ import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.math.roundToInt
 import kotlin.reflect.KType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 /** Launcher for the customIcon option, providing Icon Studio access and folder selection. */
@@ -109,9 +111,13 @@ private fun IconStudioOption(
                     modifier = Modifier.weight(1f),
                     variant = MorpheButtonVariant.DANGER,
                     onClick = {
-                        runCatching { IconExporter.projectDir(packageName).deleteRecursively() }
-                        onValueChange("")
-                        showDeleteConfirm = false
+                        scope.launch {
+                            withContext(Dispatchers.IO) {
+                                runCatching { IconExporter.projectDir(packageName).deleteRecursively() }
+                            }
+                            onValueChange("")
+                            showDeleteConfirm = false
+                        }
                     },
                 )
             }
@@ -362,7 +368,6 @@ internal fun PatchOptionEditor(
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color.Transparent,
                 )
             }
 

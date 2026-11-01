@@ -287,6 +287,12 @@ tasks {
     named("shadowDistZip") { dependsOn(overwriteShadowJar) }
     named("shadowDistTar") { dependsOn(overwriteShadowJar) }
     named("startShadowScripts") { dependsOn(overwriteShadowJar) }
+
+    withType<Test> {
+        val testDataDir = layout.buildDirectory.dir("test-morphe-data").get().asFile
+        testDataDir.mkdirs()
+        environment("MORPHE_DATA_DIR", testDataDir.absolutePath)
+    }
 }
 
 // Needed by gradle-semantic-release-plugin.

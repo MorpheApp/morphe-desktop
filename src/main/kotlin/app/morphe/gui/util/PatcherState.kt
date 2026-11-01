@@ -49,7 +49,7 @@ enum class StepId {
 }
 
 enum class State {
-    PENDING, WORKING, DONE, ERROR
+    PENDING, WORKING, DONE
 }
 
 data class Step(
@@ -127,6 +127,7 @@ class PatcherState(
             l.contains("decoding all resources") -> setStep(StepId.READ_APK_1)
             l.contains("sanitizing unpatched strings") -> setStep(StepId.READ_APK_2)
             l.contains("escaping strings") -> setStep(StepId.READ_APK_3)
+            l.contains("applying") && l.contains("patches") -> setStep(StepId.EXECUTE_PATCHES)
             l.contains("applied: ") -> {
                 setStep(StepId.EXECUTE_PATCHES)
                 completedPatches++

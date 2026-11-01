@@ -24,7 +24,9 @@ data class Release(
     @SerialName("created_at")
     val createdAt: String? = null,
     val assets: List<ReleaseAsset> = emptyList(),
-    val body: String? = null
+    val body: String? = null,
+    /** Key the bundles of the source are signed with, see [app.morphe.patcher.patch.PatchBundleSignature]. */
+    val publicKey: String? = null,
 ) {
 
     /** True if flagged as a prerelease or if the tag contains dev, alpha, or beta. */

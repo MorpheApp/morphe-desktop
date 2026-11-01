@@ -20,14 +20,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
-import app.morphe.gui.ui.components.cardChipInk
 import app.morphe.gui.ui.components.MorpheCardChip
-import app.morphe.gui.ui.components.LocalCardFills
-import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.appCardColors
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
@@ -41,6 +41,7 @@ fun SupportedAppListRow(
     app: SupportedApp,
     onClick: () -> Unit = {},
     isExpanded: Boolean = false,
+    isSimple: Boolean = false,
     /** Display names of patch sources targeting this package. */
     patchSourceNames: List<String> = emptyList(),
     patchedState: PatchedAppState = PatchedAppState.NEVER_PATCHED,
@@ -48,7 +49,8 @@ fun SupportedAppListRow(
     deviceInfo: DeviceAppInfo? = null,
     modifier: Modifier = Modifier,
 ) {
-    val chipInk = cardChipInk
+    val cardColors = appCardColors()
+    val chipInk = cardColors.chipInk
     val latestExperimental = app.experimentalVersions.firstOrNull()
 
     val cardFills = LocalCardFills.current
@@ -73,21 +75,19 @@ fun SupportedAppListRow(
             MorpheAppAvatar(
                 name = app.displayName,
                 size = MorpheAvatarSize.ROW,
-                onGradient = true,
+                onGradient = !cardColors.isMonochrome,
             )
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = app.displayName,
-                    style = MorpheTheme.typography.titleMedium.copy(color = Color.White),
+                    style = MorpheTheme.typography.titleMedium.copy(color = cardColors.title),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = app.packageName,
-                    style = MorpheTheme.typography.labelSmall.copy(
-                        color = Color.White.copy(alpha = MorpheTheme.alphas.secondaryText)
-                    ),
+                    style = MorpheTheme.typography.labelSmall.copy(color = cardColors.subtitle),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -109,12 +109,14 @@ fun SupportedAppListRow(
                 downloadUrl = app.apkDownloadUrl,
                 nullLabel = stringResource(Res.string.home_app_row_any),
             )
-            VersionCardChip(
-                channelLabel = stringResource(Res.string.home_app_row_latest_experimental),
-                version = latestExperimental,
-                downloadUrl = app.experimentalDownloadUrl,
-                nullLabel = stringResource(Res.string.home_app_row_na),
-            )
+            if (!isSimple) {
+                VersionCardChip(
+                    channelLabel = stringResource(Res.string.home_app_row_latest_experimental),
+                    version = latestExperimental,
+                    downloadUrl = app.experimentalDownloadUrl,
+                    nullLabel = stringResource(Res.string.home_app_row_na),
+                )
+            }
         }
 
         AnimatedVisibility(
@@ -127,6 +129,7 @@ fun SupportedAppListRow(
                     app = app,
                     patchSourceNames = patchSourceNames,
                     chipInk = chipInk,
+                    isSimple = isSimple,
                 )
                 deviceInfo?.let {
                     DeviceLine(
@@ -194,6 +197,7 @@ private fun ExpandedBody(
     app: SupportedApp,
     patchSourceNames: List<String>,
     chipInk: Color,
+    isSimple: Boolean = false,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -215,21 +219,23 @@ private fun ExpandedBody(
             }
         }
 
-        VersionChipSection(
-            label = stringResource(Res.string.version_label_stable),
-            color = chipInk,
-            versions = app.supportedVersions,
-            packageName = app.packageName,
-            onOpenUrl = uriHandler::openUri,
-        )
+        if (!isSimple) {
+            VersionChipSection(
+                label = stringResource(Res.string.version_label_stable),
+                color = chipInk,
+                versions = app.supportedVersions,
+                packageName = app.packageName,
+                onOpenUrl = uriHandler::openUri,
+            )
 
-        VersionChipSection(
-            label = stringResource(Res.string.version_label_experimental),
-            color = chipInk,
-            versions = app.experimentalVersions,
-            packageName = app.packageName,
-            onOpenUrl = uriHandler::openUri,
-        )
+            VersionChipSection(
+                label = stringResource(Res.string.version_label_experimental),
+                color = chipInk,
+                versions = app.experimentalVersions,
+                packageName = app.packageName,
+                onOpenUrl = uriHandler::openUri,
+            )
+        }
     }
 }
 

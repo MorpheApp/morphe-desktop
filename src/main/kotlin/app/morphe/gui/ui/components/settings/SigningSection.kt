@@ -7,8 +7,9 @@ package app.morphe.gui.ui.components.settings
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -47,6 +48,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun SigningSection(
     keystorePath: String?,
@@ -318,9 +320,8 @@ internal fun SigningSection(
                 },
             ) {
                 if (isVerifying) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(12.dp),
-                        strokeWidth = 2.dp,
+                    LoadingIndicator(
+                        modifier = Modifier.size(14.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 } else {
@@ -406,9 +407,8 @@ internal fun SigningSection(
                 contentColor = if (generateSuccess) MorpheColors.Teal else MorpheTheme.colors.primary,
             ) {
                 if (isGenerating) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(12.dp),
-                        strokeWidth = 2.dp,
+                    LoadingIndicator(
+                        modifier = Modifier.size(14.dp),
                         color = MorpheTheme.colors.primary
                     )
                 } else {

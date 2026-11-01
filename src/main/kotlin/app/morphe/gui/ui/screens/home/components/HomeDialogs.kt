@@ -32,11 +32,17 @@ import org.jetbrains.compose.resources.stringResource
 internal fun VersionWarningDialog(
     versionStatus: VersionStatus,
     currentVersion: String,
-    suggestedVersion: String,
+    requiredBuildCodes: Set<Int> = emptySet(),
+    currentBuildCode: String? = null,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val warningContent = resolveVersionWarningContent(versionStatus, currentVersion, suggestedVersion)
+    val warningContent = resolveVersionWarningContent(
+        versionStatus = versionStatus,
+        currentVersion = currentVersion,
+        requiredBuildCodes = requiredBuildCodes,
+        currentBuildCode = currentBuildCode,
+    )
     val warnColor = warningContent.colorType.toColor()
 
     MorpheDialogCard(onDismiss = onDismiss, title = warningContent.title) {

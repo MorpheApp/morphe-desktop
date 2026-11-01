@@ -73,11 +73,26 @@ object MultiSourceLoader {
             )
         } catch (e: Throwable) {
             // Catch LinkageErrors and exceptions from incompatible patcher bundles without failing other sources.
+            val req = PatcherCompatibility.requiredPatcherVersion(input.patchFile)
+            val cur = PatcherCompatibility.currentPatcherVersion
+            val appVer = UpdateChecker.currentVersion()
             val versionMsg = PatcherCompatibility.incompatibilityMessage(input.patchFile)
-            val error: Throwable = if (versionMsg != null) {
-                PatchBundleIncompatibleException(versionMsg)
-            } else {
-                PatchSourceLoadException(e.readableMessage(), e)
+            val error: Throwable = when {
+                versionMsg != null -> PatchBundleIncompatibleException(
+                    message = versionMsg,
+                    requiredPatcherVersion = req,
+                    currentPatcherVersion = cur,
+                    appVersion = appVer,
+                    cause = e,
+                )
+                e is LinkageError -> PatchBundleIncompatibleException(
+                    message = "This patch bundle is incompatible with current Morphe patcher: ${e.readableMessage()}",
+                    requiredPatcherVersion = req ?: "?",
+                    currentPatcherVersion = cur ?: "?",
+                    appVersion = appVer ?: "?",
+                    cause = e,
+                )
+                else -> PatchSourceLoadException(e.readableMessage(), e)
             }
             Logger.warn(
                 "MultiSourceLoader: failed to load '${input.sourceName}': ${error.message}",

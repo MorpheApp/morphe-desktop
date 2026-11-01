@@ -407,7 +407,7 @@ internal fun PatchSourceSection(
                     else -> {
                         listOf(
                             Triple(stringResource(Res.string.version_label_stable), accents.primary, false),
-                            Triple(stringResource(Res.string.version_label_dev), accents.warning, true),
+                            Triple(stringResource(Res.string.version_label_prerelease), accents.warning, true),
                         ).forEach { (label, color, isDev) ->
                             val group = availableVersions.filter { it.isDev == isDev }
                             if (group.isEmpty()) return@forEach

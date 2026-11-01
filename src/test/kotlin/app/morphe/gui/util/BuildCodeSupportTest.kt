@@ -59,8 +59,11 @@ class BuildCodeSupportTest {
         check(wrongBuild.status == VersionStatus.BUILD_UNSUPPORTED) {
             "expected BUILD_UNSUPPORTED, got ${wrongBuild.status}"
         }
+        check(wrongBuild.requiredBuildCodes == setOf(700)) {
+            "expected requiredBuildCodes to be [700], got ${wrongBuild.requiredBuildCodes}"
+        }
         val rightBuild = resolveVersionStatus("380.0.0.29.109", subject, versionCode = 700)
-        check(rightBuild.status == VersionStatus.LATEST_STABLE) {
+        check(rightBuild.status == VersionStatus.RECOMMENDED) {
             "a targeted build should still read as supported, got ${rightBuild.status}"
         }
     }
@@ -76,6 +79,9 @@ class BuildCodeSupportTest {
         check(resolved.status == VersionStatus.BUILD_UNSUPPORTED) {
             "experimental versions skipped the build check, got ${resolved.status}"
         }
+        check(resolved.requiredBuildCodes == setOf(700)) {
+            "expected requiredBuildCodes to be [700], got ${resolved.requiredBuildCodes}"
+        }
     }
 
     @Test
@@ -85,7 +91,7 @@ class BuildCodeSupportTest {
             "an unconstrained target should accept any build"
         }
         val resolved = resolveVersionStatus("380.0.0.29.109", subject, versionCode = 999)
-        check(resolved.status == VersionStatus.LATEST_STABLE) {
+        check(resolved.status == VersionStatus.RECOMMENDED) {
             "unconstrained version reported as a build mismatch: ${resolved.status}"
         }
     }
@@ -94,6 +100,29 @@ class BuildCodeSupportTest {
     fun unknownVersionIsUnaffectedByBuildCodes() {
         val subject = app(buildCodes = mapOf("380.0.0.29.109" to setOf(700)))
         val resolved = resolveVersionStatus("999.0.0.0.0", subject, versionCode = 1)
-        check(resolved.status == VersionStatus.TOO_NEW) { "expected TOO_NEW, got ${resolved.status}" }
+        check(resolved.status == VersionStatus.UNSUPPORTED) { "expected UNSUPPORTED, got ${resolved.status}" }
+    }
+
+    @Test
+    fun resolvesRecommendedSupportedAndExperimentalCorrectly() {
+        val subject = app(
+            stable = listOf("19.16.39", "19.11.43", "19.05.36"),
+            experimental = listOf("19.20.01"),
+        )
+        val recommended = resolveVersionStatus("19.16.39", subject)
+        check(recommended.status == VersionStatus.RECOMMENDED) { "expected RECOMMENDED, got ${recommended.status}" }
+
+        val olderSupported = resolveVersionStatus("19.11.43", subject)
+        check(olderSupported.status == VersionStatus.SUPPORTED) { "expected SUPPORTED, got ${olderSupported.status}" }
+        check(olderSupported.suggestedVersion == "19.16.39") { "expected suggestedVersion 19.16.39, got ${olderSupported.suggestedVersion}" }
+
+        val experimental = resolveVersionStatus("19.20.01", subject)
+        check(experimental.status == VersionStatus.EXPERIMENTAL) { "expected EXPERIMENTAL, got ${experimental.status}" }
+
+        val tooNew = resolveVersionStatus("20.00.00", subject)
+        check(tooNew.status == VersionStatus.UNSUPPORTED) { "expected UNSUPPORTED, got ${tooNew.status}" }
+
+        val tooOld = resolveVersionStatus("18.00.00", subject)
+        check(tooOld.status == VersionStatus.UNSUPPORTED) { "expected UNSUPPORTED, got ${tooOld.status}" }
     }
 }
