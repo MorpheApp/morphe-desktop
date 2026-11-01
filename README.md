@@ -55,7 +55,7 @@ While there are a lot of things that you can do and explore, for the time being 
 ### First Run
 
 #### GUI
-The GUI is far more user-friendly and straightforward than the CLI. On your first run it opens in **Quick mode** (the simplified, non-expert path).
+The GUI is far more user-friendly and straightforward than the CLI. On your first run it opens in **Simple mode** (the streamlined default path).
 
 ##### Steps:
 1. Double-click the downloaded `morphe-desktop-*-all.jar`. It should open like this:
@@ -65,7 +65,7 @@ The GUI is far more user-friendly and straightforward than the CLI. On your firs
 > [!NOTE]
 > **First launch only.** Morphe ships as a single small jar. The command-line tool runs on its own, but the GUI needs a couple of platform-specific components (the Skiko renderer and JNA) that aren't bundled, so the download stays small. The **first** time you open the GUI, Morphe fetches the right components for your operating system into `morphe-data/libs/` and shows a brief setup window before the home screen appears. This happens only once. Later launches reuse the cached files and need no internet connection.
 
-2. Drag and drop your `.apk` (or `.apkm` / `.xapk` / `.apks` bundle) into the window. Once it's analyzed, click **Patch** to begin:
+2. Drag and drop your `.apk` (or `.apkm` / `.xapk` / `.apks` bundle) into the window. Once it's analyzed, select your preferred patch source from the dropdown if multiple sources support the app, then click **Patch** to begin:
 
 ![Morphe GUI App Selected](docs/images/main_readme/app_selected.png)
 
@@ -81,7 +81,7 @@ The GUI is far more user-friendly and straightforward than the CLI. On your firs
 
 ![Morphe GUI Result](docs/images/main_readme/success.png)
 
-Bravo! That's your first successful patch! When you're ready for more control (choosing patches, sources, signing, and managing the apps you've patched), switch on **Expert mode** in Settings and see the [documentation](docs/documentation.md).
+Bravo! That's your first successful patch! When you're ready for granular control (selecting individual patches and editing patch options), switch on **Expert mode** in Settings. You can also manage patch sources anytime using the **Sources** tab in the top navigation bar. See the [documentation](docs/documentation.md).
 
 
 #### CLI
