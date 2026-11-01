@@ -61,7 +61,9 @@ import app.morphe.gui.ui.screens.home.BundleSupport
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
+import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.ThemeStyle
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -621,6 +623,7 @@ fun PatchedAppDetailDialog(
                     }
                 }
 
+                val isMonochrome = LocalThemeState.current.style == ThemeStyle.MONOCHROME
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
@@ -634,20 +637,22 @@ fun PatchedAppDetailDialog(
                         modifier = Modifier.weight(1f),
                         onClick = onOpenFolder,
                     )
-                    MorpheButton(
-                        label = stringResource(Res.string.customize),
-                        icon = MorpheIcons.Palette,
-                        variant = MorpheButtonVariant.OUTLINED,
-                        size = MorpheButtonSize.DEFAULT,
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            cardFills.requestEdit(
-                                record.packageName,
-                                record.displayName,
-                                supportedApp?.appIconColor,
-                            )
-                        },
-                    )
+                    if (!isMonochrome) {
+                        MorpheButton(
+                            label = stringResource(Res.string.customize),
+                            icon = MorpheIcons.Palette,
+                            variant = MorpheButtonVariant.OUTLINED,
+                            size = MorpheButtonSize.DEFAULT,
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                cardFills.requestEdit(
+                                    record.packageName,
+                                    record.displayName,
+                                    supportedApp?.appIconColor,
+                                )
+                            },
+                        )
+                    }
                     MorpheButton(
                         label = stringResource(Res.string.home_dialog_forget_button),
                         icon = MorpheIcons.Delete,

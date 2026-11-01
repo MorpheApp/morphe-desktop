@@ -31,7 +31,9 @@ import app.morphe.gui.ui.components.appCardColors
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
+import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.ThemeStyle
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -134,8 +136,8 @@ fun SupportedAppListRow(
                 deviceInfo?.let {
                     DeviceLine(
                         info = it,
-                        mutedColor = Color.White.copy(alpha = 0.5f),
-                        activeColor = Color.White,
+                        mutedColor = if (cardColors.isMonochrome) cardColors.subtitle else Color.White.copy(alpha = 0.5f),
+                        activeColor = if (cardColors.isMonochrome) cardColors.title else Color.White,
                         modifier = Modifier.padding(top = 6.dp),
                     )
                 }
@@ -151,6 +153,7 @@ internal fun PatchedStateBadge(
     state: PatchedAppState,
     onGradient: Boolean = true,
 ) {
+    val isMonochrome = LocalThemeState.current.style == ThemeStyle.MONOCHROME
     val label = when (state) {
         PatchedAppState.PATCHED -> stringResource(Res.string.home_your_apps_status_patched)
         PatchedAppState.PATCHED_WITH_UPDATES -> stringResource(Res.string.home_app_row_update_available_badge)
@@ -158,7 +161,7 @@ internal fun PatchedStateBadge(
         PatchedAppState.APK_MISSING -> stringResource(Res.string.home_app_row_apk_missing_badge)
         PatchedAppState.NEVER_PATCHED -> return
     }
-    if (onGradient) {
+    if (onGradient && !isMonochrome) {
         MorpheBadge(
             text = label,
             containerColor = Color.White.copy(alpha = 0.20f),

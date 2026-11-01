@@ -25,6 +25,7 @@ import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
+import app.morphe.gui.ui.components.MorpheBadgeTone
 import app.morphe.gui.ui.components.appCardColors
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
@@ -118,11 +119,18 @@ fun YourAppRow(
                     PatchedStateBadge(PatchedAppState.PATCHED_WITH_UPDATES)
                 }
                 if (deviceInfo?.installPending == true) {
-                    MorpheBadge(
-                        text = stringResource(Res.string.home_your_apps_install_ready),
-                        containerColor = cardColors.chipInk,
-                        onGradient = true,
-                    )
+                    if (cardColors.isMonochrome) {
+                        MorpheBadge(
+                            text = stringResource(Res.string.home_your_apps_install_ready),
+                            tone = MorpheBadgeTone.Primary,
+                        )
+                    } else {
+                        MorpheBadge(
+                            text = stringResource(Res.string.home_your_apps_install_ready),
+                            containerColor = cardColors.chipInk,
+                            onGradient = true,
+                        )
+                    }
                 }
                 if (state == PatchedAppState.APK_MISSING || state == PatchedAppState.MODIFIED_EXTERNALLY) {
                     PatchedStateBadge(state)
