@@ -1,3 +1,10 @@
+# [2.0.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.3...v2.0.0-dev.4) (2026-11-01)
+
+
+### Features
+
+* Sign with PKCS12, BKS and JKS keystores as they are ([8425c01](https://github.com/MorpheApp/morphe-desktop/commit/8425c019d5653285398625195159a3918158c02b))
+
 # [2.0.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.2...v2.0.0-dev.3) (2026-11-01)
 
 
