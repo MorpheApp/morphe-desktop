@@ -62,9 +62,29 @@ internal fun proceedToPatching(
 ) {
     if (isSimple) {
         if (apkInfo.isUnsupportedApp || selectedPatchSource == null) return
+        val allowIncompatible = apkInfo.versionStatus == VersionStatus.UNSUPPORTED ||
+                                apkInfo.versionStatus == VersionStatus.BUILD_UNSUPPORTED ||
+                                apkInfo.versionStatus == VersionStatus.EXPERIMENTAL
         coroutineScope.launch {
-            val config = viewModel.createSimplePatchConfig(apkInfo, selectedPatchSource)
-            navController.navigateComplex(PatchingScreenRoute, config)
+            val config = viewModel.createSimplePatchConfig(apkInfo, selectedPatchSource, allowIncompatible)
+            if (config.enabledPatches.isEmpty()) {
+                val patchesFile = viewModel.getCachedPatchesFile() ?: return@launch
+                navController.navigateComplex(
+                    PatchSelectionScreenRoute,
+                    PatchSelectionParams(
+                        apkPath = apkInfo.filePath,
+                        apkName = apkInfo.appName,
+                        patchesFilePath = patchesFile.absolutePath,
+                        packageName = apkInfo.packageName,
+                        apkArchitectures = apkInfo.architectures,
+                        apkVersion = apkInfo.versionName,
+                        patchesFilePaths = viewModel.getAllResolvedPatchFiles().map { it.absolutePath },
+                        patchSourceNames = viewModel.getAllResolvedPatchSourceNames(),
+                    )
+                )
+            } else {
+                navController.navigateComplex(PatchingScreenRoute, config)
+            }
         }
     } else {
         val patchesFile = viewModel.getCachedPatchesFile() ?: return

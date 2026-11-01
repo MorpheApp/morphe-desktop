@@ -23,6 +23,7 @@ import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.rememberZenoProgress
+import app.morphe.gui.util.resolveStepName
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
@@ -132,7 +133,7 @@ internal fun SimplePatchingContent(
             label = "statusMessageAnim"
         ) { targetMessage ->
             Text(
-                text = targetMessage,
+                text = resolveStepName(targetMessage),
                 style = MorpheTheme.typography.titleSmall.copy(fontWeight = FontWeight.Normal),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,

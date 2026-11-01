@@ -115,7 +115,8 @@ class HomeViewModel(
     /** Creates a [PatchEngine.Config] for simple patch mode with curated defaults. */
     suspend fun createSimplePatchConfig(
         apkInfo: ApkInfo,
-        selectedSourceName: String? = null
+        selectedSourceName: String? = null,
+        allowIncompatible: Boolean = false,
     ): PatchEngine.Config {
         val inputFile = File(apkInfo.filePath)
         val engineConfigData = engineConfigRepository.loadConfig()
@@ -193,9 +194,18 @@ class HomeViewModel(
             cachedPatches
         }
 
-        val defaultPatches = availablePatches.filter { patch ->
-            patch.isCompatibleWith(apkInfo.packageName, apkInfo.versionName) && patch.isEnabled
-        }.map { it.name }.toSet()
+        val candidatePatches = if (allowIncompatible) {
+            availablePatches.filter { it.isUniversal || it.isCompatibleWith(apkInfo.packageName) }
+        } else {
+            val matchingVersion = availablePatches.filter {
+                it.isUniversal || it.isCompatibleWith(apkInfo.packageName, apkInfo.versionName)
+            }
+            matchingVersion.ifEmpty {
+                availablePatches.filter { it.isUniversal || it.isCompatibleWith(apkInfo.packageName) }
+            }
+        }
+
+        val defaultPatches = candidatePatches.filter { it.isEnabled }.map { it.name }.toSet()
 
         return PatchEngine.Config(
             inputApk = inputFile,
@@ -275,9 +285,15 @@ class HomeViewModel(
             } else {
                 cachedPatches
             }
-            candidatePatches.filter { patch ->
+            val compatibleWithVersion = candidatePatches.filter { patch ->
                 patch.isCompatibleWith(record.packageName, record.apkVersion) && patch.isEnabled
-            }.map { it.name }.toSet()
+            }
+            val resolvedPatches = compatibleWithVersion.ifEmpty {
+                candidatePatches.filter { patch ->
+                    (patch.isUniversal || patch.isCompatibleWith(record.packageName)) && patch.isEnabled
+                }
+            }
+            resolvedPatches.map { it.name }.toSet()
         }
 
         return PatchEngine.Config(
