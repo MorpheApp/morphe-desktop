@@ -1,3 +1,15 @@
+# [2.0.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0...v2.0.0-dev.1) (2026-11-01)
+
+
+### Features
+
+* GUI 2.0 overhaul ([#393](https://github.com/MorpheApp/morphe-desktop/issues/393)) ([6d2bf56](https://github.com/MorpheApp/morphe-desktop/commit/6d2bf566dc41c89b42069f9419e1238d50eae4b5))
+
+
+### BREAKING CHANGES
+
+* Migrated Desktop to use GUI 2.0.
+
 # [1.20.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.1...v1.20.0) (2026-10-30)
 
 
