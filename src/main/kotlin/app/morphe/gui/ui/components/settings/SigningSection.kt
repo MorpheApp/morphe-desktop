@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.MorpheData
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
-import app.morphe.engine.util.KeystoreImporter
 import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.KeystoreWarning
 import app.morphe.engine.util.Logger
@@ -40,6 +39,7 @@ import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.apk.ApkUtils
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -131,33 +131,15 @@ internal fun SigningSection(
                         ) ?: return@launch
                         val validExtensions = listOf(".keystore", ".jks", ".bks", ".p12", ".pfx")
                         if (validExtensions.any { selected.name.lowercase().endsWith(it) }) {
-                            // Convert non-BKS keystores to BKS without mutating original file.
-                            val result = withContext(Dispatchers.IO) {
-                                KeystoreImporter.ensureBks(
-                                    source = selected,
-                                    convertedOutput = MorpheData.importedKeystoreFile,
-                                    alias = keystoreAlias,
-                                    password = keystoreEntryPassword,
-                                )
+                            // The keystore is signed with as it is, so only its format is checked here
+                            val type = withContext(Dispatchers.IO) {
+                                runCatching { KeystoreService.shared.keystoreType(selected) }.getOrNull()
                             }
-                            when (result) {
-                                is KeystoreImporter.Result.AlreadyBks -> {
-                                    keystoreError = null
-                                    onKeystorePathChange(result.file.absolutePath)
-                                }
-                                is KeystoreImporter.Result.Converted -> {
-                                    keystoreError = null
-                                    Logger.info(
-                                        "Converted ${result.sourceFormat.displayName} → BKS for ${selected.name}"
-                                    )
-                                    onKeystorePathChange(result.file.absolutePath)
-                                }
-                                is KeystoreImporter.Result.Failed -> {
-                                    keystoreError = result.reason
-                                    result.cause?.let {
-                                        Logger.error("Keystore import failed for ${selected.name}", it)
-                                    }
-                                }
+                            if (type != null) {
+                                keystoreError = null
+                                onKeystorePathChange(selected.absolutePath)
+                            } else {
+                                keystoreError = "Unrecognized keystore format. Supported: PKCS12 (.p12/.pfx), BKS, JKS."
                             }
                         } else {
                             keystoreError = getString(Res.string.settings_signing_invalid_file_type, validExtensions.joinToString(", "))
@@ -364,7 +346,7 @@ internal fun SigningSection(
                                 val chosen = MorpheFilePicker.saveFile(
                                     title = getString(Res.string.settings_signing_picker_save_keystore),
                                     baseName = "morphe",
-                                    extension = "keystore",
+                                    extension = "p12",
                                 ) ?: return@launch
                                 val chosenPath = chosen.absolutePath
                                 onKeystorePathChange(chosenPath)
@@ -469,11 +451,17 @@ internal fun SigningSection(
                         val dest = MorpheFilePicker.saveFile(
                             title = getString(Res.string.settings_signing_picker_export_title),
                             baseName = sourceFile.nameWithoutExtension,
-                            extension = sourceFile.extension.ifEmpty { "keystore" },
+                            extension = "p12",
                         ) ?: return@launch
                         try {
+                            val details = ApkUtils.KeyStoreDetails(
+                                sourceFile,
+                                localPassword.ifEmpty { null },
+                                localAlias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
+                                localEntryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
+                            )
                             withContext(Dispatchers.IO) {
-                                sourceFile.copyTo(dest, overwrite = true)
+                                KeystoreService.shared.exportKeystore(details, dest)
                             }
                         } catch (e: CancellationException) {
                             throw e

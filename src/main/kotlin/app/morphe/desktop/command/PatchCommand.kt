@@ -189,9 +189,9 @@ internal object PatchCommand : Callable<Int> {
 
     @CommandLine.Option(
         names = ["--keystore-password"],
-        description = ["Password of the keystore. Empty password by default."],
+        description = ["Password of the keystore. Defaults to the entry password, or none for a BKS keystore."],
     )
-    private var keyStorePassword: String? = null // Empty password by default
+    private var keyStorePassword: String? = null
 
     @CommandLine.Option(
         names = ["--keystore-entry-alias"],

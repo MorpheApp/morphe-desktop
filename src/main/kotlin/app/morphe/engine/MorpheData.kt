@@ -41,9 +41,6 @@ object MorpheData {
     /** Default signing keystore file. */
     val defaultKeystoreFile: File get() = File(root, "morphe.keystore")
 
-    /** Target file for converted imported keystores. */
-    val importedKeystoreFile: File get() = File(root, "imported.keystore")
-
     // Reason primary JAR-adjacent storage could not be used.
     private enum class FallbackReason(val message: String) {
         NO_JAR_LOCATION("Could not determine JAR location (running from IDE / classpath?)"),

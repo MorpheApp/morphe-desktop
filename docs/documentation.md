@@ -447,12 +447,12 @@ This is the GUI face of the `--keystore*` flags. Morphe signs every patched APK 
 |---------------------------|-----------------------------------------------------------|
 | Keystore path +**Browse** | Point at your own keystore file                           |
 | **Reset**                 | Revert to Morphe's auto-generated default keystore        |
-| **Keystore password**     | Password for the keystore file (default: empty)           |
+| **Keystore password**     | Password for the keystore file (default: the key password) |
 | **Key alias**             | The key entry's alias (default:`Morphe`)                  |
 | **Key password**          | The key entry's password (default:`Morphe`)               |
 | **Verify credentials**    | Check the keystore opens with the entered alias/passwords |
 | **Generate keystore**     | Create a fresh keystore                                   |
-| **Export**                | Save a copy of the keystore elsewhere                     |
+| **Export**                | Save the key as a `.p12` keystore that opens with the key password |
 
 <p align="center">
   <img src="images/documentation/gui/keystore-setting.png" width="60%" alt="Keystore signing setting" style="vertical-align: middle"/>
@@ -462,7 +462,7 @@ This is the GUI face of the `--keystore*` flags. Morphe signs every patched APK 
 > If Morphe can't find the configured keystore it warns *"Keystore not found – patching will fail until you restore it, pick another, or reset."* Use **Reset** to fall back to the default, or **Browse** to a valid one.
 
 > [!NOTE]
-> The signer only loads **BKS** keystores today. Support for pointing at **PKCS12** (`.p12` / `.pfx`) or **JKS** (`.jks`) keystores – auto-converted to BKS, original untouched – is coming in an upcoming release. (Same note as the CLI [`--keystore`](#subcommand-1-patch) flag.)
+> Morphe signs with **PKCS12** (`.p12` / `.pfx`), **BKS** and **JKS** (`.jks`) keystores as they are, telling them apart by their contents rather than their extension. Keystores it generates or exports are PKCS12, which other signing tools open too. (Same note as the CLI [`--keystore`](#subcommand-1-patch) flag.)
 
 <h4 id="gui-settings-striplibs">Strip Libs</h4>
 
@@ -892,19 +892,19 @@ Default: the shared `morphe-data/morphe.keystore` (see [Where Morphe stores its 
 Path to a keystore file containing a private key and certificate pair to sign the patched APK with. If not specified, Morphe uses a single shared keystore in its data folder – auto-creating it on the first run and reusing it afterwards. Reusing one keystore is intentional: Android only lets you update an installed app with an APK signed by the **same** key, so a stable keystore means you can re-patch and reinstall over a previous build.
 
 ```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore /path/to/keystore.bks your_app.apk
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore /path/to/keystore.p12 your_app.apk
 ```
 
 > [!NOTE]
-> The patcher signs using **BKS** keystores. If you point `--keystore` at a **PKCS12** (`.p12`/`.pfx`) or **JKS** (`.jks`) file, Morphe auto-detects the format from the file's contents (not its extension) and converts a BKS copy to sign with. Your original keystore file is never modified.
+> The patcher signs with **PKCS12** (`.p12`/`.pfx`), **BKS** and **JKS** (`.jks`) keystores as they are, detecting the format from the file's contents (not its extension). The keystore it creates on the first run is PKCS12.
 
 #### `--keystore-password`:
 
 Required: No
 
-Default: empty (no password)
+Default: the key entry password (`--keystore-entry-password`), or none for a BKS keystore
 
-Password to open the **keystore file** itself. Different from the key *entry* password (`--keystore-entry-password`). Morphe's auto-generated default keystore has an empty store password, so you typically only need this flag when supplying your own keystore that was created with one.
+Password to open the **keystore file** itself. A PKCS12 keystore conventionally shares the key *entry* password, which is how Morphe creates its default keystore, so you typically only need this flag when supplying your own keystore whose store password differs.
 
 ```
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --keystore keystore.jks --keystore-password "mypassword" your_app.apk

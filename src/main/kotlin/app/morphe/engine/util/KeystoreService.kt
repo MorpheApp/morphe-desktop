@@ -12,10 +12,7 @@ import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.patcher.apk.ApkSigner
 import app.morphe.patcher.apk.ApkUtils
 import java.io.File
-import java.security.KeyStore
 import java.security.MessageDigest
-import java.security.Provider
-import java.security.Security
 import java.security.cert.X509Certificate
 import java.text.DateFormat
 import java.util.Date
@@ -34,16 +31,18 @@ class KeystoreService(
             return userDetails
         }
 
-        return ApkUtils.KeyStoreDetails(
-            keyStore = MorpheData.defaultKeystoreFile,
-            keyStorePassword = null,
-            alias = DEFAULT_KEYSTORE_ALIAS,
-            password = DEFAULT_KEYSTORE_PASSWORD,
-        )
+        return defaultSigningDetails
     }
 
+    /** The type of keystore [file] holds, or null if it is none Morphe can sign with. */
+    fun keystoreType(file: File): ApkSigner.KeyStoreType? =
+        ApkSigner.KeyStoreType.of(file.inputStream().use { it.readNBytes(4) })
+
     /**
-     * Generates a new BKS keystore with a self-signed certificate and stores it at [destination].
+     * Generates a new PKCS12 keystore with a self-signed certificate and stores it at [destination].
+     *
+     * PKCS12 has a single password, so [storePassword] protects the key as well, and
+     * [entryPassword] is used when no store password is given.
      */
     fun generateKeystore(
         destination: File,
@@ -57,16 +56,21 @@ class KeystoreService(
             "Morphe",
             Date(System.currentTimeMillis() + validityDays * 24 * 60 * 60 * 1000),
         )
-        val ks = ApkSigner.newKeyStore(setOf(
-            ApkSigner.KeyStoreEntry(
-                alias.ifEmpty { DEFAULT_KEYSTORE_ALIAS },
-                entryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
-                keyPair,
-            ),
-        ))
         destination.outputStream().use {
-            ks.store(it, storePassword?.ifEmpty { null }?.toCharArray())
+            ApkSigner.writeKeyStore(
+                it,
+                storePassword?.ifEmpty { null } ?: entryPassword.ifEmpty { DEFAULT_KEYSTORE_PASSWORD },
+                mapOf(alias.ifEmpty { DEFAULT_KEYSTORE_ALIAS } to keyPair),
+            )
         }
+    }
+
+    /**
+     * Writes the key [details] sign with to [destination] as a PKCS12 keystore that opens with the
+     * key's password alone, the form other signing tools expect.
+     */
+    fun exportKeystore(details: ApkUtils.KeyStoreDetails, destination: File) {
+        destination.outputStream().use { ApkUtils.exportKeyStore(details, it) }
     }
 
     /**
@@ -80,96 +84,68 @@ class KeystoreService(
         locale: Locale = Locale.getDefault(),
     ): KeystoreInspectionResult? {
         if (!keystoreFile.exists()) return null
-        ensureBouncyCastleProvider()
 
-        val passwordChars = password?.toCharArray() ?: charArrayOf()
-        val types = listOf("BKS" to "BC", "BKS" to null, "JKS" to null, "PKCS12" to null)
-        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, locale)
-
-        for ((type, provider) in types) {
-            try {
-                val ks = if (provider != null) KeyStore.getInstance(type, provider) else KeyStore.getInstance(type)
-                keystoreFile.inputStream().use { ks.load(it, passwordChars) }
-
-                if (!ks.containsAlias(alias)) {
-                    return KeystoreInspectionResult(
-                        alias = alias,
-                        issuer = "",
-                        validFrom = "",
-                        validTo = "",
-                        sha256Fingerprint = "",
-                        sha1Fingerprint = "",
-                        warnings = listOf(KeystoreWarning.AliasNotFound(alias)),
-                    )
-                }
-
-                val cert = ks.getCertificate(alias) as? X509Certificate ?: continue
-
-                try {
-                    ks.getKey(alias, entryPassword?.toCharArray() ?: charArrayOf())
-                } catch (_: Exception) {
-                    return KeystoreInspectionResult(
-                        alias = alias,
-                        issuer = "",
-                        validFrom = "",
-                        validTo = "",
-                        sha256Fingerprint = "",
-                        sha1Fingerprint = "",
-                        warnings = listOf(KeystoreWarning.KeyPasswordIncorrect(alias)),
-                    )
-                }
-
-                val sha256 = MessageDigest.getInstance("SHA-256")
-                    .digest(cert.encoded)
-                    .joinToString(":") { "%02X".format(it) }
-
-                val sha1 = MessageDigest.getInstance("SHA-1")
-                    .digest(cert.encoded)
-                    .joinToString(":") { "%02X".format(it) }
-
-                return KeystoreInspectionResult(
-                    alias = alias,
-                    issuer = cert.issuerX500Principal.name,
-                    validFrom = dateFormat.format(cert.notBefore),
-                    validTo = dateFormat.format(cert.notAfter),
-                    sha256Fingerprint = sha256,
-                    sha1Fingerprint = sha1,
-                    warnings = emptyList(),
-                )
-            } catch (_: Exception) {
-                continue
-            }
+        val ks = try {
+            ApkUtils.readKeyStore(ApkUtils.KeyStoreDetails(keystoreFile, password, alias, entryPassword.orEmpty()))
+        } catch (_: Exception) {
+            return null
         }
-        return null
+
+        fun warning(warning: KeystoreWarning) = KeystoreInspectionResult(
+            alias = alias,
+            issuer = "",
+            validFrom = "",
+            validTo = "",
+            sha256Fingerprint = "",
+            sha1Fingerprint = "",
+            warnings = listOf(warning),
+        )
+
+        if (!ks.containsAlias(alias)) return warning(KeystoreWarning.AliasNotFound(alias))
+        val cert = ks.getCertificate(alias) as? X509Certificate ?: return null
+
+        try {
+            ks.getKey(alias, entryPassword?.toCharArray() ?: charArrayOf())
+        } catch (_: Exception) {
+            return warning(KeystoreWarning.KeyPasswordIncorrect(alias))
+        }
+
+        fun fingerprint(algorithm: String) = MessageDigest.getInstance(algorithm)
+            .digest(cert.encoded)
+            .joinToString(":") { "%02X".format(it) }
+
+        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, locale)
+        return KeystoreInspectionResult(
+            alias = alias,
+            issuer = cert.issuerX500Principal.name,
+            validFrom = dateFormat.format(cert.notBefore),
+            validTo = dateFormat.format(cert.notAfter),
+            sha256Fingerprint = fingerprint("SHA-256"),
+            sha1Fingerprint = fingerprint("SHA-1"),
+            warnings = emptyList(),
+        )
     }
 
     /**
      * Returns known Morphe signature hashes for both the default keystore and the configured keystore.
      */
     suspend fun getKnownSignatureIds(): Set<String> = buildSet {
-        SignatureIdentity.idForKeystore(
-            MorpheData.defaultKeystoreFile,
-            storePassword = null,
-            alias = DEFAULT_KEYSTORE_ALIAS,
-        )?.let { add(it) }
-
-        val config = configRepository.loadConfig()
-        config.resolvedKeystorePath()?.let { ks ->
-            SignatureIdentity.idForKeystore(ks, config.keystorePassword, config.keystoreAlias)?.let { add(it) }
+        SignatureIdentity.idForKeystore(defaultSigningDetails)?.let { add(it) }
+        configRepository.loadConfig().toKeyStoreDetails()?.let { details ->
+            SignatureIdentity.idForKeystore(details)?.let { add(it) }
         }
-    }
-
-    private fun ensureBouncyCastleProvider() {
-        if (Security.getProvider("BC") != null) return
-        try {
-            val provider = Class.forName("org.bouncycastle.jce.provider.BouncyCastleProvider")
-                .getDeclaredConstructor().newInstance() as Provider
-            Security.addProvider(provider)
-        } catch (_: Exception) {}
     }
 
     companion object {
         val shared: KeystoreService by lazy { KeystoreService() }
+
+        private val defaultSigningDetails
+            get() = ApkUtils.KeyStoreDetails(
+                keyStore = MorpheData.defaultKeystoreFile,
+                keyStorePassword = null,
+                alias = DEFAULT_KEYSTORE_ALIAS,
+                password = DEFAULT_KEYSTORE_PASSWORD,
+            )
     }
 }
 

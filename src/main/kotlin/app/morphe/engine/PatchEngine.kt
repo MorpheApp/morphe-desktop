@@ -24,7 +24,6 @@ import app.morphe.engine.options.writePatchBundles
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.supportedVersionsFor
 import app.morphe.engine.util.FileChecksum
-import app.morphe.engine.util.KeystoreImporter
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.deleteRecursivelyInParallel
 import app.morphe.engine.util.signWithLegacyFallback
@@ -579,42 +578,13 @@ object PatchEngine {
                         return@withContext earlyResult("Signing failed: $msg", msg)
                     }
 
-                    val resolvedKeystoreFile = if (rawKeystore.keyStore.exists()) {
-                        val importResult = KeystoreImporter.ensureBks(
-                            source = rawKeystore.keyStore,
-                            convertedOutput = MorpheData.importedKeystoreFile,
-                            alias = rawKeystore.alias,
-                            password = rawKeystore.password,
-                        )
-                        when (importResult) {
-                            is KeystoreImporter.Result.AlreadyBks -> importResult.file
-                            is KeystoreImporter.Result.Converted -> {
-                                Logger.info("Converted ${importResult.sourceFormat.displayName} keystore → BKS: ${importResult.file.absolutePath}")
-                                importResult.file
-                            }
-                            is KeystoreImporter.Result.Failed -> {
-                                val msg = "Keystore conversion failed: ${importResult.reason}"
-                                stepResults.add(StepResult(PatchStep.SIGNING, false, msg))
-                                return@withContext earlyResult("Signing failed: $msg", msg)
-                            }
-                        }
-                    } else {
-                        rawKeystore.keyStore
-                    }
-
-                    val finalKeystoreDetails = ApkUtils.KeyStoreDetails(
-                        resolvedKeystoreFile,
-                        rawKeystore.keyStorePassword,
-                        rawKeystore.alias,
-                        rawKeystore.password,
-                    )
-
                     try {
+                        // The patcher reads PKCS12, BKS and JKS keystores as they are
                         signWithLegacyFallback(
-                            primary = finalKeystoreDetails,
+                            primary = rawKeystore,
                             allowLegacyFallback = config.keystoreDetails == null ||
-                                (finalKeystoreDetails.alias == Config.DEFAULT_KEYSTORE_ALIAS &&
-                                 finalKeystoreDetails.password == Config.DEFAULT_KEYSTORE_PASSWORD),
+                                (rawKeystore.alias == Config.DEFAULT_KEYSTORE_ALIAS &&
+                                 rawKeystore.password == Config.DEFAULT_KEYSTORE_PASSWORD),
                         ) { details ->
                             ApkUtils.signApk(
                                 rebuiltApk,
