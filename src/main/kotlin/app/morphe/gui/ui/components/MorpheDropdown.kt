@@ -132,7 +132,6 @@ fun MorpheEditableDropdown(
     enabled: Boolean = true,
     searchable: Boolean = false,
     maxHeight: Dp = 300.dp,
-    backgroundColor: Color = Color.Transparent,
 ) {
     val accents = MorpheTheme.colors
     val corner = MorpheTheme.shapes.small
@@ -160,7 +159,6 @@ fun MorpheEditableDropdown(
             Modifier.fillMaxWidth()
                 .height(MorpheTheme.dimens.controlHeight)
                 .clip(corner)
-                .background(backgroundColor)
                 .border(1.dp, fieldBorder, corner)
                 .onGloballyPositioned { triggerWidth = it.size.width; triggerHeight = it.size.height }
                 .padding(start = 10.dp, end = 4.dp),

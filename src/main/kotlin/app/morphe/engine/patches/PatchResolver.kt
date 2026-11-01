@@ -33,7 +33,6 @@ object PatchResolver {
         data class DownloadFailed(override val message: String) : Error(message)
         data class SignerChanged(
             val signer: String?,
-            val repoPath: String,
             override val message: String = "The patch bundle is not signed by the key its source trusts"
         ) : Error(message)
     }
@@ -142,7 +141,7 @@ object PatchResolver {
             val ex = downloadResult.exceptionOrNull()
             if (ex is PatchBundleSignerChangedException) {
                 return@withContext ResolutionResult(
-                    error = Error.SignerChanged(ex.signer, repo.repoPath)
+                    error = Error.SignerChanged(ex.signer)
                 )
             }
             if (isPrSource) {

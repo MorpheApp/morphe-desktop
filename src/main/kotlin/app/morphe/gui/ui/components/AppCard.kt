@@ -124,10 +124,10 @@ private fun Color.toArgbInt(): Int {
 
 internal data class CardPalette(val base: Color, val mid: Color, val end: Color)
 
-private fun Color.over(background: Color, alpha: Float): Color = Color(
-    red = background.red * (1f - alpha) + red * alpha,
-    green = background.green * (1f - alpha) + green * alpha,
-    blue = background.blue * (1f - alpha) + blue * alpha,
+private fun Color.over(alpha: Float): Color = Color(
+    red = CARD_GROUND.red * (1f - alpha) + red * alpha,
+    green = CARD_GROUND.green * (1f - alpha) + green * alpha,
+    blue = CARD_GROUND.blue * (1f - alpha) + blue * alpha,
 )
 
 private val MANAGER_MID = Color(0xFF1E5AA8)
@@ -232,9 +232,9 @@ fun AppCard(
                     drawRoundRect(
                         brush = userBrush ?: Brush.linearGradient(
                             colors = listOf(
-                                baseColor.over(CARD_GROUND, CARD_BASE_ALPHA).shiftLightness(lift),
-                                midColor.over(CARD_GROUND, CARD_MID_ALPHA).shiftLightness(lift),
-                                endColor.over(CARD_GROUND, CARD_END_ALPHA).shiftLightness(lift),
+                                baseColor.over(CARD_BASE_ALPHA).shiftLightness(lift),
+                                midColor.over(CARD_MID_ALPHA).shiftLightness(lift),
+                                endColor.over(CARD_END_ALPHA).shiftLightness(lift),
                             ),
                             start = Offset(0f, h),
                             end = Offset(w, 0f),

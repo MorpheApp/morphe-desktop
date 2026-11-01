@@ -81,7 +81,7 @@ object BootstrapDownloader {
             DownloadPlan(dep, file, needsDownload = !(file.exists() && verifyHash(file, dep.expectedHash)))
         }
         val toDownload = plans.count { it.needsDownload }
-        if (toDownload > 0) listener?.onStart(toDownload)
+        if (toDownload > 0) listener?.onStart()
 
         var index = 0
         for ((dep, target, needsDownload) in plans) {
@@ -98,7 +98,7 @@ object BootstrapDownloader {
             val current = index
             try {
                 downloadWithProgress(dep, target) { done, total ->
-                    listener?.onProgress(current, toDownload, dep.fileName, done, total)
+                    listener?.onProgress(current, toDownload, done, total)
                 }
             } catch (e: Exception) {
                 target.delete()

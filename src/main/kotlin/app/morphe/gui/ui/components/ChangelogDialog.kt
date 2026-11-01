@@ -342,7 +342,6 @@ private fun ChangelogTimelineRow(
                     badge = badge,
                     isFirst = isFirst,
                     isLast = isLast,
-                    hasNode = true,
                     railColor = railColor,
                     accentColor = accentColor,
                     haloColor = haloColor,
@@ -487,7 +486,6 @@ private fun DrawScope.drawTimeline(
     badge: ChangelogBadge?,
     isFirst: Boolean,
     isLast: Boolean,
-    hasNode: Boolean,
     railColor: Color,
     accentColor: Color,
     haloColor: Color,
@@ -495,11 +493,6 @@ private fun DrawScope.drawTimeline(
 ) {
     val railX = (RailSlotWidth / 2).toPx()
     val stroke = RailStrokeWidth.toPx()
-
-    if (!hasNode) {
-        drawLine(railColor, Offset(railX, 0f), Offset(railX, size.height), stroke)
-        return
-    }
 
     val center = Offset(railX, NodeCenterY.toPx())
     val clearance = NodeHaloRadius.toPx() + RailStrokeWidth.toPx()

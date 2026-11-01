@@ -314,7 +314,6 @@ class AdbManager {
             return@withContext Result.failure(
                 AdbMultipleDevicesException(
                     "Multiple devices connected: ${authorizedDevices.size} devices found",
-                    authorizedDevices,
                 )
             )
         }
@@ -1042,5 +1041,4 @@ open class AdbException(
 
 class AdbMultipleDevicesException(
     message: String,
-    val devices: List<AdbDevice>,
 ) : AdbException(message, errorCode = AdbErrorCode.MULTIPLE_DEVICES)

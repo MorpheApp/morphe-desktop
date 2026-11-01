@@ -368,7 +368,6 @@ internal fun PatchOptionEditor(
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color.Transparent,
                 )
             }
 

@@ -33,6 +33,8 @@ import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
+private const val TIMELINE_SLOT_COUNT = 60
+
 @Composable
 internal fun HeapUsageGraph(
     samples: List<Int>,
@@ -77,8 +79,7 @@ internal fun HeapUsageGraph(
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            val slotCount = 60
-            val padded = List(slotCount - samples.size) { 0 } + samples.takeLast(slotCount)
+            val padded = List(TIMELINE_SLOT_COUNT - samples.size) { 0 } + samples.takeLast(TIMELINE_SLOT_COUNT)
 
             Canvas(
                 modifier = Modifier
@@ -86,7 +87,7 @@ internal fun HeapUsageGraph(
                     .height(36.dp)
             ) {
                 if (padded.isEmpty()) return@Canvas
-                val (gap, barWidth, corner, minimumHeight) = calculateTimelineBarMetrics(slotCount)
+                val (gap, barWidth, corner, minimumHeight) = calculateTimelineBarMetrics()
                 val redThresholdForMaxColor = 1.0f
                 val smoothStart = 0.7f
                 val memoryFractionRollingAverageSamples = 3
@@ -181,11 +182,9 @@ internal fun IoUsageGraph(
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            val slotCount = 60
-
             val peak = (samples.maxOfOrNull { it.totalKbPerSec } ?: 0).toFloat()
             val fractions = samples.map { if (peak > 0f) (it.totalKbPerSec / peak).coerceIn(0f, 1f) else 0f }
-            val padded = List(slotCount - fractions.size) { 0f } + fractions.takeLast(slotCount)
+            val padded = List(TIMELINE_SLOT_COUNT - fractions.size) { 0f } + fractions.takeLast(TIMELINE_SLOT_COUNT)
 
             Canvas(
                 modifier = Modifier
@@ -193,7 +192,7 @@ internal fun IoUsageGraph(
                     .height(36.dp)
             ) {
                 if (padded.isEmpty()) return@Canvas
-                val (gap, barWidth, corner, minimumHeight) = calculateTimelineBarMetrics(slotCount)
+                val (gap, barWidth, corner, minimumHeight) = calculateTimelineBarMetrics()
 
                 padded.forEachIndexed { index, fraction ->
                     val left = index * (barWidth + gap)
@@ -337,11 +336,11 @@ private data class TimelineBarMetrics(
     val minimumHeight: Float,
 )
 
-private fun DrawScope.calculateTimelineBarMetrics(slotCount: Int): TimelineBarMetrics {
+private fun DrawScope.calculateTimelineBarMetrics(): TimelineBarMetrics {
     val gap = 1.dp.toPx()
     return TimelineBarMetrics(
         gap = gap,
-        barWidth = (size.width - (gap * (slotCount - 1))) / slotCount,
+        barWidth = (size.width - (gap * (TIMELINE_SLOT_COUNT - 1))) / TIMELINE_SLOT_COUNT,
         corner = CornerRadius(2.dp.toPx()),
         minimumHeight = size.height * 0.04f,
     )
