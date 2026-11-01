@@ -21,7 +21,7 @@ plugins {
 group = "app.morphe"
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
     sourceSets.main {
         kotlin.srcDir(layout.buildDirectory.dir("generated/source/bootstrap/main"))
     }

@@ -27,7 +27,8 @@ All modifications made by Morphe can be found in the Git history.
 
 
 ## Prerequisites
-1. Java Runtime Environment 21 or above ([Azul Zulu JRE](https://www.azul.com/downloads/?version=java-21-lts&package=jre#zulu), [Temurin](https://adoptium.net/temurin/releases?version=21&os=any&arch=any) or [OpenJDK](https://jdk.java.net/archive/)).
+1. Java Runtime Environment 17 or above ([Azul Zulu JRE](https://www.azul.com/downloads/?version=java-17-lts&package=jre#zulu), [Temurin](https://adoptium.net/temurin/releases?version=17&os=any&arch=any) or [OpenJDK](https://jdk.java.net/archive/)).
+    The GUI requires a 64-bit Java runtime. The CLI works with both 32-bit and 64-bit Java runtimes.
 2. Morphe Desktop jar file (morphe-desktop-*-all.jar). Download the latest from [here](https://github.com/MorpheApp/morphe-desktop/releases/latest).
 
    **Alternative: Homebrew (macOS/Linux).** Install [Homebrew](https://brew.sh), then run `brew install morphe`. Homebrew installs OpenJDK as a dependency. Run `morphe --help` to get started. See the [Morphe formula](https://formulae.brew.sh/formula/morphe).
