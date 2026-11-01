@@ -1,3 +1,10 @@
+# [2.0.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.1...v2.0.0-dev.2) (2026-11-01)
+
+
+### Features
+
+* Add support for Windows on ARM ([#399](https://github.com/MorpheApp/morphe-desktop/issues/399)) ([a573962](https://github.com/MorpheApp/morphe-desktop/commit/a573962804a690ff3e75a27c01bdac4813519165))
+
 # [2.0.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0...v2.0.0-dev.1) (2026-11-01)
 
 
