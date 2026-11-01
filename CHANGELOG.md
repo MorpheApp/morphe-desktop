@@ -1,3 +1,10 @@
+# [2.0.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.2...v2.0.0-dev.3) (2026-11-01)
+
+
+### Bug Fixes
+
+* Resolve card text contrast in Monochrome Light Mode ([4ebc790](https://github.com/MorpheApp/morphe-desktop/commit/4ebc7908b25aef280858112b55451de5b78ff405))
+
 # [2.0.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.1...v2.0.0-dev.2) (2026-11-01)
 
 
