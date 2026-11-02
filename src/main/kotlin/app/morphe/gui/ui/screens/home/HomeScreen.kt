@@ -50,6 +50,7 @@ import app.morphe.gui.ui.screens.home.components.handleContinue
 import app.morphe.gui.ui.screens.home.components.openFilePicker
 import app.morphe.gui.ui.screens.home.components.proceedToPatching
 import app.morphe.gui.ui.theme.Defaults
+import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
@@ -74,7 +75,9 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    HomeScreenContent(viewModel = viewModel)
+    CompositionLocalProvider(LocalPatchSourceHeader provides viewModel::patchSourceHeadersFor) {
+        HomeScreenContent(viewModel = viewModel)
+    }
 }
 
 @Composable

@@ -25,6 +25,7 @@ import app.morphe.engine.readableMessage
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
 import app.morphe.engine.util.KeystoreService
+import app.morphe.engine.util.PatchSourceHeaders
 import app.morphe.engine.util.isNewerVersion
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.model.SupportedApp
@@ -51,6 +52,7 @@ import app.morphe.gui.util.logIfFailed
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
+import app.morphe.gui.util.patchSourceHeaders
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.CancellationException
@@ -918,6 +920,18 @@ class HomeViewModel(
                 patches.any { p -> p.compatiblePackages.any { it.name == packageName } }
             }
             .mapNotNull { (sourceId, _) -> active[sourceId] }
+    }
+
+    /** The patch source headers for [packageName], naming the loaded sources with patches for it. */
+    fun patchSourceHeadersFor(packageName: String): PatchSourceHeaders? {
+        val snapshot = cachedSourcesResult ?: return null
+        val loaded = snapshot.resolved.filter { it.patchFile != null }
+            .associate { it.source.id to (it.source to it.resolvedVersion) }
+        return patchSourceHeaders(
+            snapshot.patchesBySource.entries
+                .filter { (_, patches) -> patches.any { p -> p.compatiblePackages.any { it.name == packageName } } }
+                .mapNotNull { (sourceId, _) -> loaded[sourceId] }
+        )
     }
 
     suspend fun availableBundleVersions(sourceName: String): List<BundleRelease> {

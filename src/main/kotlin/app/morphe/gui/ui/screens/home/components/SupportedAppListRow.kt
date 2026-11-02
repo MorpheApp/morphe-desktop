@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.ui.components.AppCard
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
@@ -109,6 +110,7 @@ fun SupportedAppListRow(
                 channelLabel = stringResource(Res.string.version_label_latest_stable),
                 version = app.recommendedVersion,
                 downloadUrl = app.apkDownloadUrl,
+                packageName = app.packageName,
                 nullLabel = stringResource(Res.string.home_app_row_any),
             )
             if (!isSimple) {
@@ -116,6 +118,7 @@ fun SupportedAppListRow(
                     channelLabel = stringResource(Res.string.home_app_row_latest_experimental),
                     version = latestExperimental,
                     downloadUrl = app.experimentalDownloadUrl,
+                    packageName = app.packageName,
                     nullLabel = stringResource(Res.string.home_app_row_na),
                 )
             }
@@ -181,15 +184,19 @@ private fun VersionCardChip(
     channelLabel: String,
     version: String?,
     downloadUrl: String?,
+    packageName: String,
     nullLabel: String,
 ) {
     val uriHandler = LocalUriHandler.current
+    val patchSourceHeader = LocalPatchSourceHeader.current
     val shown = version?.let { if (it.startsWith("v")) it else "v$it" } ?: nullLabel
     MorpheCardChip(
         text = "$channelLabel · $shown",
         icon = if (downloadUrl != null) MorpheIcons.OpenInNew else null,
         onClick = downloadUrl?.let {
-            { openUrlAndFollowRedirects(it) { resolved -> uriHandler.openUri(resolved) } }
+            {
+                openUrlAndFollowRedirects(it, patchSourceHeader(packageName)) { resolved -> uriHandler.openUri(resolved) }
+            }
         },
     )
 }
@@ -252,6 +259,7 @@ private fun VersionChipSection(
     maxPills: Int = 16,
 ) {
     if (versions.isEmpty()) return
+    val patchSourceHeader = LocalPatchSourceHeader.current
     SectionLabel(text = label, color = color)
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -262,7 +270,8 @@ private fun VersionChipSection(
             MorpheCardChip(
                 text = v,
                 icon = if (url != null) MorpheIcons.OpenInNew else null,
-                onClick = url?.let { { onOpenUrl(it) } },
+                // Followed here rather than by the browser, which cannot send the patch source header
+                onClick = url?.let { { openUrlAndFollowRedirects(it, patchSourceHeader(packageName), onOpenUrl) } },
             )
         }
         if (versions.size > maxPills) {
