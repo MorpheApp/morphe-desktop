@@ -549,9 +549,8 @@ object PatchEngine {
                 val rebuiltApk = File(tempDir, "rebuilt.apk")
                 try {
                     onProgress("Rebuilding APK...")
-                    val patcherResult = patcher.get()
-                    Files.copy(actualInputApk.toPath(), rebuiltApk.toPath(), StandardCopyOption.REPLACE_EXISTING)
-                    patcherResult.applyTo(rebuiltApk)
+                    // Compiles the patched files and writes the unsigned APK in one pass
+                    patcher.writeApk(rebuiltApk)
                     stepResults.add(StepResult(PatchStep.REBUILDING, true))
                 } catch (e: CancellationException) {
                     throw e
@@ -563,7 +562,6 @@ object PatchEngine {
 
                 currentCoroutineContext().ensureActive()
 
-                val tempOutput = File(tempDir, finalOutputApk.name)
                 if (!config.unsigned) {
                     val rawKeystore = config.keystoreDetails ?: ApkUtils.KeyStoreDetails(
                         MorpheData.defaultKeystoreFile,
@@ -579,7 +577,10 @@ object PatchEngine {
                     }
 
                     try {
-                        // The patcher reads PKCS12, BKS and JKS keystores as they are
+                        // The patcher reads PKCS12, BKS and JKS keystores as they are.
+                        // The APK is signed in place: a failed attempt, such as one with the wrong
+                        // keystore password, throws before the file is modified, so the legacy retry
+                        // signs the same unsigned APK.
                         signWithLegacyFallback(
                             primary = rawKeystore,
                             allowLegacyFallback = config.keystoreDetails == null ||
@@ -588,7 +589,7 @@ object PatchEngine {
                         ) { details ->
                             ApkUtils.signApk(
                                 rebuiltApk,
-                                tempOutput,
+                                rebuiltApk,
                                 config.signerName,
                                 details,
                             )
@@ -601,8 +602,6 @@ object PatchEngine {
                         val sw = StringWriter().also { e.printStackTrace(PrintWriter(it)) }.toString()
                         return@withContext earlyResult("Signing failed: ${e.message}", sw)
                     }
-                } else {
-                    Files.copy(rebuiltApk.toPath(), tempOutput.toPath(), StandardCopyOption.REPLACE_EXISTING)
                 }
 
                 currentCoroutineContext().ensureActive()
@@ -610,7 +609,7 @@ object PatchEngine {
                 if (config.sdkToolsPath != null) {
                     try {
                         onProgress("Verifying APK with Android SDK...")
-                        verifier.verifyApkFile(tempOutput)
+                        verifier.verifyApkFile(rebuiltApk)
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Exception) {
@@ -619,7 +618,8 @@ object PatchEngine {
                 }
 
                 finalOutputApk.parentFile?.mkdirs()
-                Files.copy(tempOutput.toPath(), finalOutputApk.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                // A move is a rename on the same drive and falls back to copy and delete across drives
+                Files.move(rebuiltApk.toPath(), finalOutputApk.toPath(), StandardCopyOption.REPLACE_EXISTING)
                 onProgress("Saved to ${finalOutputApk.absolutePath}")
 
                 val isSuccess = !config.failOnError || failedPatches.isEmpty()
