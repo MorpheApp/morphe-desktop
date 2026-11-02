@@ -1,3 +1,10 @@
+# [2.0.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.4...v2.0.0-dev.5) (2026-11-02)
+
+
+### Performance Improvements
+
+* Write the patched APK in one pass and sign it in place ([#403](https://github.com/MorpheApp/morphe-desktop/issues/403)) ([e9ac86e](https://github.com/MorpheApp/morphe-desktop/commit/e9ac86e8e95153706c0b8ff64e12e411477fe3f4))
+
 # [2.0.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.3...v2.0.0-dev.4) (2026-11-01)
 
 
