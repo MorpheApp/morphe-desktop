@@ -34,8 +34,8 @@ import app.morphe.gui.ui.screens.patching.PatchingStatus
 import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.label
 import app.morphe.gui.util.rememberZenoProgress
-import app.morphe.gui.util.resolveStepName
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -67,7 +67,7 @@ internal fun ExpertProgressHeader(
             val stepNameToDisplay = if (uiState.status == PatchingStatus.COMPLETED) {
                 stringResource(Res.string.patching_step_all_done)
             } else {
-                resolveStepName(uiState.currentStepName)
+                uiState.currentStep?.label().orEmpty()
             }
 
             AnimatedContent(

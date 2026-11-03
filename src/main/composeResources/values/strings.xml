@@ -106,11 +106,9 @@
 
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Loading patches</string>
-    <string name="patching_step_preparing">Preparing</string>
     <string name="patching_step_merging_split_apk">Merging split APK</string>
     <string name="patching_step_read_apk">Read APK file</string>
     <string name="patching_step_applying_patches">Applying patches</string>
-    <string name="patching_step_saving">Saving</string>
     <string name="patching_step_writing_apk">Writing patched APK file</string>
     <string name="patching_step_signing">Signing patched APK file</string>
 
@@ -396,7 +394,7 @@
     <string name="patching_status_preparing">Preparing to patch</string>
     <string name="patching_status_in_progress">Applying patches</string>
     <string name="patching_completed_loading_result">Patching completed, loading result…</string>
-    <string name="patching_cancelled_loading_result">Patching cancelled, loading result…</string>
+    <string name="patching_cancelled_loading_result">Patching canceled, loading result…</string>
     <string name="patching_failed_loading_result">Patching failed, loading result…</string>
     <string name="patching_log_viewer_failed_to_read">Failed to read log file: %1$s</string>
     <string name="patching_log_viewer_title">Log file</string>
@@ -552,7 +550,7 @@
     <string name="source_sheet_move_up_description">Move up</string>
     <string name="source_sheet_move_down_description">Move down</string>
     <string name="source_sheet_ignored_mpp_title">Ignored .mpp patterns</string>
-    <string name="source_sheet_ignored_mpp_hint">Only affects folder sources, which auto-load the newest .mpp in a folder. When picking that newest build, files whose name matches a pattern here are skipped. A plain word matches any file containing it (e.g. debug). Use * for globs (e.g. *-debug.mpp). *-sources.mpp and *-javadoc.mpp are always ignored</string>
+    <string name="source_sheet_ignored_mpp_hint">Only affects folder sources, which autoload the newest .mpp in a folder. When picking that newest build, files whose name matches a pattern here are skipped. A plain word matches any file containing it (e.g. debug). Use * for globs (e.g. *-debug.mpp). *-sources.mpp and *-javadoc.mpp are always ignored</string>
     <string name="source_sheet_ignored_mpp_placeholder">e.g. debug or *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Add pattern</string>
     <string name="source_sheet_remove_pattern_description">Remove pattern</string>

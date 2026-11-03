@@ -19,11 +19,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.PatchEngine.PatchStep
 import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.*
+import app.morphe.gui.util.label
 import app.morphe.gui.util.rememberZenoProgress
-import app.morphe.gui.util.resolveStepName
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
@@ -34,12 +35,13 @@ internal fun SimplePatchingContent(
     progress: Float,
     completedPatches: Int,
     totalPatches: Int,
-    statusMessage: String,
+    step: PatchStep?,
+    isCompleted: Boolean,
     isActive: Boolean = true,
     onCancel: () -> Unit
 ) {
     var showSlowWarning by remember { mutableStateOf(false) }
-    LaunchedEffect(statusMessage) {
+    LaunchedEffect(step) {
         showSlowWarning = false
         delay(60.seconds)
         showSlowWarning = true
@@ -127,13 +129,14 @@ internal fun SimplePatchingContent(
             }
         }
 
+        val statusMessage = if (isCompleted) stringResource(Res.string.status_patching_completed) else step?.label().orEmpty()
         AnimatedContent(
             targetState = statusMessage,
             transitionSpec = { Animations.screenEnter togetherWith Animations.screenExit },
             label = "statusMessageAnim"
         ) { targetMessage ->
             Text(
-                text = resolveStepName(targetMessage),
+                text = targetMessage,
                 style = MorpheTheme.typography.titleSmall.copy(fontWeight = FontWeight.Normal),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheComponents
 import app.morphe.engine.PatchEngine
+import app.morphe.engine.PatchEvent
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.ApkOutputNaming
@@ -19,7 +20,7 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.PatchSourceNaming
-import app.morphe.gui.util.PatcherState
+import app.morphe.gui.util.runProgress
 import app.morphe.morphe_desktop.generated.resources.*
 import com.sun.management.OperatingSystemMXBean
 import java.io.File
@@ -88,7 +89,6 @@ class PatchingViewModel(
     }
 
     private var patchingJob: Job? = null
-    private var stateMachine: PatcherState? = null
     @Volatile private var isCancelledByUser = false
 
     fun markAutoNavigated() {
@@ -100,7 +100,6 @@ class PatchingViewModel(
 
         patchingJob = viewModelScope.launch {
             isCancelledByUser = false
-            stateMachine = null
             var locale = Locale.getDefault()
             val (preparingState, cpuSampler, ioSampler) = withContext(Dispatchers.IO) {
                 val appConfig = configRepository.loadConfig()
@@ -207,14 +206,7 @@ class PatchingViewModel(
             val engineResult = try {
                 PatchEngine.patch(
                     config = engineConfig,
-                    onProgress = { message ->
-                        if (_uiState.value.status != PatchingStatus.CANCELLED) {
-                            parseAndLogEngineMessage(message)
-                            viewModelScope.launch(Dispatchers.Main) {
-                                parseAndAddLog(message)
-                            }
-                        }
-                    }
+                    onEvent = { event -> viewModelScope.launch(Dispatchers.Main) { onPatchEvent(event) } }
                 )
             } catch (e: CancellationException) {
                 throw e
@@ -244,7 +236,6 @@ class PatchingViewModel(
                     status = PatchingStatus.COMPLETED,
                     outputPath = engineResult.outputPath,
                     progress = 1f,
-                    currentStepName = getString(Res.string.status_patching_completed),
                     outputSizeMb = outSizeMb,
                     elapsedSec = formatElapsed(elapsedMs)
                 )
@@ -280,38 +271,25 @@ class PatchingViewModel(
         ) }
     }
 
-    private fun parseAndAddLog(line: String) {
+    private fun onPatchEvent(event: PatchEvent) {
         if (_uiState.value.status == PatchingStatus.CANCELLED) return
-        val (cleanMessage, level) = when {
-            line.startsWith("ERROR: ", ignoreCase = true) -> line.substring(7) to LogLevel.ERROR
-            line.startsWith("WARNING: ", ignoreCase = true) -> line.substring(9) to LogLevel.WARNING
-            line.startsWith("ERROR:", ignoreCase = true) -> line.substring(6).trimStart() to LogLevel.ERROR
-            line.startsWith("WARNING:", ignoreCase = true) -> line.substring(8).trimStart() to LogLevel.WARNING
-            line.contains("error", ignoreCase = true) -> line to LogLevel.ERROR
-            line.contains("warning", ignoreCase = true) -> line to LogLevel.WARNING
-            line.contains("success", ignoreCase = true) ||
-            line.contains("completed", ignoreCase = true) ||
-            line.contains("done", ignoreCase = true) ||
-            line.contains("patching", ignoreCase = true) ||
-            line.contains("applying", ignoreCase = true) -> line to LogLevel.INFO
-            else -> line to LogLevel.INFO
-        }
-        if (!cleanMessage.startsWith("FAILED: ", ignoreCase = true)) {
-            addLog(cleanMessage, level)
-        }
 
-        if (stateMachine == null) {
-            val total = if (_uiState.value.totalPatches > 0) _uiState.value.totalPatches else config.enabledPatches.size
-            stateMachine = PatcherState(total, _uiState.value.isSplit)
+        when (event) {
+            is PatchEvent.Log -> addLog(event.message, event.level.toLogLevel())
+            is PatchEvent.StepStarted -> _uiState.update { it.copy(currentStep = event.step).withRunProgress() }
+            is PatchEvent.PatchApplied -> _uiState.update { it.copy(patchedCount = it.patchedCount + 1).withRunProgress() }
         }
-        stateMachine?.processLogLine(cleanMessage)
+    }
 
-        _uiState.update { it.copy(
-            progress = maxOf(it.progress, stateMachine?.currentProgress ?: 0f),
-            patchedCount = stateMachine?.completedPatches ?: it.patchedCount,
-            currentStepName = stateMachine?.currentStepName ?: it.currentStepName,
-            hasReceivedProgressUpdate = true
-        ) }
+    private fun PatchingUiState.withRunProgress(): PatchingUiState {
+        val step = currentStep ?: return this
+        return copy(progress = maxOf(progress, runProgress(config.steps, step, patchedCount, totalPatches)))
+    }
+
+    private fun Logger.Level.toLogLevel() = when (this) {
+        Logger.Level.DEBUG, Logger.Level.INFO -> LogLevel.INFO
+        Logger.Level.WARN -> LogLevel.WARNING
+        Logger.Level.ERROR -> LogLevel.ERROR
     }
 
     fun getConfig(): PatchEngine.Config = config
@@ -353,8 +331,7 @@ data class PatchingUiState(
     val progress: Float = 0f,
     val patchedCount: Int = 0,
     val totalPatches: Int = 0,
-    val currentStepName: String = "",
-    val hasReceivedProgressUpdate: Boolean = false,
+    val currentStep: PatchEngine.PatchStep? = null,
     val hasAutoNavigated: Boolean = false,
 
     val heapSamples: List<Int> = emptyList(),
@@ -384,22 +361,6 @@ data class PatchingUiState(
     val canCancel: Boolean
         get() = isInProgress
 
-}
-
-internal fun parseAndLogEngineMessage(message: String): Pair<String, LogLevel> {
-    val (cleanMessage, level) = when {
-        message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
-        message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
-        message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
-        message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
-        else -> message to LogLevel.INFO
-    }
-    when (level) {
-        LogLevel.ERROR -> Logger.error(cleanMessage)
-        LogLevel.WARNING -> Logger.warn(cleanMessage)
-        LogLevel.INFO -> Logger.info(cleanMessage)
-    }
-    return cleanMessage to level
 }
 
 internal suspend fun resolveStepFailureMessage(result: PatchEngine.Result): String? {

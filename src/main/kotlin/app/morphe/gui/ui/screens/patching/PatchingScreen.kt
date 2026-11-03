@@ -121,7 +121,8 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                             progress = uiState.progress,
                             completedPatches = uiState.patchedCount,
                             totalPatches = uiState.totalPatches,
-                            statusMessage = uiState.currentStepName,
+                            step = uiState.currentStep,
+                            isCompleted = uiState.status == PatchingStatus.COMPLETED,
                             isActive = uiState.isInProgress,
                             onCancel = { viewModel.cancelPatching() }
                         )
