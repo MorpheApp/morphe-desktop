@@ -81,6 +81,7 @@ data object PatchingScreenRoute
 @Serializable
 data class ResultScreenRoute(
     val outputPath: String,
+    val isMount: Boolean = false,
 )
 
 @Serializable
@@ -464,7 +465,7 @@ private fun appContent(
                                             }
                                             composable<ResultScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<ResultScreenRoute>()
-                                                ResultScreen(outputPath = route.outputPath)
+                                                ResultScreen(outputPath = route.outputPath, isMount = route.isMount)
                                             }
                                             composable<SettingsScreenRoute>(
                                                 enterTransition = { Animations.pushEnter },

@@ -40,6 +40,9 @@ internal fun AdbInstallSection(
     installProgress: String,
     installError: String?,
     installSuccess: Boolean,
+    isMount: Boolean = false,
+    isUnmounting: Boolean = false,
+    onUnmountClick: () -> Unit = {},
     borderColor: Color = MaterialTheme.colorScheme.outlineVariant,
     onDeviceSelected: (AdbDevice) -> Unit,
     onInstallClick: () -> Unit,
@@ -69,28 +72,61 @@ internal fun AdbInstallSection(
                     style = MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (isMount) {
+                    MorpheBadge(
+                        text = stringResource(Res.string.result_adb_badge_root_mount),
+                        tone = MorpheBadgeTone.Primary,
+                    )
+                }
             }
 
             Spacer(Modifier.height(12.dp))
 
             when {
+                isUnmounting -> {
+                    ResultProgressRow(
+                        stringResource(
+                            Res.string.result_adb_unmounting_on_device,
+                            selectedDevice?.displayName ?: stringResource(Res.string.device_default)
+                        )
+                    )
+                }
+
                 installSuccess -> {
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Icon(
-                            imageVector = MorpheIcons.CheckCircle,
-                            contentDescription = null,
-                            tint = MorpheTheme.colors.secondary,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(Res.string.installed_on, (selectedDevice?.displayName ?: stringResource(Res.string.device_default))),
-                            style = MorpheTheme.typography.labelSmall,
-                            color = MorpheTheme.colors.secondary
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = MorpheIcons.CheckCircle,
+                                contentDescription = null,
+                                tint = MorpheTheme.colors.secondary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = if (isMount) stringResource(Res.string.result_adb_mount_successful)
+                                    else stringResource(Res.string.installed_on, (selectedDevice?.displayName ?: stringResource(Res.string.device_default))),
+                                style = MorpheTheme.typography.labelSmall,
+                                color = MorpheTheme.colors.secondary
+                            )
+                        }
+
+                        if (isMount) {
+                            MorpheButton(
+                                label = stringResource(
+                                    Res.string.result_adb_unmount_button,
+                                    selectedDevice?.displayName ?: stringResource(Res.string.device_default)
+                                ),
+                                variant = MorpheButtonVariant.OUTLINED,
+                                size = MorpheButtonSize.COMPACT,
+                                onClick = onUnmountClick,
+                            )
+                        }
                     }
                 }
 
@@ -122,7 +158,15 @@ internal fun AdbInstallSection(
                 }
 
                 isInstalling -> {
-                    ResultProgressRow(installProgress.ifEmpty { stringResource(Res.string.installing) })
+                    ResultProgressRow(
+                        installProgress.ifEmpty {
+                            if (isMount) stringResource(
+                                Res.string.result_adb_mounting_on_device,
+                                selectedDevice?.displayName ?: stringResource(Res.string.device_default)
+                            )
+                            else stringResource(Res.string.installing)
+                        }
+                    )
                 }
 
                 else -> {
@@ -229,8 +273,13 @@ internal fun AdbInstallSection(
 
                         MorpheButton(
                             label = if (selectedDevice != null) {
-                                if (alreadyInstalled) stringResource(Res.string.result_adb_update_button, selectedDevice.displayName)
-                                else stringResource(Res.string.result_screen_install_on_device_label, selectedDevice.displayName)
+                                if (isMount) {
+                                    stringResource(Res.string.result_adb_mount_button, selectedDevice.displayName)
+                                } else if (alreadyInstalled) {
+                                    stringResource(Res.string.result_adb_update_button, selectedDevice.displayName)
+                                } else {
+                                    stringResource(Res.string.result_screen_install_on_device_label, selectedDevice.displayName)
+                                }
                             } else {
                                 stringResource(Res.string.result_adb_select_device_button)
                             },

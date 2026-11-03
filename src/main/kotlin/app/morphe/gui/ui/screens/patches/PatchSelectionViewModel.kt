@@ -21,7 +21,9 @@ import app.morphe.engine.options.optionValueFromJson
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
+import app.morphe.engine.model.PatchLockState
 import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.model.lockState
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -29,6 +31,7 @@ import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.patch.InstallerType
 import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
 import kotlinx.coroutines.Dispatchers
@@ -367,7 +370,35 @@ class PatchSelectionViewModel(
         _uiState.value = _uiState.value.copy(selectedByBundle = saved)
     }
 
+    fun toggleRootMode() {
+        val newRootMode = !_uiState.value.isRootMode
+        val installerType = if (newRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        val currentSelected = _uiState.value.selectedByBundle.toMutableMap()
+
+        for ((bundleId, _, patches) in _uiState.value.bundles) {
+            val selected = currentSelected[bundleId].orEmpty().toMutableSet()
+            for (patch in patches) {
+                when (patch.lockState(installerType)) {
+                    PatchLockState.LOCKED_OFF -> selected.remove(patch.uniqueId)
+                    PatchLockState.LOCKED_ON -> selected.add(patch.uniqueId)
+                    PatchLockState.NONE -> Unit
+                }
+            }
+            currentSelected[bundleId] = selected
+        }
+
+        _uiState.value = _uiState.value.copy(
+            isRootMode = newRootMode,
+            selectedByBundle = currentSelected,
+        )
+    }
+
     fun togglePatch(bundleId: String, patchId: String) {
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        val patch = bundle.patches.firstOrNull { it.uniqueId == patchId } ?: return
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        if (patch.lockState(installerType) == PatchLockState.LOCKED_OFF) return
+
         val current = _uiState.value.selectedByBundle
         val bundleSet = current[bundleId].orEmpty()
         val newSet = if (patchId in bundleSet) bundleSet - patchId else bundleSet + patchId
@@ -378,15 +409,25 @@ class PatchSelectionViewModel(
 
     fun selectAllInBundle(bundleId: String) {
         val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
-        val all = bundle.patches.map { it.uniqueId }.toSet()
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        val all = bundle.patches
+            .filter { it.lockState(installerType) != PatchLockState.LOCKED_OFF }
+            .map { it.uniqueId }
+            .toSet()
         _uiState.value = _uiState.value.copy(
             selectedByBundle = _uiState.value.selectedByBundle + (bundleId to all),
         )
     }
 
     fun deselectAllInBundle(bundleId: String) {
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        val kept = bundle.patches
+            .filter { it.lockState(installerType) == PatchLockState.LOCKED_ON }
+            .map { it.uniqueId }
+            .toSet()
         _uiState.value = _uiState.value.copy(
-            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to emptySet()),
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to kept),
         )
     }
 
@@ -396,18 +437,34 @@ class PatchSelectionViewModel(
         val anyBundleHasCompatible = apkVersion.isNotBlank() && _uiState.value.bundles.any { compatiblePatchCount(it) > 0 }
         val defaults = _uiState.value.defaultsByBundle[bundleId]
             ?: computeBundleDefaults(bundle, anyBundleHasCompatible)
+        val adjusted = adjustSelectionForLockState(bundle, defaults)
         _uiState.value = _uiState.value.copy(
-            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to defaults),
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to adjusted),
         )
     }
 
     /** Restores saved patch selection for this bundle. */
     fun applySavedDefaultsInBundle(bundleId: String) {
-        if (_uiState.value.bundles.none { it.bundleId == bundleId }) return
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
         val saved = _uiState.value.savedSelectedByBundle?.get(bundleId) ?: return
+        val adjusted = adjustSelectionForLockState(bundle, saved)
         _uiState.value = _uiState.value.copy(
-            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to saved),
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to adjusted),
         )
+    }
+
+    private fun adjustSelectionForLockState(
+        bundle: BundlePatches,
+        candidateIds: Set<String>,
+    ): Set<String> {
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        return bundle.patches.mapNotNull { patch ->
+            when (patch.lockState(installerType)) {
+                PatchLockState.LOCKED_OFF -> null
+                PatchLockState.LOCKED_ON -> patch.uniqueId
+                PatchLockState.NONE -> patch.uniqueId.takeIf { it in candidateIds }
+            }
+        }.toSet()
     }
 
     fun setSearchQuery(query: String) {
@@ -579,6 +636,8 @@ class PatchSelectionViewModel(
             enabledPatches = selectedPatchNames.toSet(),
             disabledPatches = disabledPatchNames.toSet(),
             flatPatchOptions = _uiState.value.patchOptionValues,
+            unsigned = state.isRootMode,
+            mount = state.isRootMode,
             exclusiveMode = true,
             forceCompatibility = true,
             architecturesToKeep = keepArches,
@@ -742,6 +801,7 @@ class PatchSelectionViewModel(
                 }
                 appendLine("  -o $outputFileName \\")
                 appendLine("  --force \\")
+                if (state.isRootMode) appendLine("  --mount \\")
                 if (continueOnError) appendLine("  --continue-on-error \\")
                 if (useExclusive) appendLine("  --exclusive \\")
                 striplibsArg?.let { appendLine("  --striplibs $it \\") }
@@ -768,6 +828,7 @@ class PatchSelectionViewModel(
             }
             parts.add("-o $outputFileName")
             parts.add("--force")
+            if (state.isRootMode) parts.add("--mount")
             if (continueOnError) parts.add("--continue-on-error")
             if (useExclusive) parts.add("--exclusive")
             striplibsArg?.let { parts.add("--striplibs $it") }
@@ -849,6 +910,8 @@ data class PatchSelectionUiState(
     val patchOptionValues: Map<String, String> = emptyMap(),
     /** Maps bundle ID to default-selected patch unique IDs. */
     val defaultsByBundle: Map<String, Set<String>> = emptyMap(),
+    /** True if target install mode is Root Mount (unsigned APK, no GmsCore). */
+    val isRootMode: Boolean = false,
 ) {
     /** Total count of patches selected across all bundles. */
     val selectedCount: Int get() = selectedByBundle.values.sumOf { it.size }

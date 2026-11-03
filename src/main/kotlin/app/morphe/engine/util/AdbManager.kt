@@ -450,12 +450,13 @@ class AdbManager {
                         cause = e,
                     )
                 )
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                val errorCode = if (isNoRootPermission(e)) AdbErrorCode.NO_ROOT_PERMISSION else AdbErrorCode.ROOT_MOUNT_FAILED
                 return@withContext Result.failure(
                     AdbException(
                         "Root mount check failed on ${targetDevice.id}: ${e.message ?: e}",
-                        AdbErrorCode.ROOT_MOUNT_FAILED,
-                        listOf(e.message ?: e.toString()),
+                        errorCode,
+                        listOf(targetDevice.displayName),
                         cause = e,
                     )
                 )
@@ -489,13 +490,18 @@ class AdbManager {
                 Logger.info("Mounted the APK file on ${targetDevice.id}")
                 Result.success(Unit)
             }
-        } catch (e: Exception) {
-            Logger.error("Error mounting APK", e)
+        } catch (e: Throwable) {
+            val (errorCode, formatArgs) = when {
+                isNoRootPermission(e) -> AdbErrorCode.NO_ROOT_PERMISSION to listOf(targetDevice.displayName)
+                isStockAppNotInstalled(e) -> AdbErrorCode.STOCK_APP_NOT_INSTALLED to listOf(packageName, targetDevice.displayName)
+                else -> AdbErrorCode.ROOT_MOUNT_FAILED to listOf(targetDevice.displayName)
+            }
+            Logger.error("Error mounting APK: ${e.message ?: e}", e)
             Result.failure(
                 AdbException(
                     "Error mounting APK: ${e.message ?: e}",
-                    AdbErrorCode.ROOT_MOUNT_FAILED,
-                    listOf(e.message ?: e.toString()),
+                    errorCode,
+                    formatArgs,
                     cause = e,
                 )
             )
@@ -519,18 +525,29 @@ class AdbManager {
                 Logger.info("Unmounted the patched APK file from ${targetDevice.id}")
                 Result.success(Unit)
             }
-        } catch (e: Exception) {
-            Logger.error("Error unmounting $packageName", e)
+        } catch (e: Throwable) {
+            val errorCode = if (isNoRootPermission(e)) AdbErrorCode.NO_ROOT_PERMISSION else AdbErrorCode.ROOT_UNMOUNT_FAILED
+            Logger.error("Error unmounting $packageName: ${e.message ?: e}", e)
             Result.failure(
                 AdbException(
                     "Error unmounting $packageName: ${e.message ?: e}",
-                    AdbErrorCode.ROOT_UNMOUNT_FAILED,
-                    listOf(e.message ?: e.toString()),
+                    errorCode,
+                    listOf(targetDevice.displayName),
                     cause = e,
                 )
             )
         }
     }
+
+    private fun isNoRootPermission(e: Throwable): Boolean =
+        e.message?.contains("No root permission", ignoreCase = true) == true ||
+            e::class.simpleName == "NoRootPermissionException" ||
+            e.cause?.let { isNoRootPermission(it) } == true
+
+    private fun isStockAppNotInstalled(e: Throwable): Boolean =
+        e::class.simpleName == "FailedToFindInstalledPackageException" ||
+            e.message?.contains("Failed to find installed package", ignoreCase = true) == true ||
+            e.cause?.let { isStockAppNotInstalled(it) } == true
 
     /** Uninstalls [packageName] from [deviceId], treating missing packages as success. */
     suspend fun uninstallApk(
@@ -693,10 +710,9 @@ class AdbManager {
         enable: Boolean = true,
         onProgress: suspend (LinkHandlingProgress) -> Unit = {},
     ): Result<LinkHandlingResult> = withContext(Dispatchers.IO) {
-        findAdb() ?: return@withContext Result.failure(
+        val adb = findAdb() ?: return@withContext Result.failure(
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
         )
-
         val installed = listInstalledPackages(deviceId).getOrNull() ?: emptySet()
         val stockEligible = !stockPackage.isNullOrBlank() &&
             stockPackage != patchedPackage &&
@@ -706,7 +722,7 @@ class AdbManager {
 
         val patchedCommands = if (enable) AppLinkCommands.enablePatched(patchedPackage)
         else AppLinkCommands.restorePatched(patchedPackage)
-        runShellCommands(deviceId, patchedCommands).onFailure {
+        runShellCommands(adb, deviceId, patchedCommands).onFailure {
             return@withContext Result.failure(it)
         }
 
@@ -715,7 +731,7 @@ class AdbManager {
             val stockCommands = if (enable) AppLinkCommands.disableStock(stockPackage)
             else AppLinkCommands.restoreStock(stockPackage)
             onProgress(LinkHandlingProgress.Stock(stockPackage, enable))
-            runShellCommands(deviceId, stockCommands).onFailure {
+            runShellCommands(adb, deviceId, stockCommands).onFailure {
                 return@withContext Result.failure(it)
             }
             stockChanged = true
@@ -730,20 +746,19 @@ class AdbManager {
 
     /** Runs a sequence of ADB shell commands, stopping on first failure. */
     private suspend fun runShellCommands(
+        adb: String,
         deviceId: String,
         commands: List<List<String>>,
     ): Result<Unit> = withContext(Dispatchers.IO) {
-        val adb = findAdb() ?: return@withContext Result.failure(
-            AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
-        )
         for (argv in commands) {
+            val cmd = argv.joinToString(" ")
             try {
                 val process = ProcessBuilder(listOf(adb, "-s", deviceId, "shell") + argv)
                     .redirectErrorStream(true)
                     .start()
                 val output = process.inputStream.bufferedReader().readText().trim()
                 val exitCode = process.waitFor()
-                Logger.debug("ADB shell ${argv.joinToString(" ")} -> exit $exitCode${if (output.isNotBlank()) ": $output" else ""}")
+                Logger.debug("adb shell $cmd -> exit $exitCode${if (output.isNotBlank()) ": $output" else ""}")
                 if (exitCode != 0 ||
                     output.contains("Error", ignoreCase = true) ||
                     output.contains("Failure", ignoreCase = true)
@@ -757,8 +772,8 @@ class AdbManager {
                         )
                     )
                 }
-            } catch (e: Exception) {
-                Logger.error("Error running adb shell ${argv.joinToString(" ")}", e)
+            } catch (e: Throwable) {
+                Logger.error("Error running adb shell $cmd", e)
                 return@withContext Result.failure(
                     AdbException(
                         "Error running ADB shell command: ${e.message ?: ""}",
@@ -1024,6 +1039,8 @@ enum class AdbErrorCode {
     INSTALL_VERIFICATION_FAILURE,
     INSTALL_GENERIC,
     ROOT_MOUNT_FAILED,
+    NO_ROOT_PERMISSION,
+    STOCK_APP_NOT_INSTALLED,
     UNINSTALL_FAILED,
     ROOT_UNMOUNT_FAILED,
     CLEAR_LOGS_FAILED,

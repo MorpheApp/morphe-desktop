@@ -321,6 +321,8 @@
     <string name="patch_selection_error_title">Error loading patches</string>
     <string name="patch_selection_title">Select patches</string>
     <string name="patch_selection_cmd_preview">Command preview</string>
+    <string name="patch_selection_root_mode_description">Root mount mode</string>
+    <string name="patch_selection_lock_unavailable">Unavailable for root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Continue patching even if a patch fails</string>
     <string name="patch_selection_continue_on_error_description">Continue on error</string>
     <string name="patch_selection_no_patches_found">No patches found</string>
@@ -439,6 +441,15 @@
     <string name="result_adb_updating_on_device">Updating on %1$s…</string>
     <string name="result_adb_update_successful">Update successful!</string>
     <string name="result_adb_install_successful">Installation successful!</string>
+    <string name="result_adb_badge_root_mount">Root mount</string>
+    <string name="result_adb_mount_button">Mount on %1$s</string>
+    <string name="result_adb_mounting_on_device">Mounting on %1$s…</string>
+    <string name="result_adb_mount_successful">Mounting successful!</string>
+    <string name="result_adb_mount_su_prompt_hint">Mounting on %1$s… Check your device to grant Superuser permission if prompted</string>
+    <string name="result_adb_unmount_button">Unmount from %1$s</string>
+    <string name="result_adb_unmounting_on_device">Unmounting from %1$s…</string>
+    <string name="result_adb_root_not_detected">Root access was not detected on %1$s. Ensure Magisk/KernelSU/APatch is installed and su permission is granted</string>
+    <string name="result_adb_stock_app_not_installed">Stock app %1$s is not installed on %2$s. Install the official app first before mounting</string>
     <string name="result_link_default_restored">Default link handling restored</string>
     <string name="result_link_routed_stock_disabled">Links routed to patched app, stock disabled</string>
     <string name="result_adb_not_found_hint">ADB not found. Install Android SDK Platform Tools to enable direct installation</string>

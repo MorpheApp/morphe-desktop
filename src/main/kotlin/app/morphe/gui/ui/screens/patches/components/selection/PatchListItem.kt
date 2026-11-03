@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.model.PatchLockState
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
@@ -69,6 +71,7 @@ internal fun PatchListItem(
     isNew: Boolean = false,
     sourceName: String? = null,
     packageName: String = "",
+    lockState: PatchLockState = PatchLockState.NONE,
     patchOptionValues: Map<String, String> = emptyMap(),
     getOptionValue: (optionKey: String, default: String?) -> String = { _, d -> d ?: "" },
     onOptionValueChange: (optionKey: String, value: String) -> Unit = { _, _ -> }
@@ -112,11 +115,15 @@ internal fun PatchListItem(
             if (isSelected) enabledString else disabledString,
             newString.takeIf { isNew },
         ).joinToString(", ")
+        val isLocked = lockState == PatchLockState.LOCKED_OFF
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .handCursor()
-                .clickable(interactionSource = interactionSource, indication = null, onClick = onToggle)
+                .alpha(if (isLocked) 0.5f else 1f)
+                .then(
+                    if (!isLocked) Modifier.handCursor().clickable(interactionSource = interactionSource, indication = null, onClick = onToggle)
+                    else Modifier
+                )
                 .semantics(mergeDescendants = true) { contentDescription = rowDescription }
                 .padding(14.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -161,6 +168,10 @@ internal fun PatchListItem(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
                     )
+
+                    if (lockState == PatchLockState.LOCKED_OFF) {
+                        MorpheBadge(text = stringResource(Res.string.patch_selection_lock_unavailable), tone = MorpheBadgeTone.Neutral)
+                    }
 
                     if (isNew) {
                         MorpheBadge(text = stringResource(Res.string.patch_selection_badge_new), tone = MorpheBadgeTone.Primary)

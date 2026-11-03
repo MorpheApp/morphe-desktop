@@ -36,6 +36,8 @@ internal fun PatchSelectionHeader(
     uiState: PatchSelectionUiState,
     showCommandPreview: Boolean,
     onToggleCommandPreview: () -> Unit,
+    isRootMode: Boolean = false,
+    onToggleRootMode: () -> Unit = {},
     continueOnError: Boolean,
     onToggleContinueOnError: () -> Unit,
     showRunInfo: Boolean,
@@ -87,6 +89,19 @@ internal fun PatchSelectionHeader(
         }
 
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
+            val rootModeLabel = stringResource(Res.string.patch_selection_root_mode_description)
+            MorpheTooltip(rootModeLabel) {
+                MorpheIconButton(
+                    onClick = onToggleRootMode,
+                    icon = MorpheIcons.Tag,
+                    contentDescription = rootModeLabel,
+                    size = MorpheIconButtonSize.TOP_BAR,
+                    variant = if (isRootMode) MorpheIconButtonVariant.PRIMARY else MorpheIconButtonVariant.SURFACE,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(6.dp))
+
             MorpheTooltip(stringResource(Res.string.patch_selection_cmd_preview_tooltip)) {
                 MorpheIconButton(
                     onClick = onToggleCommandPreview,
