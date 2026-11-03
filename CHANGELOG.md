@@ -1,3 +1,10 @@
+# [2.0.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.5...v2.0.0-dev.6) (2026-11-03)
+
+
+### Bug Fixes
+
+* Report patching steps and log levels as events ([daaf936](https://github.com/MorpheApp/morphe-desktop/commit/daaf9361fb5bcf79374cd3a5a0425396c1de33cd))
+
 # [2.0.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.4...v2.0.0-dev.5) (2026-11-02)
 
 
