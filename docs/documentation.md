@@ -235,6 +235,7 @@ The full patch list from your selected bundle(s), with a running **"N of M selec
 | Options editor                                            | Edit a patch's option values                                     | `-O key=value`                                   |
 | **Patch defaults** / **Your defaults**                    | Whether you've changed a patch's options                         | –                                                |
 | Strip-libs summary                                        | Which native-lib architectures will be kept                      | `--striplibs` (set in [Settings](#gui-settings)) |
+| **Root mount mode**                                       | Toggle root mount presets (locks required patches, disables MicroG/GmsCore) | `--mount`                                        |
 | **Continue patching even if a patch fails**               | Keep going when a patch errors instead of aborting the whole run | `--continue-on-error`                            |
 | **Command preview** (**Copy** / **Expand** / **Compact**) | The exact CLI command for your selections                        | – (it *is* the CLI command)                      |
 | **Patch (N)**                                             | Start patching the N selected patches                            | runs the `patch` command                         |
@@ -252,6 +253,7 @@ The full patch list from your selected bundle(s), with a running **"N of M selec
 </p>
 
 - **Strip libs**: A summary chip shows whether native libs will be stripped (**Stripping native libs** / **No stripping needed** / **No native libs**). Change the kept architectures under Settings → Strip Libs.
+- **Root mount mode**: When toggled on, configures patch selections for mounting over the official stock app on a rooted device. Patches required for root installation are locked on, while patches incompatible with root mounting (such as GmsCore / MicroG support) are locked off and marked as unavailable. Adds the `--mount` flag to the Command Preview.
 - **Continue patching even if a patch fails**: By default a failed patch aborts the whole run. Enable this to skip the failure and apply the rest. The GUI's equivalent of the CLI's `--continue-on-error`.
 - **Command preview**: The exact CLI invocation your choices produce. **Copy** it to reproduce this run in a terminal or drop it into a script. **Expand** / **Compact** toggles full vs condensed.
 
