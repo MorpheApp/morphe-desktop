@@ -99,7 +99,6 @@ class PatcherState(
 
     var currentStepIndex = 0
     var completedPatches = 0
-    var currentPatchName: String? = null
 
     val currentStep: Step get() = if (currentStepIndex < steps.size) steps[currentStepIndex] else steps.last()
     val currentStepName: String get() = currentStep.name
@@ -131,10 +130,6 @@ class PatcherState(
             l.contains("applied: ") -> {
                 setStep(StepId.EXECUTE_PATCHES)
                 completedPatches++
-                val patchName = line.substringAfter("Applied: ").trim()
-                if (patchName.isNotEmpty()) {
-                    currentPatchName = patchName
-                }
             }
             l.contains("compiling patched dex") || l.contains("rebuilding apk") -> setStep(StepId.SAVING_1)
             l.contains("writing new classes") || (l.contains("writing ") && l.contains(" new classes")) -> setStep(StepId.SAVING_2)
@@ -175,9 +170,6 @@ class PatcherState(
             }
             steps[targetIndex].state = State.WORKING
             currentStepIndex = targetIndex
-            if (id != StepId.EXECUTE_PATCHES) {
-                currentPatchName = null
-            }
         }
     }
 }

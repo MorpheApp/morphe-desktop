@@ -310,7 +310,6 @@ class PatchingViewModel(
             progress = maxOf(it.progress, stateMachine?.currentProgress ?: 0f),
             patchedCount = stateMachine?.completedPatches ?: it.patchedCount,
             currentStepName = stateMachine?.currentStepName ?: it.currentStepName,
-            currentPatchName = stateMachine?.currentPatchName,
             hasReceivedProgressUpdate = true
         ) }
     }
@@ -355,7 +354,6 @@ data class PatchingUiState(
     val patchedCount: Int = 0,
     val totalPatches: Int = 0,
     val currentStepName: String = "",
-    val currentPatchName: String? = null,
     val hasReceivedProgressUpdate: Boolean = false,
     val hasAutoNavigated: Boolean = false,
 
