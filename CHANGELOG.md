@@ -1,3 +1,10 @@
+# [2.1.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0-dev.1...v2.1.0-dev.2) (2026-11-04)
+
+
+### Features
+
+* Move `Tools` into `Settings` dialog ([#407](https://github.com/MorpheApp/morphe-desktop/issues/407)) ([36f3f2d](https://github.com/MorpheApp/morphe-desktop/commit/36f3f2de660726e99826617a67941865f241c335))
+
 # [2.1.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0...v2.1.0-dev.1) (2026-11-04)
 
 
