@@ -19,7 +19,6 @@ import app.morphe.gui.ui.components.DeviceIndicator
 import app.morphe.gui.ui.components.MorpheIconButton
 import app.morphe.gui.ui.components.MorpheIconButtonSize
 import app.morphe.gui.ui.components.SettingsButton
-import app.morphe.gui.ui.components.ToolsButton
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -90,8 +89,6 @@ internal fun PatchesHeader(
         }
 
         DeviceIndicator()
-        Spacer(modifier = Modifier.width(6.dp))
-        ToolsButton(allowCacheClear = true)
         Spacer(modifier = Modifier.width(6.dp))
         SettingsButton()
     }

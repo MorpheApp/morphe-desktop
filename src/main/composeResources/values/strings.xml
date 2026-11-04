@@ -638,18 +638,6 @@
     <string name="update_banner_later_button">Later</string>
     <string name="update_banner_skip_button">Skip v%1$s</string>
 
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Tools</string>
-    <string name="tools_dialog_open_logs_button">Open logs</string>
-    <string name="tools_dialog_open_app_data_button">Open app data</string>
-    <string name="tools_dialog_view_licenses_button">View licenses</string>
-    <string name="tools_dialog_cache_cleared">Cache cleared</string>
-    <string name="tools_dialog_clear_failed">Clear failed</string>
-    <string name="tools_dialog_clear_cache_button">Clear cache</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (patches + logs)</string>
-    <string name="tools_dialog_confirm_clear_title">Clear cache?</string>
-    <string name="tools_dialog_confirm_clear_message">This will delete downloaded patches and log files. Patches will be re-downloaded when needed</string>
-
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Open Source licenses</string>
     <string name="licenses_dialog_empty_failed">// failed to load licenses</string>
@@ -740,10 +728,21 @@
     <string name="settings_output_folder_not_found">Folder not found, will be created on next patch</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-start ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spawn the ADB daemon on launch so connected devices are monitored. When off, Morphe never starts the server, and install/push features are disabled</string>
+    <string name="settings_section_storage">Storage &amp; cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (patches + logs)</string>
+    <string name="settings_cache_clear_button">Clear cache</string>
+    <string name="settings_cache_cleared">Cache cleared</string>
+    <string name="settings_cache_clear_failed">Clear failed</string>
+    <string name="settings_cache_confirm_title">Clear cache?</string>
+    <string name="settings_cache_confirm_message">This will delete downloaded patches and log files. Patches will be re-downloaded when needed</string>
+    <string name="settings_storage_open_app_data_button">Open app data</string>
+    <string name="settings_storage_open_logs_button">Open logs</string>
     <string name="settings_section_about">About</string>
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_changelogs_title">View changelogs</string>
     <string name="settings_about_changelogs_desc">Check out the latest changes in this update</string>
+    <string name="settings_about_licenses_title">Open Source licenses</string>
+    <string name="settings_about_licenses_desc">View licenses of third-party libraries</string>
     <string name="settings_about_documentation_title">Documentation</string>
     <string name="settings_about_documentation_desc">Guides for patching, sources and troubleshooting</string>
     <string name="settings_about_website_title">Visit website</string>

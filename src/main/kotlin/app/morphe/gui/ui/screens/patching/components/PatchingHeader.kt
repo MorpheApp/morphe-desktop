@@ -84,7 +84,7 @@ internal fun PatchingHeader(
             Spacer(Modifier.width(8.dp))
         }
 
-        TopBarRow(allowCacheClear = false, isPatching = uiState.isInProgress)
+        TopBarRow(isPatching = uiState.isInProgress)
     }
 }
 

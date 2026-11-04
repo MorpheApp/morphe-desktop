@@ -103,6 +103,7 @@ fun SettingsDialog(
     val contentScroll = remember(selectedCategory) { ScrollState(0) }
     var showChangelogDialog by remember { mutableStateOf(false) }
     var showAppInfoDialog by remember { mutableStateOf(false) }
+    var showLicensesDialog by remember { mutableStateOf(false) }
 
     if (showChangelogDialog) {
         ChangelogDialog(
@@ -113,6 +114,12 @@ fun SettingsDialog(
     if (showAppInfoDialog) {
         AppInfoDialog(
             onDismiss = { showAppInfoDialog = false }
+        )
+    }
+
+    if (showLicensesDialog) {
+        LicensesDialog(
+            onDismiss = { showLicensesDialog = false }
         )
     }
 
@@ -246,6 +253,7 @@ fun SettingsDialog(
                                 borderColor = borderColor,
                                 onShowAppInfo = { showAppInfoDialog = true },
                                 onShowChangelog = { showChangelogDialog = true },
+                                onShowLicenses = { showLicensesDialog = true },
                             )
                         }
                     }

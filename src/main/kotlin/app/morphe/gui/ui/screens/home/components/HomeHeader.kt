@@ -102,7 +102,6 @@ internal fun HeaderBar(
                 .onSizeChanged { paddingState.trailingWidthPx = it.width }
         ) {
             TopBarRow(
-                allowCacheClear = true,
                 onUpdateChannelChanged = onUpdateChannelChanged,
             )
         }
@@ -144,7 +143,6 @@ fun SimpleTopBar(
                 .padding(end = 12.dp)
         ) {
             TopBarRow(
-                allowCacheClear = false,
                 isPatching = isPatching,
             )
         }
