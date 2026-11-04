@@ -40,6 +40,7 @@ internal fun SystemTab(
     borderColor: Color,
     onShowAppInfo: () -> Unit,
     onShowChangelog: () -> Unit,
+    onShowLicenses: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -84,6 +85,14 @@ internal fun SystemTab(
 
     SettingsDivider(borderColor)
 
+    StorageSection(
+        borderColor = borderColor,
+        enabled = !isPatching,
+        icon = MorpheIcons.FolderOpen,
+    )
+
+    SettingsDivider(borderColor)
+
     SectionLabel(stringResource(Res.string.settings_section_about), icon = MorpheIcons.Info)
     Spacer(Modifier.height(16.dp))
 
@@ -112,6 +121,21 @@ internal fun SystemTab(
         ) {
             Icon(
                 imageVector = MorpheIcons.Article,
+                contentDescription = null,
+                tint = MorpheTheme.colors.primary,
+                modifier = Modifier.size(18.dp)
+            )
+        }
+
+        SettingsDivider(borderColor)
+
+        AboutRow(
+            title = stringResource(Res.string.settings_about_licenses_title),
+            subtitle = stringResource(Res.string.settings_about_licenses_desc),
+            onClick = onShowLicenses,
+        ) {
+            Icon(
+                imageVector = MorpheIcons.Description,
                 contentDescription = null,
                 tint = MorpheTheme.colors.primary,
                 modifier = Modifier.size(18.dp)

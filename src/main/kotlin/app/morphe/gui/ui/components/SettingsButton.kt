@@ -40,7 +40,6 @@ fun SettingsButton(
 @Composable
 fun TopBarRow(
     modifier: Modifier = Modifier,
-    allowCacheClear: Boolean = true,
     isPatching: Boolean = false,
     onUpdateChannelChanged: () -> Unit = {},
 ) {
@@ -56,7 +55,6 @@ fun TopBarRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             DeviceIndicator()
-            ToolsButton(allowCacheClear = allowCacheClear)
             SettingsButton()
         }
     }
