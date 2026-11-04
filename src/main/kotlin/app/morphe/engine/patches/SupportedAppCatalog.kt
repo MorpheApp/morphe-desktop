@@ -52,7 +52,8 @@ object SupportedAppCatalog {
             compatiblePackages = compatiblePackages,
             options = this.options.values.map { it.toPatchOption() },
             isEnabled = this.default,
-            category = this.category?.takeIf { it.isNotBlank() }
+            category = this.category?.takeIf { it.isNotBlank() },
+            availabilityResolver = this.availability,
         )
     }
 

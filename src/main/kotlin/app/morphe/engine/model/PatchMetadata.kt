@@ -6,7 +6,12 @@
 package app.morphe.engine.model
 
 import app.morphe.engine.options.PatchOption
+import app.morphe.patcher.patch.ApkArchitecture
+import app.morphe.patcher.patch.AvailabilityResolver
+import app.morphe.patcher.patch.InstallerType
+import app.morphe.patcher.patch.PatchAvailability
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /** Metadata for a single patch from a patch bundle. */
 @Serializable
@@ -16,7 +21,8 @@ data class PatchMetadata(
     val compatiblePackages: List<CompatiblePackage> = emptyList(),
     val options: List<PatchOption> = emptyList(),
     val isEnabled: Boolean = true,
-    val category: String? = null
+    val category: String? = null,
+    @Transient val availabilityResolver: AvailabilityResolver? = null,
 ) {
     /** True if the patch applies to any app rather than specific packages. */
     val isUniversal: Boolean
@@ -56,3 +62,24 @@ data class CompatiblePackage(
     val appIconColor: String? = null,
     val versionBuildCodes: Map<String, Set<Int>> = emptyMap()
 )
+
+/** UI-facing lock state derived from a patch's availability resolver for the current install target. */
+enum class PatchLockState {
+    NONE,
+    LOCKED_ON,
+    LOCKED_OFF,
+}
+
+fun PatchMetadata.lockState(
+    installerType: InstallerType,
+    apkArchitecture: ApkArchitecture = ApkArchitecture.UNIVERSAL,
+    enforceRequired: Boolean = false,
+): PatchLockState {
+    val resolver = availabilityResolver ?: return PatchLockState.NONE
+    return when (resolver.resolve(installerType, apkArchitecture)) {
+        PatchAvailability.REQUIRED -> if (enforceRequired) PatchLockState.LOCKED_ON else PatchLockState.NONE
+        PatchAvailability.UNAVAILABLE -> PatchLockState.LOCKED_OFF
+        PatchAvailability.ENABLED,
+        PatchAvailability.DISABLED -> PatchLockState.NONE
+    }
+}
