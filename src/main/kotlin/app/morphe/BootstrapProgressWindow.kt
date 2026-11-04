@@ -53,7 +53,7 @@ class BootstrapProgressWindow : BootstrapProgressListener {
     private var bar: NeonBar? = null
     private var status: JLabel? = null
 
-    override fun onStart(componentCount: Int) {
+    override fun onStart() {
         SwingUtilities.invokeAndWait {
             val f = JFrame("Morphe")
             f.isUndecorated = true
@@ -92,7 +92,7 @@ class BootstrapProgressWindow : BootstrapProgressListener {
         }
     }
 
-    override fun onProgress(index: Int, componentCount: Int, displayName: String, bytesDownloaded: Long, totalBytes: Long) {
+    override fun onProgress(index: Int, componentCount: Int, bytesDownloaded: Long, totalBytes: Long) {
         val fraction = if (totalBytes > 0) {
             (index + bytesDownloaded.toDouble() / totalBytes) / componentCount
         } else {

@@ -13,6 +13,7 @@
     <string name="expand">Laia</string>
     <string name="cancel"> 취소Cancel</string>
     <string name="close">Sulge</string>
+    <string name="trust">Usaldus</string>
     <string name="delete">Kustuta</string>
     <string name="disabled_while_patching">Vaiksetatud paigutamise ajal</string>
     <string name="drop_apk_here">Liszuta APK siia</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Ühendus katkkes allalaadimise ajal, proovige uuesti</string>
     <string name="error_network_loading_patches">Võrguviga patche laadimisel</string>
     <string name="error_patch_file_not_found">Patchi faili ei ownutatud: %1$s</string>
-    <string name="error_no_patches_files_supplied">Patche failid ei ole esitatud</string>
-    <string name="error_input_apk_not_found">Sisend-APK-d ei ownutatud</string>
     <string name="error_step_failed">%1$s ebaõnnestus: %2$s</string>
     <string name="error_drop_valid_apk">Palun looge kehtiv .apk, .apkm, .xapk või .apks fail</string>
     <string name="status_saving">Salvestatakse…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtreeri rakendusi…</string>
     <string name="version">Versioon</string>
     <string name="version_label_stable">Stabiilne</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Eelväljalaskmine</string>
     <string name="version_label_experimental">Eksperimentaalne</string>
-    <string name="version_label_latest_dev">Uusim Dev</string>
     <string name="version_label_latest_stable">Uusim stabiilne</string>
+    <string name="version_label_recommended">Soovitatav</string>
+    <string name="version_label_supported">Toetatud</string>
     <string name="app_info_arch_label">Arh</string>
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Paigutamine katkestatud</string>
     <string name="view_full_logs_button">Vaata kogu logisid</string>
     <string name="error_patching_unknown">Paigutamine ebaõnnestus tundmatul põhjusel</string>
-    <string name="error_patching_general">Viga: %1$s</string>
     <string name="error_log_label">Vealogi</string>
     <string name="back">Tagasi</string>
     <string name="open_folder">Ava kaust</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Suvalne arv peatuspunkti, lineaarne, radiaalne või koniline</string>
     <string name="card_fill_mode_solid">Ühtlane</string>
     <string name="card_fill_mode_solid_blurb">Üks ühtlane värv</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Plaadid</string>
-    <string name="quick_patch_screen_start_over_button">Alusta uuesti</string>
-    <string name="quick_patch_patch_another_button">Paika veel üks</string>
-    <string name="quick_patch_select_apk">Vali APK</string>
-    <string name="quick_patch_analyze_apk_failed">APK analüüs ebaõnnestus</string>
-    <string name="quick_patch_extract_base_apk_failed">Põhialuse APK väljavõtmine paketist ebaõnnestus</string>
-    <string name="quick_patch_unsupported_app_error">%1$s ei ole Quick Patchi režiimis toetatud. Toetatud rakendused: %2$s. Toetamata rakenduste jaoks kasutage tavarežiimi</string>
     <string name="adb_install_on_button">Installi %1$s seadmesse</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Laaditakse plaastreid</string>
-    <string name="patching_step_preparing">Ettevalmistatakse</string>
     <string name="patching_step_merging_split_apk">Ühendatakse jaotatud APK</string>
     <string name="patching_step_read_apk">Loetakse APK-faili</string>
     <string name="patching_step_applying_patches">Rakendatakse plaastreid</string>
-    <string name="patching_step_saving">Salvestatakse</string>
     <string name="patching_step_writing_apk">Kirjutatakse paigutatud APK-faili</string>
     <string name="patching_step_signing">Allkirjastatakse paigutatud APK-faili</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Fail võib olla riknud, laadige see uuesti APKMirror-ist alla</string>
     <string name="version_status_checksum_failed">Kontrollsumma kontrollimine ebaõnnestus</string>
     <string name="version_status_checksum_matches">Kontrollsumma ükskõiksugune APKMirroriga</string>
-    <string name="version_status_older_stable">Vanem stabiilne</string>
     <string name="version_status_newer_stable_available">Saadaval uusem stabiilne v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Saadaval on uusem stabiilne versioon</string>
     <string name="version_status_experimental_detail">Toetatud, kuid ei pruugi toimida korralikult</string>
-    <string name="version_status_older_experimental">Vanem eksperimentaalne</string>
-    <string name="version_status_newer_experimental_available">Saadaval uusem eksperimentaalne v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Saadaval on uusem eksperimentaalne versioon</string>
-    <string name="version_status_too_new">Versioon liiga uus</string>
     <string name="version_status_unsupported_detail">Ei ole ametlikult toetatud, paigutused ebaõnnestuvad tõenäoliselt</string>
-    <string name="version_status_too_old">Versioon liiga vana</string>
     <string name="version_status_unsupported">Toetamata versioon</string>
     <string name="version_status_build_unsupported">Kokkupanek ei ole toetatud</string>
     <string name="version_status_build_unsupported_detail">See versioon on toetatud, kuid mitte selle kokkupanek. Hankige kokkupanek, mida uuendused sihtivad</string>
+    <string name="version_status_build_unsupported_with_code">Kohandused nõuavad ehitust %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Versiooni teavitus</string>
+    <string name="version_warning_build_unsupported_message">Praegune: v%1$s (ehitus %2$s)\nNõutav ehitus: %3$s\n\nTegemist on sama versiooni teise ehitusega. Kohandused nõuavad konkreetset ehitust.</string>
     <string name="version_warning_experiment_title">Kas soovite eksperimenteerida? 🧪</string>
-    <string name="version_warning_older_stable_title">Vanem stabiilne versioon</string>
-    <string name="version_warning_older_stable_message">Praegune: v%1$s\nUusim stabiilne: v%2$s\n\nSee versioon on toetatud, kuid saadaval on uuem stabiilne versioon. Teilt võivad puududa viimased parandused.</string>
     <string name="version_warning_latest_experimental_message">Praegune: v%1$s\n\nSellel versioonil on varajane eksperimentaalne tugi\n\n🔧 Oodake rakenduse veisatavat käitumist või tuvastamata vigu, kuna uuendusi selle rakenduse versiooni jaoks lihvitaakse.</string>
-    <string name="version_warning_older_experimental_title">Vanem eksperimentaalne versioon\nKas soovite eksperimenteerida? 🧪</string>
-    <string name="version_warning_older_experimental_message">Praegune: v%1$s\nUusim eksperimentaalne: v%2$s\n\nSee on toetatud eksperimentaalne versioon, kuid saadaval on uuem eksperimentaalne versioon. Oodake rakenduse ebatavalist käitumist või tuvastamata tõrkeid, kuna plaastreid lihvitakse selle rakenduse versiooni jaoks.</string>
-    <string name="version_warning_too_new_message">Praegune: v%1$s\nUusim teadaolev: v%2$s\n\nSellel versioonil on varajane eksperimentaalne tugi\n\n🔧 Oodake rakenduse ebatavalist käitumist või tuvastamata tõrkeid, kuna plaastreid lihvitakse selle rakenduse versiooni jaoks.</string>
-    <string name="version_warning_too_old_message">Praegune: v%1$s\nVanim toetatud: v%2$s\n\nSee ei ole ametlikult toetatud versioon. Plaastrid tõenäoliselt ebaõnnestuvad.</string>
     <string name="version_warning_unsupported_message">Praegune: v%1$s\n\nSee ei ole ametlikult toetatud versioon. Plaastrid tõenäoliselt ebaõnnestuvad.</string>
     <string name="version_warning_notice_message">Jätkata versiooniga v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Vanem stabiilne versioon - saadaval on uuem stabiilne v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Eksperimentaalne versioon - toetatud, kuid ei pruugi korralikult töötada</string>
-    <string name="quick_patch_warning_older_experimental">Vanem eksperimentaalne versioon - saadaval on uuem eksperimentaalne v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Build ei ole toetatud - see versioon on parandatav, kuid mitte selle build</string>
-    <string name="quick_patch_warning_too_new">Versioon on liiga uus - ametlikult toetamata, paigutused ebaõnnestuvad tõenäoliselt</string>
-    <string name="quick_patch_warning_too_old">Versioon on liiga vana - ametlikult toetamata, paigutused ebaõnnestuvad tõenäoliselt</string>
-    <string name="quick_patch_warning_unsupported_between">Toetamata versioon - paigutused ebaõnnestuvad tõenäoliselt</string>
-    <string name="quick_patch_read_apk_failed">APK failut ei õnnestunud lugeda: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Patche prepareeritakse…</string>
-    <string name="quick_patch_fetch_patches_failed">Patche ei õnnestunud hankida. Kontrollige oma internetiühendust</string>
-    <string name="quick_patch_status_downloading_patches">Patche allalaadimine %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Patche allalaadimine ebaõnnestus: %1$s</string>
-    <string name="quick_patch_status_patching">Patcheitakse…</string>
-    <string name="quick_patch_completed_adb_off">ADB on väljas · Paigaldamiseks aktiveeri</string>
-    <string name="quick_patch_completed_adb_connect_device">ADB abil installimiseks ühendage seade USB kaabliga</string>
-    <string name="quick_patch_error_unknown_occurred">Hingatuse tekkis tundmatu viga</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK analüüsitakse…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d paigutust</string>
-    <string name="quick_patch_patching_slow_warning">See võtab kauem kui tavaliselt. Palun oodake…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Selle rakenduse jaoks pole yhteilduvate paigutuste</string>
-    <string name="quick_patch_ready_no_matching_patches">Ei leitud paigutusi, mis vastaksid \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Paiguta vaikimise värvidega</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Toetatud rakendused</string>
-    <string name="quick_patch_supported_apps_subtitle">Hüpa toetatud rakenduse täpsen APK-versioon siia</string>
-    <string name="quick_patch_supported_apps_loading">Laaditakse toetatud rakendusi…</string>
-    <string name="quick_patch_supported_apps_load_error">Toetatud rakendusi ei õnnestunud laadida</string>
-    <string name="quick_patch_supported_apps_change_source">Muuda allikat</string>
-    <string name="quick_patch_supported_apps_no_matches">Ükski rakendus ei ühti</string>
-    <string name="quick_patch_supported_apps_version_any">Kõik versioonid</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Vali APK-fail</string>
     <string name="home_could_not_resolve_patch_files">Paigandusfailide määramine ebaõnnestus</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Eemaldage APK</string>
     <string name="home_apk_info_limited_info_warning">Selle APK manifesti ei õnnestunud täielikult lugeda (tavaline jagatud pakettide puhul). Allpool olevad üksikasjad on ligikaudsed, kuid paikamine peaks siiski toimima</string>
     <string name="home_apk_info_unsupported_app_warning">Selle rakenduse jaoks ei leitud ühilduvaid paikaid. Saate siiski jätkata, kuid paigitamisest ei prugu olla mõju</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Selle rakenduse jaoks ei leitud ühilduvaid kohandusi</string>
     <string name="home_apk_info_build_label">Versioon</string>
     <string name="home_apk_info_size_label">Suurus</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Kellelt</string>
     <string name="home_stage_change_apk">Muuda APK-d</string>
     <string name="home_stage_continue">Jätka</string>
+    <string name="home_stage_patch">Kohandus</string>
     <string name="home_stage_analyzing_title">Analüüsimine</string>
     <string name="home_stage_reading_metadata">Loetakse rakenduse metadataid…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Eemalda %1$s?</string>
     <string name="home_dialog_uninstall_message">See eemaldab %1$s ühendatud seadmest. Paigutatud APK kettal ja teie ajalugu säilivad, unless valite allpool teisiti</string>
     <string name="home_dialog_uninstall_also_forget">Eemalda ka rakenduste loendist</string>
-    <string name="home_dialog_missing_apk_title">Originaalset APK-d ei leitud</string>
-    <string name="home_dialog_missing_apk_message">Sisend-APK %1$s ei asu enam aadressil:\n%2$s\n\nValige APK uuesti, et kasutada salvestatud sätteid uuesti paigandamiseks</string>
-    <string name="home_dialog_select_apk">Valige APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Valige uuesti paigandamiseks APK</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Hali allikaid</string>
     <string name="home_header_multi_source_hint">Kõikidest aktiveeritud allikatest päevitatud paigandused on ühendatud. Halda neid ülaltoole allikate nupust</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Sinu rakendused</string>
     <string name="home_banner_view">Vaata</string>
     <string name="home_your_apps_install_ready">Installimiseks valmis</string>
-    <string name="home_your_apps_newer_patch_hint">Uuem paigutus võib rakendust uuendada, klõpsake Uuenda, et kontrollida</string>
-    <string name="home_your_apps_device_version_ready">Paigutatud v%1$s on valmis, seadmel on v%2$s (uue paigutustöö ei ole vaja)</string>
-    <string name="home_your_apps_install_ready_hint">Plaastritatud v%1$s on installimiseks valmis (uue plaastri loomine pole vajalik)</string>
-    <string name="home_action_install">Installi</string>
     <string name="home_action_install_to_device">Installi seadmesse</string>
     <string name="home_action_installing">Installitakse…</string>
     <string name="home_action_preparing">Ettevalmistatakse…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s on valmis · seadmel v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s on valmis, uue paigutustöö ei ole vaja</string>
-    <string name="home_advice_unsupported">v%1$s ei ole enam toetatud. Palun uuage versioonile v%2$s</string>
+    <string name="home_detail_source_disabled">Välja lülitatud</string>
+    <string name="home_detail_source_removed">Eemaldatud</string>
+    <string name="home_detail_source_disabled_sub">Allikas on allikate jaotises välja lülitatud. Aktiveerige see uuesti kohandamiseks</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Algne allikas on leviotatud. Vali alternatiivne allikas või aktiveeri see uuesti jaotises Allikad</string>
+    <string name="home_detail_no_compatible_source">Üht ühilduvat allikat ei ole aktiveeritud</string>
+    <string name="home_detail_choose_source">Vali plaastri allikas</string>
     <string name="home_advice_unsupported_by_patches">v%1$s ei ole enam uusimate paigutustega ühilduv</string>
     <string name="home_date_today">täna</string>
     <string name="home_date_yesterday">eile</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Grupeerimata</string>
     <string name="patch_selection_group_selected_count">%1$d valitud</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Alusta algselt</string>
+    <string name="patching_patches_count">%1$d / %2$d plaastrit</string>
+    <string name="patching_slow_warning">See võtab tavalisest kauem. Palun oota…</string>
     <string name="patching_status_ready">Valmis paigandamiseks</string>
     <string name="patching_status_preparing">Ettevalmistatakse paigutust</string>
     <string name="patching_status_in_progress">Paigutatakse paiku</string>
     <string name="patching_completed_loading_result">Paigutamine lõpetatud, tuvastatakse tulemust…</string>
-    <string name="patching_cancelled_loading_result">Paigutamine katkestatud, tuvastatakse tulemust…</string>
+    <string name="patching_cancelled_loading_result">Paigutamine katkestatud, laaditakse tulemust…</string>
     <string name="patching_failed_loading_result">Paigutamine ebaõnnestus, tuvastatakse tulemust…</string>
     <string name="patching_log_viewer_failed_to_read">Logifaili lugemine ebaõnnestus: %1$s</string>
     <string name="patching_log_viewer_title">Logifail</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Eemaldatud</string>
     <string name="patching_error_failed_patches">Ebaõnnestunud paigad: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB on väljas · Installimiseks aktiveeri</string>
+    <string name="result_adb_connect_device_hint">ADB abil installimiseks ühenda seade USB kaabliga</string>
     <string name="result_screen_patch_another_button">Paika veel üks</string>
     <string name="result_screen_install_on_device_label">Installi seadmesse %1$s</string>
     <string name="result_screen_links_routed_label">Lingid suunatud paigutatud rakendusse</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Laadimine ebaõnnestus</string>
     <string name="source_error_github_pat_required">Pull requesti allikate allalaadimiseks on vaja GitHubi PAT-tokenit</string>
     <string name="source_error_pr_no_artifact">Pull requestile ei leitud artefakte</string>
-    <string name="source_sheet_manage_description">Halda plaastriallikaid</string>
-    <string name="source_sheet_local_label">Kohalik</string>
+    <string name="source_error_patcher_incompatible">See allikas on loodud patcheri %1$s jaoks, kuid Morphe %2$s sisaldab patcherit %3$s. Selle kasutamiseks uuendage Morphe'i</string>
+    <string name="version_label_local">Kohalik</string>
     <string name="source_sheet_remote_label">Kaugas</string>
     <string name="add_source">Lisa allikas</string>
     <string name="source_sheet_title">Plaastriallikad</string>
     <string name="source_sheet_reload_description">Laadi plaastrid uuesti</string>
-    <string name="source_sheet_quick_mode_hint">Vali, millist allikast Quick Patch kasutab. Mitme allika tugi on saadaval eksperdi režiimis</string>
     <string name="source_sheet_multi_mode_hint">Lülita suvalisi kombinatsioone sisse/välja. Kõikidest aktiveeritud allikatest pärit plaastrid liitakse</string>
     <string name="source_sheet_done_button">Valmis</string>
     <string name="source_sheet_type_preinstalled">Eelinstalleeritud</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Muuda</string>
     <string name="source_sheet_move_up_description">Liiguta üles</string>
     <string name="source_sheet_move_down_description">Liiguta allas</string>
-    <string name="source_sheet_channel_older_stable">Vanem stabiilne</string>
-    <string name="source_sheet_channel_older_dev">Vanem arendusversioon</string>
     <string name="source_sheet_ignored_mpp_title">Ignoreeritav .mpp mustrid</string>
-    <string name="source_sheet_ignored_mpp_hint">Mõjutab ainult kaustade allikaid, mis autoloadivad kaustast uusima .mpp faili. Uusima buildi valimisel jäetakse kõrvale failid, mille nimi vastab siin olevale mustrile. Tavaline sõna vastab igale failile, mis seda sisaldab (nt debug). Kasutage globi jaoks sümbolit * (nt *-debug.mpp). Failid *-sources.mpp ja *-javadoc.mpp on alati ignoreeritavad</string>
+    <string name="source_sheet_ignored_mpp_hint">Mõjutab ainult kaustade allikaid, mis autoloadivad kaustast uusima .mpp faili. Selle uusima versiooni valimisel jäetakse kõrvale failid, mille nimi vastab siin määratud mustrile. Tavaline sõna vastab igale failile, mis seda sisaldab (nt debug). Kasutage gloobide jaoks sümbolit * (nt *-debug.mpp). Failid *-sources.mpp ja *-javadoc.mpp on alati ignoreeritud</string>
     <string name="source_sheet_ignored_mpp_placeholder">nt debug või *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Lisa muster</string>
     <string name="source_sheet_remove_pattern_description">Eemalda muster</string>
+    <string name="sources_management_signed_by">Allkirjastaja</string>
+    <string name="sources_management_signing_key_changed_badge">Võti on muutunud</string>
+    <string name="sources_management_signing_key_changed_hint">Allkirjavõti on muutunud. Ülevaateks klõpsake</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' ei uuendatud, kuna selle uusim versioon ei ole allkirjastatud varem kasutatud võtiga</string>
+    <string name="sources_signing_key_new">Uus võti</string>
+    <string name="sources_signing_key_trust_message">Uusim versioon on allkirjastatud teise võtiga. Kas arendaja on asendanud oma võti või on selle versiooni avaldanud keegi muu. Usaldage seda ainult juhul, kui arendaja on teatanud uue võti kohta</string>
+    <string name="sources_signing_key_trust_message_unsigned">Uusim versioon ei ole allkirjastatud. Kas arendaja on lõpetanud versioonide allkirjastamise või on selle versiooni avaldanud keegi muu. Usaldage seda ainult juhul, kui arendaja on sellest teatanud</string>
+    <string name="sources_signing_key_trust_title">Kas usaldada uut võtmet?</string>
+    <string name="sources_signing_key_trusted">Usaldatud võtme</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Kohalik fail</string>
     <string name="patch_source_dialog_name_label">Nimi</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Aktsepteerib GitHubi, GitLabi või morphe.software/add-source linki</string>
     <string name="patch_source_dialog_pre_release_title">Eelväljalaskmise paigad</string>
     <string name="patch_source_dialog_pre_release_hint">Saab varase juurdpääsu uute eksperimentaalsete paigutuste versioonideni</string>
-    <string name="patch_source_dialog_experimental_title">Eksperimentaalsed rakenduse versioonid</string>
-    <string name="patch_source_dialog_experimental_hint">Andb rakenduse eksperimentaalsetele versioonidele prioriteedi, kui need on saadaval</string>
     <string name="patch_source_dialog_error_name_required">Nimi on kohustuslik</string>
     <string name="patch_source_dialog_error_invalid_url">Sisestage kehtiv GitHubi või GitLabi URL</string>
     <string name="patch_source_dialog_error_invalid_file">Valige kehtiv .mpp fail</string>
@@ -663,6 +617,7 @@
     <string name="licenses_dialog_title">Avatud lähtekoodi litsentsid</string>
     <string name="licenses_dialog_empty_failed">// litsentside laadimine ebaõnnestus</string>
     <string name="licenses_dialog_empty_no_matches">// ei leitud vastuseid</string>
+    <string name="licenses_dialog_footer_matched">%1$d / %2$d kokkuslanged</string>
     <string name="licenses_search_placeholder">Otsi raamatukogusid, SPDX ID-d, ainulaadset ID-d…</string>
     <string name="licenses_row_authors_label">Autorid</string>
     <string name="licenses_row_org_label">Org</string>
@@ -681,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Ava logid</string>
     <string name="settings_dialog_reset_button">Lä resetting</string>
     <string name="settings_theme_system">Süsteem</string>
-    <string name="settings_signing_error_not_found">Konfigureeritud keystore'i ei ownitud: %1$s. Taasta fail, vali seadetest uus või tühista seade, et kasutada Morphe vaikeseadet</string>
     <string name="settings_search_languages_placeholder">Otsi keeli</string>
     <string name="settings_dialog_resolves_to_message">Laheneb kui: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore'i ei ownitud: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Keel</string>
     <string name="settings_language_current_title">Käesolev keel</string>
@@ -692,9 +645,13 @@
     <string name="settings_language_dialog_title">Rakenduse keel</string>
     <string name="settings_language_search_no_results">Tulemusi ei leitud</string>
     <string name="settings_section_theme">Teema</string>
+    <string name="settings_appearance_theme_mode">Teema režiim</string>
     <string name="settings_theme_light">Hele</string>
     <string name="settings_theme_dark">Tume</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Värvistiil</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monokroomne</string>
     <string name="settings_toggle_sharp_corners_label">Teravad nurgad</string>
     <string name="settings_toggle_sharp_corners_desc">Muuda kaardid, dialoogakad ja nupud nurkades teravaks</string>
     <string name="settings_section_accent_color">Aktsentsvärv</string>
@@ -704,9 +661,6 @@
     <string name="settings_section_app_cards">Rakenduste kaardid</string>
     <string name="settings_app_cards_color_all">Värv igale kaardile</string>
     <string name="settings_app_cards_color_all_desc">Kaardid, mille oled individuaalselt kohandanud, säilivad oma värvi</string>
-    <string name="settings_section_patch_list">Patchide nimekiri</string>
-    <string name="settings_toggle_patch_categories_label">Patchide kategooriad</string>
-    <string name="settings_toggle_patch_categories_desc">Grupeerib patchid laiaendavatevate kategooriatesse</string>
     <string name="settings_section_background_animation">Taustaanimatsioon</string>
     <string name="settings_background_circles">Ringid</string>
     <string name="settings_background_rings">Ringid</string>
@@ -820,8 +774,22 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Tõlkimine</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Muutmistegu pole saadaval</string>
+    <string name="changelog_badge_installed">Paigaldatud</string>
+    <string name="changelog_badge_latest">Uusim</string>
+    <string name="changelog_badge_prerelease">Eelversioon</string>
+    <string name="changelog_date_today">Täna</string>
+    <string name="changelog_date_yesterday">Eile</string>
     <string name="changelog_dialog_title">Vaata muutmistegu</string>
-    <string name="changelog_show_older_button">Kuva vanemad versioonid</string>
+    <string name="changelog_not_available">Muutmistegu pole saadaval</string>
+    <string name="changelog_section_app_support">Rakenduse tugi</string>
+    <string name="changelog_section_fixes">Parandused</string>
+    <string name="changelog_section_improvements">Improvementid</string>
+    <string name="changelog_section_new">Uut</string>
+    <string name="changelog_section_other">Muudatused</string>
+    <string name="changelog_section_performance">Jõudlus</string>
+    <string name="changelog_show_less">Näita vähem</string>
     <string name="changelog_view_on_github_button">Vaata GitHubis</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Allikad</string>
+    <string name="nav_apps">Rakendused</string>
 </resources>

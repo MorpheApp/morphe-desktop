@@ -12,18 +12,6 @@
     <plurals name="count_sources">
         <item quantity="other">%1$d sumber</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="other">%1$d tambalan akan diterapkan</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="other">%1$d dikecualikan</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="other">%1$d diaktifkan</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="other">%1$d dinonaktifkan</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="other">%1$d pustaka</item>
     </plurals>
@@ -41,5 +29,20 @@
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="other">%1$d inti</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="other">%1$d perubahan</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="other">%1$d hari yang lalu</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="other">%1$d fitur</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="other">%1$d perbaikan</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="other">%1$d optimalisasi</item>
     </plurals>
 </resources>

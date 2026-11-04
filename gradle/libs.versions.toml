@@ -6,12 +6,12 @@ kotlin = "2.4.21"
 # CLI
 picocli = "4.7.7"
 arsclib = "4695b583ef"
-morphe-patcher = "2.1.0"
+morphe-patcher = "2.2.0"
 morphe-library = "1.4.0"
 
 # Compose Desktop
 compose = "1.12.2"
-material3 = "1.9.0"
+material3 = "1.12.0-alpha03"
 
 # Networking
 ktor = "3.6.0"
@@ -83,6 +83,7 @@ compose-desktop-linux-x64 = { module = "org.jetbrains.compose.desktop:desktop-jv
 compose-desktop-linux-arm64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-linux-arm64", version.ref = "compose" }
 compose-desktop-windows-x64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-windows-x64", version.ref = "compose" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
+compose-desktop-windows-arm64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-windows-arm64", version.ref = "compose" }
 compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 
 # OSHI (cross-platform CPU / I/O telemetry)
@@ -107,6 +108,7 @@ compose-desktop = [
     "compose-desktop-linux-x64",
     "compose-desktop-linux-arm64",
     "compose-desktop-windows-x64",
+    "compose-desktop-windows-arm64",
 ]
 
 [plugins]

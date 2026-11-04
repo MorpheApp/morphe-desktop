@@ -9,14 +9,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheComponents
 import app.morphe.engine.PatchEngine
+import app.morphe.engine.PatchEvent
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.Logger
+import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
-import app.morphe.gui.util.PatcherState
+import app.morphe.gui.util.PatchSourceNaming
+import app.morphe.gui.util.runProgress
 import app.morphe.morphe_desktop.generated.resources.*
 import com.sun.management.OperatingSystemMXBean
 import java.io.File
@@ -42,11 +46,49 @@ class PatchingViewModel(
     private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PatchingUiState())
+    private var allConfiguredSources: List<PatchSource> = emptyList()
+    private val initialSnapshot = config.historyMetadata?.sourcesSnapshot
+    private val fallbackSourceName = config.patchFiles.firstOrNull()?.let {
+        PatchSourceNaming.resolveSourceName(file = it)
+    } ?: PatchSourceNaming.FALLBACK_DEFAULT_NAME
+    private val initialSourceName = when {
+        initialSnapshot.isNullOrEmpty() -> fallbackSourceName
+        initialSnapshot.size == 1 -> PatchSourceNaming.sanitize(initialSnapshot.first().sourceName)
+        else -> initialSnapshot.joinToString(", ") { PatchSourceNaming.sanitize(it.sourceName) }
+    }
+    private val initialSourceVersion = when {
+        initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let { ApkOutputNaming.extractPatchesVersion(it.name) } ?: "?"
+        initialSnapshot.size == 1 -> initialSnapshot.first().version
+        else -> initialSnapshot.joinToString(", ") { it.version }
+    }
+    private val initialAppVersion = config.historyMetadata?.appVersion ?: "?"
+
+    private val _uiState = MutableStateFlow(
+        PatchingUiState(
+            totalPatches = config.enabledPatches.size,
+            appVersion = initialAppVersion,
+            patchesSourceName = initialSourceName,
+            patchesVersion = initialSourceVersion,
+        )
+    )
     val uiState: StateFlow<PatchingUiState> = _uiState.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            val sources = runCatching { configRepository.loadConfig().patchSource }.getOrDefault(emptyList())
+            allConfiguredSources = sources
+            val resolvedName = when {
+                initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let {
+                    withContext(Dispatchers.IO) { PatchSourceNaming.resolveSourceName(file = it, sources = sources) }
+                } ?: PatchSourceNaming.FALLBACK_DEFAULT_NAME
+                initialSnapshot.size == 1 -> PatchSourceNaming.sanitize(initialSnapshot.first().sourceName, sources)
+                else -> initialSnapshot.joinToString(", ") { PatchSourceNaming.sanitize(it.sourceName, sources) }
+            }
+            _uiState.update { it.copy(patchesSourceName = resolvedName) }
+        }
+    }
+
     private var patchingJob: Job? = null
-    private var stateMachine: PatcherState? = null
     @Volatile private var isCancelledByUser = false
 
     fun markAutoNavigated() {
@@ -58,10 +100,10 @@ class PatchingViewModel(
 
         patchingJob = viewModelScope.launch {
             isCancelledByUser = false
-            stateMachine = null
             var locale = Locale.getDefault()
             val (preparingState, cpuSampler, ioSampler) = withContext(Dispatchers.IO) {
                 val appConfig = configRepository.loadConfig()
+                allConfiguredSources = appConfig.patchSource
                 val loc = FormatUtils.resolveLocale(appConfig.language)
                 locale = loc
                 val osName = System.getProperty("os.name") ?: "Unknown OS"
@@ -70,10 +112,20 @@ class PatchingViewModel(
                 val inputApkFile = config.inputApk
                 val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), loc) else "?"
                 
-                val appVersion = ApkInspector.inspect(inputApkFile)?.versionName ?: "?"
+                val appVersion = config.historyMetadata?.appVersion
+                    ?: ApkInspector.inspect(inputApkFile)?.versionName
+                    ?: initialAppVersion
                 val sourcesSnapshot = config.historyMetadata?.sourcesSnapshot
-                val patchesSourceName = sourcesSnapshot?.firstOrNull()?.sourceName ?: "MORPHE"
-                val patchesVersion = sourcesSnapshot?.firstOrNull()?.version ?: "?"
+                val patchesSourceName = when {
+                    sourcesSnapshot.isNullOrEmpty() -> initialSourceName
+                    sourcesSnapshot.size == 1 -> PatchSourceNaming.sanitize(sourcesSnapshot.first().sourceName, allConfiguredSources)
+                    else -> sourcesSnapshot.joinToString(", ") { PatchSourceNaming.sanitize(it.sourceName, allConfiguredSources) }
+                }
+                val patchesVersion = when {
+                    sourcesSnapshot.isNullOrEmpty() -> initialSourceVersion
+                    sourcesSnapshot.size == 1 -> sourcesSnapshot.first().version
+                    else -> sourcesSnapshot.joinToString(", ") { it.version }
+                }
                 val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
                 
                 val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
@@ -154,14 +206,7 @@ class PatchingViewModel(
             val engineResult = try {
                 PatchEngine.patch(
                     config = engineConfig,
-                    onProgress = { message ->
-                        if (_uiState.value.status != PatchingStatus.CANCELLED) {
-                            parseAndLogEngineMessage(message)
-                            viewModelScope.launch(Dispatchers.Main) {
-                                parseAndAddLog(message)
-                            }
-                        }
-                    }
+                    onEvent = { event -> viewModelScope.launch(Dispatchers.Main) { onPatchEvent(event) } }
                 )
             } catch (e: CancellationException) {
                 throw e
@@ -226,39 +271,25 @@ class PatchingViewModel(
         ) }
     }
 
-    private fun parseAndAddLog(line: String) {
+    private fun onPatchEvent(event: PatchEvent) {
         if (_uiState.value.status == PatchingStatus.CANCELLED) return
-        val (cleanMessage, level) = when {
-            line.startsWith("ERROR: ", ignoreCase = true) -> line.substring(7) to LogLevel.ERROR
-            line.startsWith("WARNING: ", ignoreCase = true) -> line.substring(9) to LogLevel.WARNING
-            line.startsWith("ERROR:", ignoreCase = true) -> line.substring(6).trimStart() to LogLevel.ERROR
-            line.startsWith("WARNING:", ignoreCase = true) -> line.substring(8).trimStart() to LogLevel.WARNING
-            line.contains("error", ignoreCase = true) -> line to LogLevel.ERROR
-            line.contains("warning", ignoreCase = true) -> line to LogLevel.WARNING
-            line.contains("success", ignoreCase = true) ||
-            line.contains("completed", ignoreCase = true) ||
-            line.contains("done", ignoreCase = true) ||
-            line.contains("patching", ignoreCase = true) ||
-            line.contains("applying", ignoreCase = true) -> line to LogLevel.INFO
-            else -> line to LogLevel.INFO
-        }
-        if (!cleanMessage.startsWith("FAILED: ", ignoreCase = true)) {
-            addLog(cleanMessage, level)
-        }
 
-        if (stateMachine == null) {
-            val total = if (_uiState.value.totalPatches > 0) _uiState.value.totalPatches else config.enabledPatches.size
-            stateMachine = PatcherState(total, _uiState.value.isSplit)
+        when (event) {
+            is PatchEvent.Log -> addLog(event.message, event.level.toLogLevel())
+            is PatchEvent.StepStarted -> _uiState.update { it.copy(currentStep = event.step).withRunProgress() }
+            is PatchEvent.PatchApplied -> _uiState.update { it.copy(patchedCount = it.patchedCount + 1).withRunProgress() }
         }
-        stateMachine?.processLogLine(cleanMessage)
+    }
 
-        _uiState.update { it.copy(
-            progress = maxOf(it.progress, stateMachine?.currentProgress ?: 0f),
-            patchedCount = stateMachine?.completedPatches ?: it.patchedCount,
-            currentStepName = stateMachine?.currentStepName ?: it.currentStepName,
-            currentPatchName = stateMachine?.currentPatchName,
-            hasReceivedProgressUpdate = true
-        ) }
+    private fun PatchingUiState.withRunProgress(): PatchingUiState {
+        val step = currentStep ?: return this
+        return copy(progress = maxOf(progress, runProgress(config.steps, step, patchedCount, totalPatches)))
+    }
+
+    private fun Logger.Level.toLogLevel() = when (this) {
+        Logger.Level.DEBUG, Logger.Level.INFO -> LogLevel.INFO
+        Logger.Level.WARN -> LogLevel.WARNING
+        Logger.Level.ERROR -> LogLevel.ERROR
     }
 
     fun getConfig(): PatchEngine.Config = config
@@ -300,9 +331,7 @@ data class PatchingUiState(
     val progress: Float = 0f,
     val patchedCount: Int = 0,
     val totalPatches: Int = 0,
-    val currentStepName: String = "",
-    val currentPatchName: String? = null,
-    val hasReceivedProgressUpdate: Boolean = false,
+    val currentStep: PatchEngine.PatchStep? = null,
     val hasAutoNavigated: Boolean = false,
 
     val heapSamples: List<Int> = emptyList(),
@@ -314,8 +343,8 @@ data class PatchingUiState(
     val androidVersion: String = "?",
     val deviceManufacturer: String = "?",
     val appVersion: String = "?",
-    val patchesSourceName: String = "MORPHE",
-    val patchesVersion: String = "?",
+    val patchesSourceName: String = "",
+    val patchesVersion: String = "",
     val isSplit: Boolean = false,
     val ramFreeInfo: String = "?",
     val storageFreeInfo: String = "?",
@@ -332,22 +361,6 @@ data class PatchingUiState(
     val canCancel: Boolean
         get() = isInProgress
 
-}
-
-internal fun parseAndLogEngineMessage(message: String): Pair<String, LogLevel> {
-    val (cleanMessage, level) = when {
-        message.startsWith("ERROR: ", ignoreCase = true) -> message.substring(7) to LogLevel.ERROR
-        message.startsWith("WARNING: ", ignoreCase = true) -> message.substring(9) to LogLevel.WARNING
-        message.startsWith("ERROR:", ignoreCase = true) -> message.substring(6).trimStart() to LogLevel.ERROR
-        message.startsWith("WARNING:", ignoreCase = true) -> message.substring(8).trimStart() to LogLevel.WARNING
-        else -> message to LogLevel.INFO
-    }
-    when (level) {
-        LogLevel.ERROR -> Logger.error(cleanMessage)
-        LogLevel.WARNING -> Logger.warn(cleanMessage)
-        LogLevel.INFO -> Logger.info(cleanMessage)
-    }
-    return cleanMessage to level
 }
 
 internal suspend fun resolveStepFailureMessage(result: PatchEngine.Result): String? {

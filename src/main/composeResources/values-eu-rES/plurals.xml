@@ -16,22 +16,6 @@
         <item quantity="one">%1$d iturri</item>
         <item quantity="other">%1$d iturri</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch aplikatuko da</item>
-        <item quantity="other">%1$d patching aplikatuko dira</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d kanpondu</item>
-        <item quantity="other">%1$d kanpondu</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d aktibatuta</item>
-        <item quantity="other">%1$d aktibatuta</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d desaktibatuta</item>
-        <item quantity="other">%1$d desaktibatuta</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d liburutegia</item>
         <item quantity="other">%1$d liburutegi</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d nukleo</item>
         <item quantity="other">%1$d nukleo</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d aldaketa</item>
+        <item quantity="other">%1$d aldaketa</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d egun przedu</item>
+        <item quantity="other">%1$d egun przedu</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d ezaugarri</item>
+        <item quantity="other">%1$d ezaugarri</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d konponketa</item>
+        <item quantity="other">%1$d konponketa</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimizazio</item>
+        <item quantity="other">%1$d optimizazio</item>
     </plurals>
 </resources>

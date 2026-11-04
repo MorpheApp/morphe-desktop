@@ -13,6 +13,7 @@
     <string name="expand">Розгорнути</string>
     <string name="cancel">Скасувати</string>
     <string name="close">Закрити</string>
+    <string name="trust">Довіряти</string>
     <string name="delete">Видалити</string>
     <string name="disabled_while_patching">Вимкнено під час патчингу</string>
     <string name="drop_apk_here">Перетягніть APK сюди</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">З'єднання перервано під час завантаження, спробуйте знову</string>
     <string name="error_network_loading_patches">Мережева помилка під час завантаження патчів</string>
     <string name="error_patch_file_not_found">Файл патча не знайдено: %1$s</string>
-    <string name="error_no_patches_files_supplied">Не надано жодних файлів патчів</string>
-    <string name="error_input_apk_not_found">Вхідний APK не знайдено</string>
     <string name="error_step_failed">%1$s не вдалося: %2$s</string>
     <string name="error_drop_valid_apk">Будь ласка, перетягніть дійсний файл .apk, .apkm, .xapk або .apks</string>
     <string name="status_saving">Збереження…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Фільтрувати застосунки…</string>
     <string name="version">Версія</string>
     <string name="version_label_stable">Стабільна</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Попередній реліз</string>
     <string name="version_label_experimental">Експериментальна</string>
-    <string name="version_label_latest_dev">Остання Dev</string>
     <string name="version_label_latest_stable">Остання стабільна</string>
+    <string name="version_label_recommended">Рекомендована</string>
+    <string name="version_label_supported">Підтримується</string>
     <string name="app_info_arch_label">Архітектура</string>
     <string name="app_info_min_sdk_label">Мін. SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Патчинг скасовано</string>
     <string name="view_full_logs_button">Переглянути повні журнали</string>
     <string name="error_patching_unknown">Патчинг не вдався з невідомої причини</string>
-    <string name="error_patching_general">Помилка: %1$s</string>
     <string name="error_log_label">Журнал помилок</string>
     <string name="back">Назад</string>
     <string name="open_folder">Відкрити папку</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Будь-яка кількість стопів: лінійний, радіальний або конічний</string>
     <string name="card_fill_mode_solid">Суцільний</string>
     <string name="card_fill_mode_solid_blurb">Один суцільний колір</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Патчі</string>
-    <string name="quick_patch_screen_start_over_button">Почати спочатку</string>
-    <string name="quick_patch_patch_another_button">Патчити інший</string>
-    <string name="quick_patch_select_apk">Вибрати APK файл</string>
-    <string name="quick_patch_analyze_apk_failed">Не вдалося проаналізувати APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Не вдалося витягти базовий APK із набору</string>
-    <string name="quick_patch_unsupported_app_error">%1$s не підтримується в режимі швидкого патчингу. Підтримувані застосунки: %2$s. Для непідтримуваних застосунків використовуйте звичайний режим</string>
     <string name="adb_install_on_button">Установити на %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Завантаження патчів</string>
-    <string name="patching_step_preparing">Підготовка</string>
     <string name="patching_step_merging_split_apk">Об’єднання split APK файлу</string>
     <string name="patching_step_read_apk">Читання APK файлу</string>
     <string name="patching_step_applying_patches">Застосування патчів</string>
-    <string name="patching_step_saving">Збереження</string>
     <string name="patching_step_writing_apk">Запис патченого APK файлу</string>
     <string name="patching_step_signing">Підпис патченого APK файлу</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Файл може бути пошкоджено, завантажте його повторно з APKMirror</string>
     <string name="version_status_checksum_failed">Не вдалося перевірити контрольну суму</string>
     <string name="version_status_checksum_matches">Контрольна сума збігається з APKMirror</string>
-    <string name="version_status_older_stable">Старіша стабільна</string>
     <string name="version_status_newer_stable_available">Доступна новіша стабільна v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Доступна новіша стабільна версія</string>
     <string name="version_status_experimental_detail">Підтримується, але може працювати некоректно</string>
-    <string name="version_status_older_experimental">Старіша експериментальна</string>
-    <string name="version_status_newer_experimental_available">Доступна новіша експериментальна v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Доступна новіша експериментальна збірка</string>
-    <string name="version_status_too_new">Версія занадто нова</string>
     <string name="version_status_unsupported_detail">Офіційно не підтримується, патчі, найімовірніше, не спрацюють</string>
-    <string name="version_status_too_old">Версія занадто стара</string>
     <string name="version_status_unsupported">Непідтримувана версія</string>
     <string name="version_status_build_unsupported">Збірку не підтримано</string>
     <string name="version_status_build_unsupported_detail">Ця версія підтримується, але не ця її збірка. Отримайте збірку, на яку розраховані патчі</string>
+    <string name="version_status_build_unsupported_with_code">Патчі потребують збірку %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Повідомлення про версію</string>
+    <string name="version_warning_build_unsupported_message">Поточна: v%1$s (збірка %2$s)\nПотрібна збірка: %3$s\n\nЦе інша збірка тієї самої версії. Патчі потребують конкретної збірки.</string>
     <string name="version_warning_experiment_title">Ви хочете експериментувати? 🧪</string>
-    <string name="version_warning_older_stable_title">Старіша стабільна версія</string>
-    <string name="version_warning_older_stable_message">Поточна: v%1$s\nОстання стабільна: v%2$s\n\nЦя версія підтримується, але доступна новіша стабільна версія. Можливо, вам бракує останніх виправлень.</string>
     <string name="version_warning_latest_experimental_message">Поточна: v%1$s\n\nЦя версія має ранню експериментальну підтримку\n\n🔧 Очікуйте нестабільної поведінки застосунку або невиявлених помилок, поки патчі вдосконалюються для цієї версії застосунку.</string>
-    <string name="version_warning_older_experimental_title">Старіша експериментальна версія\nХочете поекспериментувати? 🧪</string>
-    <string name="version_warning_older_experimental_message">Поточна: v%1$s\nОстання експериментальна: v%2$s\n\nЦе підтримувана експериментальна збірка, але доступна новіша експериментальна версія. Очікуйте нестабільної поведінки застосунку або невиявлених помилок, поки патчі вдосконалюються для цієї версії застосунку.</string>
-    <string name="version_warning_too_new_message">Поточна: v%1$s\nНайновіша відома: v%2$s\n\nЦя версія має ранню експериментальну підтримку\n\n🔧 Очікуйте нестабільної поведінки застосунку або невиявлених помилок, поки патчі вдосконалюються для цієї версії застосунку.</string>
-    <string name="version_warning_too_old_message">Поточна: v%1$s\nНайстаріша підтримувана: v%2$s\n\nЦе не офіційно підтримувана версія. Патчі, найімовірніше, не спрацюють.</string>
     <string name="version_warning_unsupported_message">Поточна: v%1$s\n\nЦе не офіційно підтримувана версія. Патчі, найімовірніше, не спрацюють.</string>
     <string name="version_warning_notice_message">Продовжити з v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Старіша стабільна збірка - доступна новіша стабільна v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Експериментальна збірка - підтримується, але може працювати некоректно</string>
-    <string name="quick_patch_warning_older_experimental">Старіша експериментальна збірка - доступна новіша експериментальна v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Збірку не підтримано - ця версія патчиться, але не ця її збірка</string>
-    <string name="quick_patch_warning_too_new">Версія занадто нова - офіційно не підтримується, патчі, найімовірніше, не спрацюють</string>
-    <string name="quick_patch_warning_too_old">Версія занадто стара - офіційно не підтримується, патчі, найімовірніше, не спрацюють</string>
-    <string name="quick_patch_warning_unsupported_between">Непідтримувана версія - патчі, найімовірніше, не спрацюють</string>
-    <string name="quick_patch_read_apk_failed">Не вдалося прочитати APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Підготовка патчів…</string>
-    <string name="quick_patch_fetch_patches_failed">Не вдалося отримати патчі. Перевірте з’єднання з інтернетом</string>
-    <string name="quick_patch_status_downloading_patches">Завантаження патчів %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Не вдалося завантажити патчі: %1$s</string>
-    <string name="quick_patch_status_patching">Патчинг…</string>
-    <string name="quick_patch_completed_adb_off">ADB вимкнено · Увімкніть для встановлення</string>
-    <string name="quick_patch_completed_adb_connect_device">Під’єднайте пристрій через USB, щоб установити за допомогою ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Сталася невідома помилка</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Аналіз APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d патч(а)ів</string>
-    <string name="quick_patch_patching_slow_warning">Це триває довше, ніж зазвичай. Будь ласка, зачекайте…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(збірка %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Немає сумісних патчів для цього застосунку</string>
-    <string name="quick_patch_ready_no_matching_patches">Немає патчів, які відповідають \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Застосувати патч із типовими налаштуваннями</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Підтримувані застосунки</string>
-    <string name="quick_patch_supported_apps_subtitle">Перетягніть сюди точну версію APK для підтримуваного застосунку</string>
-    <string name="quick_patch_supported_apps_loading">Завантаження підтримуваних застосунків…</string>
-    <string name="quick_patch_supported_apps_load_error">Не вдалося завантажити підтримувані застосунки</string>
-    <string name="quick_patch_supported_apps_change_source">Змінити джерело</string>
-    <string name="quick_patch_supported_apps_no_matches">Немає відповідних застосунків</string>
-    <string name="quick_patch_supported_apps_version_any">Будь-яка версія</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Виберіть файл APK</string>
     <string name="home_could_not_resolve_patch_files">Не вдалося визначити файли патчів</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Видалити APK</string>
     <string name="home_apk_info_limited_info_warning">Не вдалося повністю прочитати маніфест цього APK (часто буває для розділених наборів). Деталі нижче приблизні, патчинг усе одно має працювати</string>
     <string name="home_apk_info_unsupported_app_warning">Не знайдено сумісних патчів для цього застосунку. Ви можете продовжити, але патчинг може не мати ефекту</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Для цього застосунку не знайдено сумісних патчів</string>
     <string name="home_apk_info_build_label">Збірка</string>
     <string name="home_apk_info_size_label">Розмір</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">З</string>
     <string name="home_stage_change_apk">Змінити APK</string>
     <string name="home_stage_continue">Продовжити</string>
+    <string name="home_stage_patch">Патчити</string>
     <string name="home_stage_analyzing_title">Аналіз</string>
     <string name="home_stage_reading_metadata">Читання метаданих застосунку…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Видалити %1$s?</string>
     <string name="home_dialog_uninstall_message">Це видалить %1$s з підключеного пристрою. Пропатчений APK на диску та ваша історія зберігаються, якщо ви не оберете інакше нижче</string>
     <string name="home_dialog_uninstall_also_forget">Також видалити з «Ваших застосунків»</string>
-    <string name="home_dialog_missing_apk_title">Оригінальний APK не знайдено</string>
-    <string name="home_dialog_missing_apk_message">Вхідний APK для %1$s більше не знаходиться за адресою:\n%2$s\n\nВиберіть APK знову, щоб повторно застосувати патчі зі збереженими налаштуваннями</string>
-    <string name="home_dialog_select_apk">Виберіть APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Виберіть APK для повторного патчингу</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Керування джерелами</string>
     <string name="home_header_multi_source_hint">Патчі з усіх увімкнених джерел об’єднуються. Керуйте ними за допомогою кнопки джерел вище</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Ваші застосунки</string>
     <string name="home_banner_view">Переглянути</string>
     <string name="home_your_apps_install_ready">Готово до встановлення</string>
-    <string name="home_your_apps_newer_patch_hint">Новіший патч може підвищити версію застосунку. Натисніть «Оновити», щоб перевірити</string>
-    <string name="home_your_apps_device_version_ready">Пропатчена v%1$s готова, на пристрої v%2$s (повторний патчинг не потрібен)</string>
-    <string name="home_your_apps_install_ready_hint">Пропатчена v%1$s готова до встановлення (повторний патчинг не потрібен)</string>
-    <string name="home_action_install">Встановити</string>
     <string name="home_action_install_to_device">Установити на пристрій</string>
     <string name="home_action_installing">Інсталяція…</string>
     <string name="home_action_preparing">Підготовка…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s готова · на пристрої v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s готова, повторний патчинг не потрібен</string>
-    <string name="home_advice_unsupported">v%1$s більше не підтримується. Будь ласка, оновіться до v%2$s</string>
+    <string name="home_detail_source_disabled">Вимкнено</string>
+    <string name="home_detail_source_removed">Видалено</string>
+    <string name="home_detail_source_disabled_sub">Джерело вимкнено в розділі \"Джерела\". Увімкніть його, щоб пропатчити повторно</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Початкове джерело вимкнено. Виберіть інше джерело або знову увімкніть його в розділі \"Джерела\"</string>
+    <string name="home_detail_no_compatible_source">Немає увімкненого сумісного джерела</string>
+    <string name="home_detail_choose_source">Виберіть джерело патчів</string>
     <string name="home_advice_unsupported_by_patches">v%1$s більше не підтримується останніми патчами</string>
     <string name="home_date_today">сьогодні</string>
     <string name="home_date_yesterday">вчора</string>
@@ -427,6 +371,9 @@
     <string name="patch_selection_group_ungrouped">Без групи</string>
     <string name="patch_selection_group_selected_count">%1$d вибрано</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Почати спочатку</string>
+    <string name="patching_patches_count">Патчів: %1$d / %2$d</string>
+    <string name="patching_slow_warning">Це триває довше, ніж зазвичай. Будь ласка, зачекайте…</string>
     <string name="patching_status_ready">Готово до патчингу</string>
     <string name="patching_status_preparing">Підготовка до патчингу</string>
     <string name="patching_status_in_progress">Застосування патчів</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Видалено</string>
     <string name="patching_error_failed_patches">Невдалі патчі: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB вимкнено · Увімкніть для встановлення</string>
+    <string name="result_adb_connect_device_hint">Підключіть пристрій через USB, щоб встановити через ADB</string>
     <string name="result_screen_patch_another_button">Патчити інше</string>
     <string name="result_screen_install_on_device_label">Встановити на %1$s</string>
     <string name="result_screen_links_routed_label">Посилання перенаправляються в пропатчений застосунок</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Не вдалося завантажити</string>
     <string name="source_error_github_pat_required">Для завантаження джерел pull request потрібен PAT GitHub</string>
     <string name="source_error_pr_no_artifact">Не знайдено артефактів для pull request</string>
-    <string name="source_sheet_manage_description">Керування джерелами патчів</string>
-    <string name="source_sheet_local_label">Локальне</string>
+    <string name="source_error_patcher_incompatible">Це джерело створено для патчера %1$s, але Morphe %2$s містить патчер %3$s. Оновіть Morphe, щоб використовувати його</string>
+    <string name="version_label_local">Локальне</string>
     <string name="source_sheet_remote_label">Віддалене</string>
     <string name="add_source">Додати джерело</string>
     <string name="source_sheet_title">Джерела патчів</string>
     <string name="source_sheet_reload_description">Перезавантажити патчі</string>
-    <string name="source_sheet_quick_mode_hint">Виберіть джерело, яке використовує Quick Patch. Мультиджерела доступні в режимі експерта</string>
     <string name="source_sheet_multi_mode_hint">Увімкніть/вимкніть будь-яку комбінацію. Патчі з усіх увімкнених джерел об'єднуються</string>
     <string name="source_sheet_done_button">Готово</string>
     <string name="source_sheet_type_preinstalled">Вбудоване</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Редагувати</string>
     <string name="source_sheet_move_up_description">Перемістити вгору</string>
     <string name="source_sheet_move_down_description">Перемістити вниз</string>
-    <string name="source_sheet_channel_older_stable">Старіша стабільна</string>
-    <string name="source_sheet_channel_older_dev">Старіша dev-версія</string>
     <string name="source_sheet_ignored_mpp_title">Ігноровані шаблони .mpp</string>
-    <string name="source_sheet_ignored_mpp_hint">Впливає лише на джерела-теки, які автоматично завантажують найновіший .mpp у теці. Під час вибору найновішої збірки файли, назва яких відповідає наведеному тут шаблону, пропускаються. Просте слово відповідає будь-якому файлу, що його містить (наприклад, debug). Використовуйте * для глобів (наприклад, *-debug.mpp). *-sources.mpp і *-javadoc.mpp ігноруються завжди</string>
+    <string name="source_sheet_ignored_mpp_hint">Впливає лише на джерела-теки, які автоматично завантажують найновіший .mpp у теці. Під час вибору найновішої збірки файли, назва яких відповідає наведеному тут шаблону, пропускаються. Просте слово відповідає будь-якому файлу, що його містить (наприклад, debug). Використовуйте * для масок (наприклад, *-debug.mpp). *-sources.mpp і *-javadoc.mpp ігноруються завжди</string>
     <string name="source_sheet_ignored_mpp_placeholder">напр. debug або *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Додати шаблон</string>
     <string name="source_sheet_remove_pattern_description">Видалити шаблон</string>
+    <string name="sources_management_signed_by">Підписано</string>
+    <string name="sources_management_signing_key_changed_badge">Ключ змінено</string>
+    <string name="sources_management_signing_key_changed_hint">Ключ підпису змінено. Натисніть, щоб переглянути його</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">\"%1$s\" не оновлено, оскільки його останній реліз не підписано ключем, який він використовував раніше</string>
+    <string name="sources_signing_key_new">Новий ключ</string>
+    <string name="sources_signing_key_trust_message">Останній реліз підписано іншим ключем. Або розробник замінив свій ключ, або цей реліз опублікував хтось інший. Довіряйте йому лише якщо розробник оголосив про новий ключ</string>
+    <string name="sources_signing_key_trust_message_unsigned">Останній реліз не підписано. Або розробник припинив підписувати релізи, або цей реліз опублікував хтось інший. Довіряйте йому лише якщо розробник оголосив про це</string>
+    <string name="sources_signing_key_trust_title">Довіряти новому ключу?</string>
+    <string name="sources_signing_key_trusted">Довірений ключ</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Локальний файл</string>
     <string name="patch_source_dialog_name_label">Назва</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Приймає GitHub, GitLab або посилання morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Передрелізні патчі</string>
     <string name="patch_source_dialog_pre_release_hint">Отримує ранній доступ до нових експериментальних версій патчів</string>
-    <string name="patch_source_dialog_experimental_title">Експериментальні версії застосунків</string>
-    <string name="patch_source_dialog_experimental_hint">Надає пріоритет експериментальним версіям застосунку, якщо вони доступні</string>
     <string name="patch_source_dialog_error_name_required">Назва обов'язкова</string>
     <string name="patch_source_dialog_error_invalid_url">Введіть дійсний URL GitHub або GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Виберіть дійсний файл .mpp</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Відкрити журнали</string>
     <string name="settings_dialog_reset_button">Скинути</string>
     <string name="settings_theme_system">Системний</string>
-    <string name="settings_signing_error_not_found">Налаштоване сховище ключів не знайдено: %1$s. Відновіть файл, виберіть інше в налаштуваннях або очистіть налаштування, щоб використовувати типове сховище Morphe</string>
     <string name="settings_search_languages_placeholder">Пошук мов</string>
     <string name="settings_dialog_resolves_to_message">Вказує на: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Сховище ключів не знайдено: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Мова</string>
     <string name="settings_language_current_title">Поточна мова</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Мова застосунку</string>
     <string name="settings_language_search_no_results">Не знайдено результатів</string>
     <string name="settings_section_theme">Тема</string>
+    <string name="settings_appearance_theme_mode">Режим теми</string>
     <string name="settings_theme_light">Світла</string>
     <string name="settings_theme_dark">Темна</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Стиль кольору</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Монохромна</string>
     <string name="settings_toggle_sharp_corners_label">Гострі кути</string>
     <string name="settings_toggle_sharp_corners_desc">Зробити картки, діалоги та кнопки квадратними</string>
     <string name="settings_section_accent_color">Акцентний колір</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Картки застосунку</string>
     <string name="settings_app_cards_color_all">Колір для всіх карток</string>
     <string name="settings_app_cards_color_all_desc">Картки, які ви налаштували окремо, зберігають власний колір</string>
-    <string name="settings_section_patch_list">Список патчів</string>
-    <string name="settings_toggle_patch_categories_label">Категорії патчів</string>
-    <string name="settings_toggle_patch_categories_desc">Групувати патчі в розгортувані категорії</string>
     <string name="settings_section_background_animation">Анімація фону</string>
     <string name="settings_background_circles">Кола</string>
     <string name="settings_background_rings">Кільця</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Перекласти</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Журнал змін недоступний</string>
+    <string name="changelog_badge_installed">Встановлено</string>
+    <string name="changelog_badge_latest">Найновіша</string>
+    <string name="changelog_badge_prerelease">Попередній реліз</string>
+    <string name="changelog_date_today">Сьогодні</string>
+    <string name="changelog_date_yesterday">Вчора</string>
     <string name="changelog_dialog_title">Переглянути журнал змін</string>
-    <string name="changelog_show_older_button">Показати старіші релізи</string>
+    <string name="changelog_not_available">Журнал змін недоступний</string>
+    <string name="changelog_section_app_support">Підтримка застосунку</string>
+    <string name="changelog_section_fixes">Виправлення</string>
+    <string name="changelog_section_improvements">Покращення</string>
+    <string name="changelog_section_new">Нове</string>
+    <string name="changelog_section_other">Зміни</string>
+    <string name="changelog_section_performance">Продуктивність</string>
+    <string name="changelog_show_all">Показати все (%1$d)</string>
+    <string name="changelog_show_less">Показати менше</string>
     <string name="changelog_view_on_github_button">Переглянути на GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Джерела</string>
+    <string name="nav_apps">Застосунки</string>
 </resources>

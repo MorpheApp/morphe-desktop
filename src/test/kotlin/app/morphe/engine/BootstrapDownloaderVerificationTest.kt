@@ -20,7 +20,7 @@ class BootstrapDownloaderVerificationTest {
         assertTrue(hexPattern.matches(BootstrapConstants.OSHI_CORE_HASH), "OSHI_CORE_HASH is not a valid SHA-256")
         assertTrue(hexPattern.matches(BootstrapConstants.OSHI_COMMON_HASH), "OSHI_COMMON_HASH is not a valid SHA-256")
 
-        val expectedPlatforms = setOf("macos-x64", "macos-arm64", "linux-x64", "linux-arm64", "windows-x64")
+        val expectedPlatforms = setOf("macos-x64", "macos-arm64", "linux-x64", "linux-arm64", "windows-x64", "windows-arm64")
         assertEquals(expectedPlatforms, BootstrapConstants.SKIKO_HASHES.keys)
         for ((platform, hash) in BootstrapConstants.SKIKO_HASHES) {
             assertTrue(hexPattern.matches(hash), "Hash for $platform is not a valid SHA-256")

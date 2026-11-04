@@ -12,18 +12,6 @@
     <plurals name="count_sources">
         <item quantity="other">%1$d 個來源</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="other">將套用 %1$d 個修補程式</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="other">已排除 %1$d 個</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="other">已啟用 %1$d 個</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="other">已停用 %1$d 個</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="other">%1$d 個程式庫</item>
     </plurals>
@@ -41,5 +29,20 @@
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="other">%1$d個核心</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="other">%1$d 個變更</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="other">%1$d 天前</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="other">%1$d 項功能</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="other">%1$d 項修復</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="other">%1$d 項最佳化</item>
     </plurals>
 </resources>

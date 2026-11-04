@@ -16,22 +16,6 @@
         <item quantity="one">%1$d allikas</item>
         <item quantity="other">%1$d allikat</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Rakendatakse %1$d plaastrit</item>
-        <item quantity="other">Rakendatakse %1$d paikast</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d välditud</item>
-        <item quantity="other">%1$d välditud</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d aktiveeritud</item>
-        <item quantity="other">%1$d aktiveeritud</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d deaktiveeritud</item>
-        <item quantity="other">%1$d deaktiveeritud</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d raamatukogu</item>
         <item quantity="other">%1$d raamatukogu</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d tuum</item>
         <item quantity="other">%1$d tuuma</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d muudatus</item>
+        <item quantity="other">%1$d muudatust</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d päev tagasi</item>
+        <item quantity="other">%1$d päeva tagasi</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funktsioon</item>
+        <item quantity="other">%1$d funktsiooni</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d tõend</item>
+        <item quantity="other">%1$d tõendit</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimeering</item>
+        <item quantity="other">%1$d optimeeringit</item>
     </plurals>
 </resources>

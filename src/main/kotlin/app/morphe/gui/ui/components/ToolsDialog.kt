@@ -27,6 +27,10 @@ import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Desktop
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** Modal dialog providing diagnostics, cache cleanup, and application tools. */
 @Composable
@@ -41,6 +45,7 @@ fun ToolsDialog(
     var showLicensesDialog by remember { mutableStateOf(false) }
     var cacheCleared by remember { mutableStateOf(false) }
     var cacheClearFailed by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     MorpheAlertDialog(
         onDismiss = onDismiss,
@@ -64,13 +69,15 @@ fun ToolsDialog(
                     borderColor = borderColor,
                     contentAlignment = Alignment.CenterStart,
                     onClick = {
-                        try {
-                            val logsDir = MorpheData.logsDir
-                            if (Desktop.isDesktopSupported()) {
-                                Desktop.getDesktop().open(logsDir)
+                        scope.launch(Dispatchers.IO) {
+                            try {
+                                val logsDir = MorpheData.logsDir
+                                if (Desktop.isDesktopSupported()) {
+                                    Desktop.getDesktop().open(logsDir)
+                                }
+                            } catch (e: Exception) {
+                                Logger.error("Failed to open logs folder", e)
                             }
-                        } catch (e: Exception) {
-                            Logger.error("Failed to open logs folder", e)
                         }
                     }
                 )
@@ -85,13 +92,15 @@ fun ToolsDialog(
                     borderColor = borderColor,
                     contentAlignment = Alignment.CenterStart,
                     onClick = {
-                        try {
-                            val appDataDir = MorpheData.root
-                            if (Desktop.isDesktopSupported()) {
-                                Desktop.getDesktop().open(appDataDir)
+                        scope.launch(Dispatchers.IO) {
+                            try {
+                                val appDataDir = MorpheData.root
+                                if (Desktop.isDesktopSupported()) {
+                                    Desktop.getDesktop().open(appDataDir)
+                                }
+                            } catch (e: Exception) {
+                                Logger.error("Failed to open app data folder", e)
                             }
-                        } catch (e: Exception) {
-                            Logger.error("Failed to open app data folder", e)
                         }
                     }
                 )
@@ -110,7 +119,9 @@ fun ToolsDialog(
 
                 Spacer(Modifier.height(6.dp))
 
-                val cacheBytes = remember { CacheManager.getCacheSizeBytes() }
+                val cacheBytes by produceState(0L) {
+                    value = withContext(Dispatchers.IO) { CacheManager.getCacheSizeBytes() }
+                }
                 val cacheColor = when {
                     cacheCleared -> MorpheColors.Teal
                     cacheClearFailed -> MaterialTheme.colorScheme.error
@@ -174,11 +185,16 @@ fun ToolsDialog(
                 MorpheButton(
                     label = stringResource(Res.string.clear),
                     onClick = {
-                        val success = clearAllCache()
-                        cacheCleared = success
-                        cacheClearFailed = !success
                         showClearCacheConfirm = false
-                        if (success) onCacheCleared()
+                        // NonCancellable: dismissing the dialog mid-clear must still notify listeners.
+                        scope.launch {
+                            withContext(NonCancellable) {
+                                val success = withContext(Dispatchers.IO) { clearAllCache() }
+                                cacheCleared = success
+                                cacheClearFailed = !success
+                                if (success) onCacheCleared()
+                            }
+                        }
                     },
                     variant = MorpheButtonVariant.DANGER,
                     size = MorpheButtonSize.COMPACT,

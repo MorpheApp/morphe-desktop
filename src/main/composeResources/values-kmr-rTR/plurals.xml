@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Çavkaniya patchê ya %1$d nekarî were barkirin. Ew yên ku bi serkeftî hatin barkirin tên bikaranîn</item>
+        <item quantity="other">%1$d çavkaniyên patchê nekarîn were barkirin. Ew yên ku bi serkeftî hatin barkirin tên bikaranîn</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">Ji bo %1$d appa patched nûkirinek heye</item>
+        <item quantity="other">Ji bo %1$d appên patched nûkirin hene</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d xet hat parastin di %2$s de</item>
+        <item quantity="other">%1$d xet hatin parastin di %2$s de</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d çavkanî</item>
+        <item quantity="other">%1$d çavkanî</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d pirtûkxane</item>
+        <item quantity="other">%1$d pirtgeh</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d ji %2$d hatin hilbijartin</item>
+        <item quantity="other">%1$d ji %2$d hatin hilbijartin</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patchan</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d kart vê radiguherîne</item>
+        <item quantity="other">%1$d kart vê radiguherînin</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">%1$d bundle daxine</item>
+        <item quantity="other">%1$d bundle daxine</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d guherîn</item>
+        <item quantity="other">%1$d guherîn</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d roj berê</item>
+        <item quantity="other">%1$d roj berê</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d taybetmendî</item>
+        <item quantity="other">%1$d taybetmendî</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d çareserî</item>
+        <item quantity="other">%1$d çareserî</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimîzasyon</item>
+        <item quantity="other">%1$d optimîzasyon</item>
+    </plurals>
+</resources>

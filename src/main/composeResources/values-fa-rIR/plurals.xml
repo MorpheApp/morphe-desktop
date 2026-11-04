@@ -16,22 +16,6 @@
         <item quantity="one">%1$d منبع</item>
         <item quantity="other">%1$d منبع</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d پچ اعمال خواهد شد</item>
-        <item quantity="other">%1$d پچ اعمال خواهد شد</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d مستثنی‌شده</item>
-        <item quantity="other">%1$d مستثنی‌شده</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d فعال</item>
-        <item quantity="other">%1$d فعال</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d غیرفعال</item>
-        <item quantity="other">%1$d غیرفعال</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d کتابخانه</item>
         <item quantity="other">%1$d کتابخانه</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d هسته</item>
         <item quantity="other">%1$d هسته</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d تغییر</item>
+        <item quantity="other">%1$d تغییر</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d روز پیش</item>
+        <item quantity="other">%1$d روز پیش</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d ویژگی</item>
+        <item quantity="other">%1$d ویژگی</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d اصلاح</item>
+        <item quantity="other">%1$d اصلاحیه</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d بهینه‌سازی</item>
+        <item quantity="other">%1$d بهینه‌سازی</item>
     </plurals>
 </resources>

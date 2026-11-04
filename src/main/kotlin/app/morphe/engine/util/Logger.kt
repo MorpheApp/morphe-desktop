@@ -133,9 +133,8 @@ object Logger {
         log(Level.ERROR, "$message\n$sw")
     }
 
-
-
-    private fun log(level: Level, message: String) {
+    /** Writes [message] to the console and to the session log file. */
+    fun log(level: Level, message: String) {
         val logLine = if (logFile != null) {
             val timestamp = dateFormat.format(Date())
             "[$timestamp] [${level.name}] $message"

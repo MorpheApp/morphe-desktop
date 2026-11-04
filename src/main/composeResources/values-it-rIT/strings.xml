@@ -13,6 +13,7 @@
     <string name="expand">Espandi</string>
     <string name="cancel">Annulla</string>
     <string name="close">Chiudi</string>
+    <string name="trust">Fiducia</string>
     <string name="delete">Elimina</string>
     <string name="disabled_while_patching">Disabilitato durante l'applicazione delle patch</string>
     <string name="drop_apk_here">Trascina qui l'APK</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Connessione interrotta durante il download, riprova</string>
     <string name="error_network_loading_patches">Errore di rete durante il caricamento delle patch</string>
     <string name="error_patch_file_not_found">File di patch non trovato: %1$s</string>
-    <string name="error_no_patches_files_supplied">Nessun file di patch fornito</string>
-    <string name="error_input_apk_not_found">APK di input non trovato</string>
     <string name="error_step_failed">%1$s non riuscito: %2$s</string>
     <string name="error_drop_valid_apk">Trascina un file valido .apk, .apkm, .xapk o .apks</string>
     <string name="status_saving">Salvataggio…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtra app…</string>
     <string name="version">Versione</string>
     <string name="version_label_stable">Stabile</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Prerilascio</string>
     <string name="version_label_experimental">Sperimentale</string>
-    <string name="version_label_latest_dev">Ultima Dev</string>
     <string name="version_label_latest_stable">Ultima stabile</string>
+    <string name="version_label_recommended">Consigliata</string>
+    <string name="version_label_supported">Supportato</string>
     <string name="app_info_arch_label">Architettura</string>
     <string name="app_info_min_sdk_label">SDK minima</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Applicazione patch annullata</string>
     <string name="view_full_logs_button">Visualizza log completi</string>
     <string name="error_patching_unknown">Applicazione patch non riuscita per un motivo sconosciuto</string>
-    <string name="error_patching_general">Errore: %1$s</string>
     <string name="error_log_label">Log dell'errore</string>
     <string name="back">Indietro</string>
     <string name="open_folder">Apri cartella</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Un numero qualsiasi di stop, lineare, radiale o conico</string>
     <string name="card_fill_mode_solid">Tinta unita</string>
     <string name="card_fill_mode_solid_blurb">Un colore uniforme</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Patch</string>
-    <string name="quick_patch_screen_start_over_button">Ricomincia</string>
-    <string name="quick_patch_patch_another_button">Applica patch a un'altra app</string>
-    <string name="quick_patch_select_apk">Seleziona l'APK</string>
-    <string name="quick_patch_analyze_apk_failed">Analisi APK non riuscita</string>
-    <string name="quick_patch_extract_base_apk_failed">Estrazione dell'APK di base dal bundle non riuscita</string>
-    <string name="quick_patch_unsupported_app_error">%1$s non è supportato in modalità Quick Patch. App supportate: %2$s. Usa la modalità Normale per le app non supportate</string>
     <string name="adb_install_on_button">Installa su %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Caricamento delle patch</string>
-    <string name="patching_step_preparing">Preparazione</string>
     <string name="patching_step_merging_split_apk">Unendo gli APK suddivisi</string>
     <string name="patching_step_read_apk">Leggi file APK</string>
     <string name="patching_step_applying_patches">Applicazione patch</string>
-    <string name="patching_step_saving">Salvataggio</string>
     <string name="patching_step_writing_apk">Scrittura del file APK patchato</string>
     <string name="patching_step_signing">Firma del file APK patchato</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Il file potrebbe essere danneggiato, scaricalo di nuovo da APKMirror</string>
     <string name="version_status_checksum_failed">Verifica del checksum non riuscita</string>
     <string name="version_status_checksum_matches">Il checksum corrisponde ad APKMirror</string>
-    <string name="version_status_older_stable">Stabile precedente</string>
     <string name="version_status_newer_stable_available">Nuova versione stabile v%1$s disponibile</string>
     <string name="version_status_newer_stable_available_fallback">È disponibile una versione stabile più recente</string>
     <string name="version_status_experimental_detail">Supportata, ma potrebbe non funzionare correttamente</string>
-    <string name="version_status_older_experimental">Sperimentale precedente</string>
-    <string name="version_status_newer_experimental_available">Nuova versione sperimentale v%1$s disponibile</string>
-    <string name="version_status_newer_experimental_available_fallback">È disponibile una build sperimentale più recente</string>
-    <string name="version_status_too_new">Versione troppo recente</string>
     <string name="version_status_unsupported_detail">Non supportata ufficialmente, le patch molto probabilmente falliranno</string>
-    <string name="version_status_too_old">Versione troppo vecchia</string>
     <string name="version_status_unsupported">Versione non supportata</string>
     <string name="version_status_build_unsupported">Build non supportata</string>
     <string name="version_status_build_unsupported_detail">Questa versione è supportata, ma non questa build. Ottieni una build supportata dalle patch</string>
+    <string name="version_status_build_unsupported_with_code">Le patch richiedono la build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Avviso versione</string>
+    <string name="version_warning_build_unsupported_message">Attuale: v%1$s (build %2$s)\nBuild richiesta: %3$s\n\nQuesta è una build diversa della stessa versione. Le patch richiedono una build specifica.</string>
     <string name="version_warning_experiment_title">Vuoi sperimentare? 🧪</string>
-    <string name="version_warning_older_stable_title">Versione stabile precedente</string>
-    <string name="version_warning_older_stable_message">Attuale: v%1$s\nUltima stabile: v%2$s\n\nQuesta versione è supportata, ma è disponibile una versione stabile più recente. Potrebbero mancarti correzioni recenti.</string>
     <string name="version_warning_latest_experimental_message">Attuale: v%1$s\n\nQuesta versione ha un supporto sperimentale iniziale\n\n🔧 Aspettati comportamenti strani o bug non identificati mentre le patch vengono perfezionate per questa versione dell'app.</string>
-    <string name="version_warning_older_experimental_title">Versione sperimentale precedente\nVuoi sperimentare? 🧪</string>
-    <string name="version_warning_older_experimental_message">Attuale: v%1$s\nUltima sperimentale: v%2$s\n\nQuesta è una build sperimentale supportata, ma è disponibile una versione sperimentale più recente. Aspettati comportamenti strani o bug non identificati mentre le patch vengono perfezionate per questa versione dell'app.</string>
-    <string name="version_warning_too_new_message">Attuale: v%1$s\nNuova più recente conosciuta: v%2$s\n\nQuesta versione ha un supporto sperimentale iniziale\n\n🔧 Aspettati comportamenti strani o bug non identificati mentre le patch vengono perfezionate per questa versione dell'app.</string>
-    <string name="version_warning_too_old_message">Attuale: v%1$s\nVersione supportata meno recente: v%2$s\n\nQuesta non è una versione supportata ufficialmente. Le patch molto probabilmente falliranno.</string>
     <string name="version_warning_unsupported_message">Attuale: v%1$s\n\nQuesta non è una versione supportata ufficialmente. Le patch molto probabilmente falliranno.</string>
     <string name="version_warning_notice_message">Continuare con v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Build stabile precedente - nuova versione stabile v%1$s disponibile</string>
-    <string name="quick_patch_warning_latest_experimental">Build sperimentale - supportata, ma potrebbe non funzionare correttamente</string>
-    <string name="quick_patch_warning_older_experimental">Build sperimentale precedente - nuova versione sperimentale v%1$s disponibile</string>
-    <string name="quick_patch_warning_build_unsupported">Build non supportata - questa versione è patchabile, ma non questa build</string>
-    <string name="quick_patch_warning_too_new">Versione troppo recente - non supportata ufficialmente, le patch molto probabilmente falliranno</string>
-    <string name="quick_patch_warning_too_old">Versione troppo vecchia - non supportata ufficialmente, le patch molto probabilmente falliranno</string>
-    <string name="quick_patch_warning_unsupported_between">Versione non supportata - le patch molto probabilmente falliranno</string>
-    <string name="quick_patch_read_apk_failed">Lettura dell'APK non riuscita: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Preparazione patch…</string>
-    <string name="quick_patch_fetch_patches_failed">Recupero delle patch non riuscito. Controlla la connessione a Internet</string>
-    <string name="quick_patch_status_downloading_patches">Download delle patch %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Download delle patch non riuscito: %1$s</string>
-    <string name="quick_patch_status_patching">Applicazione patch…</string>
-    <string name="quick_patch_completed_adb_off">ADB disattivato · Attiva per installare</string>
-    <string name="quick_patch_completed_adb_connect_device">Connetti un dispositivo via USB per installare con ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Si è verificato un errore sconosciuto</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analisi APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d patch</string>
-    <string name="quick_patch_patching_slow_warning">Richiede più tempo del solito. Attendi…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Nessuna patch compatibile per questa app</string>
-    <string name="quick_patch_ready_no_matching_patches">Nessuna patch corrispondente a \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Applica patch con impostazioni predefinite</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">App supportate</string>
-    <string name="quick_patch_supported_apps_subtitle">Trascina qui la versione APK esatta per un'app supportata</string>
-    <string name="quick_patch_supported_apps_loading">Caricamento app supportate…</string>
-    <string name="quick_patch_supported_apps_load_error">Impossibile caricare le app supportate</string>
-    <string name="quick_patch_supported_apps_change_source">Cambia sorgente</string>
-    <string name="quick_patch_supported_apps_no_matches">Nessuna app corrispondente</string>
-    <string name="quick_patch_supported_apps_version_any">Qualsiasi versione</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Seleziona file APK</string>
     <string name="home_could_not_resolve_patch_files">Impossibile risolvere i file di patch</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Rimuovi APK</string>
     <string name="home_apk_info_limited_info_warning">Impossibile leggere completamente il manifest di questo APK (comune per i bundle split). I dettagli sotto sono approssimativi, l'applicazione delle patch dovrebbe funzionare comunque</string>
     <string name="home_apk_info_unsupported_app_warning">Nessuna patch compatibile trovata per questa app. Puoi comunque procedere, ma l'applicazione delle patch potrebbe non avere effetto</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Nessuna patch compatibile trovata per questa app</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Dimensione</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Da</string>
     <string name="home_stage_change_apk">Cambia APK</string>
     <string name="home_stage_continue">Continua</string>
+    <string name="home_stage_patch">Modifica</string>
     <string name="home_stage_analyzing_title">Analisi</string>
     <string name="home_stage_reading_metadata">Lettura dei metadati dell'app…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Disinstallare %1$s?</string>
     <string name="home_dialog_uninstall_message">Questo rimuove %1$s dal dispositivo connesso. L'APK patchato su disco e la cronologia vengono mantenuti, a meno che tu non scelga diversamente qui sotto</string>
     <string name="home_dialog_uninstall_also_forget">Rimuovi anche da Le tue app</string>
-    <string name="home_dialog_missing_apk_title">APK originale non trovato</string>
-    <string name="home_dialog_missing_apk_message">L'APK di input per %1$s non è più presente in:\n%2$s\n\nSeleziona di nuovo l'APK per riapplicare le patch con le impostazioni salvate</string>
-    <string name="home_dialog_select_apk">Seleziona APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Seleziona APK per riapplicare le patch</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Gestisci sorgenti</string>
     <string name="home_header_multi_source_hint">Le patch di ogni sorgente attiva vengono unite. Gestiscile dal pulsante delle sorgenti qui sopra</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Le tue app</string>
     <string name="home_banner_view">Visualizza</string>
     <string name="home_your_apps_install_ready">Pronto per l'installazione</string>
-    <string name="home_your_apps_newer_patch_hint">Una patch più recente potrebbe aggiornare l'app, clicca su Aggiorna per controllare</string>
-    <string name="home_your_apps_device_version_ready">Patchata v%1$s pronta, dispositivo su v%2$s (non è necessario riapplicare le patch)</string>
-    <string name="home_your_apps_install_ready_hint">Patchata v%1$s pronta per l'installazione (non è necessario riapplicare le patch)</string>
-    <string name="home_action_install">Installa</string>
     <string name="home_action_install_to_device">Installa sul dispositivo</string>
     <string name="home_action_installing">Installazione…</string>
     <string name="home_action_preparing">Preparazione…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s pronta · dispositivo su v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s pronta, nessuna nuova patch necessaria</string>
-    <string name="home_advice_unsupported">v%1$s non è più supportata. Aggiorna a v%2$s</string>
+    <string name="home_detail_source_disabled">Disattivato</string>
+    <string name="home_detail_source_removed">Rimosso</string>
+    <string name="home_detail_source_disabled_sub">La sorgente è disabilitata in Sorgenti. Abilitala per applicare nuovamente la patch</string>
+    <string name="home_detail_source_disabled_alternatives_sub">La sorgente originale è disabilitata. Seleziona una sorgente alternativa o riabilitala in Sorgenti</string>
+    <string name="home_detail_no_compatible_source">Nessuna sorgente compatibile abilitata</string>
+    <string name="home_detail_choose_source">Scegli la sorgente della patch</string>
     <string name="home_advice_unsupported_by_patches">v%1$s non è più supportata dalle ultime patch</string>
     <string name="home_date_today">oggi</string>
     <string name="home_date_yesterday">ieri</string>
@@ -427,11 +371,13 @@
     <string name="patch_selection_group_ungrouped">Senza gruppo</string>
     <string name="patch_selection_group_selected_count">%1$d selezionate</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Ricomincia</string>
+    <string name="patching_slow_warning">Questa operazione sta richiedendo più tempo del solito. Attendi…</string>
     <string name="patching_status_ready">Pronto per applicare le patch</string>
     <string name="patching_status_preparing">Preparazione per l'applicazione delle patch</string>
     <string name="patching_status_in_progress">Applicazione patch</string>
     <string name="patching_completed_loading_result">Applicazione patch completata, caricamento del risultato…</string>
-    <string name="patching_cancelled_loading_result">Applicazione patch annullata, caricamento del risultato…</string>
+    <string name="patching_cancelled_loading_result">Patching annullato, caricamento risultato…</string>
     <string name="patching_failed_loading_result">Applicazione patch non riuscita, caricamento del risultato…</string>
     <string name="patching_log_viewer_failed_to_read">Lettura del file di log non riuscita: %1$s</string>
     <string name="patching_log_viewer_title">File di log</string>
@@ -467,6 +413,8 @@
     <string name="patching_banner_native_libs_stripped">Rimosse</string>
     <string name="patching_error_failed_patches">Patch non riuscite: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB disattivato · Abilita per installare</string>
+    <string name="result_adb_connect_device_hint">Collega un dispositivo tramite USB per installare con ADB</string>
     <string name="result_screen_patch_another_button">Applica patch a un'altra app</string>
     <string name="result_screen_install_on_device_label">Installa su %1$s</string>
     <string name="result_screen_links_routed_label">Link reindirizzati all'app patchata</string>
@@ -566,13 +514,12 @@
     <string name="source_error_failed_to_load">Caricamento non riuscito</string>
     <string name="source_error_github_pat_required">È richiesto un PAT GitHub per scaricare le sorgenti delle pull request</string>
     <string name="source_error_pr_no_artifact">Nessun artefatto trovato per la pull request</string>
-    <string name="source_sheet_manage_description">Gestisci sorgenti di patch</string>
-    <string name="source_sheet_local_label">Locale</string>
+    <string name="source_error_patcher_incompatible">Questa sorgente è stata creata per il patcher %1$s, ma Morphe %2$s include il patcher %3$s. Aggiorna Morphe per utilizzarla</string>
+    <string name="version_label_local">Locale</string>
     <string name="source_sheet_remote_label">A distanza</string>
     <string name="add_source">Aggiungi fonte</string>
     <string name="source_sheet_title">Fonti delle patch</string>
     <string name="source_sheet_reload_description">Ricarica patch</string>
-    <string name="source_sheet_quick_mode_hint">Scegli quale sorgente usa Quick Patch. La multi-sorgente è disponibile in modalità Esperto</string>
     <string name="source_sheet_multi_mode_hint">Attiva/disattiva qualsiasi combinazione. Le patch di tutte le sorgenti attive vengono unite</string>
     <string name="source_sheet_done_button">Fatto</string>
     <string name="source_sheet_type_preinstalled">Preinstallato</string>
@@ -582,13 +529,21 @@
     <string name="source_sheet_edit_description">Modifica</string>
     <string name="source_sheet_move_up_description">Sposta su</string>
     <string name="source_sheet_move_down_description">Sposta giù</string>
-    <string name="source_sheet_channel_older_stable">Stabile precedente</string>
-    <string name="source_sheet_channel_older_dev">Dev precedente</string>
     <string name="source_sheet_ignored_mpp_title">Pattern .mpp ignorati</string>
-    <string name="source_sheet_ignored_mpp_hint">Riguarda solo le sorgenti a cartella, che caricano automaticamente il .mpp più recente in una cartella. Quando viene scelta quella build più recente, i file il cui nome corrisponde a un pattern qui vengono saltati. Una parola semplice corrisponde a qualsiasi file che la contiene (es. debug). Usa * per i glob (es. *-debug.mpp). *-sources.mpp e *-javadoc.mpp vengono sempre ignorati</string>
+    <string name="source_sheet_ignored_mpp_hint">Interessa solo le sorgenti a cartella, che caricano automaticamente il file .mpp più recente in una cartella. Quando viene selezionata l'ultima build, i file il cui nome corrisponde a un pattern qui indicato vengono ignorati. Una parola semplice corrisponde a qualsiasi file che la contenga (es. debug). Usa * per i glob (es. *-debug.mpp). *-sources.mpp e *-javadoc.mpp vengono sempre ignorati</string>
     <string name="source_sheet_ignored_mpp_placeholder">es. debug o *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Aggiungi pattern</string>
     <string name="source_sheet_remove_pattern_description">Rimuovi pattern</string>
+    <string name="sources_management_signed_by">Firmato da</string>
+    <string name="sources_management_signing_key_changed_badge">Chiave modificata</string>
+    <string name="sources_management_signing_key_changed_hint">Chiave di firma modificata. Clicca per revisionarla</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' non è stato aggiornato perché l'ultima release non è firmata con la chiave utilizzata in precedenza</string>
+    <string name="sources_signing_key_new">Nuova chiave</string>
+    <string name="sources_signing_key_trust_message">L'ultima release è firmata da una chiave diversa. Lo sviluppatore ha sostituito la propria chiave, oppure qualcun altro ha pubblicato questa release. Fidati solo se lo sviluppatore ha annunciato una nuova chiave</string>
+    <string name="sources_signing_key_trust_message_unsigned">L'ultima release non è firmata. Lo sviluppatore ha smesso di firmare le release, oppure qualcun altro ha pubblicato questa release. Fidati solo se lo sviluppatore lo ha annunciato</string>
+    <string name="sources_signing_key_trust_title">Ti fidi della nuova chiave?</string>
+    <string name="sources_signing_key_trusted">Chiave attendibile</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">File locale</string>
     <string name="patch_source_dialog_name_label">Nome</string>
@@ -598,8 +553,6 @@
     <string name="patch_source_dialog_repo_hint">Accetta un link GitHub, GitLab o morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Patch pre-release</string>
     <string name="patch_source_dialog_pre_release_hint">Ricevi accesso anticipato alle nuove versioni sperimentali delle patch</string>
-    <string name="patch_source_dialog_experimental_title">Versioni app sperimentali</string>
-    <string name="patch_source_dialog_experimental_hint">Dà priorità alle versioni app sperimentali se disponibili</string>
     <string name="patch_source_dialog_error_name_required">Il nome è obbligatorio</string>
     <string name="patch_source_dialog_error_invalid_url">Inserisci un URL GitHub o GitLab valido</string>
     <string name="patch_source_dialog_error_invalid_file">Seleziona un file .mpp valido</string>
@@ -682,10 +635,8 @@
     <string name="settings_dialog_open_logs_button">Apri log</string>
     <string name="settings_dialog_reset_button">Reimposta</string>
     <string name="settings_theme_system">Sistema</string>
-    <string name="settings_signing_error_not_found">Keystore configurato non trovato: %1$s. Ripristina il file, scegline un altro nelle Impostazioni o cancella l'impostazione per usare quello predefinito di Morphe</string>
     <string name="settings_search_languages_placeholder">Cerca lingue</string>
     <string name="settings_dialog_resolves_to_message">Risolve in: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore non trovato: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Lingua</string>
     <string name="settings_language_current_title">Lingua attuale</string>
@@ -693,9 +644,13 @@
     <string name="settings_language_dialog_title">Lingua dell'app</string>
     <string name="settings_language_search_no_results">Nessun risultato trovato</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Modalità tema</string>
     <string name="settings_theme_light">Chiaro</string>
     <string name="settings_theme_dark">Scuro</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Stile colore</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monocromatico</string>
     <string name="settings_toggle_sharp_corners_label">Angoli netti</string>
     <string name="settings_toggle_sharp_corners_desc">Rendi squadrate card, finestre di dialogo e pulsanti</string>
     <string name="settings_section_accent_color">Tonalità in risalto</string>
@@ -705,9 +660,6 @@
     <string name="settings_section_app_cards">Card delle app</string>
     <string name="settings_app_cards_color_all">Colore per ogni card</string>
     <string name="settings_app_cards_color_all_desc">Le card personalizzate singolarmente mantengono il proprio colore</string>
-    <string name="settings_section_patch_list">Lista delle patch</string>
-    <string name="settings_toggle_patch_categories_label">Categorie di patch</string>
-    <string name="settings_toggle_patch_categories_desc">Raggruppa le patch in categorie espandibili</string>
     <string name="settings_section_background_animation">Animazione dello sfondo</string>
     <string name="settings_background_circles">Cerchi</string>
     <string name="settings_background_rings">Anelli</string>
@@ -821,8 +773,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Traduci</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Changelog non disponibile</string>
+    <string name="changelog_badge_installed">Installato</string>
+    <string name="changelog_badge_latest">Ultimo</string>
+    <string name="changelog_badge_prerelease">Pre-rilascio</string>
+    <string name="changelog_date_today">Oggi</string>
+    <string name="changelog_date_yesterday">Ieri</string>
     <string name="changelog_dialog_title">Visualizza changelog</string>
-    <string name="changelog_show_older_button">Mostra versioni precedenti</string>
+    <string name="changelog_not_available">Changelog non disponibile</string>
+    <string name="changelog_section_app_support">Supporto app</string>
+    <string name="changelog_section_fixes">Correzioni</string>
+    <string name="changelog_section_improvements">Miglioramenti</string>
+    <string name="changelog_section_new">Novità</string>
+    <string name="changelog_section_other">Modifiche</string>
+    <string name="changelog_section_performance">Prestazioni</string>
+    <string name="changelog_show_all">Mostra tutto (%1$d)</string>
+    <string name="changelog_show_less">Mostra meno</string>
     <string name="changelog_view_on_github_button">Visualizza su GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Fonti</string>
+    <string name="nav_apps">Applicazioni</string>
 </resources>

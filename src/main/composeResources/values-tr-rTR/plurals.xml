@@ -16,22 +16,6 @@
         <item quantity="one">%1$d kaynak</item>
         <item quantity="other">%1$d kaynak</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d yama uygulanacak</item>
-        <item quantity="other">%1$d yama uygulanacak</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d hariç tutuldu</item>
-        <item quantity="other">%1$d hariç tutuldu</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d etkinleştirildi</item>
-        <item quantity="other">%1$d etkinleştirildi</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d devre dışı bırakıldı</item>
-        <item quantity="other">%1$d devre dışı bırakıldı</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d kitaplık</item>
         <item quantity="other">%1$d kitaplık</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d çekirdek</item>
         <item quantity="other">%1$d çekirdek</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d değişiklik</item>
+        <item quantity="other">%1$d değişiklik</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d gün önce</item>
+        <item quantity="other">%1$d gün önce</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d özellik</item>
+        <item quantity="other">%1$d özellik</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d düzeltme</item>
+        <item quantity="other">%1$d düzeltme</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimizasyon</item>
+        <item quantity="other">%1$d optimizasyon</item>
     </plurals>
 </resources>

@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
+import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheButton
@@ -60,6 +61,7 @@ import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -407,7 +409,7 @@ internal fun PatchSourceSection(
                     else -> {
                         listOf(
                             Triple(stringResource(Res.string.version_label_stable), accents.primary, false),
-                            Triple(stringResource(Res.string.version_label_dev), accents.warning, true),
+                            Triple(stringResource(Res.string.version_label_prerelease), accents.warning, true),
                         ).forEach { (label, color, isDev) ->
                             val group = availableVersions.filter { it.isDev == isDev }
                             if (group.isEmpty()) return@forEach
@@ -503,6 +505,7 @@ private fun VersionChipGroup(
     onOpenUrl: (String) -> Unit,
 ) {
     if (versions.isEmpty()) return
+    val patchSourceHeader = LocalPatchSourceHeader.current
     SectionLabel(text = label, color = color)
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -514,7 +517,8 @@ private fun VersionChipGroup(
                 text = v,
                 icon = if (url != null) MorpheIcons.OpenInNew else null,
                 onCard = false,
-                onClick = { url?.let(onOpenUrl) },
+                // Followed here rather than by the browser, which cannot send the patch source header
+                onClick = { url?.let { openUrlAndFollowRedirects(it, patchSourceHeader(packageName), onOpenUrl) } },
             )
         }
     }

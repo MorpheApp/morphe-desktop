@@ -13,6 +13,9 @@ object RemotePatchSourceFactory {
 
     const val DEFAULT_REPO_PATH = "MorpheApp/morphe-patches"
 
+    /** Key the releases of [DEFAULT_REPO_PATH] are signed with, see [app.morphe.patcher.patch.PatchBundleSignature]. */
+    const val OFFICIAL_PATCHES_SIGNING_KEY = "g8Ys9leTu2yeixojeR35HrNkK6eOSLpA6nNIizRutqI="
+
     private val githubTagRegex = Regex("""github\.com/[^/]+/[^/]+/releases?/tag/([^/?#]+)""")
     private val gitlabTagRegex = Regex("""gitlab\.com/[^/]+/[^/]+(?:/-)?/releases/([^/?#]+)""")
 

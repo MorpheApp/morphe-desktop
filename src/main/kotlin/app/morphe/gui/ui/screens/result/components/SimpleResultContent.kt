@@ -3,28 +3,28 @@
  * https://github.com/MorpheApp/morphe-desktop
  */
 
-package app.morphe.gui.ui.screens.quick.components
+package app.morphe.gui.ui.screens.result.components
 
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.PatchedAppStore
+import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
-import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
-import app.morphe.gui.ui.screens.result.components.OutputFileCard
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.getUserMessage
@@ -34,10 +34,12 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun CompletedContent(
+internal fun SimpleResultContent(
     outputPath: String,
-    onPatchAnother: () -> Unit
+    onPatchAnother: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val outputFile = remember(outputPath) { File(outputPath) }
     val monitorState by DeviceMonitor.state.collectAsState()
@@ -51,7 +53,7 @@ internal fun CompletedContent(
     val scope = rememberCoroutineScope()
     val completedScroll = rememberScrollState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,7 +79,7 @@ internal fun CompletedContent(
             if (isAdbDisabledByUser) {
                 Spacer(modifier = Modifier.height(12.dp))
                 MorpheButton(
-                    label = stringResource(Res.string.quick_patch_completed_adb_off),
+                    label = stringResource(Res.string.result_adb_off_button),
                     variant = MorpheButtonVariant.PRIMARY,
                     size = MorpheButtonSize.DEFAULT,
                     modifier = Modifier
@@ -119,9 +121,8 @@ internal fun CompletedContent(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            CircularProgressIndicator(
+                            LoadingIndicator(
                                 modifier = Modifier.size(14.dp),
-                                strokeWidth = 2.dp,
                                 color = MorpheTheme.colors.primary
                             )
                             Spacer(Modifier.width(8.dp))
@@ -175,7 +176,7 @@ internal fun CompletedContent(
                     }
                     else -> {
                         Text(
-                            text = stringResource(Res.string.quick_patch_completed_adb_connect_device),
+                            text = stringResource(Res.string.result_adb_connect_device_hint),
                             style = MorpheTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -196,7 +197,7 @@ internal fun CompletedContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             MorpheButton(
-                label = stringResource(Res.string.quick_patch_patch_another_button),
+                label = stringResource(Res.string.result_screen_patch_another_button),
                 variant = MorpheButtonVariant.PRIMARY,
                 size = MorpheButtonSize.LARGE,
                 modifier = Modifier

@@ -13,6 +13,7 @@
     <string name="expand">फैलाएं</string>
     <string name="cancel">रद्द करें</string>
     <string name="close">बंद करे</string>
+    <string name="trust">भरोसा</string>
     <string name="delete">हटाएँ</string>
     <string name="disabled_while_patching">पैचिंग के दौरान उपलब्ध नहीं</string>
     <string name="drop_apk_here">APK यहाँ ड्रॉप करें</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">डाउनलोड के दौरान कनेक्शन टूट गया, फिर कोशिश करें</string>
     <string name="error_network_loading_patches">पैच लोड करते समय नेटवर्क समस्या आई</string>
     <string name="error_patch_file_not_found">पैच फ़ाइल नहीं मिली: %1$s</string>
-    <string name="error_no_patches_files_supplied">कोई पैच फ़ाइल नहीं दी गई</string>
-    <string name="error_input_apk_not_found">इनपुट APK नहीं मिला</string>
     <string name="error_step_failed">%1$s विफल: %2$s</string>
     <string name="error_drop_valid_apk">कृपया एक मान्य .apk, .apkm, .xapk, या .apks फ़ाइल ड्रॉप करें</string>
     <string name="status_saving">सेव हो रहा है…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">ऐप्स फ़िल्टर करें…</string>
     <string name="version">संस्करण</string>
     <string name="version_label_stable">स्थिर</string>
-    <string name="version_label_dev">डेव</string>
+    <string name="version_label_prerelease">प्रीरिलीज़</string>
     <string name="version_label_experimental">प्रयोगात्मक</string>
-    <string name="version_label_latest_dev">नवीनतम डेव</string>
     <string name="version_label_latest_stable">नवीनतम स्थिर</string>
+    <string name="version_label_recommended">सुझाया गया</string>
+    <string name="version_label_supported">समर्थित</string>
     <string name="app_info_arch_label">आर्क</string>
     <string name="app_info_min_sdk_label">न्यूनतम SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">पैचिंग रद्द</string>
     <string name="view_full_logs_button">पूर्ण लॉग देखें</string>
     <string name="error_patching_unknown">अज्ञात कारण से पैचिंग विफल</string>
-    <string name="error_patching_general">त्रुटि: %1$s</string>
     <string name="error_log_label">त्रुटि लॉग</string>
     <string name="back">पीछे</string>
     <string name="open_folder">फ़ोल्डर खोलें</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">कितने भी स्टॉप, रैखिक, रेडियल या शंक्वाकार</string>
     <string name="card_fill_mode_solid">ठोस</string>
     <string name="card_fill_mode_solid_blurb">एक सपाट रंग</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">पैच</string>
-    <string name="quick_patch_screen_start_over_button">फिर से शुरू करें</string>
-    <string name="quick_patch_patch_another_button">दूसरा पैच करें</string>
-    <string name="quick_patch_select_apk">APK चुनें</string>
-    <string name="quick_patch_analyze_apk_failed">APK विश्लेषण विफल</string>
-    <string name="quick_patch_extract_base_apk_failed">बंडल से बेस APK निकालने में विफल</string>
-    <string name="quick_patch_unsupported_app_error">%1$s क्विक पैच मोड में समर्थित नहीं है। समर्थित ऐप्स: %2$s। असमर्थित ऐप्स के लिए सामान्य मोड का उपयोग करें</string>
     <string name="adb_install_on_button">%1$s पर इंस्टॉल करें</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">पैच लोड हो रहे हैं</string>
-    <string name="patching_step_preparing">तैयार कर रहे हैं...</string>
     <string name="patching_step_merging_split_apk">स्प्लिट APK विलय</string>
     <string name="patching_step_read_apk">APK फाइल पढ़ें</string>
     <string name="patching_step_applying_patches">पैच लागू करना</string>
-    <string name="patching_step_saving">सेव हो रहा है</string>
     <string name="patching_step_writing_apk">पैच्ड एपीके फाइल लिखना</string>
     <string name="patching_step_signing">पैच किए गए APK फ़ाइल पर हस्ताक्षर करना</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">फ़ाइल दूषित हो सकती है, APKMirror से पुनः डाउनलोड करें</string>
     <string name="version_status_checksum_failed">चेकसम सत्यापन विफल</string>
     <string name="version_status_checksum_matches">चेकसम APKMirror से मेल खाता है</string>
-    <string name="version_status_older_stable">पुराना स्थिर</string>
     <string name="version_status_newer_stable_available">नया स्थिर v%1$s उपलब्ध</string>
     <string name="version_status_newer_stable_available_fallback">एक नया स्थिर संस्करण उपलब्ध है</string>
     <string name="version_status_experimental_detail">समर्थित है, लेकिन ठीक से काम नहीं कर सकता</string>
-    <string name="version_status_older_experimental">पुराना प्रयोगात्मक</string>
-    <string name="version_status_newer_experimental_available">नया प्रयोगात्मक v%1$s उपलब्ध</string>
-    <string name="version_status_newer_experimental_available_fallback">एक नया प्रयोगात्मक बिल्ड उपलब्ध है</string>
-    <string name="version_status_too_new">संस्करण बहुत नया</string>
     <string name="version_status_unsupported_detail">आधिकारिक रूप से समर्थित नहीं, पैच शायद विफल होंगे</string>
-    <string name="version_status_too_old">संस्करण बहुत पुराना</string>
     <string name="version_status_unsupported">असमर्थित संस्करण</string>
     <string name="version_status_build_unsupported">बिल्ड समर्थित नहीं</string>
     <string name="version_status_build_unsupported_detail">यह संस्करण समर्थित है, लेकिन इसका यह बिल्ड नहीं। वह बिल्ड प्राप्त करें जो पैच लक्षित करते हैं</string>
+    <string name="version_status_build_unsupported_with_code">पैच के लिए बिल्ड %1$s आवश्यक है</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">संस्करण सूचना</string>
+    <string name="version_warning_build_unsupported_message">वर्तमान: v%1$s (बिल्ड %2$s)\nआवश्यक बिल्ड: %3$s\n\nयह उसी वर्ज़न का एक अलग बिल्ड है। पैच के लिए एक विशिष्ट बिल्ड की आवश्यकता होती है।</string>
     <string name="version_warning_experiment_title">क्या आप प्रयोग करना चाहते हैं? 🧪</string>
-    <string name="version_warning_older_stable_title">पुराना स्थिर संस्करण</string>
-    <string name="version_warning_older_stable_message">वर्तमान: v%1$s\nनवीनतम स्थिर: v%2$s\n\nयह संस्करण समर्थित है, लेकिन एक नया स्थिर संस्करण उपलब्ध है। आप हाल के सुधारों से वंचित रह सकते हैं।</string>
     <string name="version_warning_latest_experimental_message">वर्तमान: v%1$s\n\nइस संस्करण में प्रारंभिक प्रयोगात्मक समर्थन है\n\n🔧 पैच इस ऐप संस्करण के लिए परिष्कृत होने पर विचित्र ऐप व्यवहार या अज्ञात बग की उम्मीद करें।</string>
-    <string name="version_warning_older_experimental_title">पुराना प्रयोगात्मक संस्करण\nक्या आप प्रयोग करना चाहते हैं? 🧪</string>
-    <string name="version_warning_older_experimental_message">वर्तमान: v%1$s\nनवीनतम प्रयोगात्मक: v%2$s\n\nयह एक समर्थित प्रयोगात्मक बिल्ड है, लेकिन एक नया प्रयोगात्मक संस्करण उपलब्ध है। पैच इस ऐप संस्करण के लिए परिष्कृत होने पर विचित्र ऐप व्यवहार या अज्ञात बग की उम्मीद करें।</string>
-    <string name="version_warning_too_new_message">वर्तमान: v%1$s\nनवीनतम ज्ञात: v%2$s\n\nइस संस्करण में प्रारंभिक प्रयोगात्मक समर्थन है\n\n🔧 पैच इस ऐप संस्करण के लिए परिष्कृत होने पर विचित्र ऐप व्यवहार या अज्ञात बग की उम्मीद करें।</string>
-    <string name="version_warning_too_old_message">वर्तमान: v%1$s\nसबसे पुराना समर्थित: v%2$s\n\nयह आधिकारिक रूप से समर्थित संस्करण नहीं है। पैच शायद विफल होंगे।</string>
     <string name="version_warning_unsupported_message">वर्तमान: v%1$s\n\nयह आधिकारिक रूप से समर्थित संस्करण नहीं है। पैच शायद विफल होंगे।</string>
     <string name="version_warning_notice_message">V%1$s के साथ जारी रखें?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">पुराना स्थिर बिल्ड - नया स्थिर v%1$s उपलब्ध</string>
-    <string name="quick_patch_warning_latest_experimental">प्रयोगात्मक बिल्ड - समर्थित, लेकिन ठीक से काम नहीं कर सकता</string>
-    <string name="quick_patch_warning_older_experimental">पुराना प्रयोगात्मक बिल्ड - नया प्रयोगात्मक v%1$s उपलब्ध</string>
-    <string name="quick_patch_warning_build_unsupported">बिल्ड समर्थित नहीं - यह संस्करण पैच करने योग्य है, लेकिन इसका यह बिल्ड नहीं</string>
-    <string name="quick_patch_warning_too_new">संस्करण बहुत नया - आधिकारिक रूप से समर्थित नहीं, पैच शायद विफल होंगे</string>
-    <string name="quick_patch_warning_too_old">संस्करण बहुत पुराना - आधिकारिक रूप से समर्थित नहीं, पैच शायद विफल होंगे</string>
-    <string name="quick_patch_warning_unsupported_between">असमर्थित संस्करण - पैच शायद विफल होंगे</string>
-    <string name="quick_patch_read_apk_failed">APK पढ़ने में विफल: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">पैच तैयार हो रहे हैं…</string>
-    <string name="quick_patch_fetch_patches_failed">पैच प्राप्त करने में विफल। अपना इंटरनेट कनेक्शन जांचें</string>
-    <string name="quick_patch_status_downloading_patches">पैच डाउनलोड हो रहे हैं %1$s…</string>
-    <string name="quick_patch_download_patches_failed">पैच डाउनलोड करने में विफल: %1$s</string>
-    <string name="quick_patch_status_patching">पैचिंग हो रही है…</string>
-    <string name="quick_patch_completed_adb_off">ADB बंद · इंस्टॉल करने के लिए सक्षम करें</string>
-    <string name="quick_patch_completed_adb_connect_device">ADB से इंस्टॉल करने के लिए USB के माध्यम से डिवाइस कनेक्ट करें</string>
-    <string name="quick_patch_error_unknown_occurred">अज्ञात त्रुटि हुई</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK विश्लेषण हो रहा है…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d पैच</string>
-    <string name="quick_patch_patching_slow_warning">यह सामान्य से अधिक समय ले रहा है। कृपया प्रतीक्षा करें…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(बिल्ड %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">इस ऐप के लिए कोई संगत पैच नहीं</string>
-    <string name="quick_patch_ready_no_matching_patches">\"%1$s\" से मेल खाने वाले कोई पैच नहीं</string>
-    <string name="quick_patch_ready_patch_with_defaults">डिफ़ॉल्ट के साथ पैच करें</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">समर्थित ऐप्स</string>
-    <string name="quick_patch_supported_apps_subtitle">किसी समर्थित ऐप के लिए सटीक APK संस्करण यहाँ छोड़ें</string>
-    <string name="quick_patch_supported_apps_loading">समर्थित ऐप्स लोड हो रहे हैं…</string>
-    <string name="quick_patch_supported_apps_load_error">समर्थित ऐप्स लोड नहीं कर सके</string>
-    <string name="quick_patch_supported_apps_change_source">स्रोत बदलें</string>
-    <string name="quick_patch_supported_apps_no_matches">कोई मेल खाता ऐप नहीं</string>
-    <string name="quick_patch_supported_apps_version_any">कोई भी संस्करण</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK फ़ाइल चुनें</string>
     <string name="home_could_not_resolve_patch_files">पैच फ़ाइलें हल नहीं कर सके</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APK हटाएँ</string>
     <string name="home_apk_info_limited_info_warning">इस APK की मेनिफेस्ट पूरी तरह पढ़ नहीं सके (स्प्लिट बंडलों में सामान्य)। नीचे दिए गए विवरण अनुमानित हैं, पैचिंग अभी भी काम करनी चाहिए</string>
     <string name="home_apk_info_unsupported_app_warning">इस ऐप के लिए कोई संगत पैच नहीं मिला। आप फिर भी आगे बढ़ सकते हैं, लेकिन पैचिंग का कोई प्रभाव नहीं हो सकता</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">इस ऐप के लिए कोई संगत पैच नहीं मिले</string>
     <string name="home_apk_info_build_label">बिल्ड</string>
     <string name="home_apk_info_size_label">आकार</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">से</string>
     <string name="home_stage_change_apk">APK बदलें</string>
     <string name="home_stage_continue">जारी रखें</string>
+    <string name="home_stage_patch">पैच</string>
     <string name="home_stage_analyzing_title">विश्लेषण</string>
     <string name="home_stage_reading_metadata">ऐप मेटाडेटा पढ़ रहे हैं…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">%1$s अनइंस्टॉल करें?</string>
     <string name="home_dialog_uninstall_message">यह %1$s को कनेक्टेड डिवाइस से हटाता है। डिस्क पर पैच किया गया APK और आपका इतिहास रखा जाता है जब तक आप नीचे अन्यथा न चुनें</string>
     <string name="home_dialog_uninstall_also_forget">अपने ऐप्स से भी हटाएँ</string>
-    <string name="home_dialog_missing_apk_title">मूल APK नहीं मिला</string>
-    <string name="home_dialog_missing_apk_message">%1$s के लिए इनपुट APK अब यहाँ नहीं है:\n%2$s\n\nअपनी सहेजी गई सेटिंग्स के साथ फिर से पैच करने के लिए APK फिर से चुनें</string>
-    <string name="home_dialog_select_apk">APK चुनें…</string>
-    <string name="home_dialog_select_apk_to_repatch">फिर से पैच करने के लिए APK चुनें</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">स्रोत प्रबंधित करें</string>
     <string name="home_header_multi_source_hint">प्रत्येक सक्षम स्रोत से पैच संयुक्त होते हैं। ऊपर स्रोत बटन से प्रबंधित करें</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">आपके ऐप्स</string>
     <string name="home_banner_view">देखें</string>
     <string name="home_your_apps_install_ready">इंस्टॉल के लिए तैयार</string>
-    <string name="home_your_apps_newer_patch_hint">नया पैच ऐप को बढ़ा सकता है, जांचने के लिए अपडेट पर क्लिक करें</string>
-    <string name="home_your_apps_device_version_ready">पैच किया गया v%1$s तैयार, डिवाइस पर v%2$s (कोई पुनः पैच आवश्यक नहीं)</string>
-    <string name="home_your_apps_install_ready_hint">पैच किया गया v%1$s इंस्टॉल करने के लिए तैयार (कोई पुनः पैच की आवश्यकता नहीं)</string>
-    <string name="home_action_install">इंस्टॉल करें</string>
     <string name="home_action_install_to_device">डिवाइस पर इंस्टॉल करें</string>
     <string name="home_action_installing">इंस्टॉल हो रहा है…</string>
     <string name="home_action_preparing">तैयार हो रहा है…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s तैयार · डिवाइस पर v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s तैयार, कोई पुनः पैच आवश्यक नहीं</string>
-    <string name="home_advice_unsupported">v%1$s अब समर्थित नहीं है। कृपया v%2$s में अपडेट करें</string>
+    <string name="home_detail_source_disabled">बंद किया गया</string>
+    <string name="home_detail_source_removed">हटाया गया</string>
+    <string name="home_detail_source_disabled_sub">सोर्स, 'सोर्स' में अक्षम है। पुन: पैच करने के लिए इसे सक्षम करें</string>
+    <string name="home_detail_source_disabled_alternatives_sub">मूल स्रोत अक्षम है। कोई वैकल्पिक स्रोत चुनें या इसे Sources में फिर से सक्षम करें</string>
+    <string name="home_detail_no_compatible_source">कोई संगत स्रोत सक्षम नहीं है</string>
+    <string name="home_detail_choose_source">पैच स्रोत चुनें</string>
     <string name="home_advice_unsupported_by_patches">v%1$s अब नवीनतम पैच द्वारा समर्थित नहीं है</string>
     <string name="home_date_today">आज</string>
     <string name="home_date_yesterday">कल</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">असमूहीकृत</string>
     <string name="patch_selection_group_selected_count">%1$d चयनित</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">शुरू से खेलें</string>
+    <string name="patching_patches_count">%1$d / %2$d पैच</string>
+    <string name="patching_slow_warning">इसमें सामान्य से अधिक समय लग रहा है। कृपया प्रतीक्षा करें…</string>
     <string name="patching_status_ready">पैच करने के लिए तैयार</string>
     <string name="patching_status_preparing">पैच करने की तैयारी</string>
     <string name="patching_status_in_progress">पैच लागू करना</string>
     <string name="patching_completed_loading_result">पैचिंग पूर्ण, परिणाम लोड हो रहा है…</string>
-    <string name="patching_cancelled_loading_result">पैचिंग रद्द, परिणाम लोड हो रहा है…</string>
+    <string name="patching_cancelled_loading_result">पैचिंग रद्द कर दी गई, परिणाम लोड हो रहा है…</string>
     <string name="patching_failed_loading_result">पैचिंग विफल, परिणाम लोड हो रहा है…</string>
     <string name="patching_log_viewer_failed_to_read">लॉग फ़ाइल पढ़ने में विफल: %1$s</string>
     <string name="patching_log_viewer_title">लॉग फ़ाइल</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">स्ट्रिप किया गया</string>
     <string name="patching_error_failed_patches">विफल पैच: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB बंद है · इंस्टॉल करने के लिए सक्षम करें</string>
+    <string name="result_adb_connect_device_hint">ADB के साथ इंस्टॉल करने के लिए USB के माध्यम से डिवाइस कनेक्ट करें</string>
     <string name="result_screen_patch_another_button">दूसरा पैच करें</string>
     <string name="result_screen_install_on_device_label">%1$s पर इंस्टॉल करें</string>
     <string name="result_screen_links_routed_label">लिंक पैच किए गए ऐप पर रूट किए गए</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">लोड करने में विफल</string>
     <string name="source_error_github_pat_required">पुल रिक्वेस्ट के स्रोत डाउनलोड करने के लिए GitHub PAT आवश्यक है</string>
     <string name="source_error_pr_no_artifact">पुल रिक्वेस्ट के लिए कोई आर्टिफैक्ट नहीं मिला</string>
-    <string name="source_sheet_manage_description">पैच स्रोत प्रबंधित करें</string>
-    <string name="source_sheet_local_label">स्थानीय</string>
+    <string name="source_error_patcher_incompatible">यह स्रोत पैचर %1$s के लिए बनाया गया है, लेकिन Morphe %2$s में पैचर %3$s शामिल है। इसे उपयोग करने के लिए Morphe अपडेट करें</string>
+    <string name="version_label_local">स्थानीय</string>
     <string name="source_sheet_remote_label">दूरस्थ</string>
     <string name="add_source">स्रोत जोड़ें</string>
     <string name="source_sheet_title">पैच स्रोत</string>
     <string name="source_sheet_reload_description">पैच पुनः लोड करें</string>
-    <string name="source_sheet_quick_mode_hint">चुनें कि क्विक पैच कौन सा स्रोत उपयोग करता है। एक्सपर्ट मोड में मल्टी-स्रोत उपलब्ध है</string>
     <string name="source_sheet_multi_mode_hint">किसी भी संयोजन को सक्षम/अक्षम करें। सभी सक्षम स्रोतों से पैच संयुक्त होते हैं</string>
     <string name="source_sheet_done_button">हो गया</string>
     <string name="source_sheet_type_preinstalled">पूर्व-स्थापित</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">संपादित करें</string>
     <string name="source_sheet_move_up_description">ऊपर ले जाएँ</string>
     <string name="source_sheet_move_down_description">नीचे ले जाएँ</string>
-    <string name="source_sheet_channel_older_stable">पुराना स्थिर</string>
-    <string name="source_sheet_channel_older_dev">पुराना डेव</string>
     <string name="source_sheet_ignored_mpp_title">अनदेखा किए गए .mpp पैटर्न</string>
-    <string name="source_sheet_ignored_mpp_hint">केवल फ़ोल्डर स्रोतों को प्रभावित करता है, जो एक फ़ोल्डर में नवीनतम .mpp को स्वचालित रूप से लोड करते हैं। उस नवीनतम बिल्ड को चुनते समय, जिन फ़ाइलों का नाम यहाँ किसी पैटर्न से मेल खाता है उन्हें छोड़ दिया जाता है। एक सादा शब्द किसी भी फ़ाइल से मेल खाता है जिसमें वह होता है (जैसे debug)। ग्लोब्स के लिए * का उपयोग करें (जैसे *-debug.mpp)। *-sources.mpp और *-javadoc.mpp हमेशा अनदेखा किए जाते हैं</string>
+    <string name="source_sheet_ignored_mpp_hint">केवल फोल्डर स्रोतों को प्रभावित करता है, जो फोल्डर में नवीनतम .mpp को ऑटोलोड करते हैं। उस नवीनतम बिल्ड को चुनते समय, जिन फ़ाइलों का नाम यहाँ दिए गए पैटर्न से मेल खाता है, उन्हें छोड़ दिया जाता है। एक साधारण शब्द किसी भी ऐसी फ़ाइल से मेल खाता है जिसमें वह शब्द हो (जैसे debug)। ग्लोब्स के लिए * का उपयोग करें (जैसे *-debug.mpp)। *-sources.mpp और *-javadoc.mpp को हमेशा नज़रअंदाज़ किया जाता है</string>
     <string name="source_sheet_ignored_mpp_placeholder">जैसे debug या *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">पैटर्न जोड़ें</string>
     <string name="source_sheet_remove_pattern_description">पैटर्न हटाएँ</string>
+    <string name="sources_management_signed_by">द्वारा हस्ताक्षरित</string>
+    <string name="sources_management_signing_key_changed_badge">की बदल गई</string>
+    <string name="sources_management_signing_key_changed_hint">साइनिंग की बदल गई है। इसकी समीक्षा करने के लिए क्लिक करें</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' अपडेट नहीं किया गया क्योंकि इसका नवीनतम रिलीज़ उस key द्वारा साइन नहीं किया गया है जिसका उपयोग इसने पहले किया था</string>
+    <string name="sources_signing_key_new">नई की</string>
+    <string name="sources_signing_key_trust_message">नवीनतम रिलीज़ एक अलग key द्वारा साइन किया गया है। या तो डेवलपर ने अपनी key बदल दी है, या किसी और ने यह रिलीज़ प्रकाशित किया है। इसे केवल तभी ट्रस्ट करें यदि डेवलपर ने नई key की घोषणा की हो</string>
+    <string name="sources_signing_key_trust_message_unsigned">नवीनतम रिलीज़ साइन नहीं किया गया है। या तो डेवलपर ने रिलीज़ साइन करना बंद कर दिया है, या किसी और ने यह रिलीज़ प्रकाशित किया है। इसे केवल तभी ट्रस्ट करें यदि डेवलपर ने इसकी घोषणा की हो</string>
+    <string name="sources_signing_key_trust_title">नई key पर भरोसा करें?</string>
+    <string name="sources_signing_key_trusted">ट्रस्टेड की</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">स्थानीय फ़ाइल</string>
     <string name="patch_source_dialog_name_label">नाम</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">GitHub, GitLab, या morphe.software/add-source लिंक स्वीकार करता है</string>
     <string name="patch_source_dialog_pre_release_title">प्री-रिलीज़ पैच</string>
     <string name="patch_source_dialog_pre_release_hint">नए प्रयोगात्मक पैच संस्करणों तक प्रारंभिक पहुंच प्राप्त करता है</string>
-    <string name="patch_source_dialog_experimental_title">प्रयोगात्मक ऐप संस्करण</string>
-    <string name="patch_source_dialog_experimental_hint">यदि उपलब्ध हो तो प्रयोगात्मक ऐप संस्करणों को प्राथमिकता देता है</string>
     <string name="patch_source_dialog_error_name_required">नाम आवश्यक है</string>
     <string name="patch_source_dialog_error_invalid_url">एक मान्य GitHub या GitLab URL दर्ज करें</string>
     <string name="patch_source_dialog_error_invalid_file">एक मान्य .mpp फ़ाइल चुनें</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">लॉग खोलें</string>
     <string name="settings_dialog_reset_button">रीसेट करें</string>
     <string name="settings_theme_system">सिस्टम</string>
-    <string name="settings_signing_error_not_found">कॉन्फ़िगर किया गया कीस्टोर नहीं मिला: %1$s। फ़ाइल पुनर्स्थापित करें, सेटिंग्स में दूसरा चुनें, या Morphe का डिफ़ॉल्ट उपयोग करने के लिए सेटिंग साफ़ करें</string>
     <string name="settings_search_languages_placeholder">भाषाएँ खोजें</string>
     <string name="settings_dialog_resolves_to_message">इसका समाधान: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">कीस्टोर नहीं मिला: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">भाषा</string>
     <string name="settings_language_current_title">वर्तमान भाषा</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">ऐप भाषा</string>
     <string name="settings_language_search_no_results">कोई परिणाम नहीं मिला</string>
     <string name="settings_section_theme">थीम</string>
+    <string name="settings_appearance_theme_mode">थीम मोड</string>
     <string name="settings_theme_light">लाइट</string>
     <string name="settings_theme_dark">डार्क</string>
     <string name="settings_theme_amoled">एमोलेड</string>
+    <string name="settings_appearance_color_style">कलर स्टाइल</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">एक रंग का</string>
     <string name="settings_toggle_sharp_corners_label">नुकीले कोने</string>
     <string name="settings_toggle_sharp_corners_desc">कार्ड, डायलॉग और बटन को चौकोर करें</string>
     <string name="settings_section_accent_color">एक्सेंट रंग</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">ऐप कार्ड</string>
     <string name="settings_app_cards_color_all">हर कार्ड के लिए रंग</string>
     <string name="settings_app_cards_color_all_desc">जिन कार्डों को आपने व्यक्तिगत रूप से अनुकूलित किया है वे अपना रंग बनाए रखते हैं</string>
-    <string name="settings_section_patch_list">पैच सूची</string>
-    <string name="settings_toggle_patch_categories_label">पैच श्रेणियाँ</string>
-    <string name="settings_toggle_patch_categories_desc">पैच को विस्तार योग्य श्रेणियों में समूहित करें</string>
     <string name="settings_section_background_animation">पृष्ठभूमि एनिमेशन</string>
     <string name="settings_background_circles">वृत्त</string>
     <string name="settings_background_rings">रिंग</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">रेडिट</string>
     <string name="app_info_link_translate">अनुवाद करें</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">चेंजलॉग उपलब्ध नहीं</string>
+    <string name="changelog_badge_installed">इंस्टॉल किया गया</string>
+    <string name="changelog_badge_latest">नवीनतम</string>
+    <string name="changelog_badge_prerelease">प्री-रिलीज़</string>
+    <string name="changelog_date_today">आज</string>
+    <string name="changelog_date_yesterday">कल</string>
     <string name="changelog_dialog_title">चेंजलॉग देखें</string>
-    <string name="changelog_show_older_button">पुरानी रिलीज़ दिखाएँ</string>
+    <string name="changelog_not_available">चेंजलॉग उपलब्ध नहीं</string>
+    <string name="changelog_section_app_support">ऐप सपोर्ट</string>
+    <string name="changelog_section_fixes">फिक्सेस</string>
+    <string name="changelog_section_improvements">सुधार</string>
+    <string name="changelog_section_new">नया</string>
+    <string name="changelog_section_other">बदलाव</string>
+    <string name="changelog_section_performance">परफॉरमेंस</string>
+    <string name="changelog_show_all">{one,सभी दिखाएँ (1), other,सभी दिखाएँ (%1$d)}</string>
+    <string name="changelog_show_less">कम दिखाएँ</string>
     <string name="changelog_view_on_github_button">GitHub पर देखें</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">स्रोत</string>
+    <string name="nav_apps">ऐप्स</string>
 </resources>

@@ -13,6 +13,7 @@
     <string name="expand">Vula</string>
     <string name="cancel">Khansela</string>
     <string name="close">Vala</string>
+    <string name="trust">Thembela</string>
     <string name="delete">Susa</string>
     <string name="disabled_while_patching">Kukhishwa ngenkathi kulungiswa</string>
     <string name="drop_apk_here">Faka i-APK lapha</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Uxhumano lwahlukana ngenkathi kudownloadwa, zama futhi</string>
     <string name="error_network_loading_patches">Iphutha lenethiwekhi ngenkathi kulayishwa izinhlelo zokulungisa</string>
     <string name="error_patch_file_not_found">Ifayela loku-patch alitholakali: %1$s</string>
-    <string name="error_no_patches_files_supplied">Ayikho imayela yama-patch enikeziwe</string>
-    <string name="error_input_apk_not_found">I-APK engenayo ayitholakali</string>
     <string name="error_step_failed">%1$s ihlelele: %2$s</string>
     <string name="error_drop_valid_apk">Sicela ufake ifayela elilungile le-.apk, .apkm, .xapk, noma .apks</string>
     <string name="status_saving">Kusindiswa…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Hlunga izinhlelo…</string>
     <string name="version">Inguqulo</string>
     <string name="version_label_stable">Eqinile</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Okungaphambi kokukhishwa</string>
     <string name="version_label_experimental">Okuzama</string>
-    <string name="version_label_latest_dev">Okusekhona kwe-Dev</string>
     <string name="version_label_latest_stable">Okusekhona okunqabile</string>
+    <string name="version_label_recommended">Kunelulekile</string>
+    <string name="version_label_supported">Kusekelwa</string>
     <string name="app_info_arch_label">Arch</string>
     <string name="app_info_min_sdk_label">i-SDK encane</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Uku-patchi kukhanselwe</string>
     <string name="view_full_logs_button">Buka ama-logs aphelele</string>
     <string name="error_patching_unknown">Uku-patchi kuhleleke ngenxa engaziwa</string>
-    <string name="error_patching_general">Iphutha: %1$s</string>
     <string name="error_log_label">I-log yephutha</string>
     <string name="back">Buyela emuva</string>
     <string name="open_folder">Vula ifolda</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Inani lanoma iyiphi yama-stops, linear, radial noma conic</string>
     <string name="card_fill_mode_solid">Solid</string>
     <string name="card_fill_mode_solid_blurb">Umbala owodwa ocwebile</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Ama-Patches</string>
-    <string name="quick_patch_screen_start_over_button">Qala kabusha</string>
-    <string name="quick_patch_patch_another_button">Patcha omunye</string>
-    <string name="quick_patch_select_apk">Khetha i-APK</string>
-    <string name="quick_patch_analyze_apk_failed">Kuhlulekile ukuhlaziya i-APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Kuhlulekile ukukhipha i-base APK e-bundle</string>
-    <string name="quick_patch_unsupported_app_error">u-%1$s akusekelwa kumode we-Quick Patch. Izinhlelo ezisekelwayo: %2$s. Sebenzisa i-Normal mode ezinhlelweni ezingasekelwa</string>
     <string name="adb_install_on_button">Faka ku-%1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Kulayishwa ama-patches</string>
-    <string name="patching_step_preparing">Kulungiswa</string>
     <string name="patching_step_merging_split_apk">Kuhlanganiswa i-split APK</string>
     <string name="patching_step_read_apk">Funda ifayela le-APK</string>
     <string name="patching_step_applying_patches">Kufakwa ama-patches</string>
-    <string name="patching_step_saving">Kugcinwa</string>
     <string name="patching_step_writing_apk">Kubhalwa ifayela le-APK elipatchiwe</string>
     <string name="patching_step_signing">Kusayina ifayela le-APK elipatchiwe</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Ifayela lingase lionakele, lidownloade kabusha ku-APKMirror</string>
     <string name="version_status_checksum_failed">Ukuqinisekisa i-Checksum kuhleleke</string>
     <string name="version_status_checksum_matches">I-Checksum ihambisana ne-APKMirror</string>
-    <string name="version_status_older_stable">Indala ezisizile</string>
     <string name="version_status_newer_stable_available">Kukhona i-stable v%1$s entsha</string>
     <string name="version_status_newer_stable_available_fallback">Kukhona inguqulo entsha ezinzile</string>
     <string name="version_status_experimental_detail">Iyasekelwa, kodwa kungenzeka ingasebenzi ngendlela efanele</string>
-    <string name="version_status_older_experimental">I-Experimental endala</string>
-    <string name="version_status_newer_experimental_available">Kukhona i-experimental entsha ev%1$s efumanekayo</string>
-    <string name="version_status_newer_experimental_available_fallback">Kukhona i-experimental build entsha efumanekayo</string>
-    <string name="version_status_too_new">Inguqulo intsha kakhulu</string>
     <string name="version_status_unsupported_detail">Akusekelwe ngokusemthethweni, ama-patches azohluleka kakhulu</string>
-    <string name="version_status_too_old">Inguqulo endala kakhulu</string>
     <string name="version_status_unsupported">Inguqulo engasekelwa</string>
     <string name="version_status_build_unsupported">I-Build ayisekelwa</string>
     <string name="version_status_build_unsupported_detail">Le nguqulo iyasekelwa, kodwa hhayi le build yayo. Thola i-build eqondiswe kuma-patches</string>
+    <string name="version_status_build_unsupported_with_code">Ama-patches adinga i-build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Isaziso senguqulo</string>
+    <string name="version_warning_build_unsupported_message">Yamanje: v%1$s (build %2$s)\nI-build edingekayo: %3$s\n\nLeli i-build ehlukile yenguqulo efanayo. Ama-patches adinga i-build ethile.</string>
     <string name="version_warning_experiment_title">Uyafuna ukuzama i-experimental? 🧪</string>
-    <string name="version_warning_older_stable_title">Inguqulo ezinzile endala</string>
-    <string name="version_warning_older_stable_message">Yamanje: v%1$s\nOkugcina okuzinzile: v%2$s\n\nLe nguqulo isekelwa, kodwa kukhona inguqulo ezinzile entsha. Kungase kube khona okunقuphuzile okungakafakiwe.</string>
     <string name="version_warning_latest_experimental_message">Yamanje: v%1$s\n\nLe nguqulo inokusekelwa kwasekuqaleni okuzama izinto ezintsha\n\n🔧 Lindela ukusebenza kokuhamba kohlelo okungajwayelekile noma amaphutha angaziwa njengoba ama-patch ecwaliswa kule nguqulo yohlelo.</string>
-    <string name="version_warning_older_experimental_title">Inguqulo yakudala yokuzama izinto ezintsha\nIngabe ufuna ukuzama? 🧪</string>
-    <string name="version_warning_older_experimental_message">Yamanje: v%1$s\nOkugcina kokuzama izinto ezintsha: v%2$s\n\nLolu wukwakhiwa kokuzama izinto ezintsha okusekelwayo, kodwa kukhona inguqulo entsha yokuzama izinto ezintsha. Lindela ukusebenza kokuhamba kohlelo okungajwayelekile noma amaphutha angaziwa njengoba ama-patch ecwaliswa kule nguqulo yohlelo.</string>
-    <string name="version_warning_too_new_message">Yamanje: v%1$s\nOkusha okwaziwayo: v%2$s\n\nLe nguqulo inokusekelwa kwasekuqaleni okuzama izinto ezintsha\n\n🔧 Lindela ukusebenza kokuhamba kohlelo okungajwayelekile noma amaphutha angaziwa njengoba ama-patch ecwaliswa kule nguqulo yohlelo.</string>
-    <string name="version_warning_too_old_message">Yamanje: v%1$s\nOkudala okusekelwayo: v%2$s\n\nLe akuyona inguqulo esekelwa ngokusemthethweni. Ama-patch azohlela ukuhluleka.</string>
     <string name="version_warning_unsupported_message">Manje: v%1$s\n\nLona akuyona inguqulo esekelwa ngokusemthethweni. Ama-patch azohluleka kakhulu.</string>
     <string name="version_warning_notice_message">Uqhubeka nge-v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">I-build endala ezisizile - kuvuthwake i-v%1$s entsha ezisizile</string>
-    <string name="quick_patch_warning_latest_experimental">I-build yezokuhlola - isekelwa, kodwa kungenzeka ingasebenzi kahle</string>
-    <string name="quick_patch_warning_older_experimental">I-build endala yezokuhlola - kuvuthwake i-v%1$s entsha yezokuhlola</string>
-    <string name="quick_patch_warning_build_unsupported">I-build ayisekelwa - le nguqulo ingaba ne-patch, kodwa hhayi le build yayo</string>
-    <string name="quick_patch_warning_too_new">Inguqulo isha kakhulu - ayisekelwa ngokusemthethweni, ama-patch azohluleka kakhulu</string>
-    <string name="quick_patch_warning_too_old">Inguqulo idala kakhulu - ayisekelwa ngokusemthethweni, ama-patch azohluleka kakhulu</string>
-    <string name="quick_patch_warning_unsupported_between">Inguqulo ayisekelwa - ama-patch azohluleka kakhulu</string>
-    <string name="quick_patch_read_apk_failed">Kuhleleke ukufunda i-APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Kulungiswa ama-patches…</string>
-    <string name="quick_patch_fetch_patches_failed">Kuhleleke ukuthola ama-patches. Hlola uxhumano lwakho lwe-internet</string>
-    <string name="quick_patch_status_downloading_patches">Kudownloadwa ama-patches %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Kuhleleke ukudownload ama-patches: %1$s</string>
-    <string name="quick_patch_status_patching">Kupatshwa…</string>
-    <string name="quick_patch_completed_adb_off">i-ADB icishiwe · Vula ukuze ufake</string>
-    <string name="quick_patch_completed_adb_connect_device">Xhumana nedivayisi nge-USB ukuze ufake nge-ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Kwenzeke iphutha elifilelwe</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Kuhlaziywa i-APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d ama-patches</string>
-    <string name="quick_patch_patching_slow_warning">Lokhu kuthatha isikhathi eside kunokujwayelekile. Sicela ulinde…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(ukwakha %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Ayikho ama-patches ahambisana nalo lolu hlelo</string>
-    <string name="quick_patch_ready_no_matching_patches">Ayikho ama-patches ahambisana ne\"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Patch ngezinto ezivamisele</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Izinhlelo ezisekelwayo</string>
-    <string name="quick_patch_supported_apps_subtitle">Faka i-APK version eyisifanele sohlelo olusekelwayo lapha</string>
-    <string name="quick_patch_supported_apps_loading">Kulandwa izinhlelo ezisekelwayo…</string>
-    <string name="quick_patch_supported_apps_load_error">Kukwazekile ukulanda izinhlelo ezisekelwayo</string>
-    <string name="quick_patch_supported_apps_change_source">Shintsha umthombo</string>
-    <string name="quick_patch_supported_apps_no_matches">Azikho izinhlelo ezihambisana nalokhu</string>
-    <string name="quick_patch_supported_apps_version_any">Noma yikuphi uhlobo</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Khetha ifayela le-APK</string>
     <string name="home_could_not_resolve_patch_files">Kukwazekile ukuxazulula amafayela e-patch</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Susa i-APK</string>
     <string name="home_apk_info_limited_info_warning">Akukwazanga ukufunda ngokuphelele i-manifest yale APK (okuvamile kuma-split bundles). Imininingwane engaphansi iyisibikezelo, ukulungisa kufanele kusebenze</string>
     <string name="home_apk_info_unsupported_app_warning">Akukho izinhlelo zokulungisa ezivumelana nale app. Usengaqhubeka, kodwa ukulungisa kungase kube nampumela</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Ayikho ama-patches ahambelanayo atholakele kule app</string>
     <string name="home_apk_info_build_label">Ukwakha</string>
     <string name="home_apk_info_size_label">Usayizi</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Kusuka ku</string>
     <string name="home_stage_change_apk">Shintsha i-APK</string>
     <string name="home_stage_continue">Qhubeka</string>
+    <string name="home_stage_patch">I-patch</string>
     <string name="home_stage_analyzing_title">Kuhlaziywa</string>
     <string name="home_stage_reading_metadata">Kufundwa imininingwane ye-app…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Ukukhipha u-%1$s?</string>
     <string name="home_dialog_uninstall_message">Lokhu kususa u-%1$s kudivayisi exhunywe. I-APK ephathwe ediskini nomlando wakho kugcinwa ngaphandle kokuba ukhethe okunye ngezansi</string>
     <string name="home_dialog_uninstall_also_forget">Susa futhi ezinhlelweni zakho</string>
-    <string name="home_dialog_missing_apk_title">I-APK yokuqala ayitholakali</string>
-    <string name="home_dialog_missing_apk_message">I-APK engenayo ye-%1$s ayisasekhona ku:\n%2$s\n\nKhetha i-APK futhi ukuze uphinde uyilungise ngamasetingi akho asondelwe</string>
-    <string name="home_dialog_select_apk">Khetha i-APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Khetha i-APK ukuze uphinde uyilungise</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Phatha imithombo</string>
     <string name="home_header_multi_source_hint">Izinhlelo ezivela kuzo zonke izithombo ezivuliwe zihlanganiswe. Phatha ngenkinobho yemitombo engenhla</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Izinhlelo zakho</string>
     <string name="home_banner_view">Buka</string>
     <string name="home_your_apps_install_ready">Kulungile ukufaka</string>
-    <string name="home_your_apps_newer_patch_hint">I-patch entsha ingase ikhulise uhlelo, chofoza u-Update ukuze uhlole</string>
-    <string name="home_your_apps_device_version_ready">I-Patched v%1$s isilungile, idivayisi isiv%2$s (akudingeki ukuphatha kabusha)</string>
-    <string name="home_your_apps_install_ready_hint">UPatched v%1$s ulungile ukufakwa (akudingeki ukulungisa futhi)</string>
-    <string name="home_action_install">Faka</string>
     <string name="home_action_install_to_device">Faka kudivayisi</string>
     <string name="home_action_installing">Kufakwa…</string>
     <string name="home_action_preparing">Kulungiswa…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">iv%1$s isilungile · idivayisi isiku-v%2$s</string>
     <string name="home_detail_ready_no_repatch">iv%1$s isilungile, akudingeki ukuphatha kabusha</string>
-    <string name="home_advice_unsupported">iv%1$s ayisasekelwa. Sicela uthuthuke uye ku-v%2$s</string>
+    <string name="home_detail_source_disabled">Kukhishwe</string>
+    <string name="home_detail_source_removed">Kususiwe</string>
+    <string name="home_detail_source_disabled_sub">I-Source ikhishwe ku-Sources. Iyakhe ukuze uphinde u-patch-e</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Umthombo original uvalwe. Khetha omunye umthombo noma uvule futhi ku-Sources</string>
+    <string name="home_detail_no_compatible_source">Alikho imithombo ehambisana nalesi evuliwe</string>
+    <string name="home_detail_choose_source">Khetha umthombo we-patch</string>
     <string name="home_advice_unsupported_by_patches">i-v%1$s ayisasekelwa yizinhlelo zokulungisa zakamuva</string>
     <string name="home_date_today">namuhla</string>
     <string name="home_date_yesterday">izolo</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Angaqondiswanga</string>
     <string name="patch_selection_group_selected_count">%1$d ukhethiwe</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Qala kabusha</string>
+    <string name="patching_patches_count">%1$d / %2$d ama-patches</string>
+    <string name="patching_slow_warning">Lokhu kuthatha isikhathi eside kunokujwayelekile. Sicela ulinde…</string>
     <string name="patching_status_ready">Kulungele uku-patch-a</string>
     <string name="patching_status_preparing">Kulungiselela uku-patch-a</string>
     <string name="patching_status_in_progress">Kufakwa ama-patch-es</string>
     <string name="patching_completed_loading_result">Ukuphatha kuqedile, kulandwa imiphumela…</string>
-    <string name="patching_cancelled_loading_result">Ukulungiswa kukhanselwe, kulandwa imiphumela…</string>
+    <string name="patching_cancelled_loading_result">Ukulungiswa kukhanselwe, kulayishwa imiphumela…</string>
     <string name="patching_failed_loading_result">Ukulungiswa kwephuthe, kulandwa imiphumela…</string>
     <string name="patching_log_viewer_failed_to_read">Kwehluleka ukufunda ifayela le-log: %1$s</string>
     <string name="patching_log_viewer_title">Ifayela le-log</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Kususiwe</string>
     <string name="patching_error_failed_patches">Ama-patch wehlulekile: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB icimu · Vula ukuze ufake</string>
+    <string name="result_adb_connect_device_hint">Xhumela idivayisi nge-USB ukuze ufake nge-ADB</string>
     <string name="result_screen_patch_another_button">Patch elinye</string>
     <string name="result_screen_install_on_device_label">Faka ku-%1$s</string>
     <string name="result_screen_links_routed_label">Izixhumanisi zilandiswa ku-app e-patched</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Kuhlulekile ukuloda</string>
     <string name="source_error_github_pat_required">I-GitHub PAT idingeka ukuze kulandwe imithombo ye-pull request</string>
     <string name="source_error_pr_no_artifact">Ayikho imikhiqizo etholakele kule pull request</string>
-    <string name="source_sheet_manage_description">Phatha imithombo ye-patch</string>
-    <string name="source_sheet_local_label">Yendawo</string>
+    <string name="source_error_patcher_incompatible">Lo mthombo wakhelwe i-patcher %1$s, kodwa i-Morphe %2$s ihlanganisa i-patcher %3$s. Update i-Morphe ukuze ukusebenzise</string>
+    <string name="version_label_local">Indawo</string>
     <string name="source_sheet_remote_label">Yekude</string>
     <string name="add_source">Yengeza umthombo</string>
     <string name="source_sheet_title">Imithombo ye-patch</string>
     <string name="source_sheet_reload_description">Loda kabusha ama-patch</string>
-    <string name="source_sheet_quick_mode_hint">Khetha ukuthi i-Quick Patch isebenzise umsuka ophikelelwe. I-Multi-source itholakala kumodi ye-Expert</string>
     <string name="source_sheet_multi_mode_hint">Vula/Vala noma iyiphi inhlanganiso. Ama-Patch avela kuzo zonke izimithombo evuliwe ahlangana</string>
     <string name="source_sheet_done_button">Kuqedile</string>
     <string name="source_sheet_type_preinstalled">Efakiwe</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Hlela</string>
     <string name="source_sheet_move_up_description">Yisa phezulu</string>
     <string name="source_sheet_move_down_description">Yisa phansi</string>
-    <string name="source_sheet_channel_older_stable">Stable Endala</string>
-    <string name="source_sheet_channel_older_dev">Dev Endala</string>
     <string name="source_sheet_ignored_mpp_title">Ama-pattern e-.mpp enganakwa</string>
-    <string name="source_sheet_ignored_mpp_hint">Kuthinta kuphela imithombo yama-folder, elanda ngokuzenzakalelayo i-.mpp entsha kwi-folder. Lapho kukhethwa leyo build entsha, amafayela agoqana ne-pattern lapha ayashaywa. Igama elilula lihambisana nanoma yikuphi ifayela elilino (isib. debug). Sebenzisa * kuma-globs (isib. *-debug.mpp). Ama-*-sources.mpp kanye no-*-javadoc.mpp ahlale enganakwa</string>
+    <string name="source_sheet_ignored_mpp_hint">Kuthinta kuphela imithombo yefolda, elayisha ngokuzenzakalelayo i-.mpp entsha efoldeni. Lapho ukhetha lelo khizela lokugeza okusha, amafayela agama lawo elifana nephathini lapha ayashiywa. Igama elilula lilingana nanoma iyiphi ifayela elilino (isib. debug). Sebenzisa * kuma globs (isib. *-debug.mpp). I-*-sources.mpp ne-*-javadoc.mpp zahlale zinganakekelwa</string>
     <string name="source_sheet_ignored_mpp_placeholder">isib. debug noma *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Yengeza i-pattern</string>
     <string name="source_sheet_remove_pattern_description">Susa i-pattern</string>
+    <string name="sources_management_signed_by">Sayiniwe ngu</string>
+    <string name="sources_management_signing_key_changed_badge">Ikey ishintshile</string>
+    <string name="sources_management_signing_key_changed_hint">Ikey yokusayina ishintshile. Chofoza ukuze uyihlole</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' ayizange ivuselelwe ngoba ikhishwe okugcina ayisayiniwe ngekey ebisetshenziswa ngaphambilini</string>
+    <string name="sources_signing_key_new">Ikey entsha</string>
+    <string name="sources_signing_key_trust_message">Ikhishwe okugcina isayiniwe ngekey ehlukile. Kungenzeka ukuthi uphuthukisi ushintshe ikey yakhe, noma omunye umuntu uxoxile lokhu kukhishwa. Yithembe kuphela uma uphuthukisi ememezela ikey entsha</string>
+    <string name="sources_signing_key_trust_message_unsigned">Ikhishwe okugcina ayisayiniwe. Kungenzeka ukuthi uphuthukisi uyekile ukusayina izinto ezikhishwayo, noma omunye umuntu uxoxile lokhu kukhishwa. Yithembe kuphela uma uphuthukisi ekumemezela</string>
+    <string name="sources_signing_key_trust_title">Yithembe ikey entsha?</string>
+    <string name="sources_signing_key_trusted">Ikey ethembekile</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Ifayela lendawo</string>
     <string name="patch_source_dialog_name_label">Igama</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Yamukela i-GitHub, i-GitLab, noma i-link ye-morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Ama-patch angaphambi kokukhipha</string>
     <string name="patch_source_dialog_pre_release_hint">Uthola ukufunda kwasekuqaleni kwezinguqulo zama-patch ezintsha zokuzama</string>
-    <string name="patch_source_dialog_experimental_title">Izinguqulo ze-app zokuzama</string>
-    <string name="patch_source_dialog_experimental_hint">Nikela izinguqulo ze-app zokuzama Uma zikhona</string>
     <string name="patch_source_dialog_error_name_required">Igama lidingeka</string>
     <string name="patch_source_dialog_error_invalid_url">Faka i-URL ye-GitHub noma i-GitLab esemthethweni</string>
     <string name="patch_source_dialog_error_invalid_file">Khetha ifayela le-.mpp elisemthethweni</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Vula ama-log</string>
     <string name="settings_dialog_reset_button">Buyisela</string>
     <string name="settings_theme_system">Uhlelo</string>
-    <string name="settings_signing_error_not_found">I-keystore ekonjiwe ayitholakali: %1$s. Buyisela ifayela, ukhethe elinye kuZilungiselelo, noma ususe isilungiselelo ukuze usebenzise isayini eyisisekelo ye-Morphe</string>
     <string name="settings_search_languages_placeholder">Sesha izilimi</string>
     <string name="settings_dialog_resolves_to_message">Ixazulula ku: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">I-Keystore ayitholakali: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Ulimi</string>
     <string name="settings_language_current_title">Ulimi lwanamuhla</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Ulimi lohlelo</string>
     <string name="settings_language_search_no_results">Akukho imiphumela etholakele</string>
     <string name="settings_section_theme">Indikimba</string>
+    <string name="settings_appearance_theme_mode">Imodeli yetheme</string>
     <string name="settings_theme_light">Okukhanyayo</string>
     <string name="settings_theme_dark">Okumnyama</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Istayela sombala</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Imbala eyodwa</string>
     <string name="settings_toggle_sharp_corners_label">Izona eziqine</string>
     <string name="settings_toggle_sharp_corners_desc">Yenza amakhadi, amadayilogi nezinkinobho abe yizikwele</string>
     <string name="settings_section_accent_color">Umbala ogqamile</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Amakhadi ohlelo</string>
     <string name="settings_app_cards_color_all">Umbala walonke ikhadi</string>
     <string name="settings_app_cards_color_all_desc">Amakhadi owashintsha wena aqhubeka nokuba nombala wawo</string>
-    <string name="settings_section_patch_list">Uhlu lwe-patch</string>
-    <string name="settings_toggle_patch_categories_label">Izigaba ze-patch</string>
-    <string name="settings_toggle_patch_categories_desc">Hlanganisa ama-patch ezigabeni ezivulekayo</string>
     <string name="settings_section_background_animation">I-animation yesizindalo</string>
     <string name="settings_background_circles">Izindilinga</string>
     <string name="settings_background_rings">Izindilinga ezivulekile</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Hhumusha</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Uhlu lwezinguquko alutholakali</string>
+    <string name="changelog_badge_installed">Ifakwe</string>
+    <string name="changelog_badge_latest">Okusezingeni lokugcina</string>
+    <string name="changelog_badge_prerelease">Inguqulo engakaphumi</string>
+    <string name="changelog_date_today">Namuhla</string>
+    <string name="changelog_date_yesterday">Izolo</string>
     <string name="changelog_dialog_title">Buka uhlu lwezinguquko</string>
-    <string name="changelog_show_older_button">Khombisa izikhala zakudala</string>
+    <string name="changelog_not_available">Uhlu lwezinguquko alutholakali</string>
+    <string name="changelog_section_app_support">Usekela ohlelo</string>
+    <string name="changelog_section_fixes">Izilungiso</string>
+    <string name="changelog_section_improvements">Izithuthuko</string>
+    <string name="changelog_section_new">Okusha</string>
+    <string name="changelog_section_other">Izinguquko</string>
+    <string name="changelog_section_performance">Umsebenzi</string>
+    <string name="changelog_show_all">Khombisa zonke (%1$d)</string>
+    <string name="changelog_show_less">Khombisa okuncane</string>
     <string name="changelog_view_on_github_button">Buka ku-GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Imithombo</string>
+    <string name="nav_apps">Izinhlelo</string>
 </resources>

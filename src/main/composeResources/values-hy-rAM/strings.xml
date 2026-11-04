@@ -13,6 +13,7 @@
     <string name="expand">Բացել</string>
     <string name="cancel">Չեղարկել</string>
     <string name="close">Փակել</string>
+    <string name="trust">Վստահություն</string>
     <string name="delete">Ջնջել</string>
     <string name="disabled_while_patching">Անջատված է թարմացման ժամանակ</string>
     <string name="drop_apk_here">Տեղադրեք APK-ն այստեղ</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Կապը ընդհատվեց ներբեռնման ժամանակ, փորձեք նորից</string>
     <string name="error_network_loading_patches">Ցանցային սխալ ուղղումների բեռնման ժամանակ</string>
     <string name="error_patch_file_not_found">Ուղղման ֆայլը չի գտնվել՝ %1$s</string>
-    <string name="error_no_patches_files_supplied">Ուղղումների ֆայլեր տրամադրված չեն</string>
-    <string name="error_input_apk_not_found">Մուտքային APK-ն չի գտնվել</string>
     <string name="error_step_failed">%1$s-ը ձախողվեց՝ %2$s</string>
     <string name="error_drop_valid_apk">Խնդրում ենք տեղադրել վավեր .apk, .apkm, .xapk կամ .apks ֆայլ</string>
     <string name="status_saving">Պահպանում է…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Զտել հավելվածները…</string>
     <string name="version">Տարբերակ</string>
     <string name="version_label_stable">Կայուն</string>
-    <string name="version_label_dev">Մշակվող</string>
+    <string name="version_label_prerelease">Նախաք falsch-թողարկում</string>
     <string name="version_label_experimental">Փորձարարական</string>
-    <string name="version_label_latest_dev">Վերջին մշակվող</string>
     <string name="version_label_latest_stable">Վերջին կայուն</string>
+    <string name="version_label_recommended">Հանձնարարված է</string>
+    <string name="version_label_supported">Աջակցվող է</string>
     <string name="app_info_arch_label">Ճարտարապետություն</string>
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Թարմացումը չեղարկվեց</string>
     <string name="view_full_logs_button">Տեսնել ամբողջական մատյանները</string>
     <string name="error_patching_unknown">Թարմացումը ձախողվեց անհայտ պատճառով</string>
-    <string name="error_patching_general">Սխալ՝ %1$s</string>
     <string name="error_log_label">Սխալների մատյան</string>
     <string name="back">Հետ</string>
     <string name="open_folder">Բացել թղթապանակը</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Ցանկացած քանակի կանգառներ՝ գծային, and ճառագայթային կամ կոնիկական</string>
     <string name="card_fill_mode_solid">Համասեռ</string>
     <string name="card_fill_mode_solid_blurb">Մեկ հարթ գույն</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Պատկերակներ</string>
-    <string name="quick_patch_screen_start_over_button">Սկսել նորից</string>
-    <string name="quick_patch_patch_another_button">Փաթեթավորել մեկ այլը</string>
-    <string name="quick_patch_select_apk">Ընտրել APK</string>
-    <string name="quick_patch_analyze_apk_failed">APK-ի վերլուծումը ձախողվեց</string>
-    <string name="quick_patch_extract_base_apk_failed">Bundle-ից հիմնական APK-ի արտահանումը ձախողվեց</string>
-    <string name="quick_patch_unsupported_app_error">%1$s-ը չի աջակցվի Quick Patch ռեժիմում: Աջակցվող հավելվածները՝ %2$s: Անաջակցվող հավելվածների համար օգտագործեք Normal ռեժիմը</string>
     <string name="adb_install_on_button">Տեղադրել %1$s-ի վրա</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Բեռնում փաթեթները</string>
-    <string name="patching_step_preparing">Նախապատրաստում</string>
     <string name="patching_step_merging_split_apk">Բաժանված APK-ի միավորում</string>
     <string name="patching_step_read_apk">APK ֆայլի ընթերցում</string>
     <string name="patching_step_applying_patches">Պատկերների կիրառում</string>
-    <string name="patching_step_saving">Պահպանում</string>
     <string name="patching_step_writing_apk">Փոփոխված APK ֆայլի գրում</string>
     <string name="patching_step_signing">Փոփոխված APK ֆայլի ստորագրում</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Ֆայլը կարող է լինել վնասված, ներբեռնեք նորից APKMirror-ից</string>
     <string name="version_status_checksum_failed">Կամայական ստուգման գումարի ստուգումը ձախողվեց</string>
     <string name="version_status_checksum_matches">Կամայական ստուգման գումարը համապատասխանում է APKMirror-ին</string>
-    <string name="version_status_older_stable">Ավելի հին կայուն տարբերակ</string>
     <string name="version_status_newer_stable_available">Հասանելի է ավելի նոր կայուն v%1$s տարբերակ</string>
     <string name="version_status_newer_stable_available_fallback">Հասանելի է ավելի նոր կայուն տարբերակ</string>
     <string name="version_status_experimental_detail">Աջակցվում է, սակայն կարող է ճիշտ չաշխատել</string>
-    <string name="version_status_older_experimental">Հին փորձարարական</string>
-    <string name="version_status_newer_experimental_available">Հասանելի է ավելի նոր փորձարարական v%1$s տարբերակ</string>
-    <string name="version_status_newer_experimental_available_fallback">Հասանելի է ավելի նոր փորձարարական կառուցվածք</string>
-    <string name="version_status_too_new">Տարբերակը չափազանց նոր է</string>
     <string name="version_status_unsupported_detail">Պաշտոնապես աջակցվող չէ, փաթեթները, ամենայն հավանականությամբ, կձախողվեն</string>
-    <string name="version_status_too_old">Տարբերակը չափազանց հին է</string>
     <string name="version_status_unsupported">Չաջակցվող տարբերակ</string>
     <string name="version_status_build_unsupported">Կառուցվածքը չի աջակցվի</string>
     <string name="version_status_build_unsupported_detail">Այս տարբերակն աջակցվում է, բայց ոչ դրա այս կառուցվածքը: Ստացեք թարմացումների թիրախային կառուցվածքը</string>
+    <string name="version_status_build_unsupported_with_code">Թարմացումները պահանջում են build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Տարբերակի մասին ծանուցում</string>
+    <string name="version_warning_build_unsupported_message">Ընթացիկ՝ v%1$s (build %2$s)\nՊահանջվող build՝ %3$s\n\nՍա նույն տարբերակի այլ build է: Թարմացումները պահանջում են կոնկրետ build:</string>
     <string name="version_warning_experiment_title">Ցանկանո՞ւմ եք փորձարկել: 🧪</string>
-    <string name="version_warning_older_stable_title">Կայուն հին տարբերակ</string>
-    <string name="version_warning_older_stable_message">Ընթացիկ՝ v%1$s\nՎերջին կայուն՝ v%2$s\n\nԱյս տարբերակն աջակցվում է, սակայն հասանելի է ավելի նոր կայուն տարբերակ: Հնարավոր է՝ բաց եք թողել վերջին ուղղումները:</string>
     <string name="version_warning_latest_experimental_message">Ընթացիկ՝ v%1$s\n\nԱյս տարբերակն ունի վաղ փորձարարական աջակցություն\n\n🔧 Սպասեք հավելվածի անսովոր վարքագծի կամ չհայտնաբերված սխալների, քանի դեռ կարգավորումները հղկվում են այս տարբերակի համար:</string>
-    <string name="version_warning_older_experimental_title">Հին փորձարարական տարբերակ\nՑանկանո՞ւմ եք փորձարկել: 🧪</string>
-    <string name="version_warning_older_experimental_message">Ընթացիկ՝ v%1$s\nՎերջին փորձարարական՝ v%2$s\n\nՍա աջակցվող փորձարարական կառուցվածք է, սակայն հասանելի է ավելի նոր փորձարարական տարբերակ: Սպասեք հավելվածի անսովոր վարքագծի կամ չհայտնաբերված սխալների, քանի դեռ կարգավորումները հղկվում են այս տարբերակի համար:</string>
-    <string name="version_warning_too_new_message">Ընթացիկ՝ v%1$s\nԱմենանոր հայտնի՝ v%2$s\n\nԱյս տարբերակն ունի վաղ փորձարարական աջակցություն\n\n🔧 Սպասեք հավելվածի անսովոր վարքագծի կամ չհայտնաբերված սխալների, քանի դեռ կարգավորումները հղկվում են այս տարբերակի համար:</string>
-    <string name="version_warning_too_old_message">Ընթացիկ՝ v%1$s\nԱմենահին աջակցվող՝ v%2$s\n\nՍա պաշտոնապես աջակցվող տարբերակ չէ: Կարգավորումները, ամենայն հավանականությամբ, կբացառվեն:</string>
     <string name="version_warning_unsupported_message">Տարեկան: v%1$s\n\nՍա պաշտոնապես աջակցվող տարբերակ չէ: Պատչերը, ամենայն հավանականությամբ, ձախողվ կան:</string>
     <string name="version_warning_notice_message">Շարունակե՞լ v%1$s տարբերակով:</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Հին կայուն build - հասանելի է ավելի նոր կայուն v%1$s տարբերակ</string>
-    <string name="quick_patch_warning_latest_experimental">Փորձարարական build - աջակցվում է, բայց կարող է ճիշտ չաշխատել</string>
-    <string name="quick_patch_warning_older_experimental">Հին փորձարարական build - հասանելի է ավելի նոր փորձարարական v%1$s տարբերակ</string>
-    <string name="quick_patch_warning_build_unsupported">Build-ը չի աջակցվում - այս տարբերակը պատչելի է, բայց ոչ դրա այս build-ը</string>
-    <string name="quick_patch_warning_too_new">Տարբերակը չափազանց նոր է - պաշտոնապես չի աջակցվում, պատչերը, ամենայն հավանականությամբ, ձախողվ կան</string>
-    <string name="quick_patch_warning_too_old">Տարբերակը չափազանց հին է - պաշտոնապես չի աջակցվում, պատչերը, ամենայն հավանականությամբ, ձախողվ կան</string>
-    <string name="quick_patch_warning_unsupported_between">Չաջակցվող տարբերակ - պատչերը, ամենայն հավանականությամբ, ձախողվ կան</string>
-    <string name="quick_patch_read_apk_failed">Չհաջողվեց կարդալ APK-ն՝ %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Պատրաստվում են թարմացումները…</string>
-    <string name="quick_patch_fetch_patches_failed">Չհաջողվեց ներբեռնել թարմացումները: Ստուգեք ինտերնետ կապը</string>
-    <string name="quick_patch_status_downloading_patches">Ներբեռնվում են թարմացումները %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Չհաջողվեց ներբեռնել թարմացումները՝ %1$s</string>
-    <string name="quick_patch_status_patching">Թարմացվում է…</string>
-    <string name="quick_patch_completed_adb_off">ADB-ն անջատված է · Միացրեք տեղադրելու համար</string>
-    <string name="quick_patch_completed_adb_connect_device">Միացրեք սարքը USB-ի միջոցով՝ ADB-ով տեղադրելու համար</string>
-    <string name="quick_patch_error_unknown_occurred">Տեղի է ունեցել անհայտ սխալ</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Վերլուծվում է APK-ն…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d փաթեթներ</string>
-    <string name="quick_patch_patching_slow_warning">Սա տևում է ավելի երկար, քան սովորաբար: Խնդրում ենք սպասել…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(կառուցում %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Այս հավելվածի համար համատեղելի փաթեթներ չկան</string>
-    <string name="quick_patch_ready_no_matching_patches">\"%1$s\"-ին համապատասխան փաթեթներ չկան</string>
-    <string name="quick_patch_ready_patch_with_defaults">Փաթեթավորել լռելյայն արժեքներով</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Աջակցվող հավելվածներ</string>
-    <string name="quick_patch_supported_apps_subtitle">Տեղադրեք աջակցվող հավելվածի APK-ի ճշգրիտ տարբերակը այստեղ</string>
-    <string name="quick_patch_supported_apps_loading">Բեռնվում են աջակցվող հավելվածները…</string>
-    <string name="quick_patch_supported_apps_load_error">Չհաջողվեց բեռնել աջակցվող հավելվածները</string>
-    <string name="quick_patch_supported_apps_change_source">Փոխել աղբյուրը</string>
-    <string name="quick_patch_supported_apps_no_matches">Համապատասխան հավելվածներ չկան</string>
-    <string name="quick_patch_supported_apps_version_any">Ցանկացած տարբերակ</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Ընտրել APK ֆայլը</string>
     <string name="home_could_not_resolve_patch_files">Չհաջողվեց գտնել փաթչի ֆայլերը</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Հեռացնել APK-ն</string>
     <string name="home_apk_info_limited_info_warning">Չհաջողվեց ամբողջությամբ կարդալ այս APK-ի մանիֆեստը (սովորական է բաժանված փաթեթների համար): Ստորև բերված մանրամասները մոտ approximate են, բայց փոփոխությունները դեռ պետք է աշխատեն</string>
     <string name="home_apk_info_unsupported_app_warning">Այս հավելվածի համար համատեղելի փոփոխություններ չեն գտնվել: Դուք դեռ կարող եք շարունակել, սակայն փոփոխությունները կարող են ազդեցություն չունենալ</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Այս հավելվածի համար համատեղելի թարմացումներ չեն գտնվել</string>
     <string name="home_apk_info_build_label">Կառուցում</string>
     <string name="home_apk_info_size_label">Չափսը</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Հասցե</string>
     <string name="home_stage_change_apk">Փոխել APK-ն</string>
     <string name="home_stage_continue">Շարունակել</string>
+    <string name="home_stage_patch">Թարմացում</string>
     <string name="home_stage_analyzing_title">Վերլուծվում է</string>
     <string name="home_stage_reading_metadata">Կարդացվում է հավելվածի մետատվյալները…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,13 +192,6 @@
     <string name="home_dialog_uninstall_title">Հեռացնե՞լ %1$s-ը։</string>
     <string name="home_dialog_uninstall_message">Սա %1$s-ը հեռացնում է միացված սարքից: Սկավառակի վրայի փոփոխված APK-ն և ձեր պատմությունը պահպանվում են, եթե ստորև այլապես չնշեք</string>
     <string name="home_dialog_uninstall_also_forget">Հեռացնել նաև «Ձեր հավելվածներից»</string>
-    <string name="home_dialog_missing_apk_title">Բնօրինակ APK-ն չի գտնվել</string>
-    <string name="home_dialog_missing_apk_message">%1$s-ի համար մուտքային APK-ն այլևս չկա այս հասցեում։
-%2$s
-
-Ընտրեք APK-ն նորից՝ ձեր պահպանված կարգավորումներով վերապատչելու համար</string>
-    <string name="home_dialog_select_apk">Ընտրել APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Ընտրել APK վերապատչելու համար</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Կառավարել աղբյուրները</string>
     <string name="home_header_multi_source_hint">Յուրաքանչյուր միացված աղբյուրի պատչերը միավորվում են: Կառավարեք վերևի «աղբյուրները» կոճակի միջոցով</string>
@@ -288,10 +228,6 @@
     <string name="home_filter_your_apps">Ձեր հավելվածները</string>
     <string name="home_banner_view">Տեսնել</string>
     <string name="home_your_apps_install_ready">Տեղադրման համար պատրաստ է</string>
-    <string name="home_your_apps_newer_patch_hint">Ավելի նոր փաթեթը կարող է թարմացնել հավելվածը, սեղմեք «Թարմացնել» ստուգելու համար</string>
-    <string name="home_your_apps_device_version_ready">Փոփոխված v%1$s-ը պատրաստ է, սարքի վրա v%2$s-ն է (կրկնակի փոփոխման կարիք չկա)</string>
-    <string name="home_your_apps_install_ready_hint">Փեթչված v%1$s-ը պատրաստ է տեղադրման համար (նոր փեթչի կարիք չկա)</string>
-    <string name="home_action_install">Տեղադրել</string>
     <string name="home_action_install_to_device">Տեղադրել սարքի մեջ</string>
     <string name="home_action_installing">Տեղադրվում է…</string>
     <string name="home_action_preparing">Պատրաստվում է…</string>
@@ -332,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s պատրաստ է · սարքը v%2$s տարբերակով է</string>
     <string name="home_detail_ready_no_repatch">v%1$s-ը պատրաստ է, կրկնակի փոփոխման կարիք չկա</string>
-    <string name="home_advice_unsupported">v%1$s-ը այլևս չի աջակցվի: Խնդրում ենք թարմացնել մինչև v%2$s</string>
+    <string name="home_detail_source_disabled">Անջատված է</string>
+    <string name="home_detail_source_removed">Հեռացված է</string>
+    <string name="home_detail_source_disabled_sub">Աղբյուրն անջատված է Աղբյուրներ բաժնում: Միացրեք այն՝ կրկին թարմացնելու համար</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Բնօրինակ աղբյուրը անջատված է: Ընտրեք այլընտրանքային աղբյուր կամ վերամիացրեք այն «Աղբյուրներ» բաժնում</string>
+    <string name="home_detail_no_compatible_source">Համատեղելի աղբյուր չկա</string>
+    <string name="home_detail_choose_source">Ընտրեք փաթեթի աղբյուրը</string>
     <string name="home_advice_unsupported_by_patches">v%1$s-ը այլևս չի աջակցվի վերջին փաթեթներով</string>
     <string name="home_date_today">այսօր</string>
     <string name="home_date_yesterday">երեկ</string>
@@ -430,11 +371,13 @@
     <string name="patch_selection_group_ungrouped">Առանց խմբի</string>
     <string name="patch_selection_group_selected_count">%1$d ընտրված</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Սկսել սկզբից</string>
+    <string name="patching_slow_warning">Սա սովորականից ավելի երկար է տևում: Խնդրում ենք սպասել...</string>
     <string name="patching_status_ready">Պատրաստ է թարմացմանට</string>
     <string name="patching_status_preparing">Պատրաստվում է թարմացմանը</string>
     <string name="patching_status_in_progress">Կիրառվում են փաթեթները</string>
     <string name="patching_completed_loading_result">Պատչավորումն ավարտված է, բեռնում արդյունքը…</string>
-    <string name="patching_cancelled_loading_result">Պատչավորումը չեղարկվեց, բեռնում արդյունքը…</string>
+    <string name="patching_cancelled_loading_result">Պատչավորումը չեղարկվեց, բեռնվում է արդյունքը…</string>
     <string name="patching_failed_loading_result">Թարմացումը ձախացավ, բեռնվում է արդյունքը…</string>
     <string name="patching_log_viewer_failed_to_read">Չհաջողվեց կարդալ մատյանի ֆայլը՝ %1$s</string>
     <string name="patching_log_viewer_title">Մատյանի ֆայլ</string>
@@ -470,6 +413,8 @@
     <string name="patching_banner_native_libs_stripped">Հեռացվել է</string>
     <string name="patching_error_failed_patches">Ձախողված փաթեթներ՝ %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB-ն անջատված է · Միացրեք տեղադրելու համար</string>
+    <string name="result_adb_connect_device_hint">Միացրեք սարքը USB-ի միջոցով՝ ADB-ով տեղադրելու համար</string>
     <string name="result_screen_patch_another_button">Փաթեթավորել մեկ այլը</string>
     <string name="result_screen_install_on_device_label">Տեղադրել %1$s-ի վրա</string>
     <string name="result_screen_links_routed_label">Հղումները ուղղորդված են դեպի փոփոխված հավելված</string>
@@ -569,13 +514,12 @@
     <string name="source_error_failed_to_load">Բեռնումը ձախողվեց</string>
     <string name="source_error_github_pat_required">GitHub PAT-ը պահանջվում է pull request-ի աղբյուրները ներբեռնելու համար</string>
     <string name="source_error_pr_no_artifact">Pull request-ի համար արտեֆակտներ չեն գտնվել</string>
-    <string name="source_sheet_manage_description">Կառավարել փեչերի աղբյուրները</string>
-    <string name="source_sheet_local_label">Տեղական</string>
+    <string name="source_error_patcher_incompatible">Այս աղբյուրը ստեղծված է %1$s փաթեթավորիչի համար, սակայն Morphe %2$s-ը ներառում է %3$s փաթեթավորիչը: Թարմացրեք Morphe-ը այն օգտագործելու համար</string>
+    <string name="version_label_local">Տեղական</string>
     <string name="source_sheet_remote_label">Հեռակա</string>
     <string name="add_source">Ավելացնել աղբյուր</string>
     <string name="source_sheet_title">Փեչերի աղբյուրներ</string>
     <string name="source_sheet_reload_description">Վերաբեռնել փեչերը</string>
-    <string name="source_sheet_quick_mode_hint">Ընտրեք, թե որ աղբյուրն օգտագործի Quick Patch-ը: Բազմաղբյուրային ռեժիմը հասանելի է Expert ռեժիմում</string>
     <string name="source_sheet_multi_mode_hint">Միացրեք/անջատեք ցանկացած համադրություն: Բոլոր միացված աղբյուրների փեչերը միավորվում են</string>
     <string name="source_sheet_done_button">Պատրաստ է</string>
     <string name="source_sheet_type_preinstalled">Նախնական տեղադրված</string>
@@ -585,13 +529,21 @@
     <string name="source_sheet_edit_description">Խմբագրել</string>
     <string name="source_sheet_move_up_description">Տեղափոխել վերև</string>
     <string name="source_sheet_move_down_description">Տեղափոխել ներքև</string>
-    <string name="source_sheet_channel_older_stable">Հին կայուն</string>
-    <string name="source_sheet_channel_older_dev">Հին մշակող</string>
     <string name="source_sheet_ignored_mpp_title">Անտեսված .mpp նմուշները</string>
-    <string name="source_sheet_ignored_mpp_hint">Ազդում է միայն թղթապանակի աղբյուրների վրա, որոնք ավտոմատ կերպով բեռնում են թղթապանակի ամենանոր .mpp-ն: Այդ ամենանոր տարբերակն ընտրելիս բաց են թողնվում այն ֆայլերը, որոնց անունը համապատասխանում է այստեղ նշված նմուշին: Սովորական բառը համապատասխանում է ցանկացած ֆայլի, որը պարունակում է այն (օրինակ՝ debug): Օգտագործեք * նշանը globs-երի համար (օրինակ՝ *-debug.mpp): *-sources.mpp և *-javadoc.mpp ֆայլերը միշտ անտեսվում են</string>
+    <string name="source_sheet_ignored_mpp_hint">Ազդում է միայն թղթապանակի աղբյուրների վրա, որոնք ավտոմատ բեռնում են թղթապանակի ամենանոր .mpp ֆայլը: Այդ ամենանոր կառուցվածքը ընտրելիս բաց են թողնվում այն ֆայլերը, որոնց անունը համապատասխանում է այստեղ նշված օրինաչափությանը: Սովորական բառը համապատասխանում է այն ցանկացած ֆայլի, որը պարունակում է այդ բառը (օր.՝ debug): Օգտագործեք * նշանը globs-ի համար (օր.՝ *-debug.mpp): *-sources.mpp և *-javadoc.mpp ֆայլերը միշտ անտեսվում են</string>
     <string name="source_sheet_ignored_mpp_placeholder">օր.՝ debug կամ *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Ավելացնել նմուշ</string>
     <string name="source_sheet_remove_pattern_description">Հեռացնել նմուշ</string>
+    <string name="sources_management_signed_by">Ստորագրված է</string>
+    <string name="sources_management_signing_key_changed_badge">Բանալին փոխվել է</string>
+    <string name="sources_management_signing_key_changed_hint">Ստորագրման բանալին փոխվել է: Սեղմեք՝ վերանայելու համար</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s'-ը չի թարմացվել, քանի որ դրա վերջին թողարկումը ստորագրված չէ նախկինում օգտագործված բանալիով</string>
+    <string name="sources_signing_key_new">Նոր բանալի</string>
+    <string name="sources_signing_key_trust_message">Վերջին թողարկումը ստորագրված է այլ բանալիով: Կամ ծրագրավորողը փոխել է իր բանալին, կամ ինչ-որ մեկն է հրապարակել այս թողարկումը: Վստահեք դրան միայն եթե ծրագրավորողը հայտարարել է նոր բանալիի մասին</string>
+    <string name="sources_signing_key_trust_message_unsigned">Վերջին թողարկումը ստորագրված չէ: Կամ ծրագրավորողը դադարել է ստորագրել թողարկումները, կամ ինչ-որ մեկն է հրապարակել այս թողարկումը: Վստահեք դրան միայն եթե ծրագրավորողը հայտարարել է այդ մասին</string>
+    <string name="sources_signing_key_trust_title">Վստահե՞լ նոր բանալին։</string>
+    <string name="sources_signing_key_trusted">Վստահելի բանալի</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Տեղային ֆայլ</string>
     <string name="patch_source_dialog_name_label">Անուն</string>
@@ -601,8 +553,6 @@
     <string name="patch_source_dialog_repo_hint">Ընդունում է GitHub, GitLab կամ morphe.software/add-source հղումը</string>
     <string name="patch_source_dialog_pre_release_title">Նախաքողացումների լրացումներ</string>
     <string name="patch_source_dialog_pre_release_hint">Ստանում է վաղ հասանելիություն նոր փորձարարական լրացումների տար version-ներին</string>
-    <string name="patch_source_dialog_experimental_title">Հավելվածի փորձարարական տարբերակներ</string>
-    <string name="patch_source_dialog_experimental_hint">Առաջնահերթություն է տալիս հավելվածի փորձարարական տարբերակներին, եթե դրանք հասանելի են</string>
     <string name="patch_source_dialog_error_name_required">Անունը պարտադիր է</string>
     <string name="patch_source_dialog_error_invalid_url">Մուտքագրեք GitHub-ի կամ GitLab-ի վավեր URL</string>
     <string name="patch_source_dialog_error_invalid_file">Ընտրեք վավեր .mpp ֆայլ</string>
@@ -685,10 +635,8 @@
     <string name="settings_dialog_open_logs_button">Բացել մատյանները</string>
     <string name="settings_dialog_reset_button">Վերակայացնել</string>
     <string name="settings_theme_system">Համակարգ</string>
-    <string name="settings_signing_error_not_found">Կոնֆիգուրացված բանալիների պահոցը չի գտնվել՝ %1$s: Վերականգնեք ֆայլը, ընտրեք մեկ այլը Կարգավորումներում կամ մաքրեք կարգավորումը՝ Morphe-ի լռելյայն տարբերակն օգտագործելու համար</string>
     <string name="settings_search_languages_placeholder">Փնտրել լեզուներ</string>
     <string name="settings_dialog_resolves_to_message">Լուծվում է՝ %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Բանալիների պահոցը չի գտնվել՝ %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Լեզու</string>
     <string name="settings_language_current_title">Ընթացիկ լեզուն</string>
@@ -696,9 +644,13 @@
     <string name="settings_language_dialog_title">Հավելվածի լեզուն</string>
     <string name="settings_language_search_no_results">Արդյունքներ չեն գտնվել</string>
     <string name="settings_section_theme">Թեմա</string>
+    <string name="settings_appearance_theme_mode">Թեմայի ռեժիմ</string>
     <string name="settings_theme_light">Լուսավոր</string>
     <string name="settings_theme_dark">Մութ</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Գույների ոճը</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Միագույն</string>
     <string name="settings_toggle_sharp_corners_label">Սուր անկյուններ</string>
     <string name="settings_toggle_sharp_corners_desc">Դարձնել քարտերի, երկխոսությունների և կոճակների անկյունները ուղղանկյուն</string>
     <string name="settings_section_accent_color">Շեշտադրվող գույն</string>
@@ -708,9 +660,6 @@
     <string name="settings_section_app_cards">Հավելվածի քարտեր</string>
     <string name="settings_app_cards_color_all">Գույն բոլոր քարտերի համար</string>
     <string name="settings_app_cards_color_all_desc">Անհատապես ձևավորված քարտերը պահպանում են իրենց սեփական գույնը</string>
-    <string name="settings_section_patch_list">Փոփոխությունների ցուցակ</string>
-    <string name="settings_toggle_patch_categories_label">Փոփոխությունների կատեգորիաներ</string>
-    <string name="settings_toggle_patch_categories_desc">Խմբավորել փոփոխությունները ըստ ընդլայնվող կատեգորիաների</string>
     <string name="settings_section_background_animation">Ֆոնի անիմացիա</string>
     <string name="settings_background_circles">Շրջաններ</string>
     <string name="settings_background_rings">Օղակներ</string>
@@ -824,8 +773,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Թարգմանել</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Փոփոխությունների միջնապատկերը հասանելի չէ</string>
+    <string name="changelog_badge_installed">Տեղադրված է</string>
+    <string name="changelog_badge_latest">Վերջինը</string>
+    <string name="changelog_badge_prerelease">Նախաթողարկում</string>
+    <string name="changelog_date_today">Այսօր</string>
+    <string name="changelog_date_yesterday">Երեկ</string>
     <string name="changelog_dialog_title">Տեսնել փոփոխությունների միջնապատկերը</string>
-    <string name="changelog_show_older_button">Ցուցադրել հին թողարկումները</string>
+    <string name="changelog_not_available">Փոփոխությունների միջնապատկերը հասանելի չէ</string>
+    <string name="changelog_section_app_support">Հավելվածի աջակցություն</string>
+    <string name="changelog_section_fixes">Ուղղումներ</string>
+    <string name="changelog_section_improvements">Բարելավումներ</string>
+    <string name="changelog_section_new">Նոր</string>
+    <string name="changelog_section_other">Փոփոխություններ</string>
+    <string name="changelog_section_performance">Արտադրողականություն</string>
+    <string name="changelog_show_all">Ցույց տալ բոլորը (%1$d)</string>
+    <string name="changelog_show_less">Ցույց տալ ավելի քիչ</string>
     <string name="changelog_view_on_github_button">Տես GitHub-ում</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Աղբյուրներ</string>
+    <string name="nav_apps">Հավելվածներ</string>
 </resources>

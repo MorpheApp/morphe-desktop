@@ -13,6 +13,7 @@
     <string name="expand">Rozwiń</string>
     <string name="cancel">Anuluj</string>
     <string name="close">Zamknij</string>
+    <string name="trust">Zaufaj</string>
     <string name="delete">Usuń</string>
     <string name="disabled_while_patching">Wyłączone podczas modyfikowania</string>
     <string name="drop_apk_here">Upuść plik APK tutaj</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Przerwano połączenie podczas pobierania, spróbuj ponownie</string>
     <string name="error_network_loading_patches">Błąd sieci podczas wczytywania modyfikacji</string>
     <string name="error_patch_file_not_found">Nie znaleziono pliku modyfikacji: %1$s</string>
-    <string name="error_no_patches_files_supplied">Nie podano plików z modyfikacjami</string>
-    <string name="error_input_apk_not_found">Nie znaleziono wejściowego pliku APK</string>
     <string name="error_step_failed">%1$s - błąd: %2$s</string>
     <string name="error_drop_valid_apk">Upuść prawidłowy plik .apk, .apkm, .xapk lub .apks</string>
     <string name="status_saving">Zapisywanie…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtruj aplikacje…</string>
     <string name="version">Wersja</string>
     <string name="version_label_stable">Stabilna</string>
-    <string name="version_label_dev">Deweloperska</string>
+    <string name="version_label_prerelease">Przedpremierowa</string>
     <string name="version_label_experimental">Eksperymentalna</string>
-    <string name="version_label_latest_dev">Najnowsza deweloperska</string>
     <string name="version_label_latest_stable">Najnowsza stabilna</string>
+    <string name="version_label_recommended">Zalecane</string>
+    <string name="version_label_supported">Obsługiwane</string>
     <string name="app_info_arch_label">Architektura</string>
     <string name="app_info_min_sdk_label">Min. SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Modyfikowanie anulowane</string>
     <string name="view_full_logs_button">Pokaż pełne logi</string>
     <string name="error_patching_unknown">Modyfikowanie nie powiodło się z nieznanej przyczyny</string>
-    <string name="error_patching_general">Błąd: %1$s</string>
     <string name="error_log_label">Dziennik błędów</string>
     <string name="back">Wstecz</string>
     <string name="open_folder">Otwórz folder</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Dowolna liczba punktów, gradient liniowy, promienisty lub stożkowy</string>
     <string name="card_fill_mode_solid">Jednolity</string>
     <string name="card_fill_mode_solid_blurb">Jeden, płaski kolor</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Modyfikacje</string>
-    <string name="quick_patch_screen_start_over_button">Zacznij od nowa</string>
-    <string name="quick_patch_patch_another_button">Zmodyfikuj kolejną</string>
-    <string name="quick_patch_select_apk">Wybierz plik APK</string>
-    <string name="quick_patch_analyze_apk_failed">Nie udało się przeanalizować pliku APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Nie udało się wyodrębnić bazowego pliku APK z pakietu</string>
-    <string name="quick_patch_unsupported_app_error">Aplikacja %1$s nie jest obsługiwana w trybie szybkiego modyfikowania. Obsługiwane aplikacje: %2$s. Dla nieobsługiwanych aplikacji użyj trybu normalnego</string>
     <string name="adb_install_on_button">Zainstaluj na %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Wczytywanie modyfikacji</string>
-    <string name="patching_step_preparing">Przygotowywanie</string>
     <string name="patching_step_merging_split_apk">Scalanie podzielonego pliku APK</string>
     <string name="patching_step_read_apk">Odczytywanie pliku APK</string>
     <string name="patching_step_applying_patches">Stosowanie modyfikacji</string>
-    <string name="patching_step_saving">Zapisywanie</string>
     <string name="patching_step_writing_apk">Zapisywanie zmodyfikowanego pliku APK</string>
     <string name="patching_step_signing">Podpisywanie zmodyfikowanego pliku APK</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Plik może być uszkodzony, pobierz ponownie z APKMirror</string>
     <string name="version_status_checksum_failed">Weryfikacja sumy kontrolnej nie powiodła się</string>
     <string name="version_status_checksum_matches">Suma kontrolna zgadza się z APKMirror</string>
-    <string name="version_status_older_stable">Starsza stabilna</string>
     <string name="version_status_newer_stable_available">Dostępna nowsza stabilna wersja v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Dostępna jest nowsza stabilna wersja</string>
     <string name="version_status_experimental_detail">Obsługiwana, ale może nie działać prawidłowo</string>
-    <string name="version_status_older_experimental">Starsza eksperymentalna</string>
-    <string name="version_status_newer_experimental_available">Dostępna nowsza eksperymentalna wersja v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Dostępna jest nowsza eksperymentalna wersja</string>
-    <string name="version_status_too_new">Zbyt nowa wersja</string>
     <string name="version_status_unsupported_detail">Nie jest oficjalnie obsługiwana, modyfikacje najprawdopodobniej nie zadziałają</string>
-    <string name="version_status_too_old">Zbyt stara wersja</string>
     <string name="version_status_unsupported">Nieobsługiwana wersja</string>
     <string name="version_status_build_unsupported">Nieobsługiwana kompilacja</string>
     <string name="version_status_build_unsupported_detail">Ta wersja jest obsługiwana, ale nie ta konkretna kompilacja. Pobierz kompilację, dla której przeznaczone są modyfikacje</string>
+    <string name="version_status_build_unsupported_with_code">Modyfikacje wymagają kompilacji %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Informacja o wersji</string>
+    <string name="version_warning_build_unsupported_message">Obecna: v%1$s (kompilacja %2$s)\nWymagana kompilacja: %3$s\n\nTo inna kompilacja tej samej wersji. Modyfikacje wymagają konkretnej kompilacji.</string>
     <string name="version_warning_experiment_title">Chcesz poeksperymentować? 🧪</string>
-    <string name="version_warning_older_stable_title">Starsza stabilna wersja</string>
-    <string name="version_warning_older_stable_message">Obecna: v%1$s\nNajnowsza stabilna: v%2$s\nTa wersja jest obsługiwana, ale dostępna jest nowsza wersja stabilna. Może w niej brakować najnowszych poprawek.</string>
     <string name="version_warning_latest_experimental_message">Obecna: v%1$s\n\nTa wersja posiada wczesne wsparcie eksperymentalne\n\n🔧 Spodziewaj się niestabilnego działania aplikacji lub nieznanych błędów do czasu dopracowania modyfikacji dla tej wersji.</string>
-    <string name="version_warning_older_experimental_title">Starsza wersja eksperymentalna\nChcesz poeksperymentować? 🧪</string>
-    <string name="version_warning_older_experimental_message">Obecna: v%1$s\nNajnowsza eksperymentalna: v%2$s\n\nJest to obsługiwana kompilacja eksperymentalna, ale dostępna jest jej nowsza wersja. Spodziewaj się niestabilnego działania aplikacji lub nieznanych błędów do czasu dopracowania modyfikacji dla tej wersji.</string>
-    <string name="version_warning_too_new_message">Obecna: v%1$s\nNajnowsza znana: v%2$s\n\nTa wersja posiada wczesne wsparcie eksperymentalne\n\n🔧 Spodziewaj się niestabilnego działania aplikacji lub nieznanych błędów do czasu dopracowania modyfikacji dla tej wersji.</string>
-    <string name="version_warning_too_old_message">Obecna: v%1$s\nNajstarsza obsługiwana: v%2$s\n\nTa wersja nie jest oficjalnie obsługiwana. Modyfikacje najprawdopodobniej nie zadziałają.</string>
     <string name="version_warning_unsupported_message">Obecna: v%1$s\n\nTa wersja nie jest oficjalnie obsługiwana. Modyfikacje najprawdopodobniej nie zadziałają.</string>
     <string name="version_warning_notice_message">Kontynuować z v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Starsza stabilna kompilacja. Dostępna nowsza stabilna wersja v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Eksperymentalna kompilacja. Obsługiwana, ale może nie działać prawidłowo</string>
-    <string name="quick_patch_warning_older_experimental">Starsza kompilacja eksperymentalna. Dostępna nowsza eksperymentalna wersja v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Nieobsługiwana kompilacja. Tę wersję można zmodyfikować, ale nie tę konkretną kompilację</string>
-    <string name="quick_patch_warning_too_new">Zbyt nowa wersja. Nie jest oficjalnie obsługiwana, modyfikacje najprawdopodobniej nie zadziałają</string>
-    <string name="quick_patch_warning_too_old">Zbyt stara wersja. Nie jest oficjalnie obsługiwana, modyfikacje najprawdopodobniej nie zadziałają</string>
-    <string name="quick_patch_warning_unsupported_between">Nieobsługiwana wersja. Modyfikacje najprawdopodobniej nie zadziałają</string>
-    <string name="quick_patch_read_apk_failed">Nie udało się odczytać pliku APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Przygotowywanie modyfikacji…</string>
-    <string name="quick_patch_fetch_patches_failed">Nie udało się pobrać modyfikacji. Sprawdź połączenie z internetem</string>
-    <string name="quick_patch_status_downloading_patches">Pobieranie modyfikacji %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Nie udało się pobrać modyfikacji: %1$s</string>
-    <string name="quick_patch_status_patching">Modyfikowanie…</string>
-    <string name="quick_patch_completed_adb_off">ADB wyłączone · Włącz, aby zainstalować</string>
-    <string name="quick_patch_completed_adb_connect_device">Podłącz urządzenie przez USB, aby zainstalować za pomocą ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Wystąpił nieznany błąd</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analizowanie pliku APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d z %2$d modyfikacji</string>
-    <string name="quick_patch_patching_slow_warning">To trwa dłużej niż zwykle. Proszę czekać…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(kompilacja %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Brak kompatybilnych modyfikacji dla tej aplikacji</string>
-    <string name="quick_patch_ready_no_matching_patches">Brak modyfikacji pasujących do \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Zmodyfikuj z domyślnymi ustawieniami</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Obsługiwane aplikacje</string>
-    <string name="quick_patch_supported_apps_subtitle">Upuść tutaj plik APK w dokładnej wersji dla obsługiwanej aplikacji</string>
-    <string name="quick_patch_supported_apps_loading">Wczytywanie obsługiwanych aplikacji…</string>
-    <string name="quick_patch_supported_apps_load_error">Nie udało się wczytać obsługiwanych aplikacji</string>
-    <string name="quick_patch_supported_apps_change_source">Zmień źródło</string>
-    <string name="quick_patch_supported_apps_no_matches">Brak pasujących aplikacji</string>
-    <string name="quick_patch_supported_apps_version_any">Dowolna wersja</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Wybierz plik APK</string>
     <string name="home_could_not_resolve_patch_files">Nie udało się odnaleźć plików modyfikacji</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Usuń plik APK</string>
     <string name="home_apk_info_limited_info_warning">Nie udało się w pełni odczytać manifestu tego pliku APK (częste zjawisko przy podzielonych plikach APK). Poniższe szczegóły są przybliżone, ale modyfikowanie powinno nadal działać</string>
     <string name="home_apk_info_unsupported_app_warning">Nie znaleziono kompatybilnych modyfikacji dla tej aplikacji. Możesz kontynuować, ale modyfikowanie może nie przynieść żadnego efektu</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Nie znaleziono zgodnych modyfikacji dla tej aplikacji</string>
     <string name="home_apk_info_build_label">Kompilacja</string>
     <string name="home_apk_info_size_label">Rozmiar</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Źródło</string>
     <string name="home_stage_change_apk">Zmień plik APK</string>
     <string name="home_stage_continue">Kontynuuj</string>
+    <string name="home_stage_patch">Modyfikuj</string>
     <string name="home_stage_analyzing_title">Analizowanie</string>
     <string name="home_stage_reading_metadata">Odczytywanie metadanych aplikacji…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Odinstalować %1$s?</string>
     <string name="home_dialog_uninstall_message">Spowoduje to usunięcie %1$s z podłączonego urządzenia. Zmodyfikowany plik APK na dysku oraz historia zostaną zachowane, chyba że poniżej zaznaczysz inaczej</string>
     <string name="home_dialog_uninstall_also_forget">Usuń również z Twoich aplikacji</string>
-    <string name="home_dialog_missing_apk_title">Nie znaleziono oryginalnego pliku APK</string>
-    <string name="home_dialog_missing_apk_message">Wejściowy plik APK dla %1$s nie znajduje się już w:\n%2$s\n\nWybierz plik APK ponownie, aby go zmodyfikować z Twoimi zapisanymi ustawieniami</string>
-    <string name="home_dialog_select_apk">Wybierz plik APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Wybierz plik APK do ponownego zmodyfikowania</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Zarządzaj źródłami</string>
     <string name="home_header_multi_source_hint">Modyfikacje ze wszystkich włączonych źródeł są scalane. Zarządzaj nimi za pomocą przycisku powyżej</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Twoje aplikacje</string>
     <string name="home_banner_view">Wyświetl</string>
     <string name="home_your_apps_install_ready">Gotowe do instalacji</string>
-    <string name="home_your_apps_newer_patch_hint">Nowsza modyfikacja może obsługiwać nowszą wersję aplikacji, kliknij Aktualizuj, aby sprawdzić</string>
-    <string name="home_your_apps_device_version_ready">Zmodyfikowana v%1$s jest gotowa, urządzenie ma v%2$s (ponowne modyfikowanie nie jest wymagane)</string>
-    <string name="home_your_apps_install_ready_hint">Zmodyfikowana v%1$s jest gotowa do instalacji (ponowne modyfikowanie nie jest wymagane)</string>
-    <string name="home_action_install">Zainstaluj</string>
     <string name="home_action_install_to_device">Zainstaluj na urządzeniu</string>
     <string name="home_action_installing">Instalowanie…</string>
     <string name="home_action_preparing">Przygotowywanie…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s gotowa · urządzenie ma v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s gotowa, ponowne modyfikowanie nie jest wymagane</string>
-    <string name="home_advice_unsupported">Wersja v%1$s nie jest już obsługiwana. Zaktualizuj do v%2$s</string>
+    <string name="home_detail_source_disabled">Wyłączone</string>
+    <string name="home_detail_source_removed">Usunięte</string>
+    <string name="home_detail_source_disabled_sub">Źródło jest wyłączone w sekcji Źródła. Włącz je, aby ponownie zmodyfikować aplikację</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Pierwotne źródło jest wyłączone. Wybierz alternatywne źródło lub włącz je ponownie w sekcji Źródła</string>
+    <string name="home_detail_no_compatible_source">Brak włączonego zgodnego źródła</string>
+    <string name="home_detail_choose_source">Wybierz źródło modyfikacji</string>
     <string name="home_advice_unsupported_by_patches">Wersja v%1$s nie jest już obsługiwana przez najnowsze modyfikacje</string>
     <string name="home_date_today">dzisiaj</string>
     <string name="home_date_yesterday">wczoraj</string>
@@ -427,6 +371,9 @@
     <string name="patch_selection_group_ungrouped">Niezgrupowane</string>
     <string name="patch_selection_group_selected_count">Wybrano: %1$d</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Zacznij od nowa</string>
+    <string name="patching_patches_count">%1$d z %2$d modyfikacji</string>
+    <string name="patching_slow_warning">To trwa dłużej niż zwykle. Proszę czekać…</string>
     <string name="patching_status_ready">Gotowe do zmodyfikowania</string>
     <string name="patching_status_preparing">Przygotowywanie do modyfikowania</string>
     <string name="patching_status_in_progress">Stosowanie modyfikacji</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Usunięte</string>
     <string name="patching_error_failed_patches">Nieudane modyfikacje: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB wyłączone · Włącz, aby zainstalować</string>
+    <string name="result_adb_connect_device_hint">Podłącz urządzenie przez USB, aby zainstalować za pomocą ADB</string>
     <string name="result_screen_patch_another_button">Zmodyfikuj kolejną</string>
     <string name="result_screen_install_on_device_label">Zainstaluj na %1$s</string>
     <string name="result_screen_links_routed_label">Linki przekierowane do zmodyfikowanej aplikacji</string>
@@ -566,13 +515,13 @@
     <string name="source_error_failed_to_load">Nie udało się wczytać</string>
     <string name="source_error_github_pat_required">Osobisty token dostępu GitHub jest wymagany do pobrania źródeł z pull requestów</string>
     <string name="source_error_pr_no_artifact">Nie znaleziono artefaktów dla tego pull requesta</string>
-    <string name="source_sheet_manage_description">Zarządzaj źródłami modyfikacji</string>
-    <string name="source_sheet_local_label">Lokalne</string>
+    <string name="source_error_patcher_incompatible">To źródło zostało przygotowane dla modyfikatora %1$s, ale Morphe %2$s zawiera modyfikator %3$s. Zaktualizuj Morphe, aby go użyć
+</string>
+    <string name="version_label_local">Lokalne</string>
     <string name="source_sheet_remote_label">Zdalne</string>
     <string name="add_source">Dodaj źródło</string>
     <string name="source_sheet_title">Źródła modyfikacji</string>
     <string name="source_sheet_reload_description">Wczytaj ponownie modyfikacje</string>
-    <string name="source_sheet_quick_mode_hint">Wybierz, którego źródła używa szybka modyfikacja. Wiele źródeł jest dostępnych w trybie eksperckim</string>
     <string name="source_sheet_multi_mode_hint">Włącz lub wyłącz dowolną kombinację. Modyfikacje ze wszystkich włączonych źródeł są scalane</string>
     <string name="source_sheet_done_button">Gotowe</string>
     <string name="source_sheet_type_preinstalled">Preinstalowane</string>
@@ -582,13 +531,21 @@
     <string name="source_sheet_edit_description">Edytuj</string>
     <string name="source_sheet_move_up_description">Przenieś w górę</string>
     <string name="source_sheet_move_down_description">Przenieś w dół</string>
-    <string name="source_sheet_channel_older_stable">Starsza stabilna</string>
-    <string name="source_sheet_channel_older_dev">Starsza deweloperska</string>
     <string name="source_sheet_ignored_mpp_title">Ignorowane wzorce .mpp</string>
     <string name="source_sheet_ignored_mpp_hint">Wpływa tylko na źródła folderowe, które automatycznie wczytują najnowszy plik .mpp w folderze. Przy wybieraniu najnowszej kompilacji, pliki o nazwach pasujących do poniższych wzorców są pomijane. Zwykłe słowo dopasowuje każdy plik, który je zawiera (np. debug). Użyj znaku * dla dopasowań wieloznacznych (np. *-debug.mpp). Pliki *-sources.mpp i *-javadoc.mpp są zawsze ignorowane</string>
     <string name="source_sheet_ignored_mpp_placeholder">np. debug lub *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Dodaj wzorzec</string>
     <string name="source_sheet_remove_pattern_description">Usuń wzorzec</string>
+    <string name="sources_management_signed_by">Podpisano przez</string>
+    <string name="sources_management_signing_key_changed_badge">Zmieniono klucz</string>
+    <string name="sources_management_signing_key_changed_hint">Klucz podpisu uległ zmianie. Dotknij, aby go sprawdzić</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">Nie zaktualizowano źródła \"%1$s\", ponieważ jego najnowsze wydanie nie zostało podpisane używanym wcześniej kluczem</string>
+    <string name="sources_signing_key_new">Nowy klucz</string>
+    <string name="sources_signing_key_trust_message">Najnowsze wydanie jest podpisane innym kluczem. Programista zmienił swój klucz lub wydanie opublikował ktoś inny. Zaufaj mu tylko wtedy, gdy programista poinformował o nowym kluczu</string>
+    <string name="sources_signing_key_trust_message_unsigned">Najnowsze wydanie nie jest podpisane. Programista przestał podpisywać wydania lub opublikował je ktoś inny. Zaufaj mu tylko wtedy, gdy programista o tym poinformował</string>
+    <string name="sources_signing_key_trust_title">Zaufać nowemu kluczowi?</string>
+    <string name="sources_signing_key_trusted">Zaufany klucz</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Lokalny plik</string>
     <string name="patch_source_dialog_name_label">Nazwa</string>
@@ -598,8 +555,6 @@
     <string name="patch_source_dialog_repo_hint">Obsługuje linki z GitHub, GitLab lub morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Przedpremierowe modyfikacje</string>
     <string name="patch_source_dialog_pre_release_hint">Zapewnia wczesny dostęp do nowych, eksperymentalnych wersji modyfikacji</string>
-    <string name="patch_source_dialog_experimental_title">Eksperymentalne wersje aplikacji</string>
-    <string name="patch_source_dialog_experimental_hint">Nadaje priorytet eksperymentalnym wersjom aplikacji, jeśli są dostępne</string>
     <string name="patch_source_dialog_error_name_required">Nazwa jest wymagana</string>
     <string name="patch_source_dialog_error_invalid_url">Wprowadź prawidłowy adres GitHub lub GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Wybierz prawidłowy plik .mpp</string>
@@ -682,10 +637,8 @@
     <string name="settings_dialog_open_logs_button">Otwórz logi</string>
     <string name="settings_dialog_reset_button">Zresetuj</string>
     <string name="settings_theme_system">Systemowy</string>
-    <string name="settings_signing_error_not_found">Nie znaleziono skonfigurowanego magazynu kluczy: %1$s. Przywróć plik, wybierz inny w Ustawieniach lub wyczyść to ustawienie, aby użyć domyślnego dla Morphe</string>
     <string name="settings_search_languages_placeholder">Szukaj języków</string>
     <string name="settings_dialog_resolves_to_message">Wskazuje na: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Nie znaleziono magazynu kluczy: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Język</string>
     <string name="settings_language_current_title">Bieżący język</string>
@@ -693,9 +646,13 @@
     <string name="settings_language_dialog_title">Język aplikacji</string>
     <string name="settings_language_search_no_results">Nie znaleziono wyników</string>
     <string name="settings_section_theme">Motyw</string>
+    <string name="settings_appearance_theme_mode">Tryb motywu</string>
     <string name="settings_theme_light">Jasny</string>
     <string name="settings_theme_dark">Ciemny</string>
     <string name="settings_theme_amoled">AMOLED</string>
+    <string name="settings_appearance_color_style">Styl kolorów</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monochromatyczny</string>
     <string name="settings_toggle_sharp_corners_label">Ostre narożniki</string>
     <string name="settings_toggle_sharp_corners_desc">Usuwa zaokrąglenia kart, okien dialogowych i przycisków</string>
     <string name="settings_section_accent_color">Kolor akcentu</string>
@@ -705,9 +662,6 @@
     <string name="settings_section_app_cards">Karty aplikacji</string>
     <string name="settings_app_cards_color_all">Kolor dla każdej karty</string>
     <string name="settings_app_cards_color_all_desc">Karty dostosowane indywidualnie zachowają swój własny kolor</string>
-    <string name="settings_section_patch_list">Lista modyfikacji</string>
-    <string name="settings_toggle_patch_categories_label">Kategorie modyfikacji</string>
-    <string name="settings_toggle_patch_categories_desc">Grupuj modyfikacje w rozwijane kategorie</string>
     <string name="settings_section_background_animation">Animacja tła</string>
     <string name="settings_background_circles">Okręgi</string>
     <string name="settings_background_rings">Pierścienie</string>
@@ -821,8 +775,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Przetłumacz</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Lista zmian niedostępna</string>
+    <string name="changelog_badge_installed">Zainstalowano</string>
+    <string name="changelog_badge_latest">Najnowsza</string>
+    <string name="changelog_badge_prerelease">Przedpremierowa</string>
+    <string name="changelog_date_today">Dzisiaj</string>
+    <string name="changelog_date_yesterday">Wczoraj</string>
     <string name="changelog_dialog_title">Zobacz listę zmian</string>
-    <string name="changelog_show_older_button">Pokaż starsze wersje</string>
+    <string name="changelog_not_available">Lista zmian niedostępna</string>
+    <string name="changelog_section_app_support">Obsługa aplikacji</string>
+    <string name="changelog_section_fixes">Poprawki</string>
+    <string name="changelog_section_improvements">Ulepszenia</string>
+    <string name="changelog_section_new">Nowości</string>
+    <string name="changelog_section_other">Zmiany</string>
+    <string name="changelog_section_performance">Wydajność</string>
+    <string name="changelog_show_all">Pokaż wszystkie (%1$d)</string>
+    <string name="changelog_show_less">Pokaż mniej</string>
     <string name="changelog_view_on_github_button">Wyświetl na GitHubie</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Źródła</string>
+    <string name="nav_apps">Aplikacje</string>
 </resources>

@@ -5,10 +5,7 @@
 
 package app.morphe.engine.util
 
-import java.io.File
-import java.security.KeyStore
-import java.security.Provider
-import java.security.Security
+import app.morphe.patcher.apk.ApkUtils
 import java.security.cert.Certificate
 
 /** Computes and parses Android package signature hashes (`dumpsys package`) for device matching. */
@@ -18,15 +15,13 @@ object SignatureIdentity {
     fun idForCert(cert: Certificate): String =
         Integer.toHexString(cert.encoded.contentHashCode())
 
-    /** Computes signature hash for [alias] in [keystoreFile], or null if unreadable. */
-    fun idForKeystore(keystoreFile: File, storePassword: String?, alias: String): String? = try {
-        if (!keystoreFile.exists()) {
+    /** Computes signature hash for the key [details] sign with, or null if unreadable. */
+    fun idForKeystore(details: ApkUtils.KeyStoreDetails): String? = try {
+        if (!details.keyStore.exists()) {
             null
         } else {
-            ensureBouncyCastle()
-            val ks = KeyStore.getInstance("BKS")
-            keystoreFile.inputStream().use { ks.load(it, storePassword?.toCharArray()) }
-            val realAlias = ks.aliases().toList().firstOrNull { it.equals(alias, ignoreCase = true) } ?: alias
+            val ks = ApkUtils.readKeyStore(details)
+            val realAlias = ks.aliases().toList().firstOrNull { it.equals(details.alias, ignoreCase = true) } ?: details.alias
             ks.getCertificate(realAlias)?.let { idForCert(it) }
         }
     } catch (_: Exception) {
@@ -36,13 +31,4 @@ object SignatureIdentity {
     /** Parses signing certificate hash from `dumpsys package` output. */
     fun parseDeviceSignatureId(dumpsysOutput: String): String? =
         Regex("""signatures:\[([0-9a-fA-F]+)]""").find(dumpsysOutput)?.groupValues?.get(1)?.lowercase()
-
-    private fun ensureBouncyCastle() {
-        if (Security.getProvider("BC") != null) return
-        try {
-            val provider = Class.forName("org.bouncycastle.jce.provider.BouncyCastleProvider")
-                .getDeclaredConstructor().newInstance() as Provider
-            Security.addProvider(provider)
-        } catch (_: Exception) {}
-    }
 }

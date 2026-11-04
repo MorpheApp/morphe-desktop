@@ -31,7 +31,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
 
-/** Main GUI entry point invoked reflectively by [app.morphe.MorpheLauncher]. */
+/** Main GUI entry point invoked reflectively by [app.morphe.main] in `MorpheLauncher`. */
 @Suppress("unused")
 fun launchGui(args: Array<String>) {
     Logger.init()
@@ -45,13 +45,29 @@ fun launchGui(args: Array<String>) {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     }
 
-    application {
+    // Disk/resource reads run here on the launcher thread, before the UI thread starts composing.
     val initialSimplifiedMode = when {
         args.contains("--quick") || args.contains("-q") -> true
         args.contains("--full") || args.contains("-f") -> false
-        else -> loadConfigSync().useSimplifiedMode
+        else -> loadConfigSync().useSimpleMode
     }
 
+    val appIcon = loadAppIcon()
+
+    try {
+        if (Taskbar.isTaskbarSupported()) {
+            val stream = Thread.currentThread().contextClassLoader
+                .getResourceAsStream("morphe_logo.png")
+                ?: ClassLoader.getSystemResourceAsStream("morphe_logo.png")
+            if (stream != null) {
+                Taskbar.getTaskbar().iconImage =
+                    ImageIO.read(stream)
+            }
+        }
+    } catch (_: Exception) {
+    }
+
+    application {
     // Shutdown hook to kill ADB daemon if Morphe spawned it.
     remember {
         Runtime.getRuntime().addShutdownHook(Thread {
@@ -65,23 +81,6 @@ fun launchGui(args: Array<String>) {
         size = DpSize(1024.dp, 768.dp),
         position = WindowPosition(Alignment.Center)
     )
-
-    val appIcon = remember { loadAppIcon() }
-
-    remember {
-        try {
-            if (Taskbar.isTaskbarSupported()) {
-                val stream = Thread.currentThread().contextClassLoader
-                    .getResourceAsStream("morphe_logo.png")
-                    ?: ClassLoader.getSystemResourceAsStream("morphe_logo.png")
-                if (stream != null) {
-                    Taskbar.getTaskbar().iconImage =
-                        ImageIO.read(stream)
-                }
-            }
-        } catch (_: Exception) {
-        }
-    }
 
     Window(
         onCloseRequest = ::exitApplication,

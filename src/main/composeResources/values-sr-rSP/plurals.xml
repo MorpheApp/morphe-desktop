@@ -20,26 +20,6 @@
         <item quantity="few">%1$d извор</item>
         <item quantity="other">%1$d извор</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d закрпа ће бити примењена</item>
-        <item quantity="few">%1$d закрпе ће бити примењене</item>
-        <item quantity="other">%1$d закрпа ће бити примењено</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d искључена</item>
-        <item quantity="few">%1$d искључене</item>
-        <item quantity="other">%1$d искључено</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d омогућена</item>
-        <item quantity="few">%1$d омогућене</item>
-        <item quantity="other">%1$d омогућено</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d онемогућена</item>
-        <item quantity="few">%1$d онемогућене</item>
-        <item quantity="other">%1$d онемогућено</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d библиотека</item>
         <item quantity="few">%1$d библиотеке</item>
@@ -69,5 +49,30 @@
         <item quantity="one">%1$d језгро</item>
         <item quantity="few">%1$d језгра</item>
         <item quantity="other">%1$d језгара</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d измена</item>
+        <item quantity="few">%1$d измене</item>
+        <item quantity="other">%1$d измена</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">пре %1$d дана</item>
+        <item quantity="few">пре %1$d дана</item>
+        <item quantity="other">пре %1$d дана</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d функционалност</item>
+        <item quantity="few">%1$d функционалности</item>
+        <item quantity="other">%1$d функционалности</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d исправка</item>
+        <item quantity="few">%1$d исправке</item>
+        <item quantity="other">%1$d исправки</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d оптимизација</item>
+        <item quantity="few">%1$d оптимизације</item>
+        <item quantity="other">%1$d оптимизација</item>
     </plurals>
 </resources>

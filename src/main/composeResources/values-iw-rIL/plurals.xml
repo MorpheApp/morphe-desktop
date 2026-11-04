@@ -20,26 +20,6 @@
         <item quantity="two">%1$d מקורות</item>
         <item quantity="other">%1$d מקורות</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">יוחל %1$d טלאי</item>
-        <item quantity="two">יוחלו %1$d טלאים</item>
-        <item quantity="other">יוחלו %1$d טלאים</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d מוחרג</item>
-        <item quantity="two">%1$d מוחרגים</item>
-        <item quantity="other">%1$d מוחרגים</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d מופעל</item>
-        <item quantity="two">%1$d מופעלים</item>
-        <item quantity="other">%1$d מופעלים</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d מושבת</item>
-        <item quantity="two">%1$d מושבתים</item>
-        <item quantity="other">%1$d מושבתים</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d ספרייה</item>
         <item quantity="two">%1$d ספריות</item>
@@ -69,5 +49,30 @@
         <item quantity="one">%1$d ליבה</item>
         <item quantity="two">%1$d ליבות</item>
         <item quantity="other">%1$d ליבות</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d שינוי</item>
+        <item quantity="two">%1$d שינויים</item>
+        <item quantity="other">%1$d שינויים</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">לפני %1$d יום</item>
+        <item quantity="two">לפני %1$d ימים</item>
+        <item quantity="other">לפני %1$d ימים</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d תכונה</item>
+        <item quantity="two">%1$d תכונות</item>
+        <item quantity="other">%1$d תכונות</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d תיקון</item>
+        <item quantity="two">%1$d תיקונים</item>
+        <item quantity="other">%1$d תיקונים</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d מיטוב</item>
+        <item quantity="two">%1$d מיטובים</item>
+        <item quantity="other">%1$d מיטובים</item>
     </plurals>
 </resources>

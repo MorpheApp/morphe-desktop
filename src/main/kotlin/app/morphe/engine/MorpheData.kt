@@ -29,6 +29,9 @@ object MorpheData {
     /** Directory for custom app icons. */
     val iconsDir: File by lazy { File(root, "icons").also { it.mkdirs() } }
 
+    /** Directory for cached remote avatars. */
+    val avatarsDir: File by lazy { File(root, "avatars").also { it.mkdirs() } }
+
     /** Directory for temporary patcher scratch files. */
     val tmpDir: File by lazy { File(root, "tmp").also { it.mkdirs() } }
 
@@ -37,9 +40,6 @@ object MorpheData {
 
     /** Default signing keystore file. */
     val defaultKeystoreFile: File get() = File(root, "morphe.keystore")
-
-    /** Target file for converted imported keystores. */
-    val importedKeystoreFile: File get() = File(root, "imported.keystore")
 
     // Reason primary JAR-adjacent storage could not be used.
     private enum class FallbackReason(val message: String) {

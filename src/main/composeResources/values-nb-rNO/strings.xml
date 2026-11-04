@@ -13,6 +13,7 @@
     <string name="expand">Utvid</string>
     <string name="cancel">Avbryt</string>
     <string name="close">Lukk</string>
+    <string name="trust">Tillit</string>
     <string name="delete">Slett</string>
     <string name="disabled_while_patching">Deaktivert under patching</string>
     <string name="drop_apk_here">Slipp APK her</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Forbindelsen ble brutt under nedlasting, prøv igjen</string>
     <string name="error_network_loading_patches">Nettverksfeil under lasting av patcher</string>
     <string name="error_patch_file_not_found">Patch-fil ikke funnet: %1$s</string>
-    <string name="error_no_patches_files_supplied">Ingen patch-filer oppgitt</string>
-    <string name="error_input_apk_not_found">Inndata-APK ikke funnet</string>
     <string name="error_step_failed">%1$s mislyktes: %2$s</string>
     <string name="error_drop_valid_apk">Slipp en gyldig .apk-, .apkm-, .xapk- eller .apks-fil</string>
     <string name="status_saving">Lagrer…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtrer apper…</string>
     <string name="version">Versjon</string>
     <string name="version_label_stable">Stabil</string>
-    <string name="version_label_dev">Utvikling</string>
+    <string name="version_label_prerelease">Forhåndsutgivelse</string>
     <string name="version_label_experimental">Eksperimentell</string>
-    <string name="version_label_latest_dev">Siste Dev</string>
     <string name="version_label_latest_stable">Siste stabil</string>
+    <string name="version_label_recommended">Anbefalt</string>
+    <string name="version_label_supported">Støttet</string>
     <string name="app_info_arch_label">Arkitektur</string>
     <string name="app_info_min_sdk_label">Minste SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Patching avbrutt</string>
     <string name="view_full_logs_button">Vis fullstendige logger</string>
     <string name="error_patching_unknown">Patching mislyktes av ukjent årsak</string>
-    <string name="error_patching_general">Feil: %1$s</string>
     <string name="error_log_label">Feillogg</string>
     <string name="back">Tilbake</string>
     <string name="open_folder">Åpne mappe</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Et vilkårlig antall stoppunkter, lineær, radiell eller konisk</string>
     <string name="card_fill_mode_solid">Ensfarget</string>
     <string name="card_fill_mode_solid_blurb">Én flat farge</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Patcher</string>
-    <string name="quick_patch_screen_start_over_button">Start på nytt</string>
-    <string name="quick_patch_patch_another_button">Patch en annen</string>
-    <string name="quick_patch_select_apk">Velg APK</string>
-    <string name="quick_patch_analyze_apk_failed">Kunne ikke analysere APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Kunne ikke pakke ut grunn-APK fra pakken</string>
-    <string name="quick_patch_unsupported_app_error">%1$s støttes ikke i Quick Patch-modus. Støttede apper: %2$s. Bruk vanlig modus for apper som ikke støttes</string>
     <string name="adb_install_on_button">Installer på %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Laster inn patcher</string>
-    <string name="patching_step_preparing">Forbereder</string>
     <string name="patching_step_merging_split_apk">Slår sammen delt APK</string>
     <string name="patching_step_read_apk">Les APK-fil</string>
     <string name="patching_step_applying_patches">Bruker patcher</string>
-    <string name="patching_step_saving">Lagrer</string>
     <string name="patching_step_writing_apk">Skriver patchet APK-fil</string>
     <string name="patching_step_signing">Signerer patchet APK-fil</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Filen kan være korrupt, last ned på nytt fra APKMirror</string>
     <string name="version_status_checksum_failed">Verifisering av sjekksum mislyktes</string>
     <string name="version_status_checksum_matches">Sjekksum samsvarer med APKMirror</string>
-    <string name="version_status_older_stable">Eldre stabil</string>
     <string name="version_status_newer_stable_available">Nyere stabil v%1$s tilgjengelig</string>
     <string name="version_status_newer_stable_available_fallback">En nyere stabil versjon er tilgjengelig</string>
     <string name="version_status_experimental_detail">Støttes, men kan fungere dårlig</string>
-    <string name="version_status_older_experimental">Eldre eksperimentell</string>
-    <string name="version_status_newer_experimental_available">Nyere eksperimentell v%1$s tilgjengelig</string>
-    <string name="version_status_newer_experimental_available_fallback">En nyere eksperimentell bygg er tilgjengelig</string>
-    <string name="version_status_too_new">Versjonen er for ny</string>
     <string name="version_status_unsupported_detail">Ikke offisielt støttet, patcher vil mest sannsynlig mislykkes</string>
-    <string name="version_status_too_old">Versjonen er for gammel</string>
     <string name="version_status_unsupported">Ustøttet versjon</string>
     <string name="version_status_build_unsupported">Bygg støttes ikke</string>
     <string name="version_status_build_unsupported_detail">Denne versjonen støttes, men ikke dette bygget av den. Hent et bygg som patchene er laget for</string>
+    <string name="version_status_build_unsupported_with_code">Patches krever build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Versjonsvarsel</string>
+    <string name="version_warning_build_unsupported_message">Gjeldende: v%1$s (build %2$s)\nNødvendig build: %3$s\n\nDette er en annen build av samme versjon. Patchene krever en spesifikk build.</string>
     <string name="version_warning_experiment_title">Vil du eksperimentere? 🧪</string>
-    <string name="version_warning_older_stable_title">Eldre stabil versjon</string>
-    <string name="version_warning_older_stable_message">Nåværende: v%1$s\nSiste stabile: v%2$s\n\nDenne versjonen støttes, men en nyere stabil versjon er tilgjengelig. Du kan gå glipp av nylige rettelser.</string>
     <string name="version_warning_latest_experimental_message">Nåværende: v%1$s\n\nDenne versjonen har tidlig eksperimentell støtte\n\n🔧 Forvent uvanlig appatferd eller uidentifiserte feil mens patchene forbedres for denne appversjonen.</string>
-    <string name="version_warning_older_experimental_title">Eldre eksperimentell versjon\nVil du eksperimentere? 🧪</string>
-    <string name="version_warning_older_experimental_message">Nåværende: v%1$s\nSiste eksperimentelle: v%2$s\n\nDette er et støttet eksperimentelt bygg, men en nyere eksperimentell versjon er tilgjengelig. Forvent uvanlig appatferd eller uidentifiserte feil mens patchene forbedres for denne appversjonen.</string>
-    <string name="version_warning_too_new_message">Nåværende: v%1$s\nNyeste kjente: v%2$s\n\nDenne versjonen har tidlig eksperimentell støtte\n\n🔧 Forvent uvanlig appatferd eller uidentifiserte feil mens patchene forbedres for denne appversjonen.</string>
-    <string name="version_warning_too_old_message">Nåværende: v%1$s\nEldste støttede: v%2$s\n\nDette er ikke en offisielt støttet versjon. Patcher vil mest sannsynlig mislykkes.</string>
     <string name="version_warning_unsupported_message">Nåværende: v%1$s\n\nDette er ikke en offisielt støttet versjon. Patcher vil mest sannsynlig mislykkes.</string>
     <string name="version_warning_notice_message">Fortsette med v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Eldre stabilt bygg – nyere stabil v%1$s tilgjengelig</string>
-    <string name="quick_patch_warning_latest_experimental">Eksperimentelt bygg – støttes, men kan fungere dårlig</string>
-    <string name="quick_patch_warning_older_experimental">Eldre eksperimentelt bygg – nyere eksperimentell v%1$s tilgjengelig</string>
-    <string name="quick_patch_warning_build_unsupported">Bygget støttes ikke – denne versjonen kan patches, men ikke dette bygget av den</string>
-    <string name="quick_patch_warning_too_new">Versjonen er for ny – ikke offisielt støttet, patcher vil mest sannsynlig mislykkes</string>
-    <string name="quick_patch_warning_too_old">Versjonen er for gammel – ikke offisielt støttet, patcher vil mest sannsynlig mislykkes</string>
-    <string name="quick_patch_warning_unsupported_between">Ustøttet versjon – patcher vil mest sannsynlig mislykkes</string>
-    <string name="quick_patch_read_apk_failed">Kunne ikke lese APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Forbereder patcher…</string>
-    <string name="quick_patch_fetch_patches_failed">Kunne ikke hente patcher. Sjekk internettforbindelsen</string>
-    <string name="quick_patch_status_downloading_patches">Laster ned patcher %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Kunne ikke laste ned patcher: %1$s</string>
-    <string name="quick_patch_status_patching">Patcher…</string>
-    <string name="quick_patch_completed_adb_off">ADB av · Aktiver for å installere</string>
-    <string name="quick_patch_completed_adb_connect_device">Koble til en enhet via USB for å installere med ADB</string>
-    <string name="quick_patch_error_unknown_occurred">En ukjent feil oppstod</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analyserer APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d patcher</string>
-    <string name="quick_patch_patching_slow_warning">Dette tar lengre tid enn vanlig. Vent litt…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(bygg %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Ingen kompatible patcher for denne appen</string>
-    <string name="quick_patch_ready_no_matching_patches">Ingen patcher samsvarer med «%1$s»</string>
-    <string name="quick_patch_ready_patch_with_defaults">Patch med standardinnstillinger</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Støttede apper</string>
-    <string name="quick_patch_supported_apps_subtitle">Slipp den nøyaktige APK-versjonen for en støttet app her</string>
-    <string name="quick_patch_supported_apps_loading">Laster inn støttede apper…</string>
-    <string name="quick_patch_supported_apps_load_error">Kunne ikke laste inn støttede apper</string>
-    <string name="quick_patch_supported_apps_change_source">Endre kilde</string>
-    <string name="quick_patch_supported_apps_no_matches">Ingen samsvarende apper</string>
-    <string name="quick_patch_supported_apps_version_any">Enhver versjon</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Velg APK-fil</string>
     <string name="home_could_not_resolve_patch_files">Kunne ikke finne patch-filene</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Fjern APK</string>
     <string name="home_apk_info_limited_info_warning">Kunne ikke lese hele manifestet til denne APK-en (vanlig for delte pakker). Detaljene nedenfor er omtrentlige; patching bør fortsatt fungere</string>
     <string name="home_apk_info_unsupported_app_warning">Ingen kompatible patcher funnet for denne appen. Du kan fortsatt fortsette, men patching kan ha ingen effekt</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Ingen kompatible patcher funnet for denne appen</string>
     <string name="home_apk_info_build_label">Bygg</string>
     <string name="home_apk_info_size_label">Størrelse</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Fra</string>
     <string name="home_stage_change_apk">Endre APK</string>
     <string name="home_stage_continue">Fortsett</string>
+    <string name="home_stage_patch">Patch</string>
     <string name="home_stage_analyzing_title">Analyserer</string>
     <string name="home_stage_reading_metadata">Leser appmetadata…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Avinstallere %1$s?</string>
     <string name="home_dialog_uninstall_message">Dette fjerner %1$s fra den tilkoblede enheten. Den patchede APK-en på disk og historikken din beholdes med mindre du velger noe annet nedenfor</string>
     <string name="home_dialog_uninstall_also_forget">Fjern også fra Dine apper</string>
-    <string name="home_dialog_missing_apk_title">Opprinnelig APK ikke funnet</string>
-    <string name="home_dialog_missing_apk_message">Inndata-APK-en for %1$s er ikke lenger på:\n%2$s\n\nVelg APK-en igjen for å patche på nytt med de lagrede innstillingene</string>
-    <string name="home_dialog_select_apk">Velg APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Velg APK for å patche på nytt</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Administrer kilder</string>
     <string name="home_header_multi_source_hint">Patcher fra alle aktiverte kilder blir slått sammen. Administrer via kildeknappen ovenfor</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Dine apper</string>
     <string name="home_banner_view">Vis</string>
     <string name="home_your_apps_install_ready">Klar til installasjon</string>
-    <string name="home_your_apps_newer_patch_hint">En nyere patch kan oppgradere appen; klikk Oppdater for å sjekke</string>
-    <string name="home_your_apps_device_version_ready">Patchet v%1$s klar, enheten har v%2$s (ikke nødvendig å patche på nytt)</string>
-    <string name="home_your_apps_install_ready_hint">Patchet v%1$s klar til installasjon (ikke nødvendig å patche på nytt)</string>
-    <string name="home_action_install">Installer</string>
     <string name="home_action_install_to_device">Installer på enhet</string>
     <string name="home_action_installing">Installerer…</string>
     <string name="home_action_preparing">Forbereder…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s klar · enheten har v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s klar, ikke nødvendig å patche på nytt</string>
-    <string name="home_advice_unsupported">v%1$s støttes ikke lenger. Oppdater til v%2$s</string>
+    <string name="home_detail_source_disabled">Deaktivert</string>
+    <string name="home_detail_source_removed">Fjernet</string>
+    <string name="home_detail_source_disabled_sub">Kilden er deaktivert i Kilder. Aktiver den for å patche på nytt</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Originalkilden er deaktivert. Velg en alternativ kilde eller aktiver den på nytt i Kilder</string>
+    <string name="home_detail_no_compatible_source">Ingen kompatibel kilde aktivert</string>
+    <string name="home_detail_choose_source">Velg patch-kilde</string>
     <string name="home_advice_unsupported_by_patches">v%1$s støttes ikke lenger av de nyeste patchene</string>
     <string name="home_date_today">i dag</string>
     <string name="home_date_yesterday">i går</string>
@@ -427,6 +371,9 @@
     <string name="patch_selection_group_ungrouped">Ugruppert</string>
     <string name="patch_selection_group_selected_count">%1$d valgt</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Start på nytt</string>
+    <string name="patching_patches_count">%1$d / %2$d patcher</string>
+    <string name="patching_slow_warning">Dette tar lengre tid enn vanlig. Vennligst vent…</string>
     <string name="patching_status_ready">Klar til å patche</string>
     <string name="patching_status_preparing">Forbereder patching</string>
     <string name="patching_status_in_progress">Bruker patcher</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Strippet</string>
     <string name="patching_error_failed_patches">Mislykkede patcher: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB av · Aktiver for å installere</string>
+    <string name="result_adb_connect_device_hint">Koble til en enhet via USB for å installere med ADB</string>
     <string name="result_screen_patch_another_button">Patch en annen</string>
     <string name="result_screen_install_on_device_label">Installer på %1$s</string>
     <string name="result_screen_links_routed_label">Lenker rutet til patchet app</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Kunne ikke laste inn</string>
     <string name="source_error_github_pat_required">En GitHub PAT er påkrevd for å laste ned pull request-kilder.</string>
     <string name="source_error_pr_no_artifact">Ingen artefakter funnet for pull request.</string>
-    <string name="source_sheet_manage_description">Administrer patch-kilder</string>
-    <string name="source_sheet_local_label">Lokal</string>
+    <string name="source_error_patcher_incompatible">Denne kilden er bygget for patcher %1$s, men Morphe %2$s inkluderer patcher %3$s. Oppdater Morphe for å bruke den</string>
+    <string name="version_label_local">Lokal</string>
     <string name="source_sheet_remote_label">Ekstern</string>
     <string name="add_source">Legg til kilde</string>
     <string name="source_sheet_title">Patch-kilder</string>
     <string name="source_sheet_reload_description">Last inn patcher på nytt</string>
-    <string name="source_sheet_quick_mode_hint">Velg hvilken kilde Quick Patch bruker. Flere kilder er tilgjengelig i ekspertmodus</string>
     <string name="source_sheet_multi_mode_hint">Aktiver/deaktiver hvilken som helst kombinasjon. Patcher fra alle aktiverte kilder blir slått sammen</string>
     <string name="source_sheet_done_button">Ferdig</string>
     <string name="source_sheet_type_preinstalled">Forhåndsinstallert</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Rediger</string>
     <string name="source_sheet_move_up_description">Flytt opp</string>
     <string name="source_sheet_move_down_description">Flytt ned</string>
-    <string name="source_sheet_channel_older_stable">Eldre stabil</string>
-    <string name="source_sheet_channel_older_dev">Eldre Dev</string>
     <string name="source_sheet_ignored_mpp_title">Ignorerte .mpp-mønstre</string>
-    <string name="source_sheet_ignored_mpp_hint">Påvirker kun mappekilder, som automatisk laster inn den nyeste .mpp-filen i en mappe. Når det nyeste bygget velges, hoppes filer hvis navn samsvarer med et mønster her over. Et vanlig ord samsvarer med enhver fil som inneholder det (f.eks. debug). Bruk * for jokertegn (f.eks. *-debug.mpp). *-sources.mpp og *-javadoc.mpp ignoreres alltid</string>
+    <string name="source_sheet_ignored_mpp_hint">Påvirker kun mappekilder, som automatisk laster den nyeste .mpp-filen i en mappe. Når den nyeste byggingen velges, hopper den over filer der navnet samsvarer med et mønster her. Et enkelt ord samsvarer med alle filer som inneholder det (f.eks. debug). Bruk * for globs (f.eks. *-debug.mpp). *-sources.mpp og *-javadoc.mpp blir alltid ignorert</string>
     <string name="source_sheet_ignored_mpp_placeholder">f.eks. debug eller *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Legg til mønster</string>
     <string name="source_sheet_remove_pattern_description">Fjern mønster</string>
+    <string name="sources_management_signed_by">Signert av</string>
+    <string name="sources_management_signing_key_changed_badge">Nøkkel endret</string>
+    <string name="sources_management_signing_key_changed_hint">Signeringsnøkkelen er endret. Klikk for å se over den</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' ble ikke oppdatert fordi den nyeste utgivelsen ikke er signert med nøkkelen som ble brukt tidligere</string>
+    <string name="sources_signing_key_new">Ny nøkkel</string>
+    <string name="sources_signing_key_trust_message">Den nyeste utgivelsen er signert med en annen nøkkel. Enten har utvikleren byttet nøkkel, eller så har noen andre publisert denne utgivelsen. Stol kun på den hvis utvikleren har kunngjort en ny nøkkel</string>
+    <string name="sources_signing_key_trust_message_unsigned">Den nyeste utgivelsen er ikke signert. Enten har utvikleren sluttet å signere utgivelser, eller så har noen andre publisert denne utgivelsen. Stol kun på den hvis utvikleren har kunngjort det</string>
+    <string name="sources_signing_key_trust_title">Stol på den nye nøkkelen?</string>
+    <string name="sources_signing_key_trusted">Betrodd nøkkel</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Lokal fil</string>
     <string name="patch_source_dialog_name_label">Navn</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Godtar GitHub-, GitLab- eller morphe.software/add-source-lenke</string>
     <string name="patch_source_dialog_pre_release_title">Forhåndsutgitte patcher</string>
     <string name="patch_source_dialog_pre_release_hint">Får tidlig tilgang til nye eksperimentelle patch-versjoner</string>
-    <string name="patch_source_dialog_experimental_title">Eksperimentelle appversjoner</string>
-    <string name="patch_source_dialog_experimental_hint">Prioriterer eksperimentelle appversjoner hvis tilgjengelig</string>
     <string name="patch_source_dialog_error_name_required">Navn er obligatorisk</string>
     <string name="patch_source_dialog_error_invalid_url">Skriv inn en gyldig GitHub- eller GitLab-URL</string>
     <string name="patch_source_dialog_error_invalid_file">Velg en gyldig .mpp-fil</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Åpne logger</string>
     <string name="settings_dialog_reset_button">Tilbakestill</string>
     <string name="settings_theme_system">System</string>
-    <string name="settings_signing_error_not_found">Konfigurert nøkkellager ikke funnet: %1$s. Gjenopprett filen, velg et annet i Innstillinger, eller fjern innstillingen for å bruke Morphes standard</string>
     <string name="settings_search_languages_placeholder">Søk språk</string>
     <string name="settings_dialog_resolves_to_message">Løses til: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Nøkkellager ikke funnet: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Språk</string>
     <string name="settings_language_current_title">Nåværende språk</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">App-språk</string>
     <string name="settings_language_search_no_results">Ingen resultater funnet</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Temamodus</string>
     <string name="settings_theme_light">Lys</string>
     <string name="settings_theme_dark">Mørk</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Fargestil</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monokrom</string>
     <string name="settings_toggle_sharp_corners_label">Skarpe hjørner</string>
     <string name="settings_toggle_sharp_corners_desc">Gjør kort, dialoger og knapper firkantede</string>
     <string name="settings_section_accent_color">Aksentfarge</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">App-kort</string>
     <string name="settings_app_cards_color_all">Farge for hvert kort</string>
     <string name="settings_app_cards_color_all_desc">Kort du har tilpasset individuelt beholder sin egen farge</string>
-    <string name="settings_section_patch_list">Patch-liste</string>
-    <string name="settings_toggle_patch_categories_label">Patch-kategorier</string>
-    <string name="settings_toggle_patch_categories_desc">Grupper patcher i utvidbare kategorier</string>
     <string name="settings_section_background_animation">Bakgrunnsanimasjon</string>
     <string name="settings_background_circles">Sirkler</string>
     <string name="settings_background_rings">Ringer</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Oversett</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Endringslogg ikke tilgjengelig</string>
+    <string name="changelog_badge_installed">Installert</string>
+    <string name="changelog_badge_latest">Siste</string>
+    <string name="changelog_badge_prerelease">Forhåndsversjon</string>
+    <string name="changelog_date_today">I dag</string>
+    <string name="changelog_date_yesterday">I går</string>
     <string name="changelog_dialog_title">Vis endringslogg</string>
-    <string name="changelog_show_older_button">Vis eldre utgivelser</string>
+    <string name="changelog_not_available">Endringslogg ikke tilgjengelig</string>
+    <string name="changelog_section_app_support">App-støtte</string>
+    <string name="changelog_section_fixes">Feilrettinger</string>
+    <string name="changelog_section_improvements">Forbedringer</string>
+    <string name="changelog_section_new">Nytt</string>
+    <string name="changelog_section_other">Endringer</string>
+    <string name="changelog_section_performance">Ytelse</string>
+    <string name="changelog_show_all">Vis alle (%1$d)</string>
+    <string name="changelog_show_less">Vis mindre</string>
     <string name="changelog_view_on_github_button">Vis på GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Kilder</string>
+    <string name="nav_apps">Apper</string>
 </resources>

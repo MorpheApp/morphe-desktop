@@ -16,22 +16,6 @@
         <item quantity="one">%1$d ምንጭ</item>
         <item quantity="other">%1$d ምንጮች</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d ፓች ተግባራዊ ይሆናል</item>
-        <item quantity="other">%1$d ፓቾች ተተግብረው ያጠናቅቃሉ</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d ተገልሏል</item>
-        <item quantity="other">%1$d ተገልለዋል</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d ገቢል ሆኗል</item>
-        <item quantity="other">%1$d ገቢል ሆነዋል</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d ተዘግቷል</item>
-        <item quantity="other">%1$d ተዘግተዋል</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d ላይብረሪ</item>
         <item quantity="other">%1$d ላይብረሪዎች</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d ኮር</item>
         <item quantity="other">%1$d ኮርሶች</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d ለውጥ</item>
+        <item quantity="other">%1$d ለውጦች</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">ከ%1$d ቀን በፊት</item>
+        <item quantity="other">ከ%1$d ቀናት በፊት</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d ባህሪ</item>
+        <item quantity="other">%1$d ባህሪያት</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d እርማት</item>
+        <item quantity="other">%1$d እርማቶች</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d ማሻሻያ</item>
+        <item quantity="other">%1$d ማሻሻያዎች</item>
     </plurals>
 </resources>

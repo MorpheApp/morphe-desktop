@@ -13,6 +13,7 @@
     <string name="expand">ขยาย</string>
     <string name="cancel">ยกเลิก</string>
     <string name="close">ปิด</string>
+    <string name="trust">เชื่อถือได้</string>
     <string name="delete">ลบ</string>
     <string name="disabled_while_patching">ปิดใช้งานระหว่างแพตช์</string>
     <string name="drop_apk_here">วางไฟล์ APK ที่นี่</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">การเชื่อมต่อขาดหายขณะดาวน์โหลด โปรดลองอีกครั้ง</string>
     <string name="error_network_loading_patches">เกิดข้อผิดพลาดเครือข่ายขณะโหลดแพตช์</string>
     <string name="error_patch_file_not_found">ไม่พบไฟล์แพตช์: %1$s</string>
-    <string name="error_no_patches_files_supplied">ไม่มีการระบุไฟล์แพตช์</string>
-    <string name="error_input_apk_not_found">ไม่พบ APK ต้นทาง</string>
     <string name="error_step_failed">%1$s ล้มเหลว: %2$s</string>
     <string name="error_drop_valid_apk">โปรดวางไฟล์ .apk, .apkm, .xapk หรือ .apks ที่ถูกต้อง</string>
     <string name="status_saving">กำลังบันทึก…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">กรองแอป…</string>
     <string name="version">เวอร์ชัน</string>
     <string name="version_label_stable">เสถียร</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">รุ่นก่อนปล่อยตัวจริง</string>
     <string name="version_label_experimental">ทดลอง</string>
-    <string name="version_label_latest_dev">Dev ล่าสุด</string>
     <string name="version_label_latest_stable">เสถียรล่าสุด</string>
+    <string name="version_label_recommended">แนะนำ</string>
+    <string name="version_label_supported">รองรับ</string>
     <string name="app_info_arch_label">สถาปัตยกรรม</string>
     <string name="app_info_min_sdk_label">SDK ขั้นต่ำ</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">ยกเลิกการแพตช์</string>
     <string name="view_full_logs_button">ดูบันทึกทั้งหมด</string>
     <string name="error_patching_unknown">แพตช์ล้มเหลวด้วยสาเหตุที่ไม่ทราบ</string>
-    <string name="error_patching_general">ข้อผิดพลาด: %1$s</string>
     <string name="error_log_label">บันทึกข้อผิดพลาด</string>
     <string name="back">กลับ</string>
     <string name="open_folder">เปิดโฟลเดอร์</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">จุดหยุดจำนวนเท่าใดก็ได้ แบบเส้นตรง รัศมี หรือกรวย</string>
     <string name="card_fill_mode_solid">สีทึบ</string>
     <string name="card_fill_mode_solid_blurb">สีพื้นเดียว</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">แพตช์</string>
-    <string name="quick_patch_screen_start_over_button">เริ่มใหม่</string>
-    <string name="quick_patch_patch_another_button">แพตช์แอปอื่น</string>
-    <string name="quick_patch_select_apk">เลือกไฟล์ APK</string>
-    <string name="quick_patch_analyze_apk_failed">วิเคราะห์ APK ไม่สำเร็จ</string>
-    <string name="quick_patch_extract_base_apk_failed">แยก APK หลักจากบันเดิลไม่สำเร็จ</string>
-    <string name="quick_patch_unsupported_app_error">โหมด Quick Patch ไม่รองรับ %1$s แอปที่รองรับ: %2$s ใช้โหมดปกติสำหรับแอปที่ไม่รองรับ</string>
     <string name="adb_install_on_button">ติดตั้งบน %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">กำลังโหลดแพตช์</string>
-    <string name="patching_step_preparing">กำลังเตรียม</string>
     <string name="patching_step_merging_split_apk">รวม APK แบบแยก</string>
     <string name="patching_step_read_apk">อ่านไฟล์ APK</string>
     <string name="patching_step_applying_patches">กำลังใช้แพตช์</string>
-    <string name="patching_step_saving">กำลังบันทึก</string>
     <string name="patching_step_writing_apk">กำลังเขียนไฟล์ APK ที่แพตช์แล้ว</string>
     <string name="patching_step_signing">กำลังเซ็นชื่อไฟล์ APK ที่แพตช์แล้ว</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">ไฟล์อาจเสียหาย โปรดดาวน์โหลดใหม่จาก APKMirror</string>
     <string name="version_status_checksum_failed">การตรวจสอบเช็คซัมล้มเหลว</string>
     <string name="version_status_checksum_matches">เช็คซัมตรงกับ APKMirror</string>
-    <string name="version_status_older_stable">เวอร์ชันเสถียรที่เก่ากว่า</string>
     <string name="version_status_newer_stable_available">มีเวอร์ชันเสถียรใหม่กว่า v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">มีเวอร์ชันเสถียรใหม่กว่าให้ใช้งาน</string>
     <string name="version_status_experimental_detail">รองรับ แต่อาจทำงานไม่ถูกต้อง</string>
-    <string name="version_status_older_experimental">เวอร์ชันทดลองที่เก่ากว่า</string>
-    <string name="version_status_newer_experimental_available">มีเวอร์ชันทดลองใหม่กว่า v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">มีบิลด์ทดลองใหม่กว่าให้ใช้งาน</string>
-    <string name="version_status_too_new">เวอร์ชันใหม่เกินไป</string>
     <string name="version_status_unsupported_detail">ไม่รองรับอย่างเป็นทางการ แพตช์มักจะล้มเหลว</string>
-    <string name="version_status_too_old">เวอร์ชันเก่าเกินไป</string>
     <string name="version_status_unsupported">เวอร์ชันไม่รองรับ</string>
     <string name="version_status_build_unsupported">บิลด์ไม่รองรับ</string>
     <string name="version_status_build_unsupported_detail">เวอร์ชันนี้รองรับ แต่ไม่รองรับบิลด์นี้ โปรดรับบิลด์ที่แพตช์กำหนดเป้าหมาย</string>
+    <string name="version_status_build_unsupported_with_code">แพตซ์ต้องใช้บิลด์ %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">ประกาศเกี่ยวกับเวอร์ชัน</string>
+    <string name="version_warning_build_unsupported_message">ปัจจุบัน: v%1$s (บิลด์ %2$s)\nบิลด์ที่ต้องการ: %3$s\n\nนี่คือบิลด์ที่แตกต่างกันของเวอร์ชันเดียวกัน แพตซ์ต้องการบิลด์ที่เฉพาะเจาะจง</string>
     <string name="version_warning_experiment_title">อยากทดลองดูไหม? 🧪</string>
-    <string name="version_warning_older_stable_title">เวอร์ชันเสถียรที่เก่ากว่า</string>
-    <string name="version_warning_older_stable_message">เวอร์ชันปัจจุบัน: v%1$s\nเวอร์ชันเสถียรล่าสุด: v%2$s\n\nเวอร์ชันนี้รองรับ แต่มีเวอร์ชันเสถียรใหม่กว่าให้ใช้งาน คุณอาจพลาดการแก้ไขล่าสุด</string>
     <string name="version_warning_latest_experimental_message">เวอร์ชันปัจจุบัน: v%1$s\n\nเวอร์ชันนี้มีการรองรับแบบทดลองช่วงแรก\n\n🔧 อาจพบพฤติกรรมแปลกๆ หรือบั๊กที่ไม่ทราบสาเหตุ เพราะแพตช์กำลังถูกปรับปรุงสำหรับแอปเวอร์ชันนี้</string>
-    <string name="version_warning_older_experimental_title">เวอร์ชันทดลองที่เก่ากว่า\nอยากทดลองดูไหม? 🧪</string>
-    <string name="version_warning_older_experimental_message">เวอร์ชันปัจจุบัน: v%1$s\nเวอร์ชันทดลองล่าสุด: v%2$s\n\nนี่คือบิลด์ทดลองที่รองรับ แต่มีเวอร์ชันทดลองใหม่กว่าให้ใช้งาน อาจพบพฤติกรรมแปลกๆ หรือบั๊กที่ไม่ทราบสาเหตุ เพราะแพตช์กำลังถูกปรับปรุงสำหรับแอปเวอร์ชันนี้</string>
-    <string name="version_warning_too_new_message">เวอร์ชันปัจจุบัน: v%1$s\nเวอร์ชันล่าสุดที่รู้จัก: v%2$s\n\nเวอร์ชันนี้มีการรองรับแบบทดลองช่วงแรก\n\n🔧 อาจพบพฤติกรรมแปลกๆ หรือบั๊กที่ไม่ทราบสาเหตุ เพราะแพตช์กำลังถูกปรับปรุงสำหรับแอปเวอร์ชันนี้</string>
-    <string name="version_warning_too_old_message">เวอร์ชันปัจจุบัน: v%1$s\nเวอร์ชันเก่าที่สุดที่รองรับ: v%2$s\n\nนี่ไม่ใช่เวอร์ชันที่รองรับอย่างเป็นทางการ แพตช์มักจะล้มเหลว</string>
     <string name="version_warning_unsupported_message">เวอร์ชันปัจจุบัน: v%1$s\n\nนี่ไม่ใช่เวอร์ชันที่รองรับอย่างเป็นทางการ แพตช์มักจะล้มเหลว</string>
     <string name="version_warning_notice_message">ดำเนินการต่อด้วย v%1$s ไหม?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">บิลด์เสถียรที่เก่ากว่า - มีเวอร์ชันเสถียรใหม่กว่า v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">บิลด์ทดลอง - รองรับ แต่อาจทำงานไม่ถูกต้อง</string>
-    <string name="quick_patch_warning_older_experimental">บิลด์ทดลองที่เก่ากว่า - มีเวอร์ชันทดลองใหม่กว่า v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">บิลด์ไม่รองรับ - เวอร์ชันนี้แพตช์ได้ แต่ไม่รองรับบิลด์นี้</string>
-    <string name="quick_patch_warning_too_new">เวอร์ชันใหม่เกินไป - ไม่รองรับอย่างเป็นทางการ แพตช์มักจะล้มเหลว</string>
-    <string name="quick_patch_warning_too_old">เวอร์ชันเก่าเกินไป - ไม่รองรับอย่างเป็นทางการ แพตช์มักจะล้มเหลว</string>
-    <string name="quick_patch_warning_unsupported_between">เวอร์ชันไม่รองรับ - แพตช์มักจะล้มเหลว</string>
-    <string name="quick_patch_read_apk_failed">อ่าน APK ไม่สำเร็จ: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">กำลังเตรียมแพตช์…</string>
-    <string name="quick_patch_fetch_patches_failed">ดึงแพตช์ไม่สำเร็จ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ต</string>
-    <string name="quick_patch_status_downloading_patches">กำลังดาวน์โหลดแพตช์ %1$s…</string>
-    <string name="quick_patch_download_patches_failed">ดาวน์โหลดแพตช์ไม่สำเร็จ: %1$s</string>
-    <string name="quick_patch_status_patching">กำลังแพตช์…</string>
-    <string name="quick_patch_completed_adb_off">ปิด ADB · เปิดเพื่อติดตั้ง</string>
-    <string name="quick_patch_completed_adb_connect_device">เชื่อมต่ออุปกรณ์ผ่าน USB เพื่อติดตั้งด้วย ADB</string>
-    <string name="quick_patch_error_unknown_occurred">เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">กำลังวิเคราะห์ APK…</string>
-    <string name="quick_patch_patching_patches_count">แพตช์ %1$d / %2$d</string>
-    <string name="quick_patch_patching_slow_warning">กำลังใช้เวลานานกว่าปกติ โปรดรอ…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(บิลด์ %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">ไม่มีแพตช์ที่เข้ากันได้กับแอปนี้</string>
-    <string name="quick_patch_ready_no_matching_patches">ไม่มีแพตช์ที่ตรงกับ \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">แพตช์ด้วยค่าเริ่มต้น</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">แอปที่รองรับ</string>
-    <string name="quick_patch_supported_apps_subtitle">วางไฟล์ APK เวอร์ชันที่ตรงกันสำหรับแอปที่รองรับที่นี่</string>
-    <string name="quick_patch_supported_apps_loading">กำลังโหลดแอปที่รองรับ…</string>
-    <string name="quick_patch_supported_apps_load_error">ไม่สามารถโหลดแอปที่รองรับได้</string>
-    <string name="quick_patch_supported_apps_change_source">เปลี่ยนแหล่งที่มา</string>
-    <string name="quick_patch_supported_apps_no_matches">ไม่มีแอปที่ตรงกัน</string>
-    <string name="quick_patch_supported_apps_version_any">ทุกเวอร์ชัน</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">เลือกไฟล์ APK</string>
     <string name="home_could_not_resolve_patch_files">ไม่สามารถระบุไฟล์แพตช์ได้</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">ลบ APK</string>
     <string name="home_apk_info_limited_info_warning">อ่าน manifest ของ APK นี้ไม่ครบถ้วน (พบได้ทั่วไปใน split bundles) รายละเอียดด้านล่างเป็นค่าประมาณ แต่การแพตช์ควรยังทำงานได้</string>
     <string name="home_apk_info_unsupported_app_warning">ไม่พบแพตช์ที่เข้ากันได้กับแอปนี้ คุณยังดำเนินการต่อได้ แต่การแพตช์อาจไม่มีผล</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">ไม่พบแพตซ์ที่เข้ากันได้สำหรับแอปนี้</string>
     <string name="home_apk_info_build_label">บิลด์</string>
     <string name="home_apk_info_size_label">ขนาด</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">จาก</string>
     <string name="home_stage_change_apk">เปลี่ยน APK</string>
     <string name="home_stage_continue">ดำเนินการต่อ</string>
+    <string name="home_stage_patch">แพตซ์</string>
     <string name="home_stage_analyzing_title">กำลังวิเคราะห์</string>
     <string name="home_stage_reading_metadata">กำลังอ่านข้อมูลเมตาของแอป…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">ถอนการติดตั้ง %1$s ไหม?</string>
     <string name="home_dialog_uninstall_message">การนี้จะนำ %1$s ออกจากอุปกรณ์ที่เชื่อมต่อ APK ที่แพตช์แล้วบนดิสก์และประวัติของคุณจะยังคงอยู่เว้นแต่คุณเลือกเป็นอย่างอื่นด้านล่าง</string>
     <string name="home_dialog_uninstall_also_forget">เอาออกจากแอปของคุณด้วย</string>
-    <string name="home_dialog_missing_apk_title">ไม่พบ APK ต้นฉบับ</string>
-    <string name="home_dialog_missing_apk_message">APK ต้นทางสำหรับ %1$s ไม่อยู่ที่:\n%2$s\n\nเลือก APK อีกครั้งเพื่อแพตช์ใหม่ด้วยการตั้งค่าที่บันทึกไว้</string>
-    <string name="home_dialog_select_apk">เลือก APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">เลือก APK เพื่อแพตช์ใหม่</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">จัดการแหล่งที่มา</string>
     <string name="home_header_multi_source_hint">แพตช์จากทุกแหล่งที่เปิดใช้จะถูกรวมเข้าด้วยกัน จัดการได้จากปุ่มแหล่งที่มาด้านบน</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">แอปของคุณ</string>
     <string name="home_banner_view">ดู</string>
     <string name="home_your_apps_install_ready">พร้อมติดตั้ง</string>
-    <string name="home_your_apps_newer_patch_hint">แพตช์ใหม่อาจอัปเดตแอป คลิกอัปเดตเพื่อตรวจสอบ</string>
-    <string name="home_your_apps_device_version_ready">แพตช์ v%1$s พร้อม อุปกรณ์เป็น v%2$s (ไม่ต้องแพตช์ใหม่)</string>
-    <string name="home_your_apps_install_ready_hint">แพตช์ v%1$s พร้อมติดตั้ง (ไม่ต้องแพตช์ใหม่)</string>
-    <string name="home_action_install">ติดตั้ง</string>
     <string name="home_action_install_to_device">ติดตั้งไปยังอุปกรณ์</string>
     <string name="home_action_installing">กำลังติดตั้ง…</string>
     <string name="home_action_preparing">กำลังเตรียม…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s พร้อม · อุปกรณ์เป็น v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s พร้อม ไม่ต้องแพตช์ใหม่</string>
-    <string name="home_advice_unsupported">ไม่รองรับ v%1$s อีกต่อไป โปรดอัปเดตเป็น v%2$s</string>
+    <string name="home_detail_source_disabled">ปิดการใช้งาน</string>
+    <string name="home_detail_source_removed">ถูกนำออก</string>
+    <string name="home_detail_source_disabled_sub">แหล่งที่มาถูกปิดใช้งานในแหล่งที่มา เปิดใช้งานเพื่อทำการแพตช์ใหม่</string>
+    <string name="home_detail_source_disabled_alternatives_sub">แหล่งที่มาดั้งเดิมถูกปิดใช้งาน เลือกแหล่งที่มาอื่นหรือเปิดใช้งานอีกครั้งในแหล่งที่มา</string>
+    <string name="home_detail_no_compatible_source">ไม่มีแหล่งที่มาที่เข้ากันได้ที่เปิดใช้งานอยู่</string>
+    <string name="home_detail_choose_source">เลือกแหล่งที่มาของแพตช์</string>
     <string name="home_advice_unsupported_by_patches">v%1$s ไม่ถูกรองรับโดยแพตช์ล่าสุดอีกต่อไป</string>
     <string name="home_date_today">วันนี้</string>
     <string name="home_date_yesterday">เมื่อวานนี้</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">ไม่จัดกลุ่ม</string>
     <string name="patch_selection_group_selected_count">เลือก %1$d รายการ</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">เริ่มใหม่</string>
+    <string name="patching_patches_count">%1$d / %2$d แพตช์</string>
+    <string name="patching_slow_warning">ขั้นตอนนี้ใช้เวลานานกว่าปกติ โปรดรอสักครู่…</string>
     <string name="patching_status_ready">พร้อมแพตช์</string>
     <string name="patching_status_preparing">กำลังเตรียมแพตช์</string>
     <string name="patching_status_in_progress">กำลังใช้แพตช์</string>
     <string name="patching_completed_loading_result">แพตช์เสร็จสมบูรณ์ กำลังโหลดผลลัพธ์…</string>
-    <string name="patching_cancelled_loading_result">ยกเลิกการแพตช์ กำลังโหลดผลลัพธ์…</string>
+    <string name="patching_cancelled_loading_result">ยกเลิกการแพตช์แล้ว กำลังโหลดผลลัพธ์…</string>
     <string name="patching_failed_loading_result">แพตช์ล้มเหลว กำลังโหลดผลลัพธ์…</string>
     <string name="patching_log_viewer_failed_to_read">อ่านไฟล์บันทึกไม่สำเร็จ: %1$s</string>
     <string name="patching_log_viewer_title">ไฟล์บันทึก</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">ถูกตัดทิ้ง</string>
     <string name="patching_error_failed_patches">แพตช์ที่ล้มเหลว: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB ปิดอยู่ · เปิดใช้งานเพื่อติดตั้ง</string>
+    <string name="result_adb_connect_device_hint">เชื่อมต่ออุปกรณ์ผ่าน USB เพื่อติดตั้งด้วย ADB</string>
     <string name="result_screen_patch_another_button">แพตช์แอปอื่น</string>
     <string name="result_screen_install_on_device_label">ติดตั้งบน %1$s</string>
     <string name="result_screen_links_routed_label">ลิงก์ถูกส่งไปยังแอปที่แพตช์แล้ว</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">โหลดไม่สำเร็จ</string>
     <string name="source_error_github_pat_required">จำเป็นต้องใช้ GitHub PAT เพื่อดาวน์โหลดแหล่งที่มาของ pull request</string>
     <string name="source_error_pr_no_artifact">ไม่พบอาร์ติแฟกต์สำหรับ pull request</string>
-    <string name="source_sheet_manage_description">จัดการแหล่งแพตช์</string>
-    <string name="source_sheet_local_label">ในเครื่อง</string>
+    <string name="source_error_patcher_incompatible">แหล่งที่มานี้สร้างขึ้นสำหรับตัวแพตช์ %1$s แต่ Morphe %2$s มีตัวแพตช์ %3$s อัปเดต Morphe เพื่อใช้งาน</string>
+    <string name="version_label_local">ในเครื่อง</string>
     <string name="source_sheet_remote_label">รีโมต</string>
     <string name="add_source">เพิ่มแหล่งที่มา</string>
     <string name="source_sheet_title">แหล่งที่มาแพตช์</string>
     <string name="source_sheet_reload_description">โหลดแพตช์ใหม่</string>
-    <string name="source_sheet_quick_mode_hint">เลือกแหล่งที่ Quick Patch ใช้ รองรับหลายแหล่งในโหมดผู้เชี่ยวชาญ</string>
     <string name="source_sheet_multi_mode_hint">เปิด/ปิดแหล่งตามต้องการ แพตช์จากทุกแหล่งที่เปิดใช้จะถูกรวมกัน</string>
     <string name="source_sheet_done_button">เสร็จสิ้น</string>
     <string name="source_sheet_type_preinstalled">ติดตั้งล่วงหน้าแล้ว</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">แก้ไข</string>
     <string name="source_sheet_move_up_description">เลื่อนขึ้น</string>
     <string name="source_sheet_move_down_description">เลื่อนลง</string>
-    <string name="source_sheet_channel_older_stable">เสถียรเวอร์ชันเก่า</string>
-    <string name="source_sheet_channel_older_dev">Dev เวอร์ชันเก่า</string>
     <string name="source_sheet_ignored_mpp_title">รูปแบบ .mpp ที่ไม่สนใจ</string>
-    <string name="source_sheet_ignored_mpp_hint">มีผลกับแหล่งแบบโฟลเดอร์เท่านั้น ซึ่งโหลด .mpp ใหม่สุดในโฟลเดอร์อัตโนมัติ เมื่อเลือกบิลด์ใหม่สุดนั้น ไฟล์ที่ชื่อตรงกับรูปแบบที่นี่จะถูกข้าม คำธรรมดาตรงกับไฟล์ใดก็ตามที่มีคำนั้น (เช่น debug) ใช้ * สำหรับ glob (เช่น *-debug.mpp) และ *-sources.mpp กับ *-javadoc.mpp จะไม่ถูกสนใจเสมอ</string>
+    <string name="source_sheet_ignored_mpp_hint">มีผลเฉพาะกับแหล่งที่มาแบบโฟลเดอร์ ซึ่งจะโหลดไฟล์ .mpp ล่าสุดในโฟลเดอร์โดยอัตโนมัติ เมื่อเลือกบิลด์ล่าสุดนั้น ไฟล์ที่มีชื่อตรงตามรูปแบบที่ระบุที่นี่จะถูกข้ามไป คำทั่วไปจะตรงกับไฟล์ใดก็ตามที่มีคำนั้นอยู่ (เช่น debug) ใช้ * สำหรับ globs (เช่น *-debug.mpp) ส่วน *-sources.mpp และ *-javadoc.mpp จะถูกละเว้นเสมอ</string>
     <string name="source_sheet_ignored_mpp_placeholder">เช่น debug หรือ *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">เพิ่มรูปแบบ</string>
     <string name="source_sheet_remove_pattern_description">ลบรูปแบบ</string>
+    <string name="sources_management_signed_by">ลงนามโดย</string>
+    <string name="sources_management_signing_key_changed_badge">คีย์เปลี่ยนไป</string>
+    <string name="sources_management_signing_key_changed_hint">คีย์ที่ใช้ลงนามเปลี่ยนไป คลิกเพื่อตรวจสอบ</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' ไม่ได้รับการอัปเดตเนื่องจากเวอร์ชันล่าสุดไม่ได้ลงนามด้วยคีย์ที่เคยใช้ก่อนหน้านี้</string>
+    <string name="sources_signing_key_new">คีย์ใหม่</string>
+    <string name="sources_signing_key_trust_message">เวอร์ชันล่าสุดถูกลงนามด้วยคีย์ที่แตกต่างออกไป อาจเป็นเพราะผู้พัฒนาเปลี่ยนคีย์ หรือมีผู้อื่นเผยแพร่เวอร์ชันนี้ โปรดเชื่อถือก็ต่อเมื่อผู้พัฒนาได้ประกาศใช้คีย์ใหม่เท่านั้น</string>
+    <string name="sources_signing_key_trust_message_unsigned">เวอร์ชันล่าสุดไม่ได้มีการลงนาม อาจเป็นเพราะผู้พัฒนาหยุดลงนามในเวอร์ชันที่เผยแพร่ หรือมีผู้อื่นเผยแพร่เวอร์ชันนี้ โปรดเชื่อถือก็ต่อเมื่อผู้พัฒนาได้ประกาศแจ้งไว้เท่านั้น</string>
+    <string name="sources_signing_key_trust_title">เชื่อถือคีย์ใหม่นี้หรือไม่?</string>
+    <string name="sources_signing_key_trusted">คีย์ที่เชื่อถือได้</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">ไฟล์ในเครื่อง</string>
     <string name="patch_source_dialog_name_label">ชื่อ</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">รองรับ GitHub, GitLab หรือลิงก์ morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">แพตช์ก่อนเผยแพร่</string>
     <string name="patch_source_dialog_pre_release_hint">รับสิทธิ์เข้าถึงแพตช์ทดลองเวอร์ชันใหม่ก่อนใคร</string>
-    <string name="patch_source_dialog_experimental_title">เวอร์ชันแอปทดลอง</string>
-    <string name="patch_source_dialog_experimental_hint">ให้ความสำคัญกับแอปเวอร์ชันทดลองถ้ามี</string>
     <string name="patch_source_dialog_error_name_required">จำเป็นต้องระบุชื่อ</string>
     <string name="patch_source_dialog_error_invalid_url">ป้อน URL GitHub หรือ GitLab ที่ถูกต้อง</string>
     <string name="patch_source_dialog_error_invalid_file">เลือกไฟล์ .mpp ที่ถูกต้อง</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">เปิดบันทึก</string>
     <string name="settings_dialog_reset_button">รีเซ็ต</string>
     <string name="settings_theme_system">ระบบ</string>
-    <string name="settings_signing_error_not_found">ไม่พบคีย์สโตร์ที่กำหนด: %1$s คืนค่าไฟล์ เลือกอันอื่นในการตั้งค่า หรือล้างการตั้งค่าเพื่อใช้ค่าเริ่มต้นของ Morphe</string>
     <string name="settings_search_languages_placeholder">ค้นหาภาษา</string>
     <string name="settings_dialog_resolves_to_message">แปลงเป็น: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">ไม่พบคีย์สโตร์: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ภาษา</string>
     <string name="settings_language_current_title">ภาษาปัจจุบัน</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">ภาษาของแอป</string>
     <string name="settings_language_search_no_results">ไม่พบผลลัพธ์</string>
     <string name="settings_section_theme">ชุดรูปแบบ</string>
+    <string name="settings_appearance_theme_mode">โหมดธีม</string>
     <string name="settings_theme_light">สว่าง</string>
     <string name="settings_theme_dark">มืด</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">รูปแบบสี</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">โมโนโครม</string>
     <string name="settings_toggle_sharp_corners_label">มุมเหลี่ยม</string>
     <string name="settings_toggle_sharp_corners_desc">ทำการ์ด ไดอะล็อก และปุ่มให้เหลี่ยม</string>
     <string name="settings_section_accent_color">สีเน้น</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">การ์ดแอป</string>
     <string name="settings_app_cards_color_all">สีสำหรับทุกการ์ด</string>
     <string name="settings_app_cards_color_all_desc">การ์ดที่คุณปรับแต่งเองจะคงสีของตัวเองไว้</string>
-    <string name="settings_section_patch_list">รายการแพตช์</string>
-    <string name="settings_toggle_patch_categories_label">หมวดหมู่แพตช์</string>
-    <string name="settings_toggle_patch_categories_desc">จัดกลุ่มแพตช์เป็นหมวดหมู่ที่ขยายได้</string>
     <string name="settings_section_background_animation">ภาพเคลื่อนไหวพื้นหลัง</string>
     <string name="settings_background_circles">วงกลม</string>
     <string name="settings_background_rings">วงแหวน</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">แปลภาษา</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">ไม่มีบันทึกการเปลี่ยนแปลง</string>
+    <string name="changelog_badge_installed">ติดตั้งแล้ว</string>
+    <string name="changelog_badge_latest">ล่าสุด</string>
+    <string name="changelog_badge_prerelease">รุ่นก่อนปล่อยตัวจริง</string>
+    <string name="changelog_date_today">วันนี้</string>
+    <string name="changelog_date_yesterday">เมื่อวานนี้</string>
     <string name="changelog_dialog_title">ดูบันทึกการเปลี่ยนแปลง</string>
-    <string name="changelog_show_older_button">แสดงรีลีสที่เก่ากว่า</string>
+    <string name="changelog_not_available">ไม่มีบันทึกการเปลี่ยนแปลง</string>
+    <string name="changelog_section_app_support">การสนับสนุนแอป</string>
+    <string name="changelog_section_fixes">การแก้ไข</string>
+    <string name="changelog_section_improvements">การปรับปรุง</string>
+    <string name="changelog_section_new">ใหม่</string>
+    <string name="changelog_section_other">การเปลี่ยนแปลง</string>
+    <string name="changelog_section_performance">ประสิทธิภาพ</string>
+    <string name="changelog_show_all">แสดงทั้งหมด (%1$d)</string>
+    <string name="changelog_show_less">แสดงน้อยลง</string>
     <string name="changelog_view_on_github_button">ดูบน GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">แหล่งที่มา</string>
+    <string name="nav_apps">แอป</string>
 </resources>

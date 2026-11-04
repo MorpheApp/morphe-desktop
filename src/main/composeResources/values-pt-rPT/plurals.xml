@@ -16,22 +16,6 @@
         <item quantity="one">%1$d fonte</item>
         <item quantity="other">%1$d fontes</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch será aplicado</item>
-        <item quantity="other">%1$d patches serão aplicados</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d excluído</item>
-        <item quantity="other">%1$d excluídos</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d ativado</item>
-        <item quantity="other">%1$d ativados</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d desativado</item>
-        <item quantity="other">%1$d desativados</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d biblioteca</item>
         <item quantity="other">%1$d bibliotecas</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d núcleo</item>
         <item quantity="other">%1$d núcleos</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d alteração</item>
+        <item quantity="other">%1$d alterações</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">Há %1$d dia</item>
+        <item quantity="other">Há %1$d dias</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d recurso</item>
+        <item quantity="other">%1$d recursos</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d correção</item>
+        <item quantity="other">%1$d correções</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d otimização</item>
+        <item quantity="other">%1$d otimizações</item>
     </plurals>
 </resources>

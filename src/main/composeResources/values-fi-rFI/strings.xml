@@ -13,6 +13,7 @@
     <string name="expand">Laajenna</string>
     <string name="cancel">Peruuta</string>
     <string name="close">Sulje</string>
+    <string name="trust">Luottamus</string>
     <string name="delete">Poista</string>
     <string name="disabled_while_patching">Poistettu käytöstä paikkauksen aikana</string>
     <string name="drop_apk_here">Pudota APK tähän</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Yhteys katkesi latauksen aikana, yritä uudelleen</string>
     <string name="error_network_loading_patches">Verkkovirhe ladattaessa paikkauksia</string>
     <string name="error_patch_file_not_found">Paikkaustiedostoa ei löytynyt: %1$s</string>
-    <string name="error_no_patches_files_supplied">Ei annettu paikkaustiedostoja</string>
-    <string name="error_input_apk_not_found">Syötteenä olevaa APK:ta ei löytynyt</string>
     <string name="error_step_failed">%1$s epäonnistui: %2$s</string>
     <string name="error_drop_valid_apk">Pudota kelvollinen .apk-, .apkm-, .xapk- tai .apks-tiedosto</string>
     <string name="status_saving">Tallennetaan…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Suodata sovelluksia…</string>
     <string name="version">Versio</string>
     <string name="version_label_stable">Vakaa</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Esijulkaisu</string>
     <string name="version_label_experimental">Kokeellinen</string>
-    <string name="version_label_latest_dev">Uusin Dev</string>
     <string name="version_label_latest_stable">Uusin vakaa</string>
+    <string name="version_label_recommended">Suositeltu</string>
+    <string name="version_label_supported">Tuettu</string>
     <string name="app_info_arch_label">Arkkitehtuuri</string>
     <string name="app_info_min_sdk_label">Minimi SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Paikkaus peruutettu</string>
     <string name="view_full_logs_button">Näytä täydet lokit</string>
     <string name="error_patching_unknown">Paikkaus epäonnistui tuntemattomasta syystä</string>
-    <string name="error_patching_general">Virhe: %1$s</string>
     <string name="error_log_label">Virheloki</string>
     <string name="back">Takaisin</string>
     <string name="open_folder">Avaa kansio</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Mikä tahansa määrä pysähdyksiä, lineaarinen, säteittäinen tai kartiomainen</string>
     <string name="card_fill_mode_solid">Yhtenäinen</string>
     <string name="card_fill_mode_solid_blurb">Yksi tasainen väri</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Lisäosat</string>
-    <string name="quick_patch_screen_start_over_button">Aloita alusta</string>
-    <string name="quick_patch_patch_another_button">Paikkaa toinen</string>
-    <string name="quick_patch_select_apk">Valitse APK</string>
-    <string name="quick_patch_analyze_apk_failed">APK:n analysointi epäonnistui</string>
-    <string name="quick_patch_extract_base_apk_failed">Perus-APK:n purkaminen nipusta epäonnistui</string>
-    <string name="quick_patch_unsupported_app_error">%1$s ei ole tuettu pikanäppäintilassa. Tuetut sovellukset: %2$s. Käytä normaalitilaa ei-tuettuihin sovelluksiin</string>
     <string name="adb_install_on_button">Asenna laitteelle %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Ladataan lisäosia</string>
-    <string name="patching_step_preparing">Valmistellaan</string>
     <string name="patching_step_merging_split_apk">Yhdistetään ositettua APK:ta</string>
     <string name="patching_step_read_apk">Luetaan APK-tiedostoa</string>
     <string name="patching_step_applying_patches">Otetaan lisäosia käyttöön</string>
-    <string name="patching_step_saving">Tallennetaan</string>
     <string name="patching_step_writing_apk">Kirjoitetaan muokattua APK-tiedostoa</string>
     <string name="patching_step_signing">Allekirjoitetaan muokattua APK-tiedostoa</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Tiedosto voi olla vioittunut, lataa uudelleen APKMirrorista</string>
     <string name="version_status_checksum_failed">Tarkistussumman vahvistus epäonnistui</string>
     <string name="version_status_checksum_matches">Tarkistussumma täsmää APKMirrorin kanssa</string>
-    <string name="version_status_older_stable">Vanhempi vakaa</string>
     <string name="version_status_newer_stable_available">Uudempi vakaa v%1$s saatavilla</string>
     <string name="version_status_newer_stable_available_fallback">Uudempi vakaa versio on saatavilla</string>
     <string name="version_status_experimental_detail">Tuettu, mutta ei välttämättä toimi oikein</string>
-    <string name="version_status_older_experimental">Vanhempi kokeellinen</string>
-    <string name="version_status_newer_experimental_available">Uudempi kokeellinen v%1$s saatavilla</string>
-    <string name="version_status_newer_experimental_available_fallback">Uudempi kokeellinen versio on saatavilla</string>
-    <string name="version_status_too_new">Versio liian uusi</string>
     <string name="version_status_unsupported_detail">Ei virallisesti tuettu, paikkaukset todennäköisesti epäonnistuvat</string>
-    <string name="version_status_too_old">Versio liian vanha</string>
     <string name="version_status_unsupported">Ei-tuettu versio</string>
     <string name="version_status_build_unsupported">Rakennus ei ole tuettu</string>
     <string name="version_status_build_unsupported_detail">Tämä versio on tuettu, mutta ei tämä rakennus. Hanki rakennus, jota paikkaukset tukevat</string>
+    <string name="version_status_build_unsupported_with_code">Paikkaukset vaativat version %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Versioilmoitus</string>
+    <string name="version_warning_build_unsupported_message">Nykyinen: v%1$s (versio %2$s)\nVaadittu versio: %3$s\n\nTämä on saman version eri koontiversio. Paikkaukset vaativat tietyn version.</string>
     <string name="version_warning_experiment_title">Haluatko kokeilla? 🧪</string>
-    <string name="version_warning_older_stable_title">Vanhempi vakaa versio</string>
-    <string name="version_warning_older_stable_message">Nykyinen: v%1$s\nUusin vakaa: v%2$s\n\nTämä versio on tuettu, mutta uudempi vakaa versio on saatavilla. Saatat puuttua viimeisimmät korjaukset.</string>
     <string name="version_warning_latest_experimental_message">Nykyinen: v%1$s\n\nTällä versiolla on varhainen kokeellinen tuki\n\n🔧 Odota omituista sovelluskäyttäytymistä tai tunnistamattomia bugeja, kun paikkauksia jalostetaan tälle sovellusversiolle.</string>
-    <string name="version_warning_older_experimental_title">Vanhempi kokeellinen versio\nHaluatko kokeilla? 🧪</string>
-    <string name="version_warning_older_experimental_message">Nykyinen: v%1$s\nUusin kokeellinen: v%2$s\n\nTämä on tuettu kokeellinen rakennus, mutta uudempi kokeellinen versio on saatavilla. Odota omituista sovelluskäyttäytymistä tai tunnistamattomia bugeja, kun paikkauksia jalostetaan tälle sovellusversiolle.</string>
-    <string name="version_warning_too_new_message">Nykyinen: v%1$s\nTunnetuin uusin: v%2$s\n\nTällä versiolla on varhainen kokeellinen tuki\n\n🔧 Odota omituista sovelluskäyttäytymistä tai tunnistamattomia bugeja, kun paikkauksia jalostetaan tälle sovellusversiolle.</string>
-    <string name="version_warning_too_old_message">Nykyinen: v%1$s\nVanhin tuettu: v%2$s\n\nTämä ei ole virallisesti tuettu versio. Paikkaukset todennäköisesti epäonnistuvat.</string>
     <string name="version_warning_unsupported_message">Nykyinen: v%1$s\n\nTämä ei ole virallisesti tuettu versio. Paikkaukset todennäköisesti epäonnistuvat.</string>
     <string name="version_warning_notice_message">Jatketaanko versiolla v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Vanhempi vakaa rakennus - uudempi vakaa v%1$s saatavilla</string>
-    <string name="quick_patch_warning_latest_experimental">Kokeellinen rakennus - tuettu, mutta ei välttämättä toimi oikein</string>
-    <string name="quick_patch_warning_older_experimental">Vanhempi kokeellinen rakennus - uudempi kokeellinen v%1$s saatavilla</string>
-    <string name="quick_patch_warning_build_unsupported">Rakennus ei ole tuettu - tämä versio on paikattavissa, mutta ei tämä rakennus</string>
-    <string name="quick_patch_warning_too_new">Versio liian uusi - ei virallisesti tuettu, paikkaukset todennäköisesti epäonnistuvat</string>
-    <string name="quick_patch_warning_too_old">Versio liian vanha - ei virallisesti tuettu, paikkaukset todennäköisesti epäonnistuvat</string>
-    <string name="quick_patch_warning_unsupported_between">Ei-tuettu versio - paikkaukset todennäköisesti epäonnistuvat</string>
-    <string name="quick_patch_read_apk_failed">APK:n lukeminen epäonnistui: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Valmistellaan paikkauksia…</string>
-    <string name="quick_patch_fetch_patches_failed">Paikkausten nouto epäonnistui. Tarkista internetyhteytesi</string>
-    <string name="quick_patch_status_downloading_patches">Ladataan paikkauksia %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Paikkausten lataus epäonnistui: %1$s</string>
-    <string name="quick_patch_status_patching">Paikataan…</string>
-    <string name="quick_patch_completed_adb_off">ADB pois · Ota käyttöön asentaaksesi</string>
-    <string name="quick_patch_completed_adb_connect_device">Yhdistä laite USB:llä asentaaksesi ADB:n avulla</string>
-    <string name="quick_patch_error_unknown_occurred">Tapahtui tuntematon virhe</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analysoidaan APK:ta…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d korjausta</string>
-    <string name="quick_patch_patching_slow_warning">Tämä kestää tavallista kauemmin. Odota…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(rakennus %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Ei yhteensopivia paikkauksia tälle sovellukselle</string>
-    <string name="quick_patch_ready_no_matching_patches">Ei paikkauksia, jotka vastaavat \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Paikkaa oletusasetuksilla</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Tuetut sovellukset</string>
-    <string name="quick_patch_supported_apps_subtitle">Pudota tarkka APK-versio tuettua sovellusta varten tähän</string>
-    <string name="quick_patch_supported_apps_loading">Ladataan tuettuja sovelluksia…</string>
-    <string name="quick_patch_supported_apps_load_error">Tuettuja sovelluksia ei voitu ladata</string>
-    <string name="quick_patch_supported_apps_change_source">Vaihda lähde</string>
-    <string name="quick_patch_supported_apps_no_matches">Ei vastaavia sovelluksia</string>
-    <string name="quick_patch_supported_apps_version_any">Mikä tahansa versio</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Valitse APK-tiedosto</string>
     <string name="home_could_not_resolve_patch_files">Paikkaustiedostoja ei voitu selvittää</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Poista APK</string>
     <string name="home_apk_info_limited_info_warning">Tämän APK:n manifestia ei voitu lukea kokonaan (yleistä jaetuissa nipuissa). Alla olevat tiedot ovat likimääräisiä, paikkauksen pitäisi silti toimia</string>
     <string name="home_apk_info_unsupported_app_warning">Ei löytynyt yhteensopivia paikkauksia tälle sovellukselle. Voit silti jatkaa, mutta paikkauksella ei välttämättä ole vaikutusta</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Tälle sovellukselle ei löytynyt yhteensopivia paikkauksia</string>
     <string name="home_apk_info_build_label">Rakennus</string>
     <string name="home_apk_info_size_label">Koko</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Lähteestä</string>
     <string name="home_stage_change_apk">Vaihda APK</string>
     <string name="home_stage_continue">Jatka</string>
+    <string name="home_stage_patch">Muokkaa</string>
     <string name="home_stage_analyzing_title">Analysoidaan</string>
     <string name="home_stage_reading_metadata">Luetaan sovelluksen metatietoja…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Poistetaanko asennus %1$s?</string>
     <string name="home_dialog_uninstall_message">Tämä poistaa %1$s yhdistetyltä laitteelta. Levylle tallennettu paikattu APK ja historiasi säilytetään, ellet valitse toisin alla</string>
     <string name="home_dialog_uninstall_also_forget">Poista myös sovelluksistasi</string>
-    <string name="home_dialog_missing_apk_title">Alkuperäistä APK:ta ei löytynyt</string>
-    <string name="home_dialog_missing_apk_message">Syötteenä oleva APK sovellukselle %1$s ei ole enää sijainnissa:\n%2$s\n\nValitse APK uudelleen paikataksesi tallennetuilla asetuksilla</string>
-    <string name="home_dialog_select_apk">Valitse APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Valitse APK paikattavaksi uudelleen</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Hallinnoi lähteitä</string>
     <string name="home_header_multi_source_hint">Paikkaukset kaikista käytössä olevista lähteistä yhdistetään. Hallinnoi yllä olevasta lähteet-painikkeesta</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Omat sovellukset</string>
     <string name="home_banner_view">Näytä</string>
     <string name="home_your_apps_install_ready">Asennusvalmis</string>
-    <string name="home_your_apps_newer_patch_hint">Uudempi paikkaus saattaa päivittää sovelluksen, napsauta Päivitä tarkistaaksesi</string>
-    <string name="home_your_apps_device_version_ready">Paikattu v%1$s valmis, laite v%2$s (ei uudelleenpaikkausta tarvita)</string>
-    <string name="home_your_apps_install_ready_hint">Paikattu v%1$s valmis asennettavaksi (ei uudelleenpaikkausta tarvita)</string>
-    <string name="home_action_install">Asenna</string>
     <string name="home_action_install_to_device">Asenna laitteelle</string>
     <string name="home_action_installing">Asennetaan…</string>
     <string name="home_action_preparing">Valmistellaan…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s valmis · laite v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s valmis, ei uudelleenpaikkausta tarvita</string>
-    <string name="home_advice_unsupported">v%1$s ei ole enää tuettu. Päivitä versioon v%2$s</string>
+    <string name="home_detail_source_disabled">Pois käytöstä</string>
+    <string name="home_detail_source_removed">Poistettu</string>
+    <string name="home_detail_source_disabled_sub">Lähde on poistettu käytöstä Lähteet-valikossa. Ota se käyttöön uudelleenpaikkauksen tekemiseksi</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Alkuperäinen lähde on poistettu käytöstä. Valitse vaihtoehtoinen lähde tai ota se käyttöön uudelleen Lähteet-valikossa</string>
+    <string name="home_detail_no_compatible_source">Yhteensopivaa lähdettä ei ole käytössä</string>
+    <string name="home_detail_choose_source">Valitse lisäosien lähde</string>
     <string name="home_advice_unsupported_by_patches">v%1$s ei ole enää tuettu uusimpien paikkausten toimesta</string>
     <string name="home_date_today">tänään</string>
     <string name="home_date_yesterday">eilen</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Ryhmittelemätön</string>
     <string name="patch_selection_group_selected_count">%1$d valittua</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Aloita alusta</string>
+    <string name="patching_patches_count">%1$d / %2$d lisäosaa</string>
+    <string name="patching_slow_warning">Tämä kestää kauemmin kuin yleensä. Odota hetki…</string>
     <string name="patching_status_ready">Valmis paikkaamaan</string>
     <string name="patching_status_preparing">Valmistellaan paikkausta</string>
     <string name="patching_status_in_progress">Otetaan lisäosia käyttöön</string>
     <string name="patching_completed_loading_result">Paikkaus valmis, ladataan tulosta…</string>
-    <string name="patching_cancelled_loading_result">Paikkaus peruutettu, ladataan tulosta…</string>
+    <string name="patching_cancelled_loading_result">Paikkaus peruttu, ladataan tulosta…</string>
     <string name="patching_failed_loading_result">Paikkaus epäonnistui, ladataan tulosta…</string>
     <string name="patching_log_viewer_failed_to_read">Lokitiedoston lukeminen epäonnistui: %1$s</string>
     <string name="patching_log_viewer_title">Lokitiedosto</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Poistettu</string>
     <string name="patching_error_failed_patches">Epäonnistuneet paikkaukset: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB pois päältä · Ota käyttöön asentaaksesi</string>
+    <string name="result_adb_connect_device_hint">Yhdistä laite USB:n kautta asentaaksesi ADB:n avulla</string>
     <string name="result_screen_patch_another_button">Paikkaa toinen</string>
     <string name="result_screen_install_on_device_label">Asenna laitteelle %1$s</string>
     <string name="result_screen_links_routed_label">Linkit ohjattu paikattuun sovellukseen</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Lataus epäonnistui</string>
     <string name="source_error_github_pat_required">GitHub PAT vaaditaan pull request -lähteiden lataamiseen</string>
     <string name="source_error_pr_no_artifact">Pull requestille ei löytynyt artefakteja</string>
-    <string name="source_sheet_manage_description">Hallinnoi paikkauslähteitä</string>
-    <string name="source_sheet_local_label">Paikallinen</string>
+    <string name="source_error_patcher_incompatible">Tämä lähde on rakennettu patcherille %1$s, mutta Morphe %2$s sisältää patcherin %3$s. Päivitä Morphe käyttääksesi sitä</string>
+    <string name="version_label_local">Paikallinen</string>
     <string name="source_sheet_remote_label">Etälähde</string>
     <string name="add_source">Lisää lähde</string>
     <string name="source_sheet_title">Lisäosien lähteet</string>
     <string name="source_sheet_reload_description">Lataa paikkaukset uudelleen</string>
-    <string name="source_sheet_quick_mode_hint">Valitse, mitä lähdettä Pikapaikkaus käyttää. Useita lähteitä on saatavilla asiantuntijatilassa</string>
     <string name="source_sheet_multi_mode_hint">Ota käyttöön/poista käytöstä mikä tahansa yhdistelmä. Paikkaukset kaikista käytössä olevista lähteistä yhdistetään</string>
     <string name="source_sheet_done_button">Valmis</string>
     <string name="source_sheet_type_preinstalled">Esiasennettu</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Muokkaa</string>
     <string name="source_sheet_move_up_description">Siirrä ylös</string>
     <string name="source_sheet_move_down_description">Siirrä alas</string>
-    <string name="source_sheet_channel_older_stable">Vanhempi vakaa</string>
-    <string name="source_sheet_channel_older_dev">Vanhempi Dev</string>
     <string name="source_sheet_ignored_mpp_title">Ohitetut .mpp-kuviot</string>
-    <string name="source_sheet_ignored_mpp_hint">Vaikuttaa vain kansiolähteisiin, jotka lataavat automaattisesti uusimman .mpp-tiedoston kansiosta. Kun valitaan uusin rakennus, ohitetaan tiedostot, joiden nimi vastaa tässä olevaa kuviota. Pelkkä sana vastaa mitä tahansa tiedostoa, joka sisältää sen (esim. debug). Käytä *-merkkiä glob-kuvioihin (esim. *-debug.mpp). *-sources.mpp ja *-javadoc.mpp ohitetaan aina</string>
+    <string name="source_sheet_ignored_mpp_hint">Vaikuttaa vain kansiolähteisiin, jotka lataavat automaattisesti uusimman .mpp-tiedoston kansiosta. Kun kyseinen uusin versio valitaan, tiedostot, joiden nimi täsmää täällä olevaan kaavaan, ohitetaan. Tavallinen sana täsmää mihin tahansa tiedostoon, joka sisältää sen (esim. debug). Käytä * merkkiä wildcard-haun tekemiseen (esim. *-debug.mpp). Tiedostot *-sources.mpp ja *-javadoc.mpp jätetään aina huomioimatta</string>
     <string name="source_sheet_ignored_mpp_placeholder">esim. debug tai *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Lisää kuvio</string>
     <string name="source_sheet_remove_pattern_description">Poista kuvio</string>
+    <string name="sources_management_signed_by">Allekirjoittanut</string>
+    <string name="sources_management_signing_key_changed_badge">Avain muuttunut</string>
+    <string name="sources_management_signing_key_changed_hint">Allekirjoitusavain on muuttunut. Klikkaa tarkistaaksesi sen</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s'-sovellusta ei päivitetty, koska sen viimeisintä versiota ei ole allekirjoitettu aiemmin käytetyllä avaimella</string>
+    <string name="sources_signing_key_new">Uusi avain</string>
+    <string name="sources_signing_key_trust_message">Viimeisin versio on allekirjoitettu eri avaimella. Kehittäjä on joko vaihtanut avaimensa tai joku muu on julkaissut tämän version. Luota siihen vain, jos kehittäjä on ilmoittanut uudesta avaimesta</string>
+    <string name="sources_signing_key_trust_message_unsigned">Viimeisintä versiota ei ole allekirjoitettu. Kehittäjä on joko lopettanut versioiden allekirjoittamisen tai joku muu on julkaissut tämän version. Luota siihen vain, jos kehittäjä on ilmoittanut siitä</string>
+    <string name="sources_signing_key_trust_title">Luotetaanko uuteen avaimeen?</string>
+    <string name="sources_signing_key_trusted">Luotettu avain</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Paikallinen tiedosto</string>
     <string name="patch_source_dialog_name_label">Nimi</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Hyväksyy GitHub-, GitLab- tai morphe.software/add-source-linkin</string>
     <string name="patch_source_dialog_pre_release_title">Esijulkaisupaikkaukset</string>
     <string name="patch_source_dialog_pre_release_hint">Saa varhaisen pääsyn uusiin kokeellisiin paikkausversioihin</string>
-    <string name="patch_source_dialog_experimental_title">Kokeelliset sovellusversiot</string>
-    <string name="patch_source_dialog_experimental_hint">Priorisoi kokeelliset sovellusversiot, jos saatavilla</string>
     <string name="patch_source_dialog_error_name_required">Nimi on pakollinen</string>
     <string name="patch_source_dialog_error_invalid_url">Syötä kelvollinen GitHub- tai GitLab-URL</string>
     <string name="patch_source_dialog_error_invalid_file">Valitse kelvollinen .mpp-tiedosto</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Avaa lokit</string>
     <string name="settings_dialog_reset_button">Nollaa</string>
     <string name="settings_theme_system">Järjestelmä</string>
-    <string name="settings_signing_error_not_found">Määritettyä avainvarastoa ei löytynyt: %1$s. Palauta tiedosto, valitse toinen asetuksista tai tyhjennä asetus käyttääksesi Morphen oletusta</string>
     <string name="settings_search_languages_placeholder">Hae kieliä</string>
     <string name="settings_dialog_resolves_to_message">Ratkeaa: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Avainvarastoa ei löytynyt: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Kieli</string>
     <string name="settings_language_current_title">Nykyinen kieli</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Sovelluksen kieli</string>
     <string name="settings_language_search_no_results">Tuloksia ei löytynyt</string>
     <string name="settings_section_theme">Teema</string>
+    <string name="settings_appearance_theme_mode">Teeman tila</string>
     <string name="settings_theme_light">Vaalea</string>
     <string name="settings_theme_dark">Tumma</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Värityyli</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monokromi</string>
     <string name="settings_toggle_sharp_corners_label">Terävät kulmat</string>
     <string name="settings_toggle_sharp_corners_desc">Tee korteista, valintaikkunoista ja painikkeista kulmikkaita</string>
     <string name="settings_section_accent_color">Korostusväri</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Sovelluskortit</string>
     <string name="settings_app_cards_color_all">Väri jokaiselle kortille</string>
     <string name="settings_app_cards_color_all_desc">Kortit, jotka olet muokannut yksilöllisesti, säilyttävät oman värinsä</string>
-    <string name="settings_section_patch_list">Paikkauslista</string>
-    <string name="settings_toggle_patch_categories_label">Paikkausluokat</string>
-    <string name="settings_toggle_patch_categories_desc">Ryhmittele paikkaukset laajennettaviin luokkiin</string>
     <string name="settings_section_background_animation">Taustaanimaatio</string>
     <string name="settings_background_circles">Ympyrät</string>
     <string name="settings_background_rings">Renkaat</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Käännä</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Muutosloki ei saatavilla</string>
+    <string name="changelog_badge_installed">Asennettu</string>
+    <string name="changelog_badge_latest">Uusin</string>
+    <string name="changelog_badge_prerelease">Esijulkaisu</string>
+    <string name="changelog_date_today">Tänään</string>
+    <string name="changelog_date_yesterday">Eilen</string>
     <string name="changelog_dialog_title">Näytä muutosloki</string>
-    <string name="changelog_show_older_button">Näytä vanhemmat julkaisut</string>
+    <string name="changelog_not_available">Muutosloki ei saatavilla</string>
+    <string name="changelog_section_app_support">Sovellustuki</string>
+    <string name="changelog_section_fixes">Korjaukset</string>
+    <string name="changelog_section_improvements">Parannukset</string>
+    <string name="changelog_section_new">Uutta</string>
+    <string name="changelog_section_other">Muutokset</string>
+    <string name="changelog_section_performance">Suorituskyky</string>
+    <string name="changelog_show_all">Näytä kaikki (%1$d)</string>
+    <string name="changelog_show_less">Näytä vähemmän</string>
     <string name="changelog_view_on_github_button">Näytä GitHubissa</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Lähteet</string>
+    <string name="nav_apps">Sovellukset</string>
 </resources>

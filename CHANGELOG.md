@@ -1,3 +1,50 @@
+# [2.0.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.5...v2.0.0-dev.6) (2026-11-03)
+
+
+### Bug Fixes
+
+* Report patching steps and log levels as events ([daaf936](https://github.com/MorpheApp/morphe-desktop/commit/daaf9361fb5bcf79374cd3a5a0425396c1de33cd))
+
+# [2.0.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.4...v2.0.0-dev.5) (2026-11-02)
+
+
+### Performance Improvements
+
+* Write the patched APK in one pass and sign it in place ([#403](https://github.com/MorpheApp/morphe-desktop/issues/403)) ([e9ac86e](https://github.com/MorpheApp/morphe-desktop/commit/e9ac86e8e95153706c0b8ff64e12e411477fe3f4))
+
+# [2.0.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.3...v2.0.0-dev.4) (2026-11-01)
+
+
+### Features
+
+* Sign with PKCS12, BKS and JKS keystores as they are ([8425c01](https://github.com/MorpheApp/morphe-desktop/commit/8425c019d5653285398625195159a3918158c02b))
+
+# [2.0.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.2...v2.0.0-dev.3) (2026-11-01)
+
+
+### Bug Fixes
+
+* Resolve card text contrast in Monochrome Light Mode ([4ebc790](https://github.com/MorpheApp/morphe-desktop/commit/4ebc7908b25aef280858112b55451de5b78ff405))
+
+# [2.0.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0-dev.1...v2.0.0-dev.2) (2026-11-01)
+
+
+### Features
+
+* Add support for Windows on ARM ([#399](https://github.com/MorpheApp/morphe-desktop/issues/399)) ([a573962](https://github.com/MorpheApp/morphe-desktop/commit/a573962804a690ff3e75a27c01bdac4813519165))
+
+# [2.0.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0...v2.0.0-dev.1) (2026-11-01)
+
+
+### Features
+
+* GUI 2.0 overhaul ([#393](https://github.com/MorpheApp/morphe-desktop/issues/393)) ([6d2bf56](https://github.com/MorpheApp/morphe-desktop/commit/6d2bf566dc41c89b42069f9419e1238d50eae4b5))
+
+
+### BREAKING CHANGES
+
+* Migrated Desktop to use GUI 2.0.
+
 # [1.20.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.19.1...v1.20.0) (2026-10-30)
 
 

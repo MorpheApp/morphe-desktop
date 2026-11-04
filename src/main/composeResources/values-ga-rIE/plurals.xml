@@ -28,34 +28,6 @@
         <item quantity="many">%1$d foinsí</item>
         <item quantity="other">%1$d foinsí</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Cuirfear %1$d phaiste i bhfeidhm</item>
-        <item quantity="two">Cuirfear %1$d phaiste i bhfeidhm</item>
-        <item quantity="few">Cuirfear %1$d paistí i bhfeidhm</item>
-        <item quantity="many">Cuirfear %1$d paistí i bhfeidhm</item>
-        <item quantity="other">Cuirfear %1$d paistí i bhfeidhm</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d eisiata</item>
-        <item quantity="two">%1$d eisiata</item>
-        <item quantity="few">%1$d eisiata</item>
-        <item quantity="many">%1$d eisiata</item>
-        <item quantity="other">%1$d eisiata</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d cumasaithe</item>
-        <item quantity="two">%1$d cumasaithe</item>
-        <item quantity="few">%1$d cumasaithe</item>
-        <item quantity="many">%1$d cumasaithe</item>
-        <item quantity="other">%1$d cumasaithe</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d díchumasaithe</item>
-        <item quantity="two">%1$d díchumasaithe</item>
-        <item quantity="few">%1$d díchumasaithe</item>
-        <item quantity="many">%1$d díchumasaithe</item>
-        <item quantity="other">%1$d díchumasaithe</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d leabharlann</item>
         <item quantity="two">%1$d leabharlann</item>
@@ -97,5 +69,40 @@
         <item quantity="few">%1$d cóir</item>
         <item quantity="many">%1$d cóir</item>
         <item quantity="other">%1$d cóir</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d athrú</item>
+        <item quantity="two">%1$d athrú</item>
+        <item quantity="few">%1$d n-athrú</item>
+        <item quantity="many">%1$d n-athrú</item>
+        <item quantity="other">%1$d n-athrú</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d lá ó shin</item>
+        <item quantity="two">%1$d lá ó shin</item>
+        <item quantity="few">%1$d lá ó shin</item>
+        <item quantity="many">%1$d lá ó shin</item>
+        <item quantity="other">%1$d lá ó shin</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d ghné</item>
+        <item quantity="two">%1$d ghné</item>
+        <item quantity="few">%1$d ngné</item>
+        <item quantity="many">%1$d ngné</item>
+        <item quantity="other">%1$d ngné</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d cheartú</item>
+        <item quantity="two">%1$d cheartú</item>
+        <item quantity="few">%1$d ceartú</item>
+        <item quantity="many">%1$d gceartú</item>
+        <item quantity="other">%1$d ceartú</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optamú</item>
+        <item quantity="two">%1$d optamú</item>
+        <item quantity="few">%1$d optamú</item>
+        <item quantity="many">%1$d optamú</item>
+        <item quantity="other">%1$d optamú</item>
     </plurals>
 </resources>

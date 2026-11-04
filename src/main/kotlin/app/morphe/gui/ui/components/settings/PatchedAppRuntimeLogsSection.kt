@@ -31,6 +31,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.pluralStringResource
@@ -161,12 +162,14 @@ internal fun PatchedAppRuntimeLogsSection(
                             size = MorpheButtonSize.COMPACT,
                             customColor = MorpheTheme.colors.primary,
                             onClick = {
-                                try {
-                                    if (Desktop.isDesktopSupported()) {
-                                        Desktop.getDesktop().open(s.file.parentFile)
+                                scope.launch(Dispatchers.IO) {
+                                    try {
+                                        if (Desktop.isDesktopSupported()) {
+                                            Desktop.getDesktop().open(s.file.parentFile)
+                                        }
+                                    } catch (e: Exception) {
+                                        Logger.error("Failed to reveal logs folder", e)
                                     }
-                                } catch (e: Exception) {
-                                    Logger.error("Failed to reveal logs folder", e)
                                 }
                             }
                         )

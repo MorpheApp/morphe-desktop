@@ -16,22 +16,6 @@
         <item quantity="one">%1$d წყარო</item>
         <item quantity="other">%1$d წყარო</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d პატჩი იქნება გამოყენებული</item>
-        <item quantity="other">გამოიყენება %1$d პატჩი</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d გამორიცხულია</item>
-        <item quantity="other">%1$d გამორიცხულია</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d ჩართულია</item>
-        <item quantity="other">%1$d ჩართულია</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d გამორთულია</item>
-        <item quantity="other">%1$d გამორთულია</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d ბიბლიოთეკა</item>
         <item quantity="other">%1$d ბიბლიოთეკა</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d ბირთვი</item>
         <item quantity="other">%1$d ბირთვი</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d ცვლილება</item>
+        <item quantity="other">%1$d ცვლილება</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d დღის წინ</item>
+        <item quantity="other">%1$d დღის წინ</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d ფუნქცია</item>
+        <item quantity="other">%1$d ფუნქცია</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d გამოსწორება</item>
+        <item quantity="other">%1$d გამოსწორება</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d ოპტიმიზაცია</item>
+        <item quantity="other">%1$d ოპტიმიზაცია</item>
     </plurals>
 </resources>

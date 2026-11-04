@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">Chanzo %1$d cha patch kimeshindwa kupakiwa. Tunatumia vile vilivyopakiwa kikamilifu</item>
+        <item quantity="other">Vyanzo %1$d vya patch vimeshindwa kupakiwa. Tunatumia vile vilivyopakiwa kikamilifu</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">App %1$d iliyopatchwa ina sasisho linalopatikana</item>
+        <item quantity="other">App %1$d zilizopatchwa zina sasisho linalopatikana</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">Mstari %1$d umehifadhiwa kwenye %2$s</item>
+        <item quantity="other">Mistari %1$d imehifadhiwa kwenye %2$s</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">chanzo %1$d</item>
+        <item quantity="other">vyanzo %1$d</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">maktaba %1$d</item>
+        <item quantity="other">maktaba %1$d</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%1$d kati ya %2$d vimechaguliwa</item>
+        <item quantity="other">%1$d kati ya %2$d vimechaguliwa</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">patch %1$d</item>
+        <item quantity="other">patches %1$d</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">kadi %1$d inazidi hii</item>
+        <item quantity="other">kadi %1$d zinazidi hii</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">Pakua bundle %1$d</item>
+        <item quantity="other">Pakua bundles %1$d</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">mabadiliko %1$d</item>
+        <item quantity="other">mabadiliko %1$d</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">siku %1$d iliyopita</item>
+        <item quantity="other">siku %1$d zilizopita</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">kipengele %1$d</item>
+        <item quantity="other">vipengele %1$d</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">marekebisho %1$d</item>
+        <item quantity="other">marekebisho %1$d</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">uboreshaji %1$d</item>
+        <item quantity="other">uboreshaji %1$d</item>
+    </plurals>
+</resources>

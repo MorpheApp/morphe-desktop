@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.theme
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
@@ -17,11 +16,9 @@ import app.morphe.engine.patches.PatchResolver.Channel
 fun channelColor(channel: Channel?): Color {
     val colors = MorpheTheme.colors
     return when (channel) {
-        Channel.STABLE_LATEST -> colors.secondary
-        Channel.STABLE_OLDER -> colors.warning
-        Channel.DEV_LATEST -> colors.tertiary
-        Channel.DEV_OLDER -> MaterialTheme.colorScheme.error
-        Channel.LOCAL -> colors.primary
+        Channel.STABLE -> colors.primary
+        Channel.PRERELEASE -> colors.warning
+        Channel.LOCAL -> colors.secondary
         null, Channel.UNKNOWN -> colors.secondary
     }
 }

@@ -51,11 +51,9 @@ const val UNGROUPED_GROUP_KEY = "ungrouped"
 
 /**
  * Groups [patches] into uncategorized, alphabetical category, and universal blocks.
- * When [groupByCategory] is false, uncategorized items have a null title and render flat.
  */
 fun <T> buildPatchGroups(
     patches: List<T>,
-    groupByCategory: Boolean,
     universalTitle: String,
     ungroupedTitle: String,
     categoryOf: (T) -> String?,
@@ -63,7 +61,7 @@ fun <T> buildPatchGroups(
     isEnabled: (T) -> Boolean = { false }
 ): List<PatchGroup<T>> {
     val byCategory = patches.groupBy {
-        if (groupByCategory) categoryOf(it)?.takeIf { cat -> cat.isNotBlank() } else null
+        categoryOf(it)?.takeIf { cat -> cat.isNotBlank() }
     }
     val (universal, ungrouped) = byCategory[null].orEmpty().partition { isUniversal(it) }
     val hasCategories = byCategory.keys.any { it != null }
@@ -73,7 +71,7 @@ fun <T> buildPatchGroups(
             add(
                 PatchGroup(
                     key = UNGROUPED_GROUP_KEY,
-                    title = if (groupByCategory && hasCategories) ungroupedTitle else null,
+                    title = if (hasCategories) ungroupedTitle else null,
                     items = ungrouped,
                     icon = MorpheIcons.Category,
                     selectedCount = ungrouped.count(isEnabled),
@@ -104,7 +102,7 @@ fun <T> buildPatchGroups(
                     items = universal,
                     icon = MorpheIcons.Public,
                     selectedCount = universal.count(isEnabled),
-                    defaultExpanded = !groupByCategory
+                    defaultExpanded = false
                 )
             )
         }

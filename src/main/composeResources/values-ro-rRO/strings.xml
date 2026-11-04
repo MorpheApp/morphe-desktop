@@ -13,6 +13,7 @@
     <string name="expand">Extinde</string>
     <string name="cancel">Anulează</string>
     <string name="close">Închide</string>
+    <string name="trust">Încredere</string>
     <string name="delete">Șterge</string>
     <string name="disabled_while_patching">Dezactivat în timpul aplicării patch-urilor</string>
     <string name="drop_apk_here">Plasați APK aici</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Conexiunea s-a întrerupt în timpul descărcării, încearcă din nou</string>
     <string name="error_network_loading_patches">Eroare de rețea la încărcarea patch-urilor</string>
     <string name="error_patch_file_not_found">Fișierul de patch nu a fost găsit: %1$s</string>
-    <string name="error_no_patches_files_supplied">Nu au fost furnizate fișiere de patch</string>
-    <string name="error_input_apk_not_found">APK-ul de intrare nu a fost găsit</string>
     <string name="error_step_failed">%1$s a eșuat: %2$s</string>
     <string name="error_drop_valid_apk">Te rugăm să plasezi un fișier valid .apk, .apkm, .xapk sau .apks</string>
     <string name="status_saving">Se salvează…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtrează aplicațiile…</string>
     <string name="version">Versiune</string>
     <string name="version_label_stable">Stabil</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Pre-lansare</string>
     <string name="version_label_experimental">Experimental</string>
-    <string name="version_label_latest_dev">Ultimul Dev</string>
     <string name="version_label_latest_stable">Ultimul Stabil</string>
+    <string name="version_label_recommended">Recomandat</string>
+    <string name="version_label_supported">Suportat</string>
     <string name="app_info_arch_label">Arhitectură</string>
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Patch-area a fost anulată</string>
     <string name="view_full_logs_button">Vezi jurnalele complete</string>
     <string name="error_patching_unknown">Patch-area a eșuat dintr-un motiv necunoscut</string>
-    <string name="error_patching_general">Eroare: %1$s</string>
     <string name="error_log_label">Jurnal de erori</string>
     <string name="back">Înapoi</string>
     <string name="open_folder">Deschide dosarul</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Oricâte puncte de oprire, liniar, radial sau conic</string>
     <string name="card_fill_mode_solid">Uniform</string>
     <string name="card_fill_mode_solid_blurb">O singură culoare uniformă</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Patch-uri</string>
-    <string name="quick_patch_screen_start_over_button">Reîncepe</string>
-    <string name="quick_patch_patch_another_button">Patch-are altă aplicație</string>
-    <string name="quick_patch_select_apk">Selectează APK</string>
-    <string name="quick_patch_analyze_apk_failed">Eroare la analizarea APK-ului</string>
-    <string name="quick_patch_extract_base_apk_failed">Eroare la extragerea APK-ului de bază din pachet</string>
-    <string name="quick_patch_unsupported_app_error">%1$s nu este acceptat în modul Quick Patch. Aplicații acceptate: %2$s. Utilizați modul Normal pentru aplicații neacceptate</string>
     <string name="adb_install_on_button">Instalează pe %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Se încarcă patch-urile</string>
-    <string name="patching_step_preparing">Se pregătește</string>
     <string name="patching_step_merging_split_apk">Se îmbină APK-urile divizate</string>
     <string name="patching_step_read_apk">Se citește fișierul APK</string>
     <string name="patching_step_applying_patches">Se aplică patch-urile</string>
-    <string name="patching_step_saving">Se salvează</string>
     <string name="patching_step_writing_apk">Se scrie fișierul APK patch-at</string>
     <string name="patching_step_signing">Se semnează fișierul APK patch-at</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Fișierul poate fi corupt, descărcați din nou de pe APKMirror</string>
     <string name="version_status_checksum_failed">Verificarea checksum a eșuat</string>
     <string name="version_status_checksum_matches">Checksum-ul corespunde cu APKMirror</string>
-    <string name="version_status_older_stable">Versiune stabilă mai veche</string>
     <string name="version_status_newer_stable_available">Există o versiune stabilă mai nouă v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Este disponibilă o versiune stabilă mai nouă</string>
     <string name="version_status_experimental_detail">Acceptat, dar poate să nu funcționeze corect</string>
-    <string name="version_status_older_experimental">Versiune experimentală mai veche</string>
-    <string name="version_status_newer_experimental_available">Există o versiune experimentală mai nouă v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Este disponibilă o versiune experimentală mai nouă</string>
-    <string name="version_status_too_new">Versiune prea nouă</string>
     <string name="version_status_unsupported_detail">Neacceptat oficial, patch-urile vor eșua cel mai probabil</string>
-    <string name="version_status_too_old">Versiune prea veche</string>
     <string name="version_status_unsupported">Versiune neacceptată</string>
     <string name="version_status_build_unsupported">Build neacceptat</string>
     <string name="version_status_build_unsupported_detail">Această versiune este acceptată, dar nu și acest build. Obțineți un build pe care îl vizează patch-urile</string>
+    <string name="version_status_build_unsupported_with_code">Patch-urile necesită build-ul %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Notă privind versiunea</string>
+    <string name="version_warning_build_unsupported_message">Actual: v%1$s (build %2$s)\nBuild necesar: %3$s\n\nAcesta este un build diferit al aceleiași versiuni. Patch-urile necesită un build specific.</string>
     <string name="version_warning_experiment_title">Vrei să experimentezi? 🧪</string>
-    <string name="version_warning_older_stable_title">Versiune stabilă mai veche</string>
-    <string name="version_warning_older_stable_message">Curent: v%1$s\nUltima stabilă: v%2$s\n\nAceastă versiune este acceptată, dar există o versiune stabilă mai nouă. S-ar putea să vă lipsească remedieri recente.</string>
     <string name="version_warning_latest_experimental_message">Curent: v%1$s\n\nAceastă versiune are suport experimental timpuriu\n\n🔧 Așteptați un comportament neobișnuit al aplicației sau bug-uri neidentificate, pe măsură ce patch-urile sunt rafinate pentru această versiune de aplicație.</string>
-    <string name="version_warning_older_experimental_title">Versiune experimentală mai veche\nVrei să experimentezi? 🧪</string>
-    <string name="version_warning_older_experimental_message">Curent: v%1$s\nUltima experimentală: v%2$s\n\nAcesta este un build experimental acceptat, dar există o versiune experimentală mai nouă. Așteptați un comportament neobișnuit al aplicației sau bug-uri neidentificate, pe măsură ce patch-urile sunt rafinate pentru această versiune de aplicație.</string>
-    <string name="version_warning_too_new_message">Curent: v%1$s\nCea mai recentă cunoscută: v%2$s\n\nAceastă versiune are suport experimental timpuriu\n\n🔧 Așteptați un comportament neobișnuit al aplicației sau bug-uri neidentificate, pe măsură ce patch-urile sunt rafinate pentru această versiune de aplicație.</string>
-    <string name="version_warning_too_old_message">Curent: v%1$s\nCea mai veche acceptată: v%2$s\n\nAceasta nu este o versiune suportată oficial. Patch-urile vor eșua cel mai probabil.</string>
     <string name="version_warning_unsupported_message">Curent: v%1$s\n\nAceasta nu este o versiune suportată oficial. Patch-urile vor eșua cel mai probabil.</string>
     <string name="version_warning_notice_message">Continuați cu v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Build stabil mai vechi - există o versiune stabilă mai nouă v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Build experimental - acceptat, dar poate să nu funcționeze corect</string>
-    <string name="quick_patch_warning_older_experimental">Build experimental mai vechi - există o versiune experimentală mai nouă v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Build neacceptat - această versiune poate fi patch-ată, dar nu și acest build</string>
-    <string name="quick_patch_warning_too_new">Versiune prea nouă - nu este acceptată oficial, patch-urile vor eșua cel mai probabil</string>
-    <string name="quick_patch_warning_too_old">Versiune prea veche - nu este acceptată oficial, patch-urile vor eșua cel mai probabil</string>
-    <string name="quick_patch_warning_unsupported_between">Versiune neacceptată - patch-urile vor eșua cel mai probabil</string>
-    <string name="quick_patch_read_apk_failed">Eroare la citirea APK-ului: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Se pregătesc patch-urile…</string>
-    <string name="quick_patch_fetch_patches_failed">Eroare la obținerea patch-urilor. Verificați conexiunea la internet</string>
-    <string name="quick_patch_status_downloading_patches">Se descarcă patch-urile %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Eroare la descărcarea patch-urilor: %1$s</string>
-    <string name="quick_patch_status_patching">Se aplică patch-urile…</string>
-    <string name="quick_patch_completed_adb_off">ADB oprit · Activați pentru a instala</string>
-    <string name="quick_patch_completed_adb_connect_device">Conectați un dispozitiv prin USB pentru a instala cu ADB</string>
-    <string name="quick_patch_error_unknown_occurred">A apărut o eroare necunoscută</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Se analizează APK-ul…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d patch-uri</string>
-    <string name="quick_patch_patching_slow_warning">Acest lucru durează mai mult decât de obicei. Vă rugăm să așteptați…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Niciun patch compatibil pentru această aplicație</string>
-    <string name="quick_patch_ready_no_matching_patches">Niciun patch care să se potrivească cu \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Aplică patch-uri cu setările implicite</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Aplicații acceptate</string>
-    <string name="quick_patch_supported_apps_subtitle">Plasați aici versiunea exactă de APK pentru o aplicație acceptată</string>
-    <string name="quick_patch_supported_apps_loading">Se încarcă aplicațiile acceptate…</string>
-    <string name="quick_patch_supported_apps_load_error">Nu s-au putut încărca aplicațiile acceptate</string>
-    <string name="quick_patch_supported_apps_change_source">Schimbă sursa</string>
-    <string name="quick_patch_supported_apps_no_matches">Nicio aplicație care să se potrivească</string>
-    <string name="quick_patch_supported_apps_version_any">Orice versiune</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Selectează fișierul APK</string>
     <string name="home_could_not_resolve_patch_files">Nu s-au putut rezolva fișierele de patch</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Elimină APK-ul</string>
     <string name="home_apk_info_limited_info_warning">Nu s-a putut citi complet manifestul acestui APK (frecvent pentru pachetele divizate). Detaliile de mai jos sunt aproximative, patch-area ar trebui să funcționeze în continuare</string>
     <string name="home_apk_info_unsupported_app_warning">Nu s-au găsit patch-uri compatibile pentru această aplicație. Puteți continua, dar patch-area ar putea să nu aibă efect</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Nu au fost găsite patch-uri compatibile pentru această aplicație</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Dimensiune</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">De la</string>
     <string name="home_stage_change_apk">Schimbă APK</string>
     <string name="home_stage_continue">Continuă</string>
+    <string name="home_stage_patch">Patch-uiește</string>
     <string name="home_stage_analyzing_title">Se analizează</string>
     <string name="home_stage_reading_metadata">Se citesc metadatele aplicației…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Dezinstalezi %1$s?</string>
     <string name="home_dialog_uninstall_message">Aceasta elimină %1$s de pe dispozitivul conectat. APK patch-uit de pe disc și istoricul tău sunt păstrate, dacă nu alegi altfel mai jos</string>
     <string name="home_dialog_uninstall_also_forget">Elimină și din Aplicațiile tale</string>
-    <string name="home_dialog_missing_apk_title">APK-ul original nu a fost găsit</string>
-    <string name="home_dialog_missing_apk_message">APK-ul de intrare pentru %1$s nu mai este la:\n%2$s\n\nSelectează din nou APK-ul pentru a repatch-a cu setările salvate</string>
-    <string name="home_dialog_select_apk">Selectează APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Selectează APK pentru repatch-are</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Gestionează sursele</string>
     <string name="home_header_multi_source_hint">Patch-urile din fiecare sursă activată sunt unite. Gestionați din butonul de surse de mai sus</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Aplicațiile tale</string>
     <string name="home_banner_view">Vizualizează</string>
     <string name="home_your_apps_install_ready">Instalare gata</string>
-    <string name="home_your_apps_newer_patch_hint">Un patch mai nou poate actualiza aplicația, apasă Actualizare pentru a verifica</string>
-    <string name="home_your_apps_device_version_ready">v%1$s patch-uit gata, dispozitivul pe v%2$s (nu este necesară repatch-ul)</string>
-    <string name="home_your_apps_install_ready_hint">Versiunea patch-ată v%1$s gata de instalare (nu este necesară repatch-area)</string>
-    <string name="home_action_install">Instalează</string>
     <string name="home_action_install_to_device">Instalează pe dispozitiv</string>
     <string name="home_action_installing">Se instalează…</string>
     <string name="home_action_preparing">Se pregătește…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s gata · dispozitiv pe v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s gata, nu este necesară repatch-ul</string>
-    <string name="home_advice_unsupported">v%1$s nu mai este acceptat. Vă rugăm să actualizați la v%2$s</string>
+    <string name="home_detail_source_disabled">Dezactivat</string>
+    <string name="home_detail_source_removed">Eliminat</string>
+    <string name="home_detail_source_disabled_sub">Sursa este dezactivată în Surse. Activeaz-o pentru a aplica patch-ul din nou</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Sursa originală este dezactivată. Selectează o sursă alternativă sau reactiv-o în Surse</string>
+    <string name="home_detail_no_compatible_source">Nicio sursă compatibilă activată</string>
+    <string name="home_detail_choose_source">Alegeți sursa de patch-uri</string>
     <string name="home_advice_unsupported_by_patches">v%1$s nu mai este acceptat de cele mai recente patch-uri</string>
     <string name="home_date_today">azi</string>
     <string name="home_date_yesterday">ieri</string>
@@ -427,11 +371,13 @@
     <string name="patch_selection_group_ungrouped">Negrupat</string>
     <string name="patch_selection_group_selected_count">%1$d selectate</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Reîncepe</string>
+    <string name="patching_slow_warning">Acest proces durează mai mult decât de obicei. Vă rugăm să așteptați…</string>
     <string name="patching_status_ready">Gata de patch-are</string>
     <string name="patching_status_preparing">Se pregătește pentru patch-are</string>
     <string name="patching_status_in_progress">Se aplică patch-urile</string>
     <string name="patching_completed_loading_result">Patch-ul a fost finalizat, se încarcă rezultatul…</string>
-    <string name="patching_cancelled_loading_result">Patch-ul a fost anulat, se încarcă rezultatul…</string>
+    <string name="patching_cancelled_loading_result">Aplicarea patch-ului a fost anulată, se încarcă rezultatul…</string>
     <string name="patching_failed_loading_result">Patch-ul a eșuat, se încarcă rezultatul…</string>
     <string name="patching_log_viewer_failed_to_read">Eroare la citirea fișierului de jurnal: %1$s</string>
     <string name="patching_log_viewer_title">Fișier de jurnal</string>
@@ -467,6 +413,8 @@
     <string name="patching_banner_native_libs_stripped">Stripat</string>
     <string name="patching_error_failed_patches">Patch-uri eșuate: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB dezactivat · Activați pentru instalare</string>
+    <string name="result_adb_connect_device_hint">Conectați un dispozitiv prin USB pentru a instala cu ADB</string>
     <string name="result_screen_patch_another_button">Patch-are altă aplicație</string>
     <string name="result_screen_install_on_device_label">Instalează pe %1$s</string>
     <string name="result_screen_links_routed_label">Linkuri redirecționate către aplicația patch-ată</string>
@@ -566,13 +514,12 @@
     <string name="source_error_failed_to_load">Eroare la încărcare</string>
     <string name="source_error_github_pat_required">Un PAT GitHub este necesar pentru a descărca sursele pull request-urilor</string>
     <string name="source_error_pr_no_artifact">Nu s-au găsit artefacte pentru pull request</string>
-    <string name="source_sheet_manage_description">Gestionează sursele de patch-uri</string>
-    <string name="source_sheet_local_label">Local</string>
+    <string name="source_error_patcher_incompatible">Această sursă este construită pentru patcherul %1$s, însă Morphe %2$s include patcherul %3$s. Actualizează Morphe pentru a-l folosi</string>
+    <string name="version_label_local">Local</string>
     <string name="source_sheet_remote_label">De la distanță</string>
     <string name="add_source">Adaugă sursă</string>
     <string name="source_sheet_title">Surse de patch-uri</string>
     <string name="source_sheet_reload_description">Reîncarcă patch-urile</string>
-    <string name="source_sheet_quick_mode_hint">Alegeți ce sursă folosește Quick Patch. Multi-sursă este disponibil în modul Expert</string>
     <string name="source_sheet_multi_mode_hint">Activează/Dezactivează orice combinație. Patch-urile din toate sursele activate sunt unite</string>
     <string name="source_sheet_done_button">Gata</string>
     <string name="source_sheet_type_preinstalled">Preinstalat</string>
@@ -582,13 +529,21 @@
     <string name="source_sheet_edit_description">Editează</string>
     <string name="source_sheet_move_up_description">Mută în sus</string>
     <string name="source_sheet_move_down_description">Mută în jos</string>
-    <string name="source_sheet_channel_older_stable">Versiune stabilă mai veche</string>
-    <string name="source_sheet_channel_older_dev">Versiune Dev mai veche</string>
     <string name="source_sheet_ignored_mpp_title">Modele .mpp ignorate</string>
-    <string name="source_sheet_ignored_mpp_hint">Afectează doar sursele de tip dosar, care încarcă automat cel mai nou .mpp dintr-un dosar. Când selectați acel build cel mai nou, fișierele al căror nume se potrivește cu un model de aici sunt sărite. Un cuvânt simplu se potrivește cu orice fișier care îl conține (ex. debug). Utilizați * pentru globs (ex. *-debug.mpp). *-sources.mpp și *-javadoc.mpp sunt întotdeauna ignorate</string>
+    <string name="source_sheet_ignored_mpp_hint">Afectează doar sursele de tip folder, care încarcă automat cel mai nou fișier .mpp dintr-un folder. Atunci când este selectată cea mai nouă versiune, fișierele ale căror nume corespund unui tipar definit aici sunt omise. Un cuvânt simplu corespunde oricărui fișier care îl conține (ex. debug). Utilizați * pentru globs (ex. *-debug.mpp). Fișierele *-sources.mpp și *-javadoc.mpp sunt întotdeauna ignorate</string>
     <string name="source_sheet_ignored_mpp_placeholder">ex. debug sau *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Adaugă model</string>
     <string name="source_sheet_remove_pattern_description">Elimină modelul</string>
+    <string name="sources_management_signed_by">Semnat de</string>
+    <string name="sources_management_signing_key_changed_badge">Cheia a fost schimbată</string>
+    <string name="sources_management_signing_key_changed_hint">Cheia de semnare a fost modificată. Apăsați pentru a o revizui</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">\"%1$s\" nu a fost actualizat deoarece cea mai recentă versiune nu este semnată cu cheia utilizată anterior</string>
+    <string name="sources_signing_key_new">Cheie nouă</string>
+    <string name="sources_signing_key_trust_message">Cea mai recentă versiune este semnată cu o cheie diferită. Fie dezvoltatorul și-a înlocuit cheia, fie altcineva a publicat această versiune. Aveți încredere în aceasta doar dacă dezvoltatorul a anunțat o cheie nouă</string>
+    <string name="sources_signing_key_trust_message_unsigned">Cea mai recentă versiune nu este semnată. Fie dezvoltatorul a încetat să semneze versiunile, fie altcineva a publicat această versiune. Aveți încredere în aceasta doar dacă dezvoltatorul a anunțat acest lucru</string>
+    <string name="sources_signing_key_trust_title">Aveți încredere în noua cheie?</string>
+    <string name="sources_signing_key_trusted">Cheie de încredere</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Fișier local</string>
     <string name="patch_source_dialog_name_label">Nume</string>
@@ -598,8 +553,6 @@
     <string name="patch_source_dialog_repo_hint">Acceptă link GitHub, GitLab sau morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Patch-uri pre-lansare</string>
     <string name="patch_source_dialog_pre_release_hint">Primește acces timpuriu la noi versiuni experimentale de patch-uri</string>
-    <string name="patch_source_dialog_experimental_title">Versiuni experimentale de aplicații</string>
-    <string name="patch_source_dialog_experimental_hint">Prioritizează versiunile experimentale de aplicații dacă sunt disponibile</string>
     <string name="patch_source_dialog_error_name_required">Numele este obligatoriu</string>
     <string name="patch_source_dialog_error_invalid_url">Introduceți un URL valid GitHub sau GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Selectați un fișier .mpp valid</string>
@@ -682,10 +635,8 @@
     <string name="settings_dialog_open_logs_button">Deschide jurnalele</string>
     <string name="settings_dialog_reset_button">Resetează</string>
     <string name="settings_theme_system">Sistem</string>
-    <string name="settings_signing_error_not_found">Keystore-ul configurat nu a fost găsit: %1$s. Restaurați fișierul, alegeți altul în Setări sau ștergeți setarea pentru a folosi implicitul Morphe</string>
     <string name="settings_search_languages_placeholder">Căutați limbi</string>
     <string name="settings_dialog_resolves_to_message">Se rezolvă la: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore nu a fost găsit: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Limbă</string>
     <string name="settings_language_current_title">Limba curentă</string>
@@ -693,9 +644,13 @@
     <string name="settings_language_dialog_title">Limbă aplicație</string>
     <string name="settings_language_search_no_results">Nu s-au găsit rezultate</string>
     <string name="settings_section_theme">Temă</string>
+    <string name="settings_appearance_theme_mode">Mod temă</string>
     <string name="settings_theme_light">Luminoasă</string>
     <string name="settings_theme_dark">Întunecată</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Stil culoare</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monocrom</string>
     <string name="settings_toggle_sharp_corners_label">Colțuri ascuțite</string>
     <string name="settings_toggle_sharp_corners_desc">Pătrați cardurile, dialogurile și butoanele</string>
     <string name="settings_section_accent_color">Culoare accent</string>
@@ -705,9 +660,6 @@
     <string name="settings_section_app_cards">Carduri de aplicații</string>
     <string name="settings_app_cards_color_all">Culoare pentru fiecare card</string>
     <string name="settings_app_cards_color_all_desc">Cardurile pe care le-ați personalizat individual își păstrează propria culoare</string>
-    <string name="settings_section_patch_list">Lista de patch-uri</string>
-    <string name="settings_toggle_patch_categories_label">Categorii de patch-uri</string>
-    <string name="settings_toggle_patch_categories_desc">Grupează patch-urile în categorii expandabile</string>
     <string name="settings_section_background_animation">Animație de fundal</string>
     <string name="settings_background_circles">Cercuri</string>
     <string name="settings_background_rings">Inele</string>
@@ -821,8 +773,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Tradu</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Jurnalul de modificări nu este disponibil</string>
+    <string name="changelog_badge_installed">Instalat</string>
+    <string name="changelog_badge_latest">Ultima versiune</string>
+    <string name="changelog_badge_prerelease">Pre-lansare</string>
+    <string name="changelog_date_today">Astăzi</string>
+    <string name="changelog_date_yesterday">Ieri</string>
     <string name="changelog_dialog_title">Vizualizează jurnalul de modificări</string>
-    <string name="changelog_show_older_button">Arată versiunile mai vechi</string>
+    <string name="changelog_not_available">Jurnalul de modificări nu este disponibil</string>
+    <string name="changelog_section_app_support">Suport aplicație</string>
+    <string name="changelog_section_fixes">Corecții</string>
+    <string name="changelog_section_improvements">Îmbunătățiri</string>
+    <string name="changelog_section_new">Nou</string>
+    <string name="changelog_section_other">Modificări</string>
+    <string name="changelog_section_performance">Performanță</string>
+    <string name="changelog_show_all">Afișează tot (%1$d)</string>
+    <string name="changelog_show_less">Arată mai puțin</string>
     <string name="changelog_view_on_github_button">Vizualizează pe GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Surse</string>
+    <string name="nav_apps">Aplicații</string>
 </resources>

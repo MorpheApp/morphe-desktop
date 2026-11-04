@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d патчийн эх сурвалж ачаалагдаж чадсангүй. Амжилттай ачаалагдсаныг ашиглаж байна</item>
+        <item quantity="other">%1$d патчийн эх сурвалж ачаалагдаж чадсангүй. Амжилттай ачаалагдсаныг ашиглаж байна</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d патч хийсэн апп-д шинэчлэлт байна</item>
+        <item quantity="other">%1$d патч хийсэн апп-д шинэчлэлт байна</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d мөрийг %2$s рүү хадгаллаа</item>
+        <item quantity="other">%1$d мөрийг %2$s рүү хадгаллаа</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d эх сурвалж</item>
+        <item quantity="other">%1$d эх сурвалж</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d сан</item>
+        <item quantity="other">%1$d сан</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%2$d-оос %1$d сонгогдсон</item>
+        <item quantity="other">%2$d-оос %1$d сонгогдсон</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d патч</item>
+        <item quantity="other">%1$d патч</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d карт үүнийг дагаварлана</item>
+        <item quantity="other">%1$d карт үүнийг дагаварлана</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">%1$d багцыг татаж авах</item>
+        <item quantity="other">%1$d багцыг татаж авах</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d өөрчлөлт</item>
+        <item quantity="other">%1$d өөрчлөлт</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d хоногийн өмнө</item>
+        <item quantity="other">%1$d хоногийн өмнө</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d шинэ боломж</item>
+        <item quantity="other">%1$d шинэ боломж</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d засвар</item>
+        <item quantity="other">%1$d засвар</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d оновчлол</item>
+        <item quantity="other">%1$d оновчлол</item>
+    </plurals>
+</resources>

@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d патч булагы жүктөлгөн жок. Ийгиликтүү жүктөлгөндөрү колдонулууда</item>
+        <item quantity="other">%1$d патч булагы жүктөлгөн жок. Ийгиликтүү жүктөлгөндөрү колдонулууда</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d патчтелген тиркеме үчүн жаңыртуу бар</item>
+        <item quantity="other">%1$d патчтелген тиркеме үчүн жаңыртуулар бар</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d сап %2$s файлына сакталды</item>
+        <item quantity="other">%1$d сап %2$s файлына сакталды</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d булак</item>
+        <item quantity="other">%1$d булак</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d китепкана</item>
+        <item quantity="other">%1$d китепкана</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%2$d сандан %1$d тандалды</item>
+        <item quantity="other">%2$d сандан %1$d тандалды</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d патч</item>
+        <item quantity="other">%1$d патч</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d карта муну алмаштырат</item>
+        <item quantity="other">%1$d карта муну алмаштырат</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">%1$d бандлды жүктөө</item>
+        <item quantity="other">%1$d бандлди жүктөө</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d өзгөрүү</item>
+        <item quantity="other">%1$d өзгөрүү</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d күн мурун</item>
+        <item quantity="other">%1$d күн мурун</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d функция</item>
+        <item quantity="other">%1$d функция</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d оңдоо</item>
+        <item quantity="other">%1$d оңдоо</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d оптималдаштыруу</item>
+        <item quantity="other">%1$d оптималдаштыруу</item>
+    </plurals>
+</resources>

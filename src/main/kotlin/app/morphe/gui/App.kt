@@ -39,13 +39,13 @@ import app.morphe.gui.ui.screens.home.HomeScreen
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
 import app.morphe.gui.ui.screens.patching.PatchingScreen
-import app.morphe.gui.ui.screens.quick.QuickPatchScreen
 import app.morphe.gui.ui.screens.result.ResultScreen
 import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.ui.theme.ThemeState
+import app.morphe.gui.ui.theme.ThemeStyle
 import app.morphe.gui.ui.theme.backgrounds.AnimatedBackground
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
@@ -66,9 +66,6 @@ import org.koin.dsl.koinConfiguration
 
 @Serializable
 data object HomeScreenRoute
-
-@Serializable
-data object QuickPatchScreenRoute
 
 @Serializable
 data class PatchesScreenRoute(
@@ -125,9 +122,9 @@ private fun applyLocale(language: String) {
     )
 }
 
-/** Mode state for switching between simplified and full mode. */
+/** Mode state for switching between simple and expert mode. */
 data class ModeState(
-    val isSimplified: Boolean,
+    val isSimple: Boolean,
     val onChange: (Boolean) -> Unit
 )
 
@@ -171,10 +168,6 @@ val LocalCustomAccentColor = compositionLocalOf<MutableState<Int?>> {
 
 val LocalSharpCorners = compositionLocalOf<MutableState<Boolean>> {
     error("No LocalSharpCorners provided")
-}
-
-val LocalGroupPatchesByCategory = compositionLocalOf<MutableState<Boolean>> {
-    error("No LocalGroupPatchesByCategory provided")
 }
 
 /** Auto-start ADB preference state. */
@@ -227,7 +220,8 @@ private fun appContent(
     )
 
     var themePreference by remember { mutableStateOf(ThemePreference.SYSTEM) }
-    var isSimplifiedMode by remember { mutableStateOf(initialSimplifiedMode) }
+    var themeStyle by remember { mutableStateOf(ThemeStyle.MORPHE) }
+    var isSimpleMode by remember { mutableStateOf(initialSimplifiedMode) }
     var appLanguage by remember { mutableStateOf("system") }
     var autoStartAdb by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
@@ -235,7 +229,6 @@ private fun appContent(
     var cardFills by remember { mutableStateOf(emptyMap<String, MorpheFill>()) }
     var globalCardFill by remember { mutableStateOf<MorpheFill?>(null) }
     val sharpCornersState = remember { mutableStateOf(false) }
-    val groupPatchesByCategoryState = remember { mutableStateOf(true) }
     val backgroundSpeedState = remember { mutableFloatStateOf(1f) }
     val patchingCompletedState = remember { mutableStateOf(false) }
 
@@ -243,8 +236,8 @@ private fun appContent(
         patchSourceManager.initialize()
         val config = configRepository.loadConfig()
         themePreference = config.getThemePreference()
-        isSimplifiedMode = config.useSimplifiedMode
-        groupPatchesByCategoryState.value = config.groupPatchesByCategory
+        themeStyle = config.getThemeStyle()
+        isSimpleMode = config.useSimpleMode
         backgroundTypeState.value = try {
             BackgroundType.valueOf(config.backgroundType)
         } catch (_: Exception) {
@@ -261,7 +254,7 @@ private fun appContent(
         autoStartAdb = engineConfigRepository.loadConfig().autoStartAdb
         // Publish initial active mode before view models subscribe.
         patchSourceManager.setActiveMode(
-            if (isSimplifiedMode) ActiveMode.QUICK else ActiveMode.EXPERT
+            if (isSimpleMode) ActiveMode.SIMPLE else ActiveMode.EXPERT
         )
         isLoading = false
     }
@@ -280,15 +273,23 @@ private fun appContent(
         }
     }
 
-    val onModeChange: (Boolean) -> Unit = { simplified ->
-        isSimplifiedMode = simplified
+    val onThemeStyleChange: (ThemeStyle) -> Unit = { newStyle ->
+        themeStyle = newStyle
+        scope.launch {
+            configRepository.setThemeStyle(newStyle)
+            Logger.info("Theme style changed to: ${newStyle.name}")
+        }
+    }
+
+    val onModeChange: (Boolean) -> Unit = { simple ->
+        isSimpleMode = simple
         // Update active mode to prevent duplicate loads between view models.
         patchSourceManager.setActiveMode(
-            if (simplified) ActiveMode.QUICK else ActiveMode.EXPERT
+            if (simple) ActiveMode.SIMPLE else ActiveMode.EXPERT
         )
         scope.launch {
-            configRepository.setUseSimplifiedMode(simplified)
-            Logger.info("Mode changed to: ${if (simplified) "Simplified" else "Full"}")
+            configRepository.setUseSimpleMode(simple)
+            Logger.info("Mode changed to: ${if (simple) "Simple" else "Expert"}")
         }
     }
 
@@ -313,11 +314,13 @@ private fun appContent(
 
     val themeState = ThemeState(
         current = themePreference,
-        onChange = onThemeChange
+        onChange = onThemeChange,
+        style = themeStyle,
+        onStyleChange = onThemeStyleChange,
     )
 
     val modeState = ModeState(
-        isSimplified = isSimplifiedMode,
+        isSimple = isSimpleMode,
         onChange = onModeChange
     )
 
@@ -352,6 +355,7 @@ private fun appContent(
     CompositionLocalProvider(LocalLayoutDirection provides targetDirection) {
         MorpheTheme(
             themePreference = themePreference,
+            themeStyle = themeStyle,
             customAccentColorArgb = customAccentColorState.value,
             useSharpCorners = sharpCornersState.value
         ) {
@@ -367,7 +371,6 @@ private fun appContent(
                 LocalParallaxState provides parallaxState,
                 LocalCustomAccentColor provides customAccentColorState,
                 LocalSharpCorners provides sharpCornersState,
-                LocalGroupPatchesByCategory provides groupPatchesByCategoryState,
                 LocalBackgroundSpeed provides backgroundSpeedState,
                 LocalPatchingCompleted provides patchingCompletedState
             ) {
@@ -434,7 +437,7 @@ private fun appContent(
                                     if (!isLoading) {
                                         NavHost(
                                             navController = navController,
-                                            startDestination = if (isSimplifiedMode) QuickPatchScreenRoute else HomeScreenRoute,
+                                            startDestination = HomeScreenRoute,
                                             enterTransition = { Animations.screenEnter },
                                             exitTransition = { Animations.screenExit },
                                             popEnterTransition = { Animations.screenEnter },
@@ -442,9 +445,6 @@ private fun appContent(
                                         ) {
                                             composable<HomeScreenRoute> {
                                                 HomeScreen()
-                                            }
-                                            composable<QuickPatchScreenRoute> {
-                                                QuickPatchScreen()
                                             }
                                             composable<PatchesScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<PatchesScreenRoute>()
@@ -472,20 +472,6 @@ private fun appContent(
                                                 popEnterTransition = { Animations.pushEnter },
                                                 popExitTransition = { Animations.pushExit }
                                             ) {
-                                            }
-                                        }
-
-                                        LaunchedEffect(isSimplifiedMode) {
-                                            val currentRoute = navController.currentBackStackEntry?.destination?.route
-                                            val isQuick = currentRoute?.endsWith("QuickPatchScreenRoute") == true
-                                            if (isSimplifiedMode && !isQuick) {
-                                                navController.navigate(QuickPatchScreenRoute) {
-                                                    popUpTo(0) { inclusive = true }
-                                                }
-                                            } else if (!isSimplifiedMode && isQuick) {
-                                                navController.navigate(HomeScreenRoute) {
-                                                    popUpTo(0) { inclusive = true }
-                                                }
                                             }
                                         }
                                     }

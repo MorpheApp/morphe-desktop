@@ -13,6 +13,7 @@
     <string name="expand">Rozbaliť</string>
     <string name="cancel">Zrušiť</string>
     <string name="close">Zatvoriť</string>
+    <string name="trust">Dôvera</string>
     <string name="delete">Odstrániť</string>
     <string name="disabled_while_patching">Zakázané počas záplatovania</string>
     <string name="drop_apk_here">Presuňte APK sem</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Počas sťahovania sa pripojenie prerušilo, skúste to znova</string>
     <string name="error_network_loading_patches">Chyba siete pri načítavaní záplat</string>
     <string name="error_patch_file_not_found">Súbor so záplatami sa nenašiel: %1$s</string>
-    <string name="error_no_patches_files_supplied">Neboli dodané žiadne súbory so záplatami</string>
-    <string name="error_input_apk_not_found">Vstupný APK sa nenašiel</string>
     <string name="error_step_failed">Krok %1$s zlyhal: %2$s</string>
     <string name="error_drop_valid_apk">Presuňte platný súbor .apk, .apkm, .xapk alebo .apks</string>
     <string name="status_saving">Ukladá sa…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtrovať aplikácie…</string>
     <string name="version">Verzia</string>
     <string name="version_label_stable">Stabilná</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Pred vydaním</string>
     <string name="version_label_experimental">Experimentálna</string>
-    <string name="version_label_latest_dev">Najnovší Dev</string>
     <string name="version_label_latest_stable">Najnovšia stabilná</string>
+    <string name="version_label_recommended">Odporúčané</string>
+    <string name="version_label_supported">Podporované</string>
     <string name="app_info_arch_label">Architektúra</string>
     <string name="app_info_min_sdk_label">Min. SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Záplatovanie zrušené</string>
     <string name="view_full_logs_button">Zobraziť úplné protokoly</string>
     <string name="error_patching_unknown">Záplatovanie zlyhalo z neznámeho dôvodu</string>
-    <string name="error_patching_general">Chyba: %1$s</string>
     <string name="error_log_label">Záznam o chybách</string>
     <string name="back">Späť</string>
     <string name="open_folder">Otvoriť priečinok</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Ľubovoľný počet bodov prechodu, lineárny, radiálny alebo kužeľový</string>
     <string name="card_fill_mode_solid">Jednofarebná</string>
     <string name="card_fill_mode_solid_blurb">Jedna jednoliatá farba</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Záplaty</string>
-    <string name="quick_patch_screen_start_over_button">Začať odznova</string>
-    <string name="quick_patch_patch_another_button">Záplatovať ďalšiu</string>
-    <string name="quick_patch_select_apk">Vybrať APK súbor</string>
-    <string name="quick_patch_analyze_apk_failed">Analýza APK zlyhala</string>
-    <string name="quick_patch_extract_base_apk_failed">Extrakcia základného APK z balíka zlyhala</string>
-    <string name="quick_patch_unsupported_app_error">%1$s nie je podporovaný v režime Rýchle záplatovanie. Podporované aplikácie: %2$s. Pre nepodporované aplikácie použite normálny režim</string>
     <string name="adb_install_on_button">Nainštalovať na %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Načítavam záplaty</string>
-    <string name="patching_step_preparing">Pripravujem sa</string>
     <string name="patching_step_merging_split_apk">Spájam rozdelený APK súbor</string>
     <string name="patching_step_read_apk">Načítavam APK súbor</string>
     <string name="patching_step_applying_patches">Aplikujem záplaty</string>
-    <string name="patching_step_saving">Ukládám</string>
     <string name="patching_step_writing_apk">Vytváram zaplátaný súbor APK</string>
     <string name="patching_step_signing">Podpisujem zaplátaný súbor APK</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Súbor môže byť poškodený, znova si ho stiahnite z APKMirror</string>
     <string name="version_status_checksum_failed">Overenie kontrolného súčtu zlyhalo</string>
     <string name="version_status_checksum_matches">Kontrolný súčet sa zhoduje s APKMirror</string>
-    <string name="version_status_older_stable">Staršia stabilná</string>
     <string name="version_status_newer_stable_available">Nová stabilná verzia v%1$s je dostupná</string>
     <string name="version_status_newer_stable_available_fallback">Je dostupná novšia stabilná verzia</string>
     <string name="version_status_experimental_detail">Podporované, ale nemusí fungovať správne</string>
-    <string name="version_status_older_experimental">Staršia experimentálna</string>
-    <string name="version_status_newer_experimental_available">Nová experimentálna verzia v%1$s je dostupná</string>
-    <string name="version_status_newer_experimental_available_fallback">Je dostupný novší experimentálny build</string>
-    <string name="version_status_too_new">Verzia je príliš nová</string>
     <string name="version_status_unsupported_detail">Oficiálne nie je podporované, záplaty s najväčšou pravdepodobnosťou zlyhajú</string>
-    <string name="version_status_too_old">Verzia je príliš stará</string>
     <string name="version_status_unsupported">Nepodporovaná verzia</string>
     <string name="version_status_build_unsupported">Build nie je podporovaný</string>
     <string name="version_status_build_unsupported_detail">Táto verzia je podporovaná, ale tento build nie. Získajte build, na ktorý sú záplaty cielené</string>
+    <string name="version_status_build_unsupported_with_code">Záplaty vyžadujú build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Upozornenie o verzii</string>
+    <string name="version_warning_build_unsupported_message">Aktuálny: v%1$s (build %2$s)\nVyžadovaný build: %3$s\n\nIde o iný build rovnakej verzie. Záplaty vyžadujú konkrétny build.</string>
     <string name="version_warning_experiment_title">Chcete experimentovať? 🧪</string>
-    <string name="version_warning_older_stable_title">Staršia stabilná verzia</string>
-    <string name="version_warning_older_stable_message">Aktuálna: v%1$s\nNajnovšia stabilná: v%2$s\n\nTáto verzia je podporovaná, ale je dostupná novšia stabilná verzia. Možno vám chýbajú najnovšie opravy.</string>
     <string name="version_warning_latest_experimental_message">Aktuálna: v%1$s\n\nTáto verzia má predbežnú experimentálnu podporu\n\n🔧 Očakávajte nezvyčajné správanie aplikácie alebo neidentifikované chyby, kým sa záplaty doladia pre túto verziu aplikácie.</string>
-    <string name="version_warning_older_experimental_title">Staršia experimentálna verzia\nChcete experimentovať? 🧪</string>
-    <string name="version_warning_older_experimental_message">Aktuálna: v%1$s\nNajnovšia experimentálna: v%2$s\n\nToto je podporovaná experimentálna zostava, ale je dostupná novšia experimentálna verzia. Očakávajte nezvyčajné správanie aplikácie alebo neidentifikované chyby, kým sa záplaty doladia pre túto verziu aplikácie.</string>
-    <string name="version_warning_too_new_message">Aktuálna: v%1$s\nNajnovšia známa: v%2$s\n\nTáto verzia má predbežnú experimentálnu podporu\n\n🔧 Očakávajte nezvyčajné správanie aplikácie alebo neidentifikované chyby, kým sa záplaty doladia pre túto verziu aplikácie.</string>
-    <string name="version_warning_too_old_message">Aktuálna: v%1$s\nNajstaršia podporovaná: v%2$s\n\nToto nie je oficiálne podporovaná verzia. Záplaty s najväčšou pravdepodobnosťou zlyhajú.</string>
     <string name="version_warning_unsupported_message">Aktuálna: v%1$s\n\nToto nie je oficiálne podporovaná verzia. Záplaty s najväčšou pravdepodobnosťou zlyhajú.</string>
     <string name="version_warning_notice_message">Pokračovať s v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Starší stabilný build - je dostupná novšia stabilná verzia v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Experimentálny build - podporovaný, ale nemusí fungovať správne</string>
-    <string name="quick_patch_warning_older_experimental">Starší experimentálny build - je dostupná novšia experimentálna verzia v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Build nie je podporovaný - túto verziu možno záplatovať, ale nie tento build</string>
-    <string name="quick_patch_warning_too_new">Verzia je príliš nová - oficiálne nie je podporovaná, záplaty s najväčšou pravdepodobnosťou zlyhajú</string>
-    <string name="quick_patch_warning_too_old">Verzia je príliš stará - oficiálne nie je podporovaná, záplaty s najväčšou pravdepodobnosťou zlyhajú</string>
-    <string name="quick_patch_warning_unsupported_between">Nepodporovaná verzia - záplaty s najväčšou pravdepodobnosťou zlyhajú</string>
-    <string name="quick_patch_read_apk_failed">Čítanie APK zlyhalo: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Pripravujú sa záplaty…</string>
-    <string name="quick_patch_fetch_patches_failed">Načítanie záplat zlyhalo. Skontrolujte svoje internetové pripojenie</string>
-    <string name="quick_patch_status_downloading_patches">Sťahujú sa záplaty %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Sťahovanie záplat zlyhalo: %1$s</string>
-    <string name="quick_patch_status_patching">Záplatuje sa…</string>
-    <string name="quick_patch_completed_adb_off">ADB vypnuté · Povoľte pre inštaláciu</string>
-    <string name="quick_patch_completed_adb_connect_device">Pripojte zariadenie cez USB a inštalujte pomocou ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Vyskytla sa neznáma chyba</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analyzuje sa APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d záplat</string>
-    <string name="quick_patch_patching_slow_warning">Toto trvá dlhšie ako zvyčajne. Počkajte, prosím…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(zostava %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Pre túto aplikáciu nie sú žiadne kompatibilné záplaty</string>
-    <string name="quick_patch_ready_no_matching_patches">Žiadne záplaty nezodpovedajú výrazu \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Záplatovať s predvolenými nastaveniami</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Podporované aplikácie</string>
-    <string name="quick_patch_supported_apps_subtitle">Sem presuňte presnú verziu APK pre podporovanú aplikáciu</string>
-    <string name="quick_patch_supported_apps_loading">Načítavajú sa podporované aplikácie…</string>
-    <string name="quick_patch_supported_apps_load_error">Nepodarilo sa načítať podporované aplikácie</string>
-    <string name="quick_patch_supported_apps_change_source">Zmeniť zdroj</string>
-    <string name="quick_patch_supported_apps_no_matches">Žiadne zodpovedajúce aplikácie</string>
-    <string name="quick_patch_supported_apps_version_any">Akákoľvek verzia</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Vyberte súbor APK</string>
     <string name="home_could_not_resolve_patch_files">Nepodarilo sa získať súbory so záplatami</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Odstrániť APK</string>
     <string name="home_apk_info_limited_info_warning">Nepodarilo sa úplne prečítať manifest tohto APK (bežné pri rozdelených balíkoch). Podrobnosti nižšie sú približné, záplatovanie by malo stále fungovať</string>
     <string name="home_apk_info_unsupported_app_warning">Pre túto aplikáciu sa nenašli žiadne kompatibilné záplaty. Môžete pokračovať, ale záplatovanie nemusí mať žiadny účinok</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Pre túto aplikáciu neboli nájdené žiadne kompatibilné záplaty</string>
     <string name="home_apk_info_build_label">Zostava</string>
     <string name="home_apk_info_size_label">Veľkosť</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Z</string>
     <string name="home_stage_change_apk">Zmeniť APK</string>
     <string name="home_stage_continue">Pokračovať</string>
+    <string name="home_stage_patch">Zaplátať</string>
     <string name="home_stage_analyzing_title">Analyzuje sa</string>
     <string name="home_stage_reading_metadata">Čítajú sa metadáta aplikácie…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Odinštalovať %1$s?</string>
     <string name="home_dialog_uninstall_message">Tým sa %1$s odstráni z pripojeného zariadenia. Záplatovaný APK na disku a vaša histórie zostanú zachované, pokiaľ nižšie nezvolíte inak</string>
     <string name="home_dialog_uninstall_also_forget">Odstrániť aj z Vašich aplikácií</string>
-    <string name="home_dialog_missing_apk_title">Pôvodný APK sa nenašiel</string>
-    <string name="home_dialog_missing_apk_message">Vstupný APK pre %1$s sa už nenachádza na:\n%2$s\n\nZnova vyberte APK a vykonajte záplatovanie s uloženými nastaveniami</string>
-    <string name="home_dialog_select_apk">Vybrať APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Vyberte APK na opätovné záplatovanie</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Spravovať zdroje</string>
     <string name="home_header_multi_source_hint">Záplaty zo všetkých povolených zdrojov sa spájajú. Spravujte ich tlačidlom zdrojov vyššie</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Vaše aplikácie</string>
     <string name="home_banner_view">Zobraziť</string>
     <string name="home_your_apps_install_ready">Pripravené na inštaláciu</string>
-    <string name="home_your_apps_newer_patch_hint">Novšia záplata môže zvýšiť verziu aplikácie, kliknutím na Aktualizovať to skontrolujte</string>
-    <string name="home_your_apps_device_version_ready">Záplatovaná v%1$s je pripravená, zariadenie má v%2$s (bez potreby opätovného záplatovania)</string>
-    <string name="home_your_apps_install_ready_hint">Záplatovaná verzia v%1$s je pripravená na inštaláciu (bez potreby opätovného záplatovania)</string>
-    <string name="home_action_install">Inštalovať</string>
     <string name="home_action_install_to_device">Nainštalovať do zariadenia</string>
     <string name="home_action_installing">Inštaluje sa…</string>
     <string name="home_action_preparing">Pripravuje sa…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s pripravená · zariadenie má v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s pripravená, bez potreby opätovného záplatovania</string>
-    <string name="home_advice_unsupported">v%1$s už nie je podporovaná. Aktualizujte na v%2$s</string>
+    <string name="home_detail_source_disabled">Vypnutý</string>
+    <string name="home_detail_source_removed">Odstránené</string>
+    <string name="home_detail_source_disabled_sub">Zdroj je v Zdrojoch deaktivovaný. Aktivujte ho pre opätovné zaplatovanie</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Pôvodný zdroj je deaktivovaný. Vyberte alternatívny zdroj alebo ho znova aktivujte v Zdrojoch</string>
+    <string name="home_detail_no_compatible_source">Žiadny kompatibilný zdroj nie je aktivovaný</string>
+    <string name="home_detail_choose_source">Vybrať zdroj záplaty</string>
     <string name="home_advice_unsupported_by_patches">v%1$s už nie je podporovaná najnovšími záplatami</string>
     <string name="home_date_today">dnes</string>
     <string name="home_date_yesterday">včera</string>
@@ -427,11 +371,13 @@
     <string name="patch_selection_group_ungrouped">Nezoskupené</string>
     <string name="patch_selection_group_selected_count">Vybraté: %1$d</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Začať odznova</string>
+    <string name="patching_slow_warning">Trvá to dlhšie ako zvyčajne. Prosím, čakajte…</string>
     <string name="patching_status_ready">Pripravené na záplatovanie</string>
     <string name="patching_status_preparing">Pripravuje sa záplatovanie</string>
     <string name="patching_status_in_progress">Aplikujem záplaty</string>
     <string name="patching_completed_loading_result">Záplatovanie dokončené, načítava sa výsledok…</string>
-    <string name="patching_cancelled_loading_result">Záplatovanie zrušené, načítava sa výsledok…</string>
+    <string name="patching_cancelled_loading_result">Patchovanie zrušené, načítavanie výsledku…</string>
     <string name="patching_failed_loading_result">Záplatovanie zlyhalo, načítava sa výsledok…</string>
     <string name="patching_log_viewer_failed_to_read">Čítanie súboru protokolu zlyhalo: %1$s</string>
     <string name="patching_log_viewer_title">Súbor protokolu</string>
@@ -467,6 +413,8 @@
     <string name="patching_banner_native_libs_stripped">Odstránené</string>
     <string name="patching_error_failed_patches">Neúspešné záplaty: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB vypnuté · Povoliť pre inštaláciu</string>
+    <string name="result_adb_connect_device_hint">Pre inštaláciu cez ADB pripojte zariadenie pomocou USB</string>
     <string name="result_screen_patch_another_button">Záplatovať ďalšiu</string>
     <string name="result_screen_install_on_device_label">Nainštalovať na %1$s</string>
     <string name="result_screen_links_routed_label">Odkazy smerujú do záplatovanej aplikácie</string>
@@ -566,13 +514,12 @@
     <string name="source_error_failed_to_load">Načíatanie zlyhalo</string>
     <string name="source_error_github_pat_required">Na stiahnutie zdrojov pull requestu sa vyžaduje GitHub PAT.</string>
     <string name="source_error_pr_no_artifact">Pre pull request sa nenašli žiadne artefakty.</string>
-    <string name="source_sheet_manage_description">Spravovať zdroje záplat</string>
-    <string name="source_sheet_local_label">Lokálne</string>
+    <string name="source_error_patcher_incompatible">Tento zdroj je vytvorený pre patcher %1$s, ale Morphe %2$s obsahuje patcher %3$s. Pre jeho použitie aktualizujte Morphe</string>
+    <string name="version_label_local">Lokálne</string>
     <string name="source_sheet_remote_label">Vzdialené</string>
     <string name="add_source">Pridať zdroj</string>
     <string name="source_sheet_title">Zdroje záplat</string>
     <string name="source_sheet_reload_description">Znova načítať záplaty</string>
-    <string name="source_sheet_quick_mode_hint">Vyberte, ktorý zdroj používa Rýchle záplatovanie. Viaczdrojový režim je k dispozícii v Expertnom režime</string>
     <string name="source_sheet_multi_mode_hint">Povoľte/zakážte ľubovoľnú kombináciu. Záplaty zo všetkých povolených zdrojov sa spájajú</string>
     <string name="source_sheet_done_button">Hotovo</string>
     <string name="source_sheet_type_preinstalled">Predinštalované</string>
@@ -582,13 +529,21 @@
     <string name="source_sheet_edit_description">Upraviť</string>
     <string name="source_sheet_move_up_description">Posunúť hore</string>
     <string name="source_sheet_move_down_description">Posunúť dole</string>
-    <string name="source_sheet_channel_older_stable">Staršia stabilná</string>
-    <string name="source_sheet_channel_older_dev">Starší Dev</string>
     <string name="source_sheet_ignored_mpp_title">Ignorované vzory .mpp</string>
-    <string name="source_sheet_ignored_mpp_hint">Týka sa to len priečinkových zdrojov, ktoré automaticky načítavajú najnovší .mpp v priečinku. Pri výbere tejto najnovšej zostavy sa preskočia súbory, ktorých názov zodpovedá niektorému tu uvedenému vzoru. Obyčajné slovo sa zhoduje s každým súborom, ktorý ho obsahuje (napr. debug). Použite * pre zástupné znaky (napr. *-debug.mpp). *-sources.mpp a *-javadoc.mpp sa vždy ignorujú</string>
+    <string name="source_sheet_ignored_mpp_hint">Ovplyvňuje len zdroje priečinkov, ktoré automaticky načítavajú najnovší súbor .mpp v priečinku. Pri výbere tejto najnovšej verzie sa preskočia súbory, ktorých názov zodpovedá tu zadanému vzoru. Jednoduché slovo zodpovedá akémukoľvek súboru, ktorý ho obsahuje (napr. debug). Pre globálne vzory použite * (napr. *-debug.mpp). Súbory *-sources.mpp a *-javadoc.mpp sú vždy ignorované</string>
     <string name="source_sheet_ignored_mpp_placeholder">napr. debug alebo *-ebug.mpp</string>
     <string name="source_sheet_add_pattern_description">Pridať vzor</string>
     <string name="source_sheet_remove_pattern_description">Odstrániť vzor</string>
+    <string name="sources_management_signed_by">Podpísané</string>
+    <string name="sources_management_signing_key_changed_badge">Kľúč sa zmenil</string>
+    <string name="sources_management_signing_key_changed_hint">Kľúč na podpisovanie sa zmenil. Kliknite na kontrolu</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' nebol aktualizovaný, pretože jeho najnovšia verzia nie je podpísaná kľúčom, ktorý sa používal predtým</string>
+    <string name="sources_signing_key_new">Nový kľúč</string>
+    <string name="sources_signing_key_trust_message">Najnovšia verzia je podpísaná iným kľúčom. Buď vývojár nahradil svoj kľúč, alebo túto verziu zverejnil niekto iný. Dôverajte jej len v prípade, ak vývojár oznámil nový kľúč</string>
+    <string name="sources_signing_key_trust_message_unsigned">Najnovšia verzia nie je podpísaná. Buď vývojár prestal podpisovať verzie, alebo túto verziu zverejnil niekto iný. Dôverajte jej len v prípade, ak to vývojár oznámil</string>
+    <string name="sources_signing_key_trust_title">Dôverovať novému kľúču?</string>
+    <string name="sources_signing_key_trusted">Dôveryhodný kľúč</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Lokálny súbor</string>
     <string name="patch_source_dialog_name_label">Názov</string>
@@ -598,8 +553,6 @@
     <string name="patch_source_dialog_repo_hint">Akceptuje odkaz GitHub, GitLab alebo morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Predbežné záplaty</string>
     <string name="patch_source_dialog_pre_release_hint">Umožňuje včasný prístup k novým experimentálnym verziám záplat</string>
-    <string name="patch_source_dialog_experimental_title">Experimentálne verzie aplikácií</string>
-    <string name="patch_source_dialog_experimental_hint">Uprednostňuje experimentálne verzie aplikácií, ak sú dostupné</string>
     <string name="patch_source_dialog_error_name_required">Názov je povinný</string>
     <string name="patch_source_dialog_error_invalid_url">Zadajte platnú adresu URL GitHub alebo GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Vyberte platný súbor .mpp</string>
@@ -682,10 +635,8 @@
     <string name="settings_dialog_open_logs_button">Otvoriť protokoly</string>
     <string name="settings_dialog_reset_button">Obnoviť</string>
     <string name="settings_theme_system">Systém</string>
-    <string name="settings_signing_error_not_found">Nakonfigurované úložisko kľúčov sa nenašlo: %1$s. Obnovte súbor, vyberte iné v Nastaveniach alebo vymažte nastavenie, aby sa použilo predvolené úložisko aplikácie Morphe</string>
     <string name="settings_search_languages_placeholder">Hľadať jazyky</string>
     <string name="settings_dialog_resolves_to_message">Vyhodnotí sa ako: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Úložisko kľúčov sa nenašlo: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Jazyk</string>
     <string name="settings_language_current_title">Aktuálny jazyk</string>
@@ -693,9 +644,13 @@
     <string name="settings_language_dialog_title">Jazyk aplikácie</string>
     <string name="settings_language_search_no_results">Nenašli sa žiadne výsledky</string>
     <string name="settings_section_theme">Motív</string>
+    <string name="settings_appearance_theme_mode">Režim témy</string>
     <string name="settings_theme_light">Svetlý</string>
     <string name="settings_theme_dark">Tmavý</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Farebný štýl</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monochromatický</string>
     <string name="settings_toggle_sharp_corners_label">Ostré rohy</string>
     <string name="settings_toggle_sharp_corners_desc">Karty, dialógy a tlačidlá budú hranaté</string>
     <string name="settings_section_accent_color">Akcentová farba</string>
@@ -705,9 +660,6 @@
     <string name="settings_section_app_cards">Karty aplikácií</string>
     <string name="settings_app_cards_color_all">FarBa pre každú kartu</string>
     <string name="settings_app_cards_color_all_desc">Karty, ktoré ste prispôsobili jednotlivo, si zachovajú vlastnú farbu</string>
-    <string name="settings_section_patch_list">Zoznam záplat</string>
-    <string name="settings_toggle_patch_categories_label">Kategórie záplat</string>
-    <string name="settings_toggle_patch_categories_desc">Zoskupiť záplaty do rozbaliteľných kategórií</string>
     <string name="settings_section_background_animation">Animácia pozadia</string>
     <string name="settings_background_circles">Kruhy</string>
     <string name="settings_background_rings">Prstence</string>
@@ -821,8 +773,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Preložiť</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Zoznam zmien nie je k dispozícii</string>
+    <string name="changelog_badge_installed">Nainštalované</string>
+    <string name="changelog_badge_latest">Najnovšie</string>
+    <string name="changelog_badge_prerelease">Preduvádzač</string>
+    <string name="changelog_date_today">Dnes</string>
+    <string name="changelog_date_yesterday">Včera</string>
     <string name="changelog_dialog_title">Zobrazíť zoznam zmien</string>
-    <string name="changelog_show_older_button">Zobrazíť staršie vydania</string>
+    <string name="changelog_not_available">Zoznam zmien nie je k dispozícii</string>
+    <string name="changelog_section_app_support">Podpora aplikácie</string>
+    <string name="changelog_section_fixes">Opravy</string>
+    <string name="changelog_section_improvements">Vylepšenia</string>
+    <string name="changelog_section_new">Novinky</string>
+    <string name="changelog_section_other">Zmeny</string>
+    <string name="changelog_section_performance">Výkon</string>
+    <string name="changelog_show_all">Zobraziť všetko (%1$d)</string>
+    <string name="changelog_show_less">Zobraziť menej</string>
     <string name="changelog_view_on_github_button">Zobrazíť na GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Zdroje</string>
+    <string name="nav_apps">Aplikácie</string>
 </resources>

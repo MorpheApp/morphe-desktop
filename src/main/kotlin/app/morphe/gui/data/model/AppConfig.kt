@@ -6,6 +6,7 @@
 package app.morphe.gui.data.model
 
 import app.morphe.gui.ui.theme.ThemePreference
+import app.morphe.gui.ui.theme.ThemeStyle
 import kotlinx.serialization.Serializable
 
 /** Application configuration stored in config.json. */
@@ -33,6 +34,7 @@ data class SourceVersionPref(
 data class AppConfig(
     val language: String = "system",
     val themePreference: String = ThemePreference.SYSTEM.name,
+    val themeStyle: String = ThemeStyle.MORPHE.name,
     val backgroundType: String = "CIRCLES",
     val enableParallax: Boolean = true,
     val customAccentColorArgb: Int? = null,
@@ -47,10 +49,9 @@ data class AppConfig(
     val cardFills: Map<String, MorpheFill> = emptyMap(),
     val globalCardFill: MorpheFill? = null,
     val useSharpCorners: Boolean = false,
-    val groupPatchesByCategory: Boolean = true,
     val homeAppSortMode: String = "RECOMMENDED",
     val preferredPatchChannel: String = "STABLE",
-    val useSimplifiedMode: Boolean = true,
+    val useSimpleMode: Boolean = true,
     val patchSource: List<PatchSource> = listOf(DEFAULT_PATCH_SOURCE),
     val activePatchSourceId: String = "morphe-default",
     // Persisted expand/collapse state for settings sections.
@@ -64,6 +65,8 @@ data class AppConfig(
     val multiSourceHintDismissed: Boolean = false,
     // Last viewed apps filter tab.
     val homeAppListFilter: String = "ALL",
+    /** Preferred patch source name per app package name for Simple mode. */
+    val preferredPatchSourceByPackage: Map<String, String> = emptyMap(),
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {
@@ -82,6 +85,13 @@ data class AppConfig(
             ThemePreference.SYSTEM
         }
     }
+    fun getThemeStyle(): ThemeStyle {
+        return try {
+            ThemeStyle.valueOf(themeStyle)
+        } catch (_: Exception) {
+            ThemeStyle.MORPHE
+        }
+    }
 }
 
 @Serializable
@@ -94,7 +104,6 @@ data class PatchSource (
     val deletable: Boolean = true,
     val enabled: Boolean = true,
     val usePreRelease: Boolean = false,
-    val useExperimentalVersions: Boolean = false,
 )
 
 @Serializable

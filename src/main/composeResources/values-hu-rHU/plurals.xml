@@ -16,22 +16,6 @@
         <item quantity="one">%1$d forrás</item>
         <item quantity="other">%1$d forrás</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d javítás kerül alkalmazásra</item>
-        <item quantity="other">%1$d javítás kerül alkalmazásra</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d kizárva</item>
-        <item quantity="other">%1$d kizárva</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d engedélyezve</item>
-        <item quantity="other">%1$d engedélyezve</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d letiltva</item>
-        <item quantity="other">%1$d letiltva</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d könyvtár</item>
         <item quantity="other">%1$d könyvtár</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d mag</item>
         <item quantity="other">%1$d mag</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d módosítás</item>
+        <item quantity="other">%1$d módosítás</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d nappal ezelőtt</item>
+        <item quantity="other">%1$d nappal ezelőtt</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funkció</item>
+        <item quantity="other">%1$d funkció</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d javítás</item>
+        <item quantity="other">%1$d javítás</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimalizálás</item>
+        <item quantity="other">%1$d optimalizálás</item>
     </plurals>
 </resources>

@@ -8,10 +8,10 @@ package app.morphe.engine
 /** Progress listener for [BootstrapDownloader.downloadIfMissing]. */
 interface BootstrapProgressListener {
     /** Invoked before downloads begin with the count of components to fetch. */
-    fun onStart(componentCount: Int)
+    fun onStart()
 
     /** Reports download progress for component [index] of [componentCount]. */
-    fun onProgress(index: Int, componentCount: Int, displayName: String, bytesDownloaded: Long, totalBytes: Long)
+    fun onProgress(index: Int, componentCount: Int, bytesDownloaded: Long, totalBytes: Long)
 
     /** Invoked when all components are downloaded and verified. */
     fun onComplete()

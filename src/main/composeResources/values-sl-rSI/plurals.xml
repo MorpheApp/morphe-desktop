@@ -24,30 +24,6 @@
         <item quantity="few">%1$d viri</item>
         <item quantity="other">%1$d virov</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d popravek bo uporabljen</item>
-        <item quantity="two">%1$d popravka bosta uporabljena</item>
-        <item quantity="few">%1$d popravki bodo uporabljeni</item>
-        <item quantity="other">%1$d popravkov bo uporabljenih</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d izključen</item>
-        <item quantity="two">%1$d izključena</item>
-        <item quantity="few">%1$d izključeni</item>
-        <item quantity="other">%1$d izključenih</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d omogočen</item>
-        <item quantity="two">%1$d omogočena</item>
-        <item quantity="few">%1$d omogočeni</item>
-        <item quantity="other">%1$d omogočenih</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d onemogočen</item>
-        <item quantity="two">%1$d onemogočena</item>
-        <item quantity="few">%1$d onemogočeni</item>
-        <item quantity="other">%1$d onemogočenih</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d knjižnica</item>
         <item quantity="two">%1$d knjižnici</item>
@@ -83,5 +59,35 @@
         <item quantity="two">%1$d jedri</item>
         <item quantity="few">%1$d jedra</item>
         <item quantity="other">%1$d jeder</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d sprememba</item>
+        <item quantity="two">%1$d sprememb</item>
+        <item quantity="few">%1$d sprememb</item>
+        <item quantity="other">%1$d sprememb</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">pred %1$d dnem</item>
+        <item quantity="two">pred %1$d dnevi</item>
+        <item quantity="few">pred %1$d dnevi</item>
+        <item quantity="other">pred %1$d dnevi</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funkcija</item>
+        <item quantity="two">%1$d funkcij</item>
+        <item quantity="few">%1$d funkcij</item>
+        <item quantity="other">%1$d funkcij</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d popravek</item>
+        <item quantity="two">%1$d popravkov</item>
+        <item quantity="few">%1$d popravkov</item>
+        <item quantity="other">%1$d popravkov</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimizacija</item>
+        <item quantity="two">%1$d optimizacij</item>
+        <item quantity="few">%1$d optimizacij</item>
+        <item quantity="other">%1$d optimizacij</item>
     </plurals>
 </resources>

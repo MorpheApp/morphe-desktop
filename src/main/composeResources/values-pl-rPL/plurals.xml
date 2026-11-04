@@ -24,30 +24,6 @@
         <item quantity="many">%1$d źródeł</item>
         <item quantity="other">%1$d źródeł</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Zostanie zastosowana %1$d modyfikacja</item>
-        <item quantity="few">Zostaną zastosowane %1$d modyfikacje</item>
-        <item quantity="many">Zostanie zastosowanych %1$d modyfikacji</item>
-        <item quantity="other">Zostanie zastosowanych %1$d modyfikacji</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d wykluczona</item>
-        <item quantity="few">%1$d wykluczone</item>
-        <item quantity="many">%1$d wykluczonych</item>
-        <item quantity="other">%1$d wykluczonych</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d włączona</item>
-        <item quantity="few">%1$d włączone</item>
-        <item quantity="many">%1$d włączonych</item>
-        <item quantity="other">%1$d włączonych</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d wyłączona</item>
-        <item quantity="few">%1$d wyłączone</item>
-        <item quantity="many">%1$d wyłączonych</item>
-        <item quantity="other">%1$d wyłączonych</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d biblioteka</item>
         <item quantity="few">%1$d biblioteki</item>
@@ -83,5 +59,35 @@
         <item quantity="few">%1$d rdzenie</item>
         <item quantity="many">%1$d rdzeni</item>
         <item quantity="other">%1$d rdzeni</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d zmiana</item>
+        <item quantity="few">%1$d zmiany</item>
+        <item quantity="many">%1$d zmian</item>
+        <item quantity="other">%1$d zmian</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d dzień temu</item>
+        <item quantity="few">%1$d dni temu</item>
+        <item quantity="many">%1$d dni temu</item>
+        <item quantity="other">%1$d dni temu</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funkcja</item>
+        <item quantity="few">%1$d funkcje</item>
+        <item quantity="many">%1$d funkcji</item>
+        <item quantity="other">%1$d funkcji</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d poprawka</item>
+        <item quantity="few">%1$d poprawki</item>
+        <item quantity="many">%1$d poprawek</item>
+        <item quantity="other">%1$d poprawek</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optymalizacja</item>
+        <item quantity="few">%1$d optymalizacje</item>
+        <item quantity="many">%1$d optymalizacji</item>
+        <item quantity="other">%1$d optymalizacji</item>
     </plurals>
 </resources>

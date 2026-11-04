@@ -13,6 +13,7 @@
     <string name="expand">Proširi</string>
     <string name="cancel">Otkaži</string>
     <string name="close">Zatvori</string>
+    <string name="trust">Povjerenje</string>
     <string name="delete">Izbriši</string>
     <string name="disabled_while_patching">Onemogućeno tokom zakrpljivanja</string>
     <string name="drop_apk_here">Prevucite APK ovdje</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Veza je prekinuta tokom preuzimanja, pokušajte ponovo</string>
     <string name="error_network_loading_patches">Mrežna greška prilikom učitavanja zakrpa</string>
     <string name="error_patch_file_not_found">Datoteka zakrpe nije pronađena: %1$s</string>
-    <string name="error_no_patches_files_supplied">Nisu dostavljene datoteke zakrpa</string>
-    <string name="error_input_apk_not_found">Ulazni APK nije pronađen</string>
     <string name="error_step_failed">%1$s nije uspio: %2$s</string>
     <string name="error_drop_valid_apk">Molimo prevucite ispravnu .apk, .apkm, .xapk ili .apks datoteku</string>
     <string name="status_saving">Spremanje…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtriraj aplikacije…</string>
     <string name="version">Verzija</string>
     <string name="version_label_stable">Stabilna</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Predizdanje</string>
     <string name="version_label_experimental">Eksperimentalna</string>
-    <string name="version_label_latest_dev">Najnovija Dev</string>
     <string name="version_label_latest_stable">Najnovija stabilna</string>
+    <string name="version_label_recommended">Preporučeno</string>
+    <string name="version_label_supported">Podržano</string>
     <string name="app_info_arch_label">Arch</string>
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Zakrpljivanje otkazano</string>
     <string name="view_full_logs_button">Pogledaj kompletne zapise</string>
     <string name="error_patching_unknown">Zakrpljivanje nije uspjelo iz nepoznatog razloga</string>
-    <string name="error_patching_general">Greška: %1$s</string>
     <string name="error_log_label">Zapis o grešci</string>
     <string name="back">Nazad</string>
     <string name="open_folder">Otvori mapu</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Bilo koji broj tačaka, linearni, radijalni ili konični</string>
     <string name="card_fill_mode_solid">Jednobojno</string>
     <string name="card_fill_mode_solid_blurb">Jedna ravna boja</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Zakrpe</string>
-    <string name="quick_patch_screen_start_over_button">Kreni ispočetka</string>
-    <string name="quick_patch_patch_another_button">Zakrpi drugu</string>
-    <string name="quick_patch_select_apk">Odaberi APK</string>
-    <string name="quick_patch_analyze_apk_failed">Analiza APK-a nije uspjela</string>
-    <string name="quick_patch_extract_base_apk_failed">Neuspjelo izvlačenje osnovnog APK-a iz paketa</string>
-    <string name="quick_patch_unsupported_app_error">%1$s nije podržan u načinu Quick Patch. Podržane aplikacije: %2$s. Za nepodržane aplikacije koristite Normal način</string>
     <string name="adb_install_on_button">Instaliraj na %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Učitavanje zakrpa</string>
-    <string name="patching_step_preparing">Priprema</string>
     <string name="patching_step_merging_split_apk">Spajanje podijeljenog APK-a</string>
     <string name="patching_step_read_apk">Čitanje APK datoteke</string>
     <string name="patching_step_applying_patches">Primjena zakrpa</string>
-    <string name="patching_step_saving">Spremanje</string>
     <string name="patching_step_writing_apk">Zapisivanje zakrpljene APK datoteke</string>
     <string name="patching_step_signing">Potpisivanje zakrpljene APK datoteke</string>
     <!-- ADB Installation Errors -->
@@ -153,64 +142,21 @@
     <string name="version_status_checksum_corrupted">Datoteka može biti korumpirana, ponovo preuzmite sa APKMirror</string>
     <string name="version_status_checksum_failed">Verifikacija kontrolne sume nije uspjela</string>
     <string name="version_status_checksum_matches">Kontrolna suma se podudara sa APKMirror</string>
-    <string name="version_status_older_stable">Starija stabilna verzija</string>
     <string name="version_status_newer_stable_available">Dostupna novija stabilna v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Dostupna je novija stabilna verzija</string>
     <string name="version_status_experimental_detail">Podržano, ali možda neće raditi ispravno</string>
-    <string name="version_status_older_experimental">Starija eksperimentalna verzija</string>
-    <string name="version_status_newer_experimental_available">Dostupna novija eksperimentalna v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Dostupna je novija eksperimentalna verzija</string>
-    <string name="version_status_too_new">Verzija je prenova</string>
     <string name="version_status_unsupported_detail">Nije zvanično podržano, patch-ovi će najvjerovatnije propasti</string>
-    <string name="version_status_too_old">Verzija je prestara</string>
     <string name="version_status_unsupported">Nepodržana verzija</string>
     <string name="version_status_build_unsupported">Build nije podržan</string>
     <string name="version_status_build_unsupported_detail">Ova verzija je podržana, ali ne i ovaj build iste. Nabavite build koji zakrpe ciljaju</string>
+    <string name="version_status_build_unsupported_with_code">Za zakrpe je potrebna verzija builda %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Obavještenje o verziji</string>
+    <string name="version_warning_build_unsupported_message">Trenutno: v%1$s (build %2$s)\nPotrebna verzija builda: %3$s\n\nOvo je drugačiji build iste verzije. Zakrpe zahtijevaju specifičan build.</string>
     <string name="version_warning_experiment_title">Želite li eksperimentisati? 🧪</string>
-    <string name="version_warning_older_stable_title">Starija stabilna verzija</string>
-    <string name="version_warning_older_stable_message">Trenutna: v%1$s\nNajnovija stabilna: v%2$s\n\nOva verzija je podržana, ali dostupna je novija stabilna verzija. Moguće je da vam nedostaju nedavne ispravke.</string>
     <string name="version_warning_latest_experimental_message">Trenutna: v%1$s\n\nOva verzija ima ranu eksperimentalnu podršku\n\n🔧 Očekujte neobično ponašanje aplikacije ili neidentifikovane greške dok se zakrpe usavršavaju za ovu verziju aplikacije.</string>
-    <string name="version_warning_older_experimental_title">Starija eksperimentalna verzija\nŽelite li eksperimentisati? 🧪</string>
-    <string name="version_warning_older_experimental_message">Trenutna: v%1$s\nNajnovija eksperimentalna: v%2$s\n\nOvo je podržana eksperimentalna verzija, ali je dostupna novija eksperimentalna verzija. Očekujte neobično ponašanje aplikacije ili neidentifikovane greške dok se zakrpe usavršavaju za ovu verziju aplikacije.</string>
-    <string name="version_warning_too_new_message">Trenutna: v%1$s\nNajnovija poznata: v%2$s\n\nOva verzija ima ranu eksperimentalnu podršku\n\n🔧 Očekujte neobično ponašanje aplikacije ili neidentifikovane greške dok se zakrpe usavršavaju za ovu verziju aplikacije.</string>
-    <string name="version_warning_too_old_message">Trenutna: v%1$s\nNajstarija podržana: v%2$s\n\nOvo nije zvanično podržana verzija. Zakrpe će najvjerovatnije propasti.</string>
     <string name="version_warning_unsupported_message">Trenutna: v%1$s\n\nOvo nije zvanično podržana verzija. Zakrpe će najvjerovatnije propasti.</string>
     <string name="version_warning_notice_message">Nastaviti sa v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Starija stabilna verzija - dostupna je novija stabilna v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Eksperimentalna verzija - podržana, ali možda neće raditi ispravno</string>
-    <string name="quick_patch_warning_older_experimental">Starija eksperimentalna verzija - dostupna je novija eksperimentalna v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Build nije podržan - ova verzija može biti zakrpljena, ali ne i ovaj build nje</string>
-    <string name="quick_patch_warning_too_new">Verzija je previše nova - nije zvanično podržana, zakrpe će najvjerovatnije biti neuspješne</string>
-    <string name="quick_patch_warning_too_old">Verzija je previše stara - nije zvanično podržana, zakrpe će najvjerovatnije biti neuspješne</string>
-    <string name="quick_patch_warning_unsupported_between">Nepodržana verzija - zakrpe će najvjerovatnije biti neuspješne</string>
-    <string name="quick_patch_read_apk_failed">Neuspješno čitanje APK-a: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Pripremanje zakrpa…</string>
-    <string name="quick_patch_fetch_patches_failed">Neuspješno preuzimanje zakrpa. Provjerite svoju internet vezu</string>
-    <string name="quick_patch_status_downloading_patches">Preuzimanje zakrpa %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Neuspješno preuzimanje zakrpa: %1$s</string>
-    <string name="quick_patch_status_patching">Zakrpljivanje…</string>
-    <string name="quick_patch_completed_adb_off">ADB isključen · Omogući za instalaciju</string>
-    <string name="quick_patch_completed_adb_connect_device">Povežite uređaj putem USB-a za instalaciju pomoću ADB-a</string>
-    <string name="quick_patch_error_unknown_occurred">Došlo je do nepoznate greške</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analiziranje APK-a…</string>
-    <string name="quick_patch_patching_slow_warning">Ovo traje duže nego obično. Molimo pričekajte…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Nema kompatibilnih zakrpa za ovu aplikaciju</string>
-    <string name="quick_patch_ready_no_matching_patches">Nema zakrpa koje odgovaraju pojmu \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Zakrpi sa zadanim postavkama</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Podržane aplikacije</string>
-    <string name="quick_patch_supported_apps_subtitle">Ovdje prevucite točnu APK verziju za podržanu aplikaciju</string>
-    <string name="quick_patch_supported_apps_loading">Učitavanje podržanih aplikacija…</string>
-    <string name="quick_patch_supported_apps_load_error">Nije bilo moguće učitati podržane aplikacije</string>
-    <string name="quick_patch_supported_apps_change_source">Promijeni izvor</string>
-    <string name="quick_patch_supported_apps_no_matches">Nema odgovarajućih aplikacija</string>
-    <string name="quick_patch_supported_apps_version_any">Bilo koja verzija</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Odaberite APK datoteku</string>
     <string name="home_could_not_resolve_patch_files">Nije bilo moguće razriješiti datoteke zakrpe</string>
@@ -227,12 +173,14 @@
     <string name="home_apk_info_remove_description">Ukloni APK</string>
     <string name="home_apk_info_limited_info_warning">Nije moguće potpuno pročitati manifest ovog APK-a (uobičajeno za split bundle). Detalji ispod su približni, patching bi i dalje trebao raditi</string>
     <string name="home_apk_info_unsupported_app_warning">Nisu pronađeni kompatibilni patchevi za ovu aplikaciju. I dalje možete nastaviti, ali patching možda neće imati efekta</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Nisu pronađene kompatibilne zakrpe za ovu aplikaciju</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Veličina</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Iz</string>
     <string name="home_stage_change_apk">Promijeni APK</string>
     <string name="home_stage_continue">Nastavi</string>
+    <string name="home_stage_patch">Zakrpa</string>
     <string name="home_stage_analyzing_title">Analiziranje</string>
     <string name="home_stage_reading_metadata">Čitanje metapodataka aplikacije…</string>
     <!-- Home Screen - Dialogs -->
@@ -244,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Deinstalirati %1$s?</string>
     <string name="home_dialog_uninstall_message">Ovim se uklanja %1$s sa povezanog uređaja. Patchirani APK na disku i vaša historija ostaju sačuvani, osim ako u nastavku ne odaberete drugačije</string>
     <string name="home_dialog_uninstall_also_forget">Također ukloni iz Vaših aplikacija</string>
-    <string name="home_dialog_missing_apk_title">Originalni APK nije pronađen</string>
-    <string name="home_dialog_missing_apk_message">Ulazni APK za %1$s više se ne nalazi na:\n%2$s\n\nPonovo odaberite APK kako biste ga ponovo zakrpili sa sačuvanim postavkama</string>
-    <string name="home_dialog_select_apk">Odaberite APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Odaberite APK za ponovni patch</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Upravljanje izvorima</string>
     <string name="home_header_multi_source_hint">Patchovi iz svakog omogućenog izvora su objedinjeni. Upravljajte putem dugmeta za izvore iznad</string>
@@ -284,10 +228,6 @@
     <string name="home_filter_your_apps">Vaše aplikacije</string>
     <string name="home_banner_view">Pogledaj</string>
     <string name="home_your_apps_install_ready">Instalacija spremna</string>
-    <string name="home_your_apps_newer_patch_hint">Noviji patch može nadograditi aplikaciju, kliknite Ažuriraj da provjerite</string>
-    <string name="home_your_apps_device_version_ready">Patchirana verzija v%1$s je spremna, uređaj je na v%2$s (ponovni patch nije potreban)</string>
-    <string name="home_your_apps_install_ready_hint">Zakrpljena v%1$s spremna za instalaciju (ponovno zakrpljivanje nije potrebno)</string>
-    <string name="home_action_install">Instaliraj</string>
     <string name="home_action_install_to_device">Instaliraj na uređaj</string>
     <string name="home_action_installing">Instaliranje…</string>
     <string name="home_action_preparing">Priprema…</string>
@@ -328,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s spremno · uređaj na v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s je spremna, ponovni patch nije potreban</string>
-    <string name="home_advice_unsupported">v%1$s više nije podržana. Ažurirajte na v%2$s</string>
+    <string name="home_detail_source_disabled">Onemogućeno</string>
+    <string name="home_detail_source_removed">Uklonjeno</string>
+    <string name="home_detail_source_disabled_sub">Izvor je onemogućen u Izvorima. Omogućite ga kako biste ponovo primijenili zakrpu</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Originalni izvor je onemogućen. Odaberite alternativni izvor ili ga ponovo omogućite u Izvorima</string>
+    <string name="home_detail_no_compatible_source">Nijedan kompatibilni izvor nije omogućen</string>
+    <string name="home_detail_choose_source">Izaberite izvor zakrpe</string>
     <string name="home_advice_unsupported_by_patches">v%1$s više nije podržan najnovijim zakrpama</string>
     <string name="home_date_today">danas</string>
     <string name="home_date_yesterday">jučer</string>
@@ -425,11 +370,14 @@
     <string name="patch_selection_group_universal">Univerzalni</string>
     <string name="patch_selection_group_ungrouped">Negrupisani</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Kreni ispočetka</string>
+    <string name="patching_patches_count">%1$d / %2$d zakrpa</string>
+    <string name="patching_slow_warning">Ovo traje duže nego obično. Molimo pričekajte…</string>
     <string name="patching_status_ready">Spreman za zakrpljivanje</string>
     <string name="patching_status_preparing">Priprema za zakrpljivanje</string>
     <string name="patching_status_in_progress">Primjena zakrpa</string>
     <string name="patching_completed_loading_result">Patchiranje je završeno, učitavanje rezultata…</string>
-    <string name="patching_cancelled_loading_result">Krpanje otkazano, učitavanje rezultata…</string>
+    <string name="patching_cancelled_loading_result">Krpljenje otkazano, učitavanje rezultata…</string>
     <string name="patching_failed_loading_result">Krpanje nije uspjelo, učitavanje rezultata…</string>
     <string name="patching_log_viewer_failed_to_read">Neuspješno čitanje datoteke dnevnika: %1$s</string>
     <string name="patching_log_viewer_title">Datoteka dnevnika</string>
@@ -465,6 +413,8 @@
     <string name="patching_banner_native_libs_stripped">Uklonjeno</string>
     <string name="patching_error_failed_patches">Neuspjele zakrpe: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB isključen · Omogući za instalaciju</string>
+    <string name="result_adb_connect_device_hint">Povežite uređaj putem USB-a za instalaciju pomoću ADB-a</string>
     <string name="result_screen_patch_another_button">Zakrpi drugu</string>
     <string name="result_screen_install_on_device_label">Instaliraj na %1$s</string>
     <string name="result_screen_links_routed_label">Linkovi usmjereni na zakrpljenu aplikaciju</string>
@@ -564,13 +514,12 @@
     <string name="source_error_failed_to_load">Učitavanje nije uspjelo</string>
     <string name="source_error_github_pat_required">GitHub PAT je potreban za preuzimanje izvora pull zahtjeva</string>
     <string name="source_error_pr_no_artifact">Nisu pronađeni artefakti za pull request</string>
-    <string name="source_sheet_manage_description">Upravljaj izvorima zakrpa</string>
-    <string name="source_sheet_local_label">Lokalno</string>
+    <string name="source_error_patcher_incompatible">Ovaj izvor je napravljen za patcher %1$s, ali Morphe %2$s uključuje patcher %3$s. Ažurirajte Morphe da biste ga koristili</string>
+    <string name="version_label_local">Lokalno</string>
     <string name="source_sheet_remote_label">Udaljeno</string>
     <string name="add_source">Dodaj izvor</string>
     <string name="source_sheet_title">Izvori zakrpa</string>
     <string name="source_sheet_reload_description">Ponovo učitaj zakrpe</string>
-    <string name="source_sheet_quick_mode_hint">Odaberite koji izvor Quick Patch koristi. Više izvora je dostupno u Expert modu</string>
     <string name="source_sheet_multi_mode_hint">Omogući/Onemogući bilo koju kombinaciju. Zakrpe iz svih omogućenih izvora su objedinjene</string>
     <string name="source_sheet_done_button">Gotovo</string>
     <string name="source_sheet_type_preinstalled">Preinstalirano</string>
@@ -580,13 +529,21 @@
     <string name="source_sheet_edit_description">Uredi</string>
     <string name="source_sheet_move_up_description">Pomjeri gore</string>
     <string name="source_sheet_move_down_description">Pomjeri dolje</string>
-    <string name="source_sheet_channel_older_stable">Starija stabilna</string>
-    <string name="source_sheet_channel_older_dev">Starija razvojna</string>
     <string name="source_sheet_ignored_mpp_title">Ignorisani .mpp obrasci</string>
-    <string name="source_sheet_ignored_mpp_hint">Utječe samo na izvore foldera, koji automatski učitavaju najnoviji .mpp u folderu. Prilikom odabira te najnovije verzije, preskaču se datoteke čije ime odgovara ovdje navedenom obrascu. Obična riječ odgovara svakoj datoteci koja je sadrži (npr. debug). Koristite * za globs (npr. *-debug.mpp). *-sources.mpp i *-javadoc.mpp se uvijek ignorišu</string>
+    <string name="source_sheet_ignored_mpp_hint">Utiče samo na izvore foldera, koji automatski učitavaju najnoviji .mpp u folderu. Prilikom odabira te najnovije verzije, preskaču se datoteke čiji naziv odgovara ovdje navedenom obrascu. Obična riječ odgovara bilo kojoj datoteci koja je sadrži (npr. debug). Koristite * za globove (npr. *-debug.mpp). *-sources.mpp i *-javadoc.mpp se uvijek ignorišu</string>
     <string name="source_sheet_ignored_mpp_placeholder">npr. debug ili *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Dodaj obrazac</string>
     <string name="source_sheet_remove_pattern_description">Ukloni obrazac</string>
+    <string name="sources_management_signed_by">Potpisao</string>
+    <string name="sources_management_signing_key_changed_badge">Promijenjen ključ</string>
+    <string name="sources_management_signing_key_changed_hint">Ključ za potpisivanje je promijenjen. Kliknite da ga pregledate</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' nije ažuriran jer njegovo najnovije izdanje nije potpisano ključem koji je koristio ranije</string>
+    <string name="sources_signing_key_new">Novi ključ</string>
+    <string name="sources_signing_key_trust_message">Najnovije izdanje je potpisano drugim ključem. Ili je programer zamijenio svoj ključ, ili je neko drugi objavio ovo izdanje. Vjerujte mu samo ako je programer najavio novi ključ</string>
+    <string name="sources_signing_key_trust_message_unsigned">Najnovije izdanje nije potpisano. Ili je programer prestao potpisivati izdanja, ili je neko drugi objavio ovo izdanje. Vjerujte mu samo ako je programer to najavio</string>
+    <string name="sources_signing_key_trust_title">Vjerovati novom ključu?</string>
+    <string name="sources_signing_key_trusted">Povjerljiv ključ</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Lokalna datoteka</string>
     <string name="patch_source_dialog_name_label">Ime</string>
@@ -596,8 +553,6 @@
     <string name="patch_source_dialog_repo_hint">Prihvaćeni su linkovi GitHub-a, GitLab-a ili morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Pre-release zakrpe</string>
     <string name="patch_source_dialog_pre_release_hint">Dobija rani pristup novim eksperimentalnim verzijama zakrpa</string>
-    <string name="patch_source_dialog_experimental_title">Eksperimentalne verzije aplikacije</string>
-    <string name="patch_source_dialog_experimental_hint">Prioritizuje eksperimentalne verzije aplikacije ako su dostupne</string>
     <string name="patch_source_dialog_error_name_required">Ime je obavezno</string>
     <string name="patch_source_dialog_error_invalid_url">Unesite važeći GitHub ili GitLab URL</string>
     <string name="patch_source_dialog_error_invalid_file">Odaberite važeću .mpp datoteku</string>
@@ -680,10 +635,8 @@
     <string name="settings_dialog_open_logs_button">Otvori dnevnike</string>
     <string name="settings_dialog_reset_button">Resetuj</string>
     <string name="settings_theme_system">Sistem</string>
-    <string name="settings_signing_error_not_found">Konfigurisano spremište ključeva nije pronađeno: %1$s. Vratite datoteku, odaberite drugu u Postavkama ili obrišite postavku kako biste koristili Morphe zadanu vrijednost</string>
     <string name="settings_search_languages_placeholder">Pretraži jezike</string>
     <string name="settings_dialog_resolves_to_message">Razrješava se na: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore nije pronađen: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Jezik</string>
     <string name="settings_language_current_title">Trenutni jezik</string>
@@ -691,9 +644,13 @@
     <string name="settings_language_dialog_title">Jezik aplikacije</string>
     <string name="settings_language_search_no_results">Nema pronađenih rezultata</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Način teme</string>
     <string name="settings_theme_light">Svijetla</string>
     <string name="settings_theme_dark">Tamna</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Stil boje</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monohromatski</string>
     <string name="settings_toggle_sharp_corners_label">Oštri uglovi</string>
     <string name="settings_toggle_sharp_corners_desc">Učini kartice, dijaloge i dugmad kvadratnim</string>
     <string name="settings_section_accent_color">Akcentna boja</string>
@@ -703,9 +660,6 @@
     <string name="settings_section_app_cards">Aplikacijske kartice</string>
     <string name="settings_app_cards_color_all">Boja za svaku karticu</string>
     <string name="settings_app_cards_color_all_desc">Kartice koje ste pojedinačno prilagodili zadržavaju svoju boju</string>
-    <string name="settings_section_patch_list">Lista zakrpa</string>
-    <string name="settings_toggle_patch_categories_label">Kategorije zakrpa</string>
-    <string name="settings_toggle_patch_categories_desc">Grupirajte zakrpe u proširive kategorije</string>
     <string name="settings_section_background_animation">Pozadinska animacija</string>
     <string name="settings_background_circles">Krugovi</string>
     <string name="settings_background_rings">Prstenovi</string>
@@ -819,8 +773,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Prevedi</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Historija promjena nije dostupna</string>
+    <string name="changelog_badge_installed">Instalirano</string>
+    <string name="changelog_badge_latest">Najnovije</string>
+    <string name="changelog_badge_prerelease">Pred-izdanje</string>
+    <string name="changelog_date_today">Danas</string>
+    <string name="changelog_date_yesterday">Jučer</string>
     <string name="changelog_dialog_title">Pogledaj historiju promjena</string>
-    <string name="changelog_show_older_button">Prikaži starija izdanja</string>
+    <string name="changelog_not_available">Historija promjena nije dostupna</string>
+    <string name="changelog_section_app_support">Podrška aplikacije</string>
+    <string name="changelog_section_fixes">Ispravke</string>
+    <string name="changelog_section_improvements">Poboljšanja</string>
+    <string name="changelog_section_new">Novo</string>
+    <string name="changelog_section_other">Promjene</string>
+    <string name="changelog_section_performance">Performanse</string>
+    <string name="changelog_show_all">Prikaži sve (%1$d)</string>
+    <string name="changelog_show_less">Prikaži manje</string>
     <string name="changelog_view_on_github_button">Pogledaj na GitHub-u</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Izvori</string>
+    <string name="nav_apps">Aplikacije</string>
 </resources>

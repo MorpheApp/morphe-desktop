@@ -32,38 +32,6 @@
         <item quantity="many">%1$d مصادر التعديل</item>
         <item quantity="other">%1$d مصادر التعديل</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="zero">سيتم تطبيق %1$d تصحيحًا</item>
-        <item quantity="one">سيتم تطبيق %1$d تصحيح</item>
-        <item quantity="two">سيتم تطبيق %1$d تصحيحين</item>
-        <item quantity="few">سيتم تطبيق %1$d تصحيحات</item>
-        <item quantity="many">سيتم تطبيق %1$d تصحيحًا</item>
-        <item quantity="other">سيتم تطبيق %1$d تصحيحًا</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="zero">%1$d مستبعدًا</item>
-        <item quantity="one">%1$d مستبعد</item>
-        <item quantity="two">%1$d مستبعدين</item>
-        <item quantity="few">%1$d مستبعدة</item>
-        <item quantity="many">%1$d مستبعدًا</item>
-        <item quantity="other">%1$d مستبعدًا</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="zero">%1$d مفعّلًا</item>
-        <item quantity="one">%1$d مفعّل</item>
-        <item quantity="two">%1$d مفعّلين</item>
-        <item quantity="few">%1$d مفعّلة</item>
-        <item quantity="many">%1$d مفعّلًا</item>
-        <item quantity="other">%1$d مفعّلًا</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="zero">%1$d معطّلًا</item>
-        <item quantity="one">%1$d معطّل</item>
-        <item quantity="two">%1$d معطّلين</item>
-        <item quantity="few">%1$d معطّلة</item>
-        <item quantity="many">%1$d معطّلًا</item>
-        <item quantity="other">%1$d معطّلًا</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="zero">%1$d مكتبةً</item>
         <item quantity="one">%1$d مكتبة</item>
@@ -111,5 +79,45 @@
         <item quantity="few">%1$d أنوية</item>
         <item quantity="many">%1$d نواة</item>
         <item quantity="other">%1$d نواة</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="zero">%1$d تغيير</item>
+        <item quantity="one">%1$d تغيير</item>
+        <item quantity="two">%1$d تغيير</item>
+        <item quantity="few">%1$d تغييرات</item>
+        <item quantity="many">%1$d تغييرًا</item>
+        <item quantity="other">%1$d تغيير</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="zero">منذ %1$d يوم</item>
+        <item quantity="one">منذ %1$d يوم</item>
+        <item quantity="two">منذ %1$d يوم</item>
+        <item quantity="few">منذ %1$d يوم</item>
+        <item quantity="many">منذ %1$d يوم</item>
+        <item quantity="other">منذ %1$d يوم</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="zero">%1$d ميزة</item>
+        <item quantity="one">%1$d ميزة</item>
+        <item quantity="two">%1$d ميزتان</item>
+        <item quantity="few">%1$d ميزات</item>
+        <item quantity="many">%1$d ميزة</item>
+        <item quantity="other">%1$d ميزات</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="zero">%1$d إصلاحًا</item>
+        <item quantity="one">%1$d إصلاح</item>
+        <item quantity="two">%1$d إصلاحًا</item>
+        <item quantity="few">%1$d إصلاحات</item>
+        <item quantity="many">%1$d إصلاحًا</item>
+        <item quantity="other">%1$d إصلاحًا</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="zero">%1$d تحسينًا</item>
+        <item quantity="one">%1$d تحسين</item>
+        <item quantity="two">%1$d تحسينان</item>
+        <item quantity="few">%1$d تحسينات</item>
+        <item quantity="many">%1$d تحسينًا</item>
+        <item quantity="other">%1$d تحسينًا</item>
     </plurals>
 </resources>

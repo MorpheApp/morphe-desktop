@@ -21,13 +21,13 @@ import app.morphe.gui.ui.components.MorpheBannerAction
 import app.morphe.gui.ui.components.MorpheBannerDismiss
 import app.morphe.gui.ui.components.MorpheBannerText
 import app.morphe.gui.ui.components.MorpheBannerTone
+import app.morphe.gui.ui.components.NavigationPill
 import app.morphe.gui.ui.components.OfflineBadge
 import app.morphe.gui.ui.components.PatchesLoadingIndicator
-import app.morphe.gui.ui.components.SourceLedState
-import app.morphe.gui.ui.components.SourcesCountPill
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.components.rememberSymmetricPadding
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.screens.home.HomePage
 import app.morphe.gui.ui.screens.home.HomeUiState
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.ThemePreference
@@ -41,8 +41,8 @@ internal fun HeaderBar(
     uiState: HomeUiState,
     onRetry: () -> Unit,
     onUpdateChannelChanged: () -> Unit = {},
-    onManageSourcesClick: () -> Unit = {},
-    sourceStates: List<SourceLedState> = emptyList(),
+    selectedPage: HomePage = uiState.selectedPage,
+    onSelectPage: (HomePage) -> Unit = {},
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
     val paddingState = rememberSymmetricPadding()
@@ -78,12 +78,13 @@ internal fun HeaderBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                if (uiState.isLoadingPatches) {
+                if (uiState.isLoadingPatches && uiState.supportedApps.isEmpty()) {
                     PatchesLoadingIndicator()
                 } else {
-                    SourcesCountPill(
-                        sourceStates = sourceStates,
-                        onClick = onManageSourcesClick,
+                    NavigationPill(
+                        selectedPage = selectedPage,
+                        onSelectPage = onSelectPage,
+                        enabled = !uiState.isAnalyzing,
                     )
                 }
 
@@ -103,6 +104,48 @@ internal fun HeaderBar(
             TopBarRow(
                 allowCacheClear = true,
                 onUpdateChannelChanged = onUpdateChannelChanged,
+            )
+        }
+    }
+}
+
+/** Top bar displayed during patching and results with navigation hidden. */
+@Composable
+fun SimpleTopBar(
+    isPatching: Boolean = false,
+    modifier: Modifier = Modifier,
+) {
+    val borderColor = MaterialTheme.colorScheme.outlineVariant
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .drawBehind {
+                drawLine(
+                    color = borderColor,
+                    start = Offset(0f, size.height),
+                    end = Offset(size.width, size.height),
+                    strokeWidth = 1f
+                )
+            }
+            .padding(vertical = 8.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 12.dp)
+        ) {
+            BrandingSection(isCompact = true)
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 12.dp)
+        ) {
+            TopBarRow(
+                allowCacheClear = false,
+                isPatching = isPatching,
             )
         }
     }

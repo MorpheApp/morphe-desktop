@@ -16,22 +16,6 @@
         <item quantity="one">%1$d উত্‍স</item>
         <item quantity="other">%1$d টা উত্‍স</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d টা patch প্ৰয়োগ কৰা হ'ব</item>
-        <item quantity="other">%1$d টা patches প্ৰয়োগ কৰা হ'ব</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d টা বাদ দিয়া হৈছে</item>
-        <item quantity="other">%1$d বাদ দিয়াছে</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d সক্ৰিয়</item>
-        <item quantity="other">%1$d সক্ৰিয়</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d নিষ্ক্ৰিয়</item>
-        <item quantity="other">%1$d নিষ্ক্ৰিয়</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d লাইব্ৰেৰী</item>
         <item quantity="other">%1$d লাইব্ৰেৰী</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d টা কোৰ</item>
         <item quantity="other">%1$d টা কোৰ</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d পৰিৱৰ্তন</item>
+        <item quantity="other">%1$d পৰিৱৰ্তন</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d দিনৰ আগত</item>
+        <item quantity="other">%1$d দিনৰ আগত</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d বৈশিষ্ট্য</item>
+        <item quantity="other">%1$d বৈশিষ্ট্য</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d সমাধান</item>
+        <item quantity="other">%1$d সমাধান</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d অপ্টিমাইজেশ্যন</item>
+        <item quantity="other">%1$d অপ্টিমাইজেশ্যন</item>
     </plurals>
 </resources>

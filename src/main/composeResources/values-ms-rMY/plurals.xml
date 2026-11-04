@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="other">%1$d sumber tampalan gagal dimuatkan. Menggunakan sumber yang berjaya dimuatkan</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="other">%1$d aplikasi yang ditampal mempunyai kemas kini tersedia</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="other">%1$d baris disimpan ke %2$s</item>
+    </plurals>
     <plurals name="count_sources">
         <item quantity="other">%1$d sumber</item>
     </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="other">%1$d pustaka</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="other">%1$d daripada %2$d dipilih</item>
+    </plurals>
     <plurals name="patch_selection_group_patch_count">
         <item quantity="other">%1$d tampalan</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="other">%1$d kad mengatasi ini</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="other">Muat turun %1$d bundle</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="other">%1$d perubahan</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="other">%1$d hari yang lalu</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="other">%1$d ciri</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="other">%1$d pembetulan</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="other">%1$d pengoptimuman</item>
     </plurals>
 </resources>

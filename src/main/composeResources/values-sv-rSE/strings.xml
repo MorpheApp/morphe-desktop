@@ -13,6 +13,7 @@
     <string name="expand">Expandera</string>
     <string name="cancel">Avbryt</string>
     <string name="close">Stäng</string>
+    <string name="trust">Lita på</string>
     <string name="delete">Radera</string>
     <string name="disabled_while_patching">Inaktiverad under patchning</string>
     <string name="drop_apk_here">Släpp APK-fil här</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Anslutningen bröts under nedladdningen, försök igen</string>
     <string name="error_network_loading_patches">Nätverksfel vid inläsning av tillägg</string>
     <string name="error_patch_file_not_found">Tilläggsfilen hittades inte: %1$s</string>
-    <string name="error_no_patches_files_supplied">Inga tilläggsfiler har angetts</string>
-    <string name="error_input_apk_not_found">Indata-APK-fil hittades inte</string>
     <string name="error_step_failed">%1$s misslyckades: %2$s</string>
     <string name="error_drop_valid_apk">Släpp en giltig .apk-, .apkm-, .xapk- eller .apks-fil</string>
     <string name="status_saving">Sparar …</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtrera appar …</string>
     <string name="version">Version</string>
     <string name="version_label_stable">Stabil</string>
-    <string name="version_label_dev">Utvecklingsversion</string>
+    <string name="version_label_prerelease">Förhandsversion</string>
     <string name="version_label_experimental">Experimentell</string>
-    <string name="version_label_latest_dev">Senaste utvecklingsversionen</string>
     <string name="version_label_latest_stable">Senaste stabila</string>
+    <string name="version_label_recommended">Rekommenderas</string>
+    <string name="version_label_supported">Stöds</string>
     <string name="app_info_arch_label">Arkitektur</string>
     <string name="app_info_min_sdk_label">Minsta SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Modifieringen har avbrutits</string>
     <string name="view_full_logs_button">Visa fullständiga loggar</string>
     <string name="error_patching_unknown">Modifieringen misslyckades av okänd anledning</string>
-    <string name="error_patching_general">Fel: %1$s</string>
     <string name="error_log_label">Fellogg</string>
     <string name="back">Tillbaka</string>
     <string name="open_folder">Öppna mapp</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Valfritt antal stopp, linjärt, radiellt eller koniskt</string>
     <string name="card_fill_mode_solid">En färg</string>
     <string name="card_fill_mode_solid_blurb">En heltäckande färg</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Tillägg</string>
-    <string name="quick_patch_screen_start_over_button">Starta om</string>
-    <string name="quick_patch_patch_another_button">Modifiera en annan</string>
-    <string name="quick_patch_select_apk">Välj APK-fil</string>
-    <string name="quick_patch_analyze_apk_failed">Det gick inte att analysera APK-filen</string>
-    <string name="quick_patch_extract_base_apk_failed">Det gick inte att extrahera bas-APK-filen från paketet</string>
-    <string name="quick_patch_unsupported_app_error">%1$s stöds inte i snabbpatchläge. Appar som stöds: %2$s. Använd normalläge för appar som inte stöds</string>
     <string name="adb_install_on_button">Installera på %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Läser in tillägg</string>
-    <string name="patching_step_preparing">Förbereder</string>
     <string name="patching_step_merging_split_apk">Slår samman delad APK-fil</string>
     <string name="patching_step_read_apk">Läser APK-fil</string>
     <string name="patching_step_applying_patches">Tillämpar tillägg</string>
-    <string name="patching_step_saving">Sparar</string>
     <string name="patching_step_writing_apk">Skriver modifierad APK-fil</string>
     <string name="patching_step_signing">Signerar modifierad APK-fil</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Filen kan vara skadad, ladda ned den igen från APKMirror</string>
     <string name="version_status_checksum_failed">Verifieringen av checksumman misslyckades</string>
     <string name="version_status_checksum_matches">Checksumman matchar APKMirror</string>
-    <string name="version_status_older_stable">Äldre stabil</string>
     <string name="version_status_newer_stable_available">Nyare stabil v%1$s är tillgänglig</string>
     <string name="version_status_newer_stable_available_fallback">En nyare stabil version är tillgänglig</string>
     <string name="version_status_experimental_detail">Stöds, men kanske inte fungerar som den ska</string>
-    <string name="version_status_older_experimental">Äldre experimentell</string>
-    <string name="version_status_newer_experimental_available">Nyare experimentell v%1$s är tillgänglig</string>
-    <string name="version_status_newer_experimental_available_fallback">Ett nyare experimentellt bygge är tillgängligt</string>
-    <string name="version_status_too_new">Versionen är för ny</string>
     <string name="version_status_unsupported_detail">Stöds inte officiellt, tillägg fungerar troligen inte</string>
-    <string name="version_status_too_old">Versionen är för gammal</string>
     <string name="version_status_unsupported">Versionen stöds inte</string>
     <string name="version_status_build_unsupported">Bygget stöds inte</string>
     <string name="version_status_build_unsupported_detail">Den här versionen stöds, men inte det här bygget av den. Skaffa ett bygge som tilläggen är avsedda för</string>
+    <string name="version_status_build_unsupported_with_code">Tilläggen kräver bygge %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Versionsmeddelande</string>
+    <string name="version_warning_build_unsupported_message">Aktuell: v%1$s (bygge %2$s)\nKrävt bygge: %3$s\n\nDet här är ett annat bygge av samma version. Tilläggen kräver ett specifikt bygge.</string>
     <string name="version_warning_experiment_title">Vill du experimentera? 🧪</string>
-    <string name="version_warning_older_stable_title">Äldre stabil version</string>
-    <string name="version_warning_older_stable_message">Aktuell: v%1$s\nSenaste stabila: v%2$s\n\nDen här versionen stöds, men en nyare stabil version är tillgänglig. Det kan hända att du saknar de senaste felkorrigeringarna.</string>
     <string name="version_warning_latest_experimental_message">Aktuell: v%1$s\n\nDen här versionen har tidigt experimentellt stöd\n\n🔧 Räkna med underligt appbeteende eller okända fel medan tilläggen finjusteras för den här appversionen.</string>
-    <string name="version_warning_older_experimental_title">Äldre experimentell version\nVill du experimentera? 🧪</string>
-    <string name="version_warning_older_experimental_message">Aktuell: v%1$s\nSenaste experimentella: v%2$s\n\nDet här är ett experimentellt bygge som stöds, men en nyare experimentell version är tillgänglig. Räkna med underligt appbeteende eller okända fel medan tilläggen finjusteras för den här appversionen.</string>
-    <string name="version_warning_too_new_message">Aktuell: v%1$s\nNyaste kända: v%2$s\n\nDen här versionen har tidigt experimentellt stöd\n\n🔧 Räkna med underligt appbeteende eller okända fel medan tilläggen finjusteras för den här appversionen.</string>
-    <string name="version_warning_too_old_message">Aktuell: v%1$s\nÄldsta stödda: v%2$s\n\nDet här är inte en version som stöds officiellt. Tillägg fungerar troligen inte.</string>
     <string name="version_warning_unsupported_message">Aktuell: v%1$s\n\nDet här är inte en version som stöds officiellt. Tillägg fungerar troligen inte.</string>
     <string name="version_warning_notice_message">Fortsätt med v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Äldre stabilt bygge - nyare stabil v%1$s finns tillgänglig</string>
-    <string name="quick_patch_warning_latest_experimental">Experimentellt bygge - stöds, men kanske inte fungerar som det ska</string>
-    <string name="quick_patch_warning_older_experimental">Äldre experimentellt bygge - nyare experimentell v%1$s finns tillgänglig</string>
-    <string name="quick_patch_warning_build_unsupported">Bygget stöds inte - den här versionen går att patcha, men inte det här bygget</string>
-    <string name="quick_patch_warning_too_new">Versionen är för ny - inte officiellt stödd, patchar kommer med största sannolikhet att misslyckas</string>
-    <string name="quick_patch_warning_too_old">Versionen är för gammal - inte officiellt stödd, patchar kommer med största sannolikhet att misslyckas</string>
-    <string name="quick_patch_warning_unsupported_between">Versionen stöds inte - patchar kommer med största sannolikhet att misslyckas</string>
-    <string name="quick_patch_read_apk_failed">Det gick inte att läsa APK-fil: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Förbereder tillägg …</string>
-    <string name="quick_patch_fetch_patches_failed">Det gick inte att hämta tillägg. Kontrollera internetanslutningen</string>
-    <string name="quick_patch_status_downloading_patches">Laddar ned tillägg %1$s …</string>
-    <string name="quick_patch_download_patches_failed">Det gick inte att ladda ned tillägg: %1$s</string>
-    <string name="quick_patch_status_patching">Modifierar …</string>
-    <string name="quick_patch_completed_adb_off">ADB är inaktiverad · Aktivera för att installera</string>
-    <string name="quick_patch_completed_adb_connect_device">Anslut en enhet via USB för att installera med ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Ett okänt fel inträffade</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analyserar APK-fil …</string>
-    <string name="quick_patch_patching_patches_count">%1$d/%2$d tillägg</string>
-    <string name="quick_patch_patching_slow_warning">Det här tar längre tid än vanligt. Vänta …</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(bygge %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Inga kompatibla tillägg för den här appen</string>
-    <string name="quick_patch_ready_no_matching_patches">Inga tillägg matchar \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Modifiera med standardvärden</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Appar som stöds</string>
-    <string name="quick_patch_supported_apps_subtitle">Släpp den exakta APK-versionen för en app som stöds här</string>
-    <string name="quick_patch_supported_apps_loading">Läser in appar som stöds …</string>
-    <string name="quick_patch_supported_apps_load_error">Det gick inte att läsa in appar som stöds</string>
-    <string name="quick_patch_supported_apps_change_source">Byt källa</string>
-    <string name="quick_patch_supported_apps_no_matches">Inga matchande appar</string>
-    <string name="quick_patch_supported_apps_version_any">Valfri version</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Välj APK-fil</string>
     <string name="home_could_not_resolve_patch_files">Det gick inte att åtgärda tilläggsfiler</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Ta bort APK</string>
     <string name="home_apk_info_limited_info_warning">Det gick inte att läsa den här APK-filens manifest fullständigt (vanligt för delade paket). Uppgifterna nedan är ungefärliga, patchning bör fortfarande fungera</string>
     <string name="home_apk_info_unsupported_app_warning">Inga kompatibla patchar hittades för den här appen. Du kan fortsätta, men patchningen kanske inte har någon effekt</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Inga kompatibla tillägg hittades för den här appen</string>
     <string name="home_apk_info_build_label">Bygge</string>
     <string name="home_apk_info_size_label">Storlek</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Från</string>
     <string name="home_stage_change_apk">Byt APK</string>
     <string name="home_stage_continue">Fortsätt</string>
+    <string name="home_stage_patch">Modifiera</string>
     <string name="home_stage_analyzing_title">Analyserar</string>
     <string name="home_stage_reading_metadata">Läser appmetadata…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Avinstallera %1$s?</string>
     <string name="home_dialog_uninstall_message">Detta tar bort %1$s från den anslutna enheten. Den patchade APK-filen på disken och din historik behålls om du inte väljer annat nedan.</string>
     <string name="home_dialog_uninstall_also_forget">Ta även bort från Dina appar</string>
-    <string name="home_dialog_missing_apk_title">Original-APK hittades inte</string>
-    <string name="home_dialog_missing_apk_message">Indata-APK-filen för %1$s finns inte längre på:\n%2$s\n\nVälj APK-filen igen för att ompatcha med dina sparade inställningar</string>
-    <string name="home_dialog_select_apk">Välj APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Välj APK för ompatchning</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Hantera källor</string>
     <string name="home_header_multi_source_hint">Patchar från varje aktiverad källa kombineras. Hantera via knappen för källor ovan</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Dina appar</string>
     <string name="home_banner_view">Visa</string>
     <string name="home_your_apps_install_ready">Redo att installera</string>
-    <string name="home_your_apps_newer_patch_hint">Nyare patch kan uppgradera appen, klicka på Uppdatera för att kontrollera</string>
-    <string name="home_your_apps_device_version_ready">Patchad v%1$s klar, enheten har v%2$s (ingen ompatchning behövs)</string>
-    <string name="home_your_apps_install_ready_hint">Patchad v%1$s redo att installera (ingen ompatchning behövs)</string>
-    <string name="home_action_install">Installera</string>
     <string name="home_action_install_to_device">Installera på enhet</string>
     <string name="home_action_installing">Installerar …</string>
     <string name="home_action_preparing">Förbereder…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s redo · enheten har v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s klar, ingen ompatchning behövs</string>
-    <string name="home_advice_unsupported">v%1$s stöds inte längre. Uppdatera till v%2$s</string>
+    <string name="home_detail_source_disabled">Inaktiverad</string>
+    <string name="home_detail_source_removed">Borttagen</string>
+    <string name="home_detail_source_disabled_sub">Källan är inaktiverad i Källor. Aktivera den för att applicera tilläggen igen</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Originalkällan är inaktiverad. Välj en alternativ källa eller aktivera den igen i Källor</string>
+    <string name="home_detail_no_compatible_source">Ingen kompatibel källa aktiverad</string>
+    <string name="home_detail_choose_source">Välj käll för tillägg</string>
     <string name="home_advice_unsupported_by_patches">v%1$s stöds inte längre av de senaste patcharna</string>
     <string name="home_date_today">idag</string>
     <string name="home_date_yesterday">igår</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Ogrupperad</string>
     <string name="patch_selection_group_selected_count">%1$d valda</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Starta om</string>
+    <string name="patching_patches_count">%1$d/%2$d tillägg</string>
+    <string name="patching_slow_warning">Det här tar längre tid än vanligt. Vänta …</string>
     <string name="patching_status_ready">Redo att patcha</string>
     <string name="patching_status_preparing">Förbereder patchning</string>
     <string name="patching_status_in_progress">Tillämpar tillägg</string>
     <string name="patching_completed_loading_result">Patchning klar, läser in resultat…</string>
-    <string name="patching_cancelled_loading_result">Patchning avbruten, läser in resultat…</string>
+    <string name="patching_cancelled_loading_result">Patchning avbruten, laddar resultat…</string>
     <string name="patching_failed_loading_result">Patchning misslyckades, läser in resultat…</string>
     <string name="patching_log_viewer_failed_to_read">Det gick inte att läsa loggfilen: %1$s</string>
     <string name="patching_log_viewer_title">Loggfil</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Strippade</string>
     <string name="patching_error_failed_patches">Misslyckade patchar: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB är inaktiverad · Aktivera för att installera</string>
+    <string name="result_adb_connect_device_hint">Anslut en enhet via USB för att installera med ADB</string>
     <string name="result_screen_patch_another_button">Patcha en annan</string>
     <string name="result_screen_install_on_device_label">Installera på %1$s</string>
     <string name="result_screen_links_routed_label">Länkar dirigerade till patchad app</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Inläsningen misslyckades</string>
     <string name="source_error_github_pat_required">En GitHub-PAT krävs för att ladda ner källkoden från pull requesten.</string>
     <string name="source_error_pr_no_artifact">Inga artefakter hittades för pull requesten.</string>
-    <string name="source_sheet_manage_description">Hantera patchkällor</string>
-    <string name="source_sheet_local_label">Lokal</string>
+    <string name="source_error_patcher_incompatible">Den här källan är avsedd för modifieringsverktyg %1$s, men i Morphe %2$s ingår modifieringsverktyg %3$s. Uppdatera Morphe om du vill använda den</string>
+    <string name="version_label_local">Lokal</string>
     <string name="source_sheet_remote_label">Fjärrkälla</string>
     <string name="add_source">Lägg till källa</string>
     <string name="source_sheet_title">Tilläggskällor</string>
     <string name="source_sheet_reload_description">Ladda om patchar</string>
-    <string name="source_sheet_quick_mode_hint">Välj vilken källa Snabbpatch använder. Flera källor är tillgängliga i expertläge</string>
     <string name="source_sheet_multi_mode_hint">Aktivera/inaktivera valfri kombination. Patchar från alla aktiverade källor kombineras</string>
     <string name="source_sheet_done_button">Klart</string>
     <string name="source_sheet_type_preinstalled">Förinstallerad</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Redigera</string>
     <string name="source_sheet_move_up_description">Flytta uppåt</string>
     <string name="source_sheet_move_down_description">Flytta nedåt</string>
-    <string name="source_sheet_channel_older_stable">Äldre stabil</string>
-    <string name="source_sheet_channel_older_dev">Äldre Dev</string>
     <string name="source_sheet_ignored_mpp_title">Ignorerade .mpp-mönster</string>
-    <string name="source_sheet_ignored_mpp_hint">Påverkar bara mappkällor, som automatiskt läser in den senaste .mpp-filen i en mapp. När det senaste bygget väljs hoppas filer vars namn matchar ett mönster här över. Ett vanligt ord matchar alla filer som innehåller det (t.ex. debug). Använd * för glob-mönster (t.ex. *-debug.mpp). *-sources.mpp och *-javadoc.mpp ignoreras alltid</string>
+    <string name="source_sheet_ignored_mpp_hint">Påverkar endast mappkällor, vilka automatiskt laddar den nyaste .mpp-filen i en mapp. När den nyaste versionen väljs, ignoreras filer vars namn matchar ett mönster här. Ett vanligt ord matchar alla filer som innehåller det (t.ex. debug). Använd * för globs (t.ex. *-debug.mpp). *-sources.mpp och *-javadoc.mpp ignoreras alltid</string>
     <string name="source_sheet_ignored_mpp_placeholder">t.ex. debug eller *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Lägg till mönster</string>
     <string name="source_sheet_remove_pattern_description">Ta bort mönster</string>
+    <string name="sources_management_signed_by">Signerad av</string>
+    <string name="sources_management_signing_key_changed_badge">Nyckeln har ändrats</string>
+    <string name="sources_management_signing_key_changed_hint">Signeringsnyckeln har ändrats. Klicka för att granska den</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' uppdaterades inte eftersom den senaste versionen inte är signerad med den nyckel som användes tidigare</string>
+    <string name="sources_signing_key_new">Ny nyckel</string>
+    <string name="sources_signing_key_trust_message">Den senaste versionen är signerad med en annan nyckel. Antingen har utvecklaren bytt ut sin nyckel, eller så har någon annan publicerat den här versionen. Lita bara på den om utvecklaren har meddelat en ny nyckel</string>
+    <string name="sources_signing_key_trust_message_unsigned">Den senaste versionen är inte signerad. Antingen har utvecklaren slutat signera versioner, eller så har någon annan publicerat den här versionen. Lita bara på den om utvecklaren har meddelat det</string>
+    <string name="sources_signing_key_trust_title">Lita på den nya nyckeln?</string>
+    <string name="sources_signing_key_trusted">Betrodd nyckel</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Lokal fil</string>
     <string name="patch_source_dialog_name_label">Namn</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Accepterar GitHub-, GitLab- eller morphe.software/add-source-länk</string>
     <string name="patch_source_dialog_pre_release_title">Förhandsversioner av tillägg</string>
     <string name="patch_source_dialog_pre_release_hint">Får tidig åtkomst till nya experimentella tilläggsversioner</string>
-    <string name="patch_source_dialog_experimental_title">Experimentella appversioner</string>
-    <string name="patch_source_dialog_experimental_hint">Prioriterar experimentella appversioner om de finns tillgängliga</string>
     <string name="patch_source_dialog_error_name_required">Namn krävs</string>
     <string name="patch_source_dialog_error_invalid_url">Ange en giltig GitHub- eller GitLab-URL</string>
     <string name="patch_source_dialog_error_invalid_file">Välj en giltig .mpp-fil</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Öppna loggar</string>
     <string name="settings_dialog_reset_button">Återställ</string>
     <string name="settings_theme_system">System</string>
-    <string name="settings_signing_error_not_found">Konfigurerad keystore hittades inte: %1$s. Återställ filen, välj en annan i Inställningar, eller rensa inställningen för att använda standarden för Morphe.</string>
     <string name="settings_search_languages_placeholder">Sök språk</string>
     <string name="settings_dialog_resolves_to_message">Motsvarar: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore hittades inte: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Språk</string>
     <string name="settings_language_current_title">Aktuellt språk</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Appspråk</string>
     <string name="settings_language_search_no_results">Inga resultat hittades</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Temaläge</string>
     <string name="settings_theme_light">Ljust</string>
     <string name="settings_theme_dark">Mörkt</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Färgstil</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monokrom</string>
     <string name="settings_toggle_sharp_corners_label">Skarpa hörn</string>
     <string name="settings_toggle_sharp_corners_desc">Gör kort, dialogrutor och knappar fyrkantiga</string>
     <string name="settings_section_accent_color">Accentfärg</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Appkort</string>
     <string name="settings_app_cards_color_all">Färg för alla kort</string>
     <string name="settings_app_cards_color_all_desc">Kort som du har anpassat individuellt behåller sin egen färg</string>
-    <string name="settings_section_patch_list">Tilläggslista</string>
-    <string name="settings_toggle_patch_categories_label">Patchkategorier</string>
-    <string name="settings_toggle_patch_categories_desc">Gruppera patchar i utbyggbara kategorier</string>
     <string name="settings_section_background_animation">Bakgrundsanimation</string>
     <string name="settings_background_circles">Cirklar</string>
     <string name="settings_background_rings">Ringar</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Översätt</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Ändringslogg inte tillgänglig</string>
+    <string name="changelog_badge_installed">Installerad</string>
+    <string name="changelog_badge_latest">Senaste</string>
+    <string name="changelog_badge_prerelease">Förhandsversion</string>
+    <string name="changelog_date_today">Idag</string>
+    <string name="changelog_date_yesterday">Igår</string>
     <string name="changelog_dialog_title">Visa ändringslogg</string>
-    <string name="changelog_show_older_button">Visa äldre versioner</string>
+    <string name="changelog_not_available">Ändringslogg inte tillgänglig</string>
+    <string name="changelog_section_app_support">Appstöd</string>
+    <string name="changelog_section_fixes">Felkorrigeringar</string>
+    <string name="changelog_section_improvements">Förbättringar</string>
+    <string name="changelog_section_new">Nytt</string>
+    <string name="changelog_section_other">Ändringar</string>
+    <string name="changelog_section_performance">Prestanda</string>
+    <string name="changelog_show_all">Visa alla (%1$d)</string>
+    <string name="changelog_show_less">Visa färre</string>
     <string name="changelog_view_on_github_button">Visa på GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Källor</string>
+    <string name="nav_apps">Appar</string>
 </resources>

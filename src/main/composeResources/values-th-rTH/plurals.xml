@@ -12,18 +12,6 @@
     <plurals name="count_sources">
         <item quantity="other">%1$d แหล่งที่มา</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="other">จะนำแพตช์ %1$d รายการไปใช้</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="other">ไม่รวม %1$d รายการ</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="other">เปิดใช้ %1$d รายการ</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="other">ปิดใช้ %1$d รายการ</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="other">ไลบรารี %1$d รายการ</item>
     </plurals>
@@ -41,5 +29,20 @@
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="other">%1$d คอร์</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="other">การเปลี่ยนแปลง %1$d รายการ</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="other">%1$d วันที่แล้ว</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="other">%1$d ฟีเจอร์</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="other">การแก้ไข %1$d รายการ</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="other">%1$d การปรับปรุงประสิทธิภาพ</item>
     </plurals>
 </resources>

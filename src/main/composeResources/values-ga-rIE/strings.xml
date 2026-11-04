@@ -13,6 +13,7 @@
     <string name="expand">Leathnaigh</string>
     <string name="cancel">Cealaigh</string>
     <string name="close">Dún</string>
+    <string name="trust">Muinín</string>
     <string name="delete">Scrios</string>
     <string name="disabled_while_patching">Díchumasaithe le linn paisteála</string>
     <string name="drop_apk_here">Scaoil an APK anseo</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Cailleadh an nasc le linn an íoslódála; déan iarracht arís.</string>
     <string name="error_network_loading_patches">Earráid líonra agus paistí á luchtú</string>
     <string name="error_patch_file_not_found">Níor aimsíodh an comhad paiste: %1$s</string>
-    <string name="error_no_patches_files_supplied">Níor soláthraíodh aon chomhaid paiste.</string>
-    <string name="error_input_apk_not_found">Níor aimsíodh an APK ionchuir</string>
     <string name="error_step_failed">Theip ar %1$s: %2$s</string>
     <string name="error_drop_valid_apk">Cuir comhad bailí .apk, .apkm, .xapk, nó .apks ann, le do thoil.</string>
     <string name="status_saving">Ag sábháil…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Scag aipeanna…</string>
     <string name="version">Leagan</string>
     <string name="version_label_stable">Cobhsaí</string>
-    <string name="version_label_dev">Forbróir</string>
+    <string name="version_label_prerelease">Réamheisiúint</string>
     <string name="version_label_experimental">Turgnamhach</string>
-    <string name="version_label_latest_dev">An Forbairt is Déanaí</string>
     <string name="version_label_latest_stable">An leagan cobhsaí is déanaí</string>
+    <string name="version_label_recommended">Molta</string>
+    <string name="version_label_supported">Tacaithe</string>
     <string name="app_info_arch_label">Áirse</string>
     <string name="app_info_min_sdk_label">Íos-SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Cealú ar an bpróiseas paisteála</string>
     <string name="view_full_logs_button">Féach na logaí iomlána</string>
     <string name="error_patching_unknown">Theip ar an bpróiseas paisteála ar chúis anaithnid.</string>
-    <string name="error_patching_general">Earráid: %1$s</string>
     <string name="error_log_label">Loga earráidí</string>
     <string name="back">Ar ais</string>
     <string name="open_folder">Oscail fillteán</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Aon líon stadanna — líneach, gathach nó cónúil</string>
     <string name="card_fill_mode_solid">Soladach</string>
     <string name="card_fill_mode_solid_blurb">Dath cothrom amháin</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Paistí</string>
-    <string name="quick_patch_screen_start_over_button">Tosaigh arís</string>
-    <string name="quick_patch_patch_another_button">Cuir paiste ar cheann eile</string>
-    <string name="quick_patch_select_apk">Roghnaigh APK</string>
-    <string name="quick_patch_analyze_apk_failed">Theip ar an anailís ar an APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Theip ar an mbun-APK a bhaint as an mbeart</string>
-    <string name="quick_patch_unsupported_app_error">Ní thacaítear le %1$s i mód Mearphaisteála. Aipeanna tacaithe: %2$s. Úsáid mód Gnáth le haghaidh aipeanna neamhthacaithe</string>
     <string name="adb_install_on_button">Suiteáil ar %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Paistí á lódáil</string>
-    <string name="patching_step_preparing">Ag ullmhú</string>
     <string name="patching_step_merging_split_apk">APK scoilte á chumasc</string>
     <string name="patching_step_read_apk">Léigh comhad APK</string>
     <string name="patching_step_applying_patches">Paistí á gcur i bhfeidhm</string>
-    <string name="patching_step_saving">Ag sábháil</string>
     <string name="patching_step_writing_apk">Ag scríobh comhad APK paisteáilte</string>
     <string name="patching_step_signing">Ag síniú comhad APK paisteáilte</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">D'fhéadfadh an comhad a bheith truaillithe, íoslódáil arís ó APKMirror é</string>
     <string name="version_status_checksum_failed">Theip ar fhíorú an tsuim sheiceála</string>
     <string name="version_status_checksum_matches">Meaitseálann an suim sheiceála le APKMirror</string>
-    <string name="version_status_older_stable">Stábla níos sine</string>
     <string name="version_status_newer_stable_available">Tá leagan cobhsaí níos nuaí, v%1$s, ar fáil.</string>
     <string name="version_status_newer_stable_available_fallback">Tá leagan cobhsaí níos nuaí ar fáil.</string>
     <string name="version_status_experimental_detail">Tacaithe, ach b'fhéidir nach n-oibreoidh sé i gceart</string>
-    <string name="version_status_older_experimental">Turgnamhach níos sine</string>
-    <string name="version_status_newer_experimental_available">Tá leagan turgnamhach níos nuaí de %1$s ar fáil</string>
-    <string name="version_status_newer_experimental_available_fallback">Tá leagan turgnamhach níos nuaí ar fáil.</string>
-    <string name="version_status_too_new">Leagan ró-nua</string>
     <string name="version_status_unsupported_detail">Ní fhaightear tacaíocht oifigiúil dó; is dócha go dteipfidh ar phaistí.</string>
-    <string name="version_status_too_old">Leagan ró-shean</string>
     <string name="version_status_unsupported">Leagan gan tacaíocht</string>
     <string name="version_status_build_unsupported">Ní thacaítear leis an tógáil</string>
     <string name="version_status_build_unsupported_detail">Tacaítear leis an leagan seo, ach ní leis an leagan tógála seo de. Faigh leagan tógála a bhfuil na paistí dírithe air.</string>
+    <string name="version_status_build_unsupported_with_code">Éilíonn paistí tógáil %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Fógra leagain</string>
+    <string name="version_warning_build_unsupported_message">Reatha: v%1$s (leagan tógála %2$s)\nLeagan tógála riachtanach: %3$s\n\nIs leagan tógála difriúil den leagan céanna é seo. Teastaíonn leagan tógála ar leith do na paistí.</string>
     <string name="version_warning_experiment_title">Ar mhaith leat turgnamh a dhéanamh? 🧪</string>
-    <string name="version_warning_older_stable_title">Leagan cobhsaí níos sine</string>
-    <string name="version_warning_older_stable_message">Reatha: v%1$s\nCobhsaí is déanaí: v%2$s\n\nTacaítear leis an leagan seo, ach tá leagan cobhsaí níos nua ar fáil. B'fhéidir go bhfuil deisiúcháin le déanaí in easnamh ort.</string>
     <string name="version_warning_latest_experimental_message">Reatha: v%1$s\n\nTá tacaíocht thurgnamhach luath ag an leagan seo\n\n🔧 Bí ag súil le hiompar aisteach aipe nó fabhtanna gan aithint de réir mar a bheifear ag snasta na paistí don leagan aipe seo.</string>
-    <string name="version_warning_older_experimental_title">Leagan turgnamhach níos sine\nAn bhfuil tú ag iarraidh turgnamh a dhéanamh? 🧪</string>
-    <string name="version_warning_older_experimental_message">Reatha: v%1$s\nTurgnamhach is déanaí: v%2$s\n\nIs tógáil thurgnamhach tacaithe é seo, ach tá leagan turgnamhach níos nua ar fáil. Bí ag súil le hiompar aisteach aipe nó fabhtanna gan aithint de réir mar a bheifear ag snasta na paistí don leagan aipe seo.</string>
-    <string name="version_warning_too_new_message">Reatha: v%1$s\nIs déanaí aitheanta: v%2$s\n\nTá tacaíocht thurgnamhach luath ag an leagan seo\n\n🔧 Bí ag súil le hiompar aisteach aipe nó fabhtanna gan aithint de réir mar a bheifear ag snasta na paistí don leagan aipe seo.</string>
-    <string name="version_warning_too_old_message">Reatha: v%1$s\nTacaithe is sine: v%2$s\n\nNí leagan tacaithe go hoifigiúil é seo. Is dócha go dteipfidh na paistí.</string>
     <string name="version_warning_unsupported_message">Reatha: v%1$s\n\nNí leagan tacaithe go hoifigiúil é seo. Is dócha go dteipfidh na paistí.</string>
     <string name="version_warning_notice_message">Lean ar aghaidh le v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Leagan cobhsaí níos sine – leagan cobhsaí níos nuaí v%1$s ar fáil</string>
-    <string name="quick_patch_warning_latest_experimental">Tógáil thurgnamhach – le tacaíocht, ach b’fhéidir nach n-oibreoidh sí i gceart.</string>
-    <string name="quick_patch_warning_older_experimental">Leagan turgnamhach níos sine – tá leagan turgnamhach níos nuaí, v%1$s, ar fáil</string>
-    <string name="quick_patch_warning_build_unsupported">Ní thacaítear leis an leagan tógála seo – is féidir an leagan seo a phaisteáil, ach ní féidir an leagan tógála sonrach seo a phaisteáil.</string>
-    <string name="quick_patch_warning_too_new">Tá an leagan ró-nua – ní fhaigheann sé tacaíocht oifigiúil, agus is dócha go dteipfidh ar na paistí.</string>
-    <string name="quick_patch_warning_too_old">Leagan ró-shean – ní fhaigheann sé tacaíocht oifigiúil; is dócha go dteipfidh ar phaistí.</string>
-    <string name="quick_patch_warning_unsupported_between">Leagan gan tacaíocht – is dócha go dteipfidh ar phaistí.</string>
-    <string name="quick_patch_read_apk_failed">Teip ar léamh an APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Ag ullmhú paistí…</string>
-    <string name="quick_patch_fetch_patches_failed">Teip ar fháil na bpatchanna. Seiceáil do nasc idirlín.</string>
-    <string name="quick_patch_status_downloading_patches">Ag íoslódáil paistí %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Teip ar íoslódáil na paistí: %1$s</string>
-    <string name="quick_patch_status_patching">Ag cur paiste i bhfeidhm…</string>
-    <string name="quick_patch_completed_adb_off">ADB múchta · Cumasaigh chun a shuiteáil</string>
-    <string name="quick_patch_completed_adb_connect_device">Ceangail gléas trí USB chun suiteáil le ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Tharla earráid anaithnid</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Ag anailísiú APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d paistí</string>
-    <string name="quick_patch_patching_slow_warning">Tá sé seo ag tógáil níos faide ná mar is gnách. Fan le do thoil…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(tóg %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Níl aon phaistí comhoiriúnacha ann don aip seo</string>
-    <string name="quick_patch_ready_no_matching_patches">Níl aon phaiste ann a mheaitseálann \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Paiste le réamhshocruithe</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Aipeanna tacaithe</string>
-    <string name="quick_patch_supported_apps_subtitle">Cuir an leagan cruinn APK d'aip a dtacaítear léi anseo.</string>
-    <string name="quick_patch_supported_apps_loading">Ag luchtú aipeanna tacaithe…</string>
-    <string name="quick_patch_supported_apps_load_error">Níorbh fhéidir aipeanna tacaithe a luchtú</string>
-    <string name="quick_patch_supported_apps_change_source">Athraigh foinse</string>
-    <string name="quick_patch_supported_apps_no_matches">Níl aon aipeanna ag teacht leis</string>
-    <string name="quick_patch_supported_apps_version_any">Aon leagan</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Roghnaigh comhad APK</string>
     <string name="home_could_not_resolve_patch_files">Níorbh fhéidir comhaid phaiste a réiteach</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Bain APK</string>
     <string name="home_apk_info_limited_info_warning">Níorbh fhéidir comhad 'manifest' an APK seo a léamh go hiomlán (rud coitianta i gcás 'split bundles'). Is meastacháin iad na sonraí thíos, ach ba cheart go n-oibreodh an paisteáil fós.</string>
     <string name="home_apk_info_unsupported_app_warning">Níor aimsíodh aon phaistí comhoiriúnacha don aip seo. Is féidir leat leanúint ar aghaidh fós, ach b’fhéidir nach mbeidh aon éifeacht ag an bpaistiú.</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Níor aimsíodh paistí comhoiriúnacha don aip seo</string>
     <string name="home_apk_info_build_label">Tógáil</string>
     <string name="home_apk_info_size_label">Méid</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Ó</string>
     <string name="home_stage_change_apk">Athraigh APK</string>
     <string name="home_stage_continue">Lean ar aghaidh</string>
+    <string name="home_stage_patch">Paiste</string>
     <string name="home_stage_analyzing_title">Ag anailísiú</string>
     <string name="home_stage_reading_metadata">Ag léamh meiteashonraí an aip…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Díshuiteáil %1$s?</string>
     <string name="home_dialog_uninstall_message">Baineann sé seo %1$s den ghléas ceangailte. Coinnítear an APK paistithe ar diosca agus do stair mura roghnaíonn tú a mhalairt thíos</string>
     <string name="home_dialog_uninstall_also_forget">Bain ó do chuid aipeanna freisin</string>
-    <string name="home_dialog_missing_apk_title">Níor aimsíodh an APK bunaidh</string>
-    <string name="home_dialog_missing_apk_message">Níl an APK ionchuir do %1$s le fáil a thuilleadh ag:\n%2$s\n\Roghnaigh an APK arís chun é a athphatcháil leis na socruithe a shábháil tú.</string>
-    <string name="home_dialog_select_apk">Roghnaigh APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Roghnaigh APK le hathpháitseáil</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Bainistigh foinsí</string>
     <string name="home_header_multi_source_hint">Déantar paistí ó gach foinse atá cumasaithe a chónascadh. Is féidir iad a bhainistiú tríd an gcnaipe foinsí thuas.</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Do chuid aipeanna</string>
     <string name="home_banner_view">Amharc</string>
     <string name="home_your_apps_install_ready">Réidh le suiteáil</string>
-    <string name="home_your_apps_newer_patch_hint">D’fhéadfadh paiste níos nuaí an aip a nuashonrú; cliceáil ar ‘Nuashonraigh’ chun seiceáil a dhéanamh.</string>
-    <string name="home_your_apps_device_version_ready">Leagan paisteáilte v%1$s réidh, gléas ar v%2$s (ní gá athphaisteáil)</string>
-    <string name="home_your_apps_install_ready_hint">Paisteáilte leagan %1$s réidh le suiteáil (níl gá le hathphaisteáil)</string>
-    <string name="home_action_install">Suiteáil</string>
     <string name="home_action_install_to_device">Suiteáil ar an bhfeiste</string>
     <string name="home_action_installing">Á shuiteáil…</string>
     <string name="home_action_preparing">Ag ullmhú…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s réidh · gléas ar v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s réidh, níl gá le hathphaitseáil</string>
-    <string name="home_advice_unsupported">ní thacaítear le v%1$s a thuilleadh. Nuashonraigh go v%2$s le do thoil</string>
+    <string name="home_detail_source_disabled">Díchumasaithe</string>
+    <string name="home_detail_source_removed">Bainte</string>
+    <string name="home_detail_source_disabled_sub">Tá Foinse díchumasaithe i bhFoinsí. Cumasaigh é le haghaidh athphaisteála</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Tá an fhoinse bhunaidh díchumasaithe. Roghnaigh foinse eile nó athchumasaigh í faoi Fhoinsí</string>
+    <string name="home_detail_no_compatible_source">Níl aon fhoinse chomhoiriúnach cumasaithe</string>
+    <string name="home_detail_choose_source">Roghnaigh foinse an phaiste</string>
     <string name="home_advice_unsupported_by_patches">ní fhaigheann v%1$s tacaíocht a thuilleadh ó na paistí is déanaí</string>
     <string name="home_date_today">inniu</string>
     <string name="home_date_yesterday">inné</string>
@@ -427,6 +371,9 @@
     <string name="patch_selection_group_ungrouped">Gan a bheith grúpáilte</string>
     <string name="patch_selection_group_selected_count">%1$d roghnaithe</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Tosaigh arís</string>
+    <string name="patching_patches_count">%1$d / %2$d paistí</string>
+    <string name="patching_slow_warning">Tá sé seo ag tógáil níos faide ná mar is gnách. Fan le do thoil…</string>
     <string name="patching_status_ready">Réidh le paisteáil</string>
     <string name="patching_status_preparing">Ag ullmhú chun paisteáil</string>
     <string name="patching_status_in_progress">Paistí á gcur i bhfeidhm</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Stríoptha</string>
     <string name="patching_error_failed_patches">Paistí nár éirigh leo: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB múchta · Cumasaigh chun a shuiteáil</string>
+    <string name="result_adb_connect_device_hint">Ceangail gléas trí USB chun suiteáil le ADB</string>
     <string name="result_screen_patch_another_button">Cuir paiste ar cheann eile</string>
     <string name="result_screen_install_on_device_label">Suiteáil ar %1$s</string>
     <string name="result_screen_links_routed_label">Naisc atá curtha ar aghaidh chuig an aip nuashonraithe</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Teip ar luchtú</string>
     <string name="source_error_github_pat_required">Teastaíonn PAT GitHub chun foinsí an iarratais tarraingthe a íoslódáil.</string>
     <string name="source_error_pr_no_artifact">Níor aimsíodh aon déantán don iarratas tarraingthe.</string>
-    <string name="source_sheet_manage_description">Bainistigh foinsí paiste</string>
-    <string name="source_sheet_local_label">Áitiúil</string>
+    <string name="source_error_patcher_incompatible">Tá an foinse seo tógtha don phaisteoir %1$s, ach tá an paisteoir %3$s san áireamh i Morphe %2$s. Nuashonraigh Morphe chun é a úsáid.</string>
+    <string name="version_label_local">Áitiúil</string>
     <string name="source_sheet_remote_label">Cianda</string>
     <string name="add_source">Cuir foinse leis</string>
     <string name="source_sheet_title">Foinsí paiste</string>
     <string name="source_sheet_reload_description">Athluchtaigh paistí</string>
-    <string name="source_sheet_quick_mode_hint">Roghnaigh an fhoinse a úsáideann Quick Patch. Tá an rogha ilfhoinse ar fáil sa mhód saineolaí.</string>
     <string name="source_sheet_multi_mode_hint">Cumasaigh/Díchumasaigh aon chomhcheangal. Déantar aontú ar phaistí ó gach foinse atá cumasaithe.</string>
     <string name="source_sheet_done_button">Déanta</string>
     <string name="source_sheet_type_preinstalled">Réamhshuiteáilte</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Cuir in eagar</string>
     <string name="source_sheet_move_up_description">Bog suas</string>
     <string name="source_sheet_move_down_description">Bog síos</string>
-    <string name="source_sheet_channel_older_stable">Stábla níos sine</string>
-    <string name="source_sheet_channel_older_dev">Forbróir Níos Sine</string>
     <string name="source_sheet_ignored_mpp_title">Patrúin .mpp neamhaird</string>
-    <string name="source_sheet_ignored_mpp_hint">Ní bhaineann sé seo ach le foinsí fillteáin a luchtann an comhad .mpp is déanaí i bhfillteán go huathoibríoch. Agus an leagan tógála is déanaí sin á roghnú, déantar neamhaird de chomhaid a bhfuil a n-ainm ag teacht le patrún anseo. Meaitseálann gnáthfhocal aon chomhad ina bhfuil an focal sin (m.sh. debug). Bain úsáid as * le haghaidh patrún (m.sh. *-debug.mpp). Déantar neamhaird i gcónaí de *-sources.mpp agus *-javadoc.mpp.</string>
+    <string name="source_sheet_ignored_mpp_hint">Ní bhaineann sé seo ach le foinsí fillteáin a luchtann an comhad .mpp is déanaí i bhfillteán go huathoibríoch. Agus an leagan tógála is déanaí sin á roghnú, déantar neamhaird de chomhaid a bhfuil a n-ainm ag teacht le patrún anseo. Meaitseálann gnáthfhocal aon chomhad ina bhfuil an focal sin (m.sh. debug). Bain úsáid as * le haghaidh patrún (m.sh. *-debug.mpp). Déantar neamhaird i gcónaí de *-sources.mpp agus *-javadoc.mpp</string>
     <string name="source_sheet_ignored_mpp_placeholder">m.sh. debug nó *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Cuir patrún leis</string>
     <string name="source_sheet_remove_pattern_description">Bain patrún</string>
+    <string name="sources_management_signed_by">Sínithe ag</string>
+    <string name="sources_management_signing_key_changed_badge">Athraithe an eochair</string>
+    <string name="sources_management_signing_key_changed_hint">Athraíodh an eochair shíniúcháin. Cliceáil chun í a athbhreithniú</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">Níor nuashonraíodh '%1$s' toisc nach bhfuil an eisiúint is déanaí sínithe leis an eochair a d'úsáid sé roimhe seo</string>
+    <string name="sources_signing_key_new">Eochair nua</string>
+    <string name="sources_signing_key_trust_message">Tá an eisiúint is déanaí sínithe le heochair dhifriúil. Is dócha gur chuir an forbróir eochair nua in áit na seaneochrach, nó gur fhoilsigh duine éigin eile an eisiúint seo. Ná cuir muinín inti ach amháin má d’fhógair an forbróir eochair nua.</string>
+    <string name="sources_signing_key_trust_message_unsigned">Níl an eisiúint is déanaí sínithe. Is dócha gur stop an forbróir ag síniú eisiúintí, nó gur fhoilsigh duine éigin eile an eisiúint seo. Ná cuir muinín inti ach amháin má d’fhógair an forbróir í.</string>
+    <string name="sources_signing_key_trust_title">Muinín a chur sa eochair nua?</string>
+    <string name="sources_signing_key_trusted">Eochair iontaofa</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Comhad áitiúil</string>
     <string name="patch_source_dialog_name_label">Ainm</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Glacann sé le nasc chuig GitHub, GitLab nó morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Paistí réamheisiúna</string>
     <string name="patch_source_dialog_pre_release_hint">Faigheann rochtain luath ar leaganacha nua turgnamhacha de phaistí</string>
-    <string name="patch_source_dialog_experimental_title">Leaganacha turgnamhacha aipeanna</string>
-    <string name="patch_source_dialog_experimental_hint">Tugann sé tosaíocht do leaganacha turgnamhacha aipeanna má tá siad ar fáil</string>
     <string name="patch_source_dialog_error_name_required">Tá ainm ag teastáil</string>
     <string name="patch_source_dialog_error_invalid_url">Cuir isteach URL bailí GitHub nó GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Roghnaigh comhad .mpp bailí</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Oscail logaí</string>
     <string name="settings_dialog_reset_button">Athshocraigh</string>
     <string name="settings_theme_system">Córas</string>
-    <string name="settings_signing_error_not_found">Níor aimsíodh an stóras eochracha cumraithe: %1$s. Athchóirigh an comhad, roghnaigh ceann eile sna Socruithe, nó glan an socrú chun réamhshocrú Morphe a úsáid.</string>
     <string name="settings_search_languages_placeholder">Cuardaigh teangacha</string>
     <string name="settings_dialog_resolves_to_message">Réitíonn go: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Ní bhfuarthas stór eochracha: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Teanga</string>
     <string name="settings_language_current_title">Teanga reatha</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Teanga an aip</string>
     <string name="settings_language_search_no_results">Níor aimsíodh aon torthaí</string>
     <string name="settings_section_theme">Téama</string>
+    <string name="settings_appearance_theme_mode">Mód téama</string>
     <string name="settings_theme_light">Solas</string>
     <string name="settings_theme_dark">Dorcha</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Stíl datha</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monacrómach</string>
     <string name="settings_toggle_sharp_corners_label">Coirnéil ghéara</string>
     <string name="settings_toggle_sharp_corners_desc">Déan cártaí, boscaí dialóige agus cnaipí cearnach</string>
     <string name="settings_section_accent_color">Dath béime</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Cártaí aip</string>
     <string name="settings_app_cards_color_all">Dath do gach cárta</string>
     <string name="settings_app_cards_color_all_desc">Coinníonn cártaí atá saincheaptha agat ina n-aonar a ndath féin.</string>
-    <string name="settings_section_patch_list">Liosta paiste</string>
-    <string name="settings_toggle_patch_categories_label">Catagóirí paiste</string>
-    <string name="settings_toggle_patch_categories_desc">Grúpáil paistí ina gcatagóirí insínte</string>
     <string name="settings_section_background_animation">Beochan chúlra</string>
     <string name="settings_background_circles">Ciorcail</string>
     <string name="settings_background_rings">Fáinní</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Aistrigh</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Níl an loga athruithe ar fáil</string>
+    <string name="changelog_badge_installed">Suiteáilte</string>
+    <string name="changelog_badge_latest">Is déanaí</string>
+    <string name="changelog_badge_prerelease">Réamh-eisiúint</string>
+    <string name="changelog_date_today">Inniu</string>
+    <string name="changelog_date_yesterday">Inné</string>
     <string name="changelog_dialog_title">Féach ar an loga athruithe</string>
-    <string name="changelog_show_older_button">Taispeáin eisiúintí níos sine</string>
+    <string name="changelog_not_available">Níl an loga athruithe ar fáil</string>
+    <string name="changelog_section_app_support">Tacaíocht aipeanna</string>
+    <string name="changelog_section_fixes">Ceartúcháin</string>
+    <string name="changelog_section_improvements">Feabhsuithe</string>
+    <string name="changelog_section_new">Nua</string>
+    <string name="changelog_section_other">Athruithe</string>
+    <string name="changelog_section_performance">Feidhmíocht</string>
+    <string name="changelog_show_all">Taispeáin gach ceann (%1$d)</string>
+    <string name="changelog_show_less">Taispeáin níos lú</string>
     <string name="changelog_view_on_github_button">Féach ar GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Foinsí</string>
+    <string name="nav_apps">Aipeanna</string>
 </resources>

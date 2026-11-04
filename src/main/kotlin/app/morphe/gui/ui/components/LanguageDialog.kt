@@ -30,8 +30,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,6 +65,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /** Modal dialog for selecting the application language. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LanguageDialog(
     currentLanguageCode: String,
@@ -155,9 +157,8 @@ fun LanguageDialog(
                                 modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(28.dp),
-                                    strokeWidth = 2.5.dp,
+                                LoadingIndicator(
+                                    modifier = Modifier.size(38.dp),
                                     color = MorpheTheme.colors.primary,
                                 )
                             }

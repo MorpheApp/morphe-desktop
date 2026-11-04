@@ -16,22 +16,6 @@
         <item quantity="one">%1$d uppspretta</item>
         <item quantity="other">%1$d uppsprettur</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d plástur verður settur á</item>
-        <item quantity="other">%1$d plástrar verða settir á</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d undanskilinn</item>
-        <item quantity="other">%1$d undanskildir</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d virkur</item>
-        <item quantity="other">%1$d virkir</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d óvirkur</item>
-        <item quantity="other">%1$d óvirkir</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d forritasafn</item>
         <item quantity="other">%1$d forritasöfn</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d kjarni</item>
         <item quantity="other">%1$d kjarnar</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d breyting</item>
+        <item quantity="other">%1$d breytingar</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">fyrir %1$d degi</item>
+        <item quantity="other">fyrir %1$d dögum</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d eiginleiki</item>
+        <item quantity="other">%1$d eiginleikar</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d leiðrétting</item>
+        <item quantity="other">%1$d leiðréttingar</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d fínstilling</item>
+        <item quantity="other">%1$d fínstillingar</item>
     </plurals>
 </resources>
