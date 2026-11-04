@@ -28,7 +28,7 @@ object MultiSourceLoader {
     data class LoadedSource(
         val sourceId: String,
         val sourceName: String,
-        val patches: Set<Patch<*>>,
+        val patches: Set<Patch>,
         val error: Throwable? = null,
     ) {
         val isSuccess: Boolean get() = error == null
@@ -36,9 +36,9 @@ object MultiSourceLoader {
 
     data class Result(
         val perSource: List<LoadedSource>,
-        val allPatches: Set<Patch<*>>,
+        val allPatches: Set<Patch>,
         // Maps each deduplicated patch to the source IDs that contain it.
-        val patchToSourceIds: Map<Patch<*>, Set<String>>,
+        val patchToSourceIds: Map<Patch, Set<String>>,
     )
 
     /** Loads patches from each input source in parallel using temporary shadow copies. */
@@ -49,7 +49,7 @@ object MultiSourceLoader {
 
         // Deduplicate identical patches while tracking all contributing sources.
         val allPatches = loaded.flatMap { it.patches }.toSet()
-        val patchToSourceIds: Map<Patch<*>, Set<String>> = loaded
+        val patchToSourceIds: Map<Patch, Set<String>> = loaded
             .flatMap { src -> src.patches.map { it to src.sourceId } }
             .groupBy({ it.first }, { it.second })
             .mapValues { it.value.toSet() }

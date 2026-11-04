@@ -134,13 +134,13 @@ internal object ListPatchesCommand : Runnable {
                 append("\nType: ${toPatchOption().type.displayName}")
             }
 
-        fun getVersionCodesString(patch: Patch<*>, pkgName: String, versionName: String): String {
+        fun getVersionCodesString(patch: Patch, pkgName: String, versionName: String): String {
             return patch.versionCodesFor(pkgName, versionName)?.let { codes ->
                 codes.entries.joinToString(", ") { "${it.key.name}=${it.value}" }
             } ?: ""
         }
 
-        fun IndexedValue<Patch<*>>.buildString() =
+        fun IndexedValue<Patch>.buildString() =
             let { (index, patch) ->
                 buildString {
                     if (withIndex) appendLine("Index: $index")

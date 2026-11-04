@@ -50,7 +50,7 @@ private fun sha256ForFiles(files: Set<File>): String? = when {
 }
 
 /** Converts loaded patches into a [PatchBundle], capturing default options and metadata. */
-fun Set<Patch<*>>.toPatchBundle(
+fun Set<Patch>.toPatchBundle(
     sourceFiles: Set<File> = emptySet(),
     existingMeta: PatchBundleMeta? = null,
 ): PatchBundle {
@@ -79,7 +79,7 @@ fun Set<Patch<*>>.toPatchBundle(
  * Merges loaded patches with an existing [PatchBundle], preserving user selections
  * and option values while applying defaults for new patches or keys.
  */
-fun Set<Patch<*>>.mergeWithBundle(
+fun Set<Patch>.mergeWithBundle(
     existing: PatchBundle?,
     sourceFiles: Set<File> = emptySet(),
 ): PatchBundle {
@@ -162,7 +162,7 @@ fun List<PatchBundle>.withUpdatedBundle(bundle: PatchBundle): List<PatchBundle> 
 
 /** Deserializes stored JSON option values against live [patches] definitions. */
 fun PatchBundle.deserializeOptionsFor(
-    patches: Set<Patch<*>>,
+    patches: Set<Patch>,
     onError: (patchName: String, key: String, Exception) -> Unit = { _, _, _ -> },
 ): Map<String, Map<String, Any?>> =
     this.patches.mapNotNull { (patchName, entry) ->
@@ -203,7 +203,7 @@ data class OptionsFileDrift(
 
 /** Computes patch and option key differences between loaded patches and saved bundle options. */
 fun computeOptionsDrift(
-    bundlePatches: Set<Patch<*>>,
+    bundlePatches: Set<Patch>,
     bundleSnapshot: PatchBundle,
     bundleOpts: PatchBundle,
     packageName: String,

@@ -15,7 +15,7 @@ import java.util.zip.ZipInputStream
 /** Set of patches loaded from a specific `.mpp` bundle file. */
 data class LoadedBundle(
     val sourceFile: File,
-    val patches: Set<Patch<*>>,
+    val patches: Set<Patch>,
 )
 
 /** Loads patches while preserving which `.mpp` bundle each patch originated from. */
@@ -32,7 +32,7 @@ object PatchBundleLoader {
         }
 
     /** Loads and flattens patches from all [files] into a single set. */
-    fun loadFlat(files: Iterable<File>): Set<Patch<*>> =
+    fun loadFlat(files: Iterable<File>): Set<Patch> =
         loadEach(files).flatMap { it.patches }.toSet()
 
     /** Extracts bundle name from `META-INF/MANIFEST.MF` in [file]. */

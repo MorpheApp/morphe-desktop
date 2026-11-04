@@ -8,7 +8,7 @@ package app.morphe.engine.patches
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.SupportedAbi
 
-fun Patch<*>.versionCodesFor(
+fun Patch.versionCodesFor(
     packageName: String?,
     versionName: String,
 ): Map<SupportedAbi, Int>? {
@@ -20,13 +20,13 @@ fun Patch<*>.versionCodesFor(
         ?.versionCodes
 }
 
-fun Iterable<Patch<*>>.versionCodesFor(
+fun Iterable<Patch>.versionCodesFor(
     packageName: String?,
     versionName: String,
 ): Map<SupportedAbi, Int>? =
     firstNotNullOfOrNull { it.versionCodesFor(packageName, versionName) }
 
-fun Patch<*>.isCompatibleWith(
+fun Patch.isCompatibleWith(
     packageName: String,
     includeExperimental: Boolean,
     includeUniversalPatches: Boolean,
@@ -46,7 +46,7 @@ fun Patch<*>.isCompatibleWith(
     }
 }
 
-fun Patch<*>.supportedVersionsFor(packageName: String): List<String>? {
+fun Patch.supportedVersionsFor(packageName: String): List<String>? {
     val compat = compatibility ?: return null
 
     val matching = compat.filter { it.packageName == packageName }
@@ -58,7 +58,7 @@ fun Patch<*>.supportedVersionsFor(packageName: String): List<String>? {
     return versions.ifEmpty { null }
 }
 
-fun Patch<*>.compatibleVersionsForDisplay(
+fun Patch.compatibleVersionsForDisplay(
     includeExperimental: Boolean,
 ): List<Pair<String?, List<String>>> {
     val compat = compatibility ?: return emptyList()
