@@ -1,3 +1,10 @@
+# [2.1.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0...v2.1.0-dev.1) (2026-11-04)
+
+
+### Features
+
+* Add root mounting support to GUI ([#404](https://github.com/MorpheApp/morphe-desktop/issues/404)) ([5280710](https://github.com/MorpheApp/morphe-desktop/commit/52807105b090c1e07eb6b9dfe5bba1b027d333cb))
+
 # [2.0.0](https://github.com/MorpheApp/morphe-desktop/compare/v1.20.0...v2.0.0) (2026-11-04)
 
 
