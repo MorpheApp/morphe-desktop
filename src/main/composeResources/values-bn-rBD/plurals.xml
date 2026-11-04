@@ -16,22 +16,6 @@
         <item quantity="one">%1$d উৎস</item>
         <item quantity="other">%1$d টি সোর্স</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d প্যাচ প্রয়োগ করা হবে</item>
-        <item quantity="other">%1$d প্যাচ প্রয়োগ করা হবে</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d বাদ দেওয়া হয়েছে</item>
-        <item quantity="other">%1$d বাদ দেওয়া হয়েছে</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d সক্রিয়</item>
-        <item quantity="other">%1$d সক্রিয়</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d নিষ্ক্রিয়</item>
-        <item quantity="other">%1$d নিষ্ক্রিয়</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d লাইব্রেরি</item>
         <item quantity="other">%1$d লাইব্রেরি</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$dটি কোর</item>
         <item quantity="other">%1$dটি কোর</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d টি পরিবর্তন</item>
+        <item quantity="other">%1$d টি পরিবর্তন</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d দিন আগে</item>
+        <item quantity="other">%1$d দিন আগে</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d টি বৈশিষ্ট্য</item>
+        <item quantity="other">%1$d টি বৈশিষ্ট্য</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d টি ফিক্স</item>
+        <item quantity="other">%1$d টি ফিক্স</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d টি অপ্টিমাইজেশন</item>
+        <item quantity="other">%1$d টি অপ্টিমাইজেশন</item>
     </plurals>
 </resources>

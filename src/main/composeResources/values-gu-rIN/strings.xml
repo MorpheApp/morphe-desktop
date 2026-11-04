@@ -2,15 +2,10 @@
 <resources>
     <!-- Common Components -->
     <!-- App Card Fill Dialog -->
-    <!-- Quick Patch Screen -->
     <!-- Patcher Steps -->
     <!-- ADB Installation Errors -->
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
     <!-- Version Warning Dialogs -->
-    <!-- Version warnings for Quick Patch -->
-    <!-- Quick Patch - Patching Content -->
-    <!-- Quick Patch - Ready Content -->
-    <!-- Quick Patch - Supported Apps Row -->
     <!-- Home Screen -->
     <!-- Home Screen - ApkInfoCard -->
     <!-- Home Screen - Dialogs -->
@@ -21,9 +16,11 @@
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
     <!-- Patching Screen -->
+    <string name="patching_patches_count">%1$d / %2$d પેચીસ</string>
     <!-- Result Screen -->
     <!-- Icon Studio -->
     <!-- Source Management Sheet -->
+    <!-- Signing Key Trust Dialog -->
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
     <!-- Error Dialog -->
@@ -41,4 +38,5 @@
     <!-- Settings - GitHub PAT -->
     <!-- App Info Dialog -->
     <!-- Changelog Dialog -->
+    <!-- Navigation Pill -->
 </resources>

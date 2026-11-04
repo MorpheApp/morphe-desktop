@@ -16,22 +16,6 @@
         <item quantity="one">%1$d kilde</item>
         <item quantity="other">%1$d kilder</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch vil blive anvendt</item>
-        <item quantity="other">%1$d patches vil blive anvendt</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d ekskluderet</item>
-        <item quantity="other">%1$d ekskluderet</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d aktiveret</item>
-        <item quantity="other">%1$d aktiveret</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d deaktiveret</item>
-        <item quantity="other">%1$d deaktiveret</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d bibliotek</item>
         <item quantity="other">%1$d biblioteker</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d kerne</item>
         <item quantity="other">%1$d kerner</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d ændring</item>
+        <item quantity="other">%1$d ændringer</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">for %1$d dag siden</item>
+        <item quantity="other">for %1$d dage siden</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funktion</item>
+        <item quantity="other">%1$d funktioner</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d rettelse</item>
+        <item quantity="other">%1$d rettelser</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimering</item>
+        <item quantity="other">%1$d optimeringer</item>
     </plurals>
 </resources>

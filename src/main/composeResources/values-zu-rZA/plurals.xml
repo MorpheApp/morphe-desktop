@@ -16,22 +16,6 @@
         <item quantity="one">umthombo owodwa (%1$d)</item>
         <item quantity="other">imithombo (%1$d)</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d i-patch izosetshenziswa</item>
-        <item quantity="other">I-patch %1$d izofakwa</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d kukhishwe</item>
-        <item quantity="other">%1$d kukhishwe</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d kuvunyelwe</item>
-        <item quantity="other">%1$d kuvunyelwe</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d kucishwe</item>
-        <item quantity="other">%1$d kucishwe</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">ilayibrari %1$d</item>
         <item quantity="other">izilayibrari %1$d</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">i-core %1$d</item>
         <item quantity="other">%1$d cores</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">ushintsho olulodwa (%1$d)</item>
+        <item quantity="other">izinguquko ezi-%1$d</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">ilanga elilodwa elidlule (%1$d)</item>
+        <item quantity="other">izinsuku ezi-%1$d ezidlule</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">isici esisodwa (%1$d)</item>
+        <item quantity="other">izici ezi-%1$d</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">ukulungiswa okukodwa (%1$d)</item>
+        <item quantity="other">izilungiso ezi-%1$d</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">ukuthuthukiswa okukodwa (%1$d)</item>
+        <item quantity="other">izithuthukiso ezi-%1$d</item>
     </plurals>
 </resources>

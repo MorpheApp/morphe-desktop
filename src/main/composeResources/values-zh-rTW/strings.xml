@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
-    <string name="morphe_logo_content_description">Morphe Logo</string>
+    <string name="morphe_logo_content_description">Morphe 標誌</string>
     <string name="dismiss">忽略</string>
     <string name="ok">確定</string>
     <string name="retry">重試</string>
     <string name="clear">清除</string>
     <string name="search">搜尋</string>
-    <string name="no_matches">無符合條件的搜尋結果</string>
+    <string name="no_matches">找不到匹配的搜索結果</string>
     <string name="remove">刪除</string>
     <string name="collapse">摺疊</string>
     <string name="expand">展開</string>
     <string name="cancel">取消</string>
     <string name="close">關閉</string>
+    <string name="trust">信任</string>
     <string name="delete">刪除</string>
     <string name="disabled_while_patching">修補程式時停用</string>
     <string name="drop_apk_here">將 APK 拖曳至此</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">下載時連線中斷，請重試</string>
     <string name="error_network_loading_patches">載入修補檔時發生網路錯誤</string>
     <string name="error_patch_file_not_found">找不到修補檔：%1$s</string>
-    <string name="error_no_patches_files_supplied">未提供任何修補檔</string>
-    <string name="error_input_apk_not_found">找不到輸入的 APK</string>
     <string name="error_step_failed">%1$s 失敗：%2$s</string>
     <string name="error_drop_valid_apk">請放下有效的 .apk、.apkm、.xapk 或 .apks 檔案</string>
     <string name="status_saving">正在儲存…</string>
@@ -44,7 +43,7 @@
     <string name="copy">複製</string>
     <string name="copied">已複製</string>
     <string name="click_to_copy">點擊以複製</string>
-    <string name="enable_adb_button">啟用 ADB</string>
+    <string name="enable_adb_button">啟用 ADB 偵錯</string>
     <string name="drag_to_reorder">拖曳以重新排序</string>
     <string name="off">關閉</string>
     <string name="on">開啟</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">篩選應用程式……</string>
     <string name="version">版本</string>
     <string name="version_label_stable">穩定版</string>
-    <string name="version_label_dev">開發版</string>
+    <string name="version_label_prerelease">預先發行</string>
     <string name="version_label_experimental">實驗版</string>
-    <string name="version_label_latest_dev">最新開發版</string>
     <string name="version_label_latest_stable">最新穩定版</string>
+    <string name="version_label_recommended">建議的</string>
+    <string name="version_label_supported">支援</string>
     <string name="app_info_arch_label">架構</string>
     <string name="app_info_min_sdk_label">最低 SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">修補已取消</string>
     <string name="view_full_logs_button">檢視完整記錄</string>
     <string name="error_patching_unknown">修補因未知原因失敗</string>
-    <string name="error_patching_general">錯誤：%1$s</string>
     <string name="error_log_label">錯誤記錄檔</string>
     <string name="back">返回</string>
     <string name="open_folder">開啟資料夾</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">任意數量的色標，線性、放射狀或錐形</string>
     <string name="card_fill_mode_solid">純色</string>
     <string name="card_fill_mode_solid_blurb">單一純色</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">修補程式</string>
-    <string name="quick_patch_screen_start_over_button">重新開始</string>
-    <string name="quick_patch_patch_another_button">修補另一個</string>
-    <string name="quick_patch_select_apk">選取 APK</string>
-    <string name="quick_patch_analyze_apk_failed">無法分析 APK</string>
-    <string name="quick_patch_extract_base_apk_failed">無法從套件中擷取基礎 APK</string>
-    <string name="quick_patch_unsupported_app_error">快速修補模式不支援 %1$s。支援的應用程式：%2$s。不支援的應用程式請使用一般模式</string>
     <string name="adb_install_on_button">安裝到 %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">正在載入修補檔</string>
-    <string name="patching_step_preparing">正在準備</string>
     <string name="patching_step_merging_split_apk">正在合併分割 APK</string>
     <string name="patching_step_read_apk">讀取 APK 檔案</string>
     <string name="patching_step_applying_patches">正在套用修補程式</string>
-    <string name="patching_step_saving">正在儲存</string>
     <string name="patching_step_writing_apk">正在寫入修補後的 APK 檔案</string>
     <string name="patching_step_signing">正在簽署修補後的 APK 檔案</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">檔案可能已損毀，請從 APKMirror 重新下載</string>
     <string name="version_status_checksum_failed">檢查碼驗證失敗</string>
     <string name="version_status_checksum_matches">檢查碼與 APKMirror 相符</string>
-    <string name="version_status_older_stable">較舊的穩定版</string>
     <string name="version_status_newer_stable_available">有新穩定版 v%1$s 可用</string>
     <string name="version_status_newer_stable_available_fallback">有較新的穩定版可用</string>
     <string name="version_status_experimental_detail">受支援，但可能無法正常運作</string>
-    <string name="version_status_older_experimental">較舊的實驗版</string>
-    <string name="version_status_newer_experimental_available">有新實驗版 v%1$s 可用</string>
-    <string name="version_status_newer_experimental_available_fallback">有較新的實驗版建置可用</string>
-    <string name="version_status_too_new">版本過新</string>
     <string name="version_status_unsupported_detail">非官方支援，修補檔極有可能失敗</string>
-    <string name="version_status_too_old">版本過舊</string>
     <string name="version_status_unsupported">不支援的版本</string>
     <string name="version_status_build_unsupported">不支援此建置</string>
     <string name="version_status_build_unsupported_detail">此版本受支援，但不是這個建置。請取得修補檔所針對的建置</string>
+    <string name="version_status_build_unsupported_with_code">修補程式需要建置版本 %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">版本通知</string>
+    <string name="version_warning_build_unsupported_message">目前：v%1$s（建置版本 %2$s）\n所需建置版本：%3$s\n\n這是同一版本的不同建置版本。這些修補需要特定的建置版本。</string>
     <string name="version_warning_experiment_title">確定要嘗試實驗性版本嗎？ 🧪</string>
-    <string name="version_warning_older_stable_title">較舊的穩定版</string>
-    <string name="version_warning_older_stable_message">目前版本：v%1$s\n最新穩定版：v%2$s\n\n此版本受支援，但有較新的穩定版可用。您可能缺少近期的修正。</string>
     <string name="version_warning_latest_experimental_message">目前版本：v%1$s\n\n此版本具有早期實驗支援\n\n🔧 在修補檔針對此應用程式版本調整期間，可能出現怪異的應用程式行為或未確認的錯誤。</string>
-    <string name="version_warning_older_experimental_title">較舊的實驗版\n您想要實驗看看嗎？🧪</string>
-    <string name="version_warning_older_experimental_message">目前版本：v%1$s\n最新實驗版：v%2$s\n\n這是受支援的實驗版建置，但有較新的實驗版可用。在修補檔針對此應用程式版本持續改進期間，請預期出現怪異行為或未確認的錯誤。</string>
-    <string name="version_warning_too_new_message">目前版本：v%1$s\n最新已知版本：v%2$s\n\n此版本具有早期實驗支援\n\n🔧 在修補檔針對此應用程式版本調整期間，可能出現怪異的應用程式行為或未確認的錯誤。</string>
-    <string name="version_warning_too_old_message">目前版本：v%1$s\n最早支援版本：v%2$s\n\n這不是官方支援的版本。修補檔極有可能失敗。</string>
     <string name="version_warning_unsupported_message">目前版本：v%1$s\n\n這不是官方支援的版本。修補檔極有可能失敗。</string>
     <string name="version_warning_notice_message">要繼續使用 v%1$s 嗎？</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">較舊的穩定版建置 - 有新穩定版 v%1$s 可用</string>
-    <string name="quick_patch_warning_latest_experimental">實驗版建置 - 受支援，但可能無法正常運作</string>
-    <string name="quick_patch_warning_older_experimental">較舊的實驗版建置 - 有新實驗版 v%1$s 可用</string>
-    <string name="quick_patch_warning_build_unsupported">不支援此建置 - 此版本可修補，但此建置不行</string>
-    <string name="quick_patch_warning_too_new">版本過新 - 非官方支援，修補檔極有可能失敗</string>
-    <string name="quick_patch_warning_too_old">版本過舊 - 非官方支援，修補檔極有可能失敗</string>
-    <string name="quick_patch_warning_unsupported_between">不支援的版本 - 修補檔極有可能失敗</string>
-    <string name="quick_patch_read_apk_failed">讀取 APK 失敗：%1$s</string>
-    <string name="quick_patch_status_preparing_patches">正在準備修補檔……</string>
-    <string name="quick_patch_fetch_patches_failed">取得修補檔失敗。請檢查您的網際網路連線</string>
-    <string name="quick_patch_status_downloading_patches">正在下載修補檔 %1$s……</string>
-    <string name="quick_patch_download_patches_failed">下載修補檔失敗：%1$s</string>
-    <string name="quick_patch_status_patching">正在修補……</string>
-    <string name="quick_patch_completed_adb_off">ADB 已關閉 · 啟用以安裝</string>
-    <string name="quick_patch_completed_adb_connect_device">透過 USB 連接裝置，即可使用 ADB 安裝</string>
-    <string name="quick_patch_error_unknown_occurred">發生未知錯誤</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">正在分析 APK……</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d 項修補</string>
-    <string name="quick_patch_patching_slow_warning">這比平常花費更久時間。請稍候……</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">（建置 %1$d）</string>
-    <string name="quick_patch_ready_no_compatible_patches">此應用程式沒有相容的修補檔</string>
-    <string name="quick_patch_ready_no_matching_patches">沒有符合「%1$s」的修補檔</string>
-    <string name="quick_patch_ready_patch_with_defaults">使用預設值修補</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">支援的應用程式</string>
-    <string name="quick_patch_supported_apps_subtitle">在此放下受支援應用程式的確切 APK 版本</string>
-    <string name="quick_patch_supported_apps_loading">正在載入支援的應用程式……</string>
-    <string name="quick_patch_supported_apps_load_error">無法載入支援的應用程式</string>
-    <string name="quick_patch_supported_apps_change_source">變更來源</string>
-    <string name="quick_patch_supported_apps_no_matches">沒有相符的應用程式</string>
-    <string name="quick_patch_supported_apps_version_any">任何版本</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">選擇 APK 檔案</string>
     <string name="home_could_not_resolve_patch_files">無法解析修補檔</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">移除 APK</string>
     <string name="home_apk_info_limited_info_warning">無法完整讀取此 APK 的資訊清單（分割套件常見）。以下詳細資料為近似值，修補仍應可行</string>
     <string name="home_apk_info_unsupported_app_warning">找不到此應用程式的相容修補檔。您仍可繼續，但修補可能不會產生任何效果</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">找不到此應用程式相容的修補程式</string>
     <string name="home_apk_info_build_label">建置</string>
     <string name="home_apk_info_size_label">大小</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">來自</string>
     <string name="home_stage_change_apk">變更APK</string>
     <string name="home_stage_continue">繼續</string>
+    <string name="home_stage_patch">修補</string>
     <string name="home_stage_analyzing_title">正在分析</string>
     <string name="home_stage_reading_metadata">正在讀取應用程式元資料...</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">解除安裝%1$s？</string>
     <string name="home_dialog_uninstall_message">這會從已連線的裝置移除 %1$s。除非您在下方另行選擇，否則磁碟上的已修補 APK 和您的記錄都會保留</string>
     <string name="home_dialog_uninstall_also_forget">同時從「您的應用程式」中移除</string>
-    <string name="home_dialog_missing_apk_title">找不到原始APK</string>
-    <string name="home_dialog_missing_apk_message">%1$s 的輸入 APK 不再位於：\n%2$s\n\n請重新選擇 APK，以使用您儲存的設定重新修補</string>
-    <string name="home_dialog_select_apk">選取APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">選擇要重新修補的 APK</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">管理來源</string>
     <string name="home_header_multi_source_hint">所有已啟用來源的修補檔會聯集。請使用上方的來源按鈕管理</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">你的應用程式</string>
     <string name="home_banner_view">檢視</string>
     <string name="home_your_apps_install_ready">可安裝</string>
-    <string name="home_your_apps_newer_patch_hint">較新的修補檔可能會升級應用程式，點擊「更新」查看</string>
-    <string name="home_your_apps_device_version_ready">已修補的 v%1$s 已就緒，裝置為 v%2$s（無需重新修補）</string>
-    <string name="home_your_apps_install_ready_hint">已修補的 v%1$s 可隨時安裝（無需重新修補）</string>
-    <string name="home_action_install">安裝</string>
     <string name="home_action_install_to_device">安裝到裝置</string>
     <string name="home_action_installing">正在安裝……</string>
     <string name="home_action_preparing">正在準備…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s 已就緒 · 裝置為 v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s 已就緒，無需重新修補</string>
-    <string name="home_advice_unsupported">不再支援v%1$s。請更新到v%2$s</string>
+    <string name="home_detail_source_disabled">已停用</string>
+    <string name="home_detail_source_removed">移除</string>
+    <string name="home_detail_source_disabled_sub">來源已在「來源」中停用。啟用它以重新修補。</string>
+    <string name="home_detail_source_disabled_alternatives_sub">原始來源已停用。請選取其他來源，或在來源中重新啟用。</string>
+    <string name="home_detail_no_compatible_source">未啟用任何相容的來源</string>
+    <string name="home_detail_choose_source">選擇修補來源</string>
     <string name="home_advice_unsupported_by_patches">最新修補已不再支援v%1$s</string>
     <string name="home_date_today">今天</string>
     <string name="home_date_yesterday">昨天</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">未分組</string>
     <string name="patch_selection_group_selected_count">已選取 %1$d</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">從頭開始</string>
+    <string name="patching_patches_count">%1$d / %2$d 項修補</string>
+    <string name="patching_slow_warning">這比平常需要更長的時間，請稍候…</string>
     <string name="patching_status_ready">準備好進行修補</string>
     <string name="patching_status_preparing">正在準備修補</string>
     <string name="patching_status_in_progress">正在套用修補程式</string>
     <string name="patching_completed_loading_result">修補完成，正在載入結果……</string>
-    <string name="patching_cancelled_loading_result">修補已取消，正在載入結果……</string>
+    <string name="patching_cancelled_loading_result">修補操作已取消，正在載入結果</string>
     <string name="patching_failed_loading_result">修補失敗，正在載入結果……</string>
     <string name="patching_log_viewer_failed_to_read">讀取記錄檔失敗：%1$s</string>
     <string name="patching_log_viewer_title">日誌檔</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">剝離</string>
     <string name="patching_error_failed_patches">失敗的修補：%1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB 關閉 · 啟用以進行安裝</string>
+    <string name="result_adb_connect_device_hint">透過 USB 連線到裝置以使用 ADB 進行安裝。</string>
     <string name="result_screen_patch_another_button">修補另一個</string>
     <string name="result_screen_install_on_device_label">安裝到 %1$s</string>
     <string name="result_screen_links_routed_label">連結已路由至已修補的應用程式</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">載入失敗</string>
     <string name="source_error_github_pat_required">需要 GitHub PAT 才能下載拉取請求來源</string>
     <string name="source_error_pr_no_artifact">找不到拉取請求的成品</string>
-    <string name="source_sheet_manage_description">管理修補來源</string>
-    <string name="source_sheet_local_label">本機</string>
+    <string name="source_error_patcher_incompatible">此來源是為修補程式 %1$s 建置的，但 Morphe %2$s 包含修補程式 %3$s。更新 Morphe 以使用它。</string>
+    <string name="version_label_local">本機</string>
     <string name="source_sheet_remote_label">遠端</string>
     <string name="add_source">新增來源</string>
     <string name="source_sheet_title">修補來源</string>
     <string name="source_sheet_reload_description">重新載入修補檔</string>
-    <string name="source_sheet_quick_mode_hint">選擇快速修補要使用的來源。多來源可在專家模式中使用</string>
     <string name="source_sheet_multi_mode_hint">可任意組合啟用／停用。所有已啟用來源的修補檔都會聯集</string>
     <string name="source_sheet_done_button">完成</string>
     <string name="source_sheet_type_preinstalled">預先安裝</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">編輯</string>
     <string name="source_sheet_move_up_description">上移</string>
     <string name="source_sheet_move_down_description">下移</string>
-    <string name="source_sheet_channel_older_stable">較舊的穩定版</string>
-    <string name="source_sheet_channel_older_dev">較舊的開發版</string>
     <string name="source_sheet_ignored_mpp_title">忽略的 .mpp 模式</string>
-    <string name="source_sheet_ignored_mpp_hint">僅影響資料夾來源，其會自動載入資料夾中最新的 .mpp。選擇該最新建置時，會略過名稱符合此處模式的檔案。純文字詞會比對任何包含該詞的檔案（例如 debug）。使用 * 做為萬用字元（例如 *-debug.mpp）。*-sources.mpp 和 *-javadoc.mpp 一律會忽略</string>
+    <string name="source_sheet_ignored_mpp_hint">僅適用於會自動載入資料夾中最新 .mpp 檔案的資料夾來源。當挑選該最新組建時，會略過檔名符合此處規則的檔案。輸入一般單字即可比對任何包含該字元的檔案（例如：debug）。若要使用萬用字元請用 *（例如：*-debug.mpp）。*-sources.mpp 與 *-javadoc.mpp 則會隨時被忽略。</string>
     <string name="source_sheet_ignored_mpp_placeholder">例如 debug 或 *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">新增模式</string>
     <string name="source_sheet_remove_pattern_description">移除模式</string>
+    <string name="sources_management_signed_by">簽署者：</string>
+    <string name="sources_management_signing_key_changed_badge">已變更金鑰</string>
+    <string name="sources_management_signing_key_changed_hint">已變更簽署金鑰匙。點擊檢閱。</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">「%1$s」未更新，因為其最新版本並非由先前使用的金鑰所簽署</string>
+    <string name="sources_signing_key_new">新金鑰</string>
+    <string name="sources_signing_key_trust_message">最新版本由不同的金鑰所簽署。可能是開發者更換了金鑰匙，或是由他人發佈了這個版本。只有在開發者公佈新的金鑰時才信任它。</string>
+    <string name="sources_signing_key_trust_message_unsigned">最新版本未經簽署。可能是開發者停止簽署版本，或是他人發佈了此版本。僅在開發者公佈後才信任它</string>
+    <string name="sources_signing_key_trust_title">信任新的金鑰？</string>
+    <string name="sources_signing_key_trusted">信任的金鑰</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">本機檔案</string>
     <string name="patch_source_dialog_name_label">名稱</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab 或 morphe.software/add-source 連結</string>
     <string name="patch_source_dialog_pre_release_title">預先發佈版修補程式</string>
     <string name="patch_source_dialog_pre_release_hint">搶先取得新實驗性修補程式版本</string>
-    <string name="patch_source_dialog_experimental_title">實驗性應用程式版本</string>
-    <string name="patch_source_dialog_experimental_hint">若可用，優先使用實驗性應用程式版本</string>
     <string name="patch_source_dialog_error_name_required">必須填寫名稱</string>
     <string name="patch_source_dialog_error_invalid_url">請輸入有效的 GitHub 或 GitLab URL</string>
     <string name="patch_source_dialog_error_invalid_file">請選擇有效的 .mpp 檔案</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">開啟記錄</string>
     <string name="settings_dialog_reset_button">重設</string>
     <string name="settings_theme_system">系統</string>
-    <string name="settings_signing_error_not_found">找不到所設定的金鑰庫：%1$s。請還原該檔案、在設定中選擇其他金鑰庫，或清除該設定以使用 Morphe 的預設值</string>
     <string name="settings_search_languages_placeholder">搜尋語言</string>
     <string name="settings_dialog_resolves_to_message">解析為：%1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">找不到金鑰庫：%1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">語言</string>
     <string name="settings_language_current_title">目前語言</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">應用程式語言</string>
     <string name="settings_language_search_no_results">找不到結果</string>
     <string name="settings_section_theme">主題</string>
+    <string name="settings_appearance_theme_mode">主題模式</string>
     <string name="settings_theme_light">淺色</string>
     <string name="settings_theme_dark">深色</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">顏色樣式</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">單色</string>
     <string name="settings_toggle_sharp_corners_label">方角</string>
     <string name="settings_toggle_sharp_corners_desc">將卡片、對話框和按鈕變成方角</string>
     <string name="settings_section_accent_color">強調色</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">應用程式卡片</string>
     <string name="settings_app_cards_color_all">每張卡片的顏色</string>
     <string name="settings_app_cards_color_all_desc">您個別自訂的卡片會保留自己的顏色</string>
-    <string name="settings_section_patch_list">修補清單</string>
-    <string name="settings_toggle_patch_categories_label">修補分類</string>
-    <string name="settings_toggle_patch_categories_desc">將修補檔分組到可展開的分類中</string>
     <string name="settings_section_background_animation">背景動畫</string>
     <string name="settings_background_circles">圓圈</string>
     <string name="settings_background_rings">圓環</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">翻譯</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">變更日誌無法使用</string>
+    <string name="changelog_badge_installed">已安裝</string>
+    <string name="changelog_badge_latest">最新</string>
+    <string name="changelog_badge_prerelease">預先發佈</string>
+    <string name="changelog_date_today">今天</string>
+    <string name="changelog_date_yesterday">昨天</string>
     <string name="changelog_dialog_title">檢視變更日誌</string>
-    <string name="changelog_show_older_button">顯示舊版本</string>
+    <string name="changelog_not_available">變更日誌無法使用</string>
+    <string name="changelog_section_app_support">應用程式支援</string>
+    <string name="changelog_section_fixes">修復</string>
+    <string name="changelog_section_improvements">改進</string>
+    <string name="changelog_section_new">新增</string>
+    <string name="changelog_section_other">變更</string>
+    <string name="changelog_section_performance">效能</string>
+    <string name="changelog_show_all">顯示全部 (%1$d)</string>
+    <string name="changelog_show_less">顯示更少</string>
     <string name="changelog_view_on_github_button">在 GitHub 上檢視</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">來源</string>
+    <string name="nav_apps">應用程式</string>
 </resources>

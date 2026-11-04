@@ -16,22 +16,6 @@
         <item quantity="one">%1$d bron</item>
         <item quantity="other">%1$d bronnen</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch zal worden toegepast</item>
-        <item quantity="other">%1$d patches zullen worden toegepast</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d uitgesloten</item>
-        <item quantity="other">%1$d uitgesloten</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d ingeschakeld</item>
-        <item quantity="other">%1$d ingeschakeld</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d uitgeschakeld</item>
-        <item quantity="other">%1$d uitgeschakeld</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d bibliotheek</item>
         <item quantity="other">%1$d bibliotheken</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d kern</item>
         <item quantity="other">%1$d kernen</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d wijziging</item>
+        <item quantity="other">%1$d wijzigingen</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d dag geleden</item>
+        <item quantity="other">%1$d dagen geleden</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d functie</item>
+        <item quantity="other">%1$d functies</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d correctie</item>
+        <item quantity="other">%1$d correcties</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimalisatie</item>
+        <item quantity="other">%1$d optimalisaties</item>
     </plurals>
 </resources>

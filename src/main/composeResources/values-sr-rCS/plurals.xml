@@ -20,26 +20,6 @@
         <item quantity="few">%1$d zakrpe</item>
         <item quantity="other">%1$d zakrpe</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Primeniće se %1$d zakrpa</item>
-        <item quantity="few">Primeniće se %1$d zakrpe</item>
-        <item quantity="other">Primeniće se %1$d zakrpa</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d izuzeta</item>
-        <item quantity="few">%1$d izuzete</item>
-        <item quantity="other">%1$d izuzetih</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d omogućena</item>
-        <item quantity="few">%1$d omogućene</item>
-        <item quantity="other">%1$d omogućenih</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d onemogućena</item>
-        <item quantity="few">%1$d onemogućene</item>
-        <item quantity="other">%1$d onemogućenih</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d biblioteka</item>
         <item quantity="few">%1$d biblioteke</item>
@@ -69,5 +49,30 @@
         <item quantity="one">%1$d jezgro</item>
         <item quantity="few">%1$d jezgra</item>
         <item quantity="other">%1$d jezgara</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d promena</item>
+        <item quantity="few">%1$d promene</item>
+        <item quantity="other">%1$d promena</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">pre %1$d dana</item>
+        <item quantity="few">pre %1$d dana</item>
+        <item quantity="other">Pre %1$d dana</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d nova funkcionalnost</item>
+        <item quantity="few">%1$d nove funkcionalnosti</item>
+        <item quantity="other">%1$d novih funkcionalnosti</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d ispravka</item>
+        <item quantity="few">%1$d ispravke</item>
+        <item quantity="other">%1$d ispravki</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">Od:\"Jedne\"%1$d</item>
+        <item quantity="few">Od: %1$dX</item>
+        <item quantity="other">Od: %1$d\"druge\"</item>
     </plurals>
 </resources>

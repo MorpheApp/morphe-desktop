@@ -13,6 +13,7 @@
     <string name="expand">توسيع</string>
     <string name="cancel">إلغاء</string>
     <string name="close">إغلاق</string>
+    <string name="trust">موثوق</string>
     <string name="delete">حذف</string>
     <string name="disabled_while_patching">معطّل أثناء التصحيح</string>
     <string name="drop_apk_here">أفلت ملف APK هنا</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">انقطع الاتصال أثناء التنزيل، حاول مرة أخرى</string>
     <string name="error_network_loading_patches">خطأ في الشبكة أثناء تحميل التصحيحات</string>
     <string name="error_patch_file_not_found">ملف التصحيح غير موجود: %1$s</string>
-    <string name="error_no_patches_files_supplied">لم يتم توفير أي ملفات تصحيح</string>
-    <string name="error_input_apk_not_found">ملف APK المُدخل غير موجود</string>
     <string name="error_step_failed">فشل %1$s: %2$s</string>
     <string name="error_drop_valid_apk">يرجى إفلات ملف .apk أو .apkm أو .xapk أو .apks صالح</string>
     <string name="status_saving">جارٍ الحفظ…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">تصفية التطبيقات…</string>
     <string name="version">الإصدار</string>
     <string name="version_label_stable">مستقر</string>
-    <string name="version_label_dev">تطويري</string>
+    <string name="version_label_prerelease">إصدار ما قبل الإطلاق</string>
     <string name="version_label_experimental">تجريبي</string>
-    <string name="version_label_latest_dev">أحدث إصدار تطويري</string>
     <string name="version_label_latest_stable">أحدث إصدار مستقر</string>
+    <string name="version_label_recommended">موصّى به</string>
+    <string name="version_label_supported">مدعوم</string>
     <string name="app_info_arch_label">البنية</string>
     <string name="app_info_min_sdk_label">أدنى SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">تم إلغاء التصحيح</string>
     <string name="view_full_logs_button">عرض السجلات الكاملة</string>
     <string name="error_patching_unknown">فشل التصحيح لسبب غير معروف</string>
-    <string name="error_patching_general">خطأ: %1$s</string>
     <string name="error_log_label">سجل الأخطاء</string>
     <string name="back">رجوع</string>
     <string name="open_folder">فتح المجلد</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">أي عدد من نقاط التوقف، خطي أو قطري أو مخروطي</string>
     <string name="card_fill_mode_solid">طبقة لون واحد</string>
     <string name="card_fill_mode_solid_blurb">لون واحد مسطح</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">التعديلات</string>
-    <string name="quick_patch_screen_start_over_button">ابدأ من جديد</string>
-    <string name="quick_patch_patch_another_button">تصحيح تطبيق آخر</string>
-    <string name="quick_patch_select_apk">تحديد ملف APK</string>
-    <string name="quick_patch_analyze_apk_failed">فشل تحليل APK</string>
-    <string name="quick_patch_extract_base_apk_failed">فشل استخراج APK الأساسي من الحزمة</string>
-    <string name="quick_patch_unsupported_app_error">التطبيق %1$s غير مدعوم في وضع التصحيح السريع. التطبيقات المدعومة: %2$s. استخدم الوضع العادي للتطبيقات غير المدعومة</string>
     <string name="adb_install_on_button">التثبيت على %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">جارٍ تحميل التعديلات</string>
-    <string name="patching_step_preparing">جارٍ الإعداد</string>
     <string name="patching_step_merging_split_apk">دمج APK مُقسّم</string>
     <string name="patching_step_read_apk">قراءة ملف APK</string>
     <string name="patching_step_applying_patches">جارٍ تطبيق التعديلات</string>
-    <string name="patching_step_saving">الحفظ</string>
     <string name="patching_step_writing_apk">جارٍ كتابة ملف APK المعدل</string>
     <string name="patching_step_signing">جارٍ توقيع ملف APK المعدل</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">قد يكون الملف تالفًا، أعد تنزيله من APKMirror</string>
     <string name="version_status_checksum_failed">فشل التحقق من المجموع الاختباري</string>
     <string name="version_status_checksum_matches">المجموع الاختباري مطابق لـ APKMirror</string>
-    <string name="version_status_older_stable">إصدار مستقر أقدم</string>
     <string name="version_status_newer_stable_available">يتوفر إصدار مستقر أحدث v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">يتوفر إصدار مستقر أحدث</string>
     <string name="version_status_experimental_detail">مدعوم، لكنه قد لا يعمل بشكل صحيح</string>
-    <string name="version_status_older_experimental">إصدار تجريبي أقدم</string>
-    <string name="version_status_newer_experimental_available">يتوفر إصدار تجريبي أحدث v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">يتوفر إصدار تجريبي أحدث</string>
-    <string name="version_status_too_new">الإصدار أحدث من اللازم</string>
     <string name="version_status_unsupported_detail">غير مدعوم رسميًا، من المرجح أن تفشل التصحيحات</string>
-    <string name="version_status_too_old">الإصدار أقدم من اللازم</string>
     <string name="version_status_unsupported">إصدار غير مدعوم</string>
     <string name="version_status_build_unsupported">هذا البناء غير مدعوم</string>
     <string name="version_status_build_unsupported_detail">هذا الإصدار مدعوم، لكن ليس هذا البناء منه. احصل على بناء تستهدفه التصحيحات</string>
+    <string name="version_status_build_unsupported_with_code">التعديلات تتطلب البناء %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">ملاحظة الإصدار</string>
+    <string name="version_warning_build_unsupported_message">الحالي: v%1$s (البناء %2$s)\nالبناء المطلوب: %3$s\n\nهذا إصدار مختلف من نفس النسخة. التعديلات تتطلب بناءً محددًا.</string>
     <string name="version_warning_experiment_title">هل تريد التجربة؟ 🧪</string>
-    <string name="version_warning_older_stable_title">إصدار مستقر أقدم</string>
-    <string name="version_warning_older_stable_message">الحالي: v%1$s\nأحدث إصدار مستقر: v%2$s\n\nهذا الإصدار مدعوم، لكن يتوفر إصدار مستقر أحدث. قد تكون تفتقد الإصلاحات الأخيرة.</string>
     <string name="version_warning_latest_experimental_message">الحالي: v%1$s\n\nهذا الإصدار لديه دعم تجريبي مبكر\n\n🔧 توقع سلوكًا غريبًا أو أخطاء غير محددة أثناء تحسين التصحيحات لهذا الإصدار.</string>
-    <string name="version_warning_older_experimental_title">إصدار تجريبي أقدم\nهل تريد التجربة؟ 🧪</string>
-    <string name="version_warning_older_experimental_message">الحالي: v%1$s\nأحدث إصدار تجريبي: v%2$s\n\nهذا بناء تجريبي مدعوم، لكن يتوفر إصدار تجريبي أحدث. توقع سلوكًا غريبًا أو أخطاء غير محددة أثناء تحسين التصحيحات لهذا الإصدار.</string>
-    <string name="version_warning_too_new_message">الحالي: v%1$s\nأحدث إصدار معروف: v%2$s\n\nهذا الإصدار لديه دعم تجريبي مبكر\n\n🔧 توقع سلوكًا غريبًا أو أخطاء غير محددة أثناء تحسين التصحيحات لهذا الإصدار.</string>
-    <string name="version_warning_too_old_message">الحالي: v%1$s\nأقدم إصدار مدعوم: v%2$s\n\nهذا ليس إصدارًا مدعومًا رسميًا. من المرجح أن تفشل التصحيحات.</string>
     <string name="version_warning_unsupported_message">الحالي: v%1$s\n\nهذا ليس إصدارًا مدعومًا رسميًا. من المرجح أن تفشل التصحيحات.</string>
     <string name="version_warning_notice_message">هل تريد المتابعة مع v%1$s؟</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">بناء مستقر أقدم - يتوفر إصدار مستقر أحدث v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">بناء تجريبي - مدعوم، لكنه قد لا يعمل بشكل صحيح</string>
-    <string name="quick_patch_warning_older_experimental">بناء تجريبي أقدم - يتوفر إصدار تجريبي أحدث v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">البناء غير مدعوم - هذا الإصدار قابل للتصحيح، لكن ليس هذا البناء منه</string>
-    <string name="quick_patch_warning_too_new">الإصدار أحدث من اللازم - غير مدعوم رسميًا، من المرجح أن تفشل التصحيحات</string>
-    <string name="quick_patch_warning_too_old">الإصدار أقدم من اللازم - غير مدعوم رسميًا، من المرجح أن تفشل التصحيحات</string>
-    <string name="quick_patch_warning_unsupported_between">إصدار غير مدعوم - من المرجح أن تفشل التصحيحات</string>
-    <string name="quick_patch_read_apk_failed">فشل قراءة APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">جارٍ تحضير التصحيحات…</string>
-    <string name="quick_patch_fetch_patches_failed">فشل جلب التصحيحات. تحقق من اتصالك بالإنترنت</string>
-    <string name="quick_patch_status_downloading_patches">جارٍ تنزيل التصحيحات %1$s…</string>
-    <string name="quick_patch_download_patches_failed">فشل تنزيل التعديلات: %1$s</string>
-    <string name="quick_patch_status_patching">جارٍ التصحيح…</string>
-    <string name="quick_patch_completed_adb_off">ADB معطّل · فعّله للتثبيت</string>
-    <string name="quick_patch_completed_adb_connect_device">قم بتوصيل جهاز عبر USB للتثبيت باستخدام ADB</string>
-    <string name="quick_patch_error_unknown_occurred">حدث خطأ غير معروف</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">جارٍ تحليل APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d تعديلات</string>
-    <string name="quick_patch_patching_slow_warning">يستغرق هذا وقتًا أطول من المعتاد. يرجى الانتظار…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(البناء %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">لا توجد تصحيحات متوافقة مع هذا التطبيق</string>
-    <string name="quick_patch_ready_no_matching_patches">لا توجد تصحيحات تطابق \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">صحيح بالإعدادات الافتراضية</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">التطبيقات المدعومة</string>
-    <string name="quick_patch_supported_apps_subtitle">أفلت إصدار APK المطابق تمامًا لتطبيق مدعوم هنا</string>
-    <string name="quick_patch_supported_apps_loading">جارٍ تحميل التطبيقات المدعومة…</string>
-    <string name="quick_patch_supported_apps_load_error">تعذّر تحميل التطبيقات المدعومة</string>
-    <string name="quick_patch_supported_apps_change_source">تغيير المصدر</string>
-    <string name="quick_patch_supported_apps_no_matches">لا توجد تطبيقات مطابقة</string>
-    <string name="quick_patch_supported_apps_version_any">أي إصدار</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">اختر ملف APK</string>
     <string name="home_could_not_resolve_patch_files">تعذّر حلّ ملفات التصحيح</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">إزالة APK</string>
     <string name="home_apk_info_limited_info_warning">تعذّرت قراءة بيان APK بالكامل (شائع في الحزم المقسمة). التفاصيل أدناه تقريبية، ويجب أن يظل التصحيح يعمل</string>
     <string name="home_apk_info_unsupported_app_warning">لم يتم العثور على تصحيحات متوافقة مع هذا التطبيق. لا يزال بإمكانك المتابعة، لكن التصحيح قد لا يكون له أي تأثير</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">لم يتم العثور على تعديلات متوافقة لهذا التطبيق</string>
     <string name="home_apk_info_build_label">البناء</string>
     <string name="home_apk_info_size_label">الحجم</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">مِن</string>
     <string name="home_stage_change_apk">تغيير APK</string>
     <string name="home_stage_continue">متابعة</string>
+    <string name="home_stage_patch">تعديل</string>
     <string name="home_stage_analyzing_title">جارٍ التحليل</string>
     <string name="home_stage_reading_metadata">جارٍ قراءة بيانات التطبيق الوصفية…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">إلغاء تثبيت %1$s؟</string>
     <string name="home_dialog_uninstall_message">يؤدي هذا إلى إزالة %1$s من الجهاز المتصل. يتم الاحتفاظ بـ APK المُصحح على القرص وسجلك ما لم تختر خلاف ذلك أدناه</string>
     <string name="home_dialog_uninstall_also_forget">إزالة أيضًا من تطبيقاتك</string>
-    <string name="home_dialog_missing_apk_title">APK الأصلي غير موجود</string>
-    <string name="home_dialog_missing_apk_message">لم يعد APK المُدخل لـ %1$s موجودًا في:\n%2$s\n\nاختر APK مرة أخرى لإعادة التصحيح باستخدام إعداداتك المحفوظة</string>
-    <string name="home_dialog_select_apk">اختر APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">اختر APK لإعادة التصحيح</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">إدارة المصادر</string>
     <string name="home_header_multi_source_hint">يتم دمج التصحيحات من كل مصدر مفعّل. يمكنك الإدارة من زر المصادر أعلاه</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">تطبيقاتك</string>
     <string name="home_banner_view">عرض</string>
     <string name="home_your_apps_install_ready">جاهز للتثبيت</string>
-    <string name="home_your_apps_newer_patch_hint">التصحيح الأحدث قد يرفع إصدار التطبيق، انقر فوق تحديث للتحقق</string>
-    <string name="home_your_apps_device_version_ready">الإصدار المُصحح v%1$s جاهز، الجهاز على v%2$s (لا حاجة لإعادة التصحيح)</string>
-    <string name="home_your_apps_install_ready_hint">الإصدار المُصحح v%1$s جاهز للتثبيت (لا حاجة لإعادة التصحيح)</string>
-    <string name="home_action_install">تثبيت</string>
     <string name="home_action_install_to_device">التثبيت على الجهاز</string>
     <string name="home_action_installing">جارٍ التثبيت…</string>
     <string name="home_action_preparing">جارٍ التحضير…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s جاهز · الجهاز على v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s جاهز، لا حاجة لإعادة التصحيح</string>
-    <string name="home_advice_unsupported">الإصدار v%1$s لم يعد مدعومًا. يرجى التحديث إلى v%2$s</string>
+    <string name="home_detail_source_disabled">معطّل</string>
+    <string name="home_detail_source_removed">تم إزالته</string>
+    <string name="home_detail_source_disabled_sub">المصدر معطّل في المصادر. قم بتمكينه لإعادة التعديل</string>
+    <string name="home_detail_source_disabled_alternatives_sub">المصدر الأصلي معطل. اختر مصدرًا بديلًا أو أعد تمكينه في المصادر</string>
+    <string name="home_detail_no_compatible_source">لا يوجد مصدر متوافق مفعل</string>
+    <string name="home_detail_choose_source">اختر مصدر التعديل</string>
     <string name="home_advice_unsupported_by_patches">الإصدار v%1$s لم يعد مدعومًا من أحدث التصحيحات</string>
     <string name="home_date_today">اليوم</string>
     <string name="home_date_yesterday">أمس</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">غير مجمّع</string>
     <string name="patch_selection_group_selected_count">%1$d تم تحديده</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">البدء من جديد</string>
+    <string name="patching_patches_count">%1$d / %2$d تعديلات</string>
+    <string name="patching_slow_warning">هذا يستغرق وقتًا أطول من المعتاد، الرجاء الانتظار...</string>
     <string name="patching_status_ready">جاهز للتصحيح</string>
     <string name="patching_status_preparing">جارٍ التحضير للتصحيح</string>
     <string name="patching_status_in_progress">جارٍ تطبيق التعديلات</string>
     <string name="patching_completed_loading_result">اكتمل التصحيح، جارٍ تحميل النتيجة…</string>
-    <string name="patching_cancelled_loading_result">تم إلغاء التصحيح، جارٍ تحميل النتيجة…</string>
+    <string name="patching_cancelled_loading_result">تم إلغاء التصحيح، جاري تحميل النتيجة...</string>
     <string name="patching_failed_loading_result">فشل التصحيح، جارٍ تحميل النتيجة…</string>
     <string name="patching_log_viewer_failed_to_read">فشل قراءة ملف السجل: %1$s</string>
     <string name="patching_log_viewer_title">ملف السجل</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">مُزال</string>
     <string name="patching_error_failed_patches">التصحيحات الفاشلة: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB متوقف · تمكين للتثبيت</string>
+    <string name="result_adb_connect_device_hint">قم بتوصيل جهاز عبر USB للتثبيت باستخدام ADB</string>
     <string name="result_screen_patch_another_button">تصحيح تطبيق آخر</string>
     <string name="result_screen_install_on_device_label">التثبيت على %1$s</string>
     <string name="result_screen_links_routed_label">تم توجيه الروابط إلى التطبيق المُصحح</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">فشل التحميل</string>
     <string name="source_error_github_pat_required">مطلوب رمز وصول شخصي (PAT) من GitHub لتنزيل مصادر طلب السحب</string>
     <string name="source_error_pr_no_artifact">لم يتم العثور على أي ملفات ناتجة عن طلب السحب</string>
-    <string name="source_sheet_manage_description">إدارة مصادر التصحيح</string>
-    <string name="source_sheet_local_label">محلي</string>
+    <string name="source_error_patcher_incompatible">تم إنشاء هذا المصدر لأداة التعديل %1$s، لكن Morphe %2$s يتضمن أداة التعديل %3$s. قم بتحديث Morphe لاستخدامها</string>
+    <string name="version_label_local">محلي</string>
     <string name="source_sheet_remote_label">عن بُعد</string>
     <string name="add_source">إضافة مصدر</string>
     <string name="source_sheet_title">مصادر التعديل</string>
     <string name="source_sheet_reload_description">إعادة تحميل التصحيحات</string>
-    <string name="source_sheet_quick_mode_hint">اختر المصدر الذي يستخدمه التصحيح السريع. المصادر المتعددة متاحة في وضع الخبير</string>
     <string name="source_sheet_multi_mode_hint">فعّل/عطّل أي مجموعة. يتم دمج التصحيحات من جميع المصادر المفعلة</string>
     <string name="source_sheet_done_button">تم</string>
     <string name="source_sheet_type_preinstalled">مثبتة مسبقًا</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">تحرير</string>
     <string name="source_sheet_move_up_description">حرّك لأعلى</string>
     <string name="source_sheet_move_down_description">حرّك لأسفل</string>
-    <string name="source_sheet_channel_older_stable">إصدار مستقر أقدم</string>
-    <string name="source_sheet_channel_older_dev">إصدار تطويري أقدم</string>
     <string name="source_sheet_ignored_mpp_title">أنماط .mpp المتجاهلة</string>
-    <string name="source_sheet_ignored_mpp_hint">يؤثر فقط على مصادر المجلدات، التي تحمّل تلقائيًا أحدث ملف .mpp في المجلد. عند اختيار هذا البناء الأحدث، يتم تخطي الملفات التي يطابق اسمها نمطًا هنا. الكلمة العادية تطابق أي ملف يحتويها (مثل debug). استخدم * لأنماط glob (مثل *-debug.mpp). يتم دائمًا تجاهل *-sources.mpp و *-javadoc.mpp</string>
+    <string name="source_sheet_ignored_mpp_hint">يؤثر هذا فقط على مصادر المجلدات، والتي تقوم بتحميل أحدث ملف .mpp في المجلد تلقائيًا. عند اختيار أحدث إصدار، يتم تخطي الملفات التي يتطابق اسمها مع نمط محدد هنا. تطابق الكلمة البسيطة أي ملف يحتوي عليها (على سبيل المثال debug). استخدم * للأنماط العامة (على سبيل المثال *-debug.mpp). يتم دائمًا تجاهل *-sources.mpp و *-javadoc.mpp</string>
     <string name="source_sheet_ignored_mpp_placeholder">مثال: debug أو *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">إضافة نمط</string>
     <string name="source_sheet_remove_pattern_description">إزالة النمط</string>
+    <string name="sources_management_signed_by">موقّع من قبل</string>
+    <string name="sources_management_signing_key_changed_badge">تم تغيير المفتاح</string>
+    <string name="sources_management_signing_key_changed_hint">تم تغيير مفتاح التوقيع. انقر لمراجعته</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">لم يتم تحديث '%1$s' لأن إصداره الأخير غير موقّع بالمفتاح الذي استخدمه سابقًا</string>
+    <string name="sources_signing_key_new">مفتاح جديد</string>
+    <string name="sources_signing_key_trust_message">الإصدار الأخير موقّع بمفتاح مختلف. إما أن المطور استبدل مفتاحه، أو أن شخصًا آخر نشر هذا الإصدار. لا تثق به إلا إذا أعلن المطور عن مفتاح جديد.</string>
+    <string name="sources_signing_key_trust_message_unsigned">الإصدار الأخير غير موقّع. إما أن المطور توقف عن توقيع الإصدارات، أو أن شخصًا آخر نشر هذا الإصدار. لا تثق به إلا إذا أعلن عنه المطور</string>
+    <string name="sources_signing_key_trust_title">هل تثق بالمفتاح الجديد؟</string>
+    <string name="sources_signing_key_trusted">المفتاح الموثوق</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">ملف محلي</string>
     <string name="patch_source_dialog_name_label">الاسم</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">يقبل رابط GitHub أو GitLab أو morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">إصدارات ما قبل الإطلاق</string>
     <string name="patch_source_dialog_pre_release_hint">احصل على وصول مبكر إلى إصدارات التعديل التجريبية الجديدة</string>
-    <string name="patch_source_dialog_experimental_title">إصدارات تجريبية للتطبيقات</string>
-    <string name="patch_source_dialog_experimental_hint">يعطي الأولوية لإصدارات التطبيقات التجريبية إذا كانت متاحة</string>
     <string name="patch_source_dialog_error_name_required">الاسم مطلوب</string>
     <string name="patch_source_dialog_error_invalid_url">أدخل عنوان GitHub أو GitLab صالحًا</string>
     <string name="patch_source_dialog_error_invalid_file">اختر ملف .mpp صالحًا</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">فتح السجلات</string>
     <string name="settings_dialog_reset_button">إعادة التعيين</string>
     <string name="settings_theme_system">النظام</string>
-    <string name="settings_signing_error_not_found">متجر المفاتيح المكوّن غير موجود: %1$s. استعد الملف، أو اختر غيره في الإعدادات، أو امسح الإعداد لاستخدام الافتراضي من Morphe</string>
     <string name="settings_search_languages_placeholder">البحث في اللغات</string>
     <string name="settings_dialog_resolves_to_message">يُحل إلى: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">متجر المفاتيح غير موجود: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">اللغة</string>
     <string name="settings_language_current_title">اللغة الحالية</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">لغة التطبيق</string>
     <string name="settings_language_search_no_results">لم يتم العثور على نتائج</string>
     <string name="settings_section_theme">المظهر</string>
+    <string name="settings_appearance_theme_mode">وضع المظهر</string>
     <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
     <string name="settings_theme_amoled">أموليد</string>
+    <string name="settings_appearance_color_style">نمط الألوان</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">أحادي اللون</string>
     <string name="settings_toggle_sharp_corners_label">زوايا حادة</string>
     <string name="settings_toggle_sharp_corners_desc">اجعل البطاقات والحوارات والأزرار مربعة</string>
     <string name="settings_section_accent_color">لون التمييز</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">بطاقات التطبيقات</string>
     <string name="settings_app_cards_color_all">لون لكل بطاقة</string>
     <string name="settings_app_cards_color_all_desc">البطاقات التي خصصتها بشكل فردي تحتفظ بلونها الخاص</string>
-    <string name="settings_section_patch_list">قائمة التعديل</string>
-    <string name="settings_toggle_patch_categories_label">فئات التصحيح</string>
-    <string name="settings_toggle_patch_categories_desc">تجميع التصحيحات في فئات قابلة للتوسيع</string>
     <string name="settings_section_background_animation">خلفيّات مُتحرِّكة</string>
     <string name="settings_background_circles">دوائر</string>
     <string name="settings_background_rings">حلقات</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">ترجمة</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">سجل التغييرات غير متاح</string>
+    <string name="changelog_badge_installed">مثبت</string>
+    <string name="changelog_badge_latest">الأحدث</string>
+    <string name="changelog_badge_prerelease">إصدار ما قبل الإطلاق</string>
+    <string name="changelog_date_today">اليوم</string>
+    <string name="changelog_date_yesterday">الأمس</string>
     <string name="changelog_dialog_title">عرض سجل التغييرات</string>
-    <string name="changelog_show_older_button">عرض الإصدارات الأقدم</string>
+    <string name="changelog_not_available">سجل التغييرات غير متاح</string>
+    <string name="changelog_section_app_support">دعم التطبيق</string>
+    <string name="changelog_section_fixes">الإصلاحات</string>
+    <string name="changelog_section_improvements">التحسينات</string>
+    <string name="changelog_section_new">الجديد</string>
+    <string name="changelog_section_other">التغييرات</string>
+    <string name="changelog_section_performance">الأداء</string>
+    <string name="changelog_show_all">عرض الكل (%1$d)</string>
+    <string name="changelog_show_less">عرض أقل</string>
     <string name="changelog_view_on_github_button">عرض على GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">المصادر</string>
+    <string name="nav_apps">التطبيقات</string>
 </resources>

@@ -13,6 +13,7 @@
     <string name="expand">প্রসারিত করুন</string>
     <string name="cancel">বাতিল</string>
     <string name="close">বন্ধ করুন</string>
+    <string name="trust">বিশ্বাস</string>
     <string name="delete">মুছুন</string>
     <string name="disabled_while_patching">প্যাচিং চলাকালীন নিষ্ক্রিয়</string>
     <string name="drop_apk_here">এখানে APK ফেলে দিন</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">ডাউনলোডের সময় সংযোগ বিচ্ছিন্ন হয়েছে, আবার চেষ্টা করুন</string>
     <string name="error_network_loading_patches">প্যাচ লোড করার সময় নেটওয়ার্ক ত্রুটি</string>
     <string name="error_patch_file_not_found">প্যাচ ফাইল পাওয়া যায়নি: %1$s</string>
-    <string name="error_no_patches_files_supplied">কোনো প্যাচ ফাইল সরবরাহ করা হয়নি</string>
-    <string name="error_input_apk_not_found">ইনপুট APK পাওয়া যায়নি</string>
     <string name="error_step_failed">%1$s ব্যর্থ হয়েছে: %2$s</string>
     <string name="error_drop_valid_apk">একটি বৈধ .apk, .apkm, .xapk, বা .apks ফাইল ফেলুন</string>
     <string name="status_saving">সংরক্ষণ করা হচ্ছে…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">অ্যাপ ফিল্টার করুন…</string>
     <string name="version">ভার্সন</string>
     <string name="version_label_stable">স্থিতিশীল</string>
-    <string name="version_label_dev">ডেভ</string>
+    <string name="version_label_prerelease">প্রিরিলিজ</string>
     <string name="version_label_experimental">পরীক্ষামূলক</string>
-    <string name="version_label_latest_dev">সর্বশেষ ডেভ</string>
     <string name="version_label_latest_stable">সর্বশেষ স্থিতিশীল</string>
+    <string name="version_label_recommended">সুপারিশকৃত</string>
+    <string name="version_label_supported">সমর্থিত</string>
     <string name="app_info_arch_label">আর্ক</string>
     <string name="app_info_min_sdk_label">সর্বনিম্ন SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">প্যাচিং বাতিল হয়েছে</string>
     <string name="view_full_logs_button">সম্পূর্ণ লগ দেখুন</string>
     <string name="error_patching_unknown">অজানা কারণে প্যাচিং ব্যর্থ হয়েছে</string>
-    <string name="error_patching_general">ত্রুটি: %1$s</string>
     <string name="error_log_label">ত্রুটি লগ</string>
     <string name="back">পেছনে</string>
     <string name="open_folder">ফোল্ডার খুলুন</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">যেকোনো সংখ্যক স্টপ, রৈখিক, রেডিয়াল বা কোনিক</string>
     <string name="card_fill_mode_solid">সলিড</string>
     <string name="card_fill_mode_solid_blurb">একটি সমতল রং</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">প্যাচ</string>
-    <string name="quick_patch_screen_start_over_button">আবার শুরু করুন</string>
-    <string name="quick_patch_patch_another_button">অন্য একটি প্যাচ</string>
-    <string name="quick_patch_select_apk">APK নির্বাচন করুন</string>
-    <string name="quick_patch_analyze_apk_failed">APK বিশ্লেষণ করা ব্যর্থ হয়েছে</string>
-    <string name="quick_patch_extract_base_apk_failed">বান্ডেল থেকে বেস APK বের করা ব্যর্থ হয়েছে</string>
-    <string name="quick_patch_unsupported_app_error">%1$s কুইক প্যাচ মোডে সমর্থিত নয়। সমর্থিত অ্যাপ: %2$s। অসমর্থিত অ্যাপের জন্য সাধারণ মোড ব্যবহার করুন</string>
     <string name="adb_install_on_button">%1$s-এ ইনস্টল করুন</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">প্যাচ লোড হচ্ছে</string>
-    <string name="patching_step_preparing">প্রস্তুত হচ্ছে</string>
     <string name="patching_step_merging_split_apk">স্প্লিট APK মার্জ করা হচ্ছে</string>
     <string name="patching_step_read_apk">APK ফাইল পড়ুন</string>
     <string name="patching_step_applying_patches">প্যাচ প্রয়োগ করা হচ্ছে</string>
-    <string name="patching_step_saving">সংরক্ষণ করা হচ্ছে</string>
     <string name="patching_step_writing_apk">প্যাচ করা APK ফাইল লেখা হচ্ছে</string>
     <string name="patching_step_signing">প্যাচ করা APK ফাইল সাইন করা হচ্ছে</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">ফাইলটি ক্ষতিগ্রস্ত হতে পারে, APKMirror থেকে পুনরায় ডাউনলোড করুন</string>
     <string name="version_status_checksum_failed">চেকসাম যাচাইকরণ ব্যর্থ হয়েছে</string>
     <string name="version_status_checksum_matches">চেকসাম APKMirror-এর সাথে মিলেছে</string>
-    <string name="version_status_older_stable">পুরানো স্থিতিশীল</string>
     <string name="version_status_newer_stable_available">নতুন স্থিতিশীল v%1$s উপলব্ধ</string>
     <string name="version_status_newer_stable_available_fallback">একটি নতুন স্থিতিশীল সংস্করণ উপলব্ধ</string>
     <string name="version_status_experimental_detail">সমর্থিত, তবে সঠিকভাবে কাজ নাও করতে পারে</string>
-    <string name="version_status_older_experimental">পুরানো পরীক্ষামূলক</string>
-    <string name="version_status_newer_experimental_available">নতুন পরীক্ষামূলক v%1$s উপলব্ধ</string>
-    <string name="version_status_newer_experimental_available_fallback">একটি নতুন পরীক্ষামূলক বিল্ড উপলব্ধ</string>
-    <string name="version_status_too_new">সংস্করণ খুব নতুন</string>
     <string name="version_status_unsupported_detail">আনুষ্ঠানিকভাবে সমর্থিত নয়, প্যাচগুলো সম্ভবত ব্যর্থ হবে</string>
-    <string name="version_status_too_old">সংস্করণ খুব পুরানো</string>
     <string name="version_status_unsupported">অসমর্থিত সংস্করণ</string>
     <string name="version_status_build_unsupported">বিল্ড সমর্থিত নয়</string>
     <string name="version_status_build_unsupported_detail">এই সংস্করণটি সমর্থিত, তবে এর এই বিল্ডটি নয়। প্যাচ টার্গেট করে এমন একটি বিল্ড পান</string>
+    <string name="version_status_build_unsupported_with_code">প্যাচগুলোর জন্য বিল্ড %1$s প্রয়োজন</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">সংস্করণ বিজ্ঞপ্তি</string>
+    <string name="version_warning_build_unsupported_message">বর্তমান: v%1$s (বিল্ড %2$s)\nপ্রয়োজনীয় বিল্ড: %3$s\n\nএটি একই সংস্করণের একটি ভিন্ন বিল্ড। প্যাচগুলো কাজ করার জন্য একটি নির্দিষ্ট বিল্ডের প্রয়োজন।</string>
     <string name="version_warning_experiment_title">আপনি কি পরীক্ষা করতে চান? 🧪</string>
-    <string name="version_warning_older_stable_title">পুরানো স্থিতিশীল সংস্করণ</string>
-    <string name="version_warning_older_stable_message">বর্তমান: v%1$s\nসর্বশেষ স্থিতিশীল: v%2$s\n\nএই সংস্করণটি সমর্থিত, তবে একটি নতুন স্থিতিশীল সংস্করণ উপলব্ধ। আপনি সাম্প্রতিক ফিক্স পেতে পারেন না।</string>
     <string name="version_warning_latest_experimental_message">বর্তমান: v%1$s\n\nএই সংস্করণটিতে প্রাথমিক পরীক্ষামূলক সমর্থন রয়েছে\n\n🔧 অ্যাপের অদ্ভুত আচরণ বা অজ্ঞাত বাগ আশা করুন, কারণ প্যাচগুলো এই অ্যাপ সংস্করণের জন্য পরিমার্জিত হচ্ছে।</string>
-    <string name="version_warning_older_experimental_title">পুরানো পরীক্ষামূলক সংস্করণ\nআপনি কি পরীক্ষা করতে চান? 🧪</string>
-    <string name="version_warning_older_experimental_message">বর্তমান: v%1$s\nসর্বশেষ পরীক্ষামূলক: v%2$s\n\nএটি একটি সমর্থিত পরীক্ষামূলক বিল্ড, তবে একটি নতুন পরীক্ষামূলক সংস্করণ উপলব্ধ। অ্যাপের অদ্ভুত আচরণ বা অজ্ঞাত বাগ আশা করুন, কারণ প্যাচগুলো এই অ্যাপ সংস্করণের জন্য পরিমার্জিত হচ্ছে।</string>
-    <string name="version_warning_too_new_message">বর্তমান: v%1$s\nসর্বশেষ পরিচিত: v%2$s\n\nএই সংস্করণটিতে প্রাথমিক পরীক্ষামূলক সমর্থন রয়েছে\n\n🔧 অ্যাপের অদ্ভুত আচরণ বা অজ্ঞাত বাগ আশা করুন, কারণ প্যাচগুলো এই অ্যাপ সংস্করণের জন্য পরিমার্জিত হচ্ছে।</string>
-    <string name="version_warning_too_old_message">বর্তমান: v%1$s\nসর্বনিম্ন সমর্থিত: v%2$s\n\nএটি আনুষ্ঠানিকভাবে সমর্থিত সংস্করণ নয়। প্যাচগুলো সম্ভবত ব্যর্থ হবে।</string>
     <string name="version_warning_unsupported_message">বর্তমান: v%1$s\n\nএটি আনুষ্ঠানিকভাবে সমর্থিত সংস্করণ নয়। প্যাচগুলো সম্ভবত ব্যর্থ হবে।</string>
     <string name="version_warning_notice_message">V%1$s দিয়ে চালিয়ে যাবেন?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">পুরানো স্থিতিশীল বিল্ড - নতুন স্থিতিশীল v%1$s উপলব্ধ</string>
-    <string name="quick_patch_warning_latest_experimental">পরীক্ষামূলক বিল্ড - সমর্থিত, তবে সঠিকভাবে কাজ নাও করতে পারে</string>
-    <string name="quick_patch_warning_older_experimental">পুরানো পরীক্ষামূলক বিল্ড - নতুন পরীক্ষামূলক v%1$s উপলব্ধ</string>
-    <string name="quick_patch_warning_build_unsupported">বিল্ড সমর্থিত নয় - এই সংস্করণটি প্যাচযোগ্য, তবে এর এই বিল্ডটি নয়</string>
-    <string name="quick_patch_warning_too_new">সংস্করণ খুব নতুন - আনুষ্ঠানিকভাবে সমর্থিত নয়, প্যাচগুলো সম্ভবত ব্যর্থ হবে</string>
-    <string name="quick_patch_warning_too_old">সংস্করণ খুব পুরানো - আনুষ্ঠানিকভাবে সমর্থিত নয়, প্যাচগুলো সম্ভবত ব্যর্থ হবে</string>
-    <string name="quick_patch_warning_unsupported_between">অসমর্থিত সংস্করণ - প্যাচগুলো সম্ভবত ব্যর্থ হবে</string>
-    <string name="quick_patch_read_apk_failed">APK পড়া ব্যর্থ হয়েছে: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">প্যাচ প্রস্তুত হচ্ছে…</string>
-    <string name="quick_patch_fetch_patches_failed">প্যাচ আনতে ব্যর্থ হয়েছে। আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন</string>
-    <string name="quick_patch_status_downloading_patches">প্যাচ ডাউনলোড হচ্ছে %1$s…</string>
-    <string name="quick_patch_download_patches_failed">প্যাচ ডাউনলোড ব্যর্থ হয়েছে: %1$s</string>
-    <string name="quick_patch_status_patching">প্যাচিং হচ্ছে…</string>
-    <string name="quick_patch_completed_adb_off">ADB বন্ধ · ইনস্টল করতে সক্রিয় করুন</string>
-    <string name="quick_patch_completed_adb_connect_device">ADB দিয়ে ইনস্টল করতে USB-এর মাধ্যমে একটি ডিভাইস সংযুক্ত করুন</string>
-    <string name="quick_patch_error_unknown_occurred">অজানা ত্রুটি ঘটেছে</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK বিশ্লেষণ করা হচ্ছে…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d প্যাচ</string>
-    <string name="quick_patch_patching_slow_warning">এটি স্বাভাবিকের চেয়ে বেশি সময় নিচ্ছে। অনুগ্রহ করে অপেক্ষা করুন…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(বিল্ড %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">এই অ্যাপের জন্য কোনো সামঞ্জস্যপূর্ণ প্যাচ নেই</string>
-    <string name="quick_patch_ready_no_matching_patches">\"%1$s\" এর সাথে মিলে এমন কোনো প্যাচ নেই</string>
-    <string name="quick_patch_ready_patch_with_defaults">ডিফল্ট সহ প্যাচ</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">সমর্থিত অ্যাপ</string>
-    <string name="quick_patch_supported_apps_subtitle">এখানে একটি সমর্থিত অ্যাপের নির্দিষ্ট APK সংস্করণ ফেলুন</string>
-    <string name="quick_patch_supported_apps_loading">সমর্থিত অ্যাপ লোড হচ্ছে…</string>
-    <string name="quick_patch_supported_apps_load_error">সমর্থিত অ্যাপ লোড করা যায়নি</string>
-    <string name="quick_patch_supported_apps_change_source">সোর্স পরিবর্তন করুন</string>
-    <string name="quick_patch_supported_apps_no_matches">কোনো মিলে যাওয়া অ্যাপ নেই</string>
-    <string name="quick_patch_supported_apps_version_any">যেকোনো সংস্করণ</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK ফাইল নির্বাচন করুন</string>
     <string name="home_could_not_resolve_patch_files">প্যাচ ফাইলগুলো সমাধান করা যায়নি</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APK সরান</string>
     <string name="home_apk_info_limited_info_warning">এই APK-এর ম্যানিফেস্ট সম্পূর্ণ পড়া যায়নি (স্প্লিট বান্ডেলের জন্য সাধারণ)। নিচের বিবরণ আনুমানিক, প্যাচিং এখনও কাজ করবে</string>
     <string name="home_apk_info_unsupported_app_warning">এই অ্যাপের জন্য কোনো সামঞ্জস্যপূর্ণ প্যাচ পাওয়া যায়নি। আপনি এখনও এগিয়ে যেতে পারেন, তবে প্যাচিংয়ের কোনো প্রভাব নাও থাকতে পারে</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">এই অ্যাপটির জন্য কোনো সামঞ্জস্যপূর্ণ প্যাচ পাওয়া যায়নি</string>
     <string name="home_apk_info_build_label">বিল্ড</string>
     <string name="home_apk_info_size_label">আকার</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">থেকে</string>
     <string name="home_stage_change_apk">APK পরিবর্তন করুন</string>
     <string name="home_stage_continue">এগিয়ে যান</string>
+    <string name="home_stage_patch">টি প্যাচ</string>
     <string name="home_stage_analyzing_title">বিশ্লেষণ করা হচ্ছে</string>
     <string name="home_stage_reading_metadata">অ্যাপ মেটাডেটা পড়া হচ্ছে…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">%1$s আনইনস্টল করবেন?</string>
     <string name="home_dialog_uninstall_message">এটি সংযুক্ত ডিভাইস থেকে %1$s সরিয়ে দেয়। ডিস্কে প্যাচ করা APK এবং আপনার ইতিহাস রাখা হয়, নিচে আপনি অন্যথা না চয়ন করলে</string>
     <string name="home_dialog_uninstall_also_forget">আপনার অ্যাপ থেকে সরান</string>
-    <string name="home_dialog_missing_apk_title">মূল APK পাওয়া যায়নি</string>
-    <string name="home_dialog_missing_apk_message">%1$s এর জন্য ইনপুট APK আর এখানে নেই:\n%2$s\n\nআপনার সংরক্ষিত সেটিংস দিয়ে পুনরায় প্যাচ করতে APK আবার নির্বাচন করুন</string>
-    <string name="home_dialog_select_apk">APK নির্বাচন করুন…</string>
-    <string name="home_dialog_select_apk_to_repatch">পুনরায় প্যাচ করার জন্য APK নির্বাচন করুন</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">সোর্স পরিচালনা করুন</string>
     <string name="home_header_multi_source_hint">প্রতিটি সক্রিয় সোর্সের প্যাচগুলো একত্রিত হয়। উপরের সোর্স বাটন থেকে পরিচালনা করুন</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">আপনার অ্যাপ</string>
     <string name="home_banner_view">দেখুন</string>
     <string name="home_your_apps_install_ready">ইনস্টল প্রস্তুত</string>
-    <string name="home_your_apps_newer_patch_hint">নতুন প্যাচ অ্যাপটি আপডেট করতে পারে, পরীক্ষা করতে আপডেটে ক্লিক করুন</string>
-    <string name="home_your_apps_device_version_ready">প্যাচ করা v%1$s প্রস্তুত, ডিভাইসে v%2$s (পুনরায় প্যাচের প্রয়োজন নেই)</string>
-    <string name="home_your_apps_install_ready_hint">প্যাচ করা v%1$s ইনস্টল করতে প্রস্তুত (পুনরায় প্যাচের প্রয়োজন নেই)</string>
-    <string name="home_action_install">ইনস্টল</string>
     <string name="home_action_install_to_device">ডিভাইসে ইনস্টল করুন</string>
     <string name="home_action_installing">ইনস্টল করা হচ্ছে…</string>
     <string name="home_action_preparing">প্রস্তুত হচ্ছে…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s প্রস্তুত · ডিভাইসে v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s প্রস্তুত, পুনরায় প্যাচের প্রয়োজন নেই</string>
-    <string name="home_advice_unsupported">v%1$s আর সমর্থিত নয়। অনুগ্রহ করে v%2$s-এ আপডেট করুন</string>
+    <string name="home_detail_source_disabled">বন্ধ রাখুন</string>
+    <string name="home_detail_source_removed">সরানো হয়েছে</string>
+    <string name="home_detail_source_disabled_sub">সোর্সগুলোতে সোর্সটি নিষ্ক্রিয় করা হয়েছে। পুনরায় প্যাচ করতে এটি সক্রিয় করুন</string>
+    <string name="home_detail_source_disabled_alternatives_sub">মূল সোর্সটি নিষ্ক্রিয় করা হয়েছে। একটি বিকল্প সোর্স নির্বাচন করুন অথবা সোর্সগুলোতে এটি পুনরায় সক্রিয় করুন</string>
+    <string name="home_detail_no_compatible_source">কোনো সামঞ্জস্যপূর্ণ সোর্স সক্রিয় নেই</string>
+    <string name="home_detail_choose_source">প্যাচ সোর্স বেছে নিন</string>
     <string name="home_advice_unsupported_by_patches">v%1$s সর্বশেষ প্যাচ দ্বারা আর সমর্থিত নয়</string>
     <string name="home_date_today">আজ</string>
     <string name="home_date_yesterday">গতকাল</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">অসংগঠিত</string>
     <string name="patch_selection_group_selected_count">%1$d নির্বাচিত</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">নতুন করে শুরু করুন</string>
+    <string name="patching_patches_count">%1$d / %2$d টি প্যাচ</string>
+    <string name="patching_slow_warning">এটি স্বাভাবিকের চেয়ে বেশি সময় নিচ্ছে। অনুগ্রহ করে অপেক্ষা করুন…</string>
     <string name="patching_status_ready">প্যাচ করতে প্রস্তুত</string>
     <string name="patching_status_preparing">প্যাচ করার প্রস্তুতি</string>
     <string name="patching_status_in_progress">প্যাচ প্রয়োগ করা হচ্ছে</string>
     <string name="patching_completed_loading_result">প্যাচিং সম্পন্ন, ফলাফল লোড হচ্ছে…</string>
-    <string name="patching_cancelled_loading_result">প্যাচিং বাতিল, ফলাফল লোড হচ্ছে…</string>
+    <string name="patching_cancelled_loading_result">প্যাচিং বাতিল করা হয়েছে, ফলাফল লোড হচ্ছে…</string>
     <string name="patching_failed_loading_result">প্যাচিং ব্যর্থ, ফলাফল লোড হচ্ছে…</string>
     <string name="patching_log_viewer_failed_to_read">লগ ফাইল পড়া ব্যর্থ হয়েছে: %1$s</string>
     <string name="patching_log_viewer_title">লগ ফাইল</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">স্ট্রিপ করা হয়েছে</string>
     <string name="patching_error_failed_patches">ব্যর্থ প্যাচ: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB বন্ধ · ইনস্টল করতে চালু করুন</string>
+    <string name="result_adb_connect_device_hint">ADB-এর মাধ্যমে ইনস্টল করতে USB-র মাধ্যমে একটি ডিভাইস সংযুক্ত করুন</string>
     <string name="result_screen_patch_another_button">আরেকটি প্যাচ</string>
     <string name="result_screen_install_on_device_label">%1$s-এ ইনস্টল করুন</string>
     <string name="result_screen_links_routed_label">প্যাচ করা অ্যাপে লিংক রাউট করা হয়েছে</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">লোড ব্যর্থ হয়েছে</string>
     <string name="source_error_github_pat_required">পুল রিকোয়েস্টের সোর্স ডাউনলোড করতে একটি GitHub PAT প্রয়োজন</string>
     <string name="source_error_pr_no_artifact">পুল রিকোয়েস্টের জন্য কোনো আর্টিফ্যাক্ট পাওয়া যায়নি</string>
-    <string name="source_sheet_manage_description">প্যাচ সোর্স পরিচালনা করুন</string>
-    <string name="source_sheet_local_label">লোকাল</string>
+    <string name="source_error_patcher_incompatible">এই সোর্সটি patcher %1$s-এর জন্য তৈরি করা হয়েছে, কিন্তু Morphe %2$s-এ patcher %3$s অন্তর্ভুক্ত রয়েছে। এটি ব্যবহার করতে Morphe আপডেট করুন</string>
+    <string name="version_label_local">লোকাল</string>
     <string name="source_sheet_remote_label">রিমোট</string>
     <string name="add_source">সোর্স যোগ করুন</string>
     <string name="source_sheet_title">প্যাচ সোর্সগুলো</string>
     <string name="source_sheet_reload_description">প্যাচ পুনরায় লোড করুন</string>
-    <string name="source_sheet_quick_mode_hint">কুইক প্যাচ কোন সোর্স ব্যবহার করে তা বেছে নিন। মাল্টি-সোর্স এক্সপার্ট মোডে উপলব্ধ</string>
     <string name="source_sheet_multi_mode_hint">যেকোনো সংমিশ্রণ সক্রিয়/নিষ্ক্রিয় করুন। সব সক্রিয় সোর্সের প্যাচগুলো একত্রিত হয়</string>
     <string name="source_sheet_done_button">সম্পন্ন</string>
     <string name="source_sheet_type_preinstalled">প্রি-ইনস্টল</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">সম্পাদনা</string>
     <string name="source_sheet_move_up_description">উপরে সরান</string>
     <string name="source_sheet_move_down_description">নিচে সরান</string>
-    <string name="source_sheet_channel_older_stable">পুরানো স্থিতিশীল</string>
-    <string name="source_sheet_channel_older_dev">পুরানো ডেভ</string>
     <string name="source_sheet_ignored_mpp_title">উপেক্ষিত .mpp প্যাটার্ন</string>
-    <string name="source_sheet_ignored_mpp_hint">শুধুমাত্র ফোল্ডার সোর্সকে প্রভাবিত করে, যা একটি ফোল্ডারে সর্বশেষ .mpp স্বয়ংক্রিয়ভাবে লোড করে। সেই সর্বশেষ বিল্ড নির্বাচন করার সময়, যেসব ফাইলের নাম এখানে একটি প্যাটার্নের সাথে মেলে সেগুলো এড়িয়ে যাওয়া হয়। একটি সাধারণ শব্দ যেকোনো ফাইলের সাথে মেলে যাতে এটি রয়েছে (যেমন debug)। গ্লোবের জন্য * ব্যবহার করুন (যেমন *-debug.mpp)। *-sources.mpp এবং *-javadoc.mpp সবসময় উপেক্ষিত হয়</string>
+    <string name="source_sheet_ignored_mpp_hint">এটি শুধুমাত্র ফোল্ডার সোর্সগুলিকে প্রভাবিত করে, যা একটি ফোল্ডারের সর্বশেষ .mpp অটোলোড করে। যখন সেই সর্বশেষ বিল্ডটি বেছে নেওয়া হয়, তখন যে ফাইলগুলোর নাম এখানে দেওয়া প্যাটার্নের সাথে মেলে সেগুলো বাদ দেওয়া হয়। একটি সাধারণ শব্দ সেই সমস্ত ফাইলের সাথে মেলে যাতে শব্দটি রয়েছে (যেমন: debug)। গ্লোবের জন্য * ব্যবহার করুন (যেমন: *-debug.mpp)। *-sources.mpp এবং *-javadoc.mpp সর্বদা উপেক্ষা করা হয়</string>
     <string name="source_sheet_ignored_mpp_placeholder">যেমন debug বা *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">প্যাটার্ন যোগ করুন</string>
     <string name="source_sheet_remove_pattern_description">প্যাটার্ন সরান</string>
+    <string name="sources_management_signed_by">স্বাক্ষরিত</string>
+    <string name="sources_management_signing_key_changed_badge">কী পরিবর্তিত হয়েছে</string>
+    <string name="sources_management_signing_key_changed_hint">সাইনিং কি পরিবর্তিত হয়েছে। এটি পর্যালোচনা করতে ক্লিক করুন</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' আপডেট করা হয়নি কারণ এর সর্বশেষ রিলিজটি আগে ব্যবহৃত কি দ্বারা স্বাক্ষরিত নয়</string>
+    <string name="sources_signing_key_new">নতুন কী</string>
+    <string name="sources_signing_key_trust_message">সর্বশেষ রিলিজটি একটি ভিন্ন কী দ্বারা স্বাক্ষরিত। হয় ডেভেলপার তাদের কী পরিবর্তন করেছেন, অথবা অন্য কেউ এই রিলিজটি প্রকাশ করেছেন। ডেভেলপার নতুন কী-র কথা ঘোষণা করলে তবেই এটি বিশ্বাস করুন</string>
+    <string name="sources_signing_key_trust_message_unsigned">সর্বশেষ রিলিজটি স্বাক্ষরিত নয়। হয় ডেভেলপার রিলিজ স্বাক্ষর করা বন্ধ করেছেন, অথবা অন্য কেউ এই রিলিজটি প্রকাশ করেছেন। ডেভেলপার এটি ঘোষণা করলে তবেই বিশ্বাস করুন</string>
+    <string name="sources_signing_key_trust_title">নতুন কী-টি বিশ্বাস করবেন?</string>
+    <string name="sources_signing_key_trusted">বিশ্বস্ত কী</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">লোকাল ফাইল</string>
     <string name="patch_source_dialog_name_label">নাম</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">GitHub, GitLab বা morphe.software/add-source লিংক গ্রহণ করে</string>
     <string name="patch_source_dialog_pre_release_title">প্রি-রিলিজ প্যাচ</string>
     <string name="patch_source_dialog_pre_release_hint">নতুন পরীক্ষামূলক প্যাচ সংস্করণে প্রাথমিক অ্যাক্সেস পায়</string>
-    <string name="patch_source_dialog_experimental_title">পরীক্ষামূলক অ্যাপ সংস্করণ</string>
-    <string name="patch_source_dialog_experimental_hint">উপলব্ধ থাকলে পরীক্ষামূলক অ্যাপ সংস্করণকে অগ্রাধিকার দেয়</string>
     <string name="patch_source_dialog_error_name_required">নাম প্রয়োজন</string>
     <string name="patch_source_dialog_error_invalid_url">একটি বৈধ GitHub বা GitLab URL লিখুন</string>
     <string name="patch_source_dialog_error_invalid_file">একটি বৈধ .mpp ফাইল নির্বাচন করুন</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">লগ খুলুন</string>
     <string name="settings_dialog_reset_button">আবার সেট করুন</string>
     <string name="settings_theme_system">সিস্টেম</string>
-    <string name="settings_signing_error_not_found">কনফিগার করা কিস্টোর পাওয়া যায়নি: %1$s। ফাইলটি পুনরুদ্ধার করুন, সেটিংসে অন্য একটি বেছে নিন, অথবা Morphe-এর ডিফল্ট ব্যবহার করতে সেটিংটি মুছে দিন</string>
     <string name="settings_search_languages_placeholder">ভাষা অনুসন্ধান করুন</string>
     <string name="settings_dialog_resolves_to_message">%1$s-এ সমাধান হয়</string>
-    <string name="settings_dialog_error_keystore_not_found">কিস্টোর পাওয়া যায়নি: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ভাষা</string>
     <string name="settings_language_current_title">বর্তমান ভাষা</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">অ্যাপ্লিকেশনের ভাষা</string>
     <string name="settings_language_search_no_results">কোনো ফলাফল পাওয়া যায়নি</string>
     <string name="settings_section_theme">থিম</string>
+    <string name="settings_appearance_theme_mode">থিম মোড</string>
     <string name="settings_theme_light">হালকা</string>
     <string name="settings_theme_dark">গাঢ়</string>
     <string name="settings_theme_amoled">অ্যামোলেড</string>
+    <string name="settings_appearance_color_style">কালার স্টাইল</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">মনোক্রোম</string>
     <string name="settings_toggle_sharp_corners_label">ধারালো কোণ</string>
     <string name="settings_toggle_sharp_corners_desc">কার্ড, ডায়ালগ এবং বাটনগুলো চৌকো করে দিন</string>
     <string name="settings_section_accent_color">অ্যাকসেন্ট রং</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">অ্যাপ কার্ড</string>
     <string name="settings_app_cards_color_all">প্রতিটি কার্ডের রং</string>
     <string name="settings_app_cards_color_all_desc">আপনি যে কার্ডগুলো পৃথকভাবে কাস্টমাইজ করেছেন সেগুলো তাদের নিজস্ব রং রাখে</string>
-    <string name="settings_section_patch_list">প্যাচ তালিকা</string>
-    <string name="settings_toggle_patch_categories_label">প্যাচ বিভাগ</string>
-    <string name="settings_toggle_patch_categories_desc">প্যাচগুলো প্রসারযোগ্য বিভাগে গ্রুপ করুন</string>
     <string name="settings_section_background_animation">ব্যাকগ্রাউন্ড অ্যানিমেশন</string>
     <string name="settings_background_circles">বৃত্ত</string>
     <string name="settings_background_rings">রিং</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">অনুবাদ</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">চেঞ্জলগ উপলব্ধ নয়</string>
+    <string name="changelog_badge_installed">ইনস্টল করা হয়েছে</string>
+    <string name="changelog_badge_latest">সর্বশেষ</string>
+    <string name="changelog_badge_prerelease">প্রি-রিলিজ</string>
+    <string name="changelog_date_today">আজ</string>
+    <string name="changelog_date_yesterday">গতকাল</string>
     <string name="changelog_dialog_title">চেঞ্জলগ দেখুন</string>
-    <string name="changelog_show_older_button">পুরানো রিলিজ দেখান</string>
+    <string name="changelog_not_available">চেঞ্জলগ উপলব্ধ নয়</string>
+    <string name="changelog_section_app_support">অ্যাপ সাপোর্ট</string>
+    <string name="changelog_section_fixes">ফিক্স</string>
+    <string name="changelog_section_improvements">উন্নতি</string>
+    <string name="changelog_section_new">নতুন</string>
+    <string name="changelog_section_other">পরিবর্তন</string>
+    <string name="changelog_section_performance">পারফরম্যান্স</string>
+    <string name="changelog_show_all">সব দেখুন (%1$d)</string>
+    <string name="changelog_show_less">কম দেখুন</string>
     <string name="changelog_view_on_github_button">GitHub-এ দেখুন</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">সোর্সসমূহ</string>
+    <string name="nav_apps">অ্যাপস</string>
 </resources>

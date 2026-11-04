@@ -1,2 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="home_header_sources_failed">
+        <item quantity="one">%1$d ta patch manbasini yuklab bo‘lmadi. Muvaffaqiyatli yuklanganlardan foydalaniladi</item>
+        <item quantity="other">%1$d ta patch manbasini yuklab bo‘lmadi. Muvaffaqiyatli yuklanganlardan foydalaniladi</item>
+    </plurals>
+    <plurals name="home_banner_update_available">
+        <item quantity="one">%1$d ta patchlangan ilova uchun yangilanish mavjud</item>
+        <item quantity="other">%1$d ta patchlangan ilova uchun yangilanishlar mavjud</item>
+    </plurals>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%1$d qator %2$s fayliga saqlandi</item>
+        <item quantity="other">%1$d qator %2$s fayliga saqlandi</item>
+    </plurals>
+    <plurals name="count_sources">
+        <item quantity="one">%1$d ta manba</item>
+        <item quantity="other">%1$d ta manba</item>
+    </plurals>
+    <plurals name="licenses_dialog_footer_count">
+        <item quantity="one">%1$d kutubxona</item>
+        <item quantity="other">%1$d kutubxona</item>
+    </plurals>
+    <plurals name="patch_selection_selected_count">
+        <item quantity="one">%2$d tadan %1$d tasi tanlandi</item>
+        <item quantity="other">%2$d tadan %1$d tasi tanlandi</item>
+    </plurals>
+    <plurals name="patch_selection_group_patch_count">
+        <item quantity="one">%1$d ta patch</item>
+        <item quantity="other">%1$d patchlar</item>
+    </plurals>
+    <plurals name="settings_app_cards_override_count">
+        <item quantity="one">%1$d ta karta buni bekor qiladi</item>
+        <item quantity="other">%1$d ta karta buni bekor qiladi</item>
+    </plurals>
+    <plurals name="home_detail_download_bundles">
+        <item quantity="one">%1$d ta paketni yuklab olish</item>
+        <item quantity="other">%1$d ta paketni yuklab olish</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d o\"zgarish</item>
+        <item quantity="other">%1$d ta o\"zgarish</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d kun oldin</item>
+        <item quantity="other">%1$d kun oldin</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d ta yangi imkoniyat</item>
+        <item quantity="other">%1$d ta yangi imkoniyat</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d ta tuzatish</item>
+        <item quantity="other">%1$d ta tuzatish</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d ta optimallashtirish</item>
+        <item quantity="other">%1$d ta optimallashtirish</item>
+    </plurals>
+</resources>

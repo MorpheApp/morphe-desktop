@@ -13,6 +13,7 @@
     <string name="expand">Ανάπτυξη</string>
     <string name="cancel">Ακύρωση</string>
     <string name="close">Κλείσιμο</string>
+    <string name="trust">Εμπιστοσύνη</string>
     <string name="delete">Διαγραφή</string>
     <string name="disabled_while_patching">Απενεργοποιημένο κατά την εφαρμογή patches</string>
     <string name="drop_apk_here">Ρίξτε το APK εδώ</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Η σύνδεση διακόπηκε κατά τη λήψη, δοκιμάστε ξανά</string>
     <string name="error_network_loading_patches">Σφάλμα δικτύου κατά τη φόρτωση των patches</string>
     <string name="error_patch_file_not_found">Το αρχείο patch δεν βρέθηκε: %1$s</string>
-    <string name="error_no_patches_files_supplied">Δεν παρέχονται αρχεία patches</string>
-    <string name="error_input_apk_not_found">Το APK εισόδου δεν βρέθηκε</string>
     <string name="error_step_failed">Το %1$s απέτυχε: %2$s</string>
     <string name="error_drop_valid_apk">Ρίξτε ένα έγκυρο αρχείο .apk, .apkm, .xapk ή .apks</string>
     <string name="status_saving">Αποθήκευση…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Φίλτρο εφαρμογών…</string>
     <string name="version">Έκδοση</string>
     <string name="version_label_stable">Σταθερό</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Προ-κυκλοφορία</string>
     <string name="version_label_experimental">Πειραματική </string>
-    <string name="version_label_latest_dev">Τελευταία Dev</string>
     <string name="version_label_latest_stable">Τελευταία σταθερή</string>
+    <string name="version_label_recommended">Συνιστάται</string>
+    <string name="version_label_supported">Υποστηρίζεται</string>
     <string name="app_info_arch_label">Αρχιτεκτονική</string>
     <string name="app_info_min_sdk_label">Ελάχιστο SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Η εφαρμογή patch ακυρώθηκε</string>
     <string name="view_full_logs_button">Προβολή πλήρων αρχείων καταγραφής</string>
     <string name="error_patching_unknown">Η εφαρμογή patch απέτυχε για άγνωστη αιτία</string>
-    <string name="error_patching_general">Σφάλμα: %1$s</string>
     <string name="error_log_label">Αρχείο καταγραφής σφαλμάτων</string>
     <string name="back">Πίσω</string>
     <string name="open_folder">Άνοιγμα φακέλου</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Οποιοσδήποτε αριθμός στάσεων, γραμμική, ακτινική ή κωνική</string>
     <string name="card_fill_mode_solid">Μονόχρωμο</string>
     <string name="card_fill_mode_solid_blurb">Ένα επίπεδο χρώμα</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Τροποποιήσεις</string>
-    <string name="quick_patch_screen_start_over_button">Ξεκινήστε από την αρχή</string>
-    <string name="quick_patch_patch_another_button">Patch άλλης εφαρμογής</string>
-    <string name="quick_patch_select_apk">Επιλογή APK</string>
-    <string name="quick_patch_analyze_apk_failed">Απέτυχε η ανάλυση του APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Απέτυχε η εξαγωγή του βασικού APK από το πακέτο</string>
-    <string name="quick_patch_unsupported_app_error">Το %1$s δεν υποστηρίζεται στη λειτουργία Γρήγορου Patch. Υποστηριζόμενες εφαρμογές: %2$s. Χρησιμοποιήστε την Κανονική λειτουργία για μη υποστηριζόμενες εφαρμογές</string>
     <string name="adb_install_on_button">Εγκατάσταση σε %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Φόρτωση τροποποιήσεων</string>
-    <string name="patching_step_preparing">Προετοιμασία</string>
     <string name="patching_step_merging_split_apk">Συγχώνευση διαχωρισμένου APK</string>
     <string name="patching_step_read_apk">Ανάγνωση αρχείου APK</string>
     <string name="patching_step_applying_patches">Εφαρμογή τροποποιήσεων</string>
-    <string name="patching_step_saving">Αποθήκευση</string>
     <string name="patching_step_writing_apk">Εγγραφή αρχείου APK με patch</string>
     <string name="patching_step_signing">Υπογραφή αρχείου APK με patch</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Το αρχείο μπορεί να είναι κατεστραμμένο, κατεβάστε ξανά από το APKMirror</string>
     <string name="version_status_checksum_failed">Η επαλήθευση του αθροίσματος ελέγχου απέτυχε</string>
     <string name="version_status_checksum_matches">Το άθροισμα ελέγχου ταιριάζει με το APKMirror</string>
-    <string name="version_status_older_stable">Παλιότερη σταθερή</string>
     <string name="version_status_newer_stable_available">Διαθέσιμη νεότερη σταθερή έκδοση v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Υπάρχει διαθέσιμη νεότερη σταθερή έκδοση</string>
     <string name="version_status_experimental_detail">Υποστηρίζεται, αλλά μπορεί να μην λειτουργεί σωστά</string>
-    <string name="version_status_older_experimental">Παλιότερη Πειραματική</string>
-    <string name="version_status_newer_experimental_available">Διαθέσιμη νεότερη πειραματική έκδοση v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Υπάρχει διαθέσιμο νεότερο πειραματικό build</string>
-    <string name="version_status_too_new">Η έκδοση είναι πολύ νέα</string>
     <string name="version_status_unsupported_detail">Δεν υποστηρίζεται επίσημα, τα patches πιθανότατα θα αποτύχουν</string>
-    <string name="version_status_too_old">Η έκδοση είναι πολύ παλιά</string>
     <string name="version_status_unsupported">Μη υποστηριζόμενη έκδοση</string>
     <string name="version_status_build_unsupported">Μη υποστηριζόμενο build</string>
     <string name="version_status_build_unsupported_detail">Αυτή η έκδοση υποστηρίζεται, αλλά όχι αυτό το build της. Αποκτήστε ένα build για το οποίο προορίζονται τα patches</string>
+    <string name="version_status_build_unsupported_with_code">Τα patches απαιτούν build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Ειδοποίηση έκδοσης</string>
+    <string name="version_warning_build_unsupported_message">Τρέχον: v%1$s (build %2$s)\nΑπαιτούμενο build: %3$s\n\nΑυτό είναι διαφορετικό build της ίδιας έκδοσης. Τα patches απαιτούν συγκεκριμένο build.</string>
     <string name="version_warning_experiment_title">Θέλεις να πειραματιστείς; 🧪</string>
-    <string name="version_warning_older_stable_title">Παλιότερη σταθερή έκδοση</string>
-    <string name="version_warning_older_stable_message">Τρέχουσα: v%1$s\nΤελευταία σταθερή: v%2$s\n\nΑυτή η έκδοση υποστηρίζεται, αλλά υπάρχει μια νεότερη σταθερή έκδοση. Μπορεί να σας λείπουν πρόσφατες διορθώσεις.</string>
     <string name="version_warning_latest_experimental_message">Τρέχουσα: v%1$s\n\nΑυτή η έκδοση έχει πρώιμη πειραματική υποστήριξη\n\n🔧 Περιμένετε περίεργη συμπεριφορά εφαρμογής ή μη εντοπισμένα σφάλματα καθώς τα patches βελτιώνονται για αυτήν την έκδοση της εφαρμογής.</string>
-    <string name="version_warning_older_experimental_title">Παλιότερη πειραματική έκδοση\nΘέλεις να πειραματιστείς; 🧪</string>
-    <string name="version_warning_older_experimental_message">Τρέχουσα: v%1$s\nΤελευταία πειραματική: v%2$s\n\nΑυτό είναι ένα υποστηριζόμενο πειραματικό build, αλλά υπάρχει νεότερη πειραματική έκδοση. Περιμένετε περίεργη συμπεριφορά εφαρμογής ή μη εντοπισμένα σφάλματα καθώς τα patches βελτιώνονται για αυτήν την έκδοση της εφαρμογής.</string>
-    <string name="version_warning_too_new_message">Τρέχουσα: v%1$s\nΝεότερη γνωστή: v%2$s\n\nΑυτή η έκδοση έχει πρώιμη πειραματική υποστήριξη\n\n🔧 Περιμένετε περίεργη συμπεριφορά εφαρμογής ή μη εντοπισμένα σφάλματα καθώς τα patches βελτιώνονται για αυτήν την έκδοση της εφαρμογής.</string>
-    <string name="version_warning_too_old_message">Τρέχουσα: v%1$s\nΠαλαιότερη υποστηριζόμενη: v%2$s\n\nΑυτή δεν είναι επίσημα υποστηριζόμενη έκδοση. Τα patches πιθανότατα θα αποτύχουν.</string>
     <string name="version_warning_unsupported_message">Τρέχουσα: v%1$s\n\nΑυτή δεν είναι επίσημα υποστηριζόμενη έκδοση. Τα patches πιθανότατα θα αποτύχουν.</string>
     <string name="version_warning_notice_message">Συνέχεια με v%1$s;</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Παλιότερο σταθερό build - διαθέσιμη νεότερη σταθερή έκδοση v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Πειραματικό build - υποστηρίζεται, αλλά μπορεί να μην λειτουργεί σωστά</string>
-    <string name="quick_patch_warning_older_experimental">Παλιότερο πειραματικό build - διαθέσιμη νεότερη πειραματική έκδοση v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Μη υποστηριζόμενο build - αυτή η έκδοση μπορεί να δεχτεί patch, αλλά όχι αυτό το build της</string>
-    <string name="quick_patch_warning_too_new">Έκδοση πολύ νέα - δεν υποστηρίζεται επίσημα, τα patches πιθανότατα θα αποτύχουν</string>
-    <string name="quick_patch_warning_too_old">Έκδοση πολύ παλιά - δεν υποστηρίζεται επίσημα, τα patches πιθανότατα θα αποτύχουν</string>
-    <string name="quick_patch_warning_unsupported_between">Μη υποστηριζόμενη έκδοση - τα patches πιθανότατα θα αποτύχουν</string>
-    <string name="quick_patch_read_apk_failed">Απέτυχε η ανάγνωση του APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Προετοιμασία patches…</string>
-    <string name="quick_patch_fetch_patches_failed">Απέτυχε η λήψη patches. Ελέγξτε τη σύνδεσή σας στο διαδίκτυο</string>
-    <string name="quick_patch_status_downloading_patches">Λήψη patches %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Απέτυχε η λήψη patches: %1$s</string>
-    <string name="quick_patch_status_patching">Εφαρμογή patch…</string>
-    <string name="quick_patch_completed_adb_off">ADB ανενεργό · Ενεργοποιήστε για εγκατάσταση</string>
-    <string name="quick_patch_completed_adb_connect_device">Συνδέστε μια συσκευή μέσω USB για εγκατάσταση με ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Παρουσιάστηκε άγνωστο σφάλμα</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Ανάλυση APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d patches</string>
-    <string name="quick_patch_patching_slow_warning">Αυτό διαρκεί περισσότερο από το συνηθισμένο. Περιμένετε…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Δεν υπάρχουν συμβατά patches για αυτήν την εφαρμογή</string>
-    <string name="quick_patch_ready_no_matching_patches">Κανένα patch δεν ταιριάζει με \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Patch με προεπιλογές</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Υποστηριζόμενες εφαρμογές</string>
-    <string name="quick_patch_supported_apps_subtitle">Ρίξτε εδώ την ακριβή έκδοση APK για μια υποστηριζόμενη εφαρμογή</string>
-    <string name="quick_patch_supported_apps_loading">Φόρτωση υποστηριζόμενων εφαρμογών…</string>
-    <string name="quick_patch_supported_apps_load_error">Δεν ήταν δυνατή η φόρτωση υποστηριζόμενων εφαρμογών</string>
-    <string name="quick_patch_supported_apps_change_source">Αλλαγή πηγής</string>
-    <string name="quick_patch_supported_apps_no_matches">Δεν υπάρχ ουν αντίστοιχες εφαρμογές</string>
-    <string name="quick_patch_supported_apps_version_any">Οποιαδήποτε έκδοση</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Επιλέξτε αρχείο APK</string>
     <string name="home_could_not_resolve_patch_files">Δεν ήταν δυνατή η εύρεση των αρχείων patch</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Αφαίρεση APK</string>
     <string name="home_apk_info_limited_info_warning">Δεν ήταν δυνατή η πλήρης ανάγνωση του manifest αυτού του APK (συνηθισμένο για split bundles). Οι παρακάτω λεπτομέρειες είναι κατά προσέγγιση, το patch θα πρέπει να λειτουργήσει</string>
     <string name="home_apk_info_unsupported_app_warning">Δεν βρέθηκαν συμβατά patches για αυτήν την εφαρμογή. Μπορείτε να συνεχίσετε, αλλά το patch μπορεί να μην έχει αποτέλεσμα</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Δεν βρέθηκαν συμβατά patches για αυτήν την εφαρμογή</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Μέγεθος</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Από</string>
     <string name="home_stage_change_apk">Αλλαγή APK</string>
     <string name="home_stage_continue">Συνέχεια</string>
+    <string name="home_stage_patch">Τροποποίηση</string>
     <string name="home_stage_analyzing_title">Ανάλυση</string>
     <string name="home_stage_reading_metadata">Ανάγνωση μεταδεδομένων εφαρμογής…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Απεγκατάσταση του %1$s;</string>
     <string name="home_dialog_uninstall_message">Αυτό αφαιρεί το %1$s από τη συνδεδεμένη συσκευή. Το APK με patch στον δίσκο και το ιστορικό σας διατηρούνται εκτός αν επιλέξετε διαφορετικά παρακάτω</string>
     <string name="home_dialog_uninstall_also_forget">Επίσης αφαίρεση από τις Εφαρμογές μου</string>
-    <string name="home_dialog_missing_apk_title">Το αρχικό APK δεν βρέθηκε</string>
-    <string name="home_dialog_missing_apk_message">Το APK εισόδου για το %1$s δε βρίσκεται πλέον στη διεύθυνση:\n%2$s\n\nΕπιλέξτε ξανά το APK για να εφαρμόσετε ξανά patch με τις αποθηκευμένες ρυθμίσεις</string>
-    <string name="home_dialog_select_apk">Επιλογή APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Επιλέξτε APK για εκ νέου patch</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Διαχείριση πηγών</string>
     <string name="home_header_multi_source_hint">Τα patches από κάθε ενεργή πηγή ενώνονται. Διαχειριστείτε τα από το κουμπί πηγών παραπάνω</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Οι εφαρμογές σας</string>
     <string name="home_banner_view">Προβολή</string>
     <string name="home_your_apps_install_ready">Έτοιμο για εγκατάσταση</string>
-    <string name="home_your_apps_newer_patch_hint">Ένα νεότερο patch μπορεί να αναβαθμίσει την εφαρμογή, κάντε κλικ στην Ενημέρωση για έλεγχο</string>
-    <string name="home_your_apps_device_version_ready">Το v%1$s με patch είναι έτοιμο, συσκευή σε v%2$s (δεν χρειάζεται νέο patch)</string>
-    <string name="home_your_apps_install_ready_hint">Το v%1$s με patch είναι έτοιμο για εγκατάσταση (δε χρειάζεται νέο patch)</string>
-    <string name="home_action_install">Εγκατάσταση</string>
     <string name="home_action_install_to_device">Εγκατάσταση στη συσκευή</string>
     <string name="home_action_installing">Εγκατάσταση…</string>
     <string name="home_action_preparing">Προετοιμασία…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s έτο ιμο · συσκευή σε v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s έτοιμο, δεν χρειάζεται νέο patch</string>
-    <string name="home_advice_unsupported">η v%1$s δεν υποστηρίζεται πλέον. Παρακαλούμε ενημερωθείτε στην v%2$s</string>
+    <string name="home_detail_source_disabled">Απενεργοποιημένο</string>
+    <string name="home_detail_source_removed">Αφαιρέθηκε</string>
+    <string name="home_detail_source_disabled_sub">Η πηγή είναι απενεργοποιημένη στις Πηγές. Ενεργοποιήστε την για να επαναλάβετε το patching</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Η αρχική πηγή είναι απενεργοποιημένη. Επιλέξτε μια εναλλακτική πηγή ή ενεργοποιήστε την ξανά στις Πηγές</string>
+    <string name="home_detail_no_compatible_source">Δεν υπάρχει ενεργοποιημένη συμβατή πηγή</string>
+    <string name="home_detail_choose_source">Επιλογή πηγής τροποποίησης</string>
     <string name="home_advice_unsupported_by_patches">η v%1$s δεν υποστηρίζεται πλέον από τα τελευταία patches</string>
     <string name="home_date_today">σήμερα</string>
     <string name="home_date_yesterday">χθες</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Χωρίς ομαδοποίηση</string>
     <string name="patch_selection_group_selected_count">%1$d επιλεγμένη</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Ξεκινήστε από την αρχή</string>
+    <string name="patching_patches_count">%1$d / %2$d διορθώσεις</string>
+    <string name="patching_slow_warning">Αυτό διαρκεί περισσότερο από το usual. Παρακαλούμε περιμένετε…</string>
     <string name="patching_status_ready">Έτο ιμο γ ια patch</string>
     <string name="patching_status_preparing">Προετο ιμασία γ ια patch</string>
     <string name="patching_status_in_progress">Εφαρμογή τροποποιήσεων</string>
     <string name="patching_completed_loading_result">Το patch ολοκληρώθηκε, φόρτωση αποτελέσματος…</string>
-    <string name="patching_cancelled_loading_result">Το patch ακυρώθηκε, φόρτωση αποτελέσματος…</string>
+    <string name="patching_cancelled_loading_result">Η εφαρμογή διορθώματος ακυρώθηκε, φόρτωση αποτελέσματος…</string>
     <string name="patching_failed_loading_result">Το patch απέτυχε, φόρτωση αποτελέσματος…</string>
     <string name="patching_log_viewer_failed_to_read">Απέτυχε η ανάγνωση του αρχείου καταγρα φής: %1$s</string>
     <string name="patching_log_viewer_title">Αρχείο καταγραφής</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Αφαιρέθηκαν</string>
     <string name="patching_error_failed_patches">Αποτυχημένα patches: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB ανενεργό · Ενεργοποιήστε για εγκατάσταση</string>
+    <string name="result_adb_connect_device_hint">Συνδέστε μια συσκευή μέσω USB για εγκατάσταση με ADB</string>
     <string name="result_screen_patch_another_button">Patch άλλης εφαρμογής</string>
     <string name="result_screen_install_on_device_label">Εγκατάσταση σε %1$s</string>
     <string name="result_screen_links_routed_label">Οι σύνδεσμοι διοχετεύονται στην εφαρμογή με patch</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Απέτυχε η φόρτωση</string>
     <string name="source_error_github_pat_required">Απαιτείται GitHub PAT για τη λήψη των πηγών του pull request</string>
     <string name="source_error_pr_no_artifact">Δεν βρέθηκαν artifacts για το pull request</string>
-    <string name="source_sheet_manage_description">Διαχείριση πηγών patch</string>
-    <string name="source_sheet_local_label">Τοπική</string>
+    <string name="source_error_patcher_incompatible">Αυτή η πηγή έχει δημιουργηθεί για τον patcher %1$s, αλλά το Morphe %2$s περιλαμβάνει τον patcher %3$s. Ενημερώστε το Morphe για να τη χρησιμοποιήσετε</string>
+    <string name="version_label_local">Τοπική</string>
     <string name="source_sheet_remote_label">Απομακρυσμένη</string>
     <string name="add_source">Προσθήκη πηγής</string>
     <string name="source_sheet_title">Πηγές τροποποιήσεων</string>
     <string name="source_sheet_reload_description">Επαναφόρτωση patches</string>
-    <string name="source_sheet_quick_mode_hint">Επιλέξτε ποια πηγή χρησιμοποιεί το Γρήγορο Patch. Η πολλαπλή πηγή είνα ι δ ιαθέσιμη στη λειτουργία Expert</string>
     <string name="source_sheet_multi_mode_hint">Ενεργοπο ιήστε/Απενεργοπο ιήστε οποιονδήποτε συνδυασμό. Τα patches από όλες τις ενεργές πηγές ενώνονται</string>
     <string name="source_sheet_done_button">Τέλος</string>
     <string name="source_sheet_type_preinstalled">Προεγκατεστημένες</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Επεξεργασία</string>
     <string name="source_sheet_move_up_description">Μετακίνηση πάνω</string>
     <string name="source_sheet_move_down_description">Μετακίνηση κάτω</string>
-    <string name="source_sheet_channel_older_stable">Παλιότερη Σταθερή</string>
-    <string name="source_sheet_channel_older_dev">Παλιότερη Dev</string>
     <string name="source_sheet_ignored_mpp_title">Πρότυπα .mpp που αγνοούνται</string>
-    <string name="source_sheet_ignored_mpp_hint">Επηρεάζει μόνο τις πηγές φακέλων, οι οποίες φορτώνουν αυτόματα το νεότερο .mpp σε έναν φάκελο. Κατά την επιλογή αυτού του νεότερου build, παραλείπονται αρχεία των οποίων το όνομα ταιριάζει με κάποιο πρότυπο εδώ. Μια απλή λέξη ταιριάζει με οποιοδήποτε αρχείο την περιέχει (π.χ. debug). Χρησιμοπο ιήστε * γ ια globs (π.χ. *- debug.mpp). Τα *- sources.mpp κα ι *- javadoc.mpp αγνοούντα ι πάντα</string>
+    <string name="source_sheet_ignored_mpp_hint">Επηρεάζει μόνο τις πηγές φακέλων, οι οποίες φορτώνουν αυτόματα το νεότερο .mpp σε έναν φάκελο. Κατά την επιλογή αυτής της νεότερης έκδοσης, τα αρχεία των οποίων το όνομα ταιριάζει με ένα πρότυπο εδώ παραλείπονται. Μια απλή λέξη ταιριάζει με οποιοδήποτε αρχείο την περιέχει (π.χ. debug). Χρησιμοποιήστε το * για globs (π.χ. *-debug.mpp). Τα *-sources.mpp και *-javadoc.mpp αγνοούνται πάντα</string>
     <string name="source_sheet_ignored_mpp_placeholder">π.χ. debug ή *- debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Προσθήκη προτύπου</string>
     <string name="source_sheet_remove_pattern_description">Αφαίρεση προτύπου</string>
+    <string name="sources_management_signed_by">Υπογεγραμμένο από</string>
+    <string name="sources_management_signing_key_changed_badge">Το κλειδί άλλαξε</string>
+    <string name="sources_management_signing_key_changed_hint">Το κλειδί υπογραφής άλλαξε. Κάντε κλικ για να το ελέγξετε</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">Το '%1$s' δεν ενημερώθηκε επειδή η τελευταία του έκδοση δεν είναι υπογεγραμμένη με το κλειδί που χρησιμοποιούσε προηγουμένως</string>
+    <string name="sources_signing_key_new">Νέο κλειδί</string>
+    <string name="sources_signing_key_trust_message">Η τελευταία έκδοση είναι υπογεγραμμένη με διαφορετικό κλειδί. Είτε ο προγραμματιστής αντικατέστησε το κλειδί του, είτε κάποιος άλλος δημοσίευσε αυτή την έκδοση. Εμπιστευτείτε το μόνο αν ο προγραμματιστής ανακοίνωσε ένα νέο κλειδί</string>
+    <string name="sources_signing_key_trust_message_unsigned">Η τελευταία έκδοση δεν είναι υπογεγραμμένη. Είτε ο προγραμματιστής σταμάτησε να υπογράφει τις εκδόσεις, είτε κάποιος άλλος δημοσίευσε αυτή την έκδοση. Εμπιστευτείτε την μόνο αν ο προγραμματιστής το ανακοίνωσε</string>
+    <string name="sources_signing_key_trust_title">Να εμπιστευτείτε το νέο κλειδί;</string>
+    <string name="sources_signing_key_trusted">Έμπιστο κλειδί</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Τοπικό αρχείο</string>
     <string name="patch_source_dialog_name_label">Όνομα</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Δέχετα ι Git Hub, GitLab ή σύνδεσμο morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Patches προ- έκδοσης</string>
     <string name="patch_source_dialog_pre_release_hint">Λαμβάνε ι πρόωρη πρόσβαση σε νέες πειραμστικές εκδόσε ις patches</string>
-    <string name="patch_source_dialog_experimental_title">Πειραμστικές εκδόσε ις εφαρμογών</string>
-    <string name="patch_source_dialog_experimental_hint">Δίνει προτερα ιότ ητα σε πειραμστικές εκδόσε ις εφαρμογών, αν είνα ι δ ιαθέσιμες</string>
     <string name="patch_source_dialog_error_name_required">Το όνομα είνα ι υποχρεωτ ικό</string>
     <string name="patch_source_dialog_error_invalid_url">Εισάγετε έν α έγκυρο URL Git Hub ή GitLab</string>
     <string name="patch_source_dialog_error_invalid_file">Επ ιλέξτε έν α έγκυρο αρχείο .mpp</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Άνοιγμα αρχείων καταγραφής</string>
     <string name="settings_dialog_reset_button">Επαναφορά</string>
     <string name="settings_theme_system">Σύστημα</string>
-    <string name="settings_signing_error_not_found">Το ρυθμισμένο keystore δεν βρέθηκε: %1$s. Επαναφέρετε το αρχείο, επιλέξτε άλλο στις Ρυθμίσεις ή καθαρίστε τη ρύθμιση για να χρησιμοποιηθεί το προεπιλεγμένο του Morphe</string>
     <string name="settings_search_languages_placeholder">Αναζήτηση γλωσσών</string>
     <string name="settings_dialog_resolves_to_message">Αναλύεται σε: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Το keystore δεν βρέθηκε: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Γλώσσα</string>
     <string name="settings_language_current_title">Τρέχουσα γλώσσα</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Γλώσσα εφαρμογής</string>
     <string name="settings_language_search_no_results">Δε βρέθηκαν αποτελέσματα</string>
     <string name="settings_section_theme">Θέμα</string>
+    <string name="settings_appearance_theme_mode">Λειτουργία θέματος</string>
     <string name="settings_theme_light">Φωτεινό</string>
     <string name="settings_theme_dark">Σκοτεινό</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Στυλ χρώματος</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Μονόχρωμο</string>
     <string name="settings_toggle_sharp_corners_label">Αιχμηρές γωνίες</string>
     <string name="settings_toggle_sharp_corners_desc">Κάντε τετράγωνες τις κάρτες, τα παράθυρα διαλόγου και τα κουμπιά</string>
     <string name="settings_section_accent_color">Χρώμα έμφασης</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Κάρτες εφαρμογών</string>
     <string name="settings_app_cards_color_all">Χρώμα για κάθε κάρτα</string>
     <string name="settings_app_cards_color_all_desc">Οι κάρτες που έχετε προσαρμόσει μεμονωμένα διατηρούν το δικό τους χρώμα</string>
-    <string name="settings_section_patch_list">Λίστα patches</string>
-    <string name="settings_toggle_patch_categories_label">Κατηγορίες patches</string>
-    <string name="settings_toggle_patch_categories_desc">Ομαδοποίηση patches σε αναπτυσσόμενες κατηγορίες</string>
     <string name="settings_section_background_animation">Κινούμενο σχέδιο ταπετσαρίας</string>
     <string name="settings_background_circles">Κύκλοι</string>
     <string name="settings_background_rings">Δακτύλιοι</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Μετάφραση</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Το αρχείο αλλαγών δεν είναι διαθέσιμο</string>
+    <string name="changelog_badge_installed">Εγκατεστημένο</string>
+    <string name="changelog_badge_latest">Τελευταίο</string>
+    <string name="changelog_badge_prerelease">Προ-κυκλοφορία</string>
+    <string name="changelog_date_today">Σήμερα</string>
+    <string name="changelog_date_yesterday">Χθες</string>
     <string name="changelog_dialog_title">Προβολή αρχείου αλλαγών</string>
-    <string name="changelog_show_older_button">Εμφάνιση παλαιότερων εκδόσεων</string>
+    <string name="changelog_not_available">Το αρχείο αλλαγών δεν είναι διαθέσιμο</string>
+    <string name="changelog_section_app_support">Υποστήριξη εφαρμογής</string>
+    <string name="changelog_section_fixes">Διορθώσεις</string>
+    <string name="changelog_section_improvements">Βελτιώσεις</string>
+    <string name="changelog_section_new">Νέο</string>
+    <string name="changelog_section_other">Αλλαγές</string>
+    <string name="changelog_section_performance">Απόδοση</string>
+    <string name="changelog_show_all">Εμφάνιση όλων (%1$d)</string>
+    <string name="changelog_show_less">Εμφάνιση λιγότερων</string>
     <string name="changelog_view_on_github_button">Προβολή στο GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Πηγές</string>
+    <string name="nav_apps">Εφαρμογές</string>
 </resources>

@@ -16,22 +16,6 @@
         <item quantity="one">%1$d աղբյուր</item>
         <item quantity="other">%1$d աղբյուր</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Կկիրառվի %1$d փոփոխություն</item>
-        <item quantity="other">կիրառվելու է %1$d փաթեթ</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d բացառված է</item>
-        <item quantity="other">%1$d բացառված է</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d միացված է</item>
-        <item quantity="other">%1$d միացված է</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d անջատված է</item>
-        <item quantity="other">%1$d անջատված է</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d գրադարան</item>
         <item quantity="other">%1$d գրադարաններ</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d միջուկ</item>
         <item quantity="other">%1$d միջուկ</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d փոփոխություն</item>
+        <item quantity="other">%1$d փոփոխություն</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d օր առաջ</item>
+        <item quantity="other">%1$d օր առաջ</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d հնարավորություն</item>
+        <item quantity="other">%1$d հնարավորություն</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d ուղղում</item>
+        <item quantity="other">%1$d ուղղում</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d օպտիմիզացիա</item>
+        <item quantity="other">%1$d օպտիմիզացիա</item>
     </plurals>
 </resources>

@@ -13,6 +13,7 @@
     <string name="expand">펼치기</string>
     <string name="cancel">취소</string>
     <string name="close">닫기</string>
+    <string name="trust">신뢰</string>
     <string name="delete">삭제</string>
     <string name="disabled_while_patching">패치 중 비활성화됨</string>
     <string name="drop_apk_here">APK를 여기에 놓으세요</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">다운로드 중 연결이 끊어졌습니다. 다시 시도하세요</string>
     <string name="error_network_loading_patches">패치를 불러오는 중 네트워크 오류가 발생하였습니다</string>
     <string name="error_patch_file_not_found">패치 파일을 찾을 수 없음: %1$s</string>
-    <string name="error_no_patches_files_supplied">제공된 패치 파일이 없습니다</string>
-    <string name="error_input_apk_not_found">입력 APK를 찾을 수 없습니다</string>
     <string name="error_step_failed">%1$s 실패: %2$s</string>
     <string name="error_drop_valid_apk">유효한 .apk, .apkm, .xapk 또는 .apks 파일을 끌어다 놓으세요</string>
     <string name="status_saving">저장하는 중…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">앱 필터링…</string>
     <string name="version">버전</string>
     <string name="version_label_stable">안정 버전</string>
-    <string name="version_label_dev">개발자 버전</string>
+    <string name="version_label_prerelease">Pre-release</string>
     <string name="version_label_experimental">실험 버전</string>
-    <string name="version_label_latest_dev">최신 개발자 버전</string>
     <string name="version_label_latest_stable">최신 안정 버전</string>
+    <string name="version_label_recommended">권장 버전</string>
+    <string name="version_label_supported">지원됨</string>
     <string name="app_info_arch_label">아키텍처</string>
     <string name="app_info_min_sdk_label">최소 SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">패치 취소됨</string>
     <string name="view_full_logs_button">전체 로그 보기</string>
     <string name="error_patching_unknown">알 수 없는 이유로 패치에 실패하였습니다</string>
-    <string name="error_patching_general">오류: %1$s</string>
     <string name="error_log_label">오류 로그</string>
     <string name="back">뒤로</string>
     <string name="open_folder">폴더 열기</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">선형, 방사형 또는 원뿔형의 정지점을 원하는 수만큼 사용할 수 있습니다</string>
     <string name="card_fill_mode_solid">단색</string>
     <string name="card_fill_mode_solid_blurb">단색 하나</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">패치</string>
-    <string name="quick_patch_screen_start_over_button">다시 시작</string>
-    <string name="quick_patch_patch_another_button">다른 패치</string>
-    <string name="quick_patch_select_apk">APK 선택</string>
-    <string name="quick_patch_analyze_apk_failed">APK 분석 실패</string>
-    <string name="quick_patch_extract_base_apk_failed">번들에서 기본 APK 추출 실패</string>
-    <string name="quick_patch_unsupported_app_error">빠른 패치 모드에서는 %1$s 앱을 지원하지 않습니다. 지원되는 앱: %2$s. 지원되지 않는 앱은 일반 모드를 사용하세요</string>
     <string name="adb_install_on_button">%1$s에 설치</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">패치를 불러오는 중</string>
-    <string name="patching_step_preparing">준비하는 중</string>
     <string name="patching_step_merging_split_apk">분할 APK를 병합하는 중</string>
     <string name="patching_step_read_apk">APK 파일을 읽어오는 중</string>
     <string name="patching_step_applying_patches">패치를 적용하는 중</string>
-    <string name="patching_step_saving">저장하는 중</string>
     <string name="patching_step_writing_apk">패치된 APK 파일을 작성하는 중</string>
     <string name="patching_step_signing">패치된 APK 파일에 서명하는 중</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">파일이 손상되었을 수 있습니다. APKMirror에서 다시 다운로드하세요</string>
     <string name="version_status_checksum_failed">체크섬 검증 실패</string>
     <string name="version_status_checksum_matches">체크섬이 APKMirror와 일치합니다</string>
-    <string name="version_status_older_stable">이전 안정 버전</string>
     <string name="version_status_newer_stable_available">최신 안정 버전 v%1$s 사용 가능</string>
     <string name="version_status_newer_stable_available_fallback">최신 안정 버전을 사용할 수 있습니다</string>
     <string name="version_status_experimental_detail">지원되지만 제대로 작동하지 않을 수 있습니다</string>
-    <string name="version_status_older_experimental">이전 실험 버전</string>
-    <string name="version_status_newer_experimental_available">최신 실험 버전 v%1$s 사용 가능</string>
-    <string name="version_status_newer_experimental_available_fallback">최신 실험 빌드를 사용할 수 있습니다</string>
-    <string name="version_status_too_new">버전이 너무 최신입니다</string>
     <string name="version_status_unsupported_detail">공식 지원되지 않으며 패치가 실패할 가능성이 높습니다</string>
-    <string name="version_status_too_old">버전이 너무 오래되었습니다</string>
     <string name="version_status_unsupported">지원되지 않는 버전</string>
     <string name="version_status_build_unsupported">지원되지 않는 빌드</string>
     <string name="version_status_build_unsupported_detail">이 버전은 지원되지만 이 빌드는 지원되지 않습니다. 패치가 대상으로 하는 빌드를 받으세요</string>
+    <string name="version_status_build_unsupported_with_code">패치는 빌드 %1$s가 필요합니다</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">버전 알림</string>
+    <string name="version_warning_build_unsupported_message">현재 버전: v%1$s (빌드 %2$s)\n필요한 빌드: %3$s\n\n동일한 버전이지만 빌드가 다릅니다. 패치를 적용하려면 특정 빌드가 필요합니다</string>
     <string name="version_warning_experiment_title">실험해 보시겠습니까? 🧪</string>
-    <string name="version_warning_older_stable_title">이전 안정 버전</string>
-    <string name="version_warning_older_stable_message">현재 버전: v%1$s\n최신 안정 버전: v%2$s\n\n이 버전은 지원되지만 최신 안정 버전을 사용할 수 있습니다. 최근 수정 사항이 누락되었을 수 있습니다.</string>
     <string name="version_warning_latest_experimental_message">현재 버전: v%1$s\n\n이 버전은 초기 실험 지원 대상입니다\n\n🔧 이 앱 버전에 맞춰 패치가 개선되는 동안 예상되지 않은 동작이나 미확인 버그가 발생할 수 있습니다.</string>
-    <string name="version_warning_older_experimental_title">이전 실험 버전\n실험해 보시겠어요? 🧪</string>
-    <string name="version_warning_older_experimental_message">현재 버전: v%1$s\n최신 실험 버전: v%2$s\n\n지원되는 실험 빌드이지만 최신 실험 버전을 사용할 수 있습니다. 이 앱 버전에 맞춰 패치가 개선되는 동안 예상되지 않은 동작이나 미확인 버그가 발생할 수 있습니다.</string>
-    <string name="version_warning_too_new_message">현재 버전: v%1$s\n알려진 최신 버전: v%2$s\n\n이 버전은 초기 실험 지원 대상입니다\n\n🔧 이 앱 버전에 맞춰 패치가 개선되는 동안 예상되지 않은 동작이나 미확인 버그가 발생할 수 있습니다.</string>
-    <string name="version_warning_too_old_message">현재 버전: v%1$s\n지원되는 최소 버전: v%2$s\n\n공식 지원 버전이 아닙니다. 패치가 실패할 가능성이 높습니다.</string>
     <string name="version_warning_unsupported_message">현재 버전: v%1$s\n\n공식 지원 버전이 아닙니다. 패치가 실패할 가능성이 높습니다.</string>
     <string name="version_warning_notice_message">v%1$s로 계속할까요?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">이전 안정 빌드 - 최신 안정 버전 v%1$s 사용 가능</string>
-    <string name="quick_patch_warning_latest_experimental">실험 빌드 - 지원되지만 제대로 작동하지 않을 수 있습니다</string>
-    <string name="quick_patch_warning_older_experimental">이전 실험 빌드 - 최신 실험 버전 v%1$s 사용 가능</string>
-    <string name="quick_patch_warning_build_unsupported">지원되지 않는 빌드 - 이 버전은 패치할 수 있지만 이 빌드는 패치할 수 없습니다</string>
-    <string name="quick_patch_warning_too_new">버전이 너무 최신입니다 - 공식 지원되지 않으며 패치가 실패할 가능성이 높습니다</string>
-    <string name="quick_patch_warning_too_old">버전이 너무 오래됨 - 공식 지원되지 않으며 패치가 실패할 가능성이 높습니다</string>
-    <string name="quick_patch_warning_unsupported_between">지원되지 않는 버전 - 패치가 실패할 가능성이 높습니다</string>
-    <string name="quick_patch_read_apk_failed">APK을 읽을 수 없습니다: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">패치를 준비하는 중…</string>
-    <string name="quick_patch_fetch_patches_failed">패치를 가져오지 못하였습니다. 인터넷 연결을 확인하세요</string>
-    <string name="quick_patch_status_downloading_patches">패치 %1$s를 다운로드하는 중…</string>
-    <string name="quick_patch_download_patches_failed">패치를 다운로드할 수 없습니다: %1$s</string>
-    <string name="quick_patch_status_patching">패치하는 중…</string>
-    <string name="quick_patch_completed_adb_off">ADB 꺼짐 · 설치하려면 활성화하세요</string>
-    <string name="quick_patch_completed_adb_connect_device">ADB로 설치하려면 USB로 기기를 연결하세요</string>
-    <string name="quick_patch_error_unknown_occurred">알 수 없는 오류가 발생하였습니다</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK를 분석하는 중…</string>
-    <string name="quick_patch_patching_patches_count"> %1$d / %2$d  개의 패치</string>
-    <string name="quick_patch_patching_slow_warning">평소보다 오래 걸리고 있습니다. 잠시 기다려 주세요…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(빌드 %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">이 앱에 호환되는 패치가 없습니다</string>
-    <string name="quick_patch_ready_no_matching_patches">'%1$s'에 해당하는 패치가 없습니다</string>
-    <string name="quick_patch_ready_patch_with_defaults">기본값으로 패치</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">지원되는 앱</string>
-    <string name="quick_patch_supported_apps_subtitle">지원되는 앱의 정확한 APK 버전을 여기에 놓으세요</string>
-    <string name="quick_patch_supported_apps_loading">지원되는 앱을 불러오는 중…</string>
-    <string name="quick_patch_supported_apps_load_error">지원되는 앱을 불러올 수 없습니다</string>
-    <string name="quick_patch_supported_apps_change_source">소스 변경</string>
-    <string name="quick_patch_supported_apps_no_matches">일치하는 앱이 없음</string>
-    <string name="quick_patch_supported_apps_version_any">모든 버전</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK 파일 선택</string>
     <string name="home_could_not_resolve_patch_files">패치 파일을 확인할 수 없습니다</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APK 제거</string>
     <string name="home_apk_info_limited_info_warning">이 APK의 매니페스트를 완전히 읽을 수 없습니다 (분할 번들에서 흔함). 아래 세부 정보는 근사치이며, 패치는 여전히 작동합니다</string>
     <string name="home_apk_info_unsupported_app_warning">이 앱에 호환되는 패치를 찾을 수 없습니다. 계속 진행할 수는 있지만 패치가 효과가 없을 수 있습니다</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">이 앱과 호환되는 패치를 찾을 수 없습니다</string>
     <string name="home_apk_info_build_label">빌드</string>
     <string name="home_apk_info_size_label">크기</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">출처</string>
     <string name="home_stage_change_apk">APK 변경</string>
     <string name="home_stage_continue">계속</string>
+    <string name="home_stage_patch">패치 진행</string>
     <string name="home_stage_analyzing_title">분석하는 중</string>
     <string name="home_stage_reading_metadata">앱 메타데이터를 읽는 중…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,13 +192,6 @@
     <string name="home_dialog_uninstall_title">%1$s를 제거할까요?</string>
     <string name="home_dialog_uninstall_message">그러면 연결된 기기에서 %1$s가 제거됩니다. 아래에서 달리 선택하지 않는 한 디스크의 패치된 APK와 기록은 유지됩니다</string>
     <string name="home_dialog_uninstall_also_forget">내 앱에서도 제거</string>
-    <string name="home_dialog_missing_apk_title">원본 APK를 찾을 수 없습니다</string>
-    <string name="home_dialog_missing_apk_message">%1$s의 입력 APK가 더 이상 다음 위치에 없습니다:
-%2$s
-
-저장된 설정으로 다시 패치하려면 APK를 다시 선택하세요</string>
-    <string name="home_dialog_select_apk">APK 선택…</string>
-    <string name="home_dialog_select_apk_to_repatch">다시 패치할 APK 선택</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">소스 관리</string>
     <string name="home_header_multi_source_hint">사용하도록 설정된 모든 소스의 패치가 통합됩니다. 위의 소스 버튼에서 관리하세요</string>
@@ -288,10 +228,6 @@
     <string name="home_filter_your_apps">내 앱</string>
     <string name="home_banner_view">보기</string>
     <string name="home_your_apps_install_ready">설치 준비 완료</string>
-    <string name="home_your_apps_newer_patch_hint">최신 패치가 앱 버전을 올릴 수 있습니다. 업데이트를 클릭하여 확인하세요</string>
-    <string name="home_your_apps_device_version_ready">패치된 v%1$s 준비 완료, 기기는 v%2$s(다시 패치할 필요 없음)</string>
-    <string name="home_your_apps_install_ready_hint">패치된 v%1$s 설치 준비 완료(다시 패치할 필요 없음)</string>
-    <string name="home_action_install">설치하기</string>
     <string name="home_action_install_to_device">기기에 설치</string>
     <string name="home_action_installing">설치하는 중…</string>
     <string name="home_action_preparing">준비 중…</string>
@@ -332,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s 준비 완료 · 기기는 v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s 준비 완료, 다시 패치할 필요 없음</string>
-    <string name="home_advice_unsupported">v%1$s는 더 이상 지원되지 않습니다. v%2$s로 업데이트하세요</string>
+    <string name="home_detail_source_disabled">비활성화됨</string>
+    <string name="home_detail_source_removed">제거됨</string>
+    <string name="home_detail_source_disabled_sub">소스 탭에서 소스가 비활성화되어 있습니다. 다시 패치하려면 해당 소스를 활성화하세요</string>
+    <string name="home_detail_source_disabled_alternatives_sub">원본 소스가 비활성화되어 있습니다. 소스 탭에서 다른 소스를 선택하거나 원본 소스를 다시 활성화하세요</string>
+    <string name="home_detail_no_compatible_source">활성화된 호환 소스가 없습니다</string>
+    <string name="home_detail_choose_source">패치 소스 선택</string>
     <string name="home_advice_unsupported_by_patches">v%1$s는 최신 패치에서 더 이상 지원되지 않습니다</string>
     <string name="home_date_today">오늘</string>
     <string name="home_date_yesterday">어제</string>
@@ -430,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">그룹화되지 않음</string>
     <string name="patch_selection_group_selected_count">%1$d 개 선택됨</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">다시 시작</string>
+    <string name="patching_patches_count"> %1$d / %2$d  개의 패치</string>
+    <string name="patching_slow_warning">평소보다 시간이 오래 걸리고 있습니다. 잠시만 기다려 주세요…</string>
     <string name="patching_status_ready">패치 준비 완료</string>
     <string name="patching_status_preparing">패치 준비 중</string>
     <string name="patching_status_in_progress">패치를 적용하는 중</string>
     <string name="patching_completed_loading_result">패치 완료, 결과를 불러오는 중…</string>
-    <string name="patching_cancelled_loading_result">패치 취소됨, 결과를 불러오는 중…</string>
+    <string name="patching_cancelled_loading_result">패치가 취소됨, 결과를 불러오는 중…</string>
     <string name="patching_failed_loading_result">패치 실패, 결과를 불러오는 중…</string>
     <string name="patching_log_viewer_failed_to_read">로그 파일을 읽지 못했습니다: %1$s</string>
     <string name="patching_log_viewer_title">로그 파일</string>
@@ -470,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">제거됨</string>
     <string name="patching_error_failed_patches">실패한 패치: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB 꺼짐 · 설치하려면 활성화하세요</string>
+    <string name="result_adb_connect_device_hint">ADB로 설치하려면 USB로 기기를 연결하세요</string>
     <string name="result_screen_patch_another_button">다른 앱 패치</string>
     <string name="result_screen_install_on_device_label">%1$s에 설치</string>
     <string name="result_screen_links_routed_label">링크가 패치된 앱으로 연결됨</string>
@@ -569,13 +515,12 @@
     <string name="source_error_failed_to_load">불러오기 실패</string>
     <string name="source_error_github_pat_required">Pull requests 소스를 다운로드하려면 GitHub PAT가 필요합니다</string>
     <string name="source_error_pr_no_artifact">Pull request에 대한 아티팩트를 찾을 수 없습니다</string>
-    <string name="source_sheet_manage_description">패치 소스 관리</string>
-    <string name="source_sheet_local_label">로컬</string>
+    <string name="source_error_patcher_incompatible">이 소스는 패처 %1$s용으로 빌드되었지만, Morphe %2$s에는 패처 %3$s가 포함되어 있습니다. 이를 사용하려면 Morphe를 업데이트하세요</string>
+    <string name="version_label_local">로컬</string>
     <string name="source_sheet_remote_label">원격</string>
     <string name="add_source">소스 추가</string>
     <string name="source_sheet_title">패치 소스</string>
     <string name="source_sheet_reload_description">패치 다시 불러오기</string>
-    <string name="source_sheet_quick_mode_hint">빠른 패치에서 사용할 소스를 선택하세요. 전문가 모드에서는 여러 소스를 사용할 수 있습니다</string>
     <string name="source_sheet_multi_mode_hint">원하는 조합으로 사용/사용 안 함을 설정하세요. 사용하도록 설정된 모든 소스의 패치가 통합됩니다</string>
     <string name="source_sheet_done_button">완료</string>
     <string name="source_sheet_type_preinstalled">미리 설치됨</string>
@@ -585,13 +530,21 @@
     <string name="source_sheet_edit_description">편집</string>
     <string name="source_sheet_move_up_description">위로 이동</string>
     <string name="source_sheet_move_down_description">아래로 이동</string>
-    <string name="source_sheet_channel_older_stable">이전 안정 버전</string>
-    <string name="source_sheet_channel_older_dev">이전 개발 버전</string>
     <string name="source_sheet_ignored_mpp_title">무시되는 .mpp 패턴</string>
-    <string name="source_sheet_ignored_mpp_hint">폴더 소스에만 적용되며, 폴더에 있는 최신 .mpp를 자동으로 불러옵니다. 해당 최신 빌드를 선택할 때 여기의 패턴과 이름이 일치하는 파일은 건너뜁니다. 일반 단어는 해당 단어를 포함하는 모든 파일과 일치합니다(예: debug). *를 사용하여 글로브 패턴을 지정하세요(예: *-debug.mpp). *-sources.mpp 및 *-javadoc.mpp는 항상 무시됩니다</string>
+    <string name="source_sheet_ignored_mpp_hint">폴더 소스에만 적용되는 설정입니다. 폴더 소스는 폴더 안에서 가장 최신 버전의 .mpp 파일을 자동으로 불러옵니다. 이때 파일을 선택하는 과정에서 여기에 지정한 패턴과 일치하는 파일은 제외됩니다. 일반 단어를 입력하면 파일 이름에 해당 단어가 포함된 모든 파일이 제외됩니다 (예시: debug). 별표(*)를 사용하면 와일드카드 패턴으로 지정할 수 있습니다 (예시: *-debug.mpp). 단, *-sources.mpp 및 *-javadoc.mpp 파일은 항상 제외됩니다</string>
     <string name="source_sheet_ignored_mpp_placeholder">예: debug 또는 *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">패턴 추가</string>
     <string name="source_sheet_remove_pattern_description">패턴 제거</string>
+    <string name="sources_management_signed_by">서명자</string>
+    <string name="sources_management_signing_key_changed_badge">키 변경됨</string>
+    <string name="sources_management_signing_key_changed_hint">서명키가 변경되었습니다. 확인하려면 클릭하세요</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' 앱은 최신 릴리스가 이전에 사용하던 키로 서명되지 않아 업데이트되지 않았습니다</string>
+    <string name="sources_signing_key_new">새 키</string>
+    <string name="sources_signing_key_trust_message">최신 릴리스가 이전과 다른 키로 서명되었습니다. 개발자가 서명키를 변경했거나 다른 사람이 해당 릴리스를 게시했을 수 있습니다. 개발자가 새 키를 공지한 경우에만 신뢰하세요</string>
+    <string name="sources_signing_key_trust_message_unsigned">최신 릴리스에 서명이 없습니다. 개발자가 릴리스 서명을 중단했거나 다른 사람이 해당 릴리스를 게시했을 수 있습니다. 개발자가 해당 릴리스를 공식적으로 공지한 경우에만 신뢰하세요</string>
+    <string name="sources_signing_key_trust_title">새 키를 신뢰하시겠습니까?</string>
+    <string name="sources_signing_key_trusted">신뢰할 수 있는 키</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">로컬 파일</string>
     <string name="patch_source_dialog_name_label">이름</string>
@@ -601,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">GitHub, GitLab 또는 morphe.software/add-source 링크를 허용합니다</string>
     <string name="patch_source_dialog_pre_release_title">Pre-release 패치</string>
     <string name="patch_source_dialog_pre_release_hint">새 실험 패치 버전을 미리 받아보세요</string>
-    <string name="patch_source_dialog_experimental_title">실험 앱 버전</string>
-    <string name="patch_source_dialog_experimental_hint">가능하면 실험 앱 버전을 우선시합니다</string>
     <string name="patch_source_dialog_error_name_required">이름은 필수입니다</string>
     <string name="patch_source_dialog_error_invalid_url">유효한 GitHub 또는 GitLab URL을 입력하세요</string>
     <string name="patch_source_dialog_error_invalid_file">유효한 .mpp 파일을 선택하세요</string>
@@ -685,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">로그 열기</string>
     <string name="settings_dialog_reset_button">초기화</string>
     <string name="settings_theme_system">시스템</string>
-    <string name="settings_signing_error_not_found">구성된 키 저장소를 찾을 수 없습니다: %1$s. 파일을 복원하거나, 설정에서 다른 키 저장소를 선택하거나, Morphe 기본값을 사용하려면 설정을 지우세요</string>
     <string name="settings_search_languages_placeholder">언어 검색</string>
     <string name="settings_dialog_resolves_to_message">다음으로 확인됨: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">키 저장소를 찾을 수 없음: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">언어</string>
     <string name="settings_language_current_title">현재 언어</string>
@@ -696,9 +645,13 @@
     <string name="settings_language_dialog_title">앱 언어</string>
     <string name="settings_language_search_no_results">검색 결과가 없습니다</string>
     <string name="settings_section_theme">테마</string>
+    <string name="settings_appearance_theme_mode">테마 모드</string>
     <string name="settings_theme_light">밝은</string>
     <string name="settings_theme_dark">어두운</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">색상 스타일</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">흑백</string>
     <string name="settings_toggle_sharp_corners_label">날카로운 모서리</string>
     <string name="settings_toggle_sharp_corners_desc">카드, 대화 상자, 버튼의 모서리를 각지게 만듭니다</string>
     <string name="settings_section_accent_color">강조 색상</string>
@@ -708,9 +661,6 @@
     <string name="settings_section_app_cards">앱 카드</string>
     <string name="settings_app_cards_color_all">모든 카드의 색상</string>
     <string name="settings_app_cards_color_all_desc">개별적으로 사용자 지정한 카드는 고유한 색상을 유지합니다</string>
-    <string name="settings_section_patch_list">패치 목록</string>
-    <string name="settings_toggle_patch_categories_label">패치 카테고리</string>
-    <string name="settings_toggle_patch_categories_desc">패치를 펼칠 수 있는 카테고리로 그룹화합니다</string>
     <string name="settings_section_background_animation">배경 애니메이션</string>
     <string name="settings_background_circles">원</string>
     <string name="settings_background_rings">링</string>
@@ -824,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">번역</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">변경 로그를 사용할 수 없습니다</string>
+    <string name="changelog_badge_installed">설치됨</string>
+    <string name="changelog_badge_latest">최신</string>
+    <string name="changelog_badge_prerelease">Pre-release</string>
+    <string name="changelog_date_today">오늘</string>
+    <string name="changelog_date_yesterday">어제</string>
     <string name="changelog_dialog_title">변경 로그 보기</string>
-    <string name="changelog_show_older_button">이전 릴리스 보기</string>
+    <string name="changelog_not_available">변경 로그를 사용할 수 없습니다</string>
+    <string name="changelog_section_app_support">앱 지원</string>
+    <string name="changelog_section_fixes">수정</string>
+    <string name="changelog_section_improvements">개선</string>
+    <string name="changelog_section_new">신규</string>
+    <string name="changelog_section_other">변경</string>
+    <string name="changelog_section_performance">성능</string>
+    <string name="changelog_show_all">모두 표시 (%1$d)</string>
+    <string name="changelog_show_less">간단히 보기</string>
     <string name="changelog_view_on_github_button">GitHub에서 보기</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">소스</string>
+    <string name="nav_apps">앱</string>
 </resources>

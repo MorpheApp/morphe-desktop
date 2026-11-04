@@ -13,6 +13,7 @@
     <string name="expand">Brei uit</string>
     <string name="cancel">Kanselleer</string>
     <string name="close">Sluit</string>
+    <string name="trust">Vertroue</string>
     <string name="delete">Verwyder</string>
     <string name="disabled_while_patching">Uitgeskakel terwyl gepatch word</string>
     <string name="drop_apk_here">Los APK hier</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Verbinding verbreek tydens aflaai, probeer weer</string>
     <string name="error_network_loading_patches">Netwerkfout terwyl patches laai</string>
     <string name="error_patch_file_not_found">Patch-lêer nie gevind nie: %1$s</string>
-    <string name="error_no_patches_files_supplied">Geen patch-lêers verskaf nie</string>
-    <string name="error_input_apk_not_found">Inset-APK nie gevind nie</string>
     <string name="error_step_failed">%1$s het misluk: %2$s</string>
     <string name="error_drop_valid_apk">Los asseblief 'n geldige .apk, .apkm, .xapk, of .apks-lêer</string>
     <string name="status_saving">Stoor…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filter programme…</string>
     <string name="version">Weergawe</string>
     <string name="version_label_stable">Stabiel</string>
-    <string name="version_label_dev">Ontw.</string>
+    <string name="version_label_prerelease">Voorvrystelling</string>
     <string name="version_label_experimental">Eksperimenteel</string>
-    <string name="version_label_latest_dev">Nuutste Ontw.</string>
     <string name="version_label_latest_stable">Nuutste Stabiel</string>
+    <string name="version_label_recommended">Aanbeveel</string>
+    <string name="version_label_supported">Ondersteun</string>
     <string name="app_info_arch_label">Arg</string>
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Patching gekanselleer</string>
     <string name="view_full_logs_button">Sien volledige logboeke</string>
     <string name="error_patching_unknown">Patching het misluk om 'n onbekende rede</string>
-    <string name="error_patching_general">Fout: %1$s</string>
     <string name="error_log_label">Foutlogboek</string>
     <string name="back">Terug</string>
     <string name="open_folder">Maak gids oop</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Enige aantal stops, lineêr, radiaal of konies</string>
     <string name="card_fill_mode_solid">Solide</string>
     <string name="card_fill_mode_solid_blurb">Een plat kleur</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Veranderinge</string>
-    <string name="quick_patch_screen_start_over_button">Begin oor</string>
-    <string name="quick_patch_patch_another_button">Patch nog een</string>
-    <string name="quick_patch_select_apk">Kies APK</string>
-    <string name="quick_patch_analyze_apk_failed">Kon nie APK ontleed nie</string>
-    <string name="quick_patch_extract_base_apk_failed">Kon nie basis-APK uit bundel onttrek nie</string>
-    <string name="quick_patch_unsupported_app_error">%1$s word nie in Quick Patch-modus ondersteun nie. Ondersteunde programme: %2$s. Gebruik Normale modus vir onondersteunde programme</string>
     <string name="adb_install_on_button">Installeer op %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Laai patches</string>
-    <string name="patching_step_preparing">Berei voor</string>
     <string name="patching_step_merging_split_apk">Voeg gesplitste APK saam</string>
     <string name="patching_step_read_apk">Lees APK-lêer</string>
     <string name="patching_step_applying_patches">Besig om pleisters toe te pas</string>
-    <string name="patching_step_saving">Stoor</string>
     <string name="patching_step_writing_apk">Skryf gepatchte APK-lêer</string>
     <string name="patching_step_signing">Teken gepatchte APK-lêer</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Lêer is moontlik korrup, laai weer af vanaf APKMirror</string>
     <string name="version_status_checksum_failed">Kontrolesom-verifikasie het misluk</string>
     <string name="version_status_checksum_matches">Kontrolesom stem ooreen met APKMirror</string>
-    <string name="version_status_older_stable">Ouer stabiele weergawe</string>
     <string name="version_status_newer_stable_available">Nuwer stabiele v%1$s beskikbaar</string>
     <string name="version_status_newer_stable_available_fallback">'n Nuwer stabiele weergawe is beskikbaar</string>
     <string name="version_status_experimental_detail">Ondersteun, maar werk dalk nie behoorlik nie</string>
-    <string name="version_status_older_experimental">Ouer Eksperimentele weergawe</string>
-    <string name="version_status_newer_experimental_available">Nuwer eksperimentele v%1$s beskikbaar</string>
-    <string name="version_status_newer_experimental_available_fallback">'n Nuwer eksperimentele bou is beskikbaar</string>
-    <string name="version_status_too_new">Weergawe te nuut</string>
     <string name="version_status_unsupported_detail">Nie amptelik ondersteun nie, pleisters sal heelwaarskynlik misluk</string>
-    <string name="version_status_too_old">Weergawe te oud</string>
     <string name="version_status_unsupported">Onondersteunde weergawe</string>
     <string name="version_status_build_unsupported">Bou nie ondersteun nie</string>
     <string name="version_status_build_unsupported_detail">Hierdie weergawe word ondersteun, maar nie hierdie spesifieke bou nie. Kry 'n bou wat deur die patches geteiken word</string>
+    <string name="version_status_build_unsupported_with_code">Regstellings vereis bou %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Weergawe-kennisgewing</string>
+    <string name="version_warning_build_unsupported_message">Huidig: v%1$s (bou %2$s)\nVereiste bou: %3$s\n\nDit is 'n ander bou van dieselfde weergawe. Die regstellings vereis 'n spesifieke bou.</string>
     <string name="version_warning_experiment_title">Wil jy eksperimenteer? 🧪</string>
-    <string name="version_warning_older_stable_title">Ouer stabiele weergawe</string>
-    <string name="version_warning_older_stable_message">Huidig: v%1$s\nNuutste stabiel: v%2$s\n\nHierdie weergawe word ondersteun, maar 'n nuwer stabiele weergawe is beskikbaar. Jy mis moontlik onlangse regstellings.</string>
     <string name="version_warning_latest_experimental_message">Huidig: v%1$s\n\nHierdie weergawe het vroeë eksperimentele ondersteuning\n\n🔧 Verwag snaakse programgedrag of onidentifiseerde foute terwyl die patches vir hierdie programweergawe verfyn word.</string>
-    <string name="version_warning_older_experimental_title">Ouer eksperimentele weergawe\nWil jy eksperimenteer? 🧪</string>
-    <string name="version_warning_older_experimental_message">Huidig: v%1$s\nNuutste eksperimentele: v%2$s\n\nDit is 'n ondersteunde eksperimentele bou, maar 'n nuwer eksperimentele weergawe is beskikbaar. Verwag snaakse programgedrag of onidentifiseerde foute terwyl die patches vir hierdie programweergawe verfyn word.</string>
-    <string name="version_warning_too_new_message">Huidig: v%1$s\nNuutste bekende: v%2$s\n\nHierdie weergawe het vroeë eksperimentele ondersteuning\n\n🔧 Verwag snaakse programgedrag of onidentifiseerde foute terwyl die patches vir hierdie programweergawe verfyn word.</string>
-    <string name="version_warning_too_old_message">Huidig: v%1$s\nOudste ondersteunde: v%2$s\n\nDit is nie 'n amptelik ondersteunde weergawe nie. Patches sal waarskynlik misluk.</string>
     <string name="version_warning_unsupported_message">Huidig: v%1$s\n\nDit is nie 'n amptelik ondersteunde weergawe nie. Patches sal waarskynlik misluk.</string>
     <string name="version_warning_notice_message">Gaan voort met v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Ouer stabiele bou - nuwer stabiele v%1$s beskikbaar</string>
-    <string name="quick_patch_warning_latest_experimental">Eksperimentele bou - ondersteun, maar werk dalk nie behoorlik nie</string>
-    <string name="quick_patch_warning_older_experimental">Ouer eksperimentele bou - nuwer eksperimentele v%1$s beskikbaar</string>
-    <string name="quick_patch_warning_build_unsupported">Bou nie ondersteun nie - hierdie weergawe kan gepatch word, maar nie hierdie bou nie</string>
-    <string name="quick_patch_warning_too_new">Weergawe te nuut - nie amptelik ondersteun nie, patches sal waarskynlik misluk</string>
-    <string name="quick_patch_warning_too_old">Weergawe te oud - nie amptelik ondersteun nie, patches sal waarskynlik misluk</string>
-    <string name="quick_patch_warning_unsupported_between">Onondersteunde weergawe - patches sal waarskynlik misluk</string>
-    <string name="quick_patch_read_apk_failed">Kon nie APK lees nie: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Berei patches voor…</string>
-    <string name="quick_patch_fetch_patches_failed">Kon nie patches kry nie. Kontroleer jou internetkonneksie</string>
-    <string name="quick_patch_status_downloading_patches">Laai patches %1$s af…</string>
-    <string name="quick_patch_download_patches_failed">Kon nie patches aflaai nie: %1$s</string>
-    <string name="quick_patch_status_patching">Patching…</string>
-    <string name="quick_patch_completed_adb_off">ADB af · Skakel aan om te installeer</string>
-    <string name="quick_patch_completed_adb_connect_device">Verbind 'n toestel via USB om met ADB te installeer</string>
-    <string name="quick_patch_error_unknown_occurred">Onbekende fout het plaasgevind</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Ontleed APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d veranderinge</string>
-    <string name="quick_patch_patching_slow_warning">Dit neem langer as gewoonlik. Wag asseblief…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(bou %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Geen versoenbare patches vir hierdie program nie</string>
-    <string name="quick_patch_ready_no_matching_patches">Geen veranderinge gelyk aan \"%1$s\" nie</string>
-    <string name="quick_patch_ready_patch_with_defaults">Patch met standaardinstellings</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Ondersteunde programme</string>
-    <string name="quick_patch_supported_apps_subtitle">Los die presiese APK-weergawe vir 'n ondersteunde program hier</string>
-    <string name="quick_patch_supported_apps_loading">Laai ondersteunde programme…</string>
-    <string name="quick_patch_supported_apps_load_error">Kon nie ondersteunde programme laai nie</string>
-    <string name="quick_patch_supported_apps_change_source">Verander bron</string>
-    <string name="quick_patch_supported_apps_no_matches">Geen ooreenstemmende programme nie</string>
-    <string name="quick_patch_supported_apps_version_any">Enige weergawe</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Kies APK-lêer</string>
     <string name="home_could_not_resolve_patch_files">Kon nie patch-lêers oplos nie</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Verwyder APK</string>
     <string name="home_apk_info_limited_info_warning">Kon nie hierdie APK se manifest volledig lees nie (algemeen vir gesplitste bundels). Besonderhede hieronder is benaderings, patching behoort steeds te werk</string>
     <string name="home_apk_info_unsupported_app_warning">Geen versoenbare patches gevind vir hierdie program nie. Jy kan steeds voortgaan, maar patching mag geen effek hê nie</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Geen versoenbare regstellings gevind vir hierdie toepassing nie</string>
     <string name="home_apk_info_build_label">Bou</string>
     <string name="home_apk_info_size_label">Grootte</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Van</string>
     <string name="home_stage_change_apk">Verander APK</string>
     <string name="home_stage_continue">Gaan voort</string>
+    <string name="home_stage_patch">Verandering</string>
     <string name="home_stage_analyzing_title">Ontleed</string>
     <string name="home_stage_reading_metadata">Lees program-metadata…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Deïnstalleer %1$s?</string>
     <string name="home_dialog_uninstall_message">Dit verwyder %1$s van die gekoppelde toestel. Die gepleisterde APK op skyf en jou geskiedenis word behou tensy jy anders kies hieronder</string>
     <string name="home_dialog_uninstall_also_forget">Verwyder ook uit Jou programme</string>
-    <string name="home_dialog_missing_apk_title">Oorspronklike APK nie gevind nie</string>
-    <string name="home_dialog_missing_apk_message">Die inset-APK vir %1$s is nie meer by:\n%2$s\n\nKies die APK weer om te her-patch met jou gestoorde instellings</string>
-    <string name="home_dialog_select_apk">Kies APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Kies APK om te her-patch</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Bestuur oorspronge</string>
     <string name="home_header_multi_source_hint">Veranderings van elke geaktiveerde oorsprong word verenig. Bestuur vanaf die oorspronge-knoppie hierbo</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Jou programme</string>
     <string name="home_banner_view">Kyk</string>
     <string name="home_your_apps_install_ready">Gereed vir installasie</string>
-    <string name="home_your_apps_newer_patch_hint">Nuwer pleister kan die app se weergawe opstoot, klik Dateer op om na te gaan</string>
-    <string name="home_your_apps_device_version_ready">Gepleisterde v%1$s gereed, toestel op v%2$s (geen herpleistering nodig nie)</string>
-    <string name="home_your_apps_install_ready_hint">Veranderde v%1$s gereed om te installeer (geen herverandering nodig nie)</string>
-    <string name="home_action_install">Installeer</string>
     <string name="home_action_install_to_device">Installeer op toestel</string>
     <string name="home_action_installing">Installeer…</string>
     <string name="home_action_preparing">Berei voor…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s gereed · toestel is op v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s gereed, geen herpleistering nodig nie</string>
-    <string name="home_advice_unsupported">v%1$s word nie meer ondersteun nie. Dateer asseblief op na v%2$s</string>
+    <string name="home_detail_source_disabled">Deaktiveer</string>
+    <string name="home_detail_source_removed">Verwyder</string>
+    <string name="home_detail_source_disabled_sub">Bron is gedeaktiveer in Bronne. Aktiveer dit om weer reg te stel</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Oorspronklike bron is gedeaktiveer. Kies 'n alternatiewe bron of aktiveer dit weer in Bronne</string>
+    <string name="home_detail_no_compatible_source">Geen versoenbare bron geaktiveer nie</string>
+    <string name="home_detail_choose_source">Kies verandering oorsprong</string>
     <string name="home_advice_unsupported_by_patches">v%1$s word nie meer ondersteun deur die nuutste veranderings nie</string>
     <string name="home_date_today">vandag</string>
     <string name="home_date_yesterday">gister</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Ongegroepeer</string>
     <string name="patch_selection_group_selected_count">%1$d gekies</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Begin oor</string>
+    <string name="patching_patches_count">%1$d / %2$d veranderinge</string>
+    <string name="patching_slow_warning">Dit neem langer as gewoonlik. Wag asseblief…</string>
     <string name="patching_status_ready">Gereed om te verander</string>
     <string name="patching_status_preparing">Berei voor om te verander</string>
     <string name="patching_status_in_progress">Besig om pleisters toe te pas</string>
     <string name="patching_completed_loading_result">Pleistering voltooi, laai resultaat…</string>
-    <string name="patching_cancelled_loading_result">Pleistering gekanselleer, laai resultaat…</string>
+    <string name="patching_cancelled_loading_result">Regmaak gekanselleer, laai resultaat…</string>
     <string name="patching_failed_loading_result">Pleistering misluk, laai resultaat…</string>
     <string name="patching_log_viewer_failed_to_read">Misluk om logboeklêer te lees: %1$s</string>
     <string name="patching_log_viewer_title">Logboeklêer</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Gestrip</string>
     <string name="patching_error_failed_patches">Mislukte veranderings: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB af · Aktiveer om te installeer</string>
+    <string name="result_adb_connect_device_hint">Koppel 'n toestel via USB om met ADB te installeer</string>
     <string name="result_screen_patch_another_button">Verander nog een</string>
     <string name="result_screen_install_on_device_label">Installeer op %1$s</string>
     <string name="result_screen_links_routed_label">Skakels gerouteer na veranderde program</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Kon nie laai nie</string>
     <string name="source_error_github_pat_required">'n GitHub PAT word benodig om trekversoek-bronne af te laai</string>
     <string name="source_error_pr_no_artifact">Geen artefakte vir die trekversoek gevind nie</string>
-    <string name="source_sheet_manage_description">Bestuur patch-bronne</string>
-    <string name="source_sheet_local_label">Plaaslike</string>
+    <string name="source_error_patcher_incompatible">Hierdie bron is gebou vir patcher %1$s, maar Morphe %2$s sluit patcher %3$s in. Dateer Morphe op om dit te gebruik</string>
+    <string name="version_label_local">Plaaslike</string>
     <string name="source_sheet_remote_label">Afstand</string>
     <string name="add_source">Voeg oorsprong by</string>
     <string name="source_sheet_title">Verandering oorspronge</string>
     <string name="source_sheet_reload_description">Herlaai patches</string>
-    <string name="source_sheet_quick_mode_hint">Kies watter bron Quick Patch gebruik. Multi-bron is beskikbaar in Kenner-modus</string>
     <string name="source_sheet_multi_mode_hint">Aktiveer/Deaktiveer enige kombinasie. Patches van alle geaktiveerde bronne word saamgevoeg</string>
     <string name="source_sheet_done_button">Klaar</string>
     <string name="source_sheet_type_preinstalled">Voor geïnstalleer</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Wysig</string>
     <string name="source_sheet_move_up_description">Skuif op</string>
     <string name="source_sheet_move_down_description">Skuif af</string>
-    <string name="source_sheet_channel_older_stable">Ouer Stabiel</string>
-    <string name="source_sheet_channel_older_dev">Ouer Dev</string>
     <string name="source_sheet_ignored_mpp_title">Geïgnoreerde .mpp-patrone</string>
-    <string name="source_sheet_ignored_mpp_hint">Affekteer slegs vouerbronne, wat outomaties die nuutste .mpp in 'n vouer laai. Wanneer daardie nuutste bou gekies word, word lêers waarvan die naam met 'n patroon hier ooreenstem, oorgeslaan. 'n Gewone woord pas by enige lêer wat dit bevat (bv. debug). Gebruik * vir globs (bv. *-debug.mpp). *-sources.mpp en *-javadoc.mpp word altyd geïgnoreer</string>
+    <string name="source_sheet_ignored_mpp_hint">Affekteer slegs gidsbronne, wat die nuutste .mpp in 'n gids outomaties laai. Wanneer daardie nuutste bou gekies word, word lêers waarvan die naam met 'n patroon hier ooreenstem, oorgeslaan. 'n Gewone woord pas by enige lêer wat dit bevat (bv. debug). Gebruik * vir globs (bv. *-debug.mpp). *-sources.mpp en *-javadoc.mpp word altyd geïgnoreer</string>
     <string name="source_sheet_ignored_mpp_placeholder">bv. debug of *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Voeg patroon by</string>
     <string name="source_sheet_remove_pattern_description">Verwyder patroon</string>
+    <string name="sources_management_signed_by">Geteken deur</string>
+    <string name="sources_management_signing_key_changed_badge">Sleutel verander</string>
+    <string name="sources_management_signing_key_changed_hint">Ondertekeningsleutel verander. Klik om dit te hersien</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' is nie opgedateer nie omdat die nuutste vrystelling nie deur die sleutel onderteken is wat dit voorheen gebruik het nie</string>
+    <string name="sources_signing_key_new">Nuwe sleutel</string>
+    <string name="sources_signing_key_trust_message">Die nuutste vrystelling is deur 'n ander sleutel onderteken. Of die ontwikkelaar het hul sleutel vervang, of iemand anders het hierdie vrystelling gepubliseer. Vertrou dit slegs as die ontwikkelaar 'n nuwe sleutel aangekondig het</string>
+    <string name="sources_signing_key_trust_message_unsigned">Die nuutste vrystelling is nie onderteken nie. Of die ontwikkelaar het opgehou om vrystellings te onderteken, of iemand anders het hierdie vrystelling gepubliseer. Vertrou dit slegs as die ontwikkelaar dit aangekondig het</string>
+    <string name="sources_signing_key_trust_title">Vertrou die nuwe sleutel?</string>
+    <string name="sources_signing_key_trusted">Vertroude sleutel</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Lokale lêer</string>
     <string name="patch_source_dialog_name_label">Naam</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Aanvaar GitHub-, GitLab- of morphe.software/add-source-skakel</string>
     <string name="patch_source_dialog_pre_release_title">Voor-vrystelling patches</string>
     <string name="patch_source_dialog_pre_release_hint">Ontvang vroeë toegang tot nuwe eksperimentele patch-weergawes</string>
-    <string name="patch_source_dialog_experimental_title">Eksperimentele app-weergawes</string>
-    <string name="patch_source_dialog_experimental_hint">Prioritiseer eksperimentele app-weergawes indien beskikbaar</string>
     <string name="patch_source_dialog_error_name_required">Naam is verpligtend</string>
     <string name="patch_source_dialog_error_invalid_url">Voer 'n geldige GitHub- of GitLab-URL in</string>
     <string name="patch_source_dialog_error_invalid_file">Kies 'n geldige .mpp-lêer</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Maak logs oop</string>
     <string name="settings_dialog_reset_button">Herstel</string>
     <string name="settings_theme_system">Stelsel</string>
-    <string name="settings_signing_error_not_found">Gekonfigureerde sleutelwinkel nie gevind nie: %1$s. Herstel die lêer, kies 'n ander een in Instellings, of maak die instelling skoon om Morphe se verstek te gebruik</string>
     <string name="settings_search_languages_placeholder">Soek tale</string>
     <string name="settings_dialog_resolves_to_message">Los op na: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Sleutelwinkel nie gevind nie: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Taal</string>
     <string name="settings_language_current_title">Huidige taal</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Program taal</string>
     <string name="settings_language_search_no_results">Geen resultate gevind nie</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Temamodus</string>
     <string name="settings_theme_light">Lig</string>
     <string name="settings_theme_dark">Donker</string>
     <string name="settings_theme_amoled">AMOLED</string>
+    <string name="settings_appearance_color_style">Kleurstyl</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monochroom</string>
     <string name="settings_toggle_sharp_corners_label">Skerp hoeke</string>
     <string name="settings_toggle_sharp_corners_desc">Maak kaarte, dialoogvensters en knoppies vierkantig</string>
     <string name="settings_section_accent_color">Aksentkleur</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">App-kaarte</string>
     <string name="settings_app_cards_color_all">Kleur vir elke kaart</string>
     <string name="settings_app_cards_color_all_desc">Kaarte wat jy individueel aangepas het, behou hul eie kleur</string>
-    <string name="settings_section_patch_list">Patch-lys</string>
-    <string name="settings_toggle_patch_categories_label">Patch-kategorieë</string>
-    <string name="settings_toggle_patch_categories_desc">Groepeer patches in uitvoubare kategorieë</string>
     <string name="settings_section_background_animation">Agtergrondanimasie</string>
     <string name="settings_background_circles">Sirkels</string>
     <string name="settings_background_rings">Ringe</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Vertaal</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Veranderingslog nie beskikbaar nie</string>
+    <string name="changelog_badge_installed">Geïnstalleer</string>
+    <string name="changelog_badge_latest">Nuutste</string>
+    <string name="changelog_badge_prerelease">Voor-vrystelling</string>
+    <string name="changelog_date_today">Vandag</string>
+    <string name="changelog_date_yesterday">Gister</string>
     <string name="changelog_dialog_title">Bekyk veranderingslog</string>
-    <string name="changelog_show_older_button">Wys ouer vrystellings</string>
+    <string name="changelog_not_available">Veranderingslog nie beskikbaar nie</string>
+    <string name="changelog_section_app_support">Toepassing-ondersteuning</string>
+    <string name="changelog_section_fixes">Regstellings</string>
+    <string name="changelog_section_improvements">Verbeterings</string>
+    <string name="changelog_section_new">Nuut</string>
+    <string name="changelog_section_other">Veranderings</string>
+    <string name="changelog_section_performance">Prestasie</string>
+    <string name="changelog_show_all">Wys alles (%1$d)</string>
+    <string name="changelog_show_less">Wys minder</string>
     <string name="changelog_view_on_github_button">Bekyk op GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Oorspronge</string>
+    <string name="nav_apps">Toepassings</string>
 </resources>

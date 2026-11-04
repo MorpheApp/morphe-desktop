@@ -13,6 +13,7 @@
     <string name="expand">Mở rộng</string>
     <string name="cancel">Thôi</string>
     <string name="close">Đóng</string>
+    <string name="trust">Tin cậy</string>
     <string name="delete">Xoá</string>
     <string name="disabled_while_patching">Vô hiệu hóa trong khi vá</string>
     <string name="drop_apk_here">Thả tệp APK vào đây</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Kết nối bị ngắt khi tải xuống, hãy thử lại</string>
     <string name="error_network_loading_patches">Lỗi mạng khi tải các bản vá</string>
     <string name="error_patch_file_not_found">Không tìm thấy tệp bản vá: %1$s</string>
-    <string name="error_no_patches_files_supplied">Không có tệp bản vá nào được cung cấp</string>
-    <string name="error_input_apk_not_found">Không tìm thấy APK đầu vào</string>
     <string name="error_step_failed">%1$s thất bại: %2$s</string>
     <string name="error_drop_valid_apk">Vui lòng thả một tệp .apk, .apkm, .xapk hoặc .apks hợp lệ</string>
     <string name="status_saving">Đang lưu…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Lọc ứng dụng…</string>
     <string name="version">Phiên bản</string>
     <string name="version_label_stable">Ổn định</string>
-    <string name="version_label_dev">Bản Dev</string>
+    <string name="version_label_prerelease">Phiên bản tiền phát hành</string>
     <string name="version_label_experimental">Thử nghiệm</string>
-    <string name="version_label_latest_dev">Dev mới nhất</string>
     <string name="version_label_latest_stable">Bản ổn định mới nhất</string>
+    <string name="version_label_recommended">Khuyên dùng</string>
+    <string name="version_label_supported">Được hỗ trợ</string>
     <string name="app_info_arch_label">Kiến trúc</string>
     <string name="app_info_min_sdk_label">SDK tối thiểu</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Đã hủy vá</string>
     <string name="view_full_logs_button">Xem toàn bộ nhật ký</string>
     <string name="error_patching_unknown">Vá thất bại vì lý do không xác định</string>
-    <string name="error_patching_general">Lỗi: %1$s</string>
     <string name="error_log_label">Nhật ký lỗi</string>
     <string name="back">Trước</string>
     <string name="open_folder">Mở thư mục</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Bất kỳ số lượng điểm dừng nào, tuyến tính, tỏa tròn hoặc hình nón</string>
     <string name="card_fill_mode_solid">Đồng màu</string>
     <string name="card_fill_mode_solid_blurb">Một màu đồng nhất</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Số bản vá</string>
-    <string name="quick_patch_screen_start_over_button">Bắt đầu lại</string>
-    <string name="quick_patch_patch_another_button">Vá ứng dụng khác</string>
-    <string name="quick_patch_select_apk">Chọn APK</string>
-    <string name="quick_patch_analyze_apk_failed">Không thể phân tích APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Không thể trích xuất APK gốc từ gói</string>
-    <string name="quick_patch_unsupported_app_error">%1$s không được hỗ trợ trong chế độ Vá nhanh. Các ứng dụng được hỗ trợ: %2$s. Hãy dùng chế độ Thường cho ứng dụng không được hỗ trợ</string>
     <string name="adb_install_on_button">Cài đặt trên %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Đang tải bản vá</string>
-    <string name="patching_step_preparing">Đang chuẩn bị</string>
     <string name="patching_step_merging_split_apk">Đang gộp APK chia nhỏ</string>
     <string name="patching_step_read_apk">Đọc tệp APK</string>
     <string name="patching_step_applying_patches">Đang áp dụng các bản vá</string>
-    <string name="patching_step_saving">Đang lưu</string>
     <string name="patching_step_writing_apk">Đang viết APK đã vá</string>
     <string name="patching_step_signing">Đang ký APK đã vá</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Tệp có thế bị hőng, hãy tải lạ i từ APKMirror</string>
     <string name="version_status_checksum_failed">Xác minh tổng kiểm tra thấ t bạ i</string>
     <string name="version_status_checksum_matches">Tổng kiểm tra khớp vớ i APKMirror</string>
-    <string name="version_status_older_stable">Bản ổn định cũ hơn</string>
     <string name="version_status_newer_stable_available">Có bản ổn định mớ i hơn v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Có phiên bản ổn định mớ i hơn</string>
     <string name="version_status_experimental_detail">Được hỗ trợ, nhưng có thế không hoạ t độ ng đúng</string>
-    <string name="version_status_older_experimental">Bản thử nghiệm cũ hơn</string>
-    <string name="version_status_newer_experimental_available">Có bản thử nghiệm mớ i hơn v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Có bản dựng thử nghiệm mớ i hơn</string>
-    <string name="version_status_too_new">Phiên bản quá mớ i</string>
     <string name="version_status_unsupported_detail">Không được hỗ trợ chính thức, c ác bản vá rấ t có thế sẽ thấ t bạ i</string>
-    <string name="version_status_too_old">Phiên bản quá cũ</string>
     <string name="version_status_unsupported">Phiên bản không được hỗ trợ</string>
     <string name="version_status_build_unsupported">Bản dựng không được hỗ trợ</string>
     <string name="version_status_build_unsupported_detail">Phiên bản này được hỗ trợ, nhưng không phả i bản dựng này. Hãy lấy bản dựng mà c ác bản vá nhắm tớ i</string>
+    <string name="version_status_build_unsupported_with_code">Các bản vá yêu cầu bản dựng %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Thông báo phiên bản</string>
+    <string name="version_warning_build_unsupported_message">Hiện tại: v%1$s (bản dựng %2$s)\nBản dựng yêu cầu: %3$s\n\nMặc dù cùng phiên bản, nhưng đây là bản dựng khác. Các bản vá yêu cầu đúng bản dựng mới hỗ trợ.</string>
     <string name="version_warning_experiment_title">Muốn thử không? 🧪</string>
-    <string name="version_warning_older_stable_title">Phiên bản ổn định cũ hơn</string>
-    <string name="version_warning_older_stable_message">Hiện tạ i: v%1$s\nỔn định mớ i nhấ t: v%2$s\n\nPhiên bản này được hỗ trợ, nhưng có phiên bản ổn định mớ i hơn. Bạn có thế đang thiếu c ác bản sửa lỗ i gần đây.</string>
     <string name="version_warning_latest_experimental_message">Hiện tại: v%1$s\n\nPhiên bản này có hỗ trợ thử nghiệm sớm\n\n🔧 Có thể gặp hành vi lạ hoặc lỗi chưa xác định khi các bản vá được tinh chỉnh cho phiên bản ứng dụng này.</string>
-    <string name="version_warning_older_experimental_title">Phiên bản thử nghiệm cũ hơn\nBạn có muốn thử nghiệm không? 🧪</string>
-    <string name="version_warning_older_experimental_message">Hiện tại: v%1$s\nThử nghiệm mới nhất: v%2$s\n\nĐây là bản dựng thử nghiệm được hỗ trợ, nhưng có phiên bản thử nghiệm mới hơn. Có thể gặp hành vi lạ hoặc lỗi chưa xác định khi các bản vá được tinh chỉnh cho phiên bản ứng dụng này.</string>
-    <string name="version_warning_too_new_message">Hiện tại: v%1$s\nBản mới nhất được biết: v%2$s\n\nPhiên bản này có hỗ trợ thử nghiệm sớm\n\n🔧 Có thể gặp hành vi lạ hoặc lỗi chưa xác định khi các bản vá được tinh chỉnh cho phiên bản ứng dụng này.</string>
-    <string name="version_warning_too_old_message">Hiện tại: v%1$s\nPhiên bản hỗ trợ cũ nhất: v%2$s\n\nĐây không phải phiên bản được hỗ trợ chính thức. Các bản vá rất có thể sẽ thất bại.</string>
     <string name="version_warning_unsupported_message">Hiện tại: v%1$s\n\nĐây không phải phiên bản được hỗ trợ chính thức. Các bản vá rất có thể sẽ thất bại.</string>
     <string name="version_warning_notice_message">Tiếp tục với v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Bản ổn định cũ hơn - có bản ổn định mới hơn v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Bản thử nghiệm - được hỗ trợ, nhưng có thể không hoạt động đúng</string>
-    <string name="quick_patch_warning_older_experimental">Bản thử nghiệm cũ hơn - có bản thử nghiệm mới hơn v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Bản dựng không được hỗ trợ - phiên bản này có thể vá, nhưng không phải bản dựng này</string>
-    <string name="quick_patch_warning_too_new">Phiên bản quá mới - không được hỗ trợ chính thức, các bản vá rất có thể sẽ thất bại</string>
-    <string name="quick_patch_warning_too_old">Phiên bản quá cũ - không được hỗ trợ chính thức, các bản vá rất có thể sẽ thất bại</string>
-    <string name="quick_patch_warning_unsupported_between">Phiên bản không được hỗ trợ - các bản vá rất có thể sẽ thất bại</string>
-    <string name="quick_patch_read_apk_failed">Không thể đọc APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Đang chuẩn bị các bản vá…</string>
-    <string name="quick_patch_fetch_patches_failed">Không thể tải các bản vá. Kiểm tra kết nối internet của bạn</string>
-    <string name="quick_patch_status_downloading_patches">Đang tải các bản vá %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Không tải được bản vá: %1$s</string>
-    <string name="quick_patch_status_patching">Đang vá…</string>
-    <string name="quick_patch_completed_adb_off">ADB tắt · Bật để cài đặt</string>
-    <string name="quick_patch_completed_adb_connect_device">Kết nối thiết bị qua USB để cài đặt bằng ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Đã xảy ra lỗi không xác định</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Đang phân tích APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d/%2$d bản vá</string>
-    <string name="quick_patch_patching_slow_warning">Việc này lâu hơn bình thường. Vu lòng đợi…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(bản dựng %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Không có bản vá tương thích cho ứng dụng này</string>
-    <string name="quick_patch_ready_no_matching_patches">Không có bản vá nào khớp \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Vá vớ i tùy chọn mặc định</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Ứng dụng được hỗ trợ</string>
-    <string name="quick_patch_supported_apps_subtitle">Thả đúng phiên bản APK cho một ứng dụng được hỗ trợ vào đây</string>
-    <string name="quick_patch_supported_apps_loading">Đang tải ứng dụng được hỗ trợ…</string>
-    <string name="quick_patch_supported_apps_load_error">Không thể tải ứng dụng được hỗ trợ</string>
-    <string name="quick_patch_supported_apps_change_source">Đổ i nguồn</string>
-    <string name="quick_patch_supported_apps_no_matches">Không có ứng dụng khớp</string>
-    <string name="quick_patch_supported_apps_version_any">Phiên bản bất kỳ</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Chọn tệp APK</string>
     <string name="home_could_not_resolve_patch_files">Không thể phân giải các tệp bản vá</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Xóa APK</string>
     <string name="home_apk_info_limited_info_warning">Không thể đọc toàn bộ manifest của APK này (thường gặp với gói split). Thông tin bên dưới chỉ mang tính tương đối, việc vá vẫn hoạt động</string>
     <string name="home_apk_info_unsupported_app_warning">Không tìm thấy bản vá tương thích nào cho ứng dụng này. Bạn vẫn có thể tiếp tục, nhưng việc vá có thể không có tác dụng</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Không tìm thấy bản vá tương thích cho ứng dụng này</string>
     <string name="home_apk_info_build_label">Bản dựng</string>
     <string name="home_apk_info_size_label">Kích thước</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Từ</string>
     <string name="home_stage_change_apk">Đổi APK</string>
     <string name="home_stage_continue">Tiếp</string>
+    <string name="home_stage_patch">Vá</string>
     <string name="home_stage_analyzing_title">Đang phân tích</string>
     <string name="home_stage_reading_metadata">Đang đọc siêu dữ liệu ứng dụng…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Gỡ cài đặt %1$s?</string>
     <string name="home_dialog_uninstall_message">Thao tác này xóa %1$s khỏi thiết bị đã kết nối. APK đã vá trên đĩa và lịch sử của bạn vẫn được giữ trừ khi bạn chọn khác bên dưới</string>
     <string name="home_dialog_uninstall_also_forget">Cũng xóa khỏi Ứng dụng của bạn</string>
-    <string name="home_dialog_missing_apk_title">Không tìm thấy APK gốc</string>
-    <string name="home_dialog_missing_apk_message">Tệp APK đầu vào cho %1$s không còn ở:\n%2$s\n\nChọn lại APK để vá lại với cài đặt đã lưu của bạn</string>
-    <string name="home_dialog_select_apk">Chọn APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Chọn APK để vá lại</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Quản lý nguồn</string>
     <string name="home_header_multi_source_hint">Các bản vá từ mọi nguồn đã bật được hợp nhất. Quản lý từ nút nguồn ở trên</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Ứng dụng của bạn</string>
     <string name="home_banner_view">Xem</string>
     <string name="home_your_apps_install_ready">Sẵn sàng cài đặt</string>
-    <string name="home_your_apps_newer_patch_hint">Bản vá mớ i hơn có thế nâng phiên bản ứng dụng, hãy bấm Cập nhật để kiểm tra</string>
-    <string name="home_your_apps_device_version_ready">Đã vá v%1$s sẵn sàng, thiết bị đang dùng v%2$s (không cần vá lạ i)</string>
-    <string name="home_your_apps_install_ready_hint">Đã vá v%1$s, sẵn sàng cài đặt (không cần vá lại)</string>
-    <string name="home_action_install">Cài đặt</string>
     <string name="home_action_install_to_device">Cài đặt vào thiết bị</string>
     <string name="home_action_installing">Đang cài đặt…</string>
     <string name="home_action_preparing">Đang chuẩn bị…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s sẵn sàng · thiết bị đang dùng v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s sẵn sàng, không cần vá lại</string>
-    <string name="home_advice_unsupported">v%1$s không còn được hỗ trợ. Vui lòng cập nhật lên v%2$s</string>
+    <string name="home_detail_source_disabled">Đang tắt</string>
+    <string name="home_detail_source_removed">Đã xóa</string>
+    <string name="home_detail_source_disabled_sub">Nguồn đã bị vô hiệu hóa trong Nguồn. Hãy bật nó để vá lại</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Nguồn gốc đã bị vô hiệu hóa. Hãy chọn một nguồn thay thế hoặc kích hoạt lại trong mục Nguồn</string>
+    <string name="home_detail_no_compatible_source">Không có nguồn tương thích nào được kích hoạt</string>
+    <string name="home_detail_choose_source">Chọn nguồn vá</string>
     <string name="home_advice_unsupported_by_patches">v%1$s không còn được hỗ trợ bởi các bản vá mới nhất</string>
     <string name="home_date_today">hôm nay</string>
     <string name="home_date_yesterday">hôm qua</string>
@@ -427,6 +371,9 @@
     <string name="patch_selection_group_ungrouped">Chưa nhóm</string>
     <string name="patch_selection_group_selected_count">%1$d đã chọn</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Bắt đầu lại</string>
+    <string name="patching_patches_count">%1$d/%2$d bản vá</string>
+    <string name="patching_slow_warning">Quá trình này đang mất nhiều thời gian hơn bình thường. Vui lòng chờ…</string>
     <string name="patching_status_ready">Sẵn sàng vá</string>
     <string name="patching_status_preparing">Đang chuẩn bị vá</string>
     <string name="patching_status_in_progress">Đang áp dụng các bản vá</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Đã tách bỏ</string>
     <string name="patching_error_failed_patches">Các bản vá thất bại: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB tắt · Kích hoạt để cài đặt</string>
+    <string name="result_adb_connect_device_hint">Kết nối thiết bị qua USB để cài đặt bằng ADB</string>
     <string name="result_screen_patch_another_button">Vá ứng dụng khác</string>
     <string name="result_screen_install_on_device_label">Cài đặt trên %1$s</string>
     <string name="result_screen_links_routed_label">Liên kết đã chuyển đến ứng dụng đã vá</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Tải thất bại</string>
     <string name="source_error_github_pat_required">Cần có GitHub PAT để tải xuống mã nguồn của pull request</string>
     <string name="source_error_pr_no_artifact">Không tìm thấy artifacts nào cho pull request</string>
-    <string name="source_sheet_manage_description">Quản lý nguồn bản vá</string>
-    <string name="source_sheet_local_label">Từ bộ nhớ trong</string>
+    <string name="source_error_patcher_incompatible">Nguồn vá này được xây dựng cho trình vá %1$s, nhưng Morphe %2$s chỉ có trình vá %3$s. Hãy cập nhật Morphe để sử dụng nguồn vá này</string>
+    <string name="version_label_local">Từ bộ nhớ trong</string>
     <string name="source_sheet_remote_label">Từ URL</string>
     <string name="add_source">Thêm nguồn</string>
     <string name="source_sheet_title">Nguồn vá</string>
     <string name="source_sheet_reload_description">Tải lại các bản vá</string>
-    <string name="source_sheet_quick_mode_hint">Chọn nguồn mà Vá nhanh sử dụng. Hỗ trợ nhiều nguồn trong chế độ Chuyên gia</string>
     <string name="source_sheet_multi_mode_hint">Bật/Tắt bất kỳ tổ hợp nào. Các bản vá từ tất cả nguồn đã bật được hợp nhất</string>
     <string name="source_sheet_done_button">Xong</string>
     <string name="source_sheet_type_preinstalled">Được cài đặt sẵn</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Chỉnh sửa</string>
     <string name="source_sheet_move_up_description">Lên trên</string>
     <string name="source_sheet_move_down_description">Xuống dưới</string>
-    <string name="source_sheet_channel_older_stable">Bản ổn định cũ hơn</string>
-    <string name="source_sheet_channel_older_dev">Bản dev cũ hơn</string>
     <string name="source_sheet_ignored_mpp_title">Các mẫu .mpp bị bỏ qua</string>
-    <string name="source_sheet_ignored_mpp_hint">Chỉ ảnh hưởng đến nguồn thư mục, nguồn này tự động tải tệp .mpp mới nhất trong thư mục. Khi chọn bản dựng mới nhất đó, các tệp có tên khớp với mẫu ở đây sẽ bị bỏ qua. Một từ thông thường khớp với bất kỳ tệp nào chứa từ đó (ví dụ: debug). Dùng * cho mẫu đại diện (ví dụ: *-debug.mpp). *-sources.mpp và *-javadoc.mpp luôn bị bỏ qua</string>
+    <string name="source_sheet_ignored_mpp_hint">Chỉ ảnh hưởng đến các nguồn thư mục, nơi tự động tải tệp .mpp mới nhất trong một thư mục. Khi chọn bản build mới nhất đó, các tệp có tên khớp với mẫu ở đây sẽ bị bỏ qua. Một từ đơn giản sẽ khớp với bất kỳ tệp nào chứa từ đó (ví dụ: debug). Sử dụng * cho glob (ví dụ: *-debug.mpp). *-sources.mpp và *-javadoc.mpp luôn bị bỏ qua</string>
     <string name="source_sheet_ignored_mpp_placeholder">ví dụ: debug hoặc *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Thêm mẫu</string>
     <string name="source_sheet_remove_pattern_description">Xóa mẫu</string>
+    <string name="sources_management_signed_by">Được ký bởi</string>
+    <string name="sources_management_signing_key_changed_badge">Khóa đã thay đổi</string>
+    <string name="sources_management_signing_key_changed_hint">Khóa ký đã thay đổi. Nhấn để xem lại</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' không được cập nhật vì bản phát hành mới nhất của nó không được ký bởi khóa đã sử dụng trước đó</string>
+    <string name="sources_signing_key_new">Khóa mới</string>
+    <string name="sources_signing_key_trust_message">Bản phát hành mới nhất được ký bởi một khóa khác. Có thể nhà phát triển đã thay thế khóa của họ, hoặc ai đó khác đã xuất bản bản phát hành này. Chỉ tin tưởng nếu nhà phát triển đã thông báo về khóa mới</string>
+    <string name="sources_signing_key_trust_message_unsigned">Bản phát hành mới nhất không được ký. Có thể nhà phát triển đã ngừng ký các bản phát hành, hoặc ai đó khác đã xuất bản bản phát hành này. Chỉ tin tưởng nếu nhà phát triển đã thông báo về điều đó</string>
+    <string name="sources_signing_key_trust_title">Tin tưởng khóa mới?</string>
+    <string name="sources_signing_key_trusted">Khóa đáng tin cậy</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Tệp cục bộ</string>
     <string name="patch_source_dialog_name_label">Tên</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Chấp nhận liên kết GitHub, GitLab hoặc morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Bản vá phát hành trước</string>
     <string name="patch_source_dialog_pre_release_hint">Trải nghiệm sớm các bản vá thử nghiệm mới</string>
-    <string name="patch_source_dialog_experimental_title">Phiên bản ứng dụng thử nghiệm</string>
-    <string name="patch_source_dialog_experimental_hint">Ưu tiên phiên bản ứng dụng thử nghiệm nếu có</string>
     <string name="patch_source_dialog_error_name_required">Bắt buộc nhập tên</string>
     <string name="patch_source_dialog_error_invalid_url">Nhập URL GitHub hoặc GitLab hợp lệ</string>
     <string name="patch_source_dialog_error_invalid_file">Chọn tệp .mpp hợp lệ</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Mở nhật ký</string>
     <string name="settings_dialog_reset_button">Đặt lại</string>
     <string name="settings_theme_system">Hệ thống</string>
-    <string name="settings_signing_error_not_found">Không tìm thấy kho khóa đã cấu hình: %1$s. Khôi phục tệp, chọn kho khóa khác trong Cài đặt hoặc xóa cài đặt để dùng mặc định của Morphe</string>
     <string name="settings_search_languages_placeholder">Tìm kiếm ngôn ngữ</string>
     <string name="settings_dialog_resolves_to_message">Giải quyết thành: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Không tìm thấy kho khóa: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Ngôn ngữ</string>
     <string name="settings_language_current_title">Ngôn ngữ hiện tại</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Ngôn ngữ</string>
     <string name="settings_language_search_no_results">Không tìm thấy kết quả nào</string>
     <string name="settings_section_theme">Chủ đề</string>
+    <string name="settings_appearance_theme_mode">Chế độ chủ đề</string>
     <string name="settings_theme_light">Sáng</string>
     <string name="settings_theme_dark">Tối</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Kiểu màu</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Đơn sắc</string>
     <string name="settings_toggle_sharp_corners_label">Góc vuông</string>
     <string name="settings_toggle_sharp_corners_desc">Vuông hóa các thẻ, hộp thoại và nút</string>
     <string name="settings_section_accent_color">Màu nổi bật</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Thẻ ứng dụng</string>
     <string name="settings_app_cards_color_all">Màu cho mọi thẻ</string>
     <string name="settings_app_cards_color_all_desc">Các thẻ bạn đã tùy chỉnh riêng vẫn giữ màu của chúng</string>
-    <string name="settings_section_patch_list">Danh sách bản vá</string>
-    <string name="settings_toggle_patch_categories_label">Danh mục bản vá</string>
-    <string name="settings_toggle_patch_categories_desc">Nhóm các bản vá thành danh mục có thể mở rộng</string>
     <string name="settings_section_background_animation">Hiệu ứng nền</string>
     <string name="settings_background_circles">Hình tròn</string>
     <string name="settings_background_rings">Vòng tròn</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Dịch</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Không có nhật ký thay đổi</string>
+    <string name="changelog_badge_installed">Đã cài đặt</string>
+    <string name="changelog_badge_latest">Mới nhất</string>
+    <string name="changelog_badge_prerelease">Bản phát hành trước</string>
+    <string name="changelog_date_today">Hôm nay</string>
+    <string name="changelog_date_yesterday">Hôm qua</string>
     <string name="changelog_dialog_title">Xem nhật ký thay đổi</string>
-    <string name="changelog_show_older_button">Các bản phát hành cũ</string>
+    <string name="changelog_not_available">Không có nhật ký thay đổi</string>
+    <string name="changelog_section_app_support">Hỗ trợ ứng dụng</string>
+    <string name="changelog_section_fixes">Sửa lỗi</string>
+    <string name="changelog_section_improvements">Cải tiến</string>
+    <string name="changelog_section_new">Mới</string>
+    <string name="changelog_section_other">Thay đổi</string>
+    <string name="changelog_section_performance">Hiệu năng</string>
+    <string name="changelog_show_all">Hiển thị tất cả (%1$d)</string>
+    <string name="changelog_show_less">Thu</string>
     <string name="changelog_view_on_github_button">Xem trên GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Nguồn</string>
+    <string name="nav_apps">Ứng dụng</string>
 </resources>

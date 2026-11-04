@@ -13,6 +13,7 @@
     <string name="expand">Genişləndir</string>
     <string name="cancel">Ləğv et</string>
     <string name="close">Bağla</string>
+    <string name="trust">Etibar et</string>
     <string name="delete">Sil</string>
     <string name="disabled_while_patching">Yamaqlama zamanı söndürülür</string>
     <string name="drop_apk_here">APK faylını buraya atın</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Yükləmə zamanı bağlantı kəsildi, yenidən cəhd edin</string>
     <string name="error_network_loading_patches">Yamaqlar yüklənərkən şəbəkə xətası baş verdi</string>
     <string name="error_patch_file_not_found">Yamaq faylı tapılmadı: %1$s</string>
-    <string name="error_no_patches_files_supplied">Heç bir yamaq faylı təqdim edilməyib</string>
-    <string name="error_input_apk_not_found">Daxil edilən APK tapılmadı</string>
     <string name="error_step_failed">%1$s alınmadı: %2$s</string>
     <string name="error_drop_valid_apk">Xahiş olunur düzgün .apk, .apkm, .xapk və ya .apks faylı atın</string>
     <string name="status_saving">Saxlanılır…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Tətbiqləri filtrlə…</string>
     <string name="version">Versiya</string>
     <string name="version_label_stable">Stabil</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">İlkin buraxılış</string>
     <string name="version_label_experimental">Təcrübəvi</string>
-    <string name="version_label_latest_dev">Ən son Dev</string>
     <string name="version_label_latest_stable">Ən son stabil</string>
+    <string name="version_label_recommended">Tövsiyə olunan</string>
+    <string name="version_label_supported">Dəstəklənir</string>
     <string name="app_info_arch_label">Arxitektura</string>
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Yamaqlama ləğv edildi</string>
     <string name="view_full_logs_button">Tam jurnal bildirişlərinə bax</string>
     <string name="error_patching_unknown">Yamaqlama bilinməyən səbəbdən uğursuz oldu</string>
-    <string name="error_patching_general">Xəta: %1$s</string>
     <string name="error_log_label">Xəta jurnalı</string>
     <string name="back">Geri</string>
     <string name="open_folder">Qovluğu aç</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">İstənilən sayda keçid nöqtəsi ilə xətti, radial və ya konik</string>
     <string name="card_fill_mode_solid">Bütöv rəng</string>
     <string name="card_fill_mode_solid_blurb">Bircins, tək rəng</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Yamaqlar</string>
-    <string name="quick_patch_screen_start_over_button">Yenidən başla</string>
-    <string name="quick_patch_patch_another_button">Başqasını yamaqla</string>
-    <string name="quick_patch_select_apk">APK seçin</string>
-    <string name="quick_patch_analyze_apk_failed">APK analiz edilə bilmədi</string>
-    <string name="quick_patch_extract_base_apk_failed">Paketdən əsas APK çıxarıla bilmədi</string>
-    <string name="quick_patch_unsupported_app_error">%1$s Tez Yamaq rejimində dəstəklənmir. Dəstəklənən tətbiqlər: %2$s. Dəstəklənməyən tətbiqlər üçün Normal rejimdən istifadə edin</string>
     <string name="adb_install_on_button">%1$s üzərində quraşdırın</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Yamaqlar yüklənir</string>
-    <string name="patching_step_preparing">Hazırlanır</string>
     <string name="patching_step_merging_split_apk">Bölünmüş APK birləşdirilir</string>
     <string name="patching_step_read_apk">APK faylı oxunur</string>
     <string name="patching_step_applying_patches">Yamaqlar tətbiq olunur</string>
-    <string name="patching_step_saving">Saxlanılır</string>
     <string name="patching_step_writing_apk">Yamaqlanmış APK faylı yazılır</string>
     <string name="patching_step_signing">Yamaqlanmış APK faylı imzalanır</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Fayl zədələnmiş ola bilər, APKMirror-dan yenidən yükləyin</string>
     <string name="version_status_checksum_failed">Yoxlama cəminin doğrulanması uğursuz oldu</string>
     <string name="version_status_checksum_matches">Yoxlama cəmi APKMirror ilə uyğun gəlir</string>
-    <string name="version_status_older_stable">Daha köhnə stabil</string>
     <string name="version_status_newer_stable_available">Daha yeni stabil v%1$s versiyası mövcuddur</string>
     <string name="version_status_newer_stable_available_fallback">Daha yeni bir stabil versiya mövcuddur</string>
     <string name="version_status_experimental_detail">Dəstəklənir, lakin düzgün işləməyə bilər</string>
-    <string name="version_status_older_experimental">Daha köhnə təcrübəvi</string>
-    <string name="version_status_newer_experimental_available">Daha yeni təcrübəvi v%1$s versiyası mövcuddur</string>
-    <string name="version_status_newer_experimental_available_fallback">Daha yeni təcrübəvi qurulum mövcuddur</string>
-    <string name="version_status_too_new">Versiya çox yenidir</string>
     <string name="version_status_unsupported_detail">Rəsmi olaraq dəstəklənmir, yamaqlama böyük ehtimalla uğursuz olacaq</string>
-    <string name="version_status_too_old">Versiya çox köhnədir</string>
     <string name="version_status_unsupported">Dəstəklənməyən versiya</string>
     <string name="version_status_build_unsupported">Qurulum dəstəklənmir</string>
     <string name="version_status_build_unsupported_detail">Bu versiya dəstəklənir, lakin onun bu qurulumu yox. Yamaqların hədəflədiyi bir qurulum əldə edin</string>
+    <string name="version_status_build_unsupported_with_code">Yamaqlar %1$s quruluşunu tələb edir</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Versiya xəbərdarlığı</string>
+    <string name="version_warning_build_unsupported_message">Cari: v%1$s (quruluş %2$s)\nTələb olunan quruluş: %3$s\n\nBu, eyni versiyanın fərqli quruluşudur. Yamaqlar xüsusi bir quruluş tələb edir.</string>
     <string name="version_warning_experiment_title">Təcrübə üçün istəyirsiniz? 🧪</string>
-    <string name="version_warning_older_stable_title">Daha köhnə stabil versiya</string>
-    <string name="version_warning_older_stable_message">Mövcud: v%1$s\nƏn son stabil: v%2$s\n\nBu versiya dəstəklənir, lakin daha yeni stabil versiya mövcuddur. Ən son düzəlişləri qaçıra bilərsiniz.</string>
     <string name="version_warning_latest_experimental_message">Cari: v%1$s\n\nBu versiya ilkin təcrübi dəstəyə malikdir\n\n🔧 Yamaqlar bu tətbiq versiyası üçün təkmilləşdirildikcə tətbiqin qəribə davranışı və ya müəyyən edilməmiş xətalar gözlənilir.</string>
-    <string name="version_warning_older_experimental_title">Köhnə təcrübi versiya\nTəcrübə üçün istəyirsiniz? 🧪</string>
-    <string name="version_warning_older_experimental_message">Mövcud: v%1$s\nƏn son təcrübəvi: v%2$s\n\nBu dəstəklənən təcrübəvi qurulumdur, lakin daha yeni təcrübəvi versiya mövcuddur. Yamaqlar bu versiya üçün təkmilləşdirilərkən tətbiqin qəribə davranacağını və ya bilinməyən xətalarla qarşılaşacağını nəzərə alın.</string>
-    <string name="version_warning_too_new_message">Cari: v%1$s\nƏn yeni məlum: v%2$s\n\nBu versiya ilkin təcrübi dəstəyə malikdir\n\n🔧 Yamaqlar bu tətbiq versiyası üçün təkmilləşdirildikcə tətbiqin qəribə davranışı və ya müəyyən edilməmiş xətalar gözlənilir.</string>
-    <string name="version_warning_too_old_message">Mövcud: v%1$s\nƏn köhnə dəstəklənən: v%2$s\n\nBu rəsmi olaraq dəstəklənən versiya deyil. Yamaqlama böyük ehtimalla uğursuz olacaq.</string>
     <string name="version_warning_unsupported_message">Mövcud: v%1$s\n\nBu rəsmi olaraq dəstəklənən versiya deyil. Yamaqlama böyük ehtimalla uğursuz olacaq.</string>
     <string name="version_warning_notice_message">v%1$s ilə davam edilsin?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Daha köhnə stabil qurulum - daha yeni v%1$s stabil versiyası mövcuddur</string>
-    <string name="quick_patch_warning_latest_experimental">Təcrübəvi qurulum - dəstəklənir, lakin düzgün işləməyə bilər</string>
-    <string name="quick_patch_warning_older_experimental">Daha köhnə təcrübəvi qurulum - daha yeni v%1$s təcrübəvi versiyası mövcuddur</string>
-    <string name="quick_patch_warning_build_unsupported">Qurulum dəstəklənmir - bu versiya yamaqlana biləndir, lakin onun bu qurulumu yox</string>
-    <string name="quick_patch_warning_too_new">Versiya çox yenidir - rəsmi olaraq dəstəklənmir, yamaqlama böyük ehtimalla uğursuz olacaq</string>
-    <string name="quick_patch_warning_too_old">Versiya çox köhnədir - rəsmi olaraq dəstəklənmir, yamaqlama böyük ehtimalla uğursuz olacaq</string>
-    <string name="quick_patch_warning_unsupported_between">Dəstəklənməyən versiya - yamaqlama böyük ehtimalla uğursuz olacaq</string>
-    <string name="quick_patch_read_apk_failed">APK faylını oxumaq mümkün olmadı: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Yamaqlar hazırlanır…</string>
-    <string name="quick_patch_fetch_patches_failed">Yamaqları almaq mümkün olmadı. İnternet bağlantınızı yoxlayın</string>
-    <string name="quick_patch_status_downloading_patches">%1$s yamaqları yüklənir…</string>
-    <string name="quick_patch_download_patches_failed">Yamaqları yükləmək mümkün olmadı: %1$s</string>
-    <string name="quick_patch_status_patching">Yamaqlanır…</string>
-    <string name="quick_patch_completed_adb_off">ADB deaktivdir · Quraşdırmaq üçün aktivləşdirin</string>
-    <string name="quick_patch_completed_adb_connect_device">ADB ilə quraşdırmaq üçün USB vasitəsilə cihaz qoşun</string>
-    <string name="quick_patch_error_unknown_occurred">Bilinməyən xəta baş verdi</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK analiz edilir…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d yamaq</string>
-    <string name="quick_patch_patching_slow_warning">Bu normaldan daha uzun çəkir. Xahiş olunur, gözləyin…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(qurulum %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Bu tətbiq üçün uyğun yamaq tapılmadı</string>
-    <string name="quick_patch_ready_no_matching_patches">\"%1$s\" ilə uyğun gələn yamaq tapılmadı</string>
-    <string name="quick_patch_ready_patch_with_defaults">Varsayılanlarla yamaqla</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Dəstəklənən tətbiqlər</string>
-    <string name="quick_patch_supported_apps_subtitle">Dəstəklənən tətbiq üçün dəqiq APK versiyasını buraya atın</string>
-    <string name="quick_patch_supported_apps_loading">Dəstəklənən tətbiqlər yüklənir…</string>
-    <string name="quick_patch_supported_apps_load_error">Dəstəklənən tətbiqləri yükləmək mümkün olmadı</string>
-    <string name="quick_patch_supported_apps_change_source">Mənbəni dəyişdir</string>
-    <string name="quick_patch_supported_apps_no_matches">Uyğun gələn tətbiq tapılmadı</string>
-    <string name="quick_patch_supported_apps_version_any">İstənilən versiya</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK faylını seçin</string>
     <string name="home_could_not_resolve_patch_files">Yamaq faylları tapıla bilmədi</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APK-nı sil</string>
     <string name="home_apk_info_limited_info_warning">Bu APK-nın manifestini tam oxumaq mümkün olmadı (bölünmüş paketlər üçün adi haldır). Aşağıdakı təfərrüatlar təxminidir, yamaqlama yenə də işləməlidir</string>
     <string name="home_apk_info_unsupported_app_warning">Bu tətbiq üçün uyğun yamaq tapılmadı. Hələ də davam edə bilərsiniz, lakin yamaqlama heç bir təsir göstərməyə bilər</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Bu tətbiq üçün uyğun yamaqlar tapılmadı</string>
     <string name="home_apk_info_build_label">Qurulum</string>
     <string name="home_apk_info_size_label">Həcm</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Burdan</string>
     <string name="home_stage_change_apk">APK-nı dəyişdir</string>
     <string name="home_stage_continue">Davam et</string>
+    <string name="home_stage_patch">Yamaqla</string>
     <string name="home_stage_analyzing_title">Təhlil edilir</string>
     <string name="home_stage_reading_metadata">Tətbiqin meta-məlumatları oxunur…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">%1$s tətbiqi silinsin?</string>
     <string name="home_dialog_uninstall_message">Bu, %1$s tətbiqini qoşulmuş cihazdan silir. Aşağıda başqa cür seçmədiyiniz halda, diskdəki yamaqlanmış APK və tarixçəniz saxlanılır</string>
     <string name="home_dialog_uninstall_also_forget">Həmçinin \"Tətbiqləriniz\" bölməsindən silinsin</string>
-    <string name="home_dialog_missing_apk_title">Orijinal APK tapılmadı</string>
-    <string name="home_dialog_missing_apk_message">%1$s üçün daxil edilən APK artıq burada deyil:\n%2$s\n\nSaxlanılmış tənzimləmələrinizlə yenidən yamaqlamaq üçün APK-nı yenidən seçin</string>
-    <string name="home_dialog_select_apk">APK seçin…</string>
-    <string name="home_dialog_select_apk_to_repatch">Yenidən yamaqlamaq üçün APK seçin</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Mənbələri idarə et</string>
     <string name="home_header_multi_source_hint">Aktivləşdirilmiş hər bir mənbədən olan yamaqlar birləşdirilir. Yuxarıdakı mənbələr düyməsindən idarə edin</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Tətbiqləriniz</string>
     <string name="home_banner_view">Bax</string>
     <string name="home_your_apps_install_ready">Quraşdırmağa hazırdır</string>
-    <string name="home_your_apps_newer_patch_hint">Daha yeni yamaq tətbiq versiyasını yüksəldə bilər, yoxlamaq üçün Yenilə düyməsinə klikləyin</string>
-    <string name="home_your_apps_device_version_ready">Yamaqlanmış v%1$s hazırdır, cihazdakı versiya v%2$s (yenidən yamaqlamağa ehtiyac yoxdur)</string>
-    <string name="home_your_apps_install_ready_hint">Yamaqlanmış v%1$s quraşdırılmağa hazırdır (yenidən yamaqlamağa ehtiyac yoxdur)</string>
-    <string name="home_action_install">Quraşdır</string>
     <string name="home_action_install_to_device">Cihaza quraşdır</string>
     <string name="home_action_installing">Quraşdırılır…</string>
     <string name="home_action_preparing">Hazırlanır…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s hazırdır · cihazdakı versiya v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s hazırdır, yenidən yamaqlamağa ehtiyac yoxdur</string>
-    <string name="home_advice_unsupported">v%1$s artıq dəstəklənmir. Xahiş olunur v%2$s versiyasına yeniləyin</string>
+    <string name="home_detail_source_disabled">Qapalıdı</string>
+    <string name="home_detail_source_removed">Silindi</string>
+    <string name="home_detail_source_disabled_sub">Mənbə Mənbələrdə qapadılıb. Yenidən yamaqlamaq üçün onu aktivləşdir</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Orijinal mənbə qapadılıb. Alternativ mənbə seç və ya onu Mənbələrdə yenidən aktivləşdir</string>
+    <string name="home_detail_no_compatible_source">Uyğun mənbə aktiv deyil</string>
+    <string name="home_detail_choose_source">Yamaq mənbəyini seç</string>
     <string name="home_advice_unsupported_by_patches">v%1$s artıq ən son yamaqlar tərəfindən dəstəklənmir</string>
     <string name="home_date_today">bu gün</string>
     <string name="home_date_yesterday">dünən</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Qruplaşdırılmamış</string>
     <string name="patch_selection_group_selected_count">%1$d seçildi</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Yenidən başla</string>
+    <string name="patching_patches_count">%1$d / %2$d yamaq</string>
+    <string name="patching_slow_warning">Bu normaldan daha uzun çəkir. Xahiş olunur, gözləyin…</string>
     <string name="patching_status_ready">Yamaqlamağa hazırdır</string>
     <string name="patching_status_preparing">Yamaqlamağa hazırlaşır</string>
     <string name="patching_status_in_progress">Yamaqlar tətbiq olunur</string>
     <string name="patching_completed_loading_result">Yamama tamamlandı, nəticə yüklənir…</string>
-    <string name="patching_cancelled_loading_result">Yamama ləğv edildi, nəticə yüklənir…</string>
+    <string name="patching_cancelled_loading_result">Yamaqlama ləğv edildi, nəticəni yükləyir…</string>
     <string name="patching_failed_loading_result">Yamama baş tutmadı, nəticə yüklənir…</string>
     <string name="patching_log_viewer_failed_to_read">Jurnal faylını oxumaq mümkün olmadı: %1$s</string>
     <string name="patching_log_viewer_title">Jurnal faylı</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Təmizlənənlər</string>
     <string name="patching_error_failed_patches">Xətaya uğrayan yamaqlar: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB qapanıb · Quraşdırmaq üçün aktivləşdir</string>
+    <string name="result_adb_connect_device_hint">ADB ilə quraşdırmaq üçün USB vasitəsilə cihazı qoşun</string>
     <string name="result_screen_patch_another_button">Başqasını yamaqla</string>
     <string name="result_screen_install_on_device_label">%1$s cihazında quraşdırın</string>
     <string name="result_screen_links_routed_label">Keçidlər yamaqlanmış tətbiqə yönləndirildi</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Yüklənmədi</string>
     <string name="source_error_github_pat_required">Pull request mənbələrini endirmək üçün GitHub PAT (Personal Access Token) tələb olunur</string>
     <string name="source_error_pr_no_artifact">Pull request üçün heç bir artifakt tapılmadı</string>
-    <string name="source_sheet_manage_description">Yamaq mənbələrini idarə edin</string>
-    <string name="source_sheet_local_label">Lokal</string>
+    <string name="source_error_patcher_incompatible">Bu mənbə %1$s yamaqlayıcısı üçün qurulmuşdur, lakin Morphe %2$s versiyası %3$s yamaqlayıcısını ehtiva edir. İstifadə etmək üçün Morphe-ni yenilə</string>
+    <string name="version_label_local">Yerli</string>
     <string name="source_sheet_remote_label">Məsafədən (Remote)</string>
     <string name="add_source">Mənbə əlavə et</string>
     <string name="source_sheet_title">Yamaq mənbələri</string>
     <string name="source_sheet_reload_description">Yamaqları yenidən yüklə</string>
-    <string name="source_sheet_quick_mode_hint">Sürətli Yamağın istifadə edəcəyi mənbəyi seçin. Çoxlu mənbə rejimi Ekspert rejimində mövcuddur</string>
     <string name="source_sheet_multi_mode_hint">İstənilən kombinasiyanı Aktivləşdirin/Deaktiv edin. Bütün aktivləşdirilmiş mənbələrdən olan yamaqlar birləşdirilir</string>
     <string name="source_sheet_done_button">Hazırdır</string>
     <string name="source_sheet_type_preinstalled">Əvvəlcədən quraşdırılmış</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Düzəliş et</string>
     <string name="source_sheet_move_up_description">Yuxarı daşı</string>
     <string name="source_sheet_move_down_description">Aşağı daşı</string>
-    <string name="source_sheet_channel_older_stable">Daha köhnə sabit</string>
-    <string name="source_sheet_channel_older_dev">Daha köhnə tərtibatçı</string>
     <string name="source_sheet_ignored_mpp_title">Nəzərə alınmayan .mpp şablonları</string>
-    <string name="source_sheet_ignored_mpp_hint">Yalnız qovluqdakı ən yeni .mpp faylını avtomatik yükləyən qovluq mənbələrinə təsir edir. Ən yeni versiya seçilərkən, adı buradakı şablona uyğun gələn fayllar buraxılır. Sadə söz onu ehtiva edən istənilən fayla uyğun gəlir (məsələn, debug). Qloballar üçün * istifadə edin (məsələn, *-debug.mpp). *-sources.mpp və *-javadoc.mpp hər zaman nəzərə alınmır</string>
+    <string name="source_sheet_ignored_mpp_hint">Yalnız qovluqdakı ən yeni .mpp 'ni avtomatik yükləyən qovluq mənbələrinə təsir edir. Həmin ən yeni quruluşu seçərkən buradakı nümunəyə uyğun gələn adda fayllar ötürülür. Sadə söz onun tərkibində olan istənilən faylla uyğunlaşır (məsələn: debug). Ümumilər üçün * (məsələn: *-debug.mpp) istifadə edin. *-sources.mpp və *-javadoc.mpp həmişə nəzərə alınmır</string>
     <string name="source_sheet_ignored_mpp_placeholder">məs. debug və ya *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Şablon əlavə et</string>
     <string name="source_sheet_remove_pattern_description">Şablonu sil</string>
+    <string name="sources_management_signed_by">İmzalanan</string>
+    <string name="sources_management_signing_key_changed_badge">Açar dəyişdirildi</string>
+    <string name="sources_management_signing_key_changed_hint">İmzalanma açarı dəyişdirildi. Baxmaq üçün kliklə</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' yenilənmədi, çünki onun son buraxılışı əvvəllər istifadə edilən açarla imzalanmadı</string>
+    <string name="sources_signing_key_new">Yeni açar</string>
+    <string name="sources_signing_key_trust_message">Ən son buraxılış başqa açarla imzalanıb. Ya tərtibatçı açarını dəyişib, ya da bu buraxılışı başqası dərc edib. Yalnız tərtibatçı yeni açar elan edibsə, ona etibar edin</string>
+    <string name="sources_signing_key_trust_message_unsigned">Ən son buraxılış imzalanmayıb. Ya tərtibatçı buraxılışları imzalamağı dayandırıb, ya da bu buraxılışı başqası dərc edib. Yalnız tərtibatçı bunu elan edibsə, ona etibar edin</string>
+    <string name="sources_signing_key_trust_title">Yeni açara etibar edilsin?</string>
+    <string name="sources_signing_key_trusted">Etibarlı açar</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Lokal fayl</string>
     <string name="patch_source_dialog_name_label">Ad</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">GitHub, GitLab və ya morphe.software/add-source keçidini qəbul edir</string>
     <string name="patch_source_dialog_pre_release_title">İlkin buraxılış yamaqları</string>
     <string name="patch_source_dialog_pre_release_hint">Yeni eksperimental yamaq versiyalarına erkən giriş əldə edir</string>
-    <string name="patch_source_dialog_experimental_title">Eksperimental tətbiq versiyaları</string>
-    <string name="patch_source_dialog_experimental_hint">Mövcud olduqda eksperimental tətbiq versiyalarına üstünlük verir</string>
     <string name="patch_source_dialog_error_name_required">Ad tələb olunur</string>
     <string name="patch_source_dialog_error_invalid_url">Düzgün GitHub və ya GitLab URL-i daxil edin</string>
     <string name="patch_source_dialog_error_invalid_file">Düzgün .mpp faylı seçin</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Jurnalları aç</string>
     <string name="settings_dialog_reset_button">Sıfırla</string>
     <string name="settings_theme_system">Sistem</string>
-    <string name="settings_signing_error_not_found">Quraşdırılmış keystore tapılmadı: %1$s. Faylı bərpa edin, Ayarlardan başqasını seçin və ya Morphe-nin susmaya görə parametrini istifadə etmək üçün tənzimləməni təmizləyin</string>
     <string name="settings_search_languages_placeholder">Dilləri axtarın</string>
     <string name="settings_dialog_resolves_to_message">Təyin olunur: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore tapılmadı: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Dil</string>
     <string name="settings_language_current_title">Hazırkı dil</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Tətbiq dili</string>
     <string name="settings_language_search_no_results">Nəticə tapılmadı</string>
     <string name="settings_section_theme">Mövzu</string>
+    <string name="settings_appearance_theme_mode">Kolorit rejimi</string>
     <string name="settings_theme_light">Açıq</string>
     <string name="settings_theme_dark">Tünd</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Rəng üslubu</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Saya</string>
     <string name="settings_toggle_sharp_corners_label">Sərt künclər</string>
     <string name="settings_toggle_sharp_corners_desc">Kartları, dialoqları və düymələri kvadrat şəklinə salın</string>
     <string name="settings_section_accent_color">Vurğu rəngi</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Tətbiq kartları</string>
     <string name="settings_app_cards_color_all">Hər bir kart üçün rəng</string>
     <string name="settings_app_cards_color_all_desc">Fərdi olaraq özəlləşdirdiyiniz kartlar öz rənglərini saxlayır</string>
-    <string name="settings_section_patch_list">Yamaq siyahısı</string>
-    <string name="settings_toggle_patch_categories_label">Yamaq kateqoriyaları</string>
-    <string name="settings_toggle_patch_categories_desc">Yamaqları genişləndirilə bilən kateqoriyalara qruplaşdırın</string>
     <string name="settings_section_background_animation">Arxa fon animasiyası</string>
     <string name="settings_background_circles">Dairələr</string>
     <string name="settings_background_rings">Həlqələr</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Tərcümə et</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Dəyişikliklər jurnalı əlçatan deyil</string>
+    <string name="changelog_badge_installed">Quraşdırılıb</string>
+    <string name="changelog_badge_latest">Ən son</string>
+    <string name="changelog_badge_prerelease">İlkin buraxılış</string>
+    <string name="changelog_date_today">Bu gün</string>
+    <string name="changelog_date_yesterday">Dünən</string>
     <string name="changelog_dialog_title">Dəyişikliklər jurnalına baxın</string>
-    <string name="changelog_show_older_button">Daha köhnə buraxılışları göstər</string>
+    <string name="changelog_not_available">Dəyişikliklər jurnalı əlçatan deyil</string>
+    <string name="changelog_section_app_support">Tətbiq dəstəyi</string>
+    <string name="changelog_section_fixes">Düzəlişlər</string>
+    <string name="changelog_section_improvements">Təkmilləşdirmələr</string>
+    <string name="changelog_section_new">Yeni</string>
+    <string name="changelog_section_other">Dəyişikliklər</string>
+    <string name="changelog_section_performance">Məhsuldarlıq</string>
+    <string name="changelog_show_all">Hamısını göstər (%1$d)</string>
+    <string name="changelog_show_less">Daha az göstər</string>
     <string name="changelog_view_on_github_button">GitHub-da baxın</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Mənbələr</string>
+    <string name="nav_apps">Tətbiqlər</string>
 </resources>

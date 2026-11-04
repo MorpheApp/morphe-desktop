@@ -16,22 +16,6 @@
         <item quantity="one">%1$d πηγή</item>
         <item quantity="other">%1$d πηγές</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d τροποποίηση θα εφαρμοστεί</item>
-        <item quantity="other">%1$d τροποποιήσεις θα εφαρμοστούν</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d εξαιρέθηκε</item>
-        <item quantity="other">%1$d εξαιρέθηκαν</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d ενεργοποιήθηκε</item>
-        <item quantity="other">%1$d ενεργοποιήθηκαν</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d απενεργοποιήθηκε</item>
-        <item quantity="other">%1$d απενεργοποιήθηκαν</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d βιβλιοθήκη</item>
         <item quantity="other">%1$d βιβλιοθήκες</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d πυρήνας</item>
         <item quantity="other">%1$d πυρήνες</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d αλλαγή</item>
+        <item quantity="other">%1$d αλλαγές</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">πριν από %1$d ημέρα</item>
+        <item quantity="other">πριν από %1$d ημέρες</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d χαρακτηριστικό</item>
+        <item quantity="other">%1$d χαρακτηριστικά</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d διόρθωση</item>
+        <item quantity="other">%1$d διορθώσεις</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d βελτιστοποίηση</item>
+        <item quantity="other">%1$d βελτιστοποιήσεις</item>
     </plurals>
 </resources>

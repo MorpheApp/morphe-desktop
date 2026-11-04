@@ -13,6 +13,7 @@
     <string name="expand">Kibontás</string>
     <string name="cancel">Mégse</string>
     <string name="close">Bezárás</string>
+    <string name="trust">Bizalom</string>
     <string name="delete">Törlés</string>
     <string name="disabled_while_patching">Letiltva javítás közben</string>
     <string name="drop_apk_here">Húzd ide az APK-t</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">A kapcsolat megszakadt a letöltés közben, próbáld újra</string>
     <string name="error_network_loading_patches">Hálózati hiba a javítások betöltése közben</string>
     <string name="error_patch_file_not_found">A javítófájl nem található: %1$s</string>
-    <string name="error_no_patches_files_supplied">Nincs javítófájl megadva</string>
-    <string name="error_input_apk_not_found">A bemeneti APK nem található</string>
     <string name="error_step_failed">%1$s sikertelen: %2$s</string>
     <string name="error_drop_valid_apk">Húzz ide egy érvényes .apk, .apkm, .xapk vagy .apks fájlt</string>
     <string name="status_saving">Mentés…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Alkalmazások szűrése…</string>
     <string name="version">Verzió</string>
     <string name="version_label_stable">Stabil</string>
-    <string name="version_label_dev">Fejlesztői</string>
+    <string name="version_label_prerelease">Előzetes kiadás</string>
     <string name="version_label_experimental">Kísérleti</string>
-    <string name="version_label_latest_dev">Legújabb fejlesztői</string>
     <string name="version_label_latest_stable">Legújabb stabil</string>
+    <string name="version_label_recommended">Javasolt</string>
+    <string name="version_label_supported">Támogatott</string>
     <string name="app_info_arch_label">Architektúra</string>
     <string name="app_info_min_sdk_label">Min. SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">A javítás megszakítva</string>
     <string name="view_full_logs_button">Teljes naplók megtekintése</string>
     <string name="error_patching_unknown">A javítás ismeretlen ok miatt sikertelen</string>
-    <string name="error_patching_general">Hiba: %1$s</string>
     <string name="error_log_label">Hibanapló</string>
     <string name="back">Vissza</string>
     <string name="open_folder">Mappa megnyitása</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Tetszőleges számú színmegálló, lineáris, sugárirányú vagy kúpos</string>
     <string name="card_fill_mode_solid">Egyszínű</string>
     <string name="card_fill_mode_solid_blurb">Egyetlen egyszínű szín</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Módosítások</string>
-    <string name="quick_patch_screen_start_over_button">Újrakezdés</string>
-    <string name="quick_patch_patch_another_button">Másik javítása</string>
-    <string name="quick_patch_select_apk">APK kiválasztása</string>
-    <string name="quick_patch_analyze_apk_failed">Az APK elemzése sikertelen</string>
-    <string name="quick_patch_extract_base_apk_failed">Az alap APK kicsomagolása a csomagból sikertelen</string>
-    <string name="quick_patch_unsupported_app_error">%1$s nem támogatott a Gyorsjavítás módban. Támogatott alkalmazások: %2$s. Használd a Normál módot a nem támogatott alkalmazásokhoz</string>
     <string name="adb_install_on_button">Telepítés a következőre: %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Módosítások betöltése</string>
-    <string name="patching_step_preparing">Előkészítés</string>
     <string name="patching_step_merging_split_apk">Osztott APK egyesítése</string>
     <string name="patching_step_read_apk">APK fájl olvasása</string>
     <string name="patching_step_applying_patches">Módosítások alkalmazása</string>
-    <string name="patching_step_saving">Mentés</string>
     <string name="patching_step_writing_apk">Módosított APK fájl írása</string>
     <string name="patching_step_signing">Módosított APK fájl aláírása</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">A fájl sérült lehet, töltsd le újra az APKMirrorról</string>
     <string name="version_status_checksum_failed">Az ellenőrzőösszeg ellenőrzése sikertelen</string>
     <string name="version_status_checksum_matches">Az ellenőrzőösszeg egyezik az APKMirroréval</string>
-    <string name="version_status_older_stable">Régebbi stabil</string>
     <string name="version_status_newer_stable_available">Újabb stabil v%1$s érhető el</string>
     <string name="version_status_newer_stable_available_fallback">Újabb stabil verzió érhető el</string>
     <string name="version_status_experimental_detail">Támogatott, de lehet, hogy nem működik megfelelően</string>
-    <string name="version_status_older_experimental">Régebbi kísérleti</string>
-    <string name="version_status_newer_experimental_available">Újabb kísérleti v%1$s érhető el</string>
-    <string name="version_status_newer_experimental_available_fallback">Újabb kísérleti build érhető el</string>
-    <string name="version_status_too_new">Túl új verzió</string>
     <string name="version_status_unsupported_detail">Nem hivatalosan támogatott, a javítások nagy valószínűséggel sikertelenek lesznek</string>
-    <string name="version_status_too_old">Túl régi verzió</string>
     <string name="version_status_unsupported">Nem támogatott verzió</string>
     <string name="version_status_build_unsupported">A build nem támogatott</string>
     <string name="version_status_build_unsupported_detail">Ez a verzió támogatott, de ez a build nem. Tölts le olyan buildet, amelyet a javítások céloznak</string>
+    <string name="version_status_build_unsupported_with_code">A javításokhoz a %1$s build szükséges</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Verziófigyelmeztetés</string>
+    <string name="version_warning_build_unsupported_message">Aktuális: v%1$s (%2$s build)\nSzükséges build: %3$s\n\nEz ugyanazon verzió egy másik buildje. A javítások egy konkrét buildet igényelnek.</string>
     <string name="version_warning_experiment_title">Kísérletezni szeretnél? 🧪</string>
-    <string name="version_warning_older_stable_title">Régebbi stabil verzió</string>
-    <string name="version_warning_older_stable_message">Jelenlegi: v%1$s\nLegújabb stabil: v%2$s\n\nEz a verzió támogatott, de elérhető egy újabb stabil verzió. Lehet, hogy kimaradsz a legújabb javításokból.</string>
     <string name="version_warning_latest_experimental_message">Jelenlegi: v%1$s\n\nEz a verzió korai kísérleti támogatással rendelkezik\n\n🔧 Számíts furcsa alkalmazásviselkedésre vagy azonosítatlan hibákra, amíg a javításokat ehhez az alkalmazásverzióhoz finomítják.</string>
-    <string name="version_warning_older_experimental_title">Régebbi kísérleti verzió\nKísérletezel? 🧪</string>
-    <string name="version_warning_older_experimental_message">Jelenlegi: v%1$s\nLegújabb kísérleti: v%2$s\n\nEz egy támogatott kísérleti build, de elérhető egy újabb kísérleti verzió. Számíts furcsa alkalmazásviselkedésre vagy azonosítatlan hibákra, amíg a javításokat ehhez az alkalmazásverzióhoz finomítják.</string>
-    <string name="version_warning_too_new_message">Jelenlegi: v%1$s\nLegújabb ismert: v%2$s\n\nEz a verzió korai kísérleti támogatással rendelkezik\n\n🔧 Számíts furcsa alkalmazásviselkedésre vagy azonosítatlan hibákra, amíg a javításokat ehhez az alkalmazásverzióhoz finomítják.</string>
-    <string name="version_warning_too_old_message">Jelenlegi: v%1$s\nLegrégebbi támogatott: v%2$s\n\nEz nem hivatalosan támogatott verzió. A javítások nagy valószínűséggel sikertelenek lesznek.</string>
     <string name="version_warning_unsupported_message">Jelenlegi: v%1$s\n\nEz nem hivatalosan támogatott verzió. A javítások nagy valószínűséggel sikertelenek lesznek.</string>
     <string name="version_warning_notice_message">Folytatás a v%1$s verzióval?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Régebbi stabil build – újabb stabil v%1$s érhető el</string>
-    <string name="quick_patch_warning_latest_experimental">Kísérleti build – támogatott, de lehet, hogy nem működik megfelelően</string>
-    <string name="quick_patch_warning_older_experimental">Régebbi kísérleti build – újabb kísérleti v%1$s érhető el</string>
-    <string name="quick_patch_warning_build_unsupported">A build nem támogatott – ez a verzió javítható, de ez a build nem</string>
-    <string name="quick_patch_warning_too_new">Túl új verzió – nem hivatalosan támogatott, a javítások nagy valószínűséggel sikertelenek lesznek</string>
-    <string name="quick_patch_warning_too_old">Túl régi verzió – nem hivatalosan támogatott, a javítások nagy valószínűséggel sikertelenek lesznek</string>
-    <string name="quick_patch_warning_unsupported_between">Nem támogatott verzió – a javítások nagy valószínűséggel sikertelenek lesznek</string>
-    <string name="quick_patch_read_apk_failed">Az APK olvasása sikertelen: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Javítások előkészítése…</string>
-    <string name="quick_patch_fetch_patches_failed">A javítások lekérése sikertelen. Ellenőrizd az internetkapcsolatodat</string>
-    <string name="quick_patch_status_downloading_patches">Javítások letöltése: %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Nem sikerült a módosítások letöltése: %1$s</string>
-    <string name="quick_patch_status_patching">Javítás…</string>
-    <string name="quick_patch_completed_adb_off">ADB kikapcsolva · Engedélyezd a telepítéshez</string>
-    <string name="quick_patch_completed_adb_connect_device">Csatlakoztass egy eszközt USB-n keresztül az ADB-vel történő telepítéshez</string>
-    <string name="quick_patch_error_unknown_occurred">Ismeretlen hiba történt</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK elemzése…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d patch</string>
-    <string name="quick_patch_patching_slow_warning">Ez a szokásosnál tovább tart. Kérlek várj…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(%1$d. build)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Nincsenek kompatibilis javítások ehhez az alkalmazáshoz</string>
-    <string name="quick_patch_ready_no_matching_patches">Nincs a \"%1$s\" kifejezésnek megfelelő javítás</string>
-    <string name="quick_patch_ready_patch_with_defaults">Javítás alapértelmezésekkel</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Támogatott alkalmazások</string>
-    <string name="quick_patch_supported_apps_subtitle">Húzd ide a támogatott alkalmazás pontos APK-verzióját</string>
-    <string name="quick_patch_supported_apps_loading">Támogatott alkalmazások betöltése…</string>
-    <string name="quick_patch_supported_apps_load_error">A támogatott alkalmazások betöltése nem sikerült</string>
-    <string name="quick_patch_supported_apps_change_source">Forrás módosítása</string>
-    <string name="quick_patch_supported_apps_no_matches">Nincs megfelelő alkalmazás</string>
-    <string name="quick_patch_supported_apps_version_any">Bármelyik verzió</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK-fájl kiválasztása</string>
     <string name="home_could_not_resolve_patch_files">A javítófájlok feloldása nem sikerült</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APK eltávolítása</string>
     <string name="home_apk_info_limited_info_warning">Az APK manifestjének teljes beolvasása nem sikerült (gyakori a split csomagoknál). Az alábbi adatok közelítőek, a javításnak így is működnie kell</string>
     <string name="home_apk_info_unsupported_app_warning">Nem találhatók kompatibilis javítások ehhez az alkalmazáshoz. Folytathatod, de előfordulhat, hogy a javításnak nem lesz hatása</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Nem található kompatibilis javítás ehhez az alkalmazáshoz</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Méret</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Forrás</string>
     <string name="home_stage_change_apk">APK cseréje</string>
     <string name="home_stage_continue">Folytatás</string>
+    <string name="home_stage_patch">Módosítás</string>
     <string name="home_stage_analyzing_title">Elemzés</string>
     <string name="home_stage_reading_metadata">Alkalmazásmetaadatok olvasása…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,13 +192,6 @@
     <string name="home_dialog_uninstall_title">Eltávolítod a %1$s alkalmazást?</string>
     <string name="home_dialog_uninstall_message">Ez eltávolítja a %1$s alkalmazást a csatlakoztatott eszközről. A lemezen lévő javított APK és az előzmények megmaradnak, hacsak másképp nem döntesz lentebb</string>
     <string name="home_dialog_uninstall_also_forget">Eltávolítás a Saját alkalmazások közül is</string>
-    <string name="home_dialog_missing_apk_title">Az eredeti APK nem található</string>
-    <string name="home_dialog_missing_apk_message">A %1$s bemeneti APK-ja már nem található itt:
-%2$s
-
-Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</string>
-    <string name="home_dialog_select_apk">APK kiválasztása…</string>
-    <string name="home_dialog_select_apk_to_repatch">Válassz APK-t az újrajavításhoz</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Források kezelése</string>
     <string name="home_header_multi_source_hint">Az összes engedélyezett forrás javításai egyesítve jelennek meg. Kezelheted őket a fenti források gombbal</string>
@@ -288,10 +228,6 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="home_filter_your_apps">Saját alkalmazások</string>
     <string name="home_banner_view">Megtekintés</string>
     <string name="home_your_apps_install_ready">Telepítésre kész</string>
-    <string name="home_your_apps_newer_patch_hint">Az újabb javítás újabb alkalmazásverziót eredményezhet, kattints a Frissítés gombra az ellenőrzéshez</string>
-    <string name="home_your_apps_device_version_ready">A javított v%1$s kész, az eszközön v%2$s (nincs szükség újrajavításra)</string>
-    <string name="home_your_apps_install_ready_hint">A javított v%1$s telepítésre kész (nincs szükség újrajavításra)</string>
-    <string name="home_action_install">Telepítés</string>
     <string name="home_action_install_to_device">Telepítés az eszközre</string>
     <string name="home_action_installing">Telepítés…</string>
     <string name="home_action_preparing">Előkészítés…</string>
@@ -332,7 +268,12 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s kész · az eszközön v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s kész, nincs szükség újrajavításra</string>
-    <string name="home_advice_unsupported">a v%1$s verzió már nem támogatott. Frissíts a v%2$s verzióra</string>
+    <string name="home_detail_source_disabled">Letiltva</string>
+    <string name="home_detail_source_removed">Eltávolítva</string>
+    <string name="home_detail_source_disabled_sub">A forrás отклюvítva a Források menüben. Engedélyezze a مجújavításhoz</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Az eredeti forrás ki van kapcsolva. Válasszon egy alternatív forrást, vagy engedélyezze újra a Forrásokban</string>
+    <string name="home_detail_no_compatible_source">Nincs engedélyezve kompatibilis forrás</string>
+    <string name="home_detail_choose_source">Válasszon patch forrást</string>
     <string name="home_advice_unsupported_by_patches">a v%1$s verziót már nem támogatják a legújabb javítások</string>
     <string name="home_date_today">ma</string>
     <string name="home_date_yesterday">tegnap</string>
@@ -430,11 +371,14 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patch_selection_group_ungrouped">Csoportosítatlan</string>
     <string name="patch_selection_group_selected_count">%1$d kiválasztva</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Kezdje elölről</string>
+    <string name="patching_patches_count">%1$d / %2$d patch</string>
+    <string name="patching_slow_warning">Ez tovább tart, mint általában. Kérjük, várjon…</string>
     <string name="patching_status_ready">Kész a javításra</string>
     <string name="patching_status_preparing">Felkészülés a javításra</string>
     <string name="patching_status_in_progress">Módosítások alkalmazása</string>
     <string name="patching_completed_loading_result">A javítás befejeződött, az eredmény betöltése…</string>
-    <string name="patching_cancelled_loading_result">A javítás megszakítva, az eredmény betöltése…</string>
+    <string name="patching_cancelled_loading_result">A javítás törölve, a resultado betöltése folyamatban…</string>
     <string name="patching_failed_loading_result">A javítás sikertelen, az eredmény betöltése…</string>
     <string name="patching_log_viewer_failed_to_read">A naplófájl olvasása sikertelen: %1$s</string>
     <string name="patching_log_viewer_title">Naplófájl</string>
@@ -470,6 +414,8 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patching_banner_native_libs_stripped">Eltávolítva</string>
     <string name="patching_error_failed_patches">Sikertelen javítások: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB ki · Engedélyezze a telepítéshez</string>
+    <string name="result_adb_connect_device_hint">Csatlagasszon egy eszközt USB-n az ADB-s telepítéshez</string>
     <string name="result_screen_patch_another_button">Másik javítása</string>
     <string name="result_screen_install_on_device_label">Telepítés a következőre: %1$s</string>
     <string name="result_screen_links_routed_label">Hivatkozások a javított alkalmazáshoz irányítva</string>
@@ -569,13 +515,12 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="source_error_failed_to_load">A betöltés sikertelen</string>
     <string name="source_error_github_pat_required">A pull request forrásainak letöltéséhez GitHub PAT szükséges</string>
     <string name="source_error_pr_no_artifact">Nem találhatók összetevők a pull requesthez</string>
-    <string name="source_sheet_manage_description">Javításforrások kezelése</string>
-    <string name="source_sheet_local_label">Helyi</string>
+    <string name="source_error_patcher_incompatible">Ez a forrás a %1$s patcherhez készült, de a Morphe %2$s a %3$s patchert tartalmazza. Frissítse a Morphe-t a használatához</string>
+    <string name="version_label_local">Helyi</string>
     <string name="source_sheet_remote_label">Távoli</string>
     <string name="add_source">Forrás hozzáadása</string>
     <string name="source_sheet_title">Módosításforrások</string>
     <string name="source_sheet_reload_description">Javítások újratöltése</string>
-    <string name="source_sheet_quick_mode_hint">Válaszd ki, melyik forrást használja a Gyorsjavítás. A többforrású mód az Expert módban érhető el</string>
     <string name="source_sheet_multi_mode_hint">Bármely kombináció engedélyezése/letiltása. Az összes engedélyezett forrás javításai egyesítve jelennek meg</string>
     <string name="source_sheet_done_button">Kész</string>
     <string name="source_sheet_type_preinstalled">Előretelepített</string>
@@ -585,13 +530,21 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="source_sheet_edit_description">Szerkesztés</string>
     <string name="source_sheet_move_up_description">Mozgatás feljebb</string>
     <string name="source_sheet_move_down_description">Mozgatás lejjebb</string>
-    <string name="source_sheet_channel_older_stable">Régebbi stabil</string>
-    <string name="source_sheet_channel_older_dev">Régebbi fejlesztői</string>
     <string name="source_sheet_ignored_mpp_title">Figyelmen kívül hagyott .mpp minták</string>
-    <string name="source_sheet_ignored_mpp_hint">Csak a mappaforrásokat érinti, amelyek automatikusan a mappában lévő legújabb .mpp fájlt töltik be. A legújabb build kiválasztásakor a rendszer kihagyja azokat a fájlokat, amelyek neve illeszkedik egy itteni mintára. Egy egyszerű szó minden olyan fájlra illeszkedik, amely tartalmazza (pl. debug). Használj * jelet a glob mintákhoz (pl. *-debug.mpp). A *-sources.mpp és *-javadoc.mpp fájlok mindig figyelmen kívül maradnak</string>
+    <string name="source_sheet_ignored_mpp_hint">Csak a mappforrásokat érinti, amelyek automatikusan betöltik a legfrissebb .mpp fájlt a mappában. A legfrissebb build kiválasztásakor azok a fájlok lesznek kihagyva, amelyek neve megfelel egy itt megadott mintának. Egy egyszerű szó minden olyan fájlt egyezik, amely tartalmazza azt (pl. debug). A glob mintákhoz használja a * jelet (pl. *-debug.mpp). A *-sources.mpp és a *-javadoc.mpp fájlok mindig lesznek figyelmen kívül hagyva</string>
     <string name="source_sheet_ignored_mpp_placeholder">pl. debug vagy *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Minta hozzáadása</string>
     <string name="source_sheet_remove_pattern_description">Minta eltávolítása</string>
+    <string name="sources_management_signed_by">Aláírta</string>
+    <string name="sources_management_signing_key_changed_badge">Kulcs módosítva</string>
+    <string name="sources_management_signing_key_changed_hint">Az aláírási kulcs módosult. Kattintson az ellenőrzéshez</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' nem lett frissítve, mert a legújabb kiadása nem azzal a kulccsal van aláírva, amelyet korábban használt</string>
+    <string name="sources_signing_key_new">Új kulcs</string>
+    <string name="sources_signing_key_trust_message">A legújabb kiadás egy másik kulccsal van aláírva. Vagy a fejlesztő kicserélte a kulcsát, vagy valaki más publikálta ezt a kiadást. Csak akkor bízz benne, ha a fejlesztő bejelentett egy új kulcsot</string>
+    <string name="sources_signing_key_trust_message_unsigned">A legújabb kiadás nincs aláírva. Vagy a fejlesztő stopped a kiadások aláírását, vagy valaki más publikálta ezt a kiadást. Csak akkor bízz benne, ha a fejlesztő bejelentette</string>
+    <string name="sources_signing_key_trust_title">Bízni akar az új kulcsban?</string>
+    <string name="sources_signing_key_trusted">Megbízható kulcs</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Helyi fájl</string>
     <string name="patch_source_dialog_name_label">Név</string>
@@ -601,8 +554,6 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="patch_source_dialog_repo_hint">GitHub-, GitLab- vagy morphe.software/add-source hivatkozást fogad el</string>
     <string name="patch_source_dialog_pre_release_title">Pre-release javítások</string>
     <string name="patch_source_dialog_pre_release_hint">Korai hozzáférést biztosít az új kísérleti javításverziókhoz</string>
-    <string name="patch_source_dialog_experimental_title">Kísérleti alkalmazásverziók</string>
-    <string name="patch_source_dialog_experimental_hint">Előnyben részesíti a kísérleti alkalmazásverziókat, ha elérhetők</string>
     <string name="patch_source_dialog_error_name_required">A név megadása kötelező</string>
     <string name="patch_source_dialog_error_invalid_url">Adj meg egy érvényes GitHub- vagy GitLab-URL-t</string>
     <string name="patch_source_dialog_error_invalid_file">Válassz egy érvényes .mpp fájlt</string>
@@ -685,10 +636,8 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="settings_dialog_open_logs_button">Naplók megnyitása</string>
     <string name="settings_dialog_reset_button">Visszaállítás</string>
     <string name="settings_theme_system">Rendszer</string>
-    <string name="settings_signing_error_not_found">A konfigurált kulcstároló nem található: %1$s. Állítsd vissza a fájlt, válassz másikat a Beállításokban, vagy töröld a beállítást a Morphe alapértelmezett kulcstárolójának használatához</string>
     <string name="settings_search_languages_placeholder">Nyelvek keresése</string>
     <string name="settings_dialog_resolves_to_message">Feloldva: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">A kulcstároló nem található: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Nyelv</string>
     <string name="settings_language_current_title">Jelenlegi nyelv</string>
@@ -696,9 +645,13 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="settings_language_dialog_title">Alkalmazás nyelve</string>
     <string name="settings_language_search_no_results">Nincs találat</string>
     <string name="settings_section_theme">Téma</string>
+    <string name="settings_appearance_theme_mode">Téma mód</string>
     <string name="settings_theme_light">Világos</string>
     <string name="settings_theme_dark">Sötét</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Színstílus</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monokróm</string>
     <string name="settings_toggle_sharp_corners_label">Éles sarkok</string>
     <string name="settings_toggle_sharp_corners_desc">Kártyák, párbeszédablakok és gombok sarkainak négyszögletesítése</string>
     <string name="settings_section_accent_color">Kiemelőszín</string>
@@ -708,9 +661,6 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="settings_section_app_cards">Alkalmazáskártyák</string>
     <string name="settings_app_cards_color_all">Szín minden kártyához</string>
     <string name="settings_app_cards_color_all_desc">Az egyenként testreszabott kártyák megtartják a saját színüket</string>
-    <string name="settings_section_patch_list">Javításlista</string>
-    <string name="settings_toggle_patch_categories_label">Javításkategóriák</string>
-    <string name="settings_toggle_patch_categories_desc">Javítások csoportosítása kibontható kategóriákba</string>
     <string name="settings_section_background_animation">Háttér-animáció</string>
     <string name="settings_background_circles">Körök</string>
     <string name="settings_background_rings">Gyűrűk</string>
@@ -824,8 +774,23 @@ Válaszd ki újra az APK-t, hogy újrajavíthasd a mentett beállításokkal</st
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Fordítás</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">A változásnapló nem érhető el</string>
+    <string name="changelog_badge_installed">Telepítve</string>
+    <string name="changelog_badge_latest">Legfrissebb</string>
+    <string name="changelog_badge_prerelease">Elmelegítő verzió</string>
+    <string name="changelog_date_today">Ma</string>
+    <string name="changelog_date_yesterday">Tegnap</string>
     <string name="changelog_dialog_title">Változásnapló megtekintése</string>
-    <string name="changelog_show_older_button">Régebbi kiadások megjelenítése</string>
+    <string name="changelog_not_available">A változásnapló nem érhető el</string>
+    <string name="changelog_section_app_support">Alkalmazástámogatás</string>
+    <string name="changelog_section_fixes">Javítások</string>
+    <string name="changelog_section_improvements">Kifejlesztések</string>
+    <string name="changelog_section_new">Új</string>
+    <string name="changelog_section_other">Változások</string>
+    <string name="changelog_section_performance">Teljesítmény</string>
+    <string name="changelog_show_all">Összes megjelenítése (%1$d)</string>
+    <string name="changelog_show_less">Mutass kevesebbet</string>
     <string name="changelog_view_on_github_button">Megtekintés a GitHubon</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Források</string>
+    <string name="nav_apps">Alkalmazások</string>
 </resources>

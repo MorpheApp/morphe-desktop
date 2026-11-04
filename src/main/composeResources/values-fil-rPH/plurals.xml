@@ -16,22 +16,6 @@
         <item quantity="one">%1$d mapagkukunan</item>
         <item quantity="other">%1$d mga mapagkukunan</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Ilalapat ang %1$d na patch</item>
-        <item quantity="other">Ilalapat ang %1$d na mga patch</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d ang hindi kasama</item>
-        <item quantity="other">%1$d ang hindi kasama</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d ang naka-enable</item>
-        <item quantity="other">%1$d ang naka-enable</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d ang naka-disable</item>
-        <item quantity="other">%1$d ang naka-disable</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d na library</item>
         <item quantity="other">%1$d na library</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d na core</item>
         <item quantity="other">%1$d na core</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d na pagbabago</item>
+        <item quantity="other">%1$d na pagbabago</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$da na nakalipas</item>
+        <item quantity="other">%1$da na nakalipas</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d na feature</item>
+        <item quantity="other">%1$d na feature</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d na fix</item>
+        <item quantity="other">%1$d na mga fix</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d na pag-optimize</item>
+        <item quantity="other">%1$d na mga pag-optimize</item>
     </plurals>
 </resources>

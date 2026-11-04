@@ -13,6 +13,7 @@
     <string name="expand">展開</string>
     <string name="cancel">キャンセル</string>
     <string name="close">閉じる</string>
+    <string name="trust">信頼</string>
     <string name="delete">削除</string>
     <string name="disabled_while_patching">パッチ適用中は無効です</string>
     <string name="drop_apk_here">APK をここにドロップしてください</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">ダウンロード中に接続が切断されました。もう一度お試しください</string>
     <string name="error_network_loading_patches">パッチ読み込み中のネットワークエラー</string>
     <string name="error_patch_file_not_found">パッチファイルが見つかりません: %1$s</string>
-    <string name="error_no_patches_files_supplied">パッチファイルが指定されていません</string>
-    <string name="error_input_apk_not_found">入力された APK が見つかりません</string>
     <string name="error_step_failed">%1$s に失敗しました: %2$s</string>
     <string name="error_drop_valid_apk">有効な .apk、.apkm、.xapk、または .apks ファイルをドロップしてください</string>
     <string name="status_saving">保存中…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">アプリを絞り込む…</string>
     <string name="version">バージョン</string>
     <string name="version_label_stable">安定版</string>
-    <string name="version_label_dev">開発版</string>
+    <string name="version_label_prerelease">プレリリース</string>
     <string name="version_label_experimental">実験版</string>
-    <string name="version_label_latest_dev">最新の開発版</string>
     <string name="version_label_latest_stable">最新の安定版</string>
+    <string name="version_label_recommended">おすすめ</string>
+    <string name="version_label_supported">対応</string>
     <string name="app_info_arch_label">アーキテクチャ</string>
     <string name="app_info_min_sdk_label">最小 SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">パッチ適用がキャンセルされました</string>
     <string name="view_full_logs_button">完全なログを表示</string>
     <string name="error_patching_unknown">不明な理由でパッチ適用に失敗しました</string>
-    <string name="error_patching_general">エラー: %1$s</string>
     <string name="error_log_label">エラーログ</string>
     <string name="back">戻る</string>
     <string name="open_folder">フォルダを開く</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">任意の数のストップ、線形・放射・円錐</string>
     <string name="card_fill_mode_solid">単色</string>
     <string name="card_fill_mode_solid_blurb">単一のフラットな色</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">パッチ数</string>
-    <string name="quick_patch_screen_start_over_button">最初からやり直す</string>
-    <string name="quick_patch_patch_another_button">別のアプリをパッチ</string>
-    <string name="quick_patch_select_apk">APK を選択</string>
-    <string name="quick_patch_analyze_apk_failed">APK の解析に失敗しました</string>
-    <string name="quick_patch_extract_base_apk_failed">バンドルからベース APK を抽出できませんでした</string>
-    <string name="quick_patch_unsupported_app_error">%1$s はクイック パッチ モードではサポートされていません。サポートされているアプリ: %2$s。サポートされていないアプリの場合は通常モードを使用してください</string>
     <string name="adb_install_on_button">%1$s にインストール</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">パッチを読み込み中</string>
-    <string name="patching_step_preparing">準備中</string>
     <string name="patching_step_merging_split_apk">分割 APK を結合中</string>
     <string name="patching_step_read_apk">APK ファイルを読み込み中</string>
     <string name="patching_step_applying_patches">パッチを適用中</string>
-    <string name="patching_step_saving">保存中</string>
     <string name="patching_step_writing_apk">パッチ済み APK ファイルを出力中</string>
     <string name="patching_step_signing">パッチ済み APK ファイルに署名中</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">ファイルが破損している可能性があります。APKMirror から再ダウンロードしてください</string>
     <string name="version_status_checksum_failed">チェックサムの検証に失敗しました</string>
     <string name="version_status_checksum_matches">チェックサムが APKMirror と一致しています</string>
-    <string name="version_status_older_stable">古い安定版</string>
     <string name="version_status_newer_stable_available">新しい安定版 v%1$s が利用可能です</string>
     <string name="version_status_newer_stable_available_fallback">新しい安定版が利用可能です</string>
     <string name="version_status_experimental_detail">サポートされていますが、正常に動作しない可能性があります</string>
-    <string name="version_status_older_experimental">古い実験版</string>
-    <string name="version_status_newer_experimental_available">新しい実験版 v%1$s が利用可能です</string>
-    <string name="version_status_newer_experimental_available_fallback">新しい実験ビルドが利用可能です</string>
-    <string name="version_status_too_new">バージョンが新すぎます</string>
     <string name="version_status_unsupported_detail">公式にサポートされていないため、パッチはほぼ確実に失敗します</string>
-    <string name="version_status_too_old">バージョンが古すぎます</string>
     <string name="version_status_unsupported">サポートされていないバージョン</string>
     <string name="version_status_build_unsupported">サポートされていないビルド</string>
     <string name="version_status_build_unsupported_detail">このバージョンはサポートされていますが、このビルドはサポートされていません。パッチが対象とするビルドを入手してください</string>
+    <string name="version_status_build_unsupported_with_code">パッチにはビルド %1$s が必要です</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">バージョンに関する通知</string>
+    <string name="version_warning_build_unsupported_message">現在のバージョン：v%1$s（ビルド %2$s）\n要求ビルド：%3$s\n\nこれは同じバージョンの別ビルドです。パッチを適用するには特定のビルドが必要です。</string>
     <string name="version_warning_experiment_title">試してみますか？ 🧪</string>
-    <string name="version_warning_older_stable_title">古い安定版</string>
-    <string name="version_warning_older_stable_message">現在: v%1$s\n最新の安定版: v%2$s\n\nこのバージョンはサポートされていますが、より新しい安定版が利用可能です。最近の修正が含まれていない可能性があります。</string>
     <string name="version_warning_latest_experimental_message">現在: v%1$s\n\nこのバージョンは初期の実験的サポートの対象です\n\n🔧 このアプリバージョン向けのパッチ調整中は、予期しない動作や原因不明のバグが発生する可能性があります。</string>
-    <string name="version_warning_older_experimental_title">古い実験版です\n試してみますか？ 🧪</string>
-    <string name="version_warning_older_experimental_message">現在: v%1$s\n最新の実験版: v%2$s\n\nこれはサポートされている実験ビルドですが、より新しい実験版が利用可能です。このアプリバージョン向けのパッチ調整中は、予期しない動作や原因不明のバグが発生する可能性があります。</string>
-    <string name="version_warning_too_new_message">現在: v%1$s\n既知の最新版: v%2$s\n\nこのバージョンは初期の実験的サポートの対象です\n\n🔧 このアプリバージョン向けのパッチ調整中は、予期しない動作や原因不明のバグが発生する可能性があります。</string>
-    <string name="version_warning_too_old_message">現在: v%1$s\nサポートされている最古のバージョン: v%2$s\n\nこれは公式にサポートされているバージョンではありません。パッチはほぼ確実に失敗します。</string>
     <string name="version_warning_unsupported_message">現在: v%1$s\n\nこれは公式にサポートされているバージョンではありません。パッチはほぼ確実に失敗します。</string>
     <string name="version_warning_notice_message">バージョン %1$s で続行しますか？</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">古い安定版ビルド - 新しい安定版 v%1$s が利用可能です</string>
-    <string name="quick_patch_warning_latest_experimental">実験ビルド - サポートされていますが、正常に動作しない可能性があります</string>
-    <string name="quick_patch_warning_older_experimental">古い実験ビルド - 新しい実験版 v%1$s が利用可能です</string>
-    <string name="quick_patch_warning_build_unsupported">サポートされていないビルド - このバージョンはパッチ可能ですが、このビルドは対象外です</string>
-    <string name="quick_patch_warning_too_new">バージョンが新すぎます - 公式にサポートされていないため、パッチはほぼ確実に失敗します</string>
-    <string name="quick_patch_warning_too_old">バージョンが古すぎます - 公式にサポートされていないため、パッチはほぼ確実に失敗します</string>
-    <string name="quick_patch_warning_unsupported_between">サポートされていないバージョン - パッチはほぼ確実に失敗します</string>
-    <string name="quick_patch_read_apk_failed">APK を読み込めませんでした: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">パッチを準備中…</string>
-    <string name="quick_patch_fetch_patches_failed">パッチの取得に失敗しました。インターネット接続を確認してください</string>
-    <string name="quick_patch_status_downloading_patches">パッチ %1$s をダウンロード中…</string>
-    <string name="quick_patch_download_patches_failed">パッチのダウンロードに失敗しました: %1$s</string>
-    <string name="quick_patch_status_patching">パッチ適用中…</string>
-    <string name="quick_patch_completed_adb_off">ADB オフ · インストールするには有効にしてください</string>
-    <string name="quick_patch_completed_adb_connect_device">ADB を使用してインストールするには、USB 経由でデバイスを接続してください</string>
-    <string name="quick_patch_error_unknown_occurred">不明なエラーが発生しました</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK を解析中…</string>
-    <string name="quick_patch_patching_patches_count">パッチ %1$d / %2$d</string>
-    <string name="quick_patch_patching_slow_warning">通常より時間がかかっています。しばらくお待ちください…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(ビルド %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">このアプリに対応するパッチがありません</string>
-    <string name="quick_patch_ready_no_matching_patches">\"%1$s\" に一致するパッチがありません</string>
-    <string name="quick_patch_ready_patch_with_defaults">デフォルトでパッチを適用</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">対応アプリ</string>
-    <string name="quick_patch_supported_apps_subtitle">サポートされているアプリの正確な APK バージョンをここにドロップしてください</string>
-    <string name="quick_patch_supported_apps_loading">対応アプリを読み込み中…</string>
-    <string name="quick_patch_supported_apps_load_error">対応アプリを読み込めませんでした</string>
-    <string name="quick_patch_supported_apps_change_source">ソースを変更</string>
-    <string name="quick_patch_supported_apps_no_matches">一致するアプリがありません</string>
-    <string name="quick_patch_supported_apps_version_any">任意のバージョン</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK ファイルを選択</string>
     <string name="home_could_not_resolve_patch_files">パッチファイルを解決できませんでした</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APK を削除</string>
     <string name="home_apk_info_limited_info_warning">この APK のマニフェストを完全に読み取れませんでした（分割バンドルではよくあることです）。以下の詳細は概算であり、パッチ適用は引き続き有効です</string>
     <string name="home_apk_info_unsupported_app_warning">このアプリに対応するパッチが見つかりません。続行できますが、パッチ適用が効果を発揮しない可能性があります</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">このアプリに対応するパッチは見つかりませんでした</string>
     <string name="home_apk_info_build_label">ビルド</string>
     <string name="home_apk_info_size_label">サイズ</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">提供元</string>
     <string name="home_stage_change_apk">APK を変更</string>
     <string name="home_stage_continue">続行</string>
+    <string name="home_stage_patch">パッチ</string>
     <string name="home_stage_analyzing_title">解析中</string>
     <string name="home_stage_reading_metadata">アプリのメタデータを読み込み中…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">%1$s をアンインストールしますか？</string>
     <string name="home_dialog_uninstall_message">これにより、接続されたデバイスから %1$s が削除されます。ディスク上のパッチ適用済み APK および履歴は、以下で別途選択しない限り保持されます</string>
     <string name="home_dialog_uninstall_also_forget">「マイアプリ」からも削除</string>
-    <string name="home_dialog_missing_apk_title">オリジナル APK が見つかりません</string>
-    <string name="home_dialog_missing_apk_message">%1$s の入力 APK は、次の場所にはありません:\n%2$s\n\n保存済みの設定で再パッチするには、もう一度 APK を選択してください</string>
-    <string name="home_dialog_select_apk">APK を選択…</string>
-    <string name="home_dialog_select_apk_to_repatch">再パッチする APK を選択してください</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">ソースを管理</string>
     <string name="home_header_multi_source_hint">有効なすべてのソースのパッチが統合されます。上のソースボタンから管理できます</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">マイアプリ</string>
     <string name="home_banner_view">表示</string>
     <string name="home_your_apps_install_ready">インストール準備完了</string>
-    <string name="home_your_apps_newer_patch_hint">新しいパッチがアプリのバージョンを引き上げる可能性があります。「更新」をクリックして確認してください</string>
-    <string name="home_your_apps_device_version_ready">パッチ済み v%1$s の準備完了、デバイスは v%2$s（再パッチ不要）</string>
-    <string name="home_your_apps_install_ready_hint">パッチ済み v%1$s をインストールできます（再パッチ不要）</string>
-    <string name="home_action_install">インストール</string>
     <string name="home_action_install_to_device">デバイスにインストール</string>
     <string name="home_action_installing">インストール中…</string>
     <string name="home_action_preparing">準備中…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s 準備完了 · デバイスは v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s 準備完了、再パッチ不要</string>
-    <string name="home_advice_unsupported">v%1$s はサポートされなくなりました。v%2$s に更新してください</string>
+    <string name="home_detail_source_disabled">無効</string>
+    <string name="home_detail_source_removed">削除</string>
+    <string name="home_detail_source_disabled_sub">ソースが無効になっています。再パッチするには有効にしてください</string>
+    <string name="home_detail_source_disabled_alternatives_sub">オリジナルのソースは無効になっています。代替ソースを選択するか、「ソース」で再度有効にしてください</string>
+    <string name="home_detail_no_compatible_source">互換性のあるソースが有効になっていません</string>
+    <string name="home_detail_choose_source">パッチソースを選択</string>
     <string name="home_advice_unsupported_by_patches">v%1$s は最新パッチでサポートされなくなりました</string>
     <string name="home_date_today">今日</string>
     <string name="home_date_yesterday">昨日</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">グループ化なし</string>
     <string name="patch_selection_group_selected_count">%1$d 件選択中</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">最初からやり直す</string>
+    <string name="patching_patches_count">%2$d 件中 %1$d 件のパッチ</string>
+    <string name="patching_slow_warning">通常より時間がかかっています。しばらくお待ちください…</string>
     <string name="patching_status_ready">パッチ適用の準備ができました</string>
     <string name="patching_status_preparing">パッチ適用を準備中</string>
     <string name="patching_status_in_progress">パッチを適用中</string>
     <string name="patching_completed_loading_result">パッチ適用が完了しました。結果を読み込み中…</string>
-    <string name="patching_cancelled_loading_result">パッチ適用がキャンセルされました。結果を読み込み中…</string>
+    <string name="patching_cancelled_loading_result">パッチ適用がキャンセルされました。結果を読み込んでいます…</string>
     <string name="patching_failed_loading_result">パッチ適用に失敗しました。結果を読み込み中…</string>
     <string name="patching_log_viewer_failed_to_read">ログファイルを読み込めませんでした: %1$s</string>
     <string name="patching_log_viewer_title">ログファイル</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">ストリップ</string>
     <string name="patching_error_failed_patches">失敗したパッチ: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB オフ · インストールするには有効にしてください</string>
+    <string name="result_adb_connect_device_hint">ADB を使用してインストールするには、USB 経由でデバイスを接続してください</string>
     <string name="result_screen_patch_another_button">別のアプリをパッチ</string>
     <string name="result_screen_install_on_device_label">%1$s にインストール</string>
     <string name="result_screen_links_routed_label">リンクがパッチ済みアプリに転送されます</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">読み込みに失敗しました</string>
     <string name="source_error_github_pat_required">プルリクエストのソースをダウンロードするには、GitHub PAT が必要です</string>
     <string name="source_error_pr_no_artifact">プルリクエストのアーティファクトが見つかりません。</string>
-    <string name="source_sheet_manage_description">パッチソースを管理</string>
-    <string name="source_sheet_local_label">ローカル</string>
+    <string name="source_error_patcher_incompatible">このソースはパッチャー %1$s 用に作成されていますが、Morphe %2$s にはパッチャー %3$s が含まれています。Morphe を更新して使用してください</string>
+    <string name="version_label_local">ローカル</string>
     <string name="source_sheet_remote_label">リモート</string>
     <string name="add_source">ソースを追加</string>
     <string name="source_sheet_title">パッチソース</string>
     <string name="source_sheet_reload_description">パッチを再読み込み</string>
-    <string name="source_sheet_quick_mode_hint">クイックパッチが使用するソースを選択してください。複数ソースはエキスパートモードで利用できます</string>
     <string name="source_sheet_multi_mode_hint">任意の組み合わせで有効/無効にできます。有効なすべてのソースのパッチが統合されます</string>
     <string name="source_sheet_done_button">完了</string>
     <string name="source_sheet_type_preinstalled">プリインストール</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">編集</string>
     <string name="source_sheet_move_up_description">上へ移動</string>
     <string name="source_sheet_move_down_description">下へ移動</string>
-    <string name="source_sheet_channel_older_stable">古い安定版</string>
-    <string name="source_sheet_channel_older_dev">古い開発版</string>
     <string name="source_sheet_ignored_mpp_title">無視する .mpp パターン</string>
-    <string name="source_sheet_ignored_mpp_hint">フォルダソースにのみ影響します。フォルダ内の最新の .mpp を自動的に読み込みます。その最新ビルドを選択するとき、ここで指定したパターンに一致する名前のファイルはスキップされます。プレーンな単語は、それを含むすべてのファイルに一致します（例: debug）。グロブには * を使用します（例: *-debug.mpp）。*-sources.mpp と *-javadoc.mpp は常に無視されます</string>
+    <string name="source_sheet_ignored_mpp_hint">これはフォルダソースにのみ影響し、フォルダ内の最新の .mpp ファイルを自動読み込みします。最新のビルドを選択する際、ここで指定されたパターンに一致する名前のファイルはスキップされます。単一の単語を使用した場合は、その単語を含むすべてのファイルがスキップされます（例：debug）。ワイルドカードを使用する場合は、* を使用します（例：*-debug.mpp）。*-sources.mpp および *-javadoc.mpp は常に無視されます</string>
     <string name="source_sheet_ignored_mpp_placeholder">例: debug または *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">パターンを追加</string>
     <string name="source_sheet_remove_pattern_description">パターンを削除</string>
+    <string name="sources_management_signed_by">署名者</string>
+    <string name="sources_management_signing_key_changed_badge">キーが変更されました</string>
+    <string name="sources_management_signing_key_changed_hint">署名キーが変更されました。クリックして確認してください</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">「%1$s」の最新リリースは、以前に使用されていた署名キーで署名されていないため、更新されませんでした</string>
+    <string name="sources_signing_key_new">新しい署名キー</string>
+    <string name="sources_signing_key_trust_message">最新のリリースは以前とは異なる署名キーで署名されています。開発者が署名キーを変更したか、第三者がこのリリースを公開した可能性があります。開発者が新しい署名キーへの変更を告知している場合に限り、信頼してください</string>
+    <string name="sources_signing_key_trust_message_unsigned">最新のリリースには署名がありません。開発者がリリースへの署名をやめたか、第三者がこのリリースを公開した可能性があります。開発者が公開を告知している場合に限り、信頼してください</string>
+    <string name="sources_signing_key_trust_title">新しい署名キーを信頼しますか？</string>
+    <string name="sources_signing_key_trusted">信頼済みの署名キー</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">ローカルファイル</string>
     <string name="patch_source_dialog_name_label">名前</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">GitHub、GitLab、または morphe.software/add-source リンクを受け付けます</string>
     <string name="patch_source_dialog_pre_release_title">プレリリースパッチ</string>
     <string name="patch_source_dialog_pre_release_hint">実験的なバージョンのパッチを取得します</string>
-    <string name="patch_source_dialog_experimental_title">実験的アプリバージョン</string>
-    <string name="patch_source_dialog_experimental_hint">利用可能な場合、実験的アプリバージョンを優先します</string>
     <string name="patch_source_dialog_error_name_required">名前は必須です</string>
     <string name="patch_source_dialog_error_invalid_url">有効な GitHub または GitLab の URL を入力してください</string>
     <string name="patch_source_dialog_error_invalid_file">有効な .mpp ファイルを選択してください</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">ログを開く</string>
     <string name="settings_dialog_reset_button">リセット</string>
     <string name="settings_theme_system">システム</string>
-    <string name="settings_signing_error_not_found">設定済みのキーストアが見つかりません: %1$s。ファイルを復元するか、設定で別のファイルを選択するか、設定をクリアして Morphe のデフォルトを使用してください</string>
     <string name="settings_search_languages_placeholder">言語を検索</string>
     <string name="settings_dialog_resolves_to_message">解決先: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">キーストアが見つかりません: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">言語</string>
     <string name="settings_language_current_title">現在の言語</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">アプリの言語</string>
     <string name="settings_language_search_no_results">検索結果は見つかりませんでした</string>
     <string name="settings_section_theme">テーマ</string>
+    <string name="settings_appearance_theme_mode">テーマモード</string>
     <string name="settings_theme_light">ライト</string>
     <string name="settings_theme_dark">ダーク</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">カラースタイル</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">モノクロ</string>
     <string name="settings_toggle_sharp_corners_label">角を鋭くする</string>
     <string name="settings_toggle_sharp_corners_desc">カード、ダイアログ、ボタンの角を直角にする</string>
     <string name="settings_section_accent_color">アクセントカラー</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">アプリカード</string>
     <string name="settings_app_cards_color_all">すべてのカードの色</string>
     <string name="settings_app_cards_color_all_desc">個別にカスタマイズしたカードは独自の色を保持します</string>
-    <string name="settings_section_patch_list">パッチ一覧</string>
-    <string name="settings_toggle_patch_categories_label">パッチカテゴリ</string>
-    <string name="settings_toggle_patch_categories_desc">パッチを展開可能なカテゴリにグループ化</string>
     <string name="settings_section_background_animation">背景アニメーション</string>
     <string name="settings_background_circles">円</string>
     <string name="settings_background_rings">リング</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">翻訳</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">変更履歴は利用できません</string>
+    <string name="changelog_badge_installed">インストール済み</string>
+    <string name="changelog_badge_latest">最新</string>
+    <string name="changelog_badge_prerelease">プレリリース</string>
+    <string name="changelog_date_today">今日</string>
+    <string name="changelog_date_yesterday">昨日</string>
     <string name="changelog_dialog_title">変更履歴を表示</string>
-    <string name="changelog_show_older_button">過去のリリースを表示</string>
+    <string name="changelog_not_available">変更履歴は利用できません</string>
+    <string name="changelog_section_app_support">アプリのサポート</string>
+    <string name="changelog_section_fixes">修正</string>
+    <string name="changelog_section_improvements">改善</string>
+    <string name="changelog_section_new">新機能</string>
+    <string name="changelog_section_other">変更</string>
+    <string name="changelog_section_performance">最適化</string>
+    <string name="changelog_show_all">すべて表示（%1$d）</string>
+    <string name="changelog_show_less">表示を減らす</string>
     <string name="changelog_view_on_github_button">GitHub で表示</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">ソース</string>
+    <string name="nav_apps">アプリ</string>
 </resources>

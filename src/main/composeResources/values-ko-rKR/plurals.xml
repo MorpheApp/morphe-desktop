@@ -12,18 +12,6 @@
     <plurals name="count_sources">
         <item quantity="other">%1$d 개의 소스</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="other">%1$d 개의 패치가 적용됩니다</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="other">%1$d 개 제외됨</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="other">%1$d 개 활성화됨</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="other">%1$d 개 비활성화됨</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="other">%1$d 개의 라이브러리</item>
     </plurals>
@@ -41,5 +29,20 @@
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="other">%1$d 개의 코어</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="other">%1$d 개의 변경</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="other">%1$d 일 전</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="other">%1$d 개의 기능</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="other">%1$d 개의 수정</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="other">%1$d 개의 최적화</item>
     </plurals>
 </resources>

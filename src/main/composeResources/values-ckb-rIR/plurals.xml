@@ -16,22 +16,6 @@
         <item quantity="one">%1$d سەرچاوەیەک</item>
         <item quantity="other">%1$d سەرچاوە</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d پاتچ جێبەجێ دەکرێت</item>
-        <item quantity="other">%1$d پاتچ جێبەجێ دەکرێن</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d دەرهێنراوە</item>
-        <item quantity="other">%1$d دەرهێنراون</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d چاڵاککراوە</item>
-        <item quantity="other">%1$d چاڵاککراون</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d لەکارخراوە</item>
-        <item quantity="other">%1$d لەکارخراون</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d کتێبخانە</item>
         <item quantity="other">%1$d کتێبخانەکان</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d کڕۆکێک</item>
         <item quantity="other">%1$d کڕۆکەکان</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d گۆڕانکاری</item>
+        <item quantity="other">%1$d گۆڕانکاری</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d ڕۆژ پێش ئێستا</item>
+        <item quantity="other">%1$d ڕۆژ پێش ئێستا</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d تایبەتمەندی</item>
+        <item quantity="other">%1$d تایبەتمەندی</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d چاکسازی</item>
+        <item quantity="other">%1$d چاکسازی</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d باشکردن</item>
+        <item quantity="other">%1$d باشکردن</item>
     </plurals>
 </resources>

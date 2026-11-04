@@ -16,22 +16,6 @@
         <item quantity="one">%1$d lähde</item>
         <item quantity="other">%1$d lähdettä</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch sovelletaan</item>
-        <item quantity="other">%1$d patchia sovelletaan</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d poissuljettu</item>
-        <item quantity="other">%1$d poissuljettua</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d käytössä</item>
-        <item quantity="other">%1$d käytössä</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d pois käytöstä</item>
-        <item quantity="other">%1$d pois käytöstä</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d kirjasto</item>
         <item quantity="other">%1$d kirjastoa</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d ydin</item>
         <item quantity="other">%1$d ydintä</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d muutos</item>
+        <item quantity="other">%1$d muutosta</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d päivä sitten</item>
+        <item quantity="other">%1$d päivää sitten</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d ominaisuus</item>
+        <item quantity="other">%1$d ominaisuutta</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d korjaus</item>
+        <item quantity="other">%1$d korjausta</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimointi</item>
+        <item quantity="other">%1$d optimointia</item>
     </plurals>
 </resources>

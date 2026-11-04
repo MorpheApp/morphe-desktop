@@ -12,18 +12,6 @@
     <plurals name="count_sources">
         <item quantity="other">%1$d 件のソース</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="other">%1$d 個のパッチが適用されます</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="other">除外: %1$d 個</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="other">有効: %1$d 個</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="other">無効: %1$d 個</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="other">%1$d 件のライブラリ</item>
     </plurals>
@@ -41,5 +29,20 @@
     </plurals>
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="other">%1$d コア</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="other">%1$d 件の変更</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="other">%1$d 日前</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="other">%1$d 件の新機能</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="other">%1$d 件の修正</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="other">%1$d 件の最適化</item>
     </plurals>
 </resources>

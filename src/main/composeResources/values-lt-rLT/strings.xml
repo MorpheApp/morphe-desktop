@@ -13,6 +13,7 @@
     <string name="expand">Išskleisti</string>
     <string name="cancel">Atšaukti</string>
     <string name="close">Užverti</string>
+    <string name="trust">Pasitikėjimas</string>
     <string name="delete">Ištrinti</string>
     <string name="disabled_while_patching">Išjungta, kol pataisoma</string>
     <string name="drop_apk_here">Numeskite APK čia</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Atsisiunčiant ryšys nutrūko, bandykite dar kartą</string>
     <string name="error_network_loading_patches">Tinklo klaida įkeliant pataisas</string>
     <string name="error_patch_file_not_found">Pataisos failas nerastas: %1$s</string>
-    <string name="error_no_patches_files_supplied">Nepateikta jokių pataisų failų</string>
-    <string name="error_input_apk_not_found">Įvesties APK failas nerastas</string>
     <string name="error_step_failed">%1$s nepavyko: %2$s</string>
     <string name="error_drop_valid_apk">Numeskite tinkamą .apk, .apkm, .xapk arba .apks failą</string>
     <string name="status_saving">Saugoma…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtruoti programas…</string>
     <string name="version">Versija</string>
     <string name="version_label_stable">Stabili</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Išankstinis išleidimas</string>
     <string name="version_label_experimental">Eksperimentinis</string>
-    <string name="version_label_latest_dev">Naujausia Dev versija</string>
     <string name="version_label_latest_stable">Naujausia stabili versija</string>
+    <string name="version_label_recommended">Rekomenduojama</string>
+    <string name="version_label_supported">Palaikoma</string>
     <string name="app_info_arch_label">Architektūra</string>
     <string name="app_info_min_sdk_label">Minimalus SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Taisymas atšauktas</string>
     <string name="view_full_logs_button">Peržiūrėti visus žurnalus</string>
     <string name="error_patching_unknown">Taisymas nepavyko dėl nežinomos priežasties</string>
-    <string name="error_patching_general">Klaida: %1$s</string>
     <string name="error_log_label">Klaidų žurnalas</string>
     <string name="back">Atgal</string>
     <string name="open_folder">Atidaryti aplanką</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Bet koks taškų skaičius: tiesinis, radialinis arba kūginis</string>
     <string name="card_fill_mode_solid">Vientisa</string>
     <string name="card_fill_mode_solid_blurb">Viena vientisa spalva</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Pataisos</string>
-    <string name="quick_patch_screen_start_over_button">Pradėti iš naujo</string>
-    <string name="quick_patch_patch_another_button">Taisyti kitą</string>
-    <string name="quick_patch_select_apk">Pasirinkite APK</string>
-    <string name="quick_patch_analyze_apk_failed">Nepavyko išanalizuoti APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Nepavyko išskleisti pagrindinio APK iš paketo</string>
-    <string name="quick_patch_unsupported_app_error">%1$s nepalaikoma greitojo taisymo režimu. Palaikomos programos: %2$s. Nepalaikomoms programoms naudokite įprastą režimą</string>
     <string name="adb_install_on_button">Įdiegti įrenginyje %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Įkeliami pataisymai</string>
-    <string name="patching_step_preparing">Ruošiama</string>
     <string name="patching_step_merging_split_apk">Apjungiamas padalintas APK</string>
     <string name="patching_step_read_apk">Atverti APK failą</string>
     <string name="patching_step_applying_patches">Pritaikomi pataisymai</string>
-    <string name="patching_step_saving">Išsaugoma</string>
     <string name="patching_step_writing_apk">Rašomas pataisytas APK failas</string>
     <string name="patching_step_signing">Pasirašomas pataisytas APK failas</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Failas gali būti sugadintas, iš naujo atsisiųskite iš APKMirror</string>
     <string name="version_status_checksum_failed">Nepavyko patikrinti kontrolinės sumos</string>
     <string name="version_status_checksum_matches">Kontrolinė suma atitinka APKMirror</string>
-    <string name="version_status_older_stable">Senesnė stabili</string>
     <string name="version_status_newer_stable_available">Yra naujesnė stabili versija v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Yra naujesnė stabili versija</string>
     <string name="version_status_experimental_detail">Palaikoma, bet gali veikti netinkamai</string>
-    <string name="version_status_older_experimental">Senesnė eksperimentinė</string>
-    <string name="version_status_newer_experimental_available">Yra naujesnė eksperimentinė versija v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Yra naujesnis eksperimentinis leidimas</string>
-    <string name="version_status_too_new">Versija per nauja</string>
     <string name="version_status_unsupported_detail">Oficialiai nepalaikoma, pataisymai greičiausiai nepavyks</string>
-    <string name="version_status_too_old">Versija per sena</string>
     <string name="version_status_unsupported">Nepalaikoma versija</string>
     <string name="version_status_build_unsupported">Leidimas nepalaikomas</string>
     <string name="version_status_build_unsupported_detail">Ši versija palaikoma, bet ne šis jos leidimas. Gaukite leidimą, kuriam skirtos pataisos</string>
+    <string name="version_status_build_unsupported_with_code">Pataisoms reikalingas versija %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Versijos pranešimas</string>
+    <string name="version_warning_build_unsupported_message">Dabartinė: v%1$s (versija %2$s)\nReikalinga versija: %3$s\n\nTai taip pat tos versijos versija, tačiau kita. Pataisoms reikalinga konkreti versija.</string>
     <string name="version_warning_experiment_title">Ar norite eksperimentuoti? 🧪</string>
-    <string name="version_warning_older_stable_title">Senesnė stabili versija</string>
-    <string name="version_warning_older_stable_message">Dabartinė: v%1$s\nNaujausia stabili versija: v%2$s\n\nŠi versija palaikoma, bet yra naujesnė stabili versija. Gali trūkti naujausių pataisų.</string>
     <string name="version_warning_latest_experimental_message">Dabartinė: v%1$s\n\nŠi versija turi ankstyvą eksperimentinį palaikymą\n\n🔧 Tikėkitės neįprasto programos elgesio ar nenustatytų klaidų, kol pataisos tobulinamos šiai programos versijai.</string>
-    <string name="version_warning_older_experimental_title">Senesnė eksperimentinė versija\nAr norite eksperimentuoti? 🧪</string>
-    <string name="version_warning_older_experimental_message">Dabartinė: v%1$s\nNaujausia eksperimentinė versija: v%2$s\n\nTai palaikomas eksperimentinis buildas, bet yra naujesnė eksperimentinė versija. Tikėkitės keisto programėlės elgesio arba nenustatytų klaidų, kol šiai programėlės versijai tobulinami pataisymai.</string>
-    <string name="version_warning_too_new_message">Dabartinė: v%1$s\nNaujausia žinoma versija: v%2$s\n\nŠi versija turi ankstyvą eksperimentinį palaikymą\n\n🔧 Tikėkitės keisto programėlės elgesio arba nenustatytų klaidų, kol šiai programėlės versijai tobulinami pataisymai.</string>
-    <string name="version_warning_too_old_message">Dabartinė: v%1$s\nSeniausia palaikoma versija: v%2$s\n\nTai nėra oficialiai palaikoma versija. Pataisymai greičiausiai nepavyks.</string>
     <string name="version_warning_unsupported_message">Dabartinė: v%1$s\n\nTai nėra oficialiai palaikoma versija. Pataisymai greičiausiai nepavyks.</string>
     <string name="version_warning_notice_message">Ar tęsti su v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Senesnis stabilus buildas – pasiekiamas naujesnis stabilus buildas v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Eksperimentinis buildas – palaikomas, bet gali neveikti tinkamai</string>
-    <string name="quick_patch_warning_older_experimental">Senesnis eksperimentinis buildas – pasiekiamas naujesnis eksperimentinis buildas v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Buildas nepalaikomas – ši versija yra pataisoma, bet ne šis jos buildas</string>
-    <string name="quick_patch_warning_too_new">Versija per nauja – oficialiai nepalaikoma, pataisymai greičiausiai nepavyks</string>
-    <string name="quick_patch_warning_too_old">Versija per sena – oficialiai nepalaikoma, pataisymai greičiausiai nepavyks</string>
-    <string name="quick_patch_warning_unsupported_between">Nepalaikoma versija – pataisymai greičiausiai nepavyks</string>
-    <string name="quick_patch_read_apk_failed">Nepavyko perskaityti APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Ruošiami pataisymai…</string>
-    <string name="quick_patch_fetch_patches_failed">Nepavyko gauti pataisymų. Patikrinkite interneto ryšį</string>
-    <string name="quick_patch_status_downloading_patches">Atsisiunčiami pataisymai %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Nepavyko atsisiųsti pataisymų: %1$s</string>
-    <string name="quick_patch_status_patching">Taikomi pataisymai…</string>
-    <string name="quick_patch_completed_adb_off">ADB išjungtas · Įjunkite, kad įdiegtumėte</string>
-    <string name="quick_patch_completed_adb_connect_device">Prijunkite įrenginį per USB, kad diegtumėte naudodami ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Įvyko nežinoma klaida</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analizuojamas APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d pataisymų</string>
-    <string name="quick_patch_patching_slow_warning">Tai užtrunka ilgiau nei įprastai. Palaukite…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(versija %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Šiai programėlei nėra suderinamų pataisymų</string>
-    <string name="quick_patch_ready_no_matching_patches">Nėra pataisymų, atitinkančių \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Pataisyti su numatytaisiais nustatymais</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Palaikomos programėlės</string>
-    <string name="quick_patch_supported_apps_subtitle">Čia įkelkite tikslią palaikomos programėlės APK versiją</string>
-    <string name="quick_patch_supported_apps_loading">Kraunamos palaikomos programėlės…</string>
-    <string name="quick_patch_supported_apps_load_error">Nepavyko įkelti palaikomų programėlių</string>
-    <string name="quick_patch_supported_apps_change_source">Keisti šaltinį</string>
-    <string name="quick_patch_supported_apps_no_matches">Nėra atitinkančių programėlių</string>
-    <string name="quick_patch_supported_apps_version_any">Bet kuri versija</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Pasirinkite APK failą</string>
     <string name="home_could_not_resolve_patch_files">Nepavyko rasti pataisymų failų</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Pašalinti APK</string>
     <string name="home_apk_info_limited_info_warning">Nepavyko iki galo perskaityti šio APK manifesto (įprasta padalytiesiems paketams). Toliau pateikti duomenys yra apytiksliai, pataisymai vis tiek turėtų veikti</string>
     <string name="home_apk_info_unsupported_app_warning">Šiai programėlei suderinamų pataisymų nerasta. Vis tiek galite tęsti, bet pataisymas gali neturėti jokio poveikio</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Šiai programėlei tinkamų pataisų nerasta</string>
     <string name="home_apk_info_build_label">Buildas</string>
     <string name="home_apk_info_size_label">Dydis</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Šaltinis</string>
     <string name="home_stage_change_apk">Keisti APK</string>
     <string name="home_stage_continue">Tęsti</string>
+    <string name="home_stage_patch">Pataisa</string>
     <string name="home_stage_analyzing_title">Analizuojama</string>
     <string name="home_stage_reading_metadata">Skaitomi programėlės metaduomenys…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Pašalinti %1$s?</string>
     <string name="home_dialog_uninstall_message">Tai pašalina %1$s iš prijungto įrenginio. Pataisytas APK failas diske ir jūsų istorija išlieka, nebent toliau pasirinksite kitaip</string>
     <string name="home_dialog_uninstall_also_forget">Taip pat pašalinti iš „Jūsų programėlių“</string>
-    <string name="home_dialog_missing_apk_title">Originalus APK nerastas</string>
-    <string name="home_dialog_missing_apk_message">Pradinis APK failas, naudotas programėlei %1$s, nebėra:\n%2$s\n\nPasirinkite APK iš naujo, kad su išsaugotais nustatymais vėl pritaikytumėte pataisymus</string>
-    <string name="home_dialog_select_apk">Pasirinkite APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Pasirinkite APK, kad pataisytumėte iš naujo</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Tvarkyti šaltinius</string>
     <string name="home_header_multi_source_hint">Pataisymai iš visų įjungtų šaltinių sujungiami į vieną rinkinį. Tvarkykite juos naudodami aukščiau esantį šaltinių mygtuką</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Jūsų programėlės</string>
     <string name="home_banner_view">Peržiūrėti</string>
     <string name="home_your_apps_install_ready">Paruošta diegti</string>
-    <string name="home_your_apps_newer_patch_hint">Naujesnis pataisymas gali padidinti programėlės versiją – spustelėkite Atnaujinti, kad patikrintumėte</string>
-    <string name="home_your_apps_device_version_ready">Pataisyta v%1$s versija paruošta, įrenginyje – v%2$s (pertaisyti nereikia)</string>
-    <string name="home_your_apps_install_ready_hint">Pataisyta versija v%1$s paruošta diegti (pakartotinis pataisymas nereikalingas)</string>
-    <string name="home_action_install">Įdiegti</string>
     <string name="home_action_install_to_device">Įdiegti į įrenginį</string>
     <string name="home_action_installing">Diegiama…</string>
     <string name="home_action_preparing">Ruošiama…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s paruošta · įrenginyje v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s versija paruošta, pertaisyti nereikia</string>
-    <string name="home_advice_unsupported">v%1$s nebepalaikoma. Atnaujinkite iki v%2$s</string>
+    <string name="home_detail_source_disabled">Išjungta</string>
+    <string name="home_detail_source_removed">Pašalinta</string>
+    <string name="home_detail_source_disabled_sub">Šaltinis išjungtas skyrime „Šaltiniai“. Norėdami vėl pritaikyti pataisą, įjunkite jį</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Originalus šaltinis išjungtas. Pasirinkite alternatyvų šaltinį arba vėl įjunkite jį skyrime „Šaltiniai“</string>
+    <string name="home_detail_no_compatible_source">Nėra įjungto suderinamo šaltinio</string>
+    <string name="home_detail_choose_source">Pasirinkite pataisos šaltinį</string>
     <string name="home_advice_unsupported_by_patches">v%1$s nebepalaikoma naujausiomis pataisomis</string>
     <string name="home_date_today">šiandien</string>
     <string name="home_date_yesterday">vakar</string>
@@ -427,11 +371,13 @@
     <string name="patch_selection_group_ungrouped">Negrupuota</string>
     <string name="patch_selection_group_selected_count">Pasirinkta: %1$d</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Pradėti iš naujo</string>
+    <string name="patching_slow_warning">Tai užtrunka ilgiau nei įprastai. Palaukite…</string>
     <string name="patching_status_ready">Pasirengta pataisymui</string>
     <string name="patching_status_preparing">Ruošiamasi pataisymui</string>
     <string name="patching_status_in_progress">Pritaikomi pataisymai</string>
     <string name="patching_completed_loading_result">Pataisymas baigtas, įkeliamas rezultatas…</string>
-    <string name="patching_cancelled_loading_result">Pataisymas atšauktas, įkeliamas rezultatas…</string>
+    <string name="patching_cancelled_loading_result">Lopų diegimas atšauktas, įkraunami rezultatai…</string>
     <string name="patching_failed_loading_result">Pataisymas nepavyko, įkeliamas rezultatas…</string>
     <string name="patching_log_viewer_failed_to_read">Nepavyko perskaityti žurnalo failo: %1$s</string>
     <string name="patching_log_viewer_title">Žurnalo failas</string>
@@ -467,6 +413,8 @@
     <string name="patching_banner_native_libs_stripped">Pašalintos</string>
     <string name="patching_error_failed_patches">Nepavykusios pataisos: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB išjungta · Įjungti, kad įdiegtumėte</string>
+    <string name="result_adb_connect_device_hint">Norėdami įdiegti per ADB, prijungkite įrenginį per USB</string>
     <string name="result_screen_patch_another_button">Pataisyti kitą</string>
     <string name="result_screen_install_on_device_label">Įdiegti įrenginyje %1$s</string>
     <string name="result_screen_links_routed_label">Nuorodos nukreiptos į pataisytą programą</string>
@@ -566,13 +514,12 @@
     <string name="source_error_failed_to_load">Nepavyko įkelti</string>
     <string name="source_error_github_pat_required">Norint atsisiųsti pull request šaltinius, reikalingas GitHub PAT</string>
     <string name="source_error_pr_no_artifact">Nerasta pull request artefaktų</string>
-    <string name="source_sheet_manage_description">Tvarkyti pataisų šaltinius</string>
-    <string name="source_sheet_local_label">Vietinis</string>
+    <string name="source_error_patcher_incompatible">Šis šaltinis sukurtas pataisikliu %1$s, tačiau Morphe %2$s apima pataisiklį %3$s. Atnaujinkite Morphe, kad galėtumėte juo naudotis</string>
+    <string name="version_label_local">Vietinis</string>
     <string name="source_sheet_remote_label">Nuotolinis</string>
     <string name="add_source">Pridėti šaltinį</string>
     <string name="source_sheet_title">Pataisų šaltiniai</string>
     <string name="source_sheet_reload_description">Perkrauti pataisas</string>
-    <string name="source_sheet_quick_mode_hint">Pasirinkite, kurį šaltinį naudoja Quick Patch. Keli šaltiniai pasiekiami eksperto režimu</string>
     <string name="source_sheet_multi_mode_hint">Įjunkite / išjunkite bet kokį derinį. Pataisos iš visų įjungtų šaltinių sujungiamos</string>
     <string name="source_sheet_done_button">Atlikta</string>
     <string name="source_sheet_type_preinstalled">iš anksto įdiegta</string>
@@ -582,13 +529,21 @@
     <string name="source_sheet_edit_description">Redaguoti</string>
     <string name="source_sheet_move_up_description">Perkelti aukštyn</string>
     <string name="source_sheet_move_down_description">Perkelti žemyn</string>
-    <string name="source_sheet_channel_older_stable">Senesnė stabili versija</string>
-    <string name="source_sheet_channel_older_dev">Senesnė kūrėjo versija</string>
     <string name="source_sheet_ignored_mpp_title">Ignoruojami .mpp šablonai</string>
-    <string name="source_sheet_ignored_mpp_hint">Tai taikoma tik aplankų tipo šaltiniams, kurie automatiškai įkelia naujausią .mpp failą iš aplanko. Renkant tą naujausią versiją, praleidžiami failai, kurių pavadinimas atitinka čia nurodytą šabloną. Paprastas žodis atitinka bet kurį failą, kurio pavadinime jis yra (pvz., debug). Naudokite * kaip pakaitos simbolį (pvz., *-debug.mpp). *-sources.mpp ir *-javadoc.mpp visada ignoruojami</string>
+    <string name="source_sheet_ignored_mpp_hint">Taikoma tik aplankų šaltiniams, kurie automatiškai įkrauna naujausią .mpp failą aplanke. Renkant naujausią versiją, praleidžiami failai, kurių pavadinimas atitinka čia nurodytą šabloną. Paprastas žodis atitinka bet kurį failą, kuriame jis yra (pvz., debug). Glob šablonams naudokite * (pvz., *-debug.mpp). *-sources.mpp ir *-javadoc.mpp visada ignoruojami</string>
     <string name="source_sheet_ignored_mpp_placeholder">pvz., debug arba *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Pridėti šabloną</string>
     <string name="source_sheet_remove_pattern_description">Pašalinti šabloną</string>
+    <string name="sources_management_signed_by">Pasirašyta</string>
+    <string name="sources_management_signing_key_changed_badge">Raktas pakeistas</string>
+    <string name="sources_management_signing_key_changed_hint">Pasirašymo raktas pakeistas. Spustelėkite, kad peržavėtumėte</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">\"%1$s\" nebuvo atnaujinta, nes naujausia versija nėra pasirašyta raktu, kuris buvo naudojamas anksčiau</string>
+    <string name="sources_signing_key_new">Naujas raktas</string>
+    <string name="sources_signing_key_trust_message">Naujausia versija yra pasirašyta kitu raktu. Galbūt kūrėjas pakeitė raktą arba šią versiją paskelbė kažkas kitas. Pasitikėkite ja tik tuo laikais, kai kūrėjas pranešė apie naują raktą</string>
+    <string name="sources_signing_key_trust_message_unsigned">Naujausia versija nėra pasirašyta. Galbūt kūrėjas nustojo pasirašyti versijas arba šią versiją paskelbė kažkas kitas. Pasitikėkite ja tik tuo laikais, kai kūrėjas apie tai pranešė</string>
+    <string name="sources_signing_key_trust_title">Pasitikėti nauju raktu?</string>
+    <string name="sources_signing_key_trusted">Patikimas raktas</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Vietinis failas</string>
     <string name="patch_source_dialog_name_label">Pavadinimas</string>
@@ -598,8 +553,6 @@
     <string name="patch_source_dialog_repo_hint">Priima GitHub, GitLab arba morphe.software/add-source nuorodą</string>
     <string name="patch_source_dialog_pre_release_title">Bandomosios versijos pataisos</string>
     <string name="patch_source_dialog_pre_release_hint">Gaukite ankstyvą prieigą prie naujų eksperimentinių pataisos versijų</string>
-    <string name="patch_source_dialog_experimental_title">Eksperimentinės programos versijos</string>
-    <string name="patch_source_dialog_experimental_hint">Teikia pirmenybę eksperimentinėms programos versijoms, jei jų yra</string>
     <string name="patch_source_dialog_error_name_required">Pavadinimas privalomas</string>
     <string name="patch_source_dialog_error_invalid_url">Įveskite tinkamą GitHub arba GitLab URL</string>
     <string name="patch_source_dialog_error_invalid_file">Pasirinkite tinkamą .mpp failą</string>
@@ -682,10 +635,8 @@
     <string name="settings_dialog_open_logs_button">Atidaryti žurnalus</string>
     <string name="settings_dialog_reset_button">Atstatyti</string>
     <string name="settings_theme_system">Sistema</string>
-    <string name="settings_signing_error_not_found">Sukonfigūruota raktų saugykla nerasta: %1$s. Atkurkite failą, nustatymuose pasirinkite kitą arba išvalykite nustatymą, kad būtų naudojama numatytoji Morphe raktų saugykla</string>
     <string name="settings_search_languages_placeholder">Ieškoti kalbų</string>
     <string name="settings_dialog_resolves_to_message">Nukreipiama į: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Raktų saugykla nerasta: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Kalba</string>
     <string name="settings_language_current_title">Dabartinė kalba</string>
@@ -693,9 +644,13 @@
     <string name="settings_language_dialog_title">Programėlės kalba</string>
     <string name="settings_language_search_no_results">Rezultatų nerasta</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Temos režimas</string>
     <string name="settings_theme_light">Šviesi</string>
     <string name="settings_theme_dark">Tamsi</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Spalvų stilius</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Vienspalvė</string>
     <string name="settings_toggle_sharp_corners_label">Aštrūs kampai</string>
     <string name="settings_toggle_sharp_corners_desc">Suteikti kortelėms, dialogams ir mygtukams stačius kampus</string>
     <string name="settings_section_accent_color">Akcento spalva</string>
@@ -705,9 +660,6 @@
     <string name="settings_section_app_cards">Programų kortelės</string>
     <string name="settings_app_cards_color_all">Kiekvienos kortelės spalva</string>
     <string name="settings_app_cards_color_all_desc">Kortelės, kurias individualiai pritaikėte, išlaiko savo spalvą</string>
-    <string name="settings_section_patch_list">Pataisų sąrašas</string>
-    <string name="settings_toggle_patch_categories_label">Pataisų kategorijos</string>
-    <string name="settings_toggle_patch_categories_desc">Sugrupuoti pataisas į išskleidžiamas kategorijas</string>
     <string name="settings_section_background_animation">Fono animacijos</string>
     <string name="settings_background_circles">Apskritimai</string>
     <string name="settings_background_rings">Žiedai</string>
@@ -821,8 +773,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Versti</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Pakeitimų žurnalas neprieinamas</string>
+    <string name="changelog_badge_installed">Įdiegta</string>
+    <string name="changelog_badge_latest">Naujausia</string>
+    <string name="changelog_badge_prerelease">Išankstinio išleidimo versija</string>
+    <string name="changelog_date_today">Šiandien</string>
+    <string name="changelog_date_yesterday">Vakar</string>
     <string name="changelog_dialog_title">Peržiūrėti pakeitimų žurnalą</string>
-    <string name="changelog_show_older_button">Rodyti senesnes versijas</string>
+    <string name="changelog_not_available">Pakeitimų žurnalas neprieinamas</string>
+    <string name="changelog_section_app_support">Programėlės palaikymas</string>
+    <string name="changelog_section_fixes">Taisymai</string>
+    <string name="changelog_section_improvements">Pagerinimai</string>
+    <string name="changelog_section_new">Nauja</string>
+    <string name="changelog_section_other">Kitas</string>
+    <string name="changelog_section_performance">Našumas</string>
+    <string name="changelog_show_all">Rodyti visus (%1$d)</string>
+    <string name="changelog_show_less">Rodyti mažiau</string>
     <string name="changelog_view_on_github_button">Peržiūrėti GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Šaltiniai</string>
+    <string name="nav_apps">Programėlės</string>
 </resources>

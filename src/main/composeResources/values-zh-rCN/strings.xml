@@ -13,6 +13,7 @@
     <string name="expand">展开</string>
     <string name="cancel">取消</string>
     <string name="close">关闭</string>
+    <string name="trust">受信任</string>
     <string name="delete">删除</string>
     <string name="disabled_while_patching">修补期间已禁用</string>
     <string name="drop_apk_here">将 APK 拖放到此处</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">下载时连接中断，请重试</string>
     <string name="error_network_loading_patches">加载补丁时出现网络错误</string>
     <string name="error_patch_file_not_found">未找到补丁文件：%1$s</string>
-    <string name="error_no_patches_files_supplied">未提供补丁文件</string>
-    <string name="error_input_apk_not_found">未找到输入的 APK</string>
     <string name="error_step_failed">%1$s 失败：%2$s</string>
     <string name="error_drop_valid_apk">请拖放有效的 .apk、.apkm、.xapk 或 .apks 文件</string>
     <string name="status_saving">正在保存……</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">筛选应用……</string>
     <string name="version">版本</string>
     <string name="version_label_stable">稳定版</string>
-    <string name="version_label_dev">开发版</string>
+    <string name="version_label_prerelease">预发布</string>
     <string name="version_label_experimental">实验版</string>
-    <string name="version_label_latest_dev">最新开发版</string>
     <string name="version_label_latest_stable">最新稳定版</string>
+    <string name="version_label_recommended">推荐</string>
+    <string name="version_label_supported">已支持</string>
     <string name="app_info_arch_label">架构</string>
     <string name="app_info_min_sdk_label">最低 SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">修补已取消</string>
     <string name="view_full_logs_button">查看完整日志</string>
     <string name="error_patching_unknown">修补因未知原因失败</string>
-    <string name="error_patching_general">错误：%1$s</string>
     <string name="error_log_label">错误日志</string>
     <string name="back">返回</string>
     <string name="open_folder">打开文件夹</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">任意数量的色标，线性、径向或圆锥</string>
     <string name="card_fill_mode_solid">纯色</string>
     <string name="card_fill_mode_solid_blurb">一种纯色</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">补丁</string>
-    <string name="quick_patch_screen_start_over_button">重新开始</string>
-    <string name="quick_patch_patch_another_button">修补另一个</string>
-    <string name="quick_patch_select_apk">选择 APK</string>
-    <string name="quick_patch_analyze_apk_failed">分析 APK 失败</string>
-    <string name="quick_patch_extract_base_apk_failed">从包中提取基础 APK 失败</string>
-    <string name="quick_patch_unsupported_app_error">快速修补模式不支持 %1$s。受支持的应用：%2$s。对于不受支持的应用，请使用普通模式</string>
     <string name="adb_install_on_button">安装到 %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">加载补丁</string>
-    <string name="patching_step_preparing">准备中</string>
     <string name="patching_step_merging_split_apk">正在合并拆分 APK</string>
     <string name="patching_step_read_apk">读取 APK 文件</string>
     <string name="patching_step_applying_patches">正在应用补丁</string>
-    <string name="patching_step_saving">保存中</string>
     <string name="patching_step_writing_apk">写入修补后的 APK 文件</string>
     <string name="patching_step_signing">为修补后的 APK 文件签名</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">文件可能已损坏，请从 APKMirror 重新下载</string>
     <string name="version_status_checksum_failed">校验和验证失败</string>
     <string name="version_status_checksum_matches">校验和与 APKMirror 匹配</string>
-    <string name="version_status_older_stable">较旧的稳定版</string>
     <string name="version_status_newer_stable_available">有较新的稳定版 v%1$s 可用</string>
     <string name="version_status_newer_stable_available_fallback">有较新的稳定版可用</string>
     <string name="version_status_experimental_detail">受支持，但可能无法正常工作</string>
-    <string name="version_status_older_experimental">较旧的实验版</string>
-    <string name="version_status_newer_experimental_available">有较新的实验版 v%1$s 可用</string>
-    <string name="version_status_newer_experimental_available_fallback">有较新的实验版构建可用</string>
-    <string name="version_status_too_new">版本过新</string>
     <string name="version_status_unsupported_detail">非官方支持，补丁很可能会失败</string>
-    <string name="version_status_too_old">版本过旧</string>
     <string name="version_status_unsupported">不受支持的版本</string>
     <string name="version_status_build_unsupported">不支持的构建</string>
     <string name="version_status_build_unsupported_detail">此版本受支持，但不支持此构建。请获取补丁所针对的构建</string>
+    <string name="version_status_build_unsupported_with_code">补丁需要版本号 %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">版本提示</string>
+    <string name="version_warning_build_unsupported_message">当前：v%1$s (版本号 %2$s)\n所需版本号：%3$s\n\n这是同一版本的不同构建版本。补丁需要特定的构建版本。</string>
     <string name="version_warning_experiment_title">想试试实验版吗？🧪</string>
-    <string name="version_warning_older_stable_title">较旧的稳定版</string>
-    <string name="version_warning_older_stable_message">当前版本：v%1$s\n最新稳定版：v%2$s\n\n此版本受支持，但有较新的稳定版可用。您可能缺少最近的修复。</string>
     <string name="version_warning_latest_experimental_message">当前版本：v%1$s\n\n此版本具有早期实验支持\n\n🔧 在针对此应用版本优化补丁期间，应用行为可能异常或出现未知错误。</string>
-    <string name="version_warning_older_experimental_title">较旧的实验版本\n想试试实验版吗？🧪</string>
-    <string name="version_warning_older_experimental_message">当前版本：v%1$s\n最新实验版：v%2$s\n\n这是一个受支持的实验版构建，但有较新的实验版本可用。在针对此应用版本优化补丁期间，应用行为可能异常或出现未知错误。</string>
-    <string name="version_warning_too_new_message">当前版本：v%1$s\n已知最新版本：v%2$s\n\n此版本具有早期实验支持\n\n🔧 在针对此应用版本优化补丁期间，应用行为可能异常或出现未知错误。</string>
-    <string name="version_warning_too_old_message">当前版本：v%1$s\n支持的最早版本：v%2$s\n\n这不是官方支持的版本。补丁很可能会失败。</string>
     <string name="version_warning_unsupported_message">当前版本：v%1$s\n\n这不是官方支持的版本。补丁很可能会失败。</string>
     <string name="version_warning_notice_message">继续使用 v%1$s？</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">较旧的稳定版构建 - 有较新的稳定版 v%1$s 可用</string>
-    <string name="quick_patch_warning_latest_experimental">实验版构建 - 受支持，但可能无法正常工作</string>
-    <string name="quick_patch_warning_older_experimental">较旧的实验版构建 - 有较新的实验版 v%1$s 可用</string>
-    <string name="quick_patch_warning_build_unsupported">不支持的构建 - 此版本可修补，但此构建不可修补</string>
-    <string name="quick_patch_warning_too_new">版本过新 - 非官方支持，补丁很可能会失败</string>
-    <string name="quick_patch_warning_too_old">版本过旧 - 非官方支持，补丁很可能会失败</string>
-    <string name="quick_patch_warning_unsupported_between">不受支持的版本 - 补丁很可能会失败</string>
-    <string name="quick_patch_read_apk_failed">读取 APK 失败：%1$s</string>
-    <string name="quick_patch_status_preparing_patches">正在准备补丁……</string>
-    <string name="quick_patch_fetch_patches_failed">获取补丁失败。请检查您的网络连接</string>
-    <string name="quick_patch_status_downloading_patches">正在下载补丁 %1$s……</string>
-    <string name="quick_patch_download_patches_failed">下载补丁失败：%1$s</string>
-    <string name="quick_patch_status_patching">正在修补……</string>
-    <string name="quick_patch_completed_adb_off">ADB 已关闭 · 启用后即可安装</string>
-    <string name="quick_patch_completed_adb_connect_device">通过 USB 连接设备，即可使用 ADB 安装</string>
-    <string name="quick_patch_error_unknown_occurred">发生未知错误</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">正在分析 APK……</string>
-    <string name="quick_patch_patching_patches_count">补丁 %1$d / %2$d</string>
-    <string name="quick_patch_patching_slow_warning">这比平时耗时更长。请稍候……</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">（构建 %1$d）</string>
-    <string name="quick_patch_ready_no_compatible_patches">此应用没有兼容的补丁</string>
-    <string name="quick_patch_ready_no_matching_patches">没有匹配“%1$s”的补丁</string>
-    <string name="quick_patch_ready_patch_with_defaults">使用默认设置修补</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">受支持的应用</string>
-    <string name="quick_patch_supported_apps_subtitle">在此处拖放受支持应用的确切 APK 版本</string>
-    <string name="quick_patch_supported_apps_loading">正在加载受支持的应用……</string>
-    <string name="quick_patch_supported_apps_load_error">无法加载受支持的应用</string>
-    <string name="quick_patch_supported_apps_change_source">更改来源</string>
-    <string name="quick_patch_supported_apps_no_matches">没有匹配的应用</string>
-    <string name="quick_patch_supported_apps_version_any">任意版本</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">选择 APK 文件</string>
     <string name="home_could_not_resolve_patch_files">无法解析补丁文件</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">移除 APK</string>
     <string name="home_apk_info_limited_info_warning">无法完整读取此 APK 的清单（拆分包中常见）。以下详情为近似值，修补仍应有效</string>
     <string name="home_apk_info_unsupported_app_warning">未找到此应用的兼容补丁。您仍然可以继续，但修补可能没有效果</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">未找到此应用的兼容补丁</string>
     <string name="home_apk_info_build_label">构建</string>
     <string name="home_apk_info_size_label">大小</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">来自</string>
     <string name="home_stage_change_apk">更换 APK</string>
     <string name="home_stage_continue">继续</string>
+    <string name="home_stage_patch">修补</string>
     <string name="home_stage_analyzing_title">正在分析</string>
     <string name="home_stage_reading_metadata">正在读取应用元数据……</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">卸载 %1$s？</string>
     <string name="home_dialog_uninstall_message">这会将 %1$s 从已连接的设备中移除。除非您在下方另行选择，否则磁盘上的已修补 APK 和您的历史记录将保留</string>
     <string name="home_dialog_uninstall_also_forget">同时从“你的应用”中移除</string>
-    <string name="home_dialog_missing_apk_title">未找到原始 APK</string>
-    <string name="home_dialog_missing_apk_message">%1$s 的输入 APK 已不在：\n%2$s\n\n请重新选择 APK，以使用您保存的设置重新修补</string>
-    <string name="home_dialog_select_apk">选择 APK……</string>
-    <string name="home_dialog_select_apk_to_repatch">选择要重新修补的 APK</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">管理来源</string>
     <string name="home_header_multi_source_hint">所有已启用来源的补丁会合并。请通过上方的来源按钮进行管理</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">你的应用</string>
     <string name="home_banner_view">查看</string>
     <string name="home_your_apps_install_ready">可安装</string>
-    <string name="home_your_apps_newer_patch_hint">较新的补丁可能会提升应用版本，点击“更新”查看</string>
-    <string name="home_your_apps_device_version_ready">已修补的 v%1$s 已就绪，设备为 v%2$s（无需重新修补）</string>
-    <string name="home_your_apps_install_ready_hint">已修补的 v%1$s 可随时安装（无需重新修补）</string>
-    <string name="home_action_install">安装</string>
     <string name="home_action_install_to_device">安装到设备</string>
     <string name="home_action_installing">正在安装……</string>
     <string name="home_action_preparing">正在准备……</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s 已就绪 · 设备为 v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s 已就绪，无需重新修补</string>
-    <string name="home_advice_unsupported">v%1$s 不再受支持。请更新到 v%2$s</string>
+    <string name="home_detail_source_disabled">已禁用</string>
+    <string name="home_detail_source_removed">已移除</string>
+    <string name="home_detail_source_disabled_sub">该来源在“来源”中被禁用。请启用它以重新修补</string>
+    <string name="home_detail_source_disabled_alternatives_sub">原始来源已被禁用。请选择替代来源或在“来源”中重新启用</string>
+    <string name="home_detail_no_compatible_source">未启用兼容的来源</string>
+    <string name="home_detail_choose_source">选择补丁源</string>
     <string name="home_advice_unsupported_by_patches">最新补丁不再支持 v%1$s</string>
     <string name="home_date_today">今天</string>
     <string name="home_date_yesterday">昨天</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">未分组</string>
     <string name="patch_selection_group_selected_count">已选择 %1$d 个</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">重新开始</string>
+    <string name="patching_patches_count">%1$d / %2$d 个补丁</string>
+    <string name="patching_slow_warning">耗时比平时更长，请稍候……</string>
     <string name="patching_status_ready">准备修补</string>
     <string name="patching_status_preparing">正在准备修补</string>
     <string name="patching_status_in_progress">正在应用补丁</string>
     <string name="patching_completed_loading_result">修补完成，正在加载结果……</string>
-    <string name="patching_cancelled_loading_result">修补已取消，正在加载结果……</string>
+    <string name="patching_cancelled_loading_result">补丁取消，正在加载结果……</string>
     <string name="patching_failed_loading_result">修补失败，正在加载结果……</string>
     <string name="patching_log_viewer_failed_to_read">读取日志文件失败：%1$s</string>
     <string name="patching_log_viewer_title">日志文件</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">已剥离</string>
     <string name="patching_error_failed_patches">失败的补丁：%1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB 已关闭 · 启用以安装</string>
+    <string name="result_adb_connect_device_hint">通过 USB 连接设备以使用 ADB 安装</string>
     <string name="result_screen_patch_another_button">修补另一个</string>
     <string name="result_screen_install_on_device_label">安装到 %1$s</string>
     <string name="result_screen_links_routed_label">链接已路由到已修补的应用</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">加载失败</string>
     <string name="source_error_github_pat_required">下载拉取请求源需要 GitHub PAT。</string>
     <string name="source_error_pr_no_artifact">未找到拉取请求的构件。</string>
-    <string name="source_sheet_manage_description">管理补丁来源</string>
-    <string name="source_sheet_local_label">本地</string>
+    <string name="source_error_patcher_incompatible">此补丁源需要修补器版本 %1$s，而 Morphe %2$s 内置修补器版本为 %3$s 。需要更新 Morphe 才能应用该补丁</string>
+    <string name="version_label_local">本地</string>
     <string name="source_sheet_remote_label">远程</string>
     <string name="add_source">添加来源</string>
     <string name="source_sheet_title">补丁来源</string>
     <string name="source_sheet_reload_description">重新加载补丁</string>
-    <string name="source_sheet_quick_mode_hint">选择快速修补使用的来源。多来源在专家模式中可用</string>
     <string name="source_sheet_multi_mode_hint">启用/禁用任意组合。所有已启用来源的补丁会合并</string>
     <string name="source_sheet_done_button">完成</string>
     <string name="source_sheet_type_preinstalled">预安装</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">编辑</string>
     <string name="source_sheet_move_up_description">上移</string>
     <string name="source_sheet_move_down_description">下移</string>
-    <string name="source_sheet_channel_older_stable">较旧的稳定版</string>
-    <string name="source_sheet_channel_older_dev">较旧的开发版</string>
     <string name="source_sheet_ignored_mpp_title">忽略的 .mpp 模式</string>
-    <string name="source_sheet_ignored_mpp_hint">仅影响文件夹来源，它们会自动加载文件夹中最新的 .mpp。在选择该最新构建时，名称与此处的模式匹配的文件会被跳过。普通单词匹配任何包含它的文件（例如 debug）。使用 * 进行通配（例如 *-debug.mpp）。*-sources.mpp 和 *-javadoc.mpp 始终会被忽略</string>
+    <string name="source_sheet_ignored_mpp_hint">仅影响会自动加载文件夹中最新 .mpp 文件的文件夹源。在选择最新构建版本时，文件名符合此处模式的文件将被跳过。普通单词匹配任何包含该单词的文件（例如 debug）。使用 * 进行通配符匹配（例如 *-debug.mpp）。*-sources.mpp 和 *-javadoc.mpp 始终会被忽略</string>
     <string name="source_sheet_ignored_mpp_placeholder">例如 debug 或 *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">添加模式</string>
     <string name="source_sheet_remove_pattern_description">移除模式</string>
+    <string name="sources_management_signed_by">签名者</string>
+    <string name="sources_management_signing_key_changed_badge">密钥已更改</string>
+    <string name="sources_management_signing_key_changed_hint">签名密钥已更改。点击查看</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' 未更新，因为其最新版本未由之前使用的密钥签名</string>
+    <string name="sources_signing_key_new">新密钥</string>
+    <string name="sources_signing_key_trust_message">最新版本是由不同的密钥签名的。要么是开发者更换了密钥，要么是其他人发布了此版本。仅在开发者宣布了新密钥的情况下才信任它</string>
+    <string name="sources_signing_key_trust_message_unsigned">最新版本未签名。要么是开发者停止了对版本的签名，要么是其他人发布了此版本。仅在开发者宣布此情况的情况下才信任它</string>
+    <string name="sources_signing_key_trust_title">信任新密钥？</string>
+    <string name="sources_signing_key_trusted">受信任的密钥</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">本地文件</string>
     <string name="patch_source_dialog_name_label">名称</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab 或 morphe.software/add-source 链接</string>
     <string name="patch_source_dialog_pre_release_title">预发布补丁</string>
     <string name="patch_source_dialog_pre_release_hint">可提前获取新的实验性补丁版本</string>
-    <string name="patch_source_dialog_experimental_title">实验性应用版本</string>
-    <string name="patch_source_dialog_experimental_hint">优先使用可用的实验性应用版本</string>
     <string name="patch_source_dialog_error_name_required">名称为必填项</string>
     <string name="patch_source_dialog_error_invalid_url">输入有效的 GitHub 或 GitLab URL</string>
     <string name="patch_source_dialog_error_invalid_file">选择有效的 .mpp 文件</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">打开日志</string>
     <string name="settings_dialog_reset_button">重置</string>
     <string name="settings_theme_system">系统</string>
-    <string name="settings_signing_error_not_found">未找到配置的密钥库：%1$s。请恢复该文件、在设置中选择其他密钥库，或清除该设置以使用 Morphe 的默认密钥库</string>
     <string name="settings_search_languages_placeholder">搜索语言</string>
     <string name="settings_dialog_resolves_to_message">解析为：%1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">未找到密钥库：%1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">语言</string>
     <string name="settings_language_current_title">当前语言</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">应用语言</string>
     <string name="settings_language_search_no_results">未找到结果</string>
     <string name="settings_section_theme">主题</string>
+    <string name="settings_appearance_theme_mode">主题模式</string>
     <string name="settings_theme_light">浅色</string>
     <string name="settings_theme_dark">深色</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">颜色样式</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">单色</string>
     <string name="settings_toggle_sharp_corners_label">锐利边角</string>
     <string name="settings_toggle_sharp_corners_desc">将卡片、对话框和按钮变为方形</string>
     <string name="settings_section_accent_color">强调色</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">应用卡片</string>
     <string name="settings_app_cards_color_all">所有卡片的颜色</string>
     <string name="settings_app_cards_color_all_desc">您单独自定义过的卡片会保留自己的颜色</string>
-    <string name="settings_section_patch_list">补丁列表</string>
-    <string name="settings_toggle_patch_categories_label">补丁类别</string>
-    <string name="settings_toggle_patch_categories_desc">将补丁分组为可展开的类别</string>
     <string name="settings_section_background_animation">背景动画</string>
     <string name="settings_background_circles">圆形</string>
     <string name="settings_background_rings">圆环</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">翻译</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">更新日志不可用</string>
+    <string name="changelog_badge_installed">已安装</string>
+    <string name="changelog_badge_latest">最新</string>
+    <string name="changelog_badge_prerelease">预发布版本</string>
+    <string name="changelog_date_today">今天</string>
+    <string name="changelog_date_yesterday">昨天</string>
     <string name="changelog_dialog_title">查看更新日志</string>
-    <string name="changelog_show_older_button">显示旧版本</string>
+    <string name="changelog_not_available">更新日志不可用</string>
+    <string name="changelog_section_app_support">应用支持</string>
+    <string name="changelog_section_fixes">修复</string>
+    <string name="changelog_section_improvements">改进</string>
+    <string name="changelog_section_new">新功能</string>
+    <string name="changelog_section_other">变更</string>
+    <string name="changelog_section_performance">性能</string>
+    <string name="changelog_show_all">显示全部 (%1$d)</string>
+    <string name="changelog_show_less">显示更少</string>
     <string name="changelog_view_on_github_button">在 GitHub 上查看</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">来源</string>
+    <string name="nav_apps">应用</string>
 </resources>

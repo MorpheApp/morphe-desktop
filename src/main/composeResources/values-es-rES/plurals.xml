@@ -16,22 +16,6 @@
         <item quantity="one">%1$d fuente</item>
         <item quantity="other">%1$d fuentes</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Se aplicará %1$d parche</item>
-        <item quantity="other">Se aplicarán %1$d parches</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d excluido</item>
-        <item quantity="other">%1$d excluidos</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d activado</item>
-        <item quantity="other">%1$d activados</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d desactivado</item>
-        <item quantity="other">%1$d desactivados</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d biblioteca</item>
         <item quantity="other">%1$d bibliotecas</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d núcleo</item>
         <item quantity="other">%1$d núcleos</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d cambio</item>
+        <item quantity="other">%1$d cambios</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">Hace %1$d día</item>
+        <item quantity="other">Hace %1$d días</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d característica</item>
+        <item quantity="other">%1$d características</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d corrección</item>
+        <item quantity="other">%1$d correcciones</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimización</item>
+        <item quantity="other">%1$d optimizaciones</item>
     </plurals>
 </resources>

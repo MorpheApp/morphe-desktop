@@ -16,22 +16,6 @@
         <item quantity="one">%1$d font</item>
         <item quantity="other">%1$d fonts</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d pedaç serà aplicat</item>
-        <item quantity="other">%1$d pedaços seran aplicats</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d exclòs</item>
-        <item quantity="other">%1$d exclòs</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d habilitat</item>
-        <item quantity="other">%1$d habilitat</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d deshabilitat</item>
-        <item quantity="other">%1$d deshabilitat</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d llibreria</item>
         <item quantity="other">%1$d llibreries</item>
@@ -55,5 +39,21 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d nucli</item>
         <item quantity="other">%1$d nuclis</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d canvi</item>
+        <item quantity="other">%1$d canvis</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">fa %1$d dia</item>
+        <item quantity="other">fa %1$d dies</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d característica</item>
+        <item quantity="other">%1$d funcions</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d correcció</item>
+        <item quantity="other">%1$d correccions</item>
     </plurals>
 </resources>

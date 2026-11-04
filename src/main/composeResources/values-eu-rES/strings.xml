@@ -13,6 +13,7 @@
     <string name="expand">Zabaldu</string>
     <string name="cancel">Batalu</string>
     <string name="close">Itxi</string>
+    <string name="trust">Konfiantza</string>
     <string name="delete">Ezabatu</string>
     <string name="disabled_while_patching">Desaktibatuta patching egitean</string>
     <string name="drop_apk_here">Utzi APK hemen</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Konexioa etutsi da deskargatzean, saiatu berriro</string>
     <string name="error_network_loading_patches">Sare-errorea patchik kargatzen</string>
     <string name="error_patch_file_not_found">Patch fitxategia ez da aurkitu: %1$s</string>
-    <string name="error_no_patches_files_supplied">Ez da patch fitxategirik eman</string>
-    <string name="error_input_apk_not_found">Sarrerako APK-a ez da aurkitu</string>
     <string name="error_step_failed">%1$s huts egin du: %2$s</string>
     <string name="error_drop_valid_apk">Mesedez, utzi .apk, .apkm, .xapk edo .apks fitxategi baliabat bat</string>
     <string name="status_saving">Gorde egiten ari da…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtratu aplikazioak...</string>
     <string name="version">Bertsioa</string>
     <string name="version_label_stable">Estabila</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Pre-lanzamendua</string>
     <string name="version_label_experimental">Experimentala</string>
-    <string name="version_label_latest_dev">Azken Dev bertsioa</string>
     <string name="version_label_latest_stable">Azken bertsio estabila</string>
+    <string name="version_label_recommended">Gomendatua</string>
+    <string name="version_label_supported">Supportatua</string>
     <string name="app_info_arch_label">Ark</string>
     <string name="app_info_min_sdk_label">SDK minimoa</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Patching-a bertatu da</string>
     <string name="view_full_logs_button">Ikusi logak osoak</string>
     <string name="error_patching_unknown">Patching-ak arrazoi ezagun gabeko batengatik huts egin du</string>
-    <string name="error_patching_general">Errorea: %1$s</string>
     <string name="error_log_label">Errore loga</string>
     <string name="back">Atzera</string>
     <string name="open_folder">Karpena ireki</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Geldialdi kopuru arbitraryak, lineala, radiala edo konikoa</string>
     <string name="card_fill_mode_solid">Solidoa</string>
     <string name="card_fill_mode_solid_blurb">Kolore bakTIMESTAMPDIFF eta berdin bat</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Patch-ak</string>
-    <string name="quick_patch_screen_start_over_button">Hasi berriro</string>
-    <string name="quick_patch_patch_another_button">Patchatu beste bat</string>
-    <string name="quick_patch_select_apk">Aukeratu APK</string>
-    <string name="quick_patch_analyze_apk_failed">APK analyzeatzea huts egin du</string>
-    <string name="quick_patch_extract_base_apk_failed">Bundle-tik oinarrizko APKa ateratzea huts egin du</string>
-    <string name="quick_patch_unsupported_app_error">%1$s ez da Quick Patch moduan onartua. Onartutako aplikazioak: %2$s. Erabili Normal modua onartu gabeko aplikazioentzat</string>
     <string name="adb_install_on_button">Instalatu %1$s-en</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Patch-ak kargatzen ari da</string>
-    <string name="patching_step_preparing">Preparatzen</string>
     <string name="patching_step_merging_split_apk">APK banatua batu egiten ari da</string>
     <string name="patching_step_read_apk">Irakurri APK fitxategia</string>
     <string name="patching_step_applying_patches">Patch-ak aplikatzen ari zahizu</string>
-    <string name="patching_step_saving">Gordetzen ari da</string>
     <string name="patching_step_writing_apk">Patch-atutako APK fitxategia idazten ari zahizu</string>
     <string name="patching_step_signing">Patch-atutako APK fitxategia sinatzen ari zahizu</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Fitxategia hondatuta egon daiteke, deskargatu berriro APKMirror-etik</string>
     <string name="version_status_checksum_failed">Checksum-en berifizazioa huts egin du</string>
     <string name="version_status_checksum_matches">Checksum-a APKMirror-ekin bat egiten du</string>
-    <string name="version_status_older_stable">Z穩定agoa</string>
     <string name="version_status_newer_stable_available">v%1$s bertsio stabil berriagoa eskuragarri</string>
     <string name="version_status_newer_stable_available_fallback">Bertsio stabil berriago bat eskuragarri dago</string>
     <string name="version_status_experimental_detail">Unsupported, baina agian ez funtzionatu behar</string>
-    <string name="version_status_older_experimental">Experimentala zahagoa</string>
-    <string name="version_status_newer_experimental_available">V%1$s bertsio esperimental berriagoa eskuragarri</string>
-    <string name="version_status_newer_experimental_available_fallback">Esperimental build berriago bat eskuragarri dago</string>
-    <string name="version_status_too_new">Bertsioa berri gehiegi</string>
     <string name="version_status_unsupported_detail">Ofizialki ez dago supportatua, patch-ak huts egitera dauka probabilitate handia</string>
-    <string name="version_status_too_old">Bertsioa zahar gehiegi</string>
     <string name="version_status_unsupported">Bertsio ezagutua</string>
     <string name="version_status_build_unsupported">Build ezagutua</string>
     <string name="version_status_build_unsupported_detail">Bertsio hau onartua da, baina ez build hau. Lortu patch-ek zuzenduko build bat</string>
+    <string name="version_status_build_unsupported_with_code">Patch-ek %1$s build-a behar dute</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Bertsio ohartupena</string>
+    <string name="version_warning_build_unsupported_message">Egunkia: v%1$s (build %2$s)\nBeharrezkoa build-a: %3$s\n\nBertsio berdinaren build desberdin bat da. Patch-ek build zehatz bat behar dute.</string>
     <string name="version_warning_experiment_title">Experimentatu nahi zara? 🧪</string>
-    <string name="version_warning_older_stable_title">Bertsio egonkora zaharragoa</string>
-    <string name="version_warning_older_stable_message">Oraingoa: v%1$s\nAzken egonkora: v%2$s\n\nBertsio hau onartua da, baina bertsio egonkora berriago bat eskuragarri dago. Azken konponteak falta zaizkizutela izan daiteke.</string>
     <string name="version_warning_latest_experimental_message">Ora: v%1$s\n\nBertsio honekdistantzia eksperimental early support du\n\n🔧 Espero aplikazioaren jokapen arraroak edo akats ezagunak gabe, patching-ak bertsio honentzat fintzen diren heinean.</string>
-    <string name="version_warning_older_experimental_title">Bertsio eksperimental zahagoa\nExperimentatu nahi zara? 🧪</string>
-    <string name="version_warning_older_experimental_message">Ora: v%1$s\nAzken eksperimentalak: v%2$s\n\nBertsio eksperimental batez onartua da, baina bertsio eksperimental berriago bat eskuragarri dago. Espero aplikazioaren jokapen arraroak edo akats ezagunak gabe, patching-ak bertsio honentzat fintzen diren heinean.</string>
-    <string name="version_warning_too_new_message">Ora: v%1$s\nEzagun berriena: v%2$s\n\nBertsio honek distantzia eksperimental early support du\n\n🔧 Espero aplikazioaren jokapen arraroak edo akats ezagunak gabe, patching-ak bertsio honentzat fintzen diren heinean.</string>
-    <string name="version_warning_too_old_message">Ora: v%1$s\nOnartutako zahikena: v%2$s\n\nEz da bertsio ofizialki onartua. Patching-ak huts egin duten probabilitatea handia da.</string>
     <string name="version_warning_unsupported_message"> Egunkia: v%1$s\n\nEz da bertsio ofizialki onartua. Patch-ak huts egin aukera handia dago.</string>
     <string name="version_warning_notice_message">V%1$s bertsioarekin jarraitu?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Build egonkor zaharkatu bat - v%1$s bertsio egonkor berriagoa eskuragarri dago</string>
-    <string name="quick_patch_warning_latest_experimental">Build esperimental bat - onartua, baina agian ez dabil behar bezala</string>
-    <string name="quick_patch_warning_older_experimental">Build esperimental zaharkatu bat - v%1$s bertsio esperimental berriagoa eskuragarri dago</string>
-    <string name="quick_patch_warning_build_unsupported">Build-a ez da onartua - bertsio hau patch-garria da, baina ez build honek</string>
-    <string name="quick_patch_warning_too_new">Bertsioa berri gehiegi - ez da ofizialki onartua, patch-ak huts egin aukera handia dago</string>
-    <string name="quick_patch_warning_too_old">Bertsioa zahar gehiegi - ez da ofizialki onartua, patch-ak huts egin aukera handia dago</string>
-    <string name="quick_patch_warning_unsupported_between">Bertsio onartua ezena - patch-ak huts egin aukera handia dago</string>
-    <string name="quick_patch_read_apk_failed">APK irakurtzea huts egin du: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Patch-ak prestatzen ari zara…</string>
-    <string name="quick_patch_fetch_patches_failed">Patch-ak lortu ezin dira. Egitaztu zure internet konexioa</string>
-    <string name="quick_patch_status_downloading_patches">Patch-ak deskargatzen ari zara %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Patch-ak deskargatzea huts egin du: %1$s</string>
-    <string name="quick_patch_status_patching">Patch-atzen ari zara…</string>
-    <string name="quick_patch_completed_adb_off">ADB txertatuta ez dago · Aktibatu instalatzeko</string>
-    <string name="quick_patch_completed_adb_connect_device">Konektatu gailu bat USB bidez ADB bidez instalatzeko</string>
-    <string name="quick_patch_error_unknown_occurred">Errore ezezaguna gertatu da</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK analizatzen ari zara…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d patch</string>
-    <string name="quick_patch_patching_slow_warning">Honek ohiko baino gehiago tarda ari du. Espero mesedez…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(build %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Ez daiteke aplikazio honentzat egoki patchik</string>
-    <string name="quick_patch_ready_no_matching_patches">\"%1$s\"-rekin bat egiten ez duen patchik</string>
-    <string name="quick_patch_ready_patch_with_defaults">Patch-a lehenestezko baldintzekin</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Aplikazio onartuak</string>
-    <string name="quick_patch_supported_apps_subtitle">Utzi hemen onartutako aplikazio baten APK bertsio zehatza</string>
-    <string name="quick_patch_supported_apps_loading">Aplikazio onartuak kargatzen...</string>
-    <string name="quick_patch_supported_apps_load_error">Ezin izan da aplikazio onartuak kargatu</string>
-    <string name="quick_patch_supported_apps_change_source">Aldatu iturria</string>
-    <string name="quick_patch_supported_apps_no_matches">Ez dagoenik aplikaziorik</string>
-    <string name="quick_patch_supported_apps_version_any">Bertsio edozein</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Aukeratu APK fitxategia</string>
     <string name="home_could_not_resolve_patch_files">Ezin izan da patch fitxategiak ebetsi</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Kendu APK</string>
     <string name="home_apk_info_limited_info_warning">Ez izan ahal APK honen manifestu guztia irakurri (ohikoa split bundle-etan). Beheko xehetasunak hutsak dira, patching-ak funcionando egin beharko luke</string>
     <string name="home_apk_info_unsupported_app_warning">Ez da patching kompatibleik aurkitu aplikazio honentzat. Jarraitu ahal zuzu, baina patching-ak ez du efekturik izan beharko</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Ez dausable patch-ik aurkitu aplikazio honentzat</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Taman</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Hemen</string>
     <string name="home_stage_change_apk">Aldatu APK</string>
     <string name="home_stage_continue">Jarraitu</string>
+    <string name="home_stage_patch">Patch</string>
     <string name="home_stage_analyzing_title">Analisatzen</string>
     <string name="home_stage_reading_metadata">Aplikazioaren metadatuak irakurtzen...</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">%1$s desinstalatu?</string>
     <string name="home_dialog_uninstall_message">Honek %1$s kentzen du konektatutako gailutik. Diskoko APK patch-atua eta zure historia mantentzen dira, behean bestela aukeratzen ez baduzu</string>
     <string name="home_dialog_uninstall_also_forget">Zure aplikazioetatik kendu ere</string>
-    <string name="home_dialog_missing_apk_title">Jatorrizko APKa ez da aurkitu</string>
-    <string name="home_dialog_missing_apk_message">%1$s rakotzeko sarrera APKa ez dago gehiago hemen:\n%2$s\n\nAukeratu berriro APKa gorde dituzun konfigurazioekin berriz patchatzeko</string>
-    <string name="home_dialog_select_apk">Aukeratu APKa…</string>
-    <string name="home_dialog_select_apk_to_repatch">Aukeratu APKa berriz patchatzeko</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Kudeatu iturriak</string>
     <string name="home_header_multi_source_hint">Gaitzitutako iturri guztien patchak batzen dira. Goikoko iturrien botoiaren bidez kudeatu</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Zure aplikazioak</string>
     <string name="home_banner_view">Ikusi</string>
     <string name="home_your_apps_install_ready">Instalatzeko prest</string>
-    <string name="home_your_apps_newer_patch_hint">Patch berriago batek aplikazioa eguneratu dezake, egin klik Eguneratuan egiteko</string>
-    <string name="home_your_apps_device_version_ready">Patch-atutako v%1$s prest dago, gailua v%2$s bertsioan dago (ez da berriro patch-atu behar)</string>
-    <string name="home_your_apps_install_ready_hint">Patchatutako b%1$s instalatzeko prest (ez da berriz patchatu behar)</string>
-    <string name="home_action_install">Instalatu</string>
     <string name="home_action_install_to_device">Gailuan instalatu</string>
     <string name="home_action_installing">Instalatzen…</string>
     <string name="home_action_preparing">Preparatzen…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s prest dago · gailua v%2$s bertsioan</string>
     <string name="home_detail_ready_no_repatch">v%1$s prest dago, ez da berriro patch-atu behar</string>
-    <string name="home_advice_unsupported">v%1$s bertsioa ez da gehiago onartzen. Eguneratu v%2$s bertsioan</string>
+    <string name="home_detail_source_disabled">Desaktibatuta</string>
+    <string name="home_detail_source_removed">Kenduta</string>
+    <string name="home_detail_source_disabled_sub">Iturria desaktibatuta dago Iturrietan. Aktibatuko duzu berriz patch-atu</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Iturri jatorrizkoa desaktizatuta dago. Aukeratu iturri alternatiba bat edo aktiba berriro Iturrietan</string>
+    <string name="home_detail_no_compatible_source">Ez dago iturri kompatibleik aktibatuta</string>
+    <string name="home_detail_choose_source">Aukeratu patch-en iturria</string>
     <string name="home_advice_unsupported_by_patches">v%1$s bertsioa ez dago jada azken patch-ek onartzen</string>
     <string name="home_date_today">gaur</string>
     <string name="home_date_yesterday">atzo</string>
@@ -426,11 +370,14 @@
     <string name="patch_selection_group_universal">Unibertsala</string>
     <string name="patch_selection_group_ungrouped">TaldeGabrielik gabe</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Hasi berriz</string>
+    <string name="patching_patches_count">%1$d / %2$d patch</string>
+    <string name="patching_slow_warning">Honek ohiko baina gehiago tarda ari du. Mesedez, itxaron…</string>
     <string name="patching_status_ready">Patch-egiteko prest</string>
     <string name="patching_status_preparing">Patchatzea prestatzen ari da</string>
     <string name="patching_status_in_progress">Patchak aplikatzen ari da</string>
     <string name="patching_completed_loading_result">Patching amaieratuta, emaitza kargaatzen…</string>
-    <string name="patching_cancelled_loading_result">Patching bertatu da, emaitza kargaatzen…</string>
+    <string name="patching_cancelled_loading_result">Gegiatzea bertxe baiteko, emaitza kargatzen ari da…</string>
     <string name="patching_failed_loading_result">Patching huts egin du, emaitza kargaatzen…</string>
     <string name="patching_log_viewer_failed_to_read">Log fitxategia irakurtzea huts egin da: %1$s</string>
     <string name="patching_log_viewer_title">Log fitxategia</string>
@@ -466,6 +413,8 @@
     <string name="patching_banner_native_libs_stripped">Kentatuak</string>
     <string name="patching_error_failed_patches">Patch-ak fallatu dira: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB desaktibatuta · Aktiba instalatzeko</string>
+    <string name="result_adb_connect_device_hint">Konektatu gailu bat USB bidez ADB-rekin instalatzeko</string>
     <string name="result_screen_patch_another_button">Beste bat patchatu</string>
     <string name="result_screen_install_on_device_label">Instalatu %1$s-en</string>
     <string name="result_screen_links_routed_label">Estekak patchatutako aplikazioa bideratu dira</string>
@@ -565,13 +514,12 @@
     <string name="source_error_failed_to_load">Karga hutsik</string>
     <string name="source_error_github_pat_required">GitHub PAT bat behar da pull request iturriak deskargatzeko</string>
     <string name="source_error_pr_no_artifact">Artifaktorik ez da aurkitu pull request-erako</string>
-    <string name="source_sheet_manage_description">Patch-iturriak kudeatu</string>
-    <string name="source_sheet_local_label">Lokala</string>
+    <string name="source_error_patcher_incompatible">Iturri hau %1$s patcherrarentzat egin da, baina Morphe %2$s-ek %3$s patcherra sisältzen du. Eguneratu Morphe erabiltzeko</string>
+    <string name="version_label_local">Lokala</string>
     <string name="source_sheet_remote_label">Urruneko</string>
     <string name="add_source">Iturria gehitu</string>
     <string name="source_sheet_title">Patch-iturriak</string>
     <string name="source_sheet_reload_description">Patch-ak berkargatu</string>
-    <string name="source_sheet_quick_mode_hint">Aukeratu Quick Patch-ek zein iturria erabiliko duen. Iturri anitzko aukera Aditu moduan dago</string>
     <string name="source_sheet_multi_mode_hint">Gaitu edo desgaitu edozein konbinazio. Aktibatutako iturri guztietako patch-ak batuko dira</string>
     <string name="source_sheet_done_button">Listo</string>
     <string name="source_sheet_type_preinstalled">Aurreztekin instalatua</string>
@@ -581,13 +529,21 @@
     <string name="source_sheet_edit_description">Editatu</string>
     <string name="source_sheet_move_up_description">Gora mugitu</string>
     <string name="source_sheet_move_down_description">Behera mugitu</string>
-    <string name="source_sheet_channel_older_stable">Stable zaharkitu</string>
-    <string name="source_sheet_channel_older_dev">Dev zaharkitu</string>
     <string name="source_sheet_ignored_mpp_title">Ezagunitako .mpp er patternedak</string>
-    <string name="source_sheet_ignored_mpp_hint">Karpetako iturriei soilik eragiten die, karpetako .mpp berriena automatikoki karga duten iturriei. Build berriena aukeratzean, hemen definitutako patroiarekin bat egiten duten fitxategiak gaindituko dira. Hitz bat soilik erabiltzeak hitz hori containing duen edozein fitxategia batzuera egitekoa da (adib. debug). Globen liye * erabili (adib. *-debug.mpp). *-sources.mpp eta *-javadoc.mpp fitxategiak beti baztertuko dira</string>
+    <string name="source_sheet_ignored_mpp_hint">Karpetako iturriei bakarrik eragiki die, karpetako .mpp berriena automatikoki kargatzen dutenei. Build berriena hautatzean, hemen definitutako patroiarekin bat datoren izeneko fitxategiak saltoko dira. Hitz bat bakarrik jartzeak hitz hori dauken edozein fitxategia hautatzea dakar (adib. debug). * erabili globs-entzat (adib. *-debug.mpp). *-sources.mpp eta *-javadoc.mpp beti ezieratuko dira</string>
     <string name="source_sheet_ignored_mpp_placeholder">adib. debug edo *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Patterna gehitu</string>
     <string name="source_sheet_remove_pattern_description">Patterna kendu</string>
+    <string name="sources_management_signed_by">Sinatua</string>
+    <string name="sources_management_signing_key_changed_badge">Giltza aldatuta</string>
+    <string name="sources_management_signing_key_changed_hint">Sinatzeko giltza aldatuta da. Klik egin berrikitzeko</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' ez da eguneratzen, azken bertsioa lehenago erabili zen giltzak ez duelako sinatu</string>
+    <string name="sources_signing_key_new">Giltza berria</string>
+    <string name="sources_signing_key_trust_message">Azken bertsioa giltza ezberdin batek sinatu du. Garapidezak giltza aldatu du, edo beste norbaitek argitaratu du bertsio hau. Garapidezak giltza berri bat iragarri badu soilik konfiatu bertan</string>
+    <string name="sources_signing_key_trust_message_unsigned">Azken bertsioa ez dago sinatuta. Garapidezak bertsioak sinatzea utzi du, edo beste norbaitek argitaratu du bertsio hau. Garapidezak iragarri badu soilik konfiatu bertan</string>
+    <string name="sources_signing_key_trust_title">Giltza berriak konfiatu?</string>
+    <string name="sources_signing_key_trusted">Giltza konfiagarria</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Fitxategi lokala</string>
     <string name="patch_source_dialog_name_label">Izena</string>
@@ -597,8 +553,6 @@
     <string name="patch_source_dialog_repo_hint">GitHub, GitLab edo morphe.software/add-source estekak onartzen ditu</string>
     <string name="patch_source_dialog_pre_release_title">Pre-release patch-ak</string>
     <string name="patch_source_dialog_pre_release_hint">Patch bertsio esperimental berrien sarbide aurretikoa jasotzen du</string>
-    <string name="patch_source_dialog_experimental_title">App bertsio esperimentalak</string>
-    <string name="patch_source_dialog_experimental_hint">App bertsio esperimentalak lehenetsiko ditu eskuragarriak badira</string>
     <string name="patch_source_dialog_error_name_required">Izena beharrezkoa da</string>
     <string name="patch_source_dialog_error_invalid_url">Sartu GitHub edo GitLab URL bali bat</string>
     <string name="patch_source_dialog_error_invalid_file">Aukeratu .mpp fitxategi bali bat</string>
@@ -681,10 +635,8 @@
     <string name="settings_dialog_open_logs_button">Ireki logak</string>
     <string name="settings_dialog_reset_button">Berreskuratu</string>
     <string name="settings_theme_system">Sistema</string>
-    <string name="settings_signing_error_not_found">Konfiguratu zen giltza-biltegia ez da aurkitu: %1$s. Berreskuratu fitxegia, beste bat aukeratu Konfigurazioan, edo garbitu konfigurazioa Morphe-ren lehenestapena erabiltzeko</string>
     <string name="settings_search_languages_placeholder">Bilatu hizkuntzak</string>
     <string name="settings_dialog_resolves_to_message">Honek %1$s-ra ebiltzen du</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore-a ez da aurkitu: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Hizkuntza</string>
     <string name="settings_language_current_title">Hizkuntza egungaldia</string>
@@ -692,9 +644,13 @@
     <string name="settings_language_dialog_title">Aplikazioaren hizkuntza</string>
     <string name="settings_language_search_no_results">Ez da emaitzarik aurkitu</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Temaren modua</string>
     <string name="settings_theme_light">Argia</string>
     <string name="settings_theme_dark">Iluna</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Kolore estiloa</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monokromoa</string>
     <string name="settings_toggle_sharp_corners_label">Angleak zorrotzak</string>
     <string name="settings_toggle_sharp_corners_desc">Karta, elkarrizketak eta botoiak karratu egin</string>
     <string name="settings_section_accent_color">Accent kolorea</string>
@@ -704,9 +660,6 @@
     <string name="settings_section_app_cards">App txartak</string>
     <string name="settings_app_cards_color_all">Kolorea txartu bakoitzari</string>
     <string name="settings_app_cards_color_all_desc">Bak individually pertsonalizatu dituzun txartuek beren kolorea mantentuko dute</string>
-    <string name="settings_section_patch_list">Patch zerrenda</string>
-    <string name="settings_toggle_patch_categories_label">Patch kategoriak</string>
-    <string name="settings_toggle_patch_categories_desc">Patch-ak kategoriak zabalgarrietan taldeka</string>
     <string name="settings_section_background_animation">Atzealdeko animazioa</string>
     <string name="settings_background_circles">Zirkuluak</string>
     <string name="settings_background_rings">Erringak</string>
@@ -820,8 +773,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Itzuli</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Aldaketa-egunerak eskuragarri ez dira</string>
+    <string name="changelog_badge_installed">Instalatua</string>
+    <string name="changelog_badge_latest">Azkenena</string>
+    <string name="changelog_badge_prerelease">Pre-lanzamendua</string>
+    <string name="changelog_date_today">Gaur</string>
+    <string name="changelog_date_yesterday">Atzo</string>
     <string name="changelog_dialog_title">Ikusi aldaketa-egunerak</string>
-    <string name="changelog_show_older_button">Eragozpen zaharagoak erakutsi</string>
+    <string name="changelog_not_available">Aldaketa-egunerak eskuragarri ez dira</string>
+    <string name="changelog_section_app_support">Aplikazioaren laguntza</string>
+    <string name="changelog_section_fixes">Konponketzak</string>
+    <string name="changelog_section_improvements">Hobekuntzak</string>
+    <string name="changelog_section_new">Berria</string>
+    <string name="changelog_section_other">Aldaketzak</string>
+    <string name="changelog_section_performance">Errendimendua</string>
+    <string name="changelog_show_all">Denak erakutsi (%1$d)</string>
+    <string name="changelog_show_less">Gutxiago erakutsi</string>
     <string name="changelog_view_on_github_button">Ikusi GitHuben</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Iturriak</string>
+    <string name="nav_apps">Appak</string>
 </resources>

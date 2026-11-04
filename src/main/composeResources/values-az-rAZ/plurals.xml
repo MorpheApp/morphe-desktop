@@ -16,22 +16,6 @@
         <item quantity="one">%1$d mənbə</item>
         <item quantity="other">%1$d mənbə</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d yamaq tətbiq olunacaq</item>
-        <item quantity="other">%1$d yamaq tətbiq olunacaq</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d xaric edildi</item>
-        <item quantity="other">%1$d xaric edildi</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d aktivdir</item>
-        <item quantity="other">%1$d aktivdir</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d deaktivdir</item>
-        <item quantity="other">%1$d deaktivdir</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d kitabxana</item>
         <item quantity="other">%1$d kitabxana</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d nüvə</item>
         <item quantity="other">%1$d nüvə</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d dəyişiklik</item>
+        <item quantity="other">%1$d dəyişiklik</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d gün əvvəl</item>
+        <item quantity="other">%1$d gün əvvəl</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d xüsusiyyət</item>
+        <item quantity="other">%1$d xüsusiyyət</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d düzəliş</item>
+        <item quantity="other">%1$d düzəliş</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimallaşdırma</item>
+        <item quantity="other">%1$d optimallaşdırma</item>
     </plurals>
 </resources>

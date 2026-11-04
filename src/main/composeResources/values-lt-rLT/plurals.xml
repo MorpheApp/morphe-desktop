@@ -24,30 +24,6 @@
         <item quantity="many">%1$d šaltinio</item>
         <item quantity="other">%1$d šaltinių</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d pataisa bus pritaikyta</item>
-        <item quantity="few">%1$d pataisos bus pritaikytos</item>
-        <item quantity="many">%1$d pataisų bus pritaikyta</item>
-        <item quantity="other">%1$d pataisos bus pritaikyta</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d neįtraukta</item>
-        <item quantity="few">%1$d neįtrauktos</item>
-        <item quantity="many">%1$d neįtraukta</item>
-        <item quantity="other">%1$d neįtraukta</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d įjungtas</item>
-        <item quantity="few">%1$d įjungti</item>
-        <item quantity="many">%1$d įjungtos</item>
-        <item quantity="other">%1$d įjungtų</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d išjungta</item>
-        <item quantity="few">%1$d išjungtos</item>
-        <item quantity="many">%1$d išjungta</item>
-        <item quantity="other">%1$d išjungta</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d biblioteka</item>
         <item quantity="few">%1$d bibliotekos</item>
@@ -83,5 +59,35 @@
         <item quantity="few">%1$d branduoliai</item>
         <item quantity="many">%1$d branduolio</item>
         <item quantity="other">%1$d branduolių</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d pakeitimas</item>
+        <item quantity="few">%1$d pakeitimai</item>
+        <item quantity="many">%1$d pakeitimų</item>
+        <item quantity="other">%1$d pakeitimų</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">prieš %1$d dieną</item>
+        <item quantity="few">prieš %1$d dienas</item>
+        <item quantity="many">prieš %1$d dienų</item>
+        <item quantity="other">prieš %1$d dienų</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funkcija</item>
+        <item quantity="few">%1$d funkcijos</item>
+        <item quantity="many">%1$d funkcijų</item>
+        <item quantity="other">%1$d funkcijos</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d pataisymas</item>
+        <item quantity="few">%1$d pataisymai</item>
+        <item quantity="many">%1$d pataisymų</item>
+        <item quantity="other">%1$d pataisymų</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimizavimas</item>
+        <item quantity="few">%1$d optimizavimų</item>
+        <item quantity="many">%1$d optimizavimų</item>
+        <item quantity="other">%1$d optimizavimų</item>
     </plurals>
 </resources>

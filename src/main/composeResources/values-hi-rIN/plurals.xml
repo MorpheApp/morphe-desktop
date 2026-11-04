@@ -16,22 +16,6 @@
         <item quantity="one">%1$d सोर्स</item>
         <item quantity="other">%1$d सोर्स</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d पैच लागू किया जाएगा</item>
-        <item quantity="other">%1$d पैच लागू किए जाएँगे</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d हटाया गया</item>
-        <item quantity="other">%1$d हटाए गए</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d चालू किया गया</item>
-        <item quantity="other">%1$d चालू किए गए</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d बंद किया गया</item>
-        <item quantity="other">%1$d बंद किए गए</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d लाइब्रेरी</item>
         <item quantity="other">%1$d लाइब्रेरियाँ</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d कोर</item>
         <item quantity="other">%1$d कोर</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d बदलाव</item>
+        <item quantity="other">%1$d बदलाव</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d दिन पहले</item>
+        <item quantity="other">%1$d दिन पहले</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d सुविधा</item>
+        <item quantity="other">%1$d सुविधाएँ</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d सुधार</item>
+        <item quantity="other">%1$d सुधार</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d अनुकूलन</item>
+        <item quantity="other">%1$d अनुकूलन</item>
     </plurals>
 </resources>

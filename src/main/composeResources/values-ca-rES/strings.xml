@@ -13,6 +13,7 @@
     <string name="expand">Ampliar</string>
     <string name="cancel">Cancel·lar</string>
     <string name="close">Tanca</string>
+    <string name="trust">Confiança</string>
     <string name="delete">Eliminar</string>
     <string name="disabled_while_patching">Desactivat mentre es parxa</string>
     <string name="drop_apk_here">Solta l'APK aquí</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">S'ha perdut la connexió mentre es descarregava, torna-ho a intentar</string>
     <string name="error_network_loading_patches">Error de la xarxa mentre es carregaven els pedaços</string>
     <string name="error_patch_file_not_found">No s'ha trobat l'arxiu de pedaç: %1$s</string>
-    <string name="error_no_patches_files_supplied">No s'han proporcionat fitxers de patches</string>
-    <string name="error_input_apk_not_found">No s'ha trobat l'APK d'entrada</string>
     <string name="error_step_failed">%1$s ha fallat: %2$s</string>
     <string name="error_drop_valid_apk">Si us plau, arrossega un fitxer .apk, .apkm, .xapk o .apks vàlid</string>
     <string name="status_saving">Desant…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filtra aplicacions…</string>
     <string name="version">Versió</string>
     <string name="version_label_stable">Estable</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Prellançament</string>
     <string name="version_label_experimental">Experimental</string>
-    <string name="version_label_latest_dev">Última Dev</string>
     <string name="version_label_latest_stable">Última estable</string>
+    <string name="version_label_recommended">Recomanat</string>
+    <string name="version_label_supported">Compatible</string>
     <string name="app_info_arch_label">Arq</string>
     <string name="app_info_min_sdk_label">SDK mín</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Aplicació de pegats cancel·lada</string>
     <string name="view_full_logs_button">Consulta els logs complets</string>
     <string name="error_patching_unknown">L'aplicació de pegats ha fallat per una raó desconeguda</string>
-    <string name="error_patching_general">Error: %1$s</string>
     <string name="error_log_label">Log d'error</string>
     <string name="back">Tornar</string>
     <string name="open_folder">Obre la carpeta</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Qualsevol nombre de parades, lineal, radial o cònic</string>
     <string name="card_fill_mode_solid">Sòlid</string>
     <string name="card_fill_mode_solid_blurb">Un únic color pla</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Pedaços</string>
-    <string name="quick_patch_screen_start_over_button">Comença de nou</string>
-    <string name="quick_patch_patch_another_button">Aplica un altre pedaço</string>
-    <string name="quick_patch_select_apk">Selecciona l'APK</string>
-    <string name="quick_patch_analyze_apk_failed">Ha fallat l'anàlisi de l'APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Ha fallat l'extracció de l'APK base del paquet</string>
-    <string name="quick_patch_unsupported_app_error">%1$s no és compatible amb el mode Quick Patch. Aplicacions compatibles: %2$s. Utilitzeu el mode Normal per a aplicacions no compatibles</string>
     <string name="adb_install_on_button">Instal·lar a %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Carregant pedaços</string>
-    <string name="patching_step_preparing">Preparant</string>
     <string name="patching_step_merging_split_apk">Fusionant l'APK dividit</string>
     <string name="patching_step_read_apk">Llegint el fitxer APK</string>
     <string name="patching_step_applying_patches">Aplicant pedaços</string>
-    <string name="patching_step_saving">Desant</string>
     <string name="patching_step_writing_apk">Escribint el fitxer APK amb pedaços</string>
     <string name="patching_step_signing">Signant el fitxer APK amb pedaços</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">El fitxer pot estar corrupt, torna'l a descarregar des d'APKMirror</string>
     <string name="version_status_checksum_failed">La verificació del checksum ha fallat</string>
     <string name="version_status_checksum_matches">El checksum coincideix amb APKMirror</string>
-    <string name="version_status_older_stable">Estable més antiga</string>
     <string name="version_status_newer_stable_available">Hi ha una versió estable més recent v%1$s disponible</string>
     <string name="version_status_newer_stable_available_fallback">Hi ha una versió estable més recent disponible</string>
     <string name="version_status_experimental_detail">Compatible, però potser no funcioni correctament</string>
-    <string name="version_status_older_experimental">Experimental més antic</string>
-    <string name="version_status_newer_experimental_available">Hi ha una versió experimental més recent v%1$s disponible</string>
-    <string name="version_status_newer_experimental_available_fallback">Hi ha una compilació experimental més recent disponible</string>
-    <string name="version_status_too_new">La versió és massa recent</string>
     <string name="version_status_unsupported_detail">No és suportat oficialment, els mosaics més probablement fallaran</string>
-    <string name="version_status_too_old">La versió és massa antiga</string>
     <string name="version_status_unsupported">Versió no suportada</string>
     <string name="version_status_build_unsupported">Compilació no suportada</string>
     <string name="version_status_build_unsupported_detail">Aquesta versió és suportada, però no aquesta compilació. Obteniu una compilació que inclogui els Sleeping Patches</string>
+    <string name="version_status_build_unsupported_with_code">Els paquets requereixen la compilació %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Avís de versió</string>
+    <string name="version_warning_build_unsupported_message">Actual: v%1$s (compilació %2$s)\nCompilació requerida: %3$s\n\nAquesta és una compilació diferent de la mateixa versió. Els paquets requereixen una compilació específica.</string>
     <string name="version_warning_experiment_title">Vols experimentar? 🧪</string>
-    <string name="version_warning_older_stable_title">Versió estable anterior</string>
-    <string name="version_warning_older_stable_message">Actual: v%1$s\nÚltima estable: v%2$s\n\nAquesta versió és compatible, però n'hi ha una de més recent i estable disponible. És possible que et faltin correccions recents.</string>
     <string name="version_warning_latest_experimental_message">Actual: v%1$s\n\nAquesta versió té suport experimental preliminar\n\n🔧 Es pot esperar un comportament inusual de l'aplicació o errors no identificats mentre s'esten refinant els pegats per a aquesta versió de l'aplicació.</string>
-    <string name="version_warning_older_experimental_title">Versió experimental anterior\nVols experimentar? 🧪</string>
-    <string name="version_warning_older_experimental_message">Actual: v%1$s\nÚltima experimental: v%2$s\n\nAquesta és una compilació experimental compatible, però n'hi ha una de més recent disponible. Es pot esperar un comportament inusual de l'aplicació o errors no identificats mentre s'esten refinant els pegats per a aquesta versió de l'aplicació.</string>
-    <string name="version_warning_too_new_message">Actual: v%1$s\nMés recent coneguda: v%2$s\n\nAquesta versió té suport experimental preliminar\n\n🔧 Es pot esperar un comportament inusual de l'aplicació o errors no identificats mentre s'esten refinant els pegats per a aquesta versió de l'aplicació.</string>
-    <string name="version_warning_too_old_message">Actual: v%1$s\nMés antiga compatible: v%2$s\n\nAquesta no és una versió compatible oficialment. El més probable és que els pegats fallin.</string>
     <string name="version_warning_unsupported_message">Actual: v%1$s\n\nAquesta no és una versiót suportada oficialment. El més probable és que els retalls fallin.</string>
     <string name="version_warning_notice_message">Vols continuar amb la v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Versió estable antiga - hi ha una versió estable v%1$s més recent disponible</string>
-    <string name="quick_patch_warning_latest_experimental">Versió experimental - suportada, però potser no funcioni correctament</string>
-    <string name="quick_patch_warning_older_experimental">Versió experimental antiga - hi ha una versió experimental v%1$s més recent disponible</string>
-    <string name="quick_patch_warning_build_unsupported">Versió no suportada - aquesta versió es pot retallar, però no aquesta compilació concreta</string>
-    <string name="quick_patch_warning_too_new">Versió massa nova - no és suportada oficialment, el més probable és que els retalls fallin</string>
-    <string name="quick_patch_warning_too_old">Versió massa antiga - no és suportada oficialment, el més probable és que els retalls fallin</string>
-    <string name="quick_patch_warning_unsupported_between">Versió no suportada - el més probable és que els retalls fallin</string>
-    <string name="quick_patch_read_apk_failed">Error en llegir l'APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Preparant els pedaços…</string>
-    <string name="quick_patch_fetch_patches_failed">Error en obtenir els pedaços. Comproveu la vostra connexió a internet</string>
-    <string name="quick_patch_status_downloading_patches">Descarregant els pedaços %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Error en descarregar els pedaços: %1$s</string>
-    <string name="quick_patch_status_patching">Aplicant pedaços…</string>
-    <string name="quick_patch_completed_adb_off">ADB desactivat · Activeu-lo per instal·lar</string>
-    <string name="quick_patch_completed_adb_connect_device">Connecteu un dispositiu via USB per instal·lar amb ADB</string>
-    <string name="quick_patch_error_unknown_occurred">S'ha produït un error desconegut</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Analitzant l'APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d pedaços</string>
-    <string name="quick_patch_patching_slow_warning">Això està trigant més del normal. Si us plau, espereu…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(versió %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">No hi ha pedaços compatibles per a aquesta aplicació</string>
-    <string name="quick_patch_ready_no_matching_patches">No hi ha cap pedaç que coincideixi amb \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Pedaç amb vals per defecte</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Apps compatibles</string>
-    <string name="quick_patch_supported_apps_subtitle">Arrossega aquí la versió exacta de l'APK d'una app compatible</string>
-    <string name="quick_patch_supported_apps_loading">Carregant aplicacions compatibles…</string>
-    <string name="quick_patch_supported_apps_load_error">No s'han pogut carregar les aplicacions compatibles</string>
-    <string name="quick_patch_supported_apps_change_source">Canvia la font</string>
-    <string name="quick_patch_supported_apps_no_matches">No hi ha aplicacions compatibles</string>
-    <string name="quick_patch_supported_apps_version_any">Qualsevol versió</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Selecciona el fitxer APK</string>
     <string name="home_could_not_resolve_patch_files">No s'han pogut resoldre els fitxers del patch</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Eliminar APK</string>
     <string name="home_apk_info_limited_info_warning">No s'ha pogut llegir completament el manifest d'aquest APK (comú en els paquets dividits). Els detalls a continuació són aproximats, però el patxat encara hauria de funcionar</string>
     <string name="home_apk_info_unsupported_app_warning">No s'han trobat paquets compatibles per a aquesta aplicació. Podeu continuar, però el paquetatge podria no tenir cap efecte</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">No s'han trobat paquets compatibles per a aquesta aplicació</string>
     <string name="home_apk_info_build_label">Versió</string>
     <string name="home_apk_info_size_label">Mida</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Des de</string>
     <string name="home_stage_change_apk">Canviar APK</string>
     <string name="home_stage_continue">Continuar</string>
+    <string name="home_stage_patch">Pedaç</string>
     <string name="home_stage_analyzing_title">Analitzant</string>
     <string name="home_stage_reading_metadata">Llegint els metadades de l'aplicació…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Desinstal·lar %1$s?</string>
     <string name="home_dialog_uninstall_message">Això elimina %1$s del dispositiu connectat. L'APK modificat al disc i el teu historial es mantenen, a menys que triïs el contrari a continuació</string>
     <string name="home_dialog_uninstall_also_forget">També elimina de Les teves apps</string>
-    <string name="home_dialog_missing_apk_title">APK original no trobat</string>
-    <string name="home_dialog_missing_apk_message">L'APK d'entrada per a %1$s ja no es troba a:\n%2$s\n\nSelecciona l'APK novament per tornar a aplicar el patx amb la teva configuració guardada</string>
-    <string name="home_dialog_select_apk">Selecciona l'APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Selecciona l'APK per tornar a aplicar el patx</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Gestiona les fonts</string>
     <string name="home_header_multi_source_hint">Els pegats de totes les fonts habilitades s'uneixen. Gestiona-ho des del botó de fonts d'a dalt</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Les teves aplicacions</string>
     <string name="home_banner_view">Veure</string>
     <string name="home_your_apps_install_ready">Instal·lació llesta</string>
-    <string name="home_your_apps_newer_patch_hint">Un mosaic més recent podria actualitzar l'aplicació, feu clic a Actualitzar per comprovar-ho</string>
-    <string name="home_your_apps_device_version_ready">Patched v%1$s llesta, el dispositiu té la v%2$s (no cal tornar a modificar)</string>
-    <string name="home_your_apps_install_ready_hint">Patx v%1$s llest per instal·lar (no cal tornar a patxar)</string>
-    <string name="home_action_install">Instal·la</string>
     <string name="home_action_install_to_device">Instal·la al dispositiu</string>
     <string name="home_action_installing">Instal·lant…</string>
     <string name="home_action_preparing">Preparant…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s llest · dispositiu en v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s llesta, no cal tornar a modificar</string>
-    <string name="home_advice_unsupported">v%1$s ja no és compatible. Si us plau, actualitzeu a la v%2$s</string>
+    <string name="home_detail_source_disabled">Deshabilitat</string>
+    <string name="home_detail_source_removed">Eliminat</string>
+    <string name="home_detail_source_disabled_sub">La font està deshabilitada a Fonts. Habilita-la per tornar a aplicar el pedaç</string>
+    <string name="home_detail_source_disabled_alternatives_sub">La font original està deshabilitada. Selecciona una font alternativa o torna a habilitar-la a Fonts</string>
+    <string name="home_detail_no_compatible_source">No hi ha cap font compatible habilitada</string>
+    <string name="home_detail_choose_source">Tria la font del pedaç</string>
     <string name="home_advice_unsupported_by_patches">la v%1$s ja no és compatible amb els últims paquets de correcció</string>
     <string name="home_date_today">avui</string>
     <string name="home_date_yesterday">ahir</string>
@@ -425,11 +369,13 @@
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Sense grup</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Comença de nou</string>
+    <string name="patching_slow_warning">Això està trigant més del normal. Si us plau, espereu…</string>
     <string name="patching_status_ready">Ready per a aplicar els pedaços</string>
     <string name="patching_status_preparing">Preparant l'aplicació de pedaços</string>
     <string name="patching_status_in_progress">Aplicant pedaços</string>
     <string name="patching_completed_loading_result">Patxatge completat, carregant el resultat…</string>
-    <string name="patching_cancelled_loading_result">Patxatge cancel·lat, carregant el resultats…</string>
+    <string name="patching_cancelled_loading_result">Patching cancel·lat, carregant resultat…</string>
     <string name="patching_failed_loading_result">El patxatge ha fallat, carregant el resultat…</string>
     <string name="patching_log_viewer_failed_to_read">Error en llegir el fitxer de registre: %1$s</string>
     <string name="patching_log_viewer_title">Fitxer de registre</string>
@@ -465,6 +411,8 @@
     <string name="patching_banner_native_libs_stripped">Eliminades</string>
     <string name="patching_error_failed_patches">Patxes fallides: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB desactivat · Activa'l per instal·lar</string>
+    <string name="result_adb_connect_device_hint">Connecta un dispositiu via USB per instal·lar amb ADB</string>
     <string name="result_screen_patch_another_button">Patxar un altre</string>
     <string name="result_screen_install_on_device_label">Instal·lar a %1$s</string>
     <string name="result_screen_links_routed_label">Enllaços redirigits a l'app patxada</string>
@@ -564,13 +512,12 @@
     <string name="source_error_failed_to_load">Error en la càrrega</string>
     <string name="source_error_github_pat_required">Cal un PAT de GitHub per descarregar les fonts de la sol·licitud de commutació</string>
     <string name="source_error_pr_no_artifact">No s'han trobat artefacts per a la sol·licitud de commutació</string>
-    <string name="source_sheet_manage_description">Gestionar les fonts dels pegats</string>
-    <string name="source_sheet_local_label">Local</string>
+    <string name="source_error_patcher_incompatible">Aquesta font s'ha construït per al patcher %1$s, però Morphe %2$s inclou el patcher %3$s. Actualitza Morphe per utilitzar-lo</string>
+    <string name="version_label_local">Local</string>
     <string name="source_sheet_remote_label">Remota</string>
     <string name="add_source">Afegir font</string>
     <string name="source_sheet_title">Fonts de pegats</string>
     <string name="source_sheet_reload_description">Recarregar pegats</string>
-    <string name="source_sheet_quick_mode_hint">Tria quina font utilitza el Quick Patch. La multi-font està disponible en mode Expert</string>
     <string name="source_sheet_multi_mode_hint">Activeu/Desactiveu qualsevol combinació. Els paquets de totes les fonts actives es fusionen</string>
     <string name="source_sheet_done_button">Fet</string>
     <string name="source_sheet_type_preinstalled">Preinstal·lat</string>
@@ -580,13 +527,21 @@
     <string name="source_sheet_edit_description">Edita</string>
     <string name="source_sheet_move_up_description">Puja</string>
     <string name="source_sheet_move_down_description">Baixa</string>
-    <string name="source_sheet_channel_older_stable">Estable anterior</string>
-    <string name="source_sheet_channel_older_dev">Dev anterior</string>
     <string name="source_sheet_ignored_mpp_title">Patrons .mpp ignorats</string>
-    <string name="source_sheet_ignored_mpp_hint">Nom afecta les fonts de carpeta, que carreguen automàticament el fitxer .mpp més recent d'una carpeta. En triar aquesta versió més recent, es saltaran els fitxers el nom dels quals coincideixi amb un patró aquí. Una paraula simple coincideix amb qualsevol fitxer que la contingui (per exemple, debug). Utilitzeu * per a globs (per exemple, *-debug.mpp). *-sources.mpp i *-javadoc.mpp s'ignoren sempre</string>
+    <string name="source_sheet_ignored_mpp_hint">Només afecta a les fonts de carpeta, que carreguen automàticament el .mpp més recent d'una carpeta. En triar aquesta compilació més recent, es saltaran els fitxers el nom de els quals coincideixi amb un patró aquí. Una paraula simple coincideix amb qualsevol fitxer que la contingui (p. ex. debug). Utilitzeu * per a globs (p. ex. *-debug.mpp). *-sources.mpp i *-javadoc.mpp s'ignoren sempre</string>
     <string name="source_sheet_ignored_mpp_placeholder">p. ex. debug o *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Afegeix un patró</string>
     <string name="source_sheet_remove_pattern_description">Elimina el patró</string>
+    <string name="sources_management_signed_by">Signat per</string>
+    <string name="sources_management_signing_key_changed_badge">Clau canviada</string>
+    <string name="sources_management_signing_key_changed_hint">La clau de signatura ha canviat. Feu clic per revisar-la</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' no s'ha actualitzat perquè la seva última versió no està signada amb la clau que s'utilitzava anteriorment</string>
+    <string name="sources_signing_key_new">Clau nova</string>
+    <string name="sources_signing_key_trust_message">L'últim llançament està signat amb una clau diferent. O bé el desenvolupador ha substituït la seva clau, o bé algú més ha publicat aquest llançament. Confia-hi només si el desenvolupador ha anunciat una clau nova</string>
+    <string name="sources_signing_key_trust_message_unsigned">L'últim llançament no està signat. O bé el desenvolupador ha deixat de signar els llançaments, o bé algú més ha publicat aquest llançament. Confia-hi només si el desenvolupador ho ha anunciat</string>
+    <string name="sources_signing_key_trust_title">Confies en la clau nova?</string>
+    <string name="sources_signing_key_trusted">Clau fiable</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Arxiu local</string>
     <string name="patch_source_dialog_name_label">Nom</string>
@@ -596,8 +551,6 @@
     <string name="patch_source_dialog_repo_hint">Accepta enllaços de GitHub, GitLab o morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Pegats de pre-llançament</string>
     <string name="patch_source_dialog_pre_release_hint">Rebre accés anticipat a noves versions experimentals de pegats</string>
-    <string name="patch_source_dialog_experimental_title">Versions experimentals de l'aplicació</string>
-    <string name="patch_source_dialog_experimental_hint">Prioritza les versions experimentals de l'aplicació si n'hi ha disponibles</string>
     <string name="patch_source_dialog_error_name_required">El nom és obligatori</string>
     <string name="patch_source_dialog_error_invalid_url">Introdueix una URL de GitHub o GitLab vàlida</string>
     <string name="patch_source_dialog_error_invalid_file">Selecciona un arxiu .mpp vàlid</string>
@@ -680,10 +633,8 @@
     <string name="settings_dialog_open_logs_button">Obre els registres</string>
     <string name="settings_dialog_reset_button">Restaurar</string>
     <string name="settings_theme_system">Sistema</string>
-    <string name="settings_signing_error_not_found">No s'ha trobat el magatzem de claus configurat: %1$s. Restaura l'arxiu, tria'n un altre a Configuració o neteja la configuració per utilitzar el valor per defecte de Morphe</string>
     <string name="settings_search_languages_placeholder">Cerca idiomes</string>
     <string name="settings_dialog_resolves_to_message">Es resol a: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">No s'ha trobat el magatzem de claus: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Idioma</string>
     <string name="settings_language_current_title">Idioma actual</string>
@@ -691,9 +642,13 @@
     <string name="settings_language_dialog_title">Idioma de l'aplicació</string>
     <string name="settings_language_search_no_results">No s'han trobat resultats</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Mode del tema</string>
     <string name="settings_theme_light">Clar</string>
     <string name="settings_theme_dark">Fosc</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Estil de color</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monocrom</string>
     <string name="settings_toggle_sharp_corners_label">Canteres vives</string>
     <string name="settings_toggle_sharp_corners_desc">Quadre les targetes, els diàlegs i els botons</string>
     <string name="settings_section_accent_color">Color d'accentuació</string>
@@ -703,9 +658,6 @@
     <string name="settings_section_app_cards">Targetes de l'app</string>
     <string name="settings_app_cards_color_all">Color per a cada targeta</string>
     <string name="settings_app_cards_color_all_desc">Les cartes que hagueis personalitzat individualment conserven el seu propi color</string>
-    <string name="settings_section_patch_list">Llista de pedaços</string>
-    <string name="settings_toggle_patch_categories_label">Categories de pedaços</string>
-    <string name="settings_toggle_patch_categories_desc">Agrupa els pedaços en categories desplegables</string>
     <string name="settings_section_background_animation">Animació del fons</string>
     <string name="settings_background_circles">Círcles</string>
     <string name="settings_background_rings">Anells</string>
@@ -819,8 +771,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Traduir</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Registre de canvis no disponible</string>
+    <string name="changelog_badge_installed">Instal·lat</string>
+    <string name="changelog_badge_latest">Últim</string>
+    <string name="changelog_badge_prerelease">Preestrena</string>
+    <string name="changelog_date_today">Avui</string>
+    <string name="changelog_date_yesterday">Ahir</string>
     <string name="changelog_dialog_title">Veure registre de canvis</string>
-    <string name="changelog_show_older_button">Mostrar versions anteriors</string>
+    <string name="changelog_not_available">Registre de canvis no disponible</string>
+    <string name="changelog_section_app_support">Suport de l'app</string>
+    <string name="changelog_section_fixes">Correccions</string>
+    <string name="changelog_section_improvements">Millores</string>
+    <string name="changelog_section_new">Nou</string>
+    <string name="changelog_section_other">Canvis</string>
+    <string name="changelog_section_performance">Rendiment</string>
+    <string name="changelog_show_all">Mostrar-ho tot (%1$d)</string>
+    <string name="changelog_show_less">Mostrar menys</string>
     <string name="changelog_view_on_github_button">Veure a GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Fonts</string>
+    <string name="nav_apps">Apps</string>
 </resources>

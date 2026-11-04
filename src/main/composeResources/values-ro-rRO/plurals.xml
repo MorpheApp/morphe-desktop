@@ -20,26 +20,6 @@
         <item quantity="few">%1$d de surse</item>
         <item quantity="other">%1$d de surse</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Se va aplica %1$d patch</item>
-        <item quantity="few">Se vor aplica %1$d patch-uri</item>
-        <item quantity="other">Se vor aplica %1$d de patch-uri</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d exclus</item>
-        <item quantity="few">%1$d excluse</item>
-        <item quantity="other">%1$d de excluse</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d activat</item>
-        <item quantity="few">%1$d activate</item>
-        <item quantity="other">%1$d de activate</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d dezactivat</item>
-        <item quantity="few">%1$d dezactivate</item>
-        <item quantity="other">%1$d de dezactivate</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d bibliotecă</item>
         <item quantity="few">%1$d biblioteci</item>
@@ -69,5 +49,25 @@
         <item quantity="one">%1$d nucleu</item>
         <item quantity="few">%1$d nuclee</item>
         <item quantity="other">%1$d de nuclee</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d modificare</item>
+        <item quantity="few">%1$d modificări</item>
+        <item quantity="other">%1$d modificări</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">acuza %1$d zi</item>
+        <item quantity="few">acuza %1$d zile</item>
+        <item quantity="other">acuza %1$d zile</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funcționalitate</item>
+        <item quantity="few">%1$d funcționalități</item>
+        <item quantity="other">%1$d funcționalități</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d corecție</item>
+        <item quantity="few">%1$d corecții</item>
+        <item quantity="other">%1$d corecții</item>
     </plurals>
 </resources>

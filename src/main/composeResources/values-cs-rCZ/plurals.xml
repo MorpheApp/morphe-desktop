@@ -24,30 +24,6 @@
         <item quantity="many">%1$d zdrojů</item>
         <item quantity="other">%1$d zdrojů</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d záplata bude aplikována</item>
-        <item quantity="few">%1$d záplaty budou aplikovány</item>
-        <item quantity="many">%1$d záplat bude aplikováno</item>
-        <item quantity="other">%1$d záplat bude aplikováno</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">Vyloučeno: %1$d</item>
-        <item quantity="few">Vyloučeno: %1$d</item>
-        <item quantity="many">Vyloučeno: %1$d</item>
-        <item quantity="other">Vyloučeno: %1$d</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">Povoleno: %1$d</item>
-        <item quantity="few">Povoleno: %1$d</item>
-        <item quantity="many">Povoleno: %1$d</item>
-        <item quantity="other">Povoleno: %1$d</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">Zakázáno: %1$d</item>
-        <item quantity="few">Zakázáno: %1$d</item>
-        <item quantity="many">Zakázáno: %1$d</item>
-        <item quantity="other">Zakázáno: %1$d</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d knihovna</item>
         <item quantity="few">%1$d knihovny</item>
@@ -83,5 +59,35 @@
         <item quantity="few">%1$d jádra</item>
         <item quantity="many">%1$d jádra</item>
         <item quantity="other">%1$d jader</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d změna</item>
+        <item quantity="few">%1$d změny</item>
+        <item quantity="many">%1$d změn</item>
+        <item quantity="other">%1$d změny</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">před %1$d dnem</item>
+        <item quantity="few">před %1$d dny</item>
+        <item quantity="many">před %1$d dny</item>
+        <item quantity="other">před %1$d dny</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funkce</item>
+        <item quantity="few">%1$d funkce</item>
+        <item quantity="many">%1$d funkcí</item>
+        <item quantity="other">%1$d funkcí</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d oprava</item>
+        <item quantity="few">%1$d opravy</item>
+        <item quantity="many">%1$d oprav</item>
+        <item quantity="other">%1$d oprav</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimalizace</item>
+        <item quantity="few">%1$d optimalizace</item>
+        <item quantity="many">%1$d optimalizací</item>
+        <item quantity="other">%1$d optimalizací</item>
     </plurals>
 </resources>

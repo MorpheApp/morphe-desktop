@@ -13,6 +13,7 @@
     <string name="expand">Разгъване</string>
     <string name="cancel">Отказ</string>
     <string name="close">Затваряне</string>
+    <string name="trust">Доверие</string>
     <string name="delete">Изтриване</string>
     <string name="disabled_while_patching">Деактивирано по време на пачване</string>
     <string name="drop_apk_here">Пуснете APK тук</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Връзката се прекъсна по време на изтеглянето, опитайте отново.</string>
     <string name="error_network_loading_patches">Мрежова грешка при зареждане на кръпки</string>
     <string name="error_patch_file_not_found">Файлът с кръпки не е намерен: %1$s</string>
-    <string name="error_no_patches_files_supplied">Не са предоставени файлове с кръпки</string>
-    <string name="error_input_apk_not_found">Входният APK не е намерен</string>
     <string name="error_step_failed">%1$s не успя: %2$s</string>
     <string name="error_drop_valid_apk">Моля, пуснете валиден .apk, .apkm, .xapk или .apks файл</string>
     <string name="status_saving">Запазване…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Филтриране на приложения…</string>
     <string name="version">Версия</string>
     <string name="version_label_stable">Стабилна</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Предварителна версия</string>
     <string name="version_label_experimental">Експериментална</string>
-    <string name="version_label_latest_dev">Най-нова Dev</string>
     <string name="version_label_latest_stable">Най-нова стабилна</string>
+    <string name="version_label_recommended">Препоръчано</string>
+    <string name="version_label_supported">Поддържано</string>
     <string name="app_info_arch_label">Архитектура</string>
     <string name="app_info_min_sdk_label">Мин. SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Пачването е отменено</string>
     <string name="view_full_logs_button">Преглед на пълните журнали</string>
     <string name="error_patching_unknown">Пачването се провали по неизвестна причина</string>
-    <string name="error_patching_general">Грешка: %1$s</string>
     <string name="error_log_label">Журнал на грешки</string>
     <string name="back">Назад</string>
     <string name="open_folder">Отвори папка</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Произволен брой точки, линейни, радиални или конични</string>
     <string name="card_fill_mode_solid">Плътен</string>
     <string name="card_fill_mode_solid_blurb">Един плосък цвят</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Кръпки</string>
-    <string name="quick_patch_screen_start_over_button">Започни отначало</string>
-    <string name="quick_patch_patch_another_button">Пачване на друго</string>
-    <string name="quick_patch_select_apk">Изберете APK</string>
-    <string name="quick_patch_analyze_apk_failed">Неуспешен анализ на APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Неуспешно извличане на основния APK от пакета</string>
-    <string name="quick_patch_unsupported_app_error">%1$s не се поддържа в режим Бързо пачване. Поддържани приложения: %2$s. Използвайте нормален режим за неподдържани приложения</string>
     <string name="adb_install_on_button">Инсталиране на %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Зареждане на кръпки</string>
-    <string name="patching_step_preparing">Подготовка</string>
     <string name="patching_step_merging_split_apk">Обединяване на разделен APK</string>
     <string name="patching_step_read_apk">Четене на APK файл</string>
     <string name="patching_step_applying_patches">Прилагане на пачове</string>
-    <string name="patching_step_saving">Запазване</string>
     <string name="patching_step_writing_apk">Записване на пачвания APK файл</string>
     <string name="patching_step_signing">Подписване на пачвания APK файл</string>
     <!-- ADB Installation Errors -->
@@ -153,86 +142,27 @@
     <string name="version_status_checksum_corrupted">Файлът може да е повреден, изтеглете отново от APKMirror</string>
     <string name="version_status_checksum_failed">Проверката на контролната сума се провали</string>
     <string name="version_status_checksum_matches">Контролната сума съвпада с APKMirror</string>
-    <string name="version_status_older_stable">По-стара стабилна</string>
     <string name="version_status_newer_stable_available">Налична е по-нова стабилна v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Налична е по-нова стабилна версия</string>
     <string name="version_status_experimental_detail">Поддържа се, но може да не работи правилно</string>
-    <string name="version_status_older_experimental">По-стар експериментален</string>
-    <string name="version_status_newer_experimental_available">Наличен е по-нов експериментален v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">Налична е по-нова експериментална версия</string>
-    <string name="version_status_too_new">Версията е твърде нова</string>
     <string name="version_status_unsupported_detail">Не се поддържа официално, пачовете най-вероятно ще са неуспешни.</string>
-    <string name="version_status_too_old">Версията е твърде стара</string>
     <string name="version_status_unsupported">Неподдържана версия</string>
     <string name="version_status_build_unsupported">Изданието не се поддържа</string>
     <string name="version_status_build_unsupported_detail">Тази версия се поддържа, но не и това издание. Вземете издание, което кръпките целят</string>
+    <string name="version_status_build_unsupported_with_code">Пачовете изискват build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Известие за версията</string>
+    <string name="version_warning_build_unsupported_message">Текуща: v%1$s (build %2$s)\nИзискван build: %3$s\n\nТова е различен build на същата версия. Пачовете изискват конкретен build.</string>
     <string name="version_warning_experiment_title">Искате ли да експериментирате? 🧪</string>
-    <string name="version_warning_older_stable_title">По-стара стабилна версия</string>
-    <string name="version_warning_older_stable_message">Текуща: v%1$s
-Най-нова стабилна: v%2$s
-
-Тази версия се поддържа, но е налична по-нова стабилна версия. Възможно е да пропускате скорошни корекции.</string>
     <string name="version_warning_latest_experimental_message">Текуща: v%1$s
 
 Тази версия има ранен експериментален поддръжка
 
 🔧 Очаквайте странно поведение на приложението или неидентифицирани грешки, докато кръпките се усъвършенстват за тази версия на приложението.</string>
-    <string name="version_warning_older_experimental_title">По-стара експериментална версия
-Искате ли да експериментирате? 🧪</string>
-    <string name="version_warning_older_experimental_message">Текуща: v%1$s
-Най-нова експериментална: v%2$s
-
-Това е поддържана експериментална версия, но е налична по-нова експериментална версия. Очаквайте странно поведение на приложението или неидентифицирани грешки, докато кръпките се усъвършенстват за тази версия на приложението.</string>
-    <string name="version_warning_too_new_message">Текуща: v%1$s
-Най-нова известна: v%2$s
-
-Тази версия има ранен експериментален поддръжка
-
-🔧 Очаквайте странно поведение на приложението или неидентифицирани грешки, докато кръпките се усъвършенстват за тази версия на приложението.</string>
-    <string name="version_warning_too_old_message">Текуща: v%1$s
-Най-стара поддържана: v%2$s
-
-Това не е официално поддържана версия. Кръпките най-вероятно ще се провалят.</string>
     <string name="version_warning_unsupported_message">Текуща: v%1$s
 
 Това не е официално поддържана версия. Кръпките най-вероятно ще се провалят.</string>
     <string name="version_warning_notice_message">Продължаване с v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">По-стара стабилна версия - налична е по-нова стабилна v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">Експериментална версия - поддържа се, но може да не работи правилно</string>
-    <string name="quick_patch_warning_older_experimental">По-стара експериментална версия - налична е по-нова експериментална v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">Изданието не се поддържа - тази версия може да се пачва, но не и това издание</string>
-    <string name="quick_patch_warning_too_new">Версията е твърде нова - не се поддържа официално, кръпките най-вероятно ще се провалят</string>
-    <string name="quick_patch_warning_too_old">Версията е твърде стара - не се поддържа официално, кръпките най-вероятно ще се провалят</string>
-    <string name="quick_patch_warning_unsupported_between">Неподдържана версия - кръпките най-вероятно ще се провалят</string>
-    <string name="quick_patch_read_apk_failed">Неуспешно четене на APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Подготовка на кръпки…</string>
-    <string name="quick_patch_fetch_patches_failed">Неуспешно извличане на кръпки. Проверете интернет връзката си</string>
-    <string name="quick_patch_status_downloading_patches">Изтегляне на кръпки %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Неуспешно сваляне на пакети: %1$s</string>
-    <string name="quick_patch_status_patching">Пачване…</string>
-    <string name="quick_patch_completed_adb_off">ADB изключен · Активирайте, за да инсталирате</string>
-    <string name="quick_patch_completed_adb_connect_device">Свържете устройство чрез USB, за да инсталирате с ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Възникна неизвестна грешка</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Анализиране на APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d латки</string>
-    <string name="quick_patch_patching_slow_warning">Това отнема повече време от обикновено. Моля, изчакайте…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(сборка %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Няма съвместими кръпки за това приложение</string>
-    <string name="quick_patch_ready_no_matching_patches">Няма кръпки, съвпадащи с \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Приложи кръпка с настройките по подразбиране</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Поддържани приложения</string>
-    <string name="quick_patch_supported_apps_subtitle">Пуснете точната APK версия за поддържано приложение тук</string>
-    <string name="quick_patch_supported_apps_loading">Зареждане на поддържаните приложения…</string>
-    <string name="quick_patch_supported_apps_load_error">Не можаха да се заредят поддържаните приложения</string>
-    <string name="quick_patch_supported_apps_change_source">Смяна на източника</string>
-    <string name="quick_patch_supported_apps_no_matches">Няма съвпадащи приложения</string>
-    <string name="quick_patch_supported_apps_version_any">Всяка версия</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Изберете APK файл</string>
     <string name="home_could_not_resolve_patch_files">Не можаха да се разрешат файловете с кръпки</string>
@@ -249,12 +179,14 @@
     <string name="home_apk_info_remove_description">Премахване на APK</string>
     <string name="home_apk_info_limited_info_warning">Не можа да се прочете напълно манифестът на този APK (обичайно за разделени пакети). Детайлите по-долу са приблизителни, пачването трябва да работи</string>
     <string name="home_apk_info_unsupported_app_warning">Не са намерени съвместими кръпки за това приложение. Можете да продължите, но пачването може да няма ефект</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Не са намерени съвместими пачове за това приложение</string>
     <string name="home_apk_info_build_label">Издание</string>
     <string name="home_apk_info_size_label">Размер</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">От</string>
     <string name="home_stage_change_apk">Смяна на APK</string>
     <string name="home_stage_continue">Продължи</string>
+    <string name="home_stage_patch">Пач</string>
     <string name="home_stage_analyzing_title">Анализиране</string>
     <string name="home_stage_reading_metadata">Четене на метаданните на приложението…</string>
     <!-- Home Screen - Dialogs -->
@@ -266,13 +198,6 @@
     <string name="home_dialog_uninstall_title">Деинсталиране на %1$s?</string>
     <string name="home_dialog_uninstall_message">Това премахва %1$s от свързаното устройство. Пачваният APK на диска и историята ви се запазват, освен ако не изберете друго по-долу.</string>
     <string name="home_dialog_uninstall_also_forget">Също премахване от „Вашите приложения“</string>
-    <string name="home_dialog_missing_apk_title">Оригиналният APK не е намерен</string>
-    <string name="home_dialog_missing_apk_message">Входният APK за %1$s вече не е на:
-%2$s
-
-Изберете отново APK, за да приложите отново кръпка с вашите запазени настройки</string>
-    <string name="home_dialog_select_apk">Изберете APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Изберете APK за повторно пачване</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Управление на източници</string>
     <string name="home_header_multi_source_hint">Кръпките от всеки активиран източник се обединяват. Управлявайте от бутона за източници по-горе</string>
@@ -309,10 +234,6 @@
     <string name="home_filter_your_apps">Вашите приложения</string>
     <string name="home_banner_view">Преглед</string>
     <string name="home_your_apps_install_ready">Готово за инсталиране</string>
-    <string name="home_your_apps_newer_patch_hint">По-нов пач може да обнови приложението. Щракнете върху бутона „Актуализиране“, за да проверите.</string>
-    <string name="home_your_apps_device_version_ready">Пачваната v%1$s е готова, устройството е на v%2$s (не е нужно препачване).</string>
-    <string name="home_your_apps_install_ready_hint">Пачвана v%1$s, готова за инсталиране (не е необходимо повторно пачване)</string>
-    <string name="home_action_install">Инсталиране</string>
     <string name="home_action_install_to_device">Инсталиране на устройството</string>
     <string name="home_action_installing">Инсталиране…</string>
     <string name="home_action_preparing">Подготовка…</string>
@@ -353,7 +274,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s готова · устройството е на v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s е готова, не е нужно препачване.</string>
-    <string name="home_advice_unsupported">v%1$s вече не се поддържа. Моля, актуализирайте до v%2$s</string>
+    <string name="home_detail_source_disabled">Изключено</string>
+    <string name="home_detail_source_removed">Премахнато</string>
+    <string name="home_detail_source_disabled_sub">Източникът е деактивиран в Източници. Активирайте го, за да приложите пача отново</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Оригиналният източник е деактивиран. Изберете алтернативен източник или го активирайте отново в Източници</string>
+    <string name="home_detail_no_compatible_source">Няма активиран съвместим източник</string>
+    <string name="home_detail_choose_source">Изберете източник на пача</string>
     <string name="home_advice_unsupported_by_patches">v%1$s вече не се поддържа от най-новите кръпки</string>
     <string name="home_date_today">днес</string>
     <string name="home_date_yesterday">вчера</string>
@@ -451,11 +377,14 @@
     <string name="patch_selection_group_ungrouped">Негрупирани</string>
     <string name="patch_selection_group_selected_count">%1$d избран</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Започнете отначало</string>
+    <string name="patching_patches_count">%1$d / %2$d латки</string>
+    <string name="patching_slow_warning">Това отнема повече време от обикновено. Моля, изчакайте…</string>
     <string name="patching_status_ready">Готов за пачване</string>
     <string name="patching_status_preparing">Подготовка за пачване</string>
     <string name="patching_status_in_progress">Прилагане на пачове</string>
     <string name="patching_completed_loading_result">Пачването завърши, зареждане на резултата…</string>
-    <string name="patching_cancelled_loading_result">Пачването е отменено, зареждане на резултата…</string>
+    <string name="patching_cancelled_loading_result">Пакването е отменено, зареждане на резултата…</string>
     <string name="patching_failed_loading_result">Пачването не успя, зареждане на резултата…</string>
     <string name="patching_log_viewer_failed_to_read">Неуспешно четене на журналния файл: %1$s</string>
     <string name="patching_log_viewer_title">Журнален файл</string>
@@ -491,6 +420,8 @@
     <string name="patching_banner_native_libs_stripped">Премахнати</string>
     <string name="patching_error_failed_patches">Неуспешни кръпки: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB изкл. · Активирайте за инсталиране</string>
+    <string name="result_adb_connect_device_hint">Свържете устройство чрез USB, за да инсталирате с ADB</string>
     <string name="result_screen_patch_another_button">Пачване на друго</string>
     <string name="result_screen_install_on_device_label">Инсталиране на %1$s</string>
     <string name="result_screen_links_routed_label">Връзките са насочени към пачваното приложение</string>
@@ -590,13 +521,12 @@
     <string name="source_error_failed_to_load">Неуспешно зареждане</string>
     <string name="source_error_github_pat_required">Необходим е GitHub PAT за изтегляне на източниците на pull request.</string>
     <string name="source_error_pr_no_artifact">Не са намерени артефакти за pull request.</string>
-    <string name="source_sheet_manage_description">Управление на източници на кръпки</string>
-    <string name="source_sheet_local_label">Локален</string>
+    <string name="source_error_patcher_incompatible">Този източник е създаден за пачер %1$s, но Morphe %2$s включва пачер %3$s. Обновете Morphe, за да го използвате</string>
+    <string name="version_label_local">Локален</string>
     <string name="source_sheet_remote_label">Отдалечен</string>
     <string name="add_source">Добавяне на източник</string>
     <string name="source_sheet_title">Източници на пачове</string>
     <string name="source_sheet_reload_description">Презареждане на кръпки</string>
-    <string name="source_sheet_quick_mode_hint">Изберете кой източник използва Бързо пачване. Множество източници са налични в режим Експерт</string>
     <string name="source_sheet_multi_mode_hint">Активирайте/деактивирайте произволна комбинация. Кръпките от всички активирани източници се обединяват</string>
     <string name="source_sheet_done_button">Готово</string>
     <string name="source_sheet_type_preinstalled">Предварително инсталиран</string>
@@ -606,13 +536,21 @@
     <string name="source_sheet_edit_description">Редактиране</string>
     <string name="source_sheet_move_up_description">Преместване нагоре</string>
     <string name="source_sheet_move_down_description">Преместване надолу</string>
-    <string name="source_sheet_channel_older_stable">По-стара стабилна</string>
-    <string name="source_sheet_channel_older_dev">По-стар Dev</string>
     <string name="source_sheet_ignored_mpp_title">Игнорирани .mpp модели</string>
-    <string name="source_sheet_ignored_mpp_hint">Засяга само папкови източници, които автоматично зареждат най-новия .mpp в папка. При избор на тази най-нова версия се пропускат файлове, чието име съвпада с модел тук. Обикновена дума съвпада с всеки файл, който я съдържа (напр. debug). Използвайте * за глоб (напр. *-debug.mpp). *-sources.mpp и *-javadoc.mpp винаги се игнорират</string>
+    <string name="source_sheet_ignored_mpp_hint">Засяга само източници от папки, които автоматично зареждат най-новия .mpp файл в папка. При избор на най-новата версия, файловете, чиито имена съвпадат с шаблон тук, се пропускат. Обикновена дума съвпада с всеки файл, който я съдържа (напр. debug). Използвайте * за globs (напр. *-debug.mpp). *-sources.mpp и *-javadoc.mpp винаги се игнорират</string>
     <string name="source_sheet_ignored_mpp_placeholder">напр. debug или *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Добавяне на модел</string>
     <string name="source_sheet_remove_pattern_description">Премахване на модел</string>
+    <string name="sources_management_signed_by">Подписано от</string>
+    <string name="sources_management_signing_key_changed_badge">Ключът е променен</string>
+    <string name="sources_management_signing_key_changed_hint">Ключът за подписване е променен. Кликнете, за да го прегледате</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' не беше актуализиран, защото последната му версия не е подписана с ключа, който е използвал преди</string>
+    <string name="sources_signing_key_new">Нов ключ</string>
+    <string name="sources_signing_key_trust_message">Последната версия е подписана с различен ключ. Или разработчикът е заменил ключа си, или някой друг е публикувал тази версия. Доверете се на нея само ако разработчикът е обявил нов ключ</string>
+    <string name="sources_signing_key_trust_message_unsigned">Последната версия не е подписана. Или разработчикът е спрял да подписва версиите, или някой друг е публикувал тази версия. Доверете се на нея само ако разработчикът е обявил това</string>
+    <string name="sources_signing_key_trust_title">Доверявате ли се на новия ключ?</string>
+    <string name="sources_signing_key_trusted">Доверен ключ</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Локален файл</string>
     <string name="patch_source_dialog_name_label">Име</string>
@@ -622,8 +560,6 @@
     <string name="patch_source_dialog_repo_hint">Приема GitHub, GitLab или morphe.software/add-source връзка</string>
     <string name="patch_source_dialog_pre_release_title">Кръпки преди официално издание</string>
     <string name="patch_source_dialog_pre_release_hint">Получава ранен достъп до нови експериментални версии на кръпки</string>
-    <string name="patch_source_dialog_experimental_title">Експериментални версии на приложения</string>
-    <string name="patch_source_dialog_experimental_hint">Приоритизира експериментални версии на приложения, ако са налични</string>
     <string name="patch_source_dialog_error_name_required">Името е задължително</string>
     <string name="patch_source_dialog_error_invalid_url">Въведете валиден GitHub или GitLab URL</string>
     <string name="patch_source_dialog_error_invalid_file">Изберете валиден .mpp файл</string>
@@ -706,10 +642,8 @@
     <string name="settings_dialog_open_logs_button">Отвори журнали</string>
     <string name="settings_dialog_reset_button">Изчисти</string>
     <string name="settings_theme_system">Система</string>
-    <string name="settings_signing_error_not_found">Конфигурираното хранилище за ключове не е намерено: %1$s. Възстановете файла, изберете друг в Настройки или изчистете настройката, за да използвате подразбиращия се на Morphe</string>
     <string name="settings_search_languages_placeholder">Търсене на езици</string>
     <string name="settings_dialog_resolves_to_message">Разрешава се до: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Хранилището за ключове не е намерено: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Език</string>
     <string name="settings_language_current_title">Текущ език</string>
@@ -717,9 +651,13 @@
     <string name="settings_language_dialog_title">Език на приложението</string>
     <string name="settings_language_search_no_results">Няма намерени резултати</string>
     <string name="settings_section_theme">Тема</string>
+    <string name="settings_appearance_theme_mode">Режим на темата</string>
     <string name="settings_theme_light">Светлина</string>
     <string name="settings_theme_dark">Тъмна</string>
     <string name="settings_theme_amoled">AMOLED</string>
+    <string name="settings_appearance_color_style">Цветов стил</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Монохром</string>
     <string name="settings_toggle_sharp_corners_label">Остри ъгли</string>
     <string name="settings_toggle_sharp_corners_desc">Изправете ъглите на карти, диалози и бутони</string>
     <string name="settings_section_accent_color">Акцентен цвят</string>
@@ -729,9 +667,6 @@
     <string name="settings_section_app_cards">Карти на приложения</string>
     <string name="settings_app_cards_color_all">Цвят за всяка карта</string>
     <string name="settings_app_cards_color_all_desc">Карти, които сте персонализирали индивидуално, запазват своя цвят</string>
-    <string name="settings_section_patch_list">Списък с кръпки</string>
-    <string name="settings_toggle_patch_categories_label">Категории на кръпки</string>
-    <string name="settings_toggle_patch_categories_desc">Групирайте кръпките в разгъваеми категории</string>
     <string name="settings_section_background_animation">Фонова анимация</string>
     <string name="settings_background_circles">Кръгове</string>
     <string name="settings_background_rings">Пренци</string>
@@ -845,8 +780,22 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Превод</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Списъкът с промени не е наличен</string>
+    <string name="changelog_badge_installed">Инсталирано</string>
+    <string name="changelog_badge_latest">Най-нова</string>
+    <string name="changelog_badge_prerelease">Предварителна версия</string>
+    <string name="changelog_date_today">Днес</string>
+    <string name="changelog_date_yesterday">Вчера</string>
     <string name="changelog_dialog_title">Преглед на списъка с промени</string>
-    <string name="changelog_show_older_button">Показване на по-стари версии</string>
+    <string name="changelog_not_available">Списъкът с промени не е наличен</string>
+    <string name="changelog_section_app_support">Поддръжка на приложението</string>
+    <string name="changelog_section_fixes">Корекции</string>
+    <string name="changelog_section_improvements">Подобрения</string>
+    <string name="changelog_section_new">Ново</string>
+    <string name="changelog_section_other">Промени</string>
+    <string name="changelog_section_performance">Производителност</string>
+    <string name="changelog_show_less">Покажи по-малко</string>
     <string name="changelog_view_on_github_button">Преглед в GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Източници</string>
+    <string name="nav_apps">Приложения</string>
 </resources>

@@ -24,30 +24,6 @@
         <item quantity="many">%1$d джерел</item>
         <item quantity="other">%1$d джерел</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">Буде застосовано %1$d патч</item>
-        <item quantity="few">Буде застосовано %1$d патчі</item>
-        <item quantity="many">Буде застосовано %1$d патчів</item>
-        <item quantity="other">Буде застосовано %1$d патча</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d виключено</item>
-        <item quantity="few">%1$d виключено</item>
-        <item quantity="many">%1$d виключено</item>
-        <item quantity="other">%1$d виключено</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d увімкнено</item>
-        <item quantity="few">%1$d увімкнено</item>
-        <item quantity="many">%1$d увімкнено</item>
-        <item quantity="other">%1$d увімкнено</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d вимкнено</item>
-        <item quantity="few">%1$d вимкнено</item>
-        <item quantity="many">%1$d вимкнено</item>
-        <item quantity="other">%1$d вимкнено</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d бібліотека</item>
         <item quantity="few">%1$d бібліотеки</item>
@@ -83,5 +59,35 @@
         <item quantity="few">%1$d ядра</item>
         <item quantity="many">%1$d ядер</item>
         <item quantity="other">%1$d ядер</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d зміна</item>
+        <item quantity="few">%1$d зміни</item>
+        <item quantity="many">%1$d змін</item>
+        <item quantity="other">%1$d зміни</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d день тому</item>
+        <item quantity="few">%1$d дні тому</item>
+        <item quantity="many">%1$d днів тому</item>
+        <item quantity="other">%1$d днів тому</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d функція</item>
+        <item quantity="few">%1$d функції</item>
+        <item quantity="many">%1$d функцій</item>
+        <item quantity="other">%1$d функції</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d виправлення</item>
+        <item quantity="few">%1$d виправлення</item>
+        <item quantity="many">%1$d виправлень</item>
+        <item quantity="other">%1$d виправлення</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d оптимізація</item>
+        <item quantity="few">%1$d оптимізації</item>
+        <item quantity="many">%1$d оптимізацій</item>
+        <item quantity="other">%1$d оптимізації</item>
     </plurals>
 </resources>

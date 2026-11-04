@@ -16,22 +16,6 @@
         <item quantity="one">%1$d kilde</item>
         <item quantity="other">%1$d kilder</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch vil bli brukt</item>
-        <item quantity="other">%1$d patcher vil bli brukt</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d ekskludert</item>
-        <item quantity="other">%1$d ekskluderte</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d aktivert</item>
-        <item quantity="other">%1$d aktiverte</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d deaktivert</item>
-        <item quantity="other">%1$d deaktiverte</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d bibliotek</item>
         <item quantity="other">%1$d biblioteker</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d kjerne</item>
         <item quantity="other">%1$d kjerner</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d endring</item>
+        <item quantity="other">%1$d endringer</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">for %1$d dag siden</item>
+        <item quantity="other">for %1$d dager siden</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funksjon</item>
+        <item quantity="other">%1$d funksjoner</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d rettelse</item>
+        <item quantity="other">%1$d rettelser</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimalisering</item>
+        <item quantity="other">%1$d optimaliseringer</item>
     </plurals>
 </resources>

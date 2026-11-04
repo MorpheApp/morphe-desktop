@@ -16,22 +16,6 @@
         <item quantity="one">%1$d fonte</item>
         <item quantity="other">%1$d fonti</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch verrà applicata</item>
-        <item quantity="other">%1$d patch verranno applicate</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d esclusa</item>
-        <item quantity="other">%1$d escluse</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d abilitata</item>
-        <item quantity="other">%1$d abilitate</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d disabilitata</item>
-        <item quantity="other">%1$d disabilitate</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d libreria</item>
         <item quantity="other">%1$d librerie</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d nucleo</item>
         <item quantity="other">%1$d nuclei</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d modifica</item>
+        <item quantity="other">%1$d modifiche</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">%1$d giorno fa</item>
+        <item quantity="other">%1$d giorni fa</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d funzionalità</item>
+        <item quantity="other">%1$d funzionalità</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d correzione</item>
+        <item quantity="other">%1$d correzioni</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d ottimizzazione</item>
+        <item quantity="other">%1$d ottimizzazioni</item>
     </plurals>
 </resources>

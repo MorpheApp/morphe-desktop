@@ -13,6 +13,7 @@
     <string name="expand">Perluas</string>
     <string name="cancel">Batalkan</string>
     <string name="close">Tutup</string>
+    <string name="trust">Kepercayaan</string>
     <string name="delete">Hapus</string>
     <string name="disabled_while_patching">Dinonaktifkan saat menambal</string>
     <string name="drop_apk_here">Letakkan APK di sini</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">Koneksi terputus saat mengunduh, coba lagi</string>
     <string name="error_network_loading_patches">Kesalahan jaringan saat memuat tambalan</string>
     <string name="error_patch_file_not_found">Berkas tambalan tidak ditemukan: %1$s</string>
-    <string name="error_no_patches_files_supplied">Tidak ada berkas tambalan yang disediakan</string>
-    <string name="error_input_apk_not_found">APK masukan tidak ditemukan</string>
     <string name="error_step_failed">%1$s gagal: %2$s</string>
     <string name="error_drop_valid_apk">Letakkan berkas .apk, .apkm, .xapk, atau .apks yang valid</string>
     <string name="status_saving">Menyimpan…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">Filter aplikasi…</string>
     <string name="version">Versi</string>
     <string name="version_label_stable">Stabil</string>
-    <string name="version_label_dev">Dev</string>
+    <string name="version_label_prerelease">Prarilis</string>
     <string name="version_label_experimental">Eksperimental</string>
-    <string name="version_label_latest_dev">Dev Terbaru</string>
     <string name="version_label_latest_stable">Stabil Terbaru</string>
+    <string name="version_label_recommended">Direkomendasikan</string>
+    <string name="version_label_supported">Didukung</string>
     <string name="app_info_arch_label">Arsitektur</string>
     <string name="app_info_min_sdk_label">SDK Minimum</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">Penambalan dibatalkan</string>
     <string name="view_full_logs_button">Lihat log lengkap</string>
     <string name="error_patching_unknown">Penambalan gagal karena alasan yang tidak diketahui</string>
-    <string name="error_patching_general">Kesalahan: %1$s</string>
     <string name="error_log_label">Log kesalahan</string>
     <string name="back">Kembali</string>
     <string name="open_folder">Buka folder</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">Berapa pun jumlah titik, linear, radial, atau kerucut</string>
     <string name="card_fill_mode_solid">Solid</string>
     <string name="card_fill_mode_solid_blurb">Satu warna datar</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">Tambalan</string>
-    <string name="quick_patch_screen_start_over_button">Mulai ulang</string>
-    <string name="quick_patch_patch_another_button">Tambal lainnya</string>
-    <string name="quick_patch_select_apk">Pilih APK</string>
-    <string name="quick_patch_analyze_apk_failed">Gagal menganalisis APK</string>
-    <string name="quick_patch_extract_base_apk_failed">Gagal mengekstrak APK dasar dari paket</string>
-    <string name="quick_patch_unsupported_app_error">%1$s tidak didukung dalam mode Quick Patch. Aplikasi yang didukung: %2$s. Gunakan mode Normal untuk aplikasi yang tidak didukung</string>
     <string name="adb_install_on_button">Pasang di %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Memuat tambalan</string>
-    <string name="patching_step_preparing">Menyiapkan</string>
     <string name="patching_step_merging_split_apk">Menggabungkan APK split</string>
     <string name="patching_step_read_apk">Membaca berkas APK</string>
     <string name="patching_step_applying_patches">Menerapkan tambalan</string>
-    <string name="patching_step_saving">Menyimpan</string>
     <string name="patching_step_writing_apk">Menulis berkas APK yang ditambal</string>
     <string name="patching_step_signing">Menandatangani berkas APK yang ditambal</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">Berkas mungkin rusak, unduh ulang dari APKMirror</string>
     <string name="version_status_checksum_failed">Verifikasi checksum gagal</string>
     <string name="version_status_checksum_matches">Checksum cocok dengan APKMirror</string>
-    <string name="version_status_older_stable">Stabil lama</string>
     <string name="version_status_newer_stable_available">Tersedia stable v%1$s yang lebih baru</string>
     <string name="version_status_newer_stable_available_fallback">Tersedia versi stable yang lebih baru</string>
     <string name="version_status_experimental_detail">Didukung, tetapi mungkin tidak berfungsi dengan baik</string>
-    <string name="version_status_older_experimental">Eksperimental lama</string>
-    <string name="version_status_newer_experimental_available">Tersedia eksperimental v%1$s yang lebih baru</string>
-    <string name="version_status_newer_experimental_available_fallback">Tersedia build eksperimental yang lebih baru</string>
-    <string name="version_status_too_new">Versi terlalu baru</string>
     <string name="version_status_unsupported_detail">Tidak didukung secara resmi, tambalan kemungkinan besar akan gagal</string>
-    <string name="version_status_too_old">Versi terlalu lama</string>
     <string name="version_status_unsupported">Versi tidak didukung</string>
     <string name="version_status_build_unsupported">Build tidak didukung</string>
     <string name="version_status_build_unsupported_detail">Versi ini didukung, tetapi bukan build ini. Dapatkan build yang menjadi target tambalan</string>
+    <string name="version_status_build_unsupported_with_code">Tambalan memerlukan build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Pemberitahuan versi</string>
+    <string name="version_warning_build_unsupported_message">Saat ini: v%1$s (build %2$s)\nBuild yang diperlukan: %3$s\n\nIni adalah build yang berbeda dari versi yang sama. Tambalan memerlukan build tertentu.</string>
     <string name="version_warning_experiment_title">Apakah Anda ingin bereksperimen? 🧪</string>
-    <string name="version_warning_older_stable_title">Versi stable lama</string>
-    <string name="version_warning_older_stable_message">Saat ini: v%1$s\nVersi stabil terbaru: v%2$s\n\nVersi ini didukung, tetapi tersedia versi stabil yang lebih baru. Anda mungkin kehilangan perbaikan terbaru.</string>
     <string name="version_warning_latest_experimental_message">Saat ini: v%1$s\n\nVersi ini memiliki dukungan eksperimental awal\n\n🔧 Waspadai perilaku aplikasi yang aneh atau bug yang belum teridentifikasi selama tambalan disempurnakan untuk versi aplikasi ini.</string>
-    <string name="version_warning_older_experimental_title">Versi eksperimental yang lebih lama\nApakah Anda ingin bereksperimen? 🧪</string>
-    <string name="version_warning_older_experimental_message">Saat ini: v%1$s\nVersi eksperimental terbaru: v%2$s\n\nIni adalah build eksperimental yang didukung, tetapi tersedia versi eksperimental yang lebih baru. Waspadai perilaku aplikasi yang aneh atau bug yang belum teridentifikasi selama tambalan disempurnakan untuk versi aplikasi ini.</string>
-    <string name="version_warning_too_new_message">Saat ini: v%1$s\nVersi terbaru yang diketahui: v%2$s\n\nVersi ini memiliki dukungan eksperimental awal\n\n🔧 Waspadai perilaku aplikasi yang aneh atau bug yang belum teridentifikasi selama tambalan disempurnakan untuk versi aplikasi ini.</string>
-    <string name="version_warning_too_old_message">Saat ini: v%1$s\nVersi tertua yang didukung: v%2$s\n\nIni bukan versi yang didukung secara resmi. Tambalan kemungkinan besar akan gagal.</string>
     <string name="version_warning_unsupported_message">Saat ini: v%1$s\n\nIni bukan versi yang didukung secara resmi. Tambalan kemungkinan besar akan gagal.</string>
     <string name="version_warning_notice_message">Lanjutkan dengan v%1$s?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">Build stable lama - tersedia stable v%1$s yang lebih baru</string>
-    <string name="quick_patch_warning_latest_experimental">Build eksperimental - didukung, tetapi mungkin tidak berfungsi dengan baik</string>
-    <string name="quick_patch_warning_older_experimental">Build eksperimental lama - tersedia eksperimental v%1$s yang lebih baru</string>
-    <string name="quick_patch_warning_build_unsupported">Build tidak didukung - versi ini bisa ditambal, tetapi bukan build ini</string>
-    <string name="quick_patch_warning_too_new">Versi terlalu baru - tidak didukung secara resmi, tambalan kemungkinan besar akan gagal</string>
-    <string name="quick_patch_warning_too_old">Versi terlalu lama - tidak didukung secara resmi, tambalan kemungkinan besar akan gagal</string>
-    <string name="quick_patch_warning_unsupported_between">Versi tidak didukung - tambalan kemungkinan besar akan gagal</string>
-    <string name="quick_patch_read_apk_failed">Gagal membaca APK: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">Menyiapkan tambalan…</string>
-    <string name="quick_patch_fetch_patches_failed">Gagal mengambil tambalan. Periksa koneksi internet Anda</string>
-    <string name="quick_patch_status_downloading_patches">Mengunduh tambalan %1$s…</string>
-    <string name="quick_patch_download_patches_failed">Gagal mengunduh tambalan: %1$s</string>
-    <string name="quick_patch_status_patching">Menambal…</string>
-    <string name="quick_patch_completed_adb_off">ADB mati · Aktifkan untuk memasang</string>
-    <string name="quick_patch_completed_adb_connect_device">Hubungkan perangkat melalui USB untuk memasang dengan ADB</string>
-    <string name="quick_patch_error_unknown_occurred">Terjadi kesalahan yang tidak diketahui</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">Menganalisis APK…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d tambalan</string>
-    <string name="quick_patch_patching_slow_warning">Ini memakan waktu lebih lama dari biasanya. Harap tunggu…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(kode versi %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">Tidak ada tambalan yang kompatibel untuk aplikasi ini</string>
-    <string name="quick_patch_ready_no_matching_patches">Tidak ada tambalan yang cocok dengan \"%1$s\"</string>
-    <string name="quick_patch_ready_patch_with_defaults">Tambal dengan default</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">Aplikasi yang didukung</string>
-    <string name="quick_patch_supported_apps_subtitle">Letakkan versi APK yang tepat untuk aplikasi yang didukung di sini</string>
-    <string name="quick_patch_supported_apps_loading">Memuat aplikasi yang didukung…</string>
-    <string name="quick_patch_supported_apps_load_error">Tidak dapat memuat aplikasi yang didukung</string>
-    <string name="quick_patch_supported_apps_change_source">Ganti sumber</string>
-    <string name="quick_patch_supported_apps_no_matches">Tidak ada aplikasi yang cocok</string>
-    <string name="quick_patch_supported_apps_version_any">Versi apa pun</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Pilih berkas APK</string>
     <string name="home_could_not_resolve_patch_files">Tidak dapat menemukan berkas tambalan</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">Hapus APK</string>
     <string name="home_apk_info_limited_info_warning">Tidak dapat membaca manifes APK ini sepenuhnya (umum untuk paket split). Detail di bawah ini adalah perkiraan, penambalan seharusnya tetap berfungsi</string>
     <string name="home_apk_info_unsupported_app_warning">Tidak ada tambalan yang kompatibel untuk aplikasi ini. Anda tetap dapat melanjutkan, tetapi penambalan mungkin tidak berpengaruh</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">Tidak ada tambalan yang kompatibel ditemukan untuk aplikasi ini</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Ukuran</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Dari</string>
     <string name="home_stage_change_apk">Ganti APK</string>
     <string name="home_stage_continue">Lanjutkan</string>
+    <string name="home_stage_patch">Tambal</string>
     <string name="home_stage_analyzing_title">Menganalisis</string>
     <string name="home_stage_reading_metadata">Membaca metadata aplikasi…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">Hapus instalan %1$s?</string>
     <string name="home_dialog_uninstall_message">Ini akan menghapus %1$s dari perangkat yang terhubung. APK hasil tambalan di disk dan riwayat Anda tetap disimpan kecuali Anda memilih sebaliknya di bawah</string>
     <string name="home_dialog_uninstall_also_forget">Juga hapus dari aplikasi Anda</string>
-    <string name="home_dialog_missing_apk_title">APK asli tidak ditemukan</string>
-    <string name="home_dialog_missing_apk_message">APK masukan untuk %1$s tidak lagi berada di:\n%2$s\n\nPilih APK tersebut lagi untuk menambal ulang dengan pengaturan tersimpan Anda</string>
-    <string name="home_dialog_select_apk">Pilih APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">Pilih APK untuk ditambal ulang</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Kelola sumber</string>
     <string name="home_header_multi_source_hint">Tambalan dari setiap sumber yang diaktifkan digabungkan. Kelola melalui tombol sumber di atas</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">Aplikasi Anda</string>
     <string name="home_banner_view">Lihat</string>
     <string name="home_your_apps_install_ready">Siap dipasang</string>
-    <string name="home_your_apps_newer_patch_hint">Tambalan yang lebih baru dapat menaikkan aplikasi, klik Perbarui untuk memeriksa</string>
-    <string name="home_your_apps_device_version_ready">Hasil tambalan v%1$s siap, perangkat pada v%2$s (tidak perlu menambal ulang)</string>
-    <string name="home_your_apps_install_ready_hint">Hasil tambalan v%1$s siap dipasang (tidak perlu ditambal ulang)</string>
-    <string name="home_action_install">Pasang</string>
     <string name="home_action_install_to_device">Pasang ke perangkat</string>
     <string name="home_action_installing">Memasang…</string>
     <string name="home_action_preparing">Menyiapkan…</string>
@@ -329,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s siap · perangkat pada v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s siap, tidak perlu menambal ulang</string>
-    <string name="home_advice_unsupported">v%1$s tidak lagi didukung. Perbarui ke v%2$s</string>
+    <string name="home_detail_source_disabled">Tidak aktif</string>
+    <string name="home_detail_source_removed">Dihapus</string>
+    <string name="home_detail_source_disabled_sub">Sumber dinonaktifkan di Sumber. Aktifkan untuk menambal ulang</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Sumber asli dinonaktifkan. Pilih sumber alternatif atau aktifkan kembali di Sumber</string>
+    <string name="home_detail_no_compatible_source">Tidak ada sumber kompatibel yang diaktifkan</string>
+    <string name="home_detail_choose_source">Pilih sumber tambalan</string>
     <string name="home_advice_unsupported_by_patches">v%1$s tidak lagi didukung oleh tambalan terbaru</string>
     <string name="home_date_today">hari ini</string>
     <string name="home_date_yesterday">kemarin</string>
@@ -427,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">Tanpa grup</string>
     <string name="patch_selection_group_selected_count">%1$d dipilih</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">Mulai dari awal</string>
+    <string name="patching_patches_count">%1$d / %2$d tambalan</string>
+    <string name="patching_slow_warning">Ini memakan waktu lebih lama dari biasanya. Harap tunggu…</string>
     <string name="patching_status_ready">Siap menambal</string>
     <string name="patching_status_preparing">Menyiapkan penambalan</string>
     <string name="patching_status_in_progress">Menerapkan tambalan</string>
     <string name="patching_completed_loading_result">Penambalan selesai, memuat hasil…</string>
-    <string name="patching_cancelled_loading_result">Penambalan dibatalkan, memuat hasil…</string>
+    <string name="patching_cancelled_loading_result">Patching dibatalkan, memuat hasil…</string>
     <string name="patching_failed_loading_result">Penambalan gagal, memuat hasil…</string>
     <string name="patching_log_viewer_failed_to_read">Gagal membaca berkas log: %1$s</string>
     <string name="patching_log_viewer_title">Berkas log</string>
@@ -450,7 +397,7 @@
     <string name="patching_banner_no">Tidak</string>
     <string name="patching_banner_desktop">Desktop</string>
     <string name="patching_banner_patcher">Penambal</string>
-    <string name="patching_banner_runtime">Runtime</string>
+    <string name="patching_banner_runtime">Waktu proses</string>
     <string name="patching_banner_native_libs">Lib native</string>
     <string name="patching_banner_os">OS</string>
     <string name="patching_banner_arch">Arsitektur</string>
@@ -467,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">Dibuang</string>
     <string name="patching_error_failed_patches">Tambalan yang gagal: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB nonaktif · Aktifkan untuk menginstal</string>
+    <string name="result_adb_connect_device_hint">Hubungkan perangkat melalui USB untuk menginstal dengan ADB</string>
     <string name="result_screen_patch_another_button">Tambal lainnya</string>
     <string name="result_screen_install_on_device_label">Pasang di %1$s</string>
     <string name="result_screen_links_routed_label">Tautan diarahkan ke aplikasi yang ditambal</string>
@@ -566,13 +515,12 @@
     <string name="source_error_failed_to_load">Gagal memuat</string>
     <string name="source_error_github_pat_required">PAT GitHub diperlukan untuk mengunduh sumber pull request</string>
     <string name="source_error_pr_no_artifact">Tidak ada artefak yang ditemukan untuk pull request</string>
-    <string name="source_sheet_manage_description">Kelola sumber tambalan</string>
-    <string name="source_sheet_local_label">Lokal</string>
+    <string name="source_error_patcher_incompatible">Sumber ini dibuat untuk penambal %1$s, tetapi Morphe %2$s menyertakan penambal %3$s. Perbarui Morphe untuk menggunakannya</string>
+    <string name="version_label_local">Lokal</string>
     <string name="source_sheet_remote_label">Daring</string>
     <string name="add_source">Tambahkan sumber</string>
     <string name="source_sheet_title">Sumber tambalan</string>
     <string name="source_sheet_reload_description">Muat ulang tambalan</string>
-    <string name="source_sheet_quick_mode_hint">Pilih sumber yang digunakan Quick Patch. Multi-sumber tersedia dalam mode Expert</string>
     <string name="source_sheet_multi_mode_hint">Aktifkan/Nonaktifkan kombinasi apa pun. Tambalan dari semua sumber yang diaktifkan digabungkan</string>
     <string name="source_sheet_done_button">Selesai</string>
     <string name="source_sheet_type_preinstalled">Sudah dipasang sebelumnya</string>
@@ -582,13 +530,21 @@
     <string name="source_sheet_edit_description">Sunting</string>
     <string name="source_sheet_move_up_description">Pindah ke atas</string>
     <string name="source_sheet_move_down_description">Pindah ke bawah</string>
-    <string name="source_sheet_channel_older_stable">Stable lama</string>
-    <string name="source_sheet_channel_older_dev">Dev lama</string>
     <string name="source_sheet_ignored_mpp_title">Pola .mpp yang diabaikan</string>
-    <string name="source_sheet_ignored_mpp_hint">Hanya memengaruhi sumber folder, yang memuat .mpp terbaru secara otomatis. Saat memilih build terbaru itu, berkas yang namanya cocok dengan pola di sini dilewati. Kata polos cocok dengan berkas apa pun yang mengandungnya (mis. debug). Gunakan * untuk glob (mis. *-debug.mpp). *-sources.mpp dan *-javadoc.mpp selalu diabaikan</string>
+    <string name="source_sheet_ignored_mpp_hint">Hanya memengaruhi sumber folder, yang memuat otomatis .mpp terbaru dalam folder. Saat memilih build terbaru tersebut, berkas yang namanya cocok dengan pola di sini akan dilewati. Kata biasa cocok dengan berkas apa pun yang mengandung kata tersebut (misal: debug). Gunakan * untuk glob (misal: *-debug.mpp). *-sources.mpp dan *-javadoc.mpp selalu diabaikan</string>
     <string name="source_sheet_ignored_mpp_placeholder">mis. debug atau *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Tambahkan pola</string>
     <string name="source_sheet_remove_pattern_description">Hapus pola</string>
+    <string name="sources_management_signed_by">Ditandatangani oleh</string>
+    <string name="sources_management_signing_key_changed_badge">Kunci berubah</string>
+    <string name="sources_management_signing_key_changed_hint">Kunci penandatanganan berubah. Klik untuk meninjaunya</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' tidak diperbarui karena rilis terbarunya tidak ditandatangani oleh kunci yang digunakan sebelumnya</string>
+    <string name="sources_signing_key_new">Kunci baru</string>
+    <string name="sources_signing_key_trust_message">Rilis terbaru ditandatangani oleh kunci yang berbeda. Pengembang mungkin telah mengganti kuncinya, atau orang lain yang menerbitkan rilis ini. Percayai hanya jika pengembang telah mengumumkan kunci baru</string>
+    <string name="sources_signing_key_trust_message_unsigned">Rilis terbaru tidak ditandatangani. Pengembang mungkin telah berhenti menandatangani rilis, atau orang lain yang menerbitkan rilis ini. Percayai hanya jika pengembang telah mengumumkannya</string>
+    <string name="sources_signing_key_trust_title">Percayai kunci baru?</string>
+    <string name="sources_signing_key_trusted">Kunci tepercaya</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Berkas lokal</string>
     <string name="patch_source_dialog_name_label">Nama</string>
@@ -598,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">Menerima tautan GitHub, GitLab, atau morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Tambalan pra-rilis</string>
     <string name="patch_source_dialog_pre_release_hint">Menerima akses dini ke versi eksperimental tambalan baru</string>
-    <string name="patch_source_dialog_experimental_title">Versi aplikasi eksperimental</string>
-    <string name="patch_source_dialog_experimental_hint">Mengutamakan versi aplikasi eksperimental jika tersedia</string>
     <string name="patch_source_dialog_error_name_required">Nama wajib diisi</string>
     <string name="patch_source_dialog_error_invalid_url">Masukkan URL GitHub atau GitLab yang valid</string>
     <string name="patch_source_dialog_error_invalid_file">Pilih berkas .mpp yang valid</string>
@@ -682,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">Buka log</string>
     <string name="settings_dialog_reset_button">Setel ulang</string>
     <string name="settings_theme_system">Sistem</string>
-    <string name="settings_signing_error_not_found">Keystore yang dikonfigurasi tidak ditemukan: %1$s. Pulihkan berkasnya, pilih yang lain di Setelan, atau kosongkan setelan untuk menggunakan default Morphe</string>
     <string name="settings_search_languages_placeholder">Cari bahasa</string>
     <string name="settings_dialog_resolves_to_message">Teratasi menjadi: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">Keystore tidak ditemukan: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Bahasa</string>
     <string name="settings_language_current_title">Bahasa saat ini</string>
@@ -693,9 +645,13 @@
     <string name="settings_language_dialog_title">Bahasa aplikasi</string>
     <string name="settings_language_search_no_results">Tidak ada hasil yang ditemukan</string>
     <string name="settings_section_theme">Tema</string>
+    <string name="settings_appearance_theme_mode">Mode tema</string>
     <string name="settings_theme_light">Terang</string>
     <string name="settings_theme_dark">Gelap</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">Gaya warna</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">Monokrom</string>
     <string name="settings_toggle_sharp_corners_label">Sudut tajam</string>
     <string name="settings_toggle_sharp_corners_desc">Membuat kartu, dialog, dan tombol menjadi persegi</string>
     <string name="settings_section_accent_color">Warna aksen</string>
@@ -705,9 +661,6 @@
     <string name="settings_section_app_cards">Kartu aplikasi</string>
     <string name="settings_app_cards_color_all">Warna untuk setiap kartu</string>
     <string name="settings_app_cards_color_all_desc">Kartu yang Anda sesuaikan secara individual tetap memiliki warnanya sendiri</string>
-    <string name="settings_section_patch_list">Daftar tambalan</string>
-    <string name="settings_toggle_patch_categories_label">Kategori tambalan</string>
-    <string name="settings_toggle_patch_categories_desc">Kelompokkan tambalan ke dalam kategori yang dapat diperluas</string>
     <string name="settings_section_background_animation">Animasi latar belakang</string>
     <string name="settings_background_circles">Lingkaran</string>
     <string name="settings_background_rings">Cincin</string>
@@ -796,7 +749,7 @@
     <string name="settings_cert_warning_alias_not_found">Alias \"%1$s\" tidak ditemukan di keystore</string>
     <string name="settings_cert_warning_key_password_incorrect">Kata sandi kunci salah untuk alias \"%1$s\"</string>
     <!-- Settings - Runtime Logs -->
-    <string name="settings_runtime_logs_title">Log runtime aplikasi hasil tambalan</string>
+    <string name="settings_runtime_logs_title">Log waktu proses aplikasi hasil tambalan</string>
     <string name="settings_runtime_logs_desc">Rekam log dari ponsel Anda setelah aplikasi yang ditambal crash atau bermasalah. Bersihkan sebelum mereproduksi bug, lalu simpan output yang difilter untuk dilampirkan ke laporan bug</string>
     <string name="settings_runtime_logs_device_info">Perangkat: %1$s</string>
     <string name="settings_runtime_logs_no_device">Tidak ada perangkat terhubung. Colokkan ponsel Anda dengan USB debugging diaktifkan</string>
@@ -821,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">Terjemahkan</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">Changelog tidak tersedia</string>
+    <string name="changelog_badge_installed">Terpasang</string>
+    <string name="changelog_badge_latest">Terbaru</string>
+    <string name="changelog_badge_prerelease">Pra-rilis</string>
+    <string name="changelog_date_today">Hari ini</string>
+    <string name="changelog_date_yesterday">Kemarin</string>
     <string name="changelog_dialog_title">Lihat changelog</string>
-    <string name="changelog_show_older_button">Tampilkan rilis yang lebih lama</string>
+    <string name="changelog_not_available">Changelog tidak tersedia</string>
+    <string name="changelog_section_app_support">Dukungan aplikasi</string>
+    <string name="changelog_section_fixes">Perbaikan</string>
+    <string name="changelog_section_improvements">Peningkatan</string>
+    <string name="changelog_section_new">Baru</string>
+    <string name="changelog_section_other">Perubahan</string>
+    <string name="changelog_section_performance">Performa</string>
+    <string name="changelog_show_all">Tampilkan semua (%1$d)</string>
+    <string name="changelog_show_less">Tampilkan lebih sedikit</string>
     <string name="changelog_view_on_github_button">Lihat di GitHub</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">Sumber</string>
+    <string name="nav_apps">Aplikasi</string>
 </resources>

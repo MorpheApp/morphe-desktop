@@ -13,6 +13,7 @@
     <string name="expand">አስፋው</string>
     <string name="cancel">ሰርዝ</string>
     <string name="close">ዝጋ</string>
+    <string name="trust">እምነት</string>
     <string name="delete">ሰርዝ</string>
     <string name="disabled_while_patching">በማስተካከያ ወቅት አይሰራም</string>
     <string name="drop_apk_here">APK እዚህ ላይ ያስቀምጡ</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">በማውረድ ላይ ሳለ ግንኙነቱ ተቋርጧል፣ እንደገና ይሞክሩ</string>
     <string name="error_network_loading_patches">ፓቾችን በሚጭንበት ወቅት የኔትወርክ ስህተት ተከስቷል</string>
     <string name="error_patch_file_not_found">የፓች ፋይል አልተገኘም: %1$s</string>
-    <string name="error_no_patches_files_supplied">ምንም የፓች ፋይሎች አልቀረቡም</string>
-    <string name="error_input_apk_not_found">የገባው APK አልተገኘም</string>
     <string name="error_step_failed">%1$s አልተሳካም: %2$s</string>
     <string name="error_drop_valid_apk">እባክዎን ትክክለኛ .apk, .apkm, .xapk ወይም .apks ፋይል ያስቀምጡ</string>
     <string name="status_saving">በመጫን ላይ…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">መተግበሪያዎችን ፈልግ…</string>
     <string name="version">ስሪት</string>
     <string name="version_label_stable">የተረጋጋ</string>
-    <string name="version_label_dev">የልማት</string>
+    <string name="version_label_prerelease">ቅድመ-የመልቀቂያ ስሪት</string>
     <string name="version_label_experimental">ሙከራ</string>
-    <string name="version_label_latest_dev">የቅርብ ጊዜ ልማት</string>
     <string name="version_label_latest_stable">የቅርብ ጊዜ የተረጋጋ</string>
+    <string name="version_label_recommended">የሚመከር</string>
+    <string name="version_label_supported">የሚደገፍ</string>
     <string name="app_info_arch_label">አርክ</string>
     <string name="app_info_min_sdk_label">አነስተኛ SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">ፓቺንግ ተሰርዟል</string>
     <string name="view_full_logs_button">ሙሉ ሎጎችን ይመልከቱ</string>
     <string name="error_patching_unknown">ፓቺንግ ባልታወቀ ምክንያት አልተሳካም</string>
-    <string name="error_patching_general">ስህተት: %1$s</string>
     <string name="error_log_label">የስህተት ሎግ</string>
     <string name="back">ተመለስ</string>
     <string name="open_folder">ፎልደር ክፈት</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">ማንኛውም ቁጥር ያላቸው ስቶፖች፣ ሊኒየር፣ ራዲያል ወይም ኮኒክ</string>
     <string name="card_fill_mode_solid">ሶሊድ</string>
     <string name="card_fill_mode_solid_blurb">አንድ ወጥ ቀለም</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">ፓቾች</string>
-    <string name="quick_patch_screen_start_over_button">ከመጀመሪያው ይጀምሩ</string>
-    <string name="quick_patch_patch_another_button">ሌላውን ፓች አድርግ</string>
-    <string name="quick_patch_select_apk">APK ይምረጡ</string>
-    <string name="quick_patch_analyze_apk_failed">APKን ለመተንተን አልተቻለም</string>
-    <string name="quick_patch_extract_base_apk_failed">መሰረታዊውን APK ከባንድል ውስጥ ለማውጣት አልተቻለም</string>
-    <string name="quick_patch_unsupported_app_error">%1$s በQuick Patch ሁነታ ውስጥ አይደገፍም። የሚደገፉ መተግበሪያዎች፡ %2$s። ለማይደገፉ መተግበሪያዎች Normal ሁነታን ይጠቀሙ</string>
     <string name="adb_install_on_button">በ %1$s ላይ ይጫኑ</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">ፓቾች እየተጫኑ ነው</string>
-    <string name="patching_step_preparing">እየተዘጋጀ ነው</string>
     <string name="patching_step_merging_split_apk">የተከፋፈለ APKን ማዋሃድ</string>
     <string name="patching_step_read_apk">የ APK ፋይልን ማንበብ</string>
     <string name="patching_step_applying_patches">ፓቾችን ተግባራዊ ማድረግ</string>
-    <string name="patching_step_saving">ማስቀመጥ</string>
     <string name="patching_step_writing_apk">የተጠገነ የ APK ፋይልን መጻፍ</string>
     <string name="patching_step_signing">የተጠገነ የ APK ፋይልን መፈረም</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">ፋይሉ ተበላሽቶ ሊሆን ይችላል፣ ከAPKMirror እንደገና ያውርዱ</string>
     <string name="version_status_checksum_failed">የቼክሰም ማረጋገጫ አልተሳካም</string>
     <string name="version_status_checksum_matches">ቼክሰሙ ከAPKMirror ጋር ይጣጣማል</string>
-    <string name="version_status_older_stable">የበለጠ የቆየ የተረጋጋ ስሪት</string>
     <string name="version_status_newer_stable_available">አዲስ የተረጋጋ ስሪት v%1$s ይገኛል</string>
     <string name="version_status_newer_stable_available_fallback">አዲስ የተረጋጋ ስሪት ይገኛል</string>
     <string name="version_status_experimental_detail">የሚደገፍ ነው፣ ነገር ግን በትክክል ላይሰራ ይችላል</string>
-    <string name="version_status_older_experimental">የቆየ ሙከራ</string>
-    <string name="version_status_newer_experimental_available">አዲስ የሙከራ ስሪት v%1$s ይገኛል</string>
-    <string name="version_status_newer_experimental_available_fallback">አዲስ የሙከራ ግንባታ ይገኛል</string>
-    <string name="version_status_too_new">ስሪቱ በጣም አዲስ ነው</string>
     <string name="version_status_unsupported_detail">በይፋ አይደገፈውም፣ ፓቾች kemungkinan ከፍተኛ ውድቀት ሊያጋጥማቸው ይችላል</string>
-    <string name="version_status_too_old">ስሪቱ በጣም የቆየ ነው</string>
     <string name="version_status_unsupported">የማይደገፍ ስሪት</string>
     <string name="version_status_build_unsupported">ግንባታው አይደገፍም</string>
     <string name="version_status_build_unsupported_detail">ይህ ስሪት ይደገፋል፣ ነገር ግን ይህ የግንባታ ዓይነት አይደገፍም። ፓ patches የሚፈለገውን ግንባታ ያግኙ</string>
+    <string name="version_status_build_unsupported_with_code">ፓቾች ግንባታ %1$s ይፈልጋሉ</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">የስሪት ማሳሰቢያ</string>
+    <string name="version_warning_build_unsupported_message">የአሁኑ፡ v%1$s (ግንባታ %2$s)\nየሚፈለገው ግንባታ፡ %3$s\n\nይህ የአንድ ስሪት የተለየ ግንባታ ነው። ፓቾች የተለየ ግንባታ ይፈልጋሉ።</string>
     <string name="version_warning_experiment_title">መሞከር ይፈልጋሉ? 🧪</string>
-    <string name="version_warning_older_stable_title">የቆየ የተረጋጋ ስሪት</string>
-    <string name="version_warning_older_stable_message">አሁናዊ፡ v%1$s\nየቅርብ ጊዜ የተረጋጋ፡ v%2$s\n\nይህ ስሪት የሚደገፍ ነው፣ ነገር ግን አዲስ የተረጋጋ ስሪት አለ። የቅርብ ጊዜ ማስተካከያዎች ሊያጥፉ ይችላሉ።</string>
     <string name="version_warning_latest_experimental_message">አሁናዊ፡ v%1$s\n\nይህ ስሪት የመጀመሪያ ደረጃ የሙከራ ድጋፍ አለው\n\n🔧 ለዚህ የአፕ ስሪት ማስተካከያዎች እየተደረጉ ስለሆነ ያልተለመደ የአፕ ባህሪ ወይም ያልታወቁ ስህተቶች ሊያጋጥሙ ይችላሉ።</string>
-    <string name="version_warning_older_experimental_title">የቆየ የሙከራ ስሪት\nመሞከር ይፈልጋሉ? 🧪</string>
-    <string name="version_warning_older_experimental_message">አሁናዊ፡ v%1$s\nየቅርብ ጊዜ የሙከራ፡ v%2$s\n\nይህ የሚደገፍ የሙከራ ግንባታ ነው፣ ነገር ግን አዲስ የሙከራ ስሪት አለ። ለዚህ የአፕ ስሪት ማስተካከያዎች እየተደረጉ ስለሆነ ያልተለመደ የአፕ ባህሪ ወይም ያልታወቁ ስህተቶች ሊያጋጥሙ ይችላሉ።</string>
-    <string name="version_warning_too_new_message">አሁናዊ፡ v%1$s\nየታወቀው አዲሱ፡ v%2$s\n\nይህ ስሪት የመጀመሪያ ደረጃ የሙከራ ድጋፍ አለው\n\n🔧 ለዚህ የአፕ ስሪት ማስተካከያዎች እየተደረጉ ስለሆነ ያልተለመደ የአፕ ባህሪ ወይም ያልታወቁ ስህተቶች ሊያጋጥሙ ይችላሉ።</string>
-    <string name="version_warning_too_old_message">አሁናዊ፡ v%1$s\nበጣም የቆየው የሚደገፍ፡ v%2$s\n\nይህ በይፋ የሚደገፍ ስሪት አይደለም። ማስተካከያዎች höchst likely ይወድቃሉ።</string>
     <string name="version_warning_unsupported_message">አሁን ያለው፡ v%1$s\n\nይህ በይፋ የሚደገፍ ስሪት አይደለም። ፓቾች ሳይሰሩ ሊቀሩ ይችላሉ።</string>
     <string name="version_warning_notice_message">በ v%1$s ይቀጥሉ?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">የቆየ የተረጋጋ ግንባታ - አዲስ የተረጋጋ v%1$s ይገኛል</string>
-    <string name="quick_patch_warning_latest_experimental">የሙከራ ግንባታ - የሚደገፍ ነው፣ ነገር ግን በትክክል ላይሰራ ይችላል</string>
-    <string name="quick_patch_warning_older_experimental">የቆየ የሙከራ ግንባታ - አዲስ የሙከራ v%1$s ይገኛል</string>
-    <string name="quick_patch_warning_build_unsupported">ግንባታው የማይደገፍ ነው - ይህ ስሪት ፓች ሊደረግ ይችላል፣ ነገር ግን ይህ ግንባታው አይቻልም</string>
-    <string name="quick_patch_warning_too_new">ስሪቱ በጣም አዲስ ነው - በይፋ የማይደገፍ ነው፣ ፓቾች ሳይሰሩ ሊቀሩ ይችላሉ</string>
-    <string name="quick_patch_warning_too_old">ስሪቱ በጣም የቆየ ነው - በይፋ የማይደገፍ ነው፣ ፓቾች ሳይሰሩ ሊቀሩ ይችላሉ</string>
-    <string name="quick_patch_warning_unsupported_between">የማይደገፍ ስሪት - ፓቾች ሳይሰሩ ሊቀሩ ይችላሉ</string>
-    <string name="quick_patch_read_apk_failed">APK ለማንበብ አልተቻለም: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">ፓቾች እየተዘጋጁ ነው…</string>
-    <string name="quick_patch_fetch_patches_failed">ፓቾችን ለማግኘት አልተቻለም። እባክዎን የኢንተርኔት ግንኙነትዎን ያረጋግጡ</string>
-    <string name="quick_patch_status_downloading_patches">ፓቾች እየወረዱ ነው %1$s…</string>
-    <string name="quick_patch_download_patches_failed">ፓቾችን ማውረድ አልተቻለም: %1$s</string>
-    <string name="quick_patch_status_patching">ፓቺንግ እየተደረገ ነው…</string>
-    <string name="quick_patch_completed_adb_off">ADB ጠፍቷል · ለመጫን ያብሩት</string>
-    <string name="quick_patch_completed_adb_connect_device">በADB ለመጫን መሳሪያን በUSB ያገናኙ</string>
-    <string name="quick_patch_error_unknown_occurred">ያልታወቀ ስህተት ተፈጥሯል</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK በመተንተን ላይ…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d ፓቾች</string>
-    <string name="quick_patch_patching_slow_warning">ይህ ከተለመደው የበለጠ ጊዜ እየወሰደ ነው። እባክዎን ይጠብቁ…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(ቢልድ %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">ለዚህ መተግበሪያ ተኳሃኝ ፓቾች የሉም</string>
-    <string name="quick_patch_ready_no_matching_patches">ከ\"%1$s\" ጋር የሚዛመዱ ፓቾች የሉም</string>
-    <string name="quick_patch_ready_patch_with_defaults">በመደበኛ ቅንብሮች ፓች አድርግ</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">የሚደገፉ መተግበሪያዎች</string>
-    <string name="quick_patch_supported_apps_subtitle">ለሚደገፍ መተግበሪያ ትክክለኛውን የ APK ስሪት እዚህ ላይ ያስቀምጡ</string>
-    <string name="quick_patch_supported_apps_loading">የሚደገፉ መተግበሪያዎች እየተጫኑ ነው…</string>
-    <string name="quick_patch_supported_apps_load_error">የሚደገፉ መተግበሪያዎችን መጫን አልተቻለም</string>
-    <string name="quick_patch_supported_apps_change_source">ምንጩን ይቀይሩ</string>
-    <string name="quick_patch_supported_apps_no_matches">የሚመሳሰሉ መተግበሪያዎች የሉም</string>
-    <string name="quick_patch_supported_apps_version_any">ማንኛውም ስሪት</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">የ APK ፋይል ይምረጡ</string>
     <string name="home_could_not_resolve_patch_files">የፓች ፋይሎችን መፍታት አልተቻለም</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APKን አስወግድ</string>
     <string name="home_apk_info_limited_info_warning">የዚህን APK ማኒፌስት ሙሉ በሙሉ ማንበብ አልተቻለም (ለsplit bundles የተለመደ ነው)። ከታች ያሉት ዝርዝሮች ግምታዊ ናቸው፣ ሆኖም ፓቺንግ መስራት አለበት</string>
     <string name="home_apk_info_unsupported_app_warning">ለዚህ መተግበሪያ ምንም ተኳሃኝ ፓቾች አልተገኙም። አሁንም መቀጠል ይችላሉ፣ ነገር ግን ፓቺንግ ምንም ውጤት ላይኖረው ይችላል</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">ለዚህ መተግበሪያ ምንም ተኳሃኝ ፓቾች አልተገኙም</string>
     <string name="home_apk_info_build_label">בילድ</string>
     <string name="home_apk_info_size_label">መጠን</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">ከ</string>
     <string name="home_stage_change_apk">APK ይቀይሩ</string>
     <string name="home_stage_continue">ቀጥል</string>
+    <string name="home_stage_patch">ፓች</string>
     <string name="home_stage_analyzing_title">እያነተተ ነው</string>
     <string name="home_stage_reading_metadata">የመተግበሪያ ሜታዳታን እያነበበ ነው…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,13 +192,6 @@
     <string name="home_dialog_uninstall_title">%1$s uninstall ያድርጉ?</string>
     <string name="home_dialog_uninstall_message">ይህ %1$sን ከተገናኘው መሳሪያ ያስወግደዋል። ከታች ሌላ ምርጫ ካልመረጡ በስተቀር በዲስኩ ላይ ያለው የተፓች APK እና ታሪክዎ ይቀጥላሉ</string>
     <string name="home_dialog_uninstall_also_forget">ከመተግበሪያዎችዎም ያስወግዱ</string>
-    <string name="home_dialog_missing_apk_title">የመጀመሪያው APK አልተገኘም</string>
-    <string name="home_dialog_missing_apk_message">ለ %1$s የቀረበው APK ከእንግዲህ እዚህ የለም፦
-%2$s
-
-በተቀመጡት ቅንብሮች በድጋሚ ለመተግበር APKውን እንደገና ይምረጡ</string>
-    <string name="home_dialog_select_apk">APK ይምረጡ…</string>
-    <string name="home_dialog_select_apk_to_repatch">በድጋሚ ለመተግበር APK ይምረጡ</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">ምንጮችን ያስተዳድሩ</string>
     <string name="home_header_multi_source_hint">ከሁሉም የነቁ ምንጮች የተገኙ ፓቾች ተጠቃለዋል። ከላይ ካለው የምንጮች ቁልፍ ያስተዳድሩ</string>
@@ -288,10 +228,6 @@
     <string name="home_filter_your_apps">የእርስዎ መተግበሪያዎች</string>
     <string name="home_banner_view">ይዩ</string>
     <string name="home_your_apps_install_ready">ለመጫን ዝግጁ ነው</string>
-    <string name="home_your_apps_newer_patch_hint">አዲስ ፓች መተግበሪያውን ሊያሳድገው ይችላል፣ ለማረጋገጥ Update የሚለውን ይጫኑ</string>
-    <string name="home_your_apps_device_version_ready">የተፓች v%1$s ዝግጁ ነው፣ መሳሪያው v%2$s ላይ ነው (እንደገና ፓች ማድረግ አያስፈልግም)</string>
-    <string name="home_your_apps_install_ready_hint">የተስተካከለ v%1$s ለመጫን ዝግጁ ነው (ድጋሚ ማስተካከል አያስፈልግም)</string>
-    <string name="home_action_install">ጫን</string>
     <string name="home_action_install_to_device">በመሣሪያው ላይ ጫን</string>
     <string name="home_action_installing">በመጫን ላይ…</string>
     <string name="home_action_preparing">በማዘጋጀት ላይ…</string>
@@ -332,7 +268,12 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s ዝግጁ ነው · መሳሪያው በ v%2$s ላይ ነው</string>
     <string name="home_detail_ready_no_repatch">v%1$s ዝግጁ ነው፣ እንደገና ፓች ማድረግ አያስፈልግም</string>
-    <string name="home_advice_unsupported">v%1$s ከእንግዲህ አይደገፍም። እባክዎ ወደ v%2$s ያዘምኑ</string>
+    <string name="home_detail_source_disabled">የተ ပิด ചെയ്തു</string>
+    <string name="home_detail_source_removed">የተ நீሳ</string>
+    <string name="home_detail_source_disabled_sub">ምንጩ በምንጮች ውስጥ ተዘግቷል። እንደገና ፓች ለማድረግ ያብሩት</string>
+    <string name="home_detail_source_disabled_alternatives_sub">ዋናው ምንጭ ተዘግቷል። ሌላ አማራጭ ምንጭ ይምረጡ ወይም በምንጮች ውስጥ እንደገና ያብሩት</string>
+    <string name="home_detail_no_compatible_source">ምንም ተስማሚ ምንጭ አልበራም</string>
+    <string name="home_detail_choose_source">የፓች ምንጭ ይምረጡ</string>
     <string name="home_advice_unsupported_by_patches">v%1$s በቅርብ ጊዜ በተደረጉ ማሻሻያዎችこれ längre አይደገፍም</string>
     <string name="home_date_today">ዛሬ</string>
     <string name="home_date_yesterday">ትላንት</string>
@@ -430,6 +371,9 @@
     <string name="patch_selection_group_ungrouped">ያልተመደቡ</string>
     <string name="patch_selection_group_selected_count">%1$d ተመርጧል</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">ከመጀመሪያው ይጀምሩ</string>
+    <string name="patching_patches_count">%1$d / %2$d ፓቾች</string>
+    <string name="patching_slow_warning">ይህ ከተለመደው በላይ ጊዜ እየወሰደ ነው። እባክዎ ይጠብቁ…</string>
     <string name="patching_status_ready">ለፓች ዝግጁ ነው</string>
     <string name="patching_status_preparing">ለፓች ለማዘጋጀት እየተዘጋጀ ነው</string>
     <string name="patching_status_in_progress">ፓቾችን እየተገበሩ ነው</string>
@@ -470,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">ተወግዷል</string>
     <string name="patching_error_failed_patches">የከሸፉ ፓቾች፡ %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB ጠፍቷል · ለመጫን ያብሩት</string>
+    <string name="result_adb_connect_device_hint">በADB ለመጫን መሳሪያን በUSB ያገናኙ</string>
     <string name="result_screen_patch_another_button">ሌላውን ፓች አድርግ</string>
     <string name="result_screen_install_on_device_label">በ %1$s ላይ ይጫኑ</string>
     <string name="result_screen_links_routed_label">ሊንኮች ወደ ተፓች የተደረገው መተግበሪያ ተላከ</string>
@@ -569,13 +515,12 @@
     <string name="source_error_failed_to_load">ለመጫን አልተቻለም</string>
     <string name="source_error_github_pat_required">የፑል ሪኩዌስት ምንጮችን ለማውረድ የGitHub PAT ያስፈልጋል</string>
     <string name="source_error_pr_no_artifact">ለፑል ሪኩዌስቱ ምንም አርቲፋክቶች አልተገኙም</string>
-    <string name="source_sheet_manage_description">የፓች ምንጮችን ያስተዳድሩ</string>
-    <string name="source_sheet_local_label">የአካባቢ</string>
+    <string name="source_error_patcher_incompatible">ይህ ምንጭ የተሰራው ለፓቸር %1$s ነው፣ ነገር ግን Morphe %2$s ፓቸር %3$sን ያካትታል። ለመጠቀም Morpheን ያዘምኑ</string>
+    <string name="version_label_local">ሎካል</string>
     <string name="source_sheet_remote_label">የርቀት</string>
     <string name="add_source">ምንጭ አክል</string>
     <string name="source_sheet_title">የፓች ምንጮች</string>
     <string name="source_sheet_reload_description">ፓቾችን እንደገና ጫን</string>
-    <string name="source_sheet_quick_mode_hint">Quick Patch የትኛውን ምንጭ እንደሚጠቀም ይምረጡ። ብዙ-ምንጮች በባለሙያ (Expert) ሁነታ ውስጥ ይገኛሉ</string>
     <string name="source_sheet_multi_mode_hint">ማንኛውንም ጥምረት ያብሩ/ያጥፉ። ከተفعيل ചെയ്ത ምንጮች ሁሉ የሚገኙ ፓቾች ተቀናጅተው ይቀርባሉ</string>
     <string name="source_sheet_done_button">ተጠናቅቋል</string>
     <string name="source_sheet_type_preinstalled">ቅድመ-ተክሎ የተጫነ</string>
@@ -585,13 +530,21 @@
     <string name="source_sheet_edit_description">አርትአት</string>
     <string name="source_sheet_move_up_description">ወደ ላይ አሳብ</string>
     <string name="source_sheet_move_down_description">ወደ ታች አሳብ</string>
-    <string name="source_sheet_channel_older_stable">የቀድሞ የተረጋጋ</string>
-    <string name="source_sheet_channel_older_dev">የቀድሞ የልማት</string>
     <string name="source_sheet_ignored_mpp_title">የተجاهሉ .mpp ቅጦች</string>
-    <string name="source_sheet_ignored_mpp_hint">በፎልደር ውስጥ ያሉ አዳዲስ .mpp ፋይሎችን በራስ-ሰር የሚጫኑ የፎልደር ምንጮችን ብቻ ነው የሚነካው። ያንን አዲስ ግንባታ በሚመርጡበት ጊዜ፣ ስማቸው እዚህ ካለው ቅጥ ጋር የሚዛመዱ ፋይሎች ይዘለላሉ። ተራ ቃል ማንኛውንም የያዘውን ፋይል ያዛምዳል (ለምሳሌ debug)። ለግሎብስ * ይጠቀሙ (ለምሳሌ *-debug.mpp)። *-sources.mpp እና *-javadoc.mpp ሁል ጊዜ ይታገላሉ</string>
+    <string name="source_sheet_ignored_mpp_hint">በፎልደር ምንጮች ላይ ብቻ ተፅዕኖ ያሳድራል፣ ይህም በአንድ ፎልደር ውስጥ ያለውን አዲስ .mpp በራሱ ይጭናል። ያንን አዲስ ስሪት በሚመርጡበት ጊዜ፣ ስማቸው እዚህ ካለው ስርዓተ-ቅርጽ ጋር የሚዛመዱ ፋይሎች ይዘለላሉ። ተራ ቃል ማንኛውንም የያዘውን ፋይል ያዛምዳል (ለምሳሌ debug)። ለግሎብስ * ይጠቀሙ (ለምሳሌ *-debug.mpp)። *-sources.mpp እና *-javadoc.mpp ሁልጊዜ ችላ ይባላሉ</string>
     <string name="source_sheet_ignored_mpp_placeholder">ለምሳሌ debug ወይም *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">ቅጥ አክል</string>
     <string name="source_sheet_remove_pattern_description">ቅጥ አስወግድ</string>
+    <string name="sources_management_signed_by">የተፈረመው በ</string>
+    <string name="sources_management_signing_key_changed_badge">ቁልፉ ተቀይሯል</string>
+    <string name="sources_management_signing_key_changed_hint">የፊርማ ቁልፉ ተቀይሯል። ለመገምገም ይጫኑ</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' አልተዘመናም ምክንያቱም የቅርብ ጊዜው ስሪት ቀደም ሲል በነበረው ቁልፍ አልተፈረመም</string>
+    <string name="sources_signing_key_new">አዲስ ቁልፍ</string>
+    <string name="sources_signing_key_trust_message">የቅርብ ጊዜው ስሪት የተፈረመው በሌላ ቁልፍ ነው። አልፎ ተርፎም አልሚው ቁልፉን ቀይሮ ሊሆን ይችላል ወይም ሌላ ሰው ይህንን ስሪት አውጥቶ ሊሆን ይችላል። አልሚው አዲስ ቁልፍ እንዳወጣ ካሳወቀ ብቻ ይታመነው</string>
+    <string name="sources_signing_key_trust_message_unsigned">የቅርብ ጊዜው ስሪት አልተፈረመም። አልፎ ተርፎም አልሚው ስሪቶችን መፈረም አቁሞ ሊሆን ይችላል ወይም ሌላ ሰው ይህንን ስሪት አውጥቶ ሊሆን ይችላል። አልሚው ካሳወቀ ብቻ ይታመነው</string>
+    <string name="sources_signing_key_trust_title">አዲሱን ቁልፍ ላምነው?</string>
+    <string name="sources_signing_key_trusted">የታመነ ቁልፍ</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">የአካባቢ ፋይል</string>
     <string name="patch_source_dialog_name_label">ስም</string>
@@ -601,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">የGitHub፣ GitLab፣ ወይም morphe.software/add-source ሊንኮችን ይቀበላል</string>
     <string name="patch_source_dialog_pre_release_title">ከስሪት በፊት የሚወጡ ፓቾች</string>
     <string name="patch_source_dialog_pre_release_hint">ለአዳዲስ የሙከራ ፓች ስሪቶች ቀድሞ የማግኘት ዕድል ይሰጣል</string>
-    <string name="patch_source_dialog_experimental_title">የሙከራ የሥራ መተግበሪያ ስሪቶች</string>
-    <string name="patch_source_dialog_experimental_hint">የሙከራ የሥራ መተግበሪያ ስሪቶች ካሉ ቅድሚያ ይሰጣል</string>
     <string name="patch_source_dialog_error_name_required">ስም ያስፈልጋል</string>
     <string name="patch_source_dialog_error_invalid_url">ትክክለኛ የGitHub ወይም GitLab URL ያስገቡ</string>
     <string name="patch_source_dialog_error_invalid_file">ትክክለኛ .mpp ፋይል ይምረጡ</string>
@@ -685,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">ሎጎችን ይክፈቱ</string>
     <string name="settings_dialog_reset_button">እንደገና ያስጀምር</string>
     <string name="settings_theme_system">ስርዓት</string>
-    <string name="settings_signing_error_not_found">የተቀናበረው የቁልፍ ማከማቻ አልተገኘም፦ %1$s። ፋይሉን ይመልሱ፣ በቅንብሮች ውስጥ ሌላ ይምረጡ፣ ወይም የ Morphe ን መደበኛ አጠቃቀም ለመጠቀም ቅንብሩን ያጥፉ</string>
     <string name="settings_search_languages_placeholder">ቋንቋዎችን ይፈልጉ</string>
     <string name="settings_dialog_resolves_to_message">ወደ %1$s ይቀየራል</string>
-    <string name="settings_dialog_error_keystore_not_found">የመክማቻ ቁልፍ አልተገኘም: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ቋንቋ</string>
     <string name="settings_language_current_title">የአሁኑ ቋንቋ</string>
@@ -696,9 +645,13 @@
     <string name="settings_language_dialog_title">የመተግበሪያ ቋንቋ</string>
     <string name="settings_language_search_no_results">ምንም ውጤት አልተገኘም</string>
     <string name="settings_section_theme">ቲም</string>
+    <string name="settings_appearance_theme_mode">የቲም ሞድ</string>
     <string name="settings_theme_light">ብሩህ</string>
     <string name="settings_theme_dark">ጨለማ</string>
     <string name="settings_theme_amoled">አሞሌድ</string>
+    <string name="settings_appearance_color_style">የቀለም ስታይል</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">ሞኖክሮም</string>
     <string name="settings_toggle_sharp_corners_label">ሹል ማዕዘኖች</string>
     <string name="settings_toggle_sharp_corners_desc">ካርዶችን፣ የንግግር ሳጥኖችን እና ቁልፎችን ማጥራት</string>
     <string name="settings_section_accent_color">የጎላ ቀለም</string>
@@ -708,9 +661,6 @@
     <string name="settings_section_app_cards">የመተግበሪያ ካርዶች</string>
     <string name="settings_app_cards_color_all">ለእያንዳንዱ ካርድ የሚሆን ቀለም</string>
     <string name="settings_app_cards_color_all_desc">በግል ያሻሻሏቸው ካርዶች የራሳቸውን ቀለም ይይዛሉ</string>
-    <string name="settings_section_patch_list">የፓች ዝርዝር</string>
-    <string name="settings_toggle_patch_categories_label">የፓች ዘርፎች</string>
-    <string name="settings_toggle_patch_categories_desc">ፓቾችን ሊለጠጡ በሚችሉ ምድቦች ውስጥ መድቡ</string>
     <string name="settings_section_background_animation">የጀርባ አኒሜሽን</string>
     <string name="settings_background_circles">ክበቦች</string>
     <string name="settings_background_rings">ቀለበቶች</string>
@@ -824,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">ተርጉም</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">የለውጥ መዝገብ አልተገኘም</string>
+    <string name="changelog_badge_installed">የተጫነ</string>
+    <string name="changelog_badge_latest">የቅርብ ጊዜ</string>
+    <string name="changelog_badge_prerelease">ቅድመ-ምርት</string>
+    <string name="changelog_date_today">ዛሬ</string>
+    <string name="changelog_date_yesterday">ትላንት</string>
     <string name="changelog_dialog_title">የለውጥ መዝገብን ይመልከቱ</string>
-    <string name="changelog_show_older_button">የቀድሞ ስሪቶችን አሳይ</string>
+    <string name="changelog_not_available">የለውጥ መዝገብ አልተገኘም</string>
+    <string name="changelog_section_app_support">የመተግበሪያ ድጋፍ</string>
+    <string name="changelog_section_fixes">ማስተካከያዎች</string>
+    <string name="changelog_section_improvements">ማሻሻያዎች</string>
+    <string name="changelog_section_new">አዲስ</string>
+    <string name="changelog_section_other">ለውጦች</string>
+    <string name="changelog_section_performance">የስራ አፈጻጸም</string>
+    <string name="changelog_show_all">ሁሉንም አሳይ (%1$d)</string>
+    <string name="changelog_show_less">ቀንስ</string>
     <string name="changelog_view_on_github_button">በGitHub ላይ ይመልከቱ</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">ምንጮች</string>
+    <string name="nav_apps">መተግበሪያዎች</string>
 </resources>

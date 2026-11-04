@@ -13,6 +13,7 @@
     <string name="expand">გაშლა</string>
     <string name="cancel">გაუქმება</string>
     <string name="close">დახურვა</string>
+    <string name="trust">ნდობა</string>
     <string name="delete">წაშლა</string>
     <string name="disabled_while_patching">გათიშულია პატჩინგის დროს</string>
     <string name="drop_apk_here">ჩააგდეთ APK აქ</string>
@@ -25,8 +26,6 @@
     <string name="error_connection_dropped">ჩამოტვირთვისას კავშირი გაწყდა, სცადეთ மீண்டும்</string>
     <string name="error_network_loading_patches">ქსელის შეცდომა პატჩების ჩატვირთვისას</string>
     <string name="error_patch_file_not_found">პატჩის ფაილი ვერ მოიძებნა: %1$s</string>
-    <string name="error_no_patches_files_supplied">პატჩის ფაილები არ არის მოწოდებული</string>
-    <string name="error_input_apk_not_found">შემყვანი APK ვერ მოიძებნა</string>
     <string name="error_step_failed">%1$s ჩაიშალა: %2$s</string>
     <string name="error_drop_valid_apk">გთხოვთ, ჩააგდოთ ვალიდური .apk, .apkm, .xapk ან .apks ფაილი</string>
     <string name="status_saving">შენახვა…</string>
@@ -58,10 +57,11 @@
     <string name="filter_apps_hint">აპლიკაციების გაფილტვრა…</string>
     <string name="version">ვერსია</string>
     <string name="version_label_stable">სტაბილური</string>
-    <string name="version_label_dev">დევ</string>
+    <string name="version_label_prerelease">წინასწარი რელიზი</string>
     <string name="version_label_experimental">ექსპერიმენტული</string>
-    <string name="version_label_latest_dev">უახლესი დევ</string>
     <string name="version_label_latest_stable">უახლესი სტაბილური</string>
+    <string name="version_label_recommended">რეკომენდებული</string>
+    <string name="version_label_supported">მხარდაჭერილი</string>
     <string name="app_info_arch_label">არქიტექტურა</string>
     <string name="app_info_min_sdk_label">მინიმალური SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -73,7 +73,6 @@
     <string name="status_patching_cancelled">პატჩინგი გაუქმებულია</string>
     <string name="view_full_logs_button">ლოგების სრულად ნახვა</string>
     <string name="error_patching_unknown">პატჩინგი ჩაიშალა გაურკვეველი მიზეზით</string>
-    <string name="error_patching_general">შეცდომა: %1$s</string>
     <string name="error_log_label">შეცდომების ჟურნალი</string>
     <string name="back">უკან</string>
     <string name="open_folder">საქაღალდის გახსნა</string>
@@ -101,22 +100,12 @@
     <string name="card_fill_mode_gradient_blurb">ნებისმიერი რაოდენობის წერტილი, წრფივი, რადიალური ან კონუსური</string>
     <string name="card_fill_mode_solid">ერთი ფერი</string>
     <string name="card_fill_mode_solid_blurb">ერთი სუფთა ფერი</string>
-    <!-- Quick Patch Screen -->
-    <string name="quick_patch_patches_label">პატჩები</string>
-    <string name="quick_patch_screen_start_over_button">თავიდან დაწყება</string>
-    <string name="quick_patch_patch_another_button">სხვა პატჩის შექმნა</string>
-    <string name="quick_patch_select_apk">აირჩიეთ APK</string>
-    <string name="quick_patch_analyze_apk_failed">APK-ის ანალიზი ვერ მოხერხდა</string>
-    <string name="quick_patch_extract_base_apk_failed">ბანდლიდან საბაზისო APK-ის ექსტრაქცია ვერ მოხერხდა</string>
-    <string name="quick_patch_unsupported_app_error">%1$s არ არის მხარდაჭერილი Quick Patch რეჟიმში. მხარდაჭერილი აპლიკაციები: %2$s. მხარდაჭერილობის არმქონე აპლიკაციებისთვის გამოიყენეთ Normal რეჟიმი</string>
     <string name="adb_install_on_button">ინსტალაცია %1$s-ზე</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">პატჩების ჩატვირთვა</string>
-    <string name="patching_step_preparing">მზადდება</string>
     <string name="patching_step_merging_split_apk">გაფ𝐫აქტილებული APK-ის გაერთიანება</string>
     <string name="patching_step_read_apk">APK ფაილის წაკითხვა</string>
     <string name="patching_step_applying_patches">პატჩების გამოყენება</string>
-    <string name="patching_step_saving">შენახვა</string>
     <string name="patching_step_writing_apk">პატჩირებული APK ფაილის ჩაწერა</string>
     <string name="patching_step_signing">პატჩირებული APK ფაილის ხელმოწერა</string>
     <!-- ADB Installation Errors -->
@@ -153,65 +142,21 @@
     <string name="version_status_checksum_corrupted">ფაილი შესაძლოა დაზიანებული იყოს, ხელახლა ჩამოტვირთეთ APKMirror-დან</string>
     <string name="version_status_checksum_failed">Checksum-ის ვერიფიკაცია ჩაიშალა</string>
     <string name="version_status_checksum_matches">Checksum ემთხვევა APKMirror-ს</string>
-    <string name="version_status_older_stable">უფრო ძველი სტაბილური</string>
     <string name="version_status_newer_stable_available">ხელმისაწვდომია უფრო ახალი სტაბილური v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">ხელმისაწვდომია უფრო ახალი სტაბილური ვერსია</string>
     <string name="version_status_experimental_detail">მხარდაჭერილია, თუმცა შესაძლოა გამართულად არ ამუშავდეს</string>
-    <string name="version_status_older_experimental">უფრო ძველი ექსპერიმენტული</string>
-    <string name="version_status_newer_experimental_available">ხელმისაწვდომია უფრო ახალი ექსპერიმენტული v%1$s</string>
-    <string name="version_status_newer_experimental_available_fallback">ხელმისაწვდომია უფრო ახალი ექსპერიმენტული ვერსია</string>
-    <string name="version_status_too_new">ვერსია ძალიან ახალია</string>
     <string name="version_status_unsupported_detail">ოფიციალურად არ არის მხარდაჭერილი, პატჩები, სავარაუდოდ, ჩაირღვევა</string>
-    <string name="version_status_too_old">ვერსია ძალიან ძველია</string>
     <string name="version_status_unsupported">ვერსია არ არის მხარდაჭერილი</string>
     <string name="version_status_build_unsupported">ვერსია არ არის მხარდაჭერილი</string>
     <string name="version_status_build_unsupported_detail">ეს ვერსია მხარდაჭერილია, მაგრამ მისი ეს კონკრეტული ვერსია არა. ჩამოტვირთეთ ვერსია, რომელიც შეესაბამება პატჩებს</string>
+    <string name="version_status_build_unsupported_with_code">ფეტჩებისთვის საჭიროა ბილდი %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">ვერსიის შესახებ შეტყობინება</string>
+    <string name="version_warning_build_unsupported_message">მიმდინარე: v%1$s (ბილდი %2$s)\nსაჭირო ბილდი: %3$s\n\nეს არის ერთი და იმავე ვერსიის სხვა ბილდი. ფეტჩები მოითხოვს კონკრეტულ ბილდს.</string>
     <string name="version_warning_experiment_title">გსურთ ექსპერიმენტების ჩატარება? 🧪</string>
-    <string name="version_warning_older_stable_title">უფრო ძველი სტაბილური ვერსია</string>
-    <string name="version_warning_older_stable_message">მიმდინარე: v%1$s\nუახლესი სტაბილური: v%2$s\n\nეს ვერსია მხარდაჭერილია, თუმცა ხელმისაწვდომია უფრო ახალი სტაბილური ვერსია. შესაძლოა გამოტოვებული გაქვთ ბოლო შესწორებები.</string>
     <string name="version_warning_latest_experimental_message">მიმდინარე: v%1$s\n\nამ ვერსიას აქვს ადრეული ექსპერიმენტული მხარდაჭერა\n\n🔧 მოემზადეთ აპლიკაციის უცნაური ქცევისთვის ან გაურკვეველი ხარვეზებისთვის, სანამ შესწორებები ამ ვერსიისთვის დახვეწiladi იქნება.</string>
-    <string name="version_warning_older_experimental_title">ძველი ექსპერიმენტული ვერსია\nგსურთ ექსპერიმენტის ჩატარება? 🧪</string>
-    <string name="version_warning_older_experimental_message">მიმდინარე: v%1$s\nუახლესი ექსპერიმენტული: v%2$s\n\nეს არის მხარდაჭერილი ექსპერიმენტული ვერსია, თუმცა ხელმისაწვდომია უფრო ახალი ექსპერიმენტული ვერსია. მოემზადეთ აპლიკაციის უცნაური ქცევისთვის ან გაურკვეველი ხარვეზებისთვის, სანამ შესწორებები ამ ვერსიისთვის დახვეწiladi იქნება.</string>
-    <string name="version_warning_too_new_message">მიმდინარე: v%1$s\nუახლესი ცნობილი: v%2$s\n\nამ ვერსიას აქვს ადრეული ექსპერიმენტული მხარდაჭერა\n\n🔧 მოემზადეთ აპლიკაციის უცნაური ქცევისთვის ან გაურკვეველი ხარვეზებისთვის, სანამ შესწორებები ამ ვერსიისთვის დახვეწiladi იქნება.</string>
-    <string name="version_warning_too_old_message">მიმდინარე: v%1$s\nყველაზე ძველი მხარდაჭერილი: v%2$s\n\nეს არ არის ოფიციალურად მხარდაჭერილი ვერსია. შესწორებები, სავარაუდოდ, ვერ იმუშავებს.</string>
     <string name="version_warning_unsupported_message">მიმდინარე: v%1$s\n\nეს არ არის ოფიციალურად მხარდაჭერილი ვერსია. პატჩების გამოყენება, სავარაუდოდ, ჩაიშლება.</string>
     <string name="version_warning_notice_message">გსურთ გააგრძელოთ v%1$s-ით?</string>
-    <!-- Version warnings for Quick Patch -->
-    <string name="quick_patch_warning_older_stable">ძველი სტაბილური ვერსია - ხელმისაწვდომია ახალი სტაბილური v%1$s</string>
-    <string name="quick_patch_warning_latest_experimental">ექსპერიმენტული ვერსია - მხარდაჭერილია, თუმცა შესაძლოა გამართულად არ იმუშაოს</string>
-    <string name="quick_patch_warning_older_experimental">ძველი ექსპერიმენტული ვერსია - ხელმისაწვდომია ახალი ექსპერიმენტული v%1$s</string>
-    <string name="quick_patch_warning_build_unsupported">ვერსია არ არის მხარდაჭერილი - ეს ვერსია პატჩირებადია, მაგრამ არა მისი ეს კონკრეტული ბილდი</string>
-    <string name="quick_patch_warning_too_new">ვერსია ძალიან ახალია - ოფიციალურად არ არის მხარდაჭერილი, პატჩების გამოყენება, სავარაუდოდ, ჩაიშლება</string>
-    <string name="quick_patch_warning_too_old">ვერსია ძალიან ძველია - ოფიციალურად არ არის მხარდაჭერილი, პატჩების გამოყენება, სავარაუდოდ, ჩაიშლება</string>
-    <string name="quick_patch_warning_unsupported_between">არმხარდაჭერილი ვერსია - პატჩების გამოყენება, სავარაუდოდ, ჩაიშლება</string>
-    <string name="quick_patch_read_apk_failed">APK-ის წაკითხვა ვერ მოხერხდა: %1$s</string>
-    <string name="quick_patch_status_preparing_patches">პატჩების მომზადება…</string>
-    <string name="quick_patch_fetch_patches_failed">პატჩების ჩამოტვირთვა ვერ მოხერხდა. შეამოწმეთ ინტერნეტის კავშირი</string>
-    <string name="quick_patch_status_downloading_patches">პატჩების ჩამოტვირთვა %1$s…</string>
-    <string name="quick_patch_download_patches_failed">პატჩების ჩამოტვირთვა ვერ მოხერხდა: %1$s</string>
-    <string name="quick_patch_status_patching">პატჩირება…</string>
-    <string name="quick_patch_completed_adb_off">ADB გამორთულია · ჩასწვრით ინსტალაციისთვის</string>
-    <string name="quick_patch_completed_adb_connect_device">შეაერთეთ მოწყობილობა USB-ით ADB-ის მეშვეობით ინსტალაციისთვის</string>
-    <string name="quick_patch_error_unknown_occurred">მოხდა უცნობი შეცდომა</string>
-    <!-- Quick Patch - Patching Content -->
-    <string name="quick_patch_idle_analyzing">APK-ის ანალიზი…</string>
-    <string name="quick_patch_patching_patches_count">%1$d / %2$d პატჩი</string>
-    <string name="quick_patch_patching_slow_warning">ეს ჩვეულებრივზე მეტ დროს მოითხოვს. გთხოვთ, დაელოდოთ…</string>
-    <!-- Quick Patch - Ready Content -->
-    <string name="quick_patch_ready_version_build">(ბილდი %1$d)</string>
-    <string name="quick_patch_ready_no_compatible_patches">ამ აპლიკაციისთვის თავსებადი პატჩები არ მოიპოვება</string>
-    <string name="quick_patch_ready_no_matching_patches">არ არსებობს პატჩები, რომლებიც შეესაბამება \"%1$s\"-ს</string>
-    <string name="quick_patch_ready_patch_with_defaults">პატჩირება ნაგულისხმევი პარამეტრებით</string>
-    <!-- Quick Patch - Supported Apps Row -->
-    <string name="quick_patch_supported_apps_title">მხარდაჭერილი აპლიკაციები</string>
-    <string name="quick_patch_supported_apps_subtitle">ჩააგდეთ მხარდაჭერილი აპლიკაციის შესაბამისი APK ვერსია აქ</string>
-    <string name="quick_patch_supported_apps_loading">მხარდაჭერილი აპლიკაციების ჩატვირთვა…</string>
-    <string name="quick_patch_supported_apps_load_error">მხარდაჭერილი აპლიკაციების ჩატვირთვა ვერ მოხერხდა</string>
-    <string name="quick_patch_supported_apps_change_source">შეცვალეთ წყარო</string>
-    <string name="quick_patch_supported_apps_no_matches">შესაბამისი აპლიკაციები ვერ მოიძებნა</string>
-    <string name="quick_patch_supported_apps_version_any">ნებისმიერი ვერსია</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">აირჩიეთ APK ფაილი</string>
     <string name="home_could_not_resolve_patch_files">პატჩის ფაილების გარკვევა ვერ მოხერხდა</string>
@@ -228,12 +173,14 @@
     <string name="home_apk_info_remove_description">APK-ს წაშლა</string>
     <string name="home_apk_info_limited_info_warning">ამ APK-ს მანიფესტის სრულად წაკითხვა ვერ მოხერხდა (ხშირია split bundle-ების შემთხვევაში). დეტალები ქვემოთ მიახლოებითია, თუმცა პატჩინგი მაინც უნდა იმუშაოს</string>
     <string name="home_apk_info_unsupported_app_warning">ამ აპლიკაციისთვის თავსებადი პატჩები ვერ მოიძებნა. თქვენ მაინც შეგიძლიათ გააგრძელოთ, მაგრამ პატჩინგმა შესაძლოა არაფერი შეცვალოს</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">ამ აპლიკაციისთვის თავსებადი ფეტჩები ვერ მოიძებნა</string>
     <string name="home_apk_info_build_label">ბილდი</string>
     <string name="home_apk_info_size_label">ზომა</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">დან</string>
     <string name="home_stage_change_apk">APK-ს შეცვლა</string>
     <string name="home_stage_continue">გაგრძელება</string>
+    <string name="home_stage_patch">ფეტჩი</string>
     <string name="home_stage_analyzing_title">ანალიზი</string>
     <string name="home_stage_reading_metadata">აპლიკაციის მეტამონაცემების წაკითხვა…</string>
     <!-- Home Screen - Dialogs -->
@@ -245,10 +192,6 @@
     <string name="home_dialog_uninstall_title">წავშალოთ %1$s?</string>
     <string name="home_dialog_uninstall_message">ეს ამოშლის %1$s დაკავშირებული მოწყობილობიდან. დისკზე არსებული დაპატჩული APK და თქვენი ისტორია შენარჩუნდება, თუ ქვემოთ სხვაგვარად არ აირჩევთ</string>
     <string name="home_dialog_uninstall_also_forget">ასევე წაშალოს თქვენი აპლიკაციებიდან</string>
-    <string name="home_dialog_missing_apk_title">ორიგინალი APK ვერ მოიძებნა</string>
-    <string name="home_dialog_missing_apk_message">%1$s-ისთვის შეყვანილი APK აღარ არის აქ:\n%2$s\n\nაირჩიეთ APK ხელახლა, რათა განახორციელოთ პატჩინგი შენახული პარამეტრებით</string>
-    <string name="home_dialog_select_apk">აირჩიეთ APK…</string>
-    <string name="home_dialog_select_apk_to_repatch">აირჩიეთ APK ხელახალი პატჩინგისთვის</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">წყაროების მართვა</string>
     <string name="home_header_multi_source_hint">ყველა ჩართული წყაროდან აღებული პატჩები გაერთიანებულია. მართეთ ზემოთ მოცემული წყაროების ღილაკიდან</string>
@@ -285,10 +228,6 @@
     <string name="home_filter_your_apps">თქვენი აპლიკაციები</string>
     <string name="home_banner_view">ნახვა</string>
     <string name="home_your_apps_install_ready">ინსტალაცია მზადაა</string>
-    <string name="home_your_apps_newer_patch_hint">უფრო ახალმა პატჩმა შესაძლოა განაახლოს აპლიკაცია, შესამოწმებლად დააჭირეთ განახლებას</string>
-    <string name="home_your_apps_device_version_ready">დაპატჩული v%1$s მზად არის, მოწყობილობა არის v%2$s-ზე (ხელახალი დაპატჩვა არ არის საჭირო)</string>
-    <string name="home_your_apps_install_ready_hint">პატჩირებული v%1$s მზადაა ინსტალაციისთვის (ხელახალი პატჩირება არ არის საჭირო)</string>
-    <string name="home_action_install">ინსტალაცია</string>
     <string name="home_action_install_to_device">ინსტალაცია მოწყობილობაზე</string>
     <string name="home_action_installing">ინსტალირება…</string>
     <string name="home_action_preparing">მომზადება…</string>
@@ -329,10 +268,16 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s მზადაა · მოწყობილობა v%2$s ვერსიაზეა</string>
     <string name="home_detail_ready_no_repatch">v%1$s მზად არის, ხელახალი დაპატჩვა არ არის საჭირო</string>
-    <string name="home_advice_unsupported">v%1$s აღარ არის მხარდაჭერილი. გთხოვთ, განაახლოთ v%2$s ვერსიამდე</string>
+    <string name="home_detail_source_disabled">გათიშულია</string>
+    <string name="home_detail_source_removed">წაშლილია</string>
+    <string name="home_detail_source_disabled_sub">წყარო გათიშულია \"წყაროებში\". ჩართეთ იგი ხელახალი ფეტჩისთვის</string>
+    <string name="home_detail_source_disabled_alternatives_sub">ორიგინალი წყარო გამორთულია. აირჩიეთ ალტერნატიული წყარო ან ჩართეთ იგი ხელახლა „წყაროებში“</string>
+    <string name="home_detail_no_compatible_source">თავსებადი წყარო არ არის ჩართული</string>
+    <string name="home_detail_choose_source">აირჩიეთ პატჩის წყარო</string>
     <string name="home_advice_unsupported_by_patches">v%1$s აღარ არის მხარდაჭერილი უახლესი პატჩების მიერ</string>
     <string name="home_date_today">დღეს</string>
     <string name="home_date_yesterday">გუშინ</string>
+    <string name="home_date_days_ago">%1$d დღის წინ</string>
     <string name="home_your_apps_empty_title">პატჩირებული აპლიკაციები ჯერ არ არის</string>
     <string name="home_your_apps_empty_subtitle">გააკეთეთ აპლიკაციის პატჩირება და ის აქ გამოჩნდება</string>
     <string name="home_your_apps_no_matches_subtitle">არაფერი ემთხვევა რასაც არის \"%1$s\"</string>
@@ -426,11 +371,14 @@
     <string name="patch_selection_group_ungrouped">დაუჯგუფებელი</string>
     <string name="patch_selection_group_selected_count">{\"one\":\"1 არჩეულია\",\"other\":\"%1$d არჩეულია\"}</string>
     <!-- Patching Screen -->
+    <string name="patching_start_over_button">თავიდან დაწყება</string>
+    <string name="patching_patches_count">%1$d / %2$d პატჩი</string>
+    <string name="patching_slow_warning">ეს ჩვეულებრივზე მეტ დროს მოითხოვს. გთხოვთ, დაელოდოთ…</string>
     <string name="patching_status_ready">მზად არის პატჩინგისთვის</string>
     <string name="patching_status_preparing">მზადდება პატჩინგისთვის</string>
     <string name="patching_status_in_progress">პატჩების გამოყენება</string>
     <string name="patching_completed_loading_result">პატჩინგი დასრულდა, შედეგების ჩატვირთვა…</string>
-    <string name="patching_cancelled_loading_result">პატჩინგი გაუქმდა, შედეგების ჩატვირთვა…</string>
+    <string name="patching_cancelled_loading_result">პატჩინგი გააუქმდა, შედეგების ჩატვირთვა...</string>
     <string name="patching_failed_loading_result">პატჩინგმა ვერ იმუშავა, შედეგების ჩატვირთვა…</string>
     <string name="patching_log_viewer_failed_to_read">ლოგ-ფაილის წაკითხვა ვერ მოხერხდა: %1$s</string>
     <string name="patching_log_viewer_title">ლოგ-ფაილი</string>
@@ -466,6 +414,8 @@
     <string name="patching_banner_native_libs_stripped">ამოჭრილი</string>
     <string name="patching_error_failed_patches">ჩაისაცხლელი ვერ მოხერხდა: %1$s</string>
     <!-- Result Screen -->
+    <string name="result_adb_off_button">ADB გამორთულია · ჩართეთ ინსტალაციისთვის</string>
+    <string name="result_adb_connect_device_hint">შეაერთეთ მოწყობილობა USB-ით ADB-ის მეშვეობით ინსტალაციისთვის</string>
     <string name="result_screen_patch_another_button">სხვაზე პატჩის გაკეთება</string>
     <string name="result_screen_install_on_device_label">ინსტალაცია %1$s-ზე</string>
     <string name="result_screen_links_routed_label">ბმულები გადამისამართებულია პატჩირებულ აპლიკაციაზე</string>
@@ -565,13 +515,12 @@
     <string name="source_error_failed_to_load">ჩატვირთვა ვერ მოხერხდა</string>
     <string name="source_error_github_pat_required">Pull request-ის წყაროების ჩამოსატვირთად საჭიროა GitHub PAT</string>
     <string name="source_error_pr_no_artifact">Pull request-ისთვის არტიფაქტები ვერ მოიძებნა</string>
-    <string name="source_sheet_manage_description">პატჩის წყაროების მართვა</string>
-    <string name="source_sheet_local_label">ლოკალური</string>
+    <string name="source_error_patcher_incompatible">ეს წყარო შექმნილია პატჩერის %1$s-ისთვის, მაგრამ Morphe %2$s მოიცავს პატჩერს %3$s. განაახლეთ Morphe მისი გამოსაყენებლად</string>
+    <string name="version_label_local">ლოკალური</string>
     <string name="source_sheet_remote_label">დისტანციური</string>
     <string name="add_source">წყაროს დამატება</string>
     <string name="source_sheet_title">ფათჩების წყაროები</string>
     <string name="source_sheet_reload_description">ფათჩების ხელახალი ჩატვირთვა</string>
-    <string name="source_sheet_quick_mode_hint">აირჩიეთ, რომელ წყაროს გამოიყენებს Quick Patch. მრავალწყაროიანი რეჟიმი ხელმისაწვდომია ექსპერტის რეჟიმში</string>
     <string name="source_sheet_multi_mode_hint">გააქტიურეთ/გათიშეთ ნებისმიერი კომბინაცია. ყველა გააქტიურებული წყაროდან ფათჩები გაერთიანდება</string>
     <string name="source_sheet_done_button">დასრულდა</string>
     <string name="source_sheet_type_preinstalled">წინასწარ დაინსტალირებული</string>
@@ -581,13 +530,21 @@
     <string name="source_sheet_edit_description">რედაქტირება</string>
     <string name="source_sheet_move_up_description">ზემოთ გადატანა</string>
     <string name="source_sheet_move_down_description">ქვემოთ გადატანა</string>
-    <string name="source_sheet_channel_older_stable">უფრო ძველი სტაბილური</string>
-    <string name="source_sheet_channel_older_dev">უფრო ძველი დევ-ვერსია</string>
     <string name="source_sheet_ignored_mpp_title">იგნორირებული .mpp შაბლონები</string>
-    <string name="source_sheet_ignored_mpp_hint">გავლენას ახდენს მხოლოდ საქაღალდის წყაროებზე, რომლებიც ავტომატურად ტვირთავენ საქაღალდეში არსებულ უახლეს .mpp ფაილს. ამ უახლესი ბილდის არჩევისას, ფაილები, რომელთა სახელიც ემთხვევა აქ მითითებულ შაბლონს, იქნება გამოტოვებული. ჩვეულებრივი სიტყვა ემთხვევა ნებისმიერ ფაილს, რომელიც შეიცავს მას (მაგ. debug). გამოიყენეთ * გლობებისთვის (მაგ. *-debug.mpp). *-sources.mpp და *-javadoc.mpp ყოველთვის არის იგნორირებული</string>
+    <string name="source_sheet_ignored_mpp_hint">გავლენას ახდენს მხოლოდ საქაღალდის წყაროებზე, რომლებიც ავტომატურად ტვირთავენ საქაღალდეში არსებულ უახლეს .mpp ფაილს. ამ უახლეს ბილდს შერჩევისას, ფაილები, რომელთა სახელიც შეესაბამება აქ მითითებულ შაბლონს, იქნება გამოტოვებული. ჩვეულებრივი სიტყვა შეესაბამება ნებისმიერ ფაილს, რომელიც შეიცავს მას (მაგ. debug). გამოიყენეთ * გლობებისთვის (მაგ. *-debug.mpp). *-sources.mpp და *-javadoc.mpp ყოველთვის არის იგნორირებული</string>
     <string name="source_sheet_ignored_mpp_placeholder">მაგ. debug ან *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">შაბლონის დამატება</string>
     <string name="source_sheet_remove_pattern_description">შაბლონის წაშლა</string>
+    <string name="sources_management_signed_by">ხელმოწერილია</string>
+    <string name="sources_management_signing_key_changed_badge">გასაღები შეიცვალა</string>
+    <string name="sources_management_signing_key_changed_hint">ხელმოწერის გასაღები შეიცვალა. გადახედეთ მას დააჭირეთ</string>
+    <!-- Signing Key Trust Dialog -->
+    <string name="sources_signing_key_changed_named">'%1$s' არ განახლდა, რადგან მისი ბოლო რელიზი არ არის ხელმოწერილი იმ გასაღებით, რომელიც მანამდე გამოიყენებოდა</string>
+    <string name="sources_signing_key_new">ახალი გასაღები</string>
+    <string name="sources_signing_key_trust_message">ბოლო რელიზს სხვა გასაღები აქვს ხელმოწერილი. ან დეველოპერმა შეცვალა გასაღები, ან ეს რელიზი სხვა ვინმეს მიერაა გამოქვეყნებული. ენდეთ მას მხოლოდ იმ შემთხვევაში, თუ დეველოპერმა ახალი გასაღები განაცხადა</string>
+    <string name="sources_signing_key_trust_message_unsigned">ბოლო რელიზს ხელმოწერა არ აქვს. ან დეველოპერმა შეწყვიტა რელიზების ხელმოწერა, ან ეს რელიზი სხვა ვინმეს მიერაა გამოქვეყნებული. ენდეთ მას მხოლოდ იმ შემთხვევაში, თუ დეველოპერმა ეს განაცხადა</string>
+    <string name="sources_signing_key_trust_title">ენდოთ ახალ გასაღებს?</string>
+    <string name="sources_signing_key_trusted">სანდო გასაღები</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">ლოკალური ფაილი</string>
     <string name="patch_source_dialog_name_label">სახელი</string>
@@ -597,8 +554,6 @@
     <string name="patch_source_dialog_repo_hint">იღებს GitHub-ის, GitLab-ის ან morphe.software/add-source ბმულს</string>
     <string name="patch_source_dialog_pre_release_title">წინასწარი რელიზის პატჩები</string>
     <string name="patch_source_dialog_pre_release_hint">იღებს ადრეულ წვდომას ახალ ექსპერიმენტულ პატჩის ვერსიებზე</string>
-    <string name="patch_source_dialog_experimental_title">აპლიკაციის ექსპერიმენტული ვერსიები</string>
-    <string name="patch_source_dialog_experimental_hint">პრიორიტეტს ანიჭებს აპლიკაციის ექსპერიმენტულ ვერსიებს, თუ ისინი ხელმისაწვდომია</string>
     <string name="patch_source_dialog_error_name_required">სახელი სავალდებულოა</string>
     <string name="patch_source_dialog_error_invalid_url">შეიყვანეთ GitHub-ის ან GitLab-ის ვალიდური URL</string>
     <string name="patch_source_dialog_error_invalid_file">აირჩიეთ ვალიდური .mpp ფაილი</string>
@@ -681,10 +636,8 @@
     <string name="settings_dialog_open_logs_button">ლოგების გახსნა</string>
     <string name="settings_dialog_reset_button">გაყვანა</string>
     <string name="settings_theme_system">სისტემა</string>
-    <string name="settings_signing_error_not_found">კონფიგურირებული keystore ვერ მოიძებნა: %1$s. აღადგინეთ ფაილი, აირჩიეთ სხვა პარამეტრებში, ან გაასუფთავეთ პარამეტრი Morphe-ის ნაგულისხმევი მნიშვნელობის გამოსაყენებლად</string>
     <string name="settings_search_languages_placeholder">ენების ძებნა</string>
     <string name="settings_dialog_resolves_to_message">გადადის შემდეგზე: %1$s</string>
-    <string name="settings_dialog_error_keystore_not_found">keystore ვერ მოიძებნა: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ენა</string>
     <string name="settings_language_current_title">მიმდინარე ენა</string>
@@ -692,9 +645,13 @@
     <string name="settings_language_dialog_title">აპლიკაციის ენა</string>
     <string name="settings_language_search_no_results">შედეგები ვერ მოიძებნა</string>
     <string name="settings_section_theme">თემა</string>
+    <string name="settings_appearance_theme_mode">თემის რეჟიმი</string>
     <string name="settings_theme_light">ღია</string>
     <string name="settings_theme_dark">ბნელი</string>
     <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_appearance_color_style">ფერების სტილი</string>
+    <string name="settings_appearance_style_morphe">Morphe</string>
+    <string name="settings_appearance_monochrome">მონოქრომული</string>
     <string name="settings_toggle_sharp_corners_label">მკვეთრი კუთხეები</string>
     <string name="settings_toggle_sharp_corners_desc">ბარათების, დიალოგებისა და ღილაკების კუთხეების გასკვერტულება</string>
     <string name="settings_section_accent_color">აქცენტის ფერი</string>
@@ -704,9 +661,6 @@
     <string name="settings_section_app_cards">აპლიკაციის ბარათები</string>
     <string name="settings_app_cards_color_all">ფერი ყველა ბარათისთვის</string>
     <string name="settings_app_cards_color_all_desc">ბარათები, რომლებიც ინდივიდუალურად მოარგეთ, შეინარჩუნებენ საკუთარ ფერს</string>
-    <string name="settings_section_patch_list">პატჩების სია</string>
-    <string name="settings_toggle_patch_categories_label">პატჩების კატეგორიები</string>
-    <string name="settings_toggle_patch_categories_desc">პატჩების დაჯგუფება განვრცვად კატეგორიებად</string>
     <string name="settings_section_background_animation">ფონის ანიმაცია</string>
     <string name="settings_background_circles">წრეები</string>
     <string name="settings_background_rings">რგოლები</string>
@@ -820,8 +774,23 @@
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">თარგმნა</string>
     <!-- Changelog Dialog -->
-    <string name="changelog_not_available">ცვლილებების ჩამონათვალი მიუწვდომელია</string>
+    <string name="changelog_badge_installed">ინსტალირებული</string>
+    <string name="changelog_badge_latest">უახლესი</string>
+    <string name="changelog_badge_prerelease">წინასწარი ვერსია</string>
+    <string name="changelog_date_today">დღეს</string>
+    <string name="changelog_date_yesterday">გუშინ</string>
     <string name="changelog_dialog_title">ცვლილებების ჩამონათვალის ნახვა</string>
-    <string name="changelog_show_older_button">უფრო ძველი გამოშვებების ჩვენება</string>
+    <string name="changelog_not_available">ცვლილებების ჩამონათვალი მიუწვდომელია</string>
+    <string name="changelog_section_app_support">აპლიკაციის მხარდაჭერა</string>
+    <string name="changelog_section_fixes">გასწორებები</string>
+    <string name="changelog_section_improvements">გაუმჯობესებები</string>
+    <string name="changelog_section_new">ახალი</string>
+    <string name="changelog_section_other">ცვლილებები</string>
+    <string name="changelog_section_performance">წარმადობა</string>
+    <string name="changelog_show_all">ყველას ჩვენება (%1$d)</string>
+    <string name="changelog_show_less">ნაკლევის ჩვენება</string>
     <string name="changelog_view_on_github_button">ნახვა GitHub-ზე</string>
+    <!-- Navigation Pill -->
+    <string name="nav_sources">წყაროები</string>
+    <string name="nav_apps">აპლიკაციები</string>
 </resources>

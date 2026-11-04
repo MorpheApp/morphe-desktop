@@ -16,22 +16,6 @@
         <item quantity="one">%1$d source</item>
         <item quantity="other">%1$d sources</item>
     </plurals>
-    <plurals name="quick_patch_ready_patches_applied_summary">
-        <item quantity="one">%1$d patch sera appliqué</item>
-        <item quantity="other">%1$d patchs seront appliqués</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_excluded">
-        <item quantity="one">%1$d exclu</item>
-        <item quantity="other">%1$d exclus</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_enabled">
-        <item quantity="one">%1$d activé</item>
-        <item quantity="other">%1$d activés</item>
-    </plurals>
-    <plurals name="quick_patch_ready_patches_disabled">
-        <item quantity="one">%1$d désactivé</item>
-        <item quantity="other">%1$d désactivés</item>
-    </plurals>
     <plurals name="licenses_dialog_footer_count">
         <item quantity="one">%1$d bibliothèque</item>
         <item quantity="other">%1$d bibliothèques</item>
@@ -55,5 +39,25 @@
     <plurals name="patching_graph_cpu_cores_detail">
         <item quantity="one">%1$d cœur</item>
         <item quantity="other">%1$d cœurs</item>
+    </plurals>
+    <plurals name="changelog_change_count">
+        <item quantity="one">%1$d changement</item>
+        <item quantity="other">%1$d changements</item>
+    </plurals>
+    <plurals name="changelog_days_ago">
+        <item quantity="one">Il y a %1$d jour</item>
+        <item quantity="other">Il y a %1$d jours</item>
+    </plurals>
+    <plurals name="changelog_feature_count">
+        <item quantity="one">%1$d fonctionnalité</item>
+        <item quantity="other">%1$d fonctionnalités</item>
+    </plurals>
+    <plurals name="changelog_fix_count">
+        <item quantity="one">%1$d correction</item>
+        <item quantity="other">%1$d corrections</item>
+    </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimisation</item>
+        <item quantity="other">%1$d optimisations</item>
     </plurals>
 </resources>
