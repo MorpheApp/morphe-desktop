@@ -7,6 +7,7 @@ package app.morphe.gui.util
 
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.PatchStep
+import app.morphe.patcher.PatcherTask
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -33,7 +34,24 @@ class PatchProgressTest {
         val halfApplied = runProgress(steps, PatchStep.PATCHING, 5, 10)
         val rebuilding = runProgress(steps, PatchStep.REBUILDING, 10, 10)
         assertTrue(patchingStarted < halfApplied && halfApplied < rebuilding && rebuilding < 1f)
-        assertEquals(rebuilding, runProgress(steps, PatchStep.PATCHING, 10, 10), 1e-6f)
+    }
+
+    @Test
+    fun `the tasks of the patcher move a step on with the patches`() {
+        val patchesOnly = runProgress(steps, PatchStep.PATCHING, 10, 10)
+        val decoded = runProgress(
+            steps, PatchStep.PATCHING, 10, 10,
+            mapOf(PatcherTask.DECODING_RESOURCES to 1f, PatcherTask.INDEXING_CLASSES to 0.5f),
+        )
+        val everyTask = runProgress(
+            steps, PatchStep.PATCHING, 10, 10,
+            PatcherTask.entries.associateWith { 1f },
+        )
+        assertTrue(patchesOnly < decoded && decoded < everyTask)
+        assertEquals(runProgress(steps, PatchStep.REBUILDING, 10, 10), everyTask, 1e-6f)
+
+        val writing = runProgress(steps, PatchStep.REBUILDING, 10, 10, mapOf(PatcherTask.WRITING_APK to 0.5f))
+        assertTrue(everyTask < writing && writing < runProgress(steps, PatchStep.SIGNING, 10, 10))
     }
 
     @Test

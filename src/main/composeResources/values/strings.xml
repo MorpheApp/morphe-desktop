@@ -111,6 +111,13 @@
     <string name="patching_step_applying_patches">Applying patches</string>
     <string name="patching_step_writing_apk">Writing patched APK file</string>
     <string name="patching_step_signing">Signing patched APK file</string>
+    <string name="patching_task_decoding_dex">Reading DEX files</string>
+    <string name="patching_task_extracting_resources">Extracting resources</string>
+    <string name="patching_task_decoding_resources">Decoding resources</string>
+    <string name="patching_task_indexing_classes">Indexing classes</string>
+    <string name="patching_task_compiling_dex">Compiling DEX files</string>
+    <string name="patching_task_compiling_resources">Compiling resources</string>
+    <string name="patching_task_writing_apk">Writing APK file</string>
 
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Installing on %1$s…</string>

@@ -15,8 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.WavyProgressIndicatorDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,8 +32,11 @@ import app.morphe.gui.ui.screens.patching.PatchingStatus
 import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.util.countsItems
+import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.label
-import app.morphe.gui.util.rememberZenoProgress
+import app.morphe.gui.util.rememberEasedProgress
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -48,12 +49,9 @@ internal fun progressGradient(): Pair<Color, Color> {
 internal fun ExpertProgressHeader(
     uiState: PatchingUiState
 ) {
-    val currentStatus by rememberUpdatedState(uiState.status)
-    val isActive = currentStatus == PatchingStatus.PREPARING || currentStatus == PatchingStatus.PATCHING
-    val smoothProgress = rememberZenoProgress(
-        progress = uiState.progress,
-        isActive = isActive
-    )
+    val smoothProgress = rememberEasedProgress(uiState.progress)
+    // The task is named only while a step runs, so a run that stopped in one shows where it stopped
+    val runningTask = uiState.runningTask?.takeIf { uiState.isInProgress }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -64,10 +62,10 @@ internal fun ExpertProgressHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val stepNameToDisplay = if (uiState.status == PatchingStatus.COMPLETED) {
-                stringResource(Res.string.patching_step_all_done)
-            } else {
-                uiState.currentStep?.label().orEmpty()
+            val stepNameToDisplay = when {
+                uiState.status == PatchingStatus.COMPLETED -> stringResource(Res.string.patching_step_all_done)
+                runningTask != null -> runningTask.task.label()
+                else -> uiState.currentStep?.label().orEmpty()
             }
 
             AnimatedContent(
@@ -91,14 +89,21 @@ internal fun ExpertProgressHeader(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (uiState.totalPatches > 0) {
+                // In the classes or entries of the task that runs, or else in patches
+                val countedTask = runningTask?.takeIf { it.task.countsItems }
+                if (countedTask != null || uiState.totalPatches > 0) {
                     val countColor = MorpheTheme.colors.primary
+                    val locale = currentLocale()
                     MorpheBadge(
                         containerColor = countColor.copy(alpha = 0.18f),
                         contentColor = countColor,
                     ) {
                         Text(
-                            text = "${uiState.patchedCount} / ${uiState.totalPatches}",
+                            text = if (countedTask != null) {
+                                "${FormatUtils.formatCount(countedTask.done, locale)} / ${FormatUtils.formatCount(countedTask.total, locale)}"
+                            } else {
+                                "${uiState.patchedCount} / ${uiState.totalPatches}"
+                            },
                             style = MorpheTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold, fontSize = 12.sp),
                             color = countColor,
                         )

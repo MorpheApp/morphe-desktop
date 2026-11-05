@@ -44,6 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.job
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.EncodeDefault
@@ -315,6 +316,10 @@ object PatchEngine {
                 fileWorkspacePath = File(tempDir, "workspace").also { it.mkdirs() },
                 verifier = verifier,
                 validate = config.validate,
+                // Reported from the threads of the patcher, where a canceled run must not throw
+                progress = { task, done, total ->
+                    if (scopeContext.isActive) onEvent(PatchEvent.TaskProgress(task, done, total))
+                },
             )
 
             report(PatchEvent.StepStarted(PatchStep.LOADING_PATCHES))
