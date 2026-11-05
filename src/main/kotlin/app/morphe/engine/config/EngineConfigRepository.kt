@@ -10,6 +10,9 @@ import app.morphe.engine.util.Logger
 import app.morphe.engine.util.PortablePaths
 import java.io.File
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -23,6 +26,8 @@ open class EngineConfigRepository(
 ) {
     private val mutex = Mutex()
     private var cachedConfig: EngineConfig? = null
+    private val _configFlow = MutableStateFlow<EngineConfig?>(null)
+    val configFlow: StateFlow<EngineConfig?> = _configFlow.asStateFlow()
 
     private val json = Json {
         prettyPrint = true
@@ -32,20 +37,28 @@ open class EngineConfigRepository(
 
     open suspend fun loadConfig(): EngineConfig = withContext(Dispatchers.IO) {
         mutex.withLock {
-            cachedConfig?.let { return@withContext it }
+            cachedConfig?.let {
+                _configFlow.value = it
+                return@withContext it
+            }
             if (!configFile.exists()) {
                 val default = EngineConfig()
                 cachedConfig = default
+                _configFlow.value = default
                 return@withContext default
             }
             try {
                 val element = json.parseToJsonElement(configFile.readText())
                 val config = json.decodeFromJsonElement<EngineConfig>(element)
                 cachedConfig = config
+                _configFlow.value = config
                 config
             } catch (e: Exception) {
                 Logger.warn("Failed to parse engine config from ${configFile.absolutePath}: ${e.message}")
-                EngineConfig()
+                val fallback = EngineConfig()
+                cachedConfig = fallback
+                _configFlow.value = fallback
+                fallback
             }
         }
     }
@@ -62,6 +75,7 @@ open class EngineConfigRepository(
             val engineObj = json.encodeToJsonElement(EngineConfig.serializer(), updated).jsonObject
             mergeAndSaveJsonObject(configFile, json, engineObj)
             cachedConfig = updated
+            _configFlow.value = updated
         }
     }
 
@@ -102,6 +116,18 @@ open class EngineConfigRepository(
 
     suspend fun setDeveloperOptions(enabled: Boolean) =
         saveConfig { it.copy(developerOptions = enabled) }
+
+    suspend fun setBytecodeMode(mode: String) =
+        saveConfig { it.copy(bytecodeMode = mode) }
+
+    suspend fun setValidateFingerprints(enabled: Boolean) =
+        saveConfig { it.copy(validateFingerprints = enabled) }
+
+    suspend fun setVerifyWithSdk(enabled: Boolean) =
+        saveConfig { it.copy(verifyWithSdk = enabled) }
+
+    suspend fun setCustomAndroidSdkPath(path: String?) =
+        saveConfig { it.copy(customAndroidSdkPath = path?.let(PortablePaths::storableForm)) }
 
     suspend fun setLastLocalPatchDir(path: String?) =
         saveConfig { it.copy(lastLocalPatchDir = path) }

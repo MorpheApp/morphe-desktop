@@ -87,6 +87,14 @@ fun SettingsDialog(
     onAutoStartAdbChange: (Boolean) -> Unit = {},
     developerOptions: Boolean = false,
     onDeveloperOptionsChange: (Boolean) -> Unit = {},
+    bytecodeMode: String = "STRIP_FAST",
+    onBytecodeModeChange: (String) -> Unit = {},
+    validateFingerprints: Boolean = false,
+    onValidateFingerprintsChange: (Boolean) -> Unit = {},
+    verifyWithSdk: Boolean = false,
+    onVerifyWithSdkChange: (Boolean) -> Unit = {},
+    customAndroidSdkPath: String? = null,
+    onCustomAndroidSdkPathChange: (String?) -> Unit = {},
     autoRouteLinksAfterInstall: Boolean = false,
     onAutoRouteLinksChange: (Boolean) -> Unit = {},
     disableStockLinksAfterInstall: Boolean = false,
@@ -233,6 +241,14 @@ fun SettingsDialog(
                                 onKeepArchitecturesChange = onKeepArchitecturesChange,
                                 developerOptions = developerOptions,
                                 onDeveloperOptionsChange = onDeveloperOptionsChange,
+                                bytecodeMode = bytecodeMode,
+                                onBytecodeModeChange = onBytecodeModeChange,
+                                validateFingerprints = validateFingerprints,
+                                onValidateFingerprintsChange = onValidateFingerprintsChange,
+                                verifyWithSdk = verifyWithSdk,
+                                onVerifyWithSdkChange = onVerifyWithSdkChange,
+                                customAndroidSdkPath = customAndroidSdkPath,
+                                onCustomAndroidSdkPathChange = onCustomAndroidSdkPathChange,
                                 collapsibleSectionStates = collapsibleSectionStates,
                                 onCollapsibleSectionToggle = onCollapsibleSectionToggle,
                                 gitHubPat = gitHubPat,
@@ -313,6 +329,10 @@ fun SettingsDialogHost() {
     var autoRouteLinksAfterInstall by remember { mutableStateOf(false) }
     var disableStockLinksAfterInstall by remember { mutableStateOf(false) }
     var developerOptions by remember { mutableStateOf(false) }
+    var bytecodeMode by remember { mutableStateOf("STRIP_FAST") }
+    var validateFingerprints by remember { mutableStateOf(false) }
+    var verifyWithSdk by remember { mutableStateOf(false) }
+    var customAndroidSdkPath by remember { mutableStateOf<String?>(null) }
     var gitHubPat by remember { mutableStateOf("") }
 
     suspend fun loadSettings() {
@@ -334,6 +354,10 @@ fun SettingsDialogHost() {
         autoRouteLinksAfterInstall = engineConfig.autoRouteLinksAfterInstall
         disableStockLinksAfterInstall = engineConfig.disableStockLinksAfterInstall
         developerOptions = engineConfig.developerOptions
+        bytecodeMode = engineConfig.bytecodeMode
+        validateFingerprints = engineConfig.validateFingerprints
+        verifyWithSdk = engineConfig.verifyWithSdk
+        customAndroidSdkPath = engineConfig.resolvedCustomAndroidSdkPath()?.absolutePath
         gitHubPat = engineConfig.gitHubPat
         updateChannelPreference = channel
     }
@@ -373,6 +397,26 @@ fun SettingsDialogHost() {
             onDeveloperOptionsChange = { enabled ->
                 developerOptions = enabled
                 scope.launch { engineConfigRepository.setDeveloperOptions(enabled) }
+            },
+            bytecodeMode = bytecodeMode,
+            onBytecodeModeChange = { mode ->
+                bytecodeMode = mode
+                scope.launch { engineConfigRepository.setBytecodeMode(mode) }
+            },
+            validateFingerprints = validateFingerprints,
+            onValidateFingerprintsChange = { enabled ->
+                validateFingerprints = enabled
+                scope.launch { engineConfigRepository.setValidateFingerprints(enabled) }
+            },
+            verifyWithSdk = verifyWithSdk,
+            onVerifyWithSdkChange = { enabled ->
+                verifyWithSdk = enabled
+                scope.launch { engineConfigRepository.setVerifyWithSdk(enabled) }
+            },
+            customAndroidSdkPath = customAndroidSdkPath,
+            onCustomAndroidSdkPathChange = { path ->
+                customAndroidSdkPath = path
+                scope.launch { engineConfigRepository.setCustomAndroidSdkPath(path) }
             },
             onDismiss = {
                 showSettingsDialog = false

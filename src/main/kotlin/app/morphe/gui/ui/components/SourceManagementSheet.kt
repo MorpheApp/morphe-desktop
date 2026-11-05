@@ -733,18 +733,14 @@ private fun ChannelBadge(
 private fun DeveloperMppExclusionsSection(enabled: Boolean) {
     val engineConfigRepository = koinInject<EngineConfigRepository>()
     val scope = rememberCoroutineScope()
-    var developerOptions by remember { mutableStateOf(false) }
-    var patterns by remember { mutableStateOf<List<String>>(emptyList()) }
-    var loaded by remember { mutableStateOf(false) }
+    val config by engineConfigRepository.configFlow.collectAsState()
 
     LaunchedEffect(Unit) {
-        val cfg = engineConfigRepository.loadConfig()
-        developerOptions = cfg.developerOptions
-        patterns = cfg.excludedMppPatterns
-        loaded = true
+        engineConfigRepository.loadConfig()
     }
 
-    if (!loaded || !developerOptions) return
+    val currentConfig = config ?: return
+    if (!currentConfig.developerOptions) return
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Spacer(Modifier.height(4.dp))
@@ -760,9 +756,8 @@ private fun DeveloperMppExclusionsSection(enabled: Boolean) {
             color = MaterialTheme.colorScheme.onSurface,
         )
         ExcludedPatternsEditor(
-            patterns = patterns,
+            patterns = currentConfig.excludedMppPatterns,
             onChange = { next ->
-                patterns = next
                 scope.launch { engineConfigRepository.setExcludedMppPatterns(next) }
             },
             enabled = enabled,
