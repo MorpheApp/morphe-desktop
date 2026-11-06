@@ -1,3 +1,18 @@
+# [2.1.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0...v2.1.0) (2026-11-06)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([faf97a5](https://github.com/MorpheApp/morphe-desktop/commit/faf97a50f754745cc53eba8c491becbf50eb7d65))
+
+
+### Features
+
+* Add root mounting support to GUI ([#404](https://github.com/MorpheApp/morphe-desktop/issues/404)) ([5280710](https://github.com/MorpheApp/morphe-desktop/commit/52807105b090c1e07eb6b9dfe5bba1b027d333cb))
+* Expose developer options in GUI settings ([#408](https://github.com/MorpheApp/morphe-desktop/issues/408)) ([48fb66f](https://github.com/MorpheApp/morphe-desktop/commit/48fb66f7851b3e8f7ac40b7f224f5ca71f6b074b))
+* Move `Tools` into `Settings` dialog ([#407](https://github.com/MorpheApp/morphe-desktop/issues/407)) ([36f3f2d](https://github.com/MorpheApp/morphe-desktop/commit/36f3f2de660726e99826617a67941865f241c335))
+* Show patching progress as the patcher reports it ([b3aa432](https://github.com/MorpheApp/morphe-desktop/commit/b3aa43247e3d3c238308f4dfe04954b45cae8bc7))
+
 # [2.1.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0-dev.4...v2.1.0-dev.5) (2026-11-06)
 
 
