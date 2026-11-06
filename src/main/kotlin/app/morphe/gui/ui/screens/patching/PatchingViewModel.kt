@@ -199,13 +199,15 @@ class PatchingViewModel(
                 runningTask = null
             )
 
-            // Pass user-configured keystore if present; otherwise use default.
-            val userKeystoreDetails = engineConfigRepository.loadConfig().toKeyStoreDetails()
-            val engineConfig = if (config.keystoreDetails == null && userKeystoreDetails != null) {
-                config.copy(keystoreDetails = userKeystoreDetails)
-            } else {
-                config
-            }
+            // Pass user-configured keystore and developer options if present.
+            val appConfig = engineConfigRepository.loadConfig()
+            val userKeystoreDetails = appConfig.toKeyStoreDetails()
+            val engineConfig = config.copy(
+                keystoreDetails = config.keystoreDetails ?: userKeystoreDetails,
+                bytecodeMode = if (appConfig.developerOptions) appConfig.resolvedBytecodeMode() else config.bytecodeMode,
+                validate = if (appConfig.developerOptions) appConfig.validateFingerprints else config.validate,
+                sdkToolsPath = if (appConfig.developerOptions) appConfig.resolvedAndroidSdkPath() else config.sdkToolsPath,
+            )
 
             val engineResult = try {
                 PatchEngine.patch(

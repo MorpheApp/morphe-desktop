@@ -20,6 +20,7 @@ import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.util.AdbErrorCode
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
+import app.morphe.engine.util.AndroidSdkLocator
 import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.Logger
 import app.morphe.patcher.apk.ApkUtils
@@ -316,33 +317,11 @@ internal object PatchCommand : Callable<Int> {
             return
         }
 
-        // Try environment variables first.
-        val envPath = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
-        if (envPath != null) {
-            val envDir = File(envPath)
-            if (envDir.isDirectory) {
-                this.sdkToolsPath = envDir
-                return
-            }
-        }
-
-        // Infer default path based on OS.
-        val userHome = System.getProperty("user.home")
-        val osName = System.getProperty("os.name").lowercase()
-        val defaultPath = when {
-            osName.contains("win") -> File("$userHome/AppData/Local/Android/Sdk")
-            osName.contains("mac") -> File("$userHome/Library/Android/sdk")
-            else -> File("$userHome/Android/Sdk")
-        }
-
-        if (defaultPath.isDirectory) {
-            this.sdkToolsPath = defaultPath
-        } else {
-            throw CommandLine.ParameterException(
+        this.sdkToolsPath = AndroidSdkLocator.detectSdkPath()
+            ?: throw CommandLine.ParameterException(
                 spec.commandLine(),
                 "Could not find Android SDK. Set ANDROID_HOME or pass a path to --verify-with-sdk.",
             )
-        }
     }
     private var sdkToolsPath: File? = null
 

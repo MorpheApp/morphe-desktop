@@ -8,12 +8,10 @@ package app.morphe.gui.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchProvider
@@ -452,8 +450,9 @@ private data class LocalSourceConfig(val developerOptions: Boolean, val lastLoca
 
 @Composable
 private fun rememberLocalSourceConfig(engineConfigRepository: EngineConfigRepository): LocalSourceConfig {
-    val config by produceState<EngineConfig?>(initialValue = null) {
-        value = engineConfigRepository.loadConfig()
+    val config by engineConfigRepository.configFlow.collectAsState()
+    LaunchedEffect(Unit) {
+        engineConfigRepository.loadConfig()
     }
     return LocalSourceConfig(
         developerOptions = config?.developerOptions ?: false,

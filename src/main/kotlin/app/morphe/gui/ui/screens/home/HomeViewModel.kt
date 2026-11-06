@@ -54,6 +54,7 @@ import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.patchSourceHeaders
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.dex.BytecodeMode
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -218,6 +219,9 @@ class HomeViewModel(
             exclusiveMode = false,
             forceCompatibility = true,
             failOnError = true,
+            bytecodeMode = if (engineConfigData.developerOptions) engineConfigData.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
+            validate = engineConfigData.developerOptions && engineConfigData.validateFingerprints,
+            sdkToolsPath = if (engineConfigData.developerOptions) engineConfigData.resolvedAndroidSdkPath() else null,
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
             recordHistory = true,
@@ -308,6 +312,9 @@ class HomeViewModel(
             exclusiveMode = false,
             forceCompatibility = true,
             failOnError = true,
+            bytecodeMode = if (engineConfigData.developerOptions) engineConfigData.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
+            validate = engineConfigData.developerOptions && engineConfigData.validateFingerprints,
+            sdkToolsPath = if (engineConfigData.developerOptions) engineConfigData.resolvedAndroidSdkPath() else null,
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
             recordHistory = true,

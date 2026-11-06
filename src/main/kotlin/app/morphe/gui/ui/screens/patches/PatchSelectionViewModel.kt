@@ -13,6 +13,7 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.apk.AndroidArchitectures
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.ApkOutputNaming
+import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot
 import app.morphe.engine.options.PatchPreferencesRepository
@@ -31,8 +32,10 @@ import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.patch.InstallerType
 import app.morphe.patcher.resource.CpuArchitecture
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -85,6 +88,7 @@ class PatchSelectionViewModel(
 
     private var defaultOutputDirectory: String? = null
     private var autoCleanupTempFiles: Boolean = true
+    private var currentEngineConfig: EngineConfig? = null
 
     private val _uiState = MutableStateFlow(
         PatchSelectionUiState(
@@ -96,26 +100,30 @@ class PatchSelectionViewModel(
 
     init {
         loadPatches()
-        loadStripLibsPreference()
+        observeEngineConfig()
     }
 
-    private fun loadStripLibsPreference() {
+    private fun observeEngineConfig() {
         viewModelScope.launch {
-            val config = engineConfigRepository.loadConfig()
-            autoCleanupTempFiles = config.autoCleanupTempFiles
-            // Resolved default output directory path.
-            defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
-            // Derive architectures from the APK if not provided.
-            val arches = apkArchitectures.ifEmpty {
-                withContext(Dispatchers.IO) {
-                    runCatching { ApkInspector.extractArchitectures(File(apkPath)).toList() }
-                        .getOrDefault(emptyList())
+            engineConfigRepository.loadConfig()
+            engineConfigRepository.configFlow.collect { config ->
+                if (config == null) return@collect
+                currentEngineConfig = config
+                autoCleanupTempFiles = config.autoCleanupTempFiles
+                // Resolved default output directory path.
+                defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
+                // Derive architectures from the APK if not provided.
+                val arches = _uiState.value.apkArchitectures.ifEmpty {
+                    withContext(Dispatchers.IO) {
+                        runCatching { ApkInspector.extractArchitectures(File(apkPath)).toList() }
+                            .getOrDefault(emptyList())
+                    }
                 }
+                _uiState.value = _uiState.value.copy(
+                    apkArchitectures = arches,
+                    stripLibsStatus = computeStripLibsStatus(arches, config.keepArchitectures),
+                )
             }
-            _uiState.value = _uiState.value.copy(
-                apkArchitectures = arches,
-                stripLibsStatus = computeStripLibsStatus(arches, config.keepArchitectures),
-            )
         }
     }
 
@@ -503,7 +511,9 @@ class PatchSelectionViewModel(
 
     /** Refreshes native library stripping status from current settings. */
     fun refreshStripLibsStatus() {
-        loadStripLibsPreference()
+        viewModelScope.launch {
+            engineConfigRepository.loadConfig()
+        }
     }
 
     /** Sets a patch option value using key format "patchName.optionKey". */
@@ -521,25 +531,37 @@ class PatchSelectionViewModel(
 
     fun targetPackage(): String = packageName
 
-    fun runInfo(): RunInfo = RunInfo(
-        appName = apkName,
-        appVersion = apkVersion.takeIf { it.isNotBlank() }
-            ?: ApkOutputNaming.extractApkVersionFromFilename(File(apkPath).name).orEmpty(),
-        apkFileName = File(apkPath).name,
-        apkPath = apkPath,
-        packageName = packageName,
-        bundles = actualPatchesFilePaths.mapIndexed { i, path ->
-            val file = File(path)
-            val name = patchSourceNames.getOrNull(i)
-                ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
-                ?: PatchSourceNaming.resolveSourceName(file = file)
-            RunInfo.Bundle(
-                name = name,
-                version = ApkOutputNaming.extractPatchesVersion(file.name),
-                fileName = file.name,
+    fun runInfo(engineConfig: EngineConfig? = currentEngineConfig): RunInfo {
+        val devInfo = if (engineConfig?.developerOptions == true) {
+            RunInfo.DeveloperOptionsInfo(
+                bytecodeMode = engineConfig.bytecodeMode,
+                validateFingerprints = engineConfig.validateFingerprints,
+                verifyWithSdk = engineConfig.verifyWithSdk,
+                sdkPath = if (engineConfig.verifyWithSdk) engineConfig.resolvedAndroidSdkPath()?.absolutePath else null,
             )
-        },
-    )
+        } else null
+
+        return RunInfo(
+            appName = apkName,
+            appVersion = apkVersion.takeIf { it.isNotBlank() }
+                ?: ApkOutputNaming.extractApkVersionFromFilename(File(apkPath).name).orEmpty(),
+            apkFileName = File(apkPath).name,
+            apkPath = apkPath,
+            packageName = packageName,
+            bundles = actualPatchesFilePaths.mapIndexed { i, path ->
+                val file = File(path)
+                val name = patchSourceNames.getOrNull(i)
+                    ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
+                    ?: PatchSourceNaming.resolveSourceName(file = file)
+                RunInfo.Bundle(
+                    name = name,
+                    version = ApkOutputNaming.extractPatchesVersion(file.name),
+                    fileName = file.name,
+                )
+            },
+            developerOptions = devInfo,
+        )
+    }
 
     /** Persists current patch selections and option values for each bundle. */
     private fun saveCurrentSelection() {
@@ -629,6 +651,9 @@ class PatchSelectionViewModel(
             selectionByBundle[snapshot.sourceName]?.isNotEmpty() == true
         }
 
+        val engineCfg = currentEngineConfig ?: runBlocking { engineConfigRepository.loadConfig() }
+        val devMode = engineCfg.developerOptions
+
         return PatchEngine.Config(
             inputApk = inputFile,
             outputApk = outputFile,
@@ -642,6 +667,9 @@ class PatchSelectionViewModel(
             forceCompatibility = true,
             architecturesToKeep = keepArches,
             failOnError = !continueOnError,
+            bytecodeMode = if (devMode) engineCfg.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
+            validate = devMode && engineCfg.validateFingerprints,
+            sdkToolsPath = if (devMode) engineCfg.resolvedAndroidSdkPath() else null,
             disablePurge = !autoCleanupTempFiles,
             recordHistory = true,
             appDisplayName = apkName,
@@ -702,6 +730,7 @@ class PatchSelectionViewModel(
         keystorePassword: String? = null,
         keystoreAlias: String? = null,
         keystoreEntryPassword: String? = null,
+        engineConfig: EngineConfig? = currentEngineConfig,
     ): String {
         val jarName = resolveRunningJarName()
         val inputFile = File(apkPath)
@@ -805,6 +834,22 @@ class PatchSelectionViewModel(
                 if (continueOnError) appendLine("  --continue-on-error \\")
                 if (useExclusive) appendLine("  --exclusive \\")
                 striplibsArg?.let { appendLine("  --striplibs $it \\") }
+                if (engineConfig?.developerOptions == true) {
+                    if (engineConfig.bytecodeMode != "STRIP_FAST") {
+                        appendLine("  --bytecode-mode ${engineConfig.bytecodeMode} \\")
+                    }
+                    if (engineConfig.validateFingerprints) {
+                        appendLine("  --validate \\")
+                    }
+                    if (engineConfig.verifyWithSdk) {
+                        val customPath = engineConfig.resolvedCustomAndroidSdkPath()?.absolutePath
+                        if (customPath != null) {
+                            appendLine("  --verify-with-sdk \"$customPath\" \\")
+                        } else {
+                            appendLine("  --verify-with-sdk \\")
+                        }
+                    }
+                }
                 if (hasCustomKeystore) {
                     appendLine("  --keystore \"$keystorePath\" \\")
                     keystorePassword?.let { appendLine("  --keystore-password \"$it\" \\") }
@@ -832,6 +877,22 @@ class PatchSelectionViewModel(
             if (continueOnError) parts.add("--continue-on-error")
             if (useExclusive) parts.add("--exclusive")
             striplibsArg?.let { parts.add("--striplibs $it") }
+            if (engineConfig?.developerOptions == true) {
+                if (engineConfig.bytecodeMode != "STRIP_FAST") {
+                    parts.add("--bytecode-mode ${engineConfig.bytecodeMode}")
+                }
+                if (engineConfig.validateFingerprints) {
+                    parts.add("--validate")
+                }
+                if (engineConfig.verifyWithSdk) {
+                    val customPath = engineConfig.resolvedCustomAndroidSdkPath()?.absolutePath
+                    if (customPath != null) {
+                        parts.add("--verify-with-sdk \"$customPath\"")
+                    } else {
+                        parts.add("--verify-with-sdk")
+                    }
+                }
+            }
             if (hasCustomKeystore) {
                 parts.add("--keystore \"$keystorePath\"")
                 if (keystorePassword != null) parts.add("--keystore-password \"$keystorePassword\"")
@@ -880,11 +941,19 @@ data class RunInfo(
     val apkPath: String,
     val packageName: String,
     val bundles: List<Bundle>,
+    val developerOptions: DeveloperOptionsInfo? = null,
 ) {
     data class Bundle(
         val name: String,
         val version: String?,
         val fileName: String,
+    )
+
+    data class DeveloperOptionsInfo(
+        val bytecodeMode: String,
+        val validateFingerprints: Boolean,
+        val verifyWithSdk: Boolean,
+        val sdkPath: String?,
     )
 }
 
