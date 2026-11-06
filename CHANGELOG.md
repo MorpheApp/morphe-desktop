@@ -1,3 +1,10 @@
+# [2.2.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-11-06)
+
+
+### Features
+
+* Display required build number on version chips ([#412](https://github.com/MorpheApp/morphe-desktop/issues/412)) ([aa572ff](https://github.com/MorpheApp/morphe-desktop/commit/aa572ff6cec46b8a90c8131e4ab7c79de1c32988))
+
 # [2.2.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.1...v2.2.0-dev.1) (2026-11-06)
 
 
