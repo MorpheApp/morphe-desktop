@@ -1,3 +1,10 @@
+## [2.1.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0...v2.1.1-dev.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* Resolve relative input path when staging split bundles ([edcdccb](https://github.com/MorpheApp/morphe-desktop/commit/edcdccb00efafeb906be4bb70c106ef708775786))
+
 # [2.1.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0...v2.1.0) (2026-11-06)
 
 
