@@ -260,19 +260,20 @@ object PatchEngine {
                 val actualInputApk = if (PatchStep.MERGING_SPLITS in config.steps) {
                     report(PatchEvent.StepStarted(PatchStep.MERGING_SPLITS))
                     info("Merging split APK bundle...")
-                    val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
-                    val stagedBundle = if (config.inputApk.parentFile?.canonicalFile == tempDir.canonicalFile) {
-                        config.inputApk
+                    val inputApk = config.inputApk.absoluteFile
+                    val mergedApk = File(tempDir, "${inputApk.nameWithoutExtension}-merged.apk")
+                    val stagedBundle = if (inputApk.parentFile?.canonicalFile == tempDir.canonicalFile) {
+                        inputApk
                     } else {
-                        File(tempDir, config.inputApk.name).also { staged ->
+                        File(tempDir, inputApk.name).also { staged ->
                             Files.deleteIfExists(staged.toPath())
                             try {
-                                Files.createSymbolicLink(staged.toPath(), config.inputApk.toPath())
+                                Files.createSymbolicLink(staged.toPath(), inputApk.toPath())
                             } catch (_: Exception) {
                                 try {
-                                    Files.createLink(staged.toPath(), config.inputApk.toPath())
+                                    Files.createLink(staged.toPath(), inputApk.toPath())
                                 } catch (_: Exception) {
-                                    config.inputApk.copyTo(staged, overwrite = true)
+                                    inputApk.copyTo(staged, overwrite = true)
                                 }
                             }
                         }
@@ -285,13 +286,13 @@ object PatchEngine {
                             cleanMetaInf = false,
                         )
                     } finally {
-                        if (stagedBundle != config.inputApk) {
+                        if (stagedBundle != inputApk) {
                             runCatching { Files.deleteIfExists(stagedBundle.toPath()) }
                         }
                         tempDir.listFiles()?.filter { it.name.startsWith("tmp_") }?.forEach {
                             it.deleteRecursivelyInParallel()
                         }
-                        cleanupLegacyBundleTmp(config.inputApk)
+                        cleanupLegacyBundleTmp(inputApk)
                     }
                     mergedApkToCleanup = mergedApk
                     mergedApk
