@@ -18,6 +18,7 @@ import java.io.File
 import java.net.URI
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.skia.Image
@@ -25,6 +26,11 @@ import org.jetbrains.skia.Image
 /** Utilities for extracting repository avatars and caching remote source icons. */
 object AvatarLoader {
     private val memoryCache = ConcurrentHashMap<String, ImageBitmap>()
+
+    /** Clears in-memory avatar bitmaps. */
+    fun clearMemoryCache() {
+        memoryCache.clear()
+    }
 
     /** Resolves avatar URL for a given patch source. */
     fun resolveAvatarUrl(source: PatchSource): String? {
@@ -65,29 +71,41 @@ object AvatarLoader {
         val cacheFile = File(MorpheData.avatarsDir, "$hash.png")
 
         if (cacheFile.exists() && cacheFile.length() > 0) {
-            runCatching {
+            try {
                 val bytes = cacheFile.readBytes()
                 val bitmap = Image.makeFromEncoded(bytes).toComposeImageBitmap()
                 memoryCache[url] = bitmap
                 return@withContext bitmap
-            }.onFailure {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
                 cacheFile.delete()
             }
         }
 
-        runCatching {
+        try {
             val response = httpClient.get(url)
             if (response.status.isSuccess()) {
                 val bytes = response.bodyAsBytes()
                 if (bytes.isNotEmpty()) {
                     val bitmap = Image.makeFromEncoded(bytes).toComposeImageBitmap()
                     memoryCache[url] = bitmap
-                    runCatching { cacheFile.writeBytes(bytes) }
+                    try {
+                        cacheFile.writeBytes(bytes)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (_: Exception) {
+                        // Best-effort disk write
+                    }
                     return@withContext bitmap
                 }
             }
             null
-        }.getOrNull()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun sha256(input: String): String {
