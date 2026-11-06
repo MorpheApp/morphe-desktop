@@ -43,6 +43,7 @@ import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheButton
@@ -233,6 +234,7 @@ internal fun ApkSourceSection(
             versions = app.supportedVersions,
             packageName = app.packageName,
             onOpenUrl = uriHandler::openUri,
+            requiredBuildCodesFor = app::requiredBuildCodes,
         )
         VersionChipGroup(
             label = stringResource(Res.string.version_label_experimental),
@@ -240,6 +242,7 @@ internal fun ApkSourceSection(
             versions = app.experimentalVersions,
             packageName = app.packageName,
             onOpenUrl = uriHandler::openUri,
+            requiredBuildCodesFor = app::requiredBuildCodes,
         )
     }
 
@@ -503,6 +506,7 @@ private fun VersionChipGroup(
     versions: List<String>,
     packageName: String,
     onOpenUrl: (String) -> Unit,
+    requiredBuildCodesFor: (String) -> Set<Int> = { emptySet() },
 ) {
     if (versions.isEmpty()) return
     val patchSourceHeader = LocalPatchSourceHeader.current
@@ -513,9 +517,13 @@ private fun VersionChipGroup(
     ) {
         versions.forEach { v ->
             val url = remember(v) { SupportedApp.getDownloadUrl(packageName, v) }
+            val buildCodes = remember(v) { requiredBuildCodesFor(v) }
+            val chipText = remember(v, buildCodes) { FormatUtils.formatVersionWithBuild(v, buildCodes) }
+            val tooltip = if (buildCodes.size > 1) "$v (${buildCodes.joinToString(", ")})" else null
             MorpheCardChip(
-                text = v,
+                text = chipText,
                 icon = if (url != null) MorpheIcons.OpenInNew else null,
+                tooltip = tooltip,
                 onCard = false,
                 // Followed here rather than by the browser, which cannot send the patch source header
                 onClick = { url?.let { openUrlAndFollowRedirects(it, patchSourceHeader(packageName), onOpenUrl) } },

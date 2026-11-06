@@ -131,6 +131,13 @@ object FormatUtils {
             "$kbPerSec KB/s"
         }
     }
+
+    /** Formats an application version with its targeted build code (if any), showing at most one build code. */
+    fun formatVersionWithBuild(version: String, buildCodes: Set<Int>): String {
+        if (buildCodes.isEmpty()) return version
+        val primaryCode = buildCodes.first()
+        return "$version ($primaryCode)"
+    }
 }
 
 /** Resolves current GUI [Locale] from [LocalLanguageState]. */
