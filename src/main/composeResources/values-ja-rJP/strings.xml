@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">パッチを適用中</string>
     <string name="patching_step_writing_apk">パッチ済み APK ファイルを出力中</string>
     <string name="patching_step_signing">パッチ済み APK ファイルに署名中</string>
+    <string name="patching_task_decoding_dex">DEX ファイルを読み込んでいます</string>
+    <string name="patching_task_extracting_resources">リソースを抽出しています</string>
+    <string name="patching_task_decoding_resources">リソースをデコードしています</string>
+    <string name="patching_task_indexing_classes">クラスをインデックスしています</string>
+    <string name="patching_task_compiling_dex">DEX ファイルをコンパイルしています</string>
+    <string name="patching_task_compiling_resources">リソースをコンパイルしています</string>
+    <string name="patching_task_writing_apk">APK ファイルを書き込んでいます</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s にインストール中…</string>
     <string name="adb_error_downgrade">ダウングレードできません。新しいバージョンがインストールされています。先に既存のアプリをアンインストールしてください</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">パッチの読み込みエラー</string>
     <string name="patch_selection_title">パッチを選択</string>
     <string name="patch_selection_cmd_preview">コマンド プレビュー</string>
+    <string name="patch_selection_root_mode_description">root 権限マウントモード</string>
+    <string name="patch_selection_lock_unavailable">root マウントでは利用できません</string>
     <string name="patch_selection_continue_on_error_tooltip">パッチが失敗してもパッチ適用を続行</string>
     <string name="patch_selection_continue_on_error_description">エラー時も続行</string>
     <string name="patch_selection_no_patches_found">パッチが見つかりません</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">アプリ</string>
     <string name="patch_selection_run_info_bundles_group">パッチバンドル</string>
     <string name="patch_selection_run_info_no_bundles">解決されたバンドルがありません</string>
+    <string name="patch_selection_run_info_dev_group">開発者向け設定</string>
+    <string name="patch_selection_run_info_bytecode_mode">バイトコードモード: %1$s</string>
+    <string name="patch_selection_run_info_validate">フィンガープリント検証: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK検証: %1$s</string>
     <string name="patch_selection_group_universal">ユニバーサル</string>
     <string name="patch_selection_group_ungrouped">グループ化なし</string>
     <string name="patch_selection_group_selected_count">%1$d 件選択中</string>
@@ -422,6 +435,16 @@
     <string name="result_adb_updating_on_device">%1$s で更新中…</string>
     <string name="result_adb_update_successful">更新に成功しました！</string>
     <string name="result_adb_install_successful">インストールに成功しました！</string>
+    <string name="result_adb_badge_root_mount">root 権限マウント</string>
+    <string name="result_adb_mount_button">%1$s をマウント</string>
+    <string name="result_adb_mounting_on_device">%1$s をマウントしています…</string>
+    <string name="result_adb_mount_successful">マウントが完了しました！</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s をマウントしています… プロンプトが表示された場合は、お使いの端末で Superuser 権限を付与してください</string>
+    <string name="result_adb_unmount_button">%1$s をアンマウント</string>
+    <string name="result_adb_unmounting_on_device">%1$s をアンマウントしています…</string>
+    <string name="result_adb_root_not_detected">%1$s で root アクセスが検出されませんでした。Magisk/KernelSU/APatch がインストールされ、su 権限が付与されていることを確認してください</string>
+    <string name="result_adb_stock_app_not_installed">%2$s にはストックアプリ %1$s がインストールされていません。マウントする前に、まず公式アプリをインストールしてください
+</string>
     <string name="result_link_default_restored">デフォルトのリンク処理を復元しました</string>
     <string name="result_link_routed_stock_disabled">リンクをパッチ済みアプリに転送し、元のアプリを無効化しました</string>
     <string name="result_adb_not_found_hint">ADB が見つかりません。直接インストールを有効にするには、Android SDK Platform Tools をインストールしてください</string>
@@ -602,17 +625,6 @@
     <string name="update_banner_from_version">v%1$s から</string>
     <string name="update_banner_later_button">後で</string>
     <string name="update_banner_skip_button">v%1$s をスキップ</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">ツール</string>
-    <string name="tools_dialog_open_logs_button">ログを開く</string>
-    <string name="tools_dialog_open_app_data_button">アプリデータを開く</string>
-    <string name="tools_dialog_view_licenses_button">ライセンスを表示</string>
-    <string name="tools_dialog_cache_cleared">キャッシュを削除しました</string>
-    <string name="tools_dialog_clear_failed">削除に失敗しました</string>
-    <string name="tools_dialog_clear_cache_button">キャッシュを削除</string>
-    <string name="tools_dialog_cache_summary">キャッシュ: %1$s（パッチ + ログ）</string>
-    <string name="tools_dialog_confirm_clear_title">キャッシュを削除しますか？</string>
-    <string name="tools_dialog_confirm_clear_message">ダウンロードしたパッチとログファイルが削除されます。パッチは必要なときに再ダウンロードされます</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">オープンソースライセンス</string>
     <string name="licenses_dialog_empty_failed">// ライセンスの読み込みに失敗しました</string>
@@ -685,6 +697,19 @@
     <string name="settings_section_strip_libs">ライブラリをストリップ</string>
     <string name="settings_toggle_developer_options_label">開発者向け設定</string>
     <string name="settings_toggle_developer_options_desc">パッチ開発者向け。パッチのビルドとテストのための一連のワークフローオプションを解放します（完全なリストはドキュメントを参照）。現時点では、ローカルソースをフォルダに指定して、Morphe が常にその最新の .mpp を読み込むようにします</string>
+    <string name="settings_dev_bytecode_mode_label">バイトコードモード</string>
+    <string name="settings_dev_bytecode_mode_desc">パッチ適用中にDEXバイトコードに適用される変換モード</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">高速</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">安全</string>
+    <string name="settings_dev_bytecode_mode_full">フル</string>
+    <string name="settings_dev_validate_label">フィンガープリント検証</string>
+    <string name="settings_dev_validate_desc">各 match() が1つのメソッドにのみ一致することを確認します（パッチ適用が遅くなります。パッチのテスト用です）</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK検証</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK ツール (d8, zipalign) でパッチ済みの DEX および APK を検証します。誤検知が報告される場合があります</string>
+    <string name="settings_dev_sdk_path_label">Android SDK ディレクトリ</string>
+    <string name="settings_dev_sdk_path_auto">自動検出済み</string>
+    <string name="settings_dev_sdk_not_found">Android SDK が見つかりません。ANDROID_HOME を設定するか、SDK ディレクトリを参照してください</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK ディレクトリを選択</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">一時ファイルを自動クリーンアップ</string>
     <string name="settings_toggle_auto_cleanup_desc">パッチ適用後に一時ファイルを削除</string>
@@ -699,10 +724,21 @@
     <string name="settings_output_folder_not_found">フォルダが見つかりません。次回のパッチ適用時に作成されます</string>
     <string name="settings_toggle_auto_start_adb_label">ADB の自動起動</string>
     <string name="settings_toggle_auto_start_adb_desc">起動時に ADB デーモンを起動し、接続されたデバイスを監視します。オフにすると、Morphe はサーバーを起動せず、インストール／プッシュ機能は無効になります</string>
+    <string name="settings_section_storage">ストレージ &amp; キャッシュ</string>
+    <string name="settings_cache_summary">キャッシュ: %1$s (パッチ + ログ)</string>
+    <string name="settings_cache_clear_button">キャッシュを消去</string>
+    <string name="settings_cache_cleared">キャッシュを消去しました</string>
+    <string name="settings_cache_clear_failed">消去に失敗しました</string>
+    <string name="settings_cache_confirm_title">キャッシュを消去しますか？</string>
+    <string name="settings_cache_confirm_message">これにより、ダウンロード済みのパッチとログファイルが削除されます。パッチは必要に応じて再ダウンロードされます</string>
+    <string name="settings_storage_open_app_data_button">アプリデータを開く</string>
+    <string name="settings_storage_open_logs_button">ログを開く</string>
     <string name="settings_section_about">このフィルタについて</string>
     <string name="settings_about_version">バージョン %1$s</string>
     <string name="settings_about_changelogs_title">変更履歴を表示</string>
     <string name="settings_about_changelogs_desc">最新のアップデートでの変更点を確認します</string>
+    <string name="settings_about_licenses_title">オープンソース ライセンス</string>
+    <string name="settings_about_licenses_desc">サードパーティライブラリのライセンスを表示します</string>
     <string name="settings_about_documentation_title">ドキュメント</string>
     <string name="settings_about_documentation_desc">パッチ適用、ソース、トラブルシューティングのガイド</string>
     <string name="settings_about_website_title">ウェブサイトを表示</string>

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">패치를 적용하는 중</string>
     <string name="patching_step_writing_apk">패치된 APK 파일을 작성하는 중</string>
     <string name="patching_step_signing">패치된 APK 파일에 서명하는 중</string>
+    <string name="patching_task_decoding_dex">DEX 파일을 읽어오는 중</string>
+    <string name="patching_task_extracting_resources">리소스를 추출하는 중</string>
+    <string name="patching_task_decoding_resources">리소스를 디코딩하는 중</string>
+    <string name="patching_task_indexing_classes">클래스를 인덱싱하는 중</string>
+    <string name="patching_task_compiling_dex">DEX 파일을 컴파일하는 중</string>
+    <string name="patching_task_compiling_resources">리소스를 컴파일하는 중</string>
+    <string name="patching_task_writing_apk">APK 파일 작성 중</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s에 설치하는 중…</string>
     <string name="adb_error_downgrade">다운그레이드할 수 없습니다. 최신 버전이 설치되어 있습니다. 기존 앱을 먼저 제거하세요</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">패치 불러오기 오류</string>
     <string name="patch_selection_title">패치 선택하기</string>
     <string name="patch_selection_cmd_preview">명령 미리보기</string>
+    <string name="patch_selection_root_mode_description">루트 마운트 모드</string>
+    <string name="patch_selection_lock_unavailable">루트 마운트에 사용할 수 없음</string>
     <string name="patch_selection_continue_on_error_tooltip">패치 하나가 실패해도 패치를 계속합니다</string>
     <string name="patch_selection_continue_on_error_description">오류 시 계속</string>
     <string name="patch_selection_no_patches_found">패치를 찾을 수 없습니다</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">앱</string>
     <string name="patch_selection_run_info_bundles_group">패치 번들</string>
     <string name="patch_selection_run_info_no_bundles">확인된 번들 없음</string>
+    <string name="patch_selection_run_info_dev_group">개발자 옵션</string>
+    <string name="patch_selection_run_info_bytecode_mode">바이트코드 모드: %1$s</string>
+    <string name="patch_selection_run_info_validate">지문 검증: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK 확인: %1$s</string>
     <string name="patch_selection_group_universal">유니버설</string>
     <string name="patch_selection_group_ungrouped">그룹화되지 않음</string>
     <string name="patch_selection_group_selected_count">%1$d 개 선택됨</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">%1$s에서 업데이트 중…</string>
     <string name="result_adb_update_successful">업데이트를 성공하였습니다!</string>
     <string name="result_adb_install_successful">설치 성공!</string>
+    <string name="result_adb_badge_root_mount">루트 마운트</string>
+    <string name="result_adb_mount_button">'%1$s'에 마운트</string>
+    <string name="result_adb_mounting_on_device">'%1$s'에 마운트하는 중…</string>
+    <string name="result_adb_mount_successful">마운트 성공!</string>
+    <string name="result_adb_mount_su_prompt_hint">'%1$s'에 마운트하는 중… 슈퍼유저 권한 요청이 표시되면 기기에서 권한을 허용하세요</string>
+    <string name="result_adb_unmount_button">'%1$s'에서 마운트 해제</string>
+    <string name="result_adb_unmounting_on_device">'%1$s'에서 마운트 해제하는 중</string>
+    <string name="result_adb_root_not_detected">'%1$s'에서 루트 권한을 감지하지 못하였습니다. Magisk/KernelSU/APatch가 설치되어 있는지 확인하고 su 권한이 부여되었는지 확인하세요</string>
+    <string name="result_adb_stock_app_not_installed">'%2$s'에 기본 앱 '%1$s'이 설치되어 있지 않습니다. 마운트하기 전에 공식 앱을 먼저 설치하세요</string>
     <string name="result_link_default_restored">기본 링크 처리 복원됨</string>
     <string name="result_link_routed_stock_disabled">링크가 패치된 앱으로 연결되고 기본 앱이 비활성화됨</string>
     <string name="result_adb_not_found_hint">ADB를 찾을 수 없습니다. 직접 설치를 사용하려면 Android SDK Platform Tools를 설치하세요</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s부터</string>
     <string name="update_banner_later_button">나중에</string>
     <string name="update_banner_skip_button">v%1$s 건너뛰기</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">도구</string>
-    <string name="tools_dialog_open_logs_button">로그 열기</string>
-    <string name="tools_dialog_open_app_data_button">앱 데이터 열기</string>
-    <string name="tools_dialog_view_licenses_button">라이선스 보기</string>
-    <string name="tools_dialog_cache_cleared">캐시 지워짐</string>
-    <string name="tools_dialog_clear_failed">지우기 실패</string>
-    <string name="tools_dialog_clear_cache_button">캐시 지우기</string>
-    <string name="tools_dialog_cache_summary">캐시: %1$s(패치 + 로그)</string>
-    <string name="tools_dialog_confirm_clear_title">캐시를 지울까요?</string>
-    <string name="tools_dialog_confirm_clear_message">다운로드된 패치와 로그 파일이 삭제됩니다. 필요할 때 패치를 다시 다운로드합니다</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">오픈 소스 라이선스</string>
     <string name="licenses_dialog_empty_failed">// 라이선스를 불러오지 못했습니다</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">라이브러리 제거</string>
     <string name="settings_toggle_developer_options_label">개발자 옵션</string>
     <string name="settings_toggle_developer_options_desc">패치 개발자용입니다. 패치를 빌드하고 테스트하기 위한 일련의 워크플로 옵션을 잠금 해제합니다(전체 목록은 문서 참조). 현재로서는 로컬 소스를 폴더로 지정하여 Morphe가 항상 최신 .mpp를 불러오도록 하는 것입니다</string>
+    <string name="settings_dev_bytecode_mode_label">바이트코드 모드</string>
+    <string name="settings_dev_bytecode_mode_desc">패치 중 DEX 바이트코드에 적용되는 변환 모드</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">빠름</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">안전</string>
+    <string name="settings_dev_bytecode_mode_full">최대</string>
+    <string name="settings_dev_validate_label">지문 검증</string>
+    <string name="settings_dev_validate_desc">각 match()가 단 하나의 메서드와만 일치하는지 검증합니다 (패치 속도가 느려지며, 패치 테스트용으로 사용됩니다)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK 확인</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK 도구(d8, zipalign)를 사용하여 패치된 DEX 및 APK를 확인합니다. 오탐이 보고될 수 있습니다</string>
+    <string name="settings_dev_sdk_path_label">Android SDK 디렉토리</string>
+    <string name="settings_dev_sdk_path_auto">자동 감지됨</string>
+    <string name="settings_dev_sdk_not_found">Android SDK를 찾을 수 없습니다. ANDROID_HOME을 설정하거나 SDK 디렉토리를 찾아보세요</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK 디렉토리 선택</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">임시 파일 자동 정리</string>
     <string name="settings_toggle_auto_cleanup_desc">패치 후 임시 파일을 삭제합니다</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">폴더를 찾을 수 없습니다. 다음 패치 시 생성됩니다</string>
     <string name="settings_toggle_auto_start_adb_label">ADB 자동 시작</string>
     <string name="settings_toggle_auto_start_adb_desc">실행 시 ADB 데몬을 시작하여 연결된 기기를 모니터링합니다. 끄면 Morphe가 서버를 시작하지 않으며 설치/푸시 기능이 비활성화됩니다</string>
+    <string name="settings_section_storage">저장 공간 및 캐시</string>
+    <string name="settings_cache_summary">캐시: %1$s (패치 + 로그)</string>
+    <string name="settings_cache_clear_button">캐시 지우기</string>
+    <string name="settings_cache_cleared">캐시가 지워졌습니다</string>
+    <string name="settings_cache_clear_failed">지우기 실패</string>
+    <string name="settings_cache_confirm_title">캐시를 지우시겠습니까?</string>
+    <string name="settings_cache_confirm_message">다운로드한 패치와 로그 파일이 삭제됩니다. 패치는 필요할 때 다시 다운로드됩니다</string>
+    <string name="settings_storage_open_app_data_button">앱 데이터 열기</string>
+    <string name="settings_storage_open_logs_button">로그 열기</string>
     <string name="settings_section_about">정보</string>
     <string name="settings_about_version">버전 %1$s</string>
     <string name="settings_about_changelogs_title">변경 사항 보기</string>
     <string name="settings_about_changelogs_desc">이 업데이트의 최신 변경 사항을 확인해 보세요</string>
+    <string name="settings_about_licenses_title">오픈소스 라이선스</string>
+    <string name="settings_about_licenses_desc">제3자 라이브러리 라이선스 보기</string>
     <string name="settings_about_documentation_title">문서</string>
     <string name="settings_about_documentation_desc">패치, 소스 및 문제 해결 가이드</string>
     <string name="settings_about_website_title">웹사이트 방문</string>

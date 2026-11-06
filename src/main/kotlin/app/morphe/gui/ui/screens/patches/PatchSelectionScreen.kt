@@ -30,9 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.model.lockState
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchingScreenRoute
@@ -43,6 +43,7 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patches.components.selection.*
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.screenScrim
+import app.morphe.patcher.patch.InstallerType
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
@@ -76,8 +77,9 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val targetPackage = viewModel.targetPackage()
 
-    val engineConfig by produceState<EngineConfig?>(initialValue = null) {
-        value = engineConfigRepository.loadConfig()
+    val engineConfig by engineConfigRepository.configFlow.collectAsState()
+    LaunchedEffect(Unit) {
+        engineConfigRepository.loadConfig()
     }
 
     ScreenErrorDialog(
@@ -93,7 +95,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
 
     var showRunInfo by remember { mutableStateOf(false) }
     if (showRunInfo) {
-        val info = remember(uiState.bundles) { viewModel.runInfo() }
+        val info = remember(uiState.bundles, engineConfig) { viewModel.runInfo(engineConfig) }
         RunInfoDialog(info = info, onDismiss = { showRunInfo = false })
     }
 
@@ -102,6 +104,8 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             uiState = uiState,
             showCommandPreview = showCommandPreview,
             onToggleCommandPreview = { showCommandPreview = !showCommandPreview },
+            isRootMode = uiState.isRootMode,
+            onToggleRootMode = { viewModel.toggleRootMode() },
             continueOnError = continueOnError,
             onToggleContinueOnError = { continueOnError = !continueOnError },
             showRunInfo = showRunInfo,
@@ -125,7 +129,8 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     keystorePath = engineConfig?.resolvedKeystorePath()?.absolutePath,
                     keystorePassword = engineConfig?.keystorePassword,
                     keystoreAlias = engineConfig?.keystoreAlias,
-                    keystoreEntryPassword = engineConfig?.keystoreEntryPassword
+                    keystoreEntryPassword = engineConfig?.keystoreEntryPassword,
+                    engineConfig = engineConfig,
                 )
             }
             AnimatedVisibility(
@@ -420,9 +425,11 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                                                 items = group.items,
                                                 key = { it.uniqueId }
                                             ) { patch ->
+                                                val installerType = if (uiState.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
                                                 PatchListItem(
                                                     patch = patch,
                                                     isSelected = selectedInBundle.contains(patch.uniqueId),
+                                                    lockState = patch.lockState(installerType),
                                                     isNew = patch.uniqueId in newInBundle,
                                                     onToggle = { viewModel.togglePatch(bundle.bundleId, patch.uniqueId) },
                                                     sourceName = null,

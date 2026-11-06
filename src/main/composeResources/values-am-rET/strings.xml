@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">ፓቾችን ተግባራዊ ማድረግ</string>
     <string name="patching_step_writing_apk">የተጠገነ የ APK ፋይልን መጻፍ</string>
     <string name="patching_step_signing">የተጠገነ የ APK ፋይልን መፈረም</string>
+    <string name="patching_task_decoding_dex">DEX ፋይሎችን ማንበብ</string>
+    <string name="patching_task_extracting_resources">ሀብቶችን ማውጣት</string>
+    <string name="patching_task_decoding_resources">ሀብቶችን መፍታት</string>
+    <string name="patching_task_indexing_classes">ክላሶችን ማውጫ ማዘጋጀት</string>
+    <string name="patching_task_compiling_dex">DEX ፋይሎችን ማጠናቀር</string>
+    <string name="patching_task_compiling_resources">ሀብቶችን ማጠናቀር</string>
+    <string name="patching_task_writing_apk">APK ፋይል መጻፍ</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">በ %1$s ላይ እየተጫነ…</string>
     <string name="adb_error_downgrade">ወደ ዝቅተኛ ስሪት ዝቅ ማድረግ አይቻልም፣ አዲስ ስሪት ተጭኗል። በመጀመሪያ ያለውን መተግበሪያ ይሰርዙ</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">ፓቾችን በመጫን ላይ ስህተት ተፈጥሯል</string>
     <string name="patch_selection_title">ፓቾችን ይምረጡ</string>
     <string name="patch_selection_cmd_preview">የትእዛዝ ቅድመ እይታ</string>
+    <string name="patch_selection_root_mode_description">የሩት ማውንት ሞድ</string>
+    <string name="patch_selection_lock_unavailable">ለroot mount አይቻልም</string>
     <string name="patch_selection_continue_on_error_tooltip">አንድ ፓች ቢወድቅም ፓቺንግን ይቀጥሉ</string>
     <string name="patch_selection_continue_on_error_description">በስህተት ጊዜ ይቀጥል</string>
     <string name="patch_selection_no_patches_found">ምንም ፓቾች አልተገኙም</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">መተግበሪያ</string>
     <string name="patch_selection_run_info_bundles_group">የፓች ጥቅሎች</string>
     <string name="patch_selection_run_info_no_bundles">የተፈቱ ጥቅሎች የሉም</string>
+    <string name="patch_selection_run_info_dev_group">የልማት አማራጮች</string>
+    <string name="patch_selection_run_info_bytecode_mode">የባይትኮድ ሁነታ: %1$s</string>
+    <string name="patch_selection_run_info_validate">የጣት አሻራ ማረጋገጫ: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">የAndroid SDK ማረጋገጫ: %1$s</string>
     <string name="patch_selection_group_universal">ዩኒቨርሳል</string>
     <string name="patch_selection_group_ungrouped">ያልተመደቡ</string>
     <string name="patch_selection_group_selected_count">%1$d ተመርጧል</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">በ %1$s ላይ እየተ حدث…</string>
     <string name="result_adb_update_successful">ማዘመኛው ተሳክቷል!</string>
     <string name="result_adb_install_successful">ተከላው ተሳክቷል!</string>
+    <string name="result_adb_badge_root_mount">Root mount</string>
+    <string name="result_adb_mount_button">በ %1$s ላይ Mount ያድርጉ</string>
+    <string name="result_adb_mounting_on_device">በ %1$s ላይ እየተጫነ…</string>
+    <string name="result_adb_mount_successful">Mount ስኬታማ ነበር!</string>
+    <string name="result_adb_mount_su_prompt_hint">በ %1$s ላይ እየተጫነ… ጥያቄ ካለ የSuperuser ፈቃድ ለመስጠት መሳሪያዎን ያረጋግጡ</string>
+    <string name="result_adb_unmount_button">ከ %1$s ላይ Unmount ያድርጉ</string>
+    <string name="result_adb_unmounting_on_device">ከ %1$s ላይ እየተነሳ…</string>
+    <string name="result_adb_root_not_detected">በ %1$s ላይ የRoot access አልተገኘም። Magisk/KernelSU/APatch መጫኑን እና የ su ፈቃድ መሰጠቱን ያረጋግጡ</string>
+    <string name="result_adb_stock_app_not_installed">የመጀመሪያው አፕሊኬሽን %1$s በ %2$s ላይ አልተጫነም። ከመጫንዎ በፊት መጀመሪያ ይፋዊውን አፕሊኬሽን ይጫኑ</string>
     <string name="result_link_default_restored">የመደበኛው ሊንክ አያያዝ ተመልሷል</string>
     <string name="result_link_routed_stock_disabled">ሊንኮች ወደ ተስተካከለው መተግበሪያ ተላከዋል፣ ኦሪጅናሉ ተዘግቷል</string>
     <string name="result_adb_not_found_hint">ADB አልተገኘም። ቀጥታ ተከላን ለማስቻል Android SDK Platform Toolsን ይጫኑ</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">ከ v%1$s ጀምሮ</string>
     <string name="update_banner_later_button">ቆይ</string>
     <string name="update_banner_skip_button">v%1$sን ዝለለው</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">መሣሪያዎች</string>
-    <string name="tools_dialog_open_logs_button">ሎጎችን ክፈት</string>
-    <string name="tools_dialog_open_app_data_button">የመተግበሪያ ዳታ ክፈት</string>
-    <string name="tools_dialog_view_licenses_button">ፈቃዶችን ተመልከት</string>
-    <string name="tools_dialog_cache_cleared">ካሼ ተሰርዟል</string>
-    <string name="tools_dialog_clear_failed">ማፅዳት አልተሳካም</string>
-    <string name="tools_dialog_clear_cache_button">ካሼ አፅዳ</string>
-    <string name="tools_dialog_cache_summary">ካሼ: %1$s (ፓቾች + ሎጎች)</string>
-    <string name="tools_dialog_confirm_clear_title">ካሼ ይፅዳ?</string>
-    <string name="tools_dialog_confirm_clear_message">ይህ የተጫኑ ፓቾችን እና የሎግ ፋይሎችን ይሰርዛል። ፓቾች አስፈላጊ በሚሆኑበት ጊዜ እንደገና ይጫናሉ</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">የክፍት ምንጭ ፈቃዶች</string>
     <string name="licenses_dialog_empty_failed">// ፈቃዶችን ለመጫን አልተቻለም</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">ላይብረሪዎችን አስወግድ</string>
     <string name="settings_toggle_developer_options_label">የልማት አማራጮች</string>
     <string name="settings_toggle_developer_options_desc">ለፓች አልሚዎች። ፓቾችን ለመገንባት እና ለመሞከር የሚያስችሉ የሥራ ፍሰት አማራጮችን ይከፍታል (ሙሉ ዝርዝሩን ለማየት ሰነዱን ይመልከቱ)። ለጊዜው፣ ይህ Morphe ሁልጊዜ አዲሱን .mpp እንዲጭን የአካባቢ ምንጭን ወደ ፎልደር ማመልከቻ ነው</string>
+    <string name="settings_dev_bytecode_mode_label">የባይትኮድ ሁነታ</string>
+    <string name="settings_dev_bytecode_mode_desc">በፓቺንግ ወቅት በDEX ባይትኮድ ላይ የሚተገበር የትራንስፎርሜሽን ሁነታ</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">ፈጣን</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">አስተማማኝ</string>
+    <string name="settings_dev_bytecode_mode_full">ሙሉ</string>
+    <string name="settings_dev_validate_label">የጣት አሻራ ማረጋገጫ</string>
+    <string name="settings_dev_validate_desc">እያንዳንዱ match() አንድ ዘዴ ብቻ እንደሚዛመድ ያረጋግጡ (ዘገbottom ፓቺንግ፣ ለፓች ሙከራ)</string>
+    <string name="settings_dev_verify_sdk_label">የAndroid SDK ማረጋገጫ</string>
+    <string name="settings_dev_verify_sdk_desc">የተስተካከሉ DEX እና APKን በ Android SDK መሳሪያዎች (d8, zipalign) ያረጋግጡ። የተሳሳቱ ውጤቶችን ሪፖርት ሊያደርግ ይችላል</string>
+    <string name="settings_dev_sdk_path_label">የ Android SDK ማውጫ</string>
+    <string name="settings_dev_sdk_path_auto">በራስ-ተለይቷል</string>
+    <string name="settings_dev_sdk_not_found">Android SDK አልተገኘም። ANDROID_HOMEን ያዘጋጁ ወይም የ SDK ማውጫውን ይፈልጉ</string>
+    <string name="settings_dev_sdk_picker_title">የ Android SDK ማውጫን ይምረጡ</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">ጊዜያዊ ፋይሎችን በራስ-ሰር አጽዳ</string>
     <string name="settings_toggle_auto_cleanup_desc">ከፓቺንግ በኋላ ጊዜያዊ ፋይሎችን ይሰርዝ</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">ፎልደር አልተገኘም፣ በሚቀጥለው ፓች ላይ ይፈጠራል</string>
     <string name="settings_toggle_auto_start_adb_label">ADB በራስ-ሰር አነሳ</string>
     <string name="settings_toggle_auto_start_adb_desc">የተገናኙ መሳሪያዎች ክትትል እንዲደረግባቸው ሲጀምር ADB daemon እንዲነሳ ያድርጉ። ሲጠፋ Morphe ሰርቨሩን በፍጹም አያስጀምረውም፣ እና የጫን/የላከ ባህሪያት አይሰሩም</string>
+    <string name="settings_section_storage">ማከማቻ እና ካሼ</string>
+    <string name="settings_cache_summary">ካሼ: %1$s (ፓቾች + ሎጎች)</string>
+    <string name="settings_cache_clear_button">ካሼን አጽዳ</string>
+    <string name="settings_cache_cleared">ካሼ ተጽድቷል</string>
+    <string name="settings_cache_clear_failed">ማጽዳት አልተሳካም</string>
+    <string name="settings_cache_confirm_title">ካሼውን ላጽዳው?</string>
+    <string name="settings_cache_confirm_message">ይህ የተጫኑ ፓቾችን እና የሎግ ፋይሎችን ያጠፋል። ፓቾች በሚያስፈልጉበት ጊዜ እንደገና ይወርዳሉ</string>
+    <string name="settings_storage_open_app_data_button">የመተግበሪያ ዳታን ክፈት</string>
+    <string name="settings_storage_open_logs_button">ሎጎችን ክፈት</string>
     <string name="settings_section_about">ስለ መተግበሪያው</string>
     <string name="settings_about_version">ስሪት %1$s</string>
     <string name="settings_about_changelogs_title">የለውጥ ዝርዝሮችን ይመልከቱ</string>
     <string name="settings_about_changelogs_desc">በዚህ ማሻሻያ ውስጥ ያሉትን የቅርብ ጊዜ ለውጦች ይመልከቱ</string>
+    <string name="settings_about_licenses_title">የክፍት ምንጭ ፈቃዶች</string>
+    <string name="settings_about_licenses_desc">የሶስተኛ ወገን ላይብረሪዎችን ፈቃዶች ተመልከት</string>
     <string name="settings_about_documentation_title">ሰነዶች</string>
     <string name="settings_about_documentation_desc">ለፓቺንግ፣ ለምንጮች እና ለችግር አፈታት የሚረዱ መመሪያዎች</string>
     <string name="settings_about_website_title">ድረ-ገጹን ይጎብኙ</string>

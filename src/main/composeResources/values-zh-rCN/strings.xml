@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">正在应用补丁</string>
     <string name="patching_step_writing_apk">写入修补后的 APK 文件</string>
     <string name="patching_step_signing">为修补后的 APK 文件签名</string>
+    <string name="patching_task_decoding_dex">读取 DEX 文件</string>
+    <string name="patching_task_extracting_resources">提取资源</string>
+    <string name="patching_task_decoding_resources">解码资源</string>
+    <string name="patching_task_indexing_classes">索引类</string>
+    <string name="patching_task_compiling_dex">编译 DEX 文件</string>
+    <string name="patching_task_compiling_resources">编译资源</string>
+    <string name="patching_task_writing_apk">写入 APK 文件</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">正在安装到 %1$s……</string>
     <string name="adb_error_downgrade">无法降级，已安装较新版本。请先卸载现有应用</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">加载补丁时出错</string>
     <string name="patch_selection_title">选择补丁</string>
     <string name="patch_selection_cmd_preview">命令预览</string>
+    <string name="patch_selection_root_mode_description">Root 挂载模式</string>
+    <string name="patch_selection_lock_unavailable">无法在 root 挂载模式下使用</string>
     <string name="patch_selection_continue_on_error_tooltip">即使某个补丁失败也继续修补</string>
     <string name="patch_selection_continue_on_error_description">出错时继续</string>
     <string name="patch_selection_no_patches_found">未找到补丁</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">应用</string>
     <string name="patch_selection_run_info_bundles_group">补丁包</string>
     <string name="patch_selection_run_info_no_bundles">未解析到补丁包</string>
+    <string name="patch_selection_run_info_dev_group">开发者选项</string>
+    <string name="patch_selection_run_info_bytecode_mode">字节码模式：%1$s</string>
+    <string name="patch_selection_run_info_validate">指纹验证：%1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK 验证：%1$s</string>
     <string name="patch_selection_group_universal">通用</string>
     <string name="patch_selection_group_ungrouped">未分组</string>
     <string name="patch_selection_group_selected_count">已选择 %1$d 个</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">正在 %1$s 上更新……</string>
     <string name="result_adb_update_successful">更新成功!</string>
     <string name="result_adb_install_successful">安装成功！</string>
+    <string name="result_adb_badge_root_mount">Root 挂载模式</string>
+    <string name="result_adb_mount_button">在 %1$s 上挂载</string>
+    <string name="result_adb_mounting_on_device">正在 %1$s 上挂载……</string>
+    <string name="result_adb_mount_successful">挂载成功！</string>
+    <string name="result_adb_mount_su_prompt_hint">正在 %1$s 上挂载… 如果出现提示，请检查您的设备以授予 Superuser 权限</string>
+    <string name="result_adb_unmount_button">从 %1$s 卸载</string>
+    <string name="result_adb_unmounting_on_device">正在从 %1$s 卸载……</string>
+    <string name="result_adb_root_not_detected">在 %1$s 上未检测到 Root 权限。请确保已安装 Magisk/KernelSU/APatch 并且已授予 su 权限</string>
+    <string name="result_adb_stock_app_not_installed">设备 %2$s 上未安装原生应用 %1$s。请在挂载前先安装官方应用</string>
     <string name="result_link_default_restored">默认链接处理已恢复</string>
     <string name="result_link_routed_stock_disabled">链接已路由到已修补的应用，原应用已禁用</string>
     <string name="result_adb_not_found_hint">未找到 ADB。请安装 Android SDK Platform Tools 以启用直接安装</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">来自 v%1$s</string>
     <string name="update_banner_later_button">稍后</string>
     <string name="update_banner_skip_button">跳过 v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">工具</string>
-    <string name="tools_dialog_open_logs_button">打开日志</string>
-    <string name="tools_dialog_open_app_data_button">打开应用数据</string>
-    <string name="tools_dialog_view_licenses_button">查看许可证</string>
-    <string name="tools_dialog_cache_cleared">缓存已清除</string>
-    <string name="tools_dialog_clear_failed">清除失败</string>
-    <string name="tools_dialog_clear_cache_button">清除缓存</string>
-    <string name="tools_dialog_cache_summary">缓存：%1$s（补丁 + 日志）</string>
-    <string name="tools_dialog_confirm_clear_title">清除缓存？</string>
-    <string name="tools_dialog_confirm_clear_message">这将删除已下载的补丁和日志文件。需要时会重新下载补丁</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">开源许可证</string>
     <string name="licenses_dialog_empty_failed">// 加载许可证失败</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">剥离库</string>
     <string name="settings_toggle_developer_options_label">开发者选项</string>
     <string name="settings_toggle_developer_options_desc">供补丁开发者使用。解锁一系列用于构建和测试补丁的工作流选项（完整列表请参阅文档）。目前，这是将本地来源指向一个文件夹，以便 Morphe 始终加载其中最新的 .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">字节码模式</string>
+    <string name="settings_dev_bytecode_mode_desc">补丁过程中应用于 DEX 字节码的转换模式</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">快速</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">安全</string>
+    <string name="settings_dev_bytecode_mode_full">完整</string>
+    <string name="settings_dev_validate_label">指纹验证</string>
+    <string name="settings_dev_validate_desc">验证每个 match() 仅匹配一个方法（补丁速度较慢，用于补丁测试）</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK 验证</string>
+    <string name="settings_dev_verify_sdk_desc">使用 Android SDK 工具 (d8, zipalign) 验证修补后的 DEX 和 APK。可能会报告误报</string>
+    <string name="settings_dev_sdk_path_label">Android SDK 目录</string>
+    <string name="settings_dev_sdk_path_auto">自动检测</string>
+    <string name="settings_dev_sdk_not_found">未找到 Android SDK。请设置 ANDROID_HOME 或浏览选择 SDK 目录</string>
+    <string name="settings_dev_sdk_picker_title">选择 Android SDK 目录</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">自动清理临时文件</string>
     <string name="settings_toggle_auto_cleanup_desc">修补后删除临时文件</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">未找到文件夹，将在下次修补时创建</string>
     <string name="settings_toggle_auto_start_adb_label">自动启动 ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">启动时生成 ADB 守护进程，以监视已连接的设备。关闭时，Morphe 不会启动服务器，安装/推送功能将被禁用</string>
+    <string name="settings_section_storage">存储 &amp; 缓存</string>
+    <string name="settings_cache_summary">缓存：%1$s（补丁 + 日志）</string>
+    <string name="settings_cache_clear_button">清除缓存</string>
+    <string name="settings_cache_cleared">缓存已清除</string>
+    <string name="settings_cache_clear_failed">清除失败</string>
+    <string name="settings_cache_confirm_title">清除缓存？</string>
+    <string name="settings_cache_confirm_message">这将删除已下载的补丁和日志文件。需要时将重新下载补丁</string>
+    <string name="settings_storage_open_app_data_button">打开应用数据</string>
+    <string name="settings_storage_open_logs_button">打开日志</string>
     <string name="settings_section_about">关于</string>
     <string name="settings_about_version">版本 %1$s</string>
     <string name="settings_about_changelogs_title">查看更新日志</string>
     <string name="settings_about_changelogs_desc">查看此更新中的最新更改</string>
+    <string name="settings_about_licenses_title">开源许可证</string>
+    <string name="settings_about_licenses_desc">查看第三方库的许可证</string>
     <string name="settings_about_documentation_title">文档</string>
     <string name="settings_about_documentation_desc">修补、来源和故障排除指南</string>
     <string name="settings_about_website_title">访问网站</string>

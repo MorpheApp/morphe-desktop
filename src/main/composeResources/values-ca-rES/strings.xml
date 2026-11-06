@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Aplicant pedaços</string>
     <string name="patching_step_writing_apk">Escribint el fitxer APK amb pedaços</string>
     <string name="patching_step_signing">Signant el fitxer APK amb pedaços</string>
+    <string name="patching_task_decoding_dex">Llegint fitxers DEX</string>
+    <string name="patching_task_extracting_resources">Extractint recursos</string>
+    <string name="patching_task_decoding_resources">Descodificant recursos</string>
+    <string name="patching_task_indexing_classes">Indexant classes</string>
+    <string name="patching_task_compiling_dex">Compilant fitxers DEX</string>
+    <string name="patching_task_compiling_resources">Compilant recursos</string>
+    <string name="patching_task_writing_apk">Escribint el fitxer APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Instal·lant a %1$s…</string>
     <string name="adb_error_downgrade">No es pot reinstal·lar una versió anterior, n'hi ha una més recent instal·lada. Desinstal·la primer l'aplicació existent</string>
@@ -277,6 +284,7 @@
     <string name="home_advice_unsupported_by_patches">la v%1$s ja no és compatible amb els últims paquets de correcció</string>
     <string name="home_date_today">avui</string>
     <string name="home_date_yesterday">ahir</string>
+    <string name="home_date_days_ago">{one,fa un dia;other,fa %1$d dies}</string>
     <string name="home_your_apps_empty_title">Encara no hi ha aplicacions amb correccions</string>
     <string name="home_your_apps_empty_subtitle">Aplica una correcció a una aplicació i apareixerà aquí</string>
     <string name="home_your_apps_no_matches_subtitle">No hi ha coincidències per a \"%1$s\"</string>
@@ -305,6 +313,8 @@
     <string name="patch_selection_error_title">Error en carregar els pedaços</string>
     <string name="patch_selection_title">Selecciona els pedaços</string>
     <string name="patch_selection_cmd_preview">Previsualització del comandament</string>
+    <string name="patch_selection_root_mode_description">Mode de muntatge de l'arrel</string>
+    <string name="patch_selection_lock_unavailable">No disponible per al muntatge root</string>
     <string name="patch_selection_continue_on_error_tooltip">Continua aplicant els pedaços encara que un pedaç falli</string>
     <string name="patch_selection_continue_on_error_description">Continua en cas d'error</string>
     <string name="patch_selection_no_patches_found">No s'han trobat pedaços</string>
@@ -366,10 +376,15 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Conjunts de pedaços</string>
     <string name="patch_selection_run_info_no_bundles">No s'han resolt conjunts</string>
+    <string name="patch_selection_run_info_dev_group">Opcions per a desenvolupadors</string>
+    <string name="patch_selection_run_info_bytecode_mode">Mode de bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Validació de l'empremta: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verificació de l'SDK d'Android: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Sense grup</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Comença de nou</string>
+    <string name="patching_patches_count">%1$d / %2$d {one,patch;other,patches}</string>
     <string name="patching_slow_warning">Això està trigant més del normal. Si us plau, espereu…</string>
     <string name="patching_status_ready">Ready per a aplicar els pedaços</string>
     <string name="patching_status_preparing">Preparant l'aplicació de pedaços</string>
@@ -419,6 +434,15 @@
     <string name="result_adb_updating_on_device">Actualitzant a %1$s…</string>
     <string name="result_adb_update_successful">Actualització correcta!</string>
     <string name="result_adb_install_successful">Instal·lació correcta!</string>
+    <string name="result_adb_badge_root_mount">Muntatge root</string>
+    <string name="result_adb_mount_button">Muntar a %1$s</string>
+    <string name="result_adb_mounting_on_device">Muntant a %1$s…</string>
+    <string name="result_adb_mount_successful">Muntatge correcte!</string>
+    <string name="result_adb_mount_su_prompt_hint">Muntant a %1$s… Comproveu el vostre dispositiu per concedir el permís de Superusuari si se sol·licita</string>
+    <string name="result_adb_unmount_button">Desmuntar de %1$s</string>
+    <string name="result_adb_unmounting_on_device">Desmuntant de %1$s…</string>
+    <string name="result_adb_root_not_detected">No s'ha detectat l'accés root a %1$s. Assegureu-vos que Magisk/KernelSU/APatch estigui instal·lat i que el permís su estigui concedit</string>
+    <string name="result_adb_stock_app_not_installed">L'aplicació de stock %1$s no està instal·lada a %2$s. Instal·leu l'aplicació oficial abans de muntar</string>
     <string name="result_link_default_restored">Gestió d'enllaços per defecte restaurada</string>
     <string name="result_link_routed_stock_disabled">Enllaços redirigits a l'app patxada, stock desactivat</string>
     <string name="result_adb_not_found_hint">No s'ha trobat l'ADB. Instal·la els Android SDK Platform Tools per habilitar la instal·lació directa</string>
@@ -599,17 +623,6 @@
     <string name="update_banner_from_version">des de la v%1$s</string>
     <string name="update_banner_later_button">Més tard</string>
     <string name="update_banner_skip_button">Ometre la v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Eines</string>
-    <string name="tools_dialog_open_logs_button">Obrir registres</string>
-    <string name="tools_dialog_open_app_data_button">Obrir dades de l'app</string>
-    <string name="tools_dialog_view_licenses_button">Veure llicències</string>
-    <string name="tools_dialog_cache_cleared">Cache buidada</string>
-    <string name="tools_dialog_clear_failed">Error en buidar</string>
-    <string name="tools_dialog_clear_cache_button">Buidar cache</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (petxos + registres)</string>
-    <string name="tools_dialog_confirm_clear_title">N'estallem la cache?</string>
-    <string name="tools_dialog_confirm_clear_message">Això eliminarà els petxos descarregats i els fitxers de registre. Els petxos es tornaran a descarregar quan sigui necessari</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Llicències de codi obert</string>
     <string name="licenses_dialog_empty_failed">// s'ha produït un error en carregar les llicències</string>
@@ -682,6 +695,19 @@
     <string name="settings_section_strip_libs">Eliminar libs</string>
     <string name="settings_toggle_developer_options_label">Opcions per a desenvolupadors</string>
     <string name="settings_toggle_developer_options_desc">Per a desenvolupadors de patches. Desbloqueja un conjunt d'opcions de flux de treball per a la creació i prova de patches (consulta la documentació per a obtenir la llista completa). Per ara, això consisteix a apuntar una font local a una carpeta perquè Morphe sempre carregui el seu .mpp més recent</string>
+    <string name="settings_dev_bytecode_mode_label">Mode de bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Mode de transformació aplicat al bytecode DEX durant el patxat</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Ràpid</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Segur</string>
+    <string name="settings_dev_bytecode_mode_full">Complet</string>
+    <string name="settings_dev_validate_label">Validació de l'empremta</string>
+    <string name="settings_dev_validate_desc">Valida que cada match() coincideixi amb un sol mètode (patxat més lent, per a proves de patxes)</string>
+    <string name="settings_dev_verify_sdk_label">Verificació de l'SDK d'Android</string>
+    <string name="settings_dev_verify_sdk_desc">Verifica el DEX i l'APK patxats amb les eines de l'Android SDK (d8, zipalign). Podrien informar de falsos positius</string>
+    <string name="settings_dev_sdk_path_label">Directori de l'Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Detectat automàticament</string>
+    <string name="settings_dev_sdk_not_found">No s'ha trobat l'Android SDK. Configura ANDROID_HOME o busca el directori de l'SDK</string>
+    <string name="settings_dev_sdk_picker_title">Selecciona el directori de l'Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Neteja automàtica de fitxers temporals</string>
     <string name="settings_toggle_auto_cleanup_desc">Elimina els fitxers temporals després de l'aplicació del patch</string>
@@ -696,10 +722,21 @@
     <string name="settings_output_folder_not_found">Carpeta no trobada, es crearà en el proper patxatge</string>
     <string name="settings_toggle_auto_start_adb_label">Inici automàtic d'ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Inicia el daemon d'ADB en l'arrencada perquè es monitoritzin els dispositius connectats. Quan està desactivat, Morphe mai inicia el servidor i les funcions d'instal·lació/push es desactiven</string>
+    <string name="settings_section_storage">Espace &amp; memòria cau</string>
+    <string name="settings_cache_summary">Memòria cau: %1$s (patches + logs)</string>
+    <string name="settings_cache_clear_button">Netejar memòria cau</string>
+    <string name="settings_cache_cleared">Memòria cau netejada</string>
+    <string name="settings_cache_clear_failed">Error en la neteja</string>
+    <string name="settings_cache_confirm_title">Netejar la memòria cau?</string>
+    <string name="settings_cache_confirm_message">Això eliminarà els patches descarregats i els fitxers de registre. Els patches es tornaran a descarregar quan sigui necessari</string>
+    <string name="settings_storage_open_app_data_button">Obre les dades de l'aplicació</string>
+    <string name="settings_storage_open_logs_button">Obre els registres</string>
     <string name="settings_section_about">Quant a</string>
     <string name="settings_about_version">Versió %1$s</string>
     <string name="settings_about_changelogs_title">Veure els registres de canvis</string>
     <string name="settings_about_changelogs_desc">Consulta els últims canvis d'aquesta actualització</string>
+    <string name="settings_about_licenses_title">Llicències de codi obert</string>
+    <string name="settings_about_licenses_desc">Consulta les llicències de les biblioteques de tercers</string>
     <string name="settings_about_documentation_title">Documentació</string>
     <string name="settings_about_documentation_desc">Guies per al retallat, fonts i resolució de problemes</string>
     <string name="settings_about_website_title">Visita el lloc web</string>

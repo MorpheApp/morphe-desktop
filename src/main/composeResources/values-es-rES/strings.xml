@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Aplicando parches</string>
     <string name="patching_step_writing_apk">Guardando archivo APK parcheado</string>
     <string name="patching_step_signing">Firmando archivo APK parcheado</string>
+    <string name="patching_task_decoding_dex">Leyendo archivos DEX</string>
+    <string name="patching_task_extracting_resources">Extrayendo recursos</string>
+    <string name="patching_task_decoding_resources">Decodificando recursos</string>
+    <string name="patching_task_indexing_classes">Indexando clases</string>
+    <string name="patching_task_compiling_dex">Compilando archivos DEX</string>
+    <string name="patching_task_compiling_resources">Compilando recursos</string>
+    <string name="patching_task_writing_apk">Escribiendo archivo APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Instalando en %1$s…</string>
     <string name="adb_error_downgrade">No se puede revertir a una versión anterior, hay una versión más reciente instalada. Desinstala primero la aplicación existente</string>
@@ -312,6 +319,8 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patch_selection_error_title">Error al cargar los parches</string>
     <string name="patch_selection_title">Seleccionar parches</string>
     <string name="patch_selection_cmd_preview">Vista previa del comando</string>
+    <string name="patch_selection_root_mode_description">Modo de montaje root</string>
+    <string name="patch_selection_lock_unavailable">No disponible para el montaje de root</string>
     <string name="patch_selection_continue_on_error_tooltip">Seguir parcheando aunque falle un parche</string>
     <string name="patch_selection_continue_on_error_description">Continuar si hay errores</string>
     <string name="patch_selection_no_patches_found">No se encontraron parches</string>
@@ -373,6 +382,10 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patch_selection_run_info_app_group">Aplicación</string>
     <string name="patch_selection_run_info_bundles_group">Paquetes de parches</string>
     <string name="patch_selection_run_info_no_bundles">No se resolvió ningún paquete</string>
+    <string name="patch_selection_run_info_dev_group">Opciones de desarrollador</string>
+    <string name="patch_selection_run_info_bytecode_mode">Modo de bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Validación de huella digital: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verificación del SDK de Android: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Sin agrupar</string>
     <string name="patch_selection_group_selected_count">%1$d seleccionados</string>
@@ -428,6 +441,15 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="result_adb_updating_on_device">Actualizando en %1$s…</string>
     <string name="result_adb_update_successful">¡Actualización completada!</string>
     <string name="result_adb_install_successful">¡Instalación completada!</string>
+    <string name="result_adb_badge_root_mount">Montaje root</string>
+    <string name="result_adb_mount_button">Montar en %1$s</string>
+    <string name="result_adb_mounting_on_device">Montando en %1$s…</string>
+    <string name="result_adb_mount_successful">¡Montaje exitoso!</string>
+    <string name="result_adb_mount_su_prompt_hint">Montando en %1$s… Comprueba tu dispositivo para conceder el permiso de Superusuario si se solicita</string>
+    <string name="result_adb_unmount_button">Desmontar de %1$s</string>
+    <string name="result_adb_unmounting_on_device">Desmontando de %1$s…</string>
+    <string name="result_adb_root_not_detected">No se detectó acceso root en %1$s. Asegúrate de que Magisk/KernelSU/APatch esté instalado y se haya concedido el permiso su</string>
+    <string name="result_adb_stock_app_not_installed">La aplicación de fábrica %1$s no está instalada en %2$s. Instale primero la aplicación oficial antes de montar</string>
     <string name="result_link_default_restored">Manejo de enlaces predeterminado restaurado</string>
     <string name="result_link_routed_stock_disabled">Enlaces redirigidos a la aplicación parcheada; aplicación original desactivada</string>
     <string name="result_adb_not_found_hint">ADB no encontrado. Instala las herramientas de plataforma del SDK de Android para habilitar la instalación directa</string>
@@ -608,17 +630,6 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="update_banner_from_version">desde v%1$s</string>
     <string name="update_banner_later_button">Más tarde</string>
     <string name="update_banner_skip_button">Omitir v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Herramientas</string>
-    <string name="tools_dialog_open_logs_button">Abrir registros</string>
-    <string name="tools_dialog_open_app_data_button">Abrir datos de la aplicación</string>
-    <string name="tools_dialog_view_licenses_button">Ver licencias</string>
-    <string name="tools_dialog_cache_cleared">Caché borrada</string>
-    <string name="tools_dialog_clear_failed">Error al limpiar</string>
-    <string name="tools_dialog_clear_cache_button">Borrar caché</string>
-    <string name="tools_dialog_cache_summary">Caché: %1$s (parches + registros)</string>
-    <string name="tools_dialog_confirm_clear_title">¿Borrar la caché?</string>
-    <string name="tools_dialog_confirm_clear_message">Esto eliminará los parches descargados y los archivos de registro. Los parches se volverán a descargar cuando haga falta</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licencias de código abierto</string>
     <string name="licenses_dialog_empty_failed">// error al cargar las licencias</string>
@@ -691,6 +702,19 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_section_strip_libs">Eliminar bibliotecas</string>
     <string name="settings_toggle_developer_options_label">Opciones de desarrollador</string>
     <string name="settings_toggle_developer_options_desc">Para desarrolladores de parches. Desbloquea un conjunto de opciones de flujo de trabajo para crear y probar parches (consulta la documentación para ver la lista completa). Por ahora, consiste en apuntar una fuente local a una carpeta para que Morphe cargue siempre su .mpp más reciente</string>
+    <string name="settings_dev_bytecode_mode_label">Modo de bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Modo de transformación aplicado al bytecode DEX durante el parcheo</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Rápido</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Seguro</string>
+    <string name="settings_dev_bytecode_mode_full">Completo</string>
+    <string name="settings_dev_validate_label">Validación de huella digital</string>
+    <string name="settings_dev_validate_desc">Valida que cada match() coincida con un solo método (parcheo más lento, para pruebas de parches)</string>
+    <string name="settings_dev_verify_sdk_label">Verificación del SDK de Android</string>
+    <string name="settings_dev_verify_sdk_desc">Verificar el DEX y el APK parcheados con las herramientas del Android SDK (d8, zipalign). Puede informar falsos positivos</string>
+    <string name="settings_dev_sdk_path_label">Directorio del Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Detectado automáticamente</string>
+    <string name="settings_dev_sdk_not_found">Android SDK no encontrado. Establezca ANDROID_HOME o busque el directorio del SDK</string>
+    <string name="settings_dev_sdk_picker_title">Seleccionar el directorio del Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Limpiar archivos temporales automáticamente</string>
     <string name="settings_toggle_auto_cleanup_desc">Elimina los archivos temporales después de parchear</string>
@@ -705,10 +729,21 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_output_folder_not_found">Carpeta no encontrada, se creará en el próximo parcheo</string>
     <string name="settings_toggle_auto_start_adb_label">Iniciar ADB automáticamente</string>
     <string name="settings_toggle_auto_start_adb_desc">Inicia el servicio de ADB al arrancar para supervisar los dispositivos conectados. Si está desactivado, Morphe nunca inicia el servidor y las funciones de instalación/envío quedan deshabilitadas</string>
+    <string name="settings_section_storage">Almacenamiento &amp; caché</string>
+    <string name="settings_cache_summary">Caché: %1$s (parches + registros)</string>
+    <string name="settings_cache_clear_button">Borrar caché</string>
+    <string name="settings_cache_cleared">Caché borrada</string>
+    <string name="settings_cache_clear_failed">Error al limpiar</string>
+    <string name="settings_cache_confirm_title">¿Borrar la caché?</string>
+    <string name="settings_cache_confirm_message">Esto eliminará los parches descargados y los archivos de registro. Los parches se volverán a descargar cuando haga falta</string>
+    <string name="settings_storage_open_app_data_button">Abrir datos de la aplicación</string>
+    <string name="settings_storage_open_logs_button">Abrir registros</string>
     <string name="settings_section_about">Acerca de</string>
     <string name="settings_about_version">Versión %1$s</string>
     <string name="settings_about_changelogs_title">Ver registros de cambios</string>
     <string name="settings_about_changelogs_desc">Consulta los últimos cambios de esta actualización</string>
+    <string name="settings_about_licenses_title">Licencias de código abierto</string>
+    <string name="settings_about_licenses_desc">Ver licencias de bibliotecas de terceros</string>
     <string name="settings_about_documentation_title">Documentación</string>
     <string name="settings_about_documentation_desc">Guías de parcheo, fuentes y solución de problemas</string>
     <string name="settings_about_website_title">Visitar el sitio web</string>

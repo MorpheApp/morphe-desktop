@@ -111,6 +111,13 @@
     <string name="patching_step_applying_patches">Applying patches</string>
     <string name="patching_step_writing_apk">Writing patched APK file</string>
     <string name="patching_step_signing">Signing patched APK file</string>
+    <string name="patching_task_decoding_dex">Reading DEX files</string>
+    <string name="patching_task_extracting_resources">Extracting resources</string>
+    <string name="patching_task_decoding_resources">Decoding resources</string>
+    <string name="patching_task_indexing_classes">Indexing classes</string>
+    <string name="patching_task_compiling_dex">Compiling DEX files</string>
+    <string name="patching_task_compiling_resources">Compiling resources</string>
+    <string name="patching_task_writing_apk">Writing APK file</string>
 
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Installing on %1$s…</string>
@@ -321,6 +328,8 @@
     <string name="patch_selection_error_title">Error loading patches</string>
     <string name="patch_selection_title">Select patches</string>
     <string name="patch_selection_cmd_preview">Command preview</string>
+    <string name="patch_selection_root_mode_description">Root mount mode</string>
+    <string name="patch_selection_lock_unavailable">Unavailable for root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Continue patching even if a patch fails</string>
     <string name="patch_selection_continue_on_error_description">Continue on error</string>
     <string name="patch_selection_no_patches_found">No patches found</string>
@@ -382,6 +391,10 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch bundles</string>
     <string name="patch_selection_run_info_no_bundles">No bundles resolved</string>
+    <string name="patch_selection_run_info_dev_group">Developer options</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode mode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Fingerprint validation: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK verification: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Ungrouped</string>
     <string name="patch_selection_group_selected_count">%1$d selected</string>
@@ -439,6 +452,15 @@
     <string name="result_adb_updating_on_device">Updating on %1$s…</string>
     <string name="result_adb_update_successful">Update successful!</string>
     <string name="result_adb_install_successful">Installation successful!</string>
+    <string name="result_adb_badge_root_mount">Root mount</string>
+    <string name="result_adb_mount_button">Mount on %1$s</string>
+    <string name="result_adb_mounting_on_device">Mounting on %1$s…</string>
+    <string name="result_adb_mount_successful">Mounting successful!</string>
+    <string name="result_adb_mount_su_prompt_hint">Mounting on %1$s… Check your device to grant Superuser permission if prompted</string>
+    <string name="result_adb_unmount_button">Unmount from %1$s</string>
+    <string name="result_adb_unmounting_on_device">Unmounting from %1$s…</string>
+    <string name="result_adb_root_not_detected">Root access was not detected on %1$s. Ensure Magisk/KernelSU/APatch is installed and su permission is granted</string>
+    <string name="result_adb_stock_app_not_installed">Stock app %1$s is not installed on %2$s. Install the official app first before mounting</string>
     <string name="result_link_default_restored">Default link handling restored</string>
     <string name="result_link_routed_stock_disabled">Links routed to patched app, stock disabled</string>
     <string name="result_adb_not_found_hint">ADB not found. Install Android SDK Platform Tools to enable direct installation</string>
@@ -627,18 +649,6 @@
     <string name="update_banner_later_button">Later</string>
     <string name="update_banner_skip_button">Skip v%1$s</string>
 
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Tools</string>
-    <string name="tools_dialog_open_logs_button">Open logs</string>
-    <string name="tools_dialog_open_app_data_button">Open app data</string>
-    <string name="tools_dialog_view_licenses_button">View licenses</string>
-    <string name="tools_dialog_cache_cleared">Cache cleared</string>
-    <string name="tools_dialog_clear_failed">Clear failed</string>
-    <string name="tools_dialog_clear_cache_button">Clear cache</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (patches + logs)</string>
-    <string name="tools_dialog_confirm_clear_title">Clear cache?</string>
-    <string name="tools_dialog_confirm_clear_message">This will delete downloaded patches and log files. Patches will be re-downloaded when needed</string>
-
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Open Source licenses</string>
     <string name="licenses_dialog_empty_failed">// failed to load licenses</string>
@@ -714,6 +724,19 @@
     <string name="settings_section_strip_libs">Strip libs</string>
     <string name="settings_toggle_developer_options_label">Developer options</string>
     <string name="settings_toggle_developer_options_desc">For patch developers. Unlocks a suite of workflow options for building and testing patches (see the documentation for the full list). For now, that's pointing a local source at a folder so Morphe always loads its newest .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode mode</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformation mode applied to DEX bytecode during patching</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Fast</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Safe</string>
+    <string name="settings_dev_bytecode_mode_full">Full</string>
+    <string name="settings_dev_validate_label">Fingerprint validation</string>
+    <string name="settings_dev_validate_desc">Validate that each match() matches only one method (slower patching, for patch testing)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK verification</string>
+    <string name="settings_dev_verify_sdk_desc">Verify patched DEX and APK with Android SDK tools (d8, zipalign). May report false positives</string>
+    <string name="settings_dev_sdk_path_label">Android SDK directory</string>
+    <string name="settings_dev_sdk_path_auto">Auto-detected</string>
+    <string name="settings_dev_sdk_not_found">Android SDK not found. Set ANDROID_HOME or browse for the SDK directory</string>
+    <string name="settings_dev_sdk_picker_title">Select Android SDK directory</string>
 
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Auto-cleanup temp files</string>
@@ -729,10 +752,21 @@
     <string name="settings_output_folder_not_found">Folder not found, will be created on next patch</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-start ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spawn the ADB daemon on launch so connected devices are monitored. When off, Morphe never starts the server, and install/push features are disabled</string>
+    <string name="settings_section_storage">Storage &amp; cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (patches + logs)</string>
+    <string name="settings_cache_clear_button">Clear cache</string>
+    <string name="settings_cache_cleared">Cache cleared</string>
+    <string name="settings_cache_clear_failed">Clear failed</string>
+    <string name="settings_cache_confirm_title">Clear cache?</string>
+    <string name="settings_cache_confirm_message">This will delete downloaded patches and log files. Patches will be re-downloaded when needed</string>
+    <string name="settings_storage_open_app_data_button">Open app data</string>
+    <string name="settings_storage_open_logs_button">Open logs</string>
     <string name="settings_section_about">About</string>
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_changelogs_title">View changelogs</string>
     <string name="settings_about_changelogs_desc">Check out the latest changes in this update</string>
+    <string name="settings_about_licenses_title">Open Source licenses</string>
+    <string name="settings_about_licenses_desc">View licenses of third-party libraries</string>
     <string name="settings_about_documentation_title">Documentation</string>
     <string name="settings_about_documentation_desc">Guides for patching, sources and troubleshooting</string>
     <string name="settings_about_website_title">Visit website</string>

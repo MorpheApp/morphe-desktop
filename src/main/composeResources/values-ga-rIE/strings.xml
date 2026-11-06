@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Paistí á gcur i bhfeidhm</string>
     <string name="patching_step_writing_apk">Ag scríobh comhad APK paisteáilte</string>
     <string name="patching_step_signing">Ag síniú comhad APK paisteáilte</string>
+    <string name="patching_task_decoding_dex">Comhaid DEX á léamh</string>
+    <string name="patching_task_extracting_resources">Acmhainní a bhaint amach</string>
+    <string name="patching_task_decoding_resources">Acmhainní díchódaithe</string>
+    <string name="patching_task_indexing_classes">Ranganna innéacsaithe</string>
+    <string name="patching_task_compiling_dex">Comhaid DEX a thiomsú</string>
+    <string name="patching_task_compiling_resources">Acmhainní a thiomsú</string>
+    <string name="patching_task_writing_apk">Ag scríobh comhaid APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Ag suiteáil ar %1$s…</string>
     <string name="adb_error_downgrade">Ní féidir dul siar go leagan níos sine; tá leagan níos nuaí suiteáilte cheana féin. Díshuiteáil an aip atá ann faoi láthair ar dtús.</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Earráid agus paistí á luchtú</string>
     <string name="patch_selection_title">Roghnaigh paistí</string>
     <string name="patch_selection_cmd_preview">Réamhamharc ar an ordú</string>
+    <string name="patch_selection_root_mode_description">Mód gléasta fréimhe</string>
+    <string name="patch_selection_lock_unavailable">Níl sé ar fáil le haghaidh gléasta root</string>
     <string name="patch_selection_continue_on_error_tooltip">Lean ort ag cur paistí i bhfeidhm fiú má theipeann ar phaiste.</string>
     <string name="patch_selection_continue_on_error_description">Lean ar aghaidh ar earráid</string>
     <string name="patch_selection_no_patches_found">Níor aimsíodh aon phaiste</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Aip</string>
     <string name="patch_selection_run_info_bundles_group">Bearta paiste</string>
     <string name="patch_selection_run_info_no_bundles">Níor réitíodh aon bheart</string>
+    <string name="patch_selection_run_info_dev_group">Roghanna forbróra</string>
+    <string name="patch_selection_run_info_bytecode_mode">Mód bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Dearbhrú meirge: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verification SDK Android: %1$s</string>
     <string name="patch_selection_group_universal">Uilíoch</string>
     <string name="patch_selection_group_ungrouped">Gan a bheith grúpáilte</string>
     <string name="patch_selection_group_selected_count">%1$d roghnaithe</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Ag nuashonrú ar %1$s…</string>
     <string name="result_adb_update_successful">Nuashonrú rathúil!</string>
     <string name="result_adb_install_successful">D'éirigh leis an suiteáil!</string>
+    <string name="result_adb_badge_root_mount">Gléasadh fréimhe</string>
+    <string name="result_adb_mount_button">Gléas ar %1$s</string>
+    <string name="result_adb_mounting_on_device">Á ghléasadh ar %1$s…</string>
+    <string name="result_adb_mount_successful">D'éirigh leis an ngléasadh!</string>
+    <string name="result_adb_mount_su_prompt_hint">Á Ghléasadh ar %1$s… Seiceáil do ghléas chun cead Sárúsáideora a thabhairt má iarrtar ort é</string>
+    <string name="result_adb_unmount_button">Díghléas ó %1$s</string>
+    <string name="result_adb_unmounting_on_device">Á dhíghléasadh ó %1$s…</string>
+    <string name="result_adb_root_not_detected">Níor aimsíodh rochtain fhréamh ar %1$s. Cinntigh go bhfuil Magisk/KernelSU/APatch suiteáilte agus go bhfuil cead 'su' deonaithe.</string>
+    <string name="result_adb_stock_app_not_installed">Níl an aip réamhshuiteáilte %1$s suiteáilte ar %2$s. Suiteáil an aip oifigiúil ar dtús sula ndéantar an gléas a fheistiú.</string>
     <string name="result_link_default_restored">Athchóirithe láimhseáil nasc réamhshocraithe</string>
     <string name="result_link_routed_stock_disabled">Naisc atá curtha chuig an aip phaisteáilte; an leagan bunaidh díchumasaithe</string>
     <string name="result_adb_not_found_hint">Níor aimsíodh ADB. Suiteáil Android SDK Platform Tools chun suiteáil dhíreach a chumasú.</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">ó v%1$s</string>
     <string name="update_banner_later_button">Níos déanaí</string>
     <string name="update_banner_skip_button">Scipeáil v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Uirlisí</string>
-    <string name="tools_dialog_open_logs_button">Oscail logaí</string>
-    <string name="tools_dialog_open_app_data_button">Oscail sonraí aip</string>
-    <string name="tools_dialog_view_licenses_button">Féach ceadúnais</string>
-    <string name="tools_dialog_cache_cleared">Taisce glanta</string>
-    <string name="tools_dialog_clear_failed">Theip ar an nglanadh</string>
-    <string name="tools_dialog_clear_cache_button">Glan taisce</string>
-    <string name="tools_dialog_cache_summary">Taisce: %1$s (paistí + logaí)</string>
-    <string name="tools_dialog_confirm_clear_title">An glanfar an taisce?</string>
-    <string name="tools_dialog_confirm_clear_message">Scriosfaidh sé seo paistí agus comhaid logála a íoslódáladh. Déanfar na paistí a íoslódáil arís nuair a bheidh gá leo.</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ceadúnais Foinse Oscailte</string>
     <string name="licenses_dialog_empty_failed">// theip ar cheadúnais a lódáil</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Stiall leabharlanna</string>
     <string name="settings_toggle_developer_options_label">Roghanna forbróra</string>
     <string name="settings_toggle_developer_options_desc">Do fhorbróirí paistí. Díghlasálann sé tacar roghanna sreafa oibre chun paistí a thógáil agus a thástáil (féach an doiciméadú don liosta iomlán). Faoi láthair, is é sin foinse áitiúil a dhíriú ar fhillteán ionas go lódálann Morphe an .mpp is déanaí i gcónaí</string>
+    <string name="settings_dev_bytecode_mode_label">Mód bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Mód athrú curtha i bhfeidhm ar bytecode DEX le linn patchála</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Tapa</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Sábháilte</string>
+    <string name="settings_dev_bytecode_mode_full">Lán</string>
+    <string name="settings_dev_validate_label">Dearbhrú meirge</string>
+    <string name="settings_dev_validate_desc">Dearbhraigh nach bhfuil gach match() ag measyncanach ach amháin modh (patcháil níos slowest, le haghaidh tástáil patchála)</string>
+    <string name="settings_dev_verify_sdk_label">Verification SDK Android</string>
+    <string name="settings_dev_verify_sdk_desc">Dearbhraigh DEX agus APK patcháilte le huirlisí SDK Android (d8, zipalign). Seans go dtuigearnaíodh rudanna mar fhíorphositívaí</string>
+    <string name="settings_dev_sdk_path_label">Catalogue Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Dealaithe go huathoibríoch</string>
+    <string name="settings_dev_sdk_not_found">Ní bhfuga a Android SDK. Socraigh ANDROID_HOME nó brósáil chun catalogue an SDK a aimsiú</string>
+    <string name="settings_dev_sdk_picker_title">Roghnaigh catalogue Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Glanadh uathoibríoch comhad sealadach</string>
     <string name="settings_toggle_auto_cleanup_desc">Scrios comhaid shealadacha tar éis paisteála</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Ní bhfuarthas an fillteán, cruthófar é ar an gcéad phaiste eile</string>
     <string name="settings_toggle_auto_start_adb_label">Tosaigh ADB go huathoibríoch</string>
     <string name="settings_toggle_auto_start_adb_desc">Seol an daemon ADB ar sheoladh ionas go ndéanfar monatóireacht ar ghléasanna ceangailte. Nuair atá sé as, ní thosaíonn Morphe an freastalaí riamh, agus tá gnéithe suiteála/brú díchumasaithe</string>
+    <string name="settings_section_storage">Stóráil &amp; taisce</string>
+    <string name="settings_cache_summary">Taisce: %1$s (paistí + logaí)</string>
+    <string name="settings_cache_clear_button">Glan taisce</string>
+    <string name="settings_cache_cleared">Taisce glanta</string>
+    <string name="settings_cache_clear_failed">Theip ar an nglanadh</string>
+    <string name="settings_cache_confirm_title">Glan an taisce?</string>
+    <string name="settings_cache_confirm_message">Scriosfaidh sé seo paistí íoslódáilte agus comhaid loga. Íoslódálfar na paistí arís nuair a bheidh gá leo.</string>
+    <string name="settings_storage_open_app_data_button">Oscail sonraí an aip</string>
+    <string name="settings_storage_open_logs_button">Oscail na logaí</string>
     <string name="settings_section_about">Maidir</string>
     <string name="settings_about_version">Leagan %1$s</string>
     <string name="settings_about_changelogs_title">Féach ar logaí athruithe</string>
     <string name="settings_about_changelogs_desc">Féach ar na hathruithe is déanaí sa nuashonrú seo</string>
+    <string name="settings_about_licenses_title">Ceadúnais foinse oscailte</string>
+    <string name="settings_about_licenses_desc">Féach ar cheadúnais leabharlanna tríú páirtí</string>
     <string name="settings_about_documentation_title">Doiciméadú</string>
     <string name="settings_about_documentation_desc">Treoracha maidir le paisteáil, foinsí agus fabhtcheartú</string>
     <string name="settings_about_website_title">Tabhair cuairt ar an suíomh gréasáin</string>

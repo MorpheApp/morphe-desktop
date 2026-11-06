@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Đang áp dụng các bản vá</string>
     <string name="patching_step_writing_apk">Đang viết APK đã vá</string>
     <string name="patching_step_signing">Đang ký APK đã vá</string>
+    <string name="patching_task_decoding_dex">Đang đọc các tệp DEX</string>
+    <string name="patching_task_extracting_resources">Đang trích xuất tài nguyên</string>
+    <string name="patching_task_decoding_resources">Đang giải mã tài nguyên</string>
+    <string name="patching_task_indexing_classes">Đang lập chỉ mục các lớp</string>
+    <string name="patching_task_compiling_dex">Đang biên dịch các tệp DEX</string>
+    <string name="patching_task_compiling_resources">Đang biên dịch tài nguyên</string>
+    <string name="patching_task_writing_apk">Đang ghi tệp APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Đang cài đặt trên %1$s…</string>
     <string name="adb_error_downgrade">Không thể hạ cấp vì đã cài phiên bản mới hơn. Hãy gỡ cài đặt ứng dụng hiện có trước</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Lỗi khi tải các bản vá</string>
     <string name="patch_selection_title">Chọn bản vá</string>
     <string name="patch_selection_cmd_preview">Xem trước lệnh</string>
+    <string name="patch_selection_root_mode_description">Chế độ gắn kết root</string>
+    <string name="patch_selection_lock_unavailable">Không khả dụng cho root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Tiếp tục vá ngay cả khi một bản vá thất bại</string>
     <string name="patch_selection_continue_on_error_description">Tiếp tục khi gặp lỗi</string>
     <string name="patch_selection_no_patches_found">Không tìm thấy bản vá nà o</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Ứng dụng</string>
     <string name="patch_selection_run_info_bundles_group">Gói bản vá</string>
     <string name="patch_selection_run_info_no_bundles">Không có gói nào được phân giải</string>
+    <string name="patch_selection_run_info_dev_group">Tùy chọn nhà phát triển</string>
+    <string name="patch_selection_run_info_bytecode_mode">Chế độ Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Xác thực dấu vân tay: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Xác minh Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Phổ quát</string>
     <string name="patch_selection_group_ungrouped">Chưa nhóm</string>
     <string name="patch_selection_group_selected_count">%1$d đã chọn</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Đang cập nhật trên %1$s…</string>
     <string name="result_adb_update_successful">Cập nhật thành công!</string>
     <string name="result_adb_install_successful">Cài đặt thành công!</string>
+    <string name="result_adb_badge_root_mount">Gắn kết bằng root</string>
+    <string name="result_adb_mount_button">Mount trên %1$s</string>
+    <string name="result_adb_mounting_on_device">Đang mount trên %1$s…</string>
+    <string name="result_adb_mount_successful">Mount thành công!</string>
+    <string name="result_adb_mount_su_prompt_hint">Đang mount trên %1$s… Kiểm tra thiết bị của bạn để cấp quyền Superuser nếu được yêu cầu</string>
+    <string name="result_adb_unmount_button">Unmount khỏi %1$s</string>
+    <string name="result_adb_unmounting_on_device">Đang unmount khỏi %1$s…</string>
+    <string name="result_adb_root_not_detected">Không phát hiện quyền root trên %1$s. Hãy đảm bảo Magisk/KernelSU/APatch đã được cài đặt và quyền su đã được cấp</string>
+    <string name="result_adb_stock_app_not_installed">Ứng dụng gốc %1$s không được cài đặt trên %2$s. Vui lòng cài đặt ứng dụng chính thức trước khi mount</string>
     <string name="result_link_default_restored">Đã khôi phục xử lý liên kết mặc định</string>
     <string name="result_link_routed_stock_disabled">Liên kết đã chuyển đến ứng dụng đã vá, ứng dụng gốc bị tắt</string>
     <string name="result_adb_not_found_hint">Không tìm thấy ADB. Cài đặt Android SDK Platform Tools để bật cài đặt trực tiếp</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">từ v%1$s</string>
     <string name="update_banner_later_button">Để sau</string>
     <string name="update_banner_skip_button">Bỏ qua v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Công cụ</string>
-    <string name="tools_dialog_open_logs_button">Mở nhật ký</string>
-    <string name="tools_dialog_open_app_data_button">Mở dữ liệu ứng dụng</string>
-    <string name="tools_dialog_view_licenses_button">Xem giấy phép</string>
-    <string name="tools_dialog_cache_cleared">Đã xóa cache</string>
-    <string name="tools_dialog_clear_failed">Xóa thất bại</string>
-    <string name="tools_dialog_clear_cache_button">Xóa cache</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (bản vá + nhật ký)</string>
-    <string name="tools_dialog_confirm_clear_title">Xóa cache?</string>
-    <string name="tools_dialog_confirm_clear_message">Thao tác này sẽ xóa c ác bản vá đã tải và tệp nhật ký. Các bản vá sẽ được tải lạ i kh i cần</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Giấy phép Mã nguồn Mở</string>
     <string name="licenses_dialog_empty_failed">// không thể tải giấy phép</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Tách thư viện</string>
     <string name="settings_toggle_developer_options_label">Tùy chọn nhà phát triển</string>
     <string name="settings_toggle_developer_options_desc">Dành cho nhà phát triển bản vá. Mở khóa bộ tùy chọn quy trình làm việc để xây dựng và kiểm thử bản vá (xem tài liệu để biết danh sách đầy đủ). Hiện tại, đó là trỏ nguồn cục bộ vào một thư mục để Morphe luôn tải tệp .mpp mới nhất của nó</string>
+    <string name="settings_dev_bytecode_mode_label">Chế độ Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Chế độ chuyển đổi được áp dụng cho bytecode DEX trong quá trình vá</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Nhanh</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">An toàn</string>
+    <string name="settings_dev_bytecode_mode_full">Đầy đủ</string>
+    <string name="settings_dev_validate_label">Xác thực dấu vân tay</string>
+    <string name="settings_dev_validate_desc">Xác thực rằng mỗi match() chỉ khớp với một phương thức (vá chậm hơn, dùng để kiểm tra bản vá)</string>
+    <string name="settings_dev_verify_sdk_label">Xác minh Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Xác minh DEX và APK đã vá bằng các công cụ Android SDK (d8, zipalign). Có thể báo cáo nhầm kết quả dương tính giả</string>
+    <string name="settings_dev_sdk_path_label">Thư mục Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Đã tự động phát hiện</string>
+    <string name="settings_dev_sdk_not_found">Không tìm thấy Android SDK. Hãy thiết lập ANDROID_HOME hoặc duyệt tìm thư mục SDK</string>
+    <string name="settings_dev_sdk_picker_title">Chọn thư mục Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Tự động dọn tệp tạm thời</string>
     <string name="settings_toggle_auto_cleanup_desc">Xóa tệp tạm thời sau khi vá</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Không tìm thấy thư mục, sẽ được tạo ở lần vá tới</string>
     <string name="settings_toggle_auto_start_adb_label">Tự độ ng khở i độ ng ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Khở i chạy daemon ADB kh i mở ứng dụng để theo dõi c ác thiết bị đã kết nố i. Kh i tắt, Morphe không bao giờ khở i độ ng máy chủ và c ác tính năng cài đặt/đẩy tệp bị vô hiệu hóa</string>
+    <string name="settings_section_storage">Bộ nhớ &amp; bộ nhớ đệm</string>
+    <string name="settings_cache_summary">Bộ nhớ đệm: %1$s (bản vá + nhật ký)</string>
+    <string name="settings_cache_clear_button">Xóa bộ nhớ đệm</string>
+    <string name="settings_cache_cleared">Đã xóa bộ nhớ đệm</string>
+    <string name="settings_cache_clear_failed">Xóa thất bại</string>
+    <string name="settings_cache_confirm_title">Xóa bộ nhớ đệm?</string>
+    <string name="settings_cache_confirm_message">Thao tác này sẽ xóa các bản vá đã tải xuống và các tệp nhật ký. Các bản vá sẽ được tải lại khi cần thiết</string>
+    <string name="settings_storage_open_app_data_button">Mở dữ liệu ứng dụng</string>
+    <string name="settings_storage_open_logs_button">Mở nhật ký</string>
     <string name="settings_section_about">Giới thiệu</string>
     <string name="settings_about_version">Phiên bản %1$s</string>
     <string name="settings_about_changelogs_title">Lịch sử cập nhật</string>
     <string name="settings_about_changelogs_desc">Xem những thay đổi mới nhất trong bản cập nhật này</string>
+    <string name="settings_about_licenses_title">Giấy phép mã nguồn mở</string>
+    <string name="settings_about_licenses_desc">Xem giấy phép của các thư viện bên thứ ba</string>
     <string name="settings_about_documentation_title">Tài liệu</string>
     <string name="settings_about_documentation_desc">Hướng dẫn vá, nguồn và khắc phục sự cố</string>
     <string name="settings_about_website_title">Truy cập trang web</string>

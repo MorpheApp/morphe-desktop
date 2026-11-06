@@ -19,7 +19,11 @@ Now that you've done your first run, let's dig deeper into how the magic happens
   - [Link handling ("open with")](#gui-expert-links)
   - [Your apps](#gui-your-apps)
   - [Settings](#gui-settings)
-  - [Tools](#gui-tools)
+    - [Storage & cache](#gui-settings-storage)
+    - [Signing](#gui-settings-signing)
+    - [Strip Libs](#gui-settings-striplibs)
+    - [Patched app runtime logs](#gui-settings-runtimelogs)
+    - [Developer options](#gui-settings-developer)
   - [Installing to a device](#gui-adb)
 - [CLI](#cli)
   - [General flags](#general-flags)
@@ -63,7 +67,7 @@ morphe-data/
   config.json      # preferences + configured sources
 ```
 
-Both the GUI and the CLI use this folder. In the GUI you can open it from **Tools → Open App Data**. On the CLI, `--temporary-files-path` defaults to `tmp/` (override it to send scratch elsewhere) and `--keystore` defaults to `morphe.keystore` here.
+Both the GUI and the CLI use this folder. In the GUI you can open it from **Settings → System → Storage & cache → Open app data**. On the CLI, `--temporary-files-path` defaults to `tmp/` (override it to send scratch elsewhere) and `--keystore` defaults to `morphe.keystore` here.
 
 The **`libs/`** folder is special: it only appears once you open the **GUI**. Morphe ships as a single small jar, and to keep that download small it does not bundle the GUI's platform-specific rendering library (Skiko) or its native-access library (JNA). The first time you launch the GUI, Morphe downloads the correct builds for your operating system and architecture from Maven Central, verifies each one by checksum, and caches them here while showing a brief setup window. The CLI needs none of these, so running from a terminal never downloads anything. Every later GUI launch reuses this cache and works offline.
 
@@ -127,8 +131,7 @@ The **Navigation Pill** sits in the center of the bar with an animated sliding i
 | **Loading indicator**     | Displays an animated loading pill while patch manifests and releases are being fetched.                                                                                                                                                                               |
 | **Offline badge**         | Appears when internet connectivity is unavailable; click to retry loading remote sources.                                                                                                                                                                              |
 | **Device indicator**      | Shows the connected ADB device (or "No devices connected"). Click to choose the target device for installs.                                                                                                                                                            |
-| **Tools** (wrench)        | One-off actions + reference info – see [Tools](#gui-tools).                                                                                                                                                                                                            |
-| **Settings** (gear)       | Persistent preferences including themes, modes, signing, and native lib stripping – see [Settings](#gui-settings).                                                                                                                                                    |
+| **Settings** (gear)       | Preferences, storage & cache management, signing, native lib stripping, and about info – see [Settings](#gui-settings).                                                                                                                                                |
 
 <h4 id="gui-expert-home">1. Pick your APK</h4>
 
@@ -235,6 +238,7 @@ The full patch list from your selected bundle(s), with a running **"N of M selec
 | Options editor                                            | Edit a patch's option values                                     | `-O key=value`                                   |
 | **Patch defaults** / **Your defaults**                    | Whether you've changed a patch's options                         | –                                                |
 | Strip-libs summary                                        | Which native-lib architectures will be kept                      | `--striplibs` (set in [Settings](#gui-settings)) |
+| **Root mount mode**                                       | Toggle root mount presets (locks required patches, disables MicroG/GmsCore) | `--mount`                                        |
 | **Continue patching even if a patch fails**               | Keep going when a patch errors instead of aborting the whole run | `--continue-on-error`                            |
 | **Command preview** (**Copy** / **Expand** / **Compact**) | The exact CLI command for your selections                        | – (it *is* the CLI command)                      |
 | **Patch (N)**                                             | Start patching the N selected patches                            | runs the `patch` command                         |
@@ -252,6 +256,7 @@ The full patch list from your selected bundle(s), with a running **"N of M selec
 </p>
 
 - **Strip libs**: A summary chip shows whether native libs will be stripped (**Stripping native libs** / **No stripping needed** / **No native libs**). Change the kept architectures under Settings → Strip Libs.
+- **Root mount mode**: When toggled on, configures patch selections for mounting over the official stock app on a rooted device. Patches required for root installation are locked on, while patches incompatible with root mounting (such as GmsCore / MicroG support) are locked off and marked as unavailable. Adds the `--mount` flag to the Command Preview.
 - **Continue patching even if a patch fails**: By default a failed patch aborts the whole run. Enable this to skip the failure and apply the rest. The GUI's equivalent of the CLI's `--continue-on-error`.
 - **Command preview**: The exact CLI invocation your choices produce. **Copy** it to reproduce this run in a terminal or drop it into a script. **Expand** / **Compact** toggles full vs condensed.
 
@@ -319,7 +324,7 @@ Hit **Save icon** to export the folder and wire it into the option (**Cancel** d
 
 Morphe executes the patching pipeline and streams progress in real time:
 - In **Simple mode**, patching runs inside a streamlined progress screen (`SimplePatchingContent`) featuring a progress indicator ring, the active step message, a completed patch count, and a **Cancel** button.
-- In **Expert mode**, patching displays real-time **CPU and I/O usage monitoring graphs**, a live log stream with an **N/total** counter, and quick access to view or reveal saved log files (`morphe-data/logs/`, reachable via Tools → Open Logs).
+- In **Expert mode**, patching displays real-time **CPU and I/O usage monitoring graphs**, a live log stream with an **N/total** counter, and quick access to view or reveal saved log files (`morphe-data/logs/`, reachable via Settings → System → Storage & cache → Open logs).
 
 On failure in either mode, Morphe presents an in-depth diagnosis screen (`ExpertFailureContent`) showing the error log and full stack trace. On success, the UI advances to the result screen.
 
@@ -328,7 +333,7 @@ On failure in either mode, Morphe presents an in-depth diagnosis screen (`Expert
 </p>
 
 > [!TIP]
-> If a patch fails, the saved log has the full stack trace: **View full logs**, or Tools → Open logs. It's exactly what to attach to a bug report.
+> If a patch fails, the saved log has the full stack trace: **View full logs**, or Settings → System → Storage & cache → Open logs. It's exactly what to attach to a bug report.
 
 <p align="center">
   <img src="images/documentation/gui/patching-error.png" width="60%" alt="Patching Screen Error" style="vertical-align: middle"/>
@@ -419,6 +424,7 @@ The gear icon opens Settings – Morphe's persistent preferences. Think of it as
 | **Parallax effect**            | Smooth background shifting when moving the mouse                                                          | On                                                                                   | –                                                                                          |
 | **Auto-cleanup temp files**    | Delete scratch files after patching                                                                       | On                                                                                   | On by default; `--disable-purge` to turn off                                               |
 | **Auto-start ADB**             | Start the ADB daemon on launch so devices are monitored                                                   | Off                                                                                  | enables `-i` / install features                                                            |
+| **Storage & cache**           | Clear downloaded patches and logs, open data root or logs directory                                       | –                                                                                    | [`utility clear-cache`](#utility-clear-cache)                                              |
 | **Update channel**             | Stable or Prerelease app updates (dropdown menu)                                                          | Smart (Prerelease on dev builds, else Stable)                                        | `--prerelease` (loosely)                                                                   |
 | **Output folder**              | Default location for patched APKs                                                                         | The input APK's folder                                                               | `-o` / `--out`                                                                             |
 | **Signing**                    | Keystore + credentials used to sign                                                                       | Shared `morphe.keystore`, alias `Morphe`, key password `Morphe`, store password empty | `--keystore`, `--keystore-password`, `--keystore-entry-alias`, `--keystore-entry-password` |
@@ -433,7 +439,8 @@ The gear icon opens Settings – Morphe's persistent preferences. Think of it as
 
 A couple of items worth expanding on:
 
-- **About section & Changelogs** - The settings dialog includes an `About` tab that displays the application version, developer info, and a **View changelog** button. The Changelog dialog features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
+- **About section, Changelogs & Licenses** - The settings dialog includes an **About** section that displays the application version, developer info, a **View changelog** button, and **Open Source licenses**. The Changelog dialog features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
+- **Storage & cache** - Found under **Settings → System**, this section shows the live total cache size (patches and log files) with a one-click **Clear cache** action, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
 - **Auto-start ADB** - when off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe.
 - **Update channel** - *Prerelease* surfaces pre-releases; *Stable* only stable ones. If you've never chosen, Morphe defaults smartly (Prerelease when you're running a dev build).
 - **Route links to patched app** - when on, every ADB install is followed by routing the app's supported web links to the patched app (the [Link handling](#gui-expert-links) step, run automatically). A nested **Disable stock app's links** option also stops the original app from opening those links – only relevant when a rename patch was used and the stock app is still installed. Both are reversible and need a connected device.
@@ -500,26 +507,21 @@ This section is for people **building** patches and other developers. Off by def
 > [!NOTE]
 > Existing folder sources keep working even if you later turn Developer options back off. The toggle only gates *creating* them.
 
-<h3 id="gui-tools">Tools</h3>
+<h4 id="gui-settings-storage">Storage & cache</h4><a id="gui-tools"></a>
 
-The wrench icon opens Tools – one-off actions and reference info, kept out of Settings so a destructive action doesn't sit next to your preferences.
+Located under **Settings → System → Storage & cache**, this section centralizes cache management and directory access:
 
 
 | Action            | What it does                                                                                                       |
 |-------------------|--------------------------------------------------------------------------------------------------------------------|
-| **Open logs**     | Open the logs folder (`morphe-data/logs/`)                                                                         |
-| **Open app data** | Open Morphe's data folder – the`morphe-data/` directory (see [Where Morphe stores its files](#where-files-stored)) |
-| **Clear cache**   | Delete downloaded patches and logs (they re-download as needed)                                                    |
-| **View licenses** | Browse the open-source licenses of Morphe's dependencies                                                           |
-
-<p align="center">
-  <img src="images/documentation/gui/tools.png" width="60%" alt="Tools Setting" style="vertical-align: middle"/>
-</p>
+| **Clear cache**   | Delete downloaded patches and log files (they re-download as needed)                                               |
+| **Open app data** | Open Morphe's data folder – the `morphe-data/` directory (see [Where Morphe stores its files](#where-files-stored)) |
+| **Open logs**     | Open the application logs folder (`morphe-data/logs/`) in your file manager                                        |
 
 > [!NOTE]
-> **Clear cache** asks for confirmation, then removes downloaded `.mpp` files and logs from `morphe-data/`. Nothing irreversible, patches re-download on the next run.
+> **Clear cache** displays your current cache size, asks for confirmation, and then safely removes downloaded `.mpp` files and logs from `morphe-data/`. Nothing irreversible, patches re-download on the next run. Cache clearing is disabled while a patch operation is in progress.
 
-**View licenses** opens a searchable browser of the open-source licenses for every third-party library Morphe bundles. Use the search box to filter by name – handy for license compliance, or just to see what's under the hood.
+**Open Source licenses.** Accessible under **Settings → System → About → Open Source licenses**, this opens a searchable browser of the open-source licenses for every third-party library Morphe bundles. Use the search box to filter by name – handy for license compliance, or just to see what's under the hood.
 
 <p align="center">
   <img src="images/documentation/gui/licenses-browser.png" width="60%" alt="Licenses browser" style="vertical-align: middle"/>

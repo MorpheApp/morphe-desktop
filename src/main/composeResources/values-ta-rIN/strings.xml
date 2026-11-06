@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">பேட்ச்களைப் பயன்படுத்துகிறது</string>
     <string name="patching_step_writing_apk">பேட்ச் செய்யப்பட்ட APK கோப்பை எழுதுகிறது</string>
     <string name="patching_step_signing">பேட்ச் செய்யப்பட்ட APK கோப்பிற்கு கையொப்பமிடுகிறது</string>
+    <string name="patching_task_decoding_dex">DEX கோப்புகளைப் படிக்கிறது</string>
+    <string name="patching_task_extracting_resources">வளங்களை மீட்டெடுக்கிறது</string>
+    <string name="patching_task_decoding_resources">வளங்களை டீகோடிங் செய்கிறது</string>
+    <string name="patching_task_indexing_classes">வகுப்புகளைக் குறியிடுகிறது</string>
+    <string name="patching_task_compiling_dex">DEX கோப்புகளைக் கம்பைல் செய்கிறது</string>
+    <string name="patching_task_compiling_resources">வளங்களைக் கம்பைல் செய்கிறது</string>
+    <string name="patching_task_writing_apk">APK கோப்பை எழுதுகிறது</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s-இல் நிறுவுகிறது…</string>
     <string name="adb_error_downgrade">பதிப்பைக் குறைக்க முடியாது, புதிய பதிப்பு நிறுவப்பட்டுள்ளது. முதலில் தற்போதுள்ள செயலியை நீக்கவும்</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">பேட்ச்களை ஏற்றுவதில் பிழை</string>
     <string name="patch_selection_title">பேட்ச்களைத் தேர்ந்தெடு</string>
     <string name="patch_selection_cmd_preview">கட்டளை முன்னோட்டம்</string>
+    <string name="patch_selection_root_mode_description">ரூட் மவுண்ட் பயன்முறை</string>
+    <string name="patch_selection_lock_unavailable">ரூட் மவுண்டிற்கு கிடைக்கவில்லை</string>
     <string name="patch_selection_continue_on_error_tooltip">ஏதேனும் ஒரு பேட்ச் தோல்வியுற்றாலும் பேட்ச்சிங்கைத் தொடரவும்</string>
     <string name="patch_selection_continue_on_error_description">பிழையின் போதும் தொடரவும்</string>
     <string name="patch_selection_no_patches_found">பேட்ச்கள் எதுவும் கண்டறியப்படவில்லை</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">செயலி</string>
     <string name="patch_selection_run_info_bundles_group">பேட்ச் தொகுப்புகள்</string>
     <string name="patch_selection_run_info_no_bundles">தொகுப்புகள் எதுவும் தீர்மானிக்கப்படவில்லை</string>
+    <string name="patch_selection_run_info_dev_group">டெவலப்பர் விருப்பங்கள்</string>
+    <string name="patch_selection_run_info_bytecode_mode">பைட் கோட் பயன்முறை: %1$s</string>
+    <string name="patch_selection_run_info_validate">கைரேகை சரிபார்ப்பு: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK சரிபார்ப்பு: %1$s</string>
     <string name="patch_selection_group_universal">யுனிவர்சல்</string>
     <string name="patch_selection_group_ungrouped">குழுக்கப்படாதவை</string>
     <string name="patch_selection_group_selected_count">%1$d தேர்ந்தெடுக்கப்பட்டது</string>
@@ -421,6 +434,15 @@
     <string name="result_adb_updating_on_device">%1$s-ல் புதுப்பிக்கப்படுகிறது…</string>
     <string name="result_adb_update_successful">புதுப்பிப்பு வெற்றிகரமாக முடிந்தது!</string>
     <string name="result_adb_install_successful">நிறுவல் வெற்றிகரமாக முடிந்தது!</string>
+    <string name="result_adb_badge_root_mount">ரூட் மவுண்ட்</string>
+    <string name="result_adb_mount_button">%1$s-ல் மவுண்ட் செய்க</string>
+    <string name="result_adb_mounting_on_device">%1$s-ல் மவுண்ட் செய்யப்படுகிறது…</string>
+    <string name="result_adb_mount_successful">மவுண்ட் வெற்றிகரமாக முடிந்தது!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s-ல் மவுண்ட் செய்யப்படுகிறது… கோரப்பட்டால் Superuser அனுமதியை வழங்க உங்கள் சாதனத்தைச் சரிபார்க்கவும்</string>
+    <string name="result_adb_unmount_button">%1$s-லிருந்து அன்மவுண்ட் செய்க</string>
+    <string name="result_adb_unmounting_on_device">%1$s-லிருந்து அன்மவுண்ட் செய்யப்படுகிறது…</string>
+    <string name="result_adb_root_not_detected">%1$s-ல் ரூட் அணுகல் கண்டறியப்படவில்லை. Magisk/KernelSU/APatch நிறுவப்பட்டிருப்பதை மற்றும் su அனுமதி வழங்கப்பட்டிருப்பதை உறுதி செய்யவும்</string>
+    <string name="result_adb_stock_app_not_installed">ஸ்டாக் ஆப் %1$s, %2$s-ல் நிறுவப்படவில்லை. மவுண்ட் செய்வதற்கு முன் அதிகாரப்பூர்வ ஆப்பை முதலில் நிறுவவும்</string>
     <string name="result_link_default_restored">இயல்பான இணைப்பு கையாளுதல் மீட்டெடுக்கப்பட்டது</string>
     <string name="result_link_routed_stock_disabled">இணைப்புகள் பேட்ச் செய்யப்பட்ட செயலிக்கு routed செய்யப்பட்டன, ஸ்டாக் செயலி முடக்கப்பட்டது</string>
     <string name="result_adb_not_found_hint">ADB கண்டறியப்படவில்லை. நேரடி நிறுவலை செயல்படுத்த Android SDK Platform Tools-ஐ நிறுவவும்</string>
@@ -601,17 +623,6 @@
     <string name="update_banner_from_version">v%1$s முதல்</string>
     <string name="update_banner_later_button">பிறகு</string>
     <string name="update_banner_skip_button">v%1$s ஐத் தவிர்க்கவும்</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">கருவிகள்</string>
-    <string name="tools_dialog_open_logs_button">பதிவுகளைத் திற</string>
-    <string name="tools_dialog_open_app_data_button">செயலித் தரவைத் திற</string>
-    <string name="tools_dialog_view_licenses_button">உரிமங்களைப் பார்</string>
-    <string name="tools_dialog_cache_cleared">தற்காலிக சேமிப்பு நீக்கப்பட்டது</string>
-    <string name="tools_dialog_clear_failed">தோல்வியுற்றதை நீக்கு</string>
-    <string name="tools_dialog_clear_cache_button">தேக்ககத்தை நீக்கு</string>
-    <string name="tools_dialog_cache_summary">தேக்ககம்: %1$s (பேட்ச்கள் + பதிவுகள்)</string>
-    <string name="tools_dialog_confirm_clear_title">தேக்ககத்தை நீக்க வேண்டுமா?</string>
-    <string name="tools_dialog_confirm_clear_message">இது பதிவிறக்கம் செய்யப்பட்ட பேட்ச்கள் மற்றும் பதிவு கோப்புகளை நீக்கும். தேவைப்படும்போது பேட்ச்கள் மீண்டும் பதிவிறக்கம் செய்யப்படும்</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">திறந்த மூல உரிமங்கள்</string>
     <string name="licenses_dialog_empty_failed">// உரிமங்களை ஏற்ற முடியவில்லை</string>
@@ -684,6 +695,19 @@
     <string name="settings_section_strip_libs">லைப்ஸை நீக்குதல்</string>
     <string name="settings_toggle_developer_options_label">டெவலப்பர் விருப்பங்கள்</string>
     <string name="settings_toggle_developer_options_desc">பேட்ச் டெவலப்பர்களுக்காக. பேட்ச்களை உருவாக்குவதற்கும் மற்றும் சோதனை செய்வதற்கும் தேவையான பணிப்பாய்வு விருப்பங்களின் தொகுப்பை இது திறக்கிறது (முழு பட்டியலுக்கு ஆவணங்களைப் பார்க்கவும்). தற்போது, Morphe எப்போதும் அதன் புதிய .mpp கோப்பை ஏற்றும் வகையில் ஒரு லோக்கல் சோர்ஸை ஃபோல்டரில் குறிப்பிடுவது இதில் அடங்கும்</string>
+    <string name="settings_dev_bytecode_mode_label">பைட் கோட் பயன்முறை</string>
+    <string name="settings_dev_bytecode_mode_desc">பேட்ச் செய்யும்போது DEX பைட் கோடில் பயன்படுத்தப்படும் உருமாற்ற பயன்முறை</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">வேகமானது</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">பாதுகாப்பானது</string>
+    <string name="settings_dev_bytecode_mode_full">முழுமையானது</string>
+    <string name="settings_dev_validate_label">கைரேகை சரிபார்ப்பு</string>
+    <string name="settings_dev_validate_desc">ஒவ்வொரு match()-உம் ஒரு மெத்தடை மட்டுமே பொருத்துகிறது என்பதை சரிபார்க்கவும் (மெதுவான பேட்ச்சிங், பேட்ச் சோதனைக்காக)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK சரிபார்ப்பு</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK கருவிகளை (d8, zipalign) பயன்படுத்தி பேட்ச் செய்யப்பட்ட DEX மற்றும் APK-வை சரிபார்க்கவும். இது தவறான நேர்மறை முடிவுகளை அறிக்கையிடக்கூடும்</string>
+    <string name="settings_dev_sdk_path_label">Android SDK கோப்பகம்</string>
+    <string name="settings_dev_sdk_path_auto">தானாகக் கண்டறியப்பட்டது</string>
+    <string name="settings_dev_sdk_not_found">Android SDK கண்டறியப்படவில்லை. ANDROID_HOME-ஐ அமைக்கவும் அல்லது SDK கோப்பகத்தைத் தேடவும்</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK கோப்பகத்தைத் தேர்ந்தெடுக்கவும்</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">தற்காலிகக் கோப்புகளைத் தானாகவே சுத்தம் செய்</string>
     <string name="settings_toggle_auto_cleanup_desc">பேட்ச் செய்த பிறகு தற்காலிகக் கோப்புகளை நீக்கு</string>
@@ -698,10 +722,21 @@
     <string name="settings_output_folder_not_found">ஃபோல்டர் காணப்படவில்லை, அடுத்த பேட்ச் செய்யும்போது உருவாக்கப்படும்</string>
     <string name="settings_toggle_auto_start_adb_label">ADB-ஐ தானாகத் தொடங்கு</string>
     <string name="settings_toggle_auto_start_adb_desc">இணைக்கப்பட்ட சாதனங்கள் கண்காணிக்கப்படுவதை உறுதி செய்ய, தொடக்கத்திலேயே ADB டீமினை உருவாக்குகிறது. இது ஆஃப் செய்யப்பட்டிருக்கும் போது, Morphe சர்வரை ஒருபோதும் தொடக்காது, மேலும் நிறுவல்/புஷ் வசதிகள் முடக்கப்படும்</string>
+    <string name="settings_section_storage">சேமிப்பு &amp; தற்காலிக சேமிப்பு</string>
+    <string name="settings_cache_summary">தற்காலிக சேமிப்பு: %1$s (பேட்ச்கள் + பதிவுகள்)</string>
+    <string name="settings_cache_clear_button">தற்காலிக சேமிப்பை நீக்கு</string>
+    <string name="settings_cache_cleared">தற்காலிக சேமிப்பு நீக்கப்பட்டது</string>
+    <string name="settings_cache_clear_failed">நீக்க முடியவில்லை</string>
+    <string name="settings_cache_confirm_title">தற்காலிக சேமிப்பை நீக்க வேண்டுமா?</string>
+    <string name="settings_cache_confirm_message">இது பதிவிறக்கம் செய்யப்பட்ட பேட்ச்கள் மற்றும் பதிவு கோப்புகளை நீக்கும். தேவைப்படும்போது பேட்ச்கள் மீண்டும் பதிவிறக்கம் செய்யப்படும்</string>
+    <string name="settings_storage_open_app_data_button">ஆப் தரவைத் திற</string>
+    <string name="settings_storage_open_logs_button">பதிவுகளைத் திற</string>
     <string name="settings_section_about">பற்றி</string>
     <string name="settings_about_version">பதிப்பு %1$s</string>
     <string name="settings_about_changelogs_title">மாற்றப் பதிவுகளைக் காண்</string>
     <string name="settings_about_changelogs_desc">இந்த மேம்படுத்தலில் உள்ள சமீபத்திய மாற்றங்களைச் சரிபார்க்கவும்</string>
+    <string name="settings_about_licenses_title">திறந்த மூல உரிமங்கள்</string>
+    <string name="settings_about_licenses_desc">மூன்றாம் தரப்பு நூலகங்களின் உரிமங்களைக் காண்க</string>
     <string name="settings_about_documentation_title">ஆவணங்கள்</string>
     <string name="settings_about_documentation_desc">பேட்ச் செய்தல், ஆதாரங்கள் மற்றும் சரிசெய்தல் வழிகாட்டிகள்</string>
     <string name="settings_about_website_title">இணையதளத்தைப் பார்வையிடுக</string>

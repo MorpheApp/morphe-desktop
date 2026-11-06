@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Pritaikomi pataisymai</string>
     <string name="patching_step_writing_apk">Rašomas pataisytas APK failas</string>
     <string name="patching_step_signing">Pasirašomas pataisytas APK failas</string>
+    <string name="patching_task_decoding_dex">Skaityti DEX failus</string>
+    <string name="patching_task_extracting_resources">Ištraukti išteklius</string>
+    <string name="patching_task_decoding_resources">Dekoduoti išteklius</string>
+    <string name="patching_task_indexing_classes">Indeksuoti klases</string>
+    <string name="patching_task_compiling_dex">Kompiliuoti DEX failus</string>
+    <string name="patching_task_compiling_resources">Kompiliuoti išteklius</string>
+    <string name="patching_task_writing_apk">Rašyti APK failą</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Diegiama įrenginyje %1$s…</string>
     <string name="adb_error_downgrade">Negalima įdiegti senesnės versijos, nes įdiegta naujesnė. Pirmiausia pašalinkite esamą programėlę</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Klaida įkeliant pataisas</string>
     <string name="patch_selection_title">Pasirinkite pataisas</string>
     <string name="patch_selection_cmd_preview">Komandos peržiūra</string>
+    <string name="patch_selection_root_mode_description">Root montavimo režimas</string>
+    <string name="patch_selection_lock_unavailable">Neprieinamas root montavimui</string>
     <string name="patch_selection_continue_on_error_tooltip">Tęsti pataisymą, net jei pataisa nepavyks</string>
     <string name="patch_selection_continue_on_error_description">Tęsti įvykus klaidai</string>
     <string name="patch_selection_no_patches_found">Nėra rasti pataisų</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Programa</string>
     <string name="patch_selection_run_info_bundles_group">Pataisų paketai</string>
     <string name="patch_selection_run_info_no_bundles">Nerasta pataisų paketų</string>
+    <string name="patch_selection_run_info_dev_group">Kūrėjo parinktys</string>
+    <string name="patch_selection_run_info_bytecode_mode">Baitcode režimas: %1$s</string>
+    <string name="patch_selection_run_info_validate">Pirštų atspaudų validavimas: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK tikrinimas: %1$s</string>
     <string name="patch_selection_group_universal">Universali</string>
     <string name="patch_selection_group_ungrouped">Negrupuota</string>
     <string name="patch_selection_group_selected_count">Pasirinkta: %1$d</string>
@@ -421,6 +434,15 @@
     <string name="result_adb_updating_on_device">Atnaujinama įrenginyje %1$s…</string>
     <string name="result_adb_update_successful">Sėkmingas atnaujinimas!</string>
     <string name="result_adb_install_successful">Įdiegimas pavyko!</string>
+    <string name="result_adb_badge_root_mount">Root montavimas</string>
+    <string name="result_adb_mount_button">Montuoti %1$s</string>
+    <string name="result_adb_mounting_on_device">Montuojama %1$s…</string>
+    <string name="result_adb_mount_successful">Montavimas sėkmingas!</string>
+    <string name="result_adb_mount_su_prompt_hint">Montuojama %1$s… Jei paprašyta, patikrinkite savo įrenginį ir suteikite Super vartotojo leidimą</string>
+    <string name="result_adb_unmount_button">Atmontuoti iš %1$s</string>
+    <string name="result_adb_unmounting_on_device">Atmontuojama iš %1$s…</string>
+    <string name="result_adb_root_not_detected">%1$s ne aptikt root prieigos. Įsitikinkite, kad Magisk/KernelSU/APatch yra įdiegtas ir suteiktas \"su\" leidimas</string>
+    <string name="result_adb_stock_app_not_installed">Programėlė %1$s nėra įdengta į %2$s. Prieš montuojant, pirmiausia įdengkite oficialią programėlę</string>
     <string name="result_link_default_restored">Numatytasis nuorodų tvarkymas atkurtas</string>
     <string name="result_link_routed_stock_disabled">Nuorodos nukreiptos į pataisytą programą, originali programa išjungta</string>
     <string name="result_adb_not_found_hint">ADB nerastas. Įdiekite Android SDK Platform Tools, kad įgalintumėte tiesioginį diegimą</string>
@@ -601,17 +623,6 @@
     <string name="update_banner_from_version">nuo v%1$s</string>
     <string name="update_banner_later_button">Vėliau</string>
     <string name="update_banner_skip_button">Praleisti v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Įrankiai</string>
-    <string name="tools_dialog_open_logs_button">Atidaryti žurnalus</string>
-    <string name="tools_dialog_open_app_data_button">Atidaryti programos duomenis</string>
-    <string name="tools_dialog_view_licenses_button">Peržiūrėti licencijas</string>
-    <string name="tools_dialog_cache_cleared">Talpykla išvalyta</string>
-    <string name="tools_dialog_clear_failed">Nepavyko išvalyti</string>
-    <string name="tools_dialog_clear_cache_button">Išvalyti talpyklą</string>
-    <string name="tools_dialog_cache_summary">Talpykla: %1$s (pataisos + žurnalai)</string>
-    <string name="tools_dialog_confirm_clear_title">Išvalyti talpyklą?</string>
-    <string name="tools_dialog_confirm_clear_message">Tai ištrins atsisiųstas pataisas ir žurnalų failus. Pataisos bus atsisiųstos iš naujo, kai prireiks</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Atvirojo kodo licencijos</string>
     <string name="licenses_dialog_empty_failed">// nepavyko įkelti licencijų</string>
@@ -684,6 +695,19 @@
     <string name="settings_section_strip_libs">Pašalinti bibliotekas</string>
     <string name="settings_toggle_developer_options_label">Kūrėjo parinktys</string>
     <string name="settings_toggle_developer_options_desc">Pataisų kūrėjams. Atveria darbo eigos parinkčių rinkinį, skirtą kurti ir testuoti pataisas (visą sąrašą rasite dokumentacijoje). Kol kas tai reiškia vietinio šaltinio nukreipimą į aplanką, kad Morphe visada įkeltų naujausią .mpp failą</string>
+    <string name="settings_dev_bytecode_mode_label">Baitcode režimas</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformacijos režimas, taikomas DEX baitcode'ui patch'inimo metu</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Greitai</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Saugus</string>
+    <string name="settings_dev_bytecode_mode_full">Pilnas</string>
+    <string name="settings_dev_validate_label">Pirštų atspaudų validavimas</string>
+    <string name="settings_dev_validate_desc">Tikrinti, ar kiekvienas match() atitinka tik vieną metodą (lėtesnis patch'inimas, skirta patch'ių testavimui)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK tikrinimas</string>
+    <string name="settings_dev_verify_sdk_desc">Tikrinti supatchintą DEX ir APK naudojant Android SDK įrankius (d8, zipalign). Gali pranešti apie klaidingus teigiamus rezultatus</string>
+    <string name="settings_dev_sdk_path_label">Android SDK katalogas</string>
+    <string name="settings_dev_sdk_path_auto">Automatiškai aptikta</string>
+    <string name="settings_dev_sdk_not_found">Android SDK nerasta. Nustatykite ANDROID_HOME arba pasirinkite SDK katalogą</string>
+    <string name="settings_dev_sdk_picker_title">Pasirinkite Android SDK katalogą</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Automatiškai išvalyti laikinuosius failus</string>
     <string name="settings_toggle_auto_cleanup_desc">Ištrinti laikinuosius failus po pataisymo</string>
@@ -698,10 +722,21 @@
     <string name="settings_output_folder_not_found">Aplankas nerastas, bus sukurtas atliekant kitą pataisymą</string>
     <string name="settings_toggle_auto_start_adb_label">Automatiškai paleisti ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Paleiskite ADB paslaugą programos paleidimo metu, kad būtų stebimi prijungti įrenginiai. Kai išjungta, Morphe niekada nepaleidžia serverio, o diegimo / siuntimo funkcijos yra išjungtos</string>
+    <string name="settings_section_storage">Atminties įranga ir gnytaras</string>
+    <string name="settings_cache_summary">Gnytaras: %1$s ( Patch'ai + žurnalai)</string>
+    <string name="settings_cache_clear_button">Išvalyti gnytarą</string>
+    <string name="settings_cache_cleared">Gnytaras išvalytas</string>
+    <string name="settings_cache_clear_failed">Nepavyko išvalyti</string>
+    <string name="settings_cache_confirm_title">Išvalyti gnytarą?</string>
+    <string name="settings_cache_confirm_message">Šia العمليه bus ištrinti atsisiųsti Patch'ai ir žurnalų failai. Patch'ai bus atsisiųsti vėl, kai jų reikės</string>
+    <string name="settings_storage_open_app_data_button">Atidaryti programėlės duomenis</string>
+    <string name="settings_storage_open_logs_button">Atidaryti žurnalus</string>
     <string name="settings_section_about">Apie</string>
     <string name="settings_about_version">Versija %1$s</string>
     <string name="settings_about_changelogs_title">Peržiūrėti pakeitimų žurnalus</string>
     <string name="settings_about_changelogs_desc">Peržiūrėkite naujausius šio atnaujinimo pakeitimus</string>
+    <string name="settings_about_licenses_title">Atvirojo šaltinio licencijos</string>
+    <string name="settings_about_licenses_desc">Peržiūrėti trečiųjų šalių bibliotekų licencijas</string>
     <string name="settings_about_documentation_title">Dokumentacija</string>
     <string name="settings_about_documentation_desc">Vadovai apie pataisymą, šaltinius ir trikčių šalinimą</string>
     <string name="settings_about_website_title">Aplankyti svetainę</string>

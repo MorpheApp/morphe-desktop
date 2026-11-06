@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">პატჩების გამოყენება</string>
     <string name="patching_step_writing_apk">პატჩირებული APK ფაილის ჩაწერა</string>
     <string name="patching_step_signing">პატჩირებული APK ფაილის ხელმოწერა</string>
+    <string name="patching_task_decoding_dex">DEX ფაილების კითხვა</string>
+    <string name="patching_task_extracting_resources">რესურსების ამოღება</string>
+    <string name="patching_task_decoding_resources">რესურსების დეკოდირება</string>
+    <string name="patching_task_indexing_classes">კლასების ინდექსირება</string>
+    <string name="patching_task_compiling_dex">DEX ფაილების კომპილაცია</string>
+    <string name="patching_task_compiling_resources">რესურსების კომპილაცია</string>
+    <string name="patching_task_writing_apk">APK ფაილის ჩაწერა</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">ინსტალაცია %1$s-ზე…</string>
     <string name="adb_error_downgrade">ვერსიის დაწევა შეუძლებელია, დაინსტალირებულია უფრო ახალი ვერსია. ჯერ წაშალეთ არსებული აპლიკაცია</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">შეცდომა ფაჩების ჩატვირთვისას</string>
     <string name="patch_selection_title">აირჩიეთ ფაჩები</string>
     <string name="patch_selection_cmd_preview">ბრძანების წინასწარი ნახვა</string>
+    <string name="patch_selection_root_mode_description">Root-ის დამონტაჟების რეჟიმი</string>
+    <string name="patch_selection_lock_unavailable">არ არის ხელმისაწვდომი root mount-ისთვის</string>
     <string name="patch_selection_continue_on_error_tooltip">გააგრძელეთ პატჩირება იმ შემთხვევაშიც, თუ პატჩი ჩაიშალა</string>
     <string name="patch_selection_continue_on_error_description">გაგრძელება შეცდომის შემთხვევაში</string>
     <string name="patch_selection_no_patches_found">პატჩები ვერ მოიძებნა</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">აპლიკაცია</string>
     <string name="patch_selection_run_info_bundles_group">პატჩის პაკეტები</string>
     <string name="patch_selection_run_info_no_bundles">პაკეტები ვერ მოიძებნა</string>
+    <string name="patch_selection_run_info_dev_group">დეველოპერის პარამეტრები</string>
+    <string name="patch_selection_run_info_bytecode_mode">ბაიტკოდის რეჟიმი: %1$s</string>
+    <string name="patch_selection_run_info_validate">თითის ანაბეჭდის ვალიდაცია: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK-ის ვერიფიკაცია: %1$s</string>
     <string name="patch_selection_group_universal">უნივერსალური</string>
     <string name="patch_selection_group_ungrouped">დაუჯგუფებელი</string>
     <string name="patch_selection_group_selected_count">{\"one\":\"1 არჩეულია\",\"other\":\"%1$d არჩეულია\"}</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">განახლება %1$s-ზე…</string>
     <string name="result_adb_update_successful">განახლება წარმატებით დასრულდა!</string>
     <string name="result_adb_install_successful">ინსტალაცია წარმატებით დასრულდა!</string>
+    <string name="result_adb_badge_root_mount">Root-ის მოაწყვეტინება</string>
+    <string name="result_adb_mount_button">მოაწყვეტინება %1$s-ზე</string>
+    <string name="result_adb_mounting_on_device">მოაწყვეტინება %1$s-ზე…</string>
+    <string name="result_adb_mount_successful">მოაწყვეტინება წარმატებით დასრულდა!</string>
+    <string name="result_adb_mount_su_prompt_hint">მოაწყვეტინება %1$s-ზე… შეამოწმეთ თქვენი მოწყობილობა Superuser-ის უფლების მისანიჭებლად, თუ მოგთხოვთ</string>
+    <string name="result_adb_unmount_button">მოაწყვეტინების გაუქმება %1$s-დან</string>
+    <string name="result_adb_unmounting_on_device">მოაწყვეტინების გაუქმება %1$s-დან…</string>
+    <string name="result_adb_root_not_detected">Root წვდომა არ აღმოჩნდა %1$s-ზე. დარწმუნდით, რომ Magisk/KernelSU/APatch დაინსტალირებულია და su უფლება მინიჭებულია</string>
+    <string name="result_adb_stock_app_not_installed">სტანდარტული აპლიკაცია %1$s არ არის დაინსტალირებული %2$s-ზე. მოაწყვეტინებამდე ჯერ დააინსტალირეთ ოფიციალური აპლიკაცია</string>
     <string name="result_link_default_restored">ბმულების სტანდარტული დამუშავება აღდგენილია</string>
     <string name="result_link_routed_stock_disabled">ბმულები გადამისამართებულია პატჩირებულ აპლიკაციაზე, სტოკ-ვერსია გამორთულია</string>
     <string name="result_adb_not_found_hint">ADB ვერ მოიძებნა. დააინსტალირეთ Android SDK Platform Tools პირდაპირი ინსტალაციისთვის</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s-დან</string>
     <string name="update_banner_later_button">მოგვიანებით</string>
     <string name="update_banner_skip_button">გამოტოვეთ v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">ინსტრუმენტები</string>
-    <string name="tools_dialog_open_logs_button">ლოგების გახსნა</string>
-    <string name="tools_dialog_open_app_data_button">აპლიკაციის მონაცემების გახსნა</string>
-    <string name="tools_dialog_view_licenses_button">ლიცენზიების ნახვა</string>
-    <string name="tools_dialog_cache_cleared">ქეში გასუფთავებულია</string>
-    <string name="tools_dialog_clear_failed">გასუფთავება ვერ მოხერხდა</string>
-    <string name="tools_dialog_clear_cache_button">ქეშის გასუფთავება</string>
-    <string name="tools_dialog_cache_summary">ქეში: %1$s (ფატჩები + ლოგები)</string>
-    <string name="tools_dialog_confirm_clear_title">გასუფთავდეს ქეში?</string>
-    <string name="tools_dialog_confirm_clear_message">ეს წაშლის ჩამოტვირთულ ფატჩებსა და ლოგ ფაილებს. ფატჩები ხელახლა ჩამოიტვირთება საჭიროების შემთხვევაში</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ღია კოდის ლიცენზიები</string>
     <string name="licenses_dialog_empty_failed">// ლიცენზიების ჩატვირთვა ვერ მოხერხდა</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">ბიბლიოთეკების გასუფთავება</string>
     <string name="settings_toggle_developer_options_label">დეველოპერის პარამეტრები</string>
     <string name="settings_toggle_developer_options_desc">პატჩების დეველოპერებისთვის. განბლოკავს სამუშაო პროცესის ოფციების ნაკრებს პატჩების შესაქმნელად და გამოსაცდელად (იხილეთ სრული სია დოკუმენტაციაში). ამჟამად, ეს ნიშნავს ლოკალური წყაროს მიბმას საქაღალდესთან, რათა Morphe-მა ყოველთვის ჩატვირთოს უახლესი .mpp ფაილი</string>
+    <string name="settings_dev_bytecode_mode_label">ბაიტკოდის რეჟიმი</string>
+    <string name="settings_dev_bytecode_mode_desc">ტრანსფორმაციის რეჟიმი, რომელიც გამოიყენება DEX ბაიტკოდისთვის პატჩინგის დროს</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">სწრაფი</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">უსაფრთხო</string>
+    <string name="settings_dev_bytecode_mode_full">სრული</string>
+    <string name="settings_dev_validate_label">თითის ანაბეჭდის ვალიდაცია</string>
+    <string name="settings_dev_validate_desc">შეამოწმეთ, რომ თითოეული match() შეესაბამება მხოლოდ ერთ მეთოდს (უფრო ნელი პატჩინგი, პატჩის ტესტირებისთვის)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK-ის ვერიფიკაცია</string>
+    <string name="settings_dev_verify_sdk_desc">შეამოწმეთ პატჩირებული DEX და APK Android SDK-ის ხელსაწყოებით (d8, zipalign). შესაძლოა გამოჩნდეს ცრუ დადებითი შედეგები</string>
+    <string name="settings_dev_sdk_path_label">Android SDK-ის დირექტორია</string>
+    <string name="settings_dev_sdk_path_auto">ავტომატურად აღმოჩენილი</string>
+    <string name="settings_dev_sdk_not_found">Android SDK ვერ მოიძებნა. დააყენეთ ANDROID_HOME ან მოძებნეთ SDK-ის დირექტორია</string>
+    <string name="settings_dev_sdk_picker_title">აირჩიეთ Android SDK-ის დირექტორია</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">დროებითი ფაილების ავტომატური გასუფთავება</string>
     <string name="settings_toggle_auto_cleanup_desc">დროებითი ფაილების წაშლა პატჩინგის შემდეგ</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">საქაღალდე ვერ მოიძებნა, იგი შეიქმნება შემდეგი პატჩინგის დროს</string>
     <string name="settings_toggle_auto_start_adb_label">ADB-ის ავტომატური გაშვება</string>
     <string name="settings_toggle_auto_start_adb_desc">გაუშვით ADB დემონი გაშვებისას, რათა დაკავშირებული მოწყობილობები იყოს მონიტორინგზე. გამორთვრის შემთხვევაში, Morphe არასოდეს რთავს სერვერს, ხოლო ინსტალაციისა და push ფუნქციები გათიშულია</string>
+    <string name="settings_section_storage">მეხსოვრება და ქეში</string>
+    <string name="settings_cache_summary">ქეში: %1$s (პატჩები + ლოგები)</string>
+    <string name="settings_cache_clear_button">ქეშის გასუფთავება</string>
+    <string name="settings_cache_cleared">ქეში გასუფთავებულია</string>
+    <string name="settings_cache_clear_failed">გასუფთავება ვერ მოხერხდა</string>
+    <string name="settings_cache_confirm_title">გასუფთავდეს ქეში?</string>
+    <string name="settings_cache_confirm_message">ეს წაშლის ჩამოტვირთულ პატჩებსა და ლოგ ფაილებს. პატჩები ხელახლა ჩამოიტვირთება საჭიროების შემთხვევაში</string>
+    <string name="settings_storage_open_app_data_button">აპლიკაციის მონაცემების გახსნა</string>
+    <string name="settings_storage_open_logs_button">ლოგების გახსნა</string>
     <string name="settings_section_about">შესახებ</string>
     <string name="settings_about_version">ვერსია %1$s</string>
     <string name="settings_about_changelogs_title">ნახეთ ცვლილებების სია</string>
     <string name="settings_about_changelogs_desc">გაეცანით ბოლო ცვლილებებს ამ განახლებაში</string>
+    <string name="settings_about_licenses_title">ღია კოდის ლიცენზიები</string>
+    <string name="settings_about_licenses_desc">მესამე მხარის ბიბლიოთეკების ლიცენზიების ნახვა</string>
     <string name="settings_about_documentation_title">დოკუმენტაცია</string>
     <string name="settings_about_documentation_desc">გზამკვლევები პატჩინგისთვის, წყაროებისა და პრობლემების მოგვარებისთვის</string>
     <string name="settings_about_website_title">ვნახე ვებგვერდი</string>

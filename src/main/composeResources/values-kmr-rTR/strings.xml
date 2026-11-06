@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Sepandina palpan</string>
     <string name="patching_step_writing_apk">Nivîsandina fayla APK ya patchworkkirî</string>
     <string name="patching_step_signing">Îmza kirina fayla APK ya patchworkkirî</string>
+    <string name="patching_task_decoding_dex">Xwendina dosyên DEX</string>
+    <string name="patching_task_extracting_resources">Derxistina çavkaniyan</string>
+    <string name="patching_task_decoding_resources">Dekodkirina çavkaniyan</string>
+    <string name="patching_task_indexing_classes">Îndekskirina polan</string>
+    <string name="patching_task_compiling_dex">Kompîlkirina dosyên DEX</string>
+    <string name="patching_task_compiling_resources">Kompîlkirina çavkaniyan</string>
+    <string name="patching_task_writing_apk">Nivîsandina dosyaya APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Li ser %1$s tê instalação kirin…</string>
     <string name="adb_error_downgrade">Nakalê dikare were daxistin, guhertoya nûyê hatî sazkirin. Pêşî aplikasyona heyî jê bibe</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Xeletî di barkirina patchan de</string>
     <string name="patch_selection_title">Patchan hilbijêre</string>
     <string name="patch_selection_cmd_preview">Pêşberdaya fermana</string>
+    <string name="patch_selection_root_mode_description">Moda mountkirina Root</string>
+    <string name="patch_selection_lock_unavailable">Ji bo root mount ne pêvendî ye</string>
     <string name="patch_selection_continue_on_error_tooltip">Tevgera patching berdewam bike her çend patchek bi xeletî derkeve</string>
     <string name="patch_selection_continue_on_error_description">Di xeletiyê de berdewam bike</string>
     <string name="patch_selection_no_patches_found">Tu patch nehatin dîtin</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Bundleyên patchê</string>
     <string name="patch_selection_run_info_no_bundles">Tu bundle nehatin çareserkirin</string>
+    <string name="patch_selection_run_info_dev_group">Veçîkên pêşdevekîner</string>
+    <string name="patch_selection_run_info_bytecode_mode">Moda bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Valîdasyona fingerprints: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verîfikasyona Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Yekgir</string>
     <string name="patch_selection_group_ungrouped">Nenivîşandî</string>
     <string name="patch_selection_group_selected_count">%1$d hatin hilbijartin</string>
@@ -386,6 +399,7 @@
     <string name="patching_step_all_done">Hemû temam bûn!</string>
     <string name="patching_step_waiting">Li benda...</string>
     <string name="patching_graph_memory_usage">Bikaranîna bînbîrê</string>
+    <string name="patching_graph_memory_detail">%1$d% ji %2$d MB</string>
     <string name="patching_graph_storage_io">I/O ya jêdirê</string>
     <string name="patching_graph_cpu_usage">Bikaranîna CPU</string>
     <string name="patching_banner_started_title">Patching dest pê kir</string>
@@ -421,6 +435,15 @@
     <string name="result_adb_updating_on_device">Li ser %1$s tê nûkirin…</string>
     <string name="result_adb_update_successful">Nûkirin bi ser ket!</string>
     <string name="result_adb_install_successful">Installation bi ser ket!</string>
+    <string name="result_adb_badge_root_mount">Montkirina root</string>
+    <string name="result_adb_mount_button">Li ser %1$s mount bike</string>
+    <string name="result_adb_mounting_on_device">Li ser %1$s tê mountkirin…</string>
+    <string name="result_adb_mount_successful">Mountkirin bi serkeftin bihat kirin!</string>
+    <string name="result_adb_mount_su_prompt_hint">Li ser %1$s tê mountkirin… Ger hat xwestin, li amûrê xwe binêre da ku destûra Superuser bidî</string>
+    <string name="result_adb_unmount_button">Ji %1$s unmount bike</string>
+    <string name="result_adb_unmounting_on_device">Ji %1$s tê unmountkirin…</string>
+    <string name="result_adb_root_not_detected">Li ser %1$s gihîştina root nehat dîtin. Paşxmax bikin ku Magisk/KernelSU/APatch hatî sazkirin û destûra su hat dayîn</string>
+    <string name="result_adb_stock_app_not_installed">App-a stock %1$s li ser %2$s nehatî sazkirin. Berî mountkirinê, pêşî app-a fermî sazkirin</string>
     <string name="result_link_default_restored">Rêvebirina lînkên default hat vegerandin</string>
     <string name="result_link_routed_stock_disabled">Link hatirê appê ya patchwork kirî, ya stock hat betalkirin</string>
     <string name="result_adb_not_found_hint">ADB nehat dîtin. Ji bo ku sazkirina rasterast were çalakkirin, Android SDK Platform Tools sazbike</string>
@@ -601,17 +624,6 @@
     <string name="update_banner_from_version">ji v%1$s</string>
     <string name="update_banner_later_button">Paşê</string>
     <string name="update_banner_skip_button">V%1$s derbas bike</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Amûr</string>
-    <string name="tools_dialog_open_logs_button">Logan veke</string>
-    <string name="tools_dialog_open_app_data_button">Daneyên aplikasyonê veke</string>
-    <string name="tools_dialog_view_licenses_button">Lisansan bibîne</string>
-    <string name="tools_dialog_cache_cleared">Cache hat paqijkirin</string>
-    <string name="tools_dialog_clear_failed">Paqijkirin bi ser neket</string>
-    <string name="tools_dialog_clear_cache_button">Cache paqij bike</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (patch + log)</string>
-    <string name="tools_dialog_confirm_clear_title">Cache paqij bike?</string>
-    <string name="tools_dialog_confirm_clear_message">Ev dê patchên daxaziya kirî û dosyên logê jêbike. Patch dê dîsa werin daxizîn gava pêdivî bin</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Lîsansên Çavkaniya Vekirî</string>
     <string name="licenses_dialog_empty_failed">// barkirina lîsansan bi ser neket</string>
@@ -684,6 +696,19 @@
     <string name="settings_section_strip_libs">Paqijkirina libs</string>
     <string name="settings_toggle_developer_options_label">Opsiyonên pêşdeveloperan</string>
     <string name="settings_toggle_developer_options_desc">Ji bo pêşdeveloperên patchan. Conjûmeyek ji opsiyonên workflowê ji bo avakirin û testkirina patchan vedike (ji bo lîsteya tam li dokumantasyonê binêre). Niha, ev tê wateya nîşandana çavkaniyek lokal li foldeyekê da ku Morphe her tim .mpp ya xwe ya herî nû barkirîne</string>
+    <string name="settings_dev_bytecode_mode_label">Moda bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Moda veguhastina ku li ser bytecode'a DEX di dema patchingê de tê sepandin</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Bilaş</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Bi ewlehî</string>
+    <string name="settings_dev_bytecode_mode_full">Tevahî</string>
+    <string name="settings_dev_validate_label">Valîdasyona fingerprints</string>
+    <string name="settings_dev_validate_desc">Valîde bike ku her match() tenê bi yek metodê re diheve (patchingê hêdîtir dike, ji bo testkirina patchan)</string>
+    <string name="settings_dev_verify_sdk_label">Verîfikasyona Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">DEX û APK yên patched bi amûrên Android SDK d8, zipalign verify bike. Dibe ku raporên şaş bide</string>
+    <string name="settings_dev_sdk_path_label">Dîrektorya Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Bi otomatik hat tespîtkirin</string>
+    <string name="settings_dev_sdk_not_found">Android SDK nehat dîtin. ANDROID_HOME belge bike yan jî li dîrektorya SDK bigere</string>
+    <string name="settings_dev_sdk_picker_title">Dîrektorya Android SDK hilbijêre</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Paqijkirina otomatîk a faylên demkî</string>
     <string name="settings_toggle_auto_cleanup_desc">Faylên demkî piştî patching jêbîre bike</string>
@@ -698,10 +723,21 @@
     <string name="settings_output_folder_not_found">Foldera nehat dîtin, dê di patcha得 next de were çêkirin</string>
     <string name="settings_toggle_auto_start_adb_label">ADB bi xweşkilî destpêbike</string>
     <string name="settings_toggle_auto_start_adb_desc">Daemonê ADB di demê destpêkirinê de bîne da ku amûrên girêdayî bên şopandin. Gava vekirî be, Morphe qet serverê destpênake, û taybetmendiyên sazkirinê/şandina daneyan hatine ragirtin</string>
+    <string name="settings_section_storage">Hêjbir û cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (patch + log)</string>
+    <string name="settings_cache_clear_button">Cache paqij bike</string>
+    <string name="settings_cache_cleared">Cache hat paqijkirin</string>
+    <string name="settings_cache_clear_failed">Paqijkirin bi ser neket</string>
+    <string name="settings_cache_confirm_title">Cache paqij bike?</string>
+    <string name="settings_cache_confirm_message">Ev dê patchên hatine daxistin û dosyên log jê bibe. Patch dê dîsa werin daxistin gava pêwîst bin</string>
+    <string name="settings_storage_open_app_data_button">Datanên appê veke</string>
+    <string name="settings_storage_open_logs_button">Logan veke</string>
     <string name="settings_section_about">Derbarê</string>
     <string name="settings_about_version">Versiyona %1$s</string>
     <string name="settings_about_changelogs_title">Guherînên vêrşanê bibîne</string>
     <string name="settings_about_changelogs_desc">Guherînên herî dawî di vê nûjenkirinê de bibîne</string>
+    <string name="settings_about_licenses_title">Lisansên Çavkaniya Vekir</string>
+    <string name="settings_about_licenses_desc">Lisansên librariyên ownîyên sêyemîn bibîne</string>
     <string name="settings_about_documentation_title">Dokümantasyon</string>
     <string name="settings_about_documentation_desc">Rêberên ji bo patching, çavkaniyan û çareserkirina pirsgirêkan</string>
     <string name="settings_about_website_title">Serdana malperê bike</string>

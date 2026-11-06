@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Застосування патчів</string>
     <string name="patching_step_writing_apk">Запис патченого APK файлу</string>
     <string name="patching_step_signing">Підпис патченого APK файлу</string>
+    <string name="patching_task_decoding_dex">Читання файлів DEX</string>
+    <string name="patching_task_extracting_resources">Вилучення ресурсів</string>
+    <string name="patching_task_decoding_resources">Декодування ресурсів</string>
+    <string name="patching_task_indexing_classes">Індексація класів</string>
+    <string name="patching_task_compiling_dex">Компіляція файлів DEX</string>
+    <string name="patching_task_compiling_resources">Компіляція ресурсів</string>
+    <string name="patching_task_writing_apk">Запис файлу APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Установлення на %1$s…</string>
     <string name="adb_error_downgrade">Не можна встановити старішу версію: уже встановлено новішу. Спочатку видаліть наявний застосунок</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Помилка завантаження патчів</string>
     <string name="patch_selection_title">Вибрати патчі</string>
     <string name="patch_selection_cmd_preview">Попередній перегляд команди</string>
+    <string name="patch_selection_root_mode_description">Режим root монтування</string>
+    <string name="patch_selection_lock_unavailable">Недоступно для root-монтування</string>
     <string name="patch_selection_continue_on_error_tooltip">Продовжувати патчинг, навіть якщо якійсь патч не спрацює</string>
     <string name="patch_selection_continue_on_error_description">Продовжувати при помилці</string>
     <string name="patch_selection_no_patches_found">Патчі не знайдено</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Застосунок</string>
     <string name="patch_selection_run_info_bundles_group">Пакети патчів</string>
     <string name="patch_selection_run_info_no_bundles">Не знайдено жодного набору</string>
+    <string name="patch_selection_run_info_dev_group">Параметри розробника</string>
+    <string name="patch_selection_run_info_bytecode_mode">Режим байт-коду: %1$s</string>
+    <string name="patch_selection_run_info_validate">Перевірка відбитків: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Перевірка Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Універсальний</string>
     <string name="patch_selection_group_ungrouped">Без групи</string>
     <string name="patch_selection_group_selected_count">%1$d вибрано</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Оновлення на %1$s…</string>
     <string name="result_adb_update_successful">Оновлення успішне!</string>
     <string name="result_adb_install_successful">Успішно встановлено!</string>
+    <string name="result_adb_badge_root_mount">Root монтування</string>
+    <string name="result_adb_mount_button">Змонтувати на %1$s</string>
+    <string name="result_adb_mounting_on_device">Монтування на %1$s…</string>
+    <string name="result_adb_mount_successful">Монтування успішне!</string>
+    <string name="result_adb_mount_su_prompt_hint">Монтування на %1$s… Перевірте пристрій, щоб надати дозвіл суперкористувача, якщо буде запит</string>
+    <string name="result_adb_unmount_button">Розмонтувати з %1$s</string>
+    <string name="result_adb_unmounting_on_device">Розмонтування з %1$s…</string>
+    <string name="result_adb_root_not_detected">Root-доступ не виявлено на %1$s. Переконайтеся, що встановлено Magisk/KernelSU/APatch і надано дозвіл su</string>
+    <string name="result_adb_stock_app_not_installed">Оригінальний застосунок %1$s не встановлено на %2$s. Спершу встановіть офіційний застосунок, а потім виконуйте монтування</string>
     <string name="result_link_default_restored">Стандартну обробку посилань відновлено</string>
     <string name="result_link_routed_stock_disabled">Посилання перенаправляються в пропатчений застосунок, стандартний застосунок вимкнено</string>
     <string name="result_adb_not_found_hint">ADB не знайдено. Установіть Android SDK Platform Tools, щоб увімкнути пряме встановлення</string>
@@ -450,7 +472,7 @@
     <string name="icon_studio_background_gradient">Градієнт</string>
     <string name="icon_studio_tab_shape">Форма</string>
     <string name="icon_studio_mask_squircle">Сквіркл</string>
-    <string name="icon_studio_warn_opaque">Це зображення не має прозорості, тому тематичні іконки &amp; іконки сповіщень будуть суцільним блоком. Для них використовуйте вирізаний (прозорий) PNG, щоб показати форму вашого логотипу</string>
+    <string name="icon_studio_warn_opaque">Це зображення не має прозорості, тому тематичні іконки та іконки сповіщень будуть суцільним блоком. Для них використовуйте вирізаний (прозорий) PNG, щоб показувати форму вашого логотипу</string>
     <string name="icon_studio_warn_unreadable">Не вдалося прочитати це зображення, щоб перевірити його прозорість</string>
     <string name="icon_studio_picker_select_font">Виберіть шрифт</string>
     <string name="icon_studio_undo_button">Скасувати</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">з v%1$s</string>
     <string name="update_banner_later_button">Пізніше</string>
     <string name="update_banner_skip_button">Пропустити v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Інструменти</string>
-    <string name="tools_dialog_open_logs_button">Відкрити журнали</string>
-    <string name="tools_dialog_open_app_data_button">Відкрити дані застосунку</string>
-    <string name="tools_dialog_view_licenses_button">Переглянути ліцензії</string>
-    <string name="tools_dialog_cache_cleared">Кеш очищено</string>
-    <string name="tools_dialog_clear_failed">Не вдалося очистити</string>
-    <string name="tools_dialog_clear_cache_button">Очистити кеш</string>
-    <string name="tools_dialog_cache_summary">Кеш: %1$s (патчі + журнали)</string>
-    <string name="tools_dialog_confirm_clear_title">Очистити кеш?</string>
-    <string name="tools_dialog_confirm_clear_message">Це видалить завантажені патчі та файли журналів. Патчі буде завантажено повторно за потреби</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ліцензії з відкритим кодом</string>
     <string name="licenses_dialog_empty_failed">// не вдалося завантажити ліцензії</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Видалення бібліотек</string>
     <string name="settings_toggle_developer_options_label">Опції розробника</string>
     <string name="settings_toggle_developer_options_desc">Для розробників патчів. Відкриває набір параметрів робочого процесу для створення та тестування патчів (повний список див. у документації). Наразі це вказування локального джерела на папку, щоб Morphe завжди завантажував її найновіший .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Режим байт-коду</string>
+    <string name="settings_dev_bytecode_mode_desc">Режим трансформації, що застосовується до байт-коду DEX під час патчингу</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Швидкий</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Безпечний</string>
+    <string name="settings_dev_bytecode_mode_full">Повний</string>
+    <string name="settings_dev_validate_label">Перевірка відбитків</string>
+    <string name="settings_dev_validate_desc">Перевіряє, що кожен match() відповідає лише одному методу (повільніший патчинг, для тестування патчів)</string>
+    <string name="settings_dev_verify_sdk_label">Перевірка Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Перевіряє пропатчені DEX та APK за допомогою інструментів Android SDK (d8, zipalign). Може давати хибні спрацювання</string>
+    <string name="settings_dev_sdk_path_label">Тека Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Визначено автоматично</string>
+    <string name="settings_dev_sdk_not_found">Android SDK не знайдено. Задайте ANDROID_HOME або виберіть теку SDK вручну</string>
+    <string name="settings_dev_sdk_picker_title">Виберіть теку Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Автоматичне очищення тимчасових файлів</string>
     <string name="settings_toggle_auto_cleanup_desc">Видаляти тимчасові файли після патчингу</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Папку не знайдено, їі буде створено під час наступного патчингу</string>
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускати демон ADB під час старту, щоб відстежувати підключені пристрої. Коли вимкнено, Morphe не запускає сервер, а функції встановлення/надсилання вимкнено</string>
+    <string name="settings_section_storage">Пам'ять та кеш</string>
+    <string name="settings_cache_summary">Кеш: %1$s (патчі + журнали)</string>
+    <string name="settings_cache_clear_button">Очистити кеш</string>
+    <string name="settings_cache_cleared">Кеш очищено</string>
+    <string name="settings_cache_clear_failed">Не вдалося очистити</string>
+    <string name="settings_cache_confirm_title">Очистити кеш?</string>
+    <string name="settings_cache_confirm_message">Це видалить завантажені патчі та файли журналів. Патчі буде завантажено повторно за потреби</string>
+    <string name="settings_storage_open_app_data_button">Відкрити дані застосунку</string>
+    <string name="settings_storage_open_logs_button">Відкрити журнали</string>
     <string name="settings_section_about">Про сервіс</string>
     <string name="settings_about_version">Версія %1$s</string>
     <string name="settings_about_changelogs_title">Переглянути списки змін</string>
     <string name="settings_about_changelogs_desc">Ознайомтеся з останніми змінами в цьому оновленні</string>
+    <string name="settings_about_licenses_title">Ліцензії з відкритим кодом</string>
+    <string name="settings_about_licenses_desc">Переглянути ліцензії сторонніх бібліотек</string>
     <string name="settings_about_documentation_title">Документація</string>
     <string name="settings_about_documentation_desc">Інструкції з патчингу, джерел та усунення неполадок</string>
     <string name="settings_about_website_title">Відвідати вебсайт</string>

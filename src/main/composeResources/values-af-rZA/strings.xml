@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Besig om pleisters toe te pas</string>
     <string name="patching_step_writing_apk">Skryf gepatchte APK-lêer</string>
     <string name="patching_step_signing">Teken gepatchte APK-lêer</string>
+    <string name="patching_task_decoding_dex">Lees DEX-lêers</string>
+    <string name="patching_task_extracting_resources">Onttrek hulpbronne</string>
+    <string name="patching_task_decoding_resources">Dekodeer hulpbronne</string>
+    <string name="patching_task_indexing_classes">Indekseer klasse</string>
+    <string name="patching_task_compiling_dex">Kompileer DEX-lêers</string>
+    <string name="patching_task_compiling_resources">Kompileer hulpbronne</string>
+    <string name="patching_task_writing_apk">Skryf APK-lêer</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Installeer op %1$s…</string>
     <string name="adb_error_downgrade">Kan nie afgradeer nie, 'n nuwer weergawe is geïnstalleer. Deïnstalleer eers die bestaande app</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Fout met laai van veranderings</string>
     <string name="patch_selection_title">Kies veranderings</string>
     <string name="patch_selection_cmd_preview">Bevel-voorbeskouing</string>
+    <string name="patch_selection_root_mode_description">Wortel-koppelmodus</string>
+    <string name="patch_selection_lock_unavailable">Nie beskikbaar vir wortel-montering nie</string>
     <string name="patch_selection_continue_on_error_tooltip">Gaan voort met verandering selfs as 'n verandering misluk</string>
     <string name="patch_selection_continue_on_error_description">Gaan voort by fout</string>
     <string name="patch_selection_no_patches_found">Geen veranderings gevind nie</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Program</string>
     <string name="patch_selection_run_info_bundles_group">Veranderingsbundels</string>
     <string name="patch_selection_run_info_no_bundles">Geen bundels opgelos nie</string>
+    <string name="patch_selection_run_info_dev_group">Ontwikkelaarsopsies</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytekode-modus: %1$s</string>
+    <string name="patch_selection_run_info_validate">Vingerafdruk-validering: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK-verifikasie: %1$s</string>
     <string name="patch_selection_group_universal">Universeel</string>
     <string name="patch_selection_group_ungrouped">Ongegroepeer</string>
     <string name="patch_selection_group_selected_count">%1$d gekies</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Opdatering op %1$s…</string>
     <string name="result_adb_update_successful">Opdatering suksesvol!</string>
     <string name="result_adb_install_successful">Installasie suksesvol!</string>
+    <string name="result_adb_badge_root_mount">Wortel-montering</string>
+    <string name="result_adb_mount_button">Monteer op %1$s</string>
+    <string name="result_adb_mounting_on_device">Monteer op %1$s…</string>
+    <string name="result_adb_mount_successful">Montering suksesvol!</string>
+    <string name="result_adb_mount_su_prompt_hint">Monteer op %1$s… Gaan jou toestel na om Supergebruiker-toestemming te verleen indien gevra</string>
+    <string name="result_adb_unmount_button">Ontmonteer vanaf %1$s</string>
+    <string name="result_adb_unmounting_on_device">Ontmonteer vanaf %1$s…</string>
+    <string name="result_adb_root_not_detected">Worteltoegang is nie op %1$s bespeur nie. Maak seker Magisk/KernelSU/APatch is geïnstalleer en su-toestemming is verleen</string>
+    <string name="result_adb_stock_app_not_installed">Standaard-toepassing %1$s is nie op %2$s geïnstalleer nie. Installeer eers die amptelike toepassing voordat jy monteer</string>
     <string name="result_link_default_restored">Standaard skakelhantering herstel</string>
     <string name="result_link_routed_stock_disabled">Skakels gerouteer na veranderde program, voorraad gedeaktiveer</string>
     <string name="result_adb_not_found_hint">ADB nie gevind nie. Installeer Android SDK Platform Tools om direkte installasie te aktiveer</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">van v%1$s</string>
     <string name="update_banner_later_button">Later</string>
     <string name="update_banner_skip_button">Slaan v%1$s oor</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Nutsmiddels</string>
-    <string name="tools_dialog_open_logs_button">Maak logs oop</string>
-    <string name="tools_dialog_open_app_data_button">Maak app-data oop</string>
-    <string name="tools_dialog_view_licenses_button">Bekyk lisensies</string>
-    <string name="tools_dialog_cache_cleared">Kas skoongemaak</string>
-    <string name="tools_dialog_clear_failed">Skoonmaak het misluk</string>
-    <string name="tools_dialog_clear_cache_button">Maak kas skoon</string>
-    <string name="tools_dialog_cache_summary">Kas: %1$s (patches + logs)</string>
-    <string name="tools_dialog_confirm_clear_title">Kas skoonmaak?</string>
-    <string name="tools_dialog_confirm_clear_message">Dit sal afgelaaide patches en loglêers verwyder. Patches sal weer afgelaai word wanneer nodig</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Oopbron-lisensies</string>
     <string name="licenses_dialog_empty_failed">// kon nie lisensies laai nie</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Stroop libs</string>
     <string name="settings_toggle_developer_options_label">Ontwikkelaaropsies</string>
     <string name="settings_toggle_developer_options_desc">Vir patch-ontwikkelaars. Ontsluit 'n stel werkvloei-opsies vir die bou en toets van patches (sien die dokumentasie vir die volledige lys). Vir nou is dit om 'n lokale bron na 'n vouer te wys sodat Morphe altyd sy nuutste .mpp laai</string>
+    <string name="settings_dev_bytecode_mode_label">Bytekode-modus</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformasie-modus toegepas op DEX-bytekode tydens kolwas</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Vinnig</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Veilig</string>
+    <string name="settings_dev_bytecode_mode_full">Volledig</string>
+    <string name="settings_dev_validate_label">Vingerafdruk-validering</string>
+    <string name="settings_dev_validate_desc">Valideer dat elke match() slegs een metode pas (stadiger kolwas, vir kolwas-toetsing)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK-verifikasie</string>
+    <string name="settings_dev_verify_sdk_desc">Verifieer gepatchte DEX en APK met Android SDK-gereedskap (d8, zipalign). Mag vals positiewe resultate rapporteer</string>
+    <string name="settings_dev_sdk_path_label">Android SDK-gids</string>
+    <string name="settings_dev_sdk_path_auto">Outomaties bespeur</string>
+    <string name="settings_dev_sdk_not_found">Android SDK nie gevind nie. Stel ANDROID_HOME in of blader deur na die SDK-gids</string>
+    <string name="settings_dev_sdk_picker_title">Kies Android SDK-gids</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Maak temp-lêers outomaties skoon</string>
     <string name="settings_toggle_auto_cleanup_desc">Verwyder tydelike lêers na die patchproses</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Vouer nie gevind nie, sal met die volgende pleister geskep word</string>
     <string name="settings_toggle_auto_start_adb_label">Begin ADB outomaties</string>
     <string name="settings_toggle_auto_start_adb_desc">Begin die ADB-demon by opstart sodat gekoppelde toestelle gemonitor word. Wanneer af, begin Morphe nooit die bediener nie, en installeer/stoot-funksies word gedeaktiveer</string>
+    <string name="settings_section_storage">Berging &amp; kas</string>
+    <string name="settings_cache_summary">Kas: %1$s (regstellings + logs)</string>
+    <string name="settings_cache_clear_button">Maak kas skoon</string>
+    <string name="settings_cache_cleared">Kas skoongemaak</string>
+    <string name="settings_cache_clear_failed">Skoonmaak het misluk</string>
+    <string name="settings_cache_confirm_title">Maak kas skoon?</string>
+    <string name="settings_cache_confirm_message">Dit sal afgelaaide regstellings en log-lêers skrap. Regstellings sal her-afgelaai word wanneer nodig</string>
+    <string name="settings_storage_open_app_data_button">Maak toepassingdata oop</string>
+    <string name="settings_storage_open_logs_button">Maak logs oop</string>
     <string name="settings_section_about">Oor</string>
     <string name="settings_about_version">Weergawe %1$s</string>
     <string name="settings_about_changelogs_title">Bekyk veranderingslogs</string>
     <string name="settings_about_changelogs_desc">Bekyk die nuutste veranderinge in hierdie opdatering</string>
+    <string name="settings_about_licenses_title">Oopbron-lisensies</string>
+    <string name="settings_about_licenses_desc">Bekyk lisensies van derdeparty-biblioteke</string>
     <string name="settings_about_documentation_title">Dokumentasie</string>
     <string name="settings_about_documentation_desc">Gidse vir pleistering, bronne en probleemoplossing</string>
     <string name="settings_about_website_title">Besoek die webwerf</string>

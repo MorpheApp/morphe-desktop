@@ -22,7 +22,6 @@ import app.morphe.gui.ui.components.MorpheIconButtonSize
 import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.components.MorpheTooltip
 import app.morphe.gui.ui.components.SettingsButton
-import app.morphe.gui.ui.components.ToolsButton
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.screens.patches.PatchSelectionUiState
@@ -36,6 +35,8 @@ internal fun PatchSelectionHeader(
     uiState: PatchSelectionUiState,
     showCommandPreview: Boolean,
     onToggleCommandPreview: () -> Unit,
+    isRootMode: Boolean = false,
+    onToggleRootMode: () -> Unit = {},
     continueOnError: Boolean,
     onToggleContinueOnError: () -> Unit,
     showRunInfo: Boolean,
@@ -87,6 +88,19 @@ internal fun PatchSelectionHeader(
         }
 
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {
+            val rootModeLabel = stringResource(Res.string.patch_selection_root_mode_description)
+            MorpheTooltip(rootModeLabel) {
+                MorpheIconButton(
+                    onClick = onToggleRootMode,
+                    icon = MorpheIcons.Tag,
+                    contentDescription = rootModeLabel,
+                    size = MorpheIconButtonSize.TOP_BAR,
+                    variant = if (isRootMode) MorpheIconButtonVariant.PRIMARY else MorpheIconButtonVariant.SURFACE,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(6.dp))
+
             MorpheTooltip(stringResource(Res.string.patch_selection_cmd_preview_tooltip)) {
                 MorpheIconButton(
                     onClick = onToggleCommandPreview,
@@ -125,8 +139,6 @@ internal fun PatchSelectionHeader(
         Spacer(modifier = Modifier.width(6.dp))
 
         DeviceIndicator()
-        Spacer(modifier = Modifier.width(6.dp))
-        ToolsButton(allowCacheClear = false)
         Spacer(modifier = Modifier.width(6.dp))
         CompositionLocalProvider(LocalOnSettingsDismiss provides { onRefreshStripLibsStatus() }) {
             SettingsButton()

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Menerapkan tambalan</string>
     <string name="patching_step_writing_apk">Menulis berkas APK yang ditambal</string>
     <string name="patching_step_signing">Menandatangani berkas APK yang ditambal</string>
+    <string name="patching_task_decoding_dex">Membaca berkas DEX</string>
+    <string name="patching_task_extracting_resources">Mengekstrak sumber daya</string>
+    <string name="patching_task_decoding_resources">Mendekode sumber daya</string>
+    <string name="patching_task_indexing_classes">Mengindeks kelas</string>
+    <string name="patching_task_compiling_dex">Mengompilasi berkas DEX</string>
+    <string name="patching_task_compiling_resources">Mengompilasi sumber daya</string>
+    <string name="patching_task_writing_apk">Menulis berkas APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Memasang di %1$s…</string>
     <string name="adb_error_downgrade">Tidak dapat menurunkan versi, versi yang lebih baru sudah terpasang. Hapus instalan aplikasi yang ada terlebih dahulu</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Kesalahan memuat tambalan</string>
     <string name="patch_selection_title">Pilih tambalan</string>
     <string name="patch_selection_cmd_preview">Pratinjau perintah</string>
+    <string name="patch_selection_root_mode_description">Mode pemasang root</string>
+    <string name="patch_selection_lock_unavailable">Tidak tersedia untuk root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Lanjutkan menambal meskipun ada tambalan yang gagal</string>
     <string name="patch_selection_continue_on_error_description">Lanjutkan saat terjadi kesalahan</string>
     <string name="patch_selection_no_patches_found">Tambalan tidak ditemukan</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Aplikasi</string>
     <string name="patch_selection_run_info_bundles_group">Paket tambalan</string>
     <string name="patch_selection_run_info_no_bundles">Tidak ada paket yang diselesaikan</string>
+    <string name="patch_selection_run_info_dev_group">Opsi pengembang</string>
+    <string name="patch_selection_run_info_bytecode_mode">Mode bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Validasi sidik jari: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verifikasi Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Tanpa grup</string>
     <string name="patch_selection_group_selected_count">%1$d dipilih</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Memperbarui di %1$s…</string>
     <string name="result_adb_update_successful">Pembaruan berhasil!</string>
     <string name="result_adb_install_successful">Pemasangan berhasil!</string>
+    <string name="result_adb_badge_root_mount">Pemasang root</string>
+    <string name="result_adb_mount_button">Mount pada %1$s</string>
+    <string name="result_adb_mounting_on_device">Melakukan mounting pada %1$s…</string>
+    <string name="result_adb_mount_successful">Mounting berhasil!</string>
+    <string name="result_adb_mount_su_prompt_hint">Melakukan mounting pada %1$s… Periksa perangkat Anda untuk memberikan izin Superuser jika diminta</string>
+    <string name="result_adb_unmount_button">Unmount dari %1$s</string>
+    <string name="result_adb_unmounting_on_device">Melakukan unmounting dari %1$s…</string>
+    <string name="result_adb_root_not_detected">Akses root tidak terdeteksi pada %1$s. Pastikan Magisk/KernelSU/APatch sudah terinstal dan izin su telah diberikan</string>
+    <string name="result_adb_stock_app_not_installed">Aplikasi stok %1$s tidak terinstal pada %2$s. Instal aplikasi resmi terlebih dahulu sebelum melakukan mounting</string>
     <string name="result_link_default_restored">Penanganan tautan default dipulihkan</string>
     <string name="result_link_routed_stock_disabled">Tautan diarahkan ke aplikasi hasil tambalan, aplikasi bawaan dinonaktifkan</string>
     <string name="result_adb_not_found_hint">ADB tidak ditemukan. Instal Android SDK Platform Tools untuk mengaktifkan pemasangan langsung</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">dari v%1$s</string>
     <string name="update_banner_later_button">Nanti</string>
     <string name="update_banner_skip_button">Lewati v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Perkakas</string>
-    <string name="tools_dialog_open_logs_button">Buka log</string>
-    <string name="tools_dialog_open_app_data_button">Buka data aplikasi</string>
-    <string name="tools_dialog_view_licenses_button">Lihat lisensi</string>
-    <string name="tools_dialog_cache_cleared">Cache dibersihkan</string>
-    <string name="tools_dialog_clear_failed">Gagal membersihkan</string>
-    <string name="tools_dialog_clear_cache_button">Bersihkan cache</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (tambalan + log)</string>
-    <string name="tools_dialog_confirm_clear_title">Bersihkan cache?</string>
-    <string name="tools_dialog_confirm_clear_message">Ini akan menghapus tambalan yang diunduh dan berkas log. Tambalan akan diunduh ulang saat diperlukan</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Lisensi Sumber Terbuka</string>
     <string name="licenses_dialog_empty_failed">// gagal memuat lisensi</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Menghapus libs</string>
     <string name="settings_toggle_developer_options_label">Opsi pengembang</string>
     <string name="settings_toggle_developer_options_desc">Untuk pengembang tambalan. Membuka berbagai opsi alur kerja untuk membangun dan menguji tambalan (lihat dokumentasi untuk daftar lengkapnya). Saat ini, itu berarti mengarahkan sumber lokal ke folder sehingga Morphe selalu memuat .mpp terbarunya</string>
+    <string name="settings_dev_bytecode_mode_label">Mode bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Mode transformasi yang diterapkan pada bytecode DEX selama patching</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Cepat</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Aman</string>
+    <string name="settings_dev_bytecode_mode_full">Penuh</string>
+    <string name="settings_dev_validate_label">Validasi sidik jari</string>
+    <string name="settings_dev_validate_desc">Validasi bahwa setiap match() hanya cocok dengan satu metode (patching lebih lambat, untuk pengujian patch)</string>
+    <string name="settings_dev_verify_sdk_label">Verifikasi Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Verifikasi DEX dan APK yang telah dipatch dengan alat Android SDK (d8, zipalign). Mungkin melaporkan positif palsu</string>
+    <string name="settings_dev_sdk_path_label">Direktori Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Terdeteksi otomatis</string>
+    <string name="settings_dev_sdk_not_found">Android SDK tidak ditemukan. Atur ANDROID_HOME atau cari direktori SDK</string>
+    <string name="settings_dev_sdk_picker_title">Pilih direktori Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Bersihkan otomatis berkas sementara</string>
     <string name="settings_toggle_auto_cleanup_desc">Hapus berkas sementara setelah menambal</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Folder tidak ditemukan, akan dibuat saat menambal berikutnya</string>
     <string name="settings_toggle_auto_start_adb_label">Mulai ADB secara otomatis</string>
     <string name="settings_toggle_auto_start_adb_desc">Memulai daemon ADB saat peluncuran agar perangkat terhubung dipantau. Saat mati, Morphe tidak pernah memulai server, dan fitur pasang/geser dinonaktifkan</string>
+    <string name="settings_section_storage">Penyimpanan &amp; cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (patch + log)</string>
+    <string name="settings_cache_clear_button">Hapus cache</string>
+    <string name="settings_cache_cleared">Cache dibersihkan</string>
+    <string name="settings_cache_clear_failed">Hapus gagal</string>
+    <string name="settings_cache_confirm_title">Hapus cache?</string>
+    <string name="settings_cache_confirm_message">Ini akan menghapus patch dan file log yang diunduh. Patch akan diunduh ulang saat dibutuhkan</string>
+    <string name="settings_storage_open_app_data_button">Buka data aplikasi</string>
+    <string name="settings_storage_open_logs_button">Buka log</string>
     <string name="settings_section_about">Tentang</string>
     <string name="settings_about_version">Versi %1$s</string>
     <string name="settings_about_changelogs_title">Lihat catatan perubahan</string>
     <string name="settings_about_changelogs_desc">Lihat perubahan terbaru dalam pembaruan ini</string>
+    <string name="settings_about_licenses_title">Lisensi Sumber Terbuka</string>
+    <string name="settings_about_licenses_desc">Lihat lisensi pustaka pihak ketiga</string>
     <string name="settings_about_documentation_title">Dokumentasi</string>
     <string name="settings_about_documentation_desc">Panduan untuk menambal, sumber, dan pemecahan masalah</string>
     <string name="settings_about_website_title">Kunjungi situs web</string>

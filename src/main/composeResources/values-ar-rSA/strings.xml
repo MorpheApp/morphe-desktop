@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">جارٍ تطبيق التعديلات</string>
     <string name="patching_step_writing_apk">جارٍ كتابة ملف APK المعدل</string>
     <string name="patching_step_signing">جارٍ توقيع ملف APK المعدل</string>
+    <string name="patching_task_decoding_dex">قراءة ملفات DEX</string>
+    <string name="patching_task_extracting_resources">استخراج الموارد</string>
+    <string name="patching_task_decoding_resources">فك ترميز الموارد</string>
+    <string name="patching_task_indexing_classes">فهرسة الفئات</string>
+    <string name="patching_task_compiling_dex">تجميع ملفات DEX</string>
+    <string name="patching_task_compiling_resources">تجميع الموارد</string>
+    <string name="patching_task_writing_apk">كتابة ملف APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">جارٍ التثبيت على %1$s…</string>
     <string name="adb_error_downgrade">لا يمكن الرجوع إلى إصدار أقدم، فهناك إصدار أحدث مثبت. قم بإلغاء تثبيت التطبيق الحالي أولاً</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">خطأ في تحميل التصحيحات</string>
     <string name="patch_selection_title">تحديد التعديلات</string>
     <string name="patch_selection_cmd_preview">معاينة الأمر</string>
+    <string name="patch_selection_root_mode_description">وضع Root Mount</string>
+    <string name="patch_selection_lock_unavailable">غير متاح للتركيب الجذري</string>
     <string name="patch_selection_continue_on_error_tooltip">متابعة التصحيح حتى لو فشل أحد التصحيحات</string>
     <string name="patch_selection_continue_on_error_description">المتابعة عند الخطأ</string>
     <string name="patch_selection_no_patches_found">لم يتم العثور على تعديلات</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">التطبيق</string>
     <string name="patch_selection_run_info_bundles_group">حُزم التعديل</string>
     <string name="patch_selection_run_info_no_bundles">لا توجد حزم محلولة</string>
+    <string name="patch_selection_run_info_dev_group">خيارات المطور</string>
+    <string name="patch_selection_run_info_bytecode_mode">وضع Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">التحقق من البصمة: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">التحقق من Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">عام</string>
     <string name="patch_selection_group_ungrouped">غير مجمّع</string>
     <string name="patch_selection_group_selected_count">%1$d تم تحديده</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">جارٍ التحديث على %1$s…</string>
     <string name="result_adb_update_successful">تم التحديث بنجاح!</string>
     <string name="result_adb_install_successful">تم التثبيت بنجاح!</string>
+    <string name="result_adb_badge_root_mount">Root Mount</string>
+    <string name="result_adb_mount_button">تركيب على %1$s</string>
+    <string name="result_adb_mounting_on_device">جاري التركيب على %1$s…</string>
+    <string name="result_adb_mount_successful">تم التركيب بنجاح!</string>
+    <string name="result_adb_mount_su_prompt_hint">جاري التركيب على %1$s… تحقق من جهازك لمنح إذن Superuser إذا طُلب منك ذلك</string>
+    <string name="result_adb_unmount_button">إلغاء التركيب من %1$s</string>
+    <string name="result_adb_unmounting_on_device">جاري إلغاء التركيب من %1$s…</string>
+    <string name="result_adb_root_not_detected">لم يتم اكتشاف وصول Root على %1$s. تأكد من تثبيت Magisk/KernelSU/APatch ومنح إذن su</string>
+    <string name="result_adb_stock_app_not_installed">التطبيق الرسمي %1$s غير مثبت على %2$s. يرجى تثبيت التطبيق الرسمي أولاً قبل عملية التركيب</string>
     <string name="result_link_default_restored">تمت استعادة معالجة الروابط الافتراضية</string>
     <string name="result_link_routed_stock_disabled">تم توجيه الروابط إلى التطبيق المُصحح، والتطبيق الأصلي معطّل</string>
     <string name="result_adb_not_found_hint">ADB غير موجود. ثبّت Android SDK Platform Tools لتفعيل التثبيت المباشر</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">من v%1$s</string>
     <string name="update_banner_later_button">لاحقًا</string>
     <string name="update_banner_skip_button">تخطي v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">أدوات</string>
-    <string name="tools_dialog_open_logs_button">فتح السجلات</string>
-    <string name="tools_dialog_open_app_data_button">فتح بيانات التطبيق</string>
-    <string name="tools_dialog_view_licenses_button">عرض التراخيص</string>
-    <string name="tools_dialog_cache_cleared">تم مسح ذاكرة التخزين المؤقت</string>
-    <string name="tools_dialog_clear_failed">فشل المسح</string>
-    <string name="tools_dialog_clear_cache_button">مسح ذاكرة التخزين المؤقت</string>
-    <string name="tools_dialog_cache_summary">ذاكرة التخزين المؤقت: %1$s (التصحيحات + السجلات)</string>
-    <string name="tools_dialog_confirm_clear_title">مسح ذاكرة التخزين المؤقت؟</string>
-    <string name="tools_dialog_confirm_clear_message">سيؤدي هذا إلى حذف التصحيحات المُنزلة وملفات السجلات. سيتم إعادة تنزيل التصحيحات عند الحاجة</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">تراخيص المصدر المفتوح</string>
     <string name="licenses_dialog_empty_failed">// تعذّر تحميل التراخيص</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">إزالة المكتبات</string>
     <string name="settings_toggle_developer_options_label">خيارات المطور</string>
     <string name="settings_toggle_developer_options_desc">لمطوّري التصحيحات. يفتح مجموعة من خيارات سير العمل لبناء واختبار التصحيحات (راجع الوثائق للقائمة الكاملة). حاليًا، يعني توجيه مصدر محلي إلى مجلد بحيث يقوم Morphe دائمًا بتحميل أحدث ملف .mpp فيه</string>
+    <string name="settings_dev_bytecode_mode_label">وضع Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">وضع التحويل المطبق على DEX bytecode أثناء عملية التعديل</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Fast</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">آمن</string>
+    <string name="settings_dev_bytecode_mode_full">Full</string>
+    <string name="settings_dev_validate_label">التحقق من البصمة</string>
+    <string name="settings_dev_validate_desc">التحقق من أن كل match() يطابق طريقة واحدة فقط (تصحيح أبطأ، لاختبار التصحيح)</string>
+    <string name="settings_dev_verify_sdk_label">التحقق من Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">التحقق من DEX و APK المعدلين باستخدام أدوات Android SDK (d8, zipalign). قد يتم الإبلاغ عن نتائج إيجابية خاطئة</string>
+    <string name="settings_dev_sdk_path_label">دليل Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">تم اكتشافه تلقائيًا</string>
+    <string name="settings_dev_sdk_not_found">لم يتم العثور على Android SDK. قم بتعيين ANDROID_HOME أو تصفح دليل SDK</string>
+    <string name="settings_dev_sdk_picker_title">حدد دليل Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">التنظيف التلقائي للملفات المؤقتة</string>
     <string name="settings_toggle_auto_cleanup_desc">حذف الملفات المؤقتة بعد التصحيح</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">المجلد غير موجود، سيتم إنشاؤه عند التصحيح التالي</string>
     <string name="settings_toggle_auto_start_adb_label">بدء ADB تلقائيًا</string>
     <string name="settings_toggle_auto_start_adb_desc">شغّل خادم ADB عند الإقلاع لمراقبة الأجهزة المتصلة. عند إيقافه، لا يبدأ Morphe الخادم أبدًا، وتكون ميزات التثبيت/الإرسال معطلة</string>
+    <string name="settings_section_storage">مكان التخزين &amp; ذاكرة التخزين المؤقت</string>
+    <string name="settings_cache_summary">ذاكرة التخزين المؤقت: %1$s (التعديلات + السجلات)</string>
+    <string name="settings_cache_clear_button">مسح ذاكرة التخزين المؤقت</string>
+    <string name="settings_cache_cleared">تم مسح ذاكرة التخزين المؤقت</string>
+    <string name="settings_cache_clear_failed">فشل المسح</string>
+    <string name="settings_cache_confirm_title">مسح ذاكرة التخزين المؤقت؟</string>
+    <string name="settings_cache_confirm_message">سيؤدي هذا إلى مسح التعديلات وملفات السجل التي تم تنزيلها. سيتم إعادة تنزيل التعديلات عند الحاجة</string>
+    <string name="settings_storage_open_app_data_button">فتح بيانات التطبيق</string>
+    <string name="settings_storage_open_logs_button">فتح السجلات</string>
     <string name="settings_section_about">لمحة</string>
     <string name="settings_about_version">الإصدار %1$s</string>
     <string name="settings_about_changelogs_title">عرض سجل التغييرات</string>
     <string name="settings_about_changelogs_desc">اطّلع على آخر التغييرات في هذا التحديث</string>
+    <string name="settings_about_licenses_title">تراخيص مفتوحة المصدر</string>
+    <string name="settings_about_licenses_desc">عرض تراخيص مكتبات الطرف الثالث</string>
     <string name="settings_about_documentation_title">الوثائق</string>
     <string name="settings_about_documentation_desc">أدلة التصحيح والمصادر واستكشاف الأخطاء وإصلاحها</string>
     <string name="settings_about_website_title">زيارة الموقع</string>

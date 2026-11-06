@@ -45,6 +45,11 @@
         <item quantity="one">Lejupielādēt %1$d saieni</item>
         <item quantity="other">Lejupielādēt %1$d saienes</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="zero">%1$d kodoli</item>
+        <item quantity="one">%1$d kodols</item>
+        <item quantity="other">%1$d kodoli</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="zero">%1$d izmaiņas</item>
         <item quantity="one">%1$d izmaiņa</item>

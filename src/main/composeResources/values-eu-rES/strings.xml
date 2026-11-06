@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Patch-ak aplikatzen ari zahizu</string>
     <string name="patching_step_writing_apk">Patch-atutako APK fitxategia idazten ari zahizu</string>
     <string name="patching_step_signing">Patch-atutako APK fitxategia sinatzen ari zahizu</string>
+    <string name="patching_task_decoding_dex">DEX fitxategiak irakurtzen</string>
+    <string name="patching_task_extracting_resources">Baliabideak ateratzen</string>
+    <string name="patching_task_decoding_resources">baliabideak deskodatzen</string>
+    <string name="patching_task_indexing_classes">klaseak indexatzen</string>
+    <string name="patching_task_compiling_dex">DEX fitxategiak konpilatzen</string>
+    <string name="patching_task_compiling_resources">baliabideak konpilatzen</string>
+    <string name="patching_task_writing_apk">APK fitxategia idazten</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s-en instalatzen ari zahizu…</string>
     <string name="adb_error_downgrade">Ezin da bertsio zahagoa instalatu, bertsio berriago bat dago instalatuta. Desinstalu lehen aplikazio existentea</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Errorea patch-ak kargatzen</string>
     <string name="patch_selection_title">Aukeratu patch-ak</string>
     <string name="patch_selection_cmd_preview">Komandoaren aurbizitza</string>
+    <string name="patch_selection_root_mode_description">Root muntatzeko modua</string>
+    <string name="patch_selection_lock_unavailable">Ez dago eskuragarri root mount-erako</string>
     <string name="patch_selection_continue_on_error_tooltip">Patch bat huts egiten badu ere, patching-arekin jarraitu</string>
     <string name="patch_selection_continue_on_error_description">Jarraitu errorearekin</string>
     <string name="patch_selection_no_patches_found">Ez da patchik aurkitu</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch-bundleak</string>
     <string name="patch_selection_run_info_no_bundles">Ez da bundleik e Resolveratuta</string>
+    <string name="patch_selection_run_info_dev_group">Garapideko aukerak</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode modua: %1$s</string>
+    <string name="patch_selection_run_info_validate">Hutsfingertzatiko balidazioa: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK egizakia: %1$s</string>
     <string name="patch_selection_group_universal">Unibertsala</string>
     <string name="patch_selection_group_ungrouped">TaldeGabrielik gabe</string>
     <!-- Patching Screen -->
@@ -421,6 +434,15 @@
     <string name="result_adb_updating_on_device">Eguneratzen %1$s-ean...</string>
     <string name="result_adb_update_successful">Eguneratzea arrakastetsua izan da!</string>
     <string name="result_adb_install_successful">Instalazioa arrakastetsua!</string>
+    <string name="result_adb_badge_root_mount">Erroizko muntatzeak</string>
+    <string name="result_adb_mount_button">Mendu %1$s-en</string>
+    <string name="result_adb_mounting_on_device">%1$s-en mountatzen…</string>
+    <string name="result_adb_mount_successful">Mountatzea arrakastetsua izan da!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s-en mountatzen… Eginon galdetzen bada, eman Superusuario baimena zure gailuan</string>
+    <string name="result_adb_unmount_button">%1$s-tik desmountatu</string>
+    <string name="result_adb_unmounting_on_device">%1$s-tik desmountatzen…</string>
+    <string name="result_adb_root_not_detected">Root sarbidea ez da detektatu %1$s-en. Asegúrate Magisk/KernelSU/APatch instalatuta dagoela eta su baimena emanda dagoela</string>
+    <string name="result_adb_stock_app_not_installed">%1$s stock aplikazioa ez dago %2$s-en instalatuta. Instalatu aplikazio ofiziala mountatu aurretik</string>
     <string name="result_link_default_restored">Estekak kudeatzeko lehenesteko konfigurazioa berreskuratuta</string>
     <string name="result_link_routed_stock_disabled">Estekak aplikazio patched-era bideratu dira, stock aplikazioa desaktibatu da</string>
     <string name="result_adb_not_found_hint">ADB ez da aurkitu. Instalatu Android SDK Platform Tools zuzeneko instalazioa gaitzeko</string>
@@ -601,17 +623,6 @@
     <string name="update_banner_from_version">v%1$s bertsioatik</string>
     <string name="update_banner_later_button">Geroago</string>
     <string name="update_banner_skip_button">Pasatu v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Tresnak</string>
-    <string name="tools_dialog_open_logs_button">Ireki logak</string>
-    <string name="tools_dialog_open_app_data_button">Ireki aplikazioaren datuak</string>
-    <string name="tools_dialog_view_licenses_button">Ikusi lizentziak</string>
-    <string name="tools_dialog_cache_cleared">Cachea garbituta</string>
-    <string name="tools_dialog_clear_failed">Garbitzea huts egin du</string>
-    <string name="tools_dialog_clear_cache_button">Garbitu cachea</string>
-    <string name="tools_dialog_cache_summary">Cachea: %1$s (patchak + logak)</string>
-    <string name="tools_dialog_confirm_clear_title">Garbitu cachea?</string>
-    <string name="tools_dialog_confirm_clear_message">Honek ezabatuko ditu deskargatutako patching-ak eta log fitxategiak. Patching-ak berriro deskargatuko dira beharrezkoa izanez gero</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Iturri Irekiko lizentziak</string>
     <string name="licenses_dialog_empty_failed">// lizentziak kargatu ezin dira</string>
@@ -684,6 +695,19 @@
     <string name="settings_section_strip_libs">Libs stripatu</string>
     <string name="settings_toggle_developer_options_label">Garapideko aukerak</string>
     <string name="settings_toggle_developer_options_desc">Patch garapideentzat. Patch-ak buildatzeko eta testatzeko workflow aukera batzuak aktibatzen ditu (ikusitzi dokumentazioa zerrenda osoa lortzeko). Une honetan, iturri lokal bat karpetara zuzenduta dago Morphe-k beti bere .mpp berriena kargatu dezan</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode modua</string>
+    <string name="settings_dev_bytecode_mode_desc">Patching prozesuan DEX bytecode-ri aplikatzen zaion transformazio modua</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Azkarra</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Segurua</string>
+    <string name="settings_dev_bytecode_mode_full">Osoa</string>
+    <string name="settings_dev_validate_label">Hutsfingertzatiko balidazioa</string>
+    <string name="settings_dev_validate_desc">Balidatu match() bakoitzak metodo bakarra soilik batzu duten (patching motelagoa, patch testetarako)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK egizakia</string>
+    <string name="settings_dev_verify_sdk_desc">Egintzak DEX eta APK fitxategiak Android SDK tresnekin berrestatzen ditu (d8, zipalign). Positibo faltsuak txostatu ditzake</string>
+    <string name="settings_dev_sdk_path_label">Android SDK direktorioa</string>
+    <string name="settings_dev_sdk_path_auto">Automatiki detektatua</string>
+    <string name="settings_dev_sdk_not_found">Android SDK ez da aurkitu. Konfigura ANDROID_HOME edo bilatu SDK direktorioa</string>
+    <string name="settings_dev_sdk_picker_title">Aukeratu Android SDK direktorioa</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Temp fitxategien auto-garbiketa</string>
     <string name="settings_toggle_auto_cleanup_desc">Patch-atu ondoren fitxategi temporaleak ezabatu</string>
@@ -698,10 +722,21 @@
     <string name="settings_output_folder_not_found">Karpetak ez da aurkitu, hurrengo patch-ean sortuko da</string>
     <string name="settings_toggle_auto_start_adb_label">ADB automatikoki abiarazi</string>
     <string name="settings_toggle_auto_start_adb_desc">Abiaratzean ADB daemon-a sortu konektatutako gailak monitorizatzeko. Desaktibatuta dagoenean, Morphe-k inoiz ez ditu zerbitzaria abiarazi, eta instalaketa/push ezintasun galvanometerak desaktibatuta daude</string>
+    <string name="settings_section_storage">Biltegiratzeak &amp; cachea</string>
+    <string name="settings_cache_summary">Cachea: %1$s (patchak + logak)</string>
+    <string name="settings_cache_clear_button">Garbitu cachea</string>
+    <string name="settings_cache_cleared">Cachea garbituta</string>
+    <string name="settings_cache_clear_failed">Garbitzea huts egin du</string>
+    <string name="settings_cache_confirm_title">Cachea garbitu?</string>
+    <string name="settings_cache_confirm_message">Honek deskargatutako patchak eta log fitxategiak ezabatuko ditu. Patchak behin berriz deskargatuko dira beharらenean</string>
+    <string name="settings_storage_open_app_data_button">Ireki aplikazioaren datuak</string>
+    <string name="settings_storage_open_logs_button">Ireki logak</string>
     <string name="settings_section_about">About</string>
     <string name="settings_about_version">Bertsio %1$s</string>
     <string name="settings_about_changelogs_title">Ikusi aldaketa-eguneriztunak</string>
     <string name="settings_about_changelogs_desc">Ikusi azken aldaketak eguneratze honetan</string>
+    <string name="settings_about_licenses_title">Iturri Irekiko lizentziak</string>
+    <string name="settings_about_licenses_desc">Ikusi hirugarren parteko librerien lizentziak</string>
     <string name="settings_about_documentation_title">Dokumentazioa</string>
     <string name="settings_about_documentation_desc">Patching, iturri eta arazoen konponbideetarako gidak</string>
     <string name="settings_about_website_title">Bisitatu webgunea</string>

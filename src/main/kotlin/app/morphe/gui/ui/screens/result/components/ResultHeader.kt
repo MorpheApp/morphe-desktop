@@ -64,6 +64,6 @@ internal fun ResultHeader(
 
         Spacer(Modifier.weight(1f))
 
-        TopBarRow(allowCacheClear = false)
+        TopBarRow()
     }
 }

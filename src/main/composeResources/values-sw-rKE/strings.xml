@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Inaweka viraka</string>
     <string name="patching_step_writing_apk">Inaandika faili ya APK iliyorekebishwa</string>
     <string name="patching_step_signing">Inatia saini faili ya APK iliyorekebishwa</string>
+    <string name="patching_task_decoding_dex">Kusoma faili za DEX</string>
+    <string name="patching_task_extracting_resources">Kutoa rasilimali</string>
+    <string name="patching_task_decoding_resources">Kudekodi rasilimali</string>
+    <string name="patching_task_indexing_classes">Kuorodhesha madarasa</string>
+    <string name="patching_task_compiling_dex">Kukusanya faili za DEX</string>
+    <string name="patching_task_compiling_resources">Kukusanya rasilimali</string>
+    <string name="patching_task_writing_apk">Kuandika faili ya APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Inasakinisha kwenye %1$s…</string>
     <string name="adb_error_downgrade">Haiwezekani kushusha toleo, toleo jipya zaidi limesakinishwa. Ondoa programu iliyopo kwanza</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Hitilafu katika kupakia viraka</string>
     <string name="patch_selection_title">Chagua viraka</string>
     <string name="patch_selection_cmd_preview">Onyesho la amri</string>
+    <string name="patch_selection_root_mode_description">Hali ya kuunganisha mzizi</string>
+    <string name="patch_selection_lock_unavailable">Haitapatikana kwa root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Endelea kuweka viraka hata kama kiraka kimoja kitashindwa</string>
     <string name="patch_selection_continue_on_error_description">Endelea wakati wa hitilafu</string>
     <string name="patch_selection_no_patches_found">Hakuna viraka vilivyopatikana</string>
@@ -367,8 +376,13 @@
     <string name="patch_selection_run_info_app_group">Programu</string>
     <string name="patch_selection_run_info_bundles_group">Vifurushi vya patch</string>
     <string name="patch_selection_run_info_no_bundles">Hakuna vifurushi vilivyotatuliwa</string>
+    <string name="patch_selection_run_info_dev_group">Chaguzi za msanidi programu</string>
+    <string name="patch_selection_run_info_bytecode_mode">Hali ya Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Uthibitisho wa fingerprint: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Uhakiki wa Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Isiyokuwa katika kundi</string>
+    <string name="patch_selection_group_selected_count">%1$d imechaguliwa</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Anza upya</string>
     <string name="patching_patches_count">%1$d / %2$d patch</string>
@@ -385,6 +399,7 @@
     <string name="patching_step_all_done">Yote yamekamilika!</string>
     <string name="patching_step_waiting">Inasubiri…</string>
     <string name="patching_graph_memory_usage">Matumizi ya kumbukumbu</string>
+    <string name="patching_graph_memory_detail">%1$d ya %2$d MB</string>
     <string name="patching_graph_storage_io">I/O ya hifadhi</string>
     <string name="patching_graph_cpu_usage">Matumizi ya CPU</string>
     <string name="patching_banner_started_title">Upatishaji umeanza</string>
@@ -420,6 +435,15 @@
     <string name="result_adb_updating_on_device">Inasasisha kwenye %1$s…</string>
     <string name="result_adb_update_successful">Sasisho limefanikiwa!</string>
     <string name="result_adb_install_successful">Usakinishaji umefanikiwa!</string>
+    <string name="result_adb_badge_root_mount">Mmount ya mzizi</string>
+    <string name="result_adb_mount_button">Mount kwenye %1$s</string>
+    <string name="result_adb_mounting_on_device">Inamount kwenye %1$s…</string>
+    <string name="result_adb_mount_successful">Mount imefanikiwa!</string>
+    <string name="result_adb_mount_su_prompt_hint">Inamount kwenye %1$s… Angalia kifaa chako ili kutoa ruhusa ya Superuser ikiombwa</string>
+    <string name="result_adb_unmount_button">Unmount kutoka %1$s</string>
+    <string name="result_adb_unmounting_on_device">Inaunmount kutoka %1$s…</string>
+    <string name="result_adb_root_not_detected">Ufikiaji wa root haukugundulika kwenye %1$s. Hakikisha Magisk/KernelSU/APatch imesakinishwa na ruhusa ya su imetolewa</string>
+    <string name="result_adb_stock_app_not_installed">App ya stock %1$s haijasakinishwa kwenye %2$s. Sakinisha app rasmi kwanza kabla ya kumount</string>
     <string name="result_link_default_restored">Ushughulikiaji wa kiungo cha chaguo-msingi ume rudishwa</string>
     <string name="result_link_routed_stock_disabled">Viungo vimeelekezwa kwenye programu iliyorakwa, ya awali imezimwa</string>
     <string name="result_adb_not_found_hint">ADB hajakutwa. Sakinisha Android SDK Platform Tools ili kuwezesha usakinishaji wa moja kwa moja</string>
@@ -600,17 +624,6 @@
     <string name="update_banner_from_version">kutoka v%1$s</string>
     <string name="update_banner_later_button">Baadaye</string>
     <string name="update_banner_skip_button">Ruka v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Zana</string>
-    <string name="tools_dialog_open_logs_button">Fungua logi</string>
-    <string name="tools_dialog_open_app_data_button">Fungua data ya programu</string>
-    <string name="tools_dialog_view_licenses_button">Angalia leseni</string>
-    <string name="tools_dialog_cache_cleared">Kash imefutwa</string>
-    <string name="tools_dialog_clear_failed">Futa zilizoshindwa</string>
-    <string name="tools_dialog_clear_cache_button">Futa kash</string>
-    <string name="tools_dialog_cache_summary">Kash: %1$s (viraka + logarithms)</string>
-    <string name="tools_dialog_confirm_clear_title">Futa kash?</string>
-    <string name="tools_dialog_confirm_clear_message">Hii itafuta viraka vilivyopakuliwa na faili za logarithm. Viraka vitapakuliwa tena vinapohitajika</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Leseni za Chanzo Huria</string>
     <string name="licenses_dialog_empty_failed">// imeshindwa kupakia leseni</string>
@@ -683,6 +696,19 @@
     <string name="settings_section_strip_libs">Ondoa libs</string>
     <string name="settings_toggle_developer_options_label">Chaguo za msanidi programu</string>
     <string name="settings_toggle_developer_options_desc">Kwa wasanidi wa patch. Inafungua seti ya chaguo za mtiririko wa kazi kwa ajili ya kujenga na kupima patch (angalia nyaraka kwa orodha kamili). Kwa sasa, hiyo ni kuelekeza chanzo cha ndani kwenye folda ili Morphe kila wakati ipakie .mpp yake mpya zaidi</string>
+    <string name="settings_dev_bytecode_mode_label">Hali ya Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Hali ya mabadiliko inayotumika kwenye DEX bytecode wakati wa patching</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Haraka</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Salama</string>
+    <string name="settings_dev_bytecode_mode_full">Kamilifu</string>
+    <string name="settings_dev_validate_label">Uthibitisho wa fingerprint</string>
+    <string name="settings_dev_validate_desc">Thibitisha kwamba kila match() inalingana na njia moja tu (patching ya polepole, kwa ajili ya upimaji wa patch)</string>
+    <string name="settings_dev_verify_sdk_label">Uhakiki wa Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Thibitisha DEX na APK zilizorekebishwa kwa zana za Android SDK (d8, zipalign). Inaweza kutoa ripoti za makosa ya chanya</string>
+    <string name="settings_dev_sdk_path_label">Saraka ya Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Imegunduliwa kiotomatiki</string>
+    <string name="settings_dev_sdk_not_found">Android SDK haijapatikana. Weka ANDROID_HOME au tafuta saraka ya SDK</string>
+    <string name="settings_dev_sdk_picker_title">Chagua saraka ya Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Safisha faili za muda kiotomatiki</string>
     <string name="settings_toggle_auto_cleanup_desc">Futa faili za muda baada ya kupatch</string>
@@ -697,10 +723,21 @@
     <string name="settings_output_folder_not_found">Folda haijapatikana, itatengenezwa kwenye upachiko ujao</string>
     <string name="settings_toggle_auto_start_adb_label">Anzisha ADB kiotomatiki</string>
     <string name="settings_toggle_auto_start_adb_desc">Anzisha daemon ya ADB wakati wa kufungua ili vifaa vilivyounganishwa vifuatiliwe. Ikiwa imezimwa, Morphe haitaanzisha seva kamwe, na vipengele vya kusakinisha/kusukuma vitazimwa</string>
+    <string name="settings_section_storage">Hifadhi &amp; kasha</string>
+    <string name="settings_cache_summary">Kasha: %1$s (viraka + logarithms)</string>
+    <string name="settings_cache_clear_button">Futa kasha</string>
+    <string name="settings_cache_cleared">Kasha limefutwa</string>
+    <string name="settings_cache_clear_failed">Kufuta kumeshindikana</string>
+    <string name="settings_cache_confirm_title">Futa kasha?</string>
+    <string name="settings_cache_confirm_message">Hii itafuta viraka vilivyopakuliwa na faili za logarithm. Viraka vitapakuliwa tena vitakapohitajika</string>
+    <string name="settings_storage_open_app_data_button">Fungua data ya programu</string>
+    <string name="settings_storage_open_logs_button">Fungua logarithms</string>
     <string name="settings_section_about">Kuhusu</string>
     <string name="settings_about_version">Toleo %1$s</string>
     <string name="settings_about_changelogs_title">Angalia mabadiliko</string>
     <string name="settings_about_changelogs_desc">Angalia mabadiliko ya hivi punde katika sasisho hili</string>
+    <string name="settings_about_licenses_title">Leseni za Open Source</string>
+    <string name="settings_about_licenses_desc">Tazama leseni za maktaba za upande wa tatu</string>
     <string name="settings_about_documentation_title">Mwongozo</string>
     <string name="settings_about_documentation_desc">Mwongozo wa kupachika, vyanzo na utatuzi wa matatizo</string>
     <string name="settings_about_website_title">Tembelea tovuti</string>

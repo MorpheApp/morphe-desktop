@@ -142,7 +142,7 @@ fun deserializeOptionValue(element: JsonElement, type: KType): Any? {
  * coercing values to their declared [KType].
  */
 fun resolveFlatPatchOptions(
-    patches: Set<Patch<*>>,
+    patches: Set<Patch>,
     enabledPatches: Iterable<String>,
     flatOptions: Map<String, String>,
 ): Map<String, Map<String, Any?>> {

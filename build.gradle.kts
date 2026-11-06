@@ -60,8 +60,10 @@ dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
     implementation(libs.morphe.library) {
-        // jadb is unused by morphe-desktop and leaks mockito-core/bytebuddy into the fat JAR
-        exclude(group = "app.morphe", module = "jadb")
+        // Exclude mockito/bytebuddy leaked into compile scope by app.morphe:jadb POM
+        exclude(group = "org.mockito")
+        exclude(group = "net.bytebuddy")
+        exclude(group = "org.objenesis")
     }
     implementation(libs.picocli)
     implementation(libs.bundles.compose.desktop)

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">جێگیرکردنی پینەکان</string>
     <string name="patching_step_writing_apk">نووسینی فایلی APK پینەکراو</string>
     <string name="patching_step_signing">واژۆکردنی فایلی APK پینەکراو</string>
+    <string name="patching_task_decoding_dex">خوێندنەوەی فایڵەکانی DEX</string>
+    <string name="patching_task_extracting_resources">دەرهێنانی سەرچاوەکان</string>
+    <string name="patching_task_decoding_resources">دیکۆدکردنی سەرچاوەکان</string>
+    <string name="patching_task_indexing_classes">ئیندێکسکردنی کلاسەکان</string>
+    <string name="patching_task_compiling_dex">کۆمپایلکردنی فایڵەکانی DEX</string>
+    <string name="patching_task_compiling_resources">کۆمپایلکردنی سەرچاوەکان</string>
+    <string name="patching_task_writing_apk">نووسینی فایلی APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">دامەزراندن لەسەر %1$s…</string>
     <string name="adb_error_downgrade">ناتوانرێت وەردەگەڕێندرێتەوە بۆ وەشانێکی کۆنتر، وەشانێکی نوێتر دامەزراوە. سەرەتا ئەپی ئێستاکە بسڕەوە</string>
@@ -310,6 +317,8 @@
     <string name="patch_selection_error_title">هەڵەیەک لە بارکردنی پاچەکاندا ڕوویدا</string>
     <string name="patch_selection_title">پاچەکان هەڵبژێرە</string>
     <string name="patch_selection_cmd_preview">پێشاندرینی فەرمان</string>
+    <string name="patch_selection_root_mode_description">شێوازی ڕۆت بەستن</string>
+    <string name="patch_selection_lock_unavailable">بەردەست نییە بۆ ڕۆت بەستن</string>
     <string name="patch_selection_continue_on_error_tooltip">بەردەوام بە لە پاچکردن تەنانەت ئەگەر پاچێک سەرکەوتوو نەبێت</string>
     <string name="patch_selection_continue_on_error_description">بەردەوامبە لە کاتی هەڵەدا</string>
     <string name="patch_selection_no_patches_found">هیچ پینەیەک نەدۆزرایەوە</string>
@@ -371,6 +380,10 @@
     <string name="patch_selection_run_info_app_group">بەرنامە</string>
     <string name="patch_selection_run_info_bundles_group">کۆمەڵەکانی پینە</string>
     <string name="patch_selection_run_info_no_bundles">هیچ کۆمەڵەیەک نەدۆزرایەوە</string>
+    <string name="patch_selection_run_info_dev_group">بژاردەکانی گەشەپێدان</string>
+    <string name="patch_selection_run_info_bytecode_mode">مۆدی Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">سەلماندنی پەنجەمۆر: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">پشکنینی Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">گشتی</string>
     <string name="patch_selection_group_ungrouped">بێ گروپ</string>
     <string name="patch_selection_group_selected_count">%1$d هەڵبژێردراوە</string>
@@ -390,6 +403,7 @@
     <string name="patching_step_all_done">هەمووی تەواو بوو!</string>
     <string name="patching_step_waiting">چاوەڕوانکردن…</string>
     <string name="patching_graph_memory_usage">بەکارهێنانی بیرگە</string>
+    <string name="patching_graph_memory_detail">%1$d% لە %2$d MB</string>
     <string name="patching_graph_storage_io">داخەزن و دەرکەشان (I/O)ی کۆگاکە</string>
     <string name="patching_graph_cpu_usage">بەکارهێنانی CPU</string>
     <string name="patching_banner_started_title">پاتچکردن دەستی پێکرد</string>
@@ -425,6 +439,15 @@
     <string name="result_adb_updating_on_device">نوێکردنەوە لەسەر %1$s…</string>
     <string name="result_adb_update_successful">نوێکردنەوە سەرکەوتوو بوو!</string>
     <string name="result_adb_install_successful">دامەزاندن بە سەرکەوتوویی کۆتایی هات!</string>
+    <string name="result_adb_badge_root_mount">ڕۆت بەستن</string>
+    <string name="result_adb_mount_button">بەستن لەسەر %1$s</string>
+    <string name="result_adb_mounting_on_device">بەستن لەسەر %1$s…</string>
+    <string name="result_adb_mount_successful">بەستن سەرکەوتوو بوو!</string>
+    <string name="result_adb_mount_su_prompt_hint">بەستن لەسەر %1$s… سەیری ئامێرەکەت بکە بۆ پێدانی مۆڵەتی Superuser ئەگەر داوای لێکرا</string>
+    <string name="result_adb_unmount_button">بڕین لە %1$s</string>
+    <string name="result_adb_unmounting_on_device">بڕین لە %1$s…</string>
+    <string name="result_adb_root_not_detected">دەستڕاگەیشتنی ڕۆت لەسەر %1$s دەرنەکەوت. دڵنیابە کە Magisk/KernelSU/APatch دامەزراوە و مۆڵەتی su پێدراوە</string>
+    <string name="result_adb_stock_app_not_installed">ئەپی ستۆکی %1$s لەسەر %2$s دامەزراونە. پێش مۆنت کردن، سەرەتا ئەپی فەرمیەکە دابەزێنە</string>
     <string name="result_link_default_restored">بەڕێوەبردنی لینکە بنەڕەتییەکان گەڕێنراوەوە</string>
     <string name="result_link_routed_stock_disabled">لینکەکان ئاڕاستەی ئەپڵیکەیشنی دەستکاری کراوەکە کران، بنەڕەتییەکە لایت کرا</string>
     <string name="result_adb_not_found_hint">ADB نەدۆزرایەوە. Android SDK Platform Tools دامەزێنە بۆ چالاککردنی دامەزاندنی ڕاستەوخۆ</string>
@@ -605,17 +628,6 @@
     <string name="update_banner_from_version">لە v%1$s</string>
     <string name="update_banner_later_button">دواتر</string>
     <string name="update_banner_skip_button">تێپەڕاندنی v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">ئامرازەکان</string>
-    <string name="tools_dialog_open_logs_button">کردنەوەی لۆگۆکان</string>
-    <string name="tools_dialog_open_app_data_button">کردنەوەی داتای ئەپ</string>
-    <string name="tools_dialog_view_licenses_button">بینینی مۆڵەتنامەکان</string>
-    <string name="tools_dialog_cache_cleared">کاش خاوکراوە</string>
-    <string name="tools_dialog_clear_failed">خاوکردنەوە شکست هێنا</string>
-    <string name="tools_dialog_clear_cache_button">خاوکردنەوەی کاش</string>
-    <string name="tools_dialog_cache_summary">کاش: %1$s (پاتچەکان + لۆگات)</string>
-    <string name="tools_dialog_confirm_clear_title">خاوکردنەوەی کاش؟</string>
-    <string name="tools_dialog_confirm_clear_message">ئەمە پاتچە دابەزێنراوەکان و فایلەکانی لۆگ دەسڕێتەوە. پاتچەکان دووبارە دابەزێنرێن کاتێک پێویست بن</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">مۆڵەتنامەکانی سەرچاوەی کراوە</string>
     <string name="licenses_dialog_empty_failed">// شکست هێنا لە بارکردنی مۆڵەتەکان</string>
@@ -688,6 +700,19 @@
     <string name="settings_section_strip_libs">لادانی کتێبخانەکان</string>
     <string name="settings_toggle_developer_options_label">بژاردەکانی گەشەپێدەر</string>
     <string name="settings_toggle_developer_options_desc">بۆ گەشەپێدەرانی پەچ. کۆمەڵێک بژاردەی ڕێڕەوی کارکردن بۆ دروستکردن و تاقیکردنەوەی پەچەکان دەگەراندێتەوە (بۆ لیستی تەواو سەیری دۆکیومێنتەکان بکە). بۆ ئێستا، ئەوە ئاماژەیەکە بۆ سەرچاوەیەکی ناوخۆیی لە فۆڵدەرێکدا بۆ ئەوەی Morphe هەمیشە نوێترین .mpp لۆد بکات</string>
+    <string name="settings_dev_bytecode_mode_label">مۆدی Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">مۆدی گۆڕانکاری کە لەسەر DEX bytecode جێبەجێ دەکرێت لە کاتی پاتشکردندا</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">بەلەز</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">سەلامەت</string>
+    <string name="settings_dev_bytecode_mode_full">تەواو</string>
+    <string name="settings_dev_validate_label">سەلماندنی پەنجەمۆر</string>
+    <string name="settings_dev_validate_desc">سەلماندنی ئەوەی کە هەر match() تەنها لەگەڵ یەک میتۆد بگونجێت (پاتشکردنی خاوترە، بۆ تاقیکردنەوەی پاتش)</string>
+    <string name="settings_dev_verify_sdk_label">پشکنینی Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">پشکنینی DEX و APKی چاککراوە بە ئامرازەکانی Android SDK d8, zipalign. ڕەنگە ڕاپۆرتی هەڵەی ئەرێنی (false positives) بدات</string>
+    <string name="settings_dev_sdk_path_label">دایرێکتۆری Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">بە شێوەیەکی ئۆتۆماتیکی دۆزراوەتەوە</string>
+    <string name="settings_dev_sdk_not_found">Android SDK نەدۆزرایەوە. ANDROID_HOME دابنێ یان گەڕان بۆ دایرێکتۆری SDK بکە</string>
+    <string name="settings_dev_sdk_picker_title">دایرێکتۆری Android SDK هەڵبژێرە</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">پاککردنەوەی خۆکارى فایلە کاتییەکان</string>
     <string name="settings_toggle_auto_cleanup_desc">سڕینەوەی فایلە کاتییەکان دوای پاتچکردن</string>
@@ -702,10 +727,21 @@
     <string name="settings_output_folder_not_found">فۆڵدەرەکە نەدۆزرایەوە، لە پاتچی داهاتوودا دروست دەکرێت</string>
     <string name="settings_toggle_auto_start_adb_label">دەستپێکردنی خۆکار ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">دەستپێکردنی ADB daemon لە کاتی کردنەوەی ئەپدا بۆ ئەوەی ئامێرە بەستراوەکان چاودێری بکرێن. کاتێک لایە، Morphe هەرگیز سێرڤەرەکە دەستپێناکات، و تایبەتمەندییەکانی دامەزراندن/ناردن ناچالێن</string>
+    <string name="settings_section_storage">کۆگا و کاش</string>
+    <string name="settings_cache_summary">کاش: %1$s (پاتچەکان + تۆمارەکان)</string>
+    <string name="settings_cache_clear_button">پاککردنەوەی کاش</string>
+    <string name="settings_cache_cleared">کاش پاککرا</string>
+    <string name="settings_cache_clear_failed">پاککردنەوەکە شکست هێنا</string>
+    <string name="settings_cache_confirm_title">کاش پاکبکرێتەوە؟</string>
+    <string name="settings_cache_confirm_message">ئەمە پاتچە دابەزێنراوەکان و فایلەکانی تۆمار دەسڕێتەوە. پاتچەکان دووبارە دابەزێنرێن کاتێک پێویست بن</string>
+    <string name="settings_storage_open_app_data_button">کردنەوەی داتای ئەپ</string>
+    <string name="settings_storage_open_logs_button">کردنەوەی تۆمارەکان</string>
     <string name="settings_section_about">دربارە</string>
     <string name="settings_about_version">وەشانی  %1$s</string>
     <string name="settings_about_changelogs_title">بینینی گۆڕانکارییەکان</string>
     <string name="settings_about_changelogs_desc">دوایین گۆڕانکارییەکانی ئەم نوێکارییە ببینە</string>
+    <string name="settings_about_licenses_title">مۆڵەتەکانی سەرچاوەی کراوە</string>
+    <string name="settings_about_licenses_desc">بینینی مۆڵەتەکانی کتێبخانەکانی لایەنی سێیەم</string>
     <string name="settings_about_documentation_title">دۆکیومێنتەیشن</string>
     <string name="settings_about_documentation_desc">ڕێبەران بۆ پاتچکردن، سەرچاوەکان و چارەسەرکردنی کێشەکان</string>
     <string name="settings_about_website_title">سەردانی ماڵپەڕەکە بکە</string>

@@ -44,12 +44,21 @@
     <string name="copied">Копирано</string>
     <string name="click_to_copy">Кликнете за копирање</string>
     <string name="enable_adb_button">Овозможи ADB</string>
+    <string name="drag_to_reorder">Влечете за повторно подредување</string>
     <string name="off">Исклучено</string>
     <string name="on">Вклучено</string>
+    <string name="browse">Прегледувај</string>
+    <string name="save">Зачувај</string>
     <string name="select_folder">Изберете папка</string>
+    <string name="status_loading">Вчитување…</string>
     <string name="download">Преземи</string>
+    <string name="status_offline">Офлајн</string>
+    <string name="status_ready">Подготвено</string>
+    <string name="filter_apps_hint">Филтрирај апликации…</string>
     <string name="version">Верзија</string>
+    <string name="version_label_stable">Стабилна</string>
     <string name="version_label_prerelease">Пре-издание</string>
+    <string name="version_label_experimental">Експериментална</string>
     <string name="version_label_latest_stable">Најнова стабилна</string>
     <string name="version_label_recommended">Препорачано</string>
     <string name="version_label_supported">Поддржано</string>
@@ -99,6 +108,13 @@
     <string name="patching_step_applying_patches">Применување на закрпи</string>
     <string name="patching_step_writing_apk">Запишување на закрпена APK датотека</string>
     <string name="patching_step_signing">Потпишување на закрпена APK датотека</string>
+    <string name="patching_task_decoding_dex">Читање DEX датотеки</string>
+    <string name="patching_task_extracting_resources">Екстракција на ресурси</string>
+    <string name="patching_task_decoding_resources">Декодирање ресурси</string>
+    <string name="patching_task_indexing_classes">Индексирање класи</string>
+    <string name="patching_task_compiling_dex">Компилирање DEX датотеки</string>
+    <string name="patching_task_compiling_resources">Компилирање ресурси</string>
+    <string name="patching_task_writing_apk">Запишување APK датотека</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Инсталирање на %1$s…</string>
     <string name="adb_error_downgrade">Не може да се инсталира постара верзија, инсталирана е понова верзија. Прво деинсталирајте ја постоечката апликација</string>
@@ -296,6 +312,8 @@
     <string name="patch_selection_error_title">Грешка при вчитување на закрпите</string>
     <string name="patch_selection_title">Изберете закрпи</string>
     <string name="patch_selection_cmd_preview">Преглед на командата</string>
+    <string name="patch_selection_root_mode_description">Режим на монтирање на Root</string>
+    <string name="patch_selection_lock_unavailable">Недоступно за root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Продолжи со закрпувањето дури и ако закрпата не успее</string>
     <string name="patch_selection_continue_on_error_description">Продолжи при грешка</string>
     <string name="patch_selection_no_patches_found">Не се пронајдени закрпи</string>
@@ -357,6 +375,10 @@
     <string name="patch_selection_run_info_app_group">Апликација</string>
     <string name="patch_selection_run_info_bundles_group">Пакети за закрпи</string>
     <string name="patch_selection_run_info_no_bundles">Не се пронајдени пакети</string>
+    <string name="patch_selection_run_info_dev_group">Опции за програмери</string>
+    <string name="patch_selection_run_info_bytecode_mode">Режим на Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Валидација на отпечаток: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Верификација на Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Универзален</string>
     <string name="patch_selection_group_ungrouped">Негрупирани</string>
     <!-- Patching Screen -->
@@ -375,6 +397,7 @@
     <string name="patching_step_all_done">Сè е готово!</string>
     <string name="patching_step_waiting">Чекање…</string>
     <string name="patching_graph_memory_usage">Користење на меморија</string>
+    <string name="patching_graph_memory_detail">%1$d од %2$d MB</string>
     <string name="patching_graph_storage_io">Складиште I/O</string>
     <string name="patching_graph_cpu_usage">Користење на процесор</string>
     <string name="patching_banner_started_title">Закрпувањето започна</string>
@@ -410,6 +433,15 @@
     <string name="result_adb_updating_on_device">Ажурирање на %1$s…</string>
     <string name="result_adb_update_successful">Ажурирањето е успешно!</string>
     <string name="result_adb_install_successful">Инсталацијата е успешна!</string>
+    <string name="result_adb_badge_root_mount">Root монтирање</string>
+    <string name="result_adb_mount_button">Монтирај на %1$s</string>
+    <string name="result_adb_mounting_on_device">Монтирање на %1$s…</string>
+    <string name="result_adb_mount_successful">Монтирањето е успешно!</string>
+    <string name="result_adb_mount_su_prompt_hint">Монтирање на %1$s… Проверете го вашиот уред за да доделите Superuser дозвола доколку се побара</string>
+    <string name="result_adb_unmount_button">Одмонтирај од %1$s</string>
+    <string name="result_adb_unmounting_on_device">Одмонтирање од %1$s…</string>
+    <string name="result_adb_root_not_detected">Root пристапот не беше детектиран на %1$s. Осигурете се дека Magisk/KernelSU/APatch е инсталиран и што su дозволата е доделена</string>
+    <string name="result_adb_stock_app_not_installed">Stock апликацијата %1$s не е инсталирана на %2$s. Прво инсталирајте ја официјалната апликација пред монтирањето</string>
     <string name="result_link_default_restored">Вратено е подразумеваното ракување со линковите</string>
     <string name="result_link_routed_stock_disabled">Линковите се пренасочени кон закрпената апликација, фабричкиот режим е исклучен</string>
     <string name="result_adb_not_found_hint">ADB не е пронајден. Инсталирајте Android SDK Platform Tools за да овозможите директна инсталација</string>
@@ -590,17 +622,6 @@
     <string name="update_banner_from_version">од v%1$s</string>
     <string name="update_banner_later_button">Подоцна</string>
     <string name="update_banner_skip_button">Прескокни v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Алатки</string>
-    <string name="tools_dialog_open_logs_button">Отвори извештаи</string>
-    <string name="tools_dialog_open_app_data_button">Отвори податоци од апликацијата</string>
-    <string name="tools_dialog_view_licenses_button">Прегледај лиценци</string>
-    <string name="tools_dialog_cache_cleared">Кешот е испразнет</string>
-    <string name="tools_dialog_clear_failed">Испразнувањето не успеа</string>
-    <string name="tools_dialog_clear_cache_button">Испразни кеш</string>
-    <string name="tools_dialog_cache_summary">Кеш: %1$s (закрпи + логови)</string>
-    <string name="tools_dialog_confirm_clear_title">Испразни кеш?</string>
-    <string name="tools_dialog_confirm_clear_message">Ова ќе ги избрише преземените закрпи и датотеките за логови. Закрпите ќе бидат повторно преземени кога ќе се потребнот</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Лиценци за отворен код</string>
     <string name="licenses_dialog_empty_failed">// не успеа вчитувањето на лиценците</string>
@@ -673,6 +694,19 @@
     <string name="settings_section_strip_libs">Отстрани libs</string>
     <string name="settings_toggle_developer_options_label">Опции за развивачи</string>
     <string name="settings_toggle_developer_options_desc">За развивачи на закрпи. Овозможува низа опции за работниот процес за градење и тестирање закрпи (погледнете ја документацијата за комплетната листа). За сега, тоа значи насочување на локален извор кон папка за Morphe секогаш да ја вчитува својата најнова .mpp датотека</string>
+    <string name="settings_dev_bytecode_mode_label">Режим на Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Режим на трансформација применет на DEX bytecode за време на патчењето</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Брз</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Безбеден</string>
+    <string name="settings_dev_bytecode_mode_full">Целосен</string>
+    <string name="settings_dev_validate_label">Валидација на отпечаток</string>
+    <string name="settings_dev_validate_desc">Валидирај дека секое match() одговара само на една метода (побавно патчење, за тестирање на патчеви)</string>
+    <string name="settings_dev_verify_sdk_label">Верификација на Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Верификујте ги модифицираните DEX и APK со алатките од Android SDK (d8, zipalign). Може да пријави лажни позитивни резултати</string>
+    <string name="settings_dev_sdk_path_label">Директориум на Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Автоматски детектирано</string>
+    <string name="settings_dev_sdk_not_found">Android SDK не е пронајден. Поставете ANDROID_HOME или пребарајте го директориумот на SDK</string>
+    <string name="settings_dev_sdk_picker_title">Изберете директориум на Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Автоматско чистење на привремените датотеки</string>
     <string name="settings_toggle_auto_cleanup_desc">Избриши ги привремените датотеки по закрпувањето</string>
@@ -687,10 +721,21 @@
     <string name="settings_output_folder_not_found">Папката не е пронајдена, ќе биде креирана при следното пачирање</string>
     <string name="settings_toggle_auto_start_adb_label">Автоматски стартувај ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Започнувај го ADB демонот при стартување за да се следат поврзаните уреди. Кога е исклучено, Morphe никогаш не го стартува серверот, а функциите за инсталација/испраќање се оневозможени</string>
+    <string name="settings_section_storage">Складиште и кеш</string>
+    <string name="settings_cache_summary">Кеш: %1$s (закрпи + дневници)</string>
+    <string name="settings_cache_clear_button">Исчисти кеш</string>
+    <string name="settings_cache_cleared">Кешот е исчистен</string>
+    <string name="settings_cache_clear_failed">Чистењето не успеа</string>
+    <string name="settings_cache_confirm_title">Исчисти кеш?</string>
+    <string name="settings_cache_confirm_message">Ова ќе ги избрише преземаните закрпи и датотеките од дневникот. Закрпите ќе бидат повторно преземени кога ќе се потребнот</string>
+    <string name="settings_storage_open_app_data_button">Отвори податоци од апликацијата</string>
+    <string name="settings_storage_open_logs_button">Отвори дневници</string>
     <string name="settings_section_about">Филмови</string>
     <string name="settings_about_version">Верзија %1$s</string>
     <string name="settings_about_changelogs_title">Прегледај ги промените</string>
     <string name="settings_about_changelogs_desc">Погледнете ги најновите промени во ова ажурирање</string>
+    <string name="settings_about_licenses_title">Лиценци за отворен код</string>
+    <string name="settings_about_licenses_desc">Прегледај ги лиценците на библиотеки од трети страни</string>
     <string name="settings_about_documentation_title">Документација</string>
     <string name="settings_about_documentation_desc">Водичи за закрпување, извори и решавање проблеми</string>
     <string name="settings_about_website_title">Посетете ја веб-страницата</string>

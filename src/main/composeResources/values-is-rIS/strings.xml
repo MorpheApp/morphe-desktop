@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Nota plástra</string>
     <string name="patching_step_writing_apk">Skrifa plástraða APK-skrá</string>
     <string name="patching_step_signing">Undirrita plástraða APK-skrá</string>
+    <string name="patching_task_decoding_dex">Les á DEX-skrám</string>
+    <string name="patching_task_extracting_resources">Úttak auðlinda</string>
+    <string name="patching_task_decoding_resources">Afkóðun auðlinda</string>
+    <string name="patching_task_indexing_classes">Vísun klasa</string>
+    <string name="patching_task_compiling_dex">Samanburður DEX-skráa</string>
+    <string name="patching_task_compiling_resources">Samanburður auðlinda</string>
+    <string name="patching_task_writing_apk">Ritar APK-skrá</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Set upp á %1$s…</string>
     <string name="adb_error_downgrade">Ekki er hægt að lækka útgáfu, nýrri útgáfa er uppsett. Fjarlægðu núverandi forrit fyrst</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Villa við að hlaða inn plástrum</string>
     <string name="patch_selection_title">Veldu plástra</string>
     <string name="patch_selection_cmd_preview">Forskoðun skipunar</string>
+    <string name="patch_selection_root_mode_description">Tindahlífðarstilling</string>
+    <string name="patch_selection_lock_unavailable">Óaðgengilegt fyrir root-tengingu</string>
     <string name="patch_selection_continue_on_error_tooltip">Halda áfram plástrun jafnvel þótt plástur mistakist</string>
     <string name="patch_selection_continue_on_error_description">Halda áfram við villu</string>
     <string name="patch_selection_no_patches_found">Engir plástrar fundust</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Forrit</string>
     <string name="patch_selection_run_info_bundles_group">Plástrasöfn</string>
     <string name="patch_selection_run_info_no_bundles">Engin söfn fundust</string>
+    <string name="patch_selection_run_info_dev_group">Þróunarvalkostir</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode-hamur: %1$s</string>
+    <string name="patch_selection_run_info_validate">Staðfesting á fingrafori: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Staðfesting á Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Alhliða</string>
     <string name="patch_selection_group_ungrouped">Óflokkað</string>
     <string name="patch_selection_group_selected_count">%1$d valið</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Uppfæri á %1$s…</string>
     <string name="result_adb_update_successful">Uppfærsla tókst!</string>
     <string name="result_adb_install_successful">Uppsetning tókst!</string>
+    <string name="result_adb_badge_root_mount">Root-tenging</string>
+    <string name="result_adb_mount_button">Tengja við %1$s</string>
+    <string name="result_adb_mounting_on_device">Tengi við %1$s…</string>
+    <string name="result_adb_mount_successful">Tenging tókst!</string>
+    <string name="result_adb_mount_su_prompt_hint">Tengi við %1$s… Athugaðu tækið til að veita Superuser leyfi ef beðið er um það</string>
+    <string name="result_adb_unmount_button">Trekka af %1$s</string>
+    <string name="result_adb_unmounting_on_device">Trekkar af %1$s…</string>
+    <string name="result_adb_root_not_detected">Root-aðgangur fannst ekki á %1$s. Gakktu úr skammi að Magisk/KernelSU/APatch sé uppsett og su leyfi veitt</string>
+    <string name="result_adb_stock_app_not_installed">Upprunalega appið %1$s er ekki uppsett á %2$s. Settu upp opinbera appið áður en þú tengir</string>
     <string name="result_link_default_restored">Sjálfgefin tenglameðhöndlun endurheimt</string>
     <string name="result_link_routed_stock_disabled">Tenglum beint á plástrað forrit, upprunalega forritið óvirkt</string>
     <string name="result_adb_not_found_hint">ADB fannst ekki. Settu upp Android SDK Platform Tools til að virkja beina uppsetningu</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">frá v%1$s</string>
     <string name="update_banner_later_button">Seinna</string>
     <string name="update_banner_skip_button">Sleppa v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Verkfæri</string>
-    <string name="tools_dialog_open_logs_button">Opna annála</string>
-    <string name="tools_dialog_open_app_data_button">Opna forritsgögn</string>
-    <string name="tools_dialog_view_licenses_button">Skoða leyfi</string>
-    <string name="tools_dialog_cache_cleared">Skyndiminni hreinsað</string>
-    <string name="tools_dialog_clear_failed">Hreinsun mistókst</string>
-    <string name="tools_dialog_clear_cache_button">Hreinsa skyndiminni</string>
-    <string name="tools_dialog_cache_summary">Skyndiminni: %1$s (plástrar + annálar)</string>
-    <string name="tools_dialog_confirm_clear_title">Hreinsa skyndiminni?</string>
-    <string name="tools_dialog_confirm_clear_message">Þetta mun eyða niðurhaluðum plástrum og annálaskrám. Plástrar verða sóttir aftur þegar þörf er á</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Opin hugbúnaðarleyfi</string>
     <string name="licenses_dialog_empty_failed">// mistókst að hlaða leyfum</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Fjarlægja bókasöfn</string>
     <string name="settings_toggle_developer_options_label">Þróunarvalkostir</string>
     <string name="settings_toggle_developer_options_desc">Fyrir plásturhönnuði. Opnar sett af verkflæðisvalkostum til að byggja og prófa plástra (sjá skjölin fyrir fullan lista). Sem stendur er það að benda staðværri heimild á möppu svo Morphe hleður alltaf nýjustu .mpp hennar</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode-hamur</string>
+    <string name="settings_dev_bytecode_mode_desc">Breytingahama beitt á DEX bytecode við patching</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Hraður</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Öruggur</string>
+    <string name="settings_dev_bytecode_mode_full">Fullur</string>
+    <string name="settings_dev_validate_label">Staðfesting á fingrafori</string>
+    <string name="settings_dev_validate_desc">Staðfesta að hvert match() samsvari að einu aðferð (hægari patching, fyrir prófanir á patchum)</string>
+    <string name="settings_dev_verify_sdk_label">Staðfesting á Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Staðfestu lagaða DEX og APK með Android SDK tólum (d8, zipalign). Getur gefið rangar já-svör</string>
+    <string name="settings_dev_sdk_path_label">Android SDK vinnslumöppul</string>
+    <string name="settings_dev_sdk_path_auto">Sjálfkrafa greint</string>
+    <string name="settings_dev_sdk_not_found">Android SDK fannst ekki. Stilltu ANDROID_HOME eða leitaðu að SDK vinnslumöppul</string>
+    <string name="settings_dev_sdk_picker_title">Veldu Android SDK vinnslumöppul</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Sjálfvirk hreinsun tímabundinna skráa</string>
     <string name="settings_toggle_auto_cleanup_desc">Eyða tímabundnum skrám eftir plástrun</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Mappa fannst ekki, verður búin til við næstu plástrun</string>
     <string name="settings_toggle_auto_start_adb_label">Ræsa ADB sjálfkrafa</string>
     <string name="settings_toggle_auto_start_adb_desc">Ræstu ADB-þjóninn við ræsingu svo tengd tæki séu vöktuð. Þegar slökkt er, ræsir Morphe aldrei þjóninn og uppsetningar/sendingaraðgerðir eru óvirkar</string>
+    <string name="settings_section_storage">Geymsla &amp; önnuminkni</string>
+    <string name="settings_cache_summary">Cache: %1$s (pöttar + skrár)</string>
+    <string name="settings_cache_clear_button">Hreinsa cache</string>
+    <string name="settings_cache_cleared">Cache hreinsuð</string>
+    <string name="settings_cache_clear_failed">Hreinsun mislaðist</string>
+    <string name="settings_cache_confirm_title">Hreinsa cache?</string>
+    <string name="settings_cache_confirm_message">Þetta mun eyðastalnum pöttum og skrár. Pöttum verður hlaðið aftur þegar það er nauðsynlegt</string>
+    <string name="settings_storage_open_app_data_button">Opna gögn appsins</string>
+    <string name="settings_storage_open_logs_button">Opna skrár</string>
     <string name="settings_section_about">Um</string>
     <string name="settings_about_version">Útgáfa %1$s</string>
     <string name="settings_about_changelogs_title">Skoða breytingaskrár</string>
     <string name="settings_about_changelogs_desc">Skoðaðu nýjustu breytingarnar í þessari uppfærslu</string>
+    <string name="settings_about_licenses_title">Leyfissamningar opnaðs kóða</string>
+    <string name="settings_about_licenses_desc">Skoða leyfissamninga þriðja aðila</string>
     <string name="settings_about_documentation_title">Skjöl</string>
     <string name="settings_about_documentation_desc">Leiðbeiningar um plástrun, heimildir og bilanaleit</string>
     <string name="settings_about_website_title">Heimsækja vefsíðu</string>

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">পাচবোৰ প্ৰয়োগ কৰা হৈছে</string>
     <string name="patching_step_writing_apk">পাচ কৰা APK ফাইল লিখা হৈছে</string>
     <string name="patching_step_signing">পাচ কৰা APK ফাইলটোত স্বাক্ষৰ কৰা হৈছে</string>
+    <string name="patching_task_decoding_dex">DEX ফাইলসমূহ পঢ়ি থকা হৈছে</string>
+    <string name="patching_task_extracting_resources">সম্পদসমূহ নিষ্কাশন কৰি থকা হৈছে</string>
+    <string name="patching_task_decoding_resources">সম্পদসমূহ ডিকোড কৰি থকা হৈছে</string>
+    <string name="patching_task_indexing_classes">ক্লাছসমূহৰ ইনডেক্সিং কৰি থকা হৈছে</string>
+    <string name="patching_task_compiling_dex">DEX ফাইলসমূহ কম্পাইল কৰি থকা হৈছে</string>
+    <string name="patching_task_compiling_resources">সম্পদসমূহ কম্পাইল কৰি থকা হৈছে</string>
+    <string name="patching_task_writing_apk">APK ফাইল লিখি থকা হৈছে</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s-ত সংস্থাপন কৰা হৈছে…</string>
     <string name="adb_error_downgrade">ডাউন্গ্ৰেড কৰিব নোৱাৰি, এটা নতুন সংস্কৰণ স্থাপন কৰা হৈছে। প্ৰথমে বিদ্যমান এপটো আনইনষ্টল কৰক</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">প্যাচসমূহ লোড কৰাত ত্ৰুটি হৈছে</string>
     <string name="patch_selection_title">প্যাচসমূহ বাছনি কৰক</string>
     <string name="patch_selection_cmd_preview">কমাণ্ডৰ প্ৰিভিউ</string>
+    <string name="patch_selection_root_mode_description">ৰুট মাউণ্ট মোড</string>
+    <string name="patch_selection_lock_unavailable">ৰুট মাউণ্টৰ বাবে উপলব্ধ নহয়</string>
     <string name="patch_selection_continue_on_error_tooltip">কোনো এটা প্যাচ ব্যৰ্থ হ'লেও পেচিং অব্যাহত ৰাখক</string>
     <string name="patch_selection_continue_on_error_description">ত্ৰুটিৰ পাছতো অব্যাহত ৰাখক</string>
     <string name="patch_selection_no_patches_found">কোনো প্যাচ পোৱা নগ'ল</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">এপ</string>
     <string name="patch_selection_run_info_bundles_group">পাচ বান্ডেলসমূহ</string>
     <string name="patch_selection_run_info_no_bundles">কোনো বান্ডেল সংৰচনা হোৱা নাই</string>
+    <string name="patch_selection_run_info_dev_group">ডেভেলাপাৰ বিকল্পসমূহ</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode মোড: %1$s</string>
+    <string name="patch_selection_run_info_validate">ফিঙ্গারপ্ৰিন্ট বৈধকৰণ: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDKৰ সত্যতা পৰীক্ষা: %1$s</string>
     <string name="patch_selection_group_universal">ইউনিভাৰ্সেল</string>
     <string name="patch_selection_group_ungrouped">অনুুপুৰক</string>
     <string name="patch_selection_group_selected_count">%1$d নিৰ্বাচিত</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">%1$s ত আপডেট কৰা হৈছে…</string>
     <string name="result_adb_update_successful">আপডেট সফল হৈছে!</string>
     <string name="result_adb_install_successful">সংস্থাপন সফল হৈছে!</string>
+    <string name="result_adb_badge_root_mount">ৰুট মাউণ্ট</string>
+    <string name="result_adb_mount_button">%1$s ত মাউণ্ট কৰক</string>
+    <string name="result_adb_mounting_on_device">%1$s ত মাউণ্ট কৰা হৈছে…</string>
+    <string name="result_adb_mount_successful">মাউণ্টিং সফল হৈছে!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s ত মাউণ্ট কৰা হৈছে… যদি প্ৰশ্ন কৰা হয় তেন্তে Superuser অনুমতি দিবলৈ আপোনাৰ ডিভাইচটো পৰীক্ষা কৰক</string>
+    <string name="result_adb_unmount_button">%1$s ৰ পৰা আনমাউণ্ট কৰক</string>
+    <string name="result_adb_unmounting_on_device">%1$s ৰ পৰা আনমাউণ্ট কৰা হৈছে…</string>
+    <string name="result_adb_root_not_detected">%1$s ত Root access ধৰা পৰা নাই। Magisk/KernelSU/APatch ইন্সটল কৰা আছে আৰু su অনুমতি দিয়া হৈছে সেয়া নিশ্চিত কৰক</string>
+    <string name="result_adb_stock_app_not_installed">ষ্টক এপ %1$s টা %2$s ত ইন্সটল কৰা নাই। মাউণ্ট কৰাৰ আগতে প্ৰথমে অফিচিয়েল এপটো ইন্সটল কৰক</string>
     <string name="result_link_default_restored">ডিফল্ট লিংক হেণ্ডলিং পুনৰুদ্ধাৰ কৰা হৈছে</string>
     <string name="result_link_routed_stock_disabled">লিংকসমূহ পেচ কৰা এপলৈ ৰাউট কৰা হৈছে, ষ্টক নিষ্ক্ৰিয় কৰা হৈছে</string>
     <string name="result_adb_not_found_hint">ADB বিচাৰি পোৱা নাগিল। পোনপটীয়া সংস্থাপন সক্ৰিয় কৰিবলৈ Android SDK Platform Tools সংস্থাপন কৰক</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s পৰা</string>
     <string name="update_banner_later_button">পিছত</string>
     <string name="update_banner_skip_button">v%1$s বাদ দিয়ক</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">টুলচ</string>
-    <string name="tools_dialog_open_logs_button">লগসমূহ খোলক</string>
-    <string name="tools_dialog_open_app_data_button">এপ্লিকেচনৰ ডাটা খোলক</string>
-    <string name="tools_dialog_view_licenses_button">লাইচেন্সসমূহ চাওক</string>
-    <string name="tools_dialog_cache_cleared">কেচ পৰিষ্কাৰ কৰা হ'ল</string>
-    <string name="tools_dialog_clear_failed">পৰিষ্কাৰ কৰাত ব্যৰ্থ হ'ল</string>
-    <string name="tools_dialog_clear_cache_button">কেচ পৰিষ্কাৰ কৰক</string>
-    <string name="tools_dialog_cache_summary">কেচ: %1$s (পেচ + লগ)</string>
-    <string name="tools_dialog_confirm_clear_title">কেচ পৰিষ্কাৰ কৰিবনে?</string>
-    <string name="tools_dialog_confirm_clear_message">ইয়াৰ দ্বাৰা ডাউনলোড কৰা পেচ আৰু লগ ফাইলসমূহ মচি পেলোৱা হ'ব। প্ৰয়োজন হ'লে পেচসমূহ পুনৰ ডাউনলোড কৰা হ'ব</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">অভুক্ত উৎসৰ লাইচেন্সসমূহ</string>
     <string name="licenses_dialog_empty_failed">// লাইচেন্সসমূহ লোড কৰাত ব্যৰ্থ হ'ল</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">লাইব্ৰেৰীসমূহ স্ট্রিপ কৰক</string>
     <string name="settings_toggle_developer_options_label">ডেভেলাপাৰ বিকল্পসমূহ</string>
     <string name="settings_toggle_developer_options_desc">পেচ ডেভেলাপাৰৰ বাবে। পেচসমূহ গঠন আৰু পৰীক্ষা কৰাৰ বাবে এক ধৰণৰ কৰ্মপ্ৰবাহৰ বিকল্পসমূহ আনলক কৰে (সম্পূৰ্ণ তালিকাৰ বাবে ডকুমেন্টেশ্যন চাওক)। বৰ্তমানৰ বাবে, ই এটা লোকাল উৎসক এটা ফোল্ডাৰৰ সৈতে সংযোগ কৰিছে যাতে Morphe-এ সদায় ইয়াৰ শেহতীয়া .mpp লোড কৰে</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode মোড</string>
+    <string name="settings_dev_bytecode_mode_desc">পেচিং কৰাৰ সময়ত DEX bytecode-ৰ প্ৰয়োগ কৰা ৰূপান্তৰণ মোড</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">দ্ৰুত</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">সুৰক্ষিত</string>
+    <string name="settings_dev_bytecode_mode_full">পূৰ্ণ</string>
+    <string name="settings_dev_validate_label">ফিঙ্গারপ্ৰিন্ট বৈধকৰণ</string>
+    <string name="settings_dev_validate_desc">পৰীক্ষা কৰক যে প্ৰতিটো match() ৰ কেৱল এটা পদ্ধতিৰ সৈতে মিল আছে (পেচিং ধীৰ হ'ব, পেচ টেষ্টিংৰ বাবে)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDKৰ সত্যতা পৰীক্ষা</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK টুলস (d8, zipalign) ৰ সৈতে patched DEX আৰু APK ভেরিফাই কৰক। ই ভুল পজিটিভ ৰিপৰ্ট কৰিব পাৰে</string>
+    <string name="settings_dev_sdk_path_label">Android SDK ডাইৰেক্টৰী</string>
+    <string name="settings_dev_sdk_path_auto">অটো-ডিটেক্ট কৰা হৈছে</string>
+    <string name="settings_dev_sdk_not_found">Android SDK বিচাৰি পোৱা নগ’ল। ANDROID_HOME ছেট কৰক বা SDK ডাইৰেক্টৰীৰ বাবে ব্ৰাউজ কৰক</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK ডাইৰেক্টৰী নিৰ্বাচন কৰক</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">অস্থায়ী ফাইলসমূহ স্বয়ংক্ৰিয়ভাৱে পৰিষ্কাৰ কৰক</string>
     <string name="settings_toggle_auto_cleanup_desc">পেচিং কৰাৰ পিছত অস্থায়ী ফাইলসমূহ মচি পেলাওক</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">ফোল্ডাৰটো পোৱা নাগিল, পৰৱৰ্তী পাচত সৃষ্টি কৰা হ'ব</string>
     <string name="settings_toggle_auto_start_adb_label">ADB অটো-ষ্টাৰ্ট কৰক</string>
     <string name="settings_toggle_auto_start_adb_desc">লঞ্চৰ সময়ত ADB ডিমেনটো আৰম্ভ কৰক যাতে সংযোগ কৰা ডিভাইচসমূহ নিৰীক্ষণ কৰিব পৰা যায়। বন্ধ থাকিলে, Morphe-এ কেতিয়াও চাৰ্ভাৰ আৰম্ভ নকৰে, আৰু ইনষ্টল/পুছ বৈশিষ্ট্যসমূহ নিষ্ক্ৰীয় হৈ থাকে</string>
+    <string name="settings_section_storage">সংৰক্ষণ আৰু কেছ</string>
+    <string name="settings_cache_summary">কেছ: %1$s (পেচ + লগ)</string>
+    <string name="settings_cache_clear_button">কেছ মুচুন</string>
+    <string name="settings_cache_cleared">কেছ মুচুন কৰা হ'ল</string>
+    <string name="settings_cache_clear_failed">মুচুন কৰাত ব্যৰ্থ হৈছে</string>
+    <string name="settings_cache_confirm_title">কেছ মুচুন কৰিবনে?</string>
+    <string name="settings_cache_confirm_message">ইয়াৰ দ্বাৰা ডাউনলোড কৰা পেচ আৰু লগ ফাইলসমূহ মচি পেলাব। প্ৰয়োজন হ'লে পেচসমূহ পুনৰ ডাউনলোড কৰা হ'ব</string>
+    <string name="settings_storage_open_app_data_button">এপৰ ডাটা খোলক</string>
+    <string name="settings_storage_open_logs_button">লগসমূহ খোলক</string>
     <string name="settings_section_about">ৰবাৰো</string>
     <string name="settings_about_version">সংস্কৰণ %1$s</string>
     <string name="settings_about_changelogs_title">চেইনলগসমূহ দেখুন</string>
     <string name="settings_about_changelogs_desc">এই আপডেটৰ শেহতীয়া পৰিৱৰ্তনসমূহ পৰীক্ষা কৰক</string>
+    <string name="settings_about_licenses_title">মুক্ত উৎসৰ লাইচেন্সসমূহ</string>
+    <string name="settings_about_licenses_desc">তৃতীয় পক্ষৰ লাইব্ৰেৰীৰ লাইচেন্সসমূহ চাওক</string>
     <string name="settings_about_documentation_title">নথিভুক্তকৰণ</string>
     <string name="settings_about_documentation_desc">প্যাচিং, উৎস আৰু সমস্যা সমাধানৰ বাবে গাইডসমূহ</string>
     <string name="settings_about_website_title">ৱেবছাইট ভ্ৰমণ কৰক</string>

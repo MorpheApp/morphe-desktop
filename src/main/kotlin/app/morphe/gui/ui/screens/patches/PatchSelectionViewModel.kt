@@ -13,6 +13,7 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.apk.AndroidArchitectures
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.ApkOutputNaming
+import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.model.PatchedAppRecord.PatchedSourceSnapshot
 import app.morphe.engine.options.PatchPreferencesRepository
@@ -21,7 +22,9 @@ import app.morphe.engine.options.optionValueFromJson
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
+import app.morphe.engine.model.PatchLockState
 import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.model.lockState
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -29,7 +32,10 @@ import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.dex.BytecodeMode
+import app.morphe.patcher.patch.InstallerType
 import app.morphe.patcher.resource.CpuArchitecture
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -82,6 +88,7 @@ class PatchSelectionViewModel(
 
     private var defaultOutputDirectory: String? = null
     private var autoCleanupTempFiles: Boolean = true
+    private var currentEngineConfig: EngineConfig? = null
 
     private val _uiState = MutableStateFlow(
         PatchSelectionUiState(
@@ -93,26 +100,30 @@ class PatchSelectionViewModel(
 
     init {
         loadPatches()
-        loadStripLibsPreference()
+        observeEngineConfig()
     }
 
-    private fun loadStripLibsPreference() {
+    private fun observeEngineConfig() {
         viewModelScope.launch {
-            val config = engineConfigRepository.loadConfig()
-            autoCleanupTempFiles = config.autoCleanupTempFiles
-            // Resolved default output directory path.
-            defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
-            // Derive architectures from the APK if not provided.
-            val arches = apkArchitectures.ifEmpty {
-                withContext(Dispatchers.IO) {
-                    runCatching { ApkInspector.extractArchitectures(File(apkPath)).toList() }
-                        .getOrDefault(emptyList())
+            engineConfigRepository.loadConfig()
+            engineConfigRepository.configFlow.collect { config ->
+                if (config == null) return@collect
+                currentEngineConfig = config
+                autoCleanupTempFiles = config.autoCleanupTempFiles
+                // Resolved default output directory path.
+                defaultOutputDirectory = config.resolvedDefaultOutputDirectory()?.absolutePath
+                // Derive architectures from the APK if not provided.
+                val arches = _uiState.value.apkArchitectures.ifEmpty {
+                    withContext(Dispatchers.IO) {
+                        runCatching { ApkInspector.extractArchitectures(File(apkPath)).toList() }
+                            .getOrDefault(emptyList())
+                    }
                 }
+                _uiState.value = _uiState.value.copy(
+                    apkArchitectures = arches,
+                    stripLibsStatus = computeStripLibsStatus(arches, config.keepArchitectures),
+                )
             }
-            _uiState.value = _uiState.value.copy(
-                apkArchitectures = arches,
-                stripLibsStatus = computeStripLibsStatus(arches, config.keepArchitectures),
-            )
         }
     }
 
@@ -367,7 +378,35 @@ class PatchSelectionViewModel(
         _uiState.value = _uiState.value.copy(selectedByBundle = saved)
     }
 
+    fun toggleRootMode() {
+        val newRootMode = !_uiState.value.isRootMode
+        val installerType = if (newRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        val currentSelected = _uiState.value.selectedByBundle.toMutableMap()
+
+        for ((bundleId, _, patches) in _uiState.value.bundles) {
+            val selected = currentSelected[bundleId].orEmpty().toMutableSet()
+            for (patch in patches) {
+                when (patch.lockState(installerType)) {
+                    PatchLockState.LOCKED_OFF -> selected.remove(patch.uniqueId)
+                    PatchLockState.LOCKED_ON -> selected.add(patch.uniqueId)
+                    PatchLockState.NONE -> Unit
+                }
+            }
+            currentSelected[bundleId] = selected
+        }
+
+        _uiState.value = _uiState.value.copy(
+            isRootMode = newRootMode,
+            selectedByBundle = currentSelected,
+        )
+    }
+
     fun togglePatch(bundleId: String, patchId: String) {
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        val patch = bundle.patches.firstOrNull { it.uniqueId == patchId } ?: return
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        if (patch.lockState(installerType) == PatchLockState.LOCKED_OFF) return
+
         val current = _uiState.value.selectedByBundle
         val bundleSet = current[bundleId].orEmpty()
         val newSet = if (patchId in bundleSet) bundleSet - patchId else bundleSet + patchId
@@ -378,15 +417,25 @@ class PatchSelectionViewModel(
 
     fun selectAllInBundle(bundleId: String) {
         val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
-        val all = bundle.patches.map { it.uniqueId }.toSet()
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        val all = bundle.patches
+            .filter { it.lockState(installerType) != PatchLockState.LOCKED_OFF }
+            .map { it.uniqueId }
+            .toSet()
         _uiState.value = _uiState.value.copy(
             selectedByBundle = _uiState.value.selectedByBundle + (bundleId to all),
         )
     }
 
     fun deselectAllInBundle(bundleId: String) {
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        val kept = bundle.patches
+            .filter { it.lockState(installerType) == PatchLockState.LOCKED_ON }
+            .map { it.uniqueId }
+            .toSet()
         _uiState.value = _uiState.value.copy(
-            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to emptySet()),
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to kept),
         )
     }
 
@@ -396,18 +445,34 @@ class PatchSelectionViewModel(
         val anyBundleHasCompatible = apkVersion.isNotBlank() && _uiState.value.bundles.any { compatiblePatchCount(it) > 0 }
         val defaults = _uiState.value.defaultsByBundle[bundleId]
             ?: computeBundleDefaults(bundle, anyBundleHasCompatible)
+        val adjusted = adjustSelectionForLockState(bundle, defaults)
         _uiState.value = _uiState.value.copy(
-            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to defaults),
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to adjusted),
         )
     }
 
     /** Restores saved patch selection for this bundle. */
     fun applySavedDefaultsInBundle(bundleId: String) {
-        if (_uiState.value.bundles.none { it.bundleId == bundleId }) return
+        val bundle = _uiState.value.bundles.firstOrNull { it.bundleId == bundleId } ?: return
         val saved = _uiState.value.savedSelectedByBundle?.get(bundleId) ?: return
+        val adjusted = adjustSelectionForLockState(bundle, saved)
         _uiState.value = _uiState.value.copy(
-            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to saved),
+            selectedByBundle = _uiState.value.selectedByBundle + (bundleId to adjusted),
         )
+    }
+
+    private fun adjustSelectionForLockState(
+        bundle: BundlePatches,
+        candidateIds: Set<String>,
+    ): Set<String> {
+        val installerType = if (_uiState.value.isRootMode) InstallerType.MOUNT else InstallerType.STANDARD
+        return bundle.patches.mapNotNull { patch ->
+            when (patch.lockState(installerType)) {
+                PatchLockState.LOCKED_OFF -> null
+                PatchLockState.LOCKED_ON -> patch.uniqueId
+                PatchLockState.NONE -> patch.uniqueId.takeIf { it in candidateIds }
+            }
+        }.toSet()
     }
 
     fun setSearchQuery(query: String) {
@@ -446,7 +511,9 @@ class PatchSelectionViewModel(
 
     /** Refreshes native library stripping status from current settings. */
     fun refreshStripLibsStatus() {
-        loadStripLibsPreference()
+        viewModelScope.launch {
+            engineConfigRepository.loadConfig()
+        }
     }
 
     /** Sets a patch option value using key format "patchName.optionKey". */
@@ -464,25 +531,37 @@ class PatchSelectionViewModel(
 
     fun targetPackage(): String = packageName
 
-    fun runInfo(): RunInfo = RunInfo(
-        appName = apkName,
-        appVersion = apkVersion.takeIf { it.isNotBlank() }
-            ?: ApkOutputNaming.extractApkVersionFromFilename(File(apkPath).name).orEmpty(),
-        apkFileName = File(apkPath).name,
-        apkPath = apkPath,
-        packageName = packageName,
-        bundles = actualPatchesFilePaths.mapIndexed { i, path ->
-            val file = File(path)
-            val name = patchSourceNames.getOrNull(i)
-                ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
-                ?: PatchSourceNaming.resolveSourceName(file = file)
-            RunInfo.Bundle(
-                name = name,
-                version = ApkOutputNaming.extractPatchesVersion(file.name),
-                fileName = file.name,
+    fun runInfo(engineConfig: EngineConfig? = currentEngineConfig): RunInfo {
+        val devInfo = if (engineConfig?.developerOptions == true) {
+            RunInfo.DeveloperOptionsInfo(
+                bytecodeMode = engineConfig.bytecodeMode,
+                validateFingerprints = engineConfig.validateFingerprints,
+                verifyWithSdk = engineConfig.verifyWithSdk,
+                sdkPath = if (engineConfig.verifyWithSdk) engineConfig.resolvedAndroidSdkPath()?.absolutePath else null,
             )
-        },
-    )
+        } else null
+
+        return RunInfo(
+            appName = apkName,
+            appVersion = apkVersion.takeIf { it.isNotBlank() }
+                ?: ApkOutputNaming.extractApkVersionFromFilename(File(apkPath).name).orEmpty(),
+            apkFileName = File(apkPath).name,
+            apkPath = apkPath,
+            packageName = packageName,
+            bundles = actualPatchesFilePaths.mapIndexed { i, path ->
+                val file = File(path)
+                val name = patchSourceNames.getOrNull(i)
+                    ?.takeUnless { PatchSourceNaming.isRawOrCorruptedName(it) }
+                    ?: PatchSourceNaming.resolveSourceName(file = file)
+                RunInfo.Bundle(
+                    name = name,
+                    version = ApkOutputNaming.extractPatchesVersion(file.name),
+                    fileName = file.name,
+                )
+            },
+            developerOptions = devInfo,
+        )
+    }
 
     /** Persists current patch selections and option values for each bundle. */
     private fun saveCurrentSelection() {
@@ -572,6 +651,9 @@ class PatchSelectionViewModel(
             selectionByBundle[snapshot.sourceName]?.isNotEmpty() == true
         }
 
+        val engineCfg = currentEngineConfig ?: runBlocking { engineConfigRepository.loadConfig() }
+        val devMode = engineCfg.developerOptions
+
         return PatchEngine.Config(
             inputApk = inputFile,
             outputApk = outputFile,
@@ -579,10 +661,15 @@ class PatchSelectionViewModel(
             enabledPatches = selectedPatchNames.toSet(),
             disabledPatches = disabledPatchNames.toSet(),
             flatPatchOptions = _uiState.value.patchOptionValues,
+            unsigned = state.isRootMode,
+            mount = state.isRootMode,
             exclusiveMode = true,
             forceCompatibility = true,
             architecturesToKeep = keepArches,
             failOnError = !continueOnError,
+            bytecodeMode = if (devMode) engineCfg.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
+            validate = devMode && engineCfg.validateFingerprints,
+            sdkToolsPath = if (devMode) engineCfg.resolvedAndroidSdkPath() else null,
             disablePurge = !autoCleanupTempFiles,
             recordHistory = true,
             appDisplayName = apkName,
@@ -643,6 +730,7 @@ class PatchSelectionViewModel(
         keystorePassword: String? = null,
         keystoreAlias: String? = null,
         keystoreEntryPassword: String? = null,
+        engineConfig: EngineConfig? = currentEngineConfig,
     ): String {
         val jarName = resolveRunningJarName()
         val inputFile = File(apkPath)
@@ -742,9 +830,26 @@ class PatchSelectionViewModel(
                 }
                 appendLine("  -o $outputFileName \\")
                 appendLine("  --force \\")
+                if (state.isRootMode) appendLine("  --mount \\")
                 if (continueOnError) appendLine("  --continue-on-error \\")
                 if (useExclusive) appendLine("  --exclusive \\")
                 striplibsArg?.let { appendLine("  --striplibs $it \\") }
+                if (engineConfig?.developerOptions == true) {
+                    if (engineConfig.bytecodeMode != "STRIP_FAST") {
+                        appendLine("  --bytecode-mode ${engineConfig.bytecodeMode} \\")
+                    }
+                    if (engineConfig.validateFingerprints) {
+                        appendLine("  --validate \\")
+                    }
+                    if (engineConfig.verifyWithSdk) {
+                        val customPath = engineConfig.resolvedCustomAndroidSdkPath()?.absolutePath
+                        if (customPath != null) {
+                            appendLine("  --verify-with-sdk \"$customPath\" \\")
+                        } else {
+                            appendLine("  --verify-with-sdk \\")
+                        }
+                    }
+                }
                 if (hasCustomKeystore) {
                     appendLine("  --keystore \"$keystorePath\" \\")
                     keystorePassword?.let { appendLine("  --keystore-password \"$it\" \\") }
@@ -768,9 +873,26 @@ class PatchSelectionViewModel(
             }
             parts.add("-o $outputFileName")
             parts.add("--force")
+            if (state.isRootMode) parts.add("--mount")
             if (continueOnError) parts.add("--continue-on-error")
             if (useExclusive) parts.add("--exclusive")
             striplibsArg?.let { parts.add("--striplibs $it") }
+            if (engineConfig?.developerOptions == true) {
+                if (engineConfig.bytecodeMode != "STRIP_FAST") {
+                    parts.add("--bytecode-mode ${engineConfig.bytecodeMode}")
+                }
+                if (engineConfig.validateFingerprints) {
+                    parts.add("--validate")
+                }
+                if (engineConfig.verifyWithSdk) {
+                    val customPath = engineConfig.resolvedCustomAndroidSdkPath()?.absolutePath
+                    if (customPath != null) {
+                        parts.add("--verify-with-sdk \"$customPath\"")
+                    } else {
+                        parts.add("--verify-with-sdk")
+                    }
+                }
+            }
             if (hasCustomKeystore) {
                 parts.add("--keystore \"$keystorePath\"")
                 if (keystorePassword != null) parts.add("--keystore-password \"$keystorePassword\"")
@@ -819,11 +941,19 @@ data class RunInfo(
     val apkPath: String,
     val packageName: String,
     val bundles: List<Bundle>,
+    val developerOptions: DeveloperOptionsInfo? = null,
 ) {
     data class Bundle(
         val name: String,
         val version: String?,
         val fileName: String,
+    )
+
+    data class DeveloperOptionsInfo(
+        val bytecodeMode: String,
+        val validateFingerprints: Boolean,
+        val verifyWithSdk: Boolean,
+        val sdkPath: String?,
     )
 }
 
@@ -849,6 +979,8 @@ data class PatchSelectionUiState(
     val patchOptionValues: Map<String, String> = emptyMap(),
     /** Maps bundle ID to default-selected patch unique IDs. */
     val defaultsByBundle: Map<String, Set<String>> = emptyMap(),
+    /** True if target install mode is Root Mount (unsigned APK, no GmsCore). */
+    val isRootMode: Boolean = false,
 ) {
     /** Total count of patches selected across all bundles. */
     val selectedCount: Int get() = selectedByBundle.values.sumOf { it.size }

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Rakendatakse plaastreid</string>
     <string name="patching_step_writing_apk">Kirjutatakse paigutatud APK-faili</string>
     <string name="patching_step_signing">Allkirjastatakse paigutatud APK-faili</string>
+    <string name="patching_task_decoding_dex">DEX-failide lugemine</string>
+    <string name="patching_task_extracting_resources">Ressurside väljavõte</string>
+    <string name="patching_task_decoding_resources">Ressurside dekodeerimine</string>
+    <string name="patching_task_indexing_classes">Klasside indekseerimine</string>
+    <string name="patching_task_compiling_dex">DEX-failide kompileerimine</string>
+    <string name="patching_task_compiling_resources">Ressurside compileerimine</string>
+    <string name="patching_task_writing_apk">APK-faili kirjutamine</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Paigaldatakse %1$s…</string>
     <string name="adb_error_downgrade">Versiooni ei saa alumineks muuta, kuna on installitud uuem versioon. Eemaldage esmalt olemasolev rakendus</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Viga paigutuste laadimisel</string>
     <string name="patch_selection_title">Valige paigutused</string>
     <string name="patch_selection_cmd_preview">Käsu eelvaade</string>
+    <string name="patch_selection_root_mode_description">Root-montimise režiim</string>
+    <string name="patch_selection_lock_unavailable">Mittesaadav root-monteerimiseks</string>
     <string name="patch_selection_continue_on_error_tooltip">Jätka paigutamisega ka siis, kui mõni paigutus ebaõnnestub</string>
     <string name="patch_selection_continue_on_error_description">Jätka vea korral</string>
     <string name="patch_selection_no_patches_found">Pakendeid ei leitud</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Rakendus</string>
     <string name="patch_selection_run_info_bundles_group">Paiganduskogumid</string>
     <string name="patch_selection_run_info_no_bundles">Pakette ei leitud</string>
+    <string name="patch_selection_run_info_dev_group">Arendaja valikud</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytekoodi režiim: %1$s</string>
+    <string name="patch_selection_run_info_validate">Sõrmejälgedesigni valideerimine: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK verifitseerimine: %1$s</string>
     <string name="patch_selection_group_universal">Universaalne</string>
     <string name="patch_selection_group_ungrouped">Grupeerimata</string>
     <string name="patch_selection_group_selected_count">%1$d valitud</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Uuendatakse %1$s…</string>
     <string name="result_adb_update_successful">Uuendamine õnnestus!</string>
     <string name="result_adb_install_successful">Paigaldamine õnnestus!</string>
+    <string name="result_adb_badge_root_mount">Root-monteerimine</string>
+    <string name="result_adb_mount_button">Monteeri %1$s-le</string>
+    <string name="result_adb_mounting_on_device">Monteeritakse %1$s-le…</string>
+    <string name="result_adb_mount_successful">Monteerimine õnnestus!</string>
+    <string name="result_adb_mount_su_prompt_hint">Monteeritakse %1$s-le… Kui küsitakse, kontrolli oma seadet ja anna Superkasutaja luba</string>
+    <string name="result_adb_unmount_button">Demoonteeri %1$s-lt</string>
+    <string name="result_adb_unmounting_on_device">Demoonteeritakse %1$s-lt…</string>
+    <string name="result_adb_root_not_detected">Seadmel %1$s ei tuvastatud root-juurdepääsu. Veendu, et Magisk/KernelSU/APatch on installitud ja su-luba on antud</string>
+    <string name="result_adb_stock_app_not_installed">Rakendus %1$s ei ole installitud seadmel %2$s. Enne monteerimist installi ametlik rakendus</string>
     <string name="result_link_default_restored">Vaikimisi linkide kätlus on taastatud</string>
     <string name="result_link_routed_stock_disabled">Lingid suunatakse paigandatud rakendusse, tehaseseadistused oni disableeritud</string>
     <string name="result_adb_not_found_hint">ADB-d ei leitud. Installige Android SDK Platform Tools, et võimaldada otsepaigaldamist</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">versioonist v%1$s</string>
     <string name="update_banner_later_button">Hiljem</string>
     <string name="update_banner_skip_button">Vaata üle v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Tööriistad</string>
-    <string name="tools_dialog_open_logs_button">Ava logid</string>
-    <string name="tools_dialog_open_app_data_button">Ava rakenduse andmed</string>
-    <string name="tools_dialog_view_licenses_button">Vaata litsentse</string>
-    <string name="tools_dialog_cache_cleared">Vahemälu tühistatud</string>
-    <string name="tools_dialog_clear_failed">Tõmmis tühjendamine ebaõnnestus</string>
-    <string name="tools_dialog_clear_cache_button">Tühista vahemälu</string>
-    <string name="tools_dialog_cache_summary">Vahemälu: %1$s (kohandused + logid)</string>
-    <string name="tools_dialog_confirm_clear_title">Tühistada vahemälu?</string>
-    <string name="tools_dialog_confirm_clear_message">See kustutab allalaaditud kohandused ja logifailid. Kohandused laadatakse vajadusel uuesti alla</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Avatud lähtekoodi litsentsid</string>
     <string name="licenses_dialog_empty_failed">// litsentside laadimine ebaõnnestus</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Lootade puhastamine</string>
     <string name="settings_toggle_developer_options_label">Arendaja valikud</string>
     <string name="settings_toggle_developer_options_desc">Paigalaapide arendajatele. Avab töövoolide valiku lappide ehitamiseks ja testimiseks (täieliku nime jaoks vaadake dokumentatsiooni). Hetkel võimaldab see suunata kohaliku allika kataloogisse, et Morphe laeks alati kõige uuema .mpp faili</string>
+    <string name="settings_dev_bytecode_mode_label">Bytekoodi režiim</string>
+    <string name="settings_dev_bytecode_mode_desc">Patchimise ajal DEX bytekoodile rakendatav teisendamise režiim</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Kiire</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Ohutu</string>
+    <string name="settings_dev_bytecode_mode_full">Täielik</string>
+    <string name="settings_dev_validate_label">Sõrmejälgedesigni valideerimine</string>
+    <string name="settings_dev_validate_desc">Valideeri, et iga match() vastaks ainult ühe meetodiga (aeglum patchimine, mõeldud patchide testimiseks)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK verifitseerimine</string>
+    <string name="settings_dev_verify_sdk_desc">Kontrollige paigutatud DEX-i ja APK-d Android SDK tööriistadega (d8, zipalign). Võib raportida valseid positiivseid tulemusi</string>
+    <string name="settings_dev_sdk_path_label">Android SDK kataloog</string>
+    <string name="settings_dev_sdk_path_auto">Automaatselt tuvastatud</string>
+    <string name="settings_dev_sdk_not_found">Android SDK-d ei ownatud. Määrake ANDROID_HOME või otsige SDK kataloogi</string>
+    <string name="settings_dev_sdk_picker_title">Valige Android SDK kataloog</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Ajutiste failide automaatne puhastamine</string>
     <string name="settings_toggle_auto_cleanup_desc">Kustab ajutised failid pärast lappimist</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Kausta ei leitud, see loodakse järgmise paigutusega</string>
     <string name="settings_toggle_auto_start_adb_label">ADB automaatne käivitamine</string>
     <string name="settings_toggle_auto_start_adb_desc">Käivita käivitamisel ADB-daemon, et ühendatud seadmeid jälgitaks. Kui see on väljas, ei käivita Morphe kunagi serverit ning installimise ja pushi funktsioonid on tuvastatud</string>
+    <string name="settings_section_storage">Salvestus &amp; vahemälu</string>
+    <string name="settings_cache_summary">Vahemälu: %1$s (päevitused + logid)</string>
+    <string name="settings_cache_clear_button">Tühjenda vahemälu</string>
+    <string name="settings_cache_cleared">Vahemälu tühjendatud</string>
+    <string name="settings_cache_clear_failed">Tühjendamine ebaõnnestus</string>
+    <string name="settings_cache_confirm_title">Tühjendada vahemälu?</string>
+    <string name="settings_cache_confirm_message">See kustutab allalaaditud päevitused ja logifailid. Päevitused laadatakse vajadusel uuesti alla</string>
+    <string name="settings_storage_open_app_data_button">Ava rakenduse andmed</string>
+    <string name="settings_storage_open_logs_button">Ava logid</string>
     <string name="settings_section_about">Kohta</string>
     <string name="settings_about_version">Versioon %1$s</string>
     <string name="settings_about_changelogs_title">Vaata muutmistegusid</string>
     <string name="settings_about_changelogs_desc">Tutvuge selle uuenduse viimaste muudatustega</string>
+    <string name="settings_about_licenses_title">Avatud lähtekoodi litsentsid</string>
+    <string name="settings_about_licenses_desc">Vaata kolmandate osapoolte raamatukogude litsentse</string>
     <string name="settings_about_documentation_title">Dokumentatsioon</string>
     <string name="settings_about_documentation_desc">Juhendid paigutamise, allikate ja tõrgete kõrvaldamise kohta</string>
     <string name="settings_about_website_title">Külasta veebilehte</string>
@@ -787,6 +822,7 @@
     <string name="changelog_section_new">Uut</string>
     <string name="changelog_section_other">Muudatused</string>
     <string name="changelog_section_performance">Jõudlus</string>
+    <string name="changelog_show_all">Näita kõiki (%1$d)</string>
     <string name="changelog_show_less">Näita vähem</string>
     <string name="changelog_view_on_github_button">Vaata GitHubis</string>
     <!-- Navigation Pill -->

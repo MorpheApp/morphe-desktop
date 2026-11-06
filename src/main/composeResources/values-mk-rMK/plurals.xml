@@ -36,6 +36,10 @@
         <item quantity="one">Преземи %1$d пакет</item>
         <item quantity="other">Преземи %1$d пакети</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d јадро</item>
+        <item quantity="other">%1$d јадра</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="one">%1$d промена</item>
         <item quantity="other">%1$d промени</item>

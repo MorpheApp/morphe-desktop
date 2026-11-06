@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Применение патчей</string>
     <string name="patching_step_writing_apk">Запись патченного APK файла</string>
     <string name="patching_step_signing">Подпись патченного APK-файла</string>
+    <string name="patching_task_decoding_dex">Чтение DEX-файлов</string>
+    <string name="patching_task_extracting_resources">Извлечение ресурсов</string>
+    <string name="patching_task_decoding_resources">Декодирование ресурсов</string>
+    <string name="patching_task_indexing_classes">Индексация классов</string>
+    <string name="patching_task_compiling_dex">Компиляция DEX-файлов</string>
+    <string name="patching_task_compiling_resources">Компиляция ресурсов</string>
+    <string name="patching_task_writing_apk">Запись APK-файла</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Установка на %1$s…</string>
     <string name="adb_error_downgrade">Невозможно выполнить даунгрейд, установлена более новая версия. Сначала удалите существующее приложение</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Ошибка загрузки патчей</string>
     <string name="patch_selection_title">Выбрать патчи</string>
     <string name="patch_selection_cmd_preview">Предпросмотр команды</string>
+    <string name="patch_selection_root_mode_description">Режим монтирования Root</string>
+    <string name="patch_selection_lock_unavailable">Недоступно для Root монтирования</string>
     <string name="patch_selection_continue_on_error_tooltip">Продолжить патчинг, даже если патч не применится</string>
     <string name="patch_selection_continue_on_error_description">Продолжить при ошибке</string>
     <string name="patch_selection_no_patches_found">Патчи не найдены</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Приложение</string>
     <string name="patch_selection_run_info_bundles_group">Пакеты патчей</string>
     <string name="patch_selection_run_info_no_bundles">Пакеты не найдены</string>
+    <string name="patch_selection_run_info_dev_group">Для разработчиков</string>
+    <string name="patch_selection_run_info_bytecode_mode">Режим байт-кода: %1$s</string>
+    <string name="patch_selection_run_info_validate">Валидация отпечатков: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Верификация Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Универсальные</string>
     <string name="patch_selection_group_ungrouped">Без группы</string>
     <string name="patch_selection_group_selected_count">Выбрано: %1$d</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Обновление на %1$s…</string>
     <string name="result_adb_update_successful">Успешно обновлено!</string>
     <string name="result_adb_install_successful">Установка успешна!</string>
+    <string name="result_adb_badge_root_mount">Root монтирование</string>
+    <string name="result_adb_mount_button">Монтировать на %1$s</string>
+    <string name="result_adb_mounting_on_device">Монтирование на %1$s…</string>
+    <string name="result_adb_mount_successful">Монтирование прошло успешно!</string>
+    <string name="result_adb_mount_su_prompt_hint">Монтирование на %1$s… Проверьте устройство и предоставьте разрешение суперпользователя, если появится запрос</string>
+    <string name="result_adb_unmount_button">Размонтировать с %1$s</string>
+    <string name="result_adb_unmounting_on_device">Размонтирование с %1$s…</string>
+    <string name="result_adb_root_not_detected">Root-доступ на %1$s не обнаружен. Убедитесь, что установлен Magisk/KernelSU/APatch и предоставлено разрешение su</string>
+    <string name="result_adb_stock_app_not_installed">Стандартное приложение %1$s не установлено на %2$s. Сначала установите официальное приложение, прежде чем выполнять монтирование</string>
     <string name="result_link_default_restored">Обработка ссылок по умолчанию восстановлена</string>
     <string name="result_link_routed_stock_disabled">Ссылки перенаправлены на пропатченное приложение, стандартное отключено</string>
     <string name="result_adb_not_found_hint">ADB не найден. Установите Android SDK Platform Tools для включения прямой установки</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">с v%1$s</string>
     <string name="update_banner_later_button">Позже</string>
     <string name="update_banner_skip_button">Пропустить v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Инструменты</string>
-    <string name="tools_dialog_open_logs_button">Открыть журналы</string>
-    <string name="tools_dialog_open_app_data_button">Открыть данные приложения</string>
-    <string name="tools_dialog_view_licenses_button">Просмотреть лицензии</string>
-    <string name="tools_dialog_cache_cleared">Кэш очищен</string>
-    <string name="tools_dialog_clear_failed">Ошибка очистки</string>
-    <string name="tools_dialog_clear_cache_button">Очистить кэш</string>
-    <string name="tools_dialog_cache_summary">Кэш: %1$s (патчи + журналы)</string>
-    <string name="tools_dialog_confirm_clear_title">Очистить кэш?</string>
-    <string name="tools_dialog_confirm_clear_message">Это удалит загруженные патчи и файлы журналов. Патчи будут загружены заново при необходимости</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Лицензии с открытым исходным кодом</string>
     <string name="licenses_dialog_empty_failed">// не удалось загрузить лицензии</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Удаление библиотек</string>
     <string name="settings_toggle_developer_options_label">Параметры разработчика</string>
     <string name="settings_toggle_developer_options_desc">Для разработчиков патчей. Открывает набор параметров рабочего процесса для создания и тестирования патчей (см. документацию для полного списка). Сейчас это позволяет указать локальный источник на папку, чтобы Morphe всегда загружал его новейший .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Режим байт-кода</string>
+    <string name="settings_dev_bytecode_mode_desc">Режим трансформации, применяемый к DEX-байт-коду во время патчинга</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Быстро</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Безопасный</string>
+    <string name="settings_dev_bytecode_mode_full">Полный</string>
+    <string name="settings_dev_validate_label">Валидация отпечатков</string>
+    <string name="settings_dev_validate_desc">Проверка того, что каждый match() соответствует только одному методу (более медленный патчинг, для тестирования патчей)</string>
+    <string name="settings_dev_verify_sdk_label">Верификация Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Верификация пропатченных DEX и APK с помощью инструментов Android SDK (d8, zipalign). Может выдавать ложноположительные результаты</string>
+    <string name="settings_dev_sdk_path_label">Директория Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Определено автоматически</string>
+    <string name="settings_dev_sdk_not_found">Android SDK не найден. Установите ANDROID_HOME или выберите каталог SDK вручную</string>
+    <string name="settings_dev_sdk_picker_title">Выберите каталог Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Автоматическая очистка временных файлов</string>
     <string name="settings_toggle_auto_cleanup_desc">Удалять временные файлы после патчинга</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Папка не найдена, будет создана при следующем патчинге</string>
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускать демон ADB при запуске, чтобы отслеживать подключенные устройства. Когда выключено, Morphe никогда не запускает сервер, и функции установки/отправки отключены</string>
+    <string name="settings_section_storage">Хранилище &amp; кеш</string>
+    <string name="settings_cache_summary">Кеш: %1$s (патчи + журналы)</string>
+    <string name="settings_cache_clear_button">Очистить кеш</string>
+    <string name="settings_cache_cleared">Кеш очищен</string>
+    <string name="settings_cache_clear_failed">Ошибка очистки</string>
+    <string name="settings_cache_confirm_title">Очистить кеш?</string>
+    <string name="settings_cache_confirm_message">Это удалит загруженные патчи и файлы журналов. Патчи будут загружены снова при необходимости</string>
+    <string name="settings_storage_open_app_data_button">Открыть данные приложения</string>
+    <string name="settings_storage_open_logs_button">Открыть журналы</string>
     <string name="settings_section_about">О приложении</string>
     <string name="settings_about_version">Версия %1$s</string>
     <string name="settings_about_changelogs_title">Просмотр истории изменений</string>
     <string name="settings_about_changelogs_desc">Просмотрите последние изменения в этом обновлении</string>
+    <string name="settings_about_licenses_title">Лицензии открытого кода</string>
+    <string name="settings_about_licenses_desc">Просмотр лицензий сторонних библиотек</string>
     <string name="settings_about_documentation_title">Документация</string>
     <string name="settings_about_documentation_desc">Руководства по патчингу, источникам и устранению неполадок</string>
     <string name="settings_about_website_title">Посетить веб-сайт</string>

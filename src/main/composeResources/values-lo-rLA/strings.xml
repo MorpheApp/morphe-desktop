@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">ກຳລັງນຳໃຊ້ patch</string>
     <string name="patching_step_writing_apk">ກຳລັງຂຽນໄຟລ໌ APK ທີ່ patch ແລ້ວ</string>
     <string name="patching_step_signing">ກຳລັງເຊັນໄຟລ໌ APK ທີ່ patch ແລ້ວ</string>
+    <string name="patching_task_decoding_dex">ກຳລັງອ່ານໄຟລ໌ DEX</string>
+    <string name="patching_task_extracting_resources">ກຳລັງແຍກຊັບພະຍາກອນ</string>
+    <string name="patching_task_decoding_resources">ກຳລັງຖອດລະຫັດຊັບພະຍາກອນ</string>
+    <string name="patching_task_indexing_classes">ກຳລັງສ້າງດັດຊະນີຂອງຄລາດ</string>
+    <string name="patching_task_compiling_dex">ກຳລັງຄອມໄພລ໌ DEX</string>
+    <string name="patching_task_compiling_resources">ກຳລັງຄອມໄພລ໌ຊັບພະຍາກອນ</string>
+    <string name="patching_task_writing_apk">ກຳລັງຂຽນໄຟລ໌ APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">ກຳລັງຕິດຕັ້ງໃນ %1$s…</string>
     <string name="adb_error_downgrade">ບໍ່ສາມາດຫຼຸດເວີຊັນລົງໄດ້ ເນື່ອງຈາກມີເວີຊັນທີ່ໃໝ່ກວ່າຕິດຕັ້ງຢູ່. ກະລຸນາຖອນການຕິດຕັ້ງແອັບທີ່ມີຢູ່ກ່ອນ</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">ເກີດຂໍ້ຜິດພາດໃນການໂຫຼດ patches</string>
     <string name="patch_selection_title">ເລືອກ patches</string>
     <string name="patch_selection_cmd_preview">ຕົວຢ່າງຄຳສັ່ງ</string>
+    <string name="patch_selection_root_mode_description">ໂໝດການມោນທ໌ Root</string>
+    <string name="patch_selection_lock_unavailable">ບໍ່ສາມາດໃຊ້ງານໄດ້ສຳລັບ root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">ດຳເນີນການ patch ຕໍ່ໄປ ເຖິງແມ່ນວ່າ patch ບາງອັນຈະຜິດພາດ</string>
     <string name="patch_selection_continue_on_error_description">ດຳເນີນການຕໍ່ເມື່ອມີຂໍ້ຜິດພາດ</string>
     <string name="patch_selection_no_patches_found">ບໍ່ພົບ patches</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">ແອັບ</string>
     <string name="patch_selection_run_info_bundles_group">ຊຸດ Patch</string>
     <string name="patch_selection_run_info_no_bundles">ບໍ່ມີຊຸດທີ່ຖືກກຳນົດ</string>
+    <string name="patch_selection_run_info_dev_group">ຕົວເລືອກນັກພັດທະນາ</string>
+    <string name="patch_selection_run_info_bytecode_mode">ໂໝດ Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">ການກວດສອບລາຍນິ້ວມື: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">ການຢືນຢັນ Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">ທົ່ວໄປ</string>
     <string name="patch_selection_group_ungrouped">ບໍ່ໄດ້ຈັດກຸ່ມ</string>
     <string name="patch_selection_group_selected_count">ເລືອກ %1$d</string>
@@ -386,6 +399,7 @@
     <string name="patching_step_all_done">ສຳເລັດທັງໝົດແລ້ວ!</string>
     <string name="patching_step_waiting">ກຳລັງລໍຖ້າ…</string>
     <string name="patching_graph_memory_usage">ການນຳໃຊ້ໜ່ວຍຄວາມຈຳ</string>
+    <string name="patching_graph_memory_detail">%1$d% ຂອງ %2$d MB</string>
     <string name="patching_graph_storage_io">ການຮັບ-ສົ່ງຂໍ້ມູນຂອງບ່ອນເກັບຂໍ້ມູນ</string>
     <string name="patching_graph_cpu_usage">ການນຳໃຊ້ CPU</string>
     <string name="patching_banner_started_title">ເລີ່ມຕົ້ນການ Patching</string>
@@ -421,6 +435,15 @@
     <string name="result_adb_updating_on_device">ກຳລັງອັບເດດໃນ %1$s…</string>
     <string name="result_adb_update_successful">ອັບເດດສຳເລັດແລ້ວ!</string>
     <string name="result_adb_install_successful">ຕິດຕັ້ງສຳເລັດແລ້ວ!</string>
+    <string name="result_adb_badge_root_mount">ການທິດທາງຣູທ (Root mount)</string>
+    <string name="result_adb_mount_button">Mount ຢູ່ %1$s</string>
+    <string name="result_adb_mounting_on_device">ກຳລັງ Mounting ຢູ່ %1$s…</string>
+    <string name="result_adb_mount_successful">Mounting ສຳເລັດແລ້ວ!</string>
+    <string name="result_adb_mount_su_prompt_hint">ກຳລັງ Mounting ຢູ່ %1$s… ກວດສອບອຸປະກອນຂອງທ່ານເພື່ອໃຫ້ອະນຸຍາດ Superuser ຖ້າມີການຮຽກຮ້ອງ</string>
+    <string name="result_adb_unmount_button">Unmount ຈາກ %1$s</string>
+    <string name="result_adb_unmounting_on_device">ກຳລັງ Unmounting ຈາກ %1$s…</string>
+    <string name="result_adb_root_not_detected">ບໍ່ພົບການເຂົ້າເຖິງ Root ຢູ່ %1$s. ກະລຸນາໃຫ້ແນ່ໃຈວ່າໄດ້ຕິດຕັ້ງ Magisk/KernelSU/APatch ແລະ ໄດ້ໃຫ້ອະນຸຍາດ su ແລ້ວ</string>
+    <string name="result_adb_stock_app_not_installed">ແອັບຫຼັກ %1$s ບໍ່ໄດ້ຖືກຕິດຕັ້ງຢູ່ໃນ %2$s. ກະລຸນາຕິດຕັ້ງແອັບທາງການກ່ອນທີ່ຈະทำการ mount</string>
     <string name="result_link_default_restored">ຄືນຄ່າການຈັດການລິ້ງເລີ່ມຕົ້ນແລ້ວ</string>
     <string name="result_link_routed_stock_disabled">ລິ້ງຖືກສົ່ງໄປຍັງແອັບທີ່ປັບແກ້ແລ້ວ, ປິດການໃຊ້ງານຕົວເລືອກເລີ່ມຕົ້ນ</string>
     <string name="result_adb_not_found_hint">ບໍ່ພົບ ADB. ກະລຸນາຕິດຕັ້ງ Android SDK Platform Tools ເພື່ອເປີດໃຊ້ການຕິດຕັ້ງໂດຍກົງ</string>
@@ -601,17 +624,6 @@
     <string name="update_banner_from_version">ຈາກ v%1$s</string>
     <string name="update_banner_later_button">ພາຍຫຼັງ</string>
     <string name="update_banner_skip_button">ຂ້າມ v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">ເຄື່ອງມື</string>
-    <string name="tools_dialog_open_logs_button">ເປີດບັນທຶກ</string>
-    <string name="tools_dialog_open_app_data_button">ເປີດຂໍ້ມູນແອັບ</string>
-    <string name="tools_dialog_view_licenses_button">ເບິ່ງໃບອະນຸຍາດ</string>
-    <string name="tools_dialog_cache_cleared">ລ້າງແຄຊແລ້ວ</string>
-    <string name="tools_dialog_clear_failed">ລ້າງບໍ່ສຳເລັດ</string>
-    <string name="tools_dialog_clear_cache_button">ລ້າງແຄຊ</string>
-    <string name="tools_dialog_cache_summary">ແຄຊ: %1$s (patches + logs)</string>
-    <string name="tools_dialog_confirm_clear_title">ລ້າງແຄຊບໍ?</string>
-    <string name="tools_dialog_confirm_clear_message">ສິ່ງນີ້ຈະລຶບໄຟລ໌ patch ທີ່ດາວໂຫຼດມາ ແລະ ໄຟລ໌ບັນທຶກ. Patch ຈະຖືກດາວໂຫຼດຄືນໃໝ່ເມື່ອຈຳເປັນ</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ອະນຸຍາດ Open Source</string>
     <string name="licenses_dialog_empty_failed">// ໂຫຼດອະນຸຍາດບໍ່ສຳເລັດ</string>
@@ -684,6 +696,19 @@
     <string name="settings_section_strip_libs">ຕັດ libs ອອກ</string>
     <string name="settings_toggle_developer_options_label">ຕົວເລືອກສຳລັບນັກພັດທະນາ</string>
     <string name="settings_toggle_developer_options_desc">ສຳລັບນັກພັດທະນາ patch. ປົດລັອກຊຸດຕົວເລືອກຂັ້ນຕອນການເຮັດວຽກສຳລັບການສ້າງ ແລະ ທົດສອບ patch (ເບິ່ງລາຍການທັງໝົດໃນເອກະສານ). ໃນປັດຈຸບັນ, ແມ່ນການຊີ້ແຫຼ່ງຂໍ້ມູນທ້ອງຖິ່ນໄປທີ່ໂຟນເດີ ເພື່ອໃຫ້ Morphe ໂຫຼດໄຟລ໌ .mpp ຫຼ້າສຸດສະເໝີ</string>
+    <string name="settings_dev_bytecode_mode_label">ໂໝດ Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">ໂໝດການປ່ຽນແປງທີ່ນຳໃຊ້ກັບ DEX bytecode ໃນລະຫວ່າງການ patch</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">ໄວ</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">ປອດໄພ</string>
+    <string name="settings_dev_bytecode_mode_full">ເຕັມຮູບແບບ</string>
+    <string name="settings_dev_validate_label">ການກວດສອບລາຍນິ້ວມື</string>
+    <string name="settings_dev_validate_desc">ກວດສອບວ່າແຕ່ລະ match() ກົງກັບພຽງ method ດຽວເທົ່ານັ້ນ (ການ patch ຈະຊ້າລົງ, ສຳລັບການທົດສອບ patch)</string>
+    <string name="settings_dev_verify_sdk_label">ການຢືນຢັນ Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">ກວດສອບ DEX ແລະ APK ທີ່ຖືກປັບແກ້ດ້ວຍເຄື່ອງມື Android SDK (d8, zipalign). ອາດຈະມີການລາຍງານຜົນບວກປອມ</string>
+    <string name="settings_dev_sdk_path_label"> répertoire ຂອງ Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">ກວດພົບໂດຍອັດຕະໂນມັດ</string>
+    <string name="settings_dev_sdk_not_found">ບໍ່ພົບ Android SDK. ກຳນົດ ANDROID_HOME ຫຼື ຄົ້ນຫາ répertoire ຂອງ SDK</string>
+    <string name="settings_dev_sdk_picker_title">ເລືອກ répertoire ຂອງ Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">ລຶບໄຟລ໌ຊົ່ວຄາວອັດຕະໂນມັດ</string>
     <string name="settings_toggle_auto_cleanup_desc">ລຶບໄຟລ໌ຊົ່ວຄາວຫຼັງຈາກການປັບປຸງ</string>
@@ -698,10 +723,21 @@
     <string name="settings_output_folder_not_found">ບໍ່ພົບໂຟນເດີ, ຈະຖືກສ້າງຂຶ້ນໃນການປັບປຸງຄັ້ງຕໍ່ໄປ</string>
     <string name="settings_toggle_auto_start_adb_label">ເລີ່ມ ADB ອັດຕະໂນມັດ</string>
     <string name="settings_toggle_auto_start_adb_desc">ເປີດ ADB daemon ເມື່ອເລີ່ມຕົ້ນ ເພື່ອໃຫ້ອຸປະກອນທີ່ເຊື່ອມຕໍ່ຖືກຕິດຕາມ. ເມື່ອປິດ, Morphe ຈະບໍ່ເລີ່ມເຊີບເວີເລີຍ, ແລະ ຄຸນສົມບັດການຕິດຕັ້ງ/push ຈະຖືກປິດການໃຊ້ງານ</string>
+    <string name="settings_section_storage">ບ່ອນເກັບຂໍ້ມູນ &amp; ແຄຊ</string>
+    <string name="settings_cache_summary">ແຄຊ: %1$s (ແພັດຊ໌ + ບັນທຶກ)</string>
+    <string name="settings_cache_clear_button">ລຶບແຄຊ</string>
+    <string name="settings_cache_cleared">ລຶບແຄຊແລ້ວ</string>
+    <string name="settings_cache_clear_failed">ລຶບບໍ່ສຳເລັດ</string>
+    <string name="settings_cache_confirm_title">ລຶບແຄຊບໍ?</string>
+    <string name="settings_cache_confirm_message">ການດຳເນີນການນີ້ຈະລຶບແພັດຊ໌ທີ່ດາວໂຫຼດມາ ແລະ ໄຟລ໌ບັນທຶກ. ແພັດຊ໌ຈະຖືກດາວໂຫຼດຄືນໃໝ່ເມື່ອຈຳເປັນ</string>
+    <string name="settings_storage_open_app_data_button">ເປີດຂໍ້ມູນແອັບ</string>
+    <string name="settings_storage_open_logs_button">ເປີດບັນທຶກ</string>
     <string name="settings_section_about">ກ່ຽວກັບ</string>
     <string name="settings_about_version">ເວີຊັນ %1$s</string>
     <string name="settings_about_changelogs_title">ເບິ່ງບັນທຶກການປ່ຽນແປງ</string>
     <string name="settings_about_changelogs_desc">ກວດເບິ່ງການປ່ຽນແປງຫຼ້າສຸດໃນການອັບເດດນີ້</string>
+    <string name="settings_about_licenses_title">ອະນຸຍາດ Open Source</string>
+    <string name="settings_about_licenses_desc">ເບິ່ງອະນຸຍາດຂອງໄລບຣາຣີພາກສ່ວນທີສາມ</string>
     <string name="settings_about_documentation_title">ເອກະສານຄູ່ມື</string>
     <string name="settings_about_documentation_desc">ຄຳແນະນຳສຳລັບການ patch, ແຫຼ່ງຂໍ້ມູນ ແລະ ການແກ້ໄຂບັນຫາ</string>
     <string name="settings_about_website_title">ເຂົ້າເບິ່ງເວັບໄຊທ໌</string>

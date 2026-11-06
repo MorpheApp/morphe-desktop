@@ -36,6 +36,10 @@
         <item quantity="one">%1$d багцыг татаж авах</item>
         <item quantity="other">%1$d багцыг татаж авах</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d цөм</item>
+        <item quantity="other">%1$d цөм</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="one">%1$d өөрчлөлт</item>
         <item quantity="other">%1$d өөрчлөлт</item>

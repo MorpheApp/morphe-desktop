@@ -51,7 +51,8 @@ import org.koin.compose.koinInject
 /** Screen showing the result of patching. */
 @Composable
 fun ResultScreen(
-    outputPath: String
+    outputPath: String,
+    isMount: Boolean = false,
 ) {
     val isSimple = LocalModeState.current.isSimple
     val navController = LocalNavController.current
@@ -69,12 +70,12 @@ fun ResultScreen(
             )
         }
     } else {
-        ResultScreenContent(outputPath = outputPath)
+        ResultScreenContent(outputPath = outputPath, isMount = isMount)
     }
 }
 
 @Composable
-fun ResultScreenContent(outputPath: String) {
+fun ResultScreenContent(outputPath: String, isMount: Boolean = false) {
     val navController = LocalNavController.current
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -88,6 +89,7 @@ fun ResultScreenContent(outputPath: String) {
     val adbPreference = LocalAdbPreference.current
     val isAdbDisabledByUser = !adbPreference.enabled
     val installState = remember { AsyncActionState() }
+    var isUnmounting by remember { mutableStateOf(false) }
 
     // Check if the patched package is already installed on the target device.
     var outputPackage by remember { mutableStateOf<String?>(null) }
@@ -179,6 +181,69 @@ fun ResultScreenContent(outputPath: String) {
         }
     }
 
+    fun mountViaAdb() {
+        val device = monitorState.selectedDevice ?: return
+        scope.launch {
+            installState.isRunning = true
+            installState.error = null
+
+            val pkg = outputPackage ?: withContext(Dispatchers.IO) {
+                runCatching { ApkInspector.inspect(outputFile)?.packageName }.getOrNull()
+            } ?: run {
+                installState.error = getString(Res.string.error_patching_unknown)
+                installState.isRunning = false
+                return@launch
+            }
+
+            installState.progress = getString(Res.string.result_adb_mount_su_prompt_hint, device.displayName)
+
+            val result = adbManager.mountApk(
+                apkFile = outputFile,
+                packageName = pkg,
+                deviceId = device.id
+            )
+
+            result.fold(
+                onSuccess = {
+                    installState.isSuccess = true
+                    installState.progress = getString(Res.string.result_adb_mount_successful)
+                },
+                onFailure = { exception ->
+                    installState.error = (exception as? AdbException)?.getUserMessage() ?: exception.message ?: getString(Res.string.error_patching_unknown)
+                }
+            )
+
+            installState.isRunning = false
+        }
+    }
+
+    fun unmountViaAdb() {
+        val device = monitorState.selectedDevice ?: return
+        val pkg = outputPackage ?: return
+        scope.launch {
+            isUnmounting = true
+            installState.error = null
+            installState.progress = getString(Res.string.result_adb_unmounting_on_device, device.displayName)
+
+            val result = adbManager.unmountApk(
+                packageName = pkg,
+                deviceId = device.id
+            )
+
+            result.fold(
+                onSuccess = {
+                    installState.isSuccess = false
+                    installState.progress = ""
+                },
+                onFailure = { exception ->
+                    installState.error = (exception as? AdbException)?.getUserMessage() ?: exception.message ?: getString(Res.string.error_patching_unknown)
+                }
+            )
+
+            isUnmounting = false
+        }
+    }
+
     fun applyLinkHandling(enable: Boolean) {
         val device = monitorState.selectedDevice ?: return
         val patched = outputPackage ?: return
@@ -260,13 +325,16 @@ fun ResultScreenContent(outputPath: String) {
                         installProgress = installState.progress,
                         installError = installState.error,
                         installSuccess = installState.isSuccess,
+                        isMount = isMount,
+                        isUnmounting = isUnmounting,
+                        onUnmountClick = { unmountViaAdb() },
                         borderColor = borderColor,
                         onDeviceSelected = { DeviceMonitor.selectDevice(it) },
-                        onInstallClick = { installViaAdb() },
+                        onInstallClick = { if (isMount) mountViaAdb() else installViaAdb() },
                         onRetryClick = {
                             installState.error = null
                             installState.isSuccess = false
-                            installViaAdb()
+                            if (isMount) mountViaAdb() else installViaAdb()
                         },
                         onDismissError = { installState.error = null }
                     )

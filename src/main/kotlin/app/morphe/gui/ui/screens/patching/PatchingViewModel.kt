@@ -20,8 +20,10 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.PatchSourceNaming
+import app.morphe.gui.util.TaskStatus
 import app.morphe.gui.util.runProgress
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.PatcherTask
 import com.sun.management.OperatingSystemMXBean
 import java.io.File
 import java.lang.management.ManagementFactory
@@ -192,16 +194,20 @@ class PatchingViewModel(
                 status = PatchingStatus.PATCHING,
                 totalPatches = config.enabledPatches.size,
                 patchedCount = 0,
-                progress = 0f
+                progress = 0f,
+                taskFractions = emptyMap(),
+                runningTask = null
             )
 
-            // Pass user-configured keystore if present; otherwise use default.
-            val userKeystoreDetails = engineConfigRepository.loadConfig().toKeyStoreDetails()
-            val engineConfig = if (config.keystoreDetails == null && userKeystoreDetails != null) {
-                config.copy(keystoreDetails = userKeystoreDetails)
-            } else {
-                config
-            }
+            // Pass user-configured keystore and developer options if present.
+            val appConfig = engineConfigRepository.loadConfig()
+            val userKeystoreDetails = appConfig.toKeyStoreDetails()
+            val engineConfig = config.copy(
+                keystoreDetails = config.keystoreDetails ?: userKeystoreDetails,
+                bytecodeMode = if (appConfig.developerOptions) appConfig.resolvedBytecodeMode() else config.bytecodeMode,
+                validate = if (appConfig.developerOptions) appConfig.validateFingerprints else config.validate,
+                sdkToolsPath = if (appConfig.developerOptions) appConfig.resolvedAndroidSdkPath() else config.sdkToolsPath,
+            )
 
             val engineResult = try {
                 PatchEngine.patch(
@@ -278,12 +284,20 @@ class PatchingViewModel(
             is PatchEvent.Log -> addLog(event.message, event.level.toLogLevel())
             is PatchEvent.StepStarted -> _uiState.update { it.copy(currentStep = event.step).withRunProgress() }
             is PatchEvent.PatchApplied -> _uiState.update { it.copy(patchedCount = it.patchedCount + 1).withRunProgress() }
+            is PatchEvent.TaskProgress -> _uiState.update { state ->
+                val fraction = if (event.total > 0) event.done.toFloat() / event.total else 0f
+                state.copy(
+                    // Never back within a run, as a task that runs again starts over
+                    taskFractions = state.taskFractions + (event.task to maxOf(state.taskFractions[event.task] ?: 0f, fraction)),
+                    runningTask = TaskStatus(event.task, event.done, event.total).takeIf { event.done < event.total },
+                ).withRunProgress()
+            }
         }
     }
 
     private fun PatchingUiState.withRunProgress(): PatchingUiState {
         val step = currentStep ?: return this
-        return copy(progress = maxOf(progress, runProgress(config.steps, step, patchedCount, totalPatches)))
+        return copy(progress = maxOf(progress, runProgress(config.steps, step, patchedCount, totalPatches, taskFractions)))
     }
 
     private fun Logger.Level.toLogLevel() = when (this) {
@@ -332,6 +346,10 @@ data class PatchingUiState(
     val patchedCount: Int = 0,
     val totalPatches: Int = 0,
     val currentStep: PatchEngine.PatchStep? = null,
+    /** How far the patcher got through each of its tasks, never going back within a run. */
+    val taskFractions: Map<PatcherTask, Float> = emptyMap(),
+    /** The task the patcher is busy with besides executing patches, null while there is none. */
+    val runningTask: TaskStatus? = null,
     val hasAutoNavigated: Boolean = false,
 
     val heapSamples: List<Int> = emptyList(),

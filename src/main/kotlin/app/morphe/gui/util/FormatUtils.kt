@@ -106,6 +106,10 @@ object FormatUtils {
         }
     }
 
+    /** Formats a count as the reader writes numbers, with the grouping of their language. */
+    fun formatCount(count: Long, locale: Locale = Locale.getDefault()): String =
+        String.format(toLatinDigitsLocale(locale), "%,d", count)
+
     /** Formats a byte count into a localized human-readable file size string. */
     fun formatFileSize(bytes: Long, locale: Locale = Locale.getDefault()): String {
         val latnLocale = toLatinDigitsLocale(locale)

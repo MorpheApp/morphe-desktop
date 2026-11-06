@@ -36,6 +36,10 @@
         <item quantity="one">%1$d बंडल डाउनलोड करा</item>
         <item quantity="other">%1$d बंडल्स डाउनलोड करा</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d कोर</item>
+        <item quantity="other">%1$d कोअर्स</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="one">%1$d बदल</item>
         <item quantity="other">%1$d बदल</item>

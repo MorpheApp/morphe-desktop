@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Tillämpar tillägg</string>
     <string name="patching_step_writing_apk">Skriver modifierad APK-fil</string>
     <string name="patching_step_signing">Signerar modifierad APK-fil</string>
+    <string name="patching_task_decoding_dex">Läser DEX-filer</string>
+    <string name="patching_task_extracting_resources">Extraherar resurser</string>
+    <string name="patching_task_decoding_resources">Dekodar resurser</string>
+    <string name="patching_task_indexing_classes">Indexerar klasser</string>
+    <string name="patching_task_compiling_dex">Kompilerar DEX-filer</string>
+    <string name="patching_task_compiling_resources">Kompilerar resurser</string>
+    <string name="patching_task_writing_apk">Skriver APK-fil</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Installerar på %1$s …</string>
     <string name="adb_error_downgrade">Det går inte att nedgradera, en nyare version är installerad. Avinstallera den befintliga appen först</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Fel vid inläsning av patchar</string>
     <string name="patch_selection_title">Välj patchar</string>
     <string name="patch_selection_cmd_preview">Kommandoförhandsvisning</string>
+    <string name="patch_selection_root_mode_description">Rotmonteringsläge</string>
+    <string name="patch_selection_lock_unavailable">Otillgängligt för root-montering</string>
     <string name="patch_selection_continue_on_error_tooltip">Fortsätt patchningen även om en patch misslyckas</string>
     <string name="patch_selection_continue_on_error_description">Fortsätt vid fel</string>
     <string name="patch_selection_no_patches_found">Inga tillägg hittades</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Tilläggsarkiv</string>
     <string name="patch_selection_run_info_no_bundles">Inga paket kunde hittas</string>
+    <string name="patch_selection_run_info_dev_group">Utvecklaralternativ</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecodeläge: %1$s</string>
+    <string name="patch_selection_run_info_validate">Fingeravtrycksvalidering: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK-verifiering: %1$s</string>
     <string name="patch_selection_group_universal">Universell</string>
     <string name="patch_selection_group_ungrouped">Ogrupperad</string>
     <string name="patch_selection_group_selected_count">%1$d valda</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Uppdaterar på %1$s…</string>
     <string name="result_adb_update_successful">Uppdateringen lyckades!</string>
     <string name="result_adb_install_successful">Installationen lyckades!</string>
+    <string name="result_adb_badge_root_mount">Rotmontering</string>
+    <string name="result_adb_mount_button">Montera på %1$s</string>
+    <string name="result_adb_mounting_on_device">Monterar på %1$s…</string>
+    <string name="result_adb_mount_successful">Monteringen lyckades!</string>
+    <string name="result_adb_mount_su_prompt_hint">Monterar på %1$s… Kontrollera din enhet för att bevilja Superuser-behörighet om du uppmanas</string>
+    <string name="result_adb_unmount_button">Avmontera från %1$s</string>
+    <string name="result_adb_unmounting_on_device">Avmonterar från %1$s…</string>
+    <string name="result_adb_root_not_detected">Root-åtkomst upptäcktes inte på %1$s. Se till att Magisk/KernelSU/APatch är installerat och att su-behörighet är beviljad</string>
+    <string name="result_adb_stock_app_not_installed">Standardappen %1$s är inte installerad på %2$s. Installera den officiella appen först före montering</string>
     <string name="result_link_default_restored">Standardhantering av länkar återställd</string>
     <string name="result_link_routed_stock_disabled">Länkar dirigerade till patchad app, standardappen inaktiverad</string>
     <string name="result_adb_not_found_hint">ADB hittades inte. Installera Android SDK Platform Tools för att aktivera direktinstallation</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">från v%1$s</string>
     <string name="update_banner_later_button">Senare</string>
     <string name="update_banner_skip_button">Hoppa över v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Verktyg</string>
-    <string name="tools_dialog_open_logs_button">Öppna loggar</string>
-    <string name="tools_dialog_open_app_data_button">Öppna appdata</string>
-    <string name="tools_dialog_view_licenses_button">Visa licenser</string>
-    <string name="tools_dialog_cache_cleared">Cache rensad</string>
-    <string name="tools_dialog_clear_failed">Rensningen misslyckades</string>
-    <string name="tools_dialog_clear_cache_button">Rensa cache</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (patchar + loggar)</string>
-    <string name="tools_dialog_confirm_clear_title">Rensa cache?</string>
-    <string name="tools_dialog_confirm_clear_message">Detta tar bort nedladdade patchar och loggfiler. Patchar laddas ner igen vid behov</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licenser för öppen källkod</string>
     <string name="licenses_dialog_empty_failed">// det gick inte att läsa in licenser</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Strippa libs</string>
     <string name="settings_toggle_developer_options_label">Utvecklaralternativ</string>
     <string name="settings_toggle_developer_options_desc">För patchutvecklare. Låser upp en uppsättning arbetsflödesalternativ för att bygga och testa patchar (se dokumentationen för hela listan). För nu innebär det att peka en lokal källa mot en mapp så att Morphe alltid läser in dess senaste .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecodeläge</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformationsläge som används på DEX-bytecode under patchning</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Snabbt</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Säker</string>
+    <string name="settings_dev_bytecode_mode_full">Fullständigt</string>
+    <string name="settings_dev_validate_label">Fingeravtrycksvalidering</string>
+    <string name="settings_dev_validate_desc">Validera att varje match() endast matchar en metod (långsammare patchning, för patch-testning)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK-verifiering</string>
+    <string name="settings_dev_verify_sdk_desc">Verifiera patchad DEX och APK med Android SDK-verktyg (d8, zipalign). Kan rapportera falska positiva resultat</string>
+    <string name="settings_dev_sdk_path_label">Katalog för Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Autodetekterad</string>
+    <string name="settings_dev_sdk_not_found">Android SDK hittades inte. Ange ANDROID_HOME eller bläddra efter katalogen för SDK</string>
+    <string name="settings_dev_sdk_picker_title">Välj katalog för Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Automatisk rensning av temporära filer</string>
     <string name="settings_toggle_auto_cleanup_desc">Ta bort temporära filer efter patchning</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Mappen hittades inte, kommer att skapas vid nästa patchning</string>
     <string name="settings_toggle_auto_start_adb_label">Starta ADB automatiskt</string>
     <string name="settings_toggle_auto_start_adb_desc">Starta ADB-demonen vid start så att anslutna enheter övervakas. När den är av startar Morphe aldrig servern och installera/skicka-funktionerna är inaktiverade</string>
+    <string name="settings_section_storage">Lagring &amp; cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (patchar + loggar)</string>
+    <string name="settings_cache_clear_button">Rensa cache</string>
+    <string name="settings_cache_cleared">Cachen rensades</string>
+    <string name="settings_cache_clear_failed">Rensning misslyckades</string>
+    <string name="settings_cache_confirm_title">Rensa cache?</string>
+    <string name="settings_cache_confirm_message">Detta kommer att ta bort nedladdade patchar och loggfiler. Patchar kommer att laddas ner igen vid behov</string>
+    <string name="settings_storage_open_app_data_button">Öppna appdata</string>
+    <string name="settings_storage_open_logs_button">Öppna loggar</string>
     <string name="settings_section_about">Om</string>
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_changelogs_title">Visa ändringsloggar</string>
     <string name="settings_about_changelogs_desc">Kolla in de senaste ändringarna i den här uppdateringen</string>
+    <string name="settings_about_licenses_title">Licenser för öppen källkod</string>
+    <string name="settings_about_licenses_desc">Visa licenser för tredjepartsbibliotek</string>
     <string name="settings_about_documentation_title">Dokumentation</string>
     <string name="settings_about_documentation_desc">Guider för patchning, källor och felsökning</string>
     <string name="settings_about_website_title">Besök webbplatsen</string>
