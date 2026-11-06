@@ -118,7 +118,6 @@ internal fun StorageSection(
                             !enabled -> stringResource(Res.string.disabled_while_patching)
                             allCleared -> stringResource(Res.string.settings_cache_cleared)
                             allClearFailed -> stringResource(Res.string.settings_cache_clear_failed)
-                            totalFiles == 0 -> stringResource(Res.string.settings_cache_category_empty)
                             else -> pluralStringResource(
                                 Res.plurals.settings_cache_clear_all_summary,
                                 totalFiles,
@@ -410,7 +409,6 @@ private fun CacheRow(
                         !enabled -> stringResource(Res.string.disabled_while_patching)
                         isCleared -> stringResource(Res.string.settings_cache_category_cleared, title)
                         isClearFailed -> stringResource(Res.string.settings_cache_category_clear_failed, title)
-                        stats.fileCount == 0 -> stringResource(Res.string.settings_cache_category_empty)
                         else -> pluralStringResource(
                             Res.plurals.settings_cache_category_summary,
                             stats.fileCount,

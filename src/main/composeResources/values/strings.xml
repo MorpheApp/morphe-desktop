@@ -758,7 +758,6 @@
     <string name="settings_cache_category_logs">Logs</string>
     <string name="settings_cache_category_temp">Temporary files</string>
     <string name="settings_cache_category_avatars">Avatar cache</string>
-    <string name="settings_cache_category_empty">0 B (0 files)</string>
     <string name="settings_cache_confirm_patches_title">Clear patches?</string>
     <string name="settings_cache_confirm_patches_message">This will delete downloaded patch files. Patches will be re-downloaded when needed</string>
     <string name="settings_cache_confirm_logs_title">Clear logs?</string>
