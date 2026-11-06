@@ -1,3 +1,10 @@
+# [2.2.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.1...v2.2.0-dev.1) (2026-11-06)
+
+
+### Features
+
+* Expand cache management and granular clearing ([#411](https://github.com/MorpheApp/morphe-desktop/issues/411)) ([01295c9](https://github.com/MorpheApp/morphe-desktop/commit/01295c939f80cb68448f8014613908d0ba9339ae))
+
 ## [2.1.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0...v2.1.1) (2026-11-06)
 
 
