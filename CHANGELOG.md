@@ -1,3 +1,10 @@
+# [2.1.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0-dev.4...v2.1.0-dev.5) (2026-11-06)
+
+
+### Features
+
+* Expose developer options in GUI settings ([#408](https://github.com/MorpheApp/morphe-desktop/issues/408)) ([48fb66f](https://github.com/MorpheApp/morphe-desktop/commit/48fb66f7851b3e8f7ac40b7f224f5ca71f6b074b))
+
 # [2.1.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0-dev.3...v2.1.0-dev.4) (2026-11-05)
 
 
