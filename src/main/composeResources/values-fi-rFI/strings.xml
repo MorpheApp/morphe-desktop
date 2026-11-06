@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Otetaan lisäosia käyttöön</string>
     <string name="patching_step_writing_apk">Kirjoitetaan muokattua APK-tiedostoa</string>
     <string name="patching_step_signing">Allekirjoitetaan muokattua APK-tiedostoa</string>
+    <string name="patching_task_decoding_dex">Luetaan DEX-tiedostoja</string>
+    <string name="patching_task_extracting_resources">Puretaan resursseja</string>
+    <string name="patching_task_decoding_resources">Dekoodataan resursseja</string>
+    <string name="patching_task_indexing_classes">Indeksoidaan luokkia</string>
+    <string name="patching_task_compiling_dex">Käännetään DEX-tiedostoja</string>
+    <string name="patching_task_compiling_resources">Käännetään resursseja</string>
+    <string name="patching_task_writing_apk">Kirjoitetaan APK-tiedostoa</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Asennetaan laitteelle %1$s…</string>
     <string name="adb_error_downgrade">Ei voi päivittää vanhempaan versioon, uudempi versio on asennettu. Poista olemassa oleva sovellus ensin</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Virhe ladattaessa paikkauksia</string>
     <string name="patch_selection_title">Valitse paikkaukset</string>
     <string name="patch_selection_cmd_preview">Komentoesikatselu</string>
+    <string name="patch_selection_root_mode_description">Root-liitostila</string>
+    <string name="patch_selection_lock_unavailable">Ei käytettävissä root-liitokselle</string>
     <string name="patch_selection_continue_on_error_tooltip">Jatka paikkaamista, vaikka paikkaus epäonnistuisi</string>
     <string name="patch_selection_continue_on_error_description">Jatka virheestä huolimatta</string>
     <string name="patch_selection_no_patches_found">Lisäosia ei löytynyt</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Sovellus</string>
     <string name="patch_selection_run_info_bundles_group">Paikkausniput</string>
     <string name="patch_selection_run_info_no_bundles">Ei nippuja selvitetty</string>
+    <string name="patch_selection_run_info_dev_group">Kehittäjäasetukset</string>
+    <string name="patch_selection_run_info_bytecode_mode">Tavukooditila: %1$s</string>
+    <string name="patch_selection_run_info_validate">Sormenjäljen vahvistus: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK -varmentaminen: %1$s</string>
     <string name="patch_selection_group_universal">Universaali</string>
     <string name="patch_selection_group_ungrouped">Ryhmittelemätön</string>
     <string name="patch_selection_group_selected_count">%1$d valittua</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Päivitetään laitteella %1$s…</string>
     <string name="result_adb_update_successful">Päivitys onnistui!</string>
     <string name="result_adb_install_successful">Asennus onnistui!</string>
+    <string name="result_adb_badge_root_mount">Root-liitos</string>
+    <string name="result_adb_mount_button">Liitä %1$s-laitteeseen</string>
+    <string name="result_adb_mounting_on_device">Liitetään %1$s-laitteeseen…</string>
+    <string name="result_adb_mount_successful">Liittäminen onnistui!</string>
+    <string name="result_adb_mount_su_prompt_hint">Liitetään %1$s-laitteeseen… Tarkista laitteesi ja anna Superkäyttäjä-luvat, jos pyydetään</string>
+    <string name="result_adb_unmount_button">Irrota %1$s-laitteesta</string>
+    <string name="result_adb_unmounting_on_device">Irrotetaan %1$s-laitteesta…</string>
+    <string name="result_adb_root_not_detected">Root-käyttöoikeutta ei havaittu %1$s-laitteessa. Varmista, että Magisk/KernelSU/APatch on asennettu ja su-luvat on annettu</string>
+    <string name="result_adb_stock_app_not_installed">Vakiosovellus %1$s ei ole asennettuna laitteeseen %2$s. Asenna virallinen sovellus ennen asennusta</string>
     <string name="result_link_default_restored">Oletuslinkkien käsittely palautettu</string>
     <string name="result_link_routed_stock_disabled">Linkit ohjattu paikattuun sovellukseen, alkuperäinen poistettu käytöstä</string>
     <string name="result_adb_not_found_hint">ADB:ta ei löytynyt. Asenna Android SDK Platform Tools ottaaksesi suoran asennuksen käyttöön</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">versiosta v%1$s</string>
     <string name="update_banner_later_button">Myöhemmin</string>
     <string name="update_banner_skip_button">Ohita v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Työkalut</string>
-    <string name="tools_dialog_open_logs_button">Avaa lokit</string>
-    <string name="tools_dialog_open_app_data_button">Avaa sovellustiedot</string>
-    <string name="tools_dialog_view_licenses_button">Näytä lisenssit</string>
-    <string name="tools_dialog_cache_cleared">Välimuisti tyhjennetty</string>
-    <string name="tools_dialog_clear_failed">Tyhjennys epäonnistui</string>
-    <string name="tools_dialog_clear_cache_button">Tyhjennä välimuisti</string>
-    <string name="tools_dialog_cache_summary">Välimuisti: %1$s (paikkaukset + lokit)</string>
-    <string name="tools_dialog_confirm_clear_title">Tyhjennetäänkö välimuisti?</string>
-    <string name="tools_dialog_confirm_clear_message">Tämä poistaa ladatut paikkaukset ja lokitiedostot. Paikkaukset ladataan uudelleen tarvittaessa</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Avoimen lähdekoodin lisenssit</string>
     <string name="licenses_dialog_empty_failed">// lisenssien lataus epäonnistui</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Poista kirjastot</string>
     <string name="settings_toggle_developer_options_label">Kehittäjäasetukset</string>
     <string name="settings_toggle_developer_options_desc">Paikkauskehittäjille. Avaa joukon työnkulkuvaihtoehtoja paikkausten rakentamiseen ja testaamiseen (katso täysi lista dokumentaatiosta). Toistaiseksi se tarkoittaa paikallisen lähteen osoittamista kansioon, jotta Morphe lataa aina sen uusimman .mpp-tiedoston</string>
+    <string name="settings_dev_bytecode_mode_label">Tavukooditila</string>
+    <string name="settings_dev_bytecode_mode_desc">Paikkaustilanteessa DEX-tavukoodiin sovellettava muunnostila</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Nopea</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Turvallinen</string>
+    <string name="settings_dev_bytecode_mode_full">Täysi</string>
+    <string name="settings_dev_validate_label">Sormenjäljen vahvistus</string>
+    <string name="settings_dev_validate_desc">Varmista, että jokainen match() vastaa vain yhtä metodia (hidastaa paikkausta, tarkoitettu paikkaustestaukseen)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK -varmentaminen</string>
+    <string name="settings_dev_verify_sdk_desc">Varmista muokattu DEX ja APK Android SDK -työkaluilla (d8, zipalign). Voi ilmoittaa vääriä positiivisia tuloksia</string>
+    <string name="settings_dev_sdk_path_label">Android SDK -hakemisto</string>
+    <string name="settings_dev_sdk_path_auto">Automaattisesti tunnistettu</string>
+    <string name="settings_dev_sdk_not_found">Android SDK:ta ei löytynyt. Aseta ANDROID_HOME tai etsi SDK-hakemisto</string>
+    <string name="settings_dev_sdk_picker_title">Valitse Android SDK -hakemisto</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Siivoa väliaikaistiedostot automaattisesti</string>
     <string name="settings_toggle_auto_cleanup_desc">Poista väliaikaistiedostot paikkauksen jälkeen</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Kansiota ei löytynyt, luodaan seuraavalla paikkauksella</string>
     <string name="settings_toggle_auto_start_adb_label">Käynnistä ADB automaattisesti</string>
     <string name="settings_toggle_auto_start_adb_desc">Käynnistä ADB-taustaohjelma käynnistyksessä, jotta yhdistettyjä laitteita valvotaan. Kun pois päältä, Morphe ei koskaan käynnistä palvelinta, ja asennus/lähetysominaisuudet ovat poistettu käytöstä</string>
+    <string name="settings_section_storage">Tallennustila &amp; välimuisti</string>
+    <string name="settings_cache_summary">Välimuisti: %1$s (päivitykset + lokit)</string>
+    <string name="settings_cache_clear_button">Tyhjennä välimuisti</string>
+    <string name="settings_cache_cleared">Välimuisti tyhjennetty</string>
+    <string name="settings_cache_clear_failed">Tyhjennys epäonnistui</string>
+    <string name="settings_cache_confirm_title">Tyhjennä välimuisti?</string>
+    <string name="settings_cache_confirm_message">Tämä poistaa ladatut päivitykset ja lokitiedostot. Päivitykset ladataan uudelleen tarvittaessa</string>
+    <string name="settings_storage_open_app_data_button">Avaa sovelluksen tiedot</string>
+    <string name="settings_storage_open_logs_button">Avaa lokit</string>
     <string name="settings_section_about">Tietoja</string>
     <string name="settings_about_version">Versio %1$s</string>
     <string name="settings_about_changelogs_title">Näytä muutoslokit</string>
     <string name="settings_about_changelogs_desc">Katso tämän päivityksen uusimmat muutokset</string>
+    <string name="settings_about_licenses_title">Avoimen lähdekoodin lisenssit</string>
+    <string name="settings_about_licenses_desc">Näytä kolmannen osapuolen kirjastojen lisenssit</string>
     <string name="settings_about_documentation_title">Dokumentaatio</string>
     <string name="settings_about_documentation_desc">Oppaat paikkaukseen, lähteisiin ja vianmääritykseen</string>
     <string name="settings_about_website_title">Käy verkkosivustolla</string>

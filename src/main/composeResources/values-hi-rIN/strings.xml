@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">पैच लागू करना</string>
     <string name="patching_step_writing_apk">पैच्ड एपीके फाइल लिखना</string>
     <string name="patching_step_signing">पैच किए गए APK फ़ाइल पर हस्ताक्षर करना</string>
+    <string name="patching_task_decoding_dex">DEX फ़ाइलों को पढ़ना</string>
+    <string name="patching_task_extracting_resources">संसाधनों को निकालना</string>
+    <string name="patching_task_decoding_resources">संसाधनों को डिकोड करना</string>
+    <string name="patching_task_indexing_classes">क्लासों का इंडेक्सिंग करना</string>
+    <string name="patching_task_compiling_dex">DEX फ़ाइलों को कंपाइल करना</string>
+    <string name="patching_task_compiling_resources">संसाधनों को कंपाइल करना</string>
+    <string name="patching_task_writing_apk">APK फ़ाइल लिखना</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s पर इंस्टॉल हो रहा है…</string>
     <string name="adb_error_downgrade">डाउनग्रेड नहीं कर सकते, एक नया संस्करण इंस्टॉल है। पहले मौजूदा ऐप को अनइंस्टॉल करें</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">पैच लोड करने में त्रुटि</string>
     <string name="patch_selection_title">पैच चुनें</string>
     <string name="patch_selection_cmd_preview">कमांड पूर्वावलोकन</string>
+    <string name="patch_selection_root_mode_description">रूट माउंट मोड</string>
+    <string name="patch_selection_lock_unavailable">रूट माउंट के लिए अनुपलब्ध</string>
     <string name="patch_selection_continue_on_error_tooltip">पैच विफल होने पर भी पैचिंग जारी रखें</string>
     <string name="patch_selection_continue_on_error_description">त्रुटि पर जारी रखें</string>
     <string name="patch_selection_no_patches_found">कोई पैच नहीं मिला</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">ऐप</string>
     <string name="patch_selection_run_info_bundles_group">पैच बंडल</string>
     <string name="patch_selection_run_info_no_bundles">कोई बंडल हल नहीं हुआ</string>
+    <string name="patch_selection_run_info_dev_group">डेवलपर विकल्प</string>
+    <string name="patch_selection_run_info_bytecode_mode">बाइटकोड मोड: %1$s</string>
+    <string name="patch_selection_run_info_validate">फिंगरप्रिंट सत्यापन: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK सत्यापन: %1$s</string>
     <string name="patch_selection_group_universal">यूनिवर्सल</string>
     <string name="patch_selection_group_ungrouped">असमूहीकृत</string>
     <string name="patch_selection_group_selected_count">%1$d चयनित</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">%1$s पर अपडेट हो रहा है…</string>
     <string name="result_adb_update_successful">अपडेट सफल!</string>
     <string name="result_adb_install_successful">इंस्टॉलेशन सफल!</string>
+    <string name="result_adb_badge_root_mount">रूट माउंट</string>
+    <string name="result_adb_mount_button">%1$s पर माउंट करें</string>
+    <string name="result_adb_mounting_on_device">%1$s पर माउंट किया जा रहा है…</string>
+    <string name="result_adb_mount_successful">माउंटिंग सफल रही!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s पर माउंट किया जा रहा है… यदि पूछा जाए तो सुपरयूज़र अनुमति देने के लिए अपने डिवाइस की जाँच करें</string>
+    <string name="result_adb_unmount_button">%1$s से अनमाउंट करें</string>
+    <string name="result_adb_unmounting_on_device">%1$s से अनमाउंट किया जा रहा है…</string>
+    <string name="result_adb_root_not_detected">%1$s पर रूट एक्सेस नहीं मिला। सुनिश्चित करें कि Magisk/KernelSU/APatch इंस्टॉल है और su अनुमति दी गई है</string>
+    <string name="result_adb_stock_app_not_installed">स्टॉक ऐप %1$s, %2$s पर इंस्टॉल नहीं है। माउंट करने से पहले आधिकारिक ऐप इंस्टॉल करें</string>
     <string name="result_link_default_restored">डिफ़ॉल्ट लिंक हैंडलिंग पुनर्स्थापित</string>
     <string name="result_link_routed_stock_disabled">लिंक पैच किए गए ऐप पर रूट किए गए, स्टॉक अक्षम</string>
     <string name="result_adb_not_found_hint">ADB नहीं मिला। प्रत्यक्ष इंस्टॉलेशन सक्षम करने के लिए Android SDK Platform Tools इंस्टॉल करें</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s से</string>
     <string name="update_banner_later_button">बाद में</string>
     <string name="update_banner_skip_button">V%1$s छोड़ें</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">उपकरण</string>
-    <string name="tools_dialog_open_logs_button">लॉग खोलें</string>
-    <string name="tools_dialog_open_app_data_button">ऐप डेटा खोलें</string>
-    <string name="tools_dialog_view_licenses_button">लाइसेंस देखें</string>
-    <string name="tools_dialog_cache_cleared">कैश साफ़ हुआ</string>
-    <string name="tools_dialog_clear_failed">साफ़ करना विफल</string>
-    <string name="tools_dialog_clear_cache_button">कैश साफ़ करें</string>
-    <string name="tools_dialog_cache_summary">कैश: %1$s (पैच + लॉग)</string>
-    <string name="tools_dialog_confirm_clear_title">कैश साफ़ करें?</string>
-    <string name="tools_dialog_confirm_clear_message">यह डाउनलोड किए गए पैच और लॉग फ़ाइलें हटा देगा। आवश्यकता होने पर पैच पुनः डाउनलोड होंगे</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ओपन सोर्स लाइसेंस</string>
     <string name="licenses_dialog_empty_failed">// लाइसेंस लोड करने में विफल</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">स्ट्रिप लिब्स</string>
     <string name="settings_toggle_developer_options_label">डेवलपर विकल्प</string>
     <string name="settings_toggle_developer_options_desc">पैच डेवलपर्स के लिए। पैच बनाने और परीक्षण के लिए वर्कफ़्लो विकल्पों का एक सेट अनलॉक करता है (पूरी सूची के लिए दस्तावेज़ देखें)। अभी के लिए, यह एक स्थानीय स्रोत को एक फ़ोल्डर पर इंगित करता है ताकि Morphe हमेशा उसका नवीनतम .mpp लोड करे</string>
+    <string name="settings_dev_bytecode_mode_label">बाइटकोड मोड</string>
+    <string name="settings_dev_bytecode_mode_desc">पैचिंग के दौरान DEX बाइटकोड पर लागू ट्रांसफॉर्मेशन मोड</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">तेज़</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">सुरक्षित</string>
+    <string name="settings_dev_bytecode_mode_full">पूर्ण</string>
+    <string name="settings_dev_validate_label">फिंगरप्रिंट सत्यापन</string>
+    <string name="settings_dev_validate_desc">सत्यापित करें कि प्रत्येक match() केवल एक मेथड से मेल खाता है (धीमी पैचिंग, पैच टेस्टिंग के लिए)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK सत्यापन</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK टूल्स (d8, zipalign) के साथ पैच किए गए DEX और APK को सत्यापित करें। यह false positives रिपोर्ट कर सकता है</string>
+    <string name="settings_dev_sdk_path_label">Android SDK निर्देशिका</string>
+    <string name="settings_dev_sdk_path_auto">स्वचालित रूप से पता लगाया गया</string>
+    <string name="settings_dev_sdk_not_found">Android SDK नहीं मिला। ANDROID_HOME सेट करें या SDK निर्देशिका खोजें</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK निर्देशिका चुनें</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">अस्थायी फ़ाइलें ऑटो-क्लीनअप</string>
     <string name="settings_toggle_auto_cleanup_desc">पैचिंग के बाद अस्थायी फ़ाइलें हटाएँ</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">फ़ोल्डर नहीं मिला, अगले पैच पर बनाया जाएगा</string>
     <string name="settings_toggle_auto_start_adb_label">ADB ऑटो-स्टार्ट</string>
     <string name="settings_toggle_auto_start_adb_desc">लॉन्च पर ADB डेमॉन स्पॉन करें ताकि कनेक्टेड डिवाइसों की निगरानी हो। बंद होने पर, Morphe कभी सर्वर प्रारंभ नहीं करता, और इंस्टॉल/पुश सुविधाएँ अक्षम होती हैं</string>
+    <string name="settings_section_storage">स्टोरेज और कैश</string>
+    <string name="settings_cache_summary">कैश: %1$s (पैच + लॉग)</string>
+    <string name="settings_cache_clear_button">कैश साफ़ करें</string>
+    <string name="settings_cache_cleared">कैश साफ़ कर दिया गया</string>
+    <string name="settings_cache_clear_failed">साफ़ करने में विफल रहा</string>
+    <string name="settings_cache_confirm_title">कैश साफ़ करें?</string>
+    <string name="settings_cache_confirm_message">इससे डाउनलोड किए गए पैच और लॉग फ़ाइलें हट जाएंगी। ज़रूरत पड़ने पर पैच फिर से डाउनलोड किए जाएंगे</string>
+    <string name="settings_storage_open_app_data_button">ऐप डेटा खोलें</string>
+    <string name="settings_storage_open_logs_button">लॉग खोलें</string>
     <string name="settings_section_about">इसके बारे में</string>
     <string name="settings_about_version">संस्करण %1$s</string>
     <string name="settings_about_changelogs_title">चंगेलॉग्स देखें</string>
     <string name="settings_about_changelogs_desc">इस अपडेट में नवीनतम परिवर्तन देखें</string>
+    <string name="settings_about_licenses_title">ओपन सोर्स लाइसेंस</string>
+    <string name="settings_about_licenses_desc">थर्ड-पार्टी लाइब्रेरी के लाइसेंस देखें</string>
     <string name="settings_about_documentation_title">दस्तावेज़ीकरण</string>
     <string name="settings_about_documentation_desc">पैचिंग, स्रोत और समस्या निवारण के लिए मार्गदर्शिकाएँ</string>
     <string name="settings_about_website_title">वेबसाइट देखें</string>

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Yamaqlar tətbiq olunur</string>
     <string name="patching_step_writing_apk">Yamaqlanmış APK faylı yazılır</string>
     <string name="patching_step_signing">Yamaqlanmış APK faylı imzalanır</string>
+    <string name="patching_task_decoding_dex">DEX fayllarını oxuyur</string>
+    <string name="patching_task_extracting_resources">Resursları çıxarır</string>
+    <string name="patching_task_decoding_resources">Resursları dekodlaşdırır</string>
+    <string name="patching_task_indexing_classes">Sinifləri indeksləyir</string>
+    <string name="patching_task_compiling_dex">DEX fayllarını tərtib edir</string>
+    <string name="patching_task_compiling_resources">Resursları tərtib edir</string>
+    <string name="patching_task_writing_apk">APK faylını qeyd edir</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s üzərində quraşdırılır…</string>
     <string name="adb_error_downgrade">Versiyanı endirmək olmur, daha yeni versiya quraşdırılıb. Əvvəlcə mövcud tətbiqi silin</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Yamaqların yüklənməsində xəta</string>
     <string name="patch_selection_title">Yamaqları seçin</string>
     <string name="patch_selection_cmd_preview">Əmrə ön baxış</string>
+    <string name="patch_selection_root_mode_description">Root montajı rejimi</string>
+    <string name="patch_selection_lock_unavailable">Root montajlama üçün əlçatan deyil</string>
     <string name="patch_selection_continue_on_error_tooltip">Yama xətaya düşsə belə yamaqlamağa davam et</string>
     <string name="patch_selection_continue_on_error_description">Xəta baş verdikdə davam et</string>
     <string name="patch_selection_no_patches_found">Heç bir yamaq tapılmadı</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Tətbiq</string>
     <string name="patch_selection_run_info_bundles_group">Yamaq paketləri</string>
     <string name="patch_selection_run_info_no_bundles">Heç bir paket təyin edilməyib</string>
+    <string name="patch_selection_run_info_dev_group">Tərtibatçı seçimləri</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bayt kod rejimi: %1$s</string>
+    <string name="patch_selection_run_info_validate">Barmaq izi təsdiqlənməsi: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK təsdiqlənməsi: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Qruplaşdırılmamış</string>
     <string name="patch_selection_group_selected_count">%1$d seçildi</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">%1$s cihazında yenilənir…</string>
     <string name="result_adb_update_successful">Yeniləmə uğurludur!</string>
     <string name="result_adb_install_successful">Quraşdırma uğurludur!</string>
+    <string name="result_adb_badge_root_mount">Root montajlama</string>
+    <string name="result_adb_mount_button">%1$s üzərində montajla</string>
+    <string name="result_adb_mounting_on_device">%1$s üzərində montajlanır…</string>
+    <string name="result_adb_mount_successful">Montajlama uğurlu oldu!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s üzərində montajlanır… Tələb olunarsa, Superuser icazəsini vermək üçün cihazınızı yoxlayın</string>
+    <string name="result_adb_unmount_button">%1$s 'dan montajı ayır</string>
+    <string name="result_adb_unmounting_on_device">%1$s 'dan montajı ayırır…</string>
+    <string name="result_adb_root_not_detected">Root girişi %1$s üzərində aşkarlanmadı. Magisk/KernelSU/APatch-ın quraşdırıldığına və su icazəsinin verildiyinə əmin olun</string>
+    <string name="result_adb_stock_app_not_installed">%1$s əsas tətbiqi %2$s üzərində quraşdırılmayıb. Əvvəlcə montajlamadan qabaq rəsmi tətbiqi quraşdır</string>
     <string name="result_link_default_restored">Standart keçid idarəetməsi bərpa olundu</string>
     <string name="result_link_routed_stock_disabled">Keçidlər yamaqlanmış tətbiqə yönləndirildi, orijinal deaktiv edildi</string>
     <string name="result_adb_not_found_hint">ADB tapılmadı. Birbaşa quraşdırmanı aktiv etmək üçün Android SDK Platform Tools quraşdırın</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s versiyasından</string>
     <string name="update_banner_later_button">Sonra</string>
     <string name="update_banner_skip_button">v%1$s versiyasını ötür</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Alətlər</string>
-    <string name="tools_dialog_open_logs_button">Jurnalları aç</string>
-    <string name="tools_dialog_open_app_data_button">Tətbiq məlumatlarını aç</string>
-    <string name="tools_dialog_view_licenses_button">Lisenziyalara bax</string>
-    <string name="tools_dialog_cache_cleared">Keş təmizləndi</string>
-    <string name="tools_dialog_clear_failed">Təmizlənmədi</string>
-    <string name="tools_dialog_clear_cache_button">Keşi təmizlə</string>
-    <string name="tools_dialog_cache_summary">Keş: %1$s (yamaqlar + jurnallar)</string>
-    <string name="tools_dialog_confirm_clear_title">Keş təmizlənsin?</string>
-    <string name="tools_dialog_confirm_clear_message">Bu, endirilmiş yamaqları və jurnal fayllarını siləcək. Yamaqlar ehtiyac olduqda yenidən endiriləcək</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Açıq Mənbə lisenziyaları</string>
     <string name="licenses_dialog_empty_failed">// lisenziyaları yükləmək mümkün olmadı</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Kitabxanaları təmizlə</string>
     <string name="settings_toggle_developer_options_label">Tərtibatçı seçimləri</string>
     <string name="settings_toggle_developer_options_desc">Yamaq tərtibatçıları üçün. Yamaqların qurulması və sınaqdan keçirilməsi üçün iş axını seçimlərini açır (tam siyahı üçün sənədlərə baxın). Hal-hazırda, bu, yerli mənbəni bir qovluğa yönəldir ki, Morphe həmişə ən yeni .mpp faylını yükləsin</string>
+    <string name="settings_dev_bytecode_mode_label">Bayt kod rejimi</string>
+    <string name="settings_dev_bytecode_mode_desc">Yamaqlama zamanı DEX bayt koduna tətbiq olunan çevrilmə rejimi</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Sürətli</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Təhlükəsiz</string>
+    <string name="settings_dev_bytecode_mode_full">Tam</string>
+    <string name="settings_dev_validate_label">Barmaq izi təsdiqlənməsi</string>
+    <string name="settings_dev_validate_desc">Hər bir match() şablonunun yalnız bir metoda uyğun gəldiyini təsdiqlə (daha yavaş yamaqlama, yamaq sınağı üçün)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK təsdiqlənməsi</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK alətləri (d8, zipalign) ilə yamaqlanmış DEX və APK-nı təsdiqlə. Saxta müsbət nəticələr verə bilər</string>
+    <string name="settings_dev_sdk_path_label">Android SDK qovluğu</string>
+    <string name="settings_dev_sdk_path_auto">Avtomatik aşkarlandı</string>
+    <string name="settings_dev_sdk_not_found">Android SDK tapılmadı. ANDROID_HOME təyin edin və ya SDK qovluğuna baxın</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK qovluğunu seç</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Müvəqqəti faylları avtomatik təmizlə</string>
     <string name="settings_toggle_auto_cleanup_desc">Yamaqlandıqdan sonra müvəqqəti faylları silin</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Qovluq tapılmadı, növbəti yamaqlama zamanı yaradılacaq</string>
     <string name="settings_toggle_auto_start_adb_label">ADB-ni avtomatik başlat</string>
     <string name="settings_toggle_auto_start_adb_desc">Qoşulmuş cihazların izlənilməsi üçün işə salınarkən ADB demonunu başladır. Söndürüldükdə Morphe serveri heç vaxt başlatmır və quraşdırma/göndərmə xüsusiyyətləri sıradan çıxır</string>
+    <string name="settings_section_storage">Saxlanc &amp; qalıq</string>
+    <string name="settings_cache_summary">Keş: %1$s (yamaqlar + qeydlər)</string>
+    <string name="settings_cache_clear_button">Keşi təmizlə</string>
+    <string name="settings_cache_cleared">Keş təmizləndi</string>
+    <string name="settings_cache_clear_failed">Təmizlənmədi</string>
+    <string name="settings_cache_confirm_title">Keşi təmizləsin?</string>
+    <string name="settings_cache_confirm_message">Bu, yüklənilmiş yamaqları və qeyd fayllarını siləcək. Yamaqlar ehtiyac olduqda yenidən yükləniləcək</string>
+    <string name="settings_storage_open_app_data_button">Tətbiq məlumatlarını aç</string>
+    <string name="settings_storage_open_logs_button">Jurnalları aç</string>
     <string name="settings_section_about">Haqqında</string>
     <string name="settings_about_version">Versiya %1$s</string>
     <string name="settings_about_changelogs_title">Dəyişikliklər jurnalına baxın</string>
     <string name="settings_about_changelogs_desc">Bu yeniləmədəki son dəyişikliklərlə tanış olun</string>
+    <string name="settings_about_licenses_title">Açıq Mənbə lisenziyaları</string>
+    <string name="settings_about_licenses_desc">Üçüncü tərəf kitabxanalarının lisenziyalarına bax</string>
     <string name="settings_about_documentation_title">Sənədləşmə</string>
     <string name="settings_about_documentation_desc">Yamaqlama, mənbələr və xətaların aradan qaldırılması üçün bələdçilər</string>
     <string name="settings_about_website_title">Veb-sayta daxil olun</string>

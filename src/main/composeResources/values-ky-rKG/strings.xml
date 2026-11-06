@@ -6,6 +6,7 @@
     <string name="ok">Макул</string>
     <string name="retry">Кайра аракет кылуу</string>
     <string name="clear">Тазалоо</string>
+    <string name="search">Издөө</string>
     <string name="no_matches">Үңдөш жок</string>
     <string name="remove">Өчүрүү</string>
     <string name="collapse">Жымкуу</string>
@@ -30,15 +31,34 @@
     <string name="status_saving">Сакталууда…</string>
     <string name="installed_on">%1$s күнү орнотулган</string>
     <string name="device_default">түзмөк</string>
+    <string name="unknown">Белгисиз</string>
+    <string name="installing">Орнотулууда…</string>
     <string name="folder">Папка</string>
+    <string name="customize">Ылайыкташтыруу</string>
+    <string name="customize_card_description">Карточканы ылайыкташтыруу</string>
     <string name="none">Эч бири</string>
+    <string name="select_image">Сүрөттү тандаңыз</string>
+    <string name="select_file">Файлды тандаңыз</string>
+    <string name="failed">Ката кетти</string>
     <string name="copy">Көчүрүү</string>
+    <string name="copied">Көчүрүлдү</string>
+    <string name="click_to_copy">Көчүрүү үчүн басыңыз</string>
+    <string name="enable_adb_button">ADB'ни иштетүү</string>
+    <string name="drag_to_reorder">Тартып, тартибин өзгөртүңүз</string>
     <string name="off">Өчүк</string>
     <string name="on">Күйүк</string>
+    <string name="browse">Кម្មу</string>
+    <string name="save">Сактоо</string>
     <string name="select_folder">Папканы тандаңыз</string>
+    <string name="status_loading">Жүктөлүүдө…</string>
     <string name="download">Жүктөө</string>
+    <string name="status_offline">Оффлайн</string>
+    <string name="status_ready">Даяр</string>
+    <string name="filter_apps_hint">Тиркемелерди фильтрлөө…</string>
     <string name="version">Версия</string>
+    <string name="version_label_stable">Туруктуу</string>
     <string name="version_label_prerelease">Алдын ала чыгарылган</string>
+    <string name="version_label_experimental">Эксперименталдык</string>
     <string name="version_label_latest_stable">Акыркы туруктуу версия</string>
     <string name="version_label_recommended">Сунушталган</string>
     <string name="version_label_supported">Колдоого алынган</string>
@@ -88,6 +108,13 @@
     <string name="patching_step_applying_patches">Патчтарды колдонуу</string>
     <string name="patching_step_writing_apk">Патчталган APK файлын жазуу</string>
     <string name="patching_step_signing">Патчталган APK файлын кол коюу</string>
+    <string name="patching_task_decoding_dex">DEX файлдарын окуу</string>
+    <string name="patching_task_extracting_resources">Ресурстарды чыгаруу</string>
+    <string name="patching_task_decoding_resources">Ресурстарды декоддоо</string>
+    <string name="patching_task_indexing_classes">Класстарды indeksтөө</string>
+    <string name="patching_task_compiling_dex">DEX файлдарын компиляциялоо</string>
+    <string name="patching_task_compiling_resources">Ресурстарды компиляциялоо</string>
+    <string name="patching_task_writing_apk">APK файлын жазуу</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s түзүлүшүнө орнотулууда…</string>
     <string name="adb_error_downgrade">Версияны төмөндөтүү мүмкүн эмес, жаңыраак версия орнотулган. Алгач mevcut колдонмону өчүрүңүз</string>
@@ -285,6 +312,8 @@
     <string name="patch_selection_error_title">Патчтарды жүктөөдө ката кетти</string>
     <string name="patch_selection_title">Патчтарды тандаңыз</string>
     <string name="patch_selection_cmd_preview">Команданын алдын ала көрүнүшү</string>
+    <string name="patch_selection_root_mode_description">Root моунтунун режими</string>
+    <string name="patch_selection_lock_unavailable">Root mount үчүн жеткиликсиз</string>
     <string name="patch_selection_continue_on_error_tooltip">Патч ката кетсе да, патчингди улантуу</string>
     <string name="patch_selection_continue_on_error_description">Ката кеткенде улантуу</string>
     <string name="patch_selection_no_patches_found">Патчтар табылган жок</string>
@@ -346,6 +375,10 @@
     <string name="patch_selection_run_info_app_group">Тиркеме</string>
     <string name="patch_selection_run_info_bundles_group">Патч пакеттери</string>
     <string name="patch_selection_run_info_no_bundles">Эч кандай пакеттер табылган жок</string>
+    <string name="patch_selection_run_info_dev_group">Иштеп чыгаруучунун параметрлери</string>
+    <string name="patch_selection_run_info_bytecode_mode">Байткод режими: %1$s</string>
+    <string name="patch_selection_run_info_validate">Мандап изин берүүнү текшерүү: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK текшерүүсү: %1$s</string>
     <string name="patch_selection_group_universal">Универсалдуу</string>
     <string name="patch_selection_group_ungrouped">Топтоло элек</string>
     <!-- Patching Screen -->
@@ -364,6 +397,7 @@
     <string name="patching_step_all_done">Баары даяр!</string>
     <string name="patching_step_waiting">Күтүү…</string>
     <string name="patching_graph_memory_usage">Эстутумду колдонуу</string>
+    <string name="patching_graph_memory_detail">%2$d МБнын %1$d%</string>
     <string name="patching_graph_storage_io">Стораж I/O</string>
     <string name="patching_graph_cpu_usage">CPU колдонулушу</string>
     <string name="patching_banner_started_title">Патчтоо башталды</string>
@@ -399,6 +433,15 @@
     <string name="result_adb_updating_on_device">%1$s түзүлүшүндө жаңыртылууда…</string>
     <string name="result_adb_update_successful">Жаңыртуу ийгиликтүү аяктады!</string>
     <string name="result_adb_install_successful">Орнотуу ийгиликтүү аяктады!</string>
+    <string name="result_adb_badge_root_mount">Root моунту</string>
+    <string name="result_adb_mount_button">%1$s-ка моунттоо</string>
+    <string name="result_adb_mounting_on_device">%1$s-ка моунттолууда…</string>
+    <string name="result_adb_mount_successful">Моунттоо ийгиликтүү аяктады!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s-ка моунттолууда… Эгер суралса, Superuser уруксатын берүү үчүн түзүлүшүңүздү текшериңиз</string>
+    <string name="result_adb_unmount_button">%1$s-тан размоунттоо</string>
+    <string name="result_adb_unmounting_on_device">%1$s-тан размоунттолууду күтүү…</string>
+    <string name="result_adb_root_not_detected">%1$s түзүлүшүндө Root мүмкүнчүлүгү табылган жок. Magisk/KernelSU/APatch орнотулганын жана su уруксаты берилгенин текшериңиз</string>
+    <string name="result_adb_stock_app_not_installed">%2$s түзүлүшүнө стандарттык %1$s тиркемеси орнотулган эмес. Моунттоонун алдында алгач расмий тиркемени орнотуңуз</string>
     <string name="result_link_default_restored">Шилтемелерди иштетүүнүн стандарттуу жөндөөлөрү калыбына келтирилди</string>
     <string name="result_link_routed_stock_disabled">Шилтемелер патчтелген колдонмого багытталды, стандарттуу колдонмо өчүрүлдү</string>
     <string name="result_adb_not_found_hint">ADB табылган жок. Түз орнотууну иштетүү үчүн Android SDK Platform Tools орнотуңуз</string>
@@ -579,17 +622,6 @@
     <string name="update_banner_from_version">v%1$s версиясынан</string>
     <string name="update_banner_later_button">Кийинчерээк</string>
     <string name="update_banner_skip_button">v%1$s версиясын өткөрүп жиберүү</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Куралдар</string>
-    <string name="tools_dialog_open_logs_button">Логдорду ачуу</string>
-    <string name="tools_dialog_open_app_data_button">Тиркеменин маалыматтарын ачуу</string>
-    <string name="tools_dialog_view_licenses_button">Лицензияларды көрүү</string>
-    <string name="tools_dialog_cache_cleared">Кэш тазаланды</string>
-    <string name="tools_dialog_clear_failed">Каталарды тазалоо</string>
-    <string name="tools_dialog_clear_cache_button">Кэшти тазалоо</string>
-    <string name="tools_dialog_cache_summary">Кэш: %1$s (патчтар + логдор)</string>
-    <string name="tools_dialog_confirm_clear_title">Кэшти тазалайсызбы?</string>
-    <string name="tools_dialog_confirm_clear_message">Бул жүктөлгөн патчтарды жана лог файлдарын өчүрөт. Патчтар керек болгондо кайра жүктөлөт</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ачык булак коддуу лицензиялар</string>
     <string name="licenses_dialog_empty_failed">// лицензияларды жүктөө мүмкүн болбоду</string>
@@ -661,6 +693,19 @@
     <string name="settings_section_strip_libs">Китапканаларды кесүү</string>
     <string name="settings_toggle_developer_options_label">Разработчиктер үчүн опциялар</string>
     <string name="settings_toggle_developer_options_desc">Патч разработчиктери үчүн. Патчтарды түзүү жана тестирлөө үчүн жумушчу опциялардын топтомун ачат (толук тизмеси үчүн документацияны караңыз). Азыркы учурда бул Morphe ар дайым эң жаңы .mpp файлын жүктөөсү үчүн жергиликтүү булакты папкага багыттоо болуп саналат</string>
+    <string name="settings_dev_bytecode_mode_label">Байткод режими</string>
+    <string name="settings_dev_bytecode_mode_desc">Патчтоо учурунда DEX байткодуна колдонулган трансформация режими</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Тез</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Коопсуз</string>
+    <string name="settings_dev_bytecode_mode_full">Толук</string>
+    <string name="settings_dev_validate_label">Мандап изин берүүнү текшерүү</string>
+    <string name="settings_dev_validate_desc">Ар бир match() бир гана методго дал келерин текшерүү (патчтоону жайлатат, патчти сыноо үчүн)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK текшерүүсү</string>
+    <string name="settings_dev_verify_sdk_desc">Патчтелген DEX жана APK файлдарын Android SDK куралдары (d8, zipalign) менен текшерүү. Жалган оң жыйынтыктарды бериши мүмкүн</string>
+    <string name="settings_dev_sdk_path_label">Android SDK директориясы</string>
+    <string name="settings_dev_sdk_path_auto">Автоматтык түрдө аныкталган</string>
+    <string name="settings_dev_sdk_not_found">Android SDK табылган жок. ANDROID_HOME параметрин орнотуңуз же SDK директориясын издеңиз</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK директориясын тандаңыз</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Убактылуу файлдарды автоматтык түрдө тазалоо</string>
     <string name="settings_toggle_auto_cleanup_desc">Патчтоодон кийин убактылуу файлдарды өчүрүү</string>
@@ -675,10 +720,21 @@
     <string name="settings_output_folder_not_found">Папка табылган жок, кийинки патчингде түзүлөт</string>
     <string name="settings_toggle_auto_start_adb_label">ADB авто-иштетүү</string>
     <string name="settings_toggle_auto_start_adb_desc">Туташтырылган түзүлүштөр мониторингге алынышы үчүн, иштеткенде ADB демонду иштетүү. Өчүрүлгөн учурда, Morphe серверди эч качан иштетпейт, ал эми орнотуу/жөнөтүү функциялары өчүрүлөт</string>
+    <string name="settings_section_storage">Стораж &amp; кэш</string>
+    <string name="settings_cache_summary">Кэш: %1$s (патчтар + логдор)</string>
+    <string name="settings_cache_clear_button">Кэшти тазалоо</string>
+    <string name="settings_cache_cleared">Кэш тазаланды</string>
+    <string name="settings_cache_clear_failed">Тазалоо ишке ашпай калды</string>
+    <string name="settings_cache_confirm_title">Кэшти тазалоо керекпи?</string>
+    <string name="settings_cache_confirm_message">Бул жүктөлгөн патчтарды жана лог файлдарын өчүрөт. Патчтар керек болгондо кайра жүктөлөт</string>
+    <string name="settings_storage_open_app_data_button">Тиркеменин маалыматтарын ачуу</string>
+    <string name="settings_storage_open_logs_button">Логдорду ачуу</string>
     <string name="settings_section_about">Маалымат</string>
     <string name="settings_about_version">Версия %1$s</string>
     <string name="settings_about_changelogs_title">Өзгөртүүлөр журналын көрүү</string>
     <string name="settings_about_changelogs_desc">Бул жаңыртуудагы акыркы өзгөртүүлөр менен таанышыңыз</string>
+    <string name="settings_about_licenses_title">Ачык булак коддуу лицензиялар</string>
+    <string name="settings_about_licenses_desc">Үчүнчү тараптын китепканаларынын лицензияларын көрүү</string>
     <string name="settings_about_documentation_title">Документация</string>
     <string name="settings_about_documentation_desc">Патчилөө, булактар жана каталарды жөнгө салуу боюнча колдонмолор</string>
     <string name="settings_about_website_title">Веб-сайтты көрүү</string>
@@ -763,6 +819,7 @@
     <string name="changelog_section_new">Жаңы</string>
     <string name="changelog_section_other">Өзгөртүүлөр</string>
     <string name="changelog_section_performance">Өндүрүмдүүлүк</string>
+    <string name="changelog_show_all">Баарын көрсөт (%1$d)</string>
     <string name="changelog_show_less">Азыраак көрсөтүү</string>
     <string name="changelog_view_on_github_button">GitHub'дан көрүү</string>
     <!-- Navigation Pill -->

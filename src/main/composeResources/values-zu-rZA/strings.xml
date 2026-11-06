@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Kufakwa ama-patches</string>
     <string name="patching_step_writing_apk">Kubhalwa ifayela le-APK elipatchiwe</string>
     <string name="patching_step_signing">Kusayina ifayela le-APK elipatchiwe</string>
+    <string name="patching_task_decoding_dex">Kufundwa amafaila e-DEX</string>
+    <string name="patching_task_extracting_resources">Kukhiphelwa izinsiza</string>
+    <string name="patching_task_decoding_resources">Kudekodiwa izinsiza</string>
+    <string name="patching_task_indexing_classes">Kwenziwa uhlu lwezikhilazi</string>
+    <string name="patching_task_compiling_dex">Kuhlelwa amafaila e-DEX</string>
+    <string name="patching_task_compiling_resources">Kuhlelwa izinsiza</string>
+    <string name="patching_task_writing_apk">Kubhalwa ifayela le-APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Kufakwa ku-%1$s…</string>
     <string name="adb_error_downgrade">Awukwazi ukwehlisa izinga, kunenguqulo entsha efakwe. Susa uhlelo lokusebenza olukhona kuqala</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Iphutha ekulandweni ama-patch</string>
     <string name="patch_selection_title">Khetha ama-patch</string>
     <string name="patch_selection_cmd_preview">Ukubuka imiyalelo</string>
+    <string name="patch_selection_root_mode_description">Imode yokufaka iRoot</string>
+    <string name="patch_selection_lock_unavailable">Alitholakala ku-root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Qhubeka nokulungisa ngisho noma i-patch ihlelele</string>
     <string name="patch_selection_continue_on_error_description">Qhubeka lapho kukhona iphutha</string>
     <string name="patch_selection_no_patches_found">Azitholakali izi-patch</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">I-App</string>
     <string name="patch_selection_run_info_bundles_group">Ama-Patch bundles</string>
     <string name="patch_selection_run_info_no_bundles">Ayikho ama-bundles axazululiwe</string>
+    <string name="patch_selection_run_info_dev_group">Izinketho zomthuthukisi</string>
+    <string name="patch_selection_run_info_bytecode_mode">Imode yebytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Ukuqinisekisa iminwe: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Ukuqinisekisa i-Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Angaqondiswanga</string>
     <string name="patch_selection_group_selected_count">%1$d ukhethiwe</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Kuvuselelwa ku-%1$s…</string>
     <string name="result_adb_update_successful">Ukuvuselela kuphumelele!</string>
     <string name="result_adb_install_successful">Ukufaka kuphumelele!</string>
+    <string name="result_adb_badge_root_mount">Ukufaka i-Root</string>
+    <string name="result_adb_mount_button">Mount ku-%1$s</string>
+    <string name="result_adb_mounting_on_device">Ku-mount-wa ku-%1$s…</string>
+    <string name="result_adb_mount_successful">Uku-mount kuphumelele!</string>
+    <string name="result_adb_mount_su_prompt_hint">Ku-mount-wa ku-%1$s… Hlola idivayisi yakho ukuze unikeze imvume ye-Superuser uma ucelwa</string>
+    <string name="result_adb_unmount_button">Unmount ku-%1$s</string>
+    <string name="result_adb_unmounting_on_device">Ku-unmount-wa ku-%1$s…</string>
+    <string name="result_adb_root_not_detected">Ukufikeleleka kwe-root akuzange kutholakale ku-%1$s. Qinisekisa ukuthi i-Magisk/KernelSU/APatch ifakwe futhi imvume ye-su inikeziwe</string>
+    <string name="result_adb_stock_app_not_installed">I-app ye-stock %1$s ayifakwe ku-%2$s. Faka i-app esemthethweni kuqala ngaphambi koku-mount</string>
     <string name="result_link_default_restored">Ukuphathwa kwe-link ejwayelekile kubuyiselwe</string>
     <string name="result_link_routed_stock_disabled">Ama-link ayalulekela ohlelweni olulungisiwe, okwasembonini kukhishwa</string>
     <string name="result_adb_not_found_hint">ADB ayitholakali. Faka i-Android SDK Platform Tools ukuze uvumele ukufaka ngqo</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">kusuka ku-v%1$s</string>
     <string name="update_banner_later_button">Emva kwesikhathi</string>
     <string name="update_banner_skip_button">Yishiye i-v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Amathuluzi</string>
-    <string name="tools_dialog_open_logs_button">Vula ama-log</string>
-    <string name="tools_dialog_open_app_data_button">Vula idatha yohlelo</string>
-    <string name="tools_dialog_view_licenses_button">Buka ama-license</string>
-    <string name="tools_dialog_cache_cleared">I-cache isisuliwe</string>
-    <string name="tools_dialog_clear_failed">Ukulula kwephutha</string>
-    <string name="tools_dialog_clear_cache_button">Sula i-cache</string>
-    <string name="tools_dialog_cache_summary">I-cache: %1$s (ama-patch + ama-log)</string>
-    <string name="tools_dialog_confirm_clear_title">Sula i-cache?</string>
-    <string name="tools_dialog_confirm_clear_message">Lokhu kuzosusa ama-patch adownloadwe namafaili e-log. Ama-patch azodownloadwa futhi lapho edingeka</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ama-license we-Open Source</string>
     <string name="licenses_dialog_empty_failed">// kuhlulekile ukuloda ama-license</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Susa ama-libs</string>
     <string name="settings_toggle_developer_options_label">Izinketho zomthuthukisi</string>
     <string name="settings_toggle_developer_options_desc">Kubalulekile kubathuthukisi be-patch. Kuvula iqembu lezinketho zokusebenza zokwakha nokuhlola ama-patches (bona imibhalo ukuze uthole uhlu olugcwele). Okwamanje, lokhu kusho ukuqondisa isimo sendawo efolder ukuze iMorphe ihleze ilanda i-.mpp yakhe entsha</string>
+    <string name="settings_dev_bytecode_mode_label">Imode yebytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Imode yokushintsha esetshenziswa ku-DEX bytecode ngesikhathi sokupatcha</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Esheshayo</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Ephephile</string>
+    <string name="settings_dev_bytecode_mode_full">Egcwele</string>
+    <string name="settings_dev_validate_label">Ukuqinisekisa iminwe</string>
+    <string name="settings_dev_validate_desc">Qinisekisa ukuthi i-match() ngayinye ihambisana nendlela eyodwa kuphela (ukupatcha kuthatha isikhathi eside, ukuhlolwa kwe-patch)</string>
+    <string name="settings_dev_verify_sdk_label">Ukuqinisekisa i-Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Hlola iDEX ne-APK ezilungisiwe ngamathuluzi we-Android SDK (d8, zipalign). Kungase kubikeze imiphumela engeyona</string>
+    <string name="settings_dev_sdk_path_label">Indlela yokuqondisa i-Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Tholwe ngokuzenzakalelayo</string>
+    <string name="settings_dev_sdk_not_found">I-Android SDK ayitholakali. Setha i-ANDROID_HOME noma udinge indlela yokuqondisa i-SDK</string>
+    <string name="settings_dev_sdk_picker_title">Khetha indlela yokuqondisa i-Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Hlanza ngokuzenzakalelayo amafayela athempala</string>
     <string name="settings_toggle_auto_cleanup_desc">Susa amafaili wesikhashana emva kwe-patching</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Ifolda ayitholakali, izwakhiwa ekulungisweni okulandelayo</string>
     <string name="settings_toggle_auto_start_adb_label">Qala i-ADB ngokuzenzakalela</string>
     <string name="settings_toggle_auto_start_adb_desc">Vusa i-ADB daemon lapho kuqalisa ukuze izinkundla ezixhunywe zibukelwe. Lapho icimile, i-Morphe ayilokhu iqala iserba, futhi izici zokufaka/ukuthumela ziyacishwa</string>
+    <string name="settings_section_storage">Isimo sokugcina &amp; ikheshi</string>
+    <string name="settings_cache_summary">I-Cache: %1$s (ama-patches + ama-logs)</string>
+    <string name="settings_cache_clear_button">Sula i-cache</string>
+    <string name="settings_cache_cleared">I-cache isuliwe</string>
+    <string name="settings_cache_clear_failed">Ukisula kwephuthele</string>
+    <string name="settings_cache_confirm_title">Sula i-cache?</string>
+    <string name="settings_cache_confirm_message">Lokhu kuzosula ama-patches ama-logs adownilwe. Ama-patches azodownilwa futhi lapho edingeka</string>
+    <string name="settings_storage_open_app_data_button">Vula idatha yo-app</string>
+    <string name="settings_storage_open_logs_button">Vula ama-logs</string>
     <string name="settings_section_about">Mayelana</string>
     <string name="settings_about_version">Inguqulo %1$s</string>
     <string name="settings_about_changelogs_title">Buka uhlu lwezinguquko</string>
     <string name="settings_about_changelogs_desc">Bheka izinguquko zakamuva kule nkqubo yokuvuselelwa</string>
+    <string name="settings_about_licenses_title">Ama-laisense we-Open Source</string>
+    <string name="settings_about_licenses_desc">Buka ama-laisense ama-library wesithathu</string>
     <string name="settings_about_documentation_title">Imibhalo yokusebenzisa</string>
     <string name="settings_about_documentation_desc">Imilayezo yokulungisa, imithombo nokuxazulula izinkinga</string>
     <string name="settings_about_website_title">Vakashela iwebhusayithi</string>

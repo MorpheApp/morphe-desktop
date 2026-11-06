@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Patches toepassen</string>
     <string name="patching_step_writing_apk">Gepatcht APK-bestand schrijven</string>
     <string name="patching_step_signing">Gepatcht APK-bestand ondertekenen</string>
+    <string name="patching_task_decoding_dex">DEX-bestanden lezen</string>
+    <string name="patching_task_extracting_resources">Resources extraheren</string>
+    <string name="patching_task_decoding_resources">Resources decoderen</string>
+    <string name="patching_task_indexing_classes">Klassen indexeren</string>
+    <string name="patching_task_compiling_dex">DEX-bestanden compileren</string>
+    <string name="patching_task_compiling_resources">Resources compileren</string>
+    <string name="patching_task_writing_apk">APK-bestand schrijven</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Installeren op %1$s…</string>
     <string name="adb_error_downgrade">Kan niet downgraden, er is een nieuwere versie geïnstalleerd. Verwijder eerst de bestaande app</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Fout bij het laden van patches</string>
     <string name="patch_selection_title">Selecteer patches</string>
     <string name="patch_selection_cmd_preview">Opdrachtvoorbeeld</string>
+    <string name="patch_selection_root_mode_description">Root mount-modus</string>
+    <string name="patch_selection_lock_unavailable">Niet beschikbaar voor root-mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Ga door met patchen, zelfs als een patch mislukt</string>
     <string name="patch_selection_continue_on_error_description">Doorgaan bij fout</string>
     <string name="patch_selection_no_patches_found">Geen patches gevonden</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patchbundels</string>
     <string name="patch_selection_run_info_no_bundles">Geen bundels opgelost</string>
+    <string name="patch_selection_run_info_dev_group">Ontwikkelaarsopties</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode-modus: %1$s</string>
+    <string name="patch_selection_run_info_validate">Vingerafdrukvalidatie: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK-verificatie: %1$s</string>
     <string name="patch_selection_group_universal">Universeel</string>
     <string name="patch_selection_group_ungrouped">Niet gegroepeerd</string>
     <string name="patch_selection_group_selected_count">%1$d geselecteerd</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Bijwerken op %1$s…</string>
     <string name="result_adb_update_successful">Update geslaagd!</string>
     <string name="result_adb_install_successful">Installatie geslaagd!</string>
+    <string name="result_adb_badge_root_mount">Root-mounten</string>
+    <string name="result_adb_mount_button">Koppel aan %1$s</string>
+    <string name="result_adb_mounting_on_device">Koppelen op %1$s…</string>
+    <string name="result_adb_mount_successful">Koppelen geslaagd!</string>
+    <string name="result_adb_mount_su_prompt_hint">Koppelen op %1$s… Controleer je apparaat om Superuser-toestemming te verlenen als daarom wordt gevraagd</string>
+    <string name="result_adb_unmount_button">Ontkoppelen van %1$s</string>
+    <string name="result_adb_unmounting_on_device">Ontkoppelen van %1$s…</string>
+    <string name="result_adb_root_not_detected">Roottoegang is niet gedetecteerd op %1$s. Zorg dat Magisk/KernelSU/APatch is geïnstalleerd en dat su-toestemming is verleend</string>
+    <string name="result_adb_stock_app_not_installed">Stock-app %1$s is niet geïnstalleerd op %2$s. Installeer eerst de officiële app voordat je koppelt</string>
     <string name="result_link_default_restored">Standaard linkafhandeling hersteld</string>
     <string name="result_link_routed_stock_disabled">Links naar gepatchte app gerouteerd, standaardapp uitgeschakeld</string>
     <string name="result_adb_not_found_hint">ADB niet gevonden. Installeer Android SDK Platform Tools om directe installatie mogelijk te maken</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">van v%1$s</string>
     <string name="update_banner_later_button">Later</string>
     <string name="update_banner_skip_button">Overslaan v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Hulpmiddelen</string>
-    <string name="tools_dialog_open_logs_button">Logboeken openen</string>
-    <string name="tools_dialog_open_app_data_button">App-gegevens openen</string>
-    <string name="tools_dialog_view_licenses_button">Licenties bekijken</string>
-    <string name="tools_dialog_cache_cleared">Cache gewist</string>
-    <string name="tools_dialog_clear_failed">Wissen mislukt</string>
-    <string name="tools_dialog_clear_cache_button">Cache wissen</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (patches + logs)</string>
-    <string name="tools_dialog_confirm_clear_title">Cache wissen?</string>
-    <string name="tools_dialog_confirm_clear_message">Dit verwijdert gedownloade patches en logbestanden. Patches worden opnieuw gedownload wanneer nodig</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Open Source-licenties</string>
     <string name="licenses_dialog_empty_failed">// licenties laden mislukt</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Libs strippen</string>
     <string name="settings_toggle_developer_options_label">Opties voor ontwikkelaars</string>
     <string name="settings_toggle_developer_options_desc">Voor patchontwikkelaars. Ontgrendelt een reeks workflowopties voor het bouwen en testen van patches (zie de documentatie voor de volledige lijst). Voor nu is dat een lokale bron naar een map wijzen zodat Morphe altijd de nieuwste .mpp laadt</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode-modus</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformatiemodus toegepast op DEX-bytecode tijdens het patchen</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Snel</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Veilig</string>
+    <string name="settings_dev_bytecode_mode_full">Volledig</string>
+    <string name="settings_dev_validate_label">Vingerafdrukvalidatie</string>
+    <string name="settings_dev_validate_desc">Valideer dat elke match() slechts één methode overeenkomt (trager patchen, voor patch-testen)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK-verificatie</string>
+    <string name="settings_dev_verify_sdk_desc">Verifieer gepatchte DEX en APK met Android SDK-tools (d8, zipalign). Kan vals-positieven rapporteren</string>
+    <string name="settings_dev_sdk_path_label">Android SDK-map</string>
+    <string name="settings_dev_sdk_path_auto">Automatisch gedetecteerd</string>
+    <string name="settings_dev_sdk_not_found">Android SDK niet gevonden. Stel ANDROID_HOME in of blader naar de SDK-map</string>
+    <string name="settings_dev_sdk_picker_title">Selecteer Android SDK-map</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Tijdelijke bestanden automatisch opschonen</string>
     <string name="settings_toggle_auto_cleanup_desc">Verwijder tijdelijke bestanden na het patchen</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Map niet gevonden, wordt aangemaakt bij de volgende patch</string>
     <string name="settings_toggle_auto_start_adb_label">ADB automatisch starten</string>
     <string name="settings_toggle_auto_start_adb_desc">Start de ADB-daemon bij het opstarten zodat verbonden apparaten worden bewaakt. Wanneer uit, start Morphe de server nooit en zijn installatie/push-functies uitgeschakeld</string>
+    <string name="settings_section_storage">Opslag &amp; cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (patches + logboeken)</string>
+    <string name="settings_cache_clear_button">Cache wissen</string>
+    <string name="settings_cache_cleared">Cache gewist</string>
+    <string name="settings_cache_clear_failed">Wissen mislukt</string>
+    <string name="settings_cache_confirm_title">Cache wissen?</string>
+    <string name="settings_cache_confirm_message">Hiermee worden gedownloade patches en logbestanden verwijderd. Patches worden opnieuw gedownload wanneer dat nodig is</string>
+    <string name="settings_storage_open_app_data_button">App-gegevens openen</string>
+    <string name="settings_storage_open_logs_button">Logboeken openen</string>
     <string name="settings_section_about">Over</string>
     <string name="settings_about_version">Versie %1$s</string>
     <string name="settings_about_changelogs_title">Changelogs bekijken</string>
     <string name="settings_about_changelogs_desc">Bekijk de nieuwste wijzigingen in deze update</string>
+    <string name="settings_about_licenses_title">Open Source-licenties</string>
+    <string name="settings_about_licenses_desc">Bekijk licenties van bibliotheken van derden</string>
     <string name="settings_about_documentation_title">Documentatie</string>
     <string name="settings_about_documentation_desc">Handleidingen voor patchen, bronnen en probleemoplossing</string>
     <string name="settings_about_website_title">Website bezoeken</string>

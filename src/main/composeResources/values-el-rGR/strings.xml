@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Εφαρμογή τροποποιήσεων</string>
     <string name="patching_step_writing_apk">Εγγραφή αρχείου APK με patch</string>
     <string name="patching_step_signing">Υπογραφή αρχείου APK με patch</string>
+    <string name="patching_task_decoding_dex">Ανάγνωση αρχείων DEX</string>
+    <string name="patching_task_extracting_resources">Εξαγωγή πόρων</string>
+    <string name="patching_task_decoding_resources">Αποκωδικοποίηση πόρων</string>
+    <string name="patching_task_indexing_classes">Ευρετηρίαση κλάσεων</string>
+    <string name="patching_task_compiling_dex">Μεταγλώττιση αρχείων DEX</string>
+    <string name="patching_task_compiling_resources">Μεταγλώττιση πόρων</string>
+    <string name="patching_task_writing_apk">Γραφή αρχείου APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Εγκατάσταση σε %1$s…</string>
     <string name="adb_error_downgrade">Δεν είναι δυνατή η υποβάθμιση έκδοσης, υπάρχει εγκατεστημένη νεότερη έκδοση. Απεγκαταστήστε πρώτα την υπάρχουσα εφαρμογή</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Σφάλμα φόρτωσης patches</string>
     <string name="patch_selection_title">Επιλογή patches</string>
     <string name="patch_selection_cmd_preview">Προεπισκόπηση εντολής</string>
+    <string name="patch_selection_root_mode_description">Λειτουργία προσάρτησης root</string>
+    <string name="patch_selection_lock_unavailable">Μη διαθέσιμο για προσάρτηση με root</string>
     <string name="patch_selection_continue_on_error_tooltip">Συνέχιση του patch ακόμα κι αν αποτύχει ένα patch</string>
     <string name="patch_selection_continue_on_error_description">Συνέχεια σε σφάλμα</string>
     <string name="patch_selection_no_patches_found">Δε βρέθηκαν τροποποιήσεις </string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Εφαρμογή</string>
     <string name="patch_selection_run_info_bundles_group">Πακέτα patch</string>
     <string name="patch_selection_run_info_no_bundles">Δεν βρέθηκαν πακέτα</string>
+    <string name="patch_selection_run_info_dev_group">Επιλογές προγραμματιστή</string>
+    <string name="patch_selection_run_info_bytecode_mode">Λειτουργία Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Επαλήθευση αποτυπώματος: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Επαλήθευση Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Καθολικό</string>
     <string name="patch_selection_group_ungrouped">Χωρίς ομαδοποίηση</string>
     <string name="patch_selection_group_selected_count">%1$d επιλεγμένη</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Ενημέρωση σε %1$s…</string>
     <string name="result_adb_update_successful">Ενημέρωση επιτυχής!</string>
     <string name="result_adb_install_successful">Η εγκατάσταση ήταν επιτυχής!</string>
+    <string name="result_adb_badge_root_mount">Προσάρτηση με root</string>
+    <string name="result_adb_mount_button">Προσάρτηση στο %1$s</string>
+    <string name="result_adb_mounting_on_device">Προσάρτηση στο %1$s…</string>
+    <string name="result_adb_mount_successful">Η προσάρτηση ήταν επιτυχής!</string>
+    <string name="result_adb_mount_su_prompt_hint">Προσάρτηση στο %1$s… Ελέγξτε τη συσκευή σας για να χορίσετε άδεια Superuser εάν σας ζητηθεί</string>
+    <string name="result_adb_unmount_button">Αποσάρτηση από το %1$s</string>
+    <string name="result_adb_unmounting_on_device">Αποσάρτηση από το %1$s…</string>
+    <string name="result_adb_root_not_detected">Δεν ανιχνεύθηκε πρόσβαση root στο %1$s. Βεβαιωθείτε ότι το Magisk/KernelSU/APatch είναι εγκατεστημένο και ότι έχει χορηγηθεί άδεια su</string>
+    <string name="result_adb_stock_app_not_installed">Η εφαρμογή συστήματος %1$s δεν είναι εγκατεστημένη στο %2$s. Εγκαταστήστε πρώτα την επίσημη εφαρμογή πριν από τη στήριξη</string>
     <string name="result_link_default_restored">Η προεπιλεγμένη διαχείριση συνδέσμων επαναφέρθηκε</string>
     <string name="result_link_routed_stock_disabled">Οι σύνδεσμοι διοχετεύονται στην εφαρμογή με patch, η αρχική εφαρμογή απενεργοποιήθηκε</string>
     <string name="result_adb_not_found_hint">Το ADB δεν βρέθηκε. Εγκαταστήστε τα Android SDK Platform Tools για να ενεργοποιήσετε την άμεση εγκατάσταση</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">από v%1$s</string>
     <string name="update_banner_later_button">Αργότερα</string>
     <string name="update_banner_skip_button">Παράβλεψη v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Εργαλεία</string>
-    <string name="tools_dialog_open_logs_button">Άνοιγμα αρχείων καταγραφής</string>
-    <string name="tools_dialog_open_app_data_button">Άνοιγμα δεδομένων εφαρμογής</string>
-    <string name="tools_dialog_view_licenses_button">Προβολή αδειών</string>
-    <string name="tools_dialog_cache_cleared">Η προσωρινή μνήμη καθαρίστηκε</string>
-    <string name="tools_dialog_clear_failed">Η εκκαθάριση απέτυχε</string>
-    <string name="tools_dialog_clear_cache_button">Εκκαθάριση προσωρινής μνήμης</string>
-    <string name="tools_dialog_cache_summary">Προσωρινή μνήμη: %1$s (patches + αρχεία καταγραφής)</string>
-    <string name="tools_dialog_confirm_clear_title">Εκκαθάριση προσωρινής μνήμης;</string>
-    <string name="tools_dialog_confirm_clear_message">Αυτό θα διαγράψει τα ληφθέντα patches και τα αρχεία καταγραφής. Τα patches θα ληφθούν ξανά όταν χρειαστούν</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Άδειες λογισμικού ανοικτού κώδικα</string>
     <string name="licenses_dialog_empty_failed">// απέτυχε η φόρτωση αδειών</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Αφαίρεση βιβλιοθηκών</string>
     <string name="settings_toggle_developer_options_label">Επιλογές προγραμματιστή</string>
     <string name="settings_toggle_developer_options_desc">Για προγραμματιστές patches. Ξεκλειδώνει μια σειρά επιλογών ροής εργασίας για τη δημιουργία και δοκιμή patches (δείτε την τεκμηρίωση για την πλήρη λίστα). Προς το παρόν, αυτό σημαίνει να ορίσετε μια τοπική πηγή σε έναν φάκελο ώστε το Morphe να φορτώνει πάντα το νεότερο .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Λειτουργία Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Λειτουργία μετασχηματισμού που εφαρμόζεται στον bytecode DEX κατά το patching</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Γρήγορη</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Ασφαλής</string>
+    <string name="settings_dev_bytecode_mode_full">Πλήρης</string>
+    <string name="settings_dev_validate_label">Επαλήθευση αποτυπώματος</string>
+    <string name="settings_dev_validate_desc">Επαλήθευση ότι κάθε match() αντιστοιχεί σε μόνο μία μέθοδο (πιο αργό patching, για δοκιμή patch)</string>
+    <string name="settings_dev_verify_sdk_label">Επαλήθευση Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Επαληθεύστε τα τροποποιημένα DEX και APK με τα εργαλεία του Android SDK (d8, zipalign). Ενδέχεται να αναφέρονται ψευδώς θετικά αποτελέσματα</string>
+    <string name="settings_dev_sdk_path_label">Κατάλογος Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Αυτόματη ανίχνευση</string>
+    <string name="settings_dev_sdk_not_found">Το Android SDK δεν βρέθηκε. Ορίστε το ANDROID_HOME ή αναζητήστε τον κατάλογο του SDK</string>
+    <string name="settings_dev_sdk_picker_title">Επιλέξτε κατάλογο Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Αυτόματη εκκαθάριση προσωρινών αρχείων</string>
     <string name="settings_toggle_auto_cleanup_desc">Διαγραφή προσωρινών αρχείων μετά το patch</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Ο φάκελος δεν βρέθηκε, θα δημιουργηθεί στο επόμενο patch</string>
     <string name="settings_toggle_auto_start_adb_label">Αυτόματη εκκίνηση ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Εκκινεί τον δαίμονα ADB κατά την εκκίνηση ώστε να παρακολουθούνται οι συνδεδεμένες συσκευές. Όταν είναι απενεργοποιημένο, το Morphe δεν ξεκινά ποτέ τον διακομιστή και οι δυνατότητες εγκατάστασης/προώθησης είναι απενεργοποιημένες</string>
+    <string name="settings_section_storage">Αποθηκευτικός χώρος &amp; προσωρινή μνήμη</string>
+    <string name="settings_cache_summary">Προσωρινή μνήμη: %1$s (διορθώσεις + αρχεία καταγραφής)</string>
+    <string name="settings_cache_clear_button">Εκκαθάριση προσωρινής μνήμης</string>
+    <string name="settings_cache_cleared">Η προσωρινή μνήμη εκκαθαρίστηκε</string>
+    <string name="settings_cache_clear_failed">Η εκκαθάριση απέτυχε</string>
+    <string name="settings_cache_confirm_title">Εκκαθάριση προσωρινής μνήμης;</string>
+    <string name="settings_cache_confirm_message">Αυτό θα διαγράψει τις ληφθείσες διορθώσεις και τα αρχεία καταγραφής. Οι διορθώσεις θα ληφθούν ξανά όταν χρειαστεί</string>
+    <string name="settings_storage_open_app_data_button">Άνοιγμα δεδομένων εφαρμογής</string>
+    <string name="settings_storage_open_logs_button">Άνοιγμα αρχείων καταγραφής</string>
     <string name="settings_section_about">Πληροφορίες</string>
     <string name="settings_about_version">Έκδοση %1$s</string>
     <string name="settings_about_changelogs_title">Προβολή αρχείων αλλαγών</string>
     <string name="settings_about_changelogs_desc">Έλεγξε τις τελευταίες αλλαγές σε αυτή την ενημέρωση</string>
+    <string name="settings_about_licenses_title">Άδειες ανοιχτού κώδικα</string>
+    <string name="settings_about_licenses_desc">Προβολή αδειών βιβλιοθηκών τρίτων</string>
     <string name="settings_about_documentation_title">Τεκμηρίωση</string>
     <string name="settings_about_documentation_desc">Οδηγοί για patch, πηγές και αντιμετώπιση προβλημάτων</string>
     <string name="settings_about_website_title">Επισκεφθείτε τον ιστότοπο</string>

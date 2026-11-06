@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">در حال اعمال پچ‌ها</string>
     <string name="patching_step_writing_apk">در حال نوشتن فایل APK پچ‌شده</string>
     <string name="patching_step_signing">در حال امضای فایل APK پچ‌شده</string>
+    <string name="patching_task_decoding_dex">خواندن فایل‌های DEX</string>
+    <string name="patching_task_extracting_resources">استخراج منابع</string>
+    <string name="patching_task_decoding_resources">رمزگشایی منابع</string>
+    <string name="patching_task_indexing_classes">نمایه‌سازی کلاس‌ها</string>
+    <string name="patching_task_compiling_dex">کامپایل کردن فایل‌های DEX</string>
+    <string name="patching_task_compiling_resources">کامپایل کردن منابع</string>
+    <string name="patching_task_writing_apk">نوشتن فایل APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">در حال نصب روی %1$s…</string>
     <string name="adb_error_downgrade">امکان بازگشت به نسخهٔ قدیمی‌تر وجود ندارد؛ نسخهٔ جدیدتری نصب است. ابتدا برنامهٔ موجود را حذف نصب کنید</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">خطا در بارگذاری پچ‌ها</string>
     <string name="patch_selection_title">انتخاب پچ‌ها</string>
     <string name="patch_selection_cmd_preview">پیش‌نمایش دستور</string>
+    <string name="patch_selection_root_mode_description">حالت مانت روت</string>
+    <string name="patch_selection_lock_unavailable">برای نصب روت در دسترس نیست</string>
     <string name="patch_selection_continue_on_error_tooltip">ادامهٔ پچ حتی اگر یک پچ ناموفق باشد</string>
     <string name="patch_selection_continue_on_error_description">ادامه در صورت خطا</string>
     <string name="patch_selection_no_patches_found">هیچ پچی یافت نشد</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">برنامه</string>
     <string name="patch_selection_run_info_bundles_group">بسته‌های پچ</string>
     <string name="patch_selection_run_info_no_bundles">هیچ باندلی شناسایی نشد</string>
+    <string name="patch_selection_run_info_dev_group">گزینه‌های توسعه‌دهنده</string>
+    <string name="patch_selection_run_info_bytecode_mode">حالت بایت‌کد: %1$s</string>
+    <string name="patch_selection_run_info_validate">اعتبارسنجی اثر انگشت: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">تأیید SDK اندروید: %1$s</string>
     <string name="patch_selection_group_universal">یونیورسال</string>
     <string name="patch_selection_group_ungrouped">گروه‌بندی‌نشده</string>
     <string name="patch_selection_group_selected_count">%1$d مورد انتخاب شد</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">در حال به‌روزرسانی روی %1$s…</string>
     <string name="result_adb_update_successful">به روزرسانی موفقیت آمیز!</string>
     <string name="result_adb_install_successful">نصب با موفقیت انجام شد!</string>
+    <string name="result_adb_badge_root_mount">مانت روت</string>
+    <string name="result_adb_mount_button">نصب روی %1$s</string>
+    <string name="result_adb_mounting_on_device">در حال نصب روی %1$s…</string>
+    <string name="result_adb_mount_successful">نصب موفقیت‌آمیز بود!</string>
+    <string name="result_adb_mount_su_prompt_hint">در حال نصب روی %1$s… در صورت درخواست، دستگاه خود را برای اعطای مجوز Superuser بررسی کنید</string>
+    <string name="result_adb_unmount_button">لغو نصب از %1$s</string>
+    <string name="result_adb_unmounting_on_device">در حال لغو نصب از %1$s…</string>
+    <string name="result_adb_root_not_detected">دسترسی روت روی %1$s شناسایی نشد. مطمئن شوید Magisk/KernelSU/APatch نصب شده و مجوز su اعطا شده است</string>
+    <string name="result_adb_stock_app_not_installed">برنامه استوک %1$s روی %2$s نصب نیست. لطفاً ابتدا برنامه رسمی را نصب کرده و سپس اقدام به نصب نمایید</string>
     <string name="result_link_default_restored">مدیریت پیش‌فرض لینک‌ها بازیابی شد</string>
     <string name="result_link_routed_stock_disabled">لینک‌ها به برنامه پچ‌شده هدایت شدند، برنامه اصلی غیرفعال شد</string>
     <string name="result_adb_not_found_hint">ADB یافت نشد. برای فعال کردن نصب مستقیم، Android SDK Platform Tools را نصب کنید</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">از v%1$s</string>
     <string name="update_banner_later_button">بعداً</string>
     <string name="update_banner_skip_button">رد کردن v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">ابزارها</string>
-    <string name="tools_dialog_open_logs_button">باز کردن گزارش‌ها</string>
-    <string name="tools_dialog_open_app_data_button">باز کردن داده‌های برنامه</string>
-    <string name="tools_dialog_view_licenses_button">مشاهده مجوزها</string>
-    <string name="tools_dialog_cache_cleared">کش پاک شد</string>
-    <string name="tools_dialog_clear_failed">پاک‌سازی ناموفق بود</string>
-    <string name="tools_dialog_clear_cache_button">پاک کردن کش</string>
-    <string name="tools_dialog_cache_summary">کش: %1$s (پچ‌ها + گزارش‌ها)</string>
-    <string name="tools_dialog_confirm_clear_title">کش پاک شود؟</string>
-    <string name="tools_dialog_confirm_clear_message">این کار پچ‌های دانلودشده و فایل‌های گزارش را حذف می‌کند. پچ‌ها در صورت نیاز دوباره دانلود خواهند شد</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">مجوزهای متن‌باز</string>
     <string name="licenses_dialog_empty_failed">// بارگذاری مجوزها ناموفق بود</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">حذف کتابخانه‌ها</string>
     <string name="settings_toggle_developer_options_label">گزینه‌های توسعه‌دهنده</string>
     <string name="settings_toggle_developer_options_desc">برای توسعه‌دهندگان پچ. مجموعه‌ای از گزینه‌های گردش کار برای ساخت و آزمایش پچ‌ها را باز می‌کند (برای فهرست کامل به مستندات مراجعه کنید). در حال حاضر، یعنی اشاره کردن یک منبع محلی به یک پوشه تا Morphe همیشه جدیدترین فایل .mpp را بارگذاری کند</string>
+    <string name="settings_dev_bytecode_mode_label">حالت بایت‌کد</string>
+    <string name="settings_dev_bytecode_mode_desc">حالت تبدیل اعمال شده بر بایت‌کد DEX در هنگام پچ کردن</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">سریع</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">ایمن</string>
+    <string name="settings_dev_bytecode_mode_full">کامل</string>
+    <string name="settings_dev_validate_label">اعتبارسنجی اثر انگشت</string>
+    <string name="settings_dev_validate_desc">تأیید اینکه هر match() تنها با یک متد مطابقت دارد (پچ کردن کندتر، برای تست پچ)</string>
+    <string name="settings_dev_verify_sdk_label">تأیید SDK اندروید</string>
+    <string name="settings_dev_verify_sdk_desc">تأیید DEX و APK پچ شده با ابزارهای Android SDK (d8, zipalign). ممکن است موارد مثبت کاذب گزارش کند</string>
+    <string name="settings_dev_sdk_path_label">دایرکتوری Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">شناسایی خودکار</string>
+    <string name="settings_dev_sdk_not_found">Android SDK یافت نشد. ANDROID_HOME را تنظیم کنید یا دایرکتوری SDK را جستجو کنید</string>
+    <string name="settings_dev_sdk_picker_title">انتخاب دایرکتوری Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">پاک‌سازی خودکار فایل‌های موقت</string>
     <string name="settings_toggle_auto_cleanup_desc">حذف فایل‌های موقت پس از پچ‌کردن</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">پوشهٔ خروجی پیدا نشد؛ در پچ بعدی ساخته خواهد شد</string>
     <string name="settings_toggle_auto_start_adb_label">شروع خودکار ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">هنگام راه‌اندازی، سرویس پس‌زمینهٔ ADB اجرا می‌شود تا دستگاه‌های متصل پایش شوند. وقتی خاموش باشد، Morphe هرگز سرور را شروع نمی‌کند و قابلیت‌های نصب/ارسال غیرفعال هستند</string>
+    <string name="settings_section_storage">ذخیره‌سازی و حافظه پنهان</string>
+    <string name="settings_cache_summary">کش: %1$s (پچ‌ها + لاگ‌ها)</string>
+    <string name="settings_cache_clear_button">پاک‌کردن کش</string>
+    <string name="settings_cache_cleared">کش پاک شد</string>
+    <string name="settings_cache_clear_failed">پاک‌سازی ناموفق بود</string>
+    <string name="settings_cache_confirm_title">پاک‌کردن کش؟</string>
+    <string name="settings_cache_confirm_message">این کار باعث حذف پچ‌های دانلودشده و فایل‌های لاگ می‌شود. پچ‌ها در صورت نیاز دوباره دانلود خواهند شد</string>
+    <string name="settings_storage_open_app_data_button">باز کردن داده‌های برنامه</string>
+    <string name="settings_storage_open_logs_button">باز کردن لاگ‌ها</string>
     <string name="settings_section_about">درباره</string>
     <string name="settings_about_version">نسخه %1$s</string>
     <string name="settings_about_changelogs_title">مشاهدهٔ تغییرات نسخه</string>
     <string name="settings_about_changelogs_desc">آخرین تغییرات این به‌روزرسانی را ببینید</string>
+    <string name="settings_about_licenses_title">مجوزهای متن‌باز</string>
+    <string name="settings_about_licenses_desc">مشاهده مجوزهای کتابخانه‌های شخص ثالث</string>
     <string name="settings_about_documentation_title">مستندات</string>
     <string name="settings_about_documentation_desc">راهنماهایی برای پچ‌کردن، منابع و عیب‌یابی</string>
     <string name="settings_about_website_title">بازدید از وب‌سایت</string>

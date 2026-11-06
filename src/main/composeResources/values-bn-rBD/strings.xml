@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">প্যাচ প্রয়োগ করা হচ্ছে</string>
     <string name="patching_step_writing_apk">প্যাচ করা APK ফাইল লেখা হচ্ছে</string>
     <string name="patching_step_signing">প্যাচ করা APK ফাইল সাইন করা হচ্ছে</string>
+    <string name="patching_task_decoding_dex">DEX ফাইল পড়া হচ্ছে</string>
+    <string name="patching_task_extracting_resources">রিসোর্স এক্সট্রাক্ট করা হচ্ছে</string>
+    <string name="patching_task_decoding_resources">রিসোর্স ডিকোড করা হচ্ছে</string>
+    <string name="patching_task_indexing_classes">ক্লাস ইনডেক্স করা হচ্ছে</string>
+    <string name="patching_task_compiling_dex">DEX ফাইল কম্পাইল করা হচ্ছে</string>
+    <string name="patching_task_compiling_resources">রিসোর্স কম্পাইল করা হচ্ছে</string>
+    <string name="patching_task_writing_apk">APK ফাইল লেখা হচ্ছে</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s-এ ইনস্টল করা হচ্ছে…</string>
     <string name="adb_error_downgrade">ডাউনগ্রেড করা যাবে না, একটি নতুন সংস্করণ ইনস্টল করা আছে। আগে বিদ্যমান অ্যাপটি আনইনস্টল করুন</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">প্যাচ লোড করতে ত্রুটি</string>
     <string name="patch_selection_title">প্যাচ নির্বাচন করুন</string>
     <string name="patch_selection_cmd_preview">কমান্ড প্রিভিউ</string>
+    <string name="patch_selection_root_mode_description">রুট মাউন্ট মোড</string>
+    <string name="patch_selection_lock_unavailable">রুট মাউন্ট-এর জন্য অনুপলব্ধ</string>
     <string name="patch_selection_continue_on_error_tooltip">একটি প্যাচ ব্যর্থ হলেও প্যাচিং চালিয়ে যান</string>
     <string name="patch_selection_continue_on_error_description">ত্রুটিতে চালিয়ে যান</string>
     <string name="patch_selection_no_patches_found">কোনো প্যাচ পাওয়া যায়নি</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">অ্যাপ</string>
     <string name="patch_selection_run_info_bundles_group">প্যাচ বান্ডেল</string>
     <string name="patch_selection_run_info_no_bundles">কোনো বান্ডেল সমাধান করা হয়নি</string>
+    <string name="patch_selection_run_info_dev_group">ডেভেলপার অপশন</string>
+    <string name="patch_selection_run_info_bytecode_mode">বাইটকোড মোড: %1$s</string>
+    <string name="patch_selection_run_info_validate">ফিঙ্গারপ্রিন্ট যাচাইকরণ: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">অ্যান্ড্রয়েড SDK যাচাইকরণ: %1$s</string>
     <string name="patch_selection_group_universal">ইউনিভার্সাল</string>
     <string name="patch_selection_group_ungrouped">অসংগঠিত</string>
     <string name="patch_selection_group_selected_count">%1$d নির্বাচিত</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">%1$s-এ আপডেট হচ্ছে…</string>
     <string name="result_adb_update_successful">আপডেট সফল!</string>
     <string name="result_adb_install_successful">ইনস্টলেশন সফল!</string>
+    <string name="result_adb_badge_root_mount">রুট মাউন্ট</string>
+    <string name="result_adb_mount_button">%1$s-এ মাউন্ট করুন</string>
+    <string name="result_adb_mounting_on_device">%1$s-এ মাউন্ট করা হচ্ছে…</string>
+    <string name="result_adb_mount_successful">মাউন্ট সফল হয়েছে!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s-এ মাউন্ট করা হচ্ছে… অনুরোধ করা হলে সুপারইউজার পারমিশন দিতে আপনার ডিভাইসটি চেক করুন</string>
+    <string name="result_adb_unmount_button">%1$s থেকে আনমাউন্ট করুন</string>
+    <string name="result_adb_unmounting_on_device">%1$s থেকে আনমাউন্ট করা হচ্ছে…</string>
+    <string name="result_adb_root_not_detected">%1$s-এ রুট অ্যাক্সেস শনাক্ত করা যায়নি। নিশ্চিত করুন যে Magisk/KernelSU/APatch ইনস্টল করা আছে এবং su পারমিশন দেওয়া হয়েছে</string>
+    <string name="result_adb_stock_app_not_installed">স্টক অ্যাপ %1$s, %2$s-এ ইনস্টল করা নেই। মাউন্ট করার আগে প্রথমে অফিসিয়াল অ্যাপটি ইনস্টল করুন</string>
     <string name="result_link_default_restored">ডিফল্ট লিংক হ্যান্ডলিং পুনরুদ্ধার করা হয়েছে</string>
     <string name="result_link_routed_stock_disabled">প্যাচ করা অ্যাপে লিংক রাউট করা হয়েছে, স্টক নিষ্ক্রিয়</string>
     <string name="result_adb_not_found_hint">ADB পাওয়া যায়নি। সরাসরি ইনস্টল সক্ষম করতে Android SDK Platform Tools ইনস্টল করুন</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s থেকে</string>
     <string name="update_banner_later_button">পরে</string>
     <string name="update_banner_skip_button">V%1$s এড়িয়ে যান</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">টুলস</string>
-    <string name="tools_dialog_open_logs_button">লগ খুলুন</string>
-    <string name="tools_dialog_open_app_data_button">অ্যাপ ডেটা খুলুন</string>
-    <string name="tools_dialog_view_licenses_button">লাইসেন্স দেখুন</string>
-    <string name="tools_dialog_cache_cleared">ক্যাশে পরিষ্কার</string>
-    <string name="tools_dialog_clear_failed">পরিষ্কার ব্যর্থ</string>
-    <string name="tools_dialog_clear_cache_button">ক্যাশে পরিষ্কার করুন</string>
-    <string name="tools_dialog_cache_summary">ক্যাশে: %1$s (প্যাচ + লগ)</string>
-    <string name="tools_dialog_confirm_clear_title">ক্যাশে পরিষ্কার করবেন?</string>
-    <string name="tools_dialog_confirm_clear_message">এটি ডাউনলোড করা প্যাচ এবং লগ ফাইল মুছে দেবে। প্রয়োজন হলে প্যাচ পুনরায় ডাউনলোড করা হবে</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ওপেন সোর্স লাইসেন্স</string>
     <string name="licenses_dialog_empty_failed">// লাইসেন্স লোড করা ব্যর্থ হয়েছে</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">স্ট্রিপ লাইব্রেরি</string>
     <string name="settings_toggle_developer_options_label">ডেভেলপার অপশন</string>
     <string name="settings_toggle_developer_options_desc">প্যাচ ডেভেলপারদের জন্য। প্যাচ তৈরি এবং পরীক্ষার জন্য ওয়ার্কফ্লো বিকল্পগুলির একটি স্যুট আনলক করে (সম্পূর্ণ তালিকার জন্য ডকুমেন্টেশন দেখুন)। এখন, এটি একটি ফোল্ডারে একটি লোকাল সোর্স নির্দেশ করছে যাতে Morphe সর্বদা এর সর্বশেষ .mpp লোড করে</string>
+    <string name="settings_dev_bytecode_mode_label">বাইটকোড মোড</string>
+    <string name="settings_dev_bytecode_mode_desc">প্যাচিংয়ের সময় DEX বাইটকোডে প্রয়োগ করা ট্রান্সফরমেশন মোড</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">দ্রুত</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">নিরাপদ</string>
+    <string name="settings_dev_bytecode_mode_full">সম্পূর্ণ</string>
+    <string name="settings_dev_validate_label">ফিঙ্গারপ্রিন্ট যাচাইকরণ</string>
+    <string name="settings_dev_validate_desc">যাচাই করুন যে প্রতিটি match() শুধুমাত্র একটি মেথডের সাথে মেলে (প্যাচিং ধীর হবে, প্যাচ পরীক্ষার জন্য)</string>
+    <string name="settings_dev_verify_sdk_label">অ্যান্ড্রয়েড SDK যাচাইকরণ</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK টুলস (d8, zipalign) দিয়ে প্যাচ করা DEX এবং APK যাচাই করুন। এটি ভুল পজিটিভ রিপোর্ট করতে পারে</string>
+    <string name="settings_dev_sdk_path_label">Android SDK ডিরেক্টরি</string>
+    <string name="settings_dev_sdk_path_auto">স্বয়ংক্রিয়ভাবে শনাক্ত করা হয়েছে</string>
+    <string name="settings_dev_sdk_not_found">Android SDK পাওয়া যায়নি। ANDROID_HOME সেট করুন অথবা SDK ডিরেক্টরি ব্রাউজ করুন</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK ডিরেক্টরি নির্বাচন করুন</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">অটো-ক্লিনআপ অস্থায়ী ফাইল</string>
     <string name="settings_toggle_auto_cleanup_desc">প্যাচিংয়ের পরে অস্থায়ী ফাইল মুছুন</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">ফোল্ডার পাওয়া যায়নি, পরবর্তী প্যাচে তৈরি হবে</string>
     <string name="settings_toggle_auto_start_adb_label">ADB স্বয়ংক্রিয়-শুরু</string>
     <string name="settings_toggle_auto_start_adb_desc">লঞ্চে ADB ডেমন স্পন করুন যাতে সংযুক্ত ডিভাইসগুলো পর্যবেক্ষণ করা হয়। বন্ধ থাকলে, Morphe কখনও সার্ভার শুরু করে না, এবং ইনস্টল/পুশ বৈশিষ্ট্য নিষ্ক্রিয় থাকে</string>
+    <string name="settings_section_storage">স্টোরেজ এবং ক্যাশ</string>
+    <string name="settings_cache_summary">ক্যাশ: %1$s (প্যাচ + লগ)</string>
+    <string name="settings_cache_clear_button">ক্যাশ সাফ করুন</string>
+    <string name="settings_cache_cleared">ক্যাশ সাফ করা হয়েছে</string>
+    <string name="settings_cache_clear_failed">সাফ করা ব্যর্থ হয়েছে</string>
+    <string name="settings_cache_confirm_title">ক্যাশ সাফ করবেন?</string>
+    <string name="settings_cache_confirm_message">এর ফলে ডাউনলোড করা প্যাচ এবং লগ ফাইলগুলো মুছে যাবে। প্রয়োজন হলে প্যাচগুলো পুনরায় ডাউনলোড করা হবে</string>
+    <string name="settings_storage_open_app_data_button">অ্যাপ ডেটা খুলুন</string>
+    <string name="settings_storage_open_logs_button">লগ খুলুন</string>
     <string name="settings_section_about">মর্ফ সম্পর্কে</string>
     <string name="settings_about_version">সংস্করণ %1$s</string>
     <string name="settings_about_changelogs_title">চেঞ্জলগ দেখুন</string>
     <string name="settings_about_changelogs_desc">এই আপডেটের সর্বশেষ পরিবর্তনগুলো দেখুন</string>
+    <string name="settings_about_licenses_title">ওপেন সোর্স লাইসেন্স</string>
+    <string name="settings_about_licenses_desc">থার্ড-পার্টি লাইব্রেরির লাইসেন্স দেখুন</string>
     <string name="settings_about_documentation_title">ডকুমেন্টেশন</string>
     <string name="settings_about_documentation_desc">প্যাচিং, সোর্স এবং সমস্যা সমাধানের নির্দেশিকা</string>
     <string name="settings_about_website_title">ওয়েবসাইট দেখুন</string>

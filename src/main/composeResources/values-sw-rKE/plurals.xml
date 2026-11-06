@@ -36,6 +36,10 @@
         <item quantity="one">Pakua bundle %1$d</item>
         <item quantity="other">Pakua bundles %1$d</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">core %1$d</item>
+        <item quantity="other">core %1$d</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="one">mabadiliko %1$d</item>
         <item quantity="other">mabadiliko %1$d</item>

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Yamalar uygulanıyor</string>
     <string name="patching_step_writing_apk">Yamalanmış APK dosyası yazılıyor</string>
     <string name="patching_step_signing">Yamalanmış APK dosyası imzalanıyor</string>
+    <string name="patching_task_decoding_dex">DEX dosyaları okunuyor</string>
+    <string name="patching_task_extracting_resources">Kaynaklar çıkartılıyor</string>
+    <string name="patching_task_decoding_resources">Kaynaklar çözülüyor</string>
+    <string name="patching_task_indexing_classes">Sınıflar indeksleniyor</string>
+    <string name="patching_task_compiling_dex">DEX dosyaları derleniyor</string>
+    <string name="patching_task_compiling_resources">Kaynaklar derleniyor...</string>
+    <string name="patching_task_writing_apk">APK dosyası yazılıyor...</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s cihazına kuruluyor…</string>
     <string name="adb_error_downgrade">Sürüm düşürülemiyor, daha yeni bir sürüm yüklü. Önce mevcut uygulamayı kaldırın</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Yamalar yüklenirken hata</string>
     <string name="patch_selection_title">Yamaları seç</string>
     <string name="patch_selection_cmd_preview">Komut önizlemesi</string>
+    <string name="patch_selection_root_mode_description">Root bağlama modu</string>
+    <string name="patch_selection_lock_unavailable">Root bağlaması için kullanılamıyor</string>
     <string name="patch_selection_continue_on_error_tooltip">Bir yama başarısız olsa bile yamalamaya devam et</string>
     <string name="patch_selection_continue_on_error_description">Hatada devam et</string>
     <string name="patch_selection_no_patches_found">Yama bulunamadı</string>
@@ -368,6 +377,10 @@
     <string name="patch_selection_run_info_app_group">Uygulama</string>
     <string name="patch_selection_run_info_bundles_group">Yama bundle'ları</string>
     <string name="patch_selection_run_info_no_bundles">Paket çözümlenemedi</string>
+    <string name="patch_selection_run_info_dev_group">Geliştirici seçenekleri</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode modu: %1$s</string>
+    <string name="patch_selection_run_info_validate">Parmak izi doğrulama: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK doğrulaması: %1$s</string>
     <string name="patch_selection_group_universal">Evrensel</string>
     <string name="patch_selection_group_ungrouped">Gruplanmamış</string>
     <string name="patch_selection_group_selected_count">%1$d seçili</string>
@@ -423,6 +436,15 @@
     <string name="result_adb_updating_on_device">%1$s cihazında güncelleniyor…</string>
     <string name="result_adb_update_successful">Güncelleme başarılı!</string>
     <string name="result_adb_install_successful">Kurulum başarılı!</string>
+    <string name="result_adb_badge_root_mount">Root ile bağlama</string>
+    <string name="result_adb_mount_button">%1$s hedefinde bağla</string>
+    <string name="result_adb_mounting_on_device">%1$s hedefinde bağlanıyor…</string>
+    <string name="result_adb_mount_successful">Bağlama başarılı!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s hedefinde bağlanıyor… Sorulursa Superuser iznini vermek için cihazınızı kontrol edin</string>
+    <string name="result_adb_unmount_button">%1$s hedefinden bağlamayı kaldır</string>
+    <string name="result_adb_unmounting_on_device">%1$s hedefinden bağlama kaldırılıyor…</string>
+    <string name="result_adb_root_not_detected">%1$s hedefinde root erişimi saptanmadı. Magisk/KernelSU/APatch'ın yüklü olduğundan ve su izninin verildiğinden emin olun</string>
+    <string name="result_adb_stock_app_not_installed">%1$s stok uygulaması %2$s hedefinde yüklü değil. Bağlamadan önce resmi uygulamayı yükleyin</string>
     <string name="result_link_default_restored">Varsayılan bağlantı işleme geri yüklendi</string>
     <string name="result_link_routed_stock_disabled">Bağlantılar yamalı uygulamaya yönlendirildi, stok uygulama devre dışı bırakıldı</string>
     <string name="result_adb_not_found_hint">ADB bulunamadı. Doğrudan kurulumu etkinleştirmek için Android SDK Platform Araçları'nı kurun</string>
@@ -603,17 +625,6 @@
     <string name="update_banner_from_version">v%1$s sürümünden</string>
     <string name="update_banner_later_button">Sonra</string>
     <string name="update_banner_skip_button">V%1$s sürümünü atla</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Araçlar</string>
-    <string name="tools_dialog_open_logs_button">Günlükleri aç</string>
-    <string name="tools_dialog_open_app_data_button">Uygulama verilerini aç</string>
-    <string name="tools_dialog_view_licenses_button">Lisansları görüntüle</string>
-    <string name="tools_dialog_cache_cleared">Önbellek temizlendi</string>
-    <string name="tools_dialog_clear_failed">Temizleme başarısız oldu</string>
-    <string name="tools_dialog_clear_cache_button">Önbelleği temizle</string>
-    <string name="tools_dialog_cache_summary">Önbellek: %1$s (yamalar + günlükler)</string>
-    <string name="tools_dialog_confirm_clear_title">Önbellek temizlensin mi?</string>
-    <string name="tools_dialog_confirm_clear_message">Bu, indirilen yamaları ve günlük dosyalarını silecek. Yamalar gerektiğinde yeniden indirilecektir</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Açık Kaynak lisansları</string>
     <string name="licenses_dialog_empty_failed">// lisanslar yüklenemedi</string>
@@ -686,6 +697,19 @@
     <string name="settings_section_strip_libs">Kitaplıkları kırp</string>
     <string name="settings_toggle_developer_options_label">Geliştirici seçenekleri</string>
     <string name="settings_toggle_developer_options_desc">Yama geliştiricileri için. Yamaları derleme ve test etme için bir dizi iş akışı seçeneğinin kilidini açar (tam liste için belgelere bakın). Şimdilik bu, yerel bir kaynağı bir klasöre yönlendirerek Morphe'nin her zaman en yeni .mpp dosyasını yüklemesini sağlar</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode modu</string>
+    <string name="settings_dev_bytecode_mode_desc">Yamalama sırasında DEX bytecode'una uygulanan dönüştürme modu</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Hızlı</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Güvenli</string>
+    <string name="settings_dev_bytecode_mode_full">Tam</string>
+    <string name="settings_dev_validate_label">Parmak izi doğrulama</string>
+    <string name="settings_dev_validate_desc">Her match() ifadesinin yalnızca bir yöntemle eşleştiğini doğrula (yamalama testi için daha yavaş yamalama)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK doğrulaması</string>
+    <string name="settings_dev_verify_sdk_desc">Yamalanmış DEX ve APK'yı Android SDK araçlarıyla (d8, zipalign) doğrulayın. Yanlış pozitifler bildirebilir</string>
+    <string name="settings_dev_sdk_path_label">Android SDK dizini</string>
+    <string name="settings_dev_sdk_path_auto">Otomatik olarak algılandı</string>
+    <string name="settings_dev_sdk_not_found">Android SDK bulunamadı. ANDROID_HOME'i ayarlayın veya SDK dizini için gözatın</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK dizinini seçin</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Geçici dosyaları otomatik temizle</string>
     <string name="settings_toggle_auto_cleanup_desc">Yamalamadan sonra geçici dosyaları sil</string>
@@ -700,10 +724,21 @@
     <string name="settings_output_folder_not_found">Klasör bulunamadı, sonraki yamalamada oluşturulacak</string>
     <string name="settings_toggle_auto_start_adb_label">ADB'yi otomatik başlat</string>
     <string name="settings_toggle_auto_start_adb_desc">Başlangıçta ADB arka plan sürecini başlatarak bağlı cihazların izlenmesini sağlar. Kapalıyken Morphe sunucuyu asla başlatmaz ve kurulum/gönderme özellikleri devre dışı kalır</string>
+    <string name="settings_section_storage">Depolama ve önbellek</string>
+    <string name="settings_cache_summary">Önbellek: %1$s (yamalar + günlükler)</string>
+    <string name="settings_cache_clear_button">Önbelleği temizle</string>
+    <string name="settings_cache_cleared">Önbellek temizlendi</string>
+    <string name="settings_cache_clear_failed">Temizleme başarısız</string>
+    <string name="settings_cache_confirm_title">Önbellek temizlensin mi?</string>
+    <string name="settings_cache_confirm_message">Bu işlem, indirilen yamaları ve günlük dosyalarını silecektir. Yamalar gerektiğinde yeniden indirilecektir</string>
+    <string name="settings_storage_open_app_data_button">Uygulama verilerini aç</string>
+    <string name="settings_storage_open_logs_button">Günlükleri aç</string>
     <string name="settings_section_about">Hakkında</string>
     <string name="settings_about_version">Sürüm %1$s</string>
     <string name="settings_about_changelogs_title">Değişiklik günlüklerini görüntüle</string>
     <string name="settings_about_changelogs_desc">Bu güncellemedeki en son değişikliklere göz atın</string>
+    <string name="settings_about_licenses_title">Açık Kaynak lisansları</string>
+    <string name="settings_about_licenses_desc">Üçüncü taraf kütüphanelerin lisanslarını görüntüleyin</string>
     <string name="settings_about_documentation_title">Belgeler</string>
     <string name="settings_about_documentation_desc">Yamalama, kaynaklar ve sorun giderme kılavuzları</string>
     <string name="settings_about_website_title">Web sitesini ziyaret et</string>

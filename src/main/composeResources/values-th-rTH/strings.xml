@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">กำลังใช้แพตช์</string>
     <string name="patching_step_writing_apk">กำลังเขียนไฟล์ APK ที่แพตช์แล้ว</string>
     <string name="patching_step_signing">กำลังเซ็นชื่อไฟล์ APK ที่แพตช์แล้ว</string>
+    <string name="patching_task_decoding_dex">กำลังอ่านไฟล์ DEX</string>
+    <string name="patching_task_extracting_resources">กำลังแยกทรัพยากร</string>
+    <string name="patching_task_decoding_resources">กำลังถอดรหัสทรัพยากร</string>
+    <string name="patching_task_indexing_classes">กำลังทำดัชนีคลาส</string>
+    <string name="patching_task_compiling_dex">กำลังคอมไพล์ไฟล์ DEX</string>
+    <string name="patching_task_compiling_resources">กำลังคอมไพล์ทรัพยากร</string>
+    <string name="patching_task_writing_apk">กำลังเขียนไฟล์ APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">กำลังติดตั้งบน %1$s…</string>
     <string name="adb_error_downgrade">ไม่สามารถดาวน์เกรดได้ มีเวอร์ชันใหม่กว่าติดตั้งอยู่ ถอนการติดตั้งแอปเดิมก่อน</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">เกิดข้อผิดพลาดในการโหลดแพตช์</string>
     <string name="patch_selection_title">เลือกแพตช์</string>
     <string name="patch_selection_cmd_preview">ตัวอย่างคำสั่ง</string>
+    <string name="patch_selection_root_mode_description">โหมดการเมานต์รูท</string>
+    <string name="patch_selection_lock_unavailable">ไม่พร้อมใช้งานสำหรับการ mount root</string>
     <string name="patch_selection_continue_on_error_tooltip">แพตช์ต่อไปแม้ว่าแพตช์หนึ่งจะล้มเหลว</string>
     <string name="patch_selection_continue_on_error_description">ดำเนินการต่อเมื่อมีข้อผิดพลาด</string>
     <string name="patch_selection_no_patches_found">ไม่พบแพตช์</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">แอป</string>
     <string name="patch_selection_run_info_bundles_group">ชุดแพตช์</string>
     <string name="patch_selection_run_info_no_bundles">ไม่พบชุดแพตช์</string>
+    <string name="patch_selection_run_info_dev_group">ตัวเลือกสำหรับนักพัฒนาซอฟต์แวร์</string>
+    <string name="patch_selection_run_info_bytecode_mode">โหมด Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">การตรวจสอบลายนิ้วมือ: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">การตรวจสอบ Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">สากล</string>
     <string name="patch_selection_group_ungrouped">ไม่จัดกลุ่ม</string>
     <string name="patch_selection_group_selected_count">เลือก %1$d รายการ</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">กำลังอัปเดตบน %1$s…</string>
     <string name="result_adb_update_successful">อัปเดตสำเร็จ!</string>
     <string name="result_adb_install_successful">การติดตั้งสำเร็จ!</string>
+    <string name="result_adb_badge_root_mount">เมานต์รูท</string>
+    <string name="result_adb_mount_button">ติดตั้งบน %1$s</string>
+    <string name="result_adb_mounting_on_device">กำลังติดตั้งบน %1$s…</string>
+    <string name="result_adb_mount_successful">ติดตั้งเสร็จสมบูรณ์!</string>
+    <string name="result_adb_mount_su_prompt_hint">กำลังติดตั้งบน %1$s… โปรดตรวจสอบอุปกรณ์ของคุณเพื่ออนุญาตสิทธิ์ Superuser หากมีการแจ้งเตือน</string>
+    <string name="result_adb_unmount_button">ถอนการติดตั้งจาก %1$s</string>
+    <string name="result_adb_unmounting_on_device">กำลังถอนการติดตั้งจาก %1$s…</string>
+    <string name="result_adb_root_not_detected">ไม่พบการเข้าถึง Root บน %1$s โปรดตรวจสอบให้แน่ใจว่าได้ติดตั้ง Magisk/KernelSU/APatch และอนุญาตสิทธิ์ su แล้ว</string>
+    <string name="result_adb_stock_app_not_installed">ไม่ได้ติดตั้งแอปมาตรฐาน %1$s บน %2$s โปรดติดตั้งแอปอย่างเป็นทางการก่อนทำการติดตั้ง</string>
     <string name="result_link_default_restored">คืนค่าการจัดการลิงก์เริ่มต้นแล้ว</string>
     <string name="result_link_routed_stock_disabled">ลิงก์ถูกส่งไปยังแอปที่แพตช์แล้ว ปิดแอปเดิม</string>
     <string name="result_adb_not_found_hint">ไม่พบ ADB ติดตั้ง Android SDK Platform Tools เพื่อเปิดใช้การติดตั้งโดยตรง</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">จาก v%1$s</string>
     <string name="update_banner_later_button">ทีหลัง</string>
     <string name="update_banner_skip_button">ข้าม v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">เครื่องมือ</string>
-    <string name="tools_dialog_open_logs_button">เปิดบันทึก</string>
-    <string name="tools_dialog_open_app_data_button">เปิดข้อมูลแอป</string>
-    <string name="tools_dialog_view_licenses_button">ดูใบอนุญาต</string>
-    <string name="tools_dialog_cache_cleared">ล้างแคชแล้ว</string>
-    <string name="tools_dialog_clear_failed">ล้างไม่สำเร็จ</string>
-    <string name="tools_dialog_clear_cache_button">ล้างแคช</string>
-    <string name="tools_dialog_cache_summary">แคช: %1$s (แพตช์ + บันทึก)</string>
-    <string name="tools_dialog_confirm_clear_title">ล้างแคชไหม?</string>
-    <string name="tools_dialog_confirm_clear_message">การนี้จะลบแพตช์ที่ดาวน์โหลดและไฟล์บันทึก แพตช์จะถูกดาวน์โหลดใหม่เมื่อจำเป็น</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ใบอนุญาตโอเพนซอร์ส</string>
     <string name="licenses_dialog_empty_failed">// โหลดใบอนุญาตไม่สำเร็จ</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">ตัดไลบรารี</string>
     <string name="settings_toggle_developer_options_label">ตัวเลือกนักพัฒนา</string>
     <string name="settings_toggle_developer_options_desc">สำหรับนักพัฒนาแพตช์ ปลดล็อกตัวเลือกเวิร์กโฟลว์สำหรับสร้างและทดสอบแพตช์ (ดูเอกสารสำหรับรายการทั้งหมด) ตอนนี้คือการชี้แหล่งในเครื่องไปที่โฟลเดอร์เพื่อให้ Morphe โหลด .mpp ใหม่สุดเสมอ</string>
+    <string name="settings_dev_bytecode_mode_label">โหมด Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">โหมดการแปลงที่นำมาใช้กับ DEX bytecode ระหว่างการแพตช์</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">เร็ว</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">ปลอดภัย</string>
+    <string name="settings_dev_bytecode_mode_full">เต็มรูปแบบ</string>
+    <string name="settings_dev_validate_label">การตรวจสอบลายนิ้วมือ</string>
+    <string name="settings_dev_validate_desc">ตรวจสอบว่าแต่ละ match() ตรงกับเมธอดเพียงเมธอดเดียวเท่านั้น (การแพตช์จะช้าลง ใช้สำหรับการทดสอบแพตช์)</string>
+    <string name="settings_dev_verify_sdk_label">การตรวจสอบ Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">ตรวจสอบ DEX และ APK ที่แพตช์แล้วด้วยเครื่องมือ Android SDK (d8, zipalign) อาจรายงานผลบวกปลอม</string>
+    <string name="settings_dev_sdk_path_label">ไดเรกทอรี Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">ตรวจพบโดยอัตโนมัติ</string>
+    <string name="settings_dev_sdk_not_found">ไม่พบ Android SDK โปรดตั้งค่า ANDROID_HOME หรือเรียกดูเพื่อหาไดเรกทอรี SDK</string>
+    <string name="settings_dev_sdk_picker_title">เลือกไดเรกทอรี Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">ล้างไฟล์ชั่วคราวอัตโนมัติ</string>
     <string name="settings_toggle_auto_cleanup_desc">ลบไฟล์ชั่วคราวหลังแพตช์</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">ไม่พบโฟลเดอร์ จะสร้างขึ้นเมื่อแพตช์ครั้งถัดไป</string>
     <string name="settings_toggle_auto_start_adb_label">เริ่ม ADB อัตโนมัติ</string>
     <string name="settings_toggle_auto_start_adb_desc">เริ่มเดมอน ADB เมื่อเปิดแอปเพื่อตรวจสอบอุปกรณ์ที่เชื่อมต่อ เมื่อปิด Morphe จะไม่เริ่มเซิร์ฟเวอร์ และฟีเจอร์ติดตั้ง/ส่งจะถูกปิดใช้งาน</string>
+    <string name="settings_section_storage">พื้นที่จัดเก็บ &amp;&amp; แคช</string>
+    <string name="settings_cache_summary">แคช: %1$s (แพตช์ + บันทึก)</string>
+    <string name="settings_cache_clear_button">ล้างแคช</string>
+    <string name="settings_cache_cleared">ล้างแคชแล้ว</string>
+    <string name="settings_cache_clear_failed">การล้างข้อมูลล้มเหลว</string>
+    <string name="settings_cache_confirm_title">ล้างแคชหรือไม่?</string>
+    <string name="settings_cache_confirm_message">การดำเนินการนี้จะลบแพตช์ที่ดาวน์โหลดและไฟล์บันทึก โดยแพตช์จะถูกดาวน์โหลดอีกครั้งเมื่อจำเป็น</string>
+    <string name="settings_storage_open_app_data_button">เปิดข้อมูลแอป</string>
+    <string name="settings_storage_open_logs_button">เปิดบันทึก</string>
     <string name="settings_section_about">เกี่ยวกับ</string>
     <string name="settings_about_version">เวอร์ชัน %1$s</string>
     <string name="settings_about_changelogs_title">ดูบันทึกการเปลี่ยนแปลง</string>
     <string name="settings_about_changelogs_desc">ดูการเปลี่ยนแปลงล่าสุดในอัปเดตนี้</string>
+    <string name="settings_about_licenses_title">ใบอนุญาตโอเพนซอร์ส</string>
+    <string name="settings_about_licenses_desc">ดูใบอนุญาตของไลบรารีบุคคลที่สาม</string>
     <string name="settings_about_documentation_title">เอกสาร</string>
     <string name="settings_about_documentation_desc">คำแนะนำสำหรับการแพตช์ แหล่งที่มา และการแก้ปัญหา</string>
     <string name="settings_about_website_title">เยี่ยมชมเว็บไซต์</string>

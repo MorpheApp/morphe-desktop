@@ -36,6 +36,10 @@
         <item quantity="one">%1$d бандлды жүктөө</item>
         <item quantity="other">%1$d бандлди жүктөө</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d ядро</item>
+        <item quantity="other">%1$d ядро</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="one">%1$d өзгөрүү</item>
         <item quantity="other">%1$d өзгөрүү</item>

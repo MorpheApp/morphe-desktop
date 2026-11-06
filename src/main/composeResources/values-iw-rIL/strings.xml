@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">מחיל טלאים</string>
     <string name="patching_step_writing_apk">כותב קובץ APK מטולא</string>
     <string name="patching_step_signing">חותם על קובץ APK מטולא</string>
+    <string name="patching_task_decoding_dex">קריאת קבצי DEX</string>
+    <string name="patching_task_extracting_resources">חילוץ משאבים</string>
+    <string name="patching_task_decoding_resources">פענוח משאבים</string>
+    <string name="patching_task_indexing_classes">אינדוקס מחלקות</string>
+    <string name="patching_task_compiling_dex">הידור קבצי DEX</string>
+    <string name="patching_task_compiling_resources">הידור משאבים</string>
+    <string name="patching_task_writing_apk">כתיבת קובץ APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">מתקין על %1$s…</string>
     <string name="adb_error_downgrade">לא ניתן לבצע שדרוג לאחור, מותקנת גרסה חדשה יותר. הסר תחילה את האפליקציה הקיימת</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">שגיאה בטעינת טלאים</string>
     <string name="patch_selection_title">בחר טלאים</string>
     <string name="patch_selection_cmd_preview">תצוגה מקדימה של הפקודה</string>
+    <string name="patch_selection_root_mode_description">מצב עיגון של Root</string>
+    <string name="patch_selection_lock_unavailable">לא זמין עבור mount של root</string>
     <string name="patch_selection_continue_on_error_tooltip">המשך בתיקון גם אם טלאי נכשל</string>
     <string name="patch_selection_continue_on_error_description">המשך בשגיאה</string>
     <string name="patch_selection_no_patches_found">לא נמצאו טלאים</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">אפליקציה</string>
     <string name="patch_selection_run_info_bundles_group">חבילות טלאים</string>
     <string name="patch_selection_run_info_no_bundles">לא נפתרו חבילות</string>
+    <string name="patch_selection_run_info_dev_group">אפשרויות מפתח</string>
+    <string name="patch_selection_run_info_bytecode_mode">מצב Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">אימות טביעת אצבע: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">אימות Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">אוניברסלי</string>
     <string name="patch_selection_group_ungrouped">ללא קבוצה</string>
     <string name="patch_selection_group_selected_count">%1$d נבחרו</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">מעדכן על %1$s…</string>
     <string name="result_adb_update_successful">העדכון הצליח!</string>
     <string name="result_adb_install_successful">ההתקנה הושלמה בהצלחה!</string>
+    <string name="result_adb_badge_root_mount">עיגון Root</string>
+    <string name="result_adb_mount_button">עיגון ב-%1$s</string>
+    <string name="result_adb_mounting_on_device">מעגן ב-%1$s...</string>
+    <string name="result_adb_mount_successful">העיגון הצליח!</string>
+    <string name="result_adb_mount_su_prompt_hint">מעגן ב-%1$s... בדוק את המכשיר שלך כדי להעניק הרשאת Superuser אם תתבקש</string>
+    <string name="result_adb_unmount_button">ביטול עיגון מ-%1$s</string>
+    <string name="result_adb_unmounting_on_device">מבטל עיגון מ-%1$s...</string>
+    <string name="result_adb_root_not_detected">גישת Root לא זוהתה ב-%1$s. ודא ש-Magisk/KernelSU/APatch מותקנים ושהרשאת su ניתנה</string>
+    <string name="result_adb_stock_app_not_installed">האפליקציה המקורית %1$s אינה מותקנת ב-%2$s. התקן תחילה את האפליקציה הרשמית לפני העיגון</string>
     <string name="result_link_default_restored">טיפול ברירת המחדל בקישורים שוחזר</string>
     <string name="result_link_routed_stock_disabled">קישורים מנותבים לאפליקציה המתוקנת, המקורית הושבתה</string>
     <string name="result_adb_not_found_hint">ADB לא נמצא. התקן את Android SDK Platform Tools כדי לאפשר התקנה ישירה</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">מ-v%1$s</string>
     <string name="update_banner_later_button">מאוחר יותר</string>
     <string name="update_banner_skip_button">דלג על v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">כלים</string>
-    <string name="tools_dialog_open_logs_button">פתח יומנים</string>
-    <string name="tools_dialog_open_app_data_button">פתח נתוני אפליקציה</string>
-    <string name="tools_dialog_view_licenses_button">הצג רישיונות</string>
-    <string name="tools_dialog_cache_cleared">המטמון נוקה</string>
-    <string name="tools_dialog_clear_failed">הניקוי נכשל</string>
-    <string name="tools_dialog_clear_cache_button">נקה מטמון</string>
-    <string name="tools_dialog_cache_summary">מטמון: %1$s (טלאים + יומנים)</string>
-    <string name="tools_dialog_confirm_clear_title">לנקות מטמון?</string>
-    <string name="tools_dialog_confirm_clear_message">פעולה זו תמחק טלאים שהורדו וקבצי יומן. הטלאים ירדו שוב בעת הצורך</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">רישיונות קוד פתוח</string>
     <string name="licenses_dialog_empty_failed">// טעינת הרישיונות נכשלה</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">הסרת ספריות</string>
     <string name="settings_toggle_developer_options_label">אפשרויות מפתח</string>
     <string name="settings_toggle_developer_options_desc">למפתחי טלאים. פותח חבילת אפשרויות עבודה לבנייה ובדיקה של טלאים (ראה תיעוד לרשימה המלאה). כרגע זה כולל הפניית מקור מקומי לתיקייה כך ש-Morphe תמיד יטען את קובץ ה-.mpp החדש ביותר שלה</string>
+    <string name="settings_dev_bytecode_mode_label">מצב Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">מצב התמרה המיושם על DEX bytecode במהלך תיקון</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">מהיר</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">בטוח</string>
+    <string name="settings_dev_bytecode_mode_full">מלא</string>
+    <string name="settings_dev_validate_label">אימות טביעת אצבע</string>
+    <string name="settings_dev_validate_desc">אימות שכל match() תואם למתודה אחת בלבד (תיקון איטי יותר, לבדיקת תיקונים)</string>
+    <string name="settings_dev_verify_sdk_label">אימות Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">אימות DEX ו-APK שעברו תיקון באמצעות כלי Android SDK (d8, zipalign). עשויים להופיע דיווחים שגויים</string>
+    <string name="settings_dev_sdk_path_label">ספריית Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">זוהה באופן אוטומטי</string>
+    <string name="settings_dev_sdk_not_found">Android SDK לא נמצא. הגדר את ANDROID_HOME או דפדף כדי למצוא את ספריית ה-SDK</string>
+    <string name="settings_dev_sdk_picker_title">בחר ספריית Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">ניקוי אוטומטי של קבצים זמניים</string>
     <string name="settings_toggle_auto_cleanup_desc">מחק קבצים זמניים לאחר ההטלאה</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">התיקייה לא נמצאה, תיווצר בהטלאה הבאה</string>
     <string name="settings_toggle_auto_start_adb_label">הפעל ADB אוטומטית</string>
     <string name="settings_toggle_auto_start_adb_desc">הפעל את דמון ה-ADB בעת ההשקה כדי שמכשירים מחוברים יהיו במעקב. כשזה כבוי, Morphe לעולם לא מתחיל את השרת, ותכונות ההתקנה/דחיפה מושבתות</string>
+    <string name="settings_section_storage">אחסון &amp; מטמון</string>
+    <string name="settings_cache_summary">מטמון: %1$s (תיקונים + יומנים)</string>
+    <string name="settings_cache_clear_button">נקה מטמון</string>
+    <string name="settings_cache_cleared">המטמון נוקה</string>
+    <string name="settings_cache_clear_failed">הניקוי נכשל</string>
+    <string name="settings_cache_confirm_title">לנקות מטמון?</string>
+    <string name="settings_cache_confirm_message">פעולה זו תמחק תיקונים שהורדו וקבצי יומן. תיקונים יורדו שוב בעת הצורך</string>
+    <string name="settings_storage_open_app_data_button">פתח נתוני אפליקציה</string>
+    <string name="settings_storage_open_logs_button">פתח יומנים</string>
     <string name="settings_section_about">אודות</string>
     <string name="settings_about_version">גרסה %1$s</string>
     <string name="settings_about_changelogs_title">הצג יומני שינויים</string>
     <string name="settings_about_changelogs_desc">ראה את השינויים האחרונים בעדכון זה</string>
+    <string name="settings_about_licenses_title">רישיונות קוד פתוח</string>
+    <string name="settings_about_licenses_desc">צפה ברישיונות של ספריות צד שלישי</string>
     <string name="settings_about_documentation_title">תיעוד</string>
     <string name="settings_about_documentation_desc">מדריכים להטלאה, מקורות ופתרון תקלות</string>
     <string name="settings_about_website_title">בקר באתר</string>

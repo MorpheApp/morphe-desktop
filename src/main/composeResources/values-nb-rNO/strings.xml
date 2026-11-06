@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Bruker patcher</string>
     <string name="patching_step_writing_apk">Skriver patchet APK-fil</string>
     <string name="patching_step_signing">Signerer patchet APK-fil</string>
+    <string name="patching_task_decoding_dex">Leser DEX-filer</string>
+    <string name="patching_task_extracting_resources">Ekstraherer ressurser</string>
+    <string name="patching_task_decoding_resources">Dekoder ressurser</string>
+    <string name="patching_task_indexing_classes">Indekserer klasser</string>
+    <string name="patching_task_compiling_dex">Kompilerer DEX-filer</string>
+    <string name="patching_task_compiling_resources">Kompilerer ressurser</string>
+    <string name="patching_task_writing_apk">Skriver APK-fil</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Installerer på %1$s…</string>
     <string name="adb_error_downgrade">Kan ikke nedgradere, en nyere versjon er installert. Avinstaller den eksisterende appen først</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Feil ved lasting av patcher</string>
     <string name="patch_selection_title">Velg patcher</string>
     <string name="patch_selection_cmd_preview">Forhåndsvisning av kommando</string>
+    <string name="patch_selection_root_mode_description">Root-monteringsmodus</string>
+    <string name="patch_selection_lock_unavailable">Utilgjengelig for root-montering</string>
     <string name="patch_selection_continue_on_error_tooltip">Fortsett patching selv om en patch mislykkes</string>
     <string name="patch_selection_continue_on_error_description">Fortsett ved feil</string>
     <string name="patch_selection_no_patches_found">Ingen patcher funnet</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch-pakker</string>
     <string name="patch_selection_run_info_no_bundles">Ingen pakker funnet</string>
+    <string name="patch_selection_run_info_dev_group">Utvikleralternativer</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytekodemodus: %1$s</string>
+    <string name="patch_selection_run_info_validate">Validering av fingeravtrykk: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verifisering av Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Universell</string>
     <string name="patch_selection_group_ungrouped">Ugruppert</string>
     <string name="patch_selection_group_selected_count">%1$d valgt</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Oppdaterer på %1$s…</string>
     <string name="result_adb_update_successful">Oppdateringen var vellykket!</string>
     <string name="result_adb_install_successful">Installeringen var vellykket!</string>
+    <string name="result_adb_badge_root_mount">Root-montering</string>
+    <string name="result_adb_mount_button">Monter på %1$s</string>
+    <string name="result_adb_mounting_on_device">Monterer på %1$s…</string>
+    <string name="result_adb_mount_successful">Montering vellykket!</string>
+    <string name="result_adb_mount_su_prompt_hint">Monterer på %1$s… Sjekk enheten din for å gi Superbruker-tillatelse hvis du blir spurt</string>
+    <string name="result_adb_unmount_button">Avmonter fra %1$s</string>
+    <string name="result_adb_unmounting_on_device">Avmonterer fra %1$s…</string>
+    <string name="result_adb_root_not_detected">Root-tilgang ble ikke oppdaget på %1$s. Kontroller at Magisk/KernelSU/APatch er installert og at su-tillatelse er gitt</string>
+    <string name="result_adb_stock_app_not_installed">Standardapp %1$s er ikke installert på %2$s. Installer den offisielle appen før montering</string>
     <string name="result_link_default_restored">Standard lenkehåndtering gjenopprettet</string>
     <string name="result_link_routed_stock_disabled">Lenker rutet til patchet app, standardappen deaktivert</string>
     <string name="result_adb_not_found_hint">ADB ble ikke funnet. Installer Android SDK Platform Tools for å aktivere direkte installasjon</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">fra v%1$s</string>
     <string name="update_banner_later_button">Senere</string>
     <string name="update_banner_skip_button">Hopp over v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Verktøy</string>
-    <string name="tools_dialog_open_logs_button">Åpne logger</string>
-    <string name="tools_dialog_open_app_data_button">Åpne appdata</string>
-    <string name="tools_dialog_view_licenses_button">Vis lisenser</string>
-    <string name="tools_dialog_cache_cleared">Hurtigbuffer tømt</string>
-    <string name="tools_dialog_clear_failed">Tømming mislyktes</string>
-    <string name="tools_dialog_clear_cache_button">Tøm hurtigbuffer</string>
-    <string name="tools_dialog_cache_summary">Hurtigbuffer: %1$s (patcher + logger)</string>
-    <string name="tools_dialog_confirm_clear_title">Tømme hurtigbufferen?</string>
-    <string name="tools_dialog_confirm_clear_message">Dette sletter nedlastede patcher og loggfiler. Patcher lastes ned på nytt ved behov</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Åpen kildekode-lisenser</string>
     <string name="licenses_dialog_empty_failed">// kunne ikke laste lisenser</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Stripp biblioteker</string>
     <string name="settings_toggle_developer_options_label">Utvikleralternativer</string>
     <string name="settings_toggle_developer_options_desc">For patch-utviklere. Låser opp en rekke arbeidsflytalternativer for å bygge og teste patcher (se dokumentasjonen for full liste). Foreløpig handler det om å peke en lokal kilde til en mappe slik at Morphe alltid laster dens nyeste .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Bytekodemodus</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformasjonsmodus anvendt på DEX-bytekode under patching</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Rask</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Sikker</string>
+    <string name="settings_dev_bytecode_mode_full">Fullstendig</string>
+    <string name="settings_dev_validate_label">Validering av fingeravtrykk</string>
+    <string name="settings_dev_validate_desc">Valider at hver match() kun samsvarer med én metode (tregere patching, for testing av patcher)</string>
+    <string name="settings_dev_verify_sdk_label">Verifisering av Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Verifiser patchet DEX og APK med Android SDK-verktøy (d8, zipalign). Kan rapportere falske positiver</string>
+    <string name="settings_dev_sdk_path_label">Android SDK-mappe</string>
+    <string name="settings_dev_sdk_path_auto">Autodetektert</string>
+    <string name="settings_dev_sdk_not_found">Android SDK ble ikke funnet. Angi ANDROID_HOME eller bla for å finne SDK-mappen</string>
+    <string name="settings_dev_sdk_picker_title">Velg Android SDK-mappe</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Automatisk opprydding av midlertidige filer</string>
     <string name="settings_toggle_auto_cleanup_desc">Slett midlertidige filer etter patching</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Mappe ikke funnet, vil bli opprettet ved neste patching</string>
     <string name="settings_toggle_auto_start_adb_label">Autostart ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Start ADB-demonen ved oppstart slik at tilkoblede enheter overvåkes. Når av, starter Morphe aldri serveren, og installasjons-/push-funksjoner er deaktivert</string>
+    <string name="settings_section_storage">Lagring &amp; mellomlager</string>
+    <string name="settings_cache_summary">Cache: %1$s (patcher + logger)</string>
+    <string name="settings_cache_clear_button">Tøm cache</string>
+    <string name="settings_cache_cleared">Cache tømt</string>
+    <string name="settings_cache_clear_failed">Tømming mislyktes</string>
+    <string name="settings_cache_confirm_title">Tøm cache?</string>
+    <string name="settings_cache_confirm_message">Dette vil slette nedlastede patcher og loggfiler. Patcher vil bli lastet ned på nytt ved behov</string>
+    <string name="settings_storage_open_app_data_button">Åpne appdata</string>
+    <string name="settings_storage_open_logs_button">Åpne logger</string>
     <string name="settings_section_about">Om</string>
     <string name="settings_about_version">Versjon %1$s</string>
     <string name="settings_about_changelogs_title">Vis endringslogger</string>
     <string name="settings_about_changelogs_desc">Se de siste endringene i denne oppdateringen</string>
+    <string name="settings_about_licenses_title">Open Source-lisenser</string>
+    <string name="settings_about_licenses_desc">Vis lisenser for tredjepartsbiblioteker</string>
     <string name="settings_about_documentation_title">Dokumentasjon</string>
     <string name="settings_about_documentation_desc">Veiledninger for patching, kilder og feilsøking</string>
     <string name="settings_about_website_title">Besøk nettstedet</string>

@@ -27,6 +27,9 @@
     <plurals name="home_detail_download_bundles">
         <item quantity="other">Muat turun %1$d bundle</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="other">%1$d teras</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="other">%1$d perubahan</item>
     </plurals>

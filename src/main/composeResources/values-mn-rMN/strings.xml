@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Нөхцөлүүдийг хэрэглэж байна</string>
     <string name="patching_step_writing_apk">Зассан APK файлыг бичиж байна</string>
     <string name="patching_step_signing">Зассан APK файлд гарын үсэг зурж байна</string>
+    <string name="patching_task_decoding_dex">DEX файлуудыг уншиж байна</string>
+    <string name="patching_task_extracting_resources">Нөөцүүдийг олж байна</string>
+    <string name="patching_task_decoding_resources">Нөөцүүдийг тайлж байна</string>
+    <string name="patching_task_indexing_classes">Классуудыг индекселж байна</string>
+    <string name="patching_task_compiling_dex">DEX файлуудыг нэгтгэж байна</string>
+    <string name="patching_task_compiling_resources">Нөөцүүдийг нэгтгэж байна</string>
+    <string name="patching_task_writing_apk">APK файлыг бичиж байна</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s дээр суулгаж байна…</string>
     <string name="adb_error_downgrade">Хуучин хувилбар руу шилжих боломжгүй, илүү шинэ хувилбар суурилуулсан байна. Эхлээд суурилуулсан аппликейшнийг устгана уу</string>
@@ -277,6 +284,7 @@
     <string name="home_advice_unsupported_by_patches">v%1$s-ыг хамгийн сүүлийн пачч-аар дэмжихгүй боллоо</string>
     <string name="home_date_today">өнөөдөр</string>
     <string name="home_date_yesterday">өчигдөр</string>
+    <string name="home_date_days_ago">%1$d хоногийн өмнө</string>
     <string name="home_your_apps_empty_title">Пачч хийсэн апп хараахан байхгүй байна</string>
     <string name="home_your_apps_empty_subtitle">Апп-ыг пачч хийснээр энд харагдах болно</string>
     <string name="home_your_apps_no_matches_subtitle">\"%1$s\"-тэй тохирох зүйл алга</string>
@@ -305,6 +313,8 @@
     <string name="patch_selection_error_title">Патч ачаалах явцад алдаа гарлаа</string>
     <string name="patch_selection_title">Патчуудыг сонгох</string>
     <string name="patch_selection_cmd_preview">Тушаалын урьдчилан харах</string>
+    <string name="patch_selection_root_mode_description">Root mount-ын горим</string>
+    <string name="patch_selection_lock_unavailable">Root mount-д боломжгүй</string>
     <string name="patch_selection_continue_on_error_tooltip">Патч алдаа гарсан ч патчлах үйлдлийг үргэлжлүүлэх</string>
     <string name="patch_selection_continue_on_error_description">Алдаа гарсан ч үргэлжлүүлэх</string>
     <string name="patch_selection_no_patches_found">Нөхцөл олдоогүй</string>
@@ -366,8 +376,13 @@
     <string name="patch_selection_run_info_app_group">Аппликейшн</string>
     <string name="patch_selection_run_info_bundles_group">Патчийн багцууд</string>
     <string name="patch_selection_run_info_no_bundles">Багц олдсонгүй</string>
+    <string name="patch_selection_run_info_dev_group">Хөгжүүлэгчийн сонголтууд</string>
+    <string name="patch_selection_run_info_bytecode_mode">Байткод горим: %1$s</string>
+    <string name="patch_selection_run_info_validate">Хурууны хээний баталгаажуулалт: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK шалгалт: %1$s</string>
     <string name="patch_selection_group_universal">Түгээмэл</string>
     <string name="patch_selection_group_ungrouped">Бүлэглэгдээгүй</string>
+    <string name="patch_selection_group_selected_count">%1$d сонгогдсон</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Эхнээс нь эхлэх</string>
     <string name="patching_patches_count">%1$d / %2$d патч</string>
@@ -384,6 +399,7 @@
     <string name="patching_step_all_done">Бүгд дууслаа!</string>
     <string name="patching_step_waiting">Хүлээж байна…</string>
     <string name="patching_graph_memory_usage">Санах ойнойн ашиглалт</string>
+    <string name="patching_graph_memory_detail">%2$d МБ-ын %1$d%</string>
     <string name="patching_graph_storage_io">Хадгалах сангийн I/O</string>
     <string name="patching_graph_cpu_usage">CPU-ийн ашиглалт</string>
     <string name="patching_banner_started_title">Патчлах ажил эхэллээ</string>
@@ -419,6 +435,15 @@
     <string name="result_adb_updating_on_device">%1$s дээр шинэчилж байна…</string>
     <string name="result_adb_update_successful">Шинэчлэл амжилттай боллоо!</string>
     <string name="result_adb_install_successful">Суурилуулалт амжилттай боллоо!</string>
+    <string name="result_adb_badge_root_mount">Root mount-лах</string>
+    <string name="result_adb_mount_button">%1$s дээр mount хийх</string>
+    <string name="result_adb_mounting_on_device">%1$s дээр mount хийж байна…</string>
+    <string name="result_adb_mount_successful">Mount амжилттай боллоо!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s дээр mount хийж байна… Хэрэв хүсэлт гарвал төхөөрөмжөө шалгаж, Superuser эрхийг зөвшөөрнө үү</string>
+    <string name="result_adb_unmount_button">%1$s-ээс unmount хийх</string>
+    <string name="result_adb_unmounting_on_device">%1$s-ээс unmount хийж байна…</string>
+    <string name="result_adb_root_not_detected">%1$s дээр root хандалт илрээгүй байна. Magisk/KernelSU/APatch суулгасан эсэх болон su эрхийг зөвшөөрсөн эсэхээ шалгана уу</string>
+    <string name="result_adb_stock_app_not_installed">Stock апп %1$s нь %2$s дээр суулгаагүй байна. Mount хийхээс өмнө албан ёсны аппликейшнийг суулгана уу</string>
     <string name="result_link_default_restored">Холбоосыг боловсруулах үндсэн тохиргоог сэргээлээ</string>
     <string name="result_link_routed_stock_disabled">Холбоосуудыг зассан апп руу чиглүүлж, үндсэн тохиргоог идэвхгүй болголоо</string>
     <string name="result_adb_not_found_hint">ADB олдсонгүй. Шууд суурилуулах боломжийг нээхийн тулд Android SDK Platform Tools-ыг суулгаарай</string>
@@ -599,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s-оос</string>
     <string name="update_banner_later_button">Дараа</string>
     <string name="update_banner_skip_button">v%1$s-ийг алгасах</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Багаж хэрэгсэл</string>
-    <string name="tools_dialog_open_logs_button">Лог нээх</string>
-    <string name="tools_dialog_open_app_data_button">Апп-ын өгөгдлийг нээх</string>
-    <string name="tools_dialog_view_licenses_button">Лиценз үзэх</string>
-    <string name="tools_dialog_cache_cleared">Кэш цэвэрлэгдлээ</string>
-    <string name="tools_dialog_clear_failed">Амжилтгүйг цэвэрлэх</string>
-    <string name="tools_dialog_clear_cache_button">Кэшийг цэвэрлэх</string>
-    <string name="tools_dialog_cache_summary">Кэш: %1$s (нөхөх файлууд + лог)</string>
-    <string name="tools_dialog_confirm_clear_title">Кэшийг цэвэрлэх үү?</string>
-    <string name="tools_dialog_confirm_clear_message">Энэ нь татаж авсан нөхөх файлууд болон лог файлуудыг устгана. Нөхөх файлуудыг шаардлагатай үед дахин татаж авна</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Нээлттэй эх сурвалжийн лицензүүд</string>
     <string name="licenses_dialog_empty_failed">// лицензүүдийг ачаалахад алдаа гарлаа</string>
@@ -682,6 +696,19 @@
     <string name="settings_section_strip_libs">Сангуудыг цэвэрлэх</string>
     <string name="settings_toggle_developer_options_label">Хөгжүүлэгчийн сонголтууд</string>
     <string name="settings_toggle_developer_options_desc">Патч хөгжүүлэгчдэд зориулсан. Патч угсрах, турших ажлын урсгалын сонголтуудыг нээнэ (бүтэн жагсаалтыг баримт бичгээс үзнэ үү). Одоогоор энэ нь локал эх сурвалжийг хавтсанд зааж, Morphe үргэлж хамгийн сүүлийн .mpp файлыг ачаалах боломжийг олгоно</string>
+    <string name="settings_dev_bytecode_mode_label">Байткод горим</string>
+    <string name="settings_dev_bytecode_mode_desc">Патчлах явцад DEX байткодод хэрэглэх хувиргалтын горим</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Хурдан</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Аюулгүй</string>
+    <string name="settings_dev_bytecode_mode_full">Бүрэн</string>
+    <string name="settings_dev_validate_label">Хурууны хээний баталгаажуулалт</string>
+    <string name="settings_dev_validate_desc">match() бүр зөвхөн нэг функцтэй тохирч байгааг шалгах (патчлах хугацаа удааширна, патчыг туршихад зориулагдсан)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK шалгалт</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK-ийн хэрэгслүүдээр (d8, zipalign) засварласан DEX болон APK-г шалгана. Хуурамч эерэг илэрц гарч магадгүй</string>
+    <string name="settings_dev_sdk_path_label">Android SDK-ийн хавтас</string>
+    <string name="settings_dev_sdk_path_auto">Автоматаар илрэв</string>
+    <string name="settings_dev_sdk_not_found">Android SDK олдсонгүй. ANDROID_HOME-ийг тохируулах эсвэл SDK-ийн хавтсыг хайж олно уу</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK-ийн хавтсыг сонгох</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Түр зуурын файлуудыг автоматаар цэвэрлэх</string>
     <string name="settings_toggle_auto_cleanup_desc">Патч хийсний дараа түр зуурын файлуудыг устгах</string>
@@ -696,10 +723,21 @@
     <string name="settings_output_folder_not_found">Хавтас олдсонгүй, дараагийн патчинг үеэр үүсгэх болно</string>
     <string name="settings_toggle_auto_start_adb_label">ADB-г автоматаар эхлүүлэх</string>
     <string name="settings_toggle_auto_start_adb_desc">Холбогдсон төхөөрөмжүүдийг хянахын тулд эхлүүлэх үед ADB daemon-ыг ажиллуулна. Унтраалттай үед Morphe сервер эхлүүлэхгүй бөгөөд суулгах/push функцууд идэвхгүй болно</string>
+    <string name="settings_section_storage">Хадгалах &amp; кэш</string>
+    <string name="settings_cache_summary">Кэш: %1$s (патч + лог)</string>
+    <string name="settings_cache_clear_button">Кэшийг цэвэрлэх</string>
+    <string name="settings_cache_cleared">Кэшийг цэвэрлэсэн</string>
+    <string name="settings_cache_clear_failed">Цэвэрлэхэд алдаа гарлаа</string>
+    <string name="settings_cache_confirm_title">Кэшийг цэвэрлэх үү?</string>
+    <string name="settings_cache_confirm_message">Энэ нь татаж авсан патч болон лог файлуудыг устгана. Патчуудыг шаардлагатай үед дахин татаж авна</string>
+    <string name="settings_storage_open_app_data_button">Апп-ын өгөгдлийг нээх</string>
+    <string name="settings_storage_open_logs_button">Логуудыг нээх</string>
     <string name="settings_section_about">Тухай</string>
     <string name="settings_about_version">Хувилбар %1$s</string>
     <string name="settings_about_changelogs_title">Өөрчлөлтийн түүхийг үзэх</string>
     <string name="settings_about_changelogs_desc">Энэхүү шинэчлэлтийн хамгийн сүүлийн өөрчлөлтүүдийг шалгана уу</string>
+    <string name="settings_about_licenses_title">Нээлттэй эх сурвалжийн лицензүүд</string>
+    <string name="settings_about_licenses_desc">Гуравдагч талын сангуудын лицензүүдийг харах</string>
     <string name="settings_about_documentation_title">Баримт бичиг</string>
     <string name="settings_about_documentation_desc">Патчлах, эх сурвалж болон алдааг засах зааврууд</string>
     <string name="settings_about_website_title">Вэбсайтад зочлох</string>

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Прилагане на пачове</string>
     <string name="patching_step_writing_apk">Записване на пачвания APK файл</string>
     <string name="patching_step_signing">Подписване на пачвания APK файл</string>
+    <string name="patching_task_decoding_dex">Четене на DEX файлове</string>
+    <string name="patching_task_extracting_resources">Извличане на ресурси</string>
+    <string name="patching_task_decoding_resources">Декодиране на ресурси</string>
+    <string name="patching_task_indexing_classes">Индексиране на класове</string>
+    <string name="patching_task_compiling_dex">Компилиране на DEX файлове</string>
+    <string name="patching_task_compiling_resources">Компилиране на ресурси</string>
+    <string name="patching_task_writing_apk">Записване на APK файл</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Инсталиране на %1$s…</string>
     <string name="adb_error_downgrade">Не може да се понижи версията, тъй като е инсталирана по-нова версия. Първо деинсталирайте съществуващото приложение.</string>
@@ -312,6 +319,8 @@
     <string name="patch_selection_error_title">Грешка при зареждане на кръпки</string>
     <string name="patch_selection_title">Изберете кръпки</string>
     <string name="patch_selection_cmd_preview">Преглед на командата</string>
+    <string name="patch_selection_root_mode_description">Режим на монтиране на Root</string>
+    <string name="patch_selection_lock_unavailable">Недоступно за root монтиране</string>
     <string name="patch_selection_continue_on_error_tooltip">Продължете пачването дори ако дадена кръпка се провали</string>
     <string name="patch_selection_continue_on_error_description">Продължи при грешка</string>
     <string name="patch_selection_no_patches_found">Не са намерени кръпки</string>
@@ -373,6 +382,10 @@
     <string name="patch_selection_run_info_app_group">Приложение</string>
     <string name="patch_selection_run_info_bundles_group">Пакети с кръпки</string>
     <string name="patch_selection_run_info_no_bundles">Няма разрешени пакети</string>
+    <string name="patch_selection_run_info_dev_group">Опции за разработчици</string>
+    <string name="patch_selection_run_info_bytecode_mode">Режим на байткод: %1$s</string>
+    <string name="patch_selection_run_info_validate">Валидиране на отпечатъка: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Проверка на Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Универсални</string>
     <string name="patch_selection_group_ungrouped">Негрупирани</string>
     <string name="patch_selection_group_selected_count">%1$d избран</string>
@@ -428,6 +441,15 @@
     <string name="result_adb_updating_on_device">Актуализиране на %1$s…</string>
     <string name="result_adb_update_successful">Актуализацията е успешна!</string>
     <string name="result_adb_install_successful">Инсталирането е успешно!</string>
+    <string name="result_adb_badge_root_mount">Root монтиране</string>
+    <string name="result_adb_mount_button">Монтиране на %1$s</string>
+    <string name="result_adb_mounting_on_device">Монтиране на %1$s…</string>
+    <string name="result_adb_mount_successful">Монтирането е успешно!</string>
+    <string name="result_adb_mount_su_prompt_hint">Монтиране на %1$s… Проверете устройството си, за да предоставите Superuser разрешение, ако бъдете подcaneни</string>
+    <string name="result_adb_unmount_button">Демонтиране от %1$s</string>
+    <string name="result_adb_unmounting_on_device">Демонтиране от %1$s…</string>
+    <string name="result_adb_root_not_detected">Root достъп не беше открит на %1$s. Уверете се, че Magisk/KernelSU/APatch е инсталиран и su разрешението е предоставено</string>
+    <string name="result_adb_stock_app_not_installed">Стоковото приложение %1$s не е инсталирано на %2$s. Първо инсталирайте официалното приложение преди монтиране</string>
     <string name="result_link_default_restored">Обработката на връзки по подразбиране е възстановена</string>
     <string name="result_link_routed_stock_disabled">Връзките са насочени към пачваното приложение, оригиналното е деактивирано</string>
     <string name="result_adb_not_found_hint">ADB не е намерен. Инсталирайте Android SDK Platform Tools, за да активирате директно инсталиране</string>
@@ -608,17 +630,6 @@
     <string name="update_banner_from_version">от v%1$s</string>
     <string name="update_banner_later_button">По-късно</string>
     <string name="update_banner_skip_button">Пропусни v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Инструменти</string>
-    <string name="tools_dialog_open_logs_button">Отвори журнали</string>
-    <string name="tools_dialog_open_app_data_button">Отвори данни на приложението</string>
-    <string name="tools_dialog_view_licenses_button">Преглед на лицензи</string>
-    <string name="tools_dialog_cache_cleared">Кешът е изчистен</string>
-    <string name="tools_dialog_clear_failed">Изчистването се провали</string>
-    <string name="tools_dialog_clear_cache_button">Изчистване на кеша</string>
-    <string name="tools_dialog_cache_summary">Кеш: %1$s (кръпки + журнали)</string>
-    <string name="tools_dialog_confirm_clear_title">Изчистване на кеша?</string>
-    <string name="tools_dialog_confirm_clear_message">Това ще изтрие изтеглените кръпки и журнални файлове. Кръпките ще бъдат изтеглени отново при необходимост</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Лицензи с отворен код</string>
     <string name="licenses_dialog_empty_failed">// неуспешно зареждане на лицензи</string>
@@ -691,6 +702,19 @@
     <string name="settings_section_strip_libs">Премахване на библиотеки</string>
     <string name="settings_toggle_developer_options_label">Опции за разработчици</string>
     <string name="settings_toggle_developer_options_desc">За разработчици на кръпки. Отключва набор от опции за работния процес за изграждане и тестване на кръпки (вижте документацията за пълния списък). Засега това насочва локален източник към папка, така че Morphe винаги зарежда най-новия си .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Режим на байткод</string>
+    <string name="settings_dev_bytecode_mode_desc">Режим на трансформация, приложен към DEX байткода по време на пачването</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Бърз</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Безопасен</string>
+    <string name="settings_dev_bytecode_mode_full">Пълен</string>
+    <string name="settings_dev_validate_label">Валидиране на отпечатъка</string>
+    <string name="settings_dev_validate_desc">Валидирайте, че всяко match() съвпада само с един метод (по-бавно пачване, за тестване на пачове)</string>
+    <string name="settings_dev_verify_sdk_label">Проверка на Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Проверете пачнатия DEX и APK с инструментите на Android SDK (d8, zipalign). Мога да се докладват фалшиви положителни резултати</string>
+    <string name="settings_dev_sdk_path_label">Директория на Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Автоматично открит</string>
+    <string name="settings_dev_sdk_not_found">Android SDK не е намерен. Задайте ANDROID_HOME или потърсете директорията на SDK</string>
+    <string name="settings_dev_sdk_picker_title">Изберете директория на Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Автоматично почистване на временни файлове</string>
     <string name="settings_toggle_auto_cleanup_desc">Изтриване на временни файлове след пачване</string>
@@ -705,10 +729,21 @@
     <string name="settings_output_folder_not_found">Папката не е намерена, ще бъде създадена при следващото пачване.</string>
     <string name="settings_toggle_auto_start_adb_label">Автоматично стартиране на ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Стартира ADB демона при пускане, така че свързаните устройства да се следят. Когато е изключено, Morphe никога не стартира сървъра и функциите за инсталиране/изпращане са деактивирани</string>
+    <string name="settings_section_storage">Съхранение и кеш</string>
+    <string name="settings_cache_summary">Кеш: %1$s (пачове + логове)</string>
+    <string name="settings_cache_clear_button">Изчистване на кеша</string>
+    <string name="settings_cache_cleared">Кешът е изчистен</string>
+    <string name="settings_cache_clear_failed">Изчистването не успя</string>
+    <string name="settings_cache_confirm_title">Изчистване на кеша?</string>
+    <string name="settings_cache_confirm_message">Това ще изтрие изтеглените пачове и файловете с логове. Пачовете ще бъдат изтеглени отново при необходимост</string>
+    <string name="settings_storage_open_app_data_button">Отвори данните на приложението</string>
+    <string name="settings_storage_open_logs_button">Отвори логовете</string>
     <string name="settings_section_about">Отношение</string>
     <string name="settings_about_version">Версия %1$s</string>
     <string name="settings_about_changelogs_title">Преглед на списъците с промени</string>
     <string name="settings_about_changelogs_desc">Вижте последните промени в тази актуализация</string>
+    <string name="settings_about_licenses_title">Лицензи с отворен код</string>
+    <string name="settings_about_licenses_desc">Преглеждане на лицензите наLibraries на трети страни</string>
     <string name="settings_about_documentation_title">Документация</string>
     <string name="settings_about_documentation_desc">Ръководства за пачване, източници и отстраняване на проблеми</string>
     <string name="settings_about_website_title">Посетете уебсайта</string>

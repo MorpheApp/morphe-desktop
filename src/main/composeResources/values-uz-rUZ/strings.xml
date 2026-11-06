@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Patchlar qo'llanilmoqda</string>
     <string name="patching_step_writing_apk">Patchlangan APK fayli yozilmoqda</string>
     <string name="patching_step_signing">Patchlangan APK fayli imzolanmoqda</string>
+    <string name="patching_task_decoding_dex">DEX fayllarini o'qish</string>
+    <string name="patching_task_extracting_resources">Resurslarni ajratish</string>
+    <string name="patching_task_decoding_resources">Resurslarni dekodlash</string>
+    <string name="patching_task_indexing_classes">Klasslarni indekslash</string>
+    <string name="patching_task_compiling_dex">DEX fayllarini kompilyatsiya qilish</string>
+    <string name="patching_task_compiling_resources">Resurslarni kompilyatsiya qilish</string>
+    <string name="patching_task_writing_apk">APK faylini yozish</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s ga o'rnatilmoqda…</string>
     <string name="adb_error_downgrade">Versiyani pasaytirib bo'lmaydi, yangiroq versiya o'rnatilgan. Avval mavjud ilovani o'chirib tashlang</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Patchlarni yuklashda xatolik</string>
     <string name="patch_selection_title">Patchlarni tanlang</string>
     <string name="patch_selection_cmd_preview">Buyruq ko'rinishi</string>
+    <string name="patch_selection_root_mode_description">Root mount rejimi</string>
+    <string name="patch_selection_lock_unavailable">Root mount uchun mavjud emas</string>
     <string name="patch_selection_continue_on_error_tooltip">Hatto patch xatosi yuz bersa ham patch qilishni davom ettirish</string>
     <string name="patch_selection_continue_on_error_description">Xatolik bo'lsa ham davom ettirish</string>
     <string name="patch_selection_no_patches_found">Patchlar topilmadi</string>
@@ -340,6 +349,7 @@
     <string name="patch_selection_strip_settings_hint">· Sozlamalar → Kutubxonalarni olib tashlash</string>
     <string name="patch_selection_arch_keep">saqlash</string>
     <string name="patch_selection_arch_strip">olib tashlash</string>
+    <string name="patch_selection_arch_not_in_apk">apkda mavjud emas</string>
     <string name="patch_selection_no_matches_in_bundle">Ushbu paketda mos keladigan natijalar yo\"q</string>
     <string name="patch_selection_error_patches_file_missing">Patchlar fayli topilmadi va uni yuklab olib bo\"lmadi: %1$s</string>
     <string name="patch_selection_error_failed_to_list_patches">Patchlar ro\"yxatini chiqarishda xatolik yuz berdi: %1$s</string>
@@ -366,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Ilova</string>
     <string name="patch_selection_run_info_bundles_group">Patch paketlari</string>
     <string name="patch_selection_run_info_no_bundles">Hech qanday paketlar aniqlanmadi</string>
+    <string name="patch_selection_run_info_dev_group">Dasturchi variantlari</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytekod rejimi: %1$s</string>
+    <string name="patch_selection_run_info_validate">Fingerprint tekshiruvi: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK tekshiruvi: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Guruhlanmaganlar</string>
     <string name="patch_selection_group_selected_count">%1$d ta tanlangan</string>
@@ -385,6 +399,7 @@
     <string name="patching_step_all_done">Hamma narsa tayyor!</string>
     <string name="patching_step_waiting">Kutilmoqda…</string>
     <string name="patching_graph_memory_usage">Xotira ishlatilishi</string>
+    <string name="patching_graph_memory_detail">%2$d MB ning %1$d% i</string>
     <string name="patching_graph_storage_io">Xotira kiritish/chiqarish</string>
     <string name="patching_graph_cpu_usage">CPU ishlatilishi</string>
     <string name="patching_banner_started_title">Patchlash boshlandi</string>
@@ -420,6 +435,15 @@
     <string name="result_adb_updating_on_device">%1$s da yangilanmoqda…</string>
     <string name="result_adb_update_successful">Yangilash muvaffaqiyatli yakunlandi!</string>
     <string name="result_adb_install_successful">O'rnatish muvaffaqiyatli yakunlandi!</string>
+    <string name="result_adb_badge_root_mount">Root montaj</string>
+    <string name="result_adb_mount_button">%1$s ga mount qilish</string>
+    <string name="result_adb_mounting_on_device">%1$s ga mount qilinmoqda…</string>
+    <string name="result_adb_mount_successful">Mount muvaffaqiyatli yakunlandi!</string>
+    <string name="result_adb_mount_su_prompt_hint">%1$s ga mount qilinmoqda… Agar so'ralgan bo'lsa, Superuser ruxsatini berish uchun qurilmangizni tekshiring</string>
+    <string name="result_adb_unmount_button">%1$s dan unmount qilish</string>
+    <string name="result_adb_unmounting_on_device">%1$s dan unmount qilinmoqda…</string>
+    <string name="result_adb_root_not_detected">%1$s qurilmasida root kirish aniqlanmadi. Magisk/KernelSU/APatch o'rnatilganiga va su ruxsati berilganiga ishonch hosil qiling</string>
+    <string name="result_adb_stock_app_not_installed">%2$s qurilmasida %1$s standart ilovasi o'rnatilmagan. Mount qilishdan oldin rasmiy ilovani o'rnating</string>
     <string name="result_link_default_restored">Havolalarni qayta ishlov berishning standart holati tiklandi</string>
     <string name="result_link_routed_stock_disabled">Havolalar patch qilingan ilovaga yo'naltirildi, zavod ilovasi o'chirildi</string>
     <string name="result_adb_not_found_hint">ADB topilmadi. To'g'ridan-to'g'ri o'rnatishni yoqish uchun Android SDK Platform Tools'ni o'rnating</string>
@@ -600,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s dan</string>
     <string name="update_banner_later_button">Keyinroq</string>
     <string name="update_banner_skip_button">v%1$s ni o\"tkazib yuborish</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Asboblar</string>
-    <string name="tools_dialog_open_logs_button">Loglarni ochish</string>
-    <string name="tools_dialog_open_app_data_button">Ilova ma\"lumotlarini ochish</string>
-    <string name="tools_dialog_view_licenses_button">Litsenziyalarni ko\"rish</string>
-    <string name="tools_dialog_cache_cleared">Kesh tozalandi</string>
-    <string name="tools_dialog_clear_failed">Tozalashda xatolik</string>
-    <string name="tools_dialog_clear_cache_button">Keshni tozalash</string>
-    <string name="tools_dialog_cache_summary">Kesh: %1$s (patchlar + loglar)</string>
-    <string name="tools_dialog_confirm_clear_title">Keshni tozalashni xohlaysizmi?</string>
-    <string name="tools_dialog_confirm_clear_message">Bu yuklab olingan patchlar va log fayllarini o'chiradi. Patchlar kerak bo'lganda qayta yuklab olinadi</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ochiq kodli litsenziyalar</string>
     <string name="licenses_dialog_empty_failed">// litsenziyalarni yuklab bo'lmadi</string>
@@ -683,6 +696,19 @@
     <string name="settings_section_strip_libs">Kutubxonalarni tozalash</string>
     <string name="settings_toggle_developer_options_label">Dasturchi variantlari</string>
     <string name="settings_toggle_developer_options_desc">Patch dasturchilari uchun. Patchlarni yaratish va test qilish uchun ish oqimi variantlari to'plamini ochadi (to'liq ro'yxat uchun hujjatlarni ko'ring). Hozirda bu Morphe har doim eng yangi .mpp faylini yuklashi uchun mahalliy manbani papkaga yo'naltirishni anglatadi</string>
+    <string name="settings_dev_bytecode_mode_label">Bytekod rejimi</string>
+    <string name="settings_dev_bytecode_mode_desc">Patchlash paytida DEX bytekodiga qo'llaniladigan transformatsiya rejimi</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Tezkor</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Xavfsiz</string>
+    <string name="settings_dev_bytecode_mode_full">To'liq</string>
+    <string name="settings_dev_validate_label">Fingerprint tekshiruvi</string>
+    <string name="settings_dev_validate_desc">Har bir match() faqat bitta metodga mos kelishini tekshirish (patchlash sekinroq kechadi, patchlarni test qilish uchun)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK tekshiruvi</string>
+    <string name="settings_dev_verify_sdk_desc">Patch qilingan DEX va APKni Android SDK vositalari (d8, zipalign) yordamida tekshiring. Xato ijobiy natijalar berishi mumkin</string>
+    <string name="settings_dev_sdk_path_label">Android SDK katalogi</string>
+    <string name="settings_dev_sdk_path_auto">Avtomatik aniqlandi</string>
+    <string name="settings_dev_sdk_not_found">Android SDK topilmadi. ANDROID_HOME ni sozlang yoki SDK katalogini qidiring</string>
+    <string name="settings_dev_sdk_picker_title">Android SDK katalogini tanlang</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Vaqtinchalik fayllarni avtomatik tozalash</string>
     <string name="settings_toggle_auto_cleanup_desc">Patchlashdan so'ng vaqtinchalik fayllarni o'chirish</string>
@@ -697,10 +723,21 @@
     <string name="settings_output_folder_not_found">Papka topilmadi, keyingi patch jarayonida yaratiladi</string>
     <string name="settings_toggle_auto_start_adb_label">ADBni avtomatik ishga tushirish</string>
     <string name="settings_toggle_auto_start_adb_desc">Ulangan qurilmalar monitoring qilinishi uchun ishga tushirish paytida ADB demonini ishga tushiring. O\"chirilgan bo\"lsa, Morphe serverni hech qachon ishga tushirmaydi va o\"rnatish/jo\"natish funksiyalari ishlamaydi</string>
+    <string name="settings_section_storage">Xotira &amp; kesh</string>
+    <string name="settings_cache_summary">Kesh: %1$s (patchlar + loglar)</string>
+    <string name="settings_cache_clear_button">Keshni tozalash</string>
+    <string name="settings_cache_cleared">Kesh tozalandi</string>
+    <string name="settings_cache_clear_failed">Tozalashda xatolik</string>
+    <string name="settings_cache_confirm_title">Keshni tozalaysizmi?</string>
+    <string name="settings_cache_confirm_message">Bu yuklab olingan patchlar va log fayllarini o'chirib tashlaydi. Patchlar kerak bo'lganda qayta yuklab olinadi</string>
+    <string name="settings_storage_open_app_data_button">Ilova ma'lumotlarini ochish</string>
+    <string name="settings_storage_open_logs_button">Loglarni ochish</string>
     <string name="settings_section_about">Biz haqimizda</string>
     <string name="settings_about_version">Versiya %1$s</string>
     <string name="settings_about_changelogs_title">O\"zgarishlar ro\"yxatini ko\"rish</string>
     <string name="settings_about_changelogs_desc">Ushbu yangilanishdagi so\"nggi o\"zgarishlar bilan tanishing</string>
+    <string name="settings_about_licenses_title">Ochiq kodli litsenziyalar</string>
+    <string name="settings_about_licenses_desc">Uchinchi tomon kutubxonalari litsenziyalarini ko'rish</string>
     <string name="settings_about_documentation_title">Hujjatlar</string>
     <string name="settings_about_documentation_desc">Patch qilish, manbalar va muammolarni bartaraf etish bo\"yicha qo\"llanmalar</string>
     <string name="settings_about_website_title">Veb-saytga tashrif buyurish</string>

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Պատկերների կիրառում</string>
     <string name="patching_step_writing_apk">Փոփոխված APK ֆայլի գրում</string>
     <string name="patching_step_signing">Փոփոխված APK ֆայլի ստորագրում</string>
+    <string name="patching_task_decoding_dex">DEX ֆայլերի ընթերցում</string>
+    <string name="patching_task_extracting_resources">Ռեսուրսների արտահանում</string>
+    <string name="patching_task_decoding_resources">Ռեսուրսների վերծանում</string>
+    <string name="patching_task_indexing_classes">Դասերի ինդեքսավորում</string>
+    <string name="patching_task_compiling_dex">DEX ֆայլերի կոմպիլյացիա</string>
+    <string name="patching_task_compiling_resources">Ռեսուրսների կոմպիլյացիա</string>
+    <string name="patching_task_writing_apk">APK ֆայլի գրում</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Տեղադրվում է %1$s-ի վրա…</string>
     <string name="adb_error_downgrade">Հնարավոր չէ տարբերակը նվազեցնել, տեղադրված է ավելի նոր տարբերակ: Նախ հեռացրեք գոյություն ունեցող հավելվածը</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Սխալ փաթեթների բեռնման ժամանակ</string>
     <string name="patch_selection_title">Ընտրեք փաթեթները</string>
     <string name="patch_selection_cmd_preview">Հրամանի նախադիտում</string>
+    <string name="patch_selection_root_mode_description">Root-ի միացման ռեժիմ</string>
+    <string name="patch_selection_lock_unavailable">Անհասանելի է root mount-ի համար</string>
     <string name="patch_selection_continue_on_error_tooltip">Շարունակել փաթեթավորումը, նույնիսկ եթե փաթեթը ձախողվի</string>
     <string name="patch_selection_continue_on_error_description">Շարունակել սխալի դեպքում</string>
     <string name="patch_selection_no_patches_found">Փաթեթներ չեն գտնվել</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Հավելված</string>
     <string name="patch_selection_run_info_bundles_group">Փաթեթների փաթեթներ</string>
     <string name="patch_selection_run_info_no_bundles">Ոչ մի փաթեթ չի գտնվել</string>
+    <string name="patch_selection_run_info_dev_group">Մշակողի տարբերակներ</string>
+    <string name="patch_selection_run_info_bytecode_mode">Բայթկոդի ռեժիմ. %1$s</string>
+    <string name="patch_selection_run_info_validate">Մատնահետքի վալիդացիա. %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK-ի վերիֆիկացիա. %1$s</string>
     <string name="patch_selection_group_universal">Ունիվերսալ</string>
     <string name="patch_selection_group_ungrouped">Առանց խմբի</string>
     <string name="patch_selection_group_selected_count">%1$d ընտրված</string>
@@ -421,6 +434,15 @@
     <string name="result_adb_updating_on_device">Թարմացվում է %1$s-ի վրա…</string>
     <string name="result_adb_update_successful">Թարմացումը հաջողվեց:</string>
     <string name="result_adb_install_successful">Տեղադրումը հաջողվեց:</string>
+    <string name="result_adb_badge_root_mount">Root-ի միացում</string>
+    <string name="result_adb_mount_button">Mount %1$s-ի վրա</string>
+    <string name="result_adb_mounting_on_device">Mount-վում է %1$s-ի վրա…</string>
+    <string name="result_adb_mount_successful">Mount-ը հաջողությամբ ավարտվեց:</string>
+    <string name="result_adb_mount_su_prompt_hint">Mount-վում է %1$s-ի վրա… Ստուգեք ձեր սարքը և տվեք Superuser թույլտվություն, եթե հարցում է հայտնվում</string>
+    <string name="result_adb_unmount_button">Unmount %1$s-ից</string>
+    <string name="result_adb_unmounting_on_device">Unmount-վում է %1$s-ից…</string>
+    <string name="result_adb_root_not_detected">Root հասանելիությունը չի հայտնաբերվել %1$s-ի վրա: Համոզվեք, որ Magisk/KernelSU/APatch-ը տեղադրված է և su թույլտվությունը տրված է</string>
+    <string name="result_adb_stock_app_not_installed">Stock հավելված %1$s-ը տեղադրված չէ %2$s-ի վրա: Նախ տեղադրեք պաշտոնական հավելվածը, նոր mount արեք</string>
     <string name="result_link_default_restored">Հղումների լռելյայն մշակումը վերականգնված է</string>
     <string name="result_link_routed_stock_disabled">Հղումները ուղղորդվում են դեպի փոփոխված հավելվածը, ստանդարտը անջատված է</string>
     <string name="result_adb_not_found_hint">ADB-ն չի գտնվել: Տեղադրեք Android SDK Platform Tools-ը՝ ուղղակի տեղադրումը միացնելու համար</string>
@@ -601,17 +623,6 @@
     <string name="update_banner_from_version">սկսած v%1$s-ից</string>
     <string name="update_banner_later_button">Ավելի ուշ</string>
     <string name="update_banner_skip_button">Բաց թողնել v%1$s-ը</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Գործիքներ</string>
-    <string name="tools_dialog_open_logs_button">Բացել լոգերը</string>
-    <string name="tools_dialog_open_app_data_button">Բացել հավելվածի տվյալները</string>
-    <string name="tools_dialog_view_licenses_button">Տեսնել լիցենզիաները</string>
-    <string name="tools_dialog_cache_cleared">Քեշը մաքրված է</string>
-    <string name="tools_dialog_clear_failed">Մաքրումը ձախողվեց</string>
-    <string name="tools_dialog_clear_cache_button">Մաքրել քեշը</string>
-    <string name="tools_dialog_cache_summary">Քեշ՝ %1$s (փաթեթներ + լոգեր)</string>
-    <string name="tools_dialog_confirm_clear_title">Մաքրե՞լ քեշը։</string>
-    <string name="tools_dialog_confirm_clear_message">Սա կջնջի ներբեռնված փոփոխությունները և մատյանների ֆայլերը: Փոփոխությունները կներբեռնվեն նորից ըստ անհրաժեշտության</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Բաց կոդի լիցենզիաներ</string>
     <string name="licenses_dialog_empty_failed">// լիցենզիաների բեռնումը ձախացավ</string>
@@ -684,6 +695,19 @@
     <string name="settings_section_strip_libs">Հեռացնել գրադարանները</string>
     <string name="settings_toggle_developer_options_label">Մշակողի տարբերակներ</string>
     <string name="settings_toggle_developer_options_desc">Փաթեթների մշակողների համար: Բացում է աշխատանքային գործիքների մի շարք հնարավորություններ փաթեթների ստեղծման և թեստավորման համար (տես ամբողջական ցանկը փաստաթղթերում): Այս պահին դա տեղական աղբյուրի ուղղումն դեպի թղթապանակ, որպեսզի Morphe-ը միշտ բեռնի իր ամենաթարմ .mpp-ն</string>
+    <string name="settings_dev_bytecode_mode_label">Բայթկոդի ռեժիմ</string>
+    <string name="settings_dev_bytecode_mode_desc">Փոփոխման ռեժիմ, որը կիրառվում է DEX բայթկոդի վրա փաթեթավորման ժամանակ</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Արագ</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Անվտանգ</string>
+    <string name="settings_dev_bytecode_mode_full">Լիարժեք</string>
+    <string name="settings_dev_validate_label">Մատնահետքի վալիդացիա</string>
+    <string name="settings_dev_validate_desc">Վալիդացնել, որ յուրաքանչյուր match() համապատասխանում է միայն մեկ մեթոդի (ավելի դանդաղ փաթեթավորում, փաթեթների թեստավորման համար)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK-ի վերիֆիկացիա</string>
+    <string name="settings_dev_verify_sdk_desc">Ստուգեք փոփոխված DEX-ը և APK-ն Android SDK գործիքների (d8, zipalign) միջոցով: Հնարավոր է կեղծ դրական արդյունքների հայտնաբերում</string>
+    <string name="settings_dev_sdk_path_label">Android SDK թղթապանակ</string>
+    <string name="settings_dev_sdk_path_auto">Ավտոմատ հայտնաբերված</string>
+    <string name="settings_dev_sdk_not_found">Android SDK-ն չի գտնվել: Սահմանեք ANDROID_HOME-ը կամ փնտրեք SDK թղթապանակը</string>
+    <string name="settings_dev_sdk_picker_title">Ընտրեք Android SDK թղթապանակը</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Ժամանակավոր ֆայլերի ավտոմատ մաքրում</string>
     <string name="settings_toggle_auto_cleanup_desc">Ջնջել ժամանակավոր ֆայլերը փաթեթավորումից հետո</string>
@@ -698,10 +722,21 @@
     <string name="settings_output_folder_not_found">Թղթապանակը չի գտնվել, այն կստեղծվի հաջորդ թարմացման ժամանակ</string>
     <string name="settings_toggle_auto_start_adb_label">ADB-ի ավտոմատ միացում</string>
     <string name="settings_toggle_auto_start_adb_desc">Գործարկել ADB դեմոնը միացմանពេល, որպեսզի միացված սարքերը վերահսկվեն: Անջատված լինելու դեպքում Morphe-ն երբեք չի միացնում սերվերը, իսկ տեղադրման/փոխանցման գործառույթները անջատվում են</string>
+    <string name="settings_section_storage">Պահպանում և քեշ</string>
+    <string name="settings_cache_summary">Քեշ՝ %1$s (փաթեթներ + մատյաններ)</string>
+    <string name="settings_cache_clear_button">Մաքրել քեշը</string>
+    <string name="settings_cache_cleared">Քեշը մաքրված է</string>
+    <string name="settings_cache_clear_failed">Մաքրումը ձախողվեց</string>
+    <string name="settings_cache_confirm_title">Մաքրե՞լ քեշը։</string>
+    <string name="settings_cache_confirm_message">Սա կջնջի ներբեռնված փաթեթները և մատյանների ֆայլերը: Փաթեթները կներբեռնվեն նորից, երբ անհրաժեշտ լինի</string>
+    <string name="settings_storage_open_app_data_button">Բացել հավելվածի տվյալները</string>
+    <string name="settings_storage_open_logs_button">Բացել մատյանները</string>
     <string name="settings_section_about">Մասին</string>
     <string name="settings_about_version">Տարբերակ %1$s</string>
     <string name="settings_about_changelogs_title">Տեսնել փոփոխությունների միջնապատկերը</string>
     <string name="settings_about_changelogs_desc">Ծանոթացեք այս թարմացման վերջին փոփոխություններին</string>
+    <string name="settings_about_licenses_title">Բաց կոդի լիցենզիաներ</string>
+    <string name="settings_about_licenses_desc">Դիտել երրորդ կողմի գրադարանների լիցենզիաները</string>
     <string name="settings_about_documentation_title">Փաստաթղթեր</string>
     <string name="settings_about_documentation_desc">Ուղեցույցներ փաթեթավորման, աղբյուրների և խնդիրների լուծման համար</string>
     <string name="settings_about_website_title">Այցելել կայք</string>

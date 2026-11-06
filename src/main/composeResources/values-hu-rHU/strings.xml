@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Módosítások alkalmazása</string>
     <string name="patching_step_writing_apk">Módosított APK fájl írása</string>
     <string name="patching_step_signing">Módosított APK fájl aláírása</string>
+    <string name="patching_task_decoding_dex">DEX fájlok lectura</string>
+    <string name="patching_task_extracting_resources">Erőforrások kibontása</string>
+    <string name="patching_task_decoding_resources">Erőforrások dekódolása</string>
+    <string name="patching_task_indexing_classes">Osztályok indexelése</string>
+    <string name="patching_task_compiling_dex">DEX fájlok fordítása</string>
+    <string name="patching_task_compiling_resources">Erőforrások fordítása</string>
+    <string name="patching_task_writing_apk">APK fájl írása</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Telepítés a következőre: %1$s…</string>
     <string name="adb_error_downgrade">Nem lehet visszaváltani régebbi verzióra, mert újabb verzió van telepítve. Először távolítsd el a meglévő alkalmazást</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Hiba a javítások betöltésekor</string>
     <string name="patch_selection_title">Válassza ki a módosításokat</string>
     <string name="patch_selection_cmd_preview">Parancs előnézete</string>
+    <string name="patch_selection_root_mode_description">Root csatolási mód</string>
+    <string name="patch_selection_lock_unavailable">Nem érhető el root csatoláshoz</string>
     <string name="patch_selection_continue_on_error_tooltip">A javítás folytatása akkor is, ha egy javítás meghiúsul</string>
     <string name="patch_selection_continue_on_error_description">Folytatás hiba esetén</string>
     <string name="patch_selection_no_patches_found">Nem találhatók módosítások</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Alkalmazás</string>
     <string name="patch_selection_run_info_bundles_group">Javítócsomagok</string>
     <string name="patch_selection_run_info_no_bundles">Nincs feloldott csomag</string>
+    <string name="patch_selection_run_info_dev_group">Fejlesztői lehetőségek</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode mód: %1$s</string>
+    <string name="patch_selection_run_info_validate">Ujjlenyomat ellenőrzése: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK ellenőrzése: %1$s</string>
     <string name="patch_selection_group_universal">Univerzális</string>
     <string name="patch_selection_group_ungrouped">Csoportosítatlan</string>
     <string name="patch_selection_group_selected_count">%1$d kiválasztva</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Frissítés itt: %1$s…</string>
     <string name="result_adb_update_successful">A frissítés sikeres!</string>
     <string name="result_adb_install_successful">A telepítés sikeres!</string>
+    <string name="result_adb_badge_root_mount">Root csatolás</string>
+    <string name="result_adb_mount_button">Csatolás %1$s eszközhöz</string>
+    <string name="result_adb_mounting_on_device">Csatolás %1$s eszközhöz…</string>
+    <string name="result_adb_mount_successful">A csatolás sikeres!</string>
+    <string name="result_adb_mount_su_prompt_hint">Csatolás %1$s eszközhöz… Ellenőrizze az eszközét, és adjon engedélyt a szuperfelhasználónak, ha felkérik</string>
+    <string name="result_adb_unmount_button">Leválasztás %1$s eszközről</string>
+    <string name="result_adb_unmounting_on_device">Leválasztás %1$s eszközről…</string>
+    <string name="result_adb_root_not_detected">Nem észleltünk root hozzáférést %1$s eszközön. Győződjön meg róla, hogy a Magisk/KernelSU/APatch telepítve van, és a su engedély megadva lett</string>
+    <string name="result_adb_stock_app_not_installed">A %1$s gyári alkalmazás nincs telepítve a %2$s eszközre. A csatolás előtt telepítse először a hivatalos alkalmazást</string>
     <string name="result_link_default_restored">Az alapértelmezett hivatkozáskezelés visszaállítva</string>
     <string name="result_link_routed_stock_disabled">Hivatkozások a javított alkalmazáshoz irányítva, az eredeti letiltva</string>
     <string name="result_adb_not_found_hint">Az ADB nem található. Telepítsd az Android SDK Platform Tools csomagot a közvetlen telepítés engedélyezéséhez</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">v%1$s verzióról</string>
     <string name="update_banner_later_button">Később</string>
     <string name="update_banner_skip_button">Hagyd ki a v%1$s verziót</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Eszközök</string>
-    <string name="tools_dialog_open_logs_button">Naplók megnyitása</string>
-    <string name="tools_dialog_open_app_data_button">Alkalmazásadatok megnyitása</string>
-    <string name="tools_dialog_view_licenses_button">Licencek megtekintése</string>
-    <string name="tools_dialog_cache_cleared">Gyorsítótár törölve</string>
-    <string name="tools_dialog_clear_failed">A törlés sikertelen</string>
-    <string name="tools_dialog_clear_cache_button">Gyorsítótár törlése</string>
-    <string name="tools_dialog_cache_summary">Gyorsítótár: %1$s (javítások + naplók)</string>
-    <string name="tools_dialog_confirm_clear_title">Törlöd a gyorsítótárat?</string>
-    <string name="tools_dialog_confirm_clear_message">Ez törli a letöltött javításokat és naplófájlokat. A javítások szükség esetén újra letöltődnek</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Nyílt forráskódú licencek</string>
     <string name="licenses_dialog_empty_failed">// a licencek betöltése sikertelen</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Könyvtárak eltávolítása</string>
     <string name="settings_toggle_developer_options_label">Fejlesztői beállítások</string>
     <string name="settings_toggle_developer_options_desc">Javításfejlesztőknek. Munkafolyamat-beállítások sorát nyitja meg a javítások építéséhez és teszteléséhez (a teljes listát lásd a dokumentációban). Egyelőre ez azt jelenti, hogy egy helyi forrást mappára állíthatsz, így a Morphe mindig a legújabb .mpp-t tölti be</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode mód</string>
+    <string name="settings_dev_bytecode_mode_desc">A patching során a DEX bytecode-ra alkalmazott átalakítási mód</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Gyors</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Biztonságos</string>
+    <string name="settings_dev_bytecode_mode_full">Teljes</string>
+    <string name="settings_dev_validate_label">Ujjlenyomat ellenőrzése</string>
+    <string name="settings_dev_validate_desc">Ellenőrzi, hogy minden match() csak egyetlen metódához tartozik (lassabb patching, patch teszteléshez)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK ellenőrzése</string>
+    <string name="settings_dev_verify_sdk_desc">Ellenőrizze a módosított DEX-et és APK-t az Android SDK eszközökkel (d8, zipalign). Lehetséges hamis pozitív eredmények</string>
+    <string name="settings_dev_sdk_path_label">Android SDK könyvtár</string>
+    <string name="settings_dev_sdk_path_auto">Automatikusan érzékelve</string>
+    <string name="settings_dev_sdk_not_found">Android SDK nem található. Állítsa be az ANDROID_HOME változót, vagy keresse meg az SDK könyvtárát</string>
+    <string name="settings_dev_sdk_picker_title">Válassza ki az Android SDK könyvtárát</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Ideiglenes fájlok automatikus törlése</string>
     <string name="settings_toggle_auto_cleanup_desc">Ideiglenes fájlok törlése javítás után</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">A mappa nem található, a következő javításkor létrejön</string>
     <string name="settings_toggle_auto_start_adb_label">ADB automatikus indítása</string>
     <string name="settings_toggle_auto_start_adb_desc">Indítsd el az ADB-démont induláskor, hogy a csatlakoztatott eszközök figyelve legyenek. Kikapcsolva a Morphe soha nem indítja el a kiszolgálót, és a telepítési/küldési funkciók le vannak tiltva</string>
+    <string name="settings_section_storage">Tárhely és gyorsítotár</string>
+    <string name="settings_cache_summary">Gyorsítotár: %1$s (javítások + naplók)</string>
+    <string name="settings_cache_clear_button">Gyorsítotár törlése</string>
+    <string name="settings_cache_cleared">Gyorsítotár törölve</string>
+    <string name="settings_cache_clear_failed">Törlés sikertelen</string>
+    <string name="settings_cache_confirm_title">Törölje a gyorsítotárat?</string>
+    <string name="settings_cache_confirm_message">Ez törli a letöltött javításokat és a naplófájlokat. A javítások szükség esetén újra lesznek letöltve</string>
+    <string name="settings_storage_open_app_data_button">Alkalmazásadatok megnyitása</string>
+    <string name="settings_storage_open_logs_button">Naplók megnyitása</string>
     <string name="settings_section_about">Névjegy</string>
     <string name="settings_about_version">Verzió %1$s</string>
     <string name="settings_about_changelogs_title">Változásnaplók megtekintése</string>
     <string name="settings_about_changelogs_desc">Nézd meg a frissítés legújabb változásait</string>
+    <string name="settings_about_licenses_title">Nyílt forráskódú licencek</string>
+    <string name="settings_about_licenses_desc">Harmadikus könyvtárak licencjeinek megtekintése</string>
     <string name="settings_about_documentation_title">Dokumentáció</string>
     <string name="settings_about_documentation_desc">Útmutatók a javításhoz, a forrásokhoz és a hibaelhárításhoz</string>
     <string name="settings_about_website_title">Weboldal megnyitása</string>

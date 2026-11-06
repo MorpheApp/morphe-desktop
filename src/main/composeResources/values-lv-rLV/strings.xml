@@ -63,8 +63,19 @@
     <string name="version_label_recommended">Ieteicamais</string>
     <string name="version_label_supported">Atbalstīts</string>
     <string name="app_info_arch_label">Arhitektūra</string>
+    <string name="app_info_min_sdk_label">Min SDK</string>
+    <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
+    <string name="app_info_shared_label">Lietotnes info</string>
+    <string name="github_label">GitHub</string>
+    <string name="patches_search_hint">Meklēt patchus…</string>
+    <string name="status_patching_completed">Patchošana pabeigta</string>
+    <string name="status_patching_failed">Patchošana neizdevās</string>
+    <string name="status_patching_cancelled">Patchošana atcelta</string>
+    <string name="view_full_logs_button">Skatīt visus žurnālos</string>
+    <string name="error_patching_unknown">Patchošana neizdevās nezināma iemesla dēļ</string>
     <string name="error_log_label">Kļūdu žurnāls</string>
     <string name="back">Atpakaļ</string>
+    <string name="open_folder">Atvērt mapi</string>
     <string name="temporary_files_label">Pagaidu faili</string>
     <string name="size_can_be_freed_label">Var atbrīvot %1$s</string>
     <string name="clean_up">Notīrīt</string>
@@ -97,6 +108,13 @@
     <string name="patching_step_applying_patches">Pielieto 패ču</string>
     <string name="patching_step_writing_apk">Raksta patched APK failu</string>
     <string name="patching_step_signing">Paraksta patched APK failu</string>
+    <string name="patching_task_decoding_dex">Lasa DEX failus</string>
+    <string name="patching_task_extracting_resources">Ekstrahē resursi</string>
+    <string name="patching_task_decoding_resources">Dekodē resursi</string>
+    <string name="patching_task_indexing_classes">Indeksē klases</string>
+    <string name="patching_task_compiling_dex">Kompilē DEX faili</string>
+    <string name="patching_task_compiling_resources">Kompilē resursi</string>
+    <string name="patching_task_writing_apk">Raksta APK failu</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Instalē %1$s…</string>
     <string name="adb_error_downgrade">Nevar downgrade, ir instalēta jaunāka versija. Vispirms atinstalējiet esošo lietotni</string>
@@ -294,6 +312,8 @@
     <string name="patch_selection_error_title">Kļūda ielādējot lappisas</string>
     <string name="patch_selection_title">Atlasiet lappisas</string>
     <string name="patch_selection_cmd_preview">Komandas prizksubseteq</string>
+    <string name="patch_selection_root_mode_description">Saknes montēšanas režīms</string>
+    <string name="patch_selection_lock_unavailable">Nepieejams sakne montējumam</string>
     <string name="patch_selection_continue_on_error_tooltip">Turpināt lappisēšanu, pat ja kāda lappisa neveiksmīga</string>
     <string name="patch_selection_continue_on_error_description">Turpināt kļūdas gadījumā</string>
     <string name="patch_selection_no_patches_found">Lappisas neatrastas</string>
@@ -355,10 +375,15 @@
     <string name="patch_selection_run_info_app_group">Lietotne</string>
     <string name="patch_selection_run_info_bundles_group">Lāpstu pakaujes</string>
     <string name="patch_selection_run_info_no_bundles">Neviena pakauje nav atrasta</string>
+    <string name="patch_selection_run_info_dev_group">Izstrādātāja iespējas</string>
+    <string name="patch_selection_run_info_bytecode_mode">Baitkoda režīms: %1$s</string>
+    <string name="patch_selection_run_info_validate">Cīras validēšana: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK verificēšana: %1$s</string>
     <string name="patch_selection_group_universal">Universāls</string>
     <string name="patch_selection_group_ungrouped">Negrupēts</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Sākt no jauna</string>
+    <string name="patching_patches_count">%1$d / %2$d patchi</string>
     <string name="patching_slow_warning">Tas prasa vairāk laika nekā parasti. Lūdzu, uzgaidiet…</string>
     <string name="patching_status_ready">Gatavs lāpstošanai</string>
     <string name="patching_status_preparing">Sagatavoju plākstera uzstādīšanu</string>
@@ -372,6 +397,7 @@
     <string name="patching_step_all_done">Viss gatavs!</string>
     <string name="patching_step_waiting">Gaida…</string>
     <string name="patching_graph_memory_usage">Atmiņas izmantošana</string>
+    <string name="patching_graph_memory_detail">%1$d% no %2$d MB</string>
     <string name="patching_graph_storage_io">Atmiņas I/O</string>
     <string name="patching_graph_cpu_usage">CPU izmantošana</string>
     <string name="patching_banner_started_title">Plāksterošana sākta</string>
@@ -407,6 +433,15 @@
     <string name="result_adb_updating_on_device">Atjaunināšana ierīcē %1$s…</string>
     <string name="result_adb_update_successful">Atjauninājums veiksmīgi pabeigts!</string>
     <string name="result_adb_install_successful">Instalēšana veiksmīgi pabeigta!</string>
+    <string name="result_adb_badge_root_mount">Root montēšana</string>
+    <string name="result_adb_mount_button">Montēt uz %1$s</string>
+    <string name="result_adb_mounting_on_device">Montē uz %1$s…</string>
+    <string name="result_adb_mount_successful">Montēšana veiksmīga!</string>
+    <string name="result_adb_mount_su_prompt_hint">Montē uz %1$s… Ja parādās pieprasījums, pārbaudiet ierīci un piešķiriet Superlietotāja atļauju</string>
+    <string name="result_adb_unmount_button">Atmontēt no %1$s</string>
+    <string name="result_adb_unmounting_on_device">Atmontē no %1$s…</string>
+    <string name="result_adb_root_not_detected">Uz %1$s netika konstatēta Root piekļuve. Pārliecinieties, ka Magisk/KernelSU/APatch ir instalēts un su atļauja ir piešķirta</string>
+    <string name="result_adb_stock_app_not_installed">Standarta lietotne %1$s nav instalēta uz %2$s. Pirms montēšanas vispirms instalējiet oficiālo lietotni</string>
     <string name="result_link_default_restored">Atjaunota noklusējuma saites apstrāde</string>
     <string name="result_link_routed_stock_disabled">Saites novirzītas uz patched aplikāciju, oriģinālā ir deaktivēta</string>
     <string name="result_adb_not_found_hint">ADB netika atrasts. Instalējiet Android SDK Platform Tools, lai iespējotu tiešu instalēšanu</string>
@@ -587,17 +622,6 @@
     <string name="update_banner_from_version">no v%1$s</string>
     <string name="update_banner_later_button">Vēlāk</string>
     <string name="update_banner_skip_button">Izlaikt v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Rīki</string>
-    <string name="tools_dialog_open_logs_button">Atvērt žurnālus</string>
-    <string name="tools_dialog_open_app_data_button">Atvērt lietotnes datus</string>
-    <string name="tools_dialog_view_licenses_button">Skatīt licences</string>
-    <string name="tools_dialog_cache_cleared">Atmiņa iztīrīta</string>
-    <string name="tools_dialog_clear_failed">Tīrīšana neizdevās</string>
-    <string name="tools_dialog_clear_cache_button">Tīrīt atlasijas atmiņu</string>
-    <string name="tools_dialog_cache_summary">Atlasijas atmiņa: %1$s (taisījumā + žurnāli)</string>
-    <string name="tools_dialog_confirm_clear_title">Tīrīt atlasijas atmiņu?</string>
-    <string name="tools_dialog_confirm_clear_message">Tas izdzēs lejupielādētos taisījumus un žurnālu failus. Taisījumi tiks lejupielādēti no jauna, kad tie būs nepieciešami</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Atvērtāavotsu licences</string>
     <string name="licenses_dialog_empty_failed">// neizdevās ielādēt licences</string>
@@ -669,6 +693,19 @@
     <string name="settings_section_strip_libs">Noņemt bibliotēkas</string>
     <string name="settings_toggle_developer_options_label">Izstrādātāja iespējas</string>
     <string name="settings_toggle_developer_options_desc">Plākstumu izstrādātājiem. Atbloķē procesu iespēju kopumu plākstumu izveidei un testēšanai (pilnu sarakstu skatīt dokumentācijā). Pašlaik tas nozīmē lokālo avotu norādīšanu uz mapi, lai Morphe vienmēr ielādētu jaunāko .mpp failu</string>
+    <string name="settings_dev_bytecode_mode_label">Baitkoda režīms</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformācijas režīms, kas tiek pielietots DEX baitkodam atlabošanas laikā</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Ātrs</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Drošs</string>
+    <string name="settings_dev_bytecode_mode_full">Pilns</string>
+    <string name="settings_dev_validate_label">Cīras validēšana</string>
+    <string name="settings_dev_validate_desc">Validēt, ka katrs match() atbilst tikai vienam metodam (lēnāka atlabošana, patch testēšanai)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK verificēšana</string>
+    <string name="settings_dev_verify_sdk_desc">Verificēt patched DEX un APK ar Android SDK rīkiem (d8, zipalign). Var ziņot par kļūdainiem pozitīviem rezultātiem</string>
+    <string name="settings_dev_sdk_path_label">Android SDK katalogs</string>
+    <string name="settings_dev_sdk_path_auto">Automātiski noteikts</string>
+    <string name="settings_dev_sdk_not_found">Android SDK netika atrasts. Iestatiet ANDROID_HOME vai meklējiet SDK katalogu</string>
+    <string name="settings_dev_sdk_picker_title">Atlasīt Android SDK katalogu</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Automātiska failu tīrīšana</string>
     <string name="settings_toggle_auto_cleanup_desc">Dzēst 임porītos failus pēc lappiesēšanas</string>
@@ -683,10 +720,21 @@
     <string name="settings_output_folder_not_found">Mappa neatrasta, tā tiks izveidota nākamās patčēšanas laikā</string>
     <string name="settings_toggle_auto_start_adb_label">Automātiski startēt ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Ielaidīt ADB dēmonu startēšanas brīdī, lai sekotu līdzi pievienotajām ierīcēm. Ja šī funkcija ir izslēgta, Morphe nekad nestartē serveri, un instalēšanas/pārsūtīšanas funkcijas ir deaktivētas</string>
+    <string name="settings_section_storage">Atmiņa un keinš</string>
+    <string name="settings_cache_summary">Keinšs: %1$s (patchi + žurnāli)</string>
+    <string name="settings_cache_clear_button">Notīrīt keinši</string>
+    <string name="settings_cache_cleared">Keinšs notīrīts</string>
+    <string name="settings_cache_clear_failed">Notīrīšana neizdevās</string>
+    <string name="settings_cache_confirm_title">Notīrīt keinši?</string>
+    <string name="settings_cache_confirm_message">Tas izdzēs lejupielādētos patchus un žurnālu failus. Patchi tiks lejupielādēti atkārtoti, kad tie būs nepieciešami</string>
+    <string name="settings_storage_open_app_data_button">Atvērt lietotnes datus</string>
+    <string name="settings_storage_open_logs_button">Atvērt žurnālus</string>
     <string name="settings_section_about">Par</string>
     <string name="settings_about_version">Versija %1$s</string>
     <string name="settings_about_changelogs_title">Skatīt maiņu sarakstu</string>
     <string name="settings_about_changelogs_desc">Pārbaudiet jaunākās izmaiņas šajā atjauninājumā</string>
+    <string name="settings_about_licenses_title">Atvērt Open Source licencēs</string>
+    <string name="settings_about_licenses_desc">Skatīt trešo pušu bibliotēku licences</string>
     <string name="settings_about_documentation_title">Dokumentācija</string>
     <string name="settings_about_documentation_desc">Rokasgrāmatas patchošanai, avotiem un kļūdu novēršanai</string>
     <string name="settings_about_website_title">Apmeklēt tīmekļa vietni</string>

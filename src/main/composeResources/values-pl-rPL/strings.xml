@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Stosowanie modyfikacji</string>
     <string name="patching_step_writing_apk">Zapisywanie zmodyfikowanego pliku APK</string>
     <string name="patching_step_signing">Podpisywanie zmodyfikowanego pliku APK</string>
+    <string name="patching_task_decoding_dex">Odczytywanie plików DEX</string>
+    <string name="patching_task_extracting_resources">Wypakowywanie zasobów</string>
+    <string name="patching_task_decoding_resources">Dekodowanie zasobów</string>
+    <string name="patching_task_indexing_classes">Indeksowanie klas</string>
+    <string name="patching_task_compiling_dex">Kompilowanie plików DEX</string>
+    <string name="patching_task_compiling_resources">Kompilowanie zasobów</string>
+    <string name="patching_task_writing_apk">Zapisywanie pliku APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Instalowanie na %1$s…</string>
     <string name="adb_error_downgrade">Nie można zainstalować starszej wersji, ponieważ nowsza jest już obecna. Najpierw odinstaluj obecną aplikację</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Błąd wczytywania modyfikacji</string>
     <string name="patch_selection_title">Wybierz modyfikacje</string>
     <string name="patch_selection_cmd_preview">Podgląd polecenia</string>
+    <string name="patch_selection_root_mode_description">Tryb montowania z rootem</string>
+    <string name="patch_selection_lock_unavailable">Niedostępne dla montowania z rootem</string>
     <string name="patch_selection_continue_on_error_tooltip">Kontynuuj modyfikowanie, nawet jeśli któraś modyfikacja się nie powiedzie</string>
     <string name="patch_selection_continue_on_error_description">Kontynuuj w przypadku błędu</string>
     <string name="patch_selection_no_patches_found">Nie znaleziono modyfikacji</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Aplikacja</string>
     <string name="patch_selection_run_info_bundles_group">Pakiety modyfikacji</string>
     <string name="patch_selection_run_info_no_bundles">Nie odnaleziono pakietów</string>
+    <string name="patch_selection_run_info_dev_group">Opcje programisty</string>
+    <string name="patch_selection_run_info_bytecode_mode">Tryb kodu bajtowego: %1$s</string>
+    <string name="patch_selection_run_info_validate">Walidacja sygnatur: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Weryfikacja Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Uniwersalne</string>
     <string name="patch_selection_group_ungrouped">Niezgrupowane</string>
     <string name="patch_selection_group_selected_count">Wybrano: %1$d</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Aktualizowanie na %1$s…</string>
     <string name="result_adb_update_successful">Aktualizacja zakończona pomyślnie!</string>
     <string name="result_adb_install_successful">Instalacja zakończona pomyślnie!</string>
+    <string name="result_adb_badge_root_mount">Montowanie z rootem</string>
+    <string name="result_adb_mount_button">Zamontuj na %1$s</string>
+    <string name="result_adb_mounting_on_device">Montowanie na %1$s…</string>
+    <string name="result_adb_mount_successful">Zamontowano pomyślnie!</string>
+    <string name="result_adb_mount_su_prompt_hint">Montowanie na %1$s… Sprawdź urządzenie i przyznaj uprawnienia Superusera, jeśli pojawi się komunikat</string>
+    <string name="result_adb_unmount_button">Odmontuj z %1$s</string>
+    <string name="result_adb_unmounting_on_device">Odmontowywanie z %1$s…</string>
+    <string name="result_adb_root_not_detected">Nie wykryto dostępu do roota na urządzeniu %1$s. Upewnij się, że zainstalowano Magisk/KernelSU/APatch i przyznano uprawnienia root</string>
+    <string name="result_adb_stock_app_not_installed">Oryginalna aplikacja %1$s nie jest zainstalowana na urządzeniu %2$s. Przed zamontowaniem zainstaluj najpierw oficjalną aplikację</string>
     <string name="result_link_default_restored">Przywrócono domyślną obsługę linków</string>
     <string name="result_link_routed_stock_disabled">Linki przekierowane do zmodyfikowanej aplikacji, oryginalna wyłączona</string>
     <string name="result_adb_not_found_hint">Nie znaleziono ADB. Zainstaluj Android SDK Platform Tools, aby włączyć bezpośrednią instalację</string>
@@ -603,17 +625,6 @@
     <string name="update_banner_from_version">z v%1$s</string>
     <string name="update_banner_later_button">Później</string>
     <string name="update_banner_skip_button">Pomiń v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Narzędzia</string>
-    <string name="tools_dialog_open_logs_button">Otwórz logi</string>
-    <string name="tools_dialog_open_app_data_button">Otwórz dane aplikacji</string>
-    <string name="tools_dialog_view_licenses_button">Wyświetl licencje</string>
-    <string name="tools_dialog_cache_cleared">Wyczyszczono pamięć podręczną</string>
-    <string name="tools_dialog_clear_failed">Czyszczenie nie powiodło się</string>
-    <string name="tools_dialog_clear_cache_button">Wyczyść pamięć podręczną</string>
-    <string name="tools_dialog_cache_summary">Pamięć podręczna: %1$s (modyfikacje + logi)</string>
-    <string name="tools_dialog_confirm_clear_title">Wyczyścić pamięć podręczną?</string>
-    <string name="tools_dialog_confirm_clear_message">Spowoduje to usunięcie pobranych modyfikacji i plików logów. Modyfikacje zostaną pobrane ponownie w razie potrzeby</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licencje otwartoźródłowe</string>
     <string name="licenses_dialog_empty_failed">// nie udało się wczytać licencji</string>
@@ -686,6 +697,19 @@
     <string name="settings_section_strip_libs">Usuwanie bibliotek</string>
     <string name="settings_toggle_developer_options_label">Opcje programisty</string>
     <string name="settings_toggle_developer_options_desc">Dla twórców modyfikacji. Odblokowuje zestaw opcji ułatwiających budowanie i testowanie modyfikacji (pełna lista w dokumentacji). Na ten moment pozwala wskazać folder jako źródło lokalne, aby Morphe zawsze wczytywało z niego najnowszy plik .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Tryb kodu bajtowego</string>
+    <string name="settings_dev_bytecode_mode_desc">Tryb przekształcania stosowany do kodu bajtowego DEX podczas modyfikowania</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Szybki</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Bezpieczny</string>
+    <string name="settings_dev_bytecode_mode_full">Pełny</string>
+    <string name="settings_dev_validate_label">Walidacja sygnatur</string>
+    <string name="settings_dev_validate_desc">Sprawdzaj, czy każde wywołanie match() pasuje tylko do jednej metody (wolniejsze modyfikowanie, przeznaczone do testowania modyfikacji)</string>
+    <string name="settings_dev_verify_sdk_label">Weryfikacja Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Weryfikuj zmodyfikowane pliki DEX i APK za pomocą narzędzi Android SDK (d8, zipalign). Może zgłaszać fałszywe alarmy</string>
+    <string name="settings_dev_sdk_path_label">Katalog Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Wykryto automatycznie</string>
+    <string name="settings_dev_sdk_not_found">Nie znaleziono Android SDK. Ustaw zmienną ANDROID_HOME lub wskaż katalog SDK ręcznie</string>
+    <string name="settings_dev_sdk_picker_title">Wybierz katalog Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Automatycznie czyść pliki tymczasowe</string>
     <string name="settings_toggle_auto_cleanup_desc">Usuwa pliki tymczasowe po zakończeniu modyfikowania</string>
@@ -700,10 +724,21 @@
     <string name="settings_output_folder_not_found">Nie znaleziono folderu, zostanie utworzony przy następnym modyfikowaniu</string>
     <string name="settings_toggle_auto_start_adb_label">Automatyczne uruchamianie ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Uruchamia demona ADB przy starcie aplikacji, aby monitorować podłączone urządzenia. Gdy funkcja jest wyłączona, Morphe nigdy nie uruchamia serwera, a opcje instalacji i przesyłania są niedostępne</string>
+    <string name="settings_section_storage">Pamięć wewnętrzna i podręczna</string>
+    <string name="settings_cache_summary">Pamięć podręczna: %1$s (modyfikacje + logi)</string>
+    <string name="settings_cache_clear_button">Wyczyść pamięć podręczną</string>
+    <string name="settings_cache_cleared">Wyczyszczono pamięć podręczną</string>
+    <string name="settings_cache_clear_failed">Czyszczenie nie powiodło się</string>
+    <string name="settings_cache_confirm_title">Wyczyścić pamięć podręczną?</string>
+    <string name="settings_cache_confirm_message">Spowoduje to usunięcie pobranych modyfikacji i plików logów. Modyfikacje zostaną pobrane ponownie w razie potrzeby</string>
+    <string name="settings_storage_open_app_data_button">Otwórz dane aplikacji</string>
+    <string name="settings_storage_open_logs_button">Otwórz logi</string>
     <string name="settings_section_about">Informacje</string>
     <string name="settings_about_version">Wersja %1$s</string>
     <string name="settings_about_changelogs_title">Przeglądaj historię zmian</string>
     <string name="settings_about_changelogs_desc">Sprawdź ostatnie zmiany w tej aktualizacji</string>
+    <string name="settings_about_licenses_title">Licencje otwartoźródłowe</string>
+    <string name="settings_about_licenses_desc">Wyświetl licencje zewnętrznych bibliotek</string>
     <string name="settings_about_documentation_title">Dokumentacja</string>
     <string name="settings_about_documentation_desc">Poradniki dotyczące modyfikowania, źródeł i rozwiązywania problemów</string>
     <string name="settings_about_website_title">Odwiedź stronę</string>

@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Probíhá aplikování záplat</string>
     <string name="patching_step_writing_apk">Zápis zaplátaného souboru APK</string>
     <string name="patching_step_signing">Podepisování zaplátaného souboru APK</string>
+    <string name="patching_task_decoding_dex">Čtení souborů DEX</string>
+    <string name="patching_task_extracting_resources">Extrakce zdrojů</string>
+    <string name="patching_task_decoding_resources">Dekódování zdrojů</string>
+    <string name="patching_task_indexing_classes">Indexování tříd</string>
+    <string name="patching_task_compiling_dex">Kompilace souborů DEX</string>
+    <string name="patching_task_compiling_resources">Kompilace zdrojů</string>
+    <string name="patching_task_writing_apk">Zápis souboru APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Instaluji na %1$s…</string>
     <string name="adb_error_downgrade">Nelze přejít na starší verzi, je nainstalována novější verze. Nejprve odinstalujte stávající aplikaci.</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Chyba při načítání záplat</string>
     <string name="patch_selection_title">Vybrat záplaty</string>
     <string name="patch_selection_cmd_preview">Náhled příkazu</string>
+    <string name="patch_selection_root_mode_description">Režim připojení rootu</string>
+    <string name="patch_selection_lock_unavailable">Nedostupné pro root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Pokračovat v záplatování i v případě chyby záplaty</string>
     <string name="patch_selection_continue_on_error_description">Pokračovat při chybě</string>
     <string name="patch_selection_no_patches_found">Nebyly nalezeny žádné záplaty</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Aplikace</string>
     <string name="patch_selection_run_info_bundles_group">Balíčky záplat</string>
     <string name="patch_selection_run_info_no_bundles">Žádné balíčky nebyly vyřešeny</string>
+    <string name="patch_selection_run_info_dev_group">Možnosti pro vývojáře</string>
+    <string name="patch_selection_run_info_bytecode_mode">Režim bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Validace otisku: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Ověření Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Univerzální</string>
     <string name="patch_selection_group_ungrouped">Negrupované</string>
     <string name="patch_selection_group_selected_count">vybráno %1$d</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Aktualizace na %1$s…</string>
     <string name="result_adb_update_successful">Aktualizace proběhla úspěšně!</string>
     <string name="result_adb_install_successful">Instalace proběhla úspěšně!</string>
+    <string name="result_adb_badge_root_mount">Root mount</string>
+    <string name="result_adb_mount_button">Mount na %1$s</string>
+    <string name="result_adb_mounting_on_device">Mountování na %1$s…</string>
+    <string name="result_adb_mount_successful">Mountování proběhlo úspěšně!</string>
+    <string name="result_adb_mount_su_prompt_hint">Mountování na %1$s… Pokud budete vyzváni, udělete na svém zařízení oprávnění Superuživatele</string>
+    <string name="result_adb_unmount_button">Unmount z %1$s</string>
+    <string name="result_adb_unmounting_on_device">Unmountování z %1$s…</string>
+    <string name="result_adb_root_not_detected">Na %1$s nebyl detekován root přístup. Ujistěte se, že je nainstalován Magisk/KernelSU/APatch a že je udělěno oprávnění su</string>
+    <string name="result_adb_stock_app_not_installed">Původní aplikace %1$s není nainstalována na %2$s. Před mountováním nejprve nainstalujte oficiální aplikaci</string>
     <string name="result_link_default_restored">Výchozí zpracování odkazů obnoveno</string>
     <string name="result_link_routed_stock_disabled">Odkazy směrovány na záplatovanou aplikaci, originál zakázán</string>
     <string name="result_adb_not_found_hint">ADB nenalezeno. Pro přímou instalaci nainstalujte Android SDK Platform Tools</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">z v%1$s</string>
     <string name="update_banner_later_button">Později</string>
     <string name="update_banner_skip_button">Preskočit v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Nástroje</string>
-    <string name="tools_dialog_open_logs_button">Otevřít protokoly</string>
-    <string name="tools_dialog_open_app_data_button">Otevřít data aplikace</string>
-    <string name="tools_dialog_view_licenses_button">Zobrazit licence</string>
-    <string name="tools_dialog_cache_cleared">Mezabělopaměť vymazána</string>
-    <string name="tools_dialog_clear_failed">Mazání selhalo</string>
-    <string name="tools_dialog_clear_cache_button">Vymazat mezibělopaměť</string>
-    <string name="tools_dialog_cache_summary">Mezbělopaměť: %1$s (záplaty + protokoly)</string>
-    <string name="tools_dialog_confirm_clear_title">Vymazat mezibělopaměť?</string>
-    <string name="tools_dialog_confirm_clear_message">Tímto budou smazány stažené záplaty a soubory protokolů. Záplaty budou znovu staženy, pokud budou potřeba</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licence Open Source</string>
     <string name="licenses_dialog_empty_failed">// nepodařilo se načíst licence</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Odstranit knihovny</string>
     <string name="settings_toggle_developer_options_label">Možnosti pro vývojáře</string>
     <string name="settings_toggle_developer_options_desc">Pro vývojáře záplat. Odemyká sadu možností workflow pro sestavování a testování záplat (viz dokumentace pro úplný seznam). V současnosti to znamená nasměrování lokálního zdroje na složku, aby Morphe vždy načetl nejnovější .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Režim bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Režim transformace aplikovaný na DEX bytecode během patchování</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Rychlý</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Bezpečný</string>
+    <string name="settings_dev_bytecode_mode_full">Plný</string>
+    <string name="settings_dev_validate_label">Validace otisku</string>
+    <string name="settings_dev_validate_desc">Ověřuje, zda každý match() odpovídá pouze jedné metodě (pomalejší patchování, pro testování patchů)</string>
+    <string name="settings_dev_verify_sdk_label">Ověření Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Ověřte upravený DEX a APK pomocí nástrojů Android SDK (d8, zipalign). Může dojít k falešně pozitivním výsledkům</string>
+    <string name="settings_dev_sdk_path_label">Adresář Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Automaticky detekováno</string>
+    <string name="settings_dev_sdk_not_found">Android SDK nebylo nalezeno. Nastavte ANDROID_HOME nebo vyhledejte adresář SDK</string>
+    <string name="settings_dev_sdk_picker_title">Vyberte adresář Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Automatické čištění dočasných souborů</string>
     <string name="settings_toggle_auto_cleanup_desc">Smazat dočasné soubory po záplatování</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Složka nebyla nalezena, bude vytvořena při příštím záplatování.</string>
     <string name="settings_toggle_auto_start_adb_label">Automaticky spustit ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spustit démon ADB při startu, aby byly připojená zařízení monitorována. Když je tato možnost vypnutá, Morphe nikdy nespustí server a funkce instalace/push jsou zakázány</string>
+    <string name="settings_section_storage">Úložiště &amp; vymezená paměť</string>
+    <string name="settings_cache_summary">Mezipaměť: %1$s (záplaty + protokoly)</string>
+    <string name="settings_cache_clear_button">Vymazat mezipaměť</string>
+    <string name="settings_cache_cleared">Mezipaměť vymazána</string>
+    <string name="settings_cache_clear_failed">Mazání selhalo</string>
+    <string name="settings_cache_confirm_title">Vymazat mezipaměť?</string>
+    <string name="settings_cache_confirm_message">Tímtoto vymažete stažené záplaty a soubory protokolů. Záplaty budou znovu staženy, když budou potřeba</string>
+    <string name="settings_storage_open_app_data_button">Otevřít data aplikace</string>
+    <string name="settings_storage_open_logs_button">Otevřít protokoly</string>
     <string name="settings_section_about">O aplikaci</string>
     <string name="settings_about_version">Verze %1$s</string>
     <string name="settings_about_changelogs_title">Zobrazit seznamy změn</string>
     <string name="settings_about_changelogs_desc">Podívejte se na nejnovější změny v této aktualizaci</string>
+    <string name="settings_about_licenses_title">Licence open source</string>
+    <string name="settings_about_licenses_desc">Zobrazit licence knihoven třetích stran</string>
     <string name="settings_about_documentation_title">Dokumentace</string>
     <string name="settings_about_documentation_desc">Průvodce záplatováním, zdroji a řešením problémů</string>
     <string name="settings_about_website_title">Navštívit web</string>

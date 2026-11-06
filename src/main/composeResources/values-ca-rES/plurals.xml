@@ -56,4 +56,8 @@
         <item quantity="one">%1$d correcció</item>
         <item quantity="other">%1$d correccions</item>
     </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimització</item>
+        <item quantity="other">%1$d optimitzacions</item>
+    </plurals>
 </resources>

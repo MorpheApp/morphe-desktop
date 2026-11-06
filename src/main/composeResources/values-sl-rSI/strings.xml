@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Nanašanje popravkov</string>
     <string name="patching_step_writing_apk">Zapisovanje popravljene datoteke APK</string>
     <string name="patching_step_signing">Podpisovanje popravljene datoteke APK</string>
+    <string name="patching_task_decoding_dex">Brezanje datotek DEX</string>
+    <string name="patching_task_extracting_resources">Izvlekanje virov</string>
+    <string name="patching_task_decoding_resources">Dekodiranje virov</string>
+    <string name="patching_task_indexing_classes">Indeksiranje razredov</string>
+    <string name="patching_task_compiling_dex">Kompiliranje datotek DEX</string>
+    <string name="patching_task_compiling_resources">Kompiliranje virov</string>
+    <string name="patching_task_writing_apk">Zapisovanje datoteke APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Nameščanje na %1$s…</string>
     <string name="adb_error_downgrade">Ni mogoče preiti na starejšo različico, ker je nameščena novejša. Najprej odstranite obstoječo aplikacijo</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Napaka pri nalaganju popravkov</string>
     <string name="patch_selection_title">Izberi popravke</string>
     <string name="patch_selection_cmd_preview">Predogled ukaza</string>
+    <string name="patch_selection_root_mode_description">Način montiranja root-a</string>
+    <string name="patch_selection_lock_unavailable">Nedostopno za root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Nadaljuj popravljanje, tudi če popravek spodleti</string>
     <string name="patch_selection_continue_on_error_description">Nadaljuj ob napaki</string>
     <string name="patch_selection_no_patches_found">Ni najdenih popravkov</string>
@@ -367,11 +376,16 @@
     <string name="patch_selection_run_info_app_group">Aplikacija</string>
     <string name="patch_selection_run_info_bundles_group">Svežnji popravkov</string>
     <string name="patch_selection_run_info_no_bundles">Ni razrešenih svežnjev</string>
+    <string name="patch_selection_run_info_dev_group">Razvojni možnosti</string>
+    <string name="patch_selection_run_info_bytecode_mode">Način bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Kvalifikacija odtiska: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Preverjanje Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Univerzalno</string>
     <string name="patch_selection_group_ungrouped">Nerazvrščeno</string>
     <string name="patch_selection_group_selected_count">%1$d izbranih</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Začni znova</string>
+    <string name="patching_patches_count">%1$d / %2$d popravkov</string>
     <string name="patching_slow_warning">To trajajo dlje kot običajno. Prosimo, počakajte…</string>
     <string name="patching_status_ready">Pripravljeno za popravljanje</string>
     <string name="patching_status_preparing">Pripravljanje za popravljanje</string>
@@ -421,6 +435,15 @@
     <string name="result_adb_updating_on_device">Posodabljanje na %1$s…</string>
     <string name="result_adb_update_successful">Posodobitev je uspela!</string>
     <string name="result_adb_install_successful">Namestitev je uspela!</string>
+    <string name="result_adb_badge_root_mount">Namestite root</string>
+    <string name="result_adb_mount_button">Mount na %1$s</string>
+    <string name="result_adb_mounting_on_device">Mounting na %1$s…</string>
+    <string name="result_adb_mount_successful">Mounting je uspešen!</string>
+    <string name="result_adb_mount_su_prompt_hint">Mounting na %1$s… Preverite svojo napravo in po potrebi podelite dovoljenje Superuser</string>
+    <string name="result_adb_unmount_button">Unmount z %1$s</string>
+    <string name="result_adb_unmounting_on_device">Unmounting z %1$s…</string>
+    <string name="result_adb_root_not_detected">Root dostop na %1$s ni bil zaznan. Prepričajte se, da je Magisk/KernelSU/APatch nameščen in da je podeljeno dovoljenje su</string>
+    <string name="result_adb_stock_app_not_installed">Stock aplikacija %1$s ni nameščena na %2$s. Pred mountingom najprej namestite uradno aplikacijo</string>
     <string name="result_link_default_restored">Privzeto obravnavanje povezav je obnovljeno</string>
     <string name="result_link_routed_stock_disabled">Povezave so preusmerjene na popravljeno aplikacijo, prvotna je onemogočena</string>
     <string name="result_adb_not_found_hint">ADB ni najden. Namestite Android SDK Platform Tools za omogočanje neposredne namestitve</string>
@@ -601,17 +624,6 @@
     <string name="update_banner_from_version">iz v%1$s</string>
     <string name="update_banner_later_button">Pozneje</string>
     <string name="update_banner_skip_button">Preskoči v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Orodja</string>
-    <string name="tools_dialog_open_logs_button">Odpri dnevnike</string>
-    <string name="tools_dialog_open_app_data_button">Odpri podatke aplikacije</string>
-    <string name="tools_dialog_view_licenses_button">Prikaži licence</string>
-    <string name="tools_dialog_cache_cleared">Predpomnilnik je počiščen</string>
-    <string name="tools_dialog_clear_failed">Čiščenje ni uspelo</string>
-    <string name="tools_dialog_clear_cache_button">Počisti predpomnilnik</string>
-    <string name="tools_dialog_cache_summary">Predpomnilnik: %1$s (popravki + dnevniki)</string>
-    <string name="tools_dialog_confirm_clear_title">Počistim predpomnilnik?</string>
-    <string name="tools_dialog_confirm_clear_message">To bo izbrisalo prenesene popravke in datoteke dnevnkov. Popravki bodo po potrebi znova preneseni</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Odprtokodne licence</string>
     <string name="licenses_dialog_empty_failed">// nalaganje licenc ni uspelo</string>
@@ -684,6 +696,19 @@
     <string name="settings_section_strip_libs">Odstrani knjižnice</string>
     <string name="settings_toggle_developer_options_label">Možnosti za razvijalce</string>
     <string name="settings_toggle_developer_options_desc">Za razvijalce popravkov. Odkleni nabor možnosti dela za ustvarjanje in testiranje popravkov (celoten seznam je v dokumentaciji). Za zdaj to pomeni usmerjanje lokalnega vira na mapo, tako da Morphe vedno naloži njegov najnovejši .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Način bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Način transformacije, uporabljen za DEX bytecode med zakrpanjem</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Hitro</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Varno</string>
+    <string name="settings_dev_bytecode_mode_full">Celovito</string>
+    <string name="settings_dev_validate_label">Kvalifikacija odtiska</string>
+    <string name="settings_dev_validate_desc">Preveri, da vsak match() ustreza samo eni metodi (počasnejše zakrpanje, za testiranje zakrp),</string>
+    <string name="settings_dev_verify_sdk_label">Preverjanje Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Preverite popravljen DEX in APK z orodji Android SDK (d8, zipalign). Lahko prijavi napačne pozitivne rezultate</string>
+    <string name="settings_dev_sdk_path_label">Imenik Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Samodejno zaznano</string>
+    <string name="settings_dev_sdk_not_found">Android SDK ni najden. Nastavite ANDROID_HOME ali poiščite imenik SDK</string>
+    <string name="settings_dev_sdk_picker_title">Izberite imenik Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Samodejno čiščenje začasnih datotek</string>
     <string name="settings_toggle_auto_cleanup_desc">Izbriši začasne datoteke po popravljanju</string>
@@ -698,10 +723,21 @@
     <string name="settings_output_folder_not_found">Mapa ni najdena; ustvarjena bo ob naslednjem popravljanju</string>
     <string name="settings_toggle_auto_start_adb_label">Samodejni zagon ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Ob zagonu zaženi ozadnji program ADB, da se povezane naprave spremljajo. Ko je izklopljeno, Morphe nikoli ne zažene strežnika, funkciji nameščanja in pošiljanja pa sta onemogočeni</string>
+    <string name="settings_section_storage">Shranjevanje &amp; predpomnilnik</string>
+    <string name="settings_cache_summary">Predpomnilnik: %1$s (popravki + dnevniki)</string>
+    <string name="settings_cache_clear_button">Počisti predpomnilnik</string>
+    <string name="settings_cache_cleared">Predpomnilnik počiščen</string>
+    <string name="settings_cache_clear_failed">Čiščenje ni uspelo</string>
+    <string name="settings_cache_confirm_title">Počisti predpomnilnik?</string>
+    <string name="settings_cache_confirm_message">To bo izbrisalo prenesene popravke in datoteke dnevnikov. Popravki bodo ponovno preneseni, ko bodo potrebni</string>
+    <string name="settings_storage_open_app_data_button">Odpri podatke aplikacije</string>
+    <string name="settings_storage_open_logs_button">Odpri dnevnike</string>
     <string name="settings_section_about">O nas</string>
     <string name="settings_about_version">Različica %1$s</string>
     <string name="settings_about_changelogs_title">Prikaži dnevnike sprememb</string>
     <string name="settings_about_changelogs_desc">Oglejte si najnovejše spremembe v tej posodobitvi</string>
+    <string name="settings_about_licenses_title">Odprtokodne licence</string>
+    <string name="settings_about_licenses_desc">Oglejte si licence knjižnic tretjih ponudnikov</string>
     <string name="settings_about_documentation_title">Dokumentacija</string>
     <string name="settings_about_documentation_desc">Vodniki za popravljanje, vire in odpravljanje težav</string>
     <string name="settings_about_website_title">Obiščite spletno stran</string>

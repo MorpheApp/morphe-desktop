@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Aplikujem záplaty</string>
     <string name="patching_step_writing_apk">Vytváram zaplátaný súbor APK</string>
     <string name="patching_step_signing">Podpisujem zaplátaný súbor APK</string>
+    <string name="patching_task_decoding_dex">Čítanie DEX súborov</string>
+    <string name="patching_task_extracting_resources">Extrakcia zdrojov</string>
+    <string name="patching_task_decoding_resources">Dekódovanie zdrojov</string>
+    <string name="patching_task_indexing_classes">Indexovanie tried</string>
+    <string name="patching_task_compiling_dex">Kompilovanie DEX súborov</string>
+    <string name="patching_task_compiling_resources">Kompilovanie zdrojov</string>
+    <string name="patching_task_writing_apk">Zápis APK súboru</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Inštaluje sa na %1$s…</string>
     <string name="adb_error_downgrade">Nie je možný prechod na staršiu verziu, pretože je nainštalovaná novšia verzia. Najprv odinštalujte existujúcu apikáciu</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Chyba pri načítavaní záplat</string>
     <string name="patch_selection_title">Vybrať záplaty</string>
     <string name="patch_selection_cmd_preview">Ukážka príkazu</string>
+    <string name="patch_selection_root_mode_description">Režim mountovania rootu</string>
+    <string name="patch_selection_lock_unavailable">Nedostupné pre root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">Pokračovať v záplatovaní, aj keď niektorá záplata zlyhá</string>
     <string name="patch_selection_continue_on_error_description">Pokračovať pri chybe</string>
     <string name="patch_selection_no_patches_found">Neboli nájdené žiadne záplaty</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Aplikácia</string>
     <string name="patch_selection_run_info_bundles_group">Balíky záplat</string>
     <string name="patch_selection_run_info_no_bundles">Neboli získané žiadne balíky</string>
+    <string name="patch_selection_run_info_dev_group">Vývojárske možnosti</string>
+    <string name="patch_selection_run_info_bytecode_mode">Režim bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Overenie odtlačku: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Overenie Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Univerzálne</string>
     <string name="patch_selection_group_ungrouped">Nezoskupené</string>
     <string name="patch_selection_group_selected_count">Vybraté: %1$d</string>
@@ -421,6 +434,15 @@
     <string name="result_adb_updating_on_device">Aktualizuje sa na %1$s…</string>
     <string name="result_adb_update_successful">Aktualizácia bola úspešná!</string>
     <string name="result_adb_install_successful">Inštalácia bola úspešná!</string>
+    <string name="result_adb_badge_root_mount">Root mount</string>
+    <string name="result_adb_mount_button">Mount na %1$s</string>
+    <string name="result_adb_mounting_on_device">Mountovanie na %1$s…</string>
+    <string name="result_adb_mount_successful">Mountovanie bolo úspešné!</string>
+    <string name="result_adb_mount_su_prompt_hint">Mountovanie na %1$s… Ak sa vás systém opýta, udelte na zariadení povolenie Superužívateľa</string>
+    <string name="result_adb_unmount_button">Unmount z %1$s</string>
+    <string name="result_adb_unmounting_on_device">Unmountovanie z %1$s…</string>
+    <string name="result_adb_root_not_detected">Na %1$s nebol detekovaný root prístup. Uistite sa, že Magisk/KernelSU/APatch je nainštalovaný a povolenie su je udelené</string>
+    <string name="result_adb_stock_app_not_installed">Štandardná aplikácia %1$s nie je nainštalovaná na %2$s. Pred primontovaním najprv nainštalujte oficiálnu aplikáciu</string>
     <string name="result_link_default_restored">Predvolené spracovanie odkazov obnovené</string>
     <string name="result_link_routed_stock_disabled">Odkazy smerujú do záplatovanej aplikácie, pôvodná aplikácia je zakázaná</string>
     <string name="result_adb_not_found_hint">ADB sa nenašiel. Nainštalujte Android SDK Platform Tools, aby ste povolili priamu inštaláciu</string>
@@ -601,17 +623,6 @@
     <string name="update_banner_from_version">z v%1$s</string>
     <string name="update_banner_later_button">Neskôr</string>
     <string name="update_banner_skip_button">Preskočiť v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Nástroje</string>
-    <string name="tools_dialog_open_logs_button">Otvoriť protokoly</string>
-    <string name="tools_dialog_open_app_data_button">Otvoriť údaje aplikácie</string>
-    <string name="tools_dialog_view_licenses_button">Zobraziť licencie</string>
-    <string name="tools_dialog_cache_cleared">Vyrovnávacia pamäť vyčistená</string>
-    <string name="tools_dialog_clear_failed">Vymazanie zlyhalo</string>
-    <string name="tools_dialog_clear_cache_button">Vyčistiť vyrovnávaciu pamäť</string>
-    <string name="tools_dialog_cache_summary">Vyrovnávacia pamäť: %1$s (záplaty + protokoly)</string>
-    <string name="tools_dialog_confirm_clear_title">Vyčistiť vyrovnávaciu pamäť?</string>
-    <string name="tools_dialog_confirm_clear_message">Tým sa odstránia stiahnuté záplaty a súbory protokolov. Záplaty sa v prípade potreby znova stiahnu</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licencie s otvoreným zdrojovým kódom</string>
     <string name="licenses_dialog_empty_failed">// načítanie licencií zlyhalo</string>
@@ -684,6 +695,19 @@
     <string name="settings_section_strip_libs">Odstrániť knižnice</string>
     <string name="settings_toggle_developer_options_label">Možnosti pre vývojárov</string>
     <string name="settings_toggle_developer_options_desc">Pre vývojárov záplat. Odomyká sadu možností pracovného postupu na zostavovanie a testovanie záplat (úplný zoznam nájdete v dokumentácii). Zatiaľ ide o nasmerovanie lokálneho zdroja na priečinok, aby Morphe vždy načítaval jeho najnovší .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Režim bajtkódu</string>
+    <string name="settings_dev_bytecode_mode_desc">Režim transformácie aplikovaný na DEX bajtkód počas patchovania</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Rýchly</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Bezpečný</string>
+    <string name="settings_dev_bytecode_mode_full">Úplný</string>
+    <string name="settings_dev_validate_label">Overenie odtlačku</string>
+    <string name="settings_dev_validate_desc">Overiť, či každé match() zodpovedá iba jednej metóde (pomalejšie patchovanie, pre testovanie patchov)</string>
+    <string name="settings_dev_verify_sdk_label">Overenie Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Overenie upraveného DEX a APK pomocou nástrojov Android SDK (d8, zipalign). Môžu sa vyskytnúť falošné pozitívy</string>
+    <string name="settings_dev_sdk_path_label">Katalóg Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Automaticky detekované</string>
+    <string name="settings_dev_sdk_not_found">Android SDK nebolo nájdené. Nastavte ANDROID_HOME alebo vyhľadajte katalóg SDK</string>
+    <string name="settings_dev_sdk_picker_title">Vyberte katalóg Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Automatické čistenie dočasných súborov</string>
     <string name="settings_toggle_auto_cleanup_desc">Odstrániť dočasné súbory po záplatovaní</string>
@@ -698,10 +722,21 @@
     <string name="settings_output_folder_not_found">Priečinok sa nenašiel, vytvorí sa pri najbližšom záplatovaní</string>
     <string name="settings_toggle_auto_start_adb_label">Automaticky spustiť ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Pri spustení sa spustí démon ADB, aby sa sledovali pripojené zariadenia. Keď je vypnuté, Morphe nikdy nespustí server a funkcie inštalácie/odosielania sú zakázané</string>
+    <string name="settings_section_storage">Úložisko &amp; vyrovnávacia pamäť</string>
+    <string name="settings_cache_summary">Vyrovnávacia pamäť: %1$s (záplaty + záznamy)</string>
+    <string name="settings_cache_clear_button">Vymazať vyrovnávaciu pamäť</string>
+    <string name="settings_cache_cleared">Vyrovnávacia pamäť vymazaná</string>
+    <string name="settings_cache_clear_failed">Mazanie zlyhalo</string>
+    <string name="settings_cache_confirm_title">Vymazať vyrovnávaciu pamäť?</string>
+    <string name="settings_cache_confirm_message">Týmto vymažete stiahnuté záplaty a súbory záznamov. Záplaty sa pri potrebe stiahnu znova</string>
+    <string name="settings_storage_open_app_data_button">Otvoriť údaje aplikácie</string>
+    <string name="settings_storage_open_logs_button">Otvoriť záznamy</string>
     <string name="settings_section_about">O aplikácii</string>
     <string name="settings_about_version">Verzia %1$s</string>
     <string name="settings_about_changelogs_title">Zobraziť zoznam zmien</string>
     <string name="settings_about_changelogs_desc">Pozrite si najnovšie zmeny v tejto aktualizácii</string>
+    <string name="settings_about_licenses_title">Licencie open source</string>
+    <string name="settings_about_licenses_desc">Zobraziť licencie knižníc tretích strán</string>
     <string name="settings_about_documentation_title">Dokumentácia</string>
     <string name="settings_about_documentation_desc">Príručky pre záplatovanie, zdroje a riešenie probLémov</string>
     <string name="settings_about_website_title">Navštíviť webovú stránku</string>

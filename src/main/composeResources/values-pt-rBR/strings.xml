@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Aplicando patches</string>
     <string name="patching_step_writing_apk">Escrevendo arquivo APK patcheado</string>
     <string name="patching_step_signing">Assinando arquivo APK patcheado</string>
+    <string name="patching_task_decoding_dex">Lendo arquivos DEX</string>
+    <string name="patching_task_extracting_resources">Extraindo recursos</string>
+    <string name="patching_task_decoding_resources">Decodificando recursos</string>
+    <string name="patching_task_indexing_classes">Indexando classes</string>
+    <string name="patching_task_compiling_dex">Compilando arquivos DEX</string>
+    <string name="patching_task_compiling_resources">Compilando recursos</string>
+    <string name="patching_task_writing_apk">Escrevendo arquivo APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Instalando em %1$s…</string>
     <string name="adb_error_downgrade">Não é possível fazer downgrade; uma versão mais recente está instalada. Desinstale o app existente primeiro</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Erro ao carregar patches</string>
     <string name="patch_selection_title">Selecionar patches</string>
     <string name="patch_selection_cmd_preview">Prévia do comando</string>
+    <string name="patch_selection_root_mode_description">Modo de montagem do Root</string>
+    <string name="patch_selection_lock_unavailable">Indisponível para montagem de root</string>
     <string name="patch_selection_continue_on_error_tooltip">Continuar o patch mesmo se um patch falhar</string>
     <string name="patch_selection_continue_on_error_description">Continuar em caso de erro</string>
     <string name="patch_selection_no_patches_found">Nenhum patch encontrado</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">Aplicativo</string>
     <string name="patch_selection_run_info_bundles_group">Pacotes de patches</string>
     <string name="patch_selection_run_info_no_bundles">Nenhum pacote resolvido</string>
+    <string name="patch_selection_run_info_dev_group">Opções do desenvolvedor</string>
+    <string name="patch_selection_run_info_bytecode_mode">Modo Bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Validação de impressão digital: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verificação do Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Não agrupado</string>
     <string name="patch_selection_group_selected_count">%1$d selecionado</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">Atualizando em %1$s…</string>
     <string name="result_adb_update_successful">Atualização bem-sucedida!</string>
     <string name="result_adb_install_successful">Instalação bem-sucedida!</string>
+    <string name="result_adb_badge_root_mount">Montar root</string>
+    <string name="result_adb_mount_button">Montar em %1$s</string>
+    <string name="result_adb_mounting_on_device">Montando em %1$s…</string>
+    <string name="result_adb_mount_successful">Montagem bem-sucedida!</string>
+    <string name="result_adb_mount_su_prompt_hint">Montando em %1$s… Verifique seu dispositivo para conceder a permissão de Superusuário se solicitado</string>
+    <string name="result_adb_unmount_button">Desmontar de %1$s</string>
+    <string name="result_adb_unmounting_on_device">Desmontando de %1$s…</string>
+    <string name="result_adb_root_not_detected">O acesso root não foi detectado em %1$s. Certifique-se de que o Magisk/KernelSU/APatch esteja instalado e que a permissão su tenha sido concedida</string>
+    <string name="result_adb_stock_app_not_installed">O app stock %1$s não está instalado em %2$s. Instale o app oficial antes de montar</string>
     <string name="result_link_default_restored">Manipulação padrão de links restaurada</string>
     <string name="result_link_routed_stock_disabled">Links roteados para o app com patch, original desativado</string>
     <string name="result_adb_not_found_hint">ADB não encontrado. Instale o Android SDK Platform Tools para ativar a instalação direta</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">de v%1$s</string>
     <string name="update_banner_later_button">Depois</string>
     <string name="update_banner_skip_button">Pular v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Ferramentas</string>
-    <string name="tools_dialog_open_logs_button">Abrir logs</string>
-    <string name="tools_dialog_open_app_data_button">Abrir dados do app</string>
-    <string name="tools_dialog_view_licenses_button">Ver licenças</string>
-    <string name="tools_dialog_cache_cleared">Cache limpo</string>
-    <string name="tools_dialog_clear_failed">Falha ao limpar</string>
-    <string name="tools_dialog_clear_cache_button">Limpar cache</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (patches e logs)</string>
-    <string name="tools_dialog_confirm_clear_title">Limpar cache?</string>
-    <string name="tools_dialog_confirm_clear_message">Isso excluirá os patches baixados e os arquivos de log. Os patches serão baixados novamente quando necessário</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licenças de código aberto</string>
     <string name="licenses_dialog_empty_failed">// falha ao carregar as licenças</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">Remover libs</string>
     <string name="settings_toggle_developer_options_label">Opções do desenvolvedor</string>
     <string name="settings_toggle_developer_options_desc">Para desenvolvedores de patches. Desbloqueia um conjunto de opções de fluxo de trabalho para criar e testar patches (veja a documentação para a lista completa). Por enquanto, isso é apontar uma fonte local para uma pasta para que o Morphe sempre carregue o .mpp mais recente dela</string>
+    <string name="settings_dev_bytecode_mode_label">Modo Bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Modo de transformação aplicado ao bytecode DEX durante a aplicação do patch</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Rápido</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Seguro</string>
+    <string name="settings_dev_bytecode_mode_full">Completo</string>
+    <string name="settings_dev_validate_label">Validação de impressão digital</string>
+    <string name="settings_dev_validate_desc">Valida se cada match() corresponde a apenas um método (patching mais lento, para testes de patch)</string>
+    <string name="settings_dev_verify_sdk_label">Verificação do Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Verifique o DEX e o APK corrigidos com as ferramentas do Android SDK (d8, zipalign). Podem ocorrer falsos positivos</string>
+    <string name="settings_dev_sdk_path_label">Diretório do Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Detectado automaticamente</string>
+    <string name="settings_dev_sdk_not_found">Android SDK não encontrado. Defina ANDROID_HOME ou procure pelo diretório do SDK</string>
+    <string name="settings_dev_sdk_picker_title">Selecione o diretório do Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Limpeza automática de arquivos temporários</string>
     <string name="settings_toggle_auto_cleanup_desc">Excluir arquivos temporários após o patch</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">Pasta não encontrada, será criada no próximo patch</string>
     <string name="settings_toggle_auto_start_adb_label">Iniciar ADB automaticamente</string>
     <string name="settings_toggle_auto_start_adb_desc">Inicia o daemon do ADB na inicialização para que os dispositivos conectados sejam monitorados. Quando desativado, o Morphe nunca inicia o servidor e os recursos de instalação/envio são desativados</string>
+    <string name="settings_section_storage">Armazenamento &amp; cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (correções + logs)</string>
+    <string name="settings_cache_clear_button">Limpar cache</string>
+    <string name="settings_cache_cleared">Cache limpo</string>
+    <string name="settings_cache_clear_failed">Falha ao limpar</string>
+    <string name="settings_cache_confirm_title">Limpar cache?</string>
+    <string name="settings_cache_confirm_message">Isso excluirá os patches baixados e os arquivos de log. Os patches serão baixados novamente quando necessário</string>
+    <string name="settings_storage_open_app_data_button">Abrir dados do app</string>
+    <string name="settings_storage_open_logs_button">Abrir logs</string>
     <string name="settings_section_about">Sobre</string>
     <string name="settings_about_version">Versão %1$s</string>
     <string name="settings_about_changelogs_title">Ver changelogs</string>
     <string name="settings_about_changelogs_desc">Confira as mudanças mais recentes desta atualização</string>
+    <string name="settings_about_licenses_title">Licenças de código aberto</string>
+    <string name="settings_about_licenses_desc">Visualizar licenças de bibliotecas de terceiros</string>
     <string name="settings_about_documentation_title">Documentação</string>
     <string name="settings_about_documentation_desc">Guias para patches, fontes e solução de problemas</string>
     <string name="settings_about_website_title">Visitar site</string>

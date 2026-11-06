@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">Se aplică patch-urile</string>
     <string name="patching_step_writing_apk">Se scrie fișierul APK patch-at</string>
     <string name="patching_step_signing">Se semnează fișierul APK patch-at</string>
+    <string name="patching_task_decoding_dex">Citire fișiere DEX</string>
+    <string name="patching_task_extracting_resources">Extragere resurse</string>
+    <string name="patching_task_decoding_resources">Decodare resurse</string>
+    <string name="patching_task_indexing_classes">Indexare clase</string>
+    <string name="patching_task_compiling_dex">Compilare fișiere DEX</string>
+    <string name="patching_task_compiling_resources">Compilare resurse</string>
+    <string name="patching_task_writing_apk">Scriere fișier APK</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Se instalează pe %1$s…</string>
     <string name="adb_error_downgrade">Nu se poate face downgrade, este instalată o versiune mai nouă. Dezinstalează mai întâi aplicația existentă</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">Eroare la încărcarea patch-urilor</string>
     <string name="patch_selection_title">Selectează patch-urile</string>
     <string name="patch_selection_cmd_preview">Previzualizare comandă</string>
+    <string name="patch_selection_root_mode_description">Modul de montare Root</string>
+    <string name="patch_selection_lock_unavailable">Indisponibil pentru montare root</string>
     <string name="patch_selection_continue_on_error_tooltip">Continuă patch-area chiar dacă un patch eșuează</string>
     <string name="patch_selection_continue_on_error_description">Continuă la eroare</string>
     <string name="patch_selection_no_patches_found">Niciun patch găsit</string>
@@ -367,11 +376,16 @@
     <string name="patch_selection_run_info_app_group">Aplicație</string>
     <string name="patch_selection_run_info_bundles_group">Pachete de patch-uri</string>
     <string name="patch_selection_run_info_no_bundles">Niciun pachet rezolvat</string>
+    <string name="patch_selection_run_info_dev_group">Opțiuni pentru dezvoltatori</string>
+    <string name="patch_selection_run_info_bytecode_mode">Mod bytecode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Validarea amprentei: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Verificarea Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Negrupat</string>
     <string name="patch_selection_group_selected_count">%1$d selectate</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Reîncepe</string>
+    <string name="patching_patches_count">%1$d / %2$d patch-uri</string>
     <string name="patching_slow_warning">Acest proces durează mai mult decât de obicei. Vă rugăm să așteptați…</string>
     <string name="patching_status_ready">Gata de patch-are</string>
     <string name="patching_status_preparing">Se pregătește pentru patch-are</string>
@@ -421,6 +435,15 @@
     <string name="result_adb_updating_on_device">Se actualizează pe %1$s…</string>
     <string name="result_adb_update_successful">Actualizare reușită!</string>
     <string name="result_adb_install_successful">Instalare reușită!</string>
+    <string name="result_adb_badge_root_mount">Montare root</string>
+    <string name="result_adb_mount_button">Montare pe %1$s</string>
+    <string name="result_adb_mounting_on_device">Se montează pe %1$s…</string>
+    <string name="result_adb_mount_successful">Montarea a reușit!</string>
+    <string name="result_adb_mount_su_prompt_hint">Se montează pe %1$s… Verificați dispozitivul pentru a acorda permisiunea de Superutilizator dacă este solicitată</string>
+    <string name="result_adb_unmount_button">Demontare de pe %1$s</string>
+    <string name="result_adb_unmounting_on_device">Se demontează de pe %1$s…</string>
+    <string name="result_adb_root_not_detected">Accesul root nu a fost detectat pe %1$s. Asigurați-vă că Magisk/KernelSU/APatch este instalat și că permisiunea su a fost acordată</string>
+    <string name="result_adb_stock_app_not_installed">Aplicația stock %1$s nu este instalată pe %2$s. Instalați aplicația oficială înainte de a efectua montarea</string>
     <string name="result_link_default_restored">Gestionarea implicită a linkurilor a fost restaurată</string>
     <string name="result_link_routed_stock_disabled">Linkuri redirecționate către aplicația patch-ată, aplicația originală dezactivată</string>
     <string name="result_adb_not_found_hint">ADB nu a fost găsit. Instalați Android SDK Platform Tools pentru a activa instalarea directă</string>
@@ -601,17 +624,6 @@
     <string name="update_banner_from_version">de la v%1$s</string>
     <string name="update_banner_later_button">Mai târziu</string>
     <string name="update_banner_skip_button">Sari peste v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">Unelte</string>
-    <string name="tools_dialog_open_logs_button">Deschide jurnalele</string>
-    <string name="tools_dialog_open_app_data_button">Deschide datele aplicației</string>
-    <string name="tools_dialog_view_licenses_button">Vezi licențele</string>
-    <string name="tools_dialog_cache_cleared">Cache șters</string>
-    <string name="tools_dialog_clear_failed">Ștergerea a eșuat</string>
-    <string name="tools_dialog_clear_cache_button">Șterge cache-ul</string>
-    <string name="tools_dialog_cache_summary">Cache: %1$s (patch-uri + jurnale)</string>
-    <string name="tools_dialog_confirm_clear_title">Ștergi cache-ul?</string>
-    <string name="tools_dialog_confirm_clear_message">Aceasta va șterge patch-urile descărcate și fișierele de jurnal. Patch-urile vor fi re-descărcate când este nevoie</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licențe Open Source</string>
     <string name="licenses_dialog_empty_failed">// eroare la încărcarea licențelor</string>
@@ -684,6 +696,19 @@
     <string name="settings_section_strip_libs">Strip libs</string>
     <string name="settings_toggle_developer_options_label">Opțiuni dezvoltator</string>
     <string name="settings_toggle_developer_options_desc">Pentru dezvoltatorii de patch-uri. Deblochează un set de opțiuni de workflow pentru construirea și testarea patch-urilor (consultați documentația pentru lista completă). Deocamdată, aceasta înseamnă direcționarea unei surse locale către un dosar, astfel încât Morphe să încarce întotdeauna cel mai nou .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Mod bytecode</string>
+    <string name="settings_dev_bytecode_mode_desc">Modul de transformare aplicat bytecode-ului DEX în timpul patch-uitului</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Rapid</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Sigur</string>
+    <string name="settings_dev_bytecode_mode_full">Complet</string>
+    <string name="settings_dev_validate_label">Validarea amprentei</string>
+    <string name="settings_dev_validate_desc">Validarea faptului că fiecare match() corespunde unui singur metod (patch-uire mai lentă, pentru testarea patch-ului)</string>
+    <string name="settings_dev_verify_sdk_label">Verificarea Android SDK</string>
+    <string name="settings_dev_verify_sdk_desc">Verifică DEX și APK patch-uit cu instrumentele Android SDK (d8, zipalign). Pot apărea rezultate fals pozitive</string>
+    <string name="settings_dev_sdk_path_label">Directorul Android SDK</string>
+    <string name="settings_dev_sdk_path_auto">Detectat automat</string>
+    <string name="settings_dev_sdk_not_found">Android SDK nu a fost găsit. Setează ANDROID_HOME sau navighează către directorul SDK</string>
+    <string name="settings_dev_sdk_picker_title">Selectați directorul Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Curățare automată a fișierelor temporare</string>
     <string name="settings_toggle_auto_cleanup_desc">Șterge fișierele temporare după patch-are</string>
@@ -698,10 +723,21 @@
     <string name="settings_output_folder_not_found">Folderul nu a fost găsit, va fi creat la următorul patch</string>
     <string name="settings_toggle_auto_start_adb_label">Pornire automată ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Pornește daemonul ADB la lansare, astfel încât dispozitivele conectate să fie monitorizate. Când este oprit, Morphe nu pornește niciodată serverul, iar funcțiile de instalare/trimitere sunt dezactivate</string>
+    <string name="settings_section_storage">Stocare &amp; cache</string>
+    <string name="settings_cache_summary">Cache: %1$s (patch-uri + jurnale)</string>
+    <string name="settings_cache_clear_button">Șterge cache-ul</string>
+    <string name="settings_cache_cleared">Cache șters</string>
+    <string name="settings_cache_clear_failed">Ștergere eșuată</string>
+    <string name="settings_cache_confirm_title">Șterge cache-ul?</string>
+    <string name="settings_cache_confirm_message">Această acțiune va șterge patch-urile descărcate și fișierele de jurnal. Patch-urile vor fi descărcate din nou atunci când este necesar</string>
+    <string name="settings_storage_open_app_data_button">Deschide datele aplicației</string>
+    <string name="settings_storage_open_logs_button">Deschide jurnalele</string>
     <string name="settings_section_about">Despre</string>
     <string name="settings_about_version">Versiunea %1$s</string>
     <string name="settings_about_changelogs_title">Vizualizează jurnalele modificărilor</string>
     <string name="settings_about_changelogs_desc">Consultați cele mai recente modificări din această actualizare</string>
+    <string name="settings_about_licenses_title">Licențe Open Source</string>
+    <string name="settings_about_licenses_desc">Vizualizați licențele bibliotecilor terțe</string>
     <string name="settings_about_documentation_title">Documentație</string>
     <string name="settings_about_documentation_desc">Ghiduri pentru patch-uri, surse și depanare</string>
     <string name="settings_about_website_title">Vizitează site-ul web</string>

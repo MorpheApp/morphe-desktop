@@ -108,6 +108,13 @@
     <string name="patching_step_applying_patches">正在套用修補程式</string>
     <string name="patching_step_writing_apk">正在寫入修補後的 APK 檔案</string>
     <string name="patching_step_signing">正在簽署修補後的 APK 檔案</string>
+    <string name="patching_task_decoding_dex">正在讀取 DEX 檔案</string>
+    <string name="patching_task_extracting_resources">正在提取資源</string>
+    <string name="patching_task_decoding_resources">正在解碼資源</string>
+    <string name="patching_task_indexing_classes">正在為類別建立索引</string>
+    <string name="patching_task_compiling_dex">正在編譯 DEX 檔案</string>
+    <string name="patching_task_compiling_resources">正在編譯資源</string>
+    <string name="patching_task_writing_apk">正在寫入 APK 檔案</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">正在安裝到 %1$s……</string>
     <string name="adb_error_downgrade">無法降級，已安裝較新版本。請先解除安裝現有的應用程式</string>
@@ -306,6 +313,8 @@
     <string name="patch_selection_error_title">載入修補時出錯</string>
     <string name="patch_selection_title">選取修補檔</string>
     <string name="patch_selection_cmd_preview">指令預覽</string>
+    <string name="patch_selection_root_mode_description">Root 掛載模式</string>
+    <string name="patch_selection_lock_unavailable">無法進行 Root 掛載</string>
     <string name="patch_selection_continue_on_error_tooltip">即使其中一個修補失敗也要繼續修補</string>
     <string name="patch_selection_continue_on_error_description">出錯時繼續</string>
     <string name="patch_selection_no_patches_found">找不到修補程式</string>
@@ -367,6 +376,10 @@
     <string name="patch_selection_run_info_app_group">應用程式</string>
     <string name="patch_selection_run_info_bundles_group">修補包</string>
     <string name="patch_selection_run_info_no_bundles">未解析任何套件</string>
+    <string name="patch_selection_run_info_dev_group">開發者選項</string>
+    <string name="patch_selection_run_info_bytecode_mode">字節碼模式：%1$s</string>
+    <string name="patch_selection_run_info_validate">指紋驗證：%1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK 驗證：%1$s</string>
     <string name="patch_selection_group_universal">通用</string>
     <string name="patch_selection_group_ungrouped">未分組</string>
     <string name="patch_selection_group_selected_count">已選取 %1$d</string>
@@ -422,6 +435,15 @@
     <string name="result_adb_updating_on_device">正在 %1$s 上更新……</string>
     <string name="result_adb_update_successful">更新成功！</string>
     <string name="result_adb_install_successful">安裝成功！</string>
+    <string name="result_adb_badge_root_mount">Root 掛載</string>
+    <string name="result_adb_mount_button">在 %1$s 上掛載</string>
+    <string name="result_adb_mounting_on_device">正在 %1$s 上掛載……</string>
+    <string name="result_adb_mount_successful">掛載成功！</string>
+    <string name="result_adb_mount_su_prompt_hint">正在 %1$s 上掛載… 如果有提示，請檢查您的裝置以授予 Superuser 權限</string>
+    <string name="result_adb_unmount_button">從 %1$s 卸載</string>
+    <string name="result_adb_unmounting_on_device">正在從 %1$s 卸載……</string>
+    <string name="result_adb_root_not_detected">在 %1$s 上未檢測到 Root 權限。請確保已安裝 Magisk/KernelSU/APatch 並授予 su 權限</string>
+    <string name="result_adb_stock_app_not_installed">%2$s 上未安裝原廠應用程式 %1$s。請在掛載前先安裝官方應用程式</string>
     <string name="result_link_default_restored">已還原預設連結處理</string>
     <string name="result_link_routed_stock_disabled">連結已路由至已修補的應用程式，已停用原廠應用程式</string>
     <string name="result_adb_not_found_hint">找不到 ADB。請安裝 Android SDK Platform Tools 以啟用直接安裝</string>
@@ -602,17 +624,6 @@
     <string name="update_banner_from_version">從 v%1$s</string>
     <string name="update_banner_later_button">稍後</string>
     <string name="update_banner_skip_button">略過 v%1$s</string>
-    <!-- Tools Dialog -->
-    <string name="tools_dialog_title">工具</string>
-    <string name="tools_dialog_open_logs_button">開啟記錄</string>
-    <string name="tools_dialog_open_app_data_button">開啟應用程式資料</string>
-    <string name="tools_dialog_view_licenses_button">檢視授權</string>
-    <string name="tools_dialog_cache_cleared">已清除快取</string>
-    <string name="tools_dialog_clear_failed">清除失敗</string>
-    <string name="tools_dialog_clear_cache_button">清除快取</string>
-    <string name="tools_dialog_cache_summary">快取：%1$s（修補檔 + 記錄）</string>
-    <string name="tools_dialog_confirm_clear_title">清除快取？</string>
-    <string name="tools_dialog_confirm_clear_message">這將刪除已下載的修補檔和記錄檔。需要時會重新下載修補檔</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">開放原始碼授權</string>
     <string name="licenses_dialog_empty_failed">// 載入授權失敗</string>
@@ -685,6 +696,19 @@
     <string name="settings_section_strip_libs">剝離程式庫</string>
     <string name="settings_toggle_developer_options_label">開發人員選項</string>
     <string name="settings_toggle_developer_options_desc">供修補檔開發者使用。解鎖一系列用於建置和測試修補檔的工作流程選項（完整清單請參閱文件）。目前，這可讓本機來源指向資料夾，使 Morphe 一律載入其中最新的 .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">字節碼模式</string>
+    <string name="settings_dev_bytecode_mode_desc">修補期間應用於 DEX 字節碼的轉換模式</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">快速</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">安全</string>
+    <string name="settings_dev_bytecode_mode_full">完整</string>
+    <string name="settings_dev_validate_label">指紋驗證</string>
+    <string name="settings_dev_validate_desc">驗證每個 match() 僅匹配一個方法（修補速度較慢，用於修補測試）</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK 驗證</string>
+    <string name="settings_dev_verify_sdk_desc">使用 Android SDK 工具 (d8, zipalign) 驗證已修補的 DEX 和 APK。可能會報告誤報</string>
+    <string name="settings_dev_sdk_path_label">Android SDK 目錄</string>
+    <string name="settings_dev_sdk_path_auto">自動偵測</string>
+    <string name="settings_dev_sdk_not_found">找不到 Android SDK。請設定 ANDROID_HOME 或瀏覽 SDK 目錄</string>
+    <string name="settings_dev_sdk_picker_title">選擇 Android SDK 目錄</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">自動清理暫存檔案</string>
     <string name="settings_toggle_auto_cleanup_desc">修補後刪除暫存檔案</string>
@@ -699,10 +723,21 @@
     <string name="settings_output_folder_not_found">找不到資料夾，將於下次修補時建立</string>
     <string name="settings_toggle_auto_start_adb_label">自動啟動 ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">啟動時會自動啟動 ADB 常駐程式，以監看已連線的裝置。關閉時，Morphe 不會啟動伺服器，且安裝／推送功能會停用</string>
+    <string name="settings_section_storage">儲存空間 &amp; 快取</string>
+    <string name="settings_cache_summary">快取：%1$s (修補檔 + 日誌記錄)</string>
+    <string name="settings_cache_clear_button">清除快取</string>
+    <string name="settings_cache_cleared">快取已清除</string>
+    <string name="settings_cache_clear_failed">清除失敗</string>
+    <string name="settings_cache_confirm_title">清除快取？</string>
+    <string name="settings_cache_confirm_message">這將刪除已下載的修補檔和日誌記錄檔案。需要時將重新下載修補檔</string>
+    <string name="settings_storage_open_app_data_button">開啟應用程式資料</string>
+    <string name="settings_storage_open_logs_button">開啟記錄</string>
     <string name="settings_section_about">關於</string>
     <string name="settings_about_version">版本 %1$s</string>
     <string name="settings_about_changelogs_title">檢視變更紀錄</string>
     <string name="settings_about_changelogs_desc">查看此更新中的最新變更</string>
+    <string name="settings_about_licenses_title">開源授權</string>
+    <string name="settings_about_licenses_desc">查看第三方程式庫的授權</string>
     <string name="settings_about_documentation_title">文件</string>
     <string name="settings_about_documentation_desc">修補、來源和故障排除的指南</string>
     <string name="settings_about_website_title">瀏覽網站</string>
