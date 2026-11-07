@@ -724,12 +724,11 @@
     <string name="settings_toggle_auto_start_adb_label">Qala i-ADB ngokuzenzakalela</string>
     <string name="settings_toggle_auto_start_adb_desc">Vusa i-ADB daemon lapho kuqalisa ukuze izinkundla ezixhunywe zibukelwe. Lapho icimile, i-Morphe ayilokhu iqala iserba, futhi izici zokufaka/ukuthumela ziyacishwa</string>
     <string name="settings_section_storage">Isimo sokugcina &amp; ikheshi</string>
-    <string name="settings_cache_summary">I-Cache: %1$s (ama-patches + ama-logs)</string>
-    <string name="settings_cache_clear_button">Sula i-cache</string>
+    <string name="settings_cache_clear_all_title">Sula ikheshi lonke</string>
+    <string name="settings_cache_category_patches">Ama-Patches</string>
     <string name="settings_cache_cleared">I-cache isuliwe</string>
     <string name="settings_cache_clear_failed">Ukisula kwephuthele</string>
     <string name="settings_cache_confirm_title">Sula i-cache?</string>
-    <string name="settings_cache_confirm_message">Lokhu kuzosula ama-patches ama-logs adownilwe. Ama-patches azodownilwa futhi lapho edingeka</string>
     <string name="settings_storage_open_app_data_button">Vula idatha yo-app</string>
     <string name="settings_storage_open_logs_button">Vula ama-logs</string>
     <string name="settings_section_about">Mayelana</string>

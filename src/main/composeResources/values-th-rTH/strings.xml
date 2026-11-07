@@ -724,12 +724,11 @@
     <string name="settings_toggle_auto_start_adb_label">เริ่ม ADB อัตโนมัติ</string>
     <string name="settings_toggle_auto_start_adb_desc">เริ่มเดมอน ADB เมื่อเปิดแอปเพื่อตรวจสอบอุปกรณ์ที่เชื่อมต่อ เมื่อปิด Morphe จะไม่เริ่มเซิร์ฟเวอร์ และฟีเจอร์ติดตั้ง/ส่งจะถูกปิดใช้งาน</string>
     <string name="settings_section_storage">พื้นที่จัดเก็บ &amp;&amp; แคช</string>
-    <string name="settings_cache_summary">แคช: %1$s (แพตช์ + บันทึก)</string>
-    <string name="settings_cache_clear_button">ล้างแคช</string>
+    <string name="settings_cache_clear_all_title">ล้างแคชทั้งหมด</string>
+    <string name="settings_cache_category_patches">แพตช์</string>
     <string name="settings_cache_cleared">ล้างแคชแล้ว</string>
     <string name="settings_cache_clear_failed">การล้างข้อมูลล้มเหลว</string>
     <string name="settings_cache_confirm_title">ล้างแคชหรือไม่?</string>
-    <string name="settings_cache_confirm_message">การดำเนินการนี้จะลบแพตช์ที่ดาวน์โหลดและไฟล์บันทึก โดยแพตช์จะถูกดาวน์โหลดอีกครั้งเมื่อจำเป็น</string>
     <string name="settings_storage_open_app_data_button">เปิดข้อมูลแอป</string>
     <string name="settings_storage_open_logs_button">เปิดบันทึก</string>
     <string name="settings_section_about">เกี่ยวกับ</string>

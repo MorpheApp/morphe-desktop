@@ -728,12 +728,11 @@
     <string name="settings_toggle_auto_start_adb_label">دەستپێکردنی خۆکار ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">دەستپێکردنی ADB daemon لە کاتی کردنەوەی ئەپدا بۆ ئەوەی ئامێرە بەستراوەکان چاودێری بکرێن. کاتێک لایە، Morphe هەرگیز سێرڤەرەکە دەستپێناکات، و تایبەتمەندییەکانی دامەزراندن/ناردن ناچالێن</string>
     <string name="settings_section_storage">کۆگا و کاش</string>
-    <string name="settings_cache_summary">کاش: %1$s (پاتچەکان + تۆمارەکان)</string>
-    <string name="settings_cache_clear_button">پاککردنەوەی کاش</string>
+    <string name="settings_cache_clear_all_title">سڕینەوەی هەموو کەشییەکان</string>
+    <string name="settings_cache_category_patches">پینەکان</string>
     <string name="settings_cache_cleared">کاش پاککرا</string>
     <string name="settings_cache_clear_failed">پاککردنەوەکە شکست هێنا</string>
     <string name="settings_cache_confirm_title">کاش پاکبکرێتەوە؟</string>
-    <string name="settings_cache_confirm_message">ئەمە پاتچە دابەزێنراوەکان و فایلەکانی تۆمار دەسڕێتەوە. پاتچەکان دووبارە دابەزێنرێن کاتێک پێویست بن</string>
     <string name="settings_storage_open_app_data_button">کردنەوەی داتای ئەپ</string>
     <string name="settings_storage_open_logs_button">کردنەوەی تۆمارەکان</string>
     <string name="settings_section_about">دربارە</string>

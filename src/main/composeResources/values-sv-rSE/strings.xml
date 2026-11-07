@@ -724,12 +724,13 @@
     <string name="settings_toggle_auto_start_adb_label">Starta ADB automatiskt</string>
     <string name="settings_toggle_auto_start_adb_desc">Starta ADB-demonen vid start så att anslutna enheter övervakas. När den är av startar Morphe aldrig servern och installera/skicka-funktionerna är inaktiverade</string>
     <string name="settings_section_storage">Lagring &amp; cache</string>
-    <string name="settings_cache_summary">Cache: %1$s (patchar + loggar)</string>
-    <string name="settings_cache_clear_button">Rensa cache</string>
+    <string name="settings_cache_clear_all_title">Rensa alla cacheminnen</string>
+    <string name="settings_cache_category_patches">Tillägg</string>
+    <string name="settings_cache_category_logs">Loggar</string>
+    <string name="settings_cache_category_temp">Tillfälliga filer</string>
     <string name="settings_cache_cleared">Cachen rensades</string>
     <string name="settings_cache_clear_failed">Rensning misslyckades</string>
     <string name="settings_cache_confirm_title">Rensa cache?</string>
-    <string name="settings_cache_confirm_message">Detta kommer att ta bort nedladdade patchar och loggfiler. Patchar kommer att laddas ner igen vid behov</string>
     <string name="settings_storage_open_app_data_button">Öppna appdata</string>
     <string name="settings_storage_open_logs_button">Öppna loggar</string>
     <string name="settings_section_about">Om</string>

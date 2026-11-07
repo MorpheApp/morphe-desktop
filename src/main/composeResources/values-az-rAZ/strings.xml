@@ -724,12 +724,12 @@
     <string name="settings_toggle_auto_start_adb_label">ADB-ni avtomatik başlat</string>
     <string name="settings_toggle_auto_start_adb_desc">Qoşulmuş cihazların izlənilməsi üçün işə salınarkən ADB demonunu başladır. Söndürüldükdə Morphe serveri heç vaxt başlatmır və quraşdırma/göndərmə xüsusiyyətləri sıradan çıxır</string>
     <string name="settings_section_storage">Saxlanc &amp; qalıq</string>
-    <string name="settings_cache_summary">Keş: %1$s (yamaqlar + qeydlər)</string>
-    <string name="settings_cache_clear_button">Keşi təmizlə</string>
+    <string name="settings_cache_category_patches">Yamaqlar</string>
+    <string name="settings_cache_category_logs">Jurnallar</string>
+    <string name="settings_cache_category_temp">Müvəqqəti fayllar</string>
     <string name="settings_cache_cleared">Keş təmizləndi</string>
     <string name="settings_cache_clear_failed">Təmizlənmədi</string>
     <string name="settings_cache_confirm_title">Keşi təmizləsin?</string>
-    <string name="settings_cache_confirm_message">Bu, yüklənilmiş yamaqları və qeyd fayllarını siləcək. Yamaqlar ehtiyac olduqda yenidən yükləniləcək</string>
     <string name="settings_storage_open_app_data_button">Tətbiq məlumatlarını aç</string>
     <string name="settings_storage_open_logs_button">Jurnalları aç</string>
     <string name="settings_section_about">Haqqında</string>

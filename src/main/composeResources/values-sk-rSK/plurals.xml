@@ -88,6 +88,6 @@
         <item quantity="one">%1$d optimalizácia</item>
         <item quantity="few">%1$d optimalizácie</item>
         <item quantity="many">%1$d optimalizácií</item>
-        <item quantity="other">{%1$d, plural, one{# optimalizácia} few{# optimalizácie} many{# optimalizácií} other{# optimalizácií}}</item>
+        <item quantity="other">%1$d optimalizácií</item>
     </plurals>
 </resources>

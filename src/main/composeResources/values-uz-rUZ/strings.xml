@@ -724,12 +724,11 @@
     <string name="settings_toggle_auto_start_adb_label">ADBni avtomatik ishga tushirish</string>
     <string name="settings_toggle_auto_start_adb_desc">Ulangan qurilmalar monitoring qilinishi uchun ishga tushirish paytida ADB demonini ishga tushiring. O\"chirilgan bo\"lsa, Morphe serverni hech qachon ishga tushirmaydi va o\"rnatish/jo\"natish funksiyalari ishlamaydi</string>
     <string name="settings_section_storage">Xotira &amp; kesh</string>
-    <string name="settings_cache_summary">Kesh: %1$s (patchlar + loglar)</string>
-    <string name="settings_cache_clear_button">Keshni tozalash</string>
+    <string name="settings_cache_clear_all_title">Barcha keshni tozalash</string>
+    <string name="settings_cache_category_patches">Patchlar</string>
     <string name="settings_cache_cleared">Kesh tozalandi</string>
     <string name="settings_cache_clear_failed">Tozalashda xatolik</string>
     <string name="settings_cache_confirm_title">Keshni tozalaysizmi?</string>
-    <string name="settings_cache_confirm_message">Bu yuklab olingan patchlar va log fayllarini o'chirib tashlaydi. Patchlar kerak bo'lganda qayta yuklab olinadi</string>
     <string name="settings_storage_open_app_data_button">Ilova ma'lumotlarini ochish</string>
     <string name="settings_storage_open_logs_button">Loglarni ochish</string>
     <string name="settings_section_about">Biz haqimizda</string>

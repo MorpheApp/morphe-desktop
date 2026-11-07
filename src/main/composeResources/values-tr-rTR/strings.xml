@@ -113,8 +113,8 @@
     <string name="patching_task_decoding_resources">Kaynaklar çözülüyor</string>
     <string name="patching_task_indexing_classes">Sınıflar indeksleniyor</string>
     <string name="patching_task_compiling_dex">DEX dosyaları derleniyor</string>
-    <string name="patching_task_compiling_resources">Kaynaklar derleniyor...</string>
-    <string name="patching_task_writing_apk">APK dosyası yazılıyor...</string>
+    <string name="patching_task_compiling_resources">Kaynaklar derleniyor</string>
+    <string name="patching_task_writing_apk">APK dosyası yazılıyor</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s cihazına kuruluyor…</string>
     <string name="adb_error_downgrade">Sürüm düşürülemiyor, daha yeni bir sürüm yüklü. Önce mevcut uygulamayı kaldırın</string>
@@ -703,7 +703,7 @@
     <string name="settings_dev_bytecode_mode_strip_safe">Güvenli</string>
     <string name="settings_dev_bytecode_mode_full">Tam</string>
     <string name="settings_dev_validate_label">Parmak izi doğrulama</string>
-    <string name="settings_dev_validate_desc">Her match() ifadesinin yalnızca bir yöntemle eşleştiğini doğrula (yamalama testi için daha yavaş yamalama)</string>
+    <string name="settings_dev_validate_desc">Her match() ifadesinin yalnızca bir metotla eşleştiğini doğrula (daha yavaş yamalar, yama testleri içindir)</string>
     <string name="settings_dev_verify_sdk_label">Android SDK doğrulaması</string>
     <string name="settings_dev_verify_sdk_desc">Yamalanmış DEX ve APK'yı Android SDK araçlarıyla (d8, zipalign) doğrulayın. Yanlış pozitifler bildirebilir</string>
     <string name="settings_dev_sdk_path_label">Android SDK dizini</string>
@@ -725,12 +725,11 @@
     <string name="settings_toggle_auto_start_adb_label">ADB'yi otomatik başlat</string>
     <string name="settings_toggle_auto_start_adb_desc">Başlangıçta ADB arka plan sürecini başlatarak bağlı cihazların izlenmesini sağlar. Kapalıyken Morphe sunucuyu asla başlatmaz ve kurulum/gönderme özellikleri devre dışı kalır</string>
     <string name="settings_section_storage">Depolama ve önbellek</string>
-    <string name="settings_cache_summary">Önbellek: %1$s (yamalar + günlükler)</string>
-    <string name="settings_cache_clear_button">Önbelleği temizle</string>
+    <string name="settings_cache_clear_all_title">Tüm önbelleği temizle</string>
+    <string name="settings_cache_category_patches">Yamalar</string>
     <string name="settings_cache_cleared">Önbellek temizlendi</string>
     <string name="settings_cache_clear_failed">Temizleme başarısız</string>
     <string name="settings_cache_confirm_title">Önbellek temizlensin mi?</string>
-    <string name="settings_cache_confirm_message">Bu işlem, indirilen yamaları ve günlük dosyalarını silecektir. Yamalar gerektiğinde yeniden indirilecektir</string>
     <string name="settings_storage_open_app_data_button">Uygulama verilerini aç</string>
     <string name="settings_storage_open_logs_button">Günlükleri aç</string>
     <string name="settings_section_about">Hakkında</string>

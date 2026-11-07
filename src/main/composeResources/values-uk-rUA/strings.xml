@@ -724,12 +724,13 @@
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускати демон ADB під час старту, щоб відстежувати підключені пристрої. Коли вимкнено, Morphe не запускає сервер, а функції встановлення/надсилання вимкнено</string>
     <string name="settings_section_storage">Пам'ять та кеш</string>
-    <string name="settings_cache_summary">Кеш: %1$s (патчі + журнали)</string>
-    <string name="settings_cache_clear_button">Очистити кеш</string>
+    <string name="settings_cache_clear_all_title">Очистити весь кеш</string>
+    <string name="settings_cache_category_patches">Патчі</string>
+    <string name="settings_cache_category_logs">Журнали</string>
+    <string name="settings_cache_category_temp">Тимчасові файли</string>
     <string name="settings_cache_cleared">Кеш очищено</string>
     <string name="settings_cache_clear_failed">Не вдалося очистити</string>
     <string name="settings_cache_confirm_title">Очистити кеш?</string>
-    <string name="settings_cache_confirm_message">Це видалить завантажені патчі та файли журналів. Патчі буде завантажено повторно за потреби</string>
     <string name="settings_storage_open_app_data_button">Відкрити дані застосунку</string>
     <string name="settings_storage_open_logs_button">Відкрити журнали</string>
     <string name="settings_section_about">Про сервіс</string>

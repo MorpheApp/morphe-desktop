@@ -724,12 +724,12 @@
     <string name="settings_toggle_auto_start_adb_label">Tự độ ng khở i độ ng ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Khở i chạy daemon ADB kh i mở ứng dụng để theo dõi c ác thiết bị đã kết nố i. Kh i tắt, Morphe không bao giờ khở i độ ng máy chủ và c ác tính năng cài đặt/đẩy tệp bị vô hiệu hóa</string>
     <string name="settings_section_storage">Bộ nhớ &amp; bộ nhớ đệm</string>
-    <string name="settings_cache_summary">Bộ nhớ đệm: %1$s (bản vá + nhật ký)</string>
-    <string name="settings_cache_clear_button">Xóa bộ nhớ đệm</string>
+    <string name="settings_cache_clear_all_title">Xóa tất cả bộ nhớ đệm</string>
+    <string name="settings_cache_category_patches">Số bản vá</string>
+    <string name="settings_cache_category_logs">Nhật ký</string>
     <string name="settings_cache_cleared">Đã xóa bộ nhớ đệm</string>
     <string name="settings_cache_clear_failed">Xóa thất bại</string>
     <string name="settings_cache_confirm_title">Xóa bộ nhớ đệm?</string>
-    <string name="settings_cache_confirm_message">Thao tác này sẽ xóa các bản vá đã tải xuống và các tệp nhật ký. Các bản vá sẽ được tải lại khi cần thiết</string>
     <string name="settings_storage_open_app_data_button">Mở dữ liệu ứng dụng</string>
     <string name="settings_storage_open_logs_button">Mở nhật ký</string>
     <string name="settings_section_about">Giới thiệu</string>

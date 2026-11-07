@@ -113,7 +113,7 @@
     <string name="patching_task_decoding_resources">Ressurside dekodeerimine</string>
     <string name="patching_task_indexing_classes">Klasside indekseerimine</string>
     <string name="patching_task_compiling_dex">DEX-failide kompileerimine</string>
-    <string name="patching_task_compiling_resources">Ressurside compileerimine</string>
+    <string name="patching_task_compiling_resources">Ressurside kompileerimine</string>
     <string name="patching_task_writing_apk">APK-faili kirjutamine</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Paigaldatakse %1$s…</string>
@@ -724,12 +724,25 @@
     <string name="settings_toggle_auto_start_adb_label">ADB automaatne käivitamine</string>
     <string name="settings_toggle_auto_start_adb_desc">Käivita käivitamisel ADB-daemon, et ühendatud seadmeid jälgitaks. Kui see on väljas, ei käivita Morphe kunagi serverit ning installimise ja pushi funktsioonid on tuvastatud</string>
     <string name="settings_section_storage">Salvestus &amp; vahemälu</string>
-    <string name="settings_cache_summary">Vahemälu: %1$s (päevitused + logid)</string>
-    <string name="settings_cache_clear_button">Tühjenda vahemälu</string>
+    <string name="settings_cache_clear_all_title">Tühjenda kogu vahemälu</string>
+    <string name="settings_cache_category_patches">Paigad</string>
+    <string name="settings_cache_category_logs">Logid</string>
+    <string name="settings_cache_category_temp">Ajutised failid</string>
+    <string name="settings_cache_category_avatars">Avaatari vahemälu</string>
+    <string name="settings_cache_confirm_patches_title">Tühjendada paigad?</string>
+    <string name="settings_cache_confirm_patches_message">See kustutab allalaaditud paigafailid. Paigad laadatakse vajadusel uuesti alla</string>
+    <string name="settings_cache_confirm_logs_title">Tühjendada logid?</string>
+    <string name="settings_cache_confirm_logs_message">See kustutab kõik rakenduse logifailid ja seadme logcat-tõmmised</string>
+    <string name="settings_cache_confirm_temp_title">Tühjendada ajutised failid?</string>
+    <string name="settings_cache_confirm_temp_message">See kustutab ajutised kirjutus- ja töövälja failid</string>
+    <string name="settings_cache_confirm_avatars_title">Tühjendada avaatari vahemälu?</string>
+    <string name="settings_cache_confirm_avatars_message">See kustutab kõik vahemälusse salvestatud kaugsirusi avataripildid</string>
+    <string name="settings_cache_category_cleared">%1$s tühjendatud</string>
+    <string name="settings_cache_category_clear_failed">%1$s tühjendamine ebaõnnestus</string>
     <string name="settings_cache_cleared">Vahemälu tühjendatud</string>
     <string name="settings_cache_clear_failed">Tühjendamine ebaõnnestus</string>
     <string name="settings_cache_confirm_title">Tühjendada vahemälu?</string>
-    <string name="settings_cache_confirm_message">See kustutab allalaaditud päevitused ja logifailid. Päevitused laadatakse vajadusel uuesti alla</string>
+    <string name="settings_cache_confirm_message">See kustutab allalaaditud paranduste paketid, logifailid ja ajutised failid. Paranduste paketid laadatakse vajadusel uuesti alla</string>
     <string name="settings_storage_open_app_data_button">Ava rakenduse andmed</string>
     <string name="settings_storage_open_logs_button">Ava logid</string>
     <string name="settings_section_about">Kohta</string>

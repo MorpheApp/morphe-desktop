@@ -724,12 +724,25 @@
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускать демон ADB при запуске, чтобы отслеживать подключенные устройства. Когда выключено, Morphe никогда не запускает сервер, и функции установки/отправки отключены</string>
     <string name="settings_section_storage">Хранилище &amp; кеш</string>
-    <string name="settings_cache_summary">Кеш: %1$s (патчи + журналы)</string>
-    <string name="settings_cache_clear_button">Очистить кеш</string>
+    <string name="settings_cache_clear_all_title">Очистить весь кэш</string>
+    <string name="settings_cache_category_patches">Патчи</string>
+    <string name="settings_cache_category_logs">Журналы</string>
+    <string name="settings_cache_category_temp">Временные файлы</string>
+    <string name="settings_cache_category_avatars">Кэш аватаров</string>
+    <string name="settings_cache_confirm_patches_title">Очистить патчи?</string>
+    <string name="settings_cache_confirm_patches_message">Это удалит загруженные файлы патчей. Патчи будут загружены снова при необходимости</string>
+    <string name="settings_cache_confirm_logs_title">Очистить журналы?</string>
+    <string name="settings_cache_confirm_logs_message">Это удалит все файлы журналов приложения и дампы logcat устройства</string>
+    <string name="settings_cache_confirm_temp_title">Очистить временные файлы?</string>
+    <string name="settings_cache_confirm_temp_message">Это удалит временные черновики и файлы рабочего пространства</string>
+    <string name="settings_cache_confirm_avatars_title">Очистить кэш аватаров?</string>
+    <string name="settings_cache_confirm_avatars_message">Это удалит все кэшированные изображения удаленных аватаров</string>
+    <string name="settings_cache_category_cleared">%1$s очищено</string>
+    <string name="settings_cache_category_clear_failed">Не удалось очистить %1$s</string>
     <string name="settings_cache_cleared">Кеш очищен</string>
     <string name="settings_cache_clear_failed">Ошибка очистки</string>
     <string name="settings_cache_confirm_title">Очистить кеш?</string>
-    <string name="settings_cache_confirm_message">Это удалит загруженные патчи и файлы журналов. Патчи будут загружены снова при необходимости</string>
+    <string name="settings_cache_confirm_message">Это удалит загруженные патчи, файлы журналов и временные файлы. Патчи будут загружены снова при необходимости</string>
     <string name="settings_storage_open_app_data_button">Открыть данные приложения</string>
     <string name="settings_storage_open_logs_button">Открыть журналы</string>
     <string name="settings_section_about">О приложении</string>
@@ -822,7 +835,7 @@
     <string name="changelog_section_new">Новые</string>
     <string name="changelog_section_other">Изменения</string>
     <string name="changelog_section_performance">Производительность</string>
-    <string name="changelog_show_all">Показать все ({0, plural, one{один} few{#} many{#} other{#}} %1$d)</string>
+    <string name="changelog_show_all">Показать все (%1$d)</string>
     <string name="changelog_show_less">Показать меньше</string>
     <string name="changelog_view_on_github_button">Смотреть на GitHub</string>
     <!-- Navigation Pill -->

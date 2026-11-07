@@ -724,12 +724,11 @@
     <string name="settings_toggle_auto_start_adb_label">Anzisha ADB kiotomatiki</string>
     <string name="settings_toggle_auto_start_adb_desc">Anzisha daemon ya ADB wakati wa kufungua ili vifaa vilivyounganishwa vifuatiliwe. Ikiwa imezimwa, Morphe haitaanzisha seva kamwe, na vipengele vya kusakinisha/kusukuma vitazimwa</string>
     <string name="settings_section_storage">Hifadhi &amp; kasha</string>
-    <string name="settings_cache_summary">Kasha: %1$s (viraka + logarithms)</string>
-    <string name="settings_cache_clear_button">Futa kasha</string>
+    <string name="settings_cache_clear_all_title">Futa kache zote</string>
+    <string name="settings_cache_category_patches">Patch</string>
     <string name="settings_cache_cleared">Kasha limefutwa</string>
     <string name="settings_cache_clear_failed">Kufuta kumeshindikana</string>
     <string name="settings_cache_confirm_title">Futa kasha?</string>
-    <string name="settings_cache_confirm_message">Hii itafuta viraka vilivyopakuliwa na faili za logarithm. Viraka vitapakuliwa tena vitakapohitajika</string>
     <string name="settings_storage_open_app_data_button">Fungua data ya programu</string>
     <string name="settings_storage_open_logs_button">Fungua logarithms</string>
     <string name="settings_section_about">Kuhusu</string>
