@@ -1,3 +1,10 @@
+# [2.2.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-11-07)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([19d9483](https://github.com/MorpheApp/morphe-desktop/commit/19d948358d6f2b3785ffb860fafaf85a51bf2038))
+
 # [2.2.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-11-07)
 
 
