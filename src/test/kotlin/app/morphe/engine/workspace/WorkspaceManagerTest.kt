@@ -88,4 +88,26 @@ class WorkspaceManagerTest {
 
         assertFalse(sessionRoot != null && sessionRoot.exists())
     }
+
+    @Test
+    fun `getDirectoryStats and clearDirectoryContents correctly report and delete files`() {
+        val testDir = File(customDir, "cache-test").apply { mkdirs() }
+        File(testDir, "a.txt").writeText("12345")
+        File(testDir, "b.txt").writeText("67890")
+        val sub = File(testDir, "nested").apply { mkdirs() }
+        File(sub, "c.txt").writeText("abc")
+
+        val statsBefore = app.morphe.engine.CacheManager.getDirectoryStats(testDir)
+        assertEquals(3, statsBefore.fileCount)
+        assertEquals(13L, statsBefore.bytes)
+
+        val result = app.morphe.engine.CacheManager.clearDirectoryContents("Test", testDir)
+        assertEquals(3, result.filesDeleted)
+        assertEquals(13L, result.bytesFreed)
+        assertEquals(0, result.failedFiles)
+
+        val statsAfter = app.morphe.engine.CacheManager.getDirectoryStats(testDir)
+        assertEquals(0, statsAfter.fileCount)
+        assertEquals(0L, statsAfter.bytes)
+    }
 }

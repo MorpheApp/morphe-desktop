@@ -440,7 +440,7 @@ The gear icon opens Settings – Morphe's persistent preferences. Think of it as
 A couple of items worth expanding on:
 
 - **About section, Changelogs & Licenses** - The settings dialog includes an **About** section that displays the application version, developer info, a **View changelog** button, and **Open Source licenses**. The Changelog dialog features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
-- **Storage & cache** - Found under **Settings → System**, this section shows the live total cache size (patches and log files) with a one-click **Clear cache** action, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
+- **Storage & cache** - Found under **Settings → System**, this section displays live disk usage and file counts broken down by category (**Patches**, **Logs**, **Temporary files**, and **Avatar cache**). Each category can be cleared individually or all at once via **Clear all cache**, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
 - **Auto-start ADB** - when off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe.
 - **Update channel** - *Prerelease* surfaces pre-releases; *Stable* only stable ones. If you've never chosen, Morphe defaults smartly (Prerelease when you're running a dev build).
 - **Route links to patched app** - when on, every ADB install is followed by routing the app's supported web links to the patched app (the [Link handling](#gui-expert-links) step, run automatically). A nested **Disable stock app's links** option also stops the original app from opening those links – only relevant when a rename patch was used and the stock app is still installed. Both are reversible and need a connected device.
@@ -1642,16 +1642,20 @@ java -jar morphe-desktop-*-all.jar utility uninstall -p com.google.android.youtu
 
 <h4 id="utility-clear-cache"><code>utility clear-cache</code></h4>
 
-Delete Morphe's cached data: downloaded patch files, logs, and temporary files. By default it prints a short confirmation message.
+Delete Morphe's cached data: downloaded patch files, logs, temporary scratch files, and cached avatars. By default it clears all categories and prints a confirmation message.
 
 ```
 java -jar morphe-desktop-*-all.jar utility clear-cache [flag/s]
 ```
 
 
-| Flag     | Description                                                           |
-|----------|-----------------------------------------------------------------------|
-| `--info` | Show a per-category breakdown of what was cleared and the space freed |
+| Flag        | Description                                         |
+|-------------|-----------------------------------------------------|
+| `--info`    | Show current cache usage breakdown without clearing |
+| `--patches` | Target only cached patch bundles (`patches/`)       |
+| `--logs`    | Target only log files (`logs/`)                     |
+| `--temp`    | Target only temporary scratch files (`tmp/`)        |
+| `--avatars` | Target only cached remote avatars (`avatars/`)      |
 
 ##### `--info`:
 
@@ -1659,7 +1663,7 @@ Required: No
 
 Default: `false`
 
-Show how much was cleared from each location (patches, logs, temp) with file counts and the total space freed, instead of just a confirmation line.
+Inspect disk usage and file counts across cache categories without deleting any files:
 
 ```
 java -jar morphe-desktop-*-all.jar utility clear-cache --info

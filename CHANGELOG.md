@@ -1,3 +1,24 @@
+# [2.2.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-11-07)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([19d9483](https://github.com/MorpheApp/morphe-desktop/commit/19d948358d6f2b3785ffb860fafaf85a51bf2038))
+
+# [2.2.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-11-07)
+
+
+### Features
+
+* Display required build number on version chips ([#412](https://github.com/MorpheApp/morphe-desktop/issues/412)) ([aa572ff](https://github.com/MorpheApp/morphe-desktop/commit/aa572ff6cec46b8a90c8131e4ab7c79de1c32988))
+
+# [2.2.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.1...v2.2.0-dev.1) (2026-11-06)
+
+
+### Features
+
+* Expand cache management and granular clearing ([#411](https://github.com/MorpheApp/morphe-desktop/issues/411)) ([01295c9](https://github.com/MorpheApp/morphe-desktop/commit/01295c939f80cb68448f8014613908d0ba9339ae))
+
 ## [2.1.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0...v2.1.1) (2026-11-06)
 
 
