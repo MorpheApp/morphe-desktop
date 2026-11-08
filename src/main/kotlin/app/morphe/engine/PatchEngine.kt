@@ -213,6 +213,9 @@ object PatchEngine {
         ) { session ->
             val tempDir = session.root
             var mergedApkToCleanup: File? = null
+            var obbDirToCleanup: File? = null
+            // The OBB files of the bundle, which patches read from the package metadata
+            var obbFiles: Map<String, File> = emptyMap()
             val stepResults = mutableListOf<StepResult>()
             val appliedPatches = mutableListOf<String>()
             val failedPatches = mutableListOf<FailedPatch>()
@@ -280,11 +283,19 @@ object PatchEngine {
                     }
 
                     try {
-                        ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger()).merge(
+                        val merger = ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger())
+                        merger.merge(
                             inputFile = stagedBundle,
                             outputFile = mergedApk,
                             cleanMetaInf = false,
                         )
+
+                        val obbDir = File(tempDir, "obb")
+                        obbDirToCleanup = obbDir
+                        obbFiles = merger.extractObbFiles(inputApk, obbDir)
+                        if (obbFiles.isNotEmpty()) {
+                            info("Extracted ${obbFiles.size} OBB file(s) from the bundle")
+                        }
                     } finally {
                         if (stagedBundle != inputApk) {
                             runCatching { Files.deleteIfExists(stagedBundle.toPath()) }
@@ -321,6 +332,7 @@ object PatchEngine {
                 progress = { task, done, total ->
                     if (scopeContext.isActive) onEvent(PatchEvent.TaskProgress(task, done, total))
                 },
+                obbFiles = obbFiles,
             )
 
             report(PatchEvent.StepStarted(PatchStep.LOADING_PATCHES))
@@ -740,6 +752,7 @@ object PatchEngine {
             patcherLogger.useParentHandlers = prevUseParentHandlers
             if (!session.retain) {
                 mergedApkToCleanup?.delete()
+                obbDirToCleanup?.deleteRecursively()
             }
 
             if (config.optionsFile != null && config.updateOptions && patchesSnapshotForFinally.isNotEmpty()) {
