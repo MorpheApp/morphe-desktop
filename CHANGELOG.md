@@ -1,3 +1,10 @@
+# [2.2.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.4...v2.2.0-dev.5) (2026-11-08)
+
+
+### Bug Fixes
+
+* Native root mount implementation and pre-mount checks ([#423](https://github.com/MorpheApp/morphe-desktop/issues/423)) ([03ed5b5](https://github.com/MorpheApp/morphe-desktop/commit/03ed5b58519bd916055587d174e1336c9db8fb40))
+
 # [2.2.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.3...v2.2.0-dev.4) (2026-11-08)
 
 
