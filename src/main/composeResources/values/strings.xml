@@ -461,6 +461,8 @@
     <string name="result_adb_unmounting_on_device">Unmounting from %1$s…</string>
     <string name="result_adb_root_not_detected">Root access was not detected on %1$s. Ensure Magisk/KernelSU/APatch is installed and su permission is granted</string>
     <string name="result_adb_stock_app_not_installed">Stock app %1$s is not installed on %2$s. Install the official app first before mounting</string>
+    <string name="result_adb_mount_version_mismatch">Stock app on %3$s is v%1$s, but patched APK is v%2$s. Root mount requires matching versions</string>
+    <string name="result_adb_mount_abi_mismatch">Device %3$s is %1$s, but APK only contains [%2$s]. Native libraries will fail to load</string>
     <string name="result_link_default_restored">Default link handling restored</string>
     <string name="result_link_routed_stock_disabled">Links routed to patched app, stock disabled</string>
     <string name="result_adb_not_found_hint">ADB not found. Install Android SDK Platform Tools to enable direct installation</string>

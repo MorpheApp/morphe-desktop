@@ -60,10 +60,7 @@ dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
     implementation(libs.morphe.library) {
-        // Exclude mockito/bytebuddy leaked into compile scope by app.morphe:jadb POM
-        exclude(group = "org.mockito")
-        exclude(group = "net.bytebuddy")
-        exclude(group = "org.objenesis")
+        exclude(group = "app.morphe", module = "jadb")
     }
     implementation(libs.picocli)
     implementation(libs.bundles.compose.desktop)
