@@ -79,7 +79,23 @@ object PatchEngine {
         val disabledPatchIndices: Set<Int> = emptySet(),
         val patchOptions: Map<String, Map<String, Any?>> = emptyMap(),
         val patchOptionIndices: Map<Int, Map<String, Any?>> = emptyMap(),
-    )
+    ) {
+        internal fun resolveOptions(patches: List<Patch>): Map<String, Map<String, Any?>> {
+            val resolved = patchOptions.entries.associate { (name, options) ->
+                val declaredName = patches.firstOrNull { it.name.equals(name, ignoreCase = true) }?.name ?: name
+                declaredName to options
+            }.toMutableMap()
+            patchOptionIndices.forEach { (index, options) ->
+                if (index in patches.indices) {
+                    val name = patches[index].name
+                    if (name != null) {
+                        resolved[name] = resolved[name].orEmpty() + options
+                    }
+                }
+            }
+            return resolved
+        }
+    }
 
     data class HistoryMetadata(
         val originalPackageName: String? = null,
@@ -451,16 +467,7 @@ object PatchEngine {
                         val jsonOpts = jsonOptionsByFile[lb.sourceFile] ?: emptyMap()
 
                         val patchesList = lb.patches.toList()
-                        val resolvedScopeOptions = scope.patchOptions.toMutableMap()
-                        scope.patchOptionIndices.forEach { (idx, opts) ->
-                            if (idx in patchesList.indices) {
-                                val name = patchesList[idx].name
-                                if (name != null) {
-                                    val existing = resolvedScopeOptions[name] ?: emptyMap()
-                                    resolvedScopeOptions[name] = existing + opts
-                                }
-                            }
-                        }
+                        val resolvedScopeOptions = scope.resolveOptions(patchesList)
 
                         val effectiveEnabledNames = scope.enabledPatchNames.ifEmpty { config.enabledPatches }
                         val effectiveDisabledNames = scope.disabledPatchNames.ifEmpty { config.disabledPatches }
