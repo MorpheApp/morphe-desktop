@@ -5,13 +5,12 @@
 
 package app.morphe.engine.util
 
-import app.morphe.library.installation.installer.AdbRootInstaller
-import app.morphe.library.installation.installer.DeviceNotFoundException
-import app.morphe.library.installation.installer.Installer
-import app.morphe.library.installation.installer.RootInstallerResult
+import app.morphe.engine.apk.AndroidArchitectures
+import app.morphe.engine.apk.ApkInspector
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.Socket
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -439,25 +438,15 @@ class AdbManager {
             return@withContext Result.failure(it)
         }
         if (mount) {
-            try {
-                AdbRootInstaller(targetDevice.id)
-            } catch (e: DeviceNotFoundException) {
+            val adb = findAdb() ?: return@withContext Result.failure(
+                AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
+            )
+            if (!checkRootAccess(adb, targetDevice.id)) {
                 return@withContext Result.failure(
                     AdbException(
-                        "Device not found: ${targetDevice.id}",
-                        AdbErrorCode.DEVICE_NOT_FOUND,
-                        listOf(targetDevice.id),
-                        cause = e,
-                    )
-                )
-            } catch (e: Throwable) {
-                val errorCode = if (isNoRootPermission(e)) AdbErrorCode.NO_ROOT_PERMISSION else AdbErrorCode.ROOT_MOUNT_FAILED
-                return@withContext Result.failure(
-                    AdbException(
-                        "Root mount check failed on ${targetDevice.id}: ${e.message ?: e}",
-                        errorCode,
+                        "Root access not detected on ${targetDevice.id}",
+                        AdbErrorCode.NO_ROOT_PERMISSION,
                         listOf(targetDevice.displayName),
-                        cause = e,
                     )
                 )
             }
@@ -481,27 +470,141 @@ class AdbManager {
         val targetDevice = resolveTargetDevice(deviceId).getOrElse {
             return@withContext Result.failure(it)
         }
+        val adb = findAdb() ?: return@withContext Result.failure(
+            AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
+        )
+
+        if (!checkRootAccess(adb, targetDevice.id)) {
+            Logger.error("Root access not detected on ${targetDevice.id}")
+            return@withContext Result.failure(
+                AdbException(
+                    "Root access not detected",
+                    AdbErrorCode.NO_ROOT_PERMISSION,
+                    listOf(targetDevice.displayName),
+                )
+            )
+        }
+
+        val stockPath = resolveStockApkPath(adb, targetDevice.id, packageName).getOrElse {
+            Logger.error("Stock app $packageName not installed on ${targetDevice.id}")
+            return@withContext Result.failure(
+                AdbException(
+                    "Stock app $packageName is not installed on ${targetDevice.displayName}",
+                    AdbErrorCode.STOCK_APP_NOT_INSTALLED,
+                    listOf(packageName, targetDevice.displayName),
+                )
+            )
+        }
+        Logger.info("Resolved stock APK path for $packageName on ${targetDevice.id}: $stockPath")
+
+        val installedInfo = getInstalledPackageInfo(targetDevice.id, packageName)
+        val stockVersion = installedInfo?.first
+        val patchedVersion = ApkInspector.inspect(apkFile)?.versionName
+
+        if (!stockVersion.isNullOrBlank() && !patchedVersion.isNullOrBlank() && stockVersion != patchedVersion) {
+            val errMsg = "Installed stock app is v$stockVersion, but patched APK is v$patchedVersion. Root mount requires matching versions."
+            Logger.error(errMsg)
+            return@withContext Result.failure(
+                AdbException(
+                    errMsg,
+                    AdbErrorCode.ROOT_MOUNT_VERSION_MISMATCH,
+                    listOf(stockVersion, patchedVersion, targetDevice.displayName),
+                )
+            )
+        }
+
+        val deviceArch = getDeviceArchitecture(adb, targetDevice.id)
+        val apkArchs = ApkInspector.inspect(apkFile)?.architectures ?: emptySet()
+        if (deviceArch != null && apkArchs.isNotEmpty() && !apkArchs.contains(AndroidArchitectures.UNIVERSAL)) {
+            val isCompatible = when (deviceArch) {
+                "x86_64" -> "x86_64" in apkArchs || "x86" in apkArchs
+                "x86" -> "x86" in apkArchs
+                "arm64-v8a" -> "arm64-v8a" in apkArchs || "armeabi-v7a" in apkArchs
+                "armeabi-v7a" -> "armeabi-v7a" in apkArchs
+                else -> true
+            }
+            if (!isCompatible) {
+                val archList = apkArchs.joinToString(", ")
+                val errMsg = "$packageName on ${targetDevice.displayName} runs as $deviceArch, but patched APK only contains [$archList]. Native libraries will fail to load."
+                Logger.error(errMsg)
+                return@withContext Result.failure(
+                    AdbException(
+                        errMsg,
+                        AdbErrorCode.ROOT_MOUNT_ABI_MISMATCH,
+                        listOf(deviceArch, archList, targetDevice.displayName),
+                    )
+                )
+            }
+        }
+
         try {
-            val result = AdbRootInstaller(targetDevice.id).install(Installer.Apk(apkFile, packageName))
-            if (result == RootInstallerResult.FAILURE) {
-                Logger.error("Failed to mount the APK file")
-                Result.failure(AdbException("Failed to mount the APK file", AdbErrorCode.ROOT_MOUNT_FAILED))
-            } else {
-                Logger.info("Mounted the APK file on ${targetDevice.id}")
-                Result.success(Unit)
+            val remoteTmp = "/data/local/tmp/morphe_$packageName.tmp"
+            val pushProcess = ProcessBuilder(adb, "-s", targetDevice.id, "push", apkFile.absolutePath, remoteTmp)
+                .redirectErrorStream(true)
+                .start()
+            val pushOutput = pushProcess.inputStream.bufferedReader().readText().trim()
+            val pushExit = pushProcess.waitFor()
+            if (pushExit != 0) {
+                Logger.error("Failed to push APK to device: $pushOutput")
+                return@withContext Result.failure(
+                    AdbException(
+                        "Failed to push APK to device: $pushOutput",
+                        AdbErrorCode.ROOT_MOUNT_FAILED,
+                        listOf(pushOutput),
+                    )
+                )
             }
+
+            val basePath = "/data/adb/morphe/$packageName.apk"
+            val bootScript = "/data/adb/service.d/mount_morphe_$packageName.sh"
+            val mountScriptContent = buildMountScript(packageName, basePath, stockPath)
+
+            val installCommands = $$"""
+                mkdir -p /data/adb/morphe &&
+                mkdir -p /data/adb/service.d &&
+                mv "$$remoteTmp" "$$basePath" &&
+                chmod 644 "$$basePath" &&
+                chown system:system "$$basePath" &&
+                chcon u:object_r:apk_data_file:s0 "$$basePath" &&
+                umount -l "$$stockPath" 2>/dev/null;
+                for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m umount -l "$$stockPath" 2>/dev/null; done;
+                mount -o bind "$$basePath" "$$stockPath" &&
+                for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m mount -o bind "$$basePath" "$$stockPath" 2>/dev/null; done;
+                am force-stop "$$packageName" &&
+                am start -S "$$packageName"
+            """.trimIndent().replace("\n", " ")
+
+            val installResult = executeSuCommand(adb, targetDevice.id, installCommands)
+            if (installResult.isFailure) {
+                val err = installResult.exceptionOrNull()?.message ?: "Mount execution failed"
+                Logger.error("Root mount failed on ${targetDevice.id}: $err")
+                return@withContext Result.failure(
+                    AdbException(
+                        "Root mount failed: $err",
+                        AdbErrorCode.ROOT_MOUNT_FAILED,
+                        listOf(err),
+                    )
+                )
+            }
+
+            deployBootScript(adb, targetDevice.id, bootScript, mountScriptContent)
+
+            val verifyCmd = "grep -F '$basePath' /proc/mounts || grep -F '$stockPath' /proc/mounts"
+            val verifyResult = executeSuCommand(adb, targetDevice.id, verifyCmd)
+            if (verifyResult.isFailure || verifyResult.getOrNull().isNullOrBlank()) {
+                Logger.warn("Active mount not found in /proc/mounts on ${targetDevice.id}")
+            }
+
+            Logger.info("Mounted $packageName on ${targetDevice.id}")
+            Result.success(Unit)
         } catch (e: Throwable) {
-            val (errorCode, formatArgs) = when {
-                isNoRootPermission(e) -> AdbErrorCode.NO_ROOT_PERMISSION to listOf(targetDevice.displayName)
-                isStockAppNotInstalled(e) -> AdbErrorCode.STOCK_APP_NOT_INSTALLED to listOf(packageName, targetDevice.displayName)
-                else -> AdbErrorCode.ROOT_MOUNT_FAILED to listOf(targetDevice.displayName)
-            }
+            if (e is CancellationException) throw e
             Logger.error("Error mounting APK: ${e.message ?: e}", e)
             Result.failure(
                 AdbException(
                     "Error mounting APK: ${e.message ?: e}",
-                    errorCode,
-                    formatArgs,
+                    AdbErrorCode.ROOT_MOUNT_FAILED,
+                    listOf(targetDevice.displayName),
                     cause = e,
                 )
             )
@@ -516,22 +619,61 @@ class AdbManager {
         val targetDevice = resolveTargetDevice(deviceId).getOrElse {
             return@withContext Result.failure(it)
         }
+        val adb = findAdb() ?: return@withContext Result.failure(
+            AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
+        )
+        if (!checkRootAccess(adb, targetDevice.id)) {
+            return@withContext Result.failure(
+                AdbException(
+                    "Root access not detected",
+                    AdbErrorCode.NO_ROOT_PERMISSION,
+                    listOf(targetDevice.displayName),
+                )
+            )
+        }
+
         try {
-            val result = AdbRootInstaller(targetDevice.id).uninstall(packageName)
-            if (result == RootInstallerResult.FAILURE) {
-                Logger.error("Failed to unmount the patched APK file")
-                Result.failure(AdbException("Failed to unmount the patched APK file", AdbErrorCode.ROOT_UNMOUNT_FAILED))
+            val stockPath = resolveStockApkPath(adb, targetDevice.id, packageName).getOrNull()
+            val basePath = "/data/adb/morphe/$packageName.apk"
+            val bootScript = "/data/adb/service.d/mount_morphe_$packageName.sh"
+
+            val unmountStock = if (!stockPath.isNullOrBlank()) {
+                $$"""umount -l "$$stockPath" 2>/dev/null; for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m umount -l "$$stockPath" 2>/dev/null; done; """
             } else {
-                Logger.info("Unmounted the patched APK file from ${targetDevice.id}")
-                Result.success(Unit)
+                ""
             }
+
+            val unmountCmds = $$"""
+                $$unmountStock
+                grep -F '$$packageName' /proc/mounts 2>/dev/null | cut -d ' ' -f 2 | while read -r m; do
+                    [ -n "$m" ] && umount -l "$m" 2>/dev/null;
+                    for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m umount -l "$m" 2>/dev/null; done;
+                done;
+                rm -f '$$basePath' '$$bootScript' &&
+                am force-stop '$$packageName'
+            """.trimIndent().replace("\n", " ")
+
+            val result = executeSuCommand(adb, targetDevice.id, unmountCmds)
+            if (result.isFailure) {
+                val err = result.exceptionOrNull()?.message ?: "Unmount failed"
+                Logger.error("Failed to unmount $packageName: $err")
+                return@withContext Result.failure(
+                    AdbException(
+                        "Failed to unmount $packageName: $err",
+                        AdbErrorCode.ROOT_UNMOUNT_FAILED,
+                        listOf(err),
+                    )
+                )
+            }
+            Logger.info("Unmounted $packageName from ${targetDevice.id}")
+            Result.success(Unit)
         } catch (e: Throwable) {
-            val errorCode = if (isNoRootPermission(e)) AdbErrorCode.NO_ROOT_PERMISSION else AdbErrorCode.ROOT_UNMOUNT_FAILED
+            if (e is CancellationException) throw e
             Logger.error("Error unmounting $packageName: ${e.message ?: e}", e)
             Result.failure(
                 AdbException(
                     "Error unmounting $packageName: ${e.message ?: e}",
-                    errorCode,
+                    AdbErrorCode.ROOT_UNMOUNT_FAILED,
                     listOf(targetDevice.displayName),
                     cause = e,
                 )
@@ -539,15 +681,146 @@ class AdbManager {
         }
     }
 
-    private fun isNoRootPermission(e: Throwable): Boolean =
-        e.message?.contains("No root permission", ignoreCase = true) == true ||
-            e::class.simpleName == "NoRootPermissionException" ||
-            e.cause?.let { isNoRootPermission(it) } == true
+    private suspend fun checkRootAccess(adb: String, deviceId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "shell", "su -c id")
+                .redirectErrorStream(true)
+                .start()
+            val output = process.inputStream.bufferedReader().readText().trim()
+            val exitCode = process.waitFor()
+            exitCode == 0 && output.contains("uid=0")
+        } catch (e: Throwable) {
+            Logger.debug("Root check failed on $deviceId: ${e.message}")
+            false
+        }
+    }
 
-    private fun isStockAppNotInstalled(e: Throwable): Boolean =
-        e::class.simpleName == "FailedToFindInstalledPackageException" ||
-            e.message?.contains("Failed to find installed package", ignoreCase = true) == true ||
-            e.cause?.let { isStockAppNotInstalled(it) } == true
+    /** Resolves the installed stock APK path on [deviceId] for [packageName], prioritizing base.apk. */
+    suspend fun resolveStockApkPath(
+        adb: String,
+        deviceId: String,
+        packageName: String,
+    ): Result<String> = withContext(Dispatchers.IO) {
+        val queryCommands = listOf(
+            listOf("pm", "path", packageName),
+            listOf("pm", "path", "--user", "0", packageName),
+        )
+        for (cmd in queryCommands) {
+            try {
+                val process = ProcessBuilder(listOf(adb, "-s", deviceId, "shell") + cmd)
+                    .redirectErrorStream(true)
+                    .start()
+                val output = process.inputStream.bufferedReader().readText()
+                val exitCode = process.waitFor()
+                if (exitCode == 0 && output.isNotBlank()) {
+                    val candidatePaths = output.lines()
+                        .map { it.trim().removePrefix("package:") }
+                        .filter { it.endsWith(".apk") }
+                    val stockPath = candidatePaths.firstOrNull { it.contains("base.apk") }
+                        ?: candidatePaths.firstOrNull()
+                    if (stockPath != null) {
+                        return@withContext Result.success(stockPath)
+                    }
+                }
+            } catch (e: Throwable) {
+                Logger.debug("pm path query failed for $packageName on $deviceId: ${e.message}")
+            }
+        }
+        Result.failure(
+            AdbException(
+                "Stock app $packageName is not installed",
+                AdbErrorCode.STOCK_APP_NOT_INSTALLED,
+                listOf(packageName, deviceId),
+            )
+        )
+    }
+
+    private fun buildMountScript(packageName: String, basePath: String, fallbackStockPath: String): String =
+        $$"""
+        #!/system/bin/sh
+        until [ "$( getprop sys.boot_completed )" = 1 ]; do sleep 3; done
+        until [ -d "/sdcard/Android" ]; do sleep 1; done
+
+        base_path="$$basePath"
+        stock_path=$( pm path $$packageName | grep base | head -n 1 | sed 's/package://g' | tr -d '\r' )
+        [ -z "$stock_path" ] && stock_path=$( pm path $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
+        [ -z "$stock_path" ] && stock_path=$( pm path --user 0 $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
+        [ -z "$stock_path" ] && stock_path="$$fallbackStockPath"
+
+        if [ -z "$stock_path" ] || [ ! -f "$base_path" ]; then
+            exit 1
+        fi
+
+        chcon u:object_r:apk_data_file:s0 "$base_path"
+
+        umount -l "$stock_path" 2>/dev/null
+        for pid in $(pidof zygote zygote64 2>/dev/null); do
+            nsenter -t $pid -m umount -l "$stock_path" 2>/dev/null
+        done
+
+        mount -o bind "$base_path" "$stock_path"
+
+        for pid in $(pidof zygote zygote64 2>/dev/null); do
+            nsenter -t $pid -m mount -o bind "$base_path" "$stock_path" 2>/dev/null
+        done
+
+        am force-stop "$$packageName"
+        """.trimIndent()
+
+    private suspend fun deployBootScript(
+        adb: String,
+        deviceId: String,
+        remoteScriptPath: String,
+        content: String,
+    ) = withContext(Dispatchers.IO) {
+        val tempFile = File.createTempFile("morphe_mount_script_", ".sh")
+        try {
+            tempFile.writeText(content)
+            val remoteTmp = "/data/local/tmp/morphe_boot_${System.currentTimeMillis()}.sh"
+            val pushExit = ProcessBuilder(adb, "-s", deviceId, "push", tempFile.absolutePath, remoteTmp)
+                .start()
+                .waitFor()
+            if (pushExit == 0) {
+                executeSuCommand(
+                    adb,
+                    deviceId,
+                    "mkdir -p /data/adb/service.d && mv '$remoteTmp' '$remoteScriptPath' && chmod 755 '$remoteScriptPath'",
+                )
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            Logger.warn("Failed to deploy boot mount script on $deviceId: ${e.message}")
+        } finally {
+            tempFile.delete()
+        }
+    }
+
+    private suspend fun executeSuCommand(
+        adb: String,
+        deviceId: String,
+        command: String,
+    ): Result<String> = withContext(Dispatchers.IO) {
+        for (suBinary in listOf("su -mm -c", "su -c")) {
+            try {
+                val process = ProcessBuilder(adb, "-s", deviceId, "shell", "$suBinary '$command'")
+                    .redirectErrorStream(true)
+                    .start()
+                val output = process.inputStream.bufferedReader().readText().trim()
+                val exitCode = process.waitFor()
+                if (exitCode == 0) {
+                    return@withContext Result.success(output)
+                }
+                if (suBinary.contains("-mm") && (output.contains("invalid", ignoreCase = true) || output.contains("unknown", ignoreCase = true))) {
+                    continue
+                }
+                return@withContext Result.failure(Exception(output.ifBlank { "exit code $exitCode" }))
+            } catch (e: Throwable) {
+                Logger.debug("su command failed with $suBinary: ${e.message}")
+            }
+        }
+        Result.failure(Exception("Failed to execute root command on $deviceId"))
+    }
 
     /** Uninstalls [packageName] from [deviceId], treating missing packages as success. */
     suspend fun uninstallApk(
@@ -1041,6 +1314,8 @@ enum class AdbErrorCode {
     ROOT_MOUNT_FAILED,
     NO_ROOT_PERMISSION,
     STOCK_APP_NOT_INSTALLED,
+    ROOT_MOUNT_VERSION_MISMATCH,
+    ROOT_MOUNT_ABI_MISMATCH,
     UNINSTALL_FAILED,
     ROOT_UNMOUNT_FAILED,
     CLEAR_LOGS_FAILED,
