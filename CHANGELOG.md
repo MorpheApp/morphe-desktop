@@ -1,3 +1,10 @@
+# [2.2.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.3...v2.2.0-dev.4) (2026-11-08)
+
+
+### Features
+
+* Pass the OBB files of a bundle to patches ([#422](https://github.com/MorpheApp/morphe-desktop/issues/422)) ([e8b92d9](https://github.com/MorpheApp/morphe-desktop/commit/e8b92d9a9793f2731eff63886fa048c587ce88f2))
+
 # [2.2.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-11-07)
 
 
