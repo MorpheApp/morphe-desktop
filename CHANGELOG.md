@@ -1,3 +1,10 @@
+# [2.2.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.5...v2.2.0-dev.6) (2026-11-08)
+
+
+### Bug Fixes
+
+* Apply options when patch name capitalization differs ([#425](https://github.com/MorpheApp/morphe-desktop/issues/425)) ([f77a10f](https://github.com/MorpheApp/morphe-desktop/commit/f77a10f99d6e5489961225bee8d5e205d9748260))
+
 # [2.2.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.4...v2.2.0-dev.5) (2026-11-08)
 
 
