@@ -132,7 +132,7 @@
     <string name="adb_error_generic">Installation failed: %1$s</string>
     <string name="adb_error_not_found">ADB not found. Please install Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Device connected but not authorized. Please accept the USB debugging prompt on your device</string>
-    <string name="adb_error_no_devices">No devices connected. Please connect your Android device with USB debugging enabled</string>
+    <string name="adb_error_no_devices">No devices connected. Please connect your Android device with USB or Wi-Fi debugging enabled</string>
     <string name="adb_error_device_not_found">Device %1$s not found</string>
     <string name="adb_error_multiple_devices">Multiple devices connected. Please select one</string>
     <string name="adb_error_apk_not_found">APK file not found: %1$s</string>
@@ -445,7 +445,7 @@
 
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB off · Enable to install</string>
-    <string name="result_adb_connect_device_hint">Connect a device via USB to install with ADB</string>
+    <string name="result_adb_connect_device_hint">Connect a device via USB or Wi-Fi to install with ADB</string>
     <string name="result_screen_patch_another_button">Patch another</string>
     <string name="result_screen_install_on_device_label">Install on %1$s</string>
     <string name="result_screen_links_routed_label">Links routed to patched app</string>
@@ -466,7 +466,7 @@
     <string name="result_adb_not_found_hint">ADB not found. Install Android SDK Platform Tools to enable direct installation</string>
     <string name="result_adb_section_title">ADB install</string>
     <string name="result_adb_no_devices">No devices connected</string>
-    <string name="result_adb_connect_hint">Connect via USB with USB debugging enabled</string>
+    <string name="result_adb_connect_hint">Connect via USB or Wi-Fi debugging</string>
     <string name="result_device_status_unauth">Unauth</string>
     <string name="result_adb_update_button">Update on %1$s</string>
     <string name="result_adb_select_device_button">Select a device</string>
@@ -625,7 +625,7 @@
     <string name="device_indicator_adb_not_found_title">ADB not found</string>
     <string name="device_indicator_adb_not_found_subtitle">Install Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">No devices detected</string>
-    <string name="device_indicator_no_devices_subtitle">Connect a device with USB debugging enabled</string>
+    <string name="device_indicator_no_devices_subtitle">Connect a device with USB or Wi-Fi debugging enabled</string>
     <string name="device_indicator_enable_debugging_title">Enable USB debugging</string>
     <string name="device_indicator_enable_debugging_subtitle">Settings → Developer Options → USB Debugging</string>
     <string name="device_indicator_status_connected">Connected</string>
@@ -833,7 +833,7 @@
     <string name="settings_runtime_logs_title">Patched app runtime logs</string>
     <string name="settings_runtime_logs_desc">Capture logs from your phone after a patched app crashes or misbehaves. Clear before reproducing the bug, then save the filtered output to attach to a bug report</string>
     <string name="settings_runtime_logs_device_info">Device: %1$s</string>
-    <string name="settings_runtime_logs_no_device">No device connected. Plug in your phone with USB debugging enabled</string>
+    <string name="settings_runtime_logs_no_device">No device connected. Connect your phone with USB or Wi-Fi debugging enabled</string>
     <string name="settings_runtime_logs_clearing">Clearing…</string>
     <string name="settings_runtime_logs_clear_button">Clear device logs</string>
     <string name="settings_runtime_logs_failed_to_clear">Failed to clear logs</string>
