@@ -1,3 +1,10 @@
+# [2.2.0-dev.11](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.10...v2.2.0-dev.11) (2026-11-09)
+
+
+### Features
+
+* Add "More apps" app card ([760abbc](https://github.com/MorpheApp/morphe-desktop/commit/760abbcb0f2ba83937b9316654d33cad74d314ca))
+
 # [2.2.0-dev.10](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.9...v2.2.0-dev.10) (2026-11-09)
 
 
