@@ -1,3 +1,10 @@
+# [2.2.0-dev.9](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.8...v2.2.0-dev.9) (2026-11-09)
+
+
+### Bug Fixes
+
+* Handle app names that aren't valid in file names ([eaa3e1d](https://github.com/MorpheApp/morphe-desktop/commit/eaa3e1ddd2138d3da0a086172542386959c7d8cc))
+
 # [2.2.0-dev.8](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.7...v2.2.0-dev.8) (2026-11-09)
 
 
