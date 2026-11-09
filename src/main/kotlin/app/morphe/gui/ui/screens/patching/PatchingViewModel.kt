@@ -77,7 +77,13 @@ class PatchingViewModel(
 
     init {
         viewModelScope.launch {
-            val sources = runCatching { configRepository.loadConfig().patchSource }.getOrDefault(emptyList())
+            val sources = try {
+                configRepository.loadConfig().patchSource
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                emptyList()
+            }
             allConfiguredSources = sources
             val resolvedName = when {
                 initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let {

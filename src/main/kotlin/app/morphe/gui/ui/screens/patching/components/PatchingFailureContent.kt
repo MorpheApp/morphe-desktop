@@ -39,6 +39,7 @@ import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.datatransfer.StringSelection
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -260,6 +261,8 @@ internal fun ExpertFailureContent(
                                     tempFilesSize = remaining
                                 }
                                 Logger.info("Cleaned temp files after failed/cancelled patching")
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Logger.error("Failed to clean scratch directory", e)
                                 withContext(Dispatchers.Main) {

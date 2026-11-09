@@ -52,6 +52,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -85,6 +86,8 @@ fun ChangelogDialog(
             error = null
             try {
                 entries = changelogRepository.desktopEntries(prerelease = AppConstants.IS_DEV_BUILD)
+            } catch (e: CancellationException) {
+                throw e
             } catch (t: Throwable) {
                 error = t
             } finally {
