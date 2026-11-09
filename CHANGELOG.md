@@ -1,3 +1,10 @@
+# [2.2.0-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.6...v2.2.0-dev.7) (2026-11-09)
+
+
+### Bug Fixes
+
+* Update multi-bundle options outside the bundle directory ([#427](https://github.com/MorpheApp/morphe-desktop/issues/427)) ([e2971b1](https://github.com/MorpheApp/morphe-desktop/commit/e2971b1b4f4d43c06c8c8372da84e4dc7a42cf03))
+
 # [2.2.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.5...v2.2.0-dev.6) (2026-11-08)
 
 
