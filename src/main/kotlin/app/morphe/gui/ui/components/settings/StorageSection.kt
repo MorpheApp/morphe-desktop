@@ -25,6 +25,7 @@ import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.AppIconLoader
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
@@ -38,7 +39,7 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-private enum class CategoryType { PATCHES, LOGS, TEMP, AVATARS }
+private enum class CategoryType { PATCHES, LOGS, TEMP, AVATARS, APP_ICONS }
 private data class CategoryConfirm(val type: CategoryType, val title: String)
 
 @Composable
@@ -55,6 +56,7 @@ internal fun StorageSection(
     var logsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
     var tempStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
     var avatarsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
+    var appIconsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
 
     var showClearAllConfirm by remember { mutableStateOf(false) }
     var categoryConfirm by remember { mutableStateOf<CategoryConfirm?>(null) }
@@ -70,24 +72,28 @@ internal fun StorageSection(
         val l = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.logsDir) }
         val t = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(WorkspaceManager.scratchDir) }
         val a = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.avatarsDir) }
+        val i = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.appIconsDir) }
         patchesStats = p
         logsStats = l
         tempStats = t
         avatarsStats = a
+        appIconsStats = i
     }
 
     LaunchedEffect(Unit) {
         refreshAllStats()
     }
 
-    val totalBytes = patchesStats.bytes + logsStats.bytes + tempStats.bytes + avatarsStats.bytes
-    val totalFiles = patchesStats.fileCount + logsStats.fileCount + tempStats.fileCount + avatarsStats.fileCount
+    val totalBytes = patchesStats.bytes + logsStats.bytes + tempStats.bytes + avatarsStats.bytes + appIconsStats.bytes
+    val totalFiles = patchesStats.fileCount + logsStats.fileCount + tempStats.fileCount + avatarsStats.fileCount +
+        appIconsStats.fileCount
     val alpha = if (enabled) 1f else 0.5f
 
     val patchesTitle = stringResource(Res.string.settings_cache_category_patches)
     val logsTitle = stringResource(Res.string.settings_cache_category_logs)
     val tempTitle = stringResource(Res.string.settings_cache_category_temp)
     val avatarsTitle = stringResource(Res.string.settings_cache_category_avatars)
+    val appIconsTitle = stringResource(Res.string.settings_cache_category_app_icons)
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         SectionLabel(stringResource(Res.string.settings_section_storage), icon = icon)
@@ -191,6 +197,18 @@ internal fun StorageSection(
             isClearFailed = failedCategory == avatarsTitle,
             onClearClick = {
                 categoryConfirm = CategoryConfirm(CategoryType.AVATARS, avatarsTitle)
+            }
+        )
+
+        CacheRow(
+            icon = MorpheIcons.Image,
+            title = appIconsTitle,
+            stats = appIconsStats,
+            enabled = enabled,
+            isCleared = clearedCategory == appIconsTitle,
+            isClearFailed = failedCategory == appIconsTitle,
+            onClearClick = {
+                categoryConfirm = CategoryConfirm(CategoryType.APP_ICONS, appIconsTitle)
             }
         )
 
@@ -302,6 +320,7 @@ internal fun StorageSection(
             CategoryType.LOGS -> Res.string.settings_cache_confirm_logs_title to Res.string.settings_cache_confirm_logs_message
             CategoryType.TEMP -> Res.string.settings_cache_confirm_temp_title to Res.string.settings_cache_confirm_temp_message
             CategoryType.AVATARS -> Res.string.settings_cache_confirm_avatars_title to Res.string.settings_cache_confirm_avatars_message
+            CategoryType.APP_ICONS -> Res.string.settings_cache_confirm_app_icons_title to Res.string.settings_cache_confirm_app_icons_message
         }
         MorpheAlertDialog(
             onDismiss = { categoryConfirm = null },
@@ -338,6 +357,11 @@ internal fun StorageSection(
                                         CategoryType.AVATARS -> {
                                             val r = CacheManager.clearDirectoryContents("Avatars", MorpheData.avatarsDir)
                                             AvatarLoader.clearMemoryCache()
+                                            r
+                                        }
+                                        CategoryType.APP_ICONS -> {
+                                            val r = CacheManager.clearDirectoryContents("App icons", MorpheData.appIconsDir)
+                                            AppIconLoader.clearMemoryCache()
                                             r
                                         }
                                     }

@@ -106,6 +106,11 @@ open class ConfigRepository {
         saveConfig(current.copy(useSharpCorners = enabled))
     }
 
+    suspend fun setShowAppIcons(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(showAppIcons = enabled))
+    }
+
     suspend fun setHomeAppSortMode(mode: String) {
         val current = loadConfig()
         saveConfig(current.copy(homeAppSortMode = mode))

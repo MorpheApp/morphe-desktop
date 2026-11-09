@@ -1122,6 +1122,48 @@ class AdbManager {
         }
     }
 
+    /** Lists the installed APK paths of [packageName] on [deviceId], base APK first. Empty if not installed. */
+    suspend fun getApkPaths(deviceId: String, packageName: String): List<String> {
+        val output = shellOutput(deviceId, "pm path ${shellQuote(packageName)}") ?: return emptyList()
+        return output.decodeToString().lines()
+            .map { it.trim().removePrefix("package:") }
+            .filter { it.endsWith(".apk") }
+            .sortedByDescending { it.endsWith("/base.apk") }
+    }
+
+    /** Reads one file out of the APK at [apkPath] using the device's `unzip` (Android 9+). Null if that fails. */
+    suspend fun readApkEntry(deviceId: String, apkPath: String, entryName: String): ByteArray? =
+        shellOutput(deviceId, "unzip -p ${shellQuote(apkPath)} ${shellQuote(entryName)}")
+
+    /** Pulls [remotePath] from [deviceId] into [localFile]. */
+    suspend fun pullFile(deviceId: String, remotePath: String, localFile: File): Boolean = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext false
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "pull", remotePath, localFile.absolutePath)
+                .redirectErrorStream(true).start()
+            process.inputStream.readBytes() // drain so the child exits cleanly
+            process.waitFor() == 0 && localFile.isFile
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /** Runs [command] in the device shell and returns its raw output, or null if it failed. */
+    private suspend fun shellOutput(deviceId: String, command: String): ByteArray? = withContext(Dispatchers.IO) {
+        val adb = findAdb() ?: return@withContext null
+        try {
+            val process = ProcessBuilder(adb, "-s", deviceId, "shell", command)
+                .redirectError(ProcessBuilder.Redirect.DISCARD).start()
+            val output = process.inputStream.readBytes()
+            if (process.waitFor() == 0) output else null
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    /** Quotes [value] as a single literal argument for the device shell. */
+    private fun shellQuote(value: String): String = "'" + value.replace("'", "'\\''") + "'"
+
     /** Parses `adb devices -l` output into [AdbDevice] entries. */
     internal fun parseDeviceList(output: String, adbPath: String?): List<AdbDevice> {
         return output.lines()

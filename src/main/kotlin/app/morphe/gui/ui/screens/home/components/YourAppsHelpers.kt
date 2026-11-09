@@ -7,14 +7,21 @@ package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.AppIconSource
+import app.morphe.gui.util.AppIconState
+import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
+import app.morphe.gui.util.rememberAppIcon
 import app.morphe.morphe_desktop.generated.resources.*
+import java.io.File
 import org.jetbrains.compose.resources.stringResource
 
 /** Returns version guidance for a patched app, or null if currently supported. */
@@ -22,6 +29,19 @@ import org.jetbrains.compose.resources.stringResource
 internal fun appAdvice(u: RecallUpdateInfo): Pair<String, Boolean>? {
     if (u.appUsedSupported) return null
     return stringResource(Res.string.home_advice_unsupported_by_patches, u.appUsedVersion.removePrefix("v")) to true
+}
+
+/** Resolves the [AppIconState] for a patched app record. */
+@Composable
+internal fun rememberPatchedAppIcon(record: PatchedAppRecord, deviceInfo: DeviceAppInfo?): AppIconState {
+    val deviceId = DeviceMonitor.state.collectAsState().value.selectedDevice?.takeIf { it.isReady }?.id
+    return rememberAppIcon(
+        listOfNotNull(
+            AppIconSource.Apk(File(record.outputApkPath)),
+            AppIconSource.Apk(File(record.inputApkPath)),
+            deviceId?.takeIf { deviceInfo?.installed == true }?.let { AppIconSource.Device(it, record.installedPackageName) },
+        )
+    )
 }
 
 /** Formats the release URL based on host platform conventions. */

@@ -1642,20 +1642,21 @@ java -jar morphe-desktop-*-all.jar utility uninstall -p com.google.android.youtu
 
 <h4 id="utility-clear-cache"><code>utility clear-cache</code></h4>
 
-Delete Morphe's cached data: downloaded patch files, logs, temporary scratch files, and cached avatars. By default it clears all categories and prints a confirmation message.
+Delete Morphe's cached data: downloaded patch files, logs, temporary scratch files, cached avatars, and cached app icons. By default it clears all categories and prints a confirmation message.
 
 ```
 java -jar morphe-desktop-*-all.jar utility clear-cache [flag/s]
 ```
 
 
-| Flag        | Description                                         |
-|-------------|-----------------------------------------------------|
-| `--info`    | Show current cache usage breakdown without clearing |
-| `--patches` | Target only cached patch bundles (`patches/`)       |
-| `--logs`    | Target only log files (`logs/`)                     |
-| `--temp`    | Target only temporary scratch files (`tmp/`)        |
-| `--avatars` | Target only cached remote avatars (`avatars/`)      |
+| Flag          | Description                                         |
+|---------------|-----------------------------------------------------|
+| `--info`      | Show current cache usage breakdown without clearing |
+| `--patches`   | Target only cached patch bundles (`patches/`)       |
+| `--logs`      | Target only log files (`logs/`)                     |
+| `--temp`      | Target only temporary scratch files (`tmp/`)        |
+| `--avatars`   | Target only cached remote avatars (`avatars/`)      |
+| `--app-icons` | Target only cached app icons (`app-icons/`)         |
 
 ##### `--info`:
 

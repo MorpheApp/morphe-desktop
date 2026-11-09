@@ -51,8 +51,14 @@ internal object ClearCacheCommand : Callable<Int> {
     )
     private var avatarsOnly: Boolean = false
 
+    @Option(
+        names = ["--app-icons"],
+        description = ["Target only cached app icons."],
+    )
+    private var appIconsOnly: Boolean = false
+
     override fun call(): Int {
-        val anyCategorySelected = patchesOnly || logsOnly || tempOnly || avatarsOnly
+        val anyCategorySelected = patchesOnly || logsOnly || tempOnly || avatarsOnly || appIconsOnly
 
         if (info) {
             val categories = buildList {
@@ -60,6 +66,7 @@ internal object ClearCacheCommand : Callable<Int> {
                 if (!anyCategorySelected || logsOnly) add("Logs" to MorpheData.logsDir)
                 if (!anyCategorySelected || tempOnly) add("Temp" to WorkspaceManager.scratchDir)
                 if (!anyCategorySelected || avatarsOnly) add("Avatars" to MorpheData.avatarsDir)
+                if (!anyCategorySelected || appIconsOnly) add("App icons" to MorpheData.appIconsDir)
             }
             var totalBytes = 0L
             var totalFiles = 0
@@ -72,11 +79,11 @@ internal object ClearCacheCommand : Callable<Int> {
                         totalBytes += stats.bytes
                         totalFiles += stats.fileCount
                         appendLine(
-                            "  ${label.padEnd(8)} ${humanReadable(stats.bytes).padStart(9)}" +
+                            "  ${label.padEnd(9)} ${humanReadable(stats.bytes).padStart(9)}" +
                                 "  (${stats.fileCount} file${if (stats.fileCount == 1) "" else "s"})"
                         )
                     }
-                    append("  ${"Total".padEnd(8)} ${humanReadable(totalBytes).padStart(9)}  ($totalFiles file${if (totalFiles == 1) "" else "s"})")
+                    append("  ${"Total".padEnd(9)} ${humanReadable(totalBytes).padStart(9)}  ($totalFiles file${if (totalFiles == 1) "" else "s"})")
                 }
             )
             return EXIT_CODE_SUCCESS
@@ -88,6 +95,7 @@ internal object ClearCacheCommand : Callable<Int> {
                 if (logsOnly) add(CacheManager.clearDirectoryContents("Logs", MorpheData.logsDir))
                 if (tempOnly) add(WorkspaceManager.clearScratch())
                 if (avatarsOnly) add(CacheManager.clearDirectoryContents("Avatars", MorpheData.avatarsDir))
+                if (appIconsOnly) add(CacheManager.clearDirectoryContents("App icons", MorpheData.appIconsDir))
             }
             CacheManager.ClearResult(results)
         } else {

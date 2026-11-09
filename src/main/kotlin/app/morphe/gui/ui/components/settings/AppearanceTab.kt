@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.LocalBackgroundType
 import app.morphe.gui.LocalEnableParallax
+import app.morphe.gui.LocalShowAppIcons
 import app.morphe.gui.LocalSharpCorners
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
@@ -253,13 +254,13 @@ internal fun AppearanceTab(
         }
     }
 
+    SettingsDivider(borderColor)
+
+    SectionLabel(stringResource(Res.string.settings_section_app_cards), icon = MorpheIcons.Gradient)
+    Spacer(Modifier.height(8.dp))
+
     AnimatedVisibility(visible = currentThemeStyle != ThemeStyle.MONOCHROME) {
         Column {
-            SettingsDivider(borderColor)
-
-            SectionLabel(stringResource(Res.string.settings_section_app_cards), icon = MorpheIcons.Gradient)
-            Spacer(Modifier.height(8.dp))
-
             val cardFills = LocalCardFills.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -311,8 +312,22 @@ internal fun AppearanceTab(
                     )
                 }
             }
+
+            Spacer(Modifier.height(12.dp))
         }
     }
+
+    val showAppIconsState = LocalShowAppIcons.current
+    SettingToggleRow(
+        label = stringResource(Res.string.settings_toggle_app_icons_label),
+        description = stringResource(Res.string.settings_toggle_app_icons_desc),
+        checked = showAppIconsState.value,
+        onCheckedChange = { enabled ->
+            showAppIconsState.value = enabled
+            scope.launch { configRepo.setShowAppIcons(enabled) }
+        },
+        icon = MorpheIcons.Image
+    )
 
     SettingsDivider(borderColor)
 
