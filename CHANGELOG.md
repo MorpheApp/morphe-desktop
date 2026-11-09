@@ -1,3 +1,10 @@
+# [2.2.0-dev.8](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.7...v2.2.0-dev.8) (2026-11-09)
+
+
+### Features
+
+* Show app icons on application cards ([#428](https://github.com/MorpheApp/morphe-desktop/issues/428)) ([31df643](https://github.com/MorpheApp/morphe-desktop/commit/31df643b0b6123d0b8859c91ea05a5e50755242d))
+
 # [2.2.0-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.6...v2.2.0-dev.7) (2026-11-09)
 
 
