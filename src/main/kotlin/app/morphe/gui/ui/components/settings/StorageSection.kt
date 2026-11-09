@@ -201,7 +201,7 @@ internal fun StorageSection(
         )
 
         CacheRow(
-            icon = MorpheIcons.Apps,
+            icon = MorpheIcons.Image,
             title = appIconsTitle,
             stats = appIconsStats,
             enabled = enabled,
