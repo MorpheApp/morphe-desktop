@@ -20,6 +20,41 @@ import kotlinx.serialization.json.JsonPrimitive
 
 class PatchOptionsFileTest {
     @Test
+    fun `snapshot updates match bundle metadata without reopening source files`() {
+        val directory = kotlin.io.path.createTempDirectory().toFile()
+        try {
+            val file = directory.resolve("options.json")
+            val first = PatchBundle(
+                meta = PatchBundleMeta(source = "first.mpp", sha256 = "first-hash"),
+                patches = mapOf("Theme" to PatchEntry(false, mapOf("color" to JsonPrimitive("dark")))),
+            )
+            val second = PatchBundle(
+                meta = PatchBundleMeta(source = "second.mpp", sha256 = "second-hash"),
+                patches = mapOf("Other" to PatchEntry(true)),
+            )
+            writePatchBundles(file, listOf(first, second))
+            val snapshot = first.copy(
+                meta = first.meta.copy(sha256 = "updated-hash"),
+                patches = mapOf(
+                    "Theme" to PatchEntry(true, mapOf("color" to JsonPrimitive("light"))),
+                    "Added" to PatchEntry(true),
+                ),
+            )
+
+            updateOptionsFileFromSnapshots(file, listOf(snapshot))
+
+            val updated = readPatchBundles(file)
+            assertEquals(2, updated.size)
+            assertEquals("updated-hash", updated.first().meta.sha256)
+            assertEquals(first.patches["Theme"], updated.first().patches["Theme"])
+            assertEquals(PatchEntry(true), updated.first().patches["Added"])
+            assertEquals(second, updated.last())
+        } finally {
+            directory.deleteRecursively()
+        }
+    }
+
+    @Test
     fun `findMatchingBundle returns null for empty list`(){
         val result = emptyList<PatchBundle>().findMatchingBundle(emptySet())
         assertNull(result)
