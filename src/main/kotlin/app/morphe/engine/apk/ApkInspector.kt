@@ -165,7 +165,7 @@ object ApkInspector {
         }
     }
 
-    private fun findBaseApkEntry(zip: ZipFile): ZipEntry? {
+    internal fun findBaseApkEntry(zip: ZipFile): ZipEntry? {
         // 1. APKM / standard bundle convention
         zip.getEntry("base.apk")?.let { return it }
 

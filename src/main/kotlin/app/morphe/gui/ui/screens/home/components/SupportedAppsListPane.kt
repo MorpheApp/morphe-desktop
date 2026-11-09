@@ -33,13 +33,18 @@ import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.SlimSearchField
+import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.AppIconSource
+import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.rememberAppIcon
 import app.morphe.gui.ui.components.MorpheDropdown
 import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.morphe_desktop.generated.resources.*
+import java.io.File
 import org.jetbrains.compose.resources.stringResource
 
 /** Pane displaying a searchable, sortable list of supported applications. */
@@ -50,6 +55,7 @@ internal fun SupportedAppsListPane(
     patchedRecords: List<PatchedAppRecord> = emptyList(),
     deviceAppInfo: Map<String, DeviceAppInfo> = emptyMap(),
     updateInfoByPackage: Map<String, RecallUpdateInfo> = emptyMap(),
+    selectedApk: ApkInfo? = null,
     onShowDetail: (PatchedAppRecord) -> Unit = {},
     filter: AppListFilter = AppListFilter.ALL,
     onFilterChange: (AppListFilter) -> Unit = {},
@@ -79,6 +85,10 @@ internal fun SupportedAppsListPane(
     val patchedAtByPackage = remember(patchedRecords) {
         patchedRecords.associate { it.packageName to it.patchedAt }
     }
+    val inputApkByPackage = remember(patchedRecords) {
+        patchedRecords.associate { it.packageName to File(it.inputApkPath) }
+    }
+    val deviceId = DeviceMonitor.state.collectAsState().value.selectedDevice?.takeIf { it.isReady }?.id
     val order = remember(sortMode) { sortMode.comparator() }
     val filtered = remember(matching, order, patchedStates, installedPackages, patchedAtByPackage) {
         matching.sortedWith(
@@ -253,6 +263,14 @@ internal fun SupportedAppsListPane(
                                 patchSourceNames = sourceNamesByPackage[app.packageName] ?: emptyList(),
                                 patchedState = patchedStates[app.packageName] ?: PatchedAppState.NEVER_PATCHED,
                                 deviceInfo = deviceAppInfo[app.packageName],
+                                icon = rememberAppIcon(
+                                    listOfNotNull(
+                                        selectedApk?.takeIf { it.packageName == app.packageName }?.let { AppIconSource.Apk(File(it.filePath)) },
+                                        inputApkByPackage[app.packageName]?.let { AppIconSource.Apk(it) },
+                                        deviceId?.let { AppIconSource.Device(it, app.packageName) },
+                                    ),
+                                    packageName = app.packageName,
+                                ),
                             )
                         }
                     }

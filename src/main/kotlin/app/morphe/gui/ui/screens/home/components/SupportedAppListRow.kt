@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.util.AppIconState
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.ui.components.AppCard
@@ -51,6 +52,7 @@ fun SupportedAppListRow(
     patchedState: PatchedAppState = PatchedAppState.NEVER_PATCHED,
     /** Device installation status and version information, if available. */
     deviceInfo: DeviceAppInfo? = null,
+    icon: AppIconState = AppIconState(),
     modifier: Modifier = Modifier,
 ) {
     val cardColors = appCardColors()
@@ -80,6 +82,7 @@ fun SupportedAppListRow(
                 name = app.displayName,
                 size = MorpheAvatarSize.ROW,
                 onGradient = !cardColors.isMonochrome,
+                icon = icon,
             )
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {

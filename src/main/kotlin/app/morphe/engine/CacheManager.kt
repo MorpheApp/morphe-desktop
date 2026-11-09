@@ -9,7 +9,7 @@ import app.morphe.engine.util.deleteRecursivelyInParallel
 import app.morphe.engine.workspace.WorkspaceManager
 import java.io.File
 
-/** Manages cache sizing and deletion across patches, logs, avatars, and workspace scratch. */
+/** Manages cache sizing and deletion across patches, logs, avatars, app icons, and workspace scratch. */
 object CacheManager {
 
     /** Summary of files and byte size for a single directory. */
@@ -51,13 +51,14 @@ object CacheManager {
         DirStats(0L, 0)
     }
 
-    /** Deletes cached patches, logs, temporary scratch files, and avatars. */
+    /** Deletes cached patches, logs, temporary scratch files, avatars, and app icons. */
     fun clearCaches(): ClearResult = ClearResult(
         listOf(
             clearDirectoryContents("Patches", MorpheData.patchesDir),
             clearDirectoryContents("Logs", MorpheData.logsDir),
             WorkspaceManager.clearScratch(),
             clearDirectoryContents("Avatars", MorpheData.avatarsDir),
+            clearDirectoryContents("App icons", MorpheData.appIconsDir),
         ),
     )
 

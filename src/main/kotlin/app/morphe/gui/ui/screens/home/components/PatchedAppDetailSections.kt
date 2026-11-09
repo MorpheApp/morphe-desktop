@@ -90,6 +90,7 @@ internal fun IdentityBand(
                 name = record.displayName,
                 size = MorpheAvatarSize.ROW,
                 onGradient = false,
+                icon = rememberPatchedAppIcon(record, deviceInfo),
             )
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
