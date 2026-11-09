@@ -1068,14 +1068,14 @@ class AdbManager {
             AdbException("ADB binary not found", AdbErrorCode.ADB_NOT_FOUND)
         )
         try {
-            val process = ProcessBuilder(adb, "-s", deviceId, "shell", "pm", "list", "packages")
+            val process = ProcessBuilder(adb, "-s", deviceId, "shell", "pm", "list", "packages", "--user", "0")
                 .redirectErrorStream(true).start()
             val out = process.inputStream.bufferedReader().readText()
             process.waitFor()
             if (process.exitValue() != 0) {
                 return@withContext Result.failure(
                     AdbException(
-                        "Failed to list packages: exit code ${process.exitValue()}",
+                        "Failed to list packages: exit code ${process.exitValue()}: ${out.trim().take(300)}",
                         AdbErrorCode.PM_LIST_PACKAGES_FAILED,
                         listOf("exit code ${process.exitValue()}"),
                     )

@@ -1169,7 +1169,9 @@ class HomeViewModel(
             }
             val records = patchedRecordsByPackage.values
             if (records.isEmpty()) return@launch
-            val installed = adbManager.listInstalledPackages(device.id).getOrNull() ?: return@launch
+            val installed = adbManager.listInstalledPackages(device.id)
+                .onFailure { Logger.warn("Could not query installed packages on ${device.id}: ${it.message}") }
+                .getOrNull() ?: return@launch
             val ourSignatureIds = morpheSignatureIds()
             // Key by original package, querying by installed package to handle renames.
             val info = records.associate { record ->
