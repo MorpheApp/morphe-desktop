@@ -1,3 +1,10 @@
+# [2.2.0-dev.10](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.9...v2.2.0-dev.10) (2026-11-09)
+
+
+### Bug Fixes
+
+* Update to latest Patcher and ARSCLib ([2800436](https://github.com/MorpheApp/morphe-desktop/commit/2800436d1d2ca249c8a3a9a3988bc700014dc0d7))
+
 # [2.2.0-dev.9](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.8...v2.2.0-dev.9) (2026-11-09)
 
 
