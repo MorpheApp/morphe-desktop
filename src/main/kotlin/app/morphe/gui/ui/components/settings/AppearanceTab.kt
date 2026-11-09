@@ -25,6 +25,7 @@ import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.LocalBackgroundType
 import app.morphe.gui.LocalEnableParallax
 import app.morphe.gui.LocalShowAppIcons
+import app.morphe.gui.LocalShowMoreAppsCard
 import app.morphe.gui.LocalSharpCorners
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
@@ -327,6 +328,20 @@ internal fun AppearanceTab(
             scope.launch { configRepo.setShowAppIcons(enabled) }
         },
         icon = MorpheIcons.Image
+    )
+
+    Spacer(Modifier.height(10.dp))
+
+    val showMoreAppsCardState = LocalShowMoreAppsCard.current
+    SettingToggleRow(
+        label = stringResource(Res.string.settings_appearance_more_apps_card),
+        description = stringResource(Res.string.settings_appearance_more_apps_card_description),
+        checked = showMoreAppsCardState.value,
+        onCheckedChange = { enabled ->
+            showMoreAppsCardState.value = enabled
+            scope.launch { configRepo.setShowMoreAppsCard(enabled) }
+        },
+        icon = MorpheIcons.Apps
     )
 
     SettingsDivider(borderColor)

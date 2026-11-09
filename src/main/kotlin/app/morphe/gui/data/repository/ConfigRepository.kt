@@ -111,6 +111,16 @@ open class ConfigRepository {
         saveConfig(current.copy(showAppIcons = enabled))
     }
 
+    suspend fun setShowMoreAppsCard(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(showMoreAppsCard = enabled))
+    }
+
+    suspend fun setCommunityNoticeAcknowledged(acknowledged: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(communityNoticeAcknowledged = acknowledged))
+    }
+
     suspend fun setHomeAppSortMode(mode: String) {
         val current = loadConfig()
         saveConfig(current.copy(homeAppSortMode = mode))

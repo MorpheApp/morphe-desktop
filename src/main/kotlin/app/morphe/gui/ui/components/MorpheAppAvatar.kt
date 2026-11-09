@@ -11,12 +11,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
@@ -42,6 +44,7 @@ fun MorpheAppAvatar(
     accentColor: Color? = accent,
     onGradient: Boolean = false,
     icon: AppIconState = AppIconState(),
+    vectorIcon: ImageVector? = null,
 ) {
     val shapes = MorpheTheme.shapes
     val bitmap = icon.bitmap
@@ -84,6 +87,13 @@ fun MorpheAppAvatar(
                 color = textColor,
                 strokeWidth = 2.dp,
                 modifier = Modifier.size(size.size * 0.45f),
+            )
+        } else if (vectorIcon != null) {
+            Icon(
+                imageVector = vectorIcon,
+                contentDescription = name,
+                tint = textColor,
+                modifier = Modifier.size(size.size * 0.55f),
             )
         } else {
             Text(

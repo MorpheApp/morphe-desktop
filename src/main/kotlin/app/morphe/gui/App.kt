@@ -175,6 +175,10 @@ val LocalShowAppIcons = compositionLocalOf<MutableState<Boolean>> {
     error("No LocalShowAppIcons provided")
 }
 
+val LocalShowMoreAppsCard = compositionLocalOf<MutableState<Boolean>> {
+    error("No LocalShowMoreAppsCard provided")
+}
+
 /** Auto-start ADB preference state. */
 data class AdbPreferenceState(
     val enabled: Boolean,
@@ -235,6 +239,7 @@ private fun appContent(
     var globalCardFill by remember { mutableStateOf<MorpheFill?>(null) }
     val sharpCornersState = remember { mutableStateOf(false) }
     val showAppIconsState = remember { mutableStateOf(true) }
+    val showMoreAppsCardState = remember { mutableStateOf(true) }
     val backgroundSpeedState = remember { mutableFloatStateOf(1f) }
     val patchingCompletedState = remember { mutableStateOf(false) }
 
@@ -254,6 +259,7 @@ private fun appContent(
         globalCardFill = config.globalCardFill
         sharpCornersState.value = config.useSharpCorners
         showAppIconsState.value = config.showAppIcons
+        showMoreAppsCardState.value = config.showMoreAppsCard
 
         appLanguage = config.language
         applyLocale(config.language)
@@ -379,6 +385,7 @@ private fun appContent(
                 LocalCustomAccentColor provides customAccentColorState,
                 LocalSharpCorners provides sharpCornersState,
                 LocalShowAppIcons provides showAppIconsState,
+                LocalShowMoreAppsCard provides showMoreAppsCardState,
                 LocalBackgroundSpeed provides backgroundSpeedState,
                 LocalPatchingCompleted provides patchingCompletedState
             ) {

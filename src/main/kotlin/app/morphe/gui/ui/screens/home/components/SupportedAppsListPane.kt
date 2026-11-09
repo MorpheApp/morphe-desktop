@@ -23,11 +23,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
+import app.morphe.gui.LocalShowMoreAppsCard
+import app.morphe.gui.data.constants.AppConstants
+import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
@@ -45,7 +49,9 @@ import app.morphe.gui.ui.components.MorpheDropdown
 import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 /** Pane displaying a searchable, sortable list of supported applications. */
 @Composable
@@ -71,6 +77,12 @@ internal fun SupportedAppsListPane(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expandedPackage by remember { mutableStateOf<String?>(null) }
+    var showCommunityNoticeDialog by remember { mutableStateOf(false) }
+
+    val configRepo: ConfigRepository = koinInject()
+    val uriHandler = LocalUriHandler.current
+    val coroutineScope = rememberCoroutineScope()
+    val showMoreAppsCard = LocalShowMoreAppsCard.current.value
 
     val matching = remember(searchQuery, supportedApps) {
         if (searchQuery.isBlank()) supportedApps
@@ -273,6 +285,22 @@ internal fun SupportedAppsListPane(
                                 ),
                             )
                         }
+                        if (showMoreAppsCard && searchQuery.isBlank()) {
+                            item(key = "more_apps_card") {
+                                MoreAppsCard(
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            val config = configRepo.loadConfig()
+                                            if (config.communityNoticeAcknowledged) {
+                                                uriHandler.openUri(AppConstants.COMMUNITY_PATCHES_URL)
+                                            } else {
+                                                showCommunityNoticeDialog = true
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        }
                     }
                     Box(
                         modifier = Modifier.matchParentSize(),
@@ -288,6 +316,19 @@ internal fun SupportedAppsListPane(
             }
         }
       }
+    }
+
+    if (showCommunityNoticeDialog) {
+        CommunityPatchesNoticeDialog(
+            onDismiss = { showCommunityNoticeDialog = false },
+            onConfirm = {
+                showCommunityNoticeDialog = false
+                coroutineScope.launch {
+                    configRepo.setCommunityNoticeAcknowledged(true)
+                    uriHandler.openUri(AppConstants.COMMUNITY_PATCHES_URL)
+                }
+            }
+        )
     }
 }
 

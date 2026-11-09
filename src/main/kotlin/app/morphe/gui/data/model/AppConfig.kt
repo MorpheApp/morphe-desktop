@@ -50,6 +50,8 @@ data class AppConfig(
     val globalCardFill: MorpheFill? = null,
     val useSharpCorners: Boolean = false,
     val showAppIcons: Boolean = true,
+    val showMoreAppsCard: Boolean = true,
+    val communityNoticeAcknowledged: Boolean = false,
     val homeAppSortMode: String = "RECOMMENDED",
     val preferredPatchChannel: String = "STABLE",
     val useSimpleMode: Boolean = true,

@@ -76,6 +76,7 @@
     <string name="error_patching_unknown">Patching failed for an unknown reason</string>
     <string name="error_log_label">Error log</string>
     <string name="back">Back</string>
+    <string name="open">Open</string>
     <string name="open_folder">Open folder</string>
     <string name="temporary_files_label">Temporary files</string>
     <string name="size_can_be_freed_label">%1$s can be freed</string>
@@ -703,6 +704,8 @@
     <string name="settings_app_cards_color_all_desc">Cards you have customized individually keep their own color</string>
     <string name="settings_toggle_app_icons_label">App icons</string>
     <string name="settings_toggle_app_icons_desc">Shows each app's icon, extracted from local APKs or the connected device</string>
+    <string name="settings_appearance_more_apps_card">More apps card</string>
+    <string name="settings_appearance_more_apps_card_description">Shows a card under the apps leading to community patches</string>
     <string name="settings_section_background_animation">Background animation</string>
     <string name="settings_background_circles">Circles</string>
     <string name="settings_background_rings">Rings</string>
@@ -885,4 +888,10 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Sources</string>
     <string name="nav_apps">Apps</string>
+
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">More apps</string>
+    <string name="home_more_apps_subtitle">Community patches</string>
+    <string name="community_patches_notice_title">Third-party patch sources</string>
+    <string name="community_patches_notice_message">Community patch sources are made and maintained by their own authors. Morphe does not review or verify third-party patches, and is not responsible for their content or for what they do on your device.</string>
 </resources>
