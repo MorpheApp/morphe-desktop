@@ -1,3 +1,10 @@
+# [2.2.0-dev.12](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.11...v2.2.0-dev.12) (2026-11-10)
+
+
+### Bug Fixes
+
+* Show device status on phones with Secure Folder ([#429](https://github.com/MorpheApp/morphe-desktop/issues/429)) ([36dec7a](https://github.com/MorpheApp/morphe-desktop/commit/36dec7affdb67394e40cef5a7e95e434e77fa679))
+
 # [2.2.0-dev.11](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.10...v2.2.0-dev.11) (2026-11-09)
 
 
