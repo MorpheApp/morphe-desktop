@@ -1,3 +1,10 @@
+# [2.2.0-dev.14](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.13...v2.2.0-dev.14) (2026-11-13)
+
+
+### Bug Fixes
+
+* Send the build code and form factor to apk web-search ([6084ecf](https://github.com/MorpheApp/morphe-desktop/commit/6084ecf763638bec9d2651c22de6c39a5fa2f447))
+
 # [2.2.0-dev.13](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.12...v2.2.0-dev.13) (2026-11-13)
 
 
