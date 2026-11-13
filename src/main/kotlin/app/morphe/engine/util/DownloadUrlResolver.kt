@@ -7,6 +7,7 @@ package app.morphe.engine.util
 
 import app.morphe.engine.MorpheConstants.MORPHE_API_URL
 import app.morphe.engine.MorpheConstants.MORPHE_USER_AGENT
+import app.morphe.patcher.patch.FormFactor
 import io.ktor.http.encodeURLParameter
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
@@ -27,9 +28,22 @@ object DownloadUrlResolver {
     /** Installed version of each source of [PATCH_SOURCE_HEADER], in the same order. */
     const val PATCH_SOURCE_VERSION_HEADER = "X-Morphe-Patch-Source-Version"
 
-    fun getWebSearchDownloadLink(packageName: String, version: String, architecture: String? = null): String {
-        val architectureString = architecture ?: "all"
-        val query = "$packageName~$version~$architectureString".encodeURLParameter()
+    /**
+     * @param buildCode The version code the patches need for [architecture], or null for any build.
+     * @param formFactor Device form factor of the app. Left out for a phone, which is what the API
+     *   assumes without one.
+     */
+    fun getWebSearchDownloadLink(
+        packageName: String,
+        version: String,
+        architecture: String? = null,
+        buildCode: Int? = null,
+        formFactor: FormFactor? = null,
+    ): String {
+        val parts = mutableListOf(packageName, version, architecture ?: "all")
+        buildCode?.let { parts += it.toString() }
+        formFactor?.takeIf { it != FormFactor.MOBILE }?.let { parts += it.name.lowercase() }
+        val query = parts.joinToString("~").encodeURLParameter()
         return "$MORPHE_API_URL/v2/web-search/$query"
     }
 
