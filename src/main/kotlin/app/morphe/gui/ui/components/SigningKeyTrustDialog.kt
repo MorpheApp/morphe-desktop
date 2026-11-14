@@ -53,16 +53,11 @@ fun SigningKeyTrustDialog(
 
     val isUnsigned = actualFingerprint == null
 
-    MorpheAlertDialog(
+    MorpheDialog(
+        maxWidth = MorpheDialogMaxWidth,
         onDismiss = onDismiss,
-        title = {
-            Text(
-                text = stringResource(Res.string.sources_signing_key_trust_title),
-                style = MorpheTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        },
-        text = {
+        title = stringResource(Res.string.sources_signing_key_trust_title),
+        content = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -190,15 +185,13 @@ fun SigningKeyTrustDialog(
                 }
             }
         },
-        dismissButton = {
+        actions = {
             MorpheButton(
                 label = stringResource(Res.string.cancel),
                 variant = MorpheButtonVariant.GHOST,
                 size = MorpheButtonSize.DEFAULT,
                 onClick = onDismiss,
             )
-        },
-        confirmButton = {
             MorpheButton(
                 label = stringResource(Res.string.trust),
                 variant = MorpheButtonVariant.PRIMARY,

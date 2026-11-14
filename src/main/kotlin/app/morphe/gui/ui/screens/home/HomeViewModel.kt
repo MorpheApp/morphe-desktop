@@ -37,6 +37,7 @@ import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.SourceVersionPref
+import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -550,9 +551,13 @@ class HomeViewModel(
                     return@launch
                 }
 
-                // Load per-source version preferences.
-                val prefs = configRepository.getSourceVersionPrefs()
-                lastLoadedVersionsBySource = prefs
+                val saved = configRepository.getSourceVersionPrefs()
+                lastLoadedVersionsBySource = saved
+                val prefs = if (patchSourceManager.activeMode.value == ActiveMode.SIMPLE) {
+                    saved.followingChannels(enabled.map { it.first })
+                } else {
+                    saved
+                }
                 val result = EnabledSourcesLoader.loadAll(
                     enabled = enabled,
                     prefsBySource = prefs,
@@ -1210,6 +1215,28 @@ class HomeViewModel(
         loadPatchesAndSupportedApps(forceRefresh = forceRefresh)
     }
 
+    fun setSourceChannel(source: PatchSource, preRelease: Boolean) {
+        viewModelScope.launch {
+            followChannel(source.id, preRelease)
+            if (source.usePreRelease != preRelease) patchSourceManager.updateSource(source.copy(usePreRelease = preRelease))
+            else loadPatchesAndSupportedApps()
+        }
+    }
+
+    fun followLatest(source: PatchSource) {
+        viewModelScope.launch {
+            followChannel(source.id, source.usePreRelease)
+            loadPatchesAndSupportedApps()
+        }
+    }
+
+    private suspend fun followChannel(sourceId: String, preRelease: Boolean) {
+        configRepository.setSourceVersionPref(
+            sourceId,
+            SourceVersionPref(mode = if (preRelease) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE),
+        )
+    }
+
     /** Reloads patches if version preferences changed while on another screen. */
     fun refreshPatchesIfNeeded() {
         viewModelScope.launch {
@@ -1638,3 +1665,11 @@ private data class AppCatalogData(
     val patchedRecords: List<PatchedAppRecord>,
     val updateInfoByPackage: Map<String, RecallUpdateInfo>,
 )
+
+private fun Map<String, SourceVersionPref>.followingChannels(sources: List<PatchSource>): Map<String, SourceVersionPref> {
+    val channels = sources.associate { it.id to it.usePreRelease }
+    return mapValues { (id, pref) ->
+        if (pref.mode != FollowMode.PINNED) pref
+        else SourceVersionPref(mode = if (channels[id] == true) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE)
+    }
+}

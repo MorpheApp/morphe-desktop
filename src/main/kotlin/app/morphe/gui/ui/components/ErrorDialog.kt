@@ -5,21 +5,14 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -84,33 +77,29 @@ fun ErrorDialog(
         ErrorType.GENERIC -> MorpheIcons.Warning
     }
 
-    MorpheDialogCard(onDismiss = onDismiss, title = title) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.error,
-            modifier = Modifier.size(28.dp),
-        )
-        MorpheDialogText(message)
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
+    MorpheDialog(
+        onDismiss = onDismiss,
+        title = title,
+        icon = icon,
+        accent = MorpheTheme.colors.danger,
+        actions = {
             MorpheButton(
                 label = dismissText,
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.OUTLINED,
+                variant = if (onRetry != null) MorpheButtonVariant.GHOST else MorpheButtonVariant.OUTLINED,
+                size = MorpheButtonSize.COMPACT,
                 onClick = onDismiss,
             )
             if (onRetry != null) {
                 MorpheButton(
                     label = retryText,
-                    modifier = Modifier.weight(1f),
                     variant = MorpheButtonVariant.DANGER,
+                    size = MorpheButtonSize.COMPACT,
                     onClick = onRetry,
                 )
             }
-        }
+        },
+    ) {
+        MorpheDialogText(message)
     }
 }
 
