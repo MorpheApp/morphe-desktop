@@ -1,3 +1,10 @@
+# [2.2.0-dev.15](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.14...v2.2.0-dev.15) (2026-11-14)
+
+
+### Bug Fixes
+
+* Update Patcher dependency ([9116676](https://github.com/MorpheApp/morphe-desktop/commit/9116676d54d308d69f4c1081e27ca720e347ecfe))
+
 # [2.2.0-dev.14](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.13...v2.2.0-dev.14) (2026-11-13)
 
 
