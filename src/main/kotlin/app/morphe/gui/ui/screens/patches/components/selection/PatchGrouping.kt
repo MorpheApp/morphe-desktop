@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.patches.components.selection
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,6 +27,7 @@ import app.morphe.gui.ui.components.MorpheChevron
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -167,8 +167,7 @@ fun PatchGroupHeader(
                 if (isHovered && onToggle != null) primaryColor.copy(alpha = 0.08f)
                 else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
             )
-            .border(
-                1.dp,
+            .outlineBorder(
                 if (isHovered && onToggle != null) primaryColor.copy(alpha = 0.4f)
                 else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
                 MorpheTheme.shapes.small

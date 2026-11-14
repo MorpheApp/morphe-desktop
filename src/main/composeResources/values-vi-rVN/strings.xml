@@ -2,7 +2,7 @@
 <resources>
     <!-- Common Components -->
     <string name="morphe_logo_content_description">Logo Morphe</string>
-    <string name="dismiss">Kệ</string>
+    <string name="dismiss">Đóng</string>
     <string name="ok">Đồng ý</string>
     <string name="retry">Thử lại</string>
     <string name="clear">Dọn dẹp</string>
@@ -74,7 +74,8 @@
     <string name="view_full_logs_button">Xem toàn bộ nhật ký</string>
     <string name="error_patching_unknown">Vá thất bại vì lý do không xác định</string>
     <string name="error_log_label">Nhật ký lỗi</string>
-    <string name="back">Trước</string>
+    <string name="back">Quay lại</string>
+    <string name="open">Mở</string>
     <string name="open_folder">Mở thư mục</string>
     <string name="temporary_files_label">Tệp tạm thời</string>
     <string name="size_can_be_freed_label">Có thể giải phóng %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Cài đặt thất bại: %1$s</string>
     <string name="adb_error_not_found">Không tìm thấy ADB. Vui lòng cài đặt Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Thiết bị đã kết nối nhưng chưa được ủy quyền. Vui lòng chấp nhận lời nhắc gỡ lỗi USB trên thiết bị của bạn</string>
-    <string name="adb_error_no_devices">Không có thiết bị nào được kết nối. Vui lòng kết nối thiết bị Android của bạn với USB debugging được bật</string>
+    <string name="adb_error_no_devices">Không có thiết bị nào được kết nối. Vui lòng kết nối thiết bị Android của bạn với tính năng gỡ lỗi USB hoặc Wi-Fi đã được bật</string>
     <string name="adb_error_device_not_found">Không tìm thấy thiết bị %1$s</string>
     <string name="adb_error_multiple_devices">Nhiều thiết bị đã kết nối. Vui lòng chọn một thiết bị</string>
     <string name="adb_error_apk_not_found">Không tìm thấy tệp APK: %1$s</string>
@@ -146,16 +147,16 @@
     <string name="adb_status_enabling_links">Đang bật lại các liên kết trong %1$s…</string>
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
     <string name="version_status_checksum_mismatch">Tổng kiểm tra không khớp</string>
-    <string name="version_status_checksum_corrupted">Tệp có thế bị hőng, hãy tải lạ i từ APKMirror</string>
-    <string name="version_status_checksum_failed">Xác minh tổng kiểm tra thấ t bạ i</string>
-    <string name="version_status_checksum_matches">Tổng kiểm tra khớp vớ i APKMirror</string>
-    <string name="version_status_newer_stable_available">Có bản ổn định mớ i hơn v%1$s</string>
+    <string name="version_status_checksum_corrupted">Tệp có thể bị hỏng, hãy tải lại từ APKMirror</string>
+    <string name="version_status_checksum_failed">Xác minh tổng kiểm tra thất bại</string>
+    <string name="version_status_checksum_matches">Tổng kiểm tra khớp với APKMirror</string>
+    <string name="version_status_newer_stable_available">Có bản ổn định mới hơn v%1$s</string>
     <string name="version_status_newer_stable_available_fallback">Có phiên bản ổn định mớ i hơn</string>
-    <string name="version_status_experimental_detail">Được hỗ trợ, nhưng có thế không hoạ t độ ng đúng</string>
-    <string name="version_status_unsupported_detail">Không được hỗ trợ chính thức, c ác bản vá rấ t có thế sẽ thấ t bạ i</string>
+    <string name="version_status_experimental_detail">Được hỗ trợ, nhưng có thể không hoạt động đúng</string>
+    <string name="version_status_unsupported_detail">Không được hỗ trợ chính thức, các bản vá rất có thể sẽ thất bại</string>
     <string name="version_status_unsupported">Phiên bản không được hỗ trợ</string>
     <string name="version_status_build_unsupported">Bản dựng không được hỗ trợ</string>
-    <string name="version_status_build_unsupported_detail">Phiên bản này được hỗ trợ, nhưng không phả i bản dựng này. Hãy lấy bản dựng mà c ác bản vá nhắm tớ i</string>
+    <string name="version_status_build_unsupported_detail">Phiên bản này được hỗ trợ, nhưng không phải bản dựng này. Hãy lấy bản dựng mà các bản vá nhắm tới</string>
     <string name="version_status_build_unsupported_with_code">Các bản vá yêu cầu bản dựng %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Thông báo phiên bản</string>
@@ -240,7 +241,7 @@
     <string name="home_action_preparing">Đang chuẩn bị…</string>
     <string name="home_action_update">Cập nhật</string>
     <string name="home_action_repatch">Vá lại</string>
-    <string name="home_action_uninstalling">Đang gỡ cài...</string>
+    <string name="home_action_uninstalling">Đang gỡ cài đặt…</string>
     <string name="home_detail_source_apk_label">APK nguồn</string>
     <string name="home_detail_patch_bundle_label">Gói vá</string>
     <string name="home_detail_no_sources_enabled">Chưa bật nguồn nào</string>
@@ -255,15 +256,15 @@
     <string name="home_detail_using_label">Đang sử dụng</string>
     <string name="home_detail_apk_origin_sub">bản APK mà ứng dụng này được vá từ đó</string>
     <string name="home_detail_reading_chosen_bundle">Đang đọc gói đã chọn…</string>
-    <string name="home_detail_bundle_not_downloaded_warning">Các phiên bản bên dướ i là những gì %1$s hỗ trợ. Bạn đã chọn %2$s, phiên bản này chưa được tải, vì vậy không rõ nó hỗ trợ gì</string>
-    <string name="home_detail_bundle_does_not_support_warning">%1$s không hỗ trợ %2$s. Thay vào đó hãy chọn mộ t trong số này</string>
-    <string name="home_detail_versions_what_bundle_supports">Các phiên bản bên dướ i là những gì %1$s hỗ trợ</string>
+    <string name="home_detail_bundle_not_downloaded_warning">Các phiên bản bên dưới là những gì %1$s hỗ trợ. Bạn đã chọn %2$s, phiên bản này chưa được tải, vì vậy không rõ nó hỗ trợ gì</string>
+    <string name="home_detail_bundle_does_not_support_warning">%1$s không hỗ trợ %2$s. Thay vào đó hãy chọn một trong số này</string>
+    <string name="home_detail_versions_what_bundle_supports">Các phiên bản bên dưới là những gì %1$s hỗ trợ</string>
     <string name="home_detail_choose_apk_button">Chọn APK</string>
     <string name="home_detail_select_apk_title">Chọn APK để vá</string>
-    <string name="home_detail_new_source_button">Nguồn mớ i</string>
+    <string name="home_detail_new_source_button">Nguồn mới</string>
     <string name="home_detail_local_mpp_button">Tệp .mpp cục bộ</string>
     <string name="home_detail_select_patch_bundle_title">Chọn gói bản vá</string>
-    <string name="home_detail_latest_available">mớ i nhấ t hiện có</string>
+    <string name="home_detail_latest_available">mới nhất hiện có</string>
     <string name="home_detail_pinned_badge">Đã ghìm</string>
     <string name="home_detail_loading_versions">Đang tải phiên bản…</string>
     <string name="home_detail_no_other_versions">Không còn phiên bản nào khác</string>
@@ -314,12 +315,12 @@
     <string name="patch_selection_title">Chọn bản vá</string>
     <string name="patch_selection_cmd_preview">Xem trước lệnh</string>
     <string name="patch_selection_root_mode_description">Chế độ gắn kết root</string>
-    <string name="patch_selection_lock_unavailable">Không khả dụng cho root mount</string>
+    <string name="patch_selection_lock_unavailable">Không khả dụng cho chế độ gắn kết root</string>
     <string name="patch_selection_continue_on_error_tooltip">Tiếp tục vá ngay cả khi một bản vá thất bại</string>
     <string name="patch_selection_continue_on_error_description">Tiếp tục khi gặp lỗi</string>
-    <string name="patch_selection_no_patches_found">Không tìm thấy bản vá nà o</string>
-    <string name="patch_selection_no_source_patches_for_app">Không có nguồn nà o bạn đã bật có bản vá cho ứng dụng này</string>
-    <string name="patch_selection_no_search_matches">Không có bản vá nà o khớp vớ i tìm kiếm của bạn</string>
+    <string name="patch_selection_no_patches_found">Không tìm thấy bản vá nào</string>
+    <string name="patch_selection_no_source_patches_for_app">Không có nguồn nào bạn đã bật có bản vá cho ứng dụng này</string>
+    <string name="patch_selection_no_search_matches">Không có bản vá nào khớp với tìm kiếm của bạn</string>
     <string name="patch_selection_action_patch">Vá (%1$d)</string>
     <string name="patch_selection_filter_selected">Đã chọn</string>
     <string name="patch_selection_configure_options_description">Cấu hình tùy chọn</string>
@@ -329,7 +330,7 @@
     <string name="patch_selection_icon_ready">Biểu tượng tùy chỉnh đã sẵn sàng</string>
     <string name="patch_selection_icon_none">Chưa đặt biểu tượng tùy chỉnh</string>
     <string name="patch_selection_icon_dialog_delete_title">Xóa biểu tượng tùy chỉnh?</string>
-    <string name="patch_selection_icon_dialog_delete_message">Thao tác này xóa biểu tượng và gỡ dự án đã lưu cùng c ác tệp đã tạo. Không thể hoàn tác</string>
+    <string name="patch_selection_icon_dialog_delete_message">Thao tác này xóa biểu tượng và gỡ dự án đã lưu cùng các tệp đã tạo. Không thể hoàn tác</string>
     <string name="patch_selection_custom_icon_hint">Bạn không cần tự tạo thư mục này! Bấm vào biểu tượng Thiết kế/Chỉnh sửa để tạo nó trong Icon Studio hoặc nhập nó từ Trình quản lý</string>
     <string name="patch_selection_option_enabled">Đang bật</string>
     <string name="patch_selection_option_disabled">Đang tắt</string>
@@ -341,11 +342,11 @@
     <string name="patch_selection_strip_universal_headline">Thư viện phổ quát</string>
     <string name="patch_selection_strip_universal_detail">một thư mục phổ quát duy nhất, không áp dụng tách bỏ</string>
     <string name="patch_selection_strip_keep_all_headline">Không cần tách bỏ</string>
-    <string name="patch_selection_strip_keep_all_detail">danh sách giữ lạ i bao phủ mọ i kiến trúc trong APK này</string>
+    <string name="patch_selection_strip_keep_all_detail">danh sách giữ lại bao phủ mọi kiến trúc trong APK này</string>
     <string name="patch_selection_strip_fallback_headline">Dự phòng, giữ tất cả</string>
     <string name="patch_selection_strip_fallback_detail">không có kiến trúc ưu tiên nào, hãy xem lại cài đặt Tách thư viện</string>
     <string name="patch_selection_strip_will_strip_headline">Đang tách bỏ thư viện gốc</string>
-    <string name="patch_selection_strip_will_strip_detail">chỉ giữ c ác kiến trúc đã liệt kê</string>
+    <string name="patch_selection_strip_will_strip_detail">chỉ giữ các kiến trúc đã liệt kê</string>
     <string name="patch_selection_strip_settings_hint">· Cài đặt → Tách thư viện</string>
     <string name="patch_selection_arch_keep">giữ</string>
     <string name="patch_selection_arch_strip">tách bỏ</string>
@@ -392,7 +393,7 @@
     <string name="patching_status_in_progress">Đang áp dụng các bản vá</string>
     <string name="patching_completed_loading_result">Vá hoàn tất, đang tải kết quả…</string>
     <string name="patching_cancelled_loading_result">Đã hủy vá, đang tải kết quả…</string>
-    <string name="patching_failed_loading_result">Vá thất bạ i, đang tải kết quả…</string>
+    <string name="patching_failed_loading_result">Vá thất bại, đang tải kết quả…</string>
     <string name="patching_log_viewer_failed_to_read">Không thể đọc tệp nhật ký: %1$s</string>
     <string name="patching_log_viewer_title">Tệp nhật ký</string>
     <string name="patching_log_viewer_copy_all">Sao chép tất cả</string>
@@ -420,7 +421,7 @@
     <string name="patching_success_output_size">Kích thước đầu ra</string>
     <string name="patching_success_time">Thời gian</string>
     <string name="patching_success_memory_avg">Bộ nhớ trung bình</string>
-    <string name="patching_success_memory_max">Bộ nhớ tố i đa</string>
+    <string name="patching_success_memory_max">Bộ nhớ tối đa</string>
     <string name="patching_success_storage_io_peak">I/O lưu trữ cao nhất</string>
     <string name="patching_failure_temp_files_cleaned">Đã dọn tệp tạm thời</string>
     <string name="patching_banner_native_libs_kept">Đã giữ</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">Các bản vá thất bại: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB tắt · Kích hoạt để cài đặt</string>
-    <string name="result_adb_connect_device_hint">Kết nối thiết bị qua USB để cài đặt bằng ADB</string>
+    <string name="result_adb_connect_device_hint">Kết nối thiết bị qua USB hoặc Wi-Fi để cài đặt bằng ADB</string>
     <string name="result_screen_patch_another_button">Vá ứng dụng khác</string>
     <string name="result_screen_install_on_device_label">Cài đặt trên %1$s</string>
     <string name="result_screen_links_routed_label">Liên kết đã chuyển đến ứng dụng đã vá</string>
@@ -436,20 +437,22 @@
     <string name="result_adb_update_successful">Cập nhật thành công!</string>
     <string name="result_adb_install_successful">Cài đặt thành công!</string>
     <string name="result_adb_badge_root_mount">Gắn kết bằng root</string>
-    <string name="result_adb_mount_button">Mount trên %1$s</string>
-    <string name="result_adb_mounting_on_device">Đang mount trên %1$s…</string>
-    <string name="result_adb_mount_successful">Mount thành công!</string>
-    <string name="result_adb_mount_su_prompt_hint">Đang mount trên %1$s… Kiểm tra thiết bị của bạn để cấp quyền Superuser nếu được yêu cầu</string>
-    <string name="result_adb_unmount_button">Unmount khỏi %1$s</string>
-    <string name="result_adb_unmounting_on_device">Đang unmount khỏi %1$s…</string>
+    <string name="result_adb_mount_button">Gắn kết trên %1$s</string>
+    <string name="result_adb_mounting_on_device">Đang gắn kết trên %1$s…</string>
+    <string name="result_adb_mount_successful">Gắn kết thành công!</string>
+    <string name="result_adb_mount_su_prompt_hint">Đang gắn kết trên %1$s… Kiểm tra thiết bị của bạn để cấp quyền Superuser nếu được yêu cầu</string>
+    <string name="result_adb_unmount_button">Gỡ gắn kết khỏi %1$s</string>
+    <string name="result_adb_unmounting_on_device">Đang gỡ gắn kết khỏi %1$s…</string>
     <string name="result_adb_root_not_detected">Không phát hiện quyền root trên %1$s. Hãy đảm bảo Magisk/KernelSU/APatch đã được cài đặt và quyền su đã được cấp</string>
-    <string name="result_adb_stock_app_not_installed">Ứng dụng gốc %1$s không được cài đặt trên %2$s. Vui lòng cài đặt ứng dụng chính thức trước khi mount</string>
+    <string name="result_adb_stock_app_not_installed">Ứng dụng gốc %1$s chưa được cài đặt trên %2$s. Vui lòng cài đặt ứng dụng chính thức trước khi gắn kết</string>
+    <string name="result_adb_mount_version_mismatch">Ứng dụng gốc trên %3$s là v%1$s, nhưng APK đã vá là v%2$s. Gắn root yêu cầu các phiên bản phải khớp nhau</string>
+    <string name="result_adb_mount_abi_mismatch">Thiết bị %3$s là %1$s, nhưng APK chỉ chứa [%2$s]. Các thư viện gốc sẽ không thể tải được</string>
     <string name="result_link_default_restored">Đã khôi phục xử lý liên kết mặc định</string>
     <string name="result_link_routed_stock_disabled">Liên kết đã chuyển đến ứng dụng đã vá, ứng dụng gốc bị tắt</string>
     <string name="result_adb_not_found_hint">Không tìm thấy ADB. Cài đặt Android SDK Platform Tools để bật cài đặt trực tiếp</string>
     <string name="result_adb_section_title">Cài đặt bằng ADB</string>
     <string name="result_adb_no_devices">Không có thiết bị nào được kết nối</string>
-    <string name="result_adb_connect_hint">Kết nối qua USB với USB debugging được bật</string>
+    <string name="result_adb_connect_hint">Kết nối qua gỡ lỗi USB hoặc Wi-Fi</string>
     <string name="result_device_status_unauth">Chưa xác thực</string>
     <string name="result_adb_update_button">Cập nhật trên %1$s</string>
     <string name="result_adb_select_device_button">Chọn thiết bị</string>
@@ -538,7 +541,7 @@
     <string name="source_error_github_pat_required">Cần có GitHub PAT để tải xuống mã nguồn của pull request</string>
     <string name="source_error_pr_no_artifact">Không tìm thấy artifacts nào cho pull request</string>
     <string name="source_error_patcher_incompatible">Nguồn vá này được xây dựng cho trình vá %1$s, nhưng Morphe %2$s chỉ có trình vá %3$s. Hãy cập nhật Morphe để sử dụng nguồn vá này</string>
-    <string name="version_label_local">Từ bộ nhớ trong</string>
+    <string name="version_label_local">Cục bộ</string>
     <string name="source_sheet_remote_label">Từ URL</string>
     <string name="add_source">Thêm nguồn</string>
     <string name="source_sheet_title">Nguồn vá</string>
@@ -590,8 +593,8 @@
     <string name="patch_source_dialog_path_placeholder">Đường dẫn đến tệp .mpp</string>
     <string name="patch_source_dialog_file_button">Tệp</string>
     <string name="patch_source_dialog_picker_select_file">Chọn tệp .mpp</string>
-    <string name="patch_source_dialog_picker_select_folder">Chọn thư mục (tệp .mpp mớ i nhấ t sẽ được dùng)</string>
-    <string name="patch_source_dialog_folder_hint">Chọn thư mục để luôn tải tệp .mpp mớ i nhấ t trong đó - tiện kh i dựng lạ i c ác bản vá</string>
+    <string name="patch_source_dialog_picker_select_folder">Chọn thư mục (tệp .mpp mới nhất sẽ được dùng)</string>
+    <string name="patch_source_dialog_folder_hint">Chọn một thư mục để luôn tải tệp .mpp mới nhất trong đó - tiện khi dựng lại các bản vá</string>
     <!-- Device Indicator -->
     <string name="device_indicator_adb_off">ADB tắt</string>
     <string name="device_indicator_checking">Đang kiểm tra…</string>
@@ -599,16 +602,16 @@
     <string name="device_indicator_no_device">Không có thiết bị</string>
     <string name="device_indicator_details_description">Chi tiết thiết bị</string>
     <string name="device_indicator_adb_is_off_title">ADB đang tắt</string>
-    <string name="device_indicator_adb_is_off_subtitle">Morphe không theo dõi c ác thiết bị đã kết nố i</string>
+    <string name="device_indicator_adb_is_off_subtitle">Morphe không theo dõi các thiết bị đã kết nối</string>
     <string name="device_indicator_adb_not_found_title">Không tìm thấy ADB</string>
     <string name="device_indicator_adb_not_found_subtitle">Cài đặt Android SDK Platform Tools</string>
-    <string name="device_indicator_no_devices_title">Không phát hiện thiết bị nà o</string>
-    <string name="device_indicator_no_devices_subtitle">Kết nố i thiết bị có bậ t USB debugging</string>
-    <string name="device_indicator_enable_debugging_title">Bậ t USB debugging</string>
+    <string name="device_indicator_no_devices_title">Không phát hiện thiết bị nào</string>
+    <string name="device_indicator_no_devices_subtitle">Kết nối thiết bị với tính năng gỡ lỗi USB hoặc Wi-Fi đã được bật</string>
+    <string name="device_indicator_enable_debugging_title">Bật USB debugging</string>
     <string name="device_indicator_enable_debugging_subtitle">Cài đặt → Tùy chọn nhà phát triển → USB Debugging</string>
-    <string name="device_indicator_status_connected">Đã kết nố i</string>
+    <string name="device_indicator_status_connected">Đã kết nối</string>
     <string name="device_indicator_status_unauthorized">Chưa được ủy quyền</string>
-    <string name="device_indicator_not_listed_title">Không thấy thiết bị cũa bạn?</string>
+    <string name="device_indicator_not_listed_title">Không thấy thiết bị của bạn?</string>
     <string name="device_indicator_not_listed_subtitle">Bật USB Debugging trong Tùy chọn nhà phát triển</string>
     <!-- Error Dialog -->
     <string name="error_dialog_timeout">Kết nối đã hết thời gian chờ. Vui lòng kiểm tra kết nối internet và thử lại</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Ngôn ngữ</string>
     <string name="settings_language_current_title">Ngôn ngữ hiện tại</string>
-    <string name="settings_language_community_translation_hint">Bản dịch cho một số ngôn ngữ có thể bị thiếu hoặc chưa đầy đủ. Để dịch ngôn ngữ mới hoặc cải thiện bản dịch hiện có, hãy truy cập %1$s</string>
     <string name="settings_language_dialog_title">Ngôn ngữ</string>
+    <string name="settings_language_translate_title">Hãy giúp dịch Morphe</string>
     <string name="settings_language_search_no_results">Không tìm thấy kết quả nào</string>
     <string name="settings_section_theme">Chủ đề</string>
     <string name="settings_appearance_theme_mode">Chế độ chủ đề</string>
+    <string name="settings_appearance_theme_mode_description">Chuyển đổi giữa chủ đề sáng, tối, đen thuần hoặc theo hệ thống</string>
     <string name="settings_theme_light">Sáng</string>
     <string name="settings_theme_dark">Tối</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Kiểu màu</string>
+    <string name="settings_appearance_color_style_description">Bảng màu Morphe có màu hoặc kiểu đơn sắc thang xám</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Đơn sắc</string>
     <string name="settings_toggle_sharp_corners_label">Góc vuông</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">Thẻ ứng dụng</string>
     <string name="settings_app_cards_color_all">Màu cho mọi thẻ</string>
     <string name="settings_app_cards_color_all_desc">Các thẻ bạn đã tùy chỉnh riêng vẫn giữ màu của chúng</string>
-    <string name="settings_section_background_animation">Hiệu ứng nền</string>
+    <string name="settings_toggle_app_icons_label">Biểu tượng ứng dụng</string>
+    <string name="settings_toggle_app_icons_desc">Hiển thị biểu tượng của mỗi ứng dụng, được trích xuất từ các tệp APK cục bộ hoặc thiết bị đã kết nối</string>
+    <string name="settings_appearance_more_apps_card">Thẻ Thêm ứng dụng</string>
+    <string name="settings_appearance_more_apps_card_description">Hiển thị một thẻ bên dưới các ứng dụng dẫn đến các bản vá cộng đồng</string>
+    <string name="settings_section_effects">Hiệu ứng</string>
+    <string name="settings_appearance_background_animation">Hiệu ứng nền</string>
+    <string name="settings_appearance_background_animation_description">Hoạt ảnh chạy phía sau các màn hình ứng dụng</string>
     <string name="settings_background_circles">Hình tròn</string>
     <string name="settings_background_rings">Vòng tròn</string>
     <string name="settings_background_mesh">Lưới</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Chế độ chuyên gia</string>
     <string name="settings_toggle_expert_mode_desc">Toàn quyền kiểm soát việc chọn và cấu hình bản vá</string>
+    <string name="settings_expert_mode_disabled_in_flow">Quay lại trang chủ để thay đổi chế độ</string>
     <string name="settings_toggle_route_links_label">Chuyển liên kết đến ứng dụng đã vá</string>
     <string name="settings_toggle_route_links_desc">Sau khi cài đặt qua ADB, khiến ứng dụng đã vá mở các liên kết web được hỗ trợ thay vì trình duyệt hoặc ứng dụng gốc/mặc định</string>
     <string name="settings_toggle_disable_stock_links_label">Tắt liên kết của ứng dụng gốc</string>
@@ -717,19 +729,35 @@
     <string name="settings_channel_desc_dev">Bạn sẽ thấy biểu ngữ khi có bản phát hành dev hoặc ổn định mới</string>
     <string name="settings_channel_desc_off">Đã tắt kiểm tra cập nhật. Có thể bật lại bất cứ lúc nào</string>
     <string name="settings_section_output_folder">Thư mục đầu ra</string>
-    <string name="settings_output_folder_desc">Nơ i c ác APK đã vá được lưu. Một thư mục con riêng cho từng ứng dụng sẽ được tạo bên trong</string>
+    <string name="settings_output_folder_desc">Nơi các APK đã vá được lưu. Một thư mục con riêng cho từng ứng dụng sẽ được tạo bên trong</string>
     <string name="settings_output_folder_default">Thư mục của APK (mặc định)</string>
     <string name="settings_output_folder_picker_title">Chọn thư mục đầu ra</string>
     <string name="settings_output_folder_not_found">Không tìm thấy thư mục, sẽ được tạo ở lần vá tới</string>
-    <string name="settings_toggle_auto_start_adb_label">Tự độ ng khở i độ ng ADB</string>
-    <string name="settings_toggle_auto_start_adb_desc">Khở i chạy daemon ADB kh i mở ứng dụng để theo dõi c ác thiết bị đã kết nố i. Kh i tắt, Morphe không bao giờ khở i độ ng máy chủ và c ác tính năng cài đặt/đẩy tệp bị vô hiệu hóa</string>
+    <string name="settings_toggle_auto_start_adb_label">Tự động khởi động ADB</string>
+    <string name="settings_toggle_auto_start_adb_desc">Khởi chạy daemon ADB khi mở ứng dụng để theo dõi các thiết bị đã kết nối. Khi tắt, Morphe không bao giờ khởi động máy chủ và các tính năng cài đặt/đẩy tệp bị vô hiệu hóa</string>
     <string name="settings_section_storage">Bộ nhớ &amp; bộ nhớ đệm</string>
-    <string name="settings_cache_summary">Bộ nhớ đệm: %1$s (bản vá + nhật ký)</string>
-    <string name="settings_cache_clear_button">Xóa bộ nhớ đệm</string>
+    <string name="settings_cache_clear_all_title">Xóa tất cả bộ nhớ đệm</string>
+    <string name="settings_cache_category_patches">Số bản vá</string>
+    <string name="settings_cache_category_logs">Nhật ký</string>
+    <string name="settings_cache_category_temp">Tệp tạm thời</string>
+    <string name="settings_cache_category_avatars">Bộ nhớ đệm ảnh đại diện</string>
+    <string name="settings_cache_category_app_icons">Bộ nhớ đệm biểu tượng ứng dụng</string>
+    <string name="settings_cache_confirm_patches_title">Xóa các bản vá?</string>
+    <string name="settings_cache_confirm_patches_message">Thao tác này sẽ xóa các tệp bản vá đã tải xuống. Các bản vá sẽ được tải lại khi cần thiết</string>
+    <string name="settings_cache_confirm_logs_title">Xóa nhật ký?</string>
+    <string name="settings_cache_confirm_logs_message">Thao tác này sẽ xóa tất cả các tệp nhật ký ứng dụng và bản kết xuất logcat của thiết bị</string>
+    <string name="settings_cache_confirm_temp_title">Xóa các tệp tạm thời?</string>
+    <string name="settings_cache_confirm_temp_message">Thao tác này sẽ xóa các tệp nháp và tệp không gian làm việc tạm thời</string>
+    <string name="settings_cache_confirm_avatars_title">Xóa bộ nhớ đệm ảnh đại diện?</string>
+    <string name="settings_cache_confirm_avatars_message">Thao tác này sẽ xóa tất cả các hình ảnh đại diện từ xa được lưu trong bộ nhớ đệm</string>
+    <string name="settings_cache_confirm_app_icons_title">Xóa bộ nhớ đệm biểu tượng ứng dụng?</string>
+    <string name="settings_cache_confirm_app_icons_message">Thao tác này sẽ xóa tất cả các biểu tượng ứng dụng được trích xuất từ các tệp APK và thiết bị</string>
+    <string name="settings_cache_category_cleared">Đã xóa %1$s</string>
+    <string name="settings_cache_category_clear_failed">Không thể xóa %1$s</string>
     <string name="settings_cache_cleared">Đã xóa bộ nhớ đệm</string>
     <string name="settings_cache_clear_failed">Xóa thất bại</string>
     <string name="settings_cache_confirm_title">Xóa bộ nhớ đệm?</string>
-    <string name="settings_cache_confirm_message">Thao tác này sẽ xóa các bản vá đã tải xuống và các tệp nhật ký. Các bản vá sẽ được tải lại khi cần thiết</string>
+    <string name="settings_cache_confirm_message">Hành động này sẽ xóa các bản vá đã tải xuống, tệp nhật ký và tệp tạm thời. Các bản vá sẽ được tải lại khi cần thiết</string>
     <string name="settings_storage_open_app_data_button">Mở dữ liệu ứng dụng</string>
     <string name="settings_storage_open_logs_button">Mở nhật ký</string>
     <string name="settings_section_about">Giới thiệu</string>
@@ -743,24 +771,24 @@
     <string name="settings_about_website_title">Truy cập trang web</string>
     <string name="settings_about_website_desc">Truy cập trang web chính thức của Morphe</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">Bỏ chọn các kiến trúc bạn không cần. Khi vá, APK đầu ra sẽ chỉ giữ các kiến trúc có trong APK VÀ trong danh sách này. Nếu không có kiến trúc nà o trùng nhau, không gì bị tách bỏ để tránh tạo APK lỗ i</string>
-    <string name="settings_strip_libs_arm64">ARM 64-bit (hầu hết điện thoạ i hiện đạ i)</string>
-    <string name="settings_strip_libs_armeabi">ARM 32-bit (điện thoạ i cũ)</string>
+    <string name="settings_strip_libs_desc">Bỏ chọn các kiến trúc bạn không cần. Khi vá, APK đầu ra sẽ chỉ giữ các kiến trúc có trong APK VÀ trong danh sách này. Nếu không có kiến trúc nào trùng nhau, sẽ không tách bỏ gì để tránh tạo APK lỗi</string>
+    <string name="settings_strip_libs_arm64">ARM 64-bit (hầu hết điện thoại hiện đại)</string>
+    <string name="settings_strip_libs_armeabi">ARM 32-bit (điện thoại cũ)</string>
     <string name="settings_strip_libs_x86_64">Intel 64-bit (trình giả lập / Chromebook)</string>
     <string name="settings_strip_libs_x86">Intel 32-bit (trình giả lập cũ)</string>
     <!-- Settings - Signing -->
-    <string name="settings_signing_desc">Kho khóa dùng để ký c ác APK đã vá</string>
-    <string name="settings_signing_default_keystore">Mặc định (tự độ ng tạo)</string>
+    <string name="settings_signing_desc">Kho khóa dùng để ký các APK đã vá</string>
+    <string name="settings_signing_default_keystore">Mặc định (tự động tạo)</string>
     <string name="settings_signing_picker_title">Chọn kho khóa</string>
     <string name="settings_signing_not_found">Không tìm thấy kho khóa, việc vá sẽ thất bại cho đến khi bạn khôi phục, chọn kho khóa khác hoặc đặt lại</string>
     <string name="settings_signing_invalid_file_type">Loại tệp không hợp lệ. Dự kiến: %1$s</string>
-    <string name="settings_signing_using_default">Đang dùng kho khóa mặc định của Morphe tạ i %1$s</string>
-    <string name="settings_signing_will_create_default">Sẽ tạo kho khóa mặc định của Morphe tạ i %1$s</string>
+    <string name="settings_signing_using_default">Đang dùng kho khóa mặc định của Morphe tại %1$s</string>
+    <string name="settings_signing_will_create_default">Sẽ tạo kho khóa mặc định của Morphe tại %1$s</string>
     <string name="settings_signing_keystore_password_label">Mật khẩu kho khóa</string>
     <string name="settings_signing_key_alias_label">Bí danh khóa</string>
     <string name="settings_signing_key_password_label">Mật khẩu khóa</string>
     <string name="settings_signing_password_hide">Ẩn</string>
-    <string name="settings_signing_password_show">Xem</string>
+    <string name="settings_signing_password_show">Hiện</string>
     <string name="settings_signing_verify_button">Xác minh thông tin đăng nhập</string>
     <string name="settings_signing_verify_could_not_open">Không thể mở kho khóa, hãy kiểm tra mật khẩu kho khóa</string>
     <string name="settings_signing_verify_valid">Thông tin đăng nhập hợp lệ</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">Nhật ký thời gian chạy của ứng dụng đã vá</string>
     <string name="settings_runtime_logs_desc">Thu thập nhật ký từ điện thoại sau khi ứng dụng đã vá gặp sự cố hoặc hoạt động bất thường. Xóa trước khi tái hiện lỗi, sau đó lưu đầu ra đã lọc để đính kèm vào báo cáo lỗi</string>
     <string name="settings_runtime_logs_device_info">Thiết bị: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Không có thiết bị nào được kết nối. Hãy cắm điện thoại với USB debugging được bật</string>
+    <string name="settings_runtime_logs_no_device">Không có thiết bị nào được kết nối. Hãy kết nối điện thoại của bạn và bật gỡ lỗi USB hoặc Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">Đang xóa…</string>
     <string name="settings_runtime_logs_clear_button">Xóa nhật ký trên thiết bị</string>
     <string name="settings_runtime_logs_failed_to_clear">Không thể xóa nhật ký</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Nguồn</string>
     <string name="nav_apps">Ứng dụng</string>
+    <string name="nav_settings">Thiết lập</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Tìm kiếm cài đặt</string>
+    <string name="settings_search_no_results">Không tìm thấy cài đặt phù hợp</string>
+    <string name="settings_back_to_about">Quay lại Giới thiệu</string>
+    <string name="licenses_back_to_list">Quay lại danh sách giấy phép</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Các ứng dụng khác</string>
+    <string name="home_more_apps_subtitle">Các bản vá cộng đồng</string>
+    <string name="community_patches_notice_title">Các nguồn vá từ bên thứ ba</string>
+    <string name="community_patches_notice_message">Các nguồn vá cộng đồng được tạo và duy trì bởi chính tác giả của họ. Morphe không xem xét hoặc xác minh các bản vá từ bên thứ ba, và không chịu trách nhiệm về nội dung hoặc những gì chúng thực hiện trên thiết bị của bạn.</string>
 </resources>

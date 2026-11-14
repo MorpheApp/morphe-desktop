@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.screens.patching.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.PatchSourceNaming
@@ -42,7 +42,7 @@ private fun PatcherInfoCard(
         CardVariant.Success -> progressGradient().second
     }
     Surface(
-        modifier = Modifier.fillMaxWidth().border(1.dp, accentColor.copy(alpha = 0.55f), MorpheTheme.shapes.medium),
+        modifier = Modifier.fillMaxWidth().outlineBorder(accentColor.copy(alpha = 0.55f), MorpheTheme.shapes.medium),
         shape = MorpheTheme.shapes.medium,
         color = panelFill,
         tonalElevation = 0.dp

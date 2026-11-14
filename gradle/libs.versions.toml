@@ -5,8 +5,9 @@ kotlin = "2.4.21"
 
 # CLI
 picocli = "4.7.7"
-arsclib = "675bed2de3"
-morphe-patcher = "2.3.0"
+# Keep in step with morphe-patcher: Gradle ships only one of the two, picked by comparing hashes as versions
+arsclib = "50418a07a8"
+morphe-patcher = "2.4.0-dev.7"
 morphe-library = "1.4.0"
 
 # Compose Desktop
@@ -14,7 +15,7 @@ compose = "1.12.2"
 material3 = "1.12.0-alpha03"
 
 # Networking
-ktor = "3.6.0"
+ktor = "3.6.1"
 
 # DI
 koin-bom = "4.2.2"
@@ -30,14 +31,14 @@ kotlinx-serialization = "1.12.0"
 jna = "5.19.1"
 
 # FileKit (native file/folder pickers across Win/macOS/Linux)
-filekit = "0.16.0"
+filekit = "0.17.0"
 
 # Logging
 slf4j = "2.0.20"
 
 # Libraries
 about-libraries = "15.3.0"
-oshi = "7.7.2"
+oshi = "7.7.3"
 
 [libraries]
 # Morphe Core

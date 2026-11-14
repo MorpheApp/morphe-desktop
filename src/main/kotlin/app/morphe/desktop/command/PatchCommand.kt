@@ -29,6 +29,7 @@ import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
 import java.util.Locale
 import java.util.concurrent.Callable
+import java.util.concurrent.FutureTask
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -358,8 +359,9 @@ internal object PatchCommand : Callable<Int> {
     private var updateOptions: Boolean = false
 
     override fun call(): Int {
-        // Check for any newer version
-        UpdateChecker.check()?.let { Logger.info(it) }
+        // Check for any newer version while patching, and show it at the end.
+        val updateCheck = FutureTask(UpdateChecker::check)
+        Thread(updateCheck, "Update check").apply { isDaemon = true }.start()
 
         val adbManager = if (deviceSerial != null) AdbManager() else null
         val targetDeviceId = if (deviceSerial != null) {
@@ -522,6 +524,7 @@ internal object PatchCommand : Callable<Int> {
             adbManager?.let {
                 runBlocking { it.killServerIfOwned() }
             }
+            updateCheck.get()?.let { Logger.info(it) }
         }
     }
 }

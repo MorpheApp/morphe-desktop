@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Yamalama bilinmeyen bir nedenle başarısız oldu</string>
     <string name="error_log_label">Hata günlüğü</string>
     <string name="back">Geri</string>
+    <string name="open">Aç</string>
     <string name="open_folder">Klasörü aç</string>
     <string name="temporary_files_label">Geçici dosyalar</string>
     <string name="size_can_be_freed_label">%1$s boşaltılabilir</string>
@@ -113,8 +114,8 @@
     <string name="patching_task_decoding_resources">Kaynaklar çözülüyor</string>
     <string name="patching_task_indexing_classes">Sınıflar indeksleniyor</string>
     <string name="patching_task_compiling_dex">DEX dosyaları derleniyor</string>
-    <string name="patching_task_compiling_resources">Kaynaklar derleniyor...</string>
-    <string name="patching_task_writing_apk">APK dosyası yazılıyor...</string>
+    <string name="patching_task_compiling_resources">Kaynaklar derleniyor</string>
+    <string name="patching_task_writing_apk">APK dosyası yazılıyor</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s cihazına kuruluyor…</string>
     <string name="adb_error_downgrade">Sürüm düşürülemiyor, daha yeni bir sürüm yüklü. Önce mevcut uygulamayı kaldırın</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Yükleme başarısız: %1$s</string>
     <string name="adb_error_not_found">ADB bulunamadı. Lütfen Android SDK Platform araçlarını yükleyin</string>
     <string name="adb_error_unauthorized">Cihaz bağlı ancak yetkilendirilmemiş. Lütfen cihazınızda USB hata ayıklama uyarısını kabul edin</string>
-    <string name="adb_error_no_devices">Bağlı cihaz yok. Lütfen USB hata ayıklama özelliği etkinleştirilmiş Android cihazınızı bağlayın</string>
+    <string name="adb_error_no_devices">Bağlı cihaz yok. Lütfen USB veya Wi-Fi hata ayıklama özelliği etkinleştirilmiş Android cihazınızı bağlayın</string>
     <string name="adb_error_device_not_found">%1$s cihazı bulunamadı</string>
     <string name="adb_error_multiple_devices">Birden fazla cihaz bağlı. Lütfen birini seçin</string>
     <string name="adb_error_apk_not_found">APK dosyası bulunamadı: %1$s</string>
@@ -236,7 +237,7 @@
     <string name="home_banner_view">Görüntüle</string>
     <string name="home_your_apps_install_ready">Kuruluma hazır</string>
     <string name="home_action_install_to_device">Cihaza kur</string>
-    <string name="home_action_installing">Yükleniyor…</string>
+    <string name="home_action_installing">Kuruluyor…</string>
     <string name="home_action_preparing">Hazırlanıyor…</string>
     <string name="home_action_update">Güncelle</string>
     <string name="home_action_repatch">Yeniden yamala</string>
@@ -329,7 +330,7 @@
     <string name="patch_selection_icon_ready">Özel simge hazır</string>
     <string name="patch_selection_icon_none">Özel simge ayarlanmamış</string>
     <string name="patch_selection_icon_dialog_delete_title">Özel simge silinsin mi?</string>
-    <string name="patch_selection_icon_dialog_delete_message">Bu, simgeyi temizler ve kayıtlı projesini ile üretilen dosyalarını kaldırır. Bu işlem geri alınamaz</string>
+    <string name="patch_selection_icon_dialog_delete_message">Bu, simgeyi temizler ve kayıtlı projesini ve üretilen dosyalarını kaldırır. Bu işlem geri alınamaz</string>
     <string name="patch_selection_custom_icon_hint">Bu klasörü kendiniz oluşturmanıza gerek yok! Icon Studio'da oluşturmak için Tasarım/Düzenle simgesine tıklayın veya Manager'dan içe aktarın
 </string>
     <string name="patch_selection_option_enabled">Etkin</string>
@@ -385,7 +386,7 @@
     <string name="patch_selection_group_ungrouped">Gruplanmamış</string>
     <string name="patch_selection_group_selected_count">%1$d seçili</string>
     <!-- Patching Screen -->
-    <string name="patching_start_over_button">Yeniden başla</string>
+    <string name="patching_start_over_button">Baştan başla</string>
     <string name="patching_patches_count">%1$d / %2$d yama</string>
     <string name="patching_slow_warning">Bu normalden daha uzun sürüyor. Lütfen bekleyin…</string>
     <string name="patching_status_ready">Yamalamaya hazır</string>
@@ -429,7 +430,7 @@
     <string name="patching_error_failed_patches">Başarısız yamalar: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB kapalı · Yüklemek için etkinleştirin</string>
-    <string name="result_adb_connect_device_hint">ADB ile yüklemek için bir cihazı USB üzerinden bağlayın</string>
+    <string name="result_adb_connect_device_hint">ADB ile yüklemek için bir cihazı USB veya Wi-Fi üzerinden bağlayın</string>
     <string name="result_screen_patch_another_button">Başka bir uygulamayı yamala</string>
     <string name="result_screen_install_on_device_label">%1$s cihazına kur</string>
     <string name="result_screen_links_routed_label">Bağlantılar yamalı uygulamaya yönlendirildi</string>
@@ -445,12 +446,14 @@
     <string name="result_adb_unmounting_on_device">%1$s hedefinden bağlama kaldırılıyor…</string>
     <string name="result_adb_root_not_detected">%1$s hedefinde root erişimi saptanmadı. Magisk/KernelSU/APatch'ın yüklü olduğundan ve su izninin verildiğinden emin olun</string>
     <string name="result_adb_stock_app_not_installed">%1$s stok uygulaması %2$s hedefinde yüklü değil. Bağlamadan önce resmi uygulamayı yükleyin</string>
+    <string name="result_adb_mount_version_mismatch">%3$s üzerindeki stok uygulama v%1$s, ancak yamalanmış APK v%2$s. Root mount işlemi için sürümlerin eşleşmesi gerekir</string>
+    <string name="result_adb_mount_abi_mismatch">Cihaz %3$s %1$s, ancak APK yalnızca [%2$s] içeriyor. Yerel kitaplıklar yüklenemeyecek</string>
     <string name="result_link_default_restored">Varsayılan bağlantı işleme geri yüklendi</string>
     <string name="result_link_routed_stock_disabled">Bağlantılar yamalı uygulamaya yönlendirildi, stok uygulama devre dışı bırakıldı</string>
     <string name="result_adb_not_found_hint">ADB bulunamadı. Doğrudan kurulumu etkinleştirmek için Android SDK Platform Araçları'nı kurun</string>
     <string name="result_adb_section_title">ADB kurulumu</string>
     <string name="result_adb_no_devices">Bağlı cihaz yok</string>
-    <string name="result_adb_connect_hint">USB hata ayıklama etkinken USB ile bağlanın</string>
+    <string name="result_adb_connect_hint">USB veya Wi-Fi hata ayıklama üzerinden bağlanın</string>
     <string name="result_device_status_unauth">Yetkisiz</string>
     <string name="result_adb_update_button">%1$s cihazında güncelle</string>
     <string name="result_adb_select_device_button">Bir cihaz seç</string>
@@ -541,7 +544,7 @@
     <string name="source_error_patcher_incompatible">Bu kaynak %1$s yamalayıcı sürümü için derlenmiş; fakat Morphe %2$s, %3$s yamalayıcı sürümünü içeriyor. Kullanmak için Morphe'yi güncelleyin</string>
     <string name="version_label_local">Yerel</string>
     <string name="source_sheet_remote_label">Uzak</string>
-    <string name="add_source">Kaynak ekleyin</string>
+    <string name="add_source">Kaynak ekle</string>
     <string name="source_sheet_title">Yama kaynakları</string>
     <string name="source_sheet_reload_description">Yamaları yeniden yükle</string>
     <string name="source_sheet_multi_mode_hint">İstediğiniz kombinasyonu etkinleştirin/devre dışı bırakın. Tüm etkin kaynaklardan gelen yamalar birleştirilir</string>
@@ -604,7 +607,7 @@
     <string name="device_indicator_adb_not_found_title">ADB bulunamadı</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Araçları'nı kurun</string>
     <string name="device_indicator_no_devices_title">Cihaz algılanmadı</string>
-    <string name="device_indicator_no_devices_subtitle">USB hata ayıklama etkin bir cihaz bağlayın</string>
+    <string name="device_indicator_no_devices_subtitle">USB veya Wi-Fi hata ayıklama özelliği etkinleştirilmiş bir cihaz bağlayın</string>
     <string name="device_indicator_enable_debugging_title">USB hata ayıklamayı etkinleştir</string>
     <string name="device_indicator_enable_debugging_subtitle">Ayarlar → Geliştirici Seçenekleri → USB Hata Ayıklama</string>
     <string name="device_indicator_status_connected">Bağlı</string>
@@ -624,7 +627,7 @@
     <string name="update_banner_from_version_crosses">v%1$s sürümünden · dev → kararlı</string>
     <string name="update_banner_from_version">v%1$s sürümünden</string>
     <string name="update_banner_later_button">Sonra</string>
-    <string name="update_banner_skip_button">V%1$s sürümünü atla</string>
+    <string name="update_banner_skip_button">v%1$s sürümünü atla</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Açık Kaynak lisansları</string>
     <string name="licenses_dialog_empty_failed">// lisanslar yüklenemedi</string>
@@ -653,15 +656,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Dil</string>
     <string name="settings_language_current_title">Geçerli dil</string>
-    <string name="settings_language_community_translation_hint">Bazı diller için çeviriler eksik veya tamamlanmamış olabilir. Yeni dilleri çevirmek veya mevcut çevirileri iyileştirmek için %1$s adresini ziyaret edin</string>
     <string name="settings_language_dialog_title">Uygulama dili</string>
+    <string name="settings_language_translate_title">Morphe'yi çevirmeye yardım et</string>
     <string name="settings_language_search_no_results">Sonuç bulunamadı</string>
     <string name="settings_section_theme">Tema</string>
     <string name="settings_appearance_theme_mode">Tema modu</string>
+    <string name="settings_appearance_theme_mode_description">Açık, koyu, saf siyah veya sistem teması arasında geçiş yapın</string>
     <string name="settings_theme_light">Açık</string>
     <string name="settings_theme_dark">Koyu</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Renk stili</string>
+    <string name="settings_appearance_color_style_description">Renklendirilmiş Morphe paleti veya gri tonlamalı monokrom stil</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Tek Renk</string>
     <string name="settings_toggle_sharp_corners_label">Keskin köşeler</string>
@@ -673,7 +678,13 @@
     <string name="settings_section_app_cards">Uygulama kartları</string>
     <string name="settings_app_cards_color_all">Tüm kartlar için renk</string>
     <string name="settings_app_cards_color_all_desc">Tek tek özelleştirdiğiniz kartlar kendi rengini korur</string>
-    <string name="settings_section_background_animation">Arka plan animasyonu</string>
+    <string name="settings_toggle_app_icons_label">Uygulama simgeleri</string>
+    <string name="settings_toggle_app_icons_desc">Yerel APK'lerden veya bağlı cihazdan çıkarılan her uygulamanın simgesini gösterir</string>
+    <string name="settings_appearance_more_apps_card">Daha fazla uygulama kartı</string>
+    <string name="settings_appearance_more_apps_card_description">Uygulamaların altında topluluk yamalarına yönlendiren bir kart gösterir</string>
+    <string name="settings_section_effects">Efektler</string>
+    <string name="settings_appearance_background_animation">Arka plan animasyonu</string>
+    <string name="settings_appearance_background_animation_description">Uygulama ekranlarının arkasında oynatılan animasyon</string>
     <string name="settings_background_circles">Daireler</string>
     <string name="settings_background_rings">Halkalar</string>
     <string name="settings_background_mesh">Ağ</string>
@@ -689,6 +700,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Uzman modu</string>
     <string name="settings_toggle_expert_mode_desc">Yama seçimi ve yapılandırması üzerinde tam kontrol</string>
+    <string name="settings_expert_mode_disabled_in_flow">Modu değiştirmek için ana ekrana dönün</string>
     <string name="settings_toggle_route_links_label">Bağlantıları yamalı uygulamaya yönlendir</string>
     <string name="settings_toggle_route_links_desc">ADB ile kurduktan sonra, yamalı uygulamanın desteklenen web bağlantılarını tarayıcı veya stok/varsayılan uygulama yerine açmasını sağlayın</string>
     <string name="settings_toggle_disable_stock_links_label">Stok uygulamanın bağlantılarını devre dışı bırak</string>
@@ -703,7 +715,7 @@
     <string name="settings_dev_bytecode_mode_strip_safe">Güvenli</string>
     <string name="settings_dev_bytecode_mode_full">Tam</string>
     <string name="settings_dev_validate_label">Parmak izi doğrulama</string>
-    <string name="settings_dev_validate_desc">Her match() ifadesinin yalnızca bir yöntemle eşleştiğini doğrula (yamalama testi için daha yavaş yamalama)</string>
+    <string name="settings_dev_validate_desc">Her match() ifadesinin yalnızca bir metotla eşleştiğini doğrula (daha yavaş yamalar, yama testleri içindir)</string>
     <string name="settings_dev_verify_sdk_label">Android SDK doğrulaması</string>
     <string name="settings_dev_verify_sdk_desc">Yamalanmış DEX ve APK'yı Android SDK araçlarıyla (d8, zipalign) doğrulayın. Yanlış pozitifler bildirebilir</string>
     <string name="settings_dev_sdk_path_label">Android SDK dizini</string>
@@ -725,12 +737,28 @@
     <string name="settings_toggle_auto_start_adb_label">ADB'yi otomatik başlat</string>
     <string name="settings_toggle_auto_start_adb_desc">Başlangıçta ADB arka plan sürecini başlatarak bağlı cihazların izlenmesini sağlar. Kapalıyken Morphe sunucuyu asla başlatmaz ve kurulum/gönderme özellikleri devre dışı kalır</string>
     <string name="settings_section_storage">Depolama ve önbellek</string>
-    <string name="settings_cache_summary">Önbellek: %1$s (yamalar + günlükler)</string>
-    <string name="settings_cache_clear_button">Önbelleği temizle</string>
+    <string name="settings_cache_clear_all_title">Tüm önbelleği temizle</string>
+    <string name="settings_cache_category_patches">Yamalar</string>
+    <string name="settings_cache_category_logs">Günlükler</string>
+    <string name="settings_cache_category_temp">Geçici dosyalar</string>
+    <string name="settings_cache_category_avatars">Avatar önbelleği</string>
+    <string name="settings_cache_category_app_icons">Uygulama simgesi önbelleği</string>
+    <string name="settings_cache_confirm_patches_title">Yamalar temizlensin mi?</string>
+    <string name="settings_cache_confirm_patches_message">Bu işlem, indirilen yama dosyalarını silecektir. Yamalar gerektiğinde yeniden indirilecektir</string>
+    <string name="settings_cache_confirm_logs_title">Günlükler temizlensin mi?</string>
+    <string name="settings_cache_confirm_logs_message">Bu işlem, tüm uygulama günlük dosyalarını ve cihaz logcat dökümlerini silecektir</string>
+    <string name="settings_cache_confirm_temp_title">Geçici dosyalar temizlensin mi?</string>
+    <string name="settings_cache_confirm_temp_message">Bu işlem, geçici taslak ve çalışma alanı dosyalarını silecektir</string>
+    <string name="settings_cache_confirm_avatars_title">Avatar önbelleği temizlensin mi?</string>
+    <string name="settings_cache_confirm_avatars_message">Bu işlem, önbelleğe alınmış tüm uzak avatar resimlerini silecektir</string>
+    <string name="settings_cache_confirm_app_icons_title">Uygulama simgesi önbelleği temizlensin mi?</string>
+    <string name="settings_cache_confirm_app_icons_message">Bu işlem, APK'lerden ve cihazlardan çıkarılan tüm uygulama simgelerini silecektir</string>
+    <string name="settings_cache_category_cleared">%1$s temizlendi</string>
+    <string name="settings_cache_category_clear_failed">%1$s temizlenemedi</string>
     <string name="settings_cache_cleared">Önbellek temizlendi</string>
     <string name="settings_cache_clear_failed">Temizleme başarısız</string>
     <string name="settings_cache_confirm_title">Önbellek temizlensin mi?</string>
-    <string name="settings_cache_confirm_message">Bu işlem, indirilen yamaları ve günlük dosyalarını silecektir. Yamalar gerektiğinde yeniden indirilecektir</string>
+    <string name="settings_cache_confirm_message">Bu işlem indirilen yamaları, kayıt dosyalarını ve geçici dosyaları silecektir. Yamalar gerektiğinde yeniden indirilecektir</string>
     <string name="settings_storage_open_app_data_button">Uygulama verilerini aç</string>
     <string name="settings_storage_open_logs_button">Günlükleri aç</string>
     <string name="settings_section_about">Hakkında</string>
@@ -788,7 +816,7 @@
     <string name="settings_runtime_logs_title">Yamalı uygulama çalışma zamanı günlükleri</string>
     <string name="settings_runtime_logs_desc">Yamalı bir uygulama çöktükten veya hatalı davrandıktan sonra telefonunuzdan günlükleri yakalayın. Hatayı yeniden üretmeden önce temizleyin, ardından filtrelenmiş çıktıyı bir hata raporuna eklemek üzere kaydedin</string>
     <string name="settings_runtime_logs_device_info">Cihaz: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Bağlı cihaz yok. USB hata ayıklama etkinken telefonunuzu bağlayın</string>
+    <string name="settings_runtime_logs_no_device">Bağlı cihaz yok. Telefonunuzu USB veya Wi-Fi hata ayıklama özelliği etkinleştirilmiş şekilde bağlayın</string>
     <string name="settings_runtime_logs_clearing">Temizleniyor…</string>
     <string name="settings_runtime_logs_clear_button">Cihaz günlüklerini temizle</string>
     <string name="settings_runtime_logs_failed_to_clear">Günlükler temizlenemedi</string>
@@ -829,4 +857,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Kaynaklar</string>
     <string name="nav_apps">Uygulamalar</string>
+    <string name="nav_settings">Ayarlar</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Ayarları ara</string>
+    <string name="settings_search_no_results">Eşleşen ayar bulunamadı</string>
+    <string name="settings_back_to_about">Hakkında kısmına dön</string>
+    <string name="licenses_back_to_list">Lisanslar listesine dön</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Daha fazla uygulama</string>
+    <string name="home_more_apps_subtitle">Topluluk yamaları</string>
+    <string name="community_patches_notice_title">Üçüncü taraf yama kaynakları</string>
+    <string name="community_patches_notice_message">Topluluk yama kaynakları, kendi yazarları tarafından oluşturulur ve sürdürülür. Morphe, üçüncü taraf yamaları incelemez veya doğrulamaz ve bunların içeriğinden veya cihazınızda yaptıklarından sorumlu değildir.</string>
 </resources>

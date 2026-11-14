@@ -8,7 +8,7 @@ package app.morphe.engine.options
 import app.morphe.engine.util.FileChecksum
 import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.option
-import app.morphe.patcher.patch.rawResourcePatch
+import app.morphe.patcher.patch.patch
 import java.io.File
 import kotlin.reflect.typeOf
 import kotlin.test.Test
@@ -19,6 +19,41 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 
 class PatchOptionsFileTest {
+    @Test
+    fun `snapshot updates match bundle metadata without reopening source files`() {
+        val directory = kotlin.io.path.createTempDirectory().toFile()
+        try {
+            val file = directory.resolve("options.json")
+            val first = PatchBundle(
+                meta = PatchBundleMeta(source = "first.mpp", sha256 = "first-hash"),
+                patches = mapOf("Theme" to PatchEntry(false, mapOf("color" to JsonPrimitive("dark")))),
+            )
+            val second = PatchBundle(
+                meta = PatchBundleMeta(source = "second.mpp", sha256 = "second-hash"),
+                patches = mapOf("Other" to PatchEntry(true)),
+            )
+            writePatchBundles(file, listOf(first, second))
+            val snapshot = first.copy(
+                meta = first.meta.copy(sha256 = "updated-hash"),
+                patches = mapOf(
+                    "Theme" to PatchEntry(true, mapOf("color" to JsonPrimitive("light"))),
+                    "Added" to PatchEntry(true),
+                ),
+            )
+
+            updateOptionsFileFromSnapshots(file, listOf(snapshot))
+
+            val updated = readPatchBundles(file)
+            assertEquals(2, updated.size)
+            assertEquals("updated-hash", updated.first().meta.sha256)
+            assertEquals(first.patches["Theme"], updated.first().patches["Theme"])
+            assertEquals(PatchEntry(true), updated.first().patches["Added"])
+            assertEquals(second, updated.last())
+        } finally {
+            directory.deleteRecursively()
+        }
+    }
+
     @Test
     fun `findMatchingBundle returns null for empty list`(){
         val result = emptyList<PatchBundle>().findMatchingBundle(emptySet())
@@ -93,7 +128,7 @@ class PatchOptionsFileTest {
 
     @Test
     fun `mergeWithBundle preserves existing settings`(){
-        val patch = rawResourcePatch(name = "Theme", description = "Change Theme", default = true){
+        val patch = patch(name = "Theme", description = "Change Theme", default = true){
             option<String>(key = "colorScheme", default = "light")
         }
 
@@ -114,10 +149,10 @@ class PatchOptionsFileTest {
 
     @Test
     fun `mergeWithBundle adds new Patch that didn't exist with default settings`(){
-        val themePatch = rawResourcePatch(name = "Theme", description = "Change Theme", default = true) {}
+        val themePatch = patch(name = "Theme", description = "Change Theme", default = true) {}
 
         // App-specific patch to verify default=true is preserved (universal patches force default=false).
-        val adBlockPatch = rawResourcePatch(name = "AdBlocker", description = "Block Ads", default = true) {
+        val adBlockPatch = patch(name = "AdBlocker", description = "Block Ads", default = true) {
             compatibleWith(Compatibility("com.example.app", "Example"))
         }
 
@@ -134,7 +169,7 @@ class PatchOptionsFileTest {
     @Test
     fun `mergeWithBundle adds a universal Patch disabled even when it declares default true`(){
         // Universal patches without compatibility entries default to disabled.
-        val universalPatch = rawResourcePatch(name = "Universal", description = "Applies to any app", default = true) {}
+        val universalPatch = patch(name = "Universal", description = "Applies to any app", default = true) {}
 
         val userBundle = PatchBundle(
             meta = PatchBundleMeta(),
@@ -147,7 +182,7 @@ class PatchOptionsFileTest {
 
     @Test
     fun `mergeWithBundle removes an old patch that no longer exists`(){
-        val themePatch = rawResourcePatch(name = "Theme", description = "Change Theme", default = true) {}
+        val themePatch = patch(name = "Theme", description = "Change Theme", default = true) {}
 
         val userBundle = PatchBundle(
             meta = PatchBundleMeta(),

@@ -56,6 +56,7 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.contrastingForeground
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
@@ -217,11 +218,11 @@ internal fun ActionBar(
             .then(
                 when {
                     !enabled -> Modifier
-                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f), shape)
+                        .outlineBorder(MaterialTheme.colorScheme.outline.copy(alpha = 0.12f), shape)
                         .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
                     running -> Modifier.background(color.copy(alpha = 0.14f))
                     filled -> Modifier
-                        .border(1.dp, color, shape)
+                        .outlineBorder(color, shape)
                         .background(if (isHovered) lerp(color, color.contrastingForeground(), 0.08f) else color)
                     else -> Modifier
                         .border(1.dp, color.copy(alpha = if (isHovered) 0.4f else 0.2f), shape)

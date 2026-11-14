@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.result.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +24,7 @@ import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.screens.result.formatFileSize
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -44,10 +44,9 @@ internal fun CleanupSection(
             .widthIn(max = 520.dp)
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
-            .border(
-                1.dp,
+            .outlineBorder(
                 if (tempFilesCleared) MorpheTheme.colors.secondary.copy(alpha = 0.2f) else borderColor,
-                MorpheTheme.shapes.medium
+                MorpheTheme.shapes.medium,
             )
             .background(
                 if (tempFilesCleared) {

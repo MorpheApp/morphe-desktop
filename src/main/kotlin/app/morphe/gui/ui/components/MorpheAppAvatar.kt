@@ -5,20 +5,26 @@
 
 package app.morphe.gui.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.util.AppIconState
 
 enum class MorpheAvatarSize(val size: Dp) {
     LARGE(44.dp),
@@ -27,7 +33,7 @@ enum class MorpheAvatarSize(val size: Dp) {
     SMALL(28.dp),
 }
 
-/** Avatar badge displaying an app initial. */
+/** Avatar badge displaying the app [icon], a spinner while it is extracted, or the app initial when there is none. */
 @Composable
 fun MorpheAppAvatar(
     name: String = "",
@@ -37,8 +43,21 @@ fun MorpheAppAvatar(
     accent: Color? = null,
     accentColor: Color? = accent,
     onGradient: Boolean = false,
+    icon: AppIconState = AppIconState(),
+    vectorIcon: ImageVector? = null,
 ) {
     val shapes = MorpheTheme.shapes
+    val bitmap = icon.bitmap
+    if (bitmap != null) {
+        Image(
+            bitmap = bitmap,
+            contentDescription = name,
+            contentScale = ContentScale.Fit,
+            modifier = modifier.size(size.size).clip(shapes.small),
+        )
+        return
+    }
+
     val colors = MorpheTheme.colors
     val typography = MorpheTheme.typography
     val tint = accentColor ?: accent ?: colors.primary
@@ -59,14 +78,29 @@ fun MorpheAppAvatar(
         modifier = modifier
             .size(size.size)
             .clip(shapes.small)
-            .border(1.dp, borderColor, shapes.small)
+            .outlineBorder(borderColor, shapes.small)
             .background(bgColor),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = displayInitial,
-            style = textStyle,
-            color = textColor,
-        )
+        if (icon.isLoading) {
+            CircularProgressIndicator(
+                color = textColor,
+                strokeWidth = 2.dp,
+                modifier = Modifier.size(size.size * 0.45f),
+            )
+        } else if (vectorIcon != null) {
+            Icon(
+                imageVector = vectorIcon,
+                contentDescription = name,
+                tint = textColor,
+                modifier = Modifier.size(size.size * 0.55f),
+            )
+        } else {
+            Text(
+                text = displayInitial,
+                style = textStyle,
+                color = textColor,
+            )
+        }
     }
 }

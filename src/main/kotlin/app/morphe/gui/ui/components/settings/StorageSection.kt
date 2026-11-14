@@ -19,11 +19,14 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.CacheManager
 import app.morphe.engine.MorpheData
 import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.util.AppIconLoader
+import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
@@ -32,32 +35,66 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+
+private enum class CategoryType { PATCHES, LOGS, TEMP, AVATARS, APP_ICONS }
+private data class CategoryConfirm(val type: CategoryType, val title: String)
 
 @Composable
 internal fun StorageSection(
     borderColor: Color,
     enabled: Boolean = true,
-    icon: ImageVector? = null,
     onCacheCleared: () -> Unit = {},
 ) {
     val patchSourceManager: PatchSourceManager = koinInject()
     val scope = rememberCoroutineScope()
-    var showClearCacheConfirm by remember { mutableStateOf(false) }
-    var cacheCleared by remember { mutableStateOf(false) }
-    var cacheClearFailed by remember { mutableStateOf(false) }
-    var cacheBytes by remember { mutableStateOf(0L) }
 
-    LaunchedEffect(Unit) {
-        cacheBytes = withContext(Dispatchers.IO) { CacheManager.getCacheSizeBytes() }
+    var patchesStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
+    var logsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
+    var tempStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
+    var avatarsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
+    var appIconsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
+
+    var showClearAllConfirm by remember { mutableStateOf(false) }
+    var categoryConfirm by remember { mutableStateOf<CategoryConfirm?>(null) }
+
+    var allCleared by remember { mutableStateOf(false) }
+    var allClearFailed by remember { mutableStateOf(false) }
+
+    var clearedCategory by remember { mutableStateOf<String?>(null) }
+    var failedCategory by remember { mutableStateOf<String?>(null) }
+
+    suspend fun refreshAllStats() {
+        val p = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.patchesDir) }
+        val l = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.logsDir) }
+        val t = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(WorkspaceManager.scratchDir) }
+        val a = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.avatarsDir) }
+        val i = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.appIconsDir) }
+        patchesStats = p
+        logsStats = l
+        tempStats = t
+        avatarsStats = a
+        appIconsStats = i
     }
 
+    LaunchedEffect(Unit) {
+        refreshAllStats()
+    }
+
+    val totalBytes = patchesStats.bytes + logsStats.bytes + tempStats.bytes + avatarsStats.bytes + appIconsStats.bytes
+    val totalFiles = patchesStats.fileCount + logsStats.fileCount + tempStats.fileCount + avatarsStats.fileCount +
+        appIconsStats.fileCount
     val alpha = if (enabled) 1f else 0.5f
 
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        SectionLabel(stringResource(Res.string.settings_section_storage), icon = icon)
+    val patchesTitle = stringResource(Res.string.settings_cache_category_patches)
+    val logsTitle = stringResource(Res.string.settings_cache_category_logs)
+    val tempTitle = stringResource(Res.string.settings_cache_category_temp)
+    val avatarsTitle = stringResource(Res.string.settings_cache_category_avatars)
+    val appIconsTitle = stringResource(Res.string.settings_cache_category_app_icons)
 
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -73,23 +110,28 @@ internal fun StorageSection(
                 Spacer(Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = stringResource(Res.string.settings_cache_clear_button),
+                        text = stringResource(Res.string.settings_cache_clear_all_title),
                         style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
                     )
                     Spacer(Modifier.height(2.dp))
-                    val cacheSize = formatCacheSize(cacheBytes)
+                    val cacheSize = formatCacheSize(totalBytes)
                     Text(
                         text = when {
                             !enabled -> stringResource(Res.string.disabled_while_patching)
-                            cacheCleared -> stringResource(Res.string.settings_cache_cleared)
-                            cacheClearFailed -> stringResource(Res.string.settings_cache_clear_failed)
-                            else -> stringResource(Res.string.settings_cache_summary, cacheSize)
+                            allCleared -> stringResource(Res.string.settings_cache_cleared)
+                            allClearFailed -> stringResource(Res.string.settings_cache_clear_failed)
+                            else -> pluralStringResource(
+                                Res.plurals.settings_cache_clear_all_summary,
+                                totalFiles,
+                                cacheSize,
+                                totalFiles
+                            )
                         },
                         style = MorpheTheme.typography.bodySmall,
                         color = when {
-                            cacheCleared -> MorpheColors.Teal
-                            cacheClearFailed -> MaterialTheme.colorScheme.error
+                            allCleared -> MorpheColors.Teal
+                            allClearFailed -> MaterialTheme.colorScheme.error
                             else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha)
                         },
                     )
@@ -100,12 +142,72 @@ internal fun StorageSection(
 
             MorpheButton(
                 label = stringResource(Res.string.clear),
-                onClick = { showClearCacheConfirm = true },
-                enabled = enabled && !cacheCleared && cacheBytes > 0L,
+                onClick = { showClearAllConfirm = true },
+                enabled = enabled && !allCleared && totalBytes > 0L,
                 variant = MorpheButtonVariant.OUTLINED,
                 size = MorpheButtonSize.COMPACT,
             )
         }
+
+        CacheRow(
+            icon = MorpheIcons.DeployedCode,
+            title = patchesTitle,
+            stats = patchesStats,
+            enabled = enabled,
+            isCleared = clearedCategory == patchesTitle,
+            isClearFailed = failedCategory == patchesTitle,
+            onClearClick = {
+                categoryConfirm = CategoryConfirm(CategoryType.PATCHES, patchesTitle)
+            }
+        )
+
+        CacheRow(
+            icon = MorpheIcons.Description,
+            title = logsTitle,
+            stats = logsStats,
+            enabled = enabled,
+            isCleared = clearedCategory == logsTitle,
+            isClearFailed = failedCategory == logsTitle,
+            onClearClick = {
+                categoryConfirm = CategoryConfirm(CategoryType.LOGS, logsTitle)
+            }
+        )
+
+        CacheRow(
+            icon = MorpheIcons.LayersClear,
+            title = tempTitle,
+            stats = tempStats,
+            enabled = enabled,
+            isCleared = clearedCategory == tempTitle,
+            isClearFailed = failedCategory == tempTitle,
+            onClearClick = {
+                categoryConfirm = CategoryConfirm(CategoryType.TEMP, tempTitle)
+            }
+        )
+
+        CacheRow(
+            icon = MorpheIcons.Circle,
+            title = avatarsTitle,
+            stats = avatarsStats,
+            enabled = enabled,
+            isCleared = clearedCategory == avatarsTitle,
+            isClearFailed = failedCategory == avatarsTitle,
+            onClearClick = {
+                categoryConfirm = CategoryConfirm(CategoryType.AVATARS, avatarsTitle)
+            }
+        )
+
+        CacheRow(
+            icon = MorpheIcons.Image,
+            title = appIconsTitle,
+            stats = appIconsStats,
+            enabled = enabled,
+            isCleared = clearedCategory == appIconsTitle,
+            isClearFailed = failedCategory == appIconsTitle,
+            onClearClick = {
+                categoryConfirm = CategoryConfirm(CategoryType.APP_ICONS, appIconsTitle)
+            }
+        )
 
         Spacer(Modifier.height(2.dp))
 
@@ -157,9 +259,9 @@ internal fun StorageSection(
         }
     }
 
-    if (showClearCacheConfirm) {
+    if (showClearAllConfirm) {
         MorpheAlertDialog(
-            onDismiss = { showClearCacheConfirm = false },
+            onDismiss = { showClearAllConfirm = false },
             title = {
                 Text(
                     stringResource(Res.string.settings_cache_confirm_title),
@@ -177,15 +279,18 @@ internal fun StorageSection(
                 MorpheButton(
                     label = stringResource(Res.string.clear),
                     onClick = {
-                        showClearCacheConfirm = false
+                        showClearAllConfirm = false
                         scope.launch {
                             withContext(NonCancellable) {
                                 val success = withContext(Dispatchers.IO) { clearAllCache() }
-                                cacheCleared = success
-                                cacheClearFailed = !success
+                                allCleared = success
+                                allClearFailed = !success
                                 if (success) {
-                                    cacheBytes = 0L
+                                    clearedCategory = null
+                                    failedCategory = null
                                     patchSourceManager.notifyCacheCleared()
+                                    AvatarLoader.clearMemoryCache()
+                                    refreshAllStats()
                                     onCacheCleared()
                                 }
                             }
@@ -198,11 +303,158 @@ internal fun StorageSection(
             dismissButton = {
                 MorpheButton(
                     label = stringResource(Res.string.cancel),
-                    onClick = { showClearCacheConfirm = false },
+                    onClick = { showClearAllConfirm = false },
                     variant = MorpheButtonVariant.GHOST,
                     size = MorpheButtonSize.COMPACT,
                 )
             }
+        )
+    }
+
+    categoryConfirm?.let { item ->
+        val (titleRes, messageRes) = when (item.type) {
+            CategoryType.PATCHES -> Res.string.settings_cache_confirm_patches_title to Res.string.settings_cache_confirm_patches_message
+            CategoryType.LOGS -> Res.string.settings_cache_confirm_logs_title to Res.string.settings_cache_confirm_logs_message
+            CategoryType.TEMP -> Res.string.settings_cache_confirm_temp_title to Res.string.settings_cache_confirm_temp_message
+            CategoryType.AVATARS -> Res.string.settings_cache_confirm_avatars_title to Res.string.settings_cache_confirm_avatars_message
+            CategoryType.APP_ICONS -> Res.string.settings_cache_confirm_app_icons_title to Res.string.settings_cache_confirm_app_icons_message
+        }
+        MorpheAlertDialog(
+            onDismiss = { categoryConfirm = null },
+            title = {
+                Text(
+                    stringResource(titleRes),
+                    style = MorpheTheme.typography.titleMedium,
+                )
+            },
+            text = {
+                Text(
+                    stringResource(messageRes),
+                    style = MorpheTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+            confirmButton = {
+                MorpheButton(
+                    label = stringResource(Res.string.clear),
+                    onClick = {
+                        categoryConfirm = null
+                        scope.launch {
+                            withContext(NonCancellable) {
+                                val result = withContext(Dispatchers.IO) {
+                                    when (item.type) {
+                                        CategoryType.PATCHES -> {
+                                            val r = CacheManager.clearDirectoryContents("Patches", MorpheData.patchesDir)
+                                            patchSourceManager.notifyCacheCleared()
+                                            onCacheCleared()
+                                            r
+                                        }
+                                        CategoryType.LOGS -> CacheManager.clearDirectoryContents("Logs", MorpheData.logsDir)
+                                        CategoryType.TEMP -> WorkspaceManager.clearScratch()
+                                        CategoryType.AVATARS -> {
+                                            val r = CacheManager.clearDirectoryContents("Avatars", MorpheData.avatarsDir)
+                                            AvatarLoader.clearMemoryCache()
+                                            r
+                                        }
+                                        CategoryType.APP_ICONS -> {
+                                            val r = CacheManager.clearDirectoryContents("App icons", MorpheData.appIconsDir)
+                                            AppIconLoader.clearMemoryCache()
+                                            r
+                                        }
+                                    }
+                                }
+                                val ok = result.failedFiles == 0
+                                if (ok) {
+                                    clearedCategory = item.title
+                                    failedCategory = null
+                                } else {
+                                    clearedCategory = null
+                                    failedCategory = item.title
+                                }
+                                allCleared = false
+                                allClearFailed = false
+                                refreshAllStats()
+                            }
+                        }
+                    },
+                    variant = MorpheButtonVariant.DANGER,
+                    size = MorpheButtonSize.COMPACT,
+                )
+            },
+            dismissButton = {
+                MorpheButton(
+                    label = stringResource(Res.string.cancel),
+                    onClick = { categoryConfirm = null },
+                    variant = MorpheButtonVariant.GHOST,
+                    size = MorpheButtonSize.COMPACT,
+                )
+            }
+        )
+    }
+}
+
+@Composable
+private fun CacheRow(
+    icon: ImageVector,
+    title: String,
+    stats: CacheManager.DirStats,
+    enabled: Boolean,
+    isCleared: Boolean,
+    isClearFailed: Boolean,
+    onClearClick: () -> Unit,
+) {
+    val alpha = if (enabled) 1f else 0.5f
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MorpheTheme.colors.primary.copy(alpha = alpha),
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = title,
+                    style = MorpheTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
+                )
+                Spacer(Modifier.height(2.dp))
+                val formattedSize = formatCacheSize(stats.bytes)
+                Text(
+                    text = when {
+                        !enabled -> stringResource(Res.string.disabled_while_patching)
+                        isCleared -> stringResource(Res.string.settings_cache_category_cleared, title)
+                        isClearFailed -> stringResource(Res.string.settings_cache_category_clear_failed, title)
+                        else -> pluralStringResource(
+                            Res.plurals.settings_cache_category_summary,
+                            stats.fileCount,
+                            formattedSize,
+                            stats.fileCount
+                        )
+                    },
+                    style = MorpheTheme.typography.bodySmall,
+                    color = when {
+                        isCleared -> MorpheColors.Teal
+                        isClearFailed -> MaterialTheme.colorScheme.error
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha)
+                    },
+                )
+            }
+        }
+
+        Spacer(Modifier.width(12.dp))
+
+        MorpheButton(
+            label = stringResource(Res.string.clear),
+            onClick = onClearClick,
+            enabled = enabled && !isCleared && stats.bytes > 0L,
+            variant = MorpheButtonVariant.OUTLINED,
+            size = MorpheButtonSize.COMPACT,
         )
     }
 }

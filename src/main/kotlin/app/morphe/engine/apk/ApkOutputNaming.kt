@@ -13,6 +13,9 @@ object ApkOutputNaming {
 
     private val patchesVersionRegex = Regex("""(\d+\.\d+\.\d+(?:-dev\.\d+)?)""")
 
+    // Spaces and the characters Windows does not allow in file names
+    private val appFolderNameUnsafeRegex = Regex("""[ <>:"/\\|?*\x00-\x1F]+""")
+
     /** Extracts version from an APKMirror-style filename (e.g. `pkg_1.2.3-4.apk` -> `1.2.3`). */
     fun extractApkVersionFromFilename(fileName: String): String? = try {
         val withoutExt = stripKnownExtension(fileName)
@@ -84,7 +87,7 @@ object ApkOutputNaming {
         appVersion: String? = null,
     ): File {
         val appFolderName = (appDisplayName ?: inputApk.nameWithoutExtension)
-            .replace(" ", "-")
+            .replace(appFolderNameUnsafeRegex, "-")
         val base = baseOutputDir
             ?: inputApk.absoluteFile.parentFile
             ?: File("").absoluteFile

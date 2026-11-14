@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.contrastingForeground
+import app.morphe.gui.ui.theme.outlineBorder
 
 enum class MorpheBadgeTone {
     Neutral,
@@ -129,17 +129,15 @@ fun MorpheBadge(
 
     val isSharp = MorpheTheme.corners.isSharp
     val badgeShape = if (tone == MorpheBadgeTone.Code || isSharp) shapes.extraSmall else RoundedCornerShape(percent = 50)
-    val hasBorder = variant != MorpheBadgeVariant.FILLED && (variant == MorpheBadgeVariant.OUTLINED || !onGradient)
-    val borderModifier = if (hasBorder) {
-        val bColor = if (variant == MorpheBadgeVariant.OUTLINED) ink else ink.copy(alpha = 0.25f)
-        Modifier.border(1.dp, bColor, badgeShape)
-    } else Modifier
+    val hasBorder = variant == MorpheBadgeVariant.OUTLINED ||
+        (variant == MorpheBadgeVariant.SUBTLE && !onGradient && MorpheTheme.outlines)
+    val bColor = if (variant == MorpheBadgeVariant.OUTLINED) ink else ink.copy(alpha = 0.25f)
 
     Box(
         modifier = modifier
             .clip(badgeShape)
             .background(fill)
-            .then(borderModifier)
+            .outlineBorder(bColor, badgeShape, enabled = hasBorder)
             .defaultMinSize(minHeight = minHeight)
             .padding(padding)
             .clearAndSetSemantics { },

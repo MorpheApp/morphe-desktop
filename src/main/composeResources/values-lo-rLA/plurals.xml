@@ -45,4 +45,10 @@
     <plurals name="changelog_performance_count">
         <item quantity="other">%1$d ການປັບປຸງໃຫ້ດີຂຶ້ນ</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="other">%1$s (%2$d ໄຟລ໌)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="other">ທັງໝົດ: %1$s (%2$d ໄຟລ໌)</item>
+    </plurals>
 </resources>

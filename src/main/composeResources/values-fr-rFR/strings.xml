@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Le patching a échoué pour une raison inconnue</string>
     <string name="error_log_label">Journal d'erreur</string>
     <string name="back">Retour</string>
+    <string name="open">Ouvrir</string>
     <string name="open_folder">Ouvrir le dossier</string>
     <string name="temporary_files_label">Fichiers temporaires</string>
     <string name="size_can_be_freed_label">%1$s peuvent être libérés</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Échec de l'installation : %1$s</string>
     <string name="adb_error_not_found">ADB introuvable. Veuillez installer Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Appareil connecté mais non autorisé. Veuillez accepter la demande de débogage USB sur votre appareil</string>
-    <string name="adb_error_no_devices">Aucun appareil connecté. Veuillez connecter votre appareil Android avec le débogage USB activé</string>
+    <string name="adb_error_no_devices">Aucun appareil connecté. Veuillez connecter votre appareil Android avec le débogage USB ou Wi-Fi activé</string>
     <string name="adb_error_device_not_found">Appareil %1$s introuvable</string>
     <string name="adb_error_multiple_devices">Plusieurs appareils connectés. Veuillez en sélectionner un</string>
     <string name="adb_error_apk_not_found">Fichier APK introuvable : %1$s</string>
@@ -379,7 +380,7 @@
     <string name="patch_selection_run_info_no_bundles">Aucun bundle résolu</string>
     <string name="patch_selection_run_info_dev_group">Options de développeur</string>
     <string name="patch_selection_run_info_bytecode_mode">Mode bytecode : %1$s</string>
-    <string name="patch_selection_run_info_validate">Validation de l'empreinte : %1$s</string>
+    <string name="patch_selection_run_info_validate">Validation de l'empreinte numérique : %1$s</string>
     <string name="patch_selection_run_info_verify_sdk">Vérification du SDK Android : %1$s</string>
     <string name="patch_selection_group_universal">Universel</string>
     <string name="patch_selection_group_ungrouped">Non groupé</string>
@@ -429,12 +430,12 @@
     <string name="patching_error_failed_patches">Patchs échoués : %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB désactivé · Activer pour installer</string>
-    <string name="result_adb_connect_device_hint">Connectez un appareil via USB pour installer avec ADB</string>
+    <string name="result_adb_connect_device_hint">Connectez un appareil via USB ou Wi-Fi pour installer avec ADB</string>
     <string name="result_screen_patch_another_button">Patcher un autre</string>
     <string name="result_screen_install_on_device_label">Installer sur %1$s</string>
     <string name="result_screen_links_routed_label">Liens redirigés vers l'application patchée</string>
     <string name="result_adb_updating_on_device">Mise à jour sur %1$s…</string>
-    <string name="result_adb_update_successful">Mise à jour réussie!</string>
+    <string name="result_adb_update_successful">Mise à jour réussie !</string>
     <string name="result_adb_install_successful">Installation réussie !</string>
     <string name="result_adb_badge_root_mount">Montage root</string>
     <string name="result_adb_mount_button">Monter sur %1$s</string>
@@ -445,12 +446,15 @@
     <string name="result_adb_unmounting_on_device">Démontage depuis %1$s…</string>
     <string name="result_adb_root_not_detected">L'accès root n'a pas été détecté sur %1$s. Assurez-vous que Magisk/KernelSU/APatch est installé et que l'autorisation su est accordée</string>
     <string name="result_adb_stock_app_not_installed">L'application d'origine %1$s n'est pas installée sur %2$s. Installez d'abord l'application officielle avant de procéder au montage</string>
+    <string name="result_adb_mount_version_mismatch">L'application d'origine sur %3$s est en v%1$s, mais l'APK patché est en v%2$s. Le montage root nécessite des versions identiques
+</string>
+    <string name="result_adb_mount_abi_mismatch">L'appareil %3$s est %1$s, mais l'APK contient uniquement [%2$s]. Le chargement des bibliothèques natives échouera</string>
     <string name="result_link_default_restored">La gestion des liens par défaut a été restaurée</string>
     <string name="result_link_routed_stock_disabled">Liens redirigés vers l'application patchée, l'application d'origine est désactivée</string>
     <string name="result_adb_not_found_hint">ADB introuvable. Installez Android SDK Platform Tools pour activer l'installation directe</string>
     <string name="result_adb_section_title">Installation via ADB</string>
     <string name="result_adb_no_devices">Aucun appareil connecté</string>
-    <string name="result_adb_connect_hint">Se connecter via USB avec le débogage USB activé</string>
+    <string name="result_adb_connect_hint">Se connecter via le débogage USB ou Wi-Fi</string>
     <string name="result_device_status_unauth">Non authentifié</string>
     <string name="result_adb_update_button">Mettre à jour sur %1$s</string>
     <string name="result_adb_select_device_button">Sélectionnez un appareil</string>
@@ -574,7 +578,7 @@
     <string name="patch_source_dialog_name_placeholder">Mes Patchs Personnalisés</string>
     <string name="patch_source_dialog_repo_url_label">URL du dépôt</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/propriétaire/dépôt ou gitlab.com/propriétaire/dépôt</string>
-    <string name="patch_source_dialog_repo_hint">Accepte GitHub, GitLab, ou un lien morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_hint">Accepte les liens GitHub, GitLab ou morphe.software/add-source</string>
     <string name="patch_source_dialog_pre_release_title">Patchs en préversion</string>
     <string name="patch_source_dialog_pre_release_hint">Reçoit un accès anticipé aux nouvelles versions expérimentales des patchs</string>
     <string name="patch_source_dialog_error_name_required">Le nom est nécessaire</string>
@@ -604,7 +608,7 @@
     <string name="device_indicator_adb_not_found_title">ADB introuvable</string>
     <string name="device_indicator_adb_not_found_subtitle">Installez Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Aucun appareil détecté</string>
-    <string name="device_indicator_no_devices_subtitle">Connectez un appareil avec le débogage USB activé</string>
+    <string name="device_indicator_no_devices_subtitle">Connectez un appareil avec le débogage USB ou Wi-Fi activé</string>
     <string name="device_indicator_enable_debugging_title">Activer le débogage USB</string>
     <string name="device_indicator_enable_debugging_subtitle">Paramètres → Options pour les développeurs → Débogage USB</string>
     <string name="device_indicator_status_connected">Connecté</string>
@@ -653,15 +657,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Langue</string>
     <string name="settings_language_current_title">Langue actuelle</string>
-    <string name="settings_language_community_translation_hint">Les traductions pour certaines langues peuvent être manquantes ou incomplètes. Pour traduire de nouvelles langues ou améliorer les traductions existantes, visitez %1$s</string>
     <string name="settings_language_dialog_title">Langue de l'application</string>
+    <string name="settings_language_translate_title">Aider à traduire Morphe</string>
     <string name="settings_language_search_no_results">Aucun résultat trouvé</string>
     <string name="settings_section_theme">Thème</string>
     <string name="settings_appearance_theme_mode">Mode du thème</string>
+    <string name="settings_appearance_theme_mode_description">Basculez entre le thème clair, sombre, noir pur ou système</string>
     <string name="settings_theme_light">Clair</string>
     <string name="settings_theme_dark">Sombre</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Style de couleur</string>
+    <string name="settings_appearance_color_style_description">Palette teintée de Morphe ou style monochrome en niveaux de gris</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monochrome</string>
     <string name="settings_toggle_sharp_corners_label">Coins pointus</string>
@@ -673,7 +679,13 @@
     <string name="settings_section_app_cards">Cartes d'applications</string>
     <string name="settings_app_cards_color_all">Couleur pour chaque carte</string>
     <string name="settings_app_cards_color_all_desc">Les cartes que vous avez personnalisées individuellement conservent leur propre couleur</string>
-    <string name="settings_section_background_animation">Animation d'arrière-plan</string>
+    <string name="settings_toggle_app_icons_label">Icônes des applications</string>
+    <string name="settings_toggle_app_icons_desc">Affiche l'icône de chaque application, extraite des APK locaux ou de l'appareil connecté</string>
+    <string name="settings_appearance_more_apps_card">Carte 'Plus d'applications'</string>
+    <string name="settings_appearance_more_apps_card_description">Affiche une carte sous les applications permettant d'accéder aux patchs communautaires</string>
+    <string name="settings_section_effects">Effets</string>
+    <string name="settings_appearance_background_animation">Animation d'arrière-plan</string>
+    <string name="settings_appearance_background_animation_description">L'animation qui se joue en arrière-plan des écrans de l'application</string>
     <string name="settings_background_circles">Cercles</string>
     <string name="settings_background_rings">Anneaux</string>
     <string name="settings_background_mesh">Maillage</string>
@@ -689,6 +701,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Mode Expert</string>
     <string name="settings_toggle_expert_mode_desc">Contrôle total de la sélection et de la configuration des patchs</string>
+    <string name="settings_expert_mode_disabled_in_flow">Retournez à l'accueil pour changer de mode</string>
     <string name="settings_toggle_route_links_label">Rediriger les liens vers l'application patchée</string>
     <string name="settings_toggle_route_links_desc">Après l'installation via ADB, fait en sorte que l'application patchée ouvre ses liens web pris en charge au lieu du navigateur ou de l'application d'origine/par défaut</string>
     <string name="settings_toggle_disable_stock_links_label">Désactiver les liens de l'application d'origine</string>
@@ -698,17 +711,17 @@
     <string name="settings_toggle_developer_options_label">Options de développeur</string>
     <string name="settings_toggle_developer_options_desc">Pour les développeurs de patchs. Déverrouille une suite d'options de workflow pour créer et tester des patchs (voir la documentation pour la liste complète). Pour l'instant, cela consiste à pointer une source locale vers un dossier afin que Morphe charge toujours son fichier .mpp le plus récent</string>
     <string name="settings_dev_bytecode_mode_label">Mode bytecode</string>
-    <string name="settings_dev_bytecode_mode_desc">Mode de transformation appliqué au bytecode DEX lors du patchage</string>
+    <string name="settings_dev_bytecode_mode_desc">Mode de transformation appliqué au bytecode DEX lors du patching</string>
     <string name="settings_dev_bytecode_mode_strip_fast">Rapide</string>
-    <string name="settings_dev_bytecode_mode_strip_safe">Sûr</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Sécurisé</string>
     <string name="settings_dev_bytecode_mode_full">Complet</string>
-    <string name="settings_dev_validate_label">Validation de l'empreinte</string>
-    <string name="settings_dev_validate_desc">Valider que chaque match() ne correspond qu'à une seule méthode (patchage plus lent, pour le test de patch)</string>
+    <string name="settings_dev_validate_label">Validation de l'empreinte numérique</string>
+    <string name="settings_dev_validate_desc">Valider que chaque match() ne correspond qu'à une seule méthode (patching plus lent, pour les tests de patch)</string>
     <string name="settings_dev_verify_sdk_label">Vérification du SDK Android</string>
     <string name="settings_dev_verify_sdk_desc">Vérifier le DEX et l'APK patchés avec les outils du SDK Android (d8, zipalign). Peut signaler des faux positifs</string>
     <string name="settings_dev_sdk_path_label">Répertoire du SDK Android</string>
     <string name="settings_dev_sdk_path_auto">Détecté automatiquement</string>
-    <string name="settings_dev_sdk_not_found">SDK Android non trouvé. Définissez ANDROID_HOME ou parcourez les dossiers pour trouver le répertoire du SDK</string>
+    <string name="settings_dev_sdk_not_found">SDK Android introuvable. Définissez ANDROID_HOME ou recherchez le répertoire du SDK Android</string>
     <string name="settings_dev_sdk_picker_title">Sélectionner le répertoire du SDK Android</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Nettoyage automatique des fichiers temporaires</string>
@@ -725,12 +738,28 @@
     <string name="settings_toggle_auto_start_adb_label">Démarrage automatique d'ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Lance le démon ADB au démarrage pour surveiller les appareils connectés. Lorsqu'il est désactivé, Morphe ne démarre jamais le serveur, et les fonctionnalités d'installation/envoi sont désactivées</string>
     <string name="settings_section_storage">Stockage &amp; cache</string>
-    <string name="settings_cache_summary">Cache : %1$s (patchs + journaux)</string>
-    <string name="settings_cache_clear_button">Vider le cache</string>
+    <string name="settings_cache_clear_all_title">Effacer tout le cache</string>
+    <string name="settings_cache_category_patches">Patchs</string>
+    <string name="settings_cache_category_logs">Journaux</string>
+    <string name="settings_cache_category_temp">Fichiers temporaires</string>
+    <string name="settings_cache_category_avatars">Cache des avatars</string>
+    <string name="settings_cache_category_app_icons">Cache des icônes des applications</string>
+    <string name="settings_cache_confirm_patches_title">Effacer les patchs ?</string>
+    <string name="settings_cache_confirm_patches_message">Cela supprimera les fichiers de patchs téléchargés. Les patchs seront téléchargés à nouveau lorsque nécessaire</string>
+    <string name="settings_cache_confirm_logs_title">Effacer les journaux ?</string>
+    <string name="settings_cache_confirm_logs_message">Cela supprimera tous les fichiers journaux de l'application ainsi que les extractions logcat de l'appareil</string>
+    <string name="settings_cache_confirm_temp_title">Effacer les fichiers temporaires ?</string>
+    <string name="settings_cache_confirm_temp_message">Cela supprimera les fichiers temporaires et de travail</string>
+    <string name="settings_cache_confirm_avatars_title">Vider le cache des avatars ?</string>
+    <string name="settings_cache_confirm_avatars_message">Cela supprimera toutes les images d'avatar distantes mises en cache</string>
+    <string name="settings_cache_confirm_app_icons_title">Vider le cache des icônes des applications ?</string>
+    <string name="settings_cache_confirm_app_icons_message">Cela supprimera toutes les icônes des applications extraites des fichiers APK et des appareils</string>
+    <string name="settings_cache_category_cleared">%1$s effacé</string>
+    <string name="settings_cache_category_clear_failed">Échec de l'effacement de %1$s</string>
     <string name="settings_cache_cleared">Cache vidé</string>
     <string name="settings_cache_clear_failed">Échec de l'effacement</string>
     <string name="settings_cache_confirm_title">Vider le cache ?</string>
-    <string name="settings_cache_confirm_message">Cela supprimera les patchs téléchargés et les fichiers journaux. Les patchs seront téléchargés à nouveau lorsque nécessaire</string>
+    <string name="settings_cache_confirm_message">Cela supprimera les patchs téléchargés, les fichiers journaux et les fichiers temporaires. Les patchs seront téléchargés à nouveau lorsque nécessaire</string>
     <string name="settings_storage_open_app_data_button">Ouvrir les données de l'application</string>
     <string name="settings_storage_open_logs_button">Ouvrir les journaux</string>
     <string name="settings_section_about">À propos</string>
@@ -788,7 +817,7 @@
     <string name="settings_runtime_logs_title">Journaux d'exécution de l'application patchée</string>
     <string name="settings_runtime_logs_desc">Capturez les journaux de votre téléphone après le plantage ou le dysfonctionnement d'une application patchée. Effacez-les avant de reproduire le problème, puis enregistrez la sortie filtrée pour la joindre à un rapport de bug</string>
     <string name="settings_runtime_logs_device_info">Appareil : %1$s</string>
-    <string name="settings_runtime_logs_no_device">Aucun appareil connecté. Branchez votre téléphone avec le débogage USB activé</string>
+    <string name="settings_runtime_logs_no_device">Aucun appareil connecté. Connectez votre téléphone avec le débogage USB ou Wi-Fi activé</string>
     <string name="settings_runtime_logs_clearing">Effacement…</string>
     <string name="settings_runtime_logs_clear_button">Effacer les journaux de l'appareil</string>
     <string name="settings_runtime_logs_failed_to_clear">Échec de l'effacement des journaux</string>
@@ -829,4 +858,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Sources</string>
     <string name="nav_apps">Applications</string>
+    <string name="nav_settings">Paramètres</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Rechercher des paramètres</string>
+    <string name="settings_search_no_results">Aucun paramètre correspondant</string>
+    <string name="settings_back_to_about">Retour à la section 'À propos'</string>
+    <string name="licenses_back_to_list">Retour aux licences</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Plus d'applications</string>
+    <string name="home_more_apps_subtitle">Patchs communautaires</string>
+    <string name="community_patches_notice_title">Sources de patchs tierces</string>
+    <string name="community_patches_notice_message">Les sources de patchs communautaires sont créées et maintenues par leurs propres auteurs. Morphe ne vérifie ni n'examine les patchs tiers et n'est pas responsable de leur contenu ni de leurs agissements sur votre appareil.</string>
 </resources>

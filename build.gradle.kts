@@ -60,10 +60,7 @@ dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
     implementation(libs.morphe.library) {
-        // Exclude mockito/bytebuddy leaked into compile scope by app.morphe:jadb POM
-        exclude(group = "org.mockito")
-        exclude(group = "net.bytebuddy")
-        exclude(group = "org.objenesis")
+        exclude(group = "app.morphe", module = "jadb")
     }
     implementation(libs.picocli)
     implementation(libs.bundles.compose.desktop)
@@ -257,8 +254,9 @@ tasks {
         // Load the Proguard configuration
         configuration("proguard-rules.pro")
 
-        // Include the Java runtime classes
-        val javaHome = System.getProperty("java.home")
+        // Include the Java runtime classes of the project's toolchain JDK, not the JVM running Gradle,
+        // which can be a newer JDK (e.g. JDK 25 on ubuntu-latest) with a different class hierarchy.
+        val javaHome = project.javaToolchains.launcherFor(project.java.toolchain).get().metadata.installationPath.asFile
         libraryjars("$javaHome/jmods")
         
         // Include all dependencies as library jars so Proguard can resolve hierarchies

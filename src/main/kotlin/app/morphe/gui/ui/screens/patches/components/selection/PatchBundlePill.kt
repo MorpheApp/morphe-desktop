@@ -8,7 +8,6 @@ package app.morphe.gui.ui.screens.patches.components.selection
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -46,6 +45,7 @@ import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patches.BundlePatches
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.morphe_desktop.generated.resources.*
 import io.ktor.client.HttpClient
@@ -92,7 +92,7 @@ fun PatchBundlePill(
     Row(
         modifier = modifier
             .clip(PillShape)
-            .border(1.dp, borderColor, PillShape)
+            .outlineBorder(borderColor, PillShape, enabled = isSelected || MorpheTheme.outlines)
             .background(containerColor, PillShape)
             .hoverable(interactionSource)
             .handCursor()

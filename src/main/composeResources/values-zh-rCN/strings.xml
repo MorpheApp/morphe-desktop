@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">修补因未知原因失败</string>
     <string name="error_log_label">错误日志</string>
     <string name="back">返回</string>
+    <string name="open">打开</string>
     <string name="open_folder">打开文件夹</string>
     <string name="temporary_files_label">临时文件</string>
     <string name="size_can_be_freed_label">可释放 %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">安装失败：%1$s</string>
     <string name="adb_error_not_found">未找到 ADB。请安装 Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">设备已连接但未授权。请在设备上接受 USB 调试提示</string>
-    <string name="adb_error_no_devices">未连接设备。请连接已启用 USB 调试的 Android 设备</string>
+    <string name="adb_error_no_devices">未连接设备。请连接已启用 USB 或 Wi-Fi 调试的 Android 设备</string>
     <string name="adb_error_device_not_found">未找到设备 %1$s</string>
     <string name="adb_error_multiple_devices">已连接多台设备。请选择一台</string>
     <string name="adb_error_apk_not_found">未找到 APK 文件：%1$s</string>
@@ -249,7 +250,7 @@
     <string name="home_detail_error_download_bundle">无法下载 %1$s %2$s：%3$s</string>
     <string name="home_detail_downloading_patch">正在下载 %1$s</string>
     <string name="home_detail_resolving_patch_files">正在解析补丁文件</string>
-    <string name="home_detail_downloading_percent">正在下载 %1$d%%</string>
+    <string name="home_detail_downloading_percent">正在下载 %1$d%</string>
     <string name="home_detail_details_title">详细信息</string>
     <string name="home_detail_output_path_label">输出路径</string>
     <string name="home_detail_using_label">使用</string>
@@ -399,7 +400,7 @@
     <string name="patching_step_all_done">全部完成！</string>
     <string name="patching_step_waiting">正在等待……</string>
     <string name="patching_graph_memory_usage">内存使用量</string>
-    <string name="patching_graph_memory_detail">占 %2$d MB 的 %1$d%%</string>
+    <string name="patching_graph_memory_detail">%1$d% 占 %2$d MB</string>
     <string name="patching_graph_storage_io">存储 I/O</string>
     <string name="patching_graph_cpu_usage">CPU 使用率</string>
     <string name="patching_banner_started_title">修补已开始</string>
@@ -428,12 +429,12 @@
     <string name="patching_error_failed_patches">失败的补丁：%1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB 已关闭 · 启用以安装</string>
-    <string name="result_adb_connect_device_hint">通过 USB 连接设备以使用 ADB 安装</string>
+    <string name="result_adb_connect_device_hint">通过 USB 或 Wi-Fi 连接设备以使用 ADB 安装</string>
     <string name="result_screen_patch_another_button">修补另一个</string>
     <string name="result_screen_install_on_device_label">安装到 %1$s</string>
     <string name="result_screen_links_routed_label">链接已路由到已修补的应用</string>
     <string name="result_adb_updating_on_device">正在 %1$s 上更新……</string>
-    <string name="result_adb_update_successful">更新成功!</string>
+    <string name="result_adb_update_successful">更新成功！</string>
     <string name="result_adb_install_successful">安装成功！</string>
     <string name="result_adb_badge_root_mount">Root 挂载模式</string>
     <string name="result_adb_mount_button">在 %1$s 上挂载</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">正在从 %1$s 卸载……</string>
     <string name="result_adb_root_not_detected">在 %1$s 上未检测到 Root 权限。请确保已安装 Magisk/KernelSU/APatch 并且已授予 su 权限</string>
     <string name="result_adb_stock_app_not_installed">设备 %2$s 上未安装原生应用 %1$s。请在挂载前先安装官方应用</string>
+    <string name="result_adb_mount_version_mismatch">%3$s 上的自带应用版本为 v%1$s，但补丁 APK 版本为 v%2$s。Root 挂载需要版本匹配</string>
+    <string name="result_adb_mount_abi_mismatch">设备 %3$s 为 %1$s，但 APK 仅包含 [%2$s]。原生库将无法加载</string>
     <string name="result_link_default_restored">默认链接处理已恢复</string>
     <string name="result_link_routed_stock_disabled">链接已路由到已修补的应用，原应用已禁用</string>
     <string name="result_adb_not_found_hint">未找到 ADB。请安装 Android SDK Platform Tools 以启用直接安装</string>
     <string name="result_adb_section_title">ADB 安装</string>
     <string name="result_adb_no_devices">未连接设备</string>
-    <string name="result_adb_connect_hint">通过 USB 连接并启用 USB 调试</string>
+    <string name="result_adb_connect_hint">通过 USB 或 Wi-Fi 调试连接</string>
     <string name="result_device_status_unauth">未授权</string>
     <string name="result_adb_update_button">在 %1$s 上更新</string>
     <string name="result_adb_select_device_button">选择设备</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">未找到 ADB</string>
     <string name="device_indicator_adb_not_found_subtitle">安装 Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">未检测到设备</string>
-    <string name="device_indicator_no_devices_subtitle">连接已启用 USB 调试的设备</string>
+    <string name="device_indicator_no_devices_subtitle">连接已启用 USB 或 Wi-Fi 调试的设备</string>
     <string name="device_indicator_enable_debugging_title">启用 USB 调试</string>
     <string name="device_indicator_enable_debugging_subtitle">设置 → 开发者选项 → USB 调试</string>
     <string name="device_indicator_status_connected">已连接</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">语言</string>
     <string name="settings_language_current_title">当前语言</string>
-    <string name="settings_language_community_translation_hint">某些语言的翻译可能缺失或不完整。要翻译新语言或改进现有翻译，请访问 %1$s</string>
     <string name="settings_language_dialog_title">应用语言</string>
+    <string name="settings_language_translate_title">帮助翻译 Morphe</string>
     <string name="settings_language_search_no_results">未找到结果</string>
     <string name="settings_section_theme">主题</string>
     <string name="settings_appearance_theme_mode">主题模式</string>
+    <string name="settings_appearance_theme_mode_description">在浅色、深色、纯黑或系统主题之间切换</string>
     <string name="settings_theme_light">浅色</string>
     <string name="settings_theme_dark">深色</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">颜色样式</string>
+    <string name="settings_appearance_color_style_description">有色 Morphe 调色板或灰度单色风格</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">单色</string>
     <string name="settings_toggle_sharp_corners_label">锐利边角</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">应用卡片</string>
     <string name="settings_app_cards_color_all">所有卡片的颜色</string>
     <string name="settings_app_cards_color_all_desc">您单独自定义过的卡片会保留自己的颜色</string>
-    <string name="settings_section_background_animation">背景动画</string>
+    <string name="settings_toggle_app_icons_label">应用图标</string>
+    <string name="settings_toggle_app_icons_desc">显示从本地 APK 或已连接设备中提取的每个应用的图标</string>
+    <string name="settings_appearance_more_apps_card">更多应用卡片</string>
+    <string name="settings_appearance_more_apps_card_description">在应用下方显示一个指向社区补丁的卡片</string>
+    <string name="settings_section_effects">效果</string>
+    <string name="settings_appearance_background_animation">背景动画</string>
+    <string name="settings_appearance_background_animation_description">在应用界面后面播放的动画</string>
     <string name="settings_background_circles">圆形</string>
     <string name="settings_background_rings">圆环</string>
     <string name="settings_background_mesh">网状</string>
@@ -688,11 +699,12 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">专家模式</string>
     <string name="settings_toggle_expert_mode_desc">完全控制补丁选择和配置</string>
+    <string name="settings_expert_mode_disabled_in_flow">返回主页以更改模式</string>
     <string name="settings_toggle_route_links_label">将链接路由到已修补的应用</string>
     <string name="settings_toggle_route_links_desc">通过 ADB 安装后，让已修补的应用打开其支持的网页链接，而不是浏览器或原装/默认应用</string>
     <string name="settings_toggle_disable_stock_links_label">禁用原应用的链接</string>
     <string name="settings_toggle_disable_stock_links_desc">同时阻止原应用打开这些链接（仅在使用重命名补丁且已安装原应用时生效）。可恢复</string>
-    <string name="settings_section_signing">正在签名</string>
+    <string name="settings_section_signing">签名</string>
     <string name="settings_section_strip_libs">剥离库</string>
     <string name="settings_toggle_developer_options_label">开发者选项</string>
     <string name="settings_toggle_developer_options_desc">供补丁开发者使用。解锁一系列用于构建和测试补丁的工作流选项（完整列表请参阅文档）。目前，这是将本地来源指向一个文件夹，以便 Morphe 始终加载其中最新的 .mpp</string>
@@ -724,12 +736,28 @@
     <string name="settings_toggle_auto_start_adb_label">自动启动 ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">启动时生成 ADB 守护进程，以监视已连接的设备。关闭时，Morphe 不会启动服务器，安装/推送功能将被禁用</string>
     <string name="settings_section_storage">存储 &amp; 缓存</string>
-    <string name="settings_cache_summary">缓存：%1$s（补丁 + 日志）</string>
-    <string name="settings_cache_clear_button">清除缓存</string>
+    <string name="settings_cache_clear_all_title">清除所有缓存</string>
+    <string name="settings_cache_category_patches">补丁</string>
+    <string name="settings_cache_category_logs">日志</string>
+    <string name="settings_cache_category_temp">临时文件</string>
+    <string name="settings_cache_category_avatars">头像缓存</string>
+    <string name="settings_cache_category_app_icons">应用图标缓存</string>
+    <string name="settings_cache_confirm_patches_title">清除补丁？</string>
+    <string name="settings_cache_confirm_patches_message">这将删除已下载的补丁文件。需要时将重新下载补丁</string>
+    <string name="settings_cache_confirm_logs_title">清除日志？</string>
+    <string name="settings_cache_confirm_logs_message">这将删除所有应用程序日志文件和设备 logcat 转储</string>
+    <string name="settings_cache_confirm_temp_title">清除临时文件？</string>
+    <string name="settings_cache_confirm_temp_message">这将删除临时暂存文件和工作区文件</string>
+    <string name="settings_cache_confirm_avatars_title">清除头像缓存？</string>
+    <string name="settings_cache_confirm_avatars_message">这将删除所有缓存的远程头像图像</string>
+    <string name="settings_cache_confirm_app_icons_title">清除应用图标缓存？</string>
+    <string name="settings_cache_confirm_app_icons_message">这将删除所有从 APK 和设备中提取的应用图标</string>
+    <string name="settings_cache_category_cleared">%1$s 已清除</string>
+    <string name="settings_cache_category_clear_failed">清除 %1$s 失败</string>
     <string name="settings_cache_cleared">缓存已清除</string>
     <string name="settings_cache_clear_failed">清除失败</string>
     <string name="settings_cache_confirm_title">清除缓存？</string>
-    <string name="settings_cache_confirm_message">这将删除已下载的补丁和日志文件。需要时将重新下载补丁</string>
+    <string name="settings_cache_confirm_message">这将删除已下载的补丁、日志文件和临时文件。补丁将在需要时重新下载</string>
     <string name="settings_storage_open_app_data_button">打开应用数据</string>
     <string name="settings_storage_open_logs_button">打开日志</string>
     <string name="settings_section_about">关于</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">已修补应用的运行时日志</string>
     <string name="settings_runtime_logs_desc">在已修补的应用崩溃或行为异常后，从手机捕获日志。在重现问题前先清除，然后保存过滤后的输出以附加到错误报告中</string>
     <string name="settings_runtime_logs_device_info">设备：%1$s</string>
-    <string name="settings_runtime_logs_no_device">未连接设备。请插入已启用 USB 调试的手机</string>
+    <string name="settings_runtime_logs_no_device">未连接设备。请通过 USB 或开启 Wi-Fi 调试连接您的手机</string>
     <string name="settings_runtime_logs_clearing">正在清除……</string>
     <string name="settings_runtime_logs_clear_button">清除设备日志</string>
     <string name="settings_runtime_logs_failed_to_clear">清除日志失败</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">来源</string>
     <string name="nav_apps">应用</string>
+    <string name="nav_settings">设置</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">搜索设置</string>
+    <string name="settings_search_no_results">没有匹配的设置</string>
+    <string name="settings_back_to_about">返回关于</string>
+    <string name="licenses_back_to_list">返回许可证列表</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">更多应用</string>
+    <string name="home_more_apps_subtitle">社区补丁</string>
+    <string name="community_patches_notice_title">第三方补丁来源</string>
+    <string name="community_patches_notice_message">社区补丁来源由其作者创建并维护。Morphe 不审核或验证第三方补丁，且不对其内容或其在您的设备上的操作负责。</string>
 </resources>

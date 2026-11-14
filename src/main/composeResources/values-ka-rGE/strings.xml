@@ -7,7 +7,7 @@
     <string name="retry">გაიმეორეთ</string>
     <string name="clear">გასუფთავება</string>
     <string name="search">ძებნა</string>
-    <string name="no_matches">შესაბამისობა ვერ მოიძებნა</string>
+    <string name="no_matches">ვერაფერი მოიძებნა</string>
     <string name="remove">წაშლა</string>
     <string name="collapse">ჩაკეცვა</string>
     <string name="expand">გაშლა</string>
@@ -18,12 +18,12 @@
     <string name="disabled_while_patching">გათიშულია პატჩინგის დროს</string>
     <string name="drop_apk_here">ჩააგდეთ APK აქ</string>
     <string name="release_to_drop">გათავისუფლეთ ჩასაგდებად</string>
-    <string name="click_to_browse">ან დააჭირეთ საძიებლად</string>
+    <string name="click_to_browse">ან დააჭირეთ დასათვალიერებლად</string>
     <string name="error_could_not_load_patches">პატჩების ჩატვირთვა ვერ მოხერხდა</string>
-    <string name="error_network_timeout">ქსელის დრო დასრულდა, შეამოწმეთ თქვენი კავშირი და სცადეთ மீண்டும்</string>
+    <string name="error_network_timeout">ქსელის დრო დასრულდა, შეამოწმეთ თქვენი კავშირი და სცადეთ ხელახლა</string>
     <string name="error_could_not_reach_patch_server">პატჩის სერვერთან კავშირი ვერ დამყარდა, შეამოწმეთ თქვენი კავშირი</string>
-    <string name="error_github_rate_limit">GitHub-ის მოთხოვნების ლიმიტი ამომწურვდა, დაელოდეთ რამდენიმე წუთი და სცადეთ மீண்டும்</string>
-    <string name="error_connection_dropped">ჩამოტვირთვისას კავშირი გაწყდა, სცადეთ மீண்டும்</string>
+    <string name="error_github_rate_limit">GitHub-ის მოთხოვნების ლიმიტი ამოიწურა, დაელოდეთ რამდენიმე წუთი და სცადეთ ხელახლა</string>
+    <string name="error_connection_dropped">ჩამოტვირთვისას კავშირი გაწყდა, სცადეთ ხელახლა</string>
     <string name="error_network_loading_patches">ქსელის შეცდომა პატჩების ჩატვირთვისას</string>
     <string name="error_patch_file_not_found">პატჩის ფაილი ვერ მოიძებნა: %1$s</string>
     <string name="error_step_failed">%1$s ჩაიშალა: %2$s</string>
@@ -36,7 +36,7 @@
     <string name="folder">საქაღალდე</string>
     <string name="customize">მორგება</string>
     <string name="customize_card_description">ბარათის მორგება</string>
-    <string name="none">არავინ/არაფერი</string>
+    <string name="none">არცერთი</string>
     <string name="select_image">სურათის არჩევა</string>
     <string name="select_file">ფაილის არჩევა</string>
     <string name="failed">ვერ მოხერხდა</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">პატჩინგი ჩაიშალა გაურკვეველი მიზეზით</string>
     <string name="error_log_label">შეცდომების ჟურნალი</string>
     <string name="back">უკან</string>
+    <string name="open">გახსნა</string>
     <string name="open_folder">საქაღალდის გახსნა</string>
     <string name="temporary_files_label">დროებითი ფაილები</string>
     <string name="size_can_be_freed_label">შესაძლებელია %1$s-ის გათავისუფლება</string>
@@ -103,7 +104,7 @@
     <string name="adb_install_on_button">ინსტალაცია %1$s-ზე</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">პატჩების ჩატვირთვა</string>
-    <string name="patching_step_merging_split_apk">გაფ𝐫აქტილებული APK-ის გაერთიანება</string>
+    <string name="patching_step_merging_split_apk">გაყოფილი APK-ის გაერთიანება</string>
     <string name="patching_step_read_apk">APK ფაილის წაკითხვა</string>
     <string name="patching_step_applying_patches">პატჩების გამოყენება</string>
     <string name="patching_step_writing_apk">პატჩირებული APK ფაილის ჩაწერა</string>
@@ -127,8 +128,8 @@
     <string name="adb_error_verification_failure">პაკეტის ვერიფიკაცია ჩაიშალა</string>
     <string name="adb_error_generic">ინსტალაცია ჩაიშალა: %1$s</string>
     <string name="adb_error_not_found">ADB ვერ მოიძებნა. გთხოვთ, დააინსტალიროთ Android SDK Platform Tools</string>
-    <string name="adb_error_unauthorized">მოწყობილობა terკავშირებულია, მაგრამ არ არის ავტორიზებული. გთხოვთ, დაეთანხმოთ USB დებაგინგის მოთხოვნას თქვენს მოწყობილობაზე</string>
-    <string name="adb_error_no_devices">მოწყობილობები არ არის დაკავშირებული. გთხოვთ, შეაერთოთ თქვენი Android მოწყობილობა ჩართული USB დებაგინგით</string>
+    <string name="adb_error_unauthorized">მოწყობილობა დაკავშირებულია, მაგრამ არ არის ავტორიზებული. გთხოვთ, დაეთანხმოთ USB დებაგინგის მოთხოვნას თქვენს მოწყობილობაზე</string>
+    <string name="adb_error_no_devices">მოწყობილობები არ არის დაკავშირებული. გთხოვთ, შეაერთოთ თქვენი Android მოწყობილობა USB-ით ან Wi-Fi-ით, ჩართული დებაგინგის რეჟიმით</string>
     <string name="adb_error_device_not_found">მოწყობილობა %1$s ვერ მოიძებნა</string>
     <string name="adb_error_multiple_devices">რამდენიმე მოწყობილობაა დაკავშირებული. გთხოვთ, აირჩიოთ ერთი</string>
     <string name="adb_error_apk_not_found">APK ფაილი ვერ მოიძებნა: %1$s</string>
@@ -156,12 +157,12 @@
     <string name="version_status_unsupported">ვერსია არ არის მხარდაჭერილი</string>
     <string name="version_status_build_unsupported">ვერსია არ არის მხარდაჭერილი</string>
     <string name="version_status_build_unsupported_detail">ეს ვერსია მხარდაჭერილია, მაგრამ მისი ეს კონკრეტული ვერსია არა. ჩამოტვირთეთ ვერსია, რომელიც შეესაბამება პატჩებს</string>
-    <string name="version_status_build_unsupported_with_code">ფეტჩებისთვის საჭიროა ბილდი %1$s</string>
+    <string name="version_status_build_unsupported_with_code">პატჩებისთვის საჭიროა ბილდი %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">ვერსიის შესახებ შეტყობინება</string>
-    <string name="version_warning_build_unsupported_message">მიმდინარე: v%1$s (ბილდი %2$s)\nსაჭირო ბილდი: %3$s\n\nეს არის ერთი და იმავე ვერსიის სხვა ბილდი. ფეტჩები მოითხოვს კონკრეტულ ბილდს.</string>
+    <string name="version_warning_build_unsupported_message">მიმდინარე: v%1$s (ბილდი %2$s)\nსაჭირო ბილდი: %3$s\n\nეს არის იმავე ვერსიის სხვა ბილდი. პატჩები მოითხოვს კონკრეტულ ბილდს.</string>
     <string name="version_warning_experiment_title">გსურთ ექსპერიმენტების ჩატარება? 🧪</string>
-    <string name="version_warning_latest_experimental_message">მიმდინარე: v%1$s\n\nამ ვერსიას აქვს ადრეული ექსპერიმენტული მხარდაჭერა\n\n🔧 მოემზადეთ აპლიკაციის უცნაური ქცევისთვის ან გაურკვეველი ხარვეზებისთვის, სანამ შესწორებები ამ ვერსიისთვის დახვეწiladi იქნება.</string>
+    <string name="version_warning_latest_experimental_message">მიმდინარე: v%1$s\n\nამ ვერსიას აქვს ადრეული ექსპერიმენტული მხარდაჭერა\n\n🔧 მოემზადეთ აპლიკაციის უცნაური ქცევისთვის ან გაურკვეველი ხარვეზებისთვის, სანამ შესწორებები ამ ვერსიისთვის დაიხვეწება.</string>
     <string name="version_warning_unsupported_message">მიმდინარე: v%1$s\n\nეს არ არის ოფიციალურად მხარდაჭერილი ვერსია. პატჩების გამოყენება, სავარაუდოდ, ჩაიშლება.</string>
     <string name="version_warning_notice_message">გსურთ გააგრძელოთ v%1$s-ით?</string>
     <!-- Home Screen -->
@@ -187,18 +188,18 @@
     <string name="home_apk_info_from_label">დან</string>
     <string name="home_stage_change_apk">APK-ს შეცვლა</string>
     <string name="home_stage_continue">გაგრძელება</string>
-    <string name="home_stage_patch">ფეტჩი</string>
+    <string name="home_stage_patch">პატჩი</string>
     <string name="home_stage_analyzing_title">ანალიზი</string>
     <string name="home_stage_reading_metadata">აპლიკაციის მეტამონაცემების წაკითხვა…</string>
     <!-- Home Screen - Dialogs -->
     <string name="home_dialog_forget_button">დავიწყება</string>
     <string name="home_dialog_uninstall_button">წაშლა</string>
     <string name="home_dialog_continue_anyway">ყოველ შემთხვევაში გაგრძელება</string>
-    <string name="home_dialog_forget_title">დავიწყოთ %1$s?</string>
+    <string name="home_dialog_forget_title">დავივიწყოთ %1$s?</string>
     <string name="home_dialog_forget_message">ეს ამოშლის %1$s თქვენი დაპატჩული აპლიკაციების ისტორიიდან. ის არ ეხება ფაილებს - აპლიკაციის ხელახალი დაპატჩვა მას დააბრუნებს</string>
     <string name="home_dialog_uninstall_title">წავშალოთ %1$s?</string>
     <string name="home_dialog_uninstall_message">ეს ამოშლის %1$s დაკავშირებული მოწყობილობიდან. დისკზე არსებული დაპატჩული APK და თქვენი ისტორია შენარჩუნდება, თუ ქვემოთ სხვაგვარად არ აირჩევთ</string>
-    <string name="home_dialog_uninstall_also_forget">ასევე წაშალოს თქვენი აპლიკაციებიდან</string>
+    <string name="home_dialog_uninstall_also_forget">ასევე წაიშალოს თქვენი აპლიკაციებიდან</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">წყაროების მართვა</string>
     <string name="home_header_multi_source_hint">ყველა ჩართული წყაროდან აღებული პატჩები გაერთიანებულია. მართეთ ზემოთ მოცემული წყაროების ღილაკიდან</string>
@@ -214,17 +215,17 @@
     <string name="home_app_row_update_available_badge">ხელმისაწვდომია განახლება</string>
     <string name="home_app_row_modified_badge">შეცვლილია</string>
     <string name="home_app_row_apk_missing_badge">APK ფაილი აკლია</string>
-    <string name="home_app_row_section_patches_from">ფაჩები შემდეგიდან</string>
+    <string name="home_app_row_section_patches_from">პატჩები შემდეგიდან</string>
     <!-- Home Screen - SupportedAppsListPane -->
     <string name="home_list_load_failed">ჩატვირთვა ვერ მოხერხდა</string>
-    <string name="home_list_no_supported_apps">მხარდაჭერილი აპლიკაციები არ נמצאება</string>
+    <string name="home_list_no_supported_apps">მხარდაჭერილი აპლიკაციები არ არის</string>
     <string name="home_list_no_apps_match">აპლიკაციები, რომლებიც შეესაბამება \"%1$s\"-ს, არ მოიძებნა</string>
     <string name="home_sort_recommended">რეკომენდირებული</string>
     <string name="home_sort_recommended_desc">ჯერ პატჩირებული აპლიკაციები, შემდეგ დაინსტალირებული, შემდეგ კი სახელის მიხედვით</string>
     <string name="home_sort_name_asc">სახელი (A-დან Z-მდე)</string>
-    <string name="home_sort_name_asc_desc">ალფაბეთური</string>
+    <string name="home_sort_name_asc_desc">ანბანური</string>
     <string name="home_sort_name_desc">სახელი (Z-დან A-მდე)</string>
-    <string name="home_sort_name_desc_desc">უკუ ალფაბეთური</string>
+    <string name="home_sort_name_desc_desc">ანბანის უკუ რიგით</string>
     <string name="home_sort_updates_first">ჯერ პატჩის განახლებები</string>
     <string name="home_sort_updates_first_desc">ჯერ აპლიკაციები პატჩის განახლებით, შემდეგ რეკომენდირებული</string>
     <string name="home_sort_recently_patched">ახლახან პატჩირებული</string>
@@ -255,16 +256,16 @@
     <string name="home_detail_using_label">გამოიყენება</string>
     <string name="home_detail_apk_origin_sub">APK, რომლიდანაც ეს აპლიკაცია იქნა პატჩირებული</string>
     <string name="home_detail_reading_chosen_bundle">შერჩეული ბანდლის კითხვა...</string>
-    <string name="home_detail_bundle_not_downloaded_warning">ქვემოთ მოცემული ვერსიებია ის, რასაც %1$s mendukungავს. თქვენ შეარჩიეთ %2$s, რომელიც არ არის ჩამოტვირთული, ამიტომ უცნობია, რას mendukungავს ის</string>
-    <string name="home_detail_bundle_does_not_support_warning">%1$s არ mendukungავს %2$s-ს. ამის ნაცვლად შეარჩიეთ ერთ-ერთი მათგანი</string>
-    <string name="home_detail_versions_what_bundle_supports">ქვემოთ მოცემული ვერსიებია ის, რასაც %1$s mendukungავს</string>
+    <string name="home_detail_bundle_not_downloaded_warning">ქვემოთ მოცემული ვერსიებია ის, რასაც %1$s მხარს უჭერს. თქვენ აირჩიეთ %2$s, რომელიც არ არის ჩამოტვირთული, ამიტომ მისი მხარდაჭერა უცნობია</string>
+    <string name="home_detail_bundle_does_not_support_warning">%1$s არ უჭერს მხარს %2$s-ს. ამის ნაცვლად აირჩიეთ ერთ-ერთი მათგანი</string>
+    <string name="home_detail_versions_what_bundle_supports">ქვემოთ მოცემული ვერსიებია ის, რასაც %1$s მხარს უჭერს</string>
     <string name="home_detail_choose_apk_button">აირჩიეთ APK</string>
     <string name="home_detail_select_apk_title">აირჩიეთ APK პატჩირებისთვის</string>
     <string name="home_detail_new_source_button">ახალი წყარო</string>
     <string name="home_detail_local_mpp_button">ლოკალური .mpp</string>
     <string name="home_detail_select_patch_bundle_title">აირჩიეთ პატჩის პაკეტი</string>
     <string name="home_detail_latest_available">უახლესი ხელმისაწვდომი</string>
-    <string name="home_detail_pinned_badge">pinned</string>
+    <string name="home_detail_pinned_badge">დამაგრებული</string>
     <string name="home_detail_loading_versions">ვერსიების ჩატვირთვა…</string>
     <string name="home_detail_no_other_versions">სხვა ვერსიები არ არის ხელმისაწვდომი</string>
     <string name="home_detail_app_version_label">აპლიკაციის ვერსია</string>
@@ -329,12 +330,12 @@
     <string name="patch_selection_icon_ready">მორგებული ხატულა მზადაა</string>
     <string name="patch_selection_icon_none">მორგებული ხატულა არ არის მითითებული</string>
     <string name="patch_selection_icon_dialog_delete_title">წაშალო პერსონალური ხატულა?</string>
-    <string name="patch_selection_icon_dialog_delete_message">ეს წაშლის ხატულას, მის შენახულ პროექტსა და გენერირებულ ფაილებს. მოქმედება nicht აღდგენადია</string>
+    <string name="patch_selection_icon_dialog_delete_message">ეს წაშლის ხატულას, მის შენახულ პროექტსა და გენერირებულ ფაილებს. ამ მოქმედების გაუქმება შეუძლებელია</string>
     <string name="patch_selection_custom_icon_hint">თქვენ არ გიწევთ ამ საქაღალდის ხელით შექმნა! დააჭირეთ დიზაინის/რედაქტირების ხატულას მის შესაქმნელად Icon Studio-ში ან შემოიტანეთ იგი მენეჯერიდან</string>
     <string name="patch_selection_option_enabled">ჩართულია</string>
     <string name="patch_selection_option_disabled">გამორთულია</string>
-    <string name="patch_selection_mode_your_defaults">თქვენი ნაგबातები</string>
-    <string name="patch_selection_mode_patch_defaults">პატჩის ნაგबातები</string>
+    <string name="patch_selection_mode_your_defaults">თქვენი ნაგულისხმევი</string>
+    <string name="patch_selection_mode_patch_defaults">პატჩის ნაგულისხმევი</string>
     <string name="patch_selection_mode_all">ყველა</string>
     <string name="patch_selection_strip_no_libs_headline">ნატიური ბიბლიოთეკების გარეშე</string>
     <string name="patch_selection_strip_no_libs_detail">გამოკვეთა არ გამოიყენება</string>
@@ -415,7 +416,7 @@
     <string name="patching_banner_os">ოპერაციული სისტემა</string>
     <string name="patching_banner_arch">არქიტექტურა</string>
     <string name="patching_banner_ram_free">თავისუფალი RAM</string>
-    <string name="patching_banner_storage_free">თავისუფალი მეमोरीა</string>
+    <string name="patching_banner_storage_free">თავისუფალი მეხსიერება</string>
     <string name="patching_success_title">პატჩირება წარმატებით დასრულდა</string>
     <string name="patching_success_output_size">გამოსავალი ზომა</string>
     <string name="patching_success_time">დრო</string>
@@ -425,10 +426,10 @@
     <string name="patching_failure_temp_files_cleaned">დროებითი ფაილები გასუფთავებულია</string>
     <string name="patching_banner_native_libs_kept">შენარჩუნებული</string>
     <string name="patching_banner_native_libs_stripped">ამოჭრილი</string>
-    <string name="patching_error_failed_patches">ჩაისაცხლელი ვერ მოხერხდა: %1$s</string>
+    <string name="patching_error_failed_patches">ჩავარდნილი პატჩები: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB გამორთულია · ჩართეთ ინსტალაციისთვის</string>
-    <string name="result_adb_connect_device_hint">შეაერთეთ მოწყობილობა USB-ით ADB-ის მეშვეობით ინსტალაციისთვის</string>
+    <string name="result_adb_connect_device_hint">შეაერთეთ მოწყობილობა USB-ით ან Wi-Fi-ით ADB-ის მეშვეობით ინსტალაციისთვის</string>
     <string name="result_screen_patch_another_button">სხვაზე პატჩის გაკეთება</string>
     <string name="result_screen_install_on_device_label">ინსტალაცია %1$s-ზე</string>
     <string name="result_screen_links_routed_label">ბმულები გადამისამართებულია პატჩირებულ აპლიკაციაზე</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">მოაწყვეტინების გაუქმება %1$s-დან…</string>
     <string name="result_adb_root_not_detected">Root წვდომა არ აღმოჩნდა %1$s-ზე. დარწმუნდით, რომ Magisk/KernelSU/APatch დაინსტალირებულია და su უფლება მინიჭებულია</string>
     <string name="result_adb_stock_app_not_installed">სტანდარტული აპლიკაცია %1$s არ არის დაინსტალირებული %2$s-ზე. მოაწყვეტინებამდე ჯერ დააინსტალირეთ ოფიციალური აპლიკაცია</string>
+    <string name="result_adb_mount_version_mismatch">აპლიკაცია %3$s-ზე არის ვერსია v%1$s, მაგრამ პატჩირებული APK არის ვერსია v%2$s. Root mount-ისთვის საჭიროა ვერსიების დამთხვევა</string>
+    <string name="result_adb_mount_abi_mismatch">მოწყობილობა %3$s არის %1$s, მაგრამ APK შეიცავს მხოლოდ [%2$s]. Native ბიბლიოთეკების ჩატვირთვა ვერ მოხერხდება</string>
     <string name="result_link_default_restored">ბმულების სტანდარტული დამუშავება აღდგენილია</string>
     <string name="result_link_routed_stock_disabled">ბმულები გადამისამართებულია პატჩირებულ აპლიკაციაზე, სტოკ-ვერსია გამორთულია</string>
     <string name="result_adb_not_found_hint">ADB ვერ მოიძებნა. დააინსტალირეთ Android SDK Platform Tools პირდაპირი ინსტალაციისთვის</string>
     <string name="result_adb_section_title">ADB ინსტალაცია</string>
     <string name="result_adb_no_devices">მოწყობილობები არ არის დაკავშირებული</string>
-    <string name="result_adb_connect_hint">დაუკავშირდით USB-ით, USB-გადების (debugging) ფუნქციის ჩართულით</string>
+    <string name="result_adb_connect_hint">შეიერთეთ USB-ით ან Wi-Fi დებაგინგის მეშვეობით</string>
     <string name="result_device_status_unauth">არავტორიზირებული</string>
     <string name="result_adb_update_button">განახლება %1$s-ზე</string>
     <string name="result_adb_select_device_button">აირჩიეთ მოწყობილობა</string>
@@ -475,8 +478,8 @@
     <string name="icon_studio_warn_opaque">ამ სურათს არ აქვს გამჭვირვალობა, ამიტომ თემური &amp; შეტყობინების ხატულები იქნება მყარი ბლოკი. გამოიყენეთ გამჭვირვალე (cut-out) PNG, რათა გამოჩნდეს თქვენი ლოგოს ფორმა</string>
     <string name="icon_studio_warn_unreadable">გამჭვირვალობის შესამოწმებლად ამ სურათის წაკითხვა ვერ მოხერხდა</string>
     <string name="icon_studio_picker_select_font">აირჩიეთ ფონტი</string>
-    <string name="icon_studio_undo_button">გააუქმე</string>
-    <string name="icon_studio_redo_button">გაიმეორო</string>
+    <string name="icon_studio_undo_button">გაუქმება</string>
+    <string name="icon_studio_redo_button">გამეორება</string>
     <string name="icon_studio_templates">შაბლონები</string>
     <string name="icon_studio_template_badge">ბეიჯი</string>
     <string name="icon_studio_preview_adaptive">ადაპტური</string>
@@ -487,17 +490,17 @@
     <string name="icon_studio_layer_label">ფენა</string>
     <string name="icon_studio_duplicate_button">დუბლირება</string>
     <string name="icon_studio_layer_name_placeholder">ფენის სახელი</string>
-    <string name="icon_studio_adjust_opacity">გუმეტრიანობა</string>
+    <string name="icon_studio_adjust_opacity">გაუმჭვირვალობა</string>
     <string name="icon_studio_transform_label">ტრანსფორმაცია</string>
     <string name="icon_studio_adjust_scale">მასშტაბი</string>
     <string name="icon_studio_adjust_rotation">ბრუნვა</string>
     <string name="icon_studio_reset_position_button">პოზიციის განახლება</string>
     <string name="icon_studio_color_label">ფერი</string>
     <string name="icon_studio_adjust_hue">ტონი</string>
-    <string name="icon_studio_adjust_saturation">ჯერადობა</string>
+    <string name="icon_studio_adjust_saturation">ნაჯერობა</string>
     <string name="icon_studio_adjust_brightness">სინათლე</string>
     <string name="icon_studio_effect_shadow">ჩრდილი</string>
-    <string name="icon_studio_adjust_y_offset">Y зміწოლა</string>
+    <string name="icon_studio_adjust_y_offset">Y წანაცვლება</string>
     <string name="icon_studio_adjust_blur">გაბუნდოვნება</string>
     <string name="icon_studio_effect_glow">ნათება</string>
     <string name="icon_studio_effect_stroke">კონტური</string>
@@ -541,14 +544,14 @@
     <string name="version_label_local">ლოკალური</string>
     <string name="source_sheet_remote_label">დისტანციური</string>
     <string name="add_source">წყაროს დამატება</string>
-    <string name="source_sheet_title">ფათჩების წყაროები</string>
-    <string name="source_sheet_reload_description">ფათჩების ხელახალი ჩატვირთვა</string>
-    <string name="source_sheet_multi_mode_hint">გააქტიურეთ/გათიშეთ ნებისმიერი კომბინაცია. ყველა გააქტიურებული წყაროდან ფათჩები გაერთიანდება</string>
+    <string name="source_sheet_title">პატჩების წყაროები</string>
+    <string name="source_sheet_reload_description">პატჩების ხელახალი ჩატვირთვა</string>
+    <string name="source_sheet_multi_mode_hint">გააქტიურეთ/გათიშეთ ნებისმიერი კომბინაცია. ყველა გააქტიურებული წყაროდან პატჩები გაერთიანდება</string>
     <string name="source_sheet_done_button">დასრულდა</string>
     <string name="source_sheet_type_preinstalled">წინასწარ დაინსტალირებული</string>
     <string name="source_sheet_builtin">ჩაშენებული</string>
     <string name="source_sheet_gitlab_label">GitLab</string>
-    <string name="source_sheet_status_resolving">გადის...</string>
+    <string name="source_sheet_status_resolving">იდენტიფიცირება…</string>
     <string name="source_sheet_edit_description">რედაქტირება</string>
     <string name="source_sheet_move_up_description">ზემოთ გადატანა</string>
     <string name="source_sheet_move_down_description">ქვემოთ გადატანა</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB ვერ მოიძებნა</string>
     <string name="device_indicator_adb_not_found_subtitle">დააინსტალირეთ Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">მოწყობილებები ვერ მოიძებნა</string>
-    <string name="device_indicator_no_devices_subtitle">შეაერთეთ მოწყობილება ჩართული USB debugging-ით</string>
+    <string name="device_indicator_no_devices_subtitle">შეაერთეთ მოწყობილობა ჩართული USB ან Wi-Fi დებაგინგის რეჟიმით</string>
     <string name="device_indicator_enable_debugging_title">USB დებაგინგის ჩართვა</string>
     <string name="device_indicator_enable_debugging_subtitle">პარამეტრები → დეველოპერის ოფციები → USB დებაგინგი</string>
     <string name="device_indicator_status_connected">დაკავშირებულია</string>
@@ -627,8 +630,8 @@
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ღია კოდის ლიცენზიები</string>
     <string name="licenses_dialog_empty_failed">// ლიცენზიების ჩატვირთვა ვერ მოხერხდა</string>
-    <string name="licenses_dialog_empty_no_matches">// თანხმობა ვერ მოიძებნა</string>
-    <string name="licenses_dialog_footer_matched">%1$d / %2$d თანხმობა</string>
+    <string name="licenses_dialog_empty_no_matches">// შესაბამისი ვერ მოიძებნა</string>
+    <string name="licenses_dialog_footer_matched">%1$d / %2$d შესაბამისი</string>
     <string name="licenses_search_placeholder">მოძებნეთ ბიბლიოთეკები, SPDX id, uniqueId…</string>
     <string name="licenses_row_authors_label">ავტორები</string>
     <string name="licenses_row_org_label">ორგანიზაცია</string>
@@ -645,26 +648,28 @@
     <string name="settings_nav_advanced">გაფართოებული</string>
     <string name="settings_nav_system">სისტემა</string>
     <string name="settings_dialog_open_logs_button">ლოგების გახსნა</string>
-    <string name="settings_dialog_reset_button">გაყვანა</string>
+    <string name="settings_dialog_reset_button">გადაყენება</string>
     <string name="settings_theme_system">სისტემა</string>
     <string name="settings_search_languages_placeholder">ენების ძებნა</string>
     <string name="settings_dialog_resolves_to_message">გადადის შემდეგზე: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ენა</string>
     <string name="settings_language_current_title">მიმდინარე ენა</string>
-    <string name="settings_language_community_translation_hint">ზოგიერთი ენის თარგმანები შესაძლოა იყოს დაკლებული ან არასრული. ახალი ენების თარგმნისთვის ან არსებული თარგმანების გასაუმჯობესებლად, ეწვიეთ %1$s</string>
     <string name="settings_language_dialog_title">აპლიკაციის ენა</string>
+    <string name="settings_language_translate_title">დავეხმაროთ Morphe-ის თარგმნას</string>
     <string name="settings_language_search_no_results">შედეგები ვერ მოიძებნა</string>
     <string name="settings_section_theme">თემა</string>
     <string name="settings_appearance_theme_mode">თემის რეჟიმი</string>
+    <string name="settings_appearance_theme_mode_description">გადაირთვეთ ღია, მუქ, სუფთა შავ ან სისტემურ თემას შორის</string>
     <string name="settings_theme_light">ღია</string>
     <string name="settings_theme_dark">ბნელი</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">ფერების სტილი</string>
+    <string name="settings_appearance_color_style_description">Morphe-ის ფერად პალიტრა ან რუხი მონოქრომული სტილი</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">მონოქრომული</string>
     <string name="settings_toggle_sharp_corners_label">მკვეთრი კუთხეები</string>
-    <string name="settings_toggle_sharp_corners_desc">ბარათების, დიალოგებისა და ღილაკების კუთხეების გასკვერტულება</string>
+    <string name="settings_toggle_sharp_corners_desc">ბარათების, დიალოგებისა და ღილაკების კუთხეების გასწორება</string>
     <string name="settings_section_accent_color">აქცენტის ფერი</string>
     <string name="settings_accent_clear_description">აქცენტის ფერის გასუფთავება</string>
     <string name="settings_accent_custom_description">აქცენტის პერსონალური ფერი</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">აპლიკაციის ბარათები</string>
     <string name="settings_app_cards_color_all">ფერი ყველა ბარათისთვის</string>
     <string name="settings_app_cards_color_all_desc">ბარათები, რომლებიც ინდივიდუალურად მოარგეთ, შეინარჩუნებენ საკუთარ ფერს</string>
-    <string name="settings_section_background_animation">ფონის ანიმაცია</string>
+    <string name="settings_toggle_app_icons_label">აპლიკაციების ხატულები</string>
+    <string name="settings_toggle_app_icons_desc">აჩვენებს თითოეული აპლიკაციის ხატულას, რომელიც ამოღებულია ლოკალური APK-ებიდან ან ჩათერთებული მოწყობილობიდან</string>
+    <string name="settings_appearance_more_apps_card">მეტი აპლიკაციის ბარათი</string>
+    <string name="settings_appearance_more_apps_card_description">აჩვენებს ბარათს აპლიკაციების ქვემოთ, რომელიც მიდის საზოგადოების პატჩებისკენ</string>
+    <string name="settings_section_effects">ეფექტები</string>
+    <string name="settings_appearance_background_animation">ფონის ანიმაცია</string>
+    <string name="settings_appearance_background_animation_description">ანიმაცია, რომელიც უკანა პლანზე უკრავს აპლიკაციის ეკრანების უკွယ်ს</string>
     <string name="settings_background_circles">წრეები</string>
     <string name="settings_background_rings">რგოლები</string>
     <string name="settings_background_mesh">ბადე</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">ექსპერტის რეჟიმი</string>
     <string name="settings_toggle_expert_mode_desc">სრული კონტროლი პატჩების შერჩევასა და კონფიგურაციაზე</string>
+    <string name="settings_expert_mode_disabled_in_flow">დაუბრუნდით მთავარ გვერდს რეჟიმის შესაცვლელად</string>
     <string name="settings_toggle_route_links_label">ბმულების გადამისამართება პატჩირებულ აპლიკაციაზე</string>
     <string name="settings_toggle_route_links_desc">ADB-ის მეშვეობით ინსტალაციის შემდეგ, გაუკეთეთ პატჩირებულ აპლიკაციას, რომ გახსნას მასზე მხარდაჭერილი ვებ-ბმულები ბრაუზერის ან სტანდარტული/ნაგულისხმევი აპლიკაციის ნაცვლად</string>
     <string name="settings_toggle_disable_stock_links_label">სტანდარტული აპლიკაციის ბმულების გათიშვა</string>
@@ -723,13 +735,29 @@
     <string name="settings_output_folder_not_found">საქაღალდე ვერ მოიძებნა, იგი შეიქმნება შემდეგი პატჩინგის დროს</string>
     <string name="settings_toggle_auto_start_adb_label">ADB-ის ავტომატური გაშვება</string>
     <string name="settings_toggle_auto_start_adb_desc">გაუშვით ADB დემონი გაშვებისას, რათა დაკავშირებული მოწყობილობები იყოს მონიტორინგზე. გამორთვრის შემთხვევაში, Morphe არასოდეს რთავს სერვერს, ხოლო ინსტალაციისა და push ფუნქციები გათიშულია</string>
-    <string name="settings_section_storage">მეხსოვრება და ქეში</string>
-    <string name="settings_cache_summary">ქეში: %1$s (პატჩები + ლოგები)</string>
-    <string name="settings_cache_clear_button">ქეშის გასუფთავება</string>
+    <string name="settings_section_storage">მეხსიერება და ქეში</string>
+    <string name="settings_cache_clear_all_title">ქეშის სრული გასუფთავება</string>
+    <string name="settings_cache_category_patches">პატჩები</string>
+    <string name="settings_cache_category_logs">ლოგები</string>
+    <string name="settings_cache_category_temp">დროებითი ფაილები</string>
+    <string name="settings_cache_category_avatars">ავატარების ქეში</string>
+    <string name="settings_cache_category_app_icons">აპლიკაციების ხატულების ქეში</string>
+    <string name="settings_cache_confirm_patches_title">წაშალოთ პატჩები?</string>
+    <string name="settings_cache_confirm_patches_message">ეს წაშლის გადმოტვირთულ პატჩის ფაილებს. პატჩები ხელახლა გადმოიტვირთება საჭიროების შემთხვევაში</string>
+    <string name="settings_cache_confirm_logs_title">წაშალოთ ლოგები?</string>
+    <string name="settings_cache_confirm_logs_message">ეს წაშლის აპლიკაციის ყველა ლოგ-ფაილს და მოწყობილობის logcat-ის ამონაწერებს</string>
+    <string name="settings_cache_confirm_temp_title">წაშალოთ დროებითი ფაილები?</string>
+    <string name="settings_cache_confirm_temp_message">ეს წაშლის დროებით სემინარისა და სამუშაო სივრცის ფაილებს</string>
+    <string name="settings_cache_confirm_avatars_title">წაშალოთ ავატარების ქეში?</string>
+    <string name="settings_cache_confirm_avatars_message">ეს წაშლის ყველა ქეშირებულ დისტანციურ ავატარის სურათს</string>
+    <string name="settings_cache_confirm_app_icons_title">წაშალოთ აპლიკაციების ხატულების ქეში?</string>
+    <string name="settings_cache_confirm_app_icons_message">ეს წაშლის ყველა აპლიკაციის ხატულას, რომელიც ამოღებულია APK-ებიდან და მოწყობილობებიდან</string>
+    <string name="settings_cache_category_cleared">%1$s წაშლილია</string>
+    <string name="settings_cache_category_clear_failed">%1$s-ის გასუფთავება ვერ მოხერხდა</string>
     <string name="settings_cache_cleared">ქეში გასუფთავებულია</string>
     <string name="settings_cache_clear_failed">გასუფთავება ვერ მოხერხდა</string>
     <string name="settings_cache_confirm_title">გასუფთავდეს ქეში?</string>
-    <string name="settings_cache_confirm_message">ეს წაშლის ჩამოტვირთულ პატჩებსა და ლოგ ფაილებს. პატჩები ხელახლა ჩამოიტვირთება საჭიროების შემთხვევაში</string>
+    <string name="settings_cache_confirm_message">ეს წაშლის ჩამოტვირთულ პატჩებს, ლოგ-ფაილებსა და დროებით ფაილებს. პატჩები თავიდან ჩამოიტვირთება საჭიროების შემთხვევაში</string>
     <string name="settings_storage_open_app_data_button">აპლიკაციის მონაცემების გახსნა</string>
     <string name="settings_storage_open_logs_button">ლოგების გახსნა</string>
     <string name="settings_section_about">შესახებ</string>
@@ -740,7 +768,7 @@
     <string name="settings_about_licenses_desc">მესამე მხარის ბიბლიოთეკების ლიცენზიების ნახვა</string>
     <string name="settings_about_documentation_title">დოკუმენტაცია</string>
     <string name="settings_about_documentation_desc">გზამკვლევები პატჩინგისთვის, წყაროებისა და პრობლემების მოგვარებისთვის</string>
-    <string name="settings_about_website_title">ვნახე ვებგვერდი</string>
+    <string name="settings_about_website_title">ვებგვერდზე გადასვლა</string>
     <string name="settings_about_website_desc">ესტუმრეთ Morphe-ის ოფიციალურ ვებგვერდს</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">გააუქმეთ მონიშვნა იმ არქიტექტურებზე, რომლებიც არ გჭირდებათ. პატჩინგისას, გამომავალი APK შეინარჩუნებს მხოლოდ იმ არქიტექტურებს, რომლებიც არის როგორც APK-ში, ასევე ამ სიაში. თუ ისინი არ ემთხვევა, არაფერი წაიშლება, რათა თავიდან იქნას აცილებული APK-ის დაზიანება</string>
@@ -776,18 +804,18 @@
     <string name="settings_cert_info_title">სერტიფიკატის ინფორმაცია</string>
     <string name="settings_cert_info_alias">ალიასი</string>
     <string name="settings_cert_info_issuer">გამომცემელი</string>
-    <string name="settings_cert_info_valid_from">ვალიდურია</string>
-    <string name="settings_cert_info_valid_until">ვალიდურია</string>
+    <string name="settings_cert_info_valid_from">მოქმედებს დან</string>
+    <string name="settings_cert_info_valid_until">მოქმედებს ვადამდე</string>
     <string name="settings_cert_info_sha256">SHA-256 თითის ანაბეჭდი</string>
     <string name="settings_cert_info_sha1">SHA-1 თითის ანაბეჭდი</string>
     <string name="settings_cert_info_could_not_read">გასაღებების საცავის წაკითხვა ვერ მოხერხდა. შეამოწმეთ პაროლი და ფსევდონიმი</string>
     <string name="settings_cert_warning_alias_not_found">ფსევდონიმი \"%1$s\" ვერ მოიძებნა გასაღებების საცავში</string>
     <string name="settings_cert_warning_key_password_incorrect">გასაღების პაროლი არასწორია ფსევდონიმისთვის \"%1$s\"</string>
     <!-- Settings - Runtime Logs -->
-    <string name="settings_runtime_logs_title">პატჩირებული აპლიკაციის çalışma გარემოს ლოგები</string>
-    <string name="settings_runtime_logs_desc">გაი capture-ეთ ლოგები თქვენი ტელეფონიდან მას შემდეგ, რაც პატჩირებული აპლიკაცია გაითიშება ან некоრექტულად იმუშავებს. გაასუფთავეთ ლოგები შეცდომის გამეორებამდე, შემდეგ შეინახეთ გაფილტრული შედეგი, რათა დაურთოთ შეცდომის ანგარიშს</string>
+    <string name="settings_runtime_logs_title">პატჩირებული აპლიკაციის გაშვების ლოგები</string>
+    <string name="settings_runtime_logs_desc">შეაგროვეთ ლოგები თქვენი ტელეფონიდან, როდესაც პატჩირებული აპლიკაცია გაითიშება ან არასწორად იმუშავებს. გაასუფთავეთ ლოგები შეცდომის გამეორებამდე, შემდეგ შეინახეთ გაფილტრული შედეგი, რათა დაურთოთ შეცდომის ანგარიშს</string>
     <string name="settings_runtime_logs_device_info">მოწყობილობა: %1$s</string>
-    <string name="settings_runtime_logs_no_device">მოწყობილობა არ არის დაკავშირებული. შეაერთეთ თქვენი ტელეფონი ჩართული USB debugging-ით</string>
+    <string name="settings_runtime_logs_no_device">მოწყობილობა არ არის დაკავშირებული. დააკავშირეთ თქვენი ტელეფონი USB-ით ან Wi-Fi-ით, ჩართული დებაგინგის რეჟიმით</string>
     <string name="settings_runtime_logs_clearing">წმენდა…</string>
     <string name="settings_runtime_logs_clear_button">მოწყობილობის ლოგების გასუფთავება</string>
     <string name="settings_runtime_logs_failed_to_clear">ლოგების გასუფთავება ვერ მოხერხდა</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">წყაროები</string>
     <string name="nav_apps">აპლიკაციები</string>
+    <string name="nav_settings">პარამეტრები</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">პარამეტრების ძებნა</string>
+    <string name="settings_search_no_results">შესაბამისი პარამეტრები ვერ მოიძებნა</string>
+    <string name="settings_back_to_about">დაბრუნება „ჩვენს შესახებ“-ზე</string>
+    <string name="licenses_back_to_list">დაბრუნება ლიცენზიების სიაში</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">მეტი აპლიკაცია</string>
+    <string name="home_more_apps_subtitle">საზოგადოების პატჩები</string>
+    <string name="community_patches_notice_title">მესამე მხარის პატჩების წყაროები</string>
+    <string name="community_patches_notice_message">საზოგადოების პატჩების წყაროები შექმნილია და მართულია მათი ავტორების მიერ. Morphe არ განიხილავს ან ამოწმებს მესამე მხარის პატჩებს და არ არის პასუხისმგებელი მათ შინაარსზე ან იმაზე, თუ რას განახორციელებენ ისინი თქვენს მოწყობილობაზე.</string>
 </resources>
