@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
@@ -61,6 +60,8 @@ import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.ui.theme.outlineStroke
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -105,7 +106,7 @@ fun MorpheDropdown(
                 .defaultMinSize(minHeight = MorpheTheme.dimens.controlHeight)
                 .clip(corner)
                 .background(backgroundColor)
-                .border(1.dp, accents.primary.copy(alpha = if (expanded) 0.6f else 0.3f), corner)
+                .outlineBorder(accents.primary.copy(alpha = if (expanded) 0.6f else 0.3f), corner)
                 .onGloballyPositioned { triggerWidth = it.size.width; triggerHeight = it.size.height }
                 .clickable(enabled = enabled) { expanded = !expanded; query = "" }
                 .handCursor(enabled = enabled)
@@ -316,7 +317,7 @@ internal fun DropdownMenuPopup(
         Surface(
             shape = corner,
             color = MaterialTheme.colorScheme.surface,
-            border = BorderStroke(1.dp, accents.primary.copy(alpha = 0.35f)),
+            border = outlineStroke(accents.primary.copy(alpha = 0.35f)),
             shadowElevation = 8.dp,
             modifier = Modifier.width(with(density) { triggerWidth.toDp() }),
         ) {

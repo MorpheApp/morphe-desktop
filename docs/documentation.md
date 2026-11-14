@@ -422,6 +422,7 @@ Open Settings from the **Settings** tab in the Home navigation pill, or via the 
 | **Accent color**               | Dynamic custom accent color applied across the UI (available when Color style is Morphe)                  | Morphe Blue                                                                          | –                                                                                          |
 | **App cards**                  | Batch-customize **Color for every card**, toggle extracted **App icons**, and show/hide **More apps card** | Individual colors, icons on, card on                                                 | –                                                                                          |
 | **Sharp corners**              | Square off cards, dialogs, and buttons                                                                    | Off                                                                                  | –                                                                                          |
+| **Outlines**                   | Draw thin edges around cards, panels, dialogs, and buttons (functional input and selection borders remain visible) | On                                                                                   | –                                                                                          |
 | **Background animation**       | Choose an animated background style (e.g. Circles, Rings, Mesh, Space)                                    | Circles                                                                              | –                                                                                          |
 | **Parallax effect**            | Smooth background shifting when moving the mouse                                                          | On                                                                                   | –                                                                                          |
 | **Expert mode**                | Switch between Simple mode and Expert mode (locked from workflow sub-screens and while patching)          | Off (Simple mode)                                                                    | –                                                                                          |
@@ -1733,7 +1734,7 @@ This sets `stringKey` to the string `"1"` instead of the integer `1`.
 
 Want to build Morphe Desktop from source instead of grabbing a release? Here's how.
 
-**Requirements:** Java Development Kit 17 (e.g. [Azul Zulu](https://www.azul.com/downloads/?package=jdk#zulu) or [OpenJDK](https://jdk.java.net/archive/)).
+**Requirements:** Java Development Kit 21 or above (e.g. [Azul Zulu](https://www.azul.com/downloads/?package=jdk#zulu) or [OpenJDK](https://jdk.java.net/archive/)).
 
 1. Clone the repository:
 

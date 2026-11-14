@@ -7,7 +7,6 @@ package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -37,6 +36,7 @@ import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemeStyle
+import app.morphe.gui.ui.theme.outlineBorder
 
 /** Chip component with contrast styling adapted for card fills or plain surfaces. */
 @Composable
@@ -69,9 +69,10 @@ fun MorpheCardChip(
         ),
         animationSpec = MorpheMotion.fastTween(),
     )
-    // Show border outline only for interactive chips.
+    // Show border outline only for interactive chips when outlines are enabled.
+    val showBorder = interactive && MorpheTheme.outlines
     val borderColor by animateColorAsState(
-        if (interactive) ink.copy(alpha = if (isHovered) 0.7f else 0.45f) else Color.Transparent,
+        if (showBorder) ink.copy(alpha = if (isHovered) 0.7f else 0.45f) else Color.Transparent,
         animationSpec = MorpheMotion.fastTween(),
     )
 
@@ -82,7 +83,7 @@ fun MorpheCardChip(
             modifier = chipModifier
                 .clip(shape)
                 .background(fill)
-                .border(1.dp, borderColor, shape)
+                .outlineBorder(borderColor, shape, enabled = showBorder)
                 .hoverable(hover)
                 .then(if (onClick != null) Modifier.handCursor().clickable(onClick = onClick) else Modifier)
                 .defaultMinSize(minHeight = MorpheTheme.dimens.chipHeight)

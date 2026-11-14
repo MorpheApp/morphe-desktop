@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.components.color.CustomSwatches
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineStroke
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Color.HSBtoRGB
 import java.awt.Color.RGBtoHSB
@@ -76,7 +76,7 @@ fun MorpheColorPickerCard(
     Surface(
         shape = shapes.medium,
         color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(1.dp, colors.primary.copy(alpha = 0.4f)),
+        border = outlineStroke(colors.primary.copy(alpha = 0.4f)),
         shadowElevation = 8.dp,
         modifier = Modifier.width(220.dp),
     ) {

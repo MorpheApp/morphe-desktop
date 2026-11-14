@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +19,7 @@ import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -60,7 +60,7 @@ fun SourcesPage(
                 .fillMaxWidth()
                 .clip(shapes.medium)
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f), shapes.medium)
+                .outlineBorder(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f), shapes.medium)
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

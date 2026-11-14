@@ -49,6 +49,7 @@ data class AppConfig(
     val cardFills: Map<String, MorpheFill> = emptyMap(),
     val globalCardFill: MorpheFill? = null,
     val useSharpCorners: Boolean = false,
+    val useOutlines: Boolean = true,
     val showAppIcons: Boolean = true,
     val showMoreAppsCard: Boolean = true,
     val communityNoticeAcknowledged: Boolean = false,

@@ -7,7 +7,6 @@ package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 
 enum class MorpheIconButtonSize(val size: Dp, val iconSize: Dp) {
     XLARGE(48.dp, 24.dp),
@@ -113,6 +113,11 @@ fun MorpheIconButton(
 
     val animatedBg by animateColorAsState(targetBgColor, animationSpec = MorpheMotion.fastTween())
     val animatedBorder by animateColorAsState(targetBorderColor, animationSpec = MorpheMotion.fastTween())
+    val showOutline = when (variant) {
+        MorpheIconButtonVariant.OUTLINED, MorpheIconButtonVariant.DANGER -> true
+        MorpheIconButtonVariant.SURFACE, MorpheIconButtonVariant.PRIMARY -> MorpheTheme.outlines
+        MorpheIconButtonVariant.GHOST -> false
+    }
 
     Box(
         modifier = modifier
@@ -120,11 +125,7 @@ fun MorpheIconButton(
             .hoverable(hoverInteraction)
             .clip(shapes.small)
             .background(animatedBg)
-            .then(
-                if (targetBorderColor != Color.Transparent) {
-                    Modifier.border(1.dp, animatedBorder, shapes.small)
-                } else Modifier
-            )
+            .outlineBorder(animatedBorder, shapes.small, enabled = showOutline)
             .handCursor(enabled)
             .clickable(enabled = enabled, onClick = onClick),
         contentAlignment = Alignment.Center,
