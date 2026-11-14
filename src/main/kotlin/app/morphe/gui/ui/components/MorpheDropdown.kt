@@ -18,6 +18,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,8 +48,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -63,7 +66,19 @@ import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 /** One entry in a [MorpheDropdown]. */
-data class MorpheDropdownItem(val label: String, val onClick: () -> Unit)
+data class MorpheDropdownItem(
+    val label: String,
+    val icon: ImageVector? = null,
+    val selected: Boolean = false,
+    val onClick: () -> Unit,
+) {
+    constructor(label: String, onClick: () -> Unit) : this(
+        label = label,
+        icon = null,
+        selected = false,
+        onClick = onClick,
+    )
+}
 
 /** Dropdown component with bordered trigger and searchable popup menu. */
 @Composable
@@ -75,6 +90,7 @@ fun MorpheDropdown(
     searchable: Boolean = false,
     maxHeight: Dp = 300.dp,
     backgroundColor: Color = panelFill,
+    leadingIcon: ImageVector? = null,
 ) {
     val accents = MorpheTheme.colors
     val corner = MorpheTheme.shapes.small
@@ -92,10 +108,19 @@ fun MorpheDropdown(
                 .border(1.dp, accents.primary.copy(alpha = if (expanded) 0.6f else 0.3f), corner)
                 .onGloballyPositioned { triggerWidth = it.size.width; triggerHeight = it.size.height }
                 .clickable(enabled = enabled) { expanded = !expanded; query = "" }
-                .handCursor()
+                .handCursor(enabled = enabled)
                 .padding(horizontal = 10.dp, vertical = 7.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            if (leadingIcon != null) {
+                Icon(
+                    imageVector = leadingIcon,
+                    contentDescription = null,
+                    tint = accents.primary.copy(alpha = 0.85f),
+                    modifier = Modifier.size(15.dp),
+                )
+                Spacer(Modifier.width(8.dp))
+            }
             Text(
                 text = label,
                 style = MorpheTheme.typography.bodySmall,
@@ -310,11 +335,21 @@ internal fun DropdownMenuPopup(
                         shown.forEach { item ->
                             val hover = remember { MutableInteractionSource() }
                             val isHovered by hover.collectIsHoveredAsState()
+                            val itemBg = when {
+                                isHovered -> accents.primary.copy(alpha = 0.14f)
+                                item.selected -> accents.primary.copy(alpha = 0.08f)
+                                else -> Color.Transparent
+                            }
+                            val itemTint = if (isHovered || item.selected) {
+                                accents.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurface
+                            }
                             Row(
                                 Modifier.fillMaxWidth()
                                     .padding(horizontal = 4.dp, vertical = 2.dp)
                                     .clip(MorpheTheme.shapes.extraSmall)
-                                    .background(if (isHovered) accents.primary.copy(alpha = 0.14f) else Color.Transparent)
+                                    .background(itemBg)
                                     .hoverable(hover)
                                     .handCursor()
                                     .clickable {
@@ -329,13 +364,40 @@ internal fun DropdownMenuPopup(
                                     ),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
+                                if (item.icon != null) {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = null,
+                                        tint = if (isHovered || item.selected) {
+                                            accents.primary
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                        },
+                                        modifier = Modifier.size(15.dp),
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                }
                                 Text(
                                     item.label,
-                                    style = MorpheTheme.typography.bodySmall,
-                                    color = if (isHovered) accents.primary else MaterialTheme.colorScheme.onSurface,
+                                    style = if (item.selected) {
+                                        MorpheTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
+                                    } else {
+                                        MorpheTheme.typography.bodySmall
+                                    },
+                                    color = itemTint,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f),
                                 )
+                                if (item.selected) {
+                                    Spacer(Modifier.width(8.dp))
+                                    Icon(
+                                        imageVector = MorpheIcons.Check,
+                                        contentDescription = null,
+                                        tint = accents.primary,
+                                        modifier = Modifier.size(14.dp),
+                                    )
+                                }
                             }
                         }
                     }

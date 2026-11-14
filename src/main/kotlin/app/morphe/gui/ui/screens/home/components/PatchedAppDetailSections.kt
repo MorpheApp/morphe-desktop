@@ -236,6 +236,7 @@ internal fun ApkSourceSection(
             packageName = app.packageName,
             onOpenUrl = uriHandler::openUri,
             requiredBuildCodesFor = app::requiredBuildCodes,
+            downloadUrlFor = app::downloadUrl,
         )
         VersionChipGroup(
             label = stringResource(Res.string.version_label_experimental),
@@ -244,6 +245,7 @@ internal fun ApkSourceSection(
             packageName = app.packageName,
             onOpenUrl = uriHandler::openUri,
             requiredBuildCodesFor = app::requiredBuildCodes,
+            downloadUrlFor = app::downloadUrl,
         )
     }
 
@@ -508,6 +510,7 @@ private fun VersionChipGroup(
     packageName: String,
     onOpenUrl: (String) -> Unit,
     requiredBuildCodesFor: (String) -> Set<Int> = { emptySet() },
+    downloadUrlFor: (String) -> String? = { SupportedApp.getDownloadUrl(packageName, it) },
 ) {
     if (versions.isEmpty()) return
     val patchSourceHeader = LocalPatchSourceHeader.current
@@ -517,7 +520,7 @@ private fun VersionChipGroup(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         versions.forEach { v ->
-            val url = remember(v) { SupportedApp.getDownloadUrl(packageName, v) }
+            val url = remember(v) { downloadUrlFor(v) }
             val buildCodes = remember(v) { requiredBuildCodesFor(v) }
             val chipText = remember(v, buildCodes) { FormatUtils.formatVersionWithBuild(v, buildCodes) }
             val tooltip = if (buildCodes.size > 1) "$v (${buildCodes.joinToString(", ")})" else null

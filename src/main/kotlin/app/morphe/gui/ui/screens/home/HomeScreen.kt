@@ -33,8 +33,9 @@ import app.morphe.gui.PatchingScreenRoute
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.AddPatchSourceDialog
-import app.morphe.gui.ui.components.ChangelogDialog
+import app.morphe.gui.ui.components.LocalSettingsState
 import app.morphe.gui.ui.components.MorpheErrorBar
+import app.morphe.gui.ui.components.SettingsPage
 import app.morphe.gui.ui.components.SourcesPage
 import app.morphe.gui.ui.screens.home.components.ForgetConfirmDialog
 import app.morphe.gui.ui.screens.home.components.FullScreenDropZone
@@ -63,6 +64,7 @@ import app.morphe.gui.util.sourceVersionMap
 import java.awt.Desktop
 import java.io.File
 import java.util.UUID
+import kotlin.math.abs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -96,14 +98,21 @@ fun HomeScreenContent(
     val pagerState = rememberPagerState(initialPage = uiState.selectedPage.ordinal) { HomePage.entries.size }
     val openPage: (HomePage) -> Unit = { page ->
         viewModel.selectPage(page)
-        coroutineScope.launch { pagerState.animateScrollToPage(page.ordinal) }
-    }
-    LaunchedEffect(pagerState.currentPage) {
-        viewModel.selectPage(HomePage.entries[pagerState.currentPage])
     }
     LaunchedEffect(uiState.selectedPage) {
-        if (pagerState.currentPage != uiState.selectedPage.ordinal) {
-            pagerState.animateScrollToPage(uiState.selectedPage.ordinal)
+        val target = uiState.selectedPage.ordinal
+        if (pagerState.currentPage != target) {
+            if (abs(target - pagerState.currentPage) > 1) {
+                pagerState.scrollToPage(if (target > pagerState.currentPage) target - 1 else target + 1)
+            }
+            pagerState.animateScrollToPage(target)
+        }
+    }
+
+    val settingsState = LocalSettingsState.current
+    LaunchedEffect(settingsState.updateChannelRefreshTick) {
+        if (settingsState.updateChannelRefreshTick > 0) {
+            viewModel.refreshUpdateCheck()
         }
     }
 
@@ -192,10 +201,7 @@ fun HomeScreenContent(
         )
     }
 
-    var showChangelogDialog by remember { mutableStateOf(false) }
-    if (showChangelogDialog) {
-        ChangelogDialog(onDismiss = { showChangelogDialog = false })
-    }
+    var openChangelogToken by remember { mutableIntStateOf(0) }
 
     detailRecord?.let { record ->
         val recordSources = remember(record, allSources) { viewModel.activePatchSourcesFor(record) }
@@ -418,8 +424,7 @@ fun HomeScreenContent(
                     HeaderBar(
                         uiState = uiState,
                         onRetry = onRetry,
-                        onUpdateChannelChanged = { viewModel.refreshUpdateCheck() },
-                        selectedPage = HomePage.entries[pagerState.currentPage],
+                        selectedPage = uiState.selectedPage,
                         onSelectPage = openPage,
                     )
 
@@ -439,17 +444,23 @@ fun HomeScreenContent(
                             modifier = Modifier.weight(1f).fillMaxWidth()
                         ) {
                             Column(modifier = Modifier.fillMaxSize()) {
-                        HomeBanners(
-                            uiState = uiState,
-                            onDismissUpdateSession = { viewModel.dismissUpdateForSession() },
-                            onDismissUpdateVersion = { viewModel.dismissUpdateForVersion() },
-                            onDismissMultiSourceHint = { viewModel.dismissMultiSourceHint() },
-                            onManageSources = { openPage(HomePage.SOURCES) },
-                            onDismissSourcesFailed = { viewModel.dismissSourcesFailedBanner() },
-                            onShowChangelog = { showChangelogDialog = true },
-                        )
+                        if (uiState.selectedPage != HomePage.SETTINGS) {
+                            HomeBanners(
+                                uiState = uiState,
+                                onDismissUpdateSession = { viewModel.dismissUpdateForSession() },
+                                onDismissUpdateVersion = { viewModel.dismissUpdateForVersion() },
+                                onDismissMultiSourceHint = { viewModel.dismissMultiSourceHint() },
+                                onManageSources = { openPage(HomePage.SOURCES) },
+                                onDismissSourcesFailed = { viewModel.dismissSourcesFailedBanner() },
+                                onShowChangelog = {
+                                    openChangelogToken++
+                                    openPage(HomePage.SETTINGS)
+                                },
+                            )
+                        }
                         HorizontalPager(
                             state = pagerState,
+                            userScrollEnabled = false,
                             modifier = Modifier.weight(1f).fillMaxWidth(),
                             key = { index -> HomePage.entries[index] }
                         ) { index ->
@@ -540,6 +551,14 @@ fun HomeScreenContent(
                                         onChangeClick = onChangeClick,
                                         onContinueClick = onContinueClick,
                                         isSimple = isSimple,
+                                        modifier = Modifier.fillMaxSize(),
+                                    )
+                                }
+
+                                HomePage.SETTINGS -> {
+                                    SettingsPage(
+                                        showBackHeader = false,
+                                        openChangelogToken = openChangelogToken,
                                         modifier = Modifier.fillMaxSize(),
                                     )
                                 }

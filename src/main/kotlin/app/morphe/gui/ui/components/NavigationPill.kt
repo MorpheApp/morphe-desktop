@@ -32,6 +32,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import app.morphe.gui.LocalLanguageState
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.HomePage
 import app.morphe.gui.ui.theme.MorpheMotion
@@ -49,158 +50,120 @@ fun NavigationPill(
     val shapes = MorpheTheme.shapes
     val dimens = MorpheTheme.dimens
     val (containerColor, borderColor) = rememberPillColors()
+    val currentLanguage = LocalLanguageState.current.current
 
     val density = LocalDensity.current
-    var sourcesWidthPx by remember { mutableIntStateOf(0) }
-    var appsWidthPx by remember { mutableIntStateOf(0) }
+    val pages = HomePage.entries
+    val tabWidths = remember(pages.size) { mutableStateListOf(*Array(pages.size) { 0 }) }
+    val activeIndex = selectedPage.ordinal.coerceIn(0, pages.lastIndex)
 
-    val activeIndex = when (selectedPage) {
-        HomePage.SOURCES -> 0
-        HomePage.APPS -> 1
-    }
-
-    val sourcesInteractionSource = remember { MutableInteractionSource() }
-    val isSourcesHovered by sourcesInteractionSource.collectIsHoveredAsState()
-
-    val appsInteractionSource = remember { MutableInteractionSource() }
-    val isAppsHovered by appsInteractionSource.collectIsHoveredAsState()
+    val targetOffsetPx = tabWidths.take(activeIndex).sum()
+    val targetWidthPx = tabWidths[activeIndex]
 
     val indicatorOffsetPx by animateIntAsState(
-        targetValue = if (activeIndex == 0) 0 else sourcesWidthPx,
+        targetValue = targetOffsetPx,
         animationSpec = spring(dampingRatio = 0.8f, stiffness = 380f),
         label = "navPillIndicatorOffset",
     )
     val indicatorWidthPx by animateIntAsState(
-        targetValue = if (activeIndex == 0) sourcesWidthPx else appsWidthPx,
+        targetValue = targetWidthPx,
         animationSpec = spring(dampingRatio = 0.8f, stiffness = 380f),
         label = "navPillIndicatorWidth",
     )
 
-    Box(
-        modifier = modifier
-            .alpha(if (enabled) 1f else 0.5f)
-            .height(dimens.controlHeight)
-            .clip(shapes.small)
-            .background(containerColor)
-            .border(1.dp, borderColor, shapes.small)
-            .padding(2.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        // Sliding indicator capsule behind active tab
-        if (indicatorWidthPx > 0) {
-            Box(
-                modifier = Modifier
-                    .offset { IntOffset(indicatorOffsetPx, 0) }
-                    .width(with(density) { indicatorWidthPx.toDp() })
-                    .fillMaxHeight()
-                    .clip(shapes.small)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.16f))
-                    .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.45f), shapes.small)
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxHeight(),
-            verticalAlignment = Alignment.CenterVertically
+    key(currentLanguage) {
+        Box(
+            modifier = modifier
+                .alpha(if (enabled) 1f else 0.5f)
+                .height(dimens.controlHeight)
+                .clip(shapes.small)
+                .background(containerColor)
+                .border(1.dp, borderColor, shapes.small)
+                .padding(2.dp),
+            contentAlignment = Alignment.CenterStart,
         ) {
-            // Tab 1: Sources
-            val isSourcesActive = selectedPage == HomePage.SOURCES
-            val sourcesTextColor by animateColorAsState(
-                targetValue = when {
-                    isSourcesActive -> MaterialTheme.colorScheme.primary
-                    isSourcesHovered && enabled -> MaterialTheme.colorScheme.onSurface
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant
-                },
-                animationSpec = MorpheMotion.fastTween(),
-                label = "sourcesTextColor",
-            )
-            val sourcesHoverBg by animateColorAsState(
-                targetValue = if (isSourcesHovered && !isSourcesActive && enabled) {
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-                } else {
-                    Color.Transparent
-                },
-                animationSpec = MorpheMotion.fastTween(),
-                label = "sourcesHoverBg",
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .onSizeChanged { sourcesWidthPx = it.width }
-                    .clip(shapes.small)
-                    .background(sourcesHoverBg)
-                    .handCursor(enabled && !isSourcesActive)
-                    .clickable(
-                        enabled = enabled && !isSourcesActive,
-                        interactionSource = sourcesInteractionSource,
-                        indication = null,
-                        onClick = { onSelectPage(HomePage.SOURCES) }
-                    )
-                    .padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Icon(
-                    imageVector = MorpheIcons.FolderOpen,
-                    contentDescription = null,
-                    tint = sourcesTextColor,
-                    modifier = Modifier.size(14.dp)
-                )
-                Text(
-                    text = stringResource(Res.string.nav_sources),
-                    style = MorpheTheme.typography.labelMedium,
-                    color = sourcesTextColor
+            if (indicatorWidthPx > 0) {
+                Box(
+                    modifier = Modifier
+                        .offset { IntOffset(indicatorOffsetPx, 0) }
+                        .width(with(density) { indicatorWidthPx.toDp() })
+                        .fillMaxHeight()
+                        .clip(shapes.small)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.16f))
+                        .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.45f), shapes.small),
                 )
             }
 
-            // Tab 2: Apps
-            val isAppsActive = selectedPage == HomePage.APPS
-            val appsTextColor by animateColorAsState(
-                targetValue = when {
-                    isAppsActive -> MaterialTheme.colorScheme.primary
-                    isAppsHovered && enabled -> MaterialTheme.colorScheme.onSurface
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant
-                },
-                animationSpec = MorpheMotion.fastTween(),
-                label = "appsTextColor",
-            )
-            val appsHoverBg by animateColorAsState(
-                targetValue = if (isAppsHovered && !isAppsActive && enabled) {
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-                } else {
-                    Color.Transparent
-                },
-                animationSpec = MorpheMotion.fastTween(),
-                label = "appsHoverBg",
-            )
             Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .onSizeChanged { appsWidthPx = it.width }
-                    .clip(shapes.small)
-                    .background(appsHoverBg)
-                    .handCursor(enabled && !isAppsActive)
-                    .clickable(
-                        enabled = enabled && !isAppsActive,
-                        interactionSource = appsInteractionSource,
-                        indication = null,
-                        onClick = { onSelectPage(HomePage.APPS) }
-                    )
-                    .padding(horizontal = 12.dp),
+                modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Icon(
-                    imageVector = MorpheIcons.Apps,
-                    contentDescription = null,
-                    tint = appsTextColor,
-                    modifier = Modifier.size(14.dp)
-                )
-                Text(
-                    text = stringResource(Res.string.nav_apps),
-                    style = MorpheTheme.typography.labelMedium,
-                    color = appsTextColor
-                )
+                pages.forEachIndexed { index, page ->
+                    val isActive = selectedPage == page
+                    val interactionSource = remember(page) { MutableInteractionSource() }
+                    val isHovered by interactionSource.collectIsHoveredAsState()
+
+                    val textColor by animateColorAsState(
+                        targetValue = when {
+                            isActive -> MaterialTheme.colorScheme.primary
+                            isHovered && enabled -> MaterialTheme.colorScheme.onSurface
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                        animationSpec = MorpheMotion.fastTween(),
+                        label = "navPillTextColor_${page.name}",
+                    )
+                    val hoverBg by animateColorAsState(
+                        targetValue = if (isHovered && !isActive && enabled) {
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+                        } else {
+                            Color.Transparent
+                        },
+                        animationSpec = MorpheMotion.fastTween(),
+                        label = "navPillHoverBg_${page.name}",
+                    )
+
+                    val icon = when (page) {
+                        HomePage.SOURCES -> MorpheIcons.FolderOpen
+                        HomePage.APPS -> MorpheIcons.Apps
+                        HomePage.SETTINGS -> MorpheIcons.Engineering
+                    }
+                    val label = when (page) {
+                        HomePage.SOURCES -> stringResource(Res.string.nav_sources)
+                        HomePage.APPS -> stringResource(Res.string.nav_apps)
+                        HomePage.SETTINGS -> stringResource(Res.string.nav_settings)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .onSizeChanged { tabWidths[index] = it.width }
+                            .clip(shapes.small)
+                            .background(hoverBg)
+                            .handCursor(enabled && !isActive)
+                            .clickable(
+                                enabled = enabled && !isActive,
+                                interactionSource = interactionSource,
+                                indication = null,
+                                onClick = { onSelectPage(page) },
+                            )
+                            .padding(horizontal = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = textColor,
+                            modifier = Modifier.size(14.dp),
+                        )
+                        Text(
+                            text = label,
+                            style = MorpheTheme.typography.labelMedium,
+                            color = textColor,
+                            maxLines = 1,
+                        )
+                    }
+                }
             }
         }
     }

@@ -239,13 +239,6 @@ open class ConfigRepository {
         saveConfig(current.copy(useSimpleMode = enabled))
     }
 
-    /** Persists the expanded state of a settings section. */
-    suspend fun setCollapsibleSectionExpanded(id: String, expanded: Boolean) {
-        val current = loadConfig()
-        val updated = current.collapsibleSectionStates + (id to expanded)
-        saveConfig(current.copy(collapsibleSectionStates = updated))
-    }
-
     /** Returns the currently active patch source. */
     suspend fun getActivePatchSource(): PatchSource {
         val config = loadConfig()

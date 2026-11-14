@@ -753,15 +753,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Language</string>
     <string name="settings_language_current_title">Current language</string>
-    <string name="settings_language_community_translation_hint">Translations for some languages may be missing or incomplete. To translate new languages or improve the existing translations, visit %1$s</string>
     <string name="settings_language_dialog_title">App language</string>
+    <string name="settings_language_translate_title">Help translate Morphe</string>
     <string name="settings_language_search_no_results">No results found</string>
     <string name="settings_section_theme">Theme</string>
     <string name="settings_appearance_theme_mode">Theme mode</string>
+    <string name="settings_appearance_theme_mode_description">Switch between light, dark, pure black, or system theme</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Color style</string>
+    <string name="settings_appearance_color_style_description">Tinted Morphe palette or grayscale monochrome style</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monochrome</string>
     <string name="settings_toggle_sharp_corners_label">Sharp corners</string>
@@ -777,7 +779,9 @@
     <string name="settings_toggle_app_icons_desc">Shows each app's icon, extracted from local APKs or the connected device</string>
     <string name="settings_appearance_more_apps_card">More apps card</string>
     <string name="settings_appearance_more_apps_card_description">Shows a card under the apps leading to community patches</string>
-    <string name="settings_section_background_animation">Background animation</string>
+    <string name="settings_section_effects">Effects</string>
+    <string name="settings_appearance_background_animation">Background animation</string>
+    <string name="settings_appearance_background_animation_description">The animation that plays behind the app screens</string>
     <string name="settings_background_circles">Circles</string>
     <string name="settings_background_rings">Rings</string>
     <string name="settings_background_mesh">Mesh</string>
@@ -794,6 +798,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Expert mode</string>
     <string name="settings_toggle_expert_mode_desc">Full control over patch selection and configuration</string>
+    <string name="settings_expert_mode_disabled_in_flow">Return home to change mode</string>
     <string name="settings_toggle_route_links_label">Route links to patched app</string>
     <string name="settings_toggle_route_links_desc">After installing via ADB, make the patched app open its supported web links instead of the browser or the stock/default app</string>
     <string name="settings_toggle_disable_stock_links_label">Disable stock app's links</string>
@@ -959,6 +964,13 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Sources</string>
     <string name="nav_apps">Apps</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Search settings</string>
+    <string name="settings_search_no_results">No matching settings</string>
+    <string name="settings_back_to_about">Back to About</string>
+    <string name="licenses_back_to_list">Back to licenses</string>
 
     <!-- More apps card & community patches -->
     <string name="home_more_apps_title">More apps</string>

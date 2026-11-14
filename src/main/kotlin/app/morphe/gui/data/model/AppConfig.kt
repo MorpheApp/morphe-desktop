@@ -57,8 +57,6 @@ data class AppConfig(
     val useSimpleMode: Boolean = true,
     val patchSource: List<PatchSource> = listOf(DEFAULT_PATCH_SOURCE),
     val activePatchSourceId: String = "morphe-default",
-    // Persisted expand/collapse state for settings sections.
-    val collapsibleSectionStates: Map<String, Boolean> = emptyMap(),
     // Latest version for which update notification was dismissed.
     val dismissedUpdateVersion: String? = null,
     val updateChannelPreference: String? = null,

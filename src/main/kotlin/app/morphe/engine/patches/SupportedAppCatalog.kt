@@ -10,7 +10,9 @@ import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.options.toPatchOption
 import app.morphe.engine.util.compareVersions
+import app.morphe.patcher.patch.FormFactor
 import app.morphe.patcher.patch.Patch
+import app.morphe.patcher.patch.SupportedAbi
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -42,6 +44,14 @@ object SupportedAppCatalog {
                         .mapValues { (_, sets) ->
                             if (sets.any { it.isEmpty() }) emptySet() else sets.flatten().toSet()
                         },
+                    versionAbiBuildCodes = compatibility.targets
+                        .mapNotNull { target ->
+                            val version = target.version ?: return@mapNotNull null
+                            val codes = target.versionCodes?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                            version to codes
+                        }
+                        .toMap(),
+                    formFactor = compatibility.formFactor,
                 )
             }
             ?: emptyList()
@@ -67,10 +77,17 @@ object SupportedAppCatalog {
         val packageDisplayNames = mutableMapOf<String, String>()
         val packageIconColors = mutableMapOf<String, String>()
         val packageBuildCodes = mutableMapOf<String, MutableMap<String, MutableSet<Int>>>()
+        val packageAbiBuildCodes = mutableMapOf<String, MutableMap<String, Map<SupportedAbi, Int>>>()
+        val packageFormFactors = mutableMapOf<String, FormFactor>()
 
         for ((_, _, compatiblePackages) in patches) {
-            for ((packageName, displayName, versions, experimentalVersions, appIconColor, versionBuildCodes) in compatiblePackages) {
+            for (compatiblePackage in compatiblePackages) {
+                val (packageName, displayName, versions, experimentalVersions, appIconColor, versionBuildCodes) = compatiblePackage
                 if (packageName.isNotBlank()) {
+                    // The first patch that declares them names the build of each ABI and the form factor
+                    val abiCodes = packageAbiBuildCodes.getOrPut(packageName) { mutableMapOf() }
+                    compatiblePackage.versionAbiBuildCodes.forEach { (version, codes) -> abiCodes.putIfAbsent(version, codes) }
+                    compatiblePackage.formFactor?.let { packageFormFactors.putIfAbsent(packageName, it) }
                     packageVersionsMap.getOrPut(packageName) { mutableSetOf() }
                         .addAll(versions)
                     packageExperimentalMap.getOrPut(packageName) { mutableSetOf() }
@@ -104,7 +121,7 @@ object SupportedAppCatalog {
                 .toList().sortedWith { a, b -> compareVersions(b, a) }
             val recommendedVersion = SupportedApp.getRecommendedVersion(versionList)
             val latestExperimental = experimentalList.firstOrNull()
-            SupportedApp(
+            val app = SupportedApp(
                 packageName = packageName,
                 displayName = SupportedApp.resolveDisplayName(
                     packageName = packageName,
@@ -113,12 +130,16 @@ object SupportedAppCatalog {
                 supportedVersions = versionList,
                 experimentalVersions = experimentalList,
                 recommendedVersion = recommendedVersion,
-                apkDownloadUrl = SupportedApp.getDownloadUrl(packageName, recommendedVersion ?: "any"),
-                experimentalDownloadUrl = SupportedApp.getDownloadUrl(packageName, latestExperimental),
                 appIconColor = packageIconColors[packageName],
                 versionBuildCodes = packageBuildCodes[packageName]
                     ?.mapValues { (_, codes) -> codes.toSet() }
-                    .orEmpty()
+                    .orEmpty(),
+                versionAbiBuildCodes = packageAbiBuildCodes[packageName].orEmpty(),
+                formFactor = packageFormFactors[packageName],
+            )
+            app.copy(
+                apkDownloadUrl = app.downloadUrl(recommendedVersion ?: "any"),
+                experimentalDownloadUrl = app.downloadUrl(latestExperimental),
             )
         }.sortedBy { it.displayName }
     }

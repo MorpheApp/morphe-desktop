@@ -10,7 +10,7 @@ import com.reandroid.arsc.chunk.xml.AndroidManifestBlock
 import com.reandroid.arsc.chunk.xml.ResXmlDocument
 import com.reandroid.arsc.chunk.xml.ResXmlElement
 import com.reandroid.arsc.value.ValueItem
-import com.reandroid.arsc.value.ValueType
+import com.reandroid.arsc.value.DataType
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Color4f
 import org.jetbrains.skia.FilterTileMode
@@ -39,7 +39,7 @@ internal class AppIconExtractor private constructor(
             return AppIconExtractor(resources, readFile).renderResource(iconId, size)
         }
 
-        private val COLOR_TYPES = setOf(ValueType.COLOR_ARGB8, ValueType.COLOR_RGB8, ValueType.COLOR_ARGB4, ValueType.COLOR_RGB4)
+        private val COLOR_TYPES = setOf(DataType.COLOR_ARGB8, DataType.COLOR_RGB8, DataType.COLOR_ARGB4, DataType.COLOR_RGB4)
 
         // Matches qualifiers like "xxhdpi", "anydpi" or "v26".
         private val DENSITY_OR_VERSION = Regex("""\w*dpi|v\d+""")
@@ -60,9 +60,9 @@ internal class AppIconExtractor private constructor(
         if (depth >= 10) return null
         depth++
         try {
-            return when (value.valueType) {
-                ValueType.REFERENCE -> renderResource(value.data, size)
-                ValueType.STRING -> value.valueAsString?.let { renderFile(it, size) }
+            return when (value.dataType) {
+                DataType.REFERENCE -> renderResource(value.data, size)
+                DataType.STRING -> value.dataAsString?.let { renderFile(it, size) }
                 in COLOR_TYPES -> draw(size) { it.clear(value.data) }
                 else -> null
             }
@@ -137,7 +137,7 @@ internal class AppIconExtractor private constructor(
     }
 
     private suspend fun drawVectorPath(canvas: Canvas, element: ResXmlElement): Boolean {
-        val pathData = resolve(element.attr("pathData"))?.valueAsString ?: return false
+        val pathData = resolve(element.attr("pathData"))?.dataAsString ?: return false
         val path = Path.makeFromSVGString(pathData)
         if (resolve(element.attr("fillType"))?.data == 1) path.fillMode = PathFillMode.EVEN_ODD
 
@@ -171,7 +171,7 @@ internal class AppIconExtractor private constructor(
     }
 
     private suspend fun gradient(value: ValueItem): Shader? {
-        val path = resolve(value)?.valueAsString ?: return null
+        val path = resolve(value)?.dataAsString ?: return null
         val root = readFile(path)?.let { parseXml(it) } ?: return null
         val items = root.getElements("item").asSequence().toList()
         if (root.name != "gradient" || items.size < 2) return null
@@ -209,21 +209,21 @@ internal class AppIconExtractor private constructor(
     private fun resolve(value: ValueItem?): ValueItem? {
         var current = value ?: return null
         repeat(10) {
-            if (current.valueType != ValueType.REFERENCE) return current
+            if (current.dataType != DataType.REFERENCE) return current
             current = variants(current.data).firstOrNull() ?: return null
         }
         return null
     }
 
-    private fun color(value: ValueItem?): Int? = resolve(value)?.takeIf { it.valueType in COLOR_TYPES }?.data
+    private fun color(value: ValueItem?): Int? = resolve(value)?.takeIf { it.dataType in COLOR_TYPES }?.data
 
     private fun ResXmlElement.attr(name: String): ValueItem? = searchAttributeByName(name)
 
     private fun ResXmlElement.float(name: String): Float? {
         val value = resolve(attr(name)) ?: return null
-        return when (value.valueType) {
-            ValueType.FLOAT -> Float.fromBits(value.data)
-            ValueType.DEC, ValueType.HEX -> value.data.toFloat()
+        return when (value.dataType) {
+            DataType.FLOAT -> Float.fromBits(value.data)
+            DataType.DEC, DataType.HEX -> value.data.toFloat()
             else -> null
         }
     }

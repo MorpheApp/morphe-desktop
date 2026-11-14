@@ -1,3 +1,31 @@
+# [2.2.0-dev.16](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.15...v2.2.0-dev.16) (2026-11-14)
+
+
+### Features
+
+* Redesign settings as integrated page ([#430](https://github.com/MorpheApp/morphe-desktop/issues/430)) ([2de3ed9](https://github.com/MorpheApp/morphe-desktop/commit/2de3ed91515ffa48150c9ee9365cda878888f00c))
+
+# [2.2.0-dev.15](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.14...v2.2.0-dev.15) (2026-11-14)
+
+
+### Bug Fixes
+
+* Update Patcher dependency ([9116676](https://github.com/MorpheApp/morphe-desktop/commit/9116676d54d308d69f4c1081e27ca720e347ecfe))
+
+# [2.2.0-dev.14](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.13...v2.2.0-dev.14) (2026-11-13)
+
+
+### Bug Fixes
+
+* Send the build code and form factor to apk web-search ([6084ecf](https://github.com/MorpheApp/morphe-desktop/commit/6084ecf763638bec9d2651c22de6c39a5fa2f447))
+
+# [2.2.0-dev.13](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.12...v2.2.0-dev.13) (2026-11-13)
+
+
+### Bug Fixes
+
+* Update morphe-patcher dependency ([1c50c41](https://github.com/MorpheApp/morphe-desktop/commit/1c50c41f04165c1fcc16078ca87a430d8a89770f))
+
 # [2.2.0-dev.12](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.11...v2.2.0-dev.12) (2026-11-10)
 
 

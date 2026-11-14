@@ -31,12 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import app.morphe.engine.util.Logger
+import app.morphe.gui.ui.components.settings.SettingsSegmentCard
+import app.morphe.gui.ui.components.settings.SettingsSubViewHeader
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -50,7 +51,11 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun LicensesDialog(onDismiss: () -> Unit) {
+internal fun LicensesPane(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    horizontalPadding: PaddingValues = PaddingValues(0.dp),
+) {
     val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
 
     var isLoading by remember { mutableStateOf(true) }
@@ -88,136 +93,123 @@ internal fun LicensesDialog(onDismiss: () -> Unit) {
         }
     }
 
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        MorpheDialogSurface(
-            modifier = Modifier
-                .widthIn(min = 640.dp, max = 960.dp)
-                .heightIn(min = 520.dp, max = 780.dp)
-                .fillMaxWidth(0.88f)
-                .fillMaxHeight(0.88f),
-            contentPadding = PaddingValues(0.dp),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 22.dp, vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.Bottom,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.licenses_dialog_title),
-                            style = MorpheTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "[${libs?.libraries?.size ?: 0}]",
-                            style = MorpheTheme.typography.labelSmall,
-                            color = MorpheTheme.colors.primary
-                        )
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
+    val activeLicense = viewingLicense
+    when {
+        showNotice -> {
+            NoticeTextPane(
+                onBack = { showNotice = false },
+                modifier = modifier,
+                horizontalPadding = horizontalPadding,
+            )
+        }
+
+        activeLicense != null -> {
+            LicenseTextPane(
+                license = activeLicense,
+                onBack = { viewingLicense = null },
+                modifier = modifier,
+                horizontalPadding = horizontalPadding,
+            )
+        }
+
+        else -> {
+            val layoutDirection = LocalLayoutDirection.current
+            val padModifier = Modifier.padding(
+                start = horizontalPadding.calculateStartPadding(layoutDirection),
+                end = horizontalPadding.calculateEndPadding(layoutDirection),
+            )
+
+            Column(
+                modifier = modifier.fillMaxSize().then(padModifier).padding(bottom = 24.dp),
+            ) {
+                SettingsSubViewHeader(
+                    title = "${stringResource(Res.string.licenses_dialog_title)} · ${libs?.libraries?.size ?: 0}",
+                    backDescription = stringResource(Res.string.settings_back_to_about),
+                    onBack = onBack,
+                    trailing = {
                         // GPLv3 §7b requires providing the warranty notice.
                         NoticeButton(onClick = { showNotice = true })
+                    },
+                )
 
-                        MorpheIconButton(
-                            icon = MorpheIcons.Close,
-                            contentDescription = stringResource(Res.string.close),
-                            size = MorpheIconButtonSize.COMPACT,
-                            variant = MorpheIconButtonVariant.GHOST,
-                            onClick = onDismiss,
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        SlimSearchField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            placeholder = stringResource(Res.string.licenses_search_placeholder),
                         )
                     }
-                }
-
-                HorizontalDivider(color = dividerColor)
-
-                Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 12.dp)) {
-                    SlimSearchField(
-                        value = searchQuery,
-                        onValueChange = { searchQuery = it },
-                        placeholder = stringResource(Res.string.licenses_search_placeholder),
+                    Text(
+                        text = if (searchQuery.isBlank()) {
+                            pluralStringResource(Res.plurals.licenses_dialog_footer_count, filtered.size, filtered.size)
+                        } else {
+                            stringResource(Res.string.licenses_dialog_footer_matched, filtered.size, libs?.libraries?.size ?: 0)
+                        },
+                        style = MorpheTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
 
-                HorizontalDivider(color = dividerColor)
-
-                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                    when {
-                        isLoading -> Unit
-                        libs == null -> EmptyHint(text = stringResource(Res.string.licenses_dialog_empty_failed), isError = true)
-                        filtered.isEmpty() -> EmptyHint(text = stringResource(Res.string.licenses_dialog_empty_no_matches), isError = false)
-                        else -> {
-                            LazyColumn(
-                                state = listState,
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(horizontal = 22.dp, vertical = 8.dp)
-                            ) {
-                                items(items = filtered, key = { it.uniqueId }) { library ->
-                                    LibraryRow(
-                                        library = library,
-                                        dividerColor = dividerColor,
-                                        onLicenseClick = { viewingLicense = it }
+                SettingsSegmentCard(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        when {
+                            isLoading -> {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    CircularProgressIndicator(
+                                        color = MorpheTheme.colors.primary,
+                                        modifier = Modifier.size(32.dp),
+                                        strokeWidth = 3.dp,
                                     )
                                 }
                             }
-
-                            VerticalScrollbar(
-                                modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .fillMaxHeight()
-                                    .padding(vertical = 6.dp),
-                                adapter = rememberScrollbarAdapter(listState),
-                                style = MorpheScrollbarStyle()
+                            libs == null -> EmptyHint(
+                                text = stringResource(Res.string.licenses_dialog_empty_failed),
+                                isError = true,
                             )
+                            filtered.isEmpty() -> EmptyHint(
+                                text = stringResource(Res.string.licenses_dialog_empty_no_matches),
+                                isError = false,
+                            )
+                            else -> {
+                                LazyColumn(
+                                    state = listState,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+                                ) {
+                                    items(items = filtered, key = { it.uniqueId }) { library ->
+                                        LibraryRow(
+                                            library = library,
+                                            dividerColor = dividerColor,
+                                            onLicenseClick = { viewingLicense = it },
+                                        )
+                                    }
+                                }
+
+                                VerticalScrollbar(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .fillMaxHeight()
+                                        .padding(vertical = 6.dp, horizontal = 4.dp),
+                                    adapter = rememberScrollbarAdapter(listState),
+                                    style = MorpheScrollbarStyle(),
+                                )
+                            }
                         }
                     }
                 }
-
-                HorizontalDivider(color = dividerColor)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 22.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = if (searchQuery.isBlank()) pluralStringResource(Res.plurals.licenses_dialog_footer_count, filtered.size, filtered.size)
-                               else stringResource(Res.string.licenses_dialog_footer_matched, filtered.size, libs?.libraries?.size ?: 0),
-                        style = MorpheTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    MorpheButton(
-                        label = stringResource(Res.string.close),
-                        onClick = onDismiss,
-                        variant = MorpheButtonVariant.OUTLINED,
-                        size = MorpheButtonSize.COMPACT,
-                    )
-                }
             }
         }
-    }
-
-    viewingLicense?.let { license ->
-        LicenseTextDialog(license = license, onDismiss = { viewingLicense = null })
-    }
-
-    if (showNotice) {
-        NoticeTextDialog(onDismiss = { showNotice = false })
     }
 }
 
@@ -249,7 +241,11 @@ private fun LibraryRow(
             .clip(MorpheTheme.shapes.small)
             .hoverable(hoverInteraction)
             .background(MaterialTheme.colorScheme.onSurface.copy(alpha = bgAlpha))
-            .clickable { expanded = !expanded }
+            .clickable(
+                interactionSource = hoverInteraction,
+                indication = null,
+                onClick = { expanded = !expanded },
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 11.dp),
@@ -266,13 +262,16 @@ private fun LibraryRow(
                         style = MorpheTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
                     )
                     library.artifactVersion?.takeIf { it.isNotBlank() }?.let { v ->
                         Text(
                             text = "v$v",
                             style = MorpheTheme.typography.labelSmall,
-                            color = MorpheTheme.colors.secondary
+                            color = MorpheTheme.colors.secondary,
+                            maxLines = 1,
+                            softWrap = false,
                         )
                     }
                 }
@@ -466,7 +465,7 @@ private val MORPHE_NOTICE = """
     service marks, or logos.
 """.trimIndent()
 
-/** Header button that opens the [NoticeTextDialog]. */
+/** Header button that opens [NoticeTextPane]. */
 @Composable
 private fun NoticeButton(
     onClick: () -> Unit,
@@ -479,204 +478,148 @@ private fun NoticeButton(
     )
 }
 
-/** Modal dialog displaying the project [MORPHE_NOTICE]. */
+/** Inline view displaying the project [MORPHE_NOTICE]. */
 @Composable
-private fun NoticeTextDialog(onDismiss: () -> Unit) {
-    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = MorpheTheme.alphas.borderMuted)
+private fun NoticeTextPane(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    horizontalPadding: PaddingValues = PaddingValues(0.dp),
+) {
+    val layoutDirection = LocalLayoutDirection.current
+    val padModifier = Modifier.padding(
+        start = horizontalPadding.calculateStartPadding(layoutDirection),
+        end = horizontalPadding.calculateEndPadding(layoutDirection),
+    )
 
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        MorpheDialogSurface(
-            modifier = Modifier
-                .widthIn(min = 540.dp, max = 820.dp)
-                .heightIn(min = 380.dp, max = 680.dp)
-                .fillMaxWidth(0.78f)
-                .fillMaxHeight(0.82f),
+    Column(modifier = modifier.fillMaxSize().then(padModifier).padding(bottom = 24.dp)) {
+        SettingsSubViewHeader(
+            title = stringResource(Res.string.licenses_notice_title),
+            backDescription = stringResource(Res.string.licenses_back_to_list),
+            onBack = onBack,
+        )
+
+        Text(
+            text = stringResource(Res.string.licenses_notice_subtitle),
+            style = MorpheTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+
+        SettingsSegmentCard(
+            modifier = Modifier.weight(1f).fillMaxWidth(),
             contentPadding = PaddingValues(0.dp),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalAlignment = Alignment.Start,
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Row(
+            Box(modifier = Modifier.fillMaxSize()) {
+                val scrollState = rememberScrollState()
+                Text(
+                    text = MORPHE_NOTICE,
+                    style = MorpheTheme.typography.codeSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 22.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text(
-                            text = stringResource(Res.string.licenses_notice_title),
-                            style = MorpheTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Text(
-                            text = stringResource(Res.string.licenses_notice_subtitle),
-                            style = MorpheTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    MorpheIconButton(
-                        icon = MorpheIcons.Close,
-                        contentDescription = stringResource(Res.string.close),
-                        size = MorpheIconButtonSize.COMPACT,
-                        variant = MorpheIconButtonVariant.GHOST,
-                        onClick = onDismiss,
-                    )
-                }
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 20.dp, vertical = 16.dp),
+                )
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight()
+                        .padding(vertical = 6.dp, horizontal = 4.dp),
+                    adapter = rememberScrollbarAdapter(scrollState),
+                    style = MorpheScrollbarStyle(),
+                )
+            }
+        }
+    }
+}
 
-                HorizontalDivider(color = borderColor)
+@Composable
+private fun LicenseTextPane(
+    license: License,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    horizontalPadding: PaddingValues = PaddingValues(0.dp),
+) {
+    val layoutDirection = LocalLayoutDirection.current
+    val padModifier = Modifier.padding(
+        start = horizontalPadding.calculateStartPadding(layoutDirection),
+        end = horizontalPadding.calculateEndPadding(layoutDirection),
+    )
+    val content = license.licenseContent?.takeIf { it.isNotBlank() }
+    val chipLabel = licenseDisplayLabel(license)
 
-                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxSize().then(padModifier).padding(bottom = 24.dp)) {
+        SettingsSubViewHeader(
+            title = chipLabel,
+            backDescription = stringResource(Res.string.licenses_back_to_list),
+            onBack = onBack,
+        )
+
+        if (license.name.isNotBlank() && !license.name.equals(chipLabel, ignoreCase = true)) {
+            Text(
+                text = license.name,
+                style = MorpheTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
+        }
+
+        SettingsSegmentCard(
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                if (content != null) {
                     val scrollState = rememberScrollState()
                     Text(
-                        text = MORPHE_NOTICE,
+                        text = content,
                         style = MorpheTheme.typography.codeSmall,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(scrollState)
-                            .padding(horizontal = 22.dp, vertical = 16.dp)
+                            .padding(horizontal = 20.dp, vertical = 16.dp),
                     )
                     VerticalScrollbar(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .fillMaxHeight()
-                            .padding(vertical = 6.dp),
+                            .padding(vertical = 6.dp, horizontal = 4.dp),
                         adapter = rememberScrollbarAdapter(scrollState),
-                        style = MorpheScrollbarStyle()
+                        style = MorpheScrollbarStyle(),
                     )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LicenseTextDialog(license: License, onDismiss: () -> Unit) {
-    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = MorpheTheme.alphas.borderMuted)
-    val content = license.licenseContent?.takeIf { it.isNotBlank() }
-
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        MorpheDialogSurface(
-            modifier = Modifier
-                .widthIn(min = 540.dp, max = 820.dp)
-                .heightIn(min = 380.dp, max = 680.dp)
-                .fillMaxWidth(0.78f)
-                .fillMaxHeight(0.82f),
-            contentPadding = PaddingValues(0.dp),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 22.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        val chipLabel = licenseDisplayLabel(license)
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
                         Text(
-                            text = chipLabel,
-                            style = MorpheTheme.typography.titleMedium,
-                            color = MorpheTheme.colors.primary
+                            text = stringResource(Res.string.licenses_text_not_bundled),
+                            style = MorpheTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        if (license.name.isNotBlank() && !license.name.equals(chipLabel, ignoreCase = true)) {
+                        license.url?.takeIf { it.isNotBlank() }?.let { url ->
                             Text(
-                                text = license.name,
+                                text = stringResource(Res.string.licenses_text_open_canonical),
                                 style = MorpheTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            LinkPill(
+                                label = stringResource(Res.string.licenses_text_open_license_button),
+                                url = url,
                             )
                         }
                     }
-                    MorpheIconButton(
-                        icon = MorpheIcons.Close,
-                        contentDescription = stringResource(Res.string.close),
-                        size = MorpheIconButtonSize.COMPACT,
-                        variant = MorpheIconButtonVariant.GHOST,
-                        onClick = onDismiss,
-                    )
-                }
-
-                HorizontalDivider(color = borderColor)
-
-                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                    if (content != null) {
-                        val scrollState = rememberScrollState()
-                        Text(
-                            text = content,
-                            style = MorpheTheme.typography.codeSmall,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(scrollState)
-                                .padding(horizontal = 22.dp, vertical = 16.dp)
-                        )
-                        VerticalScrollbar(
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .fillMaxHeight()
-                                .padding(vertical = 6.dp),
-                            adapter = rememberScrollbarAdapter(scrollState),
-                            style = MorpheScrollbarStyle()
-                        )
-                    } else {
-                        Column(
-                            modifier = Modifier.fillMaxSize().padding(22.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.licenses_text_not_bundled),
-                                style = MorpheTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            license.url?.takeIf { it.isNotBlank() }?.let { url ->
-                                Text(
-                                    text = stringResource(Res.string.licenses_text_open_canonical),
-                                    style = MorpheTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                LinkPill(
-                                    label = stringResource(Res.string.licenses_text_open_license_button),
-                                    url = url,
-                                )
-                            }
-                        }
-                    }
-                }
-
-                HorizontalDivider(color = borderColor)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 22.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    MorpheButton(
-                        label = stringResource(Res.string.close),
-                        onClick = onDismiss,
-                        variant = MorpheButtonVariant.OUTLINED,
-                        size = MorpheButtonSize.COMPACT,
-                    )
                 }
             }
         }
     }
 }
-
-private val MD5_HASH_REGEX = Regex("^[0-9a-f]{32}$")
 
 private fun licenseDisplayLabel(license: License): String {
     license.spdxId?.takeIf { it.isNotBlank() }?.let { return it }
     val hash = license.hash
-    if (hash.isNotBlank() && !MD5_HASH_REGEX.matches(hash)) return hash
+    val isMd5 = hash.length == 32 && hash.all { it in '0'..'9' || it in 'a'..'f' }
+    if (hash.isNotBlank() && !isMd5) return hash
     return license.name.ifBlank { "-" }
 }

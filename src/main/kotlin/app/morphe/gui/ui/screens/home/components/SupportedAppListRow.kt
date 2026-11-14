@@ -249,6 +249,7 @@ private fun ExpandedBody(
                 packageName = app.packageName,
                 onOpenUrl = uriHandler::openUri,
                 requiredBuildCodesFor = app::requiredBuildCodes,
+                downloadUrlFor = app::downloadUrl,
             )
 
             VersionChipSection(
@@ -258,6 +259,7 @@ private fun ExpandedBody(
                 packageName = app.packageName,
                 onOpenUrl = uriHandler::openUri,
                 requiredBuildCodesFor = app::requiredBuildCodes,
+                downloadUrlFor = app::downloadUrl,
             )
         }
     }
@@ -272,6 +274,7 @@ private fun VersionChipSection(
     onOpenUrl: (String) -> Unit,
     maxPills: Int = 16,
     requiredBuildCodesFor: (String) -> Set<Int> = { emptySet() },
+    downloadUrlFor: (String) -> String? = { SupportedApp.getDownloadUrl(packageName, it) },
 ) {
     if (versions.isEmpty()) return
     val patchSourceHeader = LocalPatchSourceHeader.current
@@ -281,7 +284,7 @@ private fun VersionChipSection(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         versions.take(maxPills).forEach { v ->
-            val url = remember(v) { SupportedApp.getDownloadUrl(packageName, v) }
+            val url = remember(v) { downloadUrlFor(v) }
             val buildCodes = remember(v) { requiredBuildCodesFor(v) }
             val chipText = remember(v, buildCodes) { FormatUtils.formatVersionWithBuild(v, buildCodes) }
             val tooltip = if (buildCodes.size > 1) "$v (${buildCodes.joinToString(", ")})" else null
