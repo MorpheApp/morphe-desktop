@@ -81,13 +81,21 @@ object SupportedAppCatalog {
         val packageFormFactors = mutableMapOf<String, FormFactor>()
 
         for ((_, _, compatiblePackages) in patches) {
-            for (compatiblePackage in compatiblePackages) {
-                val (packageName, displayName, versions, experimentalVersions, appIconColor, versionBuildCodes) = compatiblePackage
+            for ((
+                packageName,
+                displayName,
+                versions,
+                experimentalVersions,
+                appIconColor,
+                versionBuildCodes,
+                versionAbiBuildCodes,
+                formFactor,
+            ) in compatiblePackages) {
                 if (packageName.isNotBlank()) {
                     // The first patch that declares them names the build of each ABI and the form factor
                     val abiCodes = packageAbiBuildCodes.getOrPut(packageName) { mutableMapOf() }
-                    compatiblePackage.versionAbiBuildCodes.forEach { (version, codes) -> abiCodes.putIfAbsent(version, codes) }
-                    compatiblePackage.formFactor?.let { packageFormFactors.putIfAbsent(packageName, it) }
+                    versionAbiBuildCodes.forEach { (version, codes) -> abiCodes.putIfAbsent(version, codes) }
+                    formFactor?.let { packageFormFactors.putIfAbsent(packageName, it) }
                     packageVersionsMap.getOrPut(packageName) { mutableSetOf() }
                         .addAll(versions)
                     packageExperimentalMap.getOrPut(packageName) { mutableSetOf() }
