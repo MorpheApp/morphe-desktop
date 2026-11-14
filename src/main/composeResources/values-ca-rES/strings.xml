@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">No s'han trobat versions</string>
     <string name="patches_export_options_title">Exportar options.json</string>
     <string name="patches_latest_badge">Últim</string>
+    <string name="patches_cached_badge">En memòria cau</string>
+    <string name="patches_date_cached">En memòria cau: %1$s</string>
+    <string name="patches_date_published">Publicat: %1$s</string>
+    <string name="patches_hide_notes">Ocultar notes</string>
+    <string name="patches_patch_notes">Notes del pegat</string>
+    <string name="patches_downloading">Descarregant…</string>
+    <string name="patches_select">Selecciona</string>
+    <string name="patches_export_json">Exportar JSON</string>
     <string name="patches_local_patch_file">Fitxer de pegat local</string>
     <string name="patches_error_local_file_not_found">No s'ha trobat l'arxiu de pedaç local: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Error en carregar els llançaments</string>

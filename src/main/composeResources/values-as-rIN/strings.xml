@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">কোনো ৰিলিজ পোৱা নাগিল</string>
     <string name="patches_export_options_title">options.json ৰপ্তন কৰক</string>
     <string name="patches_latest_badge">নৱতম</string>
+    <string name="patches_cached_badge">কেচড</string>
+    <string name="patches_date_cached">কেচড: %1$s</string>
+    <string name="patches_date_published">প্ৰকাশিত: %1$s</string>
+    <string name="patches_hide_notes">নোটসমূহ লুকুৱাওক</string>
+    <string name="patches_patch_notes">প্যাচ নোটসমূহ</string>
+    <string name="patches_downloading">ডাউনলোড হৈছে…</string>
+    <string name="patches_select">নিৰ্বাচন কৰক</string>
+    <string name="patches_export_json">JSON এক্সপৰ্ট কৰক</string>
     <string name="patches_local_patch_file">স্থানীয় প্যাচ ফাইল</string>
     <string name="patches_error_local_file_not_found">স্থানীয় প্যাচ ফাইলটো পোৱা নগ'ল: %1$s</string>
     <string name="patches_error_failed_to_load_releases">ৰিলিজসমূহ লোড কৰাত ব্যৰ্থ হৈছে</string>

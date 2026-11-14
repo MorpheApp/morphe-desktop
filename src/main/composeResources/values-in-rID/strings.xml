@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Tidak ada rilis yang ditemukan</string>
     <string name="patches_export_options_title">Ekspor options.json</string>
     <string name="patches_latest_badge">Terbaru</string>
+    <string name="patches_cached_badge">Dalam cache</string>
+    <string name="patches_date_cached">Cache: %1$s</string>
+    <string name="patches_date_published">Diterbitkan: %1$s</string>
+    <string name="patches_hide_notes">Sembunyikan catatan</string>
+    <string name="patches_patch_notes">Catatan tambalan</string>
+    <string name="patches_downloading">Mengunduh…</string>
+    <string name="patches_select">Pilih</string>
+    <string name="patches_export_json">Ekspor JSON</string>
     <string name="patches_local_patch_file">Berkas tambalan lokal</string>
     <string name="patches_error_local_file_not_found">Berkas tambalan lokal tidak ditemukan: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Gagal memuat rilis</string>

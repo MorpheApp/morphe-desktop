@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Nicio versiune găsită</string>
     <string name="patches_export_options_title">Exportă options.json</string>
     <string name="patches_latest_badge">Ultima</string>
+    <string name="patches_cached_badge">În cache</string>
+    <string name="patches_date_cached">În cache: %1$s</string>
+    <string name="patches_date_published">Publicat: %1$s</string>
+    <string name="patches_hide_notes">Ascunde notele</string>
+    <string name="patches_patch_notes">Note de patch</string>
+    <string name="patches_downloading">Se descarcă…</string>
+    <string name="patches_select">Selectează</string>
+    <string name="patches_export_json">Exportă JSON</string>
     <string name="patches_local_patch_file">Fișier de patch local</string>
     <string name="patches_error_local_file_not_found">Fișierul de patch local nu a fost găsit: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Eroare la încărcarea versiunilor</string>

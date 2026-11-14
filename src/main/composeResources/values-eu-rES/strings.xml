@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Ez da release-ik aurkitu</string>
     <string name="patches_export_options_title">Exportatu options.json</string>
     <string name="patches_latest_badge">Azkenena</string>
+    <string name="patches_cached_badge">Cacheatua</string>
+    <string name="patches_date_cached">Cacheatua: %1$s</string>
+    <string name="patches_date_published">Argitaratua: %1$s</string>
+    <string name="patches_hide_notes">Ezkutatu oharrak</string>
+    <string name="patches_patch_notes">Patch-en oharrak</string>
+    <string name="patches_downloading">Deskargatzen...</string>
+    <string name="patches_select">Hautatu</string>
+    <string name="patches_export_json">JSON esportatu</string>
     <string name="patches_local_patch_file">Patch-fitxategi lokala</string>
     <string name="patches_error_local_file_not_found">Patch-fitxategi lokalik ez da aurkitu: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Errorea bertsioak kargatzen</string>

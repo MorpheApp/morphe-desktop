@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Δεν βρέθηκαν εκδόσεις</string>
     <string name="patches_export_options_title">Εξαγωγή options.json</string>
     <string name="patches_latest_badge">Τελευταία</string>
+    <string name="patches_cached_badge">Στην κρυφή μνήμη</string>
+    <string name="patches_date_cached">Στην κρυφή μνήμη: %1$s</string>
+    <string name="patches_date_published">Δημοσιεύτηκε: %1$s</string>
+    <string name="patches_hide_notes">Απόκρυψη σημειώσεων</string>
+    <string name="patches_patch_notes">Σημειώσεις patch</string>
+    <string name="patches_downloading">Λήψη…</string>
+    <string name="patches_select">Επιλογή</string>
+    <string name="patches_export_json">Εξαγωγή JSON</string>
     <string name="patches_local_patch_file">Τοπικό αρχείο patch</string>
     <string name="patches_error_local_file_not_found">Το τοπικό αρχείο patch δεν βρέθηκε: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Απέτυχε η φόρτωση εκδόσεων</string>

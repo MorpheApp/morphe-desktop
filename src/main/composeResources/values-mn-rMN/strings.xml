@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Хувилбарууд олдсонгүй</string>
     <string name="patches_export_options_title">Options.json файлыг экспортлох</string>
     <string name="patches_latest_badge">Хамгийн сүүлийн</string>
+    <string name="patches_cached_badge">Кэшлэгдсэн</string>
+    <string name="patches_date_cached">Кэшлэгдсэн: %1$s</string>
+    <string name="patches_date_published">Нийтлэгдсэн: %1$s</string>
+    <string name="patches_hide_notes">Тайлбарыг нуух</string>
+    <string name="patches_patch_notes">Засварын тэмдэглэл</string>
+    <string name="patches_downloading">Татаж авч байна…</string>
+    <string name="patches_select">Сонгох</string>
+    <string name="patches_export_json">JSON-оор экспортлох</string>
     <string name="patches_local_patch_file">Локал патчийн файл</string>
     <string name="patches_error_local_file_not_found">Локал патчийн файл олдсонгүй: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Хувилбаруудыг ачаалж чадсангүй</string>

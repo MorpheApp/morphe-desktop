@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Sürüm bulunamadı</string>
     <string name="patches_export_options_title">Dışa aktar: options.json</string>
     <string name="patches_latest_badge">En son</string>
+    <string name="patches_cached_badge">Önbellekte</string>
+    <string name="patches_date_cached">Önbellekte: %1$s</string>
+    <string name="patches_date_published">Yayınlanma: %1$s</string>
+    <string name="patches_hide_notes">Notları gizle</string>
+    <string name="patches_patch_notes">Yama notları</string>
+    <string name="patches_downloading">İndiriliyor…</string>
+    <string name="patches_select">Seç</string>
+    <string name="patches_export_json">JSON dışa aktar</string>
     <string name="patches_local_patch_file">Yerel yama dosyası</string>
     <string name="patches_error_local_file_not_found">Yerel yama dosyası bulunamadı: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Sürümler yüklenemedi</string>

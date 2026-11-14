@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">வெளியீடுகள் எதுவும் காணப்படவில்லை</string>
     <string name="patches_export_options_title">Options.json ஏற்றுமதி விருப்பங்கள்</string>
     <string name="patches_latest_badge">சமீபத்தியது</string>
+    <string name="patches_cached_badge">தற்காலிக சேமிக்கப்பட்டது</string>
+    <string name="patches_date_cached">தற்காலிக சேமிக்கப்பட்டது: %1$s</string>
+    <string name="patches_date_published">வெளியிடப்பட்டது: %1$s</string>
+    <string name="patches_hide_notes">குறிப்புகளை மறை</string>
+    <string name="patches_patch_notes">பேட்ச் குறிப்புகள்</string>
+    <string name="patches_downloading">பதிவிறக்கம் செய்யப்படுகிறது…</string>
+    <string name="patches_select">தேர்ந்தெடு</string>
+    <string name="patches_export_json">JSON-ஐ ஏற்றுமதி செய்</string>
     <string name="patches_local_patch_file">உள்ளூர் பேட்ச் கோப்பு</string>
     <string name="patches_error_local_file_not_found">உள்ளூர் பேட்ச் கோப்பு காணப்படவில்லை: %1$s</string>
     <string name="patches_error_failed_to_load_releases">வெளியீடுகளை ஏற்ற முடியவில்லை</string>

@@ -302,6 +302,14 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="patches_no_releases_found">Nema pronađenih izdanja</string>
     <string name="patches_export_options_title">Izvezi options.json</string>
     <string name="patches_latest_badge">Najnovije</string>
+    <string name="patches_cached_badge">U predmemoriji</string>
+    <string name="patches_date_cached">U predmemoriji: %1$s</string>
+    <string name="patches_date_published">Objavljeno: %1$s</string>
+    <string name="patches_hide_notes">Sakrij bilješke</string>
+    <string name="patches_patch_notes">Bilješke o zakrpama</string>
+    <string name="patches_downloading">Preuzimanje…</string>
+    <string name="patches_select">Odaberi</string>
+    <string name="patches_export_json">Izvezi JSON</string>
     <string name="patches_local_patch_file">Lokalna datoteka zakrpa</string>
     <string name="patches_error_local_file_not_found">Lokalna datoteka zakrpa nije pronađena: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Učitavanje izdanja nije uspjelo</string>

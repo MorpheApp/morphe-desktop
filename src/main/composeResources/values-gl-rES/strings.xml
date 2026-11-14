@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Non se atoparon versións</string>
     <string name="patches_export_options_title">Exportar options.json</string>
     <string name="patches_latest_badge">Máis recente</string>
+    <string name="patches_cached_badge">En caché</string>
+    <string name="patches_date_cached">En caché: %1$s</string>
+    <string name="patches_date_published">Publicado: %1$s</string>
+    <string name="patches_hide_notes">Ocultar notas</string>
+    <string name="patches_patch_notes">Notas do parche</string>
+    <string name="patches_downloading">Descargando…</string>
+    <string name="patches_select">Seleccionar</string>
+    <string name="patches_export_json">Exportar JSON</string>
     <string name="patches_local_patch_file">Ficheiro de parche local</string>
     <string name="patches_error_local_file_not_found">Non se atopou o ficheiro local do parche: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Fallo ao cargar as versións</string>

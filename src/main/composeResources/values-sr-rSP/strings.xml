@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Нема пронађених издања</string>
     <string name="patches_export_options_title">Извези options.json</string>
     <string name="patches_latest_badge">Најновије</string>
+    <string name="patches_cached_badge">Кеширано</string>
+    <string name="patches_date_cached">Кеширано: %1$s</string>
+    <string name="patches_date_published">Објављено: %1$s</string>
+    <string name="patches_hide_notes">Сакриј белешке</string>
+    <string name="patches_patch_notes">Белешке о закрпама</string>
+    <string name="patches_downloading">Преузимање…</string>
+    <string name="patches_select">Изабери</string>
+    <string name="patches_export_json">Извези JSON</string>
     <string name="patches_local_patch_file">Локална датотека закрпе</string>
     <string name="patches_error_local_file_not_found">Локална датотека закрпе није пронађена: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Учитавање издања није успело</string>

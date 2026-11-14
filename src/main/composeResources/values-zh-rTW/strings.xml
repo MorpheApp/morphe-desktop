@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">找不到任何發佈版本</string>
     <string name="patches_export_options_title">匯出 options.json</string>
     <string name="patches_latest_badge">最新</string>
+    <string name="patches_cached_badge">已快取</string>
+    <string name="patches_date_cached">已快取：%1$s</string>
+    <string name="patches_date_published">發佈日期：%1$s</string>
+    <string name="patches_hide_notes">隱藏備註</string>
+    <string name="patches_patch_notes">修補備註</string>
+    <string name="patches_downloading">正在下載…</string>
+    <string name="patches_select">選取</string>
+    <string name="patches_export_json">匯出 JSON</string>
     <string name="patches_local_patch_file">本機修補檔</string>
     <string name="patches_error_local_file_not_found">找不到本機修補檔：%1$s</string>
     <string name="patches_error_failed_to_load_releases">無法載入發佈版本</string>

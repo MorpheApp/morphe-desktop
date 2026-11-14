@@ -296,6 +296,14 @@
     <string name="patches_no_releases_found">Nem találhatók kiadások</string>
     <string name="patches_export_options_title">Exportáld az options.json fájlt</string>
     <string name="patches_latest_badge">Legújabb</string>
+    <string name="patches_cached_badge">Gyorsítótárazva</string>
+    <string name="patches_date_cached">Gyorsítótárazva: %1$s</string>
+    <string name="patches_date_published">Közzétéve: %1$s</string>
+    <string name="patches_hide_notes">Jegyzetek elrejtése</string>
+    <string name="patches_patch_notes">Javítási jegyzetek</string>
+    <string name="patches_downloading">Letöltés…</string>
+    <string name="patches_select">Kiválasztás</string>
+    <string name="patches_export_json">JSON exportálása</string>
     <string name="patches_local_patch_file">Helyi javítófájl</string>
     <string name="patches_error_local_file_not_found">A helyi javítófájl nem található: %1$s</string>
     <string name="patches_error_failed_to_load_releases">A kiadások betöltése sikertelen</string>

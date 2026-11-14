@@ -300,6 +300,14 @@
     <string name="patches_no_releases_found">هیچ بڵاوکراوەیەک نەدۆزرایەوە</string>
     <string name="patches_export_options_title">هەناردانی options.json</string>
     <string name="patches_latest_badge">نوێترین</string>
+    <string name="patches_cached_badge">کاشکراو</string>
+    <string name="patches_date_cached">کاشکراوە: %1$s</string>
+    <string name="patches_date_published">بڵاوکراوە: %1$s</string>
+    <string name="patches_hide_notes">شاردنەوەی تێبینییەکان</string>
+    <string name="patches_patch_notes">تێبینییەکانی پاتچ</string>
+    <string name="patches_downloading">داگرتن...</string>
+    <string name="patches_select">دیاریکردن</string>
+    <string name="patches_export_json">گواستنەوەی JSON</string>
     <string name="patches_local_patch_file">فایلی پاتچی ناوخۆیی</string>
     <string name="patches_error_local_file_not_found">فایلی پاتچی ناوخۆیی نەدۆزرایەوە: %1$s</string>
     <string name="patches_error_failed_to_load_releases">شکست هێنا لە بارکردنی وەشانەکان</string>
