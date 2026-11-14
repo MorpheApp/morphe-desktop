@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.components.MorpheButton
@@ -35,7 +34,6 @@ internal fun OutputFolderSection(
     onDefaultOutputDirectoryChange: (String?) -> Unit,
     borderColor: Color,
     enabled: Boolean = true,
-    icon: ImageVector? = null,
 ) {
     val dimens = MorpheTheme.dimens
     val scope = rememberCoroutineScope()
@@ -44,13 +42,10 @@ internal fun OutputFolderSection(
     val outputDirExists = outputDir?.isDirectory == true
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        SectionLabel(stringResource(Res.string.settings_section_output_folder), icon = icon)
-        Spacer(Modifier.height(6.dp))
-
         Text(
             text = if (!enabled) stringResource(Res.string.disabled_while_patching)
                    else stringResource(Res.string.settings_output_folder_desc),
-            style = MorpheTheme.typography.labelSmall,
+            style = MorpheTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
         )
 

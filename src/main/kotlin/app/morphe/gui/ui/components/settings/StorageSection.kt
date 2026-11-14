@@ -46,7 +46,6 @@ private data class CategoryConfirm(val type: CategoryType, val title: String)
 internal fun StorageSection(
     borderColor: Color,
     enabled: Boolean = true,
-    icon: ImageVector? = null,
     onCacheCleared: () -> Unit = {},
 ) {
     val patchSourceManager: PatchSourceManager = koinInject()
@@ -96,8 +95,6 @@ internal fun StorageSection(
     val appIconsTitle = stringResource(Res.string.settings_cache_category_app_icons)
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        SectionLabel(stringResource(Res.string.settings_section_storage), icon = icon)
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,

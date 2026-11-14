@@ -105,7 +105,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                 .fillMaxSize()
                 .background(screenScrim)
         ) {
-            SimpleTopBar(isPatching = uiState.isInProgress)
+            SimpleTopBar()
 
             AnimatedContent(
                 targetState = uiState.hasAutoNavigated && (uiState.status == PatchingStatus.FAILED || uiState.status == PatchingStatus.CANCELLED),

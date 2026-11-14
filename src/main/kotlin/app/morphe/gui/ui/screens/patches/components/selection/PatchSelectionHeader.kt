@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import app.morphe.gui.LocalOnSettingsDismiss
 import app.morphe.gui.ui.components.DeviceIndicator
 import app.morphe.gui.ui.components.MorpheIconButton
 import app.morphe.gui.ui.components.MorpheIconButtonSize
@@ -42,7 +40,6 @@ internal fun PatchSelectionHeader(
     showRunInfo: Boolean,
     onShowRunInfo: () -> Unit,
     onBackClick: () -> Unit,
-    onRefreshStripLibsStatus: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
@@ -140,8 +137,6 @@ internal fun PatchSelectionHeader(
 
         DeviceIndicator()
         Spacer(modifier = Modifier.width(6.dp))
-        CompositionLocalProvider(LocalOnSettingsDismiss provides { onRefreshStripLibsStatus() }) {
-            SettingsButton()
-        }
+        SettingsButton()
     }
 }
