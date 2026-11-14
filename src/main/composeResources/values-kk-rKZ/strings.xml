@@ -4,7 +4,7 @@
     <string name="morphe_logo_content_description">Morphe логотипі</string>
     <string name="dismiss">Жабу</string>
     <string name="ok">ОК</string>
-    <string name="retry">Қайта försöңіз</string>
+    <string name="retry">Қайталау</string>
     <string name="clear">Тазалау</string>
     <string name="search">Іздеу</string>
     <string name="no_matches">Сәйкестіктер табылмады</string>
@@ -45,8 +45,8 @@
     <string name="click_to_copy">Көшіру үшін басыңыз</string>
     <string name="enable_adb_button">ADB-ді қосу</string>
     <string name="drag_to_reorder">Реттеу үшін сүйреңіз</string>
-    <string name="off">Өшіру</string>
-    <string name="on">Қосу</string>
+    <string name="off">Өшірулі</string>
+    <string name="on">Қосулы</string>
     <string name="browse">Қарау</string>
     <string name="save">Сақтау</string>
     <string name="select_folder">Папканы таңдаңыз</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Патчтау белгісіз себептермен сәтсіз аяқталды</string>
     <string name="error_log_label">Қателіктер журналы</string>
     <string name="back">Артқа</string>
+    <string name="open">Ашу</string>
     <string name="open_folder">Папканы ашу</string>
     <string name="temporary_files_label">Уақытша файлдар</string>
     <string name="size_can_be_freed_label">%1$s босатылуы мүмкін</string>
@@ -82,22 +83,22 @@
     <string name="output_file_label">Шығыс файлы</string>
     <string name="color_picker_saved">Сақталды</string>
     <string name="dropdown_search_placeholder">Іздеу…</string>
-    <string name="custom_color">Жетек түсі</string>
+    <string name="custom_color">Жеке түс</string>
     <string name="gradient_linear">Сызықтық</string>
     <string name="gradient_radial">Сәулелі</string>
-    <string name="gradient_conic">Коникалық</string>
+    <string name="gradient_conic">Конустық</string>
     <string name="gradient_add_stop">Тоқтауды қосу</string>
     <string name="gradient_remove_stop_description">Тоқтауды жою</string>
     <string name="gradient_angle">Бұрышы</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_title">Картаны теңшеу</string>
     <string name="card_fill_example_app_name">Қосымша атауының мысалы</string>
-    <string name="card_fill_mode_default">Әдепті</string>
+    <string name="card_fill_mode_default">Әдепкі</string>
     <string name="card_fill_mode_default_blurb">Патч жиынтығымен бірге келетін түс</string>
     <string name="card_fill_mode_accent">Акцент</string>
     <string name="card_fill_mode_accent_blurb">Акцент түсін бақылайды және ол өзгергенде бірге өзгереді</string>
     <string name="card_fill_mode_gradient">Градиент</string>
-    <string name="card_fill_mode_gradient_blurb">Тоқтау нүктелерінің кез келген саны, сызықтық, радиалды немесе коникалы</string>
+    <string name="card_fill_mode_gradient_blurb">Тоқтау нүктелерінің кез келген саны, сызықтық, радиалды немесе конустық</string>
     <string name="card_fill_mode_solid">Бір түсті</string>
     <string name="card_fill_mode_solid_blurb">Бір жазық түс</string>
     <string name="adb_install_on_button">%1$s-қа орнату</string>
@@ -118,8 +119,8 @@
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">%1$s-қа орнатылуда…</string>
     <string name="adb_error_downgrade">Нұсқасын төмендету мүмкін емес, жаңарақ нұсқа орнатылған. Алдымен қолданбаны жойыңыз</string>
-    <string name="adb_error_already_exists">Қолданба redan бар. Алдымен оны жоюға тырысыңыз</string>
-    <string name="adb_error_storage">Құрылғыда сақтау alanı жеткіліксіз</string>
+    <string name="adb_error_already_exists">Қолданба бұрыннан бар. Алдымен оны жоюға тырысыңыз</string>
+    <string name="adb_error_storage">Құрылғыда сақтау орны жеткіліксіз</string>
     <string name="adb_error_invalid_apk">Жарамсыз APK файлы</string>
     <string name="adb_error_no_certificates">APK дұрыс қол қойылмаған</string>
     <string name="adb_error_update_incompatible">Сәйкес келмейтін жаңарту, қолтаңбалар сәйкес келмейді. Алдымен қолданбаны жойыңыз</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Орнату сәтсіз аяқталды: %1$s</string>
     <string name="adb_error_not_found">ADB табылмады. Android SDK Platform Tools құралдарын орнатыңыз</string>
     <string name="adb_error_unauthorized">Құрылғы қосылған, бірақ авторизацияланбаған. Құрылғыңыздағы USB жөндеу сұранысын қабылдаңыз</string>
-    <string name="adb_error_no_devices">Қосылған құрылғылар жоқ. USB жөндеуі қосулы Android құрылғыңызды қосыңыз</string>
+    <string name="adb_error_no_devices">Құрылғылар қосылмаған. USB немесе Wi-Fi жөндеу мүмкіндігі қосылған Android құрылғыңызды қосыңыз</string>
     <string name="adb_error_device_not_found">%1$s құрылғысы табылмады</string>
     <string name="adb_error_multiple_devices">Бірнеше құрылғы қосылған. Біреуін таңдаңыз</string>
     <string name="adb_error_apk_not_found">APK файлы табылмады: %1$s</string>
@@ -161,7 +162,7 @@
     <string name="version_warning_notice_title">Нұсқа туралы хабарлама</string>
     <string name="version_warning_build_unsupported_message">Ағымдағы: v%1$s (%2$s құрылымы)\nҚажетті құрылым: %3$s\n\nБұл бір нұсқаның басқа құрылымы. Патчтар үшін белгілі бір құрылым қажет.</string>
     <string name="version_warning_experiment_title">Эксперимент жасағыңыз келе ме? 🧪</string>
-    <string name="version_warning_latest_experimental_message">Ағынды: v%1$s\n\nБұл нұсқада ерте эксперименттік қолдау бар\n\n🔧 Патчтар осы қолданба нұсқасы үшін жетілдірілген сайын, қолданбаның ерекше жұмысын немесе белгісіз қателерді күтіңіз.</string>
+    <string name="version_warning_latest_experimental_message">Ағымдағы: v%1$s\n\nБұл нұсқада ерте эксперименттік қолдау бар\n\n🔧 Патчтар осы қолданба нұсқасы үшін жетілдірілген сайын, қолданбаның ерекше жұмысын немесе белгісіз қателерді күтіңіз.</string>
     <string name="version_warning_unsupported_message">Ағымдағы: v%1$s\n\nБұл ресми түрде қолдау көрсетілмейтін нұсқа. Патчтар, көп жағдайда, жұмыс істемейді.</string>
     <string name="version_warning_notice_message">v%1$s нұсқасымен жалғастыру?</string>
     <!-- Home Screen -->
@@ -169,7 +170,7 @@
     <string name="home_could_not_resolve_patch_files">Патч файлдарын анықтау мүмкін болмады</string>
     <string name="home_install_failed">Орнату сәтсіз аяқталды: %1$s</string>
     <string name="home_uninstall_failed">Жою сәтсіз аяқталды: %1$s</string>
-    <string name="home_no_sources_enabled">Ешқандай патч дереккөзі қосылмаған. Басты экраннан дереккөзді қосыңыз немесе қосыңыз</string>
+    <string name="home_no_sources_enabled">Ешқандай патч дереккөзі қосылмаған. Басты экраннан дереккөз қосыңыз немесе бар дереккөзді қосыңыз</string>
     <string name="home_patch_file_corrupted">Патч файлы жоқ немесе зақымдалған. Кэшті тазалап, қайта жүктеңіз</string>
     <string name="home_validation_file_not_exist">Файл жоқ</string>
     <string name="home_validation_not_a_file">Таңдалған элемент файл емес</string>
@@ -194,9 +195,9 @@
     <string name="home_dialog_forget_button">Ұмыту</string>
     <string name="home_dialog_uninstall_button">Жою</string>
     <string name="home_dialog_continue_anyway">Сонда да жалғастыру</string>
-    <string name="home_dialog_forget_title">%1$s қолданушыны ұмыту?</string>
+    <string name="home_dialog_forget_title">%1$s қолданбасын ұмыту?</string>
     <string name="home_dialog_forget_message">Бұл %1$s нұсқасын патчталған қолданбалар тарихынан жояды. Ол файлдарға әсер етпейді - қолданбаны қайта патштау оны қайта қосады</string>
-    <string name="home_dialog_uninstall_title">%1$s жою?</string>
+    <string name="home_dialog_uninstall_title">%1$s қолданбасын жою керек пе?</string>
     <string name="home_dialog_uninstall_message">Бұл %1$s нұсқасын қосылған құрылғыдан жояды. Төменде басқа нұсқаны таңдамасаңыз, дискідегі патчталған APK және тарихыңыз сақталады</string>
     <string name="home_dialog_uninstall_also_forget">Сондай-ақ «Сіздің қосымшаларыңыз» бөлімінен жою</string>
     <!-- Home Screen - HomeHeader -->
@@ -244,7 +245,7 @@
     <string name="home_detail_source_apk_label">Дереккөз APK</string>
     <string name="home_detail_patch_bundle_label">Патч пакеті</string>
     <string name="home_detail_no_sources_enabled">Ешқандай дереккөз қосылмаған</string>
-    <string name="home_detail_enable_or_add_source">төменде біреуін қосыңыз немесе қосыңыз</string>
+    <string name="home_detail_enable_or_add_source">төменнен бір дереккөзді қосыңыз</string>
     <string name="home_detail_the_loaded_bundle">жүктелген пакет</string>
     <string name="home_detail_error_download_bundle">%1$s %2$s жүктеу мүмкін болмады: %3$s</string>
     <string name="home_detail_downloading_patch">%1$s жүктелуде</string>
@@ -377,8 +378,8 @@
     <string name="patch_selection_run_info_no_bundles">Жиынтықтар анықталмады</string>
     <string name="patch_selection_run_info_dev_group">Әзірлеуші параметрлері</string>
     <string name="patch_selection_run_info_bytecode_mode">Байткод режимі: %1$s</string>
-    <string name="patch_selection_run_info_validate">Ізіздік валидациясы: %1$s</string>
-    <string name="patch_selection_run_info_verify_sdk">Android SDK верификациясы: %1$s</string>
+    <string name="patch_selection_run_info_validate">Саусақ ізін тексеру: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK тексеруі: %1$s</string>
     <string name="patch_selection_group_universal">Универсалды</string>
     <string name="patch_selection_group_ungrouped">Топталмаған</string>
     <!-- Patching Screen -->
@@ -395,7 +396,7 @@
     <string name="patching_log_viewer_title">Лог файлы</string>
     <string name="patching_log_viewer_copy_all">Бәрін көшіру</string>
     <string name="patching_step_all_done">Бәрі дайын!</string>
-    <string name="patching_step_waiting">Күту...</string>
+    <string name="patching_step_waiting">Күту…</string>
     <string name="patching_graph_memory_usage">Жад қолданысы</string>
     <string name="patching_graph_memory_detail">%1$d% / %2$d МБ</string>
     <string name="patching_graph_storage_io">Қойма I/O</string>
@@ -426,7 +427,7 @@
     <string name="patching_error_failed_patches">Сәтсіз патчтар: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB өшірулі · Орнату үшін қосыңыз</string>
-    <string name="result_adb_connect_device_hint">ADB арқылы орнату үшін құрылғыны USB арқылы қосыңыз</string>
+    <string name="result_adb_connect_device_hint">ADB арқылы орнату үшін құрылғыны USB немесе Wi-Fi арқылы қосыңыз</string>
     <string name="result_screen_patch_another_button">Тағы біреуін патчтеу</string>
     <string name="result_screen_install_on_device_label">%1$s құрылғысына орнату</string>
     <string name="result_screen_links_routed_label">Сілтемелер патчтелген қолданбаға бағытталды</string>
@@ -442,14 +443,16 @@
     <string name="result_adb_unmounting_on_device">%1$s-тен демонтаждалуда…</string>
     <string name="result_adb_root_not_detected">%1$s құрылғысында Root рұқсаты анықталмады. Magisk/KernelSU/APatch орнатылғанын және su рұқсаты берілгенін тексеріңіз</string>
     <string name="result_adb_stock_app_not_installed">%2$s құрылғысында %1$s стандартты қолданбасы орнатылмаған. Монтаждау алдында алдымен ресми қолданбаны орнатыңыз</string>
+    <string name="result_adb_mount_version_mismatch">%3$s құрылғысындағы стандартты қолданба нұсқасы v%1$s, бірақ патчтелген APK нұсқасы v%2$s. Root mount үшін нұсқалар сәйкес келуі тиіс</string>
+    <string name="result_adb_mount_abi_mismatch">%3$s құрылғысы %1$s, бірақ APK тек [%2$s] нұсқасын қамтиды. Native кітапханалар жүктеу кезінде қателік береді</string>
     <string name="result_link_default_restored">Сілтемелерді өңдеудің әдепкі күйі қалпына келтірілді</string>
     <string name="result_link_routed_stock_disabled">Сілтемелер патчтелген қолданбаға бағытталды, стандартты нұсқа өшірілді</string>
     <string name="result_adb_not_found_hint">ADB табылмады. Тікелей орнатуды қосу үшін Android SDK Platform Tools құралдарын орнатыңыз</string>
     <string name="result_adb_section_title">ADB арқылы орнату</string>
     <string name="result_adb_no_devices">Қосылған құрылғылар жоқ</string>
-    <string name="result_adb_connect_hint">USB debugging қосылған күйде USB арқылы қосылыңыз</string>
-    <string name="result_device_status_unauth">Рұқсат берилмеді</string>
-    <string name="result_adb_update_button">%1$s нұсқасына жаңарту</string>
+    <string name="result_adb_connect_hint">USB немесе Wi-Fi жөндеу арқылы қосылыңыз</string>
+    <string name="result_device_status_unauth">Рұқсат жоқ</string>
+    <string name="result_adb_update_button">%1$s құрылғысында жаңарту</string>
     <string name="result_adb_select_device_button">Құрылғыны таңдаңыз</string>
     <string name="result_link_section_title">Сілтемелерді өңдеу</string>
     <string name="result_link_section_subtitle">Қолдау көрсетілетін веб-сілтемелерді браузердің орнына патчтелген қолданбада ашу</string>
@@ -489,7 +492,7 @@
     <string name="icon_studio_transform_label">Трансформация</string>
     <string name="icon_studio_adjust_scale">Масштаб</string>
     <string name="icon_studio_adjust_rotation">Бұрыш</string>
-    <string name="icon_studio_reset_position_button">Орынды sıfırlнау</string>
+    <string name="icon_studio_reset_position_button">Орынды қалпына келтіру</string>
     <string name="icon_studio_color_label">Түс</string>
     <string name="icon_studio_adjust_hue">Түс реңкі</string>
     <string name="icon_studio_adjust_saturation">Қанықтық</string>
@@ -499,7 +502,7 @@
     <string name="icon_studio_adjust_blur">Бұлдырландыру</string>
     <string name="icon_studio_effect_glow">Жылтыр</string>
     <string name="icon_studio_effect_stroke">Сызық</string>
-    <string name="icon_studio_adjust_width">Кеңдігі</string>
+    <string name="icon_studio_adjust_width">Ені</string>
     <string name="icon_studio_save_icon_button">Белгішені сақтау</string>
     <string name="icon_studio_foreground_label">Алдыңғы жоспар</string>
     <string name="icon_studio_add_image_button">Кескін</string>
@@ -510,7 +513,7 @@
     <string name="icon_studio_replace_icon_button">Белгішені ауыстыру</string>
     <string name="icon_studio_text_label">Мәтін</string>
     <string name="icon_studio_toggle_bold">Қалың</string>
-    <string name="icon_studio_toggle_italic">Кісік</string>
+    <string name="icon_studio_toggle_italic">Көлбеу</string>
     <string name="icon_studio_toggle_underline">Асты сызу</string>
     <string name="icon_studio_toggle_strike">Сызып тастау</string>
     <string name="icon_studio_adjust_spacing">Арақашықтық</string>
@@ -537,7 +540,7 @@
     <string name="source_error_pr_no_artifact">Pull request үшін ешқандай артефакт табылмады</string>
     <string name="source_error_patcher_incompatible">Бұл дереккөз %1$s патчері үшін жасалған, бірақ Morphe %2$s нұсқасына %3$s патчері кіреді. Оны пайдалану үшін Morphe-ті жаңартыңыз</string>
     <string name="version_label_local">Жергілікті</string>
-    <string name="source_sheet_remote_label">Қашықтық</string>
+    <string name="source_sheet_remote_label">Қашықтағы</string>
     <string name="add_source">Дереккөз қосу</string>
     <string name="source_sheet_title">Патч дереккөздері</string>
     <string name="source_sheet_reload_description">Патчтарды қайта жүктеу</string>
@@ -550,7 +553,7 @@
     <string name="source_sheet_edit_description">Өңдеу</string>
     <string name="source_sheet_move_up_description">Жоғары жылжыту</string>
     <string name="source_sheet_move_down_description">Төмен жылжыту</string>
-    <string name="source_sheet_ignored_mpp_title">Елемеу қажетті .mpp шаблондары</string>
+    <string name="source_sheet_ignored_mpp_title">Елеусіз қалдырылатын .mpp шаблондары</string>
     <string name="source_sheet_ignored_mpp_hint">Тек папкадағы ең жаңа .mpp файлын автоматты түрде жүктейтін папка дереккөздеріне әсер етеді. Осы ең жаңа құрылымды таңдағанда, атауы осындағы шаблонға сәйкес келетін файлдар өткізіліп жіберіледі. Жай сөз оны қамтитын кез келген файлға сәйкес келеді (мысалы, debug). Глобтар үшін * белгісін қолданыңыз (мысалы, *-debug.mpp). *-sources.mpp және *-javadoc.mpp әрқашан ескерілмейді</string>
     <string name="source_sheet_ignored_mpp_placeholder">мысалы, debug немесе *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Шаблон қосу</string>
@@ -578,7 +581,7 @@
     <string name="patch_source_dialog_error_invalid_url">GitHub немесе GitLab-тің дұрыс URL-мекенжайын енгізіңіз</string>
     <string name="patch_source_dialog_error_invalid_file">Дұрыс .mpp файлын таңдаңыз</string>
     <string name="patch_source_dialog_add_button">Қосу</string>
-    <string name="patch_source_dialog_edit_title">Дереккөзіді өңдеу</string>
+    <string name="patch_source_dialog_edit_title">Дереккөзді өңдеу</string>
     <string name="patch_source_dialog_type_github_repo">GitHub репозиторийі</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab репозиторийі</string>
@@ -601,13 +604,13 @@
     <string name="device_indicator_adb_not_found_title">ADB табылмады</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Tools құралын орнатыңыз</string>
     <string name="device_indicator_no_devices_title">Құрылғылар анықталмады</string>
-    <string name="device_indicator_no_devices_subtitle">USB debugging қосылған құрылғыны қосыңыз</string>
-    <string name="device_indicator_enable_debugging_title">USB debugging-ті қосу</string>
-    <string name="device_indicator_enable_debugging_subtitle">Баптаулар → Әзірлеуші параметрлері → USB Debugging</string>
+    <string name="device_indicator_no_devices_subtitle">USB немесе Wi-Fi жөндеу мүмкіндігі қосылған құрылғыны қосыңыз</string>
+    <string name="device_indicator_enable_debugging_title">USB жөндеуді қосу</string>
+    <string name="device_indicator_enable_debugging_subtitle">Баптаулар → Әзірлеуші параметрлері → USB жөндеу</string>
     <string name="device_indicator_status_connected">Қосылды</string>
     <string name="device_indicator_status_unauthorized">Рұқсат берілмеген</string>
     <string name="device_indicator_not_listed_title">Құрылғы тізімде жоқ па?</string>
-    <string name="device_indicator_not_listed_subtitle">Әзірлеуші параметрлерінде USB Debugging-ті қосыңыз</string>
+    <string name="device_indicator_not_listed_subtitle">Әзірлеуші параметрлерінде USB жөндеуді қосыңыз</string>
     <!-- Error Dialog -->
     <string name="error_dialog_timeout">Байланыс уақыты аяқталды. Интернет байланысыңызды тексеріп, қайта көріңіз</string>
     <string name="error_dialog_unreachable">Серверге қосылу мүмкін емес. Интернет байланысыңызды тексеріңіз</string>
@@ -626,8 +629,8 @@
     <string name="licenses_dialog_title">Ашық бастапқы код лицензиялары</string>
     <string name="licenses_dialog_empty_failed">// лицензияларды жүктеу сәтсіз аяқталды</string>
     <string name="licenses_dialog_empty_no_matches">// сәйкестіктер табылмады</string>
-    <string name="licenses_dialog_footer_matched">{%1$d} / {%2$d} сәйкес келеді</string>
-    <string name="licenses_search_placeholder">Кітапханаларды, SPDX id, uniqueId... іздеу…</string>
+    <string name="licenses_dialog_footer_matched">%1$d / %2$d сәйкес келеді</string>
+    <string name="licenses_search_placeholder">Кітапханаларды, SPDX id, uniqueId бойынша іздеу…</string>
     <string name="licenses_row_authors_label">Авторлар</string>
     <string name="licenses_row_org_label">Ұйым</string>
     <string name="licenses_row_link_source">Дереккөз</string>
@@ -650,19 +653,21 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Тіл</string>
     <string name="settings_language_current_title">Ағымдағы тіл</string>
-    <string name="settings_language_community_translation_hint">Кейбір тілдер үшін аудармалар жоқ болуы немесе толық емес болуы мүмкін. Жаңа тілдерді аудару немесе қолданыстағы аудармаларды жақсарту үшін %1$s бетіне өтіңіз</string>
     <string name="settings_language_dialog_title">Қосымша тілі</string>
+    <string name="settings_language_translate_title">Morphe аудармасына көмектесіңіз</string>
     <string name="settings_language_search_no_results">Нәтижелер табылмады</string>
     <string name="settings_section_theme">Тақырып</string>
     <string name="settings_appearance_theme_mode">Тақырып режимі</string>
+    <string name="settings_appearance_theme_mode_description">Жарық, қараңғы, таза қара немесе жүйе тақырыбы арасында ауысыру</string>
     <string name="settings_theme_light">Жарық</string>
     <string name="settings_theme_dark">Қою</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Түс стилі</string>
+    <string name="settings_appearance_color_style_description">Түсті Morphe палитрасы немесе сұр түсті монохромды стиль</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Монохромды</string>
-    <string name="settings_toggle_sharp_corners_label">Өрткір бұрыштар</string>
-    <string name="settings_toggle_sharp_corners_desc">Карточкаларды, диалогтарды және батырмаларды шаршы пішінді ету</string>
+    <string name="settings_toggle_sharp_corners_label">Өткір бұрыштар</string>
+    <string name="settings_toggle_sharp_corners_desc">Карточкалар, диалогтар мен батырмаларды шаршы пішінге келтіру</string>
     <string name="settings_section_accent_color">Акценттік түс</string>
     <string name="settings_accent_clear_description">Акценттік түсті тазалау</string>
     <string name="settings_accent_custom_description">Жеке акценттік түс</string>
@@ -670,7 +675,13 @@
     <string name="settings_section_app_cards">Қосымша карточкалары</string>
     <string name="settings_app_cards_color_all">Әрбір карточка үшін түс</string>
     <string name="settings_app_cards_color_all_desc">Жеке реттелген карточкалар өз түсін сақтайды</string>
-    <string name="settings_section_background_animation">Фондық анимация</string>
+    <string name="settings_toggle_app_icons_label">Қолданба белгішелері</string>
+    <string name="settings_toggle_app_icons_desc">Жергілікті APK-лардан немесе қосылған құрылғыдан алынған әрбір қолданбаның белгішесін көрсетеді</string>
+    <string name="settings_appearance_more_apps_card">Қосымша қосымшалар карточкасы</string>
+    <string name="settings_appearance_more_apps_card_description">Қоғамдық патчтарға бастайтын картаны қолданбалардың астына көрсетеді</string>
+    <string name="settings_section_effects">Эффектілер</string>
+    <string name="settings_appearance_background_animation">Фондық анимация</string>
+    <string name="settings_appearance_background_animation_description">Қолданба экрандарының артында ойнайтын анимация</string>
     <string name="settings_background_circles">Шеңберлер</string>
     <string name="settings_background_rings">Сақиналар</string>
     <string name="settings_background_mesh">Тор</string>
@@ -684,8 +695,9 @@
     <string name="settings_toggle_parallax_label">Параллакс эффектісі</string>
     <string name="settings_toggle_parallax_desc">Тінтуірді қозғалтқанда фонның бірқалыпты ығысуы</string>
     <!-- Settings - Advanced -->
-    <string name="settings_toggle_expert_mode_label">Сарапшы режимі</string>
+    <string name="settings_toggle_expert_mode_label">Эксперт режимі</string>
     <string name="settings_toggle_expert_mode_desc">Патчтарды таңдау мен конфигурациялау бойынша толық бақылау</string>
+    <string name="settings_expert_mode_disabled_in_flow">Режимді өзгерту үшін басты бетке оралыңыз</string>
     <string name="settings_toggle_route_links_label">Сілтемелерді патчтелген қолданбаға бағыттау</string>
     <string name="settings_toggle_route_links_desc">ADB арқылы орнатқаннан кейін, патчтелген қолданбаға браузердің немесе стандартты қолданбаның орнына қолдау көрсетілетін веб-сілтемелерін ашуға мүмкіндік беріңіз</string>
     <string name="settings_toggle_disable_stock_links_label">Стандартты қолданба сілтемелерін өшіру</string>
@@ -699,9 +711,9 @@
     <string name="settings_dev_bytecode_mode_strip_fast">Жылдам</string>
     <string name="settings_dev_bytecode_mode_strip_safe">Қауіпсіз</string>
     <string name="settings_dev_bytecode_mode_full">Толық</string>
-    <string name="settings_dev_validate_label">Ізіздік валидациясы</string>
+    <string name="settings_dev_validate_label">Саусақ ізін тексеру</string>
     <string name="settings_dev_validate_desc">Әрбір match() тек бір әдіспен сәйкес келетінін тексеру (патчтау баяулайды, патчты тестілеу үшін)</string>
-    <string name="settings_dev_verify_sdk_label">Android SDK верификациясы</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK тексеруі</string>
     <string name="settings_dev_verify_sdk_desc">Патчтелген DEX және APK файлдарын Android SDK құралдарымен (d8, zipalign) тексеру. Жалған оң нәтижелер болуы мүмкін</string>
     <string name="settings_dev_sdk_path_label">Android SDK каталогы</string>
     <string name="settings_dev_sdk_path_auto">Автоматты түрде анықталды</string>
@@ -722,12 +734,28 @@
     <string name="settings_toggle_auto_start_adb_label">ADB-ді автоматты түрде бастау</string>
     <string name="settings_toggle_auto_start_adb_desc">Қосылған құрылғылар бақылануы үшін іске қосу кезінде ADB демонын іске қосыңыз. Өшірілген кезде Morphe серверді ешқашан бастамайды, ал орнату/жіберу функциялары қолжетімсіз болады</string>
     <string name="settings_section_storage">Жады &amp; кэш</string>
-    <string name="settings_cache_summary">Кэш: %1$s (патчтар + логтар)</string>
-    <string name="settings_cache_clear_button">Кэшті тазалау</string>
+    <string name="settings_cache_clear_all_title">Барлық кэشتі тазалау</string>
+    <string name="settings_cache_category_patches">Патчтар</string>
+    <string name="settings_cache_category_logs">Логтар</string>
+    <string name="settings_cache_category_temp">Уақытша файлдар</string>
+    <string name="settings_cache_category_avatars">Аватарлар кэші</string>
+    <string name="settings_cache_category_app_icons">Қолданба белгішелерінің кэші</string>
+    <string name="settings_cache_confirm_patches_title">Патчтарды тазалау керек пе?</string>
+    <string name="settings_cache_confirm_patches_message">Бұл жүктелген патч файлдарын жояды. Патчтар қажет болғанда қайта жүктеледі</string>
+    <string name="settings_cache_confirm_logs_title">Логтарды тазалау керек пе?</string>
+    <string name="settings_cache_confirm_logs_message">Бұл барлық қолданба лог файлдарын және құрылғының logcat dump-тарын жояды</string>
+    <string name="settings_cache_confirm_temp_title">Уақытша файлдарды тазалау керек пе?</string>
+    <string name="settings_cache_confirm_temp_message">Бұл уақытша жұмыс файлдарын және жұмыс аймағы файлдарын жояды</string>
+    <string name="settings_cache_confirm_avatars_title">Аватарлар кэшін тазалау керек пе?</string>
+    <string name="settings_cache_confirm_avatars_message">Бұл кэштеленген барлық қашық аватар кескіндерін жояды</string>
+    <string name="settings_cache_confirm_app_icons_title">Қолданба белгішелерінің кэшін тазалау керек пе?</string>
+    <string name="settings_cache_confirm_app_icons_message">Бұл APK-лардан және құрылғылардан алынған барлық қолданба белгішелерін жояды</string>
+    <string name="settings_cache_category_cleared">%1$s тазаланды</string>
+    <string name="settings_cache_category_clear_failed">%1$s тазалау сәтсіз аяқталды</string>
     <string name="settings_cache_cleared">Кэш тазаланды</string>
     <string name="settings_cache_clear_failed">Тазалау сәтсіз аяқталды</string>
     <string name="settings_cache_confirm_title">Кэшті тазалау керек пе?</string>
-    <string name="settings_cache_confirm_message">Бұл жүктелген патчтар мен лог файлдарын жояды. Патчтар қажет болғанда қайта жүктеледі</string>
+    <string name="settings_cache_confirm_message">Бұл жүктелген патчтарды, лог файлдарын және уақытша файлдарды жояды. Патчтар қажет болғанда қайта жүктеледі</string>
     <string name="settings_storage_open_app_data_button">Қолданба деректерін ашу</string>
     <string name="settings_storage_open_logs_button">Логтарды ашу</string>
     <string name="settings_section_about">Туралы</string>
@@ -739,9 +767,9 @@
     <string name="settings_about_documentation_title">Құжаттама</string>
     <string name="settings_about_documentation_desc">Патчтау, дереккөздер және ақауларды жою бойынша нұсқаулықтар</string>
     <string name="settings_about_website_title">Сайтқа өту</string>
-    <string name="settings_about_website_desc">Morphe ресми веб-сайтына кітіңіз</string>
+    <string name="settings_about_website_desc">Morphe ресми веб-сайтына өтіңіз</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">Сізге қажет емес архитектураларды белгісіздікке айналдырыңыз. Патчтау кезінде шығыс APK тек APK-да ЖӘНЕ осы тізімде бар архитектураларды ғана сақтайды. Егер ешқандай сәйкестік болмаса, APK-ның бұзылуын болдырмау үшін ештеңе жойылмайды</string>
+    <string name="settings_strip_libs_desc">Қажет етпейтін архитектуралардың белгісін алып тастаңыз. Патчтау кезінде шығыс APK тек APK-да ЖӘНЕ осы тізімде бар архитектураларды ғана сақтайды. Егер ешқандай сәйкестік болмаса, APK-ның бұзылуын болдырмау үшін ештеңе жойылмайды</string>
     <string name="settings_strip_libs_arm64">ARM 64-бит (көптеген заманауи телефондар)</string>
     <string name="settings_strip_libs_armeabi">ARM 32-бит (ескі телефондар)</string>
     <string name="settings_strip_libs_x86_64">Intel 64-бит (эмуляторлар / Chromebook-тар)</string>
@@ -750,8 +778,8 @@
     <string name="settings_signing_desc">Патчталған APK-ларды қол қою үшін қолданылатын Keystore</string>
     <string name="settings_signing_default_keystore">Әдепкі (автоматты түрде жасалған)</string>
     <string name="settings_signing_picker_title">Кілт қоймасын таңдаңыз</string>
-    <string name="settings_signing_not_found">Keystore табылмады, оны қалпына келтіргенше, басқасын таңдағанша немесе sı resetting жасағанша патчинг сәтсіз аяқталады</string>
-    <string name="settings_signing_invalid_file_type">Файлдың сипаты дұрыс емес. Күтілетіні: %1$s</string>
+    <string name="settings_signing_not_found">Keystore табылмады, оны қалпына келтіргенше, басқасын таңдағанша немесе қайта орнатқанша патчтау сәтсіз аяқталады</string>
+    <string name="settings_signing_invalid_file_type">Файл түрі дұрыс емес. Күтілетіні: %1$s</string>
     <string name="settings_signing_using_default">%1$s мекенжайындағы Morphe-тің әдепкі кілт қоймасы қолданылуда</string>
     <string name="settings_signing_will_create_default">%1$s мекенжайында Morphe-тің әдепкі кілт қоймасы жасалады</string>
     <string name="settings_signing_keystore_password_label">Кілт қоймасының құпия сөзі</string>
@@ -774,7 +802,7 @@
     <string name="settings_cert_info_title">Сертификат туралы ақпарат</string>
     <string name="settings_cert_info_alias">Алиас</string>
     <string name="settings_cert_info_issuer">Эмитент</string>
-    <string name="settings_cert_info_valid_from">Жоғарыдан бастап</string>
+    <string name="settings_cert_info_valid_from">Басталу күні</string>
     <string name="settings_cert_info_valid_until">Жарамдылық мерзімі</string>
     <string name="settings_cert_info_sha256">SHA-256 саусақ іздері</string>
     <string name="settings_cert_info_sha1">SHA-1 саусақ іздері</string>
@@ -782,10 +810,10 @@
     <string name="settings_cert_warning_alias_not_found">Кілт қоймасынан \"%1$s\" псевдонимі табылмады</string>
     <string name="settings_cert_warning_key_password_incorrect">\"%1$s\" псевдонимі үшін кілт құпия сөзі дұрыс емес</string>
     <!-- Settings - Runtime Logs -->
-    <string name="settings_runtime_logs_title">Патчтелген қолданбаның çalışma уақытындағы логтары</string>
-    <string name="settings_runtime_logs_desc">Патчтелген қолданба сбойға ұшырағанда немесе дұрыс жұмыс істемегенде телефоныңыздан логтарды жинаңыз. Қателікті қайталау алдында логтарды тазалаңыз, содан кейін бағдарламалық қате туралы есепке тіркеу үшін сүзілген нәтижені сақтаңыз</string>
+    <string name="settings_runtime_logs_title">Патчтелген қолданбаның орындалу уақытындағы логтары</string>
+    <string name="settings_runtime_logs_desc">Патчтелген қолданба қате кеткенде немесе дұрыс жұмыс істемегенде телефоныңыздан логтарды жинаңыз. Қателікті қайталау алдында логтарды тазалаңыз, содан кейін қате туралы есепке тіркеу үшін сүзілген нәтижені сақтаңыз</string>
     <string name="settings_runtime_logs_device_info">Құрылғы: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Ешқандай құрылғы қосылмаған. USB-дебаг қосулы телефонды қосыңыз</string>
+    <string name="settings_runtime_logs_no_device">Құрылғы қосылмаған. Телефоныңызды USB немесе Wi-Fi жөндеу мүмкіндігі қосылған күйде қосыңыз</string>
     <string name="settings_runtime_logs_clearing">Тазалануда…</string>
     <string name="settings_runtime_logs_clear_button">Құрылғы журналдарын тазалау</string>
     <string name="settings_runtime_logs_failed_to_clear">Журналдарды тазалау сәтсіз аяқталды</string>
@@ -826,4 +854,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Дереккөздер</string>
     <string name="nav_apps">Қосымшалар</string>
+    <string name="nav_settings">Баптаулар</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Баптауларды іздеу</string>
+    <string name="settings_search_no_results">Сәйкес келетін баптаулар жоқ</string>
+    <string name="settings_back_to_about">«Жоғарыда» бөліміне қайту</string>
+    <string name="licenses_back_to_list">Лицензиялар тізіміне қайту</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Көбірек қолданбалар</string>
+    <string name="home_more_apps_subtitle">Қоғамдық патчтар</string>
+    <string name="community_patches_notice_title">Үшінші тараптың патч көздері</string>
+    <string name="community_patches_notice_message">Қоғамдық патч көздері өз авторларымен жасалған және қолдау көрсетіледі. Morphe үшінші тарап патчтарын қарап шықпайды немесе тексермейді, сондай-ақ олардың мазмұнына немесе құрылғыңыздағы әрекеттеріне жауап бермейді.</string>
 </resources>

@@ -38,4 +38,7 @@
     <!-- App Info Dialog -->
     <!-- Changelog Dialog -->
     <!-- Navigation Pill -->
+    <string name="nav_settings">ការកំណត់</string>
+    <!-- Settings - Search & Inline Views -->
+    <!-- More apps card & community patches -->
 </resources>

@@ -75,4 +75,14 @@
         <item quantity="one">%1$d optimizācija</item>
         <item quantity="other">%1$d optimizācijas</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="zero">%1$s (%2$d faili)</item>
+        <item quantity="one">%1$s (%2$d fails)</item>
+        <item quantity="other">%1$s (%2$d faili)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="zero">Kopā: %1$s (%2$d faili)</item>
+        <item quantity="one">Kopā: %1$s (%2$d fails)</item>
+        <item quantity="other">Kopā: %1$s (%2$d faili)</item>
+    </plurals>
 </resources>

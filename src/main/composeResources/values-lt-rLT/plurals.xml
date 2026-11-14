@@ -90,4 +90,16 @@
         <item quantity="many">%1$d optimizavimų</item>
         <item quantity="other">%1$d optimizavimų</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d failas)</item>
+        <item quantity="few">%1$s (%2$d failai)</item>
+        <item quantity="many">%1$s (%2$d failų)</item>
+        <item quantity="other">%1$s (%2$d failų)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Iš viso: %1$s (%2$d failas)</item>
+        <item quantity="few">Iš viso: %1$s (%2$d failai)</item>
+        <item quantity="many">Iš viso: %1$s (%2$d failų)</item>
+        <item quantity="other">Iš viso: %1$s (%2$d failų)</item>
+    </plurals>
 </resources>

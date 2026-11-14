@@ -29,7 +29,7 @@
     <string name="error_step_failed">%1$s не вдалося: %2$s</string>
     <string name="error_drop_valid_apk">Будь ласка, перетягніть дійсний файл .apk, .apkm, .xapk або .apks</string>
     <string name="status_saving">Збереження…</string>
-    <string name="installed_on">Установлено на %1$s</string>
+    <string name="installed_on">Встановлено на %1$s</string>
     <string name="device_default">пристрій</string>
     <string name="unknown">Невідомо</string>
     <string name="installing">Інсталяція…</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Патчинг не вдався з невідомої причини</string>
     <string name="error_log_label">Журнал помилок</string>
     <string name="back">Назад</string>
+    <string name="open">Відкрити</string>
     <string name="open_folder">Відкрити папку</string>
     <string name="temporary_files_label">Тимчасові файли</string>
     <string name="size_can_be_freed_label">%1$s можна звільнити</string>
@@ -100,7 +101,7 @@
     <string name="card_fill_mode_gradient_blurb">Будь-яка кількість стопів: лінійний, радіальний або конічний</string>
     <string name="card_fill_mode_solid">Суцільний</string>
     <string name="card_fill_mode_solid_blurb">Один суцільний колір</string>
-    <string name="adb_install_on_button">Установити на %1$s</string>
+    <string name="adb_install_on_button">Встановити на %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Завантаження патчів</string>
     <string name="patching_step_merging_split_apk">Об’єднання split APK файлу</string>
@@ -116,19 +117,19 @@
     <string name="patching_task_compiling_resources">Компіляція ресурсів</string>
     <string name="patching_task_writing_apk">Запис файлу APK</string>
     <!-- ADB Installation Errors -->
-    <string name="adb_status_installing">Установлення на %1$s…</string>
+    <string name="adb_status_installing">Встановлення на %1$s…</string>
     <string name="adb_error_downgrade">Не можна встановити старішу версію: уже встановлено новішу. Спочатку видаліть наявний застосунок</string>
     <string name="adb_error_already_exists">Застосунок уже існує. Спершу спробуйте видалити його</string>
     <string name="adb_error_storage">Недостатньо місця на пристрої</string>
     <string name="adb_error_invalid_apk">Некоректний APK файл</string>
     <string name="adb_error_no_certificates">APK підписано неправильно</string>
     <string name="adb_error_update_incompatible">Несумісне оновлення: підписи не збігаються. Спочатку видаліть наявний застосунок</string>
-    <string name="adb_error_user_restricted">Установлення обмежено налаштуваннями користувача</string>
+    <string name="adb_error_user_restricted">Встановлення обмежено налаштуваннями користувача</string>
     <string name="adb_error_verification_failure">Не вдалося перевірити пакет</string>
     <string name="adb_error_generic">Не вдалося встановити: %1$s</string>
     <string name="adb_error_not_found">ADB не знайдено. Будь ласка, встановіть Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Пристрій під’єднано, але не авторизовано. Будь ласка, прийміть запит на USB-налагодження на пристрої</string>
-    <string name="adb_error_no_devices">Не під’єднано жодного пристрою. Будь ласка, під’єднайте Android-пристрій із увімкненим USB-налагодженням</string>
+    <string name="adb_error_no_devices">Жодного пристрою не підключено. Підключіть пристрій Android із увімкненим налагодженням USB або Wi-Fi</string>
     <string name="adb_error_device_not_found">Пристрій %1$s не знайдено</string>
     <string name="adb_error_multiple_devices">Під’єднано кілька пристроїв. Виберіть один</string>
     <string name="adb_error_apk_not_found">Файл APK не знайдено: %1$s</string>
@@ -220,7 +221,7 @@
     <string name="home_list_no_supported_apps">Немає підтримуваних застосунків</string>
     <string name="home_list_no_apps_match">Не знайдено застосунків за запитом \"%1$s\"</string>
     <string name="home_sort_recommended">Рекомендована</string>
-    <string name="home_sort_recommended_desc">Спершу пропатчені застосунки, потім установлені, далі за назвою</string>
+    <string name="home_sort_recommended_desc">Спершу пропатчені застосунки, потім встановлені, далі за назвою</string>
     <string name="home_sort_name_asc">Назва (від A до Z)</string>
     <string name="home_sort_name_asc_desc">За алфавітом</string>
     <string name="home_sort_name_desc">Назва (від Z до A)</string>
@@ -235,12 +236,12 @@
     <string name="home_filter_your_apps">Ваші застосунки</string>
     <string name="home_banner_view">Переглянути</string>
     <string name="home_your_apps_install_ready">Готово до встановлення</string>
-    <string name="home_action_install_to_device">Установити на пристрій</string>
+    <string name="home_action_install_to_device">Встановити на пристрій</string>
     <string name="home_action_installing">Інсталяція…</string>
     <string name="home_action_preparing">Підготовка…</string>
     <string name="home_action_update">Оновити</string>
     <string name="home_action_repatch">Репатчити</string>
-    <string name="home_action_uninstalling">Видалення...</string>
+    <string name="home_action_uninstalling">Видалення…</string>
     <string name="home_detail_source_apk_label">Вихідний APK</string>
     <string name="home_detail_patch_bundle_label">Пакет патчу</string>
     <string name="home_detail_no_sources_enabled">Не ввімкнено жодного джерела</string>
@@ -286,7 +287,7 @@
     <string name="home_date_yesterday">вчора</string>
     <string name="home_date_days_ago">%1$d днів тому</string>
     <string name="home_your_apps_empty_title">Поки немає пропатчених застосунків</string>
-    <string name="home_your_apps_empty_subtitle">Застосуньте патч до застосунку, і він з’явиться тут</string>
+    <string name="home_your_apps_empty_subtitle">Застосуйте патч до застосунку, і він з’явиться тут</string>
     <string name="home_your_apps_no_matches_subtitle">Нічого не відповідає \"%1$s\"</string>
     <!-- Patches Screen -->
     <string name="patches_dialog_error_title">Помилка</string>
@@ -315,7 +316,7 @@
     <string name="patch_selection_cmd_preview">Попередній перегляд команди</string>
     <string name="patch_selection_root_mode_description">Режим root монтування</string>
     <string name="patch_selection_lock_unavailable">Недоступно для root-монтування</string>
-    <string name="patch_selection_continue_on_error_tooltip">Продовжувати патчинг, навіть якщо якійсь патч не спрацює</string>
+    <string name="patch_selection_continue_on_error_tooltip">Продовжувати патчинг, навіть якщо якийсь патч не спрацює</string>
     <string name="patch_selection_continue_on_error_description">Продовжувати при помилці</string>
     <string name="patch_selection_no_patches_found">Патчі не знайдено</string>
     <string name="patch_selection_no_source_patches_for_app">Жодне з ваших увімкнених джерел не має патчів для цього застосунку</string>
@@ -332,7 +333,7 @@
     <string name="patch_selection_icon_dialog_delete_message">Це очистить іконку та видалить її збережений проєкт і згенеровані файли. Цю дію не можна скасувати</string>
     <string name="patch_selection_custom_icon_hint">Вам не доведеться створювати цю папку самостійно! Натисніть на піктограму Design/Edit, щоб створити її в Icon Studio або імпортувати з менеджера</string>
     <string name="patch_selection_option_enabled">Увімкнено</string>
-    <string name="patch_selection_option_disabled">Вимкнена</string>
+    <string name="patch_selection_option_disabled">Вимкнено</string>
     <string name="patch_selection_mode_your_defaults">Ваші типові налаштування</string>
     <string name="patch_selection_mode_patch_defaults">Типові налаштування патча</string>
     <string name="patch_selection_mode_all">Всі</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">Невдалі патчі: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB вимкнено · Увімкніть для встановлення</string>
-    <string name="result_adb_connect_device_hint">Підключіть пристрій через USB, щоб встановити через ADB</string>
+    <string name="result_adb_connect_device_hint">Підключіть пристрій через USB або Wi-Fi, щоб встановити через ADB</string>
     <string name="result_screen_patch_another_button">Патчити інше</string>
     <string name="result_screen_install_on_device_label">Встановити на %1$s</string>
     <string name="result_screen_links_routed_label">Посилання перенаправляються в пропатчений застосунок</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">Розмонтування з %1$s…</string>
     <string name="result_adb_root_not_detected">Root-доступ не виявлено на %1$s. Переконайтеся, що встановлено Magisk/KernelSU/APatch і надано дозвіл su</string>
     <string name="result_adb_stock_app_not_installed">Оригінальний застосунок %1$s не встановлено на %2$s. Спершу встановіть офіційний застосунок, а потім виконуйте монтування</string>
+    <string name="result_adb_mount_version_mismatch">Оригінальний застосунок на %3$s має версію v%1$s, а пропатчений APK - v%2$s. Для root-монтування потрібні однакові версії</string>
+    <string name="result_adb_mount_abi_mismatch">Пристрій %3$s має архітектуру %1$s, а APK містить лише [%2$s]. Нативні бібліотеки не зможуть завантажитися</string>
     <string name="result_link_default_restored">Стандартну обробку посилань відновлено</string>
     <string name="result_link_routed_stock_disabled">Посилання перенаправляються в пропатчений застосунок, стандартний застосунок вимкнено</string>
     <string name="result_adb_not_found_hint">ADB не знайдено. Установіть Android SDK Platform Tools, щоб увімкнути пряме встановлення</string>
     <string name="result_adb_section_title">Установлення через ADB</string>
     <string name="result_adb_no_devices">Немає підключених пристроїв</string>
-    <string name="result_adb_connect_hint">Підключіть через USB з увімкненим налагодженням по USB</string>
+    <string name="result_adb_connect_hint">Підключіться через налагодження USB або Wi-Fi</string>
     <string name="result_device_status_unauth">Не авторизовано</string>
     <string name="result_adb_update_button">Оновити на %1$s</string>
     <string name="result_adb_select_device_button">Виберіть пристрій</string>
@@ -482,7 +485,7 @@
     <string name="icon_studio_preview_adaptive">Адаптивна</string>
     <string name="icon_studio_preview_monochrome">Монохромна</string>
     <string name="icon_studio_preview_shapes">Перегляд форм</string>
-    <string name="icon_studio_preview_shapes_hint">Кожна оболонка обирає власну форму, натисніть, щоб переглянути, як буде обрізано значок.</string>
+    <string name="icon_studio_preview_shapes_hint">Кожна оболонка обирає власну форму, натисніть, щоб переглянути, як буде обрізано іконку</string>
     <string name="icon_studio_preview_notification_status_bar">Сповіщення / Рядок стану</string>
     <string name="icon_studio_layer_label">Шар</string>
     <string name="icon_studio_duplicate_button">Дублювати</string>
@@ -518,7 +521,7 @@
     <string name="icon_studio_adjust_spacing">Інтервал</string>
     <string name="icon_studio_default_font">Шрифт за замовчуванням</string>
     <string name="icon_studio_add_file_button">Додати файл</string>
-    <string name="icon_studio_background_label">Робота у фоні</string>
+    <string name="icon_studio_background_label">Фон</string>
     <string name="icon_studio_background_solid">Суцільний</string>
     <string name="icon_studio_background_image">Зображення</string>
     <string name="icon_studio_background_hint">Заповнює всю плитку позаду переднього плану</string>
@@ -601,9 +604,9 @@
     <string name="device_indicator_adb_is_off_title">ADB вимкнено</string>
     <string name="device_indicator_adb_is_off_subtitle">Morphe не відстежує підключені пристрої</string>
     <string name="device_indicator_adb_not_found_title">ADB не знайдено</string>
-    <string name="device_indicator_adb_not_found_subtitle">Установіть Android SDK Platform Tools</string>
+    <string name="device_indicator_adb_not_found_subtitle">Встановіть Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Пристроїв не виявлено</string>
-    <string name="device_indicator_no_devices_subtitle">Підключіть пристрій з увімкненим налагодженням по USB</string>
+    <string name="device_indicator_no_devices_subtitle">Підключіть пристрій із увімкненим налагодженням USB або Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">Увімкніть налагодження по USB</string>
     <string name="device_indicator_enable_debugging_subtitle">Налаштування → Параметри розробника → Налагодження по USB</string>
     <string name="device_indicator_status_connected">Підключено</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Мова</string>
     <string name="settings_language_current_title">Поточна мова</string>
-    <string name="settings_language_community_translation_hint">Переклади деяких мов можуть бути відсутні або неповні. Щоб перекласти нові мови або покращити наявні переклади, відвідайте %1$s</string>
     <string name="settings_language_dialog_title">Мова застосунку</string>
+    <string name="settings_language_translate_title">Допоможіть перекласти Morphe</string>
     <string name="settings_language_search_no_results">Не знайдено результатів</string>
     <string name="settings_section_theme">Тема</string>
     <string name="settings_appearance_theme_mode">Режим теми</string>
+    <string name="settings_appearance_theme_mode_description">Перемикайтеся між світлою, темною, чисто чорною або системною темою</string>
     <string name="settings_theme_light">Світла</string>
     <string name="settings_theme_dark">Темна</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Стиль кольору</string>
+    <string name="settings_appearance_color_style_description">Кольорова палітра Morphe або сірий монохромний стиль</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Монохромна</string>
     <string name="settings_toggle_sharp_corners_label">Гострі кути</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">Картки застосунку</string>
     <string name="settings_app_cards_color_all">Колір для всіх карток</string>
     <string name="settings_app_cards_color_all_desc">Картки, які ви налаштували окремо, зберігають власний колір</string>
-    <string name="settings_section_background_animation">Анімація фону</string>
+    <string name="settings_toggle_app_icons_label">Іконки застосунків</string>
+    <string name="settings_toggle_app_icons_desc">Показує іконку кожного застосунку, вилучену із локальних APK або підключеного пристрою</string>
+    <string name="settings_appearance_more_apps_card">Картка \"Більше застосунків\"</string>
+    <string name="settings_appearance_more_apps_card_description">Показує картку під застосунками, що веде до патчів спільноти</string>
+    <string name="settings_section_effects">Ефекти</string>
+    <string name="settings_appearance_background_animation">Анімація фону</string>
+    <string name="settings_appearance_background_animation_description">Анімація, що відтворюється за екранами застосунку</string>
     <string name="settings_background_circles">Кола</string>
     <string name="settings_background_rings">Кільця</string>
     <string name="settings_background_mesh">Полігони</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Режим експерта</string>
     <string name="settings_toggle_expert_mode_desc">Повний контроль над вибором і налаштуванням патчів</string>
+    <string name="settings_expert_mode_disabled_in_flow">Поверніться на головну, щоб змінити режим</string>
     <string name="settings_toggle_route_links_label">Перенаправляти посилання в пропатчений застосунок</string>
     <string name="settings_toggle_route_links_desc">Після встановлення через ADB змусити пропатчений застосунок відкривати підтримувані вебпосилання замість браузера або стандартного застосунку</string>
     <string name="settings_toggle_disable_stock_links_label">Вимкнути посилання стандартного застосунку</string>
@@ -720,16 +732,32 @@
     <string name="settings_output_folder_desc">Де зберігаються пропатчені APK. Усередині створюється підтека для кожного застосунку</string>
     <string name="settings_output_folder_default">Тека APK (типово)</string>
     <string name="settings_output_folder_picker_title">Виберіть вихідну папку</string>
-    <string name="settings_output_folder_not_found">Папку не знайдено, їі буде створено під час наступного патчингу</string>
+    <string name="settings_output_folder_not_found">Папку не знайдено, її буде створено під час наступного патчингу</string>
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускати демон ADB під час старту, щоб відстежувати підключені пристрої. Коли вимкнено, Morphe не запускає сервер, а функції встановлення/надсилання вимкнено</string>
     <string name="settings_section_storage">Пам'ять та кеш</string>
-    <string name="settings_cache_summary">Кеш: %1$s (патчі + журнали)</string>
-    <string name="settings_cache_clear_button">Очистити кеш</string>
+    <string name="settings_cache_clear_all_title">Очистити весь кеш</string>
+    <string name="settings_cache_category_patches">Патчі</string>
+    <string name="settings_cache_category_logs">Журнали</string>
+    <string name="settings_cache_category_temp">Тимчасові файли</string>
+    <string name="settings_cache_category_avatars">Кеш аватарів</string>
+    <string name="settings_cache_category_app_icons">Кеш іконок застосунків</string>
+    <string name="settings_cache_confirm_patches_title">Очистити патчі?</string>
+    <string name="settings_cache_confirm_patches_message">Це видалить завантажені файли патчів. Патчі буде завантажено повторно за потреби</string>
+    <string name="settings_cache_confirm_logs_title">Очистити журнали?</string>
+    <string name="settings_cache_confirm_logs_message">Це видалить усі файли журналів застосунку та дампи logcat пристрою</string>
+    <string name="settings_cache_confirm_temp_title">Очистити тимчасові файли?</string>
+    <string name="settings_cache_confirm_temp_message">Це видалить тимчасові робочі файли та файли робочого простору</string>
+    <string name="settings_cache_confirm_avatars_title">Очистити кеш аватарів?</string>
+    <string name="settings_cache_confirm_avatars_message">Це видалить усі кешовані віддалені зображення аватарів</string>
+    <string name="settings_cache_confirm_app_icons_title">Очистити кеш іконок застосунків?</string>
+    <string name="settings_cache_confirm_app_icons_message">Це видалить усі іконки застосунків, витягнуті з APK та пристроїв</string>
+    <string name="settings_cache_category_cleared">%1$s очищено</string>
+    <string name="settings_cache_category_clear_failed">Не вдалося очистити %1$s</string>
     <string name="settings_cache_cleared">Кеш очищено</string>
     <string name="settings_cache_clear_failed">Не вдалося очистити</string>
     <string name="settings_cache_confirm_title">Очистити кеш?</string>
-    <string name="settings_cache_confirm_message">Це видалить завантажені патчі та файли журналів. Патчі буде завантажено повторно за потреби</string>
+    <string name="settings_cache_confirm_message">Це видалить завантажені патчі, файли журналів і тимчасові файли. Патчі буде завантажено повторно за потреби</string>
     <string name="settings_storage_open_app_data_button">Відкрити дані застосунку</string>
     <string name="settings_storage_open_logs_button">Відкрити журнали</string>
     <string name="settings_section_about">Про сервіс</string>
@@ -787,14 +815,14 @@
     <string name="settings_runtime_logs_title">Журнали виконання пропатченого застосунку</string>
     <string name="settings_runtime_logs_desc">Записуйте журнали з телефона після збою або некоректної поведінки пропатченого застосунку. Очистіть перед відтворенням помилки, а потім збережіть відфільтрований вивід, щоб додати його до звіту про помилку</string>
     <string name="settings_runtime_logs_device_info">Пристрій: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Немає підключеного пристрою. Підключіть телефон з увімкненим налагодженням по USB</string>
+    <string name="settings_runtime_logs_no_device">Пристрій не підключено. Підключіть телефон із увімкненим налагодженням USB або Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">Очищення…</string>
     <string name="settings_runtime_logs_clear_button">Очистити журнали пристрою</string>
     <string name="settings_runtime_logs_failed_to_clear">Не вдалося очистити журнали</string>
     <string name="settings_runtime_logs_save_button">Зберегти журнали пристрою</string>
     <string name="settings_runtime_logs_failed_to_save">Не вдалося зберегти журнали</string>
     <string name="settings_runtime_logs_cleared_success">Журнали на пристрої очищено</string>
-    <string name="settings_runtime_logs_nothing_captured">Поки що нічого не записано. Запустіть пропатчений застосунок на телфоні, а потім збережіть знову</string>
+    <string name="settings_runtime_logs_nothing_captured">Поки що нічого не записано. Запустіть пропатчений застосунок на телефоні, а потім збережіть знову</string>
     <!-- Settings - GitHub PAT -->
     <string name="settings_section_github_pat">GitHub PAT</string>
     <string name="settings_github_pat_desc">Для завантаження артефактів pull request потрібен Personal Access Token (PAT) GitHub з областю дії public_repo. Створіть PAT з областю дії public_repo на %1$s</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Джерела</string>
     <string name="nav_apps">Застосунки</string>
+    <string name="nav_settings">Налаштування</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Пошук налаштувань</string>
+    <string name="settings_search_no_results">Немає відповідних налаштувань</string>
+    <string name="settings_back_to_about">Назад до розділу «Про застосунок»</string>
+    <string name="licenses_back_to_list">Назад до ліцензій</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Більше застосунків</string>
+    <string name="home_more_apps_subtitle">Патчі спільноти</string>
+    <string name="community_patches_notice_title">Сторонні джерела патчів</string>
+    <string name="community_patches_notice_message">Джерела патчів спільноти створюються та підтримуються їхніми власними авторами. Morphe не перевіряє та не гарантує сторонні патчі, а також не несе відповідальності за їхній вміст або за те, що вони роблять на вашому пристрої.</string>
 </resources>

@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Patchning mislykkedes af en ukendt årsag</string>
     <string name="error_log_label">Fejllog</string>
     <string name="back">Tilbage</string>
+    <string name="open">Åben</string>
     <string name="open_folder">Åbn mappe</string>
     <string name="temporary_files_label">Midlertidige filer</string>
     <string name="size_can_be_freed_label">%1$s kan frigøres</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Installation mislykkedes: %1$s</string>
     <string name="adb_error_not_found">ADB blev ikke fundet. Installér Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Enheden er tilsluttet, men ikke godkendt. Accepter USB-fejlfindingsprompten på din enhed</string>
-    <string name="adb_error_no_devices">Ingen enheder tilsluttet. Tilslut din Android-enhed med USB-fejlfinding aktiveret</string>
+    <string name="adb_error_no_devices">Ingen enheder tilsluttet. Tilslut venligst din Android-enhed med USB- eller Wi-Fi-debugging aktiveret</string>
     <string name="adb_error_device_not_found">Enhed %1$s ikke fundet</string>
     <string name="adb_error_multiple_devices">Flere enheder tilsluttet. Vælg én</string>
     <string name="adb_error_apk_not_found">APK-fil ikke fundet: %1$s</string>
@@ -145,7 +146,7 @@
     <string name="adb_status_disabling_links">Deaktiverer links i %1$s…</string>
     <string name="adb_status_enabling_links">Genaktiverer links i %1$s…</string>
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
-    <string name="version_status_checksum_mismatch">Kontrolsum mismatch</string>
+    <string name="version_status_checksum_mismatch">Kontrolsum stemmer ikke</string>
     <string name="version_status_checksum_corrupted">Filen kan være beskadiget. Download den igen fra APKMirror</string>
     <string name="version_status_checksum_failed">Kontrolsum-verifikation mislykkedes</string>
     <string name="version_status_checksum_matches">Kontrolsummen matcher APKMirror</string>
@@ -343,7 +344,7 @@
     <string name="patch_selection_strip_keep_all_headline">Ingen stripning nødvendig</string>
     <string name="patch_selection_strip_keep_all_detail">keep-listen dækker alle arkitekturer i denne APK</string>
     <string name="patch_selection_strip_fallback_headline">Fallback, alle beholdes</string>
-    <string name="patch_selection_strip_fallback_detail">Ingen foretrukne arkitekturer til stede, gennemgå indstillingerne for Strip libs</string>
+    <string name="patch_selection_strip_fallback_detail">Ingen foretrukne arkitekturer til stede, gennemgå indstillingerne for Strip biblioteker</string>
     <string name="patch_selection_strip_will_strip_headline">Stripper native libs</string>
     <string name="patch_selection_strip_will_strip_detail">beholder kun angivne arkitekturer</string>
     <string name="patch_selection_strip_settings_hint">· Indstillinger → Strip libs</string>
@@ -427,7 +428,7 @@
     <string name="patching_error_failed_patches">Mislykkede patches: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB slået fra · Aktiver for at installere</string>
-    <string name="result_adb_connect_device_hint">Tilslut en enhed via USB for at installere med ADB</string>
+    <string name="result_adb_connect_device_hint">Tilslut en enhed via USB eller Wi-Fi for at installere med ADB</string>
     <string name="result_screen_patch_another_button">Patch en anden</string>
     <string name="result_screen_install_on_device_label">Installér på %1$s</string>
     <string name="result_screen_links_routed_label">Links omdirigeret til patchet app</string>
@@ -443,12 +444,14 @@
     <string name="result_adb_unmounting_on_device">Unmounting fra %1$s…</string>
     <string name="result_adb_root_not_detected">Root-adgang blev ikke fundet på %1$s. Sørg for, at Magisk/KernelSU/APatch er installeret, og at su-tilladelse er givet</string>
     <string name="result_adb_stock_app_not_installed">Standardappen %1$s er ikke installeret på %2$s. Installer den officielle app, før du monterer</string>
+    <string name="result_adb_mount_version_mismatch">Standardappen på %3$s er v%1$s, men patchet APK er v%2$s. Root-mount kræver matchende versioner</string>
+    <string name="result_adb_mount_abi_mismatch">Enhed %3$s er %1$s, men APK indeholder kun [%2$s]. Native biblioteker vil ikke kunne indlæses</string>
     <string name="result_link_default_restored">Standard linkhåndtering gendannet</string>
     <string name="result_link_routed_stock_disabled">Links omdirigeret til patchet app, standardappen deaktiveret</string>
     <string name="result_adb_not_found_hint">ADB blev ikke fundet. Installér Android SDK Platform Tools for at aktivere direkte installation</string>
     <string name="result_adb_section_title">ADB-installation</string>
     <string name="result_adb_no_devices">Ingen enheder tilsluttet</string>
-    <string name="result_adb_connect_hint">Tilslut via USB med USB-fejlfinding aktiveret</string>
+    <string name="result_adb_connect_hint">Tilslut via USB- eller Wi-Fi-debugging</string>
     <string name="result_device_status_unauth">Uautoriseret</string>
     <string name="result_adb_update_button">Opdater på %1$s</string>
     <string name="result_adb_select_device_button">Vælg en enhed</string>
@@ -602,7 +605,7 @@
     <string name="device_indicator_adb_not_found_title">ADB blev ikke fundet</string>
     <string name="device_indicator_adb_not_found_subtitle">Installér Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Ingen enheder registreret</string>
-    <string name="device_indicator_no_devices_subtitle">Tilslut en enhed med USB-fejlfinding aktiveret</string>
+    <string name="device_indicator_no_devices_subtitle">Tilslut en enhed med USB- eller Wi-Fi-debugging aktiveret</string>
     <string name="device_indicator_enable_debugging_title">Aktivér USB-fejlfinding</string>
     <string name="device_indicator_enable_debugging_subtitle">Indstillinger → Udviklerindstillinger → USB-fejlfinding</string>
     <string name="device_indicator_status_connected">Tilsluttet</string>
@@ -619,15 +622,15 @@
     <!-- Banners -->
     <string name="offline_banner_text">Offline, bruger cachelagrede patches</string>
     <string name="update_banner_available">Opdatering tilgængelig · v%1$s</string>
-    <string name="update_banner_from_version_crosses">fra v%1$s · dev → stable</string>
+    <string name="update_banner_from_version_crosses">fra v%1$s · dev → stabil</string>
     <string name="update_banner_from_version">fra v%1$s</string>
     <string name="update_banner_later_button">Senere</string>
     <string name="update_banner_skip_button">Spring v%1$s over</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Open Source-licenser</string>
     <string name="licenses_dialog_empty_failed">// kunne ikke indlæse licenser</string>
-    <string name="licenses_dialog_empty_no_matches">// ingen matches</string>
-    <string name="licenses_dialog_footer_matched">%1$d / %2$d matchet</string>
+    <string name="licenses_dialog_empty_no_matches">// ingen træf</string>
+    <string name="licenses_dialog_footer_matched">%1$d / %2$d fundet</string>
     <string name="licenses_search_placeholder">Søg efter biblioteker, SPDX-id, uniqueId…</string>
     <string name="licenses_row_authors_label">Forfattere</string>
     <string name="licenses_row_org_label">Org</string>
@@ -635,15 +638,15 @@
     <string name="licenses_notice_button">Bemærkning</string>
     <string name="licenses_notice_title">Morphe Meddelelse</string>
     <string name="licenses_notice_subtitle">Påkrævet kildeangivelse &amp; garantierklæring (GPLv3 §7)</string>
-    <string name="licenses_text_not_bundled">// fuld licens tekst er ikke inkluderet</string>
-    <string name="licenses_text_open_canonical">Åbn den kanoniske licens tekst:</string>
+    <string name="licenses_text_not_bundled">// fuld licenstekst er ikke inkluderet</string>
+    <string name="licenses_text_open_canonical">Åbn den kanoniske licenstekst:</string>
     <string name="licenses_text_open_license_button">Åbn licens</string>
     <!-- Settings -->
     <string name="settings_dialog_title">Indstillinger</string>
     <string name="settings_nav_appearance">Udseende</string>
     <string name="settings_nav_advanced">Avanceret</string>
     <string name="settings_nav_system">System</string>
-    <string name="settings_dialog_open_logs_button">Åbn logs</string>
+    <string name="settings_dialog_open_logs_button">Åbn logfiler</string>
     <string name="settings_dialog_reset_button">Nulstil</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_search_languages_placeholder">Søg efter sprog</string>
@@ -651,15 +654,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Sprog</string>
     <string name="settings_language_current_title">Nuværende sprog</string>
-    <string name="settings_language_community_translation_hint">Oversættelser for nogle sprog kan mangle eller være ufuldstændige. For at oversætte nye sprog eller forbedre de eksisterende oversættelser, besøg %1$s</string>
     <string name="settings_language_dialog_title">App-sprog</string>
+    <string name="settings_language_translate_title">Hjælp med at oversætte Morphe</string>
     <string name="settings_language_search_no_results">Fandt ingen resultater</string>
     <string name="settings_section_theme">Tema</string>
     <string name="settings_appearance_theme_mode">Tema-tilstand</string>
+    <string name="settings_appearance_theme_mode_description">Skift mellem lyst, mørkt, helt sort eller systemtema</string>
     <string name="settings_theme_light">Lys</string>
     <string name="settings_theme_dark">Mørk</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Farvestil</string>
+    <string name="settings_appearance_color_style_description">Farvet Morphe-palette eller gråtonet monokrom stil</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monokrom</string>
     <string name="settings_toggle_sharp_corners_label">Skarpe hjørner</string>
@@ -671,7 +676,13 @@
     <string name="settings_section_app_cards">App-kort</string>
     <string name="settings_app_cards_color_all">Farve til hvert kort</string>
     <string name="settings_app_cards_color_all_desc">Kort, du har tilpasset individuelt, beholder deres egen farve</string>
-    <string name="settings_section_background_animation">Baggrundsanimation</string>
+    <string name="settings_toggle_app_icons_label">Appikoner</string>
+    <string name="settings_toggle_app_icons_desc">Viser hvert apps ikon, udtrukket fra lokale APK'er eller den tilsluttede enhed</string>
+    <string name="settings_appearance_more_apps_card">Kort med flere apps</string>
+    <string name="settings_appearance_more_apps_card_description">Viser et kort under apps, der fører til community-patches</string>
+    <string name="settings_section_effects">Effekter</string>
+    <string name="settings_appearance_background_animation">Baggrundsanimation</string>
+    <string name="settings_appearance_background_animation_description">Animationen, der afspilles bag app-skærmene</string>
     <string name="settings_background_circles">Cirkler</string>
     <string name="settings_background_rings">Ringe</string>
     <string name="settings_background_mesh">Net</string>
@@ -687,6 +698,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Experttilstand</string>
     <string name="settings_toggle_expert_mode_desc">Fuld kontrol over patch-valg og -konfiguration</string>
+    <string name="settings_expert_mode_disabled_in_flow">Gå tilbage til start for at ændre tilstand</string>
     <string name="settings_toggle_route_links_label">Omdiriger links til patchet app</string>
     <string name="settings_toggle_route_links_desc">Efter installation via ADB skal den patchede app åbne sine understøttede weblinks i stedet for browseren eller standardappen</string>
     <string name="settings_toggle_disable_stock_links_label">Deaktiver standardappens links</string>
@@ -723,17 +735,33 @@
     <string name="settings_toggle_auto_start_adb_label">Autostart ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Start ADB-dæmonen ved opstart, så tilsluttede enheder overvåges. Når den er fra, starter Morphe aldrig serveren, og installations-/push-funktioner er deaktiveret</string>
     <string name="settings_section_storage">Lagring &amp; cache</string>
-    <string name="settings_cache_summary">Cache: %1$s (patches + logfiler)</string>
-    <string name="settings_cache_clear_button">Ryd cache</string>
+    <string name="settings_cache_clear_all_title">Ryd hele cachen</string>
+    <string name="settings_cache_category_patches">Patches</string>
+    <string name="settings_cache_category_logs">Logge</string>
+    <string name="settings_cache_category_temp">Midlertidige filer</string>
+    <string name="settings_cache_category_avatars">Avatar-cache</string>
+    <string name="settings_cache_category_app_icons">Cache for app-ikoner</string>
+    <string name="settings_cache_confirm_patches_title">Ryd patches?</string>
+    <string name="settings_cache_confirm_patches_message">Dette vil slette downloadede patch-filer. Patches vil blive downloadet igen, når det er nødvendigt</string>
+    <string name="settings_cache_confirm_logs_title">Ryd logfiler?</string>
+    <string name="settings_cache_confirm_logs_message">Dette vil slette alle applikationslogfiler og enhedens logcat-dumps</string>
+    <string name="settings_cache_confirm_temp_title">Ryd midlertidige filer?</string>
+    <string name="settings_cache_confirm_temp_message">Dette vil slette midlertidige kladde- og arbejdsområdefiler</string>
+    <string name="settings_cache_confirm_avatars_title">Ryd avatar-cache?</string>
+    <string name="settings_cache_confirm_avatars_message">Dette vil slette alle cachede fjern-avatarbilleder</string>
+    <string name="settings_cache_confirm_app_icons_title">Ryd cache for app-ikoner?</string>
+    <string name="settings_cache_confirm_app_icons_message">Dette vil slette alle app-ikoner udtrukket fra APK'er og enheder</string>
+    <string name="settings_cache_category_cleared">%1$s ryddet</string>
+    <string name="settings_cache_category_clear_failed">Kunne ikke rydde %1$s</string>
     <string name="settings_cache_cleared">Cache ryddet</string>
     <string name="settings_cache_clear_failed">Rydning mislykkedes</string>
     <string name="settings_cache_confirm_title">Ryd cache?</string>
-    <string name="settings_cache_confirm_message">Dette vil slette downloadede patches og logfiler. Patches vil blive downloadet igen, når der er brug for dem</string>
+    <string name="settings_cache_confirm_message">Dette vil slette downloadede patches, logfiler og midlertidige filer. Patches vil blive downloadet igen, når det er nødvendigt</string>
     <string name="settings_storage_open_app_data_button">Åbn app-data</string>
     <string name="settings_storage_open_logs_button">Åbn logfiler</string>
     <string name="settings_section_about">Om</string>
     <string name="settings_about_version">Version %1$s</string>
-    <string name="settings_about_changelogs_title">Se ændringslogge</string>
+    <string name="settings_about_changelogs_title">Se ændringslog</string>
     <string name="settings_about_changelogs_desc">Se de seneste ændringer i denne opdatering</string>
     <string name="settings_about_licenses_title">Open Source-licenser</string>
     <string name="settings_about_licenses_desc">Vis licenser for tredjepartsbiblioteker</string>
@@ -786,7 +814,7 @@
     <string name="settings_runtime_logs_title">Runtime-logfiler for patchede apps</string>
     <string name="settings_runtime_logs_desc">Indsaml logfiler fra din telefon, efter at en patchet app er gået ned eller opfører sig forkert. Ryd, før du gengiver fejlen, og gem derefter det filtrerede output for at vedhæfte det til en fejlrapport.</string>
     <string name="settings_runtime_logs_device_info">Enhed: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Ingen enhed tilsluttet. Tilslut din telefon med USB-debugging aktiveret</string>
+    <string name="settings_runtime_logs_no_device">Ingen enhed tilsluttet. Tilslut din telefon med USB- eller Wi-Fi-debugging aktiveret</string>
     <string name="settings_runtime_logs_clearing">Rydder…</string>
     <string name="settings_runtime_logs_clear_button">Ryd enhedslogfiler</string>
     <string name="settings_runtime_logs_failed_to_clear">Kunne ikke rydde logfiler</string>
@@ -818,7 +846,7 @@
     <string name="changelog_section_app_support">App-support</string>
     <string name="changelog_section_fixes">Rettelser</string>
     <string name="changelog_section_improvements">Forbedringer</string>
-    <string name="changelog_section_new">Ny</string>
+    <string name="changelog_section_new">Nyt</string>
     <string name="changelog_section_other">Ændringer</string>
     <string name="changelog_section_performance">Ydelse</string>
     <string name="changelog_show_all">Vis alle (%1$d)</string>
@@ -827,4 +855,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Kilder</string>
     <string name="nav_apps">Apps</string>
+    <string name="nav_settings">Indstillinger</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Søg i indstillinger</string>
+    <string name="settings_search_no_results">Ingen matchende indstillinger</string>
+    <string name="settings_back_to_about">Tilbage til Om</string>
+    <string name="licenses_back_to_list">Tilbage til licenser</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Flere apps</string>
+    <string name="home_more_apps_subtitle">Community-patches</string>
+    <string name="community_patches_notice_title">Tredjeparts patch-kilder</string>
+    <string name="community_patches_notice_message">Community patch-kilder er lavet og vedligeholdes af deres egne forfattere. Morphe gennemgår eller verificerer ikke tredjeparts patches og er ikke ansvarlig for deres indhold eller for, hvad de gør på din enhed.</string>
 </resources>

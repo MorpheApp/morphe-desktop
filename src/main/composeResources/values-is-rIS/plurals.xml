@@ -60,4 +60,12 @@
         <item quantity="one">%1$d fínstilling</item>
         <item quantity="other">%1$d fínstillingar</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d skjal)</item>
+        <item quantity="other">%1$s (%2$d skjöl)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Samtals: %1$s (%2$d skjal)</item>
+        <item quantity="other">Samtals: %1$s (%2$d skjöl)</item>
+    </plurals>
 </resources>

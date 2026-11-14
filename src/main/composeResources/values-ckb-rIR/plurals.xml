@@ -60,4 +60,12 @@
         <item quantity="one">%1$d باشکردن</item>
         <item quantity="other">%1$d باشکردن</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d فایل)</item>
+        <item quantity="other">%1$s (%2$d فایل)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">کۆی گشتی: %1$s (%2$d فایل)</item>
+        <item quantity="other">کۆی گشتی: %1$s (%2$d فایل)</item>
+    </plurals>
 </resources>

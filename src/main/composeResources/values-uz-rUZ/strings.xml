@@ -7,7 +7,7 @@
     <string name="retry">Qayta urinish</string>
     <string name="clear">Tozalash</string>
     <string name="search">Qidiruv</string>
-    <string name="no_matches">Mos keladigan natijalar yo\"q</string>
+    <string name="no_matches">Mos keladigan natijalar yo'q</string>
     <string name="remove">Olib tashlash</string>
     <string name="collapse">Yig'ish</string>
     <string name="expand">Kengaytirish</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Patchlash noma'lum sababga ko'ra muvaffaqiyatsiz tugadi</string>
     <string name="error_log_label">Xatolar jurnali</string>
     <string name="back">Orqaga</string>
+    <string name="open">Ochish</string>
     <string name="open_folder">Papkani ochish</string>
     <string name="temporary_files_label">Vaqtinchalik fayllar</string>
     <string name="size_can_be_freed_label">%1$s bo\"shatish mumkin</string>
@@ -86,8 +87,8 @@
     <string name="gradient_linear">Chiziqli</string>
     <string name="gradient_radial">Radial</string>
     <string name="gradient_conic">Konik</string>
-    <string name="gradient_add_stop">To\"xtash nuqtasini qo\"shish</string>
-    <string name="gradient_remove_stop_description">To\"xtash nuqtasini olib tashlash</string>
+    <string name="gradient_add_stop">To'xtash nuqtasini qo'shish</string>
+    <string name="gradient_remove_stop_description">To'xtash nuqtasini olib tashlash</string>
     <string name="gradient_angle">Burchak</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_title">Kartani sozlash</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">O'rnatish muvaffaqiyatsiz yakunlandi: %1$s</string>
     <string name="adb_error_not_found">ADB topilmadi. Iltimos, Android SDK Platform Tools'ni o'rnating</string>
     <string name="adb_error_unauthorized">Qurilma ulangan, lekin ruxsat berilmagan. Iltimos, qurilmangizda USB debugging so'rovini qabul qiling</string>
-    <string name="adb_error_no_devices">Hech qanday qurilma ulanmagan. Iltimos, USB debugging yoqilgan Android qurilmangizni ulang</string>
+    <string name="adb_error_no_devices">Hech qanday qurilma ulanmagan. Iltimos, USB yoki Wi-Fi debugging yoqilgan Android qurilmangizni ulang</string>
     <string name="adb_error_device_not_found">%1$s qurilmasi topilmadi</string>
     <string name="adb_error_multiple_devices">Bir nechta qurilma ulangan. Iltimos, bittasini tanlang</string>
     <string name="adb_error_apk_not_found">APK fayli topilmadi: %1$s</string>
@@ -149,10 +150,10 @@
     <string name="version_status_checksum_corrupted">Fayl buzilgan bo'lishi mumkin, APKMirror dan qayta yuklab oling</string>
     <string name="version_status_checksum_failed">Checksum tekshiruvi muvaffaqiyatsiz yakunlandi</string>
     <string name="version_status_checksum_matches">Checksum APKMirror bilan mos keladi</string>
-    <string name="version_status_newer_stable_available">Yangiroq barqaror v%1$s mavjud</string>
-    <string name="version_status_newer_stable_available_fallback">Yangiroq barqaror versiya mavjud</string>
+    <string name="version_status_newer_stable_available">Yangi barqaror v%1$s mavjud</string>
+    <string name="version_status_newer_stable_available_fallback">Yangi barqaror versiya mavjud</string>
     <string name="version_status_experimental_detail">Qo'llab-quvvatlanadi, ammo to'g'ri ishlamasligi mumkin</string>
-    <string name="version_status_unsupported_detail">Rasman qo'llab-quvvatlanmaydi, patchlar katta ehtimol bilan xatolik beradi</string>
+    <string name="version_status_unsupported_detail">Rasmiy qo'llab-quvvatlanmaydi, patchlar katta ehtimol bilan xatolik beradi</string>
     <string name="version_status_unsupported">Qo'llab-quvvatlanmaydigan versiya</string>
     <string name="version_status_build_unsupported">Build qo'llab-quvvatlanmaydi</string>
     <string name="version_status_build_unsupported_detail">Ushbu versiya qo'llab-quvvatlanadi, lekin uning ushbu build-i qo'llab-quvvatlanmaydi. Patchlar mo'ljallagan build-ni yuklab oling</string>
@@ -206,14 +207,14 @@
     <string name="home_app_row_latest_experimental">Oxirgi eksperimental</string>
     <string name="home_app_row_any">Istalgan</string>
     <string name="home_app_row_na">Mavjud emas</string>
-    <string name="home_app_row_not_on_device">Ushbu qurilmada yo\"q</string>
+    <string name="home_app_row_not_on_device">Ushbu qurilmada yo'q</string>
     <string name="home_app_row_on_device">Qurilmada</string>
     <string name="home_app_row_on_device_with_version">Qurilmada · v%1$s</string>
     <string name="home_app_row_on_device_not_signed">Qurilmada · Morphe bilan imzolanmagan</string>
     <string name="home_app_row_on_device_with_version_not_signed">Qurilmada · v%1$s · Morphe bilan imzolanmagan</string>
     <string name="home_app_row_update_available_badge">Yangilanish mavjud</string>
-    <string name="home_app_row_modified_badge">O\"zgartirilgan</string>
-    <string name="home_app_row_apk_missing_badge">APK yo\"q</string>
+    <string name="home_app_row_modified_badge">O'zgartirilgan</string>
+    <string name="home_app_row_apk_missing_badge">APK yo'q</string>
     <string name="home_app_row_section_patches_from">Patchlar manbasi</string>
     <!-- Home Screen - SupportedAppsListPane -->
     <string name="home_list_load_failed">Yuklashda xatolik</string>
@@ -278,15 +279,15 @@
     <string name="home_detail_source_disabled">O'chirilgan</string>
     <string name="home_detail_source_removed">Olib tashlangan</string>
     <string name="home_detail_source_disabled_sub">Manba \"Manbalar\" bo'limida o'chirilgan. Qayta patch qilish uchun uni yoqing</string>
-    <string name="home_detail_source_disabled_alternatives_sub">Asl manba o\"chirilgan. Muqobil manbani tanlang yoki Manbalar bo\"limida uni qayta yoqing</string>
+    <string name="home_detail_source_disabled_alternatives_sub">Asl manba o'chirilgan. Muqobil manbani tanlang yoki Manbalar bo'limida uni qayta yoqing</string>
     <string name="home_detail_no_compatible_source">Hech qanday mos manba yoqilmagan</string>
     <string name="home_detail_choose_source">Patch manbasini tanlang</string>
-    <string name="home_advice_unsupported_by_patches">v%1$s versiyasi eng so\"nggi patchlar tomonidan endi qo\"llab-quvvatlanmaydi</string>
+    <string name="home_advice_unsupported_by_patches">v%1$s versiyasi eng so'nggi patchlar tomonidan endi qo'llab-quvvatlanmaydi</string>
     <string name="home_date_today">bugun</string>
     <string name="home_date_yesterday">kecha</string>
     <string name="home_date_days_ago">%1$d kun oldin</string>
-    <string name="home_your_apps_empty_title">Hozircha patch qilingan ilovalar yo\"q</string>
-    <string name="home_your_apps_empty_subtitle">Ilovani patch qiling va u shu yerda ko\"rinadi</string>
+    <string name="home_your_apps_empty_title">Hozircha patch qilingan ilovalar yo'q</string>
+    <string name="home_your_apps_empty_subtitle">Ilovani patch qiling va u shu yerda ko'rinadi</string>
     <string name="home_your_apps_no_matches_subtitle">\"%1$s\" ga mos keladigan natijalar topilmadi</string>
     <!-- Patches Screen -->
     <string name="patches_dialog_error_title">Xatolik</string>
@@ -323,7 +324,7 @@
     <string name="patch_selection_action_patch">Patch (%1$d)</string>
     <string name="patch_selection_filter_selected">Tanlangan</string>
     <string name="patch_selection_configure_options_description">Opsiyalarni sozlash</string>
-    <string name="patch_selection_icon_edit">Belgiyni tahrirlash</string>
+    <string name="patch_selection_icon_edit">Belgini tahrirlash</string>
     <string name="patch_selection_icon_design">Dizayn belgisi</string>
     <string name="patch_selection_icon_select_folder_title">Belgilar papkasini tanlang</string>
     <string name="patch_selection_icon_ready">Maxsus belgi tayyor</string>
@@ -336,30 +337,30 @@
     <string name="patch_selection_mode_your_defaults">Sizning standart sozlamalaringiz</string>
     <string name="patch_selection_mode_patch_defaults">Patch standart sozlamalari</string>
     <string name="patch_selection_mode_all">Hammasi</string>
-    <string name="patch_selection_strip_no_libs_headline">Tizimli kutubxonalar yo'q</string>
+    <string name="patch_selection_strip_no_libs_headline">Native kutubxonalar yo'q</string>
     <string name="patch_selection_strip_no_libs_detail">stripping qo'llanilmaydi</string>
     <string name="patch_selection_strip_universal_headline">Universal kutubxonalar</string>
     <string name="patch_selection_strip_universal_detail">yagona universal papka, stripping qo'llanilmaydi</string>
     <string name="patch_selection_strip_keep_all_headline">Olib tashlash shart emas</string>
-    <string name="patch_selection_strip_keep_all_detail">saqlash-roâyxati ushbu APK-dagi barcha arxitekturalarni qamrab oladi</string>
-    <string name="patch_selection_strip_fallback_headline">Zaxira varianti, barcha ma'lumotlar saqlanmoqda</string>
+    <string name="patch_selection_strip_keep_all_detail">saqlash ro'yxati ushbu APK-dagi barcha arxitekturalarni qamrab oladi</string>
+    <string name="patch_selection_strip_fallback_headline">Zaxira varianti: barcha arxitekturalar saqlanadi</string>
     <string name="patch_selection_strip_fallback_detail">afzal ko'rilgan arxitekturalar mavjud emas, Strip libs sozlamalarini ko'rib chiqing</string>
     <string name="patch_selection_strip_will_strip_headline">Native kutubxonalarni olib tashlash</string>
-    <string name="patch_selection_strip_will_strip_detail">faqat roâyxatdagi arxitekturalar saqlanadi</string>
+    <string name="patch_selection_strip_will_strip_detail">faqat ro'yxatdagi arxitekturalar saqlanadi</string>
     <string name="patch_selection_strip_settings_hint">· Sozlamalar → Kutubxonalarni olib tashlash</string>
     <string name="patch_selection_arch_keep">saqlash</string>
     <string name="patch_selection_arch_strip">olib tashlash</string>
     <string name="patch_selection_arch_not_in_apk">apkda mavjud emas</string>
-    <string name="patch_selection_no_matches_in_bundle">Ushbu paketda mos keladigan natijalar yo\"q</string>
-    <string name="patch_selection_error_patches_file_missing">Patchlar fayli topilmadi va uni yuklab olib bo\"lmadi: %1$s</string>
-    <string name="patch_selection_error_failed_to_list_patches">Patchlar ro\"yxatini chiqarishda xatolik yuz berdi: %1$s</string>
-    <string name="patch_selection_cmd_preview_tooltip">Ekvivalent CLI buyrug\"i ko\"rinishini ko\"rish</string>
+    <string name="patch_selection_no_matches_in_bundle">Ushbu paketda mos keladigan natijalar yo'q</string>
+    <string name="patch_selection_error_patches_file_missing">Patchlar fayli topilmadi va uni yuklab olib bo'lmadi: %1$s</string>
+    <string name="patch_selection_error_failed_to_list_patches">Patchlar ro'yxatini chiqarishda xatolik yuz berdi: %1$s</string>
+    <string name="patch_selection_cmd_preview_tooltip">Ekvivalent CLI buyrug'i ko'rinishini ko'rish</string>
     <string name="patch_selection_run_info_tooltip">Ushbu ishga tushirish uchun foydalanilgan APK va patch paketi</string>
-    <string name="patch_selection_run_info_description">Ishga tushirish ma\"lumotlari</string>
+    <string name="patch_selection_run_info_description">Ishga tushirish ma'lumotlari</string>
     <string name="patch_selection_badge_new">Yangi</string>
     <string name="patch_selection_option_required">Ushbu variant talab qilinadi</string>
     <string name="patch_selection_option_expected">Kutilgan qiymat: %1$s</string>
-    <string name="patch_selection_option_hint_list">vergul bilan ajratilgan ro\"yxat, har biri %1$s</string>
+    <string name="patch_selection_option_hint_list">vergul bilan ajratilgan ro'yxat, har biri %1$s</string>
     <string name="patch_selection_option_hint_value">qiymat</string>
     <string name="patch_selection_option_hint_boolean">rost yoki yolg'on</string>
     <string name="patch_selection_option_hint_whole_number">butun son</string>
@@ -386,7 +387,7 @@
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Boshidan boshlash</string>
     <string name="patching_patches_count">%1$d / %2$d patchlar</string>
-    <string name="patching_slow_warning">Bu odatdagidan ko\"proq vaqt olyapti. Iltimos, kuting...</string>
+    <string name="patching_slow_warning">Bu odatdagidan ko'proq vaqt olyapti. Iltimos, kuting…</string>
     <string name="patching_status_ready">Patchga tayyor</string>
     <string name="patching_status_preparing">Patchga tayyorlanmoqda</string>
     <string name="patching_status_in_progress">Patchlar qo'llanilmoqda</string>
@@ -411,24 +412,24 @@
     <string name="patching_banner_desktop">Ish stoli</string>
     <string name="patching_banner_patcher">Patchernik</string>
     <string name="patching_banner_runtime">Ishga tushirish vaqti</string>
-    <string name="patching_banner_native_libs">Tizimli kutubxonalar</string>
+    <string name="patching_banner_native_libs">Native kutubxonalar</string>
     <string name="patching_banner_os">OT</string>
     <string name="patching_banner_arch">Arxitektura</string>
-    <string name="patching_banner_ram_free">Bo\"sh RAM</string>
-    <string name="patching_banner_storage_free">Bo\"sh xotira</string>
+    <string name="patching_banner_ram_free">Bo'sh RAM</string>
+    <string name="patching_banner_storage_free">Bo'sh xotira</string>
     <string name="patching_success_title">Patch qilish muvaffaqiyatli yakunlandi</string>
     <string name="patching_success_output_size">Chiqish hajmi</string>
     <string name="patching_success_time">Vaqt</string>
-    <string name="patching_success_memory_avg">O\"rtacha xotira</string>
+    <string name="patching_success_memory_avg">O'rtacha xotira</string>
     <string name="patching_success_memory_max">Maksimal xotira</string>
-    <string name="patching_success_storage_io_peak">Xotira kiritish/chiqarish cho\"qqisi</string>
+    <string name="patching_success_storage_io_peak">Xotira kiritish/chiqarish cho'qqisi</string>
     <string name="patching_failure_temp_files_cleaned">Vaqtinchalik fayllar tozalandi</string>
     <string name="patching_banner_native_libs_kept">Saqlandi</string>
     <string name="patching_banner_native_libs_stripped">Olib tashlandi</string>
     <string name="patching_error_failed_patches">Xato bilan patch qilinganlar: %1$s</string>
     <!-- Result Screen -->
-    <string name="result_adb_off_button">ADB o\"chiq · O\"rnatish uchun yoqing</string>
-    <string name="result_adb_connect_device_hint">ADB orqali o\"rnatish uchun qurilmani USB orqali ulang</string>
+    <string name="result_adb_off_button">ADB o'chiq · O'rnatish uchun yoqing</string>
+    <string name="result_adb_connect_device_hint">ADB orqali o'rnatish uchun qurilmani USB yoki Wi-Fi orqali ulang</string>
     <string name="result_screen_patch_another_button">Boshqasini patch qilish</string>
     <string name="result_screen_install_on_device_label">%1$s ga o'rnatish</string>
     <string name="result_screen_links_routed_label">Havolalar patch qilingan ilovaga yo'naltirildi</string>
@@ -444,26 +445,28 @@
     <string name="result_adb_unmounting_on_device">%1$s dan unmount qilinmoqda…</string>
     <string name="result_adb_root_not_detected">%1$s qurilmasida root kirish aniqlanmadi. Magisk/KernelSU/APatch o'rnatilganiga va su ruxsati berilganiga ishonch hosil qiling</string>
     <string name="result_adb_stock_app_not_installed">%2$s qurilmasida %1$s standart ilovasi o'rnatilmagan. Mount qilishdan oldin rasmiy ilovani o'rnating</string>
+    <string name="result_adb_mount_version_mismatch">%3$s dagi standart ilova versiyasi v%1$s, ammo patch qilingan APK versiyasi v%2$s. Root mount uchun versiyalar bir xil bo\"lishi kerak</string>
+    <string name="result_adb_mount_abi_mismatch">%3$s qurilmasi %1$s, ammo APK faqat [%2$s] ni o\"z ichiga olgan. Native kutubxonalar yuklanmaydi</string>
     <string name="result_link_default_restored">Havolalarni qayta ishlov berishning standart holati tiklandi</string>
     <string name="result_link_routed_stock_disabled">Havolalar patch qilingan ilovaga yo'naltirildi, zavod ilovasi o'chirildi</string>
     <string name="result_adb_not_found_hint">ADB topilmadi. To'g'ridan-to'g'ri o'rnatishni yoqish uchun Android SDK Platform Tools'ni o'rnating</string>
     <string name="result_adb_section_title">ADB orqali o'rnatish</string>
     <string name="result_adb_no_devices">Hech qanday qurilma ulanmagan</string>
-    <string name="result_adb_connect_hint">USB debugging yoqilgan holda USB orqali ulaning</string>
+    <string name="result_adb_connect_hint">USB yoki Wi-Fi debugging orqali ulang</string>
     <string name="result_device_status_unauth">Tasdiqlanmagan</string>
     <string name="result_adb_update_button">%1$s da yangilash</string>
     <string name="result_adb_select_device_button">Qurilmani tanlang</string>
     <string name="result_link_section_title">Havolalarni boshqarish</string>
     <string name="result_link_section_subtitle">Qo'llab-quvvatlanadigan veb-havolalarni brauzer o'rniga patch qilingan ilovada oching</string>
     <string name="result_link_stop_stock">Shuningdek, %1$s ilovasi ushbu havolalarni ochishini to'xtating</string>
-    <string name="result_link_applying">Taqbiq qilinmoqda…</string>
+    <string name="result_link_applying">Qo'llanilmoqda…</string>
     <string name="result_link_restore">Tiklash</string>
     <string name="result_link_open_with_patched">Havolalarni patch qilingan ilova orqali ochish</string>
     <string name="result_cleanup_cleaned_title">Vaqtinchalik fayllar tozalandi</string>
     <string name="result_cleanup_auto_enabled">Avtomatik tozalash yoqilgan</string>
-    <string name="result_cleanup_freed">%1$s bo\"shatildi</string>
-    <string name="result_adb_disabled_title">ADB o\"chirilgan. Qurilmaga o\"rnatish imkoniyati ishlamaydi</string>
-    <string name="result_adb_disabled_subtitle">Patch qilingan APK-larni to\"g\"ridan-to\"g\"ri yuborish uchun Sozlamalarda ADB-ni yoqing</string>
+    <string name="result_cleanup_freed">%1$s bo'shatildi</string>
+    <string name="result_adb_disabled_title">ADB o'chirilgan. Qurilmaga o'rnatish imkoniyati ishlamaydi</string>
+    <string name="result_adb_disabled_subtitle">Patch qilingan APK-larni to'g'ridan-to'g'ri yuborish uchun Sozlamalarda ADB-ni yoqing</string>
     <!-- Icon Studio -->
     <string name="icon_studio_title">Icon Studio</string>
     <string name="icon_studio_shape_circle">Doira</string>
@@ -476,7 +479,7 @@
     <string name="icon_studio_warn_unreadable">Shaffoflikni tekshirish uchun ushbu tasvirni o'qib bo'lmadi</string>
     <string name="icon_studio_picker_select_font">Shriftni tanlang</string>
     <string name="icon_studio_undo_button">Bekor qilish</string>
-    <string name="icon_studio_redo_button">Qaytarish</string>
+    <string name="icon_studio_redo_button">Qayta bajarish</string>
     <string name="icon_studio_templates">Andozalar</string>
     <string name="icon_studio_template_badge">Badj</string>
     <string name="icon_studio_preview_adaptive">Adaptiv</string>
@@ -499,7 +502,7 @@
     <string name="icon_studio_effect_shadow">Soya</string>
     <string name="icon_studio_adjust_y_offset">Y surilishi</string>
     <string name="icon_studio_adjust_blur">Xiralashtirish</string>
-    <string name="icon_studio_effect_glow">Yorqinlik</string>
+    <string name="icon_studio_effect_glow">Porlash</string>
     <string name="icon_studio_effect_stroke">Kontur</string>
     <string name="icon_studio_adjust_width">Kenglik</string>
     <string name="icon_studio_save_icon_button">Belgini saqlash</string>
@@ -509,15 +512,15 @@
     <string name="icon_studio_add_shape_button">Shakl</string>
     <string name="icon_studio_foreground_hint">Xavfsiz zonada qatlamlangan logotipingiz. Mavzuli &amp; bildirishnoma belgilarini shakllantiradi</string>
     <string name="icon_studio_no_foreground_hint">Hali oldingi plan yo'q - qatlam qo'shing (Tasvir / Matn / Shakl). Mavzuli &amp; bildirishnoma belgilar oldingi plandan olinadi, shuning uchun faqat orqa fonli belgi u yerda hech narsani ko'rsatmaydi (biz butun belgiga qaytamiz)</string>
-    <string name="icon_studio_replace_icon_button">Piktogrammani almashtirish</string>
+    <string name="icon_studio_replace_icon_button">Belgini almashtirish</string>
     <string name="icon_studio_text_label">Matn</string>
     <string name="icon_studio_toggle_bold">Qalin</string>
     <string name="icon_studio_toggle_italic">Kursiv</string>
     <string name="icon_studio_toggle_underline">Tagiga chizish</string>
-    <string name="icon_studio_toggle_strike">O\"chirish chizig\"i</string>
+    <string name="icon_studio_toggle_strike">Ustidan chizish</string>
     <string name="icon_studio_adjust_spacing">Masofalar</string>
     <string name="icon_studio_default_font">Standart shrift</string>
-    <string name="icon_studio_add_file_button">Fayl qo\"shish</string>
+    <string name="icon_studio_add_file_button">Fayl qo'shish</string>
     <string name="icon_studio_background_label">Orqa fon</string>
     <string name="icon_studio_background_solid">Yaxlit</string>
     <string name="icon_studio_background_image">Rasm</string>
@@ -537,7 +540,7 @@
     <string name="source_error_failed_to_load">Yuklash xatosi</string>
     <string name="source_error_github_pat_required">Pull request manbalarini yuklab olish uchun GitHub PAT talab qilinadi</string>
     <string name="source_error_pr_no_artifact">Pull request uchun hech qanday artefaktlar topilmadi</string>
-    <string name="source_error_patcher_incompatible">Ushbu manba %1$s patcheri uchun yaratilgan, ammo Morphe %2$s versiyasi %3$s patcherini o\"z ichiga oladi. Undan foydalanish uchun Morphe’ni yangilang</string>
+    <string name="source_error_patcher_incompatible">Ushbu manba %1$s patcheri uchun yaratilgan, ammo Morphe %2$s versiyasi %3$s patcherini o'z ichiga oladi. Undan foydalanish uchun Morphe’ni yangilang</string>
     <string name="version_label_local">Mahalliy</string>
     <string name="source_sheet_remote_label">Masofaviy</string>
     <string name="add_source">Manba qo‘shish</string>
@@ -552,8 +555,8 @@
     <string name="source_sheet_edit_description">Tahrirlash</string>
     <string name="source_sheet_move_up_description">Yuqoriga ko'chirish</string>
     <string name="source_sheet_move_down_description">Pastga ko'chirish</string>
-    <string name="source_sheet_ignored_mpp_title">E'borga olinmagan .mpp shablonlari</string>
-    <string name="source_sheet_ignored_mpp_hint">Faqat papka manbalariga ta'sir qiladi, ular papkadagi eng yangi .mpp faylini avtomatik yuklaydi. Eng yangi buildni tanlashda, nomi bu yerdagi shablonga mos keladigan fayllar tashlab ketiladi. Oddiy so'z uni o'z ichiga olgan har qanday faylga mos keladi (masalan, debug). Globlar uchun * belgisidan foydalaning (masalan, *-debug.mpp). *-sources.mpp va *-javadoc.mpp har doim e'borga olinmaydi</string>
+    <string name="source_sheet_ignored_mpp_title">E'tiborsiz qoldiriladigan .mpp shablonlari</string>
+    <string name="source_sheet_ignored_mpp_hint">Faqat papka manbalariga ta'sir qiladi, ular papkadagi eng yangi .mpp faylini avtomatik yuklaydi. Eng yangi buildni tanlashda, nomi bu yerdagi shablonga mos keladigan fayllar tashlab ketiladi. Oddiy so'z uni o'z ichiga olgan har qanday faylga mos keladi (masalan, debug). Globlar uchun * belgisidan foydalaning (masalan, *-debug.mpp). *-sources.mpp va *-javadoc.mpp har doim e'tiborsiz qoldiriladi</string>
     <string name="source_sheet_ignored_mpp_placeholder">masalan, debug yoki *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Shablon qo'shish</string>
     <string name="source_sheet_remove_pattern_description">Shablonni olib tashlash</string>
@@ -563,8 +566,8 @@
     <!-- Signing Key Trust Dialog -->
     <string name="sources_signing_key_changed_named">'%1$s' yangilanmadi, chunki uning so'nggi versiyasi avvalgi kalit bilan imzolanmagan</string>
     <string name="sources_signing_key_new">Yangi kalit</string>
-    <string name="sources_signing_key_trust_message">So'nggi versiya boshqa kalit bilan imzolangan. Yo dasturchi kalitini almashtirgan, yoki ushbu versiyani boshqa kimdir nashr etgan. Faqat dasturchi yangi kalit haqida e'lon qilgan bo'lsa, unga ishoning</string>
-    <string name="sources_signing_key_trust_message_unsigned">So'nggi versiya imzolanmagan. Yo dasturchi versiyalarni imzolashni to'xtatgan, yoki ushbu versiyani boshqa kimdir nashr etgan. Faqat dasturchi bu haqda e'lon qilgan bo'lsa, unga ishoning</string>
+    <string name="sources_signing_key_trust_message">So'nggi versiya boshqa kalit bilan imzolangan. Yoki dasturchi kalitini almashtirgan, yoki ushbu versiyani boshqa kimdir nashr etgan. Faqat dasturchi yangi kalit haqida e'lon qilgan bo'lsa, unga ishoning</string>
+    <string name="sources_signing_key_trust_message_unsigned">So'nggi versiya imzolanmagan. Yoki dasturchi versiyalarni imzolashni to'xtatgan, yoki ushbu versiyani boshqa kimdir nashr etgan. Faqat dasturchi bu haqda e'lon qilgan bo'lsa, unga ishoning</string>
     <string name="sources_signing_key_trust_title">Yangi kalitga ishonasizmi?</string>
     <string name="sources_signing_key_trusted">Ishonchli kalit</string>
     <!-- Patch Source Dialogs -->
@@ -577,7 +580,7 @@
     <string name="patch_source_dialog_pre_release_title">Pre-reliz patchlari</string>
     <string name="patch_source_dialog_pre_release_hint">Yangi eksperimental patch versiyalariga erta kirish imkoniyatini beradi</string>
     <string name="patch_source_dialog_error_name_required">Ism kiritilishi shart</string>
-    <string name="patch_source_dialog_error_invalid_url">GitHub yoki GitLab ning haqiqiy URL manzilini kiriting</string>
+    <string name="patch_source_dialog_error_invalid_url">Haqiqiy GitHub yoki GitLab URL manzilini kiriting</string>
     <string name="patch_source_dialog_error_invalid_file">Haqiqiy .mpp faylini tanlang</string>
     <string name="patch_source_dialog_add_button">Qo‘shish</string>
     <string name="patch_source_dialog_edit_title">Manbani tahrirlash</string>
@@ -593,17 +596,17 @@
     <string name="patch_source_dialog_picker_select_folder">Papkani tanlang (eng yangi .mpp ishlatiladi)</string>
     <string name="patch_source_dialog_folder_hint">Har doim ichidagi eng yangi .mpp faylini yuklash uchun papka tanlang - bu patchlarni qayta qurishda qulay</string>
     <!-- Device Indicator -->
-    <string name="device_indicator_adb_off">ADB o\"chirilgan</string>
-    <string name="device_indicator_checking">Tekshirilmoq…</string>
-    <string name="device_indicator_no_adb">ADB yo\"q</string>
-    <string name="device_indicator_no_device">Qurilma yo\"q</string>
+    <string name="device_indicator_adb_off">ADB o'chirilgan</string>
+    <string name="device_indicator_checking">Tekshirilmoqda…</string>
+    <string name="device_indicator_no_adb">ADB yo'q</string>
+    <string name="device_indicator_no_device">Qurilma yo'q</string>
     <string name="device_indicator_details_description">Qurilma tafsilotlari</string>
-    <string name="device_indicator_adb_is_off_title">ADB o\"chirilgan</string>
+    <string name="device_indicator_adb_is_off_title">ADB o'chirilgan</string>
     <string name="device_indicator_adb_is_off_subtitle">Morphe ulangan qurilmalarni kuzatmayapti</string>
     <string name="device_indicator_adb_not_found_title">ADB topilmadi</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Tools-ni o'rnating</string>
     <string name="device_indicator_no_devices_title">Qurilmalar aniqlanmadi</string>
-    <string name="device_indicator_no_devices_subtitle">USB debugging yoqilgan qurilmani ulang</string>
+    <string name="device_indicator_no_devices_subtitle">USB yoki Wi-Fi debugging yoqilgan qurilmani ulang</string>
     <string name="device_indicator_enable_debugging_title">USB debugging-ni yoqing</string>
     <string name="device_indicator_enable_debugging_subtitle">Sozlamalar → Dasturchi variantlari → USB debugging</string>
     <string name="device_indicator_status_connected">Ulangan</string>
@@ -615,21 +618,21 @@
     <string name="error_dialog_unreachable">Serverga ulanib bo'lmadi. Iltimos, internet aloqangizni tekshiring</string>
     <string name="error_dialog_permission_denied">Ruxsat rad etildi. Iltimos, fayl yoki papkaga kirish huquqingiz borligini tekshiring</string>
     <string name="error_dialog_not_found">So'ralgan fayl yoki resurs topilmadi</string>
-    <string name="error_dialog_disk_full">Diskda joy yetarli emas. Iltimos, biroz joy bo\"shating va qaytadan urinib ko\"ring</string>
-    <string name="error_dialog_exit_code">Patching jarayonida xatolik yuz berdi. Batafsil ma\"lumot uchun loglarni tekshiring</string>
+    <string name="error_dialog_disk_full">Diskda joy yetarli emas. Iltimos, biroz joy bo'shatib qaytadan urinib ko'ring</string>
+    <string name="error_dialog_exit_code">Patching jarayonida xatolik yuz berdi. Batafsil ma'lumot uchun loglarni tekshiring</string>
     <!-- Banners -->
     <string name="offline_banner_text">Offlayn, keshdagi patchlardan foydalanilmoqda</string>
     <string name="update_banner_available">Yangilanish mavjud · v%1$s</string>
     <string name="update_banner_from_version_crosses">v%1$s dan · dev → stable</string>
     <string name="update_banner_from_version">v%1$s dan</string>
     <string name="update_banner_later_button">Keyinroq</string>
-    <string name="update_banner_skip_button">v%1$s ni o\"tkazib yuborish</string>
+    <string name="update_banner_skip_button">v%1$s ni o'tkazib yuborish</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ochiq kodli litsenziyalar</string>
     <string name="licenses_dialog_empty_failed">// litsenziyalarni yuklab bo'lmadi</string>
     <string name="licenses_dialog_empty_no_matches">// mos keladiganlar topilmadi</string>
     <string name="licenses_dialog_footer_matched">%1$d / %2$d ta mos keldi</string>
-    <string name="licenses_search_placeholder">Kutubxonalar, SPDX id, uniqueId... ni qidiring…</string>
+    <string name="licenses_search_placeholder">Kutubxonalar, SPDX id yoki uniqueId bo'yicha qidiring…</string>
     <string name="licenses_row_authors_label">Mualliflar</string>
     <string name="licenses_row_org_label">Tashkilot</string>
     <string name="licenses_row_link_source">Manba</string>
@@ -647,20 +650,22 @@
     <string name="settings_dialog_open_logs_button">Loglarni ochish</string>
     <string name="settings_dialog_reset_button">Qayta tiklash</string>
     <string name="settings_theme_system">Tizim</string>
-    <string name="settings_search_languages_placeholder">Tillar bo\"yicha qidiruv</string>
+    <string name="settings_search_languages_placeholder">Tillar bo'yicha qidiruv</string>
     <string name="settings_dialog_resolves_to_message">Yechimi: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Til</string>
     <string name="settings_language_current_title">Joriy til</string>
-    <string name="settings_language_community_translation_hint">Ba\"zi tillar uchun tarjimalar yo\"q yoki to\"liq emas. Yangi tillarni tarjima qilish yoki mavjud tarjimalarni yaxshilash uchun %1$s sahifasiga tashrif buyuring</string>
     <string name="settings_language_dialog_title">Ilova tili</string>
+    <string name="settings_language_translate_title">Morphe tarjimasiga yordam bering</string>
     <string name="settings_language_search_no_results">Natijalar topilmadi</string>
     <string name="settings_section_theme">Mavzu</string>
     <string name="settings_appearance_theme_mode">Mavzu rejimi</string>
+    <string name="settings_appearance_theme_mode_description">Yorug', qorong'i, sof qora yoki tizim mavzusi o'rtasida almashing</string>
     <string name="settings_theme_light">Yorug'</string>
     <string name="settings_theme_dark">To'q</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Rang uslubi</string>
+    <string name="settings_appearance_color_style_description">Rangli Morphe palitrasi yoki kulrang monoxrom uslubi</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monoxrom</string>
     <string name="settings_toggle_sharp_corners_label">O'tkir burchaklar</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">Ilova kartochkalari</string>
     <string name="settings_app_cards_color_all">Har bir kartochka uchun rang</string>
     <string name="settings_app_cards_color_all_desc">Alohida sozlagan kartochkalaringiz o'z rangini saqlab qoladi</string>
-    <string name="settings_section_background_animation">Fon animatsiyasi</string>
+    <string name="settings_toggle_app_icons_label">Ilova belgilar</string>
+    <string name="settings_toggle_app_icons_desc">Har bir ilovaning mahalliy APK­lar yoki ulangan qurilmadan olingan belgisi ko­rsatiladi</string>
+    <string name="settings_appearance_more_apps_card">Boshqa ilovalar kartasi</string>
+    <string name="settings_appearance_more_apps_card_description">Ilovalar ostida hamjamiyat patchlariga olib boruvchi kartani ko'rsatadi</string>
+    <string name="settings_section_effects">Effektlar</string>
+    <string name="settings_appearance_background_animation">Fon animatsiyasi</string>
+    <string name="settings_appearance_background_animation_description">Ilova ekranlari orqasida ijro etiladigan animatsiya</string>
     <string name="settings_background_circles">Doiralar</string>
     <string name="settings_background_rings">Halqalar</string>
     <string name="settings_background_mesh">To'r</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Ekspert rejimi</string>
     <string name="settings_toggle_expert_mode_desc">Patchlarni tanlash va konfiguratsiyasi ustidan to'liq nazorat</string>
+    <string name="settings_expert_mode_disabled_in_flow">Rejimni o'zgartirish uchun bosh sahifaga qayting</string>
     <string name="settings_toggle_route_links_label">Havolalarni patch qilingan ilovaga yo'naltirish</string>
     <string name="settings_toggle_route_links_desc">ADB orqali o'rnatilgandan so'ng, patch qilingan ilova qo'llab-quvvatlanadigan veb-havolalarini brauzer yoki standart ilova o'rniga ochishini ta'minlang</string>
     <string name="settings_toggle_disable_stock_links_label">Standart ilova havolalarini o'chirish</string>
@@ -724,22 +736,38 @@
     <string name="settings_toggle_auto_start_adb_label">ADBni avtomatik ishga tushirish</string>
     <string name="settings_toggle_auto_start_adb_desc">Ulangan qurilmalar monitoring qilinishi uchun ishga tushirish paytida ADB demonini ishga tushiring. O\"chirilgan bo\"lsa, Morphe serverni hech qachon ishga tushirmaydi va o\"rnatish/jo\"natish funksiyalari ishlamaydi</string>
     <string name="settings_section_storage">Xotira &amp; kesh</string>
-    <string name="settings_cache_summary">Kesh: %1$s (patchlar + loglar)</string>
-    <string name="settings_cache_clear_button">Keshni tozalash</string>
+    <string name="settings_cache_clear_all_title">Barcha keshni tozalash</string>
+    <string name="settings_cache_category_patches">Patchlar</string>
+    <string name="settings_cache_category_logs">Loglar</string>
+    <string name="settings_cache_category_temp">Vaqtinchalik fayllar</string>
+    <string name="settings_cache_category_avatars">Avatar kesh</string>
+    <string name="settings_cache_category_app_icons">Ilova belgilarining keshini tozalash</string>
+    <string name="settings_cache_confirm_patches_title">Patchlarni tozalash?</string>
+    <string name="settings_cache_confirm_patches_message">Bu yuklab olingan patch fayllarini o'chiradi. Patchlar kerak bo'lganda qayta yuklab olinadi</string>
+    <string name="settings_cache_confirm_logs_title">Loglarni tozalash?</string>
+    <string name="settings_cache_confirm_logs_message">Bu barcha ilova log fayllarini va qurilmaning logcat dump fayllarini o'chiradi</string>
+    <string name="settings_cache_confirm_temp_title">Vaqtinchalik fayllarni tozalash?</string>
+    <string name="settings_cache_confirm_temp_message">Bu vaqtinchalik qoralama va ishchi maydon fayllarini o'chiradi</string>
+    <string name="settings_cache_confirm_avatars_title">Avatar keshini tozalash?</string>
+    <string name="settings_cache_confirm_avatars_message">Bu keshdagi barcha masofaviy avatar tasvirlarini o'chiradi</string>
+    <string name="settings_cache_confirm_app_icons_title">Ilova belgilarining keshini tozalashni tasdiqlaysizmi?</string>
+    <string name="settings_cache_confirm_app_icons_message">Bu APK­lar va qurilmalardan olingan barcha ilova belgilarini o­chiradi</string>
+    <string name="settings_cache_category_cleared">%1$s tozalandi</string>
+    <string name="settings_cache_category_clear_failed">%1$s ni tozalashda xatolik yuz berdi</string>
     <string name="settings_cache_cleared">Kesh tozalandi</string>
     <string name="settings_cache_clear_failed">Tozalashda xatolik</string>
     <string name="settings_cache_confirm_title">Keshni tozalaysizmi?</string>
-    <string name="settings_cache_confirm_message">Bu yuklab olingan patchlar va log fayllarini o'chirib tashlaydi. Patchlar kerak bo'lganda qayta yuklab olinadi</string>
+    <string name="settings_cache_confirm_message">Bu yuklab olingan patchlar, log fayllar va vaqtincha fayllarni o'chirib tashlaydi. Patchlar kerak bo'lganda qayta yuklab olinadi</string>
     <string name="settings_storage_open_app_data_button">Ilova ma'lumotlarini ochish</string>
     <string name="settings_storage_open_logs_button">Loglarni ochish</string>
     <string name="settings_section_about">Biz haqimizda</string>
     <string name="settings_about_version">Versiya %1$s</string>
-    <string name="settings_about_changelogs_title">O\"zgarishlar ro\"yxatini ko\"rish</string>
-    <string name="settings_about_changelogs_desc">Ushbu yangilanishdagi so\"nggi o\"zgarishlar bilan tanishing</string>
+    <string name="settings_about_changelogs_title">O'zgarishlar ro'yxatini ko'rish</string>
+    <string name="settings_about_changelogs_desc">Ushbu yangilanishdagi so'nggi o'zgarishlar bilan tanishing</string>
     <string name="settings_about_licenses_title">Ochiq kodli litsenziyalar</string>
     <string name="settings_about_licenses_desc">Uchinchi tomon kutubxonalari litsenziyalarini ko'rish</string>
     <string name="settings_about_documentation_title">Hujjatlar</string>
-    <string name="settings_about_documentation_desc">Patch qilish, manbalar va muammolarni bartaraf etish bo\"yicha qo\"llanmalar</string>
+    <string name="settings_about_documentation_desc">Patch qilish, manbalar va muammolarni bartaraf etish bo'yicha qo'llanmalar</string>
     <string name="settings_about_website_title">Veb-saytga tashrif buyurish</string>
     <string name="settings_about_website_desc">Morphe rasmiy veb-saytiga tashrif buyuring</string>
     <!-- Settings - Strip Libs -->
@@ -755,7 +783,7 @@
     <string name="settings_signing_not_found">Keystore topilmadi, uni tiklaguningizcha, boshqasini tanlaguningizcha yoki qayta tiklaguningizcha patching muvaffaqiyatsiz yakunlanadi</string>
     <string name="settings_signing_invalid_file_type">Noto'g'ri fayl turi. Kutilgan: %1$s</string>
     <string name="settings_signing_using_default">%1$s manzilidagi Morphe standart keystore-idan foydalanilmoqda</string>
-    <string name="settings_signing_will_create_default">Morphe ning standart kalitlar ombori %1$s manzilida yaratiladi</string>
+    <string name="settings_signing_will_create_default">Morphe'ning standart kalitlar ombori %1$s manzilida yaratiladi</string>
     <string name="settings_signing_keystore_password_label">Kalitlar ombori paroli</string>
     <string name="settings_signing_key_alias_label">Kalit taxallusi</string>
     <string name="settings_signing_key_password_label">Kalit paroli</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">Patch qilingan ilovaning runtime loglari</string>
     <string name="settings_runtime_logs_desc">Patch qilingan ilova ishdan chiqqanda yoki noto'g'ri ishlaganda telefoningizdan loglarni yig'ing. Xatolikni qayta takrorlashdan oldin loglarni tozalang, so'ngra xato haqidagi hisobotga biriktirish uchun filtrlangan natijani saqlang</string>
     <string name="settings_runtime_logs_device_info">Qurilma: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Hech qanday qurilma ulanmagan. Telefoningizni USB debugging yoqilgan holda ulang</string>
+    <string name="settings_runtime_logs_no_device">Hech qanday qurilma ulanmagan. Telefoningizni USB yoki Wi-Fi debugging yoqilgan holatda ulang</string>
     <string name="settings_runtime_logs_clearing">Tozalanmoqda…</string>
     <string name="settings_runtime_logs_clear_button">Qurilma loglarini tozalash</string>
     <string name="settings_runtime_logs_failed_to_clear">Loglarni tozalashda xatolik yuz berdi</string>
@@ -816,7 +844,7 @@
     <string name="changelog_date_yesterday">Kecha</string>
     <string name="changelog_dialog_title">O'zgarishlar ro'yxatini ko'rish</string>
     <string name="changelog_not_available">O'zgarishlar ro'yxati mavjud emas</string>
-    <string name="changelog_section_app_support">Ilova qo'llab-quvvatlovi</string>
+    <string name="changelog_section_app_support">Ilova uchun qo'llab-quvvatlash</string>
     <string name="changelog_section_fixes">Tuzatishlar</string>
     <string name="changelog_section_improvements">Yaxshilanishlar</string>
     <string name="changelog_section_new">Yangi</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Manbalar</string>
     <string name="nav_apps">Ilovalar</string>
+    <string name="nav_settings">Sozlamalar</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Sozlamalarni qidirish</string>
+    <string name="settings_search_no_results">Mos keladigan sozlamalar topilmadi</string>
+    <string name="settings_back_to_about">\"Haqida\" bo'limiga qaytish</string>
+    <string name="licenses_back_to_list">Litsenziyalar ro'yxatiga qaytish</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Boshqa ilovalar</string>
+    <string name="home_more_apps_subtitle">Hamjamiyat patchlari</string>
+    <string name="community_patches_notice_title">Uchinchi tomon patch manbalari</string>
+    <string name="community_patches_notice_message">Hamjamiyat patch manbalari ularning mualliflari tomonidan yaratilgan va qo'llab-quvvatlanadi. Morphe uchinchi tomon patchlarini ko'rib chiqmaydi yoki tasdiqlamaydi hamda ularning tarkibi yoki qurilmangizda bajaradigan ishlari uchun javobgar emas.</string>
 </resources>

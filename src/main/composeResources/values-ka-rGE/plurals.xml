@@ -60,4 +60,12 @@
         <item quantity="one">%1$d ოპტიმიზაცია</item>
         <item quantity="other">%1$d ოპტიმიზაცია</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d ფაილი)</item>
+        <item quantity="other">%1$s (%2$d ფაილი)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">სულ: %1$s (%2$d ფაილი)</item>
+        <item quantity="other">სულ: %1$s (%2$d ფაილი)</item>
+    </plurals>
 </resources>

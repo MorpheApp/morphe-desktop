@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="settings_runtime_logs_saved_success">
+        <item quantity="one">%2$s లో %1$d లైన్ సేవ్ అయ్యింది </item>
+        <item quantity="other">%2$s లో %1$d లైన్లు సేవ్ అయ్యాయి</item>
+    </plurals>
+</resources>

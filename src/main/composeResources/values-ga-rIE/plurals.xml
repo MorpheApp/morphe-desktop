@@ -105,4 +105,18 @@
         <item quantity="many">%1$d optamú</item>
         <item quantity="other">%1$d optamú</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d comhad)</item>
+        <item quantity="two">%1$s (%2$d comhad)</item>
+        <item quantity="few">%1$s (%2$d comhad)</item>
+        <item quantity="many">%1$s (%2$d comhad)</item>
+        <item quantity="other">%1$s (%2$d comhad)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Iomlán: %1$s (%2$d comhad)</item>
+        <item quantity="two">Iomlán: %1$s (%2$d comhad)</item>
+        <item quantity="few">Iomlán: %1$s (%2$d comhad)</item>
+        <item quantity="many">Iomlán: %1$s (%2$d comhad)</item>
+        <item quantity="other">Iomlán: %1$s (%2$d comhad)</item>
+    </plurals>
 </resources>

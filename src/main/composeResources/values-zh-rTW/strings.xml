@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">修補因未知原因失敗</string>
     <string name="error_log_label">錯誤記錄檔</string>
     <string name="back">返回</string>
+    <string name="open">開啟</string>
     <string name="open_folder">開啟資料夾</string>
     <string name="temporary_files_label">暫存檔案</string>
     <string name="size_can_be_freed_label">可釋放 %1$s</string>
@@ -90,7 +91,7 @@
     <string name="gradient_remove_stop_description">移除色標</string>
     <string name="gradient_angle">角度</string>
     <!-- App Card Fill Dialog -->
-    <string name="card_fill_title">自訂卡</string>
+    <string name="card_fill_title">自訂卡片</string>
     <string name="card_fill_example_app_name">範例應用程式名稱</string>
     <string name="card_fill_mode_default">預設</string>
     <string name="card_fill_mode_default_blurb">修補套件隨附的顏色</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">安裝失敗：%1$s</string>
     <string name="adb_error_not_found">找不到 ADB。請安裝 Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">裝置已連線但未授權。請在裝置上接受 USB 偵錯提示</string>
-    <string name="adb_error_no_devices">未連線任何裝置。請連接已啟用 USB 偵錯的 Android 裝置</string>
+    <string name="adb_error_no_devices">沒有連線的裝置。請在啟用 USB 或 Wi-Fi 偵錯的情況下連線您的 Android 裝置</string>
     <string name="adb_error_device_not_found">找不到裝置 %1$s</string>
     <string name="adb_error_multiple_devices">已連線多個裝置。請選擇一個</string>
     <string name="adb_error_apk_not_found">找不到 APK 檔案：%1$s</string>
@@ -161,7 +162,7 @@
     <string name="version_warning_notice_title">版本通知</string>
     <string name="version_warning_build_unsupported_message">目前：v%1$s（建置版本 %2$s）\n所需建置版本：%3$s\n\n這是同一版本的不同建置版本。這些修補需要特定的建置版本。</string>
     <string name="version_warning_experiment_title">確定要嘗試實驗性版本嗎？ 🧪</string>
-    <string name="version_warning_latest_experimental_message">目前版本：v%1$s\n\n此版本具有早期實驗支援\n\n🔧 在修補檔針對此應用程式版本調整期間，可能出現怪異的應用程式行為或未確認的錯誤。</string>
+    <string name="version_warning_latest_experimental_message">目前版本：v%1$s\n\n此版本具有早期實驗支援\n\n🔧 在修補檔針對此應用程式版本調整期間，可能出現怪異的應用程式行為或未知錯誤。</string>
     <string name="version_warning_unsupported_message">目前版本：v%1$s\n\n這不是官方支援的版本。修補檔極有可能失敗。</string>
     <string name="version_warning_notice_message">要繼續使用 v%1$s 嗎？</string>
     <!-- Home Screen -->
@@ -230,7 +231,7 @@
     <string name="home_sort_recently_patched">最近修補</string>
     <string name="home_sort_recently_patched_desc">最近修補的優先</string>
     <!-- Home Screen - YourAppsPane -->
-    <string name="home_your_apps_status_patched">修補時間</string>
+    <string name="home_your_apps_status_patched">已修補</string>
     <string name="home_filter_all_apps">所有應用程式</string>
     <string name="home_filter_your_apps">你的應用程式</string>
     <string name="home_banner_view">檢視</string>
@@ -247,7 +248,7 @@
     <string name="home_detail_enable_or_add_source">在下方啟用或新增一個</string>
     <string name="home_detail_the_loaded_bundle">已載入的套件</string>
     <string name="home_detail_error_download_bundle">無法下載 %1$s %2$s：%3$s</string>
-    <string name="home_detail_downloading_patch">正在下載%1$s</string>
+    <string name="home_detail_downloading_patch">正在下載 %1$s</string>
     <string name="home_detail_resolving_patch_files">正在解析修補檔</string>
     <string name="home_detail_downloading_percent">正在下載%1$d%</string>
     <string name="home_detail_details_title">詳細資料</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">失敗的修補：%1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB 關閉 · 啟用以進行安裝</string>
-    <string name="result_adb_connect_device_hint">透過 USB 連線到裝置以使用 ADB 進行安裝。</string>
+    <string name="result_adb_connect_device_hint">透過 USB 或 Wi-Fi 連線裝置以使用 ADB 進行安裝</string>
     <string name="result_screen_patch_another_button">修補另一個</string>
     <string name="result_screen_install_on_device_label">安裝到 %1$s</string>
     <string name="result_screen_links_routed_label">連結已路由至已修補的應用程式</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">正在從 %1$s 卸載……</string>
     <string name="result_adb_root_not_detected">在 %1$s 上未檢測到 Root 權限。請確保已安裝 Magisk/KernelSU/APatch 並授予 su 權限</string>
     <string name="result_adb_stock_app_not_installed">%2$s 上未安裝原廠應用程式 %1$s。請在掛載前先安裝官方應用程式</string>
+    <string name="result_adb_mount_version_mismatch">%3$s 上的原廠應用程式版本為 v%1$s，但修補後的 APK 版本為 v%2$s。Root 掛載需要版本一致</string>
+    <string name="result_adb_mount_abi_mismatch">裝置 %3$s 為 %1$s，但 APK 僅包含 [%2$s]。原生庫將無法載入</string>
     <string name="result_link_default_restored">已還原預設連結處理</string>
     <string name="result_link_routed_stock_disabled">連結已路由至已修補的應用程式，已停用原廠應用程式</string>
     <string name="result_adb_not_found_hint">找不到 ADB。請安裝 Android SDK Platform Tools 以啟用直接安裝</string>
     <string name="result_adb_section_title">ADB 安裝</string>
     <string name="result_adb_no_devices">未連線任何裝置</string>
-    <string name="result_adb_connect_hint">透過 USB 連線，並啟用 USB 偵錯</string>
+    <string name="result_adb_connect_hint">透過 USB 或 Wi-Fi 偵錯連線</string>
     <string name="result_device_status_unauth">未授權</string>
     <string name="result_adb_update_button">在 %1$s 上更新</string>
     <string name="result_adb_select_device_button">選擇裝置</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">找不到 ADB</string>
     <string name="device_indicator_adb_not_found_subtitle">安裝 Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">未偵測到任何裝置</string>
-    <string name="device_indicator_no_devices_subtitle">連接已啟用 USB 偵錯的裝置</string>
+    <string name="device_indicator_no_devices_subtitle">連線已啟用 USB 或 Wi-Fi 偵錯的裝置</string>
     <string name="device_indicator_enable_debugging_title">啟用 USB 偵錯</string>
     <string name="device_indicator_enable_debugging_subtitle">設定 → 開發人員選項 → USB 偵錯</string>
     <string name="device_indicator_status_connected">已連線</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">語言</string>
     <string name="settings_language_current_title">目前語言</string>
-    <string name="settings_language_community_translation_hint">部份語言的翻譯可能缺少或不完整。若要翻譯新的語言或改善現有翻譯，請瀏覽 %1$s</string>
     <string name="settings_language_dialog_title">應用程式語言</string>
+    <string name="settings_language_translate_title">協助翻譯 Morphe</string>
     <string name="settings_language_search_no_results">找不到結果</string>
     <string name="settings_section_theme">主題</string>
     <string name="settings_appearance_theme_mode">主題模式</string>
+    <string name="settings_appearance_theme_mode_description">在淺色、深色、純黑或系統主題之間切換</string>
     <string name="settings_theme_light">淺色</string>
     <string name="settings_theme_dark">深色</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">顏色樣式</string>
+    <string name="settings_appearance_color_style_description">著色 Morphe 調色盤或灰階單色風格</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">單色</string>
     <string name="settings_toggle_sharp_corners_label">方角</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">應用程式卡片</string>
     <string name="settings_app_cards_color_all">每張卡片的顏色</string>
     <string name="settings_app_cards_color_all_desc">您個別自訂的卡片會保留自己的顏色</string>
-    <string name="settings_section_background_animation">背景動畫</string>
+    <string name="settings_toggle_app_icons_label">應用程式圖示</string>
+    <string name="settings_toggle_app_icons_desc">顯示從本地 APK 或已連接裝置中提取的每個應用程式圖示</string>
+    <string name="settings_appearance_more_apps_card">更多應用程式卡片</string>
+    <string name="settings_appearance_more_apps_card_description">在應用程式下方顯示一個連結至社群修補檔的卡片</string>
+    <string name="settings_section_effects">效果</string>
+    <string name="settings_appearance_background_animation">背景動畫</string>
+    <string name="settings_appearance_background_animation_description">在應用程式畫面背後播放的動畫</string>
     <string name="settings_background_circles">圓圈</string>
     <string name="settings_background_rings">圓環</string>
     <string name="settings_background_mesh">網格</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">專家模式</string>
     <string name="settings_toggle_expert_mode_desc">完全掌控修補檔的選擇與設定</string>
+    <string name="settings_expert_mode_disabled_in_flow">返回主頁以更改模式</string>
     <string name="settings_toggle_route_links_label">將連結路由至已修補的應用程式</string>
     <string name="settings_toggle_route_links_desc">透過 ADB 安裝後，讓已修補的應用程式開啟其受支援的網頁連結，而非瀏覽器或原廠／預設應用程式</string>
     <string name="settings_toggle_disable_stock_links_label">停用原廠應用程式的連結</string>
@@ -724,12 +736,28 @@
     <string name="settings_toggle_auto_start_adb_label">自動啟動 ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">啟動時會自動啟動 ADB 常駐程式，以監看已連線的裝置。關閉時，Morphe 不會啟動伺服器，且安裝／推送功能會停用</string>
     <string name="settings_section_storage">儲存空間 &amp; 快取</string>
-    <string name="settings_cache_summary">快取：%1$s (修補檔 + 日誌記錄)</string>
-    <string name="settings_cache_clear_button">清除快取</string>
+    <string name="settings_cache_clear_all_title">清除所有快取</string>
+    <string name="settings_cache_category_patches">修補程式</string>
+    <string name="settings_cache_category_logs">記錄</string>
+    <string name="settings_cache_category_temp">臨時檔案</string>
+    <string name="settings_cache_category_avatars">頭像快取</string>
+    <string name="settings_cache_category_app_icons">應用程式圖示快取</string>
+    <string name="settings_cache_confirm_patches_title">清除修補檔？</string>
+    <string name="settings_cache_confirm_patches_message">這將刪除已下載的修補檔檔案。需要時將重新下載修補檔</string>
+    <string name="settings_cache_confirm_logs_title">清除記錄？</string>
+    <string name="settings_cache_confirm_logs_message">這將刪除所有應用程式記錄檔案和裝置 logcat 轉儲</string>
+    <string name="settings_cache_confirm_temp_title">清除暫存檔案？</string>
+    <string name="settings_cache_confirm_temp_message">這將刪除暫存的草稿和工作區檔案</string>
+    <string name="settings_cache_confirm_avatars_title">清除頭像快取？</string>
+    <string name="settings_cache_confirm_avatars_message">這將刪除所有快取的遠端頭像圖片</string>
+    <string name="settings_cache_confirm_app_icons_title">要清除應用程式圖示快取嗎？</string>
+    <string name="settings_cache_confirm_app_icons_message">這將刪除所有從 APK 和裝置中提取的應用程式圖示</string>
+    <string name="settings_cache_category_cleared">已清除 %1$s</string>
+    <string name="settings_cache_category_clear_failed">無法清除 %1$s</string>
     <string name="settings_cache_cleared">快取已清除</string>
     <string name="settings_cache_clear_failed">清除失敗</string>
     <string name="settings_cache_confirm_title">清除快取？</string>
-    <string name="settings_cache_confirm_message">這將刪除已下載的修補檔和日誌記錄檔案。需要時將重新下載修補檔</string>
+    <string name="settings_cache_confirm_message">這將刪除已下載的修補檔、日誌記錄檔案和暫存檔案。需要時將重新下載修補檔</string>
     <string name="settings_storage_open_app_data_button">開啟應用程式資料</string>
     <string name="settings_storage_open_logs_button">開啟記錄</string>
     <string name="settings_section_about">關於</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">已修補應用程式的執行階段記錄</string>
     <string name="settings_runtime_logs_desc">在已修補的應用程式當機或行為異常後，從您的手機擷取記錄。請在重現問題前先清除，然後儲存篩選後的輸出，以附加到錯誤報告中</string>
     <string name="settings_runtime_logs_device_info">裝置：%1$s</string>
-    <string name="settings_runtime_logs_no_device">未連線任何裝置。請插入已啟用 USB 偵錯的手機</string>
+    <string name="settings_runtime_logs_no_device">未連接裝置。請在啟用 USB 或 Wi-Fi 偵錯的情況下連接您的手機</string>
     <string name="settings_runtime_logs_clearing">正在清除……</string>
     <string name="settings_runtime_logs_clear_button">清除裝置記錄</string>
     <string name="settings_runtime_logs_failed_to_clear">清除記錄失敗</string>
@@ -804,7 +832,7 @@
     <string name="app_info_version_gui">GUI：%1$s</string>
     <string name="app_info_version_patcher">修補器：v%1$s</string>
     <string name="app_info_version_library">程式庫：v%1$s</string>
-    <string name="app_info_description">\"這是一個開源專案，用於對熱門的 Android 應用程式進行現代、簡化的修補，並由社群的意見回饋和貢獻所驅動\"</string>
+    <string name="app_info_description">這是一個開源專案，用於對熱門的 Android 應用程式進行現代、簡化的修補，並由社群的意見回饋和貢獻所驅動</string>
     <string name="app_info_link_changelog">變更日誌</string>
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">翻譯</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">來源</string>
     <string name="nav_apps">應用程式</string>
+    <string name="nav_settings">設定</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">搜尋設定</string>
+    <string name="settings_search_no_results">找不到相符的設定</string>
+    <string name="settings_back_to_about">返回關於</string>
+    <string name="licenses_back_to_list">返回授權列表</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">更多應用程式</string>
+    <string name="home_more_apps_subtitle">社群修補檔</string>
+    <string name="community_patches_notice_title">第三方修補檔來源</string>
+    <string name="community_patches_notice_message">社群修補檔來源由其作者自行製作與維護。Morphe 不審核或驗證第三方修補檔，且對其內容或在您的裝置上的操作不承擔任何責任.</string>
 </resources>

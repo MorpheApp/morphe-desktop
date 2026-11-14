@@ -17,7 +17,7 @@
     <string name="delete">حذف</string>
     <string name="disabled_while_patching">هنگام پچ کردن غیرفعال است</string>
     <string name="drop_apk_here">APK را اینجا رها کنید</string>
-    <string name="release_to_drop">برای انداختن، رها کنید</string>
+    <string name="release_to_drop">رها کنید تا فایل انداخته شود</string>
     <string name="click_to_browse">یا برای مرور کلیک کنید</string>
     <string name="error_could_not_load_patches">امکان بارگذاری هیچ پچی وجود نداشت</string>
     <string name="error_network_timeout">مهلت شبکه به پایان رسید؛ اتصال خود را بررسی کنید و دوباره تلاش کنید</string>
@@ -60,7 +60,7 @@
     <string name="version_label_prerelease">پیش‌انتشار</string>
     <string name="version_label_experimental">آزمایشی</string>
     <string name="version_label_latest_stable">جدیدترین نسخهٔ پایدار</string>
-    <string name="version_label_recommended">توصیه شده </string>
+    <string name="version_label_recommended">توصیه‌شده</string>
     <string name="version_label_supported">پشتیبانی‌شده</string>
     <string name="app_info_arch_label">معماری</string>
     <string name="app_info_min_sdk_label">حداقل SDK</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">پچ کردن به دلیل ناشناخته‌ای ناموفق بود</string>
     <string name="error_log_label">گزارش خطا</string>
     <string name="back">بازگشت</string>
+    <string name="open">بازکردن</string>
     <string name="open_folder">باز کردن پوشه</string>
     <string name="temporary_files_label">فایل‌های موقت</string>
     <string name="size_can_be_freed_label">%1$s قابل آزادسازی است</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">نصب ناموفق بود: %1$s</string>
     <string name="adb_error_not_found">ADB یافت نشد. لطفاً Android SDK Platform Tools را نصب کنید</string>
     <string name="adb_error_unauthorized">دستگاه متصل است اما تأیید نشده است. لطفاً درخواست اشکال‌زدایی USB را روی دستگاه خود بپذیرید</string>
-    <string name="adb_error_no_devices">هیچ دستگاهی متصل نیست. لطفاً دستگاه اندرویدی خود را با فعال بودن اشکال‌زدایی USB متصل کنید</string>
+    <string name="adb_error_no_devices">هیچ دستگاهی متصل نیست. لطفاً دستگاه اندرویدی خود را با فعال کردن USB یا Wi-Fi debugging متصل کنید</string>
     <string name="adb_error_device_not_found">دستگاه %1$s یافت نشد</string>
     <string name="adb_error_multiple_devices">چندین دستگاه متصل است. لطفاً یکی را انتخاب کنید</string>
     <string name="adb_error_apk_not_found">فایل APK یافت نشد: %1$s</string>
@@ -153,23 +154,23 @@
     <string name="version_status_newer_stable_available_fallback">نسخهٔ پایدار جدیدتری در دسترس است</string>
     <string name="version_status_experimental_detail">پشتیبانی می‌شود، اما ممکن است به‌درستی کار نکند</string>
     <string name="version_status_unsupported_detail">رسماً پشتیبانی نمی‌شود؛ پچ‌ها به احتمال زیاد با شکست مواجه خواهند شد</string>
-    <string name="version_status_unsupported">نسخه پشتیبانینشده</string>
-    <string name="version_status_build_unsupported">بیلد پشتیبانینشده</string>
-    <string name="version_status_build_unsupported_detail">این نسخه پشتیبانی میشود، اما این بیلدِ آن پشتیبانی نمیشود. بیلدی را دریافت کنید که پچها برای آن هدفگذاری شدهاند</string>
+    <string name="version_status_unsupported">نسخه پشتیبانی‌نشده</string>
+    <string name="version_status_build_unsupported">بیلد پشتیبانی‌نشده</string>
+    <string name="version_status_build_unsupported_detail">این نسخه پشتیبانی می‌شود، اما این بیلدِ آن پشتیبانی نمی‌شود. بیلدی را دریافت کنید که پچ‌ها برای آن هدف‌گذاری شده‌اند</string>
     <string name="version_status_build_unsupported_with_code">پچ‌ها به ساخت %1$s نیاز دارند</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">اعلان نسخه</string>
     <string name="version_warning_build_unsupported_message">فعلی: v%1$s (ساخت %2$s)\nساخت مورد نیاز: %3$s\n\nاین ساختی متفاوت از همان نسخه است. پچ‌ها به ساختی مشخص نیاز دارند.</string>
     <string name="version_warning_experiment_title">می‌خواهید آزمایش کنید؟ 🧪</string>
-    <string name="version_warning_latest_experimental_message">فعلی: v%1$s\n\nاین نسخه از پشتیبانی آزمایشی اولیه برخوردار است\n\n🔧 انتظار رفتار غیرعادی برنامه یا اشکالات ناشناخته را داشته باشید، در حالی که پچها برای این نسخه از برنامه اصلاح میشوند.</string>
-    <string name="version_warning_unsupported_message">فعلی: v%1$s\n\nاین نسخه بهطور رسمی پشتیبانی نمیشود. پچها به احتمال زیاد شکست خواهند خورد.</string>
-    <string name="version_warning_notice_message">با v%1$s ادامه میدهید؟</string>
+    <string name="version_warning_latest_experimental_message">فعلی: v%1$s\n\nاین نسخه پشتیبانی آزمایشی اولیه دارد\n\n🔧 با اصلاح پچ‌ها برای این نسخه از برنامه، ممکن است رفتار عجیب برنامه یا اشکالات ناشناخته را ببینید.</string>
+    <string name="version_warning_unsupported_message">فعلی: v%1$s\n\nاین نسخه به طور رسمی پشتیبانی نمی‌شود. پچ‌ها به احتمال زیاد با خطا مواجه می‌شوند.</string>
+    <string name="version_warning_notice_message">با v%1$s ادامه می‌دهید؟</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">انتخاب فایل APK</string>
-    <string name="home_could_not_resolve_patch_files">امکان شناسایی فایلهای پچ وجود نداشت</string>
+    <string name="home_could_not_resolve_patch_files">امکان شناسایی فایل‌های پچ وجود نداشت</string>
     <string name="home_install_failed">نصب ناموفق بود: %1$s</string>
     <string name="home_uninstall_failed">حذف نصب ناموفق بود: %1$s</string>
-    <string name="home_no_sources_enabled">هیچ منبع پچی فعال نیست. از صفحه اصلی یک منبع اضافه یا فعال کنید</string>
+    <string name="home_no_sources_enabled">هیچ منبع پچی فعال نیست. یک منبع را از صفحه اصلی اضافه یا فعال کنید</string>
     <string name="home_patch_file_corrupted">فایل پچ وجود ندارد یا خراب است. کش را پاک کنید و دوباره دانلود کنید</string>
     <string name="home_validation_file_not_exist">فایل وجود ندارد</string>
     <string name="home_validation_not_a_file">مورد انتخابشده یک فایل نیست</string>
@@ -179,7 +180,7 @@
     <!-- Home Screen - ApkInfoCard -->
     <string name="home_apk_info_remove_description">حذف APK</string>
     <string name="home_apk_info_limited_info_warning">امکان خواندن کامل مانیفست این APK وجود نداشت (در باندلهای تقسیمشده رایج است). جزئیات زیر تقریبی هستند؛ پچ کردن همچنان باید کار کند</string>
-    <string name="home_apk_info_unsupported_app_warning">هیچ پچ سازگاری برای این برنامه یافت نشد. همچنان میتوانید ادامه دهید، اما پچ کردن ممکن است تأثیری نداشته باشد</string>
+    <string name="home_apk_info_unsupported_app_warning">هیچ پچ سازگاری برای این برنامه یافت نشد. همچنان می‌توانید ادامه دهید، اما پچ کردن ممکن است تأثیری نداشته باشد</string>
     <string name="home_apk_info_unsupported_app_simple_warning">هیچ پچ سازگاری برای این برنامه پیدا نشد</string>
     <string name="home_apk_info_build_label">بیلد</string>
     <string name="home_apk_info_size_label">اندازه</string>
@@ -201,7 +202,7 @@
     <string name="home_dialog_uninstall_also_forget">همچنین از «برنامههای شما» حذف شود</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">مدیریت منابع</string>
-    <string name="home_header_multi_source_hint">پچهای همه منابع فعال با هم ترکیب میشوند. از دکمه منابع بالا مدیریت کنید</string>
+    <string name="home_header_multi_source_hint">پچ‌های همه منابع فعال با هم ترکیب می‌شوند. از دکمه منابع بالا مدیریت کنید</string>
     <!-- Home Screen - SupportedAppListRow -->
     <string name="home_app_row_latest_experimental">جدیدترین نسخه آزمایشی</string>
     <string name="home_app_row_any">هر نسخه‌ای</string>
@@ -219,7 +220,7 @@
     <string name="home_list_load_failed">بارگذاری ناموفق بود</string>
     <string name="home_list_no_supported_apps">هیچ برنامه پشتیبانیشدهای وجود ندارد</string>
     <string name="home_list_no_apps_match">هیچ برنامه‌ای با «%1$s» مطابقت ندارد</string>
-    <string name="home_sort_recommended">توصیه شده </string>
+    <string name="home_sort_recommended">توصیه‌شده</string>
     <string name="home_sort_recommended_desc">ابتدا برنامههای پچشده، سپس برنامههای نصبشده، سپس بر اساس نام</string>
     <string name="home_sort_name_asc">نام (A تا Z)</string>
     <string name="home_sort_name_asc_desc">الفبایی</string>
@@ -249,7 +250,7 @@
     <string name="home_detail_error_download_bundle">دانلود %1$s %2$s ممکن نشد: %3$s</string>
     <string name="home_detail_downloading_patch">درحال دانلود %1$s</string>
     <string name="home_detail_resolving_patch_files">در حال شناسایی فایل‌های پچ</string>
-    <string name="home_detail_downloading_percent">درحال دانلود %1$d%</string>
+    <string name="home_detail_downloading_percent">در حال دانلود %1$d%</string>
     <string name="home_detail_details_title">جزئیات</string>
     <string name="home_detail_output_path_label">مسیر خروجی</string>
     <string name="home_detail_using_label">استفاده از</string>
@@ -313,7 +314,7 @@
     <string name="patch_selection_error_title">خطا در بارگذاری پچ‌ها</string>
     <string name="patch_selection_title">انتخاب پچ‌ها</string>
     <string name="patch_selection_cmd_preview">پیش‌نمایش دستور</string>
-    <string name="patch_selection_root_mode_description">حالت مانت روت</string>
+    <string name="patch_selection_root_mode_description">حالت نصب روت</string>
     <string name="patch_selection_lock_unavailable">برای نصب روت در دسترس نیست</string>
     <string name="patch_selection_continue_on_error_tooltip">ادامهٔ پچ حتی اگر یک پچ ناموفق باشد</string>
     <string name="patch_selection_continue_on_error_description">ادامه در صورت خطا</string>
@@ -391,7 +392,7 @@
     <string name="patching_status_preparing">در حال آماده‌سازی برای پچ</string>
     <string name="patching_status_in_progress">در حال اعمال پچ‌ها</string>
     <string name="patching_completed_loading_result">پچ‌کردن تکمیل شد؛ در حال بارگذاری نتیجه…</string>
-    <string name="patching_cancelled_loading_result">وصله کردن لغو شد، در حال بارگذاری نتیجه…</string>
+    <string name="patching_cancelled_loading_result">پچ‌کردن لغو شد؛ در حال بارگذاری نتیجه…</string>
     <string name="patching_failed_loading_result">پچ‌کردن ناموفق بود؛ در حال بارگذاری نتیجه…</string>
     <string name="patching_log_viewer_failed_to_read">خواندن فایل گزارش ناموفق بود: %1$s</string>
     <string name="patching_log_viewer_title">فایل گزارش</string>
@@ -428,14 +429,14 @@
     <string name="patching_error_failed_patches">پچ‌های ناموفق: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB خاموش است · برای نصب فعال کنید</string>
-    <string name="result_adb_connect_device_hint">برای نصب با ADB، یک دستگاه را از طریق USB متصل کنید</string>
+    <string name="result_adb_connect_device_hint">برای نصب از طریق ADB، یک دستگاه را از طریق USB یا Wi-Fi متصل کنید</string>
     <string name="result_screen_patch_another_button">پچ کردن برنامه دیگر</string>
     <string name="result_screen_install_on_device_label">نصب روی %1$s</string>
     <string name="result_screen_links_routed_label">لینک‌ها به برنامه پچ‌شده هدایت شدند</string>
     <string name="result_adb_updating_on_device">در حال به‌روزرسانی روی %1$s…</string>
-    <string name="result_adb_update_successful">به روزرسانی موفقیت آمیز!</string>
+    <string name="result_adb_update_successful">به‌روزرسانی با موفقیت انجام شد!</string>
     <string name="result_adb_install_successful">نصب با موفقیت انجام شد!</string>
-    <string name="result_adb_badge_root_mount">مانت روت</string>
+    <string name="result_adb_badge_root_mount">نصب روت</string>
     <string name="result_adb_mount_button">نصب روی %1$s</string>
     <string name="result_adb_mounting_on_device">در حال نصب روی %1$s…</string>
     <string name="result_adb_mount_successful">نصب موفقیت‌آمیز بود!</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">در حال لغو نصب از %1$s…</string>
     <string name="result_adb_root_not_detected">دسترسی روت روی %1$s شناسایی نشد. مطمئن شوید Magisk/KernelSU/APatch نصب شده و مجوز su اعطا شده است</string>
     <string name="result_adb_stock_app_not_installed">برنامه استوک %1$s روی %2$s نصب نیست. لطفاً ابتدا برنامه رسمی را نصب کرده و سپس اقدام به نصب نمایید</string>
+    <string name="result_adb_mount_version_mismatch">نسخه برنامه پیش‌فرض در %3$s v%1$s است، اما APK پچ‌شده v%2$s است. برای Root mount، نسخه‌ها باید یکسان باشند</string>
+    <string name="result_adb_mount_abi_mismatch">دستگاه %3$s دارای معماری %1$s است، اما APK فقط شامل [%2$s] است. کتابخانه‌های Native بارگذاری نخواهند شد</string>
     <string name="result_link_default_restored">مدیریت پیش‌فرض لینک‌ها بازیابی شد</string>
     <string name="result_link_routed_stock_disabled">لینک‌ها به برنامه پچ‌شده هدایت شدند، برنامه اصلی غیرفعال شد</string>
     <string name="result_adb_not_found_hint">ADB یافت نشد. برای فعال کردن نصب مستقیم، Android SDK Platform Tools را نصب کنید</string>
     <string name="result_adb_section_title">نصب از طریق ADB</string>
     <string name="result_adb_no_devices">هیچ دستگاهی متصل نیست</string>
-    <string name="result_adb_connect_hint">با فعال بودن اشکال‌زدایی USB، از طریق USB متصل شوید</string>
+    <string name="result_adb_connect_hint">از طریق USB یا Wi-Fi debugging متصل شوید</string>
     <string name="result_device_status_unauth">احراز هویت نشده</string>
     <string name="result_adb_update_button">به‌روزرسانی روی %1$s</string>
     <string name="result_adb_select_device_button">انتخاب یک دستگاه</string>
@@ -492,7 +495,7 @@
     <string name="icon_studio_adjust_scale">مقیاس</string>
     <string name="icon_studio_adjust_rotation">چرخش</string>
     <string name="icon_studio_reset_position_button">بازنشانی موقعیت</string>
-    <string name="icon_studio_color_label">رنگی</string>
+    <string name="icon_studio_color_label">رنگ</string>
     <string name="icon_studio_adjust_hue">ته‌رنگ</string>
     <string name="icon_studio_adjust_saturation">اشباع</string>
     <string name="icon_studio_adjust_brightness">روشنایی</string>
@@ -537,7 +540,7 @@
     <string name="source_error_failed_to_load">بارگذاری ناموفق بود</string>
     <string name="source_error_github_pat_required">برای دانلود منابع درخواست کشش، یک PAT گیت‌هاب الزامی است</string>
     <string name="source_error_pr_no_artifact">هیچ آرتیفکتی برای درخواست کشش یافت نشد</string>
-    <string name="source_error_patcher_incompatible">این منبع برای پچر %1$s ساخته شده است، اما Morphe %2$s شامل پچر %3$s است. برای استفاده از آن، Morphe را به‌روز کنید</string>
+    <string name="source_error_patcher_incompatible">این منبع برای پچ‌کننده %1$s ساخته شده است، اما Morphe %2$s شامل پچ‌کننده %3$s است. برای استفاده از آن، Morphe را به‌روز کنید</string>
     <string name="version_label_local">محلی</string>
     <string name="source_sheet_remote_label">از راه دور</string>
     <string name="add_source">افزودن منبع</string>
@@ -584,8 +587,8 @@
     <string name="patch_source_dialog_type_github_repo">مخزن GitHub</string>
     <string name="patch_source_dialog_type_github_pr">درخواست کشش گیت‌هاب</string>
     <string name="patch_source_dialog_type_gitlab_repo">مخزن GitLab</string>
-    <string name="patch_source_dialog_mpp_or_folder_label">فایل mpp. یا پوشه</string>
-    <string name="patch_source_dialog_mpp_label">فایل mpp.</string>
+    <string name="patch_source_dialog_mpp_or_folder_label">فایل .mpp یا پوشه</string>
+    <string name="patch_source_dialog_mpp_label">فایل .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">مسیر .mpp یا پوشه</string>
     <string name="patch_source_dialog_path_placeholder">مسیر .mpp</string>
     <string name="patch_source_dialog_file_button">فایل</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB پیدا نشد</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Tools را نصب کنید</string>
     <string name="device_indicator_no_devices_title">هیچ دستگاهی شناسایی نشد</string>
-    <string name="device_indicator_no_devices_subtitle">دستگاهی را با USB Debugging فعال متصل کنید</string>
+    <string name="device_indicator_no_devices_subtitle">دستگاهی را متصل کنید که USB یا Wi-Fi debugging آن فعال باشد</string>
     <string name="device_indicator_enable_debugging_title">فعال کردن USB Debugging</string>
     <string name="device_indicator_enable_debugging_subtitle">تنظیمات ← گزینه‌های توسعه‌دهنده ← USB Debugging</string>
     <string name="device_indicator_status_connected">متصل</string>
@@ -620,7 +623,7 @@
     <!-- Banners -->
     <string name="offline_banner_text">آفلاین؛ در حال استفاده از پچ‌های ذخیره‌شده</string>
     <string name="update_banner_available">به‌روزرسانی موجود است · v%1$s</string>
-    <string name="update_banner_from_version_crosses">از v%1$s · dev ← stable</string>
+    <string name="update_banner_from_version_crosses">از v%1$s · dev → stable</string>
     <string name="update_banner_from_version">از v%1$s</string>
     <string name="update_banner_later_button">بعداً</string>
     <string name="update_banner_skip_button">رد کردن v%1$s</string>
@@ -634,7 +637,7 @@
     <string name="licenses_row_org_label">سازمان</string>
     <string name="licenses_row_link_source">منبع</string>
     <string name="licenses_notice_button">اعلامیه</string>
-    <string name="licenses_notice_title">اعلان Morphe</string>
+    <string name="licenses_notice_title">اعلامیهٔ Morphe</string>
     <string name="licenses_notice_subtitle">بیانیهٔ انتساب &amp; ضمانت الزامی (GPLv3 §7)</string>
     <string name="licenses_text_not_bundled">// متن کامل مجوز همراه نیست</string>
     <string name="licenses_text_open_canonical">متن رسمی مجوز را باز کنید:</string>
@@ -652,19 +655,21 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">زبان</string>
     <string name="settings_language_current_title">زبان فعلی</string>
-    <string name="settings_language_community_translation_hint">ترجمهٔ برخی زبان‌ها ممکن است ناقص یا موجود نباشد. برای ترجمهٔ زبان‌های جدید یا بهبود ترجمه‌های موجود، به %1$s مراجعه کنید</string>
     <string name="settings_language_dialog_title">زبان برنامه</string>
+    <string name="settings_language_translate_title">در ترجمه Morphe کمک کنید</string>
     <string name="settings_language_search_no_results">نتیجه‌ای پیدا نشد</string>
     <string name="settings_section_theme">پوسته</string>
     <string name="settings_appearance_theme_mode">حالت پوسته</string>
+    <string name="settings_appearance_theme_mode_description">تغییر بین تم روشن، تیره، مشکی خالص یا سیستم</string>
     <string name="settings_theme_light">روشن</string>
     <string name="settings_theme_dark">تیره</string>
     <string name="settings_theme_amoled">آمولد</string>
     <string name="settings_appearance_color_style">سبک رنگ</string>
+    <string name="settings_appearance_color_style_description">پالت رنگی Morphe یا استایل تک‌رنگ خاکستری</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">تک‌رنگ</string>
     <string name="settings_toggle_sharp_corners_label">گوشه‌های تیز</string>
-    <string name="settings_toggle_sharp_corners_desc">کارت‌ها، دیالوگ‌ها و دکمه‌ها را چهارگوش کن</string>
+    <string name="settings_toggle_sharp_corners_desc">کارت‌ها، دیالوگ‌ها و دکمه‌ها را چهارگوش کنید</string>
     <string name="settings_section_accent_color">رنگ تأکیدی</string>
     <string name="settings_accent_clear_description">پاک کردن رنگ تأکید</string>
     <string name="settings_accent_custom_description">رنگ تأکید سفارشی</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">کارت‌های برنامه</string>
     <string name="settings_app_cards_color_all">رنگ هر کارت</string>
     <string name="settings_app_cards_color_all_desc">کارت‌هایی که جداگانه سفارشی کرده‌اید، رنگ خودشان را حفظ می‌کنند</string>
-    <string name="settings_section_background_animation">انیمیشن پس‌زمینه</string>
+    <string name="settings_toggle_app_icons_label">آیکون‌های برنامه</string>
+    <string name="settings_toggle_app_icons_desc">نمایش آیکون هر برنامه، استخراج شده از APKهای محلی یا دستگاه متصل</string>
+    <string name="settings_appearance_more_apps_card">کارت برنامه‌های بیشتر</string>
+    <string name="settings_appearance_more_apps_card_description">کارتی را در زیر برنامه‌ها نمایش می‌دهد که به پچ‌های جامعه منجر می‌شود</string>
+    <string name="settings_section_effects">افکت‌ها</string>
+    <string name="settings_appearance_background_animation">انیمیشن پس‌زمینه</string>
+    <string name="settings_appearance_background_animation_description">انیمیشنی که در پس‌زمینه صفحات برنامه اجرا می‌شود</string>
     <string name="settings_background_circles">دایره‌ها</string>
     <string name="settings_background_rings">حلقه‌ها</string>
     <string name="settings_background_mesh">توری</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">حالت حرفه‌ای</string>
     <string name="settings_toggle_expert_mode_desc">کنترل کامل بر انتخاب و پیکربندی پچ</string>
+    <string name="settings_expert_mode_disabled_in_flow">برای تغییر حالت به صفحه اصلی بازگردید</string>
     <string name="settings_toggle_route_links_label">مسیریابی پیوندها به برنامهٔ پچ‌شده</string>
     <string name="settings_toggle_route_links_desc">باعث می‌شود پس از نصب از طریق ADB، برنامهٔ پچ‌شده پیوندهای وب پشتیبانی‌شده‌اش را به‌جای مرورگر یا برنامهٔ پیش‌فرض/استوک باز کند</string>
     <string name="settings_toggle_disable_stock_links_label">غیرفعال کردن پیوندهای برنامهٔ استوک</string>
@@ -724,14 +736,30 @@
     <string name="settings_toggle_auto_start_adb_label">شروع خودکار ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">هنگام راه‌اندازی، سرویس پس‌زمینهٔ ADB اجرا می‌شود تا دستگاه‌های متصل پایش شوند. وقتی خاموش باشد، Morphe هرگز سرور را شروع نمی‌کند و قابلیت‌های نصب/ارسال غیرفعال هستند</string>
     <string name="settings_section_storage">ذخیره‌سازی و حافظه پنهان</string>
-    <string name="settings_cache_summary">کش: %1$s (پچ‌ها + لاگ‌ها)</string>
-    <string name="settings_cache_clear_button">پاک‌کردن کش</string>
+    <string name="settings_cache_clear_all_title">پاک‌کردن همهٔ کش‌ها</string>
+    <string name="settings_cache_category_patches">پچ‌ها</string>
+    <string name="settings_cache_category_logs">گزارش‌ها</string>
+    <string name="settings_cache_category_temp">فایل‌های موقت</string>
+    <string name="settings_cache_category_avatars">کش آواتارها</string>
+    <string name="settings_cache_category_app_icons">کش آیکون‌های برنامه</string>
+    <string name="settings_cache_confirm_patches_title">پاک‌سازی پچ‌ها؟</string>
+    <string name="settings_cache_confirm_patches_message">این کار فایل‌های پچ دانلود شده را حذف می‌کند. پچ‌ها در صورت نیاز دوباره دانلود خواهند شد</string>
+    <string name="settings_cache_confirm_logs_title">پاک‌سازی لاگ‌ها؟</string>
+    <string name="settings_cache_confirm_logs_message">این کار تمام فایل‌های لاگ برنامه و دامپ‌های logcat دستگاه را حذف می‌کند</string>
+    <string name="settings_cache_confirm_temp_title">پاک‌سازی فایل‌های موقت؟</string>
+    <string name="settings_cache_confirm_temp_message">این کار فایل‌های موقت scratch و workspace را حذف می‌کند</string>
+    <string name="settings_cache_confirm_avatars_title">پاک‌سازی کش آواتارها؟</string>
+    <string name="settings_cache_confirm_avatars_message">این کار تمام تصاویر کش‌شده از آواتارهای ریموت را حذف می‌کند</string>
+    <string name="settings_cache_confirm_app_icons_title">پاک‌کردن کش آیکون‌های برنامه؟</string>
+    <string name="settings_cache_confirm_app_icons_message">این کار تمام آیکون‌های برنامه‌های استخراج شده از APKها و دستگاه‌ها را حذف می‌کند</string>
+    <string name="settings_cache_category_cleared">%1$s پاک شد</string>
+    <string name="settings_cache_category_clear_failed">پاک‌سازی %1$s ناموفق بود</string>
     <string name="settings_cache_cleared">کش پاک شد</string>
     <string name="settings_cache_clear_failed">پاک‌سازی ناموفق بود</string>
     <string name="settings_cache_confirm_title">پاک‌کردن کش؟</string>
-    <string name="settings_cache_confirm_message">این کار باعث حذف پچ‌های دانلودشده و فایل‌های لاگ می‌شود. پچ‌ها در صورت نیاز دوباره دانلود خواهند شد</string>
+    <string name="settings_cache_confirm_message">این کار پچ‌های دانلود شده، فایل‌های لاگ و فایل‌های موقت را حذف می‌کند. پچ‌ها در صورت نیاز دوباره دانلود خواهند شد</string>
     <string name="settings_storage_open_app_data_button">باز کردن داده‌های برنامه</string>
-    <string name="settings_storage_open_logs_button">باز کردن لاگ‌ها</string>
+    <string name="settings_storage_open_logs_button">باز کردن گزارش‌ها</string>
     <string name="settings_section_about">درباره</string>
     <string name="settings_about_version">نسخه %1$s</string>
     <string name="settings_about_changelogs_title">مشاهدهٔ تغییرات نسخه</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">گزارش‌های زمان اجرای برنامهٔ پچ‌شده</string>
     <string name="settings_runtime_logs_desc">پس از اینکه برنامهٔ پچ‌شده از کار افتاد یا رفتار نادرستی داشت، گزارش‌ها را از گوشی بگیرید. قبل از بازتولید مشکل، گزارش‌ها را پاک کنید، سپس خروجی فیلترشده را برای پیوست به گزارش باگ ذخیره کنید</string>
     <string name="settings_runtime_logs_device_info">دستگاه: %1$s</string>
-    <string name="settings_runtime_logs_no_device">هیچ دستگاهی متصل نیست. گوشی خود را با فعال بودن اشکال‌زدایی USB وصل کنید</string>
+    <string name="settings_runtime_logs_no_device">هیچ دستگاهی متصل نیست. تلفن خود را در حالی که عیب‌یابی USB یا Wi-Fi فعال است، متصل کنید</string>
     <string name="settings_runtime_logs_clearing">در حال پاک کردن…</string>
     <string name="settings_runtime_logs_clear_button">پاک کردن گزارش‌های دستگاه</string>
     <string name="settings_runtime_logs_failed_to_clear">پاک کردن گزارش‌ها ناموفق بود</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">منابع</string>
     <string name="nav_apps">برنامه‌ها</string>
+    <string name="nav_settings">تنظیمات</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">جست‌وجوی تنظیمات</string>
+    <string name="settings_search_no_results">تنظیمات مطابق پیدا نشد</string>
+    <string name="settings_back_to_about">بازگشت به درباره</string>
+    <string name="licenses_back_to_list">بازگشت به مجوزها</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">برنامه‌های بیشتر</string>
+    <string name="home_more_apps_subtitle">پچ‌های جامعه</string>
+    <string name="community_patches_notice_title">منابع پچ شخص ثالث</string>
+    <string name="community_patches_notice_message">منابع پچ جامعه توسط سازندگان خودشان ایجاد و نگهداری می‌شوند. Morphe پچ‌های شخص ثالث را بررسی یا تأیید نمی‌کند و در قبال محتوای آن‌ها یا کاری که روی دستگاه شما انجام می‌دهند مسئول نیست.</string>
 </resources>

@@ -90,4 +90,16 @@
         <item quantity="few">%1$d optimizacij</item>
         <item quantity="other">%1$d optimizacij</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d datoteka)</item>
+        <item quantity="two">%1$s (%2$d datotek)</item>
+        <item quantity="few">%1$s (%2$d datotek)</item>
+        <item quantity="other">%1$s (%2$d datotek)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Skupaj: %1$s (%2$d datoteka)</item>
+        <item quantity="two">Skupaj: %1$s (%2$d datotek)</item>
+        <item quantity="few">Skupaj: %1$s (%2$d datotek)</item>
+        <item quantity="other">Skupaj: %1$s (%2$d datotek)</item>
+    </plurals>
 </resources>

@@ -16,7 +16,7 @@
     <!-- Patches Screen -->
     <!-- Patch Selection Screen -->
     <!-- Patching Screen -->
-    <string name="patching_patches_count">%1$d / %2$d પેચીસ</string>
+    <string name="patching_patches_count">%1$d / %2$d પેચ</string>
     <!-- Result Screen -->
     <!-- Icon Studio -->
     <!-- Source Management Sheet -->
@@ -28,6 +28,7 @@
     <!-- Licenses Dialog -->
     <!-- Settings -->
     <!-- Settings - Appearance -->
+    <string name="settings_appearance_background_animation">બેકગ્રાઉન્ડ એનિમેશન</string>
     <!-- Settings - Advanced -->
     <!-- Settings - System -->
     <!-- Settings - Strip Libs -->
@@ -38,4 +39,6 @@
     <!-- App Info Dialog -->
     <!-- Changelog Dialog -->
     <!-- Navigation Pill -->
+    <!-- Settings - Search & Inline Views -->
+    <!-- More apps card & community patches -->
 </resources>

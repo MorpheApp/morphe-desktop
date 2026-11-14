@@ -70,4 +70,14 @@
         <item quantity="few">%1$d corecții</item>
         <item quantity="other">%1$d corecții</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d fișier)</item>
+        <item quantity="few">%1$s (%2$d fișiere)</item>
+        <item quantity="other">%1$s (%2$d fișiere)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Total: %1$s (%2$d fișier)</item>
+        <item quantity="few">Total: %1$s (%2$d fișiere)</item>
+        <item quantity="other">Total: %1$s (%2$d fișiere)</item>
+    </plurals>
 </resources>
