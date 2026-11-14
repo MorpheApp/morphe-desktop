@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -59,9 +58,6 @@ internal fun SigningSection(
     onCredentialsChange: (password: String?, alias: String, entryPassword: String) -> Unit,
     borderColor: Color,
     enabled: Boolean = true,
-    expanded: Boolean = false,
-    icon: ImageVector? = null,
-    onExpandedChange: (Boolean) -> Unit = {}
 ) {
     val dimens = MorpheTheme.dimens
     val alpha = if (enabled) 1f else 0.4f
@@ -80,17 +76,10 @@ internal fun SigningSection(
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        CollapsibleSection(
-            title = stringResource(Res.string.settings_section_signing),
-            expanded = expanded,
-            icon = icon,
-            onExpandedChange = onExpandedChange
-        ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = if (!enabled) stringResource(Res.string.disabled_while_patching)
                    else stringResource(Res.string.settings_signing_desc),
-            style = MorpheTheme.typography.labelSmall,
+            style = MorpheTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
         )
 
@@ -475,8 +464,6 @@ internal fun SigningSection(
                 size = MorpheButtonSize.DEFAULT,
                 modifier = Modifier.weight(1f),
             )
-        }
-        }
         }
     }
 

@@ -80,6 +80,7 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
     val engineConfig by engineConfigRepository.configFlow.collectAsState()
     LaunchedEffect(Unit) {
         engineConfigRepository.loadConfig()
+        viewModel.refreshStripLibsStatus()
     }
 
     ScreenErrorDialog(
@@ -111,7 +112,6 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
             showRunInfo = showRunInfo,
             onShowRunInfo = { showRunInfo = true },
             onBackClick = { navController.popBackStack() },
-            onRefreshStripLibsStatus = { viewModel.refreshStripLibsStatus() },
         )
 
         if (!uiState.isLoading && uiState.bundles.isNotEmpty()) {

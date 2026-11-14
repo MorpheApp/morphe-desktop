@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,15 +33,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import app.morphe.engine.util.isNewerVersion
 import app.morphe.engine.util.normalizeVersion
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.repository.ChangelogRepository
+import app.morphe.gui.ui.components.settings.SettingsSubViewHeader
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.*
@@ -53,35 +52,24 @@ import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-private val RailSlotWidth = 18.dp
-private val RailContentGap = 14.dp
-private val RailStrokeWidth = 2.dp
-private val NodeRadius = 6.dp
-private val NodeHaloRadius = 10.dp
-private val NodeCenterY = 16.dp
-private val ReleaseSpacing = 16.dp
-
-@Composable
-fun ChangelogDialog(
-    onDismiss: () -> Unit,
-    changelogRepository: ChangelogRepository = koinInject(),
+private class ChangelogViewState(
+    private val changelogRepository: ChangelogRepository,
+    private val scope: CoroutineScope,
 ) {
-    val uriHandler = LocalUriHandler.current
-    val coroutineScope = rememberCoroutineScope()
+    var entries by mutableStateOf<List<ChangelogEntry>?>(null)
+    var isLoading by mutableStateOf(true)
+    var error by mutableStateOf<Throwable?>(null)
+    val expandedMap = mutableStateMapOf<String, Boolean>()
+    val installedVersion: String = AppConstants.APP_VERSION.normalizeVersion()
 
-    var entries by remember { mutableStateOf<List<ChangelogEntry>?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var error by remember { mutableStateOf<Throwable?>(null) }
-
-    val expandedMap = remember { mutableStateMapOf<String, Boolean>() }
-
-    fun loadData() {
-        coroutineScope.launch {
+    fun load() {
+        scope.launch {
             isLoading = true
             error = null
             try {
@@ -95,221 +83,171 @@ fun ChangelogDialog(
             }
         }
     }
+}
 
-    LaunchedEffect(Unit) {
-        loadData()
+@Composable
+private fun rememberChangelogViewState(changelogRepository: ChangelogRepository): ChangelogViewState {
+    val scope = rememberCoroutineScope()
+    val state = remember(changelogRepository) { ChangelogViewState(changelogRepository, scope) }
+    LaunchedEffect(state) { state.load() }
+    return state
+}
+
+@Composable
+fun ChangelogPane(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    horizontalPadding: PaddingValues = PaddingValues(0.dp),
+    changelogRepository: ChangelogRepository = koinInject(),
+) {
+    val uriHandler = LocalUriHandler.current
+    val state = rememberChangelogViewState(changelogRepository)
+    val entryList = state.entries.orEmpty()
+    val tagVersion = entryList.firstOrNull()?.version ?: state.installedVersion
+
+    val layoutDirection = LocalLayoutDirection.current
+
+    Column(modifier = modifier.fillMaxSize()) {
+        SettingsSubViewHeader(
+            title = stringResource(Res.string.changelog_dialog_title),
+            backDescription = stringResource(Res.string.settings_back_to_about),
+            onBack = onBack,
+            modifier = Modifier.padding(horizontalPadding),
+            trailing = {
+                MorpheButton(
+                    label = stringResource(Res.string.changelog_view_on_github_button),
+                    icon = MorpheIcons.Github,
+                    onClick = {
+                        val clean = tagVersion.normalizeVersion()
+                        uriHandler.openUri("https://github.com/MorpheApp/morphe-desktop/releases/tag/v$clean")
+                    },
+                    variant = MorpheButtonVariant.OUTLINED,
+                    size = MorpheButtonSize.COMPACT,
+                )
+            },
+        )
+
+        ChangelogTimelineBody(
+            state = state,
+            listPadding = PaddingValues(
+                start = horizontalPadding.calculateStartPadding(layoutDirection),
+                end = horizontalPadding.calculateEndPadding(layoutDirection),
+                top = 4.dp,
+                bottom = 24.dp,
+            ),
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+        )
     }
+}
 
-    val installedVersion = remember { AppConstants.APP_VERSION.normalizeVersion() }
-    val entryList = entries.orEmpty()
-    val newestVersion = entryList.firstOrNull()?.version
+@Composable
+private fun ChangelogTimelineBody(
+    state: ChangelogViewState,
+    listPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
+    val entryList = state.entries.orEmpty()
+    val installedVersion = state.installedVersion
 
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        MorpheDialogSurface(
-            modifier = Modifier
-                .widthIn(min = 640.dp, max = 880.dp)
-                .heightIn(min = 520.dp, max = 780.dp)
-                .fillMaxWidth(0.85f)
-                .fillMaxHeight(0.85f),
-            contentPadding = PaddingValues(0.dp),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                // Dialog Header
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 18.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+    Box(modifier = modifier) {
+        when {
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(38.dp)
-                            .clip(CircleShape)
-                            .background(MorpheTheme.colors.primary.copy(alpha = 0.12f)),
-                        contentAlignment = Alignment.Center,
+                    CircularProgressIndicator(
+                        color = MorpheTheme.colors.primary,
+                        modifier = Modifier.size(36.dp),
+                        strokeWidth = 3.dp,
+                    )
+                }
+            }
+
+            state.error != null && entryList.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(24.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Icon(
-                            imageVector = MorpheIcons.MorpheLogo,
+                            imageVector = MorpheIcons.Error,
                             contentDescription = null,
-                            tint = MorpheTheme.colors.primary,
-                            modifier = Modifier.size(22.dp),
-                        )
-                    }
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(Res.string.changelog_dialog_title),
-                            style = MorpheTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            tint = MorpheTheme.colors.danger,
+                            modifier = Modifier.size(40.dp),
                         )
                         Text(
-                            text = "${stringResource(Res.string.app_name)} · ${AppConstants.APP_VERSION}",
-                            style = MorpheTheme.typography.labelSmall,
+                            text = stringResource(Res.string.changelog_not_available),
+                            style = MorpheTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                        MorpheButton(
+                            label = stringResource(Res.string.retry),
+                            onClick = { state.load() },
+                            variant = MorpheButtonVariant.OUTLINED,
+                            size = MorpheButtonSize.COMPACT,
+                        )
                     }
-
-                    MorpheIconButton(
-                        icon = MorpheIcons.Close,
-                        contentDescription = stringResource(Res.string.close),
-                        onClick = onDismiss,
-                        variant = MorpheIconButtonVariant.GHOST,
-                        size = MorpheIconButtonSize.COMPACT,
-                    )
                 }
+            }
 
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f),
-                    thickness = 1.dp,
-                )
-
-                // Dialog Content Body
+            entryList.isEmpty() -> {
                 Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize().padding(24.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    when {
-                        isLoading -> {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                CircularProgressIndicator(
-                                    color = MorpheTheme.colors.primary,
-                                    modifier = Modifier.size(36.dp),
-                                    strokeWidth = 3.dp,
-                                )
-                            }
+                    Text(
+                        text = stringResource(Res.string.changelog_not_available),
+                        style = MorpheTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+
+            else -> {
+                val listState = rememberLazyListState()
+
+                LazyColumn(
+                    state = listState,
+                    contentPadding = listPadding,
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    itemsIndexed(
+                        items = entryList,
+                        key = { _, entry -> entry.version },
+                    ) { index, entry ->
+                        val isNewest = index == 0
+                        val isLast = index == entryList.lastIndex
+                        val badge = when {
+                            entry.version.normalizeVersion() == installedVersion -> ChangelogBadge.INSTALLED
+                            isNewest && isNewerVersion(entry.version, installedVersion) -> ChangelogBadge.LATEST
+                            entry.isPrerelease -> ChangelogBadge.PRERELEASE
+                            else -> null
                         }
+                        val isExpanded = state.expandedMap[entry.version] ?: isNewest
 
-                        error != null && entryList.isEmpty() -> {
-                            Box(
-                                modifier = Modifier.fillMaxSize().padding(24.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                                ) {
-                                    Icon(
-                                        imageVector = MorpheIcons.Error,
-                                        contentDescription = null,
-                                        tint = MorpheTheme.colors.danger,
-                                        modifier = Modifier.size(40.dp),
-                                    )
-                                    Text(
-                                        text = stringResource(Res.string.changelog_not_available),
-                                        style = MorpheTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                    MorpheButton(
-                                        label = stringResource(Res.string.retry),
-                                        onClick = { loadData() },
-                                        variant = MorpheButtonVariant.OUTLINED,
-                                        size = MorpheButtonSize.COMPACT,
-                                    )
-                                }
-                            }
-                        }
-
-                        entryList.isEmpty() -> {
-                            Box(
-                                modifier = Modifier.fillMaxSize().padding(24.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.changelog_not_available),
-                                    style = MorpheTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
-
-                        else -> {
-                            val listState = rememberLazyListState()
-
-                            LazyColumn(
-                                state = listState,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 16.dp),
-                            ) {
-                                itemsIndexed(
-                                    items = entryList,
-                                    key = { _, entry -> entry.version },
-                                ) { index, entry ->
-                                    val isNewest = index == 0
-                                    val isLast = index == entryList.lastIndex
-                                    val badge = when {
-                                        entry.version.normalizeVersion() == installedVersion -> ChangelogBadge.INSTALLED
-                                        isNewest && isNewerVersion(entry.version, installedVersion) -> ChangelogBadge.LATEST
-                                        entry.isPrerelease -> ChangelogBadge.PRERELEASE
-                                        else -> null
-                                    }
-                                    val isExpanded = expandedMap[entry.version] ?: isNewest
-
-                                    ChangelogTimelineRow(
-                                        entry = entry,
-                                        badge = badge,
-                                        isFirst = isNewest,
-                                        isLast = isLast,
-                                        expanded = isExpanded,
-                                        onToggle = { expandedMap[entry.version] = !isExpanded },
-                                    )
-                                }
-                            }
-
-                            VerticalScrollbar(
-                                modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .fillMaxHeight()
-                                    .padding(end = 4.dp),
-                                adapter = rememberScrollbarAdapter(listState),
-                                style = MorpheScrollbarStyle(),
-                            )
-                        }
+                        ChangelogTimelineRow(
+                            entry = entry,
+                            badge = badge,
+                            isFirst = isNewest,
+                            isLast = isLast,
+                            expanded = isExpanded,
+                            onToggle = { state.expandedMap[entry.version] = !isExpanded },
+                        )
                     }
                 }
 
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f),
-                    thickness = 1.dp,
-                )
-
-                // Dialog Footer
-                Row(
+                VerticalScrollbar(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    val tagVersion = newestVersion ?: installedVersion
-                    MorpheButton(
-                        label = stringResource(Res.string.changelog_view_on_github_button),
-                        icon = MorpheIcons.Github,
-                        onClick = {
-                            val clean = tagVersion.normalizeVersion()
-                            uriHandler.openUri("https://github.com/MorpheApp/morphe-desktop/releases/tag/v$clean")
-                        },
-                        variant = MorpheButtonVariant.OUTLINED,
-                        size = MorpheButtonSize.COMPACT,
-                    )
-
-                    MorpheButton(
-                        label = stringResource(Res.string.close),
-                        onClick = onDismiss,
-                        variant = MorpheButtonVariant.GHOST,
-                        size = MorpheButtonSize.COMPACT,
-                    )
-                }
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight()
+                        .padding(end = 4.dp),
+                    adapter = rememberScrollbarAdapter(listState),
+                    style = MorpheScrollbarStyle(),
+                )
             }
         }
     }
@@ -352,11 +290,11 @@ private fun ChangelogTimelineRow(
                 )
             },
     ) {
-        Spacer(modifier = Modifier.width(RailSlotWidth + RailContentGap))
+        Spacer(modifier = Modifier.width(18.dp + 14.dp))
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(bottom = if (isLast) 0.dp else ReleaseSpacing),
+                .padding(bottom = if (isLast) 0.dp else 16.dp),
         ) {
             val rowInteraction = remember { MutableInteractionSource() }
             val isRowHovered by rowInteraction.collectIsHoveredAsState()
@@ -494,11 +432,12 @@ private fun DrawScope.drawTimeline(
     haloColor: Color,
     mutedColor: Color,
 ) {
-    val railX = (RailSlotWidth / 2).toPx()
-    val stroke = RailStrokeWidth.toPx()
+    val railX = (18.dp / 2).toPx()
+    val stroke = 2.dp.toPx()
+    val haloRadius = 10.dp.toPx()
 
-    val center = Offset(railX, NodeCenterY.toPx())
-    val clearance = NodeHaloRadius.toPx() + RailStrokeWidth.toPx()
+    val center = Offset(railX, 16.dp.toPx())
+    val clearance = haloRadius + stroke
 
     if (!isFirst) {
         drawLine(railColor, Offset(railX, 0f), Offset(railX, center.y - clearance), stroke)
@@ -507,10 +446,10 @@ private fun DrawScope.drawTimeline(
         drawLine(railColor, Offset(railX, center.y + clearance), Offset(railX, size.height), stroke)
     }
 
-    val radius = NodeRadius.toPx()
+    val radius = 6.dp.toPx()
     when (badge) {
         ChangelogBadge.LATEST -> {
-            drawCircle(haloColor, radius = NodeHaloRadius.toPx(), center = center)
+            drawCircle(haloColor, radius = haloRadius, center = center)
             drawCircle(accentColor, radius = radius, center = center)
         }
         ChangelogBadge.INSTALLED, ChangelogBadge.DOWNLOADED -> {
@@ -518,13 +457,12 @@ private fun DrawScope.drawTimeline(
             drawCircle(accentColor, radius = radius - ring / 2, center = center, style = Stroke(ring))
         }
         ChangelogBadge.PRERELEASE -> {
-            val ring = RailStrokeWidth.toPx()
             val dash = 2.5.dp.toPx()
             drawCircle(
                 mutedColor,
-                radius = radius - ring / 2,
+                radius = radius - stroke / 2,
                 center = center,
-                style = Stroke(ring, pathEffect = PathEffect.dashPathEffect(floatArrayOf(dash, dash))),
+                style = Stroke(stroke, pathEffect = PathEffect.dashPathEffect(floatArrayOf(dash, dash))),
             )
         }
         null -> {

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,15 +31,20 @@ import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.data.repository.isRtlLanguage
 import app.morphe.gui.di.appModule
 import app.morphe.gui.ui.components.CardFillHost
 import app.morphe.gui.ui.components.LocalFrameWindowScope
-import app.morphe.gui.ui.components.SettingsDialogHost
+import app.morphe.gui.ui.components.LocalSettingsState
+import app.morphe.gui.ui.components.SettingsPage
+import app.morphe.gui.ui.components.rememberSettingsStateHolder
 import app.morphe.gui.ui.screens.home.HomeScreen
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
 import app.morphe.gui.ui.screens.patching.PatchingScreen
+import app.morphe.gui.ui.screens.patching.PatchingSessionTracker
+import app.morphe.gui.ui.screens.patching.PatchingStatus
 import app.morphe.gui.ui.screens.result.ResultScreen
 import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.LocalThemeState
@@ -46,6 +52,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.ui.theme.ThemeState
 import app.morphe.gui.ui.theme.ThemeStyle
+import app.morphe.gui.ui.theme.screenScrim
 import app.morphe.gui.ui.theme.backgrounds.AnimatedBackground
 import app.morphe.gui.ui.theme.backgrounds.BackgroundType
 import app.morphe.gui.ui.theme.backgrounds.LocalParallaxState
@@ -142,15 +149,9 @@ val LocalLanguageState = staticCompositionLocalOf<LanguageState> {
     error("No LanguageState provided")
 }
 
-val LocalSettingsDialogVisible = compositionLocalOf<MutableState<Boolean>> {
-    error("No LocalSettingsDialogVisible provided")
-}
-
-val LocalIsPatching = compositionLocalOf<MutableState<Boolean>> {
+val LocalIsPatching = compositionLocalOf<State<Boolean>> {
     error("No LocalIsPatching provided")
 }
-val LocalOnSettingsDismiss = compositionLocalOf { {} }
-val LocalOnUpdateChannelChanged = compositionLocalOf { {} }
 
 val LocalBackgroundType = compositionLocalOf<MutableState<BackgroundType>> { 
     error("No background type provided") 
@@ -221,6 +222,9 @@ private fun appContent(
     val configRepository: ConfigRepository = koinInject()
     val engineConfigRepository: EngineConfigRepository = koinInject()
     val patchSourceManager: PatchSourceManager = koinInject()
+    val updateCheckRepository: UpdateCheckRepository = koinInject()
+    val patchingSessionTracker: PatchingSessionTracker = koinInject()
+    val patchingSession by patchingSessionTracker.state.collectAsState()
     val scope = rememberCoroutineScope()
     val enableParallaxState = remember { mutableStateOf(true) }
     val (parallaxState, parallaxMod) = rememberParallaxState(
@@ -360,8 +364,25 @@ private fun appContent(
         }
     }
 
-    val settingsDialogVisible = remember { mutableStateOf(false) }
-    val isPatchingState = remember { mutableStateOf(false) }
+    val settingsState = rememberSettingsStateHolder(
+        configRepository = configRepository,
+        engineConfigRepository = engineConfigRepository,
+        updateCheckRepository = updateCheckRepository,
+        languageProvider = { appLanguage },
+        onLanguageChange = onLanguageChange,
+        themeStateProvider = { themeState },
+        simpleModeProvider = { isSimpleMode },
+        onSimpleModeChange = onModeChange,
+        adbEnabledProvider = { autoStartAdb },
+        onAdbEnabledChange = onAutoStartAdbChange,
+        sharpCornersState = sharpCornersState,
+        customAccentColorState = customAccentColorState,
+        backgroundTypeState = backgroundTypeState,
+        enableParallaxState = enableParallaxState,
+        showAppIconsState = showAppIconsState,
+        showMoreAppsCardState = showMoreAppsCardState,
+    )
+    val isPatchingState = rememberUpdatedState(patchingSession.isInProgress)
 
     val targetDirection = if (appLanguage.isRtlLanguage()) LayoutDirection.Rtl else LayoutDirection.Ltr
 
@@ -377,7 +398,7 @@ private fun appContent(
                 LocalLanguageState provides languageState,
                 LocalModeState provides modeState,
                 LocalAdbPreference provides adbPreferenceState,
-                LocalSettingsDialogVisible provides settingsDialogVisible,
+                LocalSettingsState provides settingsState,
                 LocalIsPatching provides isPatchingState,
                 LocalBackgroundType provides backgroundTypeState,
                 LocalEnableParallax provides enableParallaxState,
@@ -445,10 +466,6 @@ private fun appContent(
                                 val navController = rememberNavController()
 
                                 CompositionLocalProvider(LocalNavController provides navController) {
-                                    key(appLanguage) {
-                                        SettingsDialogHost()
-                                    }
-
                                     if (!isLoading) {
                                         NavHost(
                                             navController = navController,
@@ -487,6 +504,41 @@ private fun appContent(
                                                 popEnterTransition = { Animations.pushEnter },
                                                 popExitTransition = { Animations.pushExit }
                                             ) {
+                                                SettingsPage(
+                                                    showBackHeader = true,
+                                                    onBack = {
+                                                        val cameFromPatching = navController.previousBackStackEntry
+                                                            ?.destination
+                                                            ?.hasRoute<PatchingScreenRoute>() == true
+                                                        val session = patchingSessionTracker.state.value
+                                                        val completedOutput = session.outputPath
+                                                        when {
+                                                            cameFromPatching &&
+                                                                session.status == PatchingStatus.COMPLETED &&
+                                                                !session.hasAutoNavigated &&
+                                                                completedOutput != null -> {
+                                                                patchingSessionTracker.markAutoNavigated(session.runId)
+                                                                navController.navigate(
+                                                                    ResultScreenRoute(
+                                                                        outputPath = completedOutput,
+                                                                        isMount = session.isMount,
+                                                                    )
+                                                                ) {
+                                                                    popUpTo<SettingsScreenRoute> { inclusive = true }
+                                                                }
+                                                            }
+                                                            cameFromPatching &&
+                                                                (session.status == PatchingStatus.FAILED ||
+                                                                    session.status == PatchingStatus.CANCELLED) &&
+                                                                !session.hasAutoNavigated -> {
+                                                                patchingSessionTracker.markAutoNavigated(session.runId)
+                                                                navController.popBackStack()
+                                                            }
+                                                            else -> navController.popBackStack()
+                                                        }
+                                                    },
+                                                    modifier = Modifier.background(screenScrim),
+                                                )
                                             }
                                         }
                                     }

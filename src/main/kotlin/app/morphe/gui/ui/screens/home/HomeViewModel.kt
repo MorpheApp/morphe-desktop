@@ -1548,7 +1548,7 @@ data class DeviceAppInfo(
 )
 
 /** Top-level home screen pages navigated via the central navigation pill. */
-enum class HomePage { SOURCES, APPS }
+enum class HomePage { SOURCES, APPS, SETTINGS }
 
 data class HomeUiState(
     val selectedPage: HomePage = HomePage.APPS,
