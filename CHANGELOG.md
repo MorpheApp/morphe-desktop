@@ -1,3 +1,10 @@
+# [2.2.0-dev.16](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.15...v2.2.0-dev.16) (2026-11-14)
+
+
+### Features
+
+* Redesign settings as integrated page ([#430](https://github.com/MorpheApp/morphe-desktop/issues/430)) ([2de3ed9](https://github.com/MorpheApp/morphe-desktop/commit/2de3ed91515ffa48150c9ee9365cda878888f00c))
+
 # [2.2.0-dev.15](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.14...v2.2.0-dev.15) (2026-11-14)
 
 
