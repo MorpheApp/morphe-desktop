@@ -122,16 +122,16 @@ The top bar sits at the top of the window and provides persistent navigation:
   <img src="images/documentation/gui/topbar.png" width="80%" alt="Topbar" style="vertical-align: middle"/>
 </p>
 
-The **Navigation Pill** sits in the center of the bar with an animated sliding indicator between the two primary pages:
+The **Navigation Pill** sits in the center of the bar on Home with an animated sliding indicator across the three primary pages. On workflow sub-screens (such as patch selection, patching, and result), the pill is replaced by a back button and screen title on the left and a **Settings** icon button next to the device indicator on the right:
 
 | Control                   | What it does                                                                                                                                                                                                                                                           |
 |---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Sources** tab           | Opens the **Sources page** to add, edit, reorder, refresh, or remove patch sources and review signing keys – see [Managing patch sources](#gui-expert-sources).                                                                                                        |
 | **Apps** tab              | Opens the **Apps page** with the APK staging area, Supported apps catalog, and Your apps patching history.                                                                                                                                                             |
+| **Settings** tab / button | Opens the integrated **Settings page** for preferences, storage & cache management, signing, native lib stripping, and about info – see [Settings](#gui-settings).                                                                                                     |
 | **Loading indicator**     | Displays an animated loading pill while patch manifests and releases are being fetched.                                                                                                                                                                               |
 | **Offline badge**         | Appears when internet connectivity is unavailable; click to retry loading remote sources.                                                                                                                                                                              |
 | **Device indicator**      | Shows the connected ADB device (or "No devices connected"). Click to choose the target device for installs.                                                                                                                                                            |
-| **Settings** (gear)       | Preferences, storage & cache management, signing, native lib stripping, and about info – see [Settings](#gui-settings).                                                                                                                                                |
 
 <h4 id="gui-expert-home">1. Pick your APK</h4>
 
@@ -411,38 +411,44 @@ The detail view provides a comprehensive breakdown of the patched app:
 
 <h3 id="gui-settings">Settings</h3>
 
-The gear icon opens Settings – Morphe's persistent preferences. Think of it as the GUI's equivalent of the CLI flag set: most settings map directly to a `patch` flag.
+Open Settings from the **Settings** tab in the Home navigation pill, or via the top-right **Settings** button on any workflow sub-screen. Think of it as the GUI's equivalent of the CLI flag set: most settings map directly to a `patch` flag. Settings is laid out as an integrated two-pane page with a live **Search settings** bar and three categories in the left sidebar: **Appearance**, **Advanced**, and **System**.
 
 
 | Setting                        | What it does                                                                                              | Default                                                                              | CLI equivalent                                                                             |
 |--------------------------------|-----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| **Language**                   | Switch the app language (opens an inline searchable language pane with a translation link)                | System / English                                                                     | –                                                                                          |
 | **Theme mode**                 | App color scheme: Light, Dark, Amoled (pure black), System                                                | System                                                                               | –                                                                                          |
-| **Color style**                | Palette style: **Morphe** (dynamic colors and customized app cards) or **Monochrome** (pure monochrome)   | Morphe                                                                               | –                                                                                          |
+| **Color style**                | Palette style: **Morphe** (tinted Morphe palette) or **Monochrome** (grayscale monochrome)                | Morphe                                                                               | –                                                                                          |
 | **Accent color**               | Dynamic custom accent color applied across the UI (available when Color style is Morphe)                  | Morphe Blue                                                                          | –                                                                                          |
-| **Expert mode**                | Switch between Simple mode and Expert mode                                                                | Off (Simple mode)                                                                    | –                                                                                          |
+| **App cards**                  | Batch-customize **Color for every card**, toggle extracted **App icons**, and show/hide **More apps card** | Individual colors, icons on, card on                                                 | –                                                                                          |
+| **Sharp corners**              | Square off cards, dialogs, and buttons                                                                    | Off                                                                                  | –                                                                                          |
 | **Background animation**       | Choose an animated background style (e.g. Circles, Rings, Mesh, Space)                                    | Circles                                                                              | –                                                                                          |
 | **Parallax effect**            | Smooth background shifting when moving the mouse                                                          | On                                                                                   | –                                                                                          |
-| **Auto-cleanup temp files**    | Delete scratch files after patching                                                                       | On                                                                                   | On by default; `--disable-purge` to turn off                                               |
-| **Auto-start ADB**             | Start the ADB daemon on launch so devices are monitored                                                   | Off                                                                                  | enables `-i` / install features                                                            |
-| **Storage & cache**           | Clear downloaded patches and logs, open data root or logs directory                                       | –                                                                                    | [`utility clear-cache`](#utility-clear-cache)                                              |
-| **Update channel**             | Stable or Prerelease app updates (dropdown menu)                                                          | Smart (Prerelease on dev builds, else Stable)                                        | `--prerelease` (loosely)                                                                   |
-| **Output folder**              | Default location for patched APKs                                                                         | The input APK's folder                                                               | `-o` / `--out`                                                                             |
-| **Signing**                    | Keystore + credentials used to sign                                                                       | Shared `morphe.keystore`, alias `Morphe`, key password `Morphe`, store password empty | `--keystore`, `--keystore-password`, `--keystore-entry-alias`, `--keystore-entry-password` |
-| **Strip Libs**                 | Native-lib architectures to keep                                                                          | Keep all                                                                             | `--striplibs`                                                                              |
-| **Patched app runtime logs**   | Capture logcat from a device after a patched app misbehaves                                               | –                                                                                    | –                                                                                          |
+| **Expert mode**                | Switch between Simple mode and Expert mode (locked from workflow sub-screens and while patching)          | Off (Simple mode)                                                                    | –                                                                                          |
 | **Route links to patched app** | After an ADB install, auto-route the app's web links to it (with an optional "disable stock app's links") | Off                                                                                  | [`utility install --route-links`](#utility-install)                                        |
-| **Developer options**          | Unlock patch-developer workflows (point local source at a folder with auto-reloading newest .mpp)         | Off                                                                                  | –                                                                                          |
+| **Signing**                    | Keystore + credentials used to sign, certificate viewer, and export                                       | Shared `morphe.keystore`, alias `Morphe`, key password `Morphe`, store password empty | `--keystore`, `--keystore-password`, `--keystore-entry-alias`, `--keystore-entry-password` |
+| **Strip libs**                 | Native-lib architectures to keep                                                                          | Keep all                                                                             | `--striplibs`                                                                              |
+| **Developer options**          | Unlock patch-developer workflows (folder local sources, bytecode mode, fingerprint validation, SDK verify) | Off                                                                                  | –                                                                                          |
+| **Patched app runtime logs**   | Capture logcat from a device after a patched app misbehaves                                               | –                                                                                    | –                                                                                          |
+| **GitHub PAT**                 | Personal Access Token (`public_repo` scope) for downloading GitHub PR artifact bundles                    | –                                                                                    | `GITHUB_TOKEN` / `GH_TOKEN`                                                                |
+| **Auto-cleanup temp files**    | Delete scratch files after patching                                                                       | On                                                                                   | On by default; `--disable-purge` to turn off                                               |
+| **Check for updates**          | Stable, Prerelease, or Off app update checks (dropdown menu)                                              | Smart (Prerelease on dev builds, else Stable)                                        | `--prerelease` (loosely)                                                                   |
+| **Output folder**              | Default location for patched APKs                                                                         | The input APK's folder                                                               | `-o` / `--out`                                                                             |
+| **Auto-start ADB**             | Start the ADB daemon on launch so devices are monitored                                                   | Off                                                                                  | enables `-i` / install features                                                            |
+| **Storage & cache**            | Inspect and clear caches, or open data root / logs directory                                              | –                                                                                    | [`utility clear-cache`](#utility-clear-cache)                                              |
 
 <p align="center">
-  <img src="images/documentation/gui/settings.png" width="60%" alt="Settings dialog" style="vertical-align: middle"/>
+  <img src="images/documentation/gui/settings.png" width="75%" alt="Settings page" style="vertical-align: middle"/>
 </p>
 
 A couple of items worth expanding on:
 
-- **About section, Changelogs & Licenses** - The settings dialog includes an **About** section that displays the application version, developer info, a **View changelog** button, and **Open Source licenses**. The Changelog dialog features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
-- **Storage & cache** - Found under **Settings → System**, this section displays live disk usage and file counts broken down by category (**Patches**, **Logs**, **Temporary files**, and **Avatar cache**). Each category can be cleared individually or all at once via **Clear all cache**, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
+- **Search & inline sub-views** - **Search settings** filters across **Appearance**, **Advanced**, and **System** at the same time (keeping matching nested groups such as **Developer options** expanded so matches are immediately reachable). **Current language**, **View changelogs**, and **Open Source licenses** open as inline panes inside Settings rather than separate modal dialogs.
+- **Mode switching & patching lock** - Switching **Expert mode** is only available when Settings is opened from Home; opening Settings from any workflow sub-screen locks the toggle (*"Return home to change mode"*). Settings under **Advanced** and **System** that affect patching are disabled while a run is active (*"Disabled while patching"*) and automatically re-enable as soon as patching finishes, while **Appearance** (including **Language**) and **About** remain interactive throughout.
+- **About, Changelogs & Licenses** - **Settings → System → About** displays the application version, **View changelogs**, **Open Source licenses**, **Documentation**, and **Visit website**. The Changelog pane (also opened directly from update banners) features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
+- **Storage & cache** - Found under **Settings → System**, this section displays live disk usage and file counts broken down by category (**Patches**, **Logs**, **Temporary files**, **Avatar cache**, and **App icon cache**). Each category can be cleared individually or all at once via **Clear all cache**, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
 - **Auto-start ADB** - when off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe.
-- **Update channel** - *Prerelease* surfaces pre-releases; *Stable* only stable ones. If you've never chosen, Morphe defaults smartly (Prerelease when you're running a dev build).
+- **Check for updates** - *Prerelease* surfaces pre-releases; *Stable* only stable ones; *Off* disables update checks. If you've never chosen, Morphe defaults smartly (Prerelease when you're running a dev build).
 - **Route links to patched app** - when on, every ADB install is followed by routing the app's supported web links to the patched app (the [Link handling](#gui-expert-links) step, run automatically). A nested **Disable stock app's links** option also stops the original app from opening those links – only relevant when a rename patch was used and the stock app is still installed. Both are reversible and need a connected device.
 
 <h4 id="gui-settings-signing">Signing</h4>
@@ -459,6 +465,7 @@ This is the GUI face of the `--keystore*` flags. Morphe signs every patched APK 
 | **Key password**          | The key entry's password (default:`Morphe`)               |
 | **Verify credentials**    | Check the keystore opens with the entered alias/passwords |
 | **Generate keystore**     | Create a fresh keystore                                   |
+| **Certificate**           | View certificate alias, issuer, validity, and SHA-256 / SHA-1 fingerprints |
 | **Export**                | Save the key as a `.p12` keystore that opens with the key password |
 
 <p align="center">
@@ -500,9 +507,12 @@ A debugging aid: capture logcat from a connected device after a patched app cras
 
 <h4 id="gui-settings-developer">Developer options</h4>
 
-This section is for people **building** patches and other developers. Off by default. Toggling it on unlocks a suite of workflow options to better assist you in your development. Please feel free to make a request in the issues tab if you feel a feature could be added here.
+This section is for people **building** patches and other developers. Off by default. Toggling it on unlocks patch-development tools under **Settings → Advanced → Developer options** as well as folder source workflows. Please feel free to make a request in the issues tab if you feel a feature could be added here.
 
-**Folder sources.** Normally a local source points at a single `.mpp` file. With Developer options on, the add/edit source dialog gains a **Folder** button next to **File**. Pick a folder and Morphe always loads the **newest `.mpp`** inside it. Point it at your patch build-output directory once and you never re-pick the file: each rebuild is used on the next load. The [source sheet](#gui-expert-sources) also gains a **refresh** button (top-right) that re-scans on demand, so a patch you just built shows up without leaving the screen. Build outputs like `*-sources.mpp` and `*-javadoc.mpp` are always ignored, and you can set your own exclude patterns for a folder source from the source manager.
+- **Bytecode mode** – choose the DEX bytecode transformation mode applied during patching (*Fast*, *Safe*, or *Full*).
+- **Fingerprint validation** – validate that each `match()` matches only one method (slower patching, useful when testing patches).
+- **Android SDK verification** – verify patched DEX and APK files using Android SDK tools (`d8`, `zipalign`), with an **Android SDK directory** picker (**Auto-detected** / **Browse** / **Reset**).
+- **Folder sources** – normally a local source points at a single `.mpp` file. With Developer options on, the add/edit source dialog gains a **Folder** button next to **File**. Pick a folder and Morphe always loads the **newest `.mpp`** inside it. Point it at your patch build-output directory once and you never re-pick the file: each rebuild is used on the next load. The [source sheet](#gui-expert-sources) also gains a **refresh** button (top-right) that re-scans on demand, so a patch you just built shows up without leaving the screen. Build outputs like `*-sources.mpp` and `*-javadoc.mpp` are always ignored, and you can set your own exclude patterns for a folder source from the source manager.
 
 > [!NOTE]
 > Existing folder sources keep working even if you later turn Developer options back off. The toggle only gates *creating* them.
@@ -514,17 +524,17 @@ Located under **Settings → System → Storage & cache**, this section centrali
 
 | Action            | What it does                                                                                                       |
 |-------------------|--------------------------------------------------------------------------------------------------------------------|
-| **Clear cache**   | Delete downloaded patches and log files (they re-download as needed)                                               |
+| **Clear all cache** / per-category **Clear** | Clear **Patches**, **Logs**, **Temporary files**, **Avatar cache**, and **App icon cache** individually or all at once |
 | **Open app data** | Open Morphe's data folder – the `morphe-data/` directory (see [Where Morphe stores its files](#where-files-stored)) |
 | **Open logs**     | Open the application logs folder (`morphe-data/logs/`) in your file manager                                        |
 
 > [!NOTE]
-> **Clear cache** displays your current cache size, asks for confirmation, and then safely removes downloaded `.mpp` files and logs from `morphe-data/`. Nothing irreversible, patches re-download on the next run. Cache clearing is disabled while a patch operation is in progress.
+> Each clear action displays your current size and item count, asks for confirmation, and safely removes cached files from `morphe-data/`. Nothing is irreversible: patches, avatars, and app icons are re-fetched or extracted as needed. Clearing caches is disabled while a patch operation is in progress.
 
-**Open Source licenses.** Accessible under **Settings → System → About → Open Source licenses**, this opens a searchable browser of the open-source licenses for every third-party library Morphe bundles. Use the search box to filter by name – handy for license compliance, or just to see what's under the hood.
+**Open Source licenses.** Accessible under **Settings → System → About → Open Source licenses**, this opens an inline searchable pane listing the open-source licenses for every third-party library Morphe bundles (alongside a **Notice** dialog with attribution details). Use the search box to filter by library name, SPDX ID, or coordinate – handy for license compliance, or just to see what's under the hood.
 
 <p align="center">
-  <img src="images/documentation/gui/licenses-browser.png" width="60%" alt="Licenses browser" style="vertical-align: middle"/>
+  <img src="images/documentation/gui/licenses-browser.png" width="60%" alt="Open Source licenses pane" style="vertical-align: middle"/>
 </p>
 
 <h3 id="gui-adb">Installing to a device (ADB)</h3>
@@ -664,7 +674,7 @@ java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/
 > You can create a token at [github.com/settings/tokens](https://github.com/settings/tokens) (classic token with `public_repo` scope) and configure it via:
 >
 > - **Environment variable** (CLI): `export GITHUB_TOKEN="ghp_your_token"` (or `GH_TOKEN`)
-> - **Settings UI / Config**: In the GUI under **Settings &rarr; GitHub Personal Access Token**
+> - **Settings UI / Config**: In the GUI under **Settings &rarr; Advanced &rarr; GitHub PAT &rarr; Personal Access Token**
 
 <h5 id="using-multiple-bundles">Using multiple patch bundles</h5>
 
