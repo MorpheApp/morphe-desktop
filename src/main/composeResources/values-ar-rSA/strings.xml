@@ -660,7 +660,7 @@
     <string name="settings_language_search_no_results">لم يتم العثور على نتائج</string>
     <string name="settings_section_theme">المظهر</string>
     <string name="settings_appearance_theme_mode">وضع المظهر</string>
-    <string name="settings_appearance_theme_mode_description">التنقل بين المظهر الفاتح، أو الداكن، أو الأسود الصرف، أو مظهر النظام</string>
+    <string name="settings_appearance_theme_mode_description">التنقل بين المظهر الفاتح، الداكن، الأسود النقي، أو مظهر النظام</string>
     <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
     <string name="settings_theme_amoled">أموليد</string>
@@ -699,7 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">وضع الخبير</string>
     <string name="settings_toggle_expert_mode_desc">تحكم كامل في اختيار التصحيحات وتكوينها</string>
-    <string name="settings_expert_mode_disabled_in_flow">العودة إلى الصفحة الرئيسية لتغيير الوضع</string>
+    <string name="settings_expert_mode_disabled_in_flow">الرجوع إلى الصفحة الرئيسية لتغيير الوضع</string>
     <string name="settings_toggle_route_links_label">توجيه الروابط إلى التطبيق المُصحح</string>
     <string name="settings_toggle_route_links_desc">بعد التثبيت عبر ADB، اجعل التطبيق المُصحح يفتح روابطه المدعومة بدلاً من المتصفح أو التطبيق الأصلي/الافتراضي</string>
     <string name="settings_toggle_disable_stock_links_label">تعطيل روابط التطبيق الأصلي</string>
@@ -860,8 +860,8 @@
     <!-- Settings - Search & Inline Views -->
     <string name="settings_search_placeholder">بحث الإعدادات</string>
     <string name="settings_search_no_results">لا توجد إعدادات مطابقة</string>
-    <string name="settings_back_to_about">العودة إلى \"حول\"</string>
-    <string name="licenses_back_to_list">العودة إلى التراخيص</string>
+    <string name="settings_back_to_about">الرجوع إلى لمحة</string>
+    <string name="licenses_back_to_list">الرجوع إلى التراخيص</string>
     <!-- More apps card & community patches -->
     <string name="home_more_apps_title">المزيد من التطبيقات</string>
     <string name="home_more_apps_subtitle">تعديلات المجتمع</string>

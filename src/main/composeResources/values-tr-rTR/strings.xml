@@ -861,8 +861,8 @@
     <!-- Settings - Search & Inline Views -->
     <string name="settings_search_placeholder">Ayarları ara</string>
     <string name="settings_search_no_results">Eşleşen ayar bulunamadı</string>
-    <string name="settings_back_to_about">Hakkında kısmına dön</string>
-    <string name="licenses_back_to_list">Lisanslar listesine dön</string>
+    <string name="settings_back_to_about">Hakkındaya dön</string>
+    <string name="licenses_back_to_list">Lisanslara dön</string>
     <!-- More apps card & community patches -->
     <string name="home_more_apps_title">Daha fazla uygulama</string>
     <string name="home_more_apps_subtitle">Topluluk yamaları</string>

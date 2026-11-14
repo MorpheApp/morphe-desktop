@@ -665,7 +665,7 @@
     <string name="settings_theme_dark">Темна</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Стиль кольору</string>
-    <string name="settings_appearance_color_style_description">Кольорова палітра Morphe або сірий монохромний стиль</string>
+    <string name="settings_appearance_color_style_description">Тонована палітра Morphe або сірий монохромний стиль</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Монохромна</string>
     <string name="settings_toggle_sharp_corners_label">Гострі кути</string>
@@ -860,7 +860,7 @@
     <!-- Settings - Search & Inline Views -->
     <string name="settings_search_placeholder">Пошук налаштувань</string>
     <string name="settings_search_no_results">Немає відповідних налаштувань</string>
-    <string name="settings_back_to_about">Назад до розділу «Про застосунок»</string>
+    <string name="settings_back_to_about">Назад до розділу \"Про Morphe\"</string>
     <string name="licenses_back_to_list">Назад до ліцензій</string>
     <!-- More apps card & community patches -->
     <string name="home_more_apps_title">Більше застосунків</string>
