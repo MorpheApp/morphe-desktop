@@ -6,10 +6,8 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -69,6 +67,8 @@ import app.morphe.gui.ui.components.settings.rememberSettingsCardBorderColor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.ui.theme.outlineStroke
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -254,7 +254,7 @@ private fun LanguageOptionCard(
                 .size(40.dp)
                 .clip(MorpheTheme.shapes.small)
                 .background(MaterialTheme.colorScheme.surface)
-                .border(1.dp, badgeBorderColor, MorpheTheme.shapes.small),
+                .outlineBorder(badgeBorderColor, MorpheTheme.shapes.small),
             contentAlignment = Alignment.Center,
         ) {
             if (isSystem) {
@@ -347,7 +347,7 @@ private fun LanguageCardContainer(
             ),
         shape = shape,
         color = containerColor,
-        border = BorderStroke(1.dp, borderColor),
+        border = outlineStroke(borderColor, enabled = selected || MorpheTheme.outlines),
     ) {
         Row(
             modifier = Modifier

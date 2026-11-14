@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -33,6 +32,7 @@ import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.AppIconSource
 import app.morphe.gui.util.DeviceMonitor
@@ -78,7 +78,7 @@ fun ApkInfoCard(
             .fillMaxWidth()
             .clip(cardShape)
             .background(panelFill)
-            .border(1.dp, borderColor, cardShape)
+            .outlineBorder(borderColor, cardShape)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()

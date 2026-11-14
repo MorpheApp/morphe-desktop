@@ -7,7 +7,6 @@ package app.morphe.gui.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,6 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.AppIconState
 
 enum class MorpheAvatarSize(val size: Dp) {
@@ -78,7 +78,7 @@ fun MorpheAppAvatar(
         modifier = modifier
             .size(size.size)
             .clip(shapes.small)
-            .border(1.dp, borderColor, shapes.small)
+            .outlineBorder(borderColor, shapes.small)
             .background(bgColor),
         contentAlignment = Alignment.Center,
     ) {

@@ -64,6 +64,7 @@ internal data class AppearanceSearchVisibility(
     val themeMode: Boolean,
     val colorStyle: Boolean,
     val sharpCorners: Boolean,
+    val outlines: Boolean = false,
     val accentColor: Boolean,
     val appCards: Boolean,
     val appIcons: Boolean,
@@ -75,7 +76,7 @@ internal data class AppearanceSearchVisibility(
     val hasThemeSection: Boolean get() = themeMode || colorStyle
     val hasAccentSection: Boolean get() = accentColor
     val hasAppCardsSection: Boolean get() = appCards || appIcons || moreAppsCard
-    val hasEffectsSection: Boolean get() = sharpCorners || backgroundAnimation || parallax
+    val hasEffectsSection: Boolean get() = sharpCorners || outlines || backgroundAnimation || parallax
     val any: Boolean
         get() = hasLanguageSection || hasThemeSection || hasAccentSection || hasAppCardsSection || hasEffectsSection
 }
@@ -91,6 +92,7 @@ internal fun rememberAppearanceSearchVisibility(
             themeMode = true,
             colorStyle = true,
             sharpCorners = true,
+            outlines = true,
             accentColor = true,
             appCards = true,
             backgroundAnimation = true,
@@ -109,6 +111,8 @@ internal fun rememberAppearanceSearchVisibility(
     val colorStyleDesc = stringResource(Res.string.settings_appearance_color_style_description)
     val sharpLabel = stringResource(Res.string.settings_toggle_sharp_corners_label)
     val sharpDesc = stringResource(Res.string.settings_toggle_sharp_corners_desc)
+    val outlinesLabel = stringResource(Res.string.settings_toggle_outlines_label)
+    val outlinesDesc = stringResource(Res.string.settings_toggle_outlines_desc)
     val accentSection = stringResource(Res.string.settings_section_accent_color)
     val cardsSection = stringResource(Res.string.settings_section_app_cards)
     val cardsSub = stringResource(Res.string.settings_app_cards_color_all)
@@ -128,6 +132,7 @@ internal fun rememberAppearanceSearchVisibility(
         themeMode = matchesSettingQuery(query, themeSection, themeModeLabel, themeModeDesc, "light", "dark", "amoled", "system", "theme"),
         colorStyle = matchesSettingQuery(query, themeSection, colorStyleLabel, colorStyleDesc, "morphe", "monochrome", "style"),
         sharpCorners = matchesSettingQuery(query, effectsSection, sharpLabel, sharpDesc, "effects", "sharp", "corners", "square", "radius"),
+        outlines = matchesSettingQuery(query, effectsSection, outlinesLabel, outlinesDesc, "effects", "outline", "outlines", "border", "borders", "edge", "card"),
         accentColor = matchesSettingQuery(query, accentSection, "accent", "color", "swatch", "custom"),
         appCards = !isMonochrome && matchesSettingQuery(query, cardsSection, cardsSub, cardsDesc, "card", "fill", "gradient"),
         appIcons = matchesSettingQuery(query, cardsSection, appIconsLabel, appIconsDesc, "icons", "app icons"),
@@ -441,6 +446,16 @@ internal fun AppearanceSection(
                         description = stringResource(Res.string.settings_toggle_sharp_corners_desc),
                         checked = settings.sharpCorners,
                         onCheckedChange = settings::setSharpCorners,
+                    )
+
+                    toggleItem(
+                        key = "outlines",
+                        visible = visibility.outlines,
+                        icon = MorpheIcons.BorderStyle,
+                        title = stringResource(Res.string.settings_toggle_outlines_label),
+                        description = stringResource(Res.string.settings_toggle_outlines_desc),
+                        checked = settings.outlines,
+                        onCheckedChange = settings::setOutlines,
                     )
 
                     dropdownItem(

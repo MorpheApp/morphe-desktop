@@ -12,9 +12,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -70,6 +68,8 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.ui.theme.outlineStroke
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -444,7 +444,7 @@ fun SettingsSegmentCard(
         modifier = cardModifier,
         shape = shape,
         color = containerColor,
-        border = BorderStroke(1.dp, borderColor),
+        border = outlineStroke(borderColor),
     ) {
         Column(
             modifier = Modifier
@@ -662,16 +662,10 @@ fun SettingsRailCategoryItem(
             .fillMaxWidth()
             .clip(shape)
             .background(bgColor)
-            .then(
-                if (selected) {
-                    Modifier.border(
-                        width = 1.dp,
-                        color = colors.primary.copy(alpha = 0.28f),
-                        shape = shape,
-                    )
-                } else {
-                    Modifier
-                }
+            .outlineBorder(
+                color = colors.primary.copy(alpha = 0.28f),
+                shape = shape,
+                enabled = selected && MorpheTheme.outlines,
             )
             .hoverable(interactionSource)
             .handCursor()

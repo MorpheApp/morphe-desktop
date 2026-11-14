@@ -48,6 +48,7 @@ class SettingsStateHolder(
     private val adbEnabledProvider: () -> Boolean,
     private val onAdbEnabledChange: (Boolean) -> Unit,
     private val sharpCornersState: MutableState<Boolean>,
+    private val outlinesState: MutableState<Boolean>,
     private val customAccentColorState: MutableState<Int?>,
     private val backgroundTypeState: MutableState<BackgroundType>,
     private val enableParallaxState: MutableState<Boolean>,
@@ -70,6 +71,7 @@ class SettingsStateHolder(
     val useExpertMode: Boolean get() = !simpleModeProvider()
     val autoStartAdb: Boolean get() = adbEnabledProvider()
     val sharpCorners: Boolean get() = sharpCornersState.value
+    val outlines: Boolean get() = outlinesState.value
     val customAccentColorArgb: Int? get() = customAccentColorState.value
     val backgroundType: BackgroundType get() = backgroundTypeState.value
     val enableParallax: Boolean get() = enableParallaxState.value
@@ -92,6 +94,11 @@ class SettingsStateHolder(
     fun setSharpCorners(enabled: Boolean) {
         sharpCornersState.value = enabled
         scope.launch { configRepository.setUseSharpCorners(enabled) }
+    }
+
+    fun setOutlines(enabled: Boolean) {
+        outlinesState.value = enabled
+        scope.launch { configRepository.setUseOutlines(enabled) }
     }
 
     fun setCustomAccentColor(argb: Int?) {
@@ -212,6 +219,7 @@ fun rememberSettingsStateHolder(
     adbEnabledProvider: () -> Boolean,
     onAdbEnabledChange: (Boolean) -> Unit,
     sharpCornersState: MutableState<Boolean>,
+    outlinesState: MutableState<Boolean>,
     customAccentColorState: MutableState<Int?>,
     backgroundTypeState: MutableState<BackgroundType>,
     enableParallaxState: MutableState<Boolean>,
@@ -245,6 +253,7 @@ fun rememberSettingsStateHolder(
             adbEnabledProvider = { currentAdbEnabledState.value },
             onAdbEnabledChange = { currentOnAdbEnabledChange(it) },
             sharpCornersState = sharpCornersState,
+            outlinesState = outlinesState,
             customAccentColorState = customAccentColorState,
             backgroundTypeState = backgroundTypeState,
             enableParallaxState = enableParallaxState,

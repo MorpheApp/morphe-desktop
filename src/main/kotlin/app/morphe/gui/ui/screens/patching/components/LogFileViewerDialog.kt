@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.patching.components
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -41,6 +40,7 @@ import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.awt.datatransfer.StringSelection
@@ -81,7 +81,7 @@ fun LogFileViewerDialog(
                 .padding(32.dp)
                 .clip(MorpheTheme.shapes.large)
                 .background(MaterialTheme.colorScheme.surface)
-                .border(1.dp, borderColor, MorpheTheme.shapes.large)
+                .outlineBorder(borderColor, MorpheTheme.shapes.large)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 // Header

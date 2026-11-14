@@ -6,9 +6,7 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,6 +26,8 @@ import app.morphe.gui.LocalAdbPreference
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.ui.theme.outlineStroke
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -71,7 +71,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
                 .hoverable(hoverInteraction)
                 .clip(MorpheTheme.shapes.small)
                 .background(containerColor)
-                .border(1.dp, borderColor, MorpheTheme.shapes.small)
+                .outlineBorder(borderColor, MorpheTheme.shapes.small)
                 .handCursor()
                 .clickable { showPopup = !showPopup }
         ) {
@@ -134,7 +134,7 @@ fun DeviceIndicator(modifier: Modifier = Modifier) {
             onDismissRequest = { showPopup = false },
             shape = MorpheTheme.shapes.medium,
             containerColor = MaterialTheme.colorScheme.surface,
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
+            border = outlineStroke(MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
         ) {
             when {
                 isAdbDisabledByUser -> {

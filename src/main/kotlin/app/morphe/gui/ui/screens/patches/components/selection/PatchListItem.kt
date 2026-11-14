@@ -60,6 +60,7 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.contrastingForeground
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -103,7 +104,7 @@ internal fun PatchListItem(
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.small)
             .background(containerColor, MorpheTheme.shapes.small)
-            .border(1.dp, borderColor, MorpheTheme.shapes.small)
+            .outlineBorder(borderColor, MorpheTheme.shapes.small)
             .hoverable(interactionSource)
     ) {
         // Include badge status in row content description for accessibility.

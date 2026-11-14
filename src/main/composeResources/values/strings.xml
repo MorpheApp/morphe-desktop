@@ -697,6 +697,8 @@
     <string name="settings_appearance_monochrome">Monochrome</string>
     <string name="settings_toggle_sharp_corners_label">Sharp corners</string>
     <string name="settings_toggle_sharp_corners_desc">Square off cards, dialogs and buttons</string>
+    <string name="settings_toggle_outlines_label">Outlines</string>
+    <string name="settings_toggle_outlines_desc">Draws a thin edge around cards, panels and buttons</string>
     <string name="settings_section_accent_color">Accent color</string>
     <string name="settings_accent_clear_description">Clear accent color</string>
     <string name="settings_accent_custom_description">Custom accent color</string>

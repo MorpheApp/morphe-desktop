@@ -8,7 +8,6 @@ package app.morphe.gui.ui.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.hoverable
@@ -45,6 +44,7 @@ import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.channelColor
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Cursor
 import java.awt.Toolkit
@@ -415,10 +415,9 @@ private fun SourceRow(
             .onSizeChanged { onMeasured(it.height) }
             .fillMaxWidth()
             .clip(shapes.medium)
-            .border(
-                1.dp,
-                if (isDragging) colors.primary.copy(alpha = 0.7f) else animatedBorder,
-                shapes.medium
+            .outlineBorder(
+                color = if (isDragging) colors.primary.copy(alpha = 0.7f) else animatedBorder,
+                shape = shapes.medium,
             )
             .background(baseBg)
             .background(if (isDragging) colors.primary.copy(alpha = 0.10f) else animatedBg)
@@ -540,7 +539,7 @@ private fun SourceRow(
                         modifier = Modifier
                             .clip(shapes.small)
                             .background(colors.danger.copy(alpha = 0.1f))
-                            .border(1.dp, colors.danger.copy(alpha = 0.3f), shapes.small)
+                            .outlineBorder(colors.danger.copy(alpha = 0.3f), shapes.small)
                             .then(
                                 if (onReviewSignerChanged != null) Modifier
                                     .handCursor()

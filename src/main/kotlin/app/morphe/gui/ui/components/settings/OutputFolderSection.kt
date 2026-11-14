@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components.settings
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,7 @@ import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -61,7 +61,7 @@ internal fun OutputFolderSection(
                     .weight(1f)
                     .fillMaxHeight()
                     .clip(MorpheTheme.shapes.small)
-                    .border(1.dp, borderColor, MorpheTheme.shapes.small)
+                    .outlineBorder(borderColor, MorpheTheme.shapes.small)
                     .padding(horizontal = 10.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
