@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">ვერსიები ვერ მოიძებნა</string>
     <string name="patches_export_options_title">Export options.json-ის ექსპორტი</string>
     <string name="patches_latest_badge">უახლესი</string>
-    <string name="patches_cached_badge">ქეშირებული</string>
-    <string name="patches_date_cached">ქეშირებულია: %1$s</string>
-    <string name="patches_date_published">გამოქვეყნებულია: %1$s</string>
-    <string name="patches_hide_notes">შენიშვნების დამალვა</string>
-    <string name="patches_patch_notes">პატჩის შენიშვნები</string>
-    <string name="patches_downloading">ჩამოტვირთვა...</string>
-    <string name="patches_select">აირჩიეთ</string>
-    <string name="patches_export_json">JSON-ის ექსპორტი</string>
     <string name="patches_local_patch_file">პატჩის ლოკალური ფაილი</string>
     <string name="patches_error_local_file_not_found">პატჩის ლოკალური ფაილი ვერ მოიძებნა: %1$s</string>
     <string name="patches_error_failed_to_load_releases">ვერსიების ჩატვირთვა ვერ მოხერხდა</string>

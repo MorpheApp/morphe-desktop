@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Рэлізаў не знойдзена</string>
     <string name="patches_export_options_title">Экспартаваць options.json</string>
     <string name="patches_latest_badge">Новыя</string>
-    <string name="patches_cached_badge">Кэшаваныя</string>
-    <string name="patches_date_cached">Кэшавана: %1$s</string>
-    <string name="patches_date_published">Апублікавана: %1$s</string>
-    <string name="patches_hide_notes">Схаваць запіскі</string>
-    <string name="patches_patch_notes">Запіскі да патча</string>
-    <string name="patches_downloading">Спампоўка…</string>
-    <string name="patches_select">Выбраць</string>
-    <string name="patches_export_json">Экспартаваць JSON</string>
     <string name="patches_local_patch_file">Локальны файл патча</string>
     <string name="patches_error_local_file_not_found">Локальны файл патча не знойдзены: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Не ўдалося загрузіць рэлізы</string>

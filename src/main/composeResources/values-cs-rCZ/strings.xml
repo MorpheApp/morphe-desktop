@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Žádné verze nebyly nalezeny</string>
     <string name="patches_export_options_title">Exportovat options.json</string>
     <string name="patches_latest_badge">Nejnovější</string>
-    <string name="patches_cached_badge">V cache</string>
-    <string name="patches_date_cached">V cache: %1$s</string>
-    <string name="patches_date_published">Publikováno: %1$s</string>
-    <string name="patches_hide_notes">Skrýt poznámky</string>
-    <string name="patches_patch_notes">Poznámky k záplacie</string>
-    <string name="patches_downloading">Stahování…</string>
-    <string name="patches_select">Vybrat</string>
-    <string name="patches_export_json">Exportovat JSON</string>
     <string name="patches_local_patch_file">Lokální soubor záplaty</string>
     <string name="patches_error_local_file_not_found">Lokální soubor záplaty nebyl nalezen: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Nepodařilo se načíst verze</string>

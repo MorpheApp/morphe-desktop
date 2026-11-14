@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Geen releases gevonden</string>
     <string name="patches_export_options_title">Exporteer options.json</string>
     <string name="patches_latest_badge">Nieuwste</string>
-    <string name="patches_cached_badge">In cache</string>
-    <string name="patches_date_cached">In cache: %1$s</string>
-    <string name="patches_date_published">Gepubliceerd: %1$s</string>
-    <string name="patches_hide_notes">Notities verbergen</string>
-    <string name="patches_patch_notes">Patchopmerkingen</string>
-    <string name="patches_downloading">Bezig met downloaden…</string>
-    <string name="patches_select">Selecteren</string>
-    <string name="patches_export_json">Exporteer JSON</string>
     <string name="patches_local_patch_file">Lokaal patchbestand</string>
     <string name="patches_error_local_file_not_found">Lokaal patchbestand niet gevonden: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Releases laden mislukt</string>

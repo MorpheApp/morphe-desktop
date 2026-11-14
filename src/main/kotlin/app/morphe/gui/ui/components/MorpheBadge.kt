@@ -85,6 +85,7 @@ fun MorpheBadge(
     containerColor: Color? = null,
     contentColor: Color? = null,
     onGradient: Boolean = false,
+    isCode: Boolean = tone == MorpheBadgeTone.Code,
     content: @Composable RowScope.() -> Unit,
 ) {
     val shapes = MorpheTheme.shapes
@@ -128,7 +129,7 @@ fun MorpheBadge(
     }
 
     val isSharp = MorpheTheme.corners.isSharp
-    val badgeShape = if (tone == MorpheBadgeTone.Code || isSharp) shapes.extraSmall else RoundedCornerShape(percent = 50)
+    val badgeShape = if (isCode || isSharp) shapes.extraSmall else RoundedCornerShape(percent = 50)
     val hasBorder = variant != MorpheBadgeVariant.FILLED && (variant == MorpheBadgeVariant.OUTLINED || !onGradient)
     val borderModifier = if (hasBorder) {
         val bColor = if (variant == MorpheBadgeVariant.OUTLINED) ink else ink.copy(alpha = 0.25f)
@@ -182,6 +183,7 @@ fun MorpheBadge(
         containerColor = containerColor,
         contentColor = contentColor,
         onGradient = onGradient,
+        isCode = isCode,
     ) {
         Text(text = text, style = textStyle, color = LocalContentColor.current)
     }

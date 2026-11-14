@@ -295,14 +295,6 @@
     <string name="patches_no_releases_found">Релизтер табылмады</string>
     <string name="patches_export_options_title">Options.json файлын экспорттау</string>
     <string name="patches_latest_badge">Соңғы</string>
-    <string name="patches_cached_badge">Кэштелген</string>
-    <string name="patches_date_cached">Кэштелген: %1$s</string>
-    <string name="patches_date_published">Жарияланды: %1$s</string>
-    <string name="patches_hide_notes">Жазбаларды жасыру</string>
-    <string name="patches_patch_notes">Патч жазбалары</string>
-    <string name="patches_downloading">Жүктелуде…</string>
-    <string name="patches_select">Таңдау</string>
-    <string name="patches_export_json">JSON экспорты</string>
     <string name="patches_local_patch_file">Жергілікті патч файлы</string>
     <string name="patches_error_local_file_not_found">Жергілікті патч файлы табылмады: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Релизтерді жүктеу сәтсіз аяқталды</string>

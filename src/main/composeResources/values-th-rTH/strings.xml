@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">ไม่พบรีลีส</string>
     <string name="patches_export_options_title">ส่งออก options.json</string>
     <string name="patches_latest_badge">ล่าสุด</string>
-    <string name="patches_cached_badge">แคชแล้ว</string>
-    <string name="patches_date_cached">แคชเมื่อ: %1$s</string>
-    <string name="patches_date_published">เผยแพร่เมื่อ: %1$s</string>
-    <string name="patches_hide_notes">ซ่อนบันทึก</string>
-    <string name="patches_patch_notes">หมายเหตุแพตช์</string>
-    <string name="patches_downloading">กำลังดาวน์โหลด…</string>
-    <string name="patches_select">เลือก</string>
-    <string name="patches_export_json">ส่งออก JSON</string>
     <string name="patches_local_patch_file">ไฟล์แพตช์ในเครื่อง</string>
     <string name="patches_error_local_file_not_found">ไม่พบไฟล์แพตช์ในเครื่อง: %1$s</string>
     <string name="patches_error_failed_to_load_releases">โหลดรีลีสไม่สำเร็จ</string>

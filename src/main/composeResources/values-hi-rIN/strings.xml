@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">कोई रिलीज़ नहीं मिली</string>
     <string name="patches_export_options_title">Options.json निर्यात करें</string>
     <string name="patches_latest_badge">नवीनतम</string>
-    <string name="patches_cached_badge">कैश किया हुआ</string>
-    <string name="patches_date_cached">कैश किया हुआ: %1$s</string>
-    <string name="patches_date_published">प्रकाशित: %1$s</string>
-    <string name="patches_hide_notes">नोट छिपाएँ</string>
-    <string name="patches_patch_notes">पैच नोट</string>
-    <string name="patches_downloading">डाउनलोड हो रहा है…</string>
-    <string name="patches_select">चुनें</string>
-    <string name="patches_export_json">JSON निर्यात करें</string>
     <string name="patches_local_patch_file">स्थानीय पैच फ़ाइल</string>
     <string name="patches_error_local_file_not_found">स्थानीय पैच फ़ाइल नहीं मिली: %1$s</string>
     <string name="patches_error_failed_to_load_releases">रिलीज़ लोड करने में विफल</string>

@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Tiada keluaran dijumpai</string>
     <string name="patches_export_options_title">Eksport options.json</string>
     <string name="patches_latest_badge">Terbaharu</string>
-    <string name="patches_cached_badge">Disebelak</string>
-    <string name="patches_date_cached">Dih cache: %1$s</string>
-    <string name="patches_date_published">Diterbitkan: %1$s</string>
-    <string name="patches_hide_notes">Sembunyikan nota</string>
-    <string name="patches_patch_notes">Nota tampalan</string>
-    <string name="patches_downloading">Memuat turun…</string>
-    <string name="patches_select">Pilih</string>
-    <string name="patches_export_json">Eksport JSON</string>
     <string name="patches_local_patch_file">Fail tampalan tempatan</string>
     <string name="patches_error_local_file_not_found">Fail tampalan tempatan tidak ditemui: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Gagal untuk memuatkan keluaran</string>

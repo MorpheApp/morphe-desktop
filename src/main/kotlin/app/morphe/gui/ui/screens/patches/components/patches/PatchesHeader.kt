@@ -27,7 +27,8 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun PatchesHeader(
-    apkName: String,
+    title: String,
+    subtitle: String,
     isLocalSource: Boolean,
     isLoading: Boolean,
     onBackClick: () -> Unit,
@@ -62,13 +63,13 @@ internal fun PatchesHeader(
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(Res.string.patches_title_select_bundle_version),
+                text = title,
                 style = MorpheTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            if (apkName.isNotBlank()) {
+            if (subtitle.isNotBlank()) {
                 Text(
-                    text = apkName,
+                    text = subtitle,
                     style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,

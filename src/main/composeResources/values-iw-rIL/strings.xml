@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">לא נמצאו מהדורות</string>
     <string name="patches_export_options_title">ייצא options.json</string>
     <string name="patches_latest_badge">עדכני</string>
-    <string name="patches_cached_badge">במטמון</string>
-    <string name="patches_date_cached">במטמון: %1$s</string>
-    <string name="patches_date_published">פורסם: %1$s</string>
-    <string name="patches_hide_notes">הסתר הערות</string>
-    <string name="patches_patch_notes">הערות טלאי</string>
-    <string name="patches_downloading">מוריד…</string>
-    <string name="patches_select">בחר</string>
-    <string name="patches_export_json">ייצא JSON</string>
     <string name="patches_local_patch_file">קובץ טלאי מקומי</string>
     <string name="patches_error_local_file_not_found">קובץ הטלאי המקומי לא נמצא: %1$s</string>
     <string name="patches_error_failed_to_load_releases">טעינת המהדורות נכשלה</string>

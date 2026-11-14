@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">未找到发布版</string>
     <string name="patches_export_options_title">导出 options.json</string>
     <string name="patches_latest_badge">最新</string>
-    <string name="patches_cached_badge">已缓存</string>
-    <string name="patches_date_cached">已缓存：%1$s</string>
-    <string name="patches_date_published">发布于：%1$s</string>
-    <string name="patches_hide_notes">隐藏说明</string>
-    <string name="patches_patch_notes">补丁说明</string>
-    <string name="patches_downloading">正在下载……</string>
-    <string name="patches_select">选择</string>
-    <string name="patches_export_json">导出 JSON</string>
     <string name="patches_local_patch_file">本地补丁文件</string>
     <string name="patches_error_local_file_not_found">未找到本地补丁文件：%1$s</string>
     <string name="patches_error_failed_to_load_releases">加载发布版失败</string>

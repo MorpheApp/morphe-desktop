@@ -12,6 +12,7 @@ import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
@@ -39,6 +40,7 @@ object EnabledSourcesLoader {
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
         val isOffline: Boolean = false,
+        val isPinned: Boolean = false,
         val error: String? = null,
         val channel: PatchResolver.Channel = PatchResolver.Channel.UNKNOWN,
         val errorRes: StringResource? = null,
@@ -161,7 +163,9 @@ object EnabledSourcesLoader {
                 }
             }
         }
-        engineResult.toResolvedSource(source, repo)
+        engineResult.toResolvedSource(source, repo).let {
+            if (source.type != PatchSourceType.LOCAL && pref?.mode == FollowMode.PINNED) it.copy(isPinned = true) else it
+        }
     }
 
     private fun PatchResolver.ResolutionResult.toResolvedSource(
@@ -279,4 +283,44 @@ fun EnabledSourcesLoader.Result.logIfFailed(prefix: String = "") {
     } else {
         Logger.warn(logMessage)
     }
+}
+
+data class SourceApp(
+    val packageName: String,
+    val displayName: String,
+    val patchCount: Int,
+    val iconColorHex: String?,
+)
+
+data class SourceDetails(
+    val patchCount: Int,
+    val sizeBytes: Long?,
+    val apps: List<SourceApp>,
+    val isOffline: Boolean,
+    val isPinned: Boolean,
+    val fileName: String?,
+)
+
+fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> {
+    val snapshot = this ?: return emptyMap()
+    return snapshot.resolved.mapNotNull { r ->
+        val file = r.patchFile ?: return@mapNotNull null
+        val patches = snapshot.patchesBySource[r.source.id] ?: return@mapNotNull null
+        val apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(patches).map { app ->
+            SourceApp(
+                packageName = app.packageName,
+                displayName = app.displayName,
+                patchCount = patches.count { p -> p.compatiblePackages.any { it.name == app.packageName } },
+                iconColorHex = app.appIconColor,
+            )
+        }.sortedWith(compareByDescending<SourceApp> { it.patchCount }.thenBy { it.displayName })
+        r.source.id to SourceDetails(
+            patchCount = patches.size,
+            sizeBytes = file.takeIf { it.isFile }?.length(),
+            apps = apps,
+            isOffline = r.isOffline,
+            isPinned = r.isPinned,
+            fileName = file.name,
+        )
+    }.toMap()
 }

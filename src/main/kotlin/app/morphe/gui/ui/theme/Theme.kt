@@ -184,6 +184,9 @@ object MorpheTheme {
 val panelFill: Color
     @Composable get() = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
 
+val cardFill: Color
+    @Composable get() = MaterialTheme.colorScheme.surfaceContainerLow
+
 /** Background scrim color for screens with dense text content. */
 val screenScrim: Color
     @Composable get() = MaterialTheme.colorScheme.background.copy(alpha = SCREEN_SCRIM_ALPHA)

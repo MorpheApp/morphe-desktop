@@ -16,8 +16,9 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.VersionStatus
 import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
-import app.morphe.gui.ui.components.MorpheDialogCard
+import app.morphe.gui.ui.components.MorpheDialog
 import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -45,29 +46,27 @@ internal fun VersionWarningDialog(
     )
     val warnColor = warningContent.colorType.toColor()
 
-    MorpheDialogCard(onDismiss = onDismiss, title = warningContent.title) {
-        Icon(
-            imageVector = MorpheIcons.Warning,
-            contentDescription = null,
-            tint = warnColor,
-            modifier = Modifier.size(28.dp),
-        )
-        MorpheDialogText(warningContent.message)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+    MorpheDialog(
+        onDismiss = onDismiss,
+        title = warningContent.title,
+        icon = MorpheIcons.Warning,
+        accent = warnColor,
+        actions = {
             MorpheButton(
                 label = stringResource(Res.string.cancel),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.OUTLINED,
+                variant = MorpheButtonVariant.GHOST,
+                size = MorpheButtonSize.COMPACT,
                 onClick = onDismiss,
             )
             MorpheButton(
                 label = stringResource(Res.string.home_dialog_continue_anyway),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.FILLED,
+                size = MorpheButtonSize.COMPACT,
                 customColor = warnColor,
                 onClick = onConfirm,
             )
-        }
+        },
+    ) {
+        MorpheDialogText(warningContent.message)
     }
 }
 
@@ -78,14 +77,21 @@ internal fun ForgetConfirmDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_forget_title, record.displayName)) {
+    MorpheDialog(
+        onDismiss = onDismiss,
+        title = stringResource(Res.string.home_dialog_forget_title, record.displayName),
+        icon = MorpheIcons.Delete,
+        accent = MorpheTheme.colors.danger,
+        actions = {
+            DangerDialogActions(
+                confirmLabel = stringResource(Res.string.home_dialog_forget_button),
+                onDismiss = onDismiss,
+                onConfirm = onConfirm,
+            )
+        },
+    ) {
         MorpheDialogText(
             stringResource(Res.string.home_dialog_forget_message, record.displayName)
-        )
-        DangerDialogActionRow(
-            confirmLabel = stringResource(Res.string.home_dialog_forget_button),
-            onDismiss = onDismiss,
-            onConfirm = onConfirm,
         )
     }
 }
@@ -100,9 +106,18 @@ internal fun UninstallConfirmDialog(
     onConfirm: () -> Unit,
 ) {
     val dangerColor = MorpheTheme.colors.danger
-    MorpheDialogCard(
+    MorpheDialog(
         onDismiss = onDismiss,
         title = stringResource(Res.string.home_dialog_uninstall_title, record.displayName),
+        icon = MorpheIcons.Delete,
+        accent = dangerColor,
+        actions = {
+            DangerDialogActions(
+                confirmLabel = stringResource(Res.string.home_dialog_uninstall_button),
+                onDismiss = onDismiss,
+                onConfirm = onConfirm,
+            )
+        },
     ) {
         MorpheDialogText(
             stringResource(Res.string.home_dialog_uninstall_message, record.displayName)
@@ -129,33 +144,26 @@ internal fun UninstallConfirmDialog(
                 color = MaterialTheme.colorScheme.onSurface,
             )
         }
-        DangerDialogActionRow(
-            confirmLabel = stringResource(Res.string.home_dialog_uninstall_button),
-            onDismiss = onDismiss,
-            onConfirm = onConfirm,
-        )
     }
 }
 
 @Composable
-private fun DangerDialogActionRow(
+private fun DangerDialogActions(
     confirmLabel: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-        MorpheButton(
-            label = stringResource(Res.string.cancel),
-            modifier = Modifier.weight(1f),
-            variant = MorpheButtonVariant.OUTLINED,
-            onClick = onDismiss,
-        )
-        MorpheButton(
-            label = confirmLabel,
-            modifier = Modifier.weight(1f),
-            variant = MorpheButtonVariant.DANGER,
-            onClick = onConfirm,
-        )
-    }
+    MorpheButton(
+        label = stringResource(Res.string.cancel),
+        variant = MorpheButtonVariant.GHOST,
+        size = MorpheButtonSize.COMPACT,
+        onClick = onDismiss,
+    )
+    MorpheButton(
+        label = confirmLabel,
+        variant = MorpheButtonVariant.DANGER,
+        size = MorpheButtonSize.COMPACT,
+        onClick = onConfirm,
+    )
 }
 

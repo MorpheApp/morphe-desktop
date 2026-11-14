@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">リリースが見つかりません</string>
     <string name="patches_export_options_title">エクスポート： options.json</string>
     <string name="patches_latest_badge">最新</string>
-    <string name="patches_cached_badge">キャッシュ済み</string>
-    <string name="patches_date_cached">キャッシュ: %1$s</string>
-    <string name="patches_date_published">公開: %1$s</string>
-    <string name="patches_hide_notes">メモを隠す</string>
-    <string name="patches_patch_notes">パッチノート</string>
-    <string name="patches_downloading">ダウンロード中…</string>
-    <string name="patches_select">選択</string>
-    <string name="patches_export_json">JSON をエクスポート</string>
     <string name="patches_local_patch_file">ローカル パッチ ファイル</string>
     <string name="patches_error_local_file_not_found">ローカル パッチ ファイルが見つかりません: %1$s</string>
     <string name="patches_error_failed_to_load_releases">リリースの読み込みに失敗しました</string>

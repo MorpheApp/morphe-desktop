@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Релизы не найдены</string>
     <string name="patches_export_options_title">Экспортировать options.json</string>
     <string name="patches_latest_badge">Последняя</string>
-    <string name="patches_cached_badge">В кэше</string>
-    <string name="patches_date_cached">В кэше: %1$s</string>
-    <string name="patches_date_published">Опубликовано: %1$s</string>
-    <string name="patches_hide_notes">Скрыть заметки</string>
-    <string name="patches_patch_notes">Заметки к патчам</string>
-    <string name="patches_downloading">Загрузка…</string>
-    <string name="patches_select">Выбрать</string>
-    <string name="patches_export_json">Экспортировать JSON</string>
     <string name="patches_local_patch_file">Локальный файл патча</string>
     <string name="patches_error_local_file_not_found">Локальный файл патча не найден: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Не удалось загрузить релизы</string>

@@ -263,22 +263,25 @@ internal fun StorageSection(
     }
 
     if (showClearAllConfirm) {
-        MorpheAlertDialog(
+        MorpheDialog(
             onDismiss = { showClearAllConfirm = false },
-            title = {
-                Text(
-                    stringResource(Res.string.settings_cache_confirm_title),
-                    style = MorpheTheme.typography.titleMedium,
-                )
-            },
-            text = {
+            icon = MorpheIcons.DeleteSweep,
+            accent = MorpheTheme.colors.danger,
+            title = stringResource(Res.string.settings_cache_confirm_title),
+            content = {
                 Text(
                     stringResource(Res.string.settings_cache_confirm_message),
                     style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
-            confirmButton = {
+            actions = {
+                MorpheButton(
+                    label = stringResource(Res.string.cancel),
+                    onClick = { showClearAllConfirm = false },
+                    variant = MorpheButtonVariant.GHOST,
+                    size = MorpheButtonSize.COMPACT,
+                )
                 MorpheButton(
                     label = stringResource(Res.string.clear),
                     onClick = {
@@ -303,14 +306,6 @@ internal fun StorageSection(
                     size = MorpheButtonSize.COMPACT,
                 )
             },
-            dismissButton = {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    onClick = { showClearAllConfirm = false },
-                    variant = MorpheButtonVariant.GHOST,
-                    size = MorpheButtonSize.COMPACT,
-                )
-            }
         )
     }
 
@@ -322,22 +317,25 @@ internal fun StorageSection(
             CategoryType.AVATARS -> Res.string.settings_cache_confirm_avatars_title to Res.string.settings_cache_confirm_avatars_message
             CategoryType.APP_ICONS -> Res.string.settings_cache_confirm_app_icons_title to Res.string.settings_cache_confirm_app_icons_message
         }
-        MorpheAlertDialog(
+        MorpheDialog(
             onDismiss = { categoryConfirm = null },
-            title = {
-                Text(
-                    stringResource(titleRes),
-                    style = MorpheTheme.typography.titleMedium,
-                )
-            },
-            text = {
+            icon = MorpheIcons.DeleteSweep,
+            accent = MorpheTheme.colors.danger,
+            title = stringResource(titleRes),
+            content = {
                 Text(
                     stringResource(messageRes),
                     style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
-            confirmButton = {
+            actions = {
+                MorpheButton(
+                    label = stringResource(Res.string.cancel),
+                    onClick = { categoryConfirm = null },
+                    variant = MorpheButtonVariant.GHOST,
+                    size = MorpheButtonSize.COMPACT,
+                )
                 MorpheButton(
                     label = stringResource(Res.string.clear),
                     onClick = {
@@ -384,14 +382,6 @@ internal fun StorageSection(
                     size = MorpheButtonSize.COMPACT,
                 )
             },
-            dismissButton = {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    onClick = { categoryConfirm = null },
-                    variant = MorpheButtonVariant.GHOST,
-                    size = MorpheButtonSize.COMPACT,
-                )
-            }
         )
     }
 }

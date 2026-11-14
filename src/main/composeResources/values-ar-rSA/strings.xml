@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">لا توجد إصدارات</string>
     <string name="patches_export_options_title">تصدير options.json</string>
     <string name="patches_latest_badge">الأحدث</string>
-    <string name="patches_cached_badge">مخزَّن مؤقتًا</string>
-    <string name="patches_date_cached">مخزَّن مؤقتًا: %1$s</string>
-    <string name="patches_date_published">نُشر: %1$s</string>
-    <string name="patches_hide_notes">إخفاء الملاحظات</string>
-    <string name="patches_patch_notes">ملاحظات التصحيح</string>
-    <string name="patches_downloading">جارٍ التنزيل…</string>
-    <string name="patches_select">تحديد</string>
-    <string name="patches_export_json">تصدير JSON</string>
     <string name="patches_local_patch_file">ملف تصحيح محلي</string>
     <string name="patches_error_local_file_not_found">ملف التصحيح المحلي غير موجود: %1$s</string>
     <string name="patches_error_failed_to_load_releases">فشل تحميل الإصدارات</string>

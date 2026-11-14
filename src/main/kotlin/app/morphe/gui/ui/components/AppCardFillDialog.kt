@@ -69,26 +69,12 @@ fun AppCardFillDialog(
     var mode by remember { mutableStateOf(initialFill.mode) }
     val palette = cardPalette(working, appIconColorHex, defaultCardPalette())
 
-    MorpheAlertDialog(
+    MorpheDialog(
         onDismiss = onDismiss,
         maxWidth = 520.dp,
-        title = {
-            Column {
-                Text(
-                    text = stringResource(Res.string.card_fill_title),
-                    style = MorpheTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                if (appName != null) {
-                    Text(
-                        text = appName,
-                        style = MorpheTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
-        },
-        text = {
+        title = stringResource(Res.string.card_fill_title),
+        subtitle = appName,
+        content = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -150,15 +136,13 @@ fun AppCardFillDialog(
                 }
             }
         },
-        dismissButton = {
+        actions = {
             MorpheButton(
                 label = stringResource(Res.string.cancel),
                 onClick = onDismiss,
                 variant = MorpheButtonVariant.GHOST,
                 size = MorpheButtonSize.COMPACT,
             )
-        },
-        confirmButton = {
             MorpheButton(
                 label = stringResource(Res.string.save),
                 onClick = { onSave(working) },

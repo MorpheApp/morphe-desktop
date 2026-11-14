@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Релізів не знайдено</string>
     <string name="patches_export_options_title">Експортувати options.json</string>
     <string name="patches_latest_badge">Остання</string>
-    <string name="patches_cached_badge">У кеші</string>
-    <string name="patches_date_cached">У кеші: %1$s</string>
-    <string name="patches_date_published">Опубліковано: %1$s</string>
-    <string name="patches_hide_notes">Сховати нотатки</string>
-    <string name="patches_patch_notes">Нотатки патча</string>
-    <string name="patches_downloading">Завантаження…</string>
-    <string name="patches_select">Вибрати</string>
-    <string name="patches_export_json">Експортувати JSON</string>
     <string name="patches_local_patch_file">Локальний файл патча</string>
     <string name="patches_error_local_file_not_found">Локальний файл патча не знайдено: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Не вдалося завантажити релізи</string>

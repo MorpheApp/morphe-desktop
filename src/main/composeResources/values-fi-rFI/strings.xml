@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Ei julkaisuja löytynyt</string>
     <string name="patches_export_options_title">Vie options.json</string>
     <string name="patches_latest_badge">Uusin</string>
-    <string name="patches_cached_badge">Välimuistissa</string>
-    <string name="patches_date_cached">Välimuistissa: %1$s</string>
-    <string name="patches_date_published">Julkaistu: %1$s</string>
-    <string name="patches_hide_notes">Piilota muistiinpanot</string>
-    <string name="patches_patch_notes">Paikkausmuistiinpanot</string>
-    <string name="patches_downloading">Ladataan…</string>
-    <string name="patches_select">Valitse</string>
-    <string name="patches_export_json">Vie JSON</string>
     <string name="patches_local_patch_file">Paikallinen paikkaustiedosto</string>
     <string name="patches_error_local_file_not_found">Paikallista paikkaustiedostoa ei löytynyt: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Julkaisujen lataus epäonnistui</string>

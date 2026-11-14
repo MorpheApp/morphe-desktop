@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Geen vrystellings gevind nie</string>
     <string name="patches_export_options_title">Voer options.json uit</string>
     <string name="patches_latest_badge">Nuutste</string>
-    <string name="patches_cached_badge">Gekas</string>
-    <string name="patches_date_cached">Gekas: %1$s</string>
-    <string name="patches_date_published">Gepubliseer: %1$s</string>
-    <string name="patches_hide_notes">Verstek notas</string>
-    <string name="patches_patch_notes">Verandering notas</string>
-    <string name="patches_downloading">Laai af…</string>
-    <string name="patches_select">Kies</string>
-    <string name="patches_export_json">Voer JSON uit</string>
     <string name="patches_local_patch_file">Lokale veranderingslêer</string>
     <string name="patches_error_local_file_not_found">Lokale veranderingslêer nie gevind nie: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Misluk om vrystellings te laai</string>

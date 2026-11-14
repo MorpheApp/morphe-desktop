@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Inga utgåvor hittades</string>
     <string name="patches_export_options_title">Exportera options.json</string>
     <string name="patches_latest_badge">Senaste</string>
-    <string name="patches_cached_badge">Cachad</string>
-    <string name="patches_date_cached">Cachad: %1$s</string>
-    <string name="patches_date_published">Publicerad: %1$s</string>
-    <string name="patches_hide_notes">Dölj anteckningar</string>
-    <string name="patches_patch_notes">Patchanteckningar</string>
-    <string name="patches_downloading">Laddar ner…</string>
-    <string name="patches_select">Välj</string>
-    <string name="patches_export_json">Exportera JSON</string>
     <string name="patches_local_patch_file">Lokal patchfil</string>
     <string name="patches_error_local_file_not_found">Lokal patchfil hittades inte: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Det gick inte att läsa in utgåvor</string>

@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.screens.home.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,8 +24,9 @@ import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheButton
+import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
-import app.morphe.gui.ui.components.MorpheDialogCard
+import app.morphe.gui.ui.components.MorpheDialog
 import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.appCardColors
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -89,27 +89,24 @@ internal fun CommunityPatchesNoticeDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    MorpheDialogCard(
+    MorpheDialog(
         onDismiss = onDismiss,
         title = stringResource(Res.string.community_patches_notice_title),
-    ) {
-        MorpheDialogText(stringResource(Res.string.community_patches_notice_message))
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth(),
-        ) {
+        icon = MorpheIcons.Info,
+        actions = {
             MorpheButton(
                 label = stringResource(Res.string.cancel),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.OUTLINED,
+                variant = MorpheButtonVariant.GHOST,
+                size = MorpheButtonSize.COMPACT,
                 onClick = onDismiss,
             )
             MorpheButton(
                 label = stringResource(Res.string.open),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.FILLED,
+                size = MorpheButtonSize.COMPACT,
                 onClick = onConfirm,
             )
-        }
+        },
+    ) {
+        MorpheDialogText(stringResource(Res.string.community_patches_notice_message))
     }
 }

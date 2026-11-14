@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Թողարկումներ չեն գտնվել</string>
     <string name="patches_export_options_title">Արտահանել options.json</string>
     <string name="patches_latest_badge">Վերջինը</string>
-    <string name="patches_cached_badge">Քեշավորված</string>
-    <string name="patches_date_cached">Քեշավորված է՝ %1$s</string>
-    <string name="patches_date_published">Հրապարակված է՝ %1$s</string>
-    <string name="patches_hide_notes">Թաքցնել նշումները</string>
-    <string name="patches_patch_notes">Փաթեթի նշումներ</string>
-    <string name="patches_downloading">Ներբեռնվում է…</string>
-    <string name="patches_select">Ընտրել</string>
-    <string name="patches_export_json">Արտահանել JSON</string>
     <string name="patches_local_patch_file">Տեղական փաթեթի ֆայլ</string>
     <string name="patches_error_local_file_not_found">Տեղական փաթեթի ֆայլը չի գտնվել՝ %1$s</string>
     <string name="patches_error_failed_to_load_releases">Չհաջողվեց բեռնել թողարկումները</string>

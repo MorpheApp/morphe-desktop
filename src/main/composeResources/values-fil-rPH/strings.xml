@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">Walang nakitang release</string>
     <string name="patches_export_options_title">I-export ang options.json</string>
     <string name="patches_latest_badge">Pinakabago</string>
-    <string name="patches_cached_badge">Naka-cache</string>
-    <string name="patches_date_cached">Naka-cache: %1$s</string>
-    <string name="patches_date_published">Nai-publish: %1$s</string>
-    <string name="patches_hide_notes">Itago ang mga tala</string>
-    <string name="patches_patch_notes">Mga tala ng patch</string>
-    <string name="patches_downloading">Dini-download…</string>
-    <string name="patches_select">Pumili</string>
-    <string name="patches_export_json">I-export ang JSON</string>
     <string name="patches_local_patch_file">Lokal na patch file</string>
     <string name="patches_error_local_file_not_found">Hindi nahanap ang lokal na patch file: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Nabigo ang pag-load ng mga release</string>

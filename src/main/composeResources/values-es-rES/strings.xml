@@ -302,14 +302,6 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patches_no_releases_found">No se encontraron versiones</string>
     <string name="patches_export_options_title">Exportar options.json</string>
     <string name="patches_latest_badge">Última</string>
-    <string name="patches_cached_badge">En caché</string>
-    <string name="patches_date_cached">En caché: %1$s</string>
-    <string name="patches_date_published">Publicada: %1$s</string>
-    <string name="patches_hide_notes">Ocultar notas</string>
-    <string name="patches_patch_notes">Notas del parche</string>
-    <string name="patches_downloading">Descargando…</string>
-    <string name="patches_select">Seleccionar</string>
-    <string name="patches_export_json">Exportar JSON</string>
     <string name="patches_local_patch_file">Archivo de parches local</string>
     <string name="patches_error_local_file_not_found">Archivo de parches local no encontrado: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Error al cargar las versiones</string>

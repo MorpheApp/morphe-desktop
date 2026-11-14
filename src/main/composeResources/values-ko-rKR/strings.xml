@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">릴리스를 찾을 수 없습니다</string>
     <string name="patches_export_options_title">options.json 내보내기</string>
     <string name="patches_latest_badge">최신</string>
-    <string name="patches_cached_badge">캐시됨</string>
-    <string name="patches_date_cached">캐시됨: %1$s</string>
-    <string name="patches_date_published">게시됨: %1$s</string>
-    <string name="patches_hide_notes">노트 숨기기</string>
-    <string name="patches_patch_notes">패치 노트</string>
-    <string name="patches_downloading">다운로드 중…</string>
-    <string name="patches_select">선택</string>
-    <string name="patches_export_json">JSON 내보내기</string>
     <string name="patches_local_patch_file">로컬 패치 파일</string>
     <string name="patches_error_local_file_not_found">로컬 패치 파일을 찾을 수 없음: %1$s</string>
     <string name="patches_error_failed_to_load_releases">릴리스를 불러오지 못했습니다</string>

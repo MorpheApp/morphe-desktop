@@ -295,14 +295,6 @@
     <string name="patches_no_releases_found">Izlaides nenāktu</string>
     <string name="patches_export_options_title">Eksportēt options.json</string>
     <string name="patches_latest_badge">Jaunākais</string>
-    <string name="patches_cached_badge">Kešēts</string>
-    <string name="patches_date_cached">Kešēts: %1$s</string>
-    <string name="patches_date_published">Publicēts: %1$s</string>
-    <string name="patches_hide_notes">Paslēpt piezīmes</string>
-    <string name="patches_patch_notes">Lāpīšanas piezīmes</string>
-    <string name="patches_downloading">Lejupielādē...</string>
-    <string name="patches_select">Atlasīt</string>
-    <string name="patches_export_json">Eksportēt JSON</string>
     <string name="patches_local_patch_file">Lokāls lāpīšanas fails</string>
     <string name="patches_error_local_file_not_found">Lokāls lappisa fails neatrasts: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Neizdevās ielādēt izlaidumus</string>

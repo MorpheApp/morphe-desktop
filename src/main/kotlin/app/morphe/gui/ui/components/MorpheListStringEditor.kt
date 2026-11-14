@@ -151,7 +151,23 @@ fun MorpheListStringDialog(
         errorMessage = null
     }
 
-    MorpheDialogCard(onDismiss = onDismiss, title = title) {
+    MorpheDialog(
+        onDismiss = onDismiss,
+        title = title,
+        actions = {
+            MorpheButton(
+                label = stringResource(Res.string.cancel),
+                variant = MorpheButtonVariant.GHOST,
+                size = MorpheButtonSize.COMPACT,
+                onClick = onDismiss,
+            )
+            MorpheButton(
+                label = stringResource(Res.string.save),
+                size = MorpheButtonSize.COMPACT,
+                onClick = { onSave(currentItems.toList()) },
+            )
+        },
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -272,26 +288,6 @@ fun MorpheListStringDialog(
                         )
                     }
                 }
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    modifier = Modifier.weight(1f),
-                    variant = MorpheButtonVariant.OUTLINED,
-                    size = MorpheButtonSize.COMPACT,
-                    onClick = onDismiss,
-                )
-                MorpheButton(
-                    label = stringResource(Res.string.save),
-                    modifier = Modifier.weight(1f),
-                    variant = MorpheButtonVariant.FILLED,
-                    size = MorpheButtonSize.COMPACT,
-                    onClick = { onSave(currentItems.toList()) },
-                )
             }
         }
     }

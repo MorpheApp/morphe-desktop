@@ -296,14 +296,6 @@
     <string name="patches_no_releases_found">কোনো রিলিজ পাওয়া যায়নি</string>
     <string name="patches_export_options_title">options.json এক্সপোর্ট করুন</string>
     <string name="patches_latest_badge">সর্বশেষ</string>
-    <string name="patches_cached_badge">ক্যাশে</string>
-    <string name="patches_date_cached">ক্যাশে: %1$s</string>
-    <string name="patches_date_published">প্রকাশিত: %1$s</string>
-    <string name="patches_hide_notes">নোট লুকান</string>
-    <string name="patches_patch_notes">প্যাচ নোট</string>
-    <string name="patches_downloading">ডাউনলোড হচ্ছে…</string>
-    <string name="patches_select">নির্বাচন</string>
-    <string name="patches_export_json">JSON এক্সপোর্ট করুন</string>
     <string name="patches_local_patch_file">লোকাল প্যাচ ফাইল</string>
     <string name="patches_error_local_file_not_found">লোকাল প্যাচ ফাইল পাওয়া যায়নি: %1$s</string>
     <string name="patches_error_failed_to_load_releases">রিলিজ লোড করা ব্যর্থ হয়েছে</string>
