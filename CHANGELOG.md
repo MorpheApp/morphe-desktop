@@ -1,3 +1,10 @@
+# [2.2.0-dev.18](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.17...v2.2.0-dev.18) (2026-11-14)
+
+
+### Features
+
+* Add `Outlines` toggle ([#434](https://github.com/MorpheApp/morphe-desktop/issues/434)) ([9fbf79a](https://github.com/MorpheApp/morphe-desktop/commit/9fbf79a4a2695e43682ae4303a8c1058577a2d38))
+
 # [2.2.0-dev.17](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.16...v2.2.0-dev.17) (2026-11-14)
 
 
