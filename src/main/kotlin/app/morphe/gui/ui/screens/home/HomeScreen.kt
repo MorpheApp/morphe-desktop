@@ -428,6 +428,7 @@ fun HomeScreenContent(
                     suggestedVersion = resolution.suggestedVersion,
                     requiredBuildCodes = resolution.requiredBuildCodes,
                     isUnsupportedApp = app == null,
+                    formFactor = app?.formFactor ?: apk.formFactor,
                 )
             }
             val activeApkInfo = effectiveApkInfo ?: uiState.apkInfo

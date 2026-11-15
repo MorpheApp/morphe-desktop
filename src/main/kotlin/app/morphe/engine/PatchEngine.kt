@@ -22,6 +22,7 @@ import app.morphe.engine.options.toPatchBundle
 import app.morphe.engine.options.updateOptionsFileFromSnapshots
 import app.morphe.engine.options.writePatchBundles
 import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.supportedVersionsFor
 import app.morphe.engine.util.FileChecksum
 import app.morphe.engine.util.Logger
@@ -36,6 +37,7 @@ import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.dex.NoOpDexVerifier
 import app.morphe.patcher.dex.SdkDexVerifier
 import app.morphe.patcher.logging.toMorpheLogger
+import app.morphe.patcher.patch.FormFactor
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.setOptions
 import app.morphe.patcher.resource.CpuArchitecture
@@ -101,6 +103,7 @@ object PatchEngine {
         val originalPackageName: String? = null,
         val displayName: String? = null,
         val appVersion: String? = null,
+        val formFactor: FormFactor? = null,
         val patchSelectionByBundle: Map<String, Set<String>> = emptyMap(),
         val patchOptionValues: Map<String, String> = emptyMap(),
         val sourcesSnapshot: List<PatchedAppRecord.PatchedSourceSnapshot> = emptyList(),
@@ -373,6 +376,7 @@ object PatchEngine {
                 )
 
                 val finalPatches = mutableSetOf<Patch>()
+                var allPatchesForLookup: Iterable<Patch> = config.patches
 
                 val effectiveBundleScopes = if (config.bundleScopes.isNotEmpty()) {
                     config.bundleScopes
@@ -451,6 +455,7 @@ object PatchEngine {
                     }
 
                     val allLoadedPatches = loadedBundles.flatMap { it.patches }.toSet()
+                    allPatchesForLookup = allLoadedPatches
                     val flatResolvedOpts = if (config.flatPatchOptions.isNotEmpty()) {
                         resolveFlatPatchOptions(
                             patches = allLoadedPatches,
@@ -693,14 +698,18 @@ object PatchEngine {
                     try {
                         val (sha, size) = FileChecksum.fingerprintOrNull(finalOutputApk.absolutePath)
                         val manifest = runCatching { ApkInspector.inspect(finalOutputApk) }.getOrNull()
+                        val originalPkg = config.historyMetadata?.originalPackageName?.takeIf { it.isNotBlank() } ?: packageName
+                        val resolvedFormFactor = config.historyMetadata?.formFactor
+                            ?: SupportedAppCatalog.extractFormFactors(allPatchesForLookup)[originalPkg]
                         val record = PatchedAppRecord(
-                            packageName = config.historyMetadata?.originalPackageName?.takeIf { it.isNotBlank() } ?: packageName,
+                            packageName = originalPkg,
                             currentPackageName = manifest?.packageName,
                             displayName = config.appDisplayName?.takeIf { it.isNotBlank() }
                                 ?: config.historyMetadata?.displayName?.takeIf { it.isNotBlank() }
                                 ?: packageName,
                             apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: packageVersion,
                             apkVersionCode = manifest?.versionCode,
+                            formFactor = resolvedFormFactor,
                             inputApkPath = config.inputApk.absolutePath,
                             outputApkPath = finalOutputApk.absolutePath,
                             outputApkSha256 = sha,
