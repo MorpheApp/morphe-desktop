@@ -128,7 +128,6 @@ fun SourcesPage(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = 1240.dp)
                     .fillMaxWidth()
                     .padding(start = 36.dp, end = 36.dp, top = 28.dp, bottom = 72.dp),
             ) {

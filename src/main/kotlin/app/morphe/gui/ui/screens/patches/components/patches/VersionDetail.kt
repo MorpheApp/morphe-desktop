@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.CircleShape
@@ -64,7 +63,6 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 private const val PERCENT = 100
-private val DetailMaxWidth = 960.dp
 private val HeroCompactWidth = 720.dp
 private val DetailPaddingHorizontal = 40.dp
 private val DetailPaddingVertical = 28.dp
@@ -112,7 +110,7 @@ internal fun VersionDetail(
                 .padding(horizontal = DetailPaddingHorizontal, vertical = DetailPaddingVertical),
         ) {
             Column(
-                modifier = Modifier.widthIn(max = DetailMaxWidth),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(SectionGap),
             ) {
                 Hero(state = state, release = release, contents = contents, base = base, actions = actions)
