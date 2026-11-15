@@ -1,3 +1,10 @@
+# [2.3.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0...v2.3.0-dev.1) (2026-11-15)
+
+
+### Features
+
+* Show app form factors in GUI and CLI ([#435](https://github.com/MorpheApp/morphe-desktop/issues/435)) ([3a41067](https://github.com/MorpheApp/morphe-desktop/commit/3a41067a67f9d30946075302cfdde5db2eb69be9))
+
 # [2.2.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.1...v2.2.0) (2026-11-15)
 
 
