@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.patching.components
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -33,6 +32,7 @@ import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.PatchSourceNaming
@@ -97,7 +97,7 @@ internal fun ExpertFailureContent(
                 .fillMaxWidth()
                 .clip(MorpheTheme.shapes.medium)
                 .background(panelFill)
-                .border(1.dp, borderColor, MorpheTheme.shapes.medium)
+                .outlineBorder(borderColor, MorpheTheme.shapes.medium)
         ) {
             Column(
                 modifier = Modifier
@@ -155,7 +155,7 @@ internal fun ExpertFailureContent(
                     .fillMaxWidth()
                     .clip(MorpheTheme.shapes.medium)
                     .background(panelFill)
-                    .border(1.dp, borderColor, MorpheTheme.shapes.medium)
+                    .outlineBorder(borderColor, MorpheTheme.shapes.medium)
             ) {
                 Column(
                     modifier = Modifier
@@ -224,7 +224,7 @@ internal fun ExpertFailureContent(
                     .fillMaxWidth()
                     .clip(MorpheTheme.shapes.small)
                     .background(panelFill)
-                    .border(1.dp, borderColor, MorpheTheme.shapes.small)
+                    .outlineBorder(borderColor, MorpheTheme.shapes.small)
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -284,7 +284,7 @@ internal fun ExpertFailureContent(
                     .fillMaxWidth()
                     .clip(MorpheTheme.shapes.small)
                     .background(panelFill)
-                    .border(1.dp, MorpheTheme.colors.secondary.copy(alpha = 0.3f), MorpheTheme.shapes.small)
+                    .outlineBorder(MorpheTheme.colors.secondary.copy(alpha = 0.3f), MorpheTheme.shapes.small)
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically

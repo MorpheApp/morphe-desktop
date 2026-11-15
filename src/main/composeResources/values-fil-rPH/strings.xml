@@ -11,7 +11,7 @@
     <string name="remove">Alisin</string>
     <string name="collapse">Itiklop</string>
     <string name="expand">Palawakin</string>
-    <string name="cancel">Ikansela</string>
+    <string name="cancel">Kanselahin</string>
     <string name="close">Isara</string>
     <string name="trust">Tiwala</string>
     <string name="delete">Burahin</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Nabigo ang pag-patch sa hindi malamang dahilan</string>
     <string name="error_log_label">Tala ng pagkakamali</string>
     <string name="back">Bumalik</string>
+    <string name="open">Buksan</string>
     <string name="open_folder">Buksan ang folder</string>
     <string name="temporary_files_label">Mga pansamantalang file</string>
     <string name="size_can_be_freed_label">Maaaring palayain ang %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Nabigo ang pag-install: %1$s</string>
     <string name="adb_error_not_found">Hindi nahanap ang ADB. Mangyaring i-install ang Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Konektado ang device pero hindi awtorisado. Mangyaring tanggapin ang USB debugging prompt sa iyong device</string>
-    <string name="adb_error_no_devices">Walang konektadong device. Mangyaring ikonekta ang iyong Android device na naka-enable ang USB debugging</string>
+    <string name="adb_error_no_devices">Walang nakakonektang device. Mangyaring ikonekta ang iyong Android device na naka-enable ang USB o Wi-Fi debugging</string>
     <string name="adb_error_device_not_found">Hindi nahanap ang device na %1$s</string>
     <string name="adb_error_multiple_devices">Maraming device ang konektado. Mangyaring pumili ng isa</string>
     <string name="adb_error_apk_not_found">Hindi nahanap ang APK file: %1$s</string>
@@ -198,7 +199,7 @@
     <string name="home_dialog_forget_message">Aalisin nito ang %1$s mula sa iyong history ng mga na-patch na app. Hindi nito ginagalaw ang anumang file - ibabalik ito ng pag-repatch sa app</string>
     <string name="home_dialog_uninstall_title">I-uninstall ang %1$s?</string>
     <string name="home_dialog_uninstall_message">Aalisin nito ang %1$s mula sa konektadong device. Ang na-patch na APK sa disk at ang iyong history ay mananatili maliban kung pipiliin mo kung hindi sa ibaba</string>
-    <string name="home_dialog_uninstall_also_forget">Alisin din sa Iyong mga app</string>
+    <string name="home_dialog_uninstall_also_forget">Alisin din sa iyong mga app</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Pamahalaan ang mga source</string>
     <string name="home_header_multi_source_hint">Pinagsasama ang mga patch mula sa bawat naka-enable na source. Pamahalaan gamit ang sources button sa itaas</string>
@@ -270,7 +271,7 @@
     <string name="home_detail_app_version_label">Bersyon ng app</string>
     <string name="home_detail_newer_patch_available_note">Mayroong mas bagong patch na maaaring sumusuporta sa mas bagong bersyon ng app. I-click ang Update upang suriin</string>
     <string name="home_detail_section_patches_applied">Mga patch na inilapat</string>
-    <string name="home_detail_section_options">Mga Pagpipilian</string>
+    <string name="home_detail_section_options">Mga opsyon</string>
     <string name="home_detail_output_size_label">Laki ng output</string>
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">handa ang v%1$s · device sa v%2$s</string>
@@ -382,7 +383,7 @@
     <string name="patch_selection_run_info_verify_sdk">Pagpapatunay ng Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Pangkalahatan</string>
     <string name="patch_selection_group_ungrouped">Hindi naka-grupo</string>
-    <string name="patch_selection_group_selected_count">%1$d ang napili</string>
+    <string name="patch_selection_group_selected_count">%1$d napili</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Magsimula muli</string>
     <string name="patching_patches_count">%1$d / %2$d na mga patch</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">Mga nabigong patch: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">Naka-off ang ADB · I-enable para i-install</string>
-    <string name="result_adb_connect_device_hint">Kumonekta ng device gamit ang USB para i-install gamit ang ADB</string>
+    <string name="result_adb_connect_device_hint">Kumonekta ng device via USB o Wi-Fi para mag-install gamit ang ADB</string>
     <string name="result_screen_patch_another_button">Mag-patch ng iba</string>
     <string name="result_screen_install_on_device_label">I-install sa %1$s</string>
     <string name="result_screen_links_routed_label">Ang mga link ay niruta sa na-patch na app</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">Ina-unmount mula sa %1$s…</string>
     <string name="result_adb_root_not_detected">Walang nakitang root access sa %1$s. Siguraduhing naka-install ang Magisk/KernelSU/APatch at naibigay ang su permission</string>
     <string name="result_adb_stock_app_not_installed">Ang stock app na %1$s ay hindi naka-install sa %2$s. I-install muna ang opisyal na app bago mag-mount</string>
+    <string name="result_adb_mount_version_mismatch">Ang stock app sa %3$s ay v%1$s, ngunit ang patched APK ay v%2$s. Ang root mount ay nangangailangan ng magkatugmang bersyon</string>
+    <string name="result_adb_mount_abi_mismatch">Ang device %3$s ay %1$s, ngunit ang APK ay naglalaman lamang ng [%2$s]. Mabibigo ang pag-load ng mga native library</string>
     <string name="result_link_default_restored">Naibalik ang default na link handling</string>
     <string name="result_link_routed_stock_disabled">Ang mga link ay niruta sa na-patch na app, naka-disable ang stock</string>
     <string name="result_adb_not_found_hint">Hindi nahanap ang ADB. I-install ang Android SDK Platform Tools upang i-enable ang direktang pag-install</string>
     <string name="result_adb_section_title">Pag-install ng ADB</string>
     <string name="result_adb_no_devices">Walang konektadong device</string>
-    <string name="result_adb_connect_hint">Kumonekta sa pamamagitan ng USB na may naka-enable na USB debugging</string>
+    <string name="result_adb_connect_hint">Kumonekta via USB o Wi-Fi debugging</string>
     <string name="result_device_status_unauth">Hindi awtorisado</string>
     <string name="result_adb_update_button">I-update sa %1$s</string>
     <string name="result_adb_select_device_button">Pumili ng device</string>
@@ -476,7 +479,7 @@
     <string name="icon_studio_warn_unreadable">Hindi mabasa ang larawang ito upang suriin ang transparency nito</string>
     <string name="icon_studio_picker_select_font">Pumili ng font</string>
     <string name="icon_studio_undo_button">Ipawalang-bisa</string>
-    <string name="icon_studio_redo_button">Gawing muli</string>
+    <string name="icon_studio_redo_button">Ulitin</string>
     <string name="icon_studio_templates">Mga template</string>
     <string name="icon_studio_template_badge">Badge</string>
     <string name="icon_studio_preview_adaptive">Adaptive</string>
@@ -541,7 +544,7 @@
     <string name="version_label_local">Lokal</string>
     <string name="source_sheet_remote_label">Remote</string>
     <string name="add_source">Magdagdag ng source</string>
-    <string name="source_sheet_title">I-patch ang mapagkukunan</string>
+    <string name="source_sheet_title">Mga source ng patch</string>
     <string name="source_sheet_reload_description">I-reload ang mga patch</string>
     <string name="source_sheet_multi_mode_hint">I-enable/I-disable ang kahit anong kombinasyon. Pinagsasama ang mga patch mula sa lahat ng naka-enable na source</string>
     <string name="source_sheet_done_button">Tapos</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">Hindi nahanap ang ADB</string>
     <string name="device_indicator_adb_not_found_subtitle">I-install ang Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Walang nakitang device</string>
-    <string name="device_indicator_no_devices_subtitle">Ikonekta ang isang device na may naka-enable na USB debugging</string>
+    <string name="device_indicator_no_devices_subtitle">Kumonekta ng device na naka-enable ang USB o Wi-Fi debugging</string>
     <string name="device_indicator_enable_debugging_title">I-enable ang USB debugging</string>
     <string name="device_indicator_enable_debugging_subtitle">Mga Setting → Developer Options → USB Debugging</string>
     <string name="device_indicator_status_connected">Konektado</string>
@@ -640,9 +643,9 @@
     <string name="licenses_text_open_canonical">Buksan ang canonical na teksto ng lisensya:</string>
     <string name="licenses_text_open_license_button">Buksan ang lisensya</string>
     <!-- Settings -->
-    <string name="settings_dialog_title">Mga pagpipilian</string>
+    <string name="settings_dialog_title">Mga setting</string>
     <string name="settings_nav_appearance">Hitsura</string>
-    <string name="settings_nav_advanced">Pagsulong</string>
+    <string name="settings_nav_advanced">Advanced</string>
     <string name="settings_nav_system">Sistema</string>
     <string name="settings_dialog_open_logs_button">Buksan ang mga log</string>
     <string name="settings_dialog_reset_button">Ipawalang-bisa</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Wika</string>
     <string name="settings_language_current_title">Kasalukuyang wika</string>
-    <string name="settings_language_community_translation_hint">Maaaring kulang o hindi kumpleto ang mga pagsasalin para sa ilang wika. Upang magsalin ng mga bagong wika o pagbutihin ang mga kasalukuyang pagsasalin, bisitahin ang %1$s</string>
     <string name="settings_language_dialog_title">Wika ng aplikasyon</string>
+    <string name="settings_language_translate_title">Tulungang isalin ang Morphe</string>
     <string name="settings_language_search_no_results">Walang mahanap na mga resulta</string>
     <string name="settings_section_theme">Tema</string>
     <string name="settings_appearance_theme_mode">Mode ng tema</string>
+    <string name="settings_appearance_theme_mode_description">Magpalit sa pagitan ng light, dark, pure black, o system theme</string>
     <string name="settings_theme_light">Maliwanag</string>
     <string name="settings_theme_dark">Madilim</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Estilo ng kulay</string>
+    <string name="settings_appearance_color_style_description">Tinted Morphe palette o grayscale monochrome style</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monokromo</string>
     <string name="settings_toggle_sharp_corners_label">Matalim na mga sulok</string>
@@ -672,10 +677,16 @@
     <string name="settings_section_app_cards">Mga app card</string>
     <string name="settings_app_cards_color_all">Kulay para sa bawat card</string>
     <string name="settings_app_cards_color_all_desc">Ang mga card na isa-isang na-customize mo ay nagpapanatili ng sarili nilang kulay</string>
-    <string name="settings_section_background_animation">Likurang animation</string>
+    <string name="settings_toggle_app_icons_label">Mga icon ng aplikasyon</string>
+    <string name="settings_toggle_app_icons_desc">Ipinapakita ang icon ng bawat aplikasyon, na kinuha mula sa mga lokal na APK o sa nakakonektang device</string>
+    <string name="settings_appearance_more_apps_card">Card ng higit pang mga app</string>
+    <string name="settings_appearance_more_apps_card_description">Nagpapakita ng card sa ilalim ng mga app na humahantong sa mga community patch</string>
+    <string name="settings_section_effects">Mga Epekto</string>
+    <string name="settings_appearance_background_animation">Animation sa background</string>
+    <string name="settings_appearance_background_animation_description">Ang animation na tumatakbo sa likod ng mga screen ng app</string>
     <string name="settings_background_circles">Mga bilog</string>
     <string name="settings_background_rings">Mga singsing</string>
-    <string name="settings_background_mesh">Mata</string>
+    <string name="settings_background_mesh">Mesh</string>
     <string name="settings_background_space">Puwang</string>
     <string name="settings_background_shapes">Mga hugis</string>
     <string name="settings_background_snow">Niyebe</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Expert mode</string>
     <string name="settings_toggle_expert_mode_desc">Buong kontrol sa pagpili at configuration ng patch</string>
+    <string name="settings_expert_mode_disabled_in_flow">Bumalik sa home para baguhin ang mode</string>
     <string name="settings_toggle_route_links_label">I-route ang mga link sa na-patch na app</string>
     <string name="settings_toggle_route_links_desc">Pagkatapos mag-install sa pamamagitan ng ADB, gawing buksan ng na-patch na app ang mga suportadong web link nito sa halip na ang browser o ang stock/default app</string>
     <string name="settings_toggle_disable_stock_links_label">I-disable ang mga link ng stock app</string>
@@ -724,12 +736,28 @@
     <string name="settings_toggle_auto_start_adb_label">Awtomatikong simulan ang ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Sisimulan ang ADB daemon sa paglunsad upang ma-monitor ang mga konektadong device. Kapag naka-off, hindi kailanman sisimulan ng Morphe ang server, at naka-disable ang mga install/push feature</string>
     <string name="settings_section_storage">Imbakan &amp; cache</string>
-    <string name="settings_cache_summary">Cache: %1$s (mga patch + mga tala)</string>
-    <string name="settings_cache_clear_button">Linisin ang cache</string>
+    <string name="settings_cache_clear_all_title">Linisin ang lahat ng cache</string>
+    <string name="settings_cache_category_patches">Mga patch</string>
+    <string name="settings_cache_category_logs">Mga log</string>
+    <string name="settings_cache_category_temp">Mga pansamantalang file</string>
+    <string name="settings_cache_category_avatars">Cache ng Avatar</string>
+    <string name="settings_cache_category_app_icons">Cache ng icon ng aplikasyon</string>
+    <string name="settings_cache_confirm_patches_title">Alisin ang mga patch?</string>
+    <string name="settings_cache_confirm_patches_message">Buburahin nito ang mga na-download na patch file. Muling i-da-download ang mga patch kapag kinakailangan</string>
+    <string name="settings_cache_confirm_logs_title">Alisin ang mga log?</string>
+    <string name="settings_cache_confirm_logs_message">Buburahin nito ang lahat ng application log file at device logcat dump</string>
+    <string name="settings_cache_confirm_temp_title">Alisin ang mga pansamantalang file?</string>
+    <string name="settings_cache_confirm_temp_message">Buburahin nito ang mga pansamantalang scratch at workspace file</string>
+    <string name="settings_cache_confirm_avatars_title">Alisin ang avatar cache?</string>
+    <string name="settings_cache_confirm_avatars_message">Buburahin nito ang lahat ng naka-cache na remote avatar images</string>
+    <string name="settings_cache_confirm_app_icons_title">Linisin ang cache ng icon ng aplikasyon?</string>
+    <string name="settings_cache_confirm_app_icons_message">Buburahin nito ang lahat ng mga icon ng aplikasyon na kinuha mula sa mga APK at device</string>
+    <string name="settings_cache_category_cleared">Inalis ang %1$s</string>
+    <string name="settings_cache_category_clear_failed">Nabigong alisin ang %1$s</string>
     <string name="settings_cache_cleared">Nalinis ang cache</string>
     <string name="settings_cache_clear_failed">Nabigong linisin</string>
     <string name="settings_cache_confirm_title">Linisin ang cache?</string>
-    <string name="settings_cache_confirm_message">Buburahin nito ang mga na-download na patch at mga log file. Muling i-da-download ang mga patch kapag kinakailangan</string>
+    <string name="settings_cache_confirm_message">Buburahin nito ang mga na-download na patch, mga log file, at mga pansamantalang file. Muling i-da-download ang mga patch kapag kinakailangan</string>
     <string name="settings_storage_open_app_data_button">Buksan ang data ng app</string>
     <string name="settings_storage_open_logs_button">Buksan ang mga tala</string>
     <string name="settings_section_about">Tungkol</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">Runtime log ng na-patch na app</string>
     <string name="settings_runtime_logs_desc">Kumuha ng mga log mula sa iyong phone pagkatapos mag-crash o mag-misbehave ang isang na-patch na app. Mag-clear bago i-reproduce ang bug, pagkatapos ay i-save ang na-filter na output upang ikabit sa isang bug report</string>
     <string name="settings_runtime_logs_device_info">Aparato: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Walang konektadong device. Isaksak ang iyong phone na may naka-enable na USB debugging</string>
+    <string name="settings_runtime_logs_no_device">Walang device na nakakonekta. I-konekta ang iyong phone na naka-enable ang USB o Wi-Fi debugging</string>
     <string name="settings_runtime_logs_clearing">Naglilinis…</string>
     <string name="settings_runtime_logs_clear_button">I-clear ang mga log ng device</string>
     <string name="settings_runtime_logs_failed_to_clear">Nabigo ang pag-clear ng mga log</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Mga mapagkukunan</string>
     <string name="nav_apps">Mga app</string>
+    <string name="nav_settings">Mga setting</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Maghanap sa mga pagpipilian</string>
+    <string name="settings_search_no_results">Walang tumutugmang mga pagpipilian</string>
+    <string name="settings_back_to_about">Bumalik sa About</string>
+    <string name="licenses_back_to_list">Bumalik sa mga lisensya</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Higit pang mga app</string>
+    <string name="home_more_apps_subtitle">Mga community patch</string>
+    <string name="community_patches_notice_title">Mga third-party patch source</string>
+    <string name="community_patches_notice_message">Ang mga community patch source ay ginawa at pinapanatili ng kanilang sariling mga may-akda. Hindi sinusuri o bineberipika ng Morphe ang mga third-party patch, at hindi ito responsable sa nilalaman ng mga ito o sa kung ano ang ginagawa nila sa iyong device.</string>
 </resources>

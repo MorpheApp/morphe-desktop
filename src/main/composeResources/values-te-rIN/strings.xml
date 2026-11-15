@@ -37,4 +37,7 @@
     <!-- App Info Dialog -->
     <!-- Changelog Dialog -->
     <!-- Navigation Pill -->
+    <string name="nav_settings">సెట్టింగ్లు</string>
+    <!-- Settings - Search & Inline Views -->
+    <!-- More apps card & community patches -->
 </resources>

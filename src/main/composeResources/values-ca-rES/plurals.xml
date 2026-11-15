@@ -60,4 +60,12 @@
         <item quantity="one">%1$d optimització</item>
         <item quantity="other">%1$d optimitzacions</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d fitxer)</item>
+        <item quantity="other">%1$s (%2$d fitxers)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Total: %1$s (%2$d fitxer)</item>
+        <item quantity="other">Total: %1$s (%2$d fitxers)</item>
+    </plurals>
 </resources>

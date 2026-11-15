@@ -60,4 +60,12 @@
         <item quantity="one">uboreshaji %1$d</item>
         <item quantity="other">uboreshaji %1$d</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (faili %2$d)</item>
+        <item quantity="other">%1$s (faili %2$d)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Jumla: %1$s (faili %2$d)</item>
+        <item quantity="other">Jumla: %1$s (faili %2$d)</item>
+    </plurals>
 </resources>

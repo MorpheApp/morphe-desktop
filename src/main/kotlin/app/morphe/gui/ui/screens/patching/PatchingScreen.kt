@@ -8,7 +8,6 @@ package app.morphe.gui.ui.screens.patching
 import androidx.compose.animation.*
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -30,6 +29,7 @@ import app.morphe.gui.ui.screens.home.components.SimpleTopBar
 import app.morphe.gui.ui.screens.patching.components.*
 import app.morphe.gui.ui.theme.Animations
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.ui.theme.screenScrim
 import kotlin.time.Duration.Companion.milliseconds
@@ -181,7 +181,7 @@ fun PatchingScreenContent(viewModel: PatchingViewModel) {
                                 .fillMaxWidth()
                                 .clip(MorpheTheme.shapes.medium)
                                 .background(panelFill)
-                                .border(1.dp, borderColor, MorpheTheme.shapes.medium)
+                                .outlineBorder(borderColor, MorpheTheme.shapes.medium)
                         ) {
                             ProvideTextStyle(MorpheTheme.typography.codeSmall) {
                                 Column(

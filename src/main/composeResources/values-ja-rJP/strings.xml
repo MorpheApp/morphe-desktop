@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">不明な理由でパッチ適用に失敗しました</string>
     <string name="error_log_label">エラーログ</string>
     <string name="back">戻る</string>
+    <string name="open">開く</string>
     <string name="open_folder">フォルダを開く</string>
     <string name="temporary_files_label">一時ファイル</string>
     <string name="size_can_be_freed_label">%1$s を解放できます</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">インストールに失敗しました: %1$s</string>
     <string name="adb_error_not_found">ADB が見つかりません。Android SDK Platform Tools をインストールしてください</string>
     <string name="adb_error_unauthorized">デバイスは接続されていますが、認証されていません。デバイスで USB デバッグのプロンプトを承認してください</string>
-    <string name="adb_error_no_devices">デバイスが接続されていません。USB デバッグを有効にした状態で、Android デバイスを接続してください</string>
+    <string name="adb_error_no_devices">デバイスが接続されていません。USB または Wi-Fi デバッグを有効にした状態で、Android デバイスを接続してください</string>
     <string name="adb_error_device_not_found">デバイス %1$s が見つかりません</string>
     <string name="adb_error_multiple_devices">複数のデバイスが接続されています。いずれかを選択してください</string>
     <string name="adb_error_apk_not_found">APK ファイルが見つかりません: %1$s</string>
@@ -230,7 +231,7 @@
     <string name="home_sort_recently_patched">最近パッチした順</string>
     <string name="home_sort_recently_patched_desc">最近パッチした順</string>
     <!-- Home Screen - YourAppsPane -->
-    <string name="home_your_apps_status_patched">パッチの適用</string>
+    <string name="home_your_apps_status_patched">パッチ済み</string>
     <string name="home_filter_all_apps">すべてのアプリ</string>
     <string name="home_filter_your_apps">マイアプリ</string>
     <string name="home_banner_view">表示</string>
@@ -294,7 +295,7 @@
     <string name="patches_refresh_description">更新</string>
     <string name="patches_fetching_releases">リリースを取得中</string>
     <string name="patches_no_releases_found">リリースが見つかりません</string>
-    <string name="patches_export_options_title">エクスポート： options.json</string>
+    <string name="patches_export_options_title">options.json をエクスポート</string>
     <string name="patches_latest_badge">最新</string>
     <string name="patches_cached_badge">キャッシュ済み</string>
     <string name="patches_date_cached">キャッシュ: %1$s</string>
@@ -377,9 +378,9 @@
     <string name="patch_selection_run_info_bundles_group">パッチバンドル</string>
     <string name="patch_selection_run_info_no_bundles">解決されたバンドルがありません</string>
     <string name="patch_selection_run_info_dev_group">開発者向け設定</string>
-    <string name="patch_selection_run_info_bytecode_mode">バイトコードモード: %1$s</string>
+    <string name="patch_selection_run_info_bytecode_mode">バイトコード モード: %1$s</string>
     <string name="patch_selection_run_info_validate">フィンガープリント検証: %1$s</string>
-    <string name="patch_selection_run_info_verify_sdk">Android SDK検証: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK 検証: %1$s</string>
     <string name="patch_selection_group_universal">ユニバーサル</string>
     <string name="patch_selection_group_ungrouped">グループ化なし</string>
     <string name="patch_selection_group_selected_count">%1$d 件選択中</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">失敗したパッチ: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB オフ · インストールするには有効にしてください</string>
-    <string name="result_adb_connect_device_hint">ADB を使用してインストールするには、USB 経由でデバイスを接続してください</string>
+    <string name="result_adb_connect_device_hint">ADB でインストールするには、USB または Wi-Fi 経由でデバイスを接続してください</string>
     <string name="result_screen_patch_another_button">別のアプリをパッチ</string>
     <string name="result_screen_install_on_device_label">%1$s にインストール</string>
     <string name="result_screen_links_routed_label">リンクがパッチ済みアプリに転送されます</string>
@@ -445,18 +446,20 @@
     <string name="result_adb_root_not_detected">%1$s で root アクセスが検出されませんでした。Magisk/KernelSU/APatch がインストールされ、su 権限が付与されていることを確認してください</string>
     <string name="result_adb_stock_app_not_installed">%2$s にはストックアプリ %1$s がインストールされていません。マウントする前に、まず公式アプリをインストールしてください
 </string>
+    <string name="result_adb_mount_version_mismatch">%3$s の標準アプリは v%1$s ですが、パッチ適用済み APK は v%2$s です。root マウントには、バージョンが一致している必要があります</string>
+    <string name="result_adb_mount_abi_mismatch">デバイス %3$s は %1$s ですが、APK には [%2$s] しか含まれていません。ネイティブ ライブラリの読み込みに失敗します</string>
     <string name="result_link_default_restored">デフォルトのリンク処理を復元しました</string>
     <string name="result_link_routed_stock_disabled">リンクをパッチ済みアプリに転送し、元のアプリを無効化しました</string>
     <string name="result_adb_not_found_hint">ADB が見つかりません。直接インストールを有効にするには、Android SDK Platform Tools をインストールしてください</string>
     <string name="result_adb_section_title">ADB インストール</string>
     <string name="result_adb_no_devices">デバイスが接続されていません</string>
-    <string name="result_adb_connect_hint">USB デバッグを有効にして USB 経由で接続します</string>
+    <string name="result_adb_connect_hint">USB または Wi-Fi デバッグ経由で接続してください</string>
     <string name="result_device_status_unauth">未認証</string>
     <string name="result_adb_update_button">%1$s で更新</string>
     <string name="result_adb_select_device_button">デバイスを選択</string>
     <string name="result_link_section_title">リンク処理</string>
     <string name="result_link_section_subtitle">ブラウザではなく、パッチ適用済みのアプリでサポートされているウェブリンクを開きます</string>
-    <string name="result_link_stop_stock">%1$s がこれらのリンクを開くのも停止する</string>
+    <string name="result_link_stop_stock">%1$s がこれらのリンクを開かないようにする</string>
     <string name="result_link_applying">適用中…</string>
     <string name="result_link_restore">復元</string>
     <string name="result_link_open_with_patched">パッチ済みアプリでリンクを開く</string>
@@ -472,7 +475,7 @@
     <string name="icon_studio_shape_rounded">角丸</string>
     <string name="icon_studio_background_gradient">グラデーション</string>
     <string name="icon_studio_tab_shape">シェイプ</string>
-    <string name="icon_studio_mask_squircle">スクウィークル</string>
+    <string name="icon_studio_mask_squircle">スクワークル</string>
     <string name="icon_studio_warn_opaque">この画像には透過部分がないため、テーマ &amp; 通知アイコンは単色のブロックになります。ロゴの形を表示するには、切り抜き（透過）PNGを使用してください</string>
     <string name="icon_studio_warn_unreadable">この画像を読み取って透過情報を確認できませんでした</string>
     <string name="icon_studio_picker_select_font">フォントを選択</string>
@@ -604,7 +607,7 @@
     <string name="device_indicator_adb_not_found_title">ADB が見つかりません</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Tools をインストールしてください</string>
     <string name="device_indicator_no_devices_title">デバイスが検出されません</string>
-    <string name="device_indicator_no_devices_subtitle">USB デバッグが有効になっているデバイスを接続してください</string>
+    <string name="device_indicator_no_devices_subtitle">USB または Wi-Fi デバッグが有効になっているデバイスを接続してください</string>
     <string name="device_indicator_enable_debugging_title">USB デバッグを有効化</string>
     <string name="device_indicator_enable_debugging_subtitle">設定 → 開発者向けオプション → USB デバッグ</string>
     <string name="device_indicator_status_connected">接続済み</string>
@@ -653,18 +656,20 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">言語</string>
     <string name="settings_language_current_title">現在の言語</string>
-    <string name="settings_language_community_translation_hint">一部の言語の翻訳が欠落しているか不完全な場合があります。新しい言語の翻訳や既存の翻訳の改善については、%1$s を参照してください</string>
     <string name="settings_language_dialog_title">アプリの言語</string>
+    <string name="settings_language_translate_title">Morphe の翻訳に協力する</string>
     <string name="settings_language_search_no_results">検索結果は見つかりませんでした</string>
     <string name="settings_section_theme">テーマ</string>
     <string name="settings_appearance_theme_mode">テーマモード</string>
+    <string name="settings_appearance_theme_mode_description">ライト、ダーク、ピュアブラック、またはシステムテーマを切り替えます</string>
     <string name="settings_theme_light">ライト</string>
     <string name="settings_theme_dark">ダーク</string>
-    <string name="settings_theme_amoled">Amoled</string>
+    <string name="settings_theme_amoled">AMOLED</string>
     <string name="settings_appearance_color_style">カラースタイル</string>
+    <string name="settings_appearance_color_style_description">色付きの Morphe パレットまたはグレースケールのモノクロスタイル</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">モノクロ</string>
-    <string name="settings_toggle_sharp_corners_label">角を鋭くする</string>
+    <string name="settings_toggle_sharp_corners_label">角を直角に</string>
     <string name="settings_toggle_sharp_corners_desc">カード、ダイアログ、ボタンの角を直角にする</string>
     <string name="settings_section_accent_color">アクセントカラー</string>
     <string name="settings_accent_clear_description">アクセントカラーをクリア</string>
@@ -673,7 +678,13 @@
     <string name="settings_section_app_cards">アプリカード</string>
     <string name="settings_app_cards_color_all">すべてのカードの色</string>
     <string name="settings_app_cards_color_all_desc">個別にカスタマイズしたカードは独自の色を保持します</string>
-    <string name="settings_section_background_animation">背景アニメーション</string>
+    <string name="settings_toggle_app_icons_label">アプリアイコン</string>
+    <string name="settings_toggle_app_icons_desc">ローカルの APK または接続済みデバイスから抽出された、各アプリのアイコンを表示します</string>
+    <string name="settings_appearance_more_apps_card">その他のアプリカード</string>
+    <string name="settings_appearance_more_apps_card_description">アプリ一覧の下に、コミュニティ製パッチへのリンクカードを表示します</string>
+    <string name="settings_section_effects">エフェクト</string>
+    <string name="settings_appearance_background_animation">背景アニメーション</string>
+    <string name="settings_appearance_background_animation_description">アプリの画面の背景で再生されるアニメーション</string>
     <string name="settings_background_circles">円</string>
     <string name="settings_background_rings">リング</string>
     <string name="settings_background_mesh">メッシュ</string>
@@ -682,13 +693,14 @@
     <string name="settings_background_snow">雪</string>
     <string name="settings_background_grid">グリッド</string>
     <string name="settings_background_particles">パーティクル</string>
-    <string name="settings_background_lava">ローラランプ</string>
+    <string name="settings_background_lava">溶岩ランプ</string>
     <string name="settings_background_matrix">マトリックス</string>
     <string name="settings_toggle_parallax_label">視差効果</string>
     <string name="settings_toggle_parallax_desc">マウスを動かしたときの背景の滑らかな移動</string>
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">エキスパート モード</string>
     <string name="settings_toggle_expert_mode_desc">パッチの選択と設定を完全に制御</string>
+    <string name="settings_expert_mode_disabled_in_flow">モードを変更するにはホームに戻ってください</string>
     <string name="settings_toggle_route_links_label">リンクをパッチ済みアプリに転送</string>
     <string name="settings_toggle_route_links_desc">ADB 経由でインストールした後、パッチ適用済みのアプリがブラウザや標準／デフォルト アプリではなく、サポートされているウェブリンクを開くようにします</string>
     <string name="settings_toggle_disable_stock_links_label">元のアプリのリンクを無効化</string>
@@ -696,15 +708,15 @@
     <string name="settings_section_signing">署名</string>
     <string name="settings_section_strip_libs">ライブラリをストリップ</string>
     <string name="settings_toggle_developer_options_label">開発者向け設定</string>
-    <string name="settings_toggle_developer_options_desc">パッチ開発者向け。パッチのビルドとテストのための一連のワークフローオプションを解放します（完全なリストはドキュメントを参照）。現時点では、ローカルソースをフォルダに指定して、Morphe が常にその最新の .mpp を読み込むようにします</string>
-    <string name="settings_dev_bytecode_mode_label">バイトコードモード</string>
-    <string name="settings_dev_bytecode_mode_desc">パッチ適用中にDEXバイトコードに適用される変換モード</string>
+    <string name="settings_toggle_developer_options_desc">パッチ開発者向け。パッチのビルドとテストのための一連のワークフローオプションを提供します（完全なリストはドキュメントを参照）。現時点では、ローカルソースをフォルダに指定して、Morphe が常にその最新の .mpp を読み込むようにします</string>
+    <string name="settings_dev_bytecode_mode_label">バイトコード モード</string>
+    <string name="settings_dev_bytecode_mode_desc">パッチ適用時に DEX バイトコードに適用される変換モード</string>
     <string name="settings_dev_bytecode_mode_strip_fast">高速</string>
     <string name="settings_dev_bytecode_mode_strip_safe">安全</string>
     <string name="settings_dev_bytecode_mode_full">フル</string>
     <string name="settings_dev_validate_label">フィンガープリント検証</string>
-    <string name="settings_dev_validate_desc">各 match() が1つのメソッドにのみ一致することを確認します（パッチ適用が遅くなります。パッチのテスト用です）</string>
-    <string name="settings_dev_verify_sdk_label">Android SDK検証</string>
+    <string name="settings_dev_validate_desc">各 match() が 1 つのメソッドのみに一致することを検証します（パッチテストのため、パッチ適用が遅くなります）</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK 検証</string>
     <string name="settings_dev_verify_sdk_desc">Android SDK ツール (d8, zipalign) でパッチ済みの DEX および APK を検証します。誤検知が報告される場合があります</string>
     <string name="settings_dev_sdk_path_label">Android SDK ディレクトリ</string>
     <string name="settings_dev_sdk_path_auto">自動検出済み</string>
@@ -725,19 +737,35 @@
     <string name="settings_toggle_auto_start_adb_label">ADB の自動起動</string>
     <string name="settings_toggle_auto_start_adb_desc">起動時に ADB デーモンを起動し、接続されたデバイスを監視します。オフにすると、Morphe はサーバーを起動せず、インストール／プッシュ機能は無効になります</string>
     <string name="settings_section_storage">ストレージ &amp; キャッシュ</string>
-    <string name="settings_cache_summary">キャッシュ: %1$s (パッチ + ログ)</string>
-    <string name="settings_cache_clear_button">キャッシュを消去</string>
+    <string name="settings_cache_clear_all_title">すべてのキャッシュを消去</string>
+    <string name="settings_cache_category_patches">パッチ数</string>
+    <string name="settings_cache_category_logs">ログ</string>
+    <string name="settings_cache_category_temp">一時ファイル</string>
+    <string name="settings_cache_category_avatars">アバターキャッシュ</string>
+    <string name="settings_cache_category_app_icons">アプリアイコンのキャッシュ</string>
+    <string name="settings_cache_confirm_patches_title">パッチを消去しますか？</string>
+    <string name="settings_cache_confirm_patches_message">ダウンロード済みのパッチファイルが削除されます。必要に応じてパッチが再ダウンロードされます</string>
+    <string name="settings_cache_confirm_logs_title">ログを消去しますか？</string>
+    <string name="settings_cache_confirm_logs_message">すべてのアプリケーションログファイルとデバイスのlogcatダンプが削除されます</string>
+    <string name="settings_cache_confirm_temp_title">一時ファイルを消去しますか？</string>
+    <string name="settings_cache_confirm_temp_message">一時的なスクラッチファイルとワークスペースファイルが削除されます</string>
+    <string name="settings_cache_confirm_avatars_title">アバターキャッシュを消去しますか？</string>
+    <string name="settings_cache_confirm_avatars_message">キャッシュされたすべてのリモートアバター画像が削除されます</string>
+    <string name="settings_cache_confirm_app_icons_title">アプリアイコンのキャッシュを消去しますか？</string>
+    <string name="settings_cache_confirm_app_icons_message">これにより、APK ファイルとデバイスから抽出されたすべてのアプリアイコンが削除されます</string>
+    <string name="settings_cache_category_cleared">%1$sを消去しました</string>
+    <string name="settings_cache_category_clear_failed">%1$sの消去に失敗しました</string>
     <string name="settings_cache_cleared">キャッシュを消去しました</string>
     <string name="settings_cache_clear_failed">消去に失敗しました</string>
     <string name="settings_cache_confirm_title">キャッシュを消去しますか？</string>
-    <string name="settings_cache_confirm_message">これにより、ダウンロード済みのパッチとログファイルが削除されます。パッチは必要に応じて再ダウンロードされます</string>
+    <string name="settings_cache_confirm_message">ダウンロード済みのパッチ、ログファイル、および一時ファイルが削除されます。パッチは必要に応じて再ダウンロードされます</string>
     <string name="settings_storage_open_app_data_button">アプリデータを開く</string>
     <string name="settings_storage_open_logs_button">ログを開く</string>
-    <string name="settings_section_about">このフィルタについて</string>
+    <string name="settings_section_about">このアプリについて</string>
     <string name="settings_about_version">バージョン %1$s</string>
     <string name="settings_about_changelogs_title">変更履歴を表示</string>
     <string name="settings_about_changelogs_desc">最新のアップデートでの変更点を確認します</string>
-    <string name="settings_about_licenses_title">オープンソース ライセンス</string>
+    <string name="settings_about_licenses_title">オープンソースライセンス</string>
     <string name="settings_about_licenses_desc">サードパーティライブラリのライセンスを表示します</string>
     <string name="settings_about_documentation_title">ドキュメント</string>
     <string name="settings_about_documentation_desc">パッチ適用、ソース、トラブルシューティングのガイド</string>
@@ -779,8 +807,8 @@
     <string name="settings_cert_info_issuer">発行者</string>
     <string name="settings_cert_info_valid_from">有効開始日</string>
     <string name="settings_cert_info_valid_until">有効期限</string>
-    <string name="settings_cert_info_sha256">SHA-256フィンガープリント</string>
-    <string name="settings_cert_info_sha1">SHA-1フィンガープリント</string>
+    <string name="settings_cert_info_sha256">SHA-256 フィンガープリント</string>
+    <string name="settings_cert_info_sha1">SHA-1 フィンガープリント</string>
     <string name="settings_cert_info_could_not_read">キーストアを読み取れませんでした。パスワードとエイリアスを確認してください</string>
     <string name="settings_cert_warning_alias_not_found">キーストアにエイリアス \"%1$s\" が見つかりません</string>
     <string name="settings_cert_warning_key_password_incorrect">エイリアス \"%1$s\" のキーパスワードが正しくありません</string>
@@ -788,7 +816,7 @@
     <string name="settings_runtime_logs_title">パッチ済みアプリのランタイムログ</string>
     <string name="settings_runtime_logs_desc">パッチ済みアプリがクラッシュしたり誤動作した後に、スマートフォンからログを取得します。バグを再現する前にクリアし、フィルタリングした出力を保存してバグレポートに添付してください</string>
     <string name="settings_runtime_logs_device_info">デバイス: %1$s</string>
-    <string name="settings_runtime_logs_no_device">デバイスが接続されていません。USB デバッグを有効にしてスマートフォンを接続してください</string>
+    <string name="settings_runtime_logs_no_device">デバイスが接続されていません。USB または Wi-Fi デバッグを有効にしてスマートフォンを接続してください</string>
     <string name="settings_runtime_logs_clearing">クリア中…</string>
     <string name="settings_runtime_logs_clear_button">デバイスのログをクリア</string>
     <string name="settings_runtime_logs_failed_to_clear">ログのクリアに失敗しました</string>
@@ -829,4 +857,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">ソース</string>
     <string name="nav_apps">アプリ</string>
+    <string name="nav_settings">設定</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">設定を検索</string>
+    <string name="settings_search_no_results">一致する設定はありません</string>
+    <string name="settings_back_to_about">「このアプリについて」に戻る</string>
+    <string name="licenses_back_to_list">ライセンス一覧に戻る</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">その他のアプリ</string>
+    <string name="home_more_apps_subtitle">コミュニティ製パッチ</string>
+    <string name="community_patches_notice_title">サードパーティのパッチソース</string>
+    <string name="community_patches_notice_message">コミュニティ製のパッチソースは、それぞれの作者によって作成・管理されています。Morphe は、サードパーティー製のパッチを審査・検証しておらず、その内容や、お使いのデバイスに及ぼす影響について一切の責任を負いません.</string>
 </resources>

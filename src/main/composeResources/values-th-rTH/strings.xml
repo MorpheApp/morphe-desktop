@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">แพตช์ล้มเหลวด้วยสาเหตุที่ไม่ทราบ</string>
     <string name="error_log_label">บันทึกข้อผิดพลาด</string>
     <string name="back">กลับ</string>
+    <string name="open">เปิด</string>
     <string name="open_folder">เปิดโฟลเดอร์</string>
     <string name="temporary_files_label">ไฟล์ชั่วคราว</string>
     <string name="size_can_be_freed_label">สามารถเพิ่มพื้นที่ว่างได้ %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">การติดตั้งล้มเหลว: %1$s</string>
     <string name="adb_error_not_found">ไม่พบ ADB โปรดติดตั้ง Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">เชื่อมต่ออุปกรณ์แล้วแต่ยังไม่ได้รับอนุญาต โปรดยอมรับคำขอ USB debugging บนอุปกรณ์ของคุณ</string>
-    <string name="adb_error_no_devices">ไม่มีอุปกรณ์เชื่อมต่อ โปรดเชื่อมต่ออุปกรณ์ Android ที่เปิด USB debugging</string>
+    <string name="adb_error_no_devices">ไม่มีอุปกรณ์ที่เชื่อมต่อ โปรดเชื่อมต่ออุปกรณ์ Android ของคุณโดยเปิดใช้งานการแก้ไขข้อบกพร่องผ่าน USB หรือ Wi-Fi</string>
     <string name="adb_error_device_not_found">ไม่พบอุปกรณ์ %1$s</string>
     <string name="adb_error_multiple_devices">มีอุปกรณ์เชื่อมต่อหลายเครื่อง โปรดเลือกหนึ่งเครื่อง</string>
     <string name="adb_error_apk_not_found">ไม่พบไฟล์ APK: %1$s</string>
@@ -156,10 +157,10 @@
     <string name="version_status_unsupported">เวอร์ชันไม่รองรับ</string>
     <string name="version_status_build_unsupported">บิลด์ไม่รองรับ</string>
     <string name="version_status_build_unsupported_detail">เวอร์ชันนี้รองรับ แต่ไม่รองรับบิลด์นี้ โปรดรับบิลด์ที่แพตช์กำหนดเป้าหมาย</string>
-    <string name="version_status_build_unsupported_with_code">แพตซ์ต้องใช้บิลด์ %1$s</string>
+    <string name="version_status_build_unsupported_with_code">แพตช์ต้องใช้บิลด์ %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">ประกาศเกี่ยวกับเวอร์ชัน</string>
-    <string name="version_warning_build_unsupported_message">ปัจจุบัน: v%1$s (บิลด์ %2$s)\nบิลด์ที่ต้องการ: %3$s\n\nนี่คือบิลด์ที่แตกต่างกันของเวอร์ชันเดียวกัน แพตซ์ต้องการบิลด์ที่เฉพาะเจาะจง</string>
+    <string name="version_warning_build_unsupported_message">ปัจจุบัน: v%1$s (บิลด์ %2$s)\nบิลด์ที่ต้องการ: %3$s\n\nนี่คือบิลด์ที่แตกต่างกันของเวอร์ชันเดียวกัน แพตช์ต้องการบิลด์ที่เฉพาะเจาะจง</string>
     <string name="version_warning_experiment_title">อยากทดลองดูไหม? 🧪</string>
     <string name="version_warning_latest_experimental_message">เวอร์ชันปัจจุบัน: v%1$s\n\nเวอร์ชันนี้มีการรองรับแบบทดลองช่วงแรก\n\n🔧 อาจพบพฤติกรรมแปลกๆ หรือบั๊กที่ไม่ทราบสาเหตุ เพราะแพตช์กำลังถูกปรับปรุงสำหรับแอปเวอร์ชันนี้</string>
     <string name="version_warning_unsupported_message">เวอร์ชันปัจจุบัน: v%1$s\n\nนี่ไม่ใช่เวอร์ชันที่รองรับอย่างเป็นทางการ แพตช์มักจะล้มเหลว</string>
@@ -180,14 +181,14 @@
     <string name="home_apk_info_remove_description">ลบ APK</string>
     <string name="home_apk_info_limited_info_warning">อ่าน manifest ของ APK นี้ไม่ครบถ้วน (พบได้ทั่วไปใน split bundles) รายละเอียดด้านล่างเป็นค่าประมาณ แต่การแพตช์ควรยังทำงานได้</string>
     <string name="home_apk_info_unsupported_app_warning">ไม่พบแพตช์ที่เข้ากันได้กับแอปนี้ คุณยังดำเนินการต่อได้ แต่การแพตช์อาจไม่มีผล</string>
-    <string name="home_apk_info_unsupported_app_simple_warning">ไม่พบแพตซ์ที่เข้ากันได้สำหรับแอปนี้</string>
+    <string name="home_apk_info_unsupported_app_simple_warning">ไม่พบแพตช์ที่เข้ากันได้สำหรับแอปนี้</string>
     <string name="home_apk_info_build_label">บิลด์</string>
     <string name="home_apk_info_size_label">ขนาด</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">จาก</string>
     <string name="home_stage_change_apk">เปลี่ยน APK</string>
     <string name="home_stage_continue">ดำเนินการต่อ</string>
-    <string name="home_stage_patch">แพตซ์</string>
+    <string name="home_stage_patch">แพตช์</string>
     <string name="home_stage_analyzing_title">กำลังวิเคราะห์</string>
     <string name="home_stage_reading_metadata">กำลังอ่านข้อมูลเมตาของแอป…</string>
     <!-- Home Screen - Dialogs -->
@@ -332,7 +333,7 @@
     <string name="patch_selection_icon_dialog_delete_message">การนี้จะล้างไอคอนและลบโปรเจกต์ที่บันทึกไว้และไฟล์ที่สร้างขึ้น ไม่สามารถย้อนกลับได้</string>
     <string name="patch_selection_custom_icon_hint">คุณไม่ต้องสร้างโฟลเดอร์นี้เอง! คลิกไอคอนออกแบบ/แก้ไขเพื่อสร้างใน Icon Studio หรือนำเข้าจาก Manager</string>
     <string name="patch_selection_option_enabled">เปิดใช้</string>
-    <string name="patch_selection_option_disabled">ปิดการใช้งานอยู่</string>
+    <string name="patch_selection_option_disabled">ปิดใช้งาน</string>
     <string name="patch_selection_mode_your_defaults">ค่าเริ่มต้นของคุณ</string>
     <string name="patch_selection_mode_patch_defaults">ค่าเริ่มต้นของแพตช์</string>
     <string name="patch_selection_mode_all">ทั้งหมด</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">แพตช์ที่ล้มเหลว: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB ปิดอยู่ · เปิดใช้งานเพื่อติดตั้ง</string>
-    <string name="result_adb_connect_device_hint">เชื่อมต่ออุปกรณ์ผ่าน USB เพื่อติดตั้งด้วย ADB</string>
+    <string name="result_adb_connect_device_hint">เชื่อมต่ออุปกรณ์ผ่าน USB หรือ Wi-Fi เพื่อติดตั้งด้วย ADB</string>
     <string name="result_screen_patch_another_button">แพตช์แอปอื่น</string>
     <string name="result_screen_install_on_device_label">ติดตั้งบน %1$s</string>
     <string name="result_screen_links_routed_label">ลิงก์ถูกส่งไปยังแอปที่แพตช์แล้ว</string>
@@ -436,20 +437,22 @@
     <string name="result_adb_update_successful">อัปเดตสำเร็จ!</string>
     <string name="result_adb_install_successful">การติดตั้งสำเร็จ!</string>
     <string name="result_adb_badge_root_mount">เมานต์รูท</string>
-    <string name="result_adb_mount_button">ติดตั้งบน %1$s</string>
-    <string name="result_adb_mounting_on_device">กำลังติดตั้งบน %1$s…</string>
-    <string name="result_adb_mount_successful">ติดตั้งเสร็จสมบูรณ์!</string>
-    <string name="result_adb_mount_su_prompt_hint">กำลังติดตั้งบน %1$s… โปรดตรวจสอบอุปกรณ์ของคุณเพื่ออนุญาตสิทธิ์ Superuser หากมีการแจ้งเตือน</string>
-    <string name="result_adb_unmount_button">ถอนการติดตั้งจาก %1$s</string>
-    <string name="result_adb_unmounting_on_device">กำลังถอนการติดตั้งจาก %1$s…</string>
+    <string name="result_adb_mount_button">เมานต์บน %1$s</string>
+    <string name="result_adb_mounting_on_device">กำลังเมานต์บน %1$s…</string>
+    <string name="result_adb_mount_successful">เมานต์สำเร็จ!</string>
+    <string name="result_adb_mount_su_prompt_hint">กำลังเมานต์บน %1$s… โปรดตรวจสอบอุปกรณ์ของคุณเพื่ออนุญาตสิทธิ์ Superuser หากมีการแจ้งเตือน</string>
+    <string name="result_adb_unmount_button">ยกเลิกการเมานต์จาก %1$s</string>
+    <string name="result_adb_unmounting_on_device">กำลังยกเลิกการเมานต์จาก %1$s…</string>
     <string name="result_adb_root_not_detected">ไม่พบการเข้าถึง Root บน %1$s โปรดตรวจสอบให้แน่ใจว่าได้ติดตั้ง Magisk/KernelSU/APatch และอนุญาตสิทธิ์ su แล้ว</string>
-    <string name="result_adb_stock_app_not_installed">ไม่ได้ติดตั้งแอปมาตรฐาน %1$s บน %2$s โปรดติดตั้งแอปอย่างเป็นทางการก่อนทำการติดตั้ง</string>
+    <string name="result_adb_stock_app_not_installed">ไม่ได้ติดตั้งแอปมาตรฐาน %1$s บน %2$s โปรดติดตั้งแอปอย่างเป็นทางการก่อนเมานต์</string>
+    <string name="result_adb_mount_version_mismatch">แอป Stock บน %3$s คือ v%1$s แต่ patched APK คือ v%2$s การทำ Root mount จำเป็นต้องมีเวอร์ชันที่ตรงกัน</string>
+    <string name="result_adb_mount_abi_mismatch">อุปกรณ์ %3$s คือ %1$s แต่ APK มีเพียง [%2$s] ไลบรารี Native จะไม่สามารถโหลดได้</string>
     <string name="result_link_default_restored">คืนค่าการจัดการลิงก์เริ่มต้นแล้ว</string>
     <string name="result_link_routed_stock_disabled">ลิงก์ถูกส่งไปยังแอปที่แพตช์แล้ว ปิดแอปเดิม</string>
     <string name="result_adb_not_found_hint">ไม่พบ ADB ติดตั้ง Android SDK Platform Tools เพื่อเปิดใช้การติดตั้งโดยตรง</string>
     <string name="result_adb_section_title">การติดตั้งผ่าน ADB</string>
     <string name="result_adb_no_devices">ไม่มีอุปกรณ์เชื่อมต่อ</string>
-    <string name="result_adb_connect_hint">เชื่อมต่อผ่าน USB โดยเปิด USB debugging</string>
+    <string name="result_adb_connect_hint">เชื่อมต่อผ่านการแก้ไขข้อบกพร่อง USB หรือ Wi-Fi</string>
     <string name="result_device_status_unauth">ไม่ได้รับอนุญาต</string>
     <string name="result_adb_update_button">อัปเดตบน %1$s</string>
     <string name="result_adb_select_device_button">เลือกอุปกรณ์</string>
@@ -488,19 +491,19 @@
     <string name="icon_studio_duplicate_button">ทำสำเนา</string>
     <string name="icon_studio_layer_name_placeholder">ชื่อเลเยอร์</string>
     <string name="icon_studio_adjust_opacity">ความทึบ</string>
-    <string name="icon_studio_transform_label">แปลงร่าง</string>
+    <string name="icon_studio_transform_label">การแปลงรูป</string>
     <string name="icon_studio_adjust_scale">ขนาด</string>
     <string name="icon_studio_adjust_rotation">หมุน</string>
     <string name="icon_studio_reset_position_button">รีเซ็ตตำแหน่ง</string>
     <string name="icon_studio_color_label">สี</string>
-    <string name="icon_studio_adjust_hue">สี</string>
+    <string name="icon_studio_adjust_hue">เฉดสี</string>
     <string name="icon_studio_adjust_saturation">ความอิ่มของสี</string>
     <string name="icon_studio_adjust_brightness">ความสว่าง</string>
     <string name="icon_studio_effect_shadow">เงา</string>
     <string name="icon_studio_adjust_y_offset">ออฟเซตแกน Y</string>
     <string name="icon_studio_adjust_blur">เบลอ</string>
     <string name="icon_studio_effect_glow">เรืองแสง</string>
-    <string name="icon_studio_effect_stroke">เส้นโครง</string>
+    <string name="icon_studio_effect_stroke">เส้นขอบ</string>
     <string name="icon_studio_adjust_width">ความกว้าง</string>
     <string name="icon_studio_save_icon_button">บันทึกไอคอน</string>
     <string name="icon_studio_foreground_label">ส่วนหน้า</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ไม่พบ ADB</string>
     <string name="device_indicator_adb_not_found_subtitle">ติดตั้ง Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">ไม่พบอุปกรณ์</string>
-    <string name="device_indicator_no_devices_subtitle">เชื่อมต่ออุปกรณ์ที่เปิดการแก้ไขข้อบกพร่อง USB</string>
+    <string name="device_indicator_no_devices_subtitle">เชื่อมต่ออุปกรณ์ที่เปิดการแก้ไขข้อบกพร่อง USB หรือ Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">เปิดการแก้ไขข้อบกพร่อง USB</string>
     <string name="device_indicator_enable_debugging_subtitle">การตั้งค่า → ทางเลือกผู้พัฒนา → การแก้ไขข้อบกพร่อง USB</string>
     <string name="device_indicator_status_connected">เชื่อมต่อแล้ว</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ภาษา</string>
     <string name="settings_language_current_title">ภาษาปัจจุบัน</string>
-    <string name="settings_language_community_translation_hint">คำแปลสำหรับบางภาษาอาจขาดหายหรือไม่สมบูรณ์ หากต้องการแปลภาษาใหม่หรือปรับปรุงคำแปลที่มีอยู่ เยี่ยมชม %1$s</string>
     <string name="settings_language_dialog_title">ภาษาของแอป</string>
+    <string name="settings_language_translate_title">ช่วยแปล Morphe</string>
     <string name="settings_language_search_no_results">ไม่พบผลลัพธ์</string>
-    <string name="settings_section_theme">ชุดรูปแบบ</string>
+    <string name="settings_section_theme">ธีม</string>
     <string name="settings_appearance_theme_mode">โหมดธีม</string>
+    <string name="settings_appearance_theme_mode_description">สลับระหว่างธีมสว่าง, มืด, ดำสนิท หรือธีมระบบ</string>
     <string name="settings_theme_light">สว่าง</string>
     <string name="settings_theme_dark">มืด</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">รูปแบบสี</string>
+    <string name="settings_appearance_color_style_description">จานสี Morphe แบบมีสี หรือสไตล์ขาวดำแบบโมโนโครม</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">โมโนโครม</string>
     <string name="settings_toggle_sharp_corners_label">มุมเหลี่ยม</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">การ์ดแอป</string>
     <string name="settings_app_cards_color_all">สีสำหรับทุกการ์ด</string>
     <string name="settings_app_cards_color_all_desc">การ์ดที่คุณปรับแต่งเองจะคงสีของตัวเองไว้</string>
-    <string name="settings_section_background_animation">ภาพเคลื่อนไหวพื้นหลัง</string>
+    <string name="settings_toggle_app_icons_label">ไอคอนแอป</string>
+    <string name="settings_toggle_app_icons_desc">แสดงไอคอนของแต่ละแอป ซึ่งดึงมาจาก APK ท้องถิ่นหรืออุปกรณ์ที่เชื่อมต่ออยู่</string>
+    <string name="settings_appearance_more_apps_card">การ์ดแอปเพิ่มเติม</string>
+    <string name="settings_appearance_more_apps_card_description">แสดงการ์ดใต้แอปซึ่งจะนำไปสู่แพตช์ชุมชน</string>
+    <string name="settings_section_effects">เอฟเฟกต์</string>
+    <string name="settings_appearance_background_animation">ภาพเคลื่อนไหวพื้นหลัง</string>
+    <string name="settings_appearance_background_animation_description">แอนิเมชันที่เล่นอยู่เบื้องหลังหน้าจอของแอป</string>
     <string name="settings_background_circles">วงกลม</string>
     <string name="settings_background_rings">วงแหวน</string>
     <string name="settings_background_mesh">ตาข่าย</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">โหมดเชี่ยวชาญ</string>
     <string name="settings_toggle_expert_mode_desc">ควบคุมการเลือกและการกำหนดค่าแพตช์ได้เต็มที่</string>
+    <string name="settings_expert_mode_disabled_in_flow">กลับไปที่หน้าหลักเพื่อเปลี่ยนโหมด</string>
     <string name="settings_toggle_route_links_label">เปลี่ยนเส้นทางลิงก์ไปยังแอปที่แพตช์แล้ว</string>
     <string name="settings_toggle_route_links_desc">หลังจากติดตั้งผ่าน ADB ให้แอปที่แพตช์แล้วเปิดลิงก์เว็บที่รองรับแทนเบราว์เซอร์หรือแอปเริ่มต้น/แอปเดิม</string>
     <string name="settings_toggle_disable_stock_links_label">ปิดการใช้ลิงก์ของแอปเดิม</string>
@@ -723,13 +735,29 @@
     <string name="settings_output_folder_not_found">ไม่พบโฟลเดอร์ จะสร้างขึ้นเมื่อแพตช์ครั้งถัดไป</string>
     <string name="settings_toggle_auto_start_adb_label">เริ่ม ADB อัตโนมัติ</string>
     <string name="settings_toggle_auto_start_adb_desc">เริ่มเดมอน ADB เมื่อเปิดแอปเพื่อตรวจสอบอุปกรณ์ที่เชื่อมต่อ เมื่อปิด Morphe จะไม่เริ่มเซิร์ฟเวอร์ และฟีเจอร์ติดตั้ง/ส่งจะถูกปิดใช้งาน</string>
-    <string name="settings_section_storage">พื้นที่จัดเก็บ &amp;&amp; แคช</string>
-    <string name="settings_cache_summary">แคช: %1$s (แพตช์ + บันทึก)</string>
-    <string name="settings_cache_clear_button">ล้างแคช</string>
+    <string name="settings_section_storage">พื้นที่จัดเก็บ &amp; แคช</string>
+    <string name="settings_cache_clear_all_title">ล้างแคชทั้งหมด</string>
+    <string name="settings_cache_category_patches">แพตช์</string>
+    <string name="settings_cache_category_logs">บันทึก</string>
+    <string name="settings_cache_category_temp">ไฟล์ชั่วคราว</string>
+    <string name="settings_cache_category_avatars">แคชรูปโปรไฟล์</string>
+    <string name="settings_cache_category_app_icons">แคชไอคอนแอป</string>
+    <string name="settings_cache_confirm_patches_title">ล้างแพตช์หรือไม่?</string>
+    <string name="settings_cache_confirm_patches_message">การดำเนินการนี้จะลบไฟล์แพตช์ที่ดาวน์โหลดไว้ โดยแพตช์จะถูกดาวน์โหลดใหม่เมื่อจำเป็น</string>
+    <string name="settings_cache_confirm_logs_title">ล้างบันทึกหรือไม่?</string>
+    <string name="settings_cache_confirm_logs_message">การดำเนินการนี้จะลบไฟล์บันทึกของแอปพลิเคชันและ logcat dumps ของอุปกรณ์ทั้งหมด</string>
+    <string name="settings_cache_confirm_temp_title">ล้างไฟล์ชั่วคราวหรือไม่?</string>
+    <string name="settings_cache_confirm_temp_message">การดำเนินการนี้จะลบไฟล์ scratch และไฟล์เวิร์กสเปซชั่วคราว</string>
+    <string name="settings_cache_confirm_avatars_title">ล้างแคชรูปโปรไฟล์หรือไม่?</string>
+    <string name="settings_cache_confirm_avatars_message">การดำเนินการนี้จะลบรูปโปรไฟล์จากรีโมทที่ถูกแคชไว้ทั้งหมด</string>
+    <string name="settings_cache_confirm_app_icons_title">ล้างแคชไอคอนแอปหรือไม่?</string>
+    <string name="settings_cache_confirm_app_icons_message">การดำเนินการนี้จะลบไอคอนแอปทั้งหมดที่ดึงมาจาก APK และอุปกรณ์</string>
+    <string name="settings_cache_category_cleared">ล้าง %1$s แล้ว</string>
+    <string name="settings_cache_category_clear_failed">ไม่สามารถล้าง %1$s ได้</string>
     <string name="settings_cache_cleared">ล้างแคชแล้ว</string>
     <string name="settings_cache_clear_failed">การล้างข้อมูลล้มเหลว</string>
     <string name="settings_cache_confirm_title">ล้างแคชหรือไม่?</string>
-    <string name="settings_cache_confirm_message">การดำเนินการนี้จะลบแพตช์ที่ดาวน์โหลดและไฟล์บันทึก โดยแพตช์จะถูกดาวน์โหลดอีกครั้งเมื่อจำเป็น</string>
+    <string name="settings_cache_confirm_message">การดำเนินการนี้จะลบแพตช์ที่ดาวน์โหลดมา ไฟล์บันทึก และไฟล์ชั่วคราว โดยแพตช์จะถูกดาวน์โหลดใหม่เมื่อจำเป็น</string>
     <string name="settings_storage_open_app_data_button">เปิดข้อมูลแอป</string>
     <string name="settings_storage_open_logs_button">เปิดบันทึก</string>
     <string name="settings_section_about">เกี่ยวกับ</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">บันทึกรันไทม์ของแอปที่แพตช์แล้ว</string>
     <string name="settings_runtime_logs_desc">จับบันทึกจากโทรศัพท์หลังจากแอปที่แพตช์แล้วค้างหรือทำงานผิดปกติ ล้างก่อนจำลองบั๊ก จากนั้นบันทึกเอาต์พุตที่กรองแล้วเพื่อแนบไปกับรายงานบั๊ก</string>
     <string name="settings_runtime_logs_device_info">อุปกรณ์: %1$s</string>
-    <string name="settings_runtime_logs_no_device">ไม่มีอุปกรณ์เชื่อมต่อ เสียบโทรศัพท์ที่เปิด USB debugging</string>
+    <string name="settings_runtime_logs_no_device">ไม่มีอุปกรณ์ที่เชื่อมต่อ โปรดเชื่อมต่อโทรศัพท์ของคุณโดยเปิดใช้งานการแก้ไขข้อบกพร่องผ่าน USB หรือ Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">กำลังล้าง…</string>
     <string name="settings_runtime_logs_clear_button">ล้างบันทึกอุปกรณ์</string>
     <string name="settings_runtime_logs_failed_to_clear">ล้างบันทึกไม่สำเร็จ</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">แหล่งที่มา</string>
     <string name="nav_apps">แอป</string>
+    <string name="nav_settings">การตั้งค่า</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">ค้นหาในการตั้งค่า</string>
+    <string name="settings_search_no_results">ไม่พบการตั้งค่าที่ตรงกัน</string>
+    <string name="settings_back_to_about">กลับไปยังเกี่ยวกับ</string>
+    <string name="licenses_back_to_list">กลับไปยังใบอนุญาต</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">แอปเพิ่มเติม</string>
+    <string name="home_more_apps_subtitle">แพตช์ชุมชน</string>
+    <string name="community_patches_notice_title">แหล่งที่มาของแพตช์จากบุคคลที่สาม</string>
+    <string name="community_patches_notice_message">แหล่งที่มาแพตช์ชุมชนถูกสร้างและดูแลโดยผู้เขียนของตนเอง Morphe ไม่ได้ตรวจสอบหรือยืนยันแพตช์ของบุคคลที่สาม และไม่รับผิดชอบต่อเนื้อหาหรือสิ่งที่เกิดขึ้นกับอุปกรณ์ของคุณ</string>
 </resources>

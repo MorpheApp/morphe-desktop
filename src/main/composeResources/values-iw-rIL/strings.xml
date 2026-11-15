@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">התיקון נכשל מסיבה לא ידועה</string>
     <string name="error_log_label">יומן שגיאות</string>
     <string name="back">חזור</string>
+    <string name="open">פתח</string>
     <string name="open_folder">פתח תיקייה</string>
     <string name="temporary_files_label">קבצים זמניים</string>
     <string name="size_can_be_freed_label">ניתן לפנות %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">ההתקנה נכשלה: %1$s</string>
     <string name="adb_error_not_found">ADB לא נמצא. התקן את Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">המכשיר מחובר אך לא מורשה. אשר את הודעת איתור הבאגים ב-USB במכשיר שלך</string>
-    <string name="adb_error_no_devices">אין מכשירים מחוברים. חבר את מכשיר ה-Android שלך עם איתור באגים ב-USB מופעל</string>
+    <string name="adb_error_no_devices">אין מכשירים מחוברים. אנא חבר את מכשיר ה-Android שלך עם ניפוי שגיאות מופעל באמצעות USB או Wi-Fi</string>
     <string name="adb_error_device_not_found">המכשיר %1$s לא נמצא</string>
     <string name="adb_error_multiple_devices">מחוברים מספר מכשירים. בחר אחד</string>
     <string name="adb_error_apk_not_found">קובץ APK לא נמצא: %1$s</string>
@@ -390,9 +391,9 @@
     <string name="patching_status_ready">מוכן לתיקון</string>
     <string name="patching_status_preparing">מכין לתיקון</string>
     <string name="patching_status_in_progress">מחיל טלאים</string>
-    <string name="patching_completed_loading_result">ההטלאה הושלמה, טוען תוצאה…</string>
-    <string name="patching_cancelled_loading_result">הטלאה בוטלה, טוען תוצאה...</string>
-    <string name="patching_failed_loading_result">ההטלאה נכשלה, טוען תוצאה…</string>
+    <string name="patching_completed_loading_result">התיקון הושלם, טוען תוצאה…</string>
+    <string name="patching_cancelled_loading_result">התיקון בוטל, טוען תוצאה…</string>
+    <string name="patching_failed_loading_result">התיקון נכשל, טוען תוצאה…</string>
     <string name="patching_log_viewer_failed_to_read">קריאת קובץ היומן נכשלה: %1$s</string>
     <string name="patching_log_viewer_title">קובץ יומן</string>
     <string name="patching_log_viewer_copy_all">העתק הכל</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">טלאים שנכשלו: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB כבוי · הפעל כדי להתקין</string>
-    <string name="result_adb_connect_device_hint">חבר מכשיר באמצעות USB כדי להתקין עם ADB</string>
+    <string name="result_adb_connect_device_hint">חבר מכשיר באמצעות USB או Wi-Fi כדי להתקין באמצעות ADB</string>
     <string name="result_screen_patch_another_button">תקן אפליקציה אחרת</string>
     <string name="result_screen_install_on_device_label">התקן על %1$s</string>
     <string name="result_screen_links_routed_label">קישורים מנותבים לאפליקציה המתוקנת</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">מבטל עיגון מ-%1$s...</string>
     <string name="result_adb_root_not_detected">גישת Root לא זוהתה ב-%1$s. ודא ש-Magisk/KernelSU/APatch מותקנים ושהרשאת su ניתנה</string>
     <string name="result_adb_stock_app_not_installed">האפליקציה המקורית %1$s אינה מותקנת ב-%2$s. התקן תחילה את האפליקציה הרשמית לפני העיגון</string>
+    <string name="result_adb_mount_version_mismatch">אפליקציית המלאי ב-%3$s היא בגרסה v%1$s, אך ה-APK המותאם הוא בגרסה v%2$s. עיגון Root דורש גרסאות תואמות</string>
+    <string name="result_adb_mount_abi_mismatch">מכשיר %3$s הוא %1$s, אך ה-APK מכיל רק [%2$s]. ספריות מקומיות לא ייטענו</string>
     <string name="result_link_default_restored">טיפול ברירת המחדל בקישורים שוחזר</string>
     <string name="result_link_routed_stock_disabled">קישורים מנותבים לאפליקציה המתוקנת, המקורית הושבתה</string>
     <string name="result_adb_not_found_hint">ADB לא נמצא. התקן את Android SDK Platform Tools כדי לאפשר התקנה ישירה</string>
     <string name="result_adb_section_title">התקנת ADB</string>
     <string name="result_adb_no_devices">אין מכשירים מחוברים</string>
-    <string name="result_adb_connect_hint">התחבר דרך USB עם איתור באגים ב-USB מופעל</string>
+    <string name="result_adb_connect_hint">התחבר באמצעות ניפוי שגיאות ב-USB או Wi-Fi</string>
     <string name="result_device_status_unauth">לא מורשה</string>
     <string name="result_adb_update_button">עדכן על %1$s</string>
     <string name="result_adb_select_device_button">בחר מכשיר</string>
@@ -551,7 +554,7 @@
     <string name="source_sheet_status_resolving">פותר…</string>
     <string name="source_sheet_edit_description">ערוך</string>
     <string name="source_sheet_move_up_description">הזז למעלה</string>
-    <string name="source_sheet_move_down_description">הורד</string>
+    <string name="source_sheet_move_down_description">הזז למטה</string>
     <string name="source_sheet_ignored_mpp_title">תבניות .mpp שיתעלמו מהן</string>
     <string name="source_sheet_ignored_mpp_hint">משפיע רק על מקורות תיקייה, הטוענים באופן אוטומטי את קובץ ה-.mpp החדש ביותר בתיקייה. בעת בחירת הבנייה החדשה ביותר, קבצים ששמם תואם לתבנית כאן ידולגו. מילה פשוטה תתאים לכל קובץ המכיל אותה (למשל debug). השתמש ב-* עבור globs (למשל *-debug.mpp). קבצי *-sources.mpp ו-*-javadoc.mpp תמיד ידולגו</string>
     <string name="source_sheet_ignored_mpp_placeholder">לדוגמה debug או *-debug.mpp</string>
@@ -572,9 +575,9 @@
     <string name="patch_source_dialog_name_label">שם</string>
     <string name="patch_source_dialog_name_placeholder">הטלאים המותאמים אישית שלי</string>
     <string name="patch_source_dialog_repo_url_label">כתובת URL של המאגר</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo or gitlab.com/owner/repo</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo או gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">מקבל קישור GitHub, GitLab או morphe.software/add-source</string>
-    <string name="patch_source_dialog_pre_release_title">טלאי טרום-גרסה</string>
+    <string name="patch_source_dialog_pre_release_title">טלאים לפני הפצה</string>
     <string name="patch_source_dialog_pre_release_hint">מקבל גישה מוקדמת לגרסאות טלאי ניסיוניות חדשות</string>
     <string name="patch_source_dialog_error_name_required">שם הוא חובה</string>
     <string name="patch_source_dialog_error_invalid_url">הזן כתובת URL תקינה של GitHub או GitLab</string>
@@ -584,8 +587,8 @@
     <string name="patch_source_dialog_type_github_repo">מאגר GitHub</string>
     <string name="patch_source_dialog_type_github_pr">בקשת משיכה של GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">מאגר GitLab</string>
-    <string name="patch_source_dialog_mpp_or_folder_label">קובץ mpp. או תיקייה</string>
-    <string name="patch_source_dialog_mpp_label">קובץ mpp.</string>
+    <string name="patch_source_dialog_mpp_or_folder_label">קובץ .mpp או תיקייה</string>
+    <string name="patch_source_dialog_mpp_label">קובץ .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">נתיב אל .mpp או תיקייה</string>
     <string name="patch_source_dialog_path_placeholder">נתיב אל קובץ .mpp</string>
     <string name="patch_source_dialog_file_button">קובץ</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB לא נמצא</string>
     <string name="device_indicator_adb_not_found_subtitle">התקן את Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">לא זוהו מכשירים</string>
-    <string name="device_indicator_no_devices_subtitle">חבר מכשיר עם איתור באגים ב-USB מופעל</string>
+    <string name="device_indicator_no_devices_subtitle">חבר מכשיר עם ניפוי שגיאות מופעל באמצעות USB או Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">הפעל איתור באגים ב-USB</string>
     <string name="device_indicator_enable_debugging_subtitle">הגדרות → אפשרויות מפתח → איתור באגים ב-USB</string>
     <string name="device_indicator_status_connected">מחובר</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">שפה</string>
     <string name="settings_language_current_title">שפה נוכחית</string>
-    <string name="settings_language_community_translation_hint">ייתכן שתרגומים לחלק מהשפות חסרים או חלקיים. כדי לתרגם שפות חדשות או לשפר תרגומים קיימים, בקר ב-%1$s</string>
     <string name="settings_language_dialog_title">שפת היישום</string>
+    <string name="settings_language_translate_title">עזרו לתרגם את Morphe</string>
     <string name="settings_language_search_no_results">לא נמצאו תוצאות</string>
     <string name="settings_section_theme">ערכת נושא</string>
     <string name="settings_appearance_theme_mode">מצב ערכת נושא</string>
+    <string name="settings_appearance_theme_mode_description">מעבר בין ערכת נושא בהירה, כהה, שחור מוחלט או ערכת נושא של המערכת</string>
     <string name="settings_theme_light">בהיר</string>
     <string name="settings_theme_dark">כהה</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">סגנון צבע</string>
+    <string name="settings_appearance_color_style_description">פלטת Morphe צבעונית או סגנון מונוכרומטי בגווני אפור</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">מונוכרום</string>
     <string name="settings_toggle_sharp_corners_label">פינות חדות</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">כרטיסי אפליקציה</string>
     <string name="settings_app_cards_color_all">צבע לכל כרטיס</string>
     <string name="settings_app_cards_color_all_desc">כרטיסים שהתאמת אישית בנפרד שומרים על צבע משלהם</string>
-    <string name="settings_section_background_animation">אנימציית רקע</string>
+    <string name="settings_toggle_app_icons_label">אייקונים של אפליקציות</string>
+    <string name="settings_toggle_app_icons_desc">מציג את האייקון של כל אפליקציה, שחולץ מקובצי APK מקומיים או מהמכשיר המחובר</string>
+    <string name="settings_appearance_more_apps_card">כרטיס אפליקציות נוספות</string>
+    <string name="settings_appearance_more_apps_card_description">מציג כרטיס מתחת לאפליקציות המוביל לתיקוני קהילה</string>
+    <string name="settings_section_effects">אפקטים</string>
+    <string name="settings_appearance_background_animation">אנימציית רקע</string>
+    <string name="settings_appearance_background_animation_description">האנימציה שמופעלת מאחורי מסכי האפליקציה</string>
     <string name="settings_background_circles">עיגולים</string>
     <string name="settings_background_rings">טבעות</string>
     <string name="settings_background_mesh">רשת</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">מצב מומחה</string>
     <string name="settings_toggle_expert_mode_desc">שליטה מלאה בבחירת טלאים ובהגדרתם</string>
+    <string name="settings_expert_mode_disabled_in_flow">חזור למסך הבית כדי לשנות מצב</string>
     <string name="settings_toggle_route_links_label">נתב קישורים לאפליקציה המטולאת</string>
     <string name="settings_toggle_route_links_desc">לאחר התקנה דרך ADB, גרום לאפליקציה המטולאת לפתוח קישורי אינטרנט נתמכים במקום הדפדפן או האפליקציה המקורית/ברירת המחדל</string>
     <string name="settings_toggle_disable_stock_links_label">השבת קישורים של האפליקציה המקורית</string>
@@ -720,16 +732,32 @@
     <string name="settings_output_folder_desc">היכן נשמרים APK מטולאים. נוצרת בתוכה תיקיית משנה לכל אפליקציה</string>
     <string name="settings_output_folder_default">התיקייה של ה-APK (ברירת מחדל)</string>
     <string name="settings_output_folder_picker_title">בחר תיקיית פלט</string>
-    <string name="settings_output_folder_not_found">התיקייה לא נמצאה, תיווצר בהטלאה הבאה</string>
+    <string name="settings_output_folder_not_found">התיקייה לא נמצאה, תיווצר בתיקון הבא</string>
     <string name="settings_toggle_auto_start_adb_label">הפעל ADB אוטומטית</string>
     <string name="settings_toggle_auto_start_adb_desc">הפעל את דמון ה-ADB בעת ההשקה כדי שמכשירים מחוברים יהיו במעקב. כשזה כבוי, Morphe לעולם לא מתחיל את השרת, ותכונות ההתקנה/דחיפה מושבתות</string>
     <string name="settings_section_storage">אחסון &amp; מטמון</string>
-    <string name="settings_cache_summary">מטמון: %1$s (תיקונים + יומנים)</string>
-    <string name="settings_cache_clear_button">נקה מטמון</string>
+    <string name="settings_cache_clear_all_title">נקה את כל המטמון</string>
+    <string name="settings_cache_category_patches">תיקונים</string>
+    <string name="settings_cache_category_logs">יומנים</string>
+    <string name="settings_cache_category_temp">קבצים זמניים</string>
+    <string name="settings_cache_category_avatars">מטמון אווטארים</string>
+    <string name="settings_cache_category_app_icons">מטמון אייקונים של אפליקציות</string>
+    <string name="settings_cache_confirm_patches_title">נקה תיקונים?</string>
+    <string name="settings_cache_confirm_patches_message">פעולה זו תמחק את קבצי התיקונים שהורדו. תיקונים יורדו שוב בעת הצורך</string>
+    <string name="settings_cache_confirm_logs_title">נקה יומנים?</string>
+    <string name="settings_cache_confirm_logs_message">פעולה זו תמחק את כל קבצי יומן האפליקציה ואת דמפי ה-logcat של המכשיר</string>
+    <string name="settings_cache_confirm_temp_title">נקה קבצים זמניים?</string>
+    <string name="settings_cache_confirm_temp_message">פעולה זו תמחק קבצי טיוטה וסביבת עבודה זמניים</string>
+    <string name="settings_cache_confirm_avatars_title">נקה מטמון אווטארים?</string>
+    <string name="settings_cache_confirm_avatars_message">פעולה זו תמחק את כל תמונות האווטארים המרוחקות השמורות במטמון</string>
+    <string name="settings_cache_confirm_app_icons_title">לנקות את מטמון האייקונים של האפליקציות?</string>
+    <string name="settings_cache_confirm_app_icons_message">פעולה זו תמחק את כל אייקוני האפליקציות שחולצו מקובצי APK וממכשירים</string>
+    <string name="settings_cache_category_cleared">%1$s נוקו</string>
+    <string name="settings_cache_category_clear_failed">ניקוי של %1$s נכשל</string>
     <string name="settings_cache_cleared">המטמון נוקה</string>
     <string name="settings_cache_clear_failed">הניקוי נכשל</string>
     <string name="settings_cache_confirm_title">לנקות מטמון?</string>
-    <string name="settings_cache_confirm_message">פעולה זו תמחק תיקונים שהורדו וקבצי יומן. תיקונים יורדו שוב בעת הצורך</string>
+    <string name="settings_cache_confirm_message">פעולה זו תמחק תיקוני תוכנה שהורדו, קובצי יומן וקבצים זמניים. תיקוני התוכנה יורדו שוב בעת הצורך</string>
     <string name="settings_storage_open_app_data_button">פתח נתוני אפליקציה</string>
     <string name="settings_storage_open_logs_button">פתח יומנים</string>
     <string name="settings_section_about">אודות</string>
@@ -752,7 +780,7 @@
     <string name="settings_signing_desc">מאגר המפתחות המשמש לחתימה על APK מטולאים</string>
     <string name="settings_signing_default_keystore">ברירת מחדל (נוצר אוטומטית)</string>
     <string name="settings_signing_picker_title">בחר מאגר מפתחות</string>
-    <string name="settings_signing_not_found">מאגר המפתחות לא נמצא, ההטלאה תיכשל עד שתשחזר אותו, תבחר אחר, או תאפס</string>
+    <string name="settings_signing_not_found">מאגר המפתחות לא נמצא, התיקון ייכשל עד שתשחזר אותו, תבחר אחר, או תאפס</string>
     <string name="settings_signing_invalid_file_type">סוג קובץ לא חוקי. צפוי: %1$s</string>
     <string name="settings_signing_using_default">משתמש במאגר המפתחות ברירת המחדל של Morphe ב-%1$s</string>
     <string name="settings_signing_will_create_default">ייווצר מאגר המפתחות ברירת המחדל של Morphe ב-%1$s</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">יומני ריצה של אפליקציות מטולאות</string>
     <string name="settings_runtime_logs_desc">לכוד יומנים מהטלפון לאחר שאפליקציה מטולאת קורסת או מתנהגת לא כראוי. נקה לפני שחזור הבאג, ולאחר מכן שמור את הפלט המסונן כדי לצרף לדוח באג</string>
     <string name="settings_runtime_logs_device_info">מכשיר: %1$s</string>
-    <string name="settings_runtime_logs_no_device">לא מחובר מכשיר. חבר את הטלפון עם איתור באגים ב-USB מופעל</string>
+    <string name="settings_runtime_logs_no_device">אין מכשיר מחובר. חבר את הטלפון שלך עם ניפוי שגיאות ב-USB או ב-Wi-Fi מופעל</string>
     <string name="settings_runtime_logs_clearing">מנקה…</string>
     <string name="settings_runtime_logs_clear_button">נקה יומני מכשיר</string>
     <string name="settings_runtime_logs_failed_to_clear">ניקוי היומנים נכשל</string>
@@ -802,7 +830,7 @@
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">אתר</string>
     <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">מטליא: v%1$s</string>
+    <string name="app_info_version_patcher">מתקן: v%1$s</string>
     <string name="app_info_version_library">ספרייה: v%1$s</string>
     <string name="app_info_description">פרויקט קוד פתוח להטלאה מודרנית ויעילה של אפליקציות אנדרואיד פופולריות, המונע על ידי משוב ותרומות של הקהילה</string>
     <string name="app_info_link_changelog">יומן שינויים</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">מקורות</string>
     <string name="nav_apps">אפליקציות</string>
+    <string name="nav_settings">הגדרות</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">חפש בהגדרות</string>
+    <string name="settings_search_no_results">לא נמצאו הגדרות תואמות</string>
+    <string name="settings_back_to_about">חזרה ל\"אודות\"</string>
+    <string name="licenses_back_to_list">חזרה לרישיונות</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">אפליקציות נוספות</string>
+    <string name="home_more_apps_subtitle">תיקוני קהילה</string>
+    <string name="community_patches_notice_title">מקורות תיקון של צד שלישי</string>
+    <string name="community_patches_notice_message">מקורות תיקוני קהילה נוצרו ומתוחזקים על ידי מחבריהם. Morphe אינה בודקת או מאמתת תיקונים של צד שלישי, ואינה אחראית לתוכנם או לפעולות שהם מבצעים במכשיר שלך.</string>
 </resources>

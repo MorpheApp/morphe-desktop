@@ -40,7 +40,7 @@
     <string name="select_image">Изберете изображение</string>
     <string name="select_file">Изберете файл</string>
     <string name="failed">Неуспешно</string>
-    <string name="copy">Дублирането на видеа се показва</string>
+    <string name="copy">Копиране</string>
     <string name="copied">Копирано</string>
     <string name="click_to_copy">Кликнете, за да копирате</string>
     <string name="enable_adb_button">Активирайте ADB</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Пачването се провали по неизвестна причина</string>
     <string name="error_log_label">Журнал на грешки</string>
     <string name="back">Назад</string>
+    <string name="open">Отвори</string>
     <string name="open_folder">Отвори папка</string>
     <string name="temporary_files_label">Временни файлове</string>
     <string name="size_can_be_freed_label">%1$s могат да бъдат освободени</string>
@@ -95,7 +96,7 @@
     <string name="card_fill_mode_default">По подразбиране</string>
     <string name="card_fill_mode_default_blurb">Цветът, който идва с пакета кръпки</string>
     <string name="card_fill_mode_accent">Акцент</string>
-    <string name="card_fill_mode_accent_blurb">Следи акцентния цвят, променя се при него</string>
+    <string name="card_fill_mode_accent_blurb">Следва акцентния цвят и се променя заедно с него</string>
     <string name="card_fill_mode_gradient">Градиент</string>
     <string name="card_fill_mode_gradient_blurb">Произволен брой точки, линейни, радиални или конични</string>
     <string name="card_fill_mode_solid">Плътен</string>
@@ -105,7 +106,7 @@
     <string name="patching_step_loading_patches">Зареждане на кръпки</string>
     <string name="patching_step_merging_split_apk">Обединяване на разделен APK</string>
     <string name="patching_step_read_apk">Четене на APK файл</string>
-    <string name="patching_step_applying_patches">Прилагане на пачове</string>
+    <string name="patching_step_applying_patches">Прилагане на кръпки</string>
     <string name="patching_step_writing_apk">Записване на пачвания APK файл</string>
     <string name="patching_step_signing">Подписване на пачвания APK файл</string>
     <string name="patching_task_decoding_dex">Четене на DEX файлове</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Инсталирането се провали: %1$s</string>
     <string name="adb_error_not_found">ADB не е намерен. Моля, инсталирайте Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Устройството е свързано, но не е оторизирано. Моля, приемете подканата за USB отстраняване на грешки на вашето устройство</string>
-    <string name="adb_error_no_devices">Няма свързани устройства. Моля, свържете вашето Android устройство с активирано USB отстраняване на грешки</string>
+    <string name="adb_error_no_devices">Няма свързани устройства. Моля, свържете вашето Android устройство с активирано USB или Wi-Fi дебъгване</string>
     <string name="adb_error_device_not_found">Устройството %1$s не е намерено</string>
     <string name="adb_error_multiple_devices">Свързани са няколко устройства. Моля, изберете едно</string>
     <string name="adb_error_apk_not_found">APK файлът не е намерен: %1$s</string>
@@ -155,7 +156,7 @@
     <string name="version_status_unsupported_detail">Не се поддържа официално, пачовете най-вероятно ще са неуспешни.</string>
     <string name="version_status_unsupported">Неподдържана версия</string>
     <string name="version_status_build_unsupported">Изданието не се поддържа</string>
-    <string name="version_status_build_unsupported_detail">Тази версия се поддържа, но не и това издание. Вземете издание, което кръпките целят</string>
+    <string name="version_status_build_unsupported_detail">Тази версия се поддържа, но не и това издание. Вземете издание, за което са предназначени кръпките</string>
     <string name="version_status_build_unsupported_with_code">Пачовете изискват build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Известие за версията</string>
@@ -166,9 +167,7 @@
 Тази версия има ранен експериментален поддръжка
 
 🔧 Очаквайте странно поведение на приложението или неидентифицирани грешки, докато кръпките се усъвършенстват за тази версия на приложението.</string>
-    <string name="version_warning_unsupported_message">Текуща: v%1$s
-
-Това не е официално поддържана версия. Кръпките най-вероятно ще се провалят.</string>
+    <string name="version_warning_unsupported_message">Текуща: v%1$s\n\nТова не е официално поддържана версия. Кръпките най-вероятно ще се провалят.</string>
     <string name="version_warning_notice_message">Продължаване с v%1$s?</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Изберете APK файл</string>
@@ -204,7 +203,7 @@
     <string name="home_dialog_forget_message">Това премахва %1$s от историята на приложенията с пачове. Не засяга никакви файлове - повторното пачване на приложението го добавя отново.</string>
     <string name="home_dialog_uninstall_title">Деинсталиране на %1$s?</string>
     <string name="home_dialog_uninstall_message">Това премахва %1$s от свързаното устройство. Пачваният APK на диска и историята ви се запазват, освен ако не изберете друго по-долу.</string>
-    <string name="home_dialog_uninstall_also_forget">Също премахване от „Вашите приложения“</string>
+    <string name="home_dialog_uninstall_also_forget">Премахване и от „Вашите приложения“</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Управление на източници</string>
     <string name="home_header_multi_source_hint">Кръпките от всеки активиран източник се обединяват. Управлявайте от бутона за източници по-горе</string>
@@ -248,7 +247,7 @@
     <string name="home_action_repatch">Препачване</string>
     <string name="home_action_uninstalling">Деинсталиране…</string>
     <string name="home_detail_source_apk_label">Изходен APK</string>
-    <string name="home_detail_patch_bundle_label">Набор на пачове</string>
+    <string name="home_detail_patch_bundle_label">Пакет с кръпки</string>
     <string name="home_detail_no_sources_enabled">Няма активирани източници</string>
     <string name="home_detail_enable_or_add_source">активирайте или добавете един по-долу</string>
     <string name="home_detail_the_loaded_bundle">зареденият пакет</string>
@@ -313,14 +312,14 @@
     <string name="patches_local_patch_file">Локален файл с кръпки</string>
     <string name="patches_error_local_file_not_found">Локалният файл с кръпки не е намерен: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Неуспешно зареждане на издания</string>
-    <string name="patches_error_failed_to_download_patches">Неуспешно сваляне на пакети</string>
+    <string name="patches_error_failed_to_download_patches">Неуспешно изтегляне на кръпки</string>
     <string name="patches_error_failed_to_export_options">Неуспешен експорт на опции: %1$s</string>
     <!-- Patch Selection Screen -->
     <string name="patch_selection_error_title">Грешка при зареждане на кръпки</string>
     <string name="patch_selection_title">Изберете кръпки</string>
     <string name="patch_selection_cmd_preview">Преглед на командата</string>
     <string name="patch_selection_root_mode_description">Режим на монтиране на Root</string>
-    <string name="patch_selection_lock_unavailable">Недоступно за root монтиране</string>
+    <string name="patch_selection_lock_unavailable">Недостъпно за root монтиране</string>
     <string name="patch_selection_continue_on_error_tooltip">Продължете пачването дори ако дадена кръпка се провали</string>
     <string name="patch_selection_continue_on_error_description">Продължи при грешка</string>
     <string name="patch_selection_no_patches_found">Не са намерени кръпки</string>
@@ -330,19 +329,19 @@
     <string name="patch_selection_filter_selected">Избрани</string>
     <string name="patch_selection_configure_options_description">Конфигуриране на опции</string>
     <string name="patch_selection_icon_edit">Редактиране на икона</string>
-    <string name="patch_selection_icon_design">Проектиране на икона</string>
+    <string name="patch_selection_icon_design">Дизайн на икона</string>
     <string name="patch_selection_icon_select_folder_title">Изберете папка с икони</string>
     <string name="patch_selection_icon_ready">Персонализираната икона е готова</string>
     <string name="patch_selection_icon_none">Няма зададена персонализирана икона</string>
     <string name="patch_selection_icon_dialog_delete_title">Изтриване на персонализираната икона?</string>
     <string name="patch_selection_icon_dialog_delete_message">Това изчиства иконата и премахва запазения проект и генерираните файлове. Това не може да бъде отменено</string>
-    <string name="patch_selection_custom_icon_hint">Не е нужно сами да създавате тази папка! Щракнете върху иконата Design/Edit, за да я създадете в Icon Studio или да я импортирате от мениджъра.</string>
+    <string name="patch_selection_custom_icon_hint">Не е нужно сами да създавате тази папка! Щракнете върху иконата за дизайн/редактиране, за да я създадете в Icon Studio или да я импортирате от мениджъра</string>
     <string name="patch_selection_option_enabled">Активирано</string>
     <string name="patch_selection_option_disabled">Деактивирано</string>
     <string name="patch_selection_mode_your_defaults">Вашите настройки по подразбиране</string>
     <string name="patch_selection_mode_patch_defaults">Настройки по подразбиране за кръпки</string>
     <string name="patch_selection_mode_all">Всички</string>
-    <string name="patch_selection_strip_no_libs_headline">Няма родни библиотеки</string>
+    <string name="patch_selection_strip_no_libs_headline">Няма нативни библиотеки</string>
     <string name="patch_selection_strip_no_libs_detail">премахването не се прилага</string>
     <string name="patch_selection_strip_universal_headline">Универсални библиотеки</string>
     <string name="patch_selection_strip_universal_detail">единична универсална папка, изчистването не се прилага</string>
@@ -350,7 +349,7 @@
     <string name="patch_selection_strip_keep_all_detail">списъкът за запазване покрива всяка архитектура в този APK</string>
     <string name="patch_selection_strip_fallback_headline">Резервен вариант, запазване на всичко</string>
     <string name="patch_selection_strip_fallback_detail">няма предпочитани архитектури, прегледайте настройките за изчистване на библиотеките</string>
-    <string name="patch_selection_strip_will_strip_headline">Премахване на родни библиотеки</string>
+    <string name="patch_selection_strip_will_strip_headline">Премахване на нативни библиотеки</string>
     <string name="patch_selection_strip_will_strip_detail">запазване само на изброените архитектури</string>
     <string name="patch_selection_strip_settings_hint">· Настройки → Премахване на библиотеки</string>
     <string name="patch_selection_arch_keep">запази</string>
@@ -367,7 +366,7 @@
     <string name="patch_selection_option_expected">Очаква се %1$s</string>
     <string name="patch_selection_option_hint_list">списък, разделен със запетая, всеки елемент %1$s</string>
     <string name="patch_selection_option_hint_value">стойност</string>
-    <string name="patch_selection_option_hint_boolean">истина или лъжа</string>
+    <string name="patch_selection_option_hint_boolean">true или false</string>
     <string name="patch_selection_option_hint_whole_number">цяло число</string>
     <string name="patch_selection_option_hint_number">число</string>
     <string name="patch_selection_option_hint_text">текст</string>
@@ -388,16 +387,16 @@
     <string name="patch_selection_run_info_verify_sdk">Проверка на Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">Универсални</string>
     <string name="patch_selection_group_ungrouped">Негрупирани</string>
-    <string name="patch_selection_group_selected_count">%1$d избран</string>
+    <string name="patch_selection_group_selected_count">%1$d избрани</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Започнете отначало</string>
-    <string name="patching_patches_count">%1$d / %2$d латки</string>
+    <string name="patching_patches_count">%1$d / %2$d пачове</string>
     <string name="patching_slow_warning">Това отнема повече време от обикновено. Моля, изчакайте…</string>
     <string name="patching_status_ready">Готов за пачване</string>
     <string name="patching_status_preparing">Подготовка за пачване</string>
-    <string name="patching_status_in_progress">Прилагане на пачове</string>
+    <string name="patching_status_in_progress">Прилагане на кръпки</string>
     <string name="patching_completed_loading_result">Пачването завърши, зареждане на резултата…</string>
-    <string name="patching_cancelled_loading_result">Пакването е отменено, зареждане на резултата…</string>
+    <string name="patching_cancelled_loading_result">Пачването е отменено, зареждане на резултата…</string>
     <string name="patching_failed_loading_result">Пачването не успя, зареждане на резултата…</string>
     <string name="patching_log_viewer_failed_to_read">Неуспешно четене на журналния файл: %1$s</string>
     <string name="patching_log_viewer_title">Журнален файл</string>
@@ -417,7 +416,7 @@
     <string name="patching_banner_desktop">Работен плот</string>
     <string name="patching_banner_patcher">Пачър</string>
     <string name="patching_banner_runtime">Време на изпълнение</string>
-    <string name="patching_banner_native_libs">Родни библиотеки</string>
+    <string name="patching_banner_native_libs">Нативни библиотеки</string>
     <string name="patching_banner_os">ОС</string>
     <string name="patching_banner_arch">Архитектура</string>
     <string name="patching_banner_ram_free">Свободна RAM</string>
@@ -434,7 +433,7 @@
     <string name="patching_error_failed_patches">Неуспешни кръпки: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB изкл. · Активирайте за инсталиране</string>
-    <string name="result_adb_connect_device_hint">Свържете устройство чрез USB, за да инсталирате с ADB</string>
+    <string name="result_adb_connect_device_hint">Свържете устройство чрез USB или Wi-Fi, за да инсталирате чрез ADB</string>
     <string name="result_screen_patch_another_button">Пачване на друго</string>
     <string name="result_screen_install_on_device_label">Инсталиране на %1$s</string>
     <string name="result_screen_links_routed_label">Връзките са насочени към пачваното приложение</string>
@@ -445,23 +444,25 @@
     <string name="result_adb_mount_button">Монтиране на %1$s</string>
     <string name="result_adb_mounting_on_device">Монтиране на %1$s…</string>
     <string name="result_adb_mount_successful">Монтирането е успешно!</string>
-    <string name="result_adb_mount_su_prompt_hint">Монтиране на %1$s… Проверете устройството си, за да предоставите Superuser разрешение, ако бъдете подcaneни</string>
+    <string name="result_adb_mount_su_prompt_hint">Монтиране на %1$s… Проверете устройството си, за да предоставите Superuser разрешение, ако бъдете подканени</string>
     <string name="result_adb_unmount_button">Демонтиране от %1$s</string>
     <string name="result_adb_unmounting_on_device">Демонтиране от %1$s…</string>
     <string name="result_adb_root_not_detected">Root достъп не беше открит на %1$s. Уверете се, че Magisk/KernelSU/APatch е инсталиран и su разрешението е предоставено</string>
-    <string name="result_adb_stock_app_not_installed">Стоковото приложение %1$s не е инсталирано на %2$s. Първо инсталирайте официалното приложение преди монтиране</string>
+    <string name="result_adb_stock_app_not_installed">Оригиналното приложение %1$s не е инсталирано на %2$s. Първо инсталирайте официалното приложение преди монтиране</string>
+    <string name="result_adb_mount_version_mismatch">Инсталираното приложение на %3$s е v%1$s, но пачнатият APK е v%2$s. Root mount изисква съвпадащи версии</string>
+    <string name="result_adb_mount_abi_mismatch">Устройството %3$s е %1$s, но APK съдържа само [%2$s]. Native библиотеките няма да се заредят</string>
     <string name="result_link_default_restored">Обработката на връзки по подразбиране е възстановена</string>
     <string name="result_link_routed_stock_disabled">Връзките са насочени към пачваното приложение, оригиналното е деактивирано</string>
     <string name="result_adb_not_found_hint">ADB не е намерен. Инсталирайте Android SDK Platform Tools, за да активирате директно инсталиране</string>
     <string name="result_adb_section_title">ADB инсталиране</string>
     <string name="result_adb_no_devices">Няма свързани устройства</string>
-    <string name="result_adb_connect_hint">Свържете чрез USB с активирано USB отстраняване на грешки</string>
+    <string name="result_adb_connect_hint">Свържете се чрез USB или Wi-Fi дебъгване</string>
     <string name="result_device_status_unauth">Неоторизирано</string>
     <string name="result_adb_update_button">Актуализиране на %1$s</string>
     <string name="result_adb_select_device_button">Изберете устройство</string>
     <string name="result_link_section_title">Обработка на връзки</string>
     <string name="result_link_section_subtitle">Отваряне на поддържани уеб връзки в пачваното приложение вместо в браузъра</string>
-    <string name="result_link_stop_stock">Също спрете %1$s да отваря тези връзки</string>
+    <string name="result_link_stop_stock">Спрете и %1$s да отваря тези връзки</string>
     <string name="result_link_applying">Прилагане…</string>
     <string name="result_link_restore">Възстановяване</string>
     <string name="result_link_open_with_patched">Отваряне на връзки с пачваното приложение</string>
@@ -478,11 +479,11 @@
     <string name="icon_studio_background_gradient">Градиент</string>
     <string name="icon_studio_tab_shape">Форма</string>
     <string name="icon_studio_mask_squircle">Скъркъл</string>
-    <string name="icon_studio_warn_opaque">Това изображение няма прозрачност, така че тематичните и иконите за известия ще бъдат плътен блок. Използвайте изрязан (прозрачен) PNG за тях, за да покажете формата на вашето лого</string>
+    <string name="icon_studio_warn_opaque">Това изображение няма прозрачност, така че тематичните икони и иконите за известия ще бъдат плътен блок. Използвайте изрязан (прозрачен) PNG за тях, за да се покаже формата на вашето лого</string>
     <string name="icon_studio_warn_unreadable">Не можа да се прочете това изображение, за да се провери неговата прозрачност</string>
     <string name="icon_studio_picker_select_font">Изберете шрифт</string>
     <string name="icon_studio_undo_button">Отмяна</string>
-    <string name="icon_studio_redo_button">Повторение</string>
+    <string name="icon_studio_redo_button">Повтори</string>
     <string name="icon_studio_templates">Шаблони</string>
     <string name="icon_studio_template_badge">Значка</string>
     <string name="icon_studio_preview_adaptive">Адаптивна</string>
@@ -505,7 +506,7 @@
     <string name="icon_studio_effect_shadow">Сянка</string>
     <string name="icon_studio_adjust_y_offset">Y отместване</string>
     <string name="icon_studio_adjust_blur">Размиване</string>
-    <string name="icon_studio_effect_glow">Светене</string>
+    <string name="icon_studio_effect_glow">Сияние</string>
     <string name="icon_studio_effect_stroke">Контур</string>
     <string name="icon_studio_adjust_width">Ширина</string>
     <string name="icon_studio_save_icon_button">Запазване на икона</string>
@@ -530,7 +531,7 @@
     <string name="icon_studio_background_hint">Запълва цялата плочка, зад предния план</string>
     <string name="icon_studio_background_image_set_hint">Зададен е фон с изображение, щракнете върху Изображение, за да го замените</string>
     <string name="icon_studio_shape_triangle">Триъгълник</string>
-    <string name="icon_studio_shape_diamond">Диамант</string>
+    <string name="icon_studio_shape_diamond">Ромб</string>
     <string name="icon_studio_shape_pentagon">Петоъгълник</string>
     <string name="icon_studio_shape_hexagon">Шестоъгълник</string>
     <string name="icon_studio_shape_star">Звезда</string>
@@ -547,7 +548,7 @@
     <string name="version_label_local">Локален</string>
     <string name="source_sheet_remote_label">Отдалечен</string>
     <string name="add_source">Добавяне на източник</string>
-    <string name="source_sheet_title">Източници на пачове</string>
+    <string name="source_sheet_title">Източници на кръпки</string>
     <string name="source_sheet_reload_description">Презареждане на кръпки</string>
     <string name="source_sheet_multi_mode_hint">Активирайте/деактивирайте произволна комбинация. Кръпките от всички активирани източници се обединяват</string>
     <string name="source_sheet_done_button">Готово</string>
@@ -558,11 +559,11 @@
     <string name="source_sheet_edit_description">Редактиране</string>
     <string name="source_sheet_move_up_description">Преместване нагоре</string>
     <string name="source_sheet_move_down_description">Преместване надолу</string>
-    <string name="source_sheet_ignored_mpp_title">Игнорирани .mpp модели</string>
+    <string name="source_sheet_ignored_mpp_title">Игнорирани .mpp шаблони</string>
     <string name="source_sheet_ignored_mpp_hint">Засяга само източници от папки, които автоматично зареждат най-новия .mpp файл в папка. При избор на най-новата версия, файловете, чиито имена съвпадат с шаблон тук, се пропускат. Обикновена дума съвпада с всеки файл, който я съдържа (напр. debug). Използвайте * за globs (напр. *-debug.mpp). *-sources.mpp и *-javadoc.mpp винаги се игнорират</string>
     <string name="source_sheet_ignored_mpp_placeholder">напр. debug или *-debug.mpp</string>
-    <string name="source_sheet_add_pattern_description">Добавяне на модел</string>
-    <string name="source_sheet_remove_pattern_description">Премахване на модел</string>
+    <string name="source_sheet_add_pattern_description">Добавяне на шаблон</string>
+    <string name="source_sheet_remove_pattern_description">Премахване на шаблон</string>
     <string name="sources_management_signed_by">Подписано от</string>
     <string name="sources_management_signing_key_changed_badge">Ключът е променен</string>
     <string name="sources_management_signing_key_changed_hint">Ключът за подписване е променен. Кликнете, за да го прегледате</string>
@@ -597,7 +598,7 @@
     <string name="patch_source_dialog_file_button">Файл</string>
     <string name="patch_source_dialog_picker_select_file">Изберете .mpp файл</string>
     <string name="patch_source_dialog_picker_select_folder">Изберете папка (използва се най-новият .mpp)</string>
-    <string name="patch_source_dialog_folder_hint">Изберете папка, за да винаги зареждате най-новия .mpp в нея - удобно при възстановяване на кръпки</string>
+    <string name="patch_source_dialog_folder_hint">Изберете папка, за да винаги зареждате най-новия .mpp в нея - удобно при изграждане на кръпки</string>
     <!-- Device Indicator -->
     <string name="device_indicator_adb_off">ADB изключен</string>
     <string name="device_indicator_checking">Проверка…</string>
@@ -609,7 +610,7 @@
     <string name="device_indicator_adb_not_found_title">ADB не е намерен</string>
     <string name="device_indicator_adb_not_found_subtitle">Инсталирайте Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Не са открити устройства</string>
-    <string name="device_indicator_no_devices_subtitle">Свържете устройство с активирано USB отстраняване на грешки</string>
+    <string name="device_indicator_no_devices_subtitle">Свържете устройство с активирано USB или Wi-Fi дебъгване</string>
     <string name="device_indicator_enable_debugging_title">Активирайте USB отстраняване на грешки</string>
     <string name="device_indicator_enable_debugging_subtitle">Настройки → Опции за разработчици → USB отстраняване на грешки</string>
     <string name="device_indicator_status_connected">Свързано</string>
@@ -617,8 +618,8 @@
     <string name="device_indicator_not_listed_title">Устройството не е в списъка?</string>
     <string name="device_indicator_not_listed_subtitle">Активирайте USB отстраняване на грешки в Опциите за разработчици</string>
     <!-- Error Dialog -->
-    <string name="error_dialog_timeout">Връзката изтече. Моля, проверете интернет връзката си и опитайте отново</string>
-    <string name="error_dialog_unreachable">Не може да се свърже със сървъра. Моля, проверете интернет връзката си</string>
+    <string name="error_dialog_timeout">Времето за изчакване на връзката изтече. Моля, проверете интернет връзката си и опитайте отново</string>
+    <string name="error_dialog_unreachable">Не може да се осъществи връзка със сървъра. Моля, проверете интернет връзката си</string>
     <string name="error_dialog_permission_denied">Отказано е разрешение. Моля, проверете дали имате достъп до файла или папката</string>
     <string name="error_dialog_not_found">Исканият файл или ресурс не е намерен</string>
     <string name="error_dialog_disk_full">Няма достатъчно дисково пространство. Моля, освободете малко място и опитайте отново</string>
@@ -626,7 +627,7 @@
     <!-- Banners -->
     <string name="offline_banner_text">Офлайн, използват се кеширани пачове</string>
     <string name="update_banner_available">Налична е актуализация · v%1$s</string>
-    <string name="update_banner_from_version_crosses">от v%1$s · dev → stable</string>
+    <string name="update_banner_from_version_crosses">от v%1$s · dev → стабилна</string>
     <string name="update_banner_from_version">от v%1$s</string>
     <string name="update_banner_later_button">По-късно</string>
     <string name="update_banner_skip_button">Пропусни v%1$s</string>
@@ -651,26 +652,28 @@
     <string name="settings_nav_advanced">Разширено</string>
     <string name="settings_nav_system">Система</string>
     <string name="settings_dialog_open_logs_button">Отвори журнали</string>
-    <string name="settings_dialog_reset_button">Изчисти</string>
+    <string name="settings_dialog_reset_button">Нулиране</string>
     <string name="settings_theme_system">Система</string>
     <string name="settings_search_languages_placeholder">Търсене на езици</string>
     <string name="settings_dialog_resolves_to_message">Разрешава се до: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Език</string>
     <string name="settings_language_current_title">Текущ език</string>
-    <string name="settings_language_community_translation_hint">Преводите за някои езици може да липсват или да са непълни. За да преведете нови езици или да подобрите съществуващите преводи, посетете %1$s</string>
     <string name="settings_language_dialog_title">Език на приложението</string>
+    <string name="settings_language_translate_title">Помогнете за превода на Morphe</string>
     <string name="settings_language_search_no_results">Няма намерени резултати</string>
     <string name="settings_section_theme">Тема</string>
     <string name="settings_appearance_theme_mode">Режим на темата</string>
-    <string name="settings_theme_light">Светлина</string>
+    <string name="settings_appearance_theme_mode_description">Превключвайте между светла, тъмна, чисто черна или системна тема</string>
+    <string name="settings_theme_light">Светла</string>
     <string name="settings_theme_dark">Тъмна</string>
     <string name="settings_theme_amoled">AMOLED</string>
     <string name="settings_appearance_color_style">Цветов стил</string>
+    <string name="settings_appearance_color_style_description">Цветна палитра Morphe или сивомащабен монохромен стил</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Монохром</string>
     <string name="settings_toggle_sharp_corners_label">Остри ъгли</string>
-    <string name="settings_toggle_sharp_corners_desc">Изправете ъглите на карти, диалози и бутони</string>
+    <string name="settings_toggle_sharp_corners_desc">Прави ъглите на картите, диалозите и бутоните квадратни</string>
     <string name="settings_section_accent_color">Акцентен цвят</string>
     <string name="settings_accent_clear_description">Изчистване на акцентния цвят</string>
     <string name="settings_accent_custom_description">Персонализиран акцентен цвят</string>
@@ -678,13 +681,19 @@
     <string name="settings_section_app_cards">Карти на приложения</string>
     <string name="settings_app_cards_color_all">Цвят за всяка карта</string>
     <string name="settings_app_cards_color_all_desc">Карти, които сте персонализирали индивидуално, запазват своя цвят</string>
-    <string name="settings_section_background_animation">Фонова анимация</string>
+    <string name="settings_toggle_app_icons_label">Икони на приложенията</string>
+    <string name="settings_toggle_app_icons_desc">Показва иконата на всяко приложение, извлечена от локални APK или свързаното устройство</string>
+    <string name="settings_appearance_more_apps_card">Картичка \"Още приложения\"</string>
+    <string name="settings_appearance_more_apps_card_description">Показва карта под приложенията, водеща към общностни пачове</string>
+    <string name="settings_section_effects">Ефекти</string>
+    <string name="settings_appearance_background_animation">Фонова анимация</string>
+    <string name="settings_appearance_background_animation_description">Анимацията, която се възпроизвежда зад екраните на приложението</string>
     <string name="settings_background_circles">Кръгове</string>
-    <string name="settings_background_rings">Пренци</string>
+    <string name="settings_background_rings">Пръстени</string>
     <string name="settings_background_mesh">Мрежа</string>
     <string name="settings_background_space">Пространство</string>
     <string name="settings_background_shapes">Форми</string>
-    <string name="settings_background_snow">Снег</string>
+    <string name="settings_background_snow">Сняг</string>
     <string name="settings_background_grid">Решетка</string>
     <string name="settings_background_particles">Частици</string>
     <string name="settings_background_lava">Лава лампа</string>
@@ -694,10 +703,11 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Режим Експерт</string>
     <string name="settings_toggle_expert_mode_desc">Пълен контрол върху избора и конфигурацията на кръпки</string>
+    <string name="settings_expert_mode_disabled_in_flow">Върнете се на началния екран, за да промените режима</string>
     <string name="settings_toggle_route_links_label">Насочване на връзки към пачваното приложение</string>
-    <string name="settings_toggle_route_links_desc">След инсталиране чрез ADB, накарайте пачваното приложение да отваря своите поддържани уеб връзки вместо браузъра или оригиналното/приложението по подразбиране</string>
+    <string name="settings_toggle_route_links_desc">След инсталиране чрез ADB пачваното приложение ще отваря поддържаните си уеб връзки вместо браузъра или оригиналното приложение</string>
     <string name="settings_toggle_disable_stock_links_label">Деактивиране на връзките на оригиналното приложение</string>
-    <string name="settings_toggle_disable_stock_links_desc">Също спрете оригиналното приложение да отваря тези връзки (само когато е използвана кръпка за преименуване и оригиналното приложение е инсталирано). Обратимо</string>
+    <string name="settings_toggle_disable_stock_links_desc">Спрете и оригиналното приложение да отваря тези връзки (само когато е използвана кръпка за преименуване и оригиналното приложение е инсталирано). Обратимо</string>
     <string name="settings_section_signing">Подписване</string>
     <string name="settings_section_strip_libs">Премахване на библиотеки</string>
     <string name="settings_toggle_developer_options_label">Опции за разработчици</string>
@@ -710,7 +720,7 @@
     <string name="settings_dev_validate_label">Валидиране на отпечатъка</string>
     <string name="settings_dev_validate_desc">Валидирайте, че всяко match() съвпада само с един метод (по-бавно пачване, за тестване на пачове)</string>
     <string name="settings_dev_verify_sdk_label">Проверка на Android SDK</string>
-    <string name="settings_dev_verify_sdk_desc">Проверете пачнатия DEX и APK с инструментите на Android SDK (d8, zipalign). Мога да се докладват фалшиви положителни резултати</string>
+    <string name="settings_dev_verify_sdk_desc">Проверете пачнатия DEX и APK с инструментите на Android SDK (d8, zipalign). Възможно е да се докладват фалшиви положителни резултати</string>
     <string name="settings_dev_sdk_path_label">Директория на Android SDK</string>
     <string name="settings_dev_sdk_path_auto">Автоматично открит</string>
     <string name="settings_dev_sdk_not_found">Android SDK не е намерен. Задайте ANDROID_HOME или потърсете директорията на SDK</string>
@@ -730,20 +740,36 @@
     <string name="settings_toggle_auto_start_adb_label">Автоматично стартиране на ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Стартира ADB демона при пускане, така че свързаните устройства да се следят. Когато е изключено, Morphe никога не стартира сървъра и функциите за инсталиране/изпращане са деактивирани</string>
     <string name="settings_section_storage">Съхранение и кеш</string>
-    <string name="settings_cache_summary">Кеш: %1$s (пачове + логове)</string>
-    <string name="settings_cache_clear_button">Изчистване на кеша</string>
+    <string name="settings_cache_clear_all_title">Изчисти целия кеш</string>
+    <string name="settings_cache_category_patches">Пачове</string>
+    <string name="settings_cache_category_logs">Логове</string>
+    <string name="settings_cache_category_temp">Временни файлове</string>
+    <string name="settings_cache_category_avatars">Кеш на аватарите</string>
+    <string name="settings_cache_category_app_icons">Кеш на иконите на приложенията</string>
+    <string name="settings_cache_confirm_patches_title">Изчистване на пачовете?</string>
+    <string name="settings_cache_confirm_patches_message">Това ще изтрие изтеглените файлове с пачове. Пачовете ще бъдат изтеглени отново, когато е необходимо</string>
+    <string name="settings_cache_confirm_logs_title">Изчистване на логовете?</string>
+    <string name="settings_cache_confirm_logs_message">Това ще изтрие всички файлове с логове на приложението и дамповете на logcat на устройството</string>
+    <string name="settings_cache_confirm_temp_title">Изчистване на временните файлове?</string>
+    <string name="settings_cache_confirm_temp_message">Това ще изтрие временните работни файлове и файловете на работното пространство</string>
+    <string name="settings_cache_confirm_avatars_title">Изчистване на кеша на аватарите?</string>
+    <string name="settings_cache_confirm_avatars_message">Това ще изтрие всички кеширани отдалечени изображения на аватари</string>
+    <string name="settings_cache_confirm_app_icons_title">Изчистване на кеша на иконите на приложенията?</string>
+    <string name="settings_cache_confirm_app_icons_message">Това ще изтрие всички икони на приложения, извлечени от APK и устройства</string>
+    <string name="settings_cache_category_cleared">%1$s е изчистен</string>
+    <string name="settings_cache_category_clear_failed">Неуспешно изчистване на %1$s</string>
     <string name="settings_cache_cleared">Кешът е изчистен</string>
     <string name="settings_cache_clear_failed">Изчистването не успя</string>
     <string name="settings_cache_confirm_title">Изчистване на кеша?</string>
-    <string name="settings_cache_confirm_message">Това ще изтрие изтеглените пачове и файловете с логове. Пачовете ще бъдат изтеглени отново при необходимост</string>
+    <string name="settings_cache_confirm_message">Това ще изтрие изтеглените пачове, лог файловете и временните файлове. Пачовете ще бъдат изтеглени отново при нужда</string>
     <string name="settings_storage_open_app_data_button">Отвори данните на приложението</string>
-    <string name="settings_storage_open_logs_button">Отвори логовете</string>
-    <string name="settings_section_about">Отношение</string>
+    <string name="settings_storage_open_logs_button">Отвори журналите</string>
+    <string name="settings_section_about">Относно</string>
     <string name="settings_about_version">Версия %1$s</string>
     <string name="settings_about_changelogs_title">Преглед на списъците с промени</string>
     <string name="settings_about_changelogs_desc">Вижте последните промени в тази актуализация</string>
     <string name="settings_about_licenses_title">Лицензи с отворен код</string>
-    <string name="settings_about_licenses_desc">Преглеждане на лицензите наLibraries на трети страни</string>
+    <string name="settings_about_licenses_desc">Преглеждане на лицензите на библиотеките на трети страни</string>
     <string name="settings_about_documentation_title">Документация</string>
     <string name="settings_about_documentation_desc">Ръководства за пачване, източници и отстраняване на проблеми</string>
     <string name="settings_about_website_title">Посетете уебсайта</string>
@@ -755,7 +781,7 @@
     <string name="settings_strip_libs_x86_64">Intel 64-битова (емулатори / Chromebook-и)</string>
     <string name="settings_strip_libs_x86">Intel 32-битова (стари емулатори)</string>
     <!-- Settings - Signing -->
-    <string name="settings_signing_desc">Keystore, използван за подписване на APK с пачове</string>
+    <string name="settings_signing_desc">Keystore, използван за подписване на пачваните APK</string>
     <string name="settings_signing_default_keystore">По подразбиране (автоматично генериран)</string>
     <string name="settings_signing_picker_title">Избор на keystore</string>
     <string name="settings_signing_not_found">Keystore не е намерен, пачването ще се проваля, докато не го възстановите, не изберете друг или не нулирате.</string>
@@ -772,12 +798,12 @@
     <string name="settings_signing_verify_valid">Идентификационните данни са валидни</string>
     <string name="settings_signing_picker_save_keystore">Запазване на keystore</string>
     <string name="settings_signing_failed_to_generate">Неуспешно генериране: %1$s</string>
-    <string name="settings_signing_generated_button">Ключова запазна книга генерирана</string>
-    <string name="settings_signing_generate_button">Генериране на ключова запазна книга</string>
+    <string name="settings_signing_generated_button">Keystore генериран</string>
+    <string name="settings_signing_generate_button">Генериране на keystore</string>
     <string name="settings_signing_uses_credentials_hint">Използва въведените по-горе идентификационни данни</string>
     <string name="settings_signing_certificate_button">Сертификат</string>
     <string name="settings_signing_export_button">Експортиране</string>
-    <string name="settings_signing_picker_export_title">Извеждане на ключова запазна книга</string>
+    <string name="settings_signing_picker_export_title">Експортиране на keystore</string>
     <!-- Settings - Keystore Info Dialog -->
     <string name="settings_cert_info_title">Информация за сертификата</string>
     <string name="settings_cert_info_alias">Псевдоним</string>
@@ -790,17 +816,17 @@
     <string name="settings_cert_warning_alias_not_found">Псевдонимът \"%1$s\" не е намерен в keystore.</string>
     <string name="settings_cert_warning_key_password_incorrect">Паролата за ключа е неправилна за псевдоним \"%1$s\".</string>
     <!-- Settings - Runtime Logs -->
-    <string name="settings_runtime_logs_title">Журнали за изпълнение на приложението с пачове</string>
-    <string name="settings_runtime_logs_desc">Събирайте журнали от телефона си, след като приложение с пачове се срине или работи неправилно. Изчистете ги, преди да възпроизведете грешката, след което запазете филтрирания изход, за да го прикачите към доклад за грешка.</string>
+    <string name="settings_runtime_logs_title">Журнали за изпълнение на пачваното приложение</string>
+    <string name="settings_runtime_logs_desc">Събирайте журнали от телефона си, след като пачвано приложение се срине или работи неправилно. Изчистете ги, преди да възпроизведете грешката, след което запазете филтрирания изход, за да го прикачите към доклад за грешка</string>
     <string name="settings_runtime_logs_device_info">Устройство: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Няма свързано устройство. Свържете телефона си с включено USB отстраняване на грешки.</string>
+    <string name="settings_runtime_logs_no_device">Няма свързано устройство. Свържете телефона си с активирано USB или Wi-Fi дебъгване</string>
     <string name="settings_runtime_logs_clearing">Изчистване…</string>
     <string name="settings_runtime_logs_clear_button">Изчистване на журналите на устройството</string>
     <string name="settings_runtime_logs_failed_to_clear">Неуспех при изчистване на журналите</string>
     <string name="settings_runtime_logs_save_button">Запазване на журналите на устройството</string>
     <string name="settings_runtime_logs_failed_to_save">Неуспех при запазване на журналите</string>
     <string name="settings_runtime_logs_cleared_success">Журналите на устройството са изчистени</string>
-    <string name="settings_runtime_logs_nothing_captured">Все още нищо не е записано. Стартирайте приложението с пачове на телефона си и след това запазете отново.</string>
+    <string name="settings_runtime_logs_nothing_captured">Все още нищо не е записано. Стартирайте пачваното приложение на телефона си и след това запазете отново</string>
     <!-- Settings - GitHub PAT -->
     <string name="settings_section_github_pat">GitHub PAT</string>
     <string name="settings_github_pat_desc">За изтегляне на артефакти от pull request е необходим GitHub Personal Access Token (PAT) с обхват public_repo. Създайте PAT с обхват public_repo на %1$s</string>
@@ -808,7 +834,7 @@
     <!-- App Info Dialog -->
     <string name="app_info_dialog_link_website">Уебсайт</string>
     <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
+    <string name="app_info_version_patcher">Пачер: v%1$s</string>
     <string name="app_info_version_library">Библиотека: v%1$s</string>
     <string name="app_info_description">Проект с отворен код за съвременно и рационализирано пачване на популярни Android приложения, воден от отзивите и приносите на общността.</string>
     <string name="app_info_link_changelog">Списък на промените</string>
@@ -833,4 +859,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Източници</string>
     <string name="nav_apps">Приложения</string>
+    <string name="nav_settings">Настройки</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Търсене на настройки</string>
+    <string name="settings_search_no_results">Няма съвпадащи настройки</string>
+    <string name="settings_back_to_about">Назад към „За приложението“</string>
+    <string name="licenses_back_to_list">Назад към лицензите</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Още приложения</string>
+    <string name="home_more_apps_subtitle">Общностни пачове</string>
+    <string name="community_patches_notice_title">Източници на пачове от трети страни</string>
+    <string name="community_patches_notice_message">Източниците на общностни пачове се създават и поддържат от техните собствени автори. Morphe не преглежда и не проверява пачове от трети страни и не носи отговорност за тяхното съдържание или за това какво правят те на вашето устройство.</string>
 </resources>

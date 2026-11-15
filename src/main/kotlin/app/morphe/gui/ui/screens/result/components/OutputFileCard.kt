@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.result.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +22,7 @@ import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.ui.screens.result.formatFileSize
 import app.morphe.morphe_desktop.generated.resources.*
@@ -46,7 +46,7 @@ internal fun OutputFileCard(
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
             .background(panelFill)
-            .border(1.dp, borderColor, MorpheTheme.shapes.medium)
+            .outlineBorder(borderColor, MorpheTheme.shapes.medium)
     ) {
         Column(
             modifier = Modifier

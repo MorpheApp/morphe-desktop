@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Modyfikowanie nie powiodło się z nieznanej przyczyny</string>
     <string name="error_log_label">Dziennik błędów</string>
     <string name="back">Wstecz</string>
+    <string name="open">Otwórz</string>
     <string name="open_folder">Otwórz folder</string>
     <string name="temporary_files_label">Pliki tymczasowe</string>
     <string name="size_can_be_freed_label">Można zwolnić %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Instalacja nie powiodła się: %1$s</string>
     <string name="adb_error_not_found">Nie znaleziono ADB. Zainstaluj Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Urządzenie podłączone, ale nieautoryzowane. Zaakceptuj monit o debugowanie USB na urządzeniu</string>
-    <string name="adb_error_no_devices">Brak podłączonych urządzeń. Podłącz urządzenie z Androidem z włączonym debugowaniem USB</string>
+    <string name="adb_error_no_devices">Brak podłączonych urządzeń. Podłącz urządzenie z Androidem z włączonym debugowaniem USB lub Wi-Fi</string>
     <string name="adb_error_device_not_found">Nie znaleziono urządzenia %1$s</string>
     <string name="adb_error_multiple_devices">Podłączono wiele urządzeń. Wybierz jedno</string>
     <string name="adb_error_apk_not_found">Nie znaleziono pliku APK: %1$s</string>
@@ -421,14 +422,14 @@
     <string name="patching_success_time">Czas</string>
     <string name="patching_success_memory_avg">Średnie użycie pamięci</string>
     <string name="patching_success_memory_max">Maksymalne użycie pamięci</string>
-    <string name="patching_success_storage_io_peak">Szczytowe I/O przestrzeni</string>
+    <string name="patching_success_storage_io_peak">Szczytowe operacje I/O</string>
     <string name="patching_failure_temp_files_cleaned">Wyczyszczono pliki tymczasowe</string>
     <string name="patching_banner_native_libs_kept">Zachowane</string>
     <string name="patching_banner_native_libs_stripped">Usunięte</string>
     <string name="patching_error_failed_patches">Nieudane modyfikacje: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB wyłączone · Włącz, aby zainstalować</string>
-    <string name="result_adb_connect_device_hint">Podłącz urządzenie przez USB, aby zainstalować za pomocą ADB</string>
+    <string name="result_adb_connect_device_hint">Podłącz urządzenie przez USB lub Wi-Fi, aby zainstalować za pomocą ADB</string>
     <string name="result_screen_patch_another_button">Zmodyfikuj kolejną</string>
     <string name="result_screen_install_on_device_label">Zainstaluj na %1$s</string>
     <string name="result_screen_links_routed_label">Linki przekierowane do zmodyfikowanej aplikacji</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">Odmontowywanie z %1$s…</string>
     <string name="result_adb_root_not_detected">Nie wykryto dostępu do roota na urządzeniu %1$s. Upewnij się, że zainstalowano Magisk/KernelSU/APatch i przyznano uprawnienia root</string>
     <string name="result_adb_stock_app_not_installed">Oryginalna aplikacja %1$s nie jest zainstalowana na urządzeniu %2$s. Przed zamontowaniem zainstaluj najpierw oficjalną aplikację</string>
+    <string name="result_adb_mount_version_mismatch">Oryginalna aplikacja na urządzeniu %3$s jest w wersji v%1$s, ale zmodyfikowany plik APK ma wersję v%2$s. Montowanie z rootem wymaga zgodnych wersji</string>
+    <string name="result_adb_mount_abi_mismatch">Architektura urządzenia %3$s to %1$s, ale plik APK zawiera tylko [%2$s]. Nie uda się załadować bibliotek natywnych</string>
     <string name="result_link_default_restored">Przywrócono domyślną obsługę linków</string>
     <string name="result_link_routed_stock_disabled">Linki przekierowane do zmodyfikowanej aplikacji, oryginalna wyłączona</string>
     <string name="result_adb_not_found_hint">Nie znaleziono ADB. Zainstaluj Android SDK Platform Tools, aby włączyć bezpośrednią instalację</string>
     <string name="result_adb_section_title">Instalacja przez ADB</string>
     <string name="result_adb_no_devices">Brak podłączonych urządzeń</string>
-    <string name="result_adb_connect_hint">Podłącz przez USB z włączonym debugowaniem USB</string>
+    <string name="result_adb_connect_hint">Podłącz przez debugowanie USB lub Wi-Fi</string>
     <string name="result_device_status_unauth">Nieautoryzowane</string>
     <string name="result_adb_update_button">Zaktualizuj na %1$s</string>
     <string name="result_adb_select_device_button">Wybierz urządzenie</string>
@@ -604,7 +607,7 @@
     <string name="device_indicator_adb_not_found_title">Nie znaleziono ADB</string>
     <string name="device_indicator_adb_not_found_subtitle">Zainstaluj Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Nie wykryto urządzeń</string>
-    <string name="device_indicator_no_devices_subtitle">Podłącz urządzenie z włączonym debugowaniem USB</string>
+    <string name="device_indicator_no_devices_subtitle">Podłącz urządzenie z włączonym debugowaniem USB lub Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">Włącz debugowanie USB</string>
     <string name="device_indicator_enable_debugging_subtitle">Ustawienia → Opcje programisty → Debugowanie USB</string>
     <string name="device_indicator_status_connected">Połączono</string>
@@ -653,15 +656,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Język</string>
     <string name="settings_language_current_title">Bieżący język</string>
-    <string name="settings_language_community_translation_hint">Tłumaczenia dla niektórych języków mogą być niekompletne lub może ich brakować. Aby przetłumaczyć aplikację na nowe języki lub poprawić istniejące tłumaczenia, odwiedź stronę %1$s</string>
     <string name="settings_language_dialog_title">Język aplikacji</string>
+    <string name="settings_language_translate_title">Pomóż przetłumaczyć Morphe</string>
     <string name="settings_language_search_no_results">Nie znaleziono wyników</string>
     <string name="settings_section_theme">Motyw</string>
     <string name="settings_appearance_theme_mode">Tryb motywu</string>
+    <string name="settings_appearance_theme_mode_description">Przełączaj między motywem jasnym, ciemnym, głęboką czernią lub systemowym</string>
     <string name="settings_theme_light">Jasny</string>
     <string name="settings_theme_dark">Ciemny</string>
     <string name="settings_theme_amoled">AMOLED</string>
     <string name="settings_appearance_color_style">Styl kolorów</string>
+    <string name="settings_appearance_color_style_description">Barwiona paleta Morphe lub monochromatyczny styl w skali szarości</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monochromatyczny</string>
     <string name="settings_toggle_sharp_corners_label">Ostre narożniki</string>
@@ -673,7 +678,13 @@
     <string name="settings_section_app_cards">Karty aplikacji</string>
     <string name="settings_app_cards_color_all">Kolor dla każdej karty</string>
     <string name="settings_app_cards_color_all_desc">Karty dostosowane indywidualnie zachowają swój własny kolor</string>
-    <string name="settings_section_background_animation">Animacja tła</string>
+    <string name="settings_toggle_app_icons_label">Ikony aplikacji</string>
+    <string name="settings_toggle_app_icons_desc">Wyświetla ikonę każdej aplikacji wypakowaną z lokalnych plików APK lub podłączonego urządzenia</string>
+    <string name="settings_appearance_more_apps_card">Karta \"Więcej aplikacji\"</string>
+    <string name="settings_appearance_more_apps_card_description">Wyświetla kartę pod listą aplikacji, prowadzącą do modyfikacji społeczności</string>
+    <string name="settings_section_effects">Efekty</string>
+    <string name="settings_appearance_background_animation">Animacja tła</string>
+    <string name="settings_appearance_background_animation_description">Animacja odtwarzana w tle ekranów aplikacji</string>
     <string name="settings_background_circles">Okręgi</string>
     <string name="settings_background_rings">Pierścienie</string>
     <string name="settings_background_mesh">Siatka</string>
@@ -689,6 +700,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Tryb ekspercki</string>
     <string name="settings_toggle_expert_mode_desc">Pełna kontrola nad wyborem i konfiguracją modyfikacji</string>
+    <string name="settings_expert_mode_disabled_in_flow">Wróć na ekran główny, aby zmienić tryb</string>
     <string name="settings_toggle_route_links_label">Przekierowuj linki do zmodyfikowanej aplikacji</string>
     <string name="settings_toggle_route_links_desc">Po zainstalowaniu przez ADB spraw, aby zmodyfikowana aplikacja otwierała obsługiwane linki internetowe zamiast przeglądarki lub oryginalnej/domyślnej aplikacji</string>
     <string name="settings_toggle_disable_stock_links_label">Wyłącz linki w oryginalnej aplikacji</string>
@@ -725,12 +737,28 @@
     <string name="settings_toggle_auto_start_adb_label">Automatyczne uruchamianie ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Uruchamia demona ADB przy starcie aplikacji, aby monitorować podłączone urządzenia. Gdy funkcja jest wyłączona, Morphe nigdy nie uruchamia serwera, a opcje instalacji i przesyłania są niedostępne</string>
     <string name="settings_section_storage">Pamięć wewnętrzna i podręczna</string>
-    <string name="settings_cache_summary">Pamięć podręczna: %1$s (modyfikacje + logi)</string>
-    <string name="settings_cache_clear_button">Wyczyść pamięć podręczną</string>
+    <string name="settings_cache_clear_all_title">Wyczyść całą pamięć podręczną</string>
+    <string name="settings_cache_category_patches">Modyfikacje</string>
+    <string name="settings_cache_category_logs">Logi</string>
+    <string name="settings_cache_category_temp">Pliki tymczasowe</string>
+    <string name="settings_cache_category_avatars">Pamięć podręczna awatarów</string>
+    <string name="settings_cache_category_app_icons">Pamięć podręczna ikon aplikacji</string>
+    <string name="settings_cache_confirm_patches_title">Wyczyścić modyfikacje?</string>
+    <string name="settings_cache_confirm_patches_message">Spowoduje to usunięcie pobranych plików modyfikacji. Zostaną one pobrane ponownie w razie potrzeby</string>
+    <string name="settings_cache_confirm_logs_title">Wyczyścić logi?</string>
+    <string name="settings_cache_confirm_logs_message">Spowoduje to usunięcie wszystkich plików dziennika aplikacji oraz zrzutów systemowych logcat</string>
+    <string name="settings_cache_confirm_temp_title">Wyczyścić pliki tymczasowe?</string>
+    <string name="settings_cache_confirm_temp_message">Spowoduje to usunięcie tymczasowych plików pomocniczych oraz plików obszaru roboczego</string>
+    <string name="settings_cache_confirm_avatars_title">Wyczyścić pamięć podręczną awatarów?</string>
+    <string name="settings_cache_confirm_avatars_message">Spowoduje to usunięcie wszystkich zapisanych w pamięci podręcznej zdalnych obrazów awatarów</string>
+    <string name="settings_cache_confirm_app_icons_title">Wyczyścić pamięć podręczną ikon aplikacji?</string>
+    <string name="settings_cache_confirm_app_icons_message">Spowoduje to usunięcie wszystkich ikon aplikacji wypakowanych z plików APK oraz urządzeń</string>
+    <string name="settings_cache_category_cleared">Wyczyszczono: %1$s</string>
+    <string name="settings_cache_category_clear_failed">Nie udało się wyczyścić: %1$s</string>
     <string name="settings_cache_cleared">Wyczyszczono pamięć podręczną</string>
     <string name="settings_cache_clear_failed">Czyszczenie nie powiodło się</string>
     <string name="settings_cache_confirm_title">Wyczyścić pamięć podręczną?</string>
-    <string name="settings_cache_confirm_message">Spowoduje to usunięcie pobranych modyfikacji i plików logów. Modyfikacje zostaną pobrane ponownie w razie potrzeby</string>
+    <string name="settings_cache_confirm_message">Spowoduje to usunięcie pobranych modyfikacji, plików dziennika oraz plików tymczasowych. Modyfikacje zostaną pobrane ponownie w razie potrzeby</string>
     <string name="settings_storage_open_app_data_button">Otwórz dane aplikacji</string>
     <string name="settings_storage_open_logs_button">Otwórz logi</string>
     <string name="settings_section_about">Informacje</string>
@@ -788,7 +816,7 @@
     <string name="settings_runtime_logs_title">Logi środowiska zmodyfikowanej aplikacji</string>
     <string name="settings_runtime_logs_desc">Pobieraj logi z telefonu, gdy zmodyfikowana aplikacja zawiesi się lub nie działa prawidłowo. Wyczyść je przed odtworzeniem błędu, a następnie zapisz przefiltrowany wynik, aby dołączyć go do zgłoszenia błędu</string>
     <string name="settings_runtime_logs_device_info">Urządzenie: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Brak podłączonego urządzenia. Podłącz telefon z włączonym debugowaniem USB</string>
+    <string name="settings_runtime_logs_no_device">Brak podłączonego urządzenia. Podłącz telefon z włączonym debugowaniem USB lub Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">Czyszczenie…</string>
     <string name="settings_runtime_logs_clear_button">Wyczyść logi urządzenia</string>
     <string name="settings_runtime_logs_failed_to_clear">Nie udało się wyczyścić logów</string>
@@ -829,4 +857,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Źródła</string>
     <string name="nav_apps">Aplikacje</string>
+    <string name="nav_settings">Ustawienia</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Szukaj w ustawieniach</string>
+    <string name="settings_search_no_results">Brak pasujących ustawień</string>
+    <string name="settings_back_to_about">Powrót do Informacje</string>
+    <string name="licenses_back_to_list">Powrót do licencji</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Więcej aplikacji</string>
+    <string name="home_more_apps_subtitle">Modyfikacje społeczności</string>
+    <string name="community_patches_notice_title">Zewnętrzne źródła modyfikacji</string>
+    <string name="community_patches_notice_message">Społecznościowe źródła modyfikacji są tworzone i utrzymywane przez ich własnych autorów. Morphe nie sprawdza ani nie weryfikuje zewnętrznych modyfikacji i nie ponosi odpowiedzialności za ich zawartość ani działanie na Twoim urządzeniu.</string>
 </resources>

@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.result.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -45,7 +44,7 @@ internal fun LinkHandlingSection(
             .widthIn(max = 520.dp)
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
-            .border(1.dp, borderColor, MorpheTheme.shapes.medium)
+            .outlineBorder(borderColor, MorpheTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
     ) {
         Column(

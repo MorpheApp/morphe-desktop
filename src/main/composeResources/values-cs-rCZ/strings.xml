@@ -17,7 +17,7 @@
     <string name="delete">Smazat</string>
     <string name="disabled_while_patching">Zakázáno během záplatování</string>
     <string name="drop_apk_here">Sem přetáhněte APK</string>
-    <string name="release_to_drop">K položení upustite</string>
+    <string name="release_to_drop">Pusťte pro vložení</string>
     <string name="click_to_browse">nebo klikněte pro procházení</string>
     <string name="error_could_not_load_patches">Nepodařilo se načíst žádné záplaty</string>
     <string name="error_network_timeout">Vypršel časový limit sítě, zkontrolujte připojení a zkuste to znovu.</string>
@@ -43,7 +43,7 @@
     <string name="copy">Kopírovat</string>
     <string name="copied">Zkopírováno</string>
     <string name="click_to_copy">Klikněte pro kopírování</string>
-    <string name="enable_adb_button">K a ADB</string>
+    <string name="enable_adb_button">Povolit ADB</string>
     <string name="drag_to_reorder">Přetáhněte pro změnu pořadí</string>
     <string name="off">Vypnuto</string>
     <string name="on">Zapnuto</string>
@@ -61,7 +61,7 @@
     <string name="version_label_experimental">Experimentální</string>
     <string name="version_label_latest_stable">Nejnovější stabilní</string>
     <string name="version_label_recommended">Doporučeno</string>
-    <string name="version_label_supported">Podporana</string>
+    <string name="version_label_supported">Podporovaná</string>
     <string name="app_info_arch_label">Arch</string>
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Záplatování selhalo z neznámého důvodu</string>
     <string name="error_log_label">Protokol chyb</string>
     <string name="back">Zpět</string>
+    <string name="open">Otevřít</string>
     <string name="open_folder">Otevřít složku</string>
     <string name="temporary_files_label">Dočasné soubory</string>
     <string name="size_can_be_freed_label">Lze uvolnit %1$s</string>
@@ -85,9 +86,9 @@
     <string name="custom_color">Vlastní barva</string>
     <string name="gradient_linear">Lineární</string>
     <string name="gradient_radial">Radiální</string>
-    <string name="gradient_conic">Konická</string>
-    <string name="gradient_add_stop">Přidat zastavku</string>
-    <string name="gradient_remove_stop_description">Odebřít zastavku</string>
+    <string name="gradient_conic">Kuželový</string>
+    <string name="gradient_add_stop">Přidat bod</string>
+    <string name="gradient_remove_stop_description">Odebrat bod</string>
     <string name="gradient_angle">Úhel</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_title">Přizpůsobit kartu</string>
@@ -97,7 +98,7 @@
     <string name="card_fill_mode_accent">Akcent</string>
     <string name="card_fill_mode_accent_blurb">Sleduje akcentní barvu a mění se společně s ní</string>
     <string name="card_fill_mode_gradient">Přechod</string>
-    <string name="card_fill_mode_gradient_blurb">Libovolný počet zastavek, lineární, radiální nebo konické</string>
+    <string name="card_fill_mode_gradient_blurb">Libovolný počet bodů, lineární, radiální nebo kuželový</string>
     <string name="card_fill_mode_solid">Plná</string>
     <string name="card_fill_mode_solid_blurb">Jedna jednotná barva</string>
     <string name="adb_install_on_button">Instalovat na %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Instalace selhala: %1$s</string>
     <string name="adb_error_not_found">ADB nenalezeno. Nainstalujte prosím Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Zařízení je připojeno, ale není autorizováno. Přijměte prosím výzvu k ladění USB na svém zařízení</string>
-    <string name="adb_error_no_devices">Žádná zařízení nejsou připojena. Připojte prosím své Android zařízení s povoleným laděním USB</string>
+    <string name="adb_error_no_devices">Žádná připojená zařízení. Připojte prosím své Android zařízení s povoleným laděním přes USB nebo Wi-Fi</string>
     <string name="adb_error_device_not_found">Zařízení %1$s nebylo nalezeno</string>
     <string name="adb_error_multiple_devices">Připojeno více zařízení. Vyberte prosím jedno</string>
     <string name="adb_error_apk_not_found">Soubor APK nebyl nalezen: %1$s</string>
@@ -159,7 +160,7 @@
     <string name="version_status_build_unsupported_with_code">Záplaty vyžadují sestavení %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Upozornění o verzi</string>
-    <string name="version_warning_build_unsupported_message">Aktuální: v%1$s (sestavení %2$s)\nVyžadované sestavení: %3$s\n\nToto je jiná sestavení stejné verze. Opravy vyžadují specifické sestavení.</string>
+    <string name="version_warning_build_unsupported_message">Aktuální: v%1$s (sestavení %2$s)\nVyžadované sestavení: %3$s\n\nToto je jiné sestavení stejné verze. Záplaty vyžadují konkrétní sestavení.</string>
     <string name="version_warning_experiment_title">Chcete experimentovat? 🧪</string>
     <string name="version_warning_latest_experimental_message">Aktuální: v%1$s\n\nTato verze má předběžnou experimentální podporu\n\n🔧 Očekávejte neobvyklé chování aplikace nebo neidentifikované chyby, záplaty pro tuto verzi aplikace jsou ještě ve vývoji.</string>
     <string name="version_warning_unsupported_message">Aktuální: v%1$s\n\nJedná se o verzi, která není oficiálně podporována. Záplaty pravděpodobně selžou.</string>
@@ -198,7 +199,7 @@
     <string name="home_dialog_forget_message">Tím se %1$s odstraní z historie záplatovaných aplikací. Nedotýká se žádných souborů - opětovné záplatování aplikace ji přidá zpět.</string>
     <string name="home_dialog_uninstall_title">Odinstalovat %1$s?</string>
     <string name="home_dialog_uninstall_message">Tím se %1$s odstraní z připojeného zařízení. Záplatovaný APK na disku a vaše historie zůstanou zachovány, pokud níže nezvolíte jinak.</string>
-    <string name="home_dialog_uninstall_also_forget">Také odstranit z \"Moje aplikace\"</string>
+    <string name="home_dialog_uninstall_also_forget">Také odstranit z „Vaše aplikace“</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Spravovat zdroje</string>
     <string name="home_header_multi_source_hint">Záplaty ze všech povolených zdrojů jsou sjednoceny. Spravujte je pomocí tlačítka zdrojů výše</string>
@@ -221,9 +222,9 @@
     <string name="home_list_no_apps_match">Žádné aplikace neodpovídají hledání „%1$s“</string>
     <string name="home_sort_recommended">Doporučeno</string>
     <string name="home_sort_recommended_desc">Nejprve záplatované aplikace, poté instalované a následně podle jména</string>
-    <string name="home_sort_name_asc">Jméno (A {0} Z)</string>
+    <string name="home_sort_name_asc">Jméno (A až Z)</string>
     <string name="home_sort_name_asc_desc">Abecedně</string>
-    <string name="home_sort_name_desc">Jméno (Z {0} A)</string>
+    <string name="home_sort_name_desc">Jméno (Z až A)</string>
     <string name="home_sort_name_desc_desc">Obráceně abecedně</string>
     <string name="home_sort_updates_first">Nejprve aktualizace záplat</string>
     <string name="home_sort_updates_first_desc">Nejprve aplikace s aktualizací záplaty, poté doporučené</string>
@@ -300,7 +301,7 @@
     <string name="patches_date_cached">V cache: %1$s</string>
     <string name="patches_date_published">Publikováno: %1$s</string>
     <string name="patches_hide_notes">Skrýt poznámky</string>
-    <string name="patches_patch_notes">Poznámky k záplacie</string>
+    <string name="patches_patch_notes">Poznámky k záplatám</string>
     <string name="patches_downloading">Stahování…</string>
     <string name="patches_select">Vybrat</string>
     <string name="patches_export_json">Exportovat JSON</string>
@@ -314,7 +315,7 @@
     <string name="patch_selection_title">Vybrat záplaty</string>
     <string name="patch_selection_cmd_preview">Náhled příkazu</string>
     <string name="patch_selection_root_mode_description">Režim připojení rootu</string>
-    <string name="patch_selection_lock_unavailable">Nedostupné pro root mount</string>
+    <string name="patch_selection_lock_unavailable">Nedostupné pro připojení rootu</string>
     <string name="patch_selection_continue_on_error_tooltip">Pokračovat v záplatování i v případě chyby záplaty</string>
     <string name="patch_selection_continue_on_error_description">Pokračovat při chybě</string>
     <string name="patch_selection_no_patches_found">Nebyly nalezeny žádné záplaty</string>
@@ -391,7 +392,7 @@
     <string name="patching_status_preparing">Příprava na záplatování</string>
     <string name="patching_status_in_progress">Probíhá aplikování záplat</string>
     <string name="patching_completed_loading_result">Záplatování dokončeno, načítání výsledku…</string>
-    <string name="patching_cancelled_loading_result">Patchování zrušeno, načítání výsledku…</string>
+    <string name="patching_cancelled_loading_result">Záplatování zrušeno, načítání výsledku…</string>
     <string name="patching_failed_loading_result">Záplatování selhalo, načítání výsledku…</string>
     <string name="patching_log_viewer_failed_to_read">Nepodařilo se přečíst soubor protokolu: %1$s</string>
     <string name="patching_log_viewer_title">Soubor protokolu</string>
@@ -402,7 +403,7 @@
     <string name="patching_graph_memory_detail">%1$d% z %2$d MB</string>
     <string name="patching_graph_storage_io">I/O úložiště</string>
     <string name="patching_graph_cpu_usage">Využití CPU</string>
-    <string name="patching_banner_started_title">Záplatování zaháčeno</string>
+    <string name="patching_banner_started_title">Záplatování zahájeno</string>
     <string name="patching_banner_apk_size">Velikost APK</string>
     <string name="patching_banner_patches">Záplaty</string>
     <string name="patching_banner_split_apk">Rozdělená APK</string>
@@ -428,28 +429,30 @@
     <string name="patching_error_failed_patches">Selhané záplaty: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB vypnuto · Povolte pro instalaci</string>
-    <string name="result_adb_connect_device_hint">K instalaci pomocí ADB připojte zařízení přes USB</string>
+    <string name="result_adb_connect_device_hint">K instalaci pomocí ADB připojte zařízení přes USB nebo Wi-Fi</string>
     <string name="result_screen_patch_another_button">Záplatovat jinou</string>
     <string name="result_screen_install_on_device_label">Instalovat na %1$s</string>
     <string name="result_screen_links_routed_label">Odkazy směrovány na záplatovanou aplikaci</string>
     <string name="result_adb_updating_on_device">Aktualizace na %1$s…</string>
     <string name="result_adb_update_successful">Aktualizace proběhla úspěšně!</string>
     <string name="result_adb_install_successful">Instalace proběhla úspěšně!</string>
-    <string name="result_adb_badge_root_mount">Root mount</string>
-    <string name="result_adb_mount_button">Mount na %1$s</string>
-    <string name="result_adb_mounting_on_device">Mountování na %1$s…</string>
-    <string name="result_adb_mount_successful">Mountování proběhlo úspěšně!</string>
-    <string name="result_adb_mount_su_prompt_hint">Mountování na %1$s… Pokud budete vyzváni, udělete na svém zařízení oprávnění Superuživatele</string>
-    <string name="result_adb_unmount_button">Unmount z %1$s</string>
-    <string name="result_adb_unmounting_on_device">Unmountování z %1$s…</string>
-    <string name="result_adb_root_not_detected">Na %1$s nebyl detekován root přístup. Ujistěte se, že je nainstalován Magisk/KernelSU/APatch a že je udělěno oprávnění su</string>
-    <string name="result_adb_stock_app_not_installed">Původní aplikace %1$s není nainstalována na %2$s. Před mountováním nejprve nainstalujte oficiální aplikaci</string>
+    <string name="result_adb_badge_root_mount">Připojení rootu</string>
+    <string name="result_adb_mount_button">Připojit na %1$s</string>
+    <string name="result_adb_mounting_on_device">Připojování na %1$s…</string>
+    <string name="result_adb_mount_successful">Připojení proběhlo úspěšně!</string>
+    <string name="result_adb_mount_su_prompt_hint">Připojování na %1$s… Pokud budete vyzváni, udělte na svém zařízení oprávnění Superuživatele</string>
+    <string name="result_adb_unmount_button">Odpojit od %1$s</string>
+    <string name="result_adb_unmounting_on_device">Odpojování z %1$s…</string>
+    <string name="result_adb_root_not_detected">Na %1$s nebyl detekován root přístup. Ujistěte se, že je nainstalován Magisk/KernelSU/APatch a že je uděleno oprávnění su</string>
+    <string name="result_adb_stock_app_not_installed">Původní aplikace %1$s není nainstalována na %2$s. Před připojením nejprve nainstalujte oficiální aplikaci</string>
+    <string name="result_adb_mount_version_mismatch">Původní aplikace na %3$s je ve verzi v%1$s, ale upravený APK je ve verzi v%2$s. Pro Root mount jsou vyžadovány shodné verze</string>
+    <string name="result_adb_mount_abi_mismatch">Zařízení %3$s je %1$s, ale APK obsahuje pouze [%2$s]. Nativní knihovny se nepodaří načíst</string>
     <string name="result_link_default_restored">Výchozí zpracování odkazů obnoveno</string>
     <string name="result_link_routed_stock_disabled">Odkazy směrovány na záplatovanou aplikaci, originál zakázán</string>
     <string name="result_adb_not_found_hint">ADB nenalezeno. Pro přímou instalaci nainstalujte Android SDK Platform Tools</string>
     <string name="result_adb_section_title">ADB instalace</string>
     <string name="result_adb_no_devices">Žádná připojená zařízení</string>
-    <string name="result_adb_connect_hint">Připojte se přes USB s povoleným laděním USB</string>
+    <string name="result_adb_connect_hint">Připojte se pomocí ladění přes USB nebo Wi-Fi</string>
     <string name="result_device_status_unauth">Neautorizováno</string>
     <string name="result_adb_update_button">Aktualizovat na %1$s</string>
     <string name="result_adb_select_device_button">Vyberte zařízení</string>
@@ -497,7 +500,7 @@
     <string name="icon_studio_adjust_saturation">Saturace</string>
     <string name="icon_studio_adjust_brightness">Jas</string>
     <string name="icon_studio_effect_shadow">Stín</string>
-    <string name="icon_studio_adjust_y_offset">Smyk Y</string>
+    <string name="icon_studio_adjust_y_offset">Posun Y</string>
     <string name="icon_studio_adjust_blur">Rozostření</string>
     <string name="icon_studio_effect_glow">Záře</string>
     <string name="icon_studio_effect_stroke">Obvod</string>
@@ -514,7 +517,7 @@
     <string name="icon_studio_toggle_bold">Tučné</string>
     <string name="icon_studio_toggle_italic">Kurziva</string>
     <string name="icon_studio_toggle_underline">Podtržení</string>
-    <string name="icon_studio_toggle_strike">Přškrtnutí</string>
+    <string name="icon_studio_toggle_strike">Přeškrtnutí</string>
     <string name="icon_studio_adjust_spacing">Mezery</string>
     <string name="icon_studio_default_font">Výchozí písmo</string>
     <string name="icon_studio_add_file_button">Přidat soubor</string>
@@ -525,8 +528,8 @@
     <string name="icon_studio_background_image_set_hint">Pozadí z obrázku je nastaveno, klikněte na Obrázek pro nahrazení</string>
     <string name="icon_studio_shape_triangle">Trojúhelník</string>
     <string name="icon_studio_shape_diamond">Kosočtverec</string>
-    <string name="icon_studio_shape_pentagon">Pětiboh</string>
-    <string name="icon_studio_shape_hexagon">Šestiboh</string>
+    <string name="icon_studio_shape_pentagon">Pětiúhelník</string>
+    <string name="icon_studio_shape_hexagon">Šestiúhelník</string>
     <string name="icon_studio_shape_star">Hvězda</string>
     <!-- Source Management Sheet -->
     <string name="source_error_local_no_path">Lokální zdroj nemá konfigurovanou cestu k souboru</string>
@@ -595,7 +598,7 @@
     <!-- Device Indicator -->
     <string name="device_indicator_adb_off">ADB vypnuto</string>
     <string name="device_indicator_checking">Kontrola…</string>
-    <string name="device_indicator_no_adb">Žádné ADB</string>
+    <string name="device_indicator_no_adb">ADB nenalezeno</string>
     <string name="device_indicator_no_device">Žádné zařízení</string>
     <string name="device_indicator_details_description">Podrobnosti o zařízení</string>
     <string name="device_indicator_adb_is_off_title">ADB je vypnuto</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB nenalezeno</string>
     <string name="device_indicator_adb_not_found_subtitle">Instalujte Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Žádná zařízení detekována</string>
-    <string name="device_indicator_no_devices_subtitle">Připojte zařízení s povoleným USB laděním</string>
+    <string name="device_indicator_no_devices_subtitle">Připojte zařízení s povoleným laděním přes USB nebo Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">Povolit USB ladění</string>
     <string name="device_indicator_enable_debugging_subtitle">Nastavení → Možnosti pro vývojáře → USB ladění</string>
     <string name="device_indicator_status_connected">Připojeno</string>
@@ -611,19 +614,19 @@
     <string name="device_indicator_not_listed_title">Zařízení není v seznamu?</string>
     <string name="device_indicator_not_listed_subtitle">Povolete USB ladění v Možnostech pro vývojáře</string>
     <!-- Error Dialog -->
-    <string name="error_dialog_timeout">Konection vypršela. Zkontrolujte prosím připojení k internetu a zkuste to znovu</string>
+    <string name="error_dialog_timeout">Připojení vypršelo. Zkontrolujte prosím připojení k internetu a zkuste to znovu</string>
     <string name="error_dialog_unreachable">Nelze se připojit k serveru. Zkontrolujte prosím připojení k internetu</string>
     <string name="error_dialog_permission_denied">Přístup zamítnut. Zkontrolujte prosím, zda máte k souboru nebo složce přístup</string>
-    <string name="error_dialog_not_found">Žádaný soubor nebo resurs nebyl nalezen</string>
+    <string name="error_dialog_not_found">Požadovaný soubor nebo zdroj nebyl nalezen</string>
     <string name="error_dialog_disk_full">Nedostatek místa na disku. Prosím uvolněte místo a zkuste to znovu</string>
-    <string name="error_dialog_exit_code">během procesu záplatování došlo k chybě. Podrobnosti naleznete v protokolech</string>
+    <string name="error_dialog_exit_code">Během procesu záplatování došlo k chybě. Podrobnosti naleznete v protokolech</string>
     <!-- Banners -->
     <string name="offline_banner_text">Offline, používají se záplaty z mezipaměti</string>
     <string name="update_banner_available">K dispozici aktualizace · v%1$s</string>
-    <string name="update_banner_from_version_crosses">z v%1$s · dev → stable</string>
+    <string name="update_banner_from_version_crosses">z v%1$s · dev → stabilní</string>
     <string name="update_banner_from_version">z v%1$s</string>
     <string name="update_banner_later_button">Později</string>
-    <string name="update_banner_skip_button">Preskočit v%1$s</string>
+    <string name="update_banner_skip_button">Přeskočit v%1$s</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licence Open Source</string>
     <string name="licenses_dialog_empty_failed">// nepodařilo se načíst licence</string>
@@ -648,23 +651,25 @@
     <string name="settings_dialog_reset_button">Výchozí</string>
     <string name="settings_theme_system">Systém</string>
     <string name="settings_search_languages_placeholder">Hledat jazyky</string>
-    <string name="settings_dialog_resolves_to_message">Rozřešuje na: %1$s</string>
+    <string name="settings_dialog_resolves_to_message">Použije se: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Jazyk</string>
     <string name="settings_language_current_title">Aktuální jazyk</string>
-    <string name="settings_language_community_translation_hint">Překlady pro některé jazyky mohou chybět nebo být neúplné.Chcete-li přeložit nové jazyky nebo zlepšit stávající překlady, navštivte %1$s</string>
     <string name="settings_language_dialog_title">Jazyk aplikace</string>
+    <string name="settings_language_translate_title">Pomozte s překladem Morphe</string>
     <string name="settings_language_search_no_results">Nebyly nalezeny žádné výsledky</string>
     <string name="settings_section_theme">Motiv</string>
     <string name="settings_appearance_theme_mode">Režim motivu</string>
+    <string name="settings_appearance_theme_mode_description">Přepínejte mezi světlým, tmavým, čistě černým nebo systémovým tématem</string>
     <string name="settings_theme_light">Světlý</string>
     <string name="settings_theme_dark">Tmavý</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Barevný styl</string>
+    <string name="settings_appearance_color_style_description">Barevná paleta Morphe nebo grayscale monochromatický styl</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monochromatický</string>
     <string name="settings_toggle_sharp_corners_label">Ostré rohy</string>
-    <string name="settings_toggle_sharp_corners_desc">Změňte karty, dialogy a tlačítka na pravoúhlé</string>
+    <string name="settings_toggle_sharp_corners_desc">Rohy karet, dialogů a tlačítek budou pravoúhlé</string>
     <string name="settings_section_accent_color">Barva zvýraznění</string>
     <string name="settings_accent_clear_description">Vymazat zvýrazněnou barvu</string>
     <string name="settings_accent_custom_description">Vlastní zvýrazněná barva</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">Karty aplikací</string>
     <string name="settings_app_cards_color_all">Barva pro všechny karty</string>
     <string name="settings_app_cards_color_all_desc">Karty, které jste přizpůsobili jednotlivě, si ponechají svou vlastní barvu</string>
-    <string name="settings_section_background_animation">Animace pozadí</string>
+    <string name="settings_toggle_app_icons_label">Ikony aplikací</string>
+    <string name="settings_toggle_app_icons_desc">Zobrazuje ikonu každé aplikace extrahovanou z lokálních souborů APK nebo připojeného zařízení</string>
+    <string name="settings_appearance_more_apps_card">Karta Další aplikace</string>
+    <string name="settings_appearance_more_apps_card_description">Zobrazí kartu pod aplikacemi, která vede ke komunitním záplatám</string>
+    <string name="settings_section_effects">Efekty</string>
+    <string name="settings_appearance_background_animation">Animace pozadí</string>
+    <string name="settings_appearance_background_animation_description">Animace, která se přehrává v pozadí obrazovek aplikace</string>
     <string name="settings_background_circles">Kroužky</string>
     <string name="settings_background_rings">Prstence</string>
     <string name="settings_background_mesh">Síť</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Režim Expert</string>
     <string name="settings_toggle_expert_mode_desc">Plná kontrola nad výběrem a konfigurací záplat</string>
+    <string name="settings_expert_mode_disabled_in_flow">K změně režimu se vraťte na plochu</string>
     <string name="settings_toggle_route_links_label">Směrovat odkazy na záplatovanou aplikaci</string>
     <string name="settings_toggle_route_links_desc">Po instalaci přes ADB zajistěte, aby záplatovaná aplikace otevírala podporované webové odkazy namísto prohlížeče nebo původní/výchozí aplikace</string>
     <string name="settings_toggle_disable_stock_links_label">Zakázat odkazy původní aplikace</string>
@@ -697,12 +709,12 @@
     <string name="settings_toggle_developer_options_label">Možnosti pro vývojáře</string>
     <string name="settings_toggle_developer_options_desc">Pro vývojáře záplat. Odemyká sadu možností workflow pro sestavování a testování záplat (viz dokumentace pro úplný seznam). V současnosti to znamená nasměrování lokálního zdroje na složku, aby Morphe vždy načetl nejnovější .mpp</string>
     <string name="settings_dev_bytecode_mode_label">Režim bytecode</string>
-    <string name="settings_dev_bytecode_mode_desc">Režim transformace aplikovaný na DEX bytecode během patchování</string>
+    <string name="settings_dev_bytecode_mode_desc">Režim transformace aplikovaný na DEX bytecode během záplatování</string>
     <string name="settings_dev_bytecode_mode_strip_fast">Rychlý</string>
     <string name="settings_dev_bytecode_mode_strip_safe">Bezpečný</string>
     <string name="settings_dev_bytecode_mode_full">Plný</string>
     <string name="settings_dev_validate_label">Validace otisku</string>
-    <string name="settings_dev_validate_desc">Ověřuje, zda každý match() odpovídá pouze jedné metodě (pomalejší patchování, pro testování patchů)</string>
+    <string name="settings_dev_validate_desc">Ověřuje, zda každý match() odpovídá pouze jedné metodě (pomalejší záplatování, pro testování záplat)</string>
     <string name="settings_dev_verify_sdk_label">Ověření Android SDK</string>
     <string name="settings_dev_verify_sdk_desc">Ověřte upravený DEX a APK pomocí nástrojů Android SDK (d8, zipalign). Může dojít k falešně pozitivním výsledkům</string>
     <string name="settings_dev_sdk_path_label">Adresář Android SDK</string>
@@ -723,13 +735,29 @@
     <string name="settings_output_folder_not_found">Složka nebyla nalezena, bude vytvořena při příštím záplatování.</string>
     <string name="settings_toggle_auto_start_adb_label">Automaticky spustit ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spustit démon ADB při startu, aby byly připojená zařízení monitorována. Když je tato možnost vypnutá, Morphe nikdy nespustí server a funkce instalace/push jsou zakázány</string>
-    <string name="settings_section_storage">Úložiště &amp; vymezená paměť</string>
-    <string name="settings_cache_summary">Mezipaměť: %1$s (záplaty + protokoly)</string>
-    <string name="settings_cache_clear_button">Vymazat mezipaměť</string>
+    <string name="settings_section_storage">Úložiště &amp; mezipaměť</string>
+    <string name="settings_cache_clear_all_title">Vymazat veškerou mezipaměť</string>
+    <string name="settings_cache_category_patches">Záplaty</string>
+    <string name="settings_cache_category_logs">Protokoly</string>
+    <string name="settings_cache_category_temp">Dočasné soubory</string>
+    <string name="settings_cache_category_avatars">Vymezeň avatarů</string>
+    <string name="settings_cache_category_app_icons">Mezipaměť ikon aplikací</string>
+    <string name="settings_cache_confirm_patches_title">Vymazat záplaty?</string>
+    <string name="settings_cache_confirm_patches_message">Tímto budou smazány stažené soubory záplat. Záplaty budou znovu staženy, když budou potřeba</string>
+    <string name="settings_cache_confirm_logs_title">Vymazat protokoly?</string>
+    <string name="settings_cache_confirm_logs_message">Tímto budou smazány všechny soubory protokolů aplikace a výpisy logcatu zařízení</string>
+    <string name="settings_cache_confirm_temp_title">Vymazat dočasné soubory?</string>
+    <string name="settings_cache_confirm_temp_message">Tímto budou smazány dočasné pracovní soubory a soubory pracovního prostoru</string>
+    <string name="settings_cache_confirm_avatars_title">Vymazat vymezeň avatarů?</string>
+    <string name="settings_cache_confirm_avatars_message">Tímto vymažete všechny vycacheované vzdálené obrázky avatarů</string>
+    <string name="settings_cache_confirm_app_icons_title">Vymazat mezipaměť ikon aplikací?</string>
+    <string name="settings_cache_confirm_app_icons_message">Tímto budou smazány všechny ikony aplikací extrahované z APK a zařízení</string>
+    <string name="settings_cache_category_cleared">%1$s vymazáno</string>
+    <string name="settings_cache_category_clear_failed">Nepodařilo se vymazat %1$s</string>
     <string name="settings_cache_cleared">Mezipaměť vymazána</string>
     <string name="settings_cache_clear_failed">Mazání selhalo</string>
     <string name="settings_cache_confirm_title">Vymazat mezipaměť?</string>
-    <string name="settings_cache_confirm_message">Tímtoto vymažete stažené záplaty a soubory protokolů. Záplaty budou znovu staženy, když budou potřeba</string>
+    <string name="settings_cache_confirm_message">Tímto vymažete stažené záplaty, soubory protokolů a dočasné soubory. Záplaty budou znovu staženy v případě potřeby</string>
     <string name="settings_storage_open_app_data_button">Otevřít data aplikace</string>
     <string name="settings_storage_open_logs_button">Otevřít protokoly</string>
     <string name="settings_section_about">O aplikaci</string>
@@ -759,7 +787,7 @@
     <string name="settings_signing_keystore_password_label">Heslo k úložišti klíčů</string>
     <string name="settings_signing_key_alias_label">Alias klíče</string>
     <string name="settings_signing_key_password_label">Heslo k klíči</string>
-    <string name="settings_signing_password_hide">Kryt</string>
+    <string name="settings_signing_password_hide">Skrýt</string>
     <string name="settings_signing_password_show">Zobrazit</string>
     <string name="settings_signing_verify_button">Ověřit přihlašovací údaje</string>
     <string name="settings_signing_verify_could_not_open">Nelze otevřít úložiště klíčů, zkontrolujte heslo úložiště klíčů.</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">Protokoly běhu záplatované aplikace</string>
     <string name="settings_runtime_logs_desc">Zachyťte protokoly ze svého telefonu poté, co záplatovaná aplikace spadne nebo se nechová správně. Před reprodukováním chyby protokoly vymažte, poté uložte filtrovaný výstup a přiložte jej k hlášení chyby.</string>
     <string name="settings_runtime_logs_device_info">Zařízení: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Není připojeno žádné zařízení. Připojte telefon s povoleným laděním USB.</string>
+    <string name="settings_runtime_logs_no_device">Žádné zařízení není připojeno. Připojte svůj telefon s povoleným laděním přes USB nebo Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">Mazání…</string>
     <string name="settings_runtime_logs_clear_button">Vymazat protokoly zařízení</string>
     <string name="settings_runtime_logs_failed_to_clear">Nepodařilo se vymazat protokoly</string>
@@ -827,4 +855,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Zdroje</string>
     <string name="nav_apps">Aplikace</string>
+    <string name="nav_settings">Nastavení</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Hledat nastavení</string>
+    <string name="settings_search_no_results">Žádná odpovídající nastavení</string>
+    <string name="settings_back_to_about">Zpět k informacím</string>
+    <string name="licenses_back_to_list">Zpět k licencím</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Více aplikací</string>
+    <string name="home_more_apps_subtitle">Komunitní záplaty</string>
+    <string name="community_patches_notice_title">Zdroje záplat třetích stran</string>
+    <string name="community_patches_notice_message">Zdroje komunitních záplat jsou vytvářeny a udržovány jejich vlastními autory. Morphe neprovádí revizi ani ověřování záplat třetích stran a není zodpovědný za jejich obsah ani za to, co způsobí ve vašem zařízení.</string>
 </resources>

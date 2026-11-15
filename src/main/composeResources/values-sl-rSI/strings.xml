@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Popravljanje ni uspelo iz neznanega razloga</string>
     <string name="error_log_label">Dnevnik napak</string>
     <string name="back">Nazaj</string>
+    <string name="open">Odpri</string>
     <string name="open_folder">Odpri mapo</string>
     <string name="temporary_files_label">Začasne datoteke</string>
     <string name="size_can_be_freed_label">Mogoče je sprostiti %1$s</string>
@@ -85,7 +86,7 @@
     <string name="custom_color">Barva po meri</string>
     <string name="gradient_linear">Linearno</string>
     <string name="gradient_radial">Radialno</string>
-    <string name="gradient_conic">Stožčno</string>
+    <string name="gradient_conic">Stožčasto</string>
     <string name="gradient_add_stop">Dodaj postajo</string>
     <string name="gradient_remove_stop_description">Odstrani postajo</string>
     <string name="gradient_angle">Kot</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Namestitev ni uspela: %1$s</string>
     <string name="adb_error_not_found">ADB ni najden. Namestite Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Naprava je povezana, vendar ni pooblaščena. Sprejmite poziv za USB razhroščevanje na svoji napravi</string>
-    <string name="adb_error_no_devices">Ni povezanih naprav. Povežite svojo Android napravo z omogočenim USB razhroščevanjem</string>
+    <string name="adb_error_no_devices">Ni povezanih naprav. Prosimo, povežite svojo Android napravo z omogočenim USB ali Wi-Fi odhramljanjem</string>
     <string name="adb_error_device_not_found">Naprava %1$s ni najdena</string>
     <string name="adb_error_multiple_devices">Povezanih je več naprav. Izberite eno</string>
     <string name="adb_error_apk_not_found">Datoteka APK ni najdena: %1$s</string>
@@ -183,7 +184,7 @@
     <string name="home_apk_info_unsupported_app_simple_warning">Za to aplikacijo niso najdeni kompatibilni popravki</string>
     <string name="home_apk_info_build_label">Build</string>
     <string name="home_apk_info_size_label">Velikost</string>
-    <string name="home_apk_info_value_api">AP I %1$d</string>
+    <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">Vir</string>
     <string name="home_stage_change_apk">Zamenjaj APK</string>
     <string name="home_stage_continue">Nadaljuj</string>
@@ -308,7 +309,7 @@
     <string name="patches_error_local_file_not_found">Lokalna datoteka popravka ni najdena: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Nalaganje izdaj ni uspelo</string>
     <string name="patches_error_failed_to_download_patches">Prenos popravkov ni uspel</string>
-    <string name="patches_error_failed_to_export_options">Izvos možnosti ni uspel: %1$s</string>
+    <string name="patches_error_failed_to_export_options">Izvoz možnosti ni uspel: %1$s</string>
     <!-- Patch Selection Screen -->
     <string name="patch_selection_error_title">Napaka pri nalaganju popravkov</string>
     <string name="patch_selection_title">Izberi popravke</string>
@@ -376,7 +377,7 @@
     <string name="patch_selection_run_info_app_group">Aplikacija</string>
     <string name="patch_selection_run_info_bundles_group">Svežnji popravkov</string>
     <string name="patch_selection_run_info_no_bundles">Ni razrešenih svežnjev</string>
-    <string name="patch_selection_run_info_dev_group">Razvojni možnosti</string>
+    <string name="patch_selection_run_info_dev_group">Razvojne možnosti</string>
     <string name="patch_selection_run_info_bytecode_mode">Način bytecode: %1$s</string>
     <string name="patch_selection_run_info_validate">Kvalifikacija odtiska: %1$s</string>
     <string name="patch_selection_run_info_verify_sdk">Preverjanje Android SDK: %1$s</string>
@@ -401,7 +402,7 @@
     <string name="patching_graph_memory_usage">Uporaba pomnilnika</string>
     <string name="patching_graph_memory_detail">%1$d % od %2$d MB</string>
     <string name="patching_graph_storage_io">V/I shranjevanja</string>
-    <string name="patching_graph_cpu_usage">Uporaba CP U</string>
+    <string name="patching_graph_cpu_usage">Uporaba procesorja</string>
     <string name="patching_banner_started_title">Popravljanje se je začelo</string>
     <string name="patching_banner_apk_size">Velikost APK</string>
     <string name="patching_banner_patches">Popravki</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">Neuspeli popravki: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB izklopljen · Omogoči za namestitev</string>
-    <string name="result_adb_connect_device_hint">Priključite napravo prek USB za namestitev z ADB</string>
+    <string name="result_adb_connect_device_hint">Za namestitev prek ADB povežite napravo prek USB ali Wi-Fi</string>
     <string name="result_screen_patch_another_button">Popravi drugo</string>
     <string name="result_screen_install_on_device_label">Namesti na %1$s</string>
     <string name="result_screen_links_routed_label">Povezave so preusmerjene na popravljeno aplikacijo</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">Unmounting z %1$s…</string>
     <string name="result_adb_root_not_detected">Root dostop na %1$s ni bil zaznan. Prepričajte se, da je Magisk/KernelSU/APatch nameščen in da je podeljeno dovoljenje su</string>
     <string name="result_adb_stock_app_not_installed">Stock aplikacija %1$s ni nameščena na %2$s. Pred mountingom najprej namestite uradno aplikacijo</string>
+    <string name="result_adb_mount_version_mismatch">Tovarna aplikacija na %3$s je v%1$s, vendar je popravljen APK v%2$s. Root montaža zahteva ujemajoče različice</string>
+    <string name="result_adb_mount_abi_mismatch">Naprava %3$s je %1$s, vendar APK vsebuje le [%2$s]. Native knjižnice se ne bodo mogli naložiti</string>
     <string name="result_link_default_restored">Privzeto obravnavanje povezav je obnovljeno</string>
     <string name="result_link_routed_stock_disabled">Povezave so preusmerjene na popravljeno aplikacijo, prvotna je onemogočena</string>
     <string name="result_adb_not_found_hint">ADB ni najden. Namestite Android SDK Platform Tools za omogočanje neposredne namestitve</string>
     <string name="result_adb_section_title">Namestitev ADB</string>
     <string name="result_adb_no_devices">Ni povezanih naprav</string>
-    <string name="result_adb_connect_hint">Povežite se prek USB z omogočenim USB razhroščevanjem</string>
+    <string name="result_adb_connect_hint">Povežite se prek USB ali Wi-Fi odhramljanja</string>
     <string name="result_device_status_unauth">Nepooblaščeno</string>
     <string name="result_adb_update_button">Posodobi na %1$s</string>
     <string name="result_adb_select_device_button">Izberi napravo</string>
@@ -471,7 +474,7 @@
     <string name="icon_studio_shape_rounded">Zaobljeno</string>
     <string name="icon_studio_background_gradient">Prehod</string>
     <string name="icon_studio_tab_shape">Oblika</string>
-    <string name="icon_studio_mask_squircle">Zaobljeni kvardrat</string>
+    <string name="icon_studio_mask_squircle">Zaobljeni kvadrat</string>
     <string name="icon_studio_warn_opaque">Ta slika ni prosojna, zato bosta tematska &amp; obvestilna ikona enobarvni. Za prikaz oblike logotipa uporabite izrezano (prosojno) sliko PNG</string>
     <string name="icon_studio_warn_unreadable">Te slike ni bilo mogoče prebrati za preverjanje prosojnosti</string>
     <string name="icon_studio_picker_select_font">Izberi pisavo</string>
@@ -487,7 +490,7 @@
     <string name="icon_studio_layer_label">Plast</string>
     <string name="icon_studio_duplicate_button">Podvoji</string>
     <string name="icon_studio_layer_name_placeholder">Ime plasti</string>
-    <string name="icon_studio_adjust_opacity">Neproizročnost</string>
+    <string name="icon_studio_adjust_opacity">Neprozornost</string>
     <string name="icon_studio_transform_label">Preoblikovanje</string>
     <string name="icon_studio_adjust_scale">Merilo</string>
     <string name="icon_studio_adjust_rotation">Zasuk</string>
@@ -554,7 +557,7 @@
     <string name="source_sheet_move_down_description">Pomakni dol</string>
     <string name="source_sheet_ignored_mpp_title">Prezrti vzorci .mpp</string>
     <string name="source_sheet_ignored_mpp_hint">Vpliva samo na vire map, ki samodejno naložijo najnovejši .mpp v mapi. Pri izbiri tega najnovejšega builda so datoteke, katerih ime ustreza tukajšnjemu vzorcu, preskočene. Preprosta beseda ustreza katerim koli datoteki, ki jo vsebuje (npr. debug). Za globs uporabite * (npr. *-debug.mpp). *-sources.mpp in *-javadoc.mpp sta vedno prezrta</string>
-    <string name="source_sheet_ignored_mpp_placeholder">npr. debug ali *-ebug.mpp</string>
+    <string name="source_sheet_ignored_mpp_placeholder">npr. debug ali *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Dodaj vzorec</string>
     <string name="source_sheet_remove_pattern_description">Odstrani vzorec</string>
     <string name="sources_management_signed_by">Podpisal</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB ni najden</string>
     <string name="device_indicator_adb_not_found_subtitle">Namestite Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Ni zaznanih naprav</string>
-    <string name="device_indicator_no_devices_subtitle">Povežite napravo z omogočenim USB razhroščevanjem</string>
+    <string name="device_indicator_no_devices_subtitle">Povežite napravo z omogočenim USB ali Wi-Fi odhramljanjem</string>
     <string name="device_indicator_enable_debugging_title">Omogoči USB razhroščevanje</string>
     <string name="device_indicator_enable_debugging_subtitle">Nastavitve → Možnosti za razvijalce → USB razhroščevanje</string>
     <string name="device_indicator_status_connected">Povezano</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Jezik</string>
     <string name="settings_language_current_title">Trenutni jezik</string>
-    <string name="settings_language_community_translation_hint">Prevodi za nekatere jezike so lahko manjkajoči ali nepopolni. Za prevajanje novih jezikov ali izboljšanje obstoječih prevodov obiščite %1$s</string>
     <string name="settings_language_dialog_title">Jezik aplikacije</string>
+    <string name="settings_language_translate_title">Pomagajte pri prevajanju aplikacije Morphe</string>
     <string name="settings_language_search_no_results">Ni najdenih rezultatov</string>
     <string name="settings_section_theme">Tema</string>
     <string name="settings_appearance_theme_mode">Način teme</string>
+    <string name="settings_appearance_theme_mode_description">Preklapljajte med svetlo, temno, čisto črno ali sistemsko temo</string>
     <string name="settings_theme_light">Svetla</string>
     <string name="settings_theme_dark">Temna</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Slog barv</string>
+    <string name="settings_appearance_color_style_description">Barvna paleta Morphe ali grayscale monokromski slog</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Enobarvno</string>
     <string name="settings_toggle_sharp_corners_label">Ostri vogali</string>
@@ -672,10 +677,16 @@
     <string name="settings_section_app_cards">Kartice aplikacij</string>
     <string name="settings_app_cards_color_all">Barva za vsako kartico</string>
     <string name="settings_app_cards_color_all_desc">Kartice, ki ste jih posamezno prilagodili, ohranijo svojo barvo</string>
-    <string name="settings_section_background_animation">Animacija ozadja</string>
+    <string name="settings_toggle_app_icons_label">Ikone aplikacij</string>
+    <string name="settings_toggle_app_icons_desc">Prikaže ikono vsake aplikacije, pridobljeno iz lokalnih datotek APK ali povezane naprave</string>
+    <string name="settings_appearance_more_apps_card">Opcija za več aplikacij</string>
+    <string name="settings_appearance_more_apps_card_description">Pod aplikacijami prikaže kartico, ki vodi do javnih popravkov</string>
+    <string name="settings_section_effects">Učinki</string>
+    <string name="settings_appearance_background_animation">Animacija ozadja</string>
+    <string name="settings_appearance_background_animation_description">Animacija, ki se predvaja v ozadju zaslonov aplikacije</string>
     <string name="settings_background_circles">Krogi</string>
     <string name="settings_background_rings">Obroči</string>
-    <string name="settings_background_mesh">Mreža</string>
+    <string name="settings_background_mesh">Mrežni vzorec</string>
     <string name="settings_background_space">Vesolje</string>
     <string name="settings_background_shapes">Oblike</string>
     <string name="settings_background_snow">Sneg</string>
@@ -688,10 +699,11 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Strokovni način</string>
     <string name="settings_toggle_expert_mode_desc">Popoln nadzor nad izbiro in konfiguracijo popravkov</string>
+    <string name="settings_expert_mode_disabled_in_flow">Vrnite se na začetno stran, da spremenite način</string>
     <string name="settings_toggle_route_links_label">Preusmerjaj povezave na popravljeno aplikacijo</string>
     <string name="settings_toggle_route_links_desc">Po namestitvi prek ADB naj popravljena aplikacija odpira svoje podprte spletne povezave namesto brskalnika ali privzete aplikacije</string>
     <string name="settings_toggle_disable_stock_links_label">Onemogoči povezave prvotne aplikacije</string>
-    <string name="settings_toggle_disable_stock_links_desc">Prav tako prepreči prvotni aplikaciji odpiranje teh povezav (samo kadar je bil uporabljen popravek preimenovanja in je nameščena prvotna aplikacija). Povratno</string>
+    <string name="settings_toggle_disable_stock_links_desc">Prav tako prepreči prvotni aplikaciji odpiranje teh povezav (samo kadar je bil uporabljen popravek preimenovanja in je nameščena prvotna aplikacija). Mogoče razveljaviti</string>
     <string name="settings_section_signing">Podpisovanje</string>
     <string name="settings_section_strip_libs">Odstrani knjižnice</string>
     <string name="settings_toggle_developer_options_label">Možnosti za razvijalce</string>
@@ -702,7 +714,7 @@
     <string name="settings_dev_bytecode_mode_strip_safe">Varno</string>
     <string name="settings_dev_bytecode_mode_full">Celovito</string>
     <string name="settings_dev_validate_label">Kvalifikacija odtiska</string>
-    <string name="settings_dev_validate_desc">Preveri, da vsak match() ustreza samo eni metodi (počasnejše zakrpanje, za testiranje zakrp),</string>
+    <string name="settings_dev_validate_desc">Preveri, da vsak match() ustreza samo eni metodi (počasnejše zakrpanje, za testiranje zakrp)</string>
     <string name="settings_dev_verify_sdk_label">Preverjanje Android SDK</string>
     <string name="settings_dev_verify_sdk_desc">Preverite popravljen DEX in APK z orodji Android SDK (d8, zipalign). Lahko prijavi napačne pozitivne rezultate</string>
     <string name="settings_dev_sdk_path_label">Imenik Android SDK</string>
@@ -724,12 +736,28 @@
     <string name="settings_toggle_auto_start_adb_label">Samodejni zagon ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Ob zagonu zaženi ozadnji program ADB, da se povezane naprave spremljajo. Ko je izklopljeno, Morphe nikoli ne zažene strežnika, funkciji nameščanja in pošiljanja pa sta onemogočeni</string>
     <string name="settings_section_storage">Shranjevanje &amp; predpomnilnik</string>
-    <string name="settings_cache_summary">Predpomnilnik: %1$s (popravki + dnevniki)</string>
-    <string name="settings_cache_clear_button">Počisti predpomnilnik</string>
+    <string name="settings_cache_clear_all_title">Počisti ves predpomnilnik</string>
+    <string name="settings_cache_category_patches">Popravki</string>
+    <string name="settings_cache_category_logs">Dnevnik</string>
+    <string name="settings_cache_category_temp">Začasne datoteke</string>
+    <string name="settings_cache_category_avatars">Predvidnik avatarjev</string>
+    <string name="settings_cache_category_app_icons">Predpomnilnik ikon aplikacij</string>
+    <string name="settings_cache_confirm_patches_title">Počistiti popravke?</string>
+    <string name="settings_cache_confirm_patches_message">To bo izbrisalo prenesene datoteke popravkov. Popravki bodo ponovno preneseni, ko bodo potrebni</string>
+    <string name="settings_cache_confirm_logs_title">Počisti dnevnike?</string>
+    <string name="settings_cache_confirm_logs_message">To bo izbrisalo vse datoteke dnevnika aplikacije in dumps logcata naprave</string>
+    <string name="settings_cache_confirm_temp_title">Izbrisati začasne datoteke?</string>
+    <string name="settings_cache_confirm_temp_message">To bo izbrisalo začasne delovne datoteke in datoteke delovnega prostora</string>
+    <string name="settings_cache_confirm_avatars_title">Počistiti predpomnilnik avatarjev?</string>
+    <string name="settings_cache_confirm_avatars_message">To bo izbrisalo vse predvzete slike zdaljenih avatarjev</string>
+    <string name="settings_cache_confirm_app_icons_title">Počistiti predpomnilnik ikon aplikacij?</string>
+    <string name="settings_cache_confirm_app_icons_message">To bo izbrisalo vse ikone aplikacij, pridobljene iz datotek APK in naprav</string>
+    <string name="settings_cache_category_cleared">%1$s počiščeno</string>
+    <string name="settings_cache_category_clear_failed">Ni uspelo počistiti %1$s</string>
     <string name="settings_cache_cleared">Predpomnilnik počiščen</string>
     <string name="settings_cache_clear_failed">Čiščenje ni uspelo</string>
     <string name="settings_cache_confirm_title">Počisti predpomnilnik?</string>
-    <string name="settings_cache_confirm_message">To bo izbrisalo prenesene popravke in datoteke dnevnikov. Popravki bodo ponovno preneseni, ko bodo potrebni</string>
+    <string name="settings_cache_confirm_message">S tem boste izbrisali prenesene popravke, dnevniške datoteke in začasne datoteke. Popravki bodo ponovno preneseni, ko bodo potrebni</string>
     <string name="settings_storage_open_app_data_button">Odpri podatke aplikacije</string>
     <string name="settings_storage_open_logs_button">Odpri dnevnike</string>
     <string name="settings_section_about">O nas</string>
@@ -787,12 +815,12 @@
     <string name="settings_runtime_logs_title">Dnevniki delovanja popravljene aplikacije</string>
     <string name="settings_runtime_logs_desc">Posnemite dnevnike iz telefona, ko se popravljena aplikacija zruši ali ne deluje pravilno. Počistite pred ponovitvijo napake, nato shranite filtrirani izpis in ga priložite prijavi napake</string>
     <string name="settings_runtime_logs_device_info">Naprava: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Ni povezane naprave. Priključite telefon z omogočenim USB razhroščevanjem</string>
+    <string name="settings_runtime_logs_no_device">Nobena naprava ni povezana. Povežite svoj telefon z omogočenim USB ali Wi-Fi odhajalnim urejanjem</string>
     <string name="settings_runtime_logs_clearing">Čiščenje…</string>
     <string name="settings_runtime_logs_clear_button">Počisti dnevnike naprave</string>
     <string name="settings_runtime_logs_failed_to_clear">Čiščenje dnevnikov ni uspelo</string>
     <string name="settings_runtime_logs_save_button">Shrani dnevnike naprave</string>
-    <string name="settings_runtime_logs_failed_to_save">Shranjevanje dnevnkov ni uspelo</string>
+    <string name="settings_runtime_logs_failed_to_save">Shranjevanje dnevnikov ni uspelo</string>
     <string name="settings_runtime_logs_cleared_success">Dnevniki v napravi so počiščeni</string>
     <string name="settings_runtime_logs_nothing_captured">Nič še ni posneto. Zaženite popravljeno aplikacijo na telefonu in znova shranite</string>
     <!-- Settings - GitHub PAT -->
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Viri</string>
     <string name="nav_apps">Aplikacije</string>
+    <string name="nav_settings">Nastavitve</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Iskanje nastavitev</string>
+    <string name="settings_search_no_results">Ni ustreznih nastavitev</string>
+    <string name="settings_back_to_about">Nazaj do O aplikaciji</string>
+    <string name="licenses_back_to_list">Nazaj do licenc</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Ostale aplikacije</string>
+    <string name="home_more_apps_subtitle">Javni popravki</string>
+    <string name="community_patches_notice_title">Viri popravkov tretjih oseb</string>
+    <string name="community_patches_notice_message">Javne vire popravkov ustvarjajo in vzdržujejo njihovi avtorji. Morphe ne pregleduje niti ne preverja popravkov tretjih oseb in ni odgovoren za njihovo vsebino ali za to, kaj naredijo na vaši napravi.</string>
 </resources>

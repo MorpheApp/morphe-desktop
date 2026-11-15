@@ -69,12 +69,13 @@
     <string name="github_label">GitHub</string>
     <string name="patches_search_hint">البحث عن التعديلات</string>
     <string name="status_patching_completed">اكتمل التصحيح</string>
-    <string name="status_patching_failed">فشل التعديل</string>
+    <string name="status_patching_failed">فشل التصحيح</string>
     <string name="status_patching_cancelled">تم إلغاء التصحيح</string>
     <string name="view_full_logs_button">عرض السجلات الكاملة</string>
     <string name="error_patching_unknown">فشل التصحيح لسبب غير معروف</string>
     <string name="error_log_label">سجل الأخطاء</string>
     <string name="back">رجوع</string>
+    <string name="open">فتح</string>
     <string name="open_folder">فتح المجلد</string>
     <string name="temporary_files_label">ملفات مؤقتة</string>
     <string name="size_can_be_freed_label">يمكن تحرير %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">فشل التثبيت: %1$s</string>
     <string name="adb_error_not_found">ADB غير موجود. يرجى تثبيت Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">الجهاز متصل لكنه غير مصرح به. يرجى قبول طلب تصحيح أخطاء USB على جهازك</string>
-    <string name="adb_error_no_devices">لا توجد أجهزة متصلة. يرجى توصيل جهاز Android مع تفعيل تصحيح أخطاء USB</string>
+    <string name="adb_error_no_devices">لا توجد أجهزة متصلة. يرجى توصيل جهاز Android الخاص بك مع تمكين تصحيح أخطاء USB أو Wi-Fi</string>
     <string name="adb_error_device_not_found">الجهاز %1$s غير موجود</string>
     <string name="adb_error_multiple_devices">تم توصيل عدة أجهزة. يرجى اختيار جهاز واحد</string>
     <string name="adb_error_apk_not_found">ملف APK غير موجود: %1$s</string>
@@ -187,7 +188,7 @@
     <string name="home_apk_info_from_label">مِن</string>
     <string name="home_stage_change_apk">تغيير APK</string>
     <string name="home_stage_continue">متابعة</string>
-    <string name="home_stage_patch">تعديل</string>
+    <string name="home_stage_patch">تصحيح</string>
     <string name="home_stage_analyzing_title">جارٍ التحليل</string>
     <string name="home_stage_reading_metadata">جارٍ قراءة بيانات التطبيق الوصفية…</string>
     <!-- Home Screen - Dialogs -->
@@ -204,7 +205,7 @@
     <string name="home_header_multi_source_hint">يتم دمج التصحيحات من كل مصدر مفعّل. يمكنك الإدارة من زر المصادر أعلاه</string>
     <!-- Home Screen - SupportedAppListRow -->
     <string name="home_app_row_latest_experimental">أحدث إصدار تجريبي</string>
-    <string name="home_app_row_any">أي شي</string>
+    <string name="home_app_row_any">أي إصدار</string>
     <string name="home_app_row_na">غير متاح</string>
     <string name="home_app_row_not_on_device">ليس على هذا الجهاز</string>
     <string name="home_app_row_on_device">على الجهاز</string>
@@ -218,7 +219,7 @@
     <!-- Home Screen - SupportedAppsListPane -->
     <string name="home_list_load_failed">فشل التحميل</string>
     <string name="home_list_no_supported_apps">لا توجد تطبيقات مدعومة</string>
-    <string name="home_list_no_apps_match">لا يوجد تطبيقات تطابق \"%1$s\"</string>
+    <string name="home_list_no_apps_match">لا توجد تطبيقات تطابق \"%1$s\"</string>
     <string name="home_sort_recommended">موصى به</string>
     <string name="home_sort_recommended_desc">التطبيقات المُصححة أولاً، ثم المثبتة، ثم بالاسم</string>
     <string name="home_sort_name_asc">الاسم (أ إلى ي)</string>
@@ -291,7 +292,7 @@
     <!-- Patches Screen -->
     <string name="patches_dialog_error_title">خطأ</string>
     <string name="patches_title_select_bundle_version">اختر إصدار الحزمة</string>
-    <string name="patches_refresh_description">أنعش</string>
+    <string name="patches_refresh_description">تحديث</string>
     <string name="patches_fetching_releases">جارٍ جلب الإصدارات</string>
     <string name="patches_no_releases_found">لا توجد إصدارات</string>
     <string name="patches_export_options_title">تصدير options.json</string>
@@ -331,7 +332,7 @@
     <string name="patch_selection_icon_dialog_delete_title">حذف الأيقونة المخصصة؟</string>
     <string name="patch_selection_icon_dialog_delete_message">سيؤدي هذا إلى مسح الأيقونة وإزالة مشروعها المحفوظ والملفات المُنشأة. لا يمكن التراجع عن هذا</string>
     <string name="patch_selection_custom_icon_hint">ليس عليك إنشاء هذا المجلد بنفسك! انقر على أيقونة التصميم/التحرير لإنشائه في استوديو الأيقونات أو استيراده من المدير</string>
-    <string name="patch_selection_option_enabled">تمكين</string>
+    <string name="patch_selection_option_enabled">مفعّل</string>
     <string name="patch_selection_option_disabled">معطّل</string>
     <string name="patch_selection_mode_your_defaults">افتراضياتك</string>
     <string name="patch_selection_mode_patch_defaults">افتراضيات التصحيح</string>
@@ -382,16 +383,16 @@
     <string name="patch_selection_run_info_verify_sdk">التحقق من Android SDK: %1$s</string>
     <string name="patch_selection_group_universal">عام</string>
     <string name="patch_selection_group_ungrouped">غير مجمّع</string>
-    <string name="patch_selection_group_selected_count">%1$d تم تحديده</string>
+    <string name="patch_selection_group_selected_count">تم تحديد %1$d</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">البدء من جديد</string>
-    <string name="patching_patches_count">%1$d / %2$d تعديلات</string>
+    <string name="patching_patches_count">%1$d / %2$d تصحيحات</string>
     <string name="patching_slow_warning">هذا يستغرق وقتًا أطول من المعتاد، الرجاء الانتظار...</string>
     <string name="patching_status_ready">جاهز للتصحيح</string>
     <string name="patching_status_preparing">جارٍ التحضير للتصحيح</string>
     <string name="patching_status_in_progress">جارٍ تطبيق التعديلات</string>
     <string name="patching_completed_loading_result">اكتمل التصحيح، جارٍ تحميل النتيجة…</string>
-    <string name="patching_cancelled_loading_result">تم إلغاء التصحيح، جاري تحميل النتيجة...</string>
+    <string name="patching_cancelled_loading_result">تم إلغاء التصحيح، جارٍ تحميل النتيجة…</string>
     <string name="patching_failed_loading_result">فشل التصحيح، جارٍ تحميل النتيجة…</string>
     <string name="patching_log_viewer_failed_to_read">فشل قراءة ملف السجل: %1$s</string>
     <string name="patching_log_viewer_title">ملف السجل</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">التصحيحات الفاشلة: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB متوقف · تمكين للتثبيت</string>
-    <string name="result_adb_connect_device_hint">قم بتوصيل جهاز عبر USB للتثبيت باستخدام ADB</string>
+    <string name="result_adb_connect_device_hint">قم بتوصيل جهاز عبر USB أو Wi-Fi للتثبيت باستخدام ADB</string>
     <string name="result_screen_patch_another_button">تصحيح تطبيق آخر</string>
     <string name="result_screen_install_on_device_label">التثبيت على %1$s</string>
     <string name="result_screen_links_routed_label">تم توجيه الروابط إلى التطبيق المُصحح</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">جاري إلغاء التركيب من %1$s…</string>
     <string name="result_adb_root_not_detected">لم يتم اكتشاف وصول Root على %1$s. تأكد من تثبيت Magisk/KernelSU/APatch ومنح إذن su</string>
     <string name="result_adb_stock_app_not_installed">التطبيق الرسمي %1$s غير مثبت على %2$s. يرجى تثبيت التطبيق الرسمي أولاً قبل عملية التركيب</string>
+    <string name="result_adb_mount_version_mismatch">إصدار التطبيق الأصلي على %3$s هو v%1$s، ولكن إصدار APK المعدل هو v%2$s. يتطلب تثبيت الـ Root تطابق الإصدارات</string>
+    <string name="result_adb_mount_abi_mismatch">الجهاز %3$s هو %1$s، ولكن ملف APK يحتوي فقط على [%2$s]. ستفشل المكتبات الأصلية في التحميل</string>
     <string name="result_link_default_restored">تمت استعادة معالجة الروابط الافتراضية</string>
     <string name="result_link_routed_stock_disabled">تم توجيه الروابط إلى التطبيق المُصحح، والتطبيق الأصلي معطّل</string>
     <string name="result_adb_not_found_hint">ADB غير موجود. ثبّت Android SDK Platform Tools لتفعيل التثبيت المباشر</string>
     <string name="result_adb_section_title">تثبيت ADB</string>
     <string name="result_adb_no_devices">لا توجد أجهزة متصلة</string>
-    <string name="result_adb_connect_hint">قم بالتوصيل عبر USB مع تفعيل تصحيح أخطاء USB</string>
+    <string name="result_adb_connect_hint">الاتصال عبر تصحيح أخطاء USB أو Wi-Fi</string>
     <string name="result_device_status_unauth">غير مصرح</string>
     <string name="result_adb_update_button">التحديث على %1$s</string>
     <string name="result_adb_select_device_button">اختر جهازًا</string>
@@ -493,7 +496,7 @@
     <string name="icon_studio_adjust_rotation">تدوير</string>
     <string name="icon_studio_reset_position_button">إعادة تعيين الموضع</string>
     <string name="icon_studio_color_label">اللون</string>
-    <string name="icon_studio_adjust_hue">تدرج اللون</string>
+    <string name="icon_studio_adjust_hue">درجة اللون</string>
     <string name="icon_studio_adjust_saturation">التشبع</string>
     <string name="icon_studio_adjust_brightness">السطوع</string>
     <string name="icon_studio_effect_shadow">ظل</string>
@@ -519,7 +522,7 @@
     <string name="icon_studio_default_font">الخط الافتراضي</string>
     <string name="icon_studio_add_file_button">إضافة ملف</string>
     <string name="icon_studio_background_label">الخلفية</string>
-    <string name="icon_studio_background_solid">طبقة لون واحد</string>
+    <string name="icon_studio_background_solid">لون موحد</string>
     <string name="icon_studio_background_image">صورة</string>
     <string name="icon_studio_background_hint">يملأ البلاطة بالكامل، خلف المقدمة</string>
     <string name="icon_studio_background_image_set_hint">تم تعيين خلفية الصورة، انقر فوق صورة للاستبدال</string>
@@ -541,7 +544,7 @@
     <string name="version_label_local">محلي</string>
     <string name="source_sheet_remote_label">عن بُعد</string>
     <string name="add_source">إضافة مصدر</string>
-    <string name="source_sheet_title">مصادر التعديل</string>
+    <string name="source_sheet_title">مصادر التصحيحات</string>
     <string name="source_sheet_reload_description">إعادة تحميل التصحيحات</string>
     <string name="source_sheet_multi_mode_hint">فعّل/عطّل أي مجموعة. يتم دمج التصحيحات من جميع المصادر المفعلة</string>
     <string name="source_sheet_done_button">تم</string>
@@ -563,7 +566,7 @@
     <!-- Signing Key Trust Dialog -->
     <string name="sources_signing_key_changed_named">لم يتم تحديث '%1$s' لأن إصداره الأخير غير موقّع بالمفتاح الذي استخدمه سابقًا</string>
     <string name="sources_signing_key_new">مفتاح جديد</string>
-    <string name="sources_signing_key_trust_message">الإصدار الأخير موقّع بمفتاح مختلف. إما أن المطور استبدل مفتاحه، أو أن شخصًا آخر نشر هذا الإصدار. لا تثق به إلا إذا أعلن المطور عن مفتاح جديد.</string>
+    <string name="sources_signing_key_trust_message">الإصدار الأخير موقّع بمفتاح مختلف. إما أن المطور استبدل مفتاحه، أو أن شخصًا آخر نشر هذا الإصدار. لا تثق به إلا إذا أعلن المطور عن مفتاح جديد</string>
     <string name="sources_signing_key_trust_message_unsigned">الإصدار الأخير غير موقّع. إما أن المطور توقف عن توقيع الإصدارات، أو أن شخصًا آخر نشر هذا الإصدار. لا تثق به إلا إذا أعلن عنه المطور</string>
     <string name="sources_signing_key_trust_title">هل تثق بالمفتاح الجديد؟</string>
     <string name="sources_signing_key_trusted">المفتاح الموثوق</string>
@@ -574,8 +577,8 @@
     <string name="patch_source_dialog_repo_url_label">عنوان المستودع</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo أو gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">يقبل رابط GitHub أو GitLab أو morphe.software/add-source</string>
-    <string name="patch_source_dialog_pre_release_title">إصدارات ما قبل الإطلاق</string>
-    <string name="patch_source_dialog_pre_release_hint">احصل على وصول مبكر إلى إصدارات التعديل التجريبية الجديدة</string>
+    <string name="patch_source_dialog_pre_release_title">تصحيحات ما قبل الإصدار</string>
+    <string name="patch_source_dialog_pre_release_hint">احصل على وصول مبكر إلى إصدارات التصحيحات التجريبية الجديدة</string>
     <string name="patch_source_dialog_error_name_required">الاسم مطلوب</string>
     <string name="patch_source_dialog_error_invalid_url">أدخل عنوان GitHub أو GitLab صالحًا</string>
     <string name="patch_source_dialog_error_invalid_file">اختر ملف .mpp صالحًا</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB غير موجود</string>
     <string name="device_indicator_adb_not_found_subtitle">ثبّت Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">لا توجد أجهزة مكتشفة</string>
-    <string name="device_indicator_no_devices_subtitle">قم بتوصيل جهاز مع تفعيل تصحيح أخطاء USB</string>
+    <string name="device_indicator_no_devices_subtitle">قم بتوصيل جهاز مع تمكين تصحيح أخطاء USB أو Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">فعّل تصحيح أخطاء USB</string>
     <string name="device_indicator_enable_debugging_subtitle">الإعدادات ← خيارات المطور ← تصحيح أخطاء USB</string>
     <string name="device_indicator_status_connected">متصل</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">اللغة</string>
     <string name="settings_language_current_title">اللغة الحالية</string>
-    <string name="settings_language_community_translation_hint">قد تكون ترجمات بعض اللغات مفقودة أو غير مكتملة. لترجمة لغات جديدة أو تحسين الترجمات الحالية، تفضل بزيارة %1$s</string>
     <string name="settings_language_dialog_title">لغة التطبيق</string>
+    <string name="settings_language_translate_title">ساعد في ترجمة Morphe</string>
     <string name="settings_language_search_no_results">لم يتم العثور على نتائج</string>
     <string name="settings_section_theme">المظهر</string>
     <string name="settings_appearance_theme_mode">وضع المظهر</string>
+    <string name="settings_appearance_theme_mode_description">التنقل بين المظهر الفاتح، أو الداكن، أو الأسود الصرف، أو مظهر النظام</string>
     <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
     <string name="settings_theme_amoled">أموليد</string>
     <string name="settings_appearance_color_style">نمط الألوان</string>
+    <string name="settings_appearance_color_style_description">لوحة ألوان Morphe الملونة أو نمط أحادي اللون بتدرج رمادي</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">أحادي اللون</string>
     <string name="settings_toggle_sharp_corners_label">زوايا حادة</string>
@@ -672,10 +677,16 @@
     <string name="settings_section_app_cards">بطاقات التطبيقات</string>
     <string name="settings_app_cards_color_all">لون لكل بطاقة</string>
     <string name="settings_app_cards_color_all_desc">البطاقات التي خصصتها بشكل فردي تحتفظ بلونها الخاص</string>
-    <string name="settings_section_background_animation">خلفيّات مُتحرِّكة</string>
+    <string name="settings_toggle_app_icons_label">أيقونات التطبيق</string>
+    <string name="settings_toggle_app_icons_desc">يعرض أيقونة كل تطبيق، والتي تم استخراجها من ملفات APK المحلية أو الجهاز المتصل</string>
+    <string name="settings_appearance_more_apps_card">بطاقة المزيد من التطبيقات</string>
+    <string name="settings_appearance_more_apps_card_description">يعرض بطاقة أسفل التطبيقات تؤدي إلى تعديلات المجتمع</string>
+    <string name="settings_section_effects">التأثيرات</string>
+    <string name="settings_appearance_background_animation">خلفيّات مُتحرِّكة</string>
+    <string name="settings_appearance_background_animation_description">تأثيرات الحركة التي تُعرض خلف شاشات التطبيق</string>
     <string name="settings_background_circles">دوائر</string>
     <string name="settings_background_rings">حلقات</string>
-    <string name="settings_background_mesh">مجسم</string>
+    <string name="settings_background_mesh">نسيج</string>
     <string name="settings_background_space">فضاء</string>
     <string name="settings_background_shapes">أشكال</string>
     <string name="settings_background_snow">ثلج</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">وضع الخبير</string>
     <string name="settings_toggle_expert_mode_desc">تحكم كامل في اختيار التصحيحات وتكوينها</string>
+    <string name="settings_expert_mode_disabled_in_flow">العودة إلى الصفحة الرئيسية لتغيير الوضع</string>
     <string name="settings_toggle_route_links_label">توجيه الروابط إلى التطبيق المُصحح</string>
     <string name="settings_toggle_route_links_desc">بعد التثبيت عبر ADB، اجعل التطبيق المُصحح يفتح روابطه المدعومة بدلاً من المتصفح أو التطبيق الأصلي/الافتراضي</string>
     <string name="settings_toggle_disable_stock_links_label">تعطيل روابط التطبيق الأصلي</string>
@@ -701,9 +713,9 @@
     <string name="settings_dev_bytecode_mode_strip_fast">Fast</string>
     <string name="settings_dev_bytecode_mode_strip_safe">آمن</string>
     <string name="settings_dev_bytecode_mode_full">Full</string>
-    <string name="settings_dev_validate_label">التحقق من البصمة</string>
-    <string name="settings_dev_validate_desc">التحقق من أن كل match() يطابق طريقة واحدة فقط (تصحيح أبطأ، لاختبار التصحيح)</string>
-    <string name="settings_dev_verify_sdk_label">التحقق من Android SDK</string>
+    <string name="settings_dev_validate_label">تحقق البصمة</string>
+    <string name="settings_dev_validate_desc">التحقق من أن كل match() يطابق طريقة واحدة فقط (تعديل أبطأ، لاختبار التعديل)</string>
+    <string name="settings_dev_verify_sdk_label">تحقق Android SDK</string>
     <string name="settings_dev_verify_sdk_desc">التحقق من DEX و APK المعدلين باستخدام أدوات Android SDK (d8, zipalign). قد يتم الإبلاغ عن نتائج إيجابية خاطئة</string>
     <string name="settings_dev_sdk_path_label">دليل Android SDK</string>
     <string name="settings_dev_sdk_path_auto">تم اكتشافه تلقائيًا</string>
@@ -724,12 +736,28 @@
     <string name="settings_toggle_auto_start_adb_label">بدء ADB تلقائيًا</string>
     <string name="settings_toggle_auto_start_adb_desc">شغّل خادم ADB عند الإقلاع لمراقبة الأجهزة المتصلة. عند إيقافه، لا يبدأ Morphe الخادم أبدًا، وتكون ميزات التثبيت/الإرسال معطلة</string>
     <string name="settings_section_storage">مكان التخزين &amp; ذاكرة التخزين المؤقت</string>
-    <string name="settings_cache_summary">ذاكرة التخزين المؤقت: %1$s (التعديلات + السجلات)</string>
-    <string name="settings_cache_clear_button">مسح ذاكرة التخزين المؤقت</string>
+    <string name="settings_cache_clear_all_title">مسح كل ذاكرة التخزين المؤقت</string>
+    <string name="settings_cache_category_patches">التعديلات</string>
+    <string name="settings_cache_category_logs">السجلات</string>
+    <string name="settings_cache_category_temp">الملفات المؤقتة</string>
+    <string name="settings_cache_category_avatars">ذاكرة التخزين المؤقت للصور الرمزية</string>
+    <string name="settings_cache_category_app_icons">ذاكرة التخزين المؤقت لأيقونات التطبيقات</string>
+    <string name="settings_cache_confirm_patches_title">مسح التعديلات؟</string>
+    <string name="settings_cache_confirm_patches_message">سيؤدي هذا إلى حذف ملفات التعديلات التي تم تنزيلها. سيتم إعادة تنزيل التعديلات عند الحاجة</string>
+    <string name="settings_cache_confirm_logs_title">مسح السجلات؟</string>
+    <string name="settings_cache_confirm_logs_message">سيؤدي هذا إلى حذف جميع ملفات سجل التطبيق ومسودات logcat الخاصة بالجهاز</string>
+    <string name="settings_cache_confirm_temp_title">مسح الملفات المؤقتة؟</string>
+    <string name="settings_cache_confirm_temp_message">سيؤدي هذا إلى حذف ملفات المسودة ومساحة العمل المؤقتة</string>
+    <string name="settings_cache_confirm_avatars_title">مسح ذاكرة التخزين المؤقت للصور الرمزية؟</string>
+    <string name="settings_cache_confirm_avatars_message">سيؤدي هذا إلى حذف جميع صور الرمزيات عن بعد المخزنة مؤقتًا</string>
+    <string name="settings_cache_confirm_app_icons_title">مسح ذاكرة التخزين المؤقت لأيقونات التطبيقات؟</string>
+    <string name="settings_cache_confirm_app_icons_message">سيؤدي هذا إلى حذف كل أيقونات التطبيقات المستخرجة من ملفات APK والأجهزة</string>
+    <string name="settings_cache_category_cleared">تم مسح %1$s</string>
+    <string name="settings_cache_category_clear_failed">فشل مسح %1$s</string>
     <string name="settings_cache_cleared">تم مسح ذاكرة التخزين المؤقت</string>
     <string name="settings_cache_clear_failed">فشل المسح</string>
     <string name="settings_cache_confirm_title">مسح ذاكرة التخزين المؤقت؟</string>
-    <string name="settings_cache_confirm_message">سيؤدي هذا إلى مسح التعديلات وملفات السجل التي تم تنزيلها. سيتم إعادة تنزيل التعديلات عند الحاجة</string>
+    <string name="settings_cache_confirm_message">سيؤدي هذا إلى حذف التعديلات، ملفات السجل، والملفات المؤقتة التي تم تنزيلها. سيتم إعادة تنزيل التعديلات عند الحاجة</string>
     <string name="settings_storage_open_app_data_button">فتح بيانات التطبيق</string>
     <string name="settings_storage_open_logs_button">فتح السجلات</string>
     <string name="settings_section_about">لمحة</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">سجلات وقت تشغيل التطبيق المُصحح</string>
     <string name="settings_runtime_logs_desc">التقط السجلات من هاتفك بعد تعطل التطبيق المُصحح أو سلوكه غير السليم. امسح قبل إعادة إنتاج الخطأ، ثم احفظ المخرجات المصفاة لإرفاقها ببلاغ خطأ</string>
     <string name="settings_runtime_logs_device_info">الجهاز: %1$s</string>
-    <string name="settings_runtime_logs_no_device">لا يوجد جهاز متصل. قم بتوصيل هاتفك مع تفعيل تصحيح أخطاء USB</string>
+    <string name="settings_runtime_logs_no_device">لا يوجد جهاز متصل. قم بتوصيل هاتفك مع تمكين تصحيح أخطاء USB أو Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">جارٍ المسح…</string>
     <string name="settings_runtime_logs_clear_button">مسح سجلات الجهاز</string>
     <string name="settings_runtime_logs_failed_to_clear">فشل مسح السجلات</string>
@@ -804,7 +832,7 @@
     <string name="app_info_version_gui">الواجهة الرسومية: %1$s</string>
     <string name="app_info_version_patcher">المصحح: v%1$s</string>
     <string name="app_info_version_library">المكتبة: v%1$s</string>
-    <string name="app_info_description">مشروع مفتوح المصدر يهدف إلى توفير طريقة حديثة ومبسطة لتعديل تطبيقات Android الشهيرة، مستندًا إلى ملاحظات المستخدمين ومساهمات المجتمع</string>
+    <string name="app_info_description">مشروع مفتوح المصدر يهدف إلى توفير طريقة حديثة ومبسطة لتصحيح تطبيقات Android الشهيرة، مستندًا إلى ملاحظات المستخدمين ومساهمات المجتمع</string>
     <string name="app_info_link_changelog">سجل التغييرات</string>
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">ترجمة</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">المصادر</string>
     <string name="nav_apps">التطبيقات</string>
+    <string name="nav_settings">الإعدادات</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">بحث الإعدادات</string>
+    <string name="settings_search_no_results">لا توجد إعدادات مطابقة</string>
+    <string name="settings_back_to_about">العودة إلى \"حول\"</string>
+    <string name="licenses_back_to_list">العودة إلى التراخيص</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">المزيد من التطبيقات</string>
+    <string name="home_more_apps_subtitle">تعديلات المجتمع</string>
+    <string name="community_patches_notice_title">مصادر التعديل من طرف ثالث</string>
+    <string name="community_patches_notice_message">مصادر تعديلات المجتمع يتم إنشاؤها وصيانتها من قبل مؤلفيها. لا يقوم Morphe بمراجعة أو التحقق من تعديلات الجهات الخارجية، وهو غير مسؤول عن محتواها أو عما تقوم به على جهازك.</string>
 </resources>

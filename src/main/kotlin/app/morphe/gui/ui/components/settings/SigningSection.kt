@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components.settings
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -36,6 +35,7 @@ import app.morphe.gui.ui.components.SlimTextField
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.apk.ApkUtils
@@ -95,7 +95,7 @@ internal fun SigningSection(
                     .weight(1f)
                     .fillMaxHeight()
                     .clip(MorpheTheme.shapes.small)
-                    .border(1.dp, borderColor, MorpheTheme.shapes.small)
+                    .outlineBorder(borderColor, MorpheTheme.shapes.small)
                     .padding(horizontal = 10.dp),
                 contentAlignment = Alignment.CenterStart
             ) {

@@ -2,14 +2,14 @@
 <resources>
     <!-- Common Components -->
     <string name="morphe_logo_content_description">Nembo ya Morphe</string>
-    <string name="dismiss">Futa</string>
+    <string name="dismiss">Funga</string>
     <string name="ok">Sawa</string>
     <string name="retry">Jaribu tena</string>
     <string name="clear">Safisha</string>
     <string name="search">Tafuta</string>
     <string name="no_matches">Hakuna inayofanana</string>
     <string name="remove">Ondoa</string>
-    <string name="collapse">Kunjga</string>
+    <string name="collapse">Kunja</string>
     <string name="expand">Panua</string>
     <string name="cancel">Ghairi</string>
     <string name="close">Funga</string>
@@ -68,13 +68,14 @@
     <string name="app_info_shared_label">Habari za programu</string>
     <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Tafuta viraka…</string>
-    <string name="status_patching_completed">Uviraka ukamilika</string>
-    <string name="status_patching_failed">Uviraka umeshindwa</string>
-    <string name="status_patching_cancelled">Uviraka umeghairiwa</string>
+    <string name="status_patching_completed">Urekebishaji umekamilika</string>
+    <string name="status_patching_failed">Urekebishaji umeshindwa</string>
+    <string name="status_patching_cancelled">Urekebishaji umeghairiwa</string>
     <string name="view_full_logs_button">Angalia rekodi kamili</string>
-    <string name="error_patching_unknown">Uviraka umeshindwa kwa sababu isiyojulikana</string>
+    <string name="error_patching_unknown">Urekebishaji umeshindwa kwa sababu isiyojulikana</string>
     <string name="error_log_label">Logi ya makosa</string>
     <string name="back">Rudi</string>
+    <string name="open">Fungua</string>
     <string name="open_folder">Fungua folda</string>
     <string name="temporary_files_label">Faili za muda</string>
     <string name="size_can_be_freed_label">%1$s inaweza kuachiliwa</string>
@@ -96,7 +97,7 @@
     <string name="card_fill_mode_default_blurb">Rangi inayokuja na kifurushi cha patch</string>
     <string name="card_fill_mode_accent">Rangi ya mkazo</string>
     <string name="card_fill_mode_accent_blurb">Hufuatilia rangi ya accent, ikibadilika wakati rangi hiyo inapobadilika</string>
-    <string name="card_fill_mode_gradient">M gradient</string>
+    <string name="card_fill_mode_gradient">Gradient</string>
     <string name="card_fill_mode_gradient_blurb">Idadi yoyote ya vituo, linear, radial au conic</string>
     <string name="card_fill_mode_solid">Imara</string>
     <string name="card_fill_mode_solid_blurb">Rangi moja tambarare</string>
@@ -127,8 +128,8 @@
     <string name="adb_error_verification_failure">Uthibitishaji wa kifurushi umeshindwa</string>
     <string name="adb_error_generic">Ufungaji umeshindwa: %1$s</string>
     <string name="adb_error_not_found">ADB haijapatikana. Tafadhali weka Android SDK Platform Tools</string>
-    <string name="adb_error_unauthorized">Kifaa kimeunganishwa lakini hakijaidhinishwa. Tafadhali kubali ombi la usanisi wa USB kwenye kifaa chako</string>
-    <string name="adb_error_no_devices">Hakuna vifaa vilivyounganishwa. Tafadhali unganisha kifaa chako cha Android kikiwa na usanisi wa USB umewashwa</string>
+    <string name="adb_error_unauthorized">Kifaa kimeunganishwa lakini hakijaidhinishwa. Tafadhali kubali ombi la utatuzi wa USB kwenye kifaa chako</string>
+    <string name="adb_error_no_devices">Hakuna kifaa kilichounganishwa. Tafadhali unganisha kifaa chako cha Android ukiwa umeilinda USB au Wi-Fi debugging</string>
     <string name="adb_error_device_not_found">Kifaa %1$s hakijapatikana</string>
     <string name="adb_error_multiple_devices">Vifaa vingi vimeunganishwa. Tafadhali chagua kimoja</string>
     <string name="adb_error_apk_not_found">Faili ya APK haijapatikana: %1$s</string>
@@ -149,26 +150,26 @@
     <string name="version_status_checksum_corrupted">Faili inaweza kuwa imeharibika, pakua tena kutoka APKMirror</string>
     <string name="version_status_checksum_failed">Uthibitisho wa checksum umefeli</string>
     <string name="version_status_checksum_matches">Checksum inalingana na APKMirror</string>
-    <string name="version_status_newer_stable_available">Toleo jipya zaidi la utulivu v%1$s lipo</string>
-    <string name="version_status_newer_stable_available_fallback">Toleo jipya zaidi la utulivu lipo</string>
+    <string name="version_status_newer_stable_available">Toleo jipya thabiti v%1$s linapatikana</string>
+    <string name="version_status_newer_stable_available_fallback">Toleo jipya thabiti linapatikana</string>
     <string name="version_status_experimental_detail">Inaungwa mkono, lakini inaweza isifanye kazi ipasavyo</string>
     <string name="version_status_unsupported_detail">Haiungwi mkono rasmi, patch nyingi zinaweza kushindwa</string>
     <string name="version_status_unsupported">Toleo lisiloungwa mkono</string>
-    <string name="version_status_build_unsupported">Build haiongewezwi msaada</string>
+    <string name="version_status_build_unsupported">Build haiungwi mkono</string>
     <string name="version_status_build_unsupported_detail">Toleo hili linaungwa mkono, lakini si build hii yake. Pata build ambayo patches inalenga</string>
     <string name="version_status_build_unsupported_with_code">Marekebisho yanahitaji build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Taarifa ya toleo</string>
     <string name="version_warning_build_unsupported_message">Ya sasa: v%1$s (build %2$s)\nBuild inayohitajika: %3$s\n\nHii ni build tofauti ya toleo lile lile. Marekebisho yanahitaji build mahususi.</string>
     <string name="version_warning_experiment_title">Je, unataka kufanya majaribio? 🧪</string>
-    <string name="version_warning_latest_experimental_message">Sasa: v%1$s\n\nToleo hili lina uungaji mkono wa awali wa majaribio\n\n🔧 Tarajia tabia ya app isiyo ya kawaida au hitilafu zisizojulikana wakati maboresho yanapokamilishwa kwa toleo hili la app.</string>
-    <string name="version_warning_unsupported_message">Sasa: v%1$s\n\nHili si toleo linaloungwa mkono rasmi. Maboresho yana uwezekano mkubwa wa kushindwa.</string>
+    <string name="version_warning_latest_experimental_message">Sasa: v%1$s\n\nToleo hili lina uungaji mkono wa awali wa majaribio\n\n🔧 Tarajia tabia ya app isiyo ya kawaida au hitilafu zisizojulikana wakati viraka vinapoboreshwa kwa toleo hili la app.</string>
+    <string name="version_warning_unsupported_message">Sasa: v%1$s\n\nHili si toleo linaloungwa mkono rasmi. Viraka vina uwezekano mkubwa wa kushindwa.</string>
     <string name="version_warning_notice_message">Endelea na v%1$s?</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">Chagua faili ya APK</string>
     <string name="home_could_not_resolve_patch_files">Imeshindwa kutatua faili za kiraka</string>
     <string name="home_install_failed">Ufungaji umefeli: %1$s</string>
-    <string name="home_uninstall_failed">Imara ya kuondoa imeshindwa: %1$s</string>
+    <string name="home_uninstall_failed">Kuondoa kumeshindwa: %1$s</string>
     <string name="home_no_sources_enabled">Hakuna vyanzo vya patch vilivyowashwa. Ongeza au washa chanzo kutoka skrini ya nyumbani</string>
     <string name="home_patch_file_corrupted">Faili ya patch haipo au imeharibika. Futa cache na upakue tena</string>
     <string name="home_validation_file_not_exist">Faili haipo</string>
@@ -255,9 +256,9 @@
     <string name="home_detail_using_label">Inatumia</string>
     <string name="home_detail_apk_origin_sub">APK ambayo programu hii ilirekebishwa kutoka</string>
     <string name="home_detail_reading_chosen_bundle">Inasoma kifurushi kilichochaguliwa…</string>
-    <string name="home_detail_bundle_not_downloaded_warning">Toleo zilizo hapa chini ni zile ambazo %1$s inazikubali. Ulichagua %2$s, ambayo haijapakuliwa, hivyo kile inayokubali hakijulikani</string>
+    <string name="home_detail_bundle_not_downloaded_warning">Matoleo yaliyo hapa chini ndiyo %1$s inayoyakubali. Umechagua %2$s, ambayo haijapakuliwa, kwa hivyo yale inayoyakubali hayajulikani</string>
     <string name="home_detail_bundle_does_not_support_warning">%1$s haikubali %2$s. Chagua moja kati ya hizi badala yake</string>
-    <string name="home_detail_versions_what_bundle_supports">Toleo zilizo hapa chini ni zile ambazo %1$s inazikubali</string>
+    <string name="home_detail_versions_what_bundle_supports">Matoleo yaliyo hapa chini ndiyo %1$s inayoyakubali</string>
     <string name="home_detail_choose_apk_button">Chagua APK</string>
     <string name="home_detail_select_apk_title">Chagua APK ya kurekebisha</string>
     <string name="home_detail_new_source_button">Chanzo kipya</string>
@@ -291,10 +292,10 @@
     <!-- Patches Screen -->
     <string name="patches_dialog_error_title">Kosa</string>
     <string name="patches_title_select_bundle_version">Chagua toleo la bundle</string>
-    <string name="patches_refresh_description">Osha</string>
+    <string name="patches_refresh_description">Onyesha upya</string>
     <string name="patches_fetching_releases">Inatafuta matoleo</string>
     <string name="patches_no_releases_found">Hakuna matoleo yaliyopatikana</string>
-    <string name="patches_export_options_title">EXPORT options.json</string>
+    <string name="patches_export_options_title">Hamisha options.json</string>
     <string name="patches_latest_badge">Hivi karibuni</string>
     <string name="patches_cached_badge">Imehifadhiwa</string>
     <string name="patches_date_cached">Imehifadhiwa: %1$s</string>
@@ -372,7 +373,7 @@
     <string name="patch_option_enter_value">Ingiza thamani…</string>
     <string name="patch_option_add_item">Ongeza kitu</string>
     <string name="patch_option_edit_list">Hariri orodha</string>
-    <string name="patch_selection_run_info_title">Kimbilio hiki</string>
+    <string name="patch_selection_run_info_title">Utekelezaji huu</string>
     <string name="patch_selection_run_info_app_group">Programu</string>
     <string name="patch_selection_run_info_bundles_group">Vifurushi vya patch</string>
     <string name="patch_selection_run_info_no_bundles">Hakuna vifurushi vilivyotatuliwa</string>
@@ -417,7 +418,7 @@
     <string name="patching_banner_ram_free">RAM iliyo wazi</string>
     <string name="patching_banner_storage_free">Hifadhi iliyo wazi</string>
     <string name="patching_success_title">Urekebishaji ulifanikiwa</string>
-    <string name="patching_success_output_size">Ukubwa wa tija</string>
+    <string name="patching_success_output_size">Ukubwa wa matokeo</string>
     <string name="patching_success_time">Muda</string>
     <string name="patching_success_memory_avg">Wastani wa kumbukumbu</string>
     <string name="patching_success_memory_max">Kumbukumbu ya juu</string>
@@ -425,17 +426,17 @@
     <string name="patching_failure_temp_files_cleaned">Faili za muda zimesafishwa</string>
     <string name="patching_banner_native_libs_kept">Zimehifadhiwa</string>
     <string name="patching_banner_native_libs_stripped">Zimeondolewa</string>
-    <string name="patching_error_failed_patches">Raka zilizoshindwa: %1$s</string>
+    <string name="patching_error_failed_patches">Patch zilizoshindwa: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB imezimwa · Washa ili kusakinisha</string>
-    <string name="result_adb_connect_device_hint">Unganisha kifaa kupitia USB ili kusakinisha kwa ADB</string>
-    <string name="result_screen_patch_another_button">Raka nyingine</string>
+    <string name="result_adb_connect_device_hint">Unganisha kifaa kupitia USB au Wi-Fi ili usakinishe kwa ADB</string>
+    <string name="result_screen_patch_another_button">Patch nyingine</string>
     <string name="result_screen_install_on_device_label">Sakinisha kwenye %1$s</string>
     <string name="result_screen_links_routed_label">Viungo vimeelekezwa kwenye programu iliyorakwa</string>
     <string name="result_adb_updating_on_device">Inasasisha kwenye %1$s…</string>
     <string name="result_adb_update_successful">Sasisho limefanikiwa!</string>
     <string name="result_adb_install_successful">Usakinishaji umefanikiwa!</string>
-    <string name="result_adb_badge_root_mount">Mmount ya mzizi</string>
+    <string name="result_adb_badge_root_mount">Mount ya mzizi</string>
     <string name="result_adb_mount_button">Mount kwenye %1$s</string>
     <string name="result_adb_mounting_on_device">Inamount kwenye %1$s…</string>
     <string name="result_adb_mount_successful">Mount imefanikiwa!</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">Inaunmount kutoka %1$s…</string>
     <string name="result_adb_root_not_detected">Ufikiaji wa root haukugundulika kwenye %1$s. Hakikisha Magisk/KernelSU/APatch imesakinishwa na ruhusa ya su imetolewa</string>
     <string name="result_adb_stock_app_not_installed">App ya stock %1$s haijasakinishwa kwenye %2$s. Sakinisha app rasmi kwanza kabla ya kumount</string>
+    <string name="result_adb_mount_version_mismatch">App ya asili kwenye %3$s ni v%1$s, lakini APK iliyorekebishwa ni v%2$s. Root mount inahitaji matoleo yanayolingana</string>
+    <string name="result_adb_mount_abi_mismatch">Kifaa %3$s ni %1$s, lakini APK ina [%2$s] pekee. Maktaba asilia zitashindwa kupakiwa</string>
     <string name="result_link_default_restored">Ushughulikiaji wa kiungo cha chaguo-msingi ume rudishwa</string>
     <string name="result_link_routed_stock_disabled">Viungo vimeelekezwa kwenye programu iliyorakwa, ya awali imezimwa</string>
     <string name="result_adb_not_found_hint">ADB hajakutwa. Sakinisha Android SDK Platform Tools ili kuwezesha usakinishaji wa moja kwa moja</string>
     <string name="result_adb_section_title">Sakinisha ADB</string>
     <string name="result_adb_no_devices">Hakuna kifaa kilichounganishwa</string>
-    <string name="result_adb_connect_hint">Unganisha kupitia USB ukiwa umeilinda USB debugging</string>
+    <string name="result_adb_connect_hint">Unganisha kupitia USB au Wi-Fi debugging</string>
     <string name="result_device_status_unauth">Hujathibitishwa</string>
     <string name="result_adb_update_button">Sasisha kwenye %1$s</string>
     <string name="result_adb_select_device_button">Chagua kifaa</string>
@@ -494,7 +497,7 @@
     <string name="icon_studio_reset_position_button">Rudi nafasi ya awali</string>
     <string name="icon_studio_color_label">Rangi</string>
     <string name="icon_studio_adjust_hue">Toni ya rangi</string>
-    <string name="icon_studio_adjust_saturation">Ush satiety</string>
+    <string name="icon_studio_adjust_saturation">Ukolezi</string>
     <string name="icon_studio_adjust_brightness">Mwangaza</string>
     <string name="icon_studio_effect_shadow">Kivuli</string>
     <string name="icon_studio_adjust_y_offset">Offset ya Y</string>
@@ -570,7 +573,7 @@
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">Faili ya ndani</string>
     <string name="patch_source_dialog_name_label">Jina</string>
-    <string name="patch_source_dialog_name_placeholder">Patch Zangu za Kijisiti</string>
+    <string name="patch_source_dialog_name_placeholder">Patch Zangu Maalum</string>
     <string name="patch_source_dialog_repo_url_label">URL ya Repository</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo au gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">Inakubali GitHub, GitLab, au kiungo cha morphe.software/add-source</string>
@@ -603,13 +606,13 @@
     <string name="device_indicator_adb_not_found_title">ADB haikupatikana</string>
     <string name="device_indicator_adb_not_found_subtitle">Sakinisha Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Hakuna vifaa vilivyogunduliwa</string>
-    <string name="device_indicator_no_devices_subtitle">Unganisha kifaa ambacho urekebishaji wa USB umewashwa</string>
-    <string name="device_indicator_enable_debugging_title">Washa urekebishaji wa USB</string>
-    <string name="device_indicator_enable_debugging_subtitle">Mipangilio → Chaguzi za Msanidi Programu → Usajili wa USB</string>
+    <string name="device_indicator_no_devices_subtitle">Unganisha kifaa ukiwa umeilinda USB au Wi-Fi debugging</string>
+    <string name="device_indicator_enable_debugging_title">Washa utatuzi wa USB</string>
+    <string name="device_indicator_enable_debugging_subtitle">Mipangilio → Chaguzi za Msanidi Programu → Utatuzi wa USB</string>
     <string name="device_indicator_status_connected">Imeunganishwa</string>
     <string name="device_indicator_status_unauthorized">Haijaruhusiwa</string>
     <string name="device_indicator_not_listed_title">Kifaa hakipo kwenye orodha?</string>
-    <string name="device_indicator_not_listed_subtitle">Washa Usajili wa USB katika Chaguzi za Msanidi Programu</string>
+    <string name="device_indicator_not_listed_subtitle">Washa Utatuzi wa USB katika Chaguzi za Msanidi Programu</string>
     <!-- Error Dialog -->
     <string name="error_dialog_timeout">Muunganisho umeisha muda. Tafadhali angalia muunganisho wako wa mtandao na ujaribu tena</string>
     <string name="error_dialog_unreachable">Hatuwezi kuunganisha na seva. Tafadhali angalia muunganisho wako wa mtandao</string>
@@ -644,7 +647,7 @@
     <string name="settings_nav_appearance">Muonekano</string>
     <string name="settings_nav_advanced">Ya juu</string>
     <string name="settings_nav_system">Mfumo</string>
-    <string name="settings_dialog_open_logs_button">Fungua logarithms</string>
+    <string name="settings_dialog_open_logs_button">Fungua logi</string>
     <string name="settings_dialog_reset_button">Weka upya</string>
     <string name="settings_theme_system">Mfumo</string>
     <string name="settings_search_languages_placeholder">Tafuta lugha</string>
@@ -652,27 +655,35 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Lugha</string>
     <string name="settings_language_current_title">Lugha ya sasa</string>
-    <string name="settings_language_community_translation_hint">Tafsiri za baadhi ya lugha zinaweza kukosekana au kutokamilika. Ili kutafsiri lugha mpya au kuboresha tafsiri zilizopo, tembelea %1$s</string>
     <string name="settings_language_dialog_title">Lugha ya programu</string>
+    <string name="settings_language_translate_title">Saidia kutafsiri Morphe</string>
     <string name="settings_language_search_no_results">Hakuna matokeo yaliyopatikana</string>
     <string name="settings_section_theme">Mandhari</string>
     <string name="settings_appearance_theme_mode">Hali ya mandhari</string>
+    <string name="settings_appearance_theme_mode_description">Badilisha kati ya mandhari ya mwanga, giza, nyeusi kabisa, au ya mfumo</string>
     <string name="settings_theme_light">Nuru</string>
     <string name="settings_theme_dark">Giza</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Mtindo wa rangi</string>
+    <string name="settings_appearance_color_style_description">Rangi za Morphe au mtindo wa rangi ya kijivu</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Rangi moja</string>
     <string name="settings_toggle_sharp_corners_label">Pembe kali</string>
     <string name="settings_toggle_sharp_corners_desc">Fanya kadi, dialogi na vitufe kuwa vya mraba</string>
     <string name="settings_section_accent_color">Rangi ya mkazo</string>
     <string name="settings_accent_clear_description">Futa rangi ya mkazo</string>
-    <string name="settings_accent_custom_description">Rangi ya mkazo ya kistandard</string>
+    <string name="settings_accent_custom_description">Rangi ya mkazo maalum</string>
     <string name="settings_accent_remove_color_description">Ondoa rangi iliyohifadhiwa</string>
     <string name="settings_section_app_cards">Kadi za programu</string>
     <string name="settings_app_cards_color_all">Rangi kwa kila kadi</string>
     <string name="settings_app_cards_color_all_desc">Kadi ulizobadilisha mionekano yake mmoja mmoja zinabaki na rangi zao</string>
-    <string name="settings_section_background_animation">Animation ya mandhari</string>
+    <string name="settings_toggle_app_icons_label">Aikoni za programu</string>
+    <string name="settings_toggle_app_icons_desc">Inaonyesha aikoni ya kila programu, iliyotolewa kutoka APK za ndani au kifaa kilichounganishwa</string>
+    <string name="settings_appearance_more_apps_card">Kadi ya programu zaidi</string>
+    <string name="settings_appearance_more_apps_card_description">Inaonyesha kadi chini ya programu inayopeleka kwenye viraka vya jumuiya</string>
+    <string name="settings_section_effects">Athari</string>
+    <string name="settings_appearance_background_animation">Uhuishaji wa mandhari</string>
+    <string name="settings_appearance_background_animation_description">Uchezaji wa uhuishaji unaocheza nyuma ya skrini za programu</string>
     <string name="settings_background_circles">Duara</string>
     <string name="settings_background_rings">Pete</string>
     <string name="settings_background_mesh">Mesh</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Hali ya mtaalamu</string>
     <string name="settings_toggle_expert_mode_desc">Udhibiti kamili wa uteuzi na usanidi wa patch</string>
+    <string name="settings_expert_mode_disabled_in_flow">Rudi nyumbani ili kubadilisha modi</string>
     <string name="settings_toggle_route_links_label">Elekeza viunganishi kwenye app iliyopatchwa</string>
     <string name="settings_toggle_route_links_desc">Baada ya kusakinisha kupitia ADB, ifanye app iliyopatchwa ifungue viunganishi vyake vya wavuti vinavyoweza kutumiwa badala ya kivinjari au app ya asili/ya kawaida</string>
     <string name="settings_toggle_disable_stock_links_label">Zima viunganishi vya app ya asili</string>
@@ -724,14 +736,30 @@
     <string name="settings_toggle_auto_start_adb_label">Anzisha ADB kiotomatiki</string>
     <string name="settings_toggle_auto_start_adb_desc">Anzisha daemon ya ADB wakati wa kufungua ili vifaa vilivyounganishwa vifuatiliwe. Ikiwa imezimwa, Morphe haitaanzisha seva kamwe, na vipengele vya kusakinisha/kusukuma vitazimwa</string>
     <string name="settings_section_storage">Hifadhi &amp; kasha</string>
-    <string name="settings_cache_summary">Kasha: %1$s (viraka + logarithms)</string>
-    <string name="settings_cache_clear_button">Futa kasha</string>
+    <string name="settings_cache_clear_all_title">Futa kache zote</string>
+    <string name="settings_cache_category_patches">Patch</string>
+    <string name="settings_cache_category_logs">Kumbukumbu</string>
+    <string name="settings_cache_category_temp">Faili za muda</string>
+    <string name="settings_cache_category_avatars">Kasha la avatar</string>
+    <string name="settings_cache_category_app_icons">Kasha la aikoni za programu</string>
+    <string name="settings_cache_confirm_patches_title">Futa patch?</string>
+    <string name="settings_cache_confirm_patches_message">Hii itafuta faili za patch zilizopakuliwa. Patch zitapakuliwa tena zinapohitajika</string>
+    <string name="settings_cache_confirm_logs_title">Futa logi?</string>
+    <string name="settings_cache_confirm_logs_message">Hii itafuta faili zote za logi za programu na dumps za logcat za kifaa</string>
+    <string name="settings_cache_confirm_temp_title">Futa faili za muda?</string>
+    <string name="settings_cache_confirm_temp_message">Hii itafuta faili za muda za scratch na workspace</string>
+    <string name="settings_cache_confirm_avatars_title">Futa kasha la avatar?</string>
+    <string name="settings_cache_confirm_avatars_message">Hii itafuta picha zote za avatar za mbali zilizohifadhiwa</string>
+    <string name="settings_cache_confirm_app_icons_title">Futa kasha la aikoni za programu?</string>
+    <string name="settings_cache_confirm_app_icons_message">Hii itafuta aikoni zote za programu zilizotolewa kutoka APK na vifaa</string>
+    <string name="settings_cache_category_cleared">%1$s imefutwa</string>
+    <string name="settings_cache_category_clear_failed">Imeshindwa kufuta %1$s</string>
     <string name="settings_cache_cleared">Kasha limefutwa</string>
     <string name="settings_cache_clear_failed">Kufuta kumeshindikana</string>
     <string name="settings_cache_confirm_title">Futa kasha?</string>
-    <string name="settings_cache_confirm_message">Hii itafuta viraka vilivyopakuliwa na faili za logarithm. Viraka vitapakuliwa tena vitakapohitajika</string>
+    <string name="settings_cache_confirm_message">Hii itafuta viraka vilivyopakuliwa, faili za logi, na faili za muda. Viraka vitapakuliwa tena vinapohitajika</string>
     <string name="settings_storage_open_app_data_button">Fungua data ya programu</string>
-    <string name="settings_storage_open_logs_button">Fungua logarithms</string>
+    <string name="settings_storage_open_logs_button">Fungua logi</string>
     <string name="settings_section_about">Kuhusu</string>
     <string name="settings_about_version">Toleo %1$s</string>
     <string name="settings_about_changelogs_title">Angalia mabadiliko</string>
@@ -743,7 +771,7 @@
     <string name="settings_about_website_title">Tembelea tovuti</string>
     <string name="settings_about_website_desc">Tembelea tovuti rasmi ya Morphe</string>
     <!-- Settings - Strip Libs -->
-    <string name="settings_strip_libs_desc">Ondoa alama ya tiki kwenye usanifu usiohitajika. Wakati wa kupatika, APK ya toleo itabaki na usanifu uliopo kwenye APK NA katika orodha hii. Ikiwa hakuna yanayofanana, hakuna kitakachoondolewa ili kuepuka APK kuharibika</string>
+    <string name="settings_strip_libs_desc">Ondoa alama ya tiki kwenye usanifu usiohitajika. Wakati wa kupatch, APK ya toleo itabaki na usanifu uliopo kwenye APK NA katika orodha hii. Ikiwa hakuna yanayofanana, hakuna kitakachoondolewa ili kuepuka APK kuharibika</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (simu nyingi za kisasa)</string>
     <string name="settings_strip_libs_armeabi">ARM 32-bit (simu za zamani)</string>
     <string name="settings_strip_libs_x86_64">Intel 64-bit (emuleta / Chromebooks)</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">Logi za wakati wa uendeshaji wa programu iliyorekebishwa</string>
     <string name="settings_runtime_logs_desc">Nasa logi kutoka kwenye simu yako baada ya programu iliyorekebishwa kufeli au kufanya kazi isivyo kawaida. Futa kabla ya kurudia hitilafu, kisha hifadhi matokeo yaliyochujwa ili yaambatanishwe kwenye ripoti ya hitilafu</string>
     <string name="settings_runtime_logs_device_info">Kifaa: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Hakuna kifaa kilichounganishwa. Chomeka simu yako ukiwa umewezesha USB debugging</string>
+    <string name="settings_runtime_logs_no_device">Hakuna kifaa kilichounganishwa. Unganisha simu yako ukiwa umeidhinisha USB au Wi-Fi debugging</string>
     <string name="settings_runtime_logs_clearing">Inafuta…</string>
     <string name="settings_runtime_logs_clear_button">Futa logi za kifaa</string>
     <string name="settings_runtime_logs_failed_to_clear">Imeshindwa kufuta logi</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Vyanzo</string>
     <string name="nav_apps">Programu</string>
+    <string name="nav_settings">Mipangilio</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Tafuta mipangilio</string>
+    <string name="settings_search_no_results">Hakuna mipangilio inayolingana</string>
+    <string name="settings_back_to_about">Rudi kwenye Kuhusu</string>
+    <string name="licenses_back_to_list">Rudi kwenye leseni</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Programu zaidi</string>
+    <string name="home_more_apps_subtitle">Viraka vya jumuiya</string>
+    <string name="community_patches_notice_title">Vyanzo vya viraka vya upande wa tatu</string>
+    <string name="community_patches_notice_message">Vyanzo vya viraka vya jumuiya vimetengenezwa na kudumishwa na waandishi wao wenyewe. Morphe haikagui wala kuhakiki viraka vya upande wa tatu, na haihusiki na maudhui yao au kile wanachofanya kwenye kifaa chako.</string>
 </resources>

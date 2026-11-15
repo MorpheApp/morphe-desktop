@@ -45,4 +45,10 @@
     <plurals name="changelog_performance_count">
         <item quantity="other">%1$d pengoptimuman</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="other">%1$s (%2$d fail)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="other">Jumlah: %1$s (%2$d fail)</item>
+    </plurals>
 </resources>

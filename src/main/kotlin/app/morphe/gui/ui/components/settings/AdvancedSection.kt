@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components.settings
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +34,7 @@ import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.components.SettingsStateHolder
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
@@ -364,7 +364,7 @@ internal fun AdvancedSection(
                                     .weight(1f)
                                     .fillMaxHeight()
                                     .clip(MorpheTheme.shapes.small)
-                                    .border(1.dp, borderColor, MorpheTheme.shapes.small)
+                                    .outlineBorder(borderColor, MorpheTheme.shapes.small)
                                     .padding(horizontal = 10.dp),
                                 contentAlignment = Alignment.CenterStart,
                             ) {

@@ -12,7 +12,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -42,6 +41,7 @@ import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.AppIconSource
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.rememberAppIcon
@@ -356,7 +356,7 @@ internal fun SkeletonAppRow(
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
             .background(cardBg)
-            .border(1.dp, outline, MorpheTheme.shapes.medium)
+            .outlineBorder(outline, MorpheTheme.shapes.medium)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {

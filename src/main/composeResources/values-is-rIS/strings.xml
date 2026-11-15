@@ -19,7 +19,7 @@
     <string name="drop_apk_here">Slepptu APK hér</string>
     <string name="release_to_drop">Slepptu til að setja niður</string>
     <string name="click_to_browse">eða smelltu til að fletta</string>
-    <string name="error_could_not_load_patches">Ekki tókst að hlaða enga plástra</string>
+    <string name="error_could_not_load_patches">Ekki tókst að hlaða plástrum</string>
     <string name="error_network_timeout">Nettenging rann út á tíma, athugaðu tenginguna þína og reyndu aftur</string>
     <string name="error_could_not_reach_patch_server">Gat ekki náð sambandi við plásturþjóninn, athugaðu tenginguna þína</string>
     <string name="error_github_rate_limit">GitHub hraðatakmörkum náð, bíddu í nokkrar mínútur og reyndu aftur</string>
@@ -54,11 +54,11 @@
     <string name="download">Sækja</string>
     <string name="status_offline">Ónettengdur</string>
     <string name="status_ready">Tilbúið</string>
-    <string name="filter_apps_hint">Sía öpp…</string>
+    <string name="filter_apps_hint">Sía forrit…</string>
     <string name="version">Útgáfa</string>
     <string name="version_label_stable">Stöðug</string>
     <string name="version_label_prerelease">Forsýn</string>
-    <string name="version_label_experimental">Tilrauna</string>
+    <string name="version_label_experimental">Tilraunaútgáfa</string>
     <string name="version_label_latest_stable">Nýjasta stöðuga útgáfa</string>
     <string name="version_label_recommended">Mælt með</string>
     <string name="version_label_supported">Stuðningur</string>
@@ -75,19 +75,20 @@
     <string name="error_patching_unknown">Plástrun mistókst af óþekktri ástæðu</string>
     <string name="error_log_label">Villuannáll</string>
     <string name="back">Til baka</string>
+    <string name="open">Opna</string>
     <string name="open_folder">Opna möppu</string>
     <string name="temporary_files_label">Tímabundnar skrár</string>
-    <string name="size_can_be_freed_label">%1$s er hægt að losa</string>
+    <string name="size_can_be_freed_label">Hægt er að losa %1$s</string>
     <string name="clean_up">Hreinsa</string>
     <string name="output_file_label">Úttaksskrá</string>
     <string name="color_picker_saved">Vistað</string>
     <string name="dropdown_search_placeholder">Leita…</string>
     <string name="custom_color">Sérsniðinn litur</string>
     <string name="gradient_linear">Línulegur</string>
-    <string name="gradient_radial">Radíal</string>
+    <string name="gradient_radial">Geislalaga</string>
     <string name="gradient_conic">Keilulaga</string>
-    <string name="gradient_add_stop">Bæta við stopppunkti</string>
-    <string name="gradient_remove_stop_description">Fjarlægja stopppunkt</string>
+    <string name="gradient_add_stop">Bæta við stoppunkti</string>
+    <string name="gradient_remove_stop_description">Fjarlægja stoppunkt</string>
     <string name="gradient_angle">Horn</string>
     <!-- App Card Fill Dialog -->
     <string name="card_fill_title">Sérsníða spjald</string>
@@ -97,7 +98,7 @@
     <string name="card_fill_mode_accent">Áherslulitur</string>
     <string name="card_fill_mode_accent_blurb">Fylgir áherslulitnum og breytist þegar hann breytist</string>
     <string name="card_fill_mode_gradient">Litahalli</string>
-    <string name="card_fill_mode_gradient_blurb">Sérhver fjöldi stopppunkta, línulegur, radíal eða keilulaga</string>
+    <string name="card_fill_mode_gradient_blurb">Hvaða fjöldi stoppunkta sem er, línulegur, geislalaga eða keilulaga</string>
     <string name="card_fill_mode_solid">Einfaldur litur</string>
     <string name="card_fill_mode_solid_blurb">Einn flatlitur</string>
     <string name="adb_install_on_button">Setja upp á %1$s</string>
@@ -108,12 +109,12 @@
     <string name="patching_step_applying_patches">Nota plástra</string>
     <string name="patching_step_writing_apk">Skrifa plástraða APK-skrá</string>
     <string name="patching_step_signing">Undirrita plástraða APK-skrá</string>
-    <string name="patching_task_decoding_dex">Les á DEX-skrám</string>
-    <string name="patching_task_extracting_resources">Úttak auðlinda</string>
+    <string name="patching_task_decoding_dex">Les DEX-skrár</string>
+    <string name="patching_task_extracting_resources">Útdráttur auðlinda</string>
     <string name="patching_task_decoding_resources">Afkóðun auðlinda</string>
-    <string name="patching_task_indexing_classes">Vísun klasa</string>
-    <string name="patching_task_compiling_dex">Samanburður DEX-skráa</string>
-    <string name="patching_task_compiling_resources">Samanburður auðlinda</string>
+    <string name="patching_task_indexing_classes">Skráning flokka</string>
+    <string name="patching_task_compiling_dex">Set saman DEX-skrár</string>
+    <string name="patching_task_compiling_resources">Set saman auðlindir</string>
     <string name="patching_task_writing_apk">Ritar APK-skrá</string>
     <!-- ADB Installation Errors -->
     <string name="adb_status_installing">Set upp á %1$s…</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Uppsetning mistókst: %1$s</string>
     <string name="adb_error_not_found">ADB fannst ekki. Settu upp Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Tæki tengt en ekki heimilað. Samþykktu USB-villuleitarbeiðnina á tækinu þínu</string>
-    <string name="adb_error_no_devices">Engin tæki tengd. Tengdu Android tækið þitt með USB-villuleit virka</string>
+    <string name="adb_error_no_devices">Engar tæki tengd. Vinsamlegast tengdu Android-tækið þitt með USB eða Wi-Fi debugging virkt</string>
     <string name="adb_error_device_not_found">Tækið %1$s fannst ekki</string>
     <string name="adb_error_multiple_devices">Mörg tæki tengd. Veldu eitt</string>
     <string name="adb_error_apk_not_found">APK-skrá fannst ekki: %1$s</string>
@@ -151,15 +152,15 @@
     <string name="version_status_checksum_matches">Stöðusumma er í samræmi við APKMirror</string>
     <string name="version_status_newer_stable_available">Nýrri stöðug v%1$s fáanleg</string>
     <string name="version_status_newer_stable_available_fallback">Nýrri stöðug útgáfa er fáanleg</string>
-    <string name="version_status_experimental_detail">Stutt, en gæti ekki virkað rétt</string>
+    <string name="version_status_experimental_detail">Studd, en gæti ekki virkað rétt</string>
     <string name="version_status_unsupported_detail">Ekki opinberlega stutt, líklegast munu plástrarnir mistakast</string>
     <string name="version_status_unsupported">Óstudd útgáfa</string>
     <string name="version_status_build_unsupported">Gerð ekki studd</string>
     <string name="version_status_build_unsupported_detail">Þessi útgáfa er studd, en ekki þessi gerð hennar. Náðu í gerð sem plástrarnir miða á</string>
-    <string name="version_status_build_unsupported_with_code">Færingar krefjast uppbyggingar %1$s</string>
+    <string name="version_status_build_unsupported_with_code">Breytistillingar krefjast uppbyggingar %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">Útgáfutilkynning</string>
-    <string name="version_warning_build_unsupported_message">Núverandi: v%1$s (uppbygging %2$s)\nKröfð uppbygging: %3$s\n\nÞetta er önnur uppbygging af sömu útgáfu. Færingar krefjast tiltekinnar uppbyggingar.</string>
+    <string name="version_warning_build_unsupported_message">Núverandi: v%1$s (uppbygging %2$s)\nKröfð uppbygging: %3$s\n\nÞetta er önnur uppbygging af sömu útgáfu. Breytistillingar krefjast tiltekinnar uppbyggingar.</string>
     <string name="version_warning_experiment_title">Viltu gera tilraun? 🧪</string>
     <string name="version_warning_latest_experimental_message">Núverandi: v%1$s\n\nÞessi útgáfa er með snemmtækan tilraunastuðning\n\n🔧 Búast má við furðulegri hegðun forrits eða óþekktum villum þegar plástrarnir eru fágaðir fyrir þessa útgáfu forritsins.</string>
     <string name="version_warning_unsupported_message">Núverandi: v%1$s\n\nÞetta er ekki opinberlega studd útgáfa. Líklegast munu plástrarnir mistakast.</string>
@@ -187,7 +188,7 @@
     <string name="home_apk_info_from_label">Frá</string>
     <string name="home_stage_change_apk">Breyta APK</string>
     <string name="home_stage_continue">Halda áfram</string>
-    <string name="home_stage_patch">Færingur</string>
+    <string name="home_stage_patch">Engar samhæfar breytistillingar fundust fyrir þetta forrit</string>
     <string name="home_stage_analyzing_title">Greini</string>
     <string name="home_stage_reading_metadata">Les lýsigögn forrits…</string>
     <!-- Home Screen - Dialogs -->
@@ -198,14 +199,14 @@
     <string name="home_dialog_forget_message">Þetta fjarlægir %1$s úr plástraða-forritasögu þinni. Það snertir engar skrár - að plástra forritið aftur bætir því við aftur</string>
     <string name="home_dialog_uninstall_title">Fjarlægja %1$s?</string>
     <string name="home_dialog_uninstall_message">Þetta fjarlægir %1$s af tengda tækinu. Plástraða APK á diski og saga þín eru geymd nema þú veljir annað hér að neðan</string>
-    <string name="home_dialog_uninstall_also_forget">Fjarlægja einnig úr Forritin þín</string>
+    <string name="home_dialog_uninstall_also_forget">Fjarlægja einnig úr „Forritin þín“</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Stjórna heimildum</string>
     <string name="home_header_multi_source_hint">Plástrar frá öllum virkum heimildum eru sameinaðir. Stjórnaðu frá heimildahnappnum hér fyrir ofan</string>
     <!-- Home Screen - SupportedAppListRow -->
     <string name="home_app_row_latest_experimental">Nýjasta tilraunaútgáfa</string>
-    <string name="home_app_row_any">Hvaða</string>
-    <string name="home_app_row_na">E/V</string>
+    <string name="home_app_row_any">Hvaða útgáfa sem er</string>
+    <string name="home_app_row_na">Á ekki við</string>
     <string name="home_app_row_not_on_device">Ekki á þessu tæki</string>
     <string name="home_app_row_on_device">Á tæki</string>
     <string name="home_app_row_on_device_with_version">Á tæki · v%1$s</string>
@@ -221,9 +222,9 @@
     <string name="home_list_no_apps_match">Engin forrit passa við \"%1$s\"</string>
     <string name="home_sort_recommended">Mælt með</string>
     <string name="home_sort_recommended_desc">Plástruð forrit fyrst, síðan uppsett, því næst eftir nafni</string>
-    <string name="home_sort_name_asc">Nafn (A–Ö)</string>
+    <string name="home_sort_name_asc">Nafn (A–Z)</string>
     <string name="home_sort_name_asc_desc">Stafrófsröð</string>
-    <string name="home_sort_name_desc">Nafn (Ö–A)</string>
+    <string name="home_sort_name_desc">Nafn (Z–A)</string>
     <string name="home_sort_name_desc_desc">Öfug stafrófsröð</string>
     <string name="home_sort_updates_first">Plástruppfærslur fyrst</string>
     <string name="home_sort_updates_first_desc">Forrit með plástruppfærslu fyrst, síðan mælt með</string>
@@ -274,7 +275,7 @@
     <string name="home_detail_output_size_label">Úttaksstærð</string>
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s tilbúin · tæki á v%2$s</string>
-    <string name="home_detail_ready_no_repatch">v%1$s tilbúin, engin endurplástrun þörf</string>
+    <string name="home_detail_ready_no_repatch">v%1$s tilbúin, engin endurplástrun þarf</string>
     <string name="home_detail_source_disabled">Óvirk</string>
     <string name="home_detail_source_removed">Fjarlægð</string>
     <string name="home_detail_source_disabled_sub">Uppspretta er afsett í Uppsprettum. Virkja hana til að patcha aftur</string>
@@ -313,10 +314,10 @@
     <string name="patch_selection_error_title">Villa við að hlaða inn plástrum</string>
     <string name="patch_selection_title">Veldu plástra</string>
     <string name="patch_selection_cmd_preview">Forskoðun skipunar</string>
-    <string name="patch_selection_root_mode_description">Tindahlífðarstilling</string>
+    <string name="patch_selection_root_mode_description">Root-tengingarstilling</string>
     <string name="patch_selection_lock_unavailable">Óaðgengilegt fyrir root-tengingu</string>
     <string name="patch_selection_continue_on_error_tooltip">Halda áfram plástrun jafnvel þótt plástur mistakist</string>
-    <string name="patch_selection_continue_on_error_description">Halda áfram við villu</string>
+    <string name="patch_selection_continue_on_error_description">Halda áfram þrátt fyrir villu</string>
     <string name="patch_selection_no_patches_found">Engir plástrar fundust</string>
     <string name="patch_selection_no_source_patches_for_app">Engin af virkum heimildum þínum er með plástra fyrir þetta forrit</string>
     <string name="patch_selection_no_search_matches">Engir plástrar passa við leitina þína</string>
@@ -340,7 +341,7 @@
     <string name="patch_selection_strip_no_libs_detail">fjarlæging á ekki við</string>
     <string name="patch_selection_strip_universal_headline">Alhliða bókasöfn</string>
     <string name="patch_selection_strip_universal_detail">ein alhliða mappa, fjarlæging á ekki við</string>
-    <string name="patch_selection_strip_keep_all_headline">Engin fjarlæging þörf</string>
+    <string name="patch_selection_strip_keep_all_headline">Engin fjarlæging nauðsynleg</string>
     <string name="patch_selection_strip_keep_all_detail">keep-listinn nær yfir alla arkitektúra í þessu APK</string>
     <string name="patch_selection_strip_fallback_headline">Varaleið, heldur öllu</string>
     <string name="patch_selection_strip_fallback_detail">engir æskilegir arkitektúrar til staðar, endurskoðaðu stillingar Fjarlægja bókasöfn</string>
@@ -386,12 +387,12 @@
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Hefja upp á nýtt</string>
     <string name="patching_patches_count">%1$d / %2$d patchar</string>
-    <string name="patching_slow_warning">Þetta tekur lengri tíma en venjulega. Vinsamlegast bíðið…</string>
+    <string name="patching_slow_warning">Þetta tekur lengri tíma en venjulega. Vinsamlegast bíddu…</string>
     <string name="patching_status_ready">Tilbúið til plástrunar</string>
     <string name="patching_status_preparing">Undirbý plástrun</string>
     <string name="patching_status_in_progress">Nota plástra</string>
     <string name="patching_completed_loading_result">Plástrun lokið, hleð niðurstöðu…</string>
-    <string name="patching_cancelled_loading_result">Pötsun aflitin, hleðst niður niðurstöð…</string>
+    <string name="patching_cancelled_loading_result">Breytistilling hætt við, hleð niðurstöðu…</string>
     <string name="patching_failed_loading_result">Plástrun mistókst, hleð niðurstöðu…</string>
     <string name="patching_log_viewer_failed_to_read">Mistókst að lesa annálsskrá: %1$s</string>
     <string name="patching_log_viewer_title">Annálsskrá</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">Plástrar sem mistókust: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB af · Virkja til að uppsetja</string>
-    <string name="result_adb_connect_device_hint">Tengdu tæki með USB til að uppsetja með ADB</string>
+    <string name="result_adb_connect_device_hint">Tengdu tæki með USB eða Wi-Fi til að uppsetja með ADB</string>
     <string name="result_screen_patch_another_button">Plástra annað</string>
     <string name="result_screen_install_on_device_label">Setja upp á %1$s</string>
     <string name="result_screen_links_routed_label">Tenglum beint á plástrað forrit</string>
@@ -440,16 +441,18 @@
     <string name="result_adb_mounting_on_device">Tengi við %1$s…</string>
     <string name="result_adb_mount_successful">Tenging tókst!</string>
     <string name="result_adb_mount_su_prompt_hint">Tengi við %1$s… Athugaðu tækið til að veita Superuser leyfi ef beðið er um það</string>
-    <string name="result_adb_unmount_button">Trekka af %1$s</string>
-    <string name="result_adb_unmounting_on_device">Trekkar af %1$s…</string>
+    <string name="result_adb_unmount_button">Aftengja frá %1$s</string>
+    <string name="result_adb_unmounting_on_device">Aftengi frá %1$s…</string>
     <string name="result_adb_root_not_detected">Root-aðgangur fannst ekki á %1$s. Gakktu úr skammi að Magisk/KernelSU/APatch sé uppsett og su leyfi veitt</string>
     <string name="result_adb_stock_app_not_installed">Upprunalega appið %1$s er ekki uppsett á %2$s. Settu upp opinbera appið áður en þú tengir</string>
+    <string name="result_adb_mount_version_mismatch">Upprunaleg app á %3$s er í útgáfu v%1$s, en breytt APK er í v%2$s. Root-tenging krefst þess að útgáfurnar séu sömu</string>
+    <string name="result_adb_mount_abi_mismatch">Tæki %3$s er %1$s, en APK inniheldur aðeins [%2$s]. Innbyggð bókasafn munu ekki hlaðast</string>
     <string name="result_link_default_restored">Sjálfgefin tenglameðhöndlun endurheimt</string>
     <string name="result_link_routed_stock_disabled">Tenglum beint á plástrað forrit, upprunalega forritið óvirkt</string>
     <string name="result_adb_not_found_hint">ADB fannst ekki. Settu upp Android SDK Platform Tools til að virkja beina uppsetningu</string>
     <string name="result_adb_section_title">ADB uppsetning</string>
     <string name="result_adb_no_devices">Engin tæki tengd</string>
-    <string name="result_adb_connect_hint">Tengdu í gegnum USB með USB-villuleit virka</string>
+    <string name="result_adb_connect_hint">Tengdu með USB eða Wi-Fi debugging</string>
     <string name="result_device_status_unauth">Óheimilt</string>
     <string name="result_adb_update_button">Uppfæra á %1$s</string>
     <string name="result_adb_select_device_button">Veldu tæki</string>
@@ -476,7 +479,7 @@
     <string name="icon_studio_warn_unreadable">Gat ekki lesið þessa mynd til að athuga gagnsæi hennar</string>
     <string name="icon_studio_picker_select_font">Veldu letur</string>
     <string name="icon_studio_undo_button">Afturkalla</string>
-    <string name="icon_studio_redo_button">Endurgera</string>
+    <string name="icon_studio_redo_button">Endurtaka</string>
     <string name="icon_studio_templates">Sniðmát</string>
     <string name="icon_studio_template_badge">Merki</string>
     <string name="icon_studio_preview_adaptive">Aðlögunarhæft</string>
@@ -489,7 +492,7 @@
     <string name="icon_studio_layer_name_placeholder">Nafn lags</string>
     <string name="icon_studio_adjust_opacity">Ógegnsæni</string>
     <string name="icon_studio_transform_label">Umbreyta</string>
-    <string name="icon_studio_adjust_scale">Skali</string>
+    <string name="icon_studio_adjust_scale">Stærð</string>
     <string name="icon_studio_adjust_rotation">Snúningur</string>
     <string name="icon_studio_reset_position_button">Endurstilla stöðu</string>
     <string name="icon_studio_color_label">Litur</string>
@@ -500,7 +503,7 @@
     <string name="icon_studio_adjust_y_offset">Y-hliðrun</string>
     <string name="icon_studio_adjust_blur">Móða</string>
     <string name="icon_studio_effect_glow">Ljómi</string>
-    <string name="icon_studio_effect_stroke">Strik</string>
+    <string name="icon_studio_effect_stroke">Útlína</string>
     <string name="icon_studio_adjust_width">Breidd</string>
     <string name="icon_studio_save_icon_button">Vista tákn</string>
     <string name="icon_studio_foreground_label">Forgrunnur</string>
@@ -553,7 +556,7 @@
     <string name="source_sheet_move_up_description">Færa upp</string>
     <string name="source_sheet_move_down_description">Færa niður</string>
     <string name="source_sheet_ignored_mpp_title">Hunsuð .mpp mynstur</string>
-    <string name="source_sheet_ignored_mpp_hint">Hafar aðeins áhrif á möppukerfi, sem sjálkirja nýjasta .mpp skrána í möppu. Þegar nýjasta útgáfan er valin eru skrár sem passa við munstur hér slepptar. Einfalt orð passar við hverja skrá sem inniheldur það (t.d. debug). Notaðu * fyrir globs (t.d. *-debug.mpp). *-sources.mpp og *-javadoc.mpp eru alltaf slepptar</string>
+    <string name="source_sheet_ignored_mpp_hint">Hefur aðeins áhrif á möppuuppsprettur, sem hlaða sjálfkrafa nýjustu .mpp skránni í möppu. Þegar nýjasta útgáfan er valin eru skrár sem passa við mynstur hér sleppt. Einfalt orð passar við hverja skrá sem inniheldur það (t.d. debug). Notaðu * fyrir glob (t.d. *-debug.mpp). *-sources.mpp og *-javadoc.mpp eru alltaf sleppt</string>
     <string name="source_sheet_ignored_mpp_placeholder">t.d. debug eða *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Bæta við mynstri</string>
     <string name="source_sheet_remove_pattern_description">Fjarlægja mynstur</string>
@@ -563,8 +566,8 @@
     <!-- Signing Key Trust Dialog -->
     <string name="sources_signing_key_changed_named">'%1$s' var ekki uppfært því nýjasta útgáfan er ekki undirrituð með lyklnum sem var notaður áður</string>
     <string name="sources_signing_key_new">Nýr lykill</string>
-    <string name="sources_signing_key_trust_message">Nýjasta útgáfan er undirrituð með öðrum lykli. Antan vera það að forritagerandinn skipti um lykil eða að einhver annar hafi gefið út þessa útgáfu. Treystu henni aðeins ef forritagerandinn tilkynnti nýjan lykil</string>
-    <string name="sources_signing_key_trust_message_unsigned">Nýjasta útgáfan er ekki undirrituð. Antan vera það að forritagerandinn hætti að undirrita útgáfur eða að einhver annar hafi gefið út þessa útgáfu. Treystu henni aðeins ef forritagerandinn tilkynnti það</string>
+    <string name="sources_signing_key_trust_message">Nýjasta útgáfan er undirrituð með öðrum lykli. Annaðhvort skipti forritagerandinn um lykil eða einhver annar gaf út þessa útgáfu. Treystu henni aðeins ef forritagerandinn tilkynnti nýjan lykil</string>
+    <string name="sources_signing_key_trust_message_unsigned">Nýjasta útgáfan er ekki undirrituð. Annaðhvort hætti forritagerandinn að undirrita útgáfur eða einhver annar gaf út þessa útgáfu. Treystu henni aðeins ef forritagerandinn tilkynnti það</string>
     <string name="sources_signing_key_trust_title">Treysta nýjum lykli?</string>
     <string name="sources_signing_key_trusted">Treystur lykill</string>
     <!-- Patch Source Dialogs -->
@@ -575,7 +578,7 @@
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo eða gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">Samþykkir GitHub, GitLab eða morphe.software/add-source tengil</string>
     <string name="patch_source_dialog_pre_release_title">Forútgáfuplástrar</string>
-    <string name="patch_source_dialog_pre_release_hint">Fær snemmtækan aðgang að nýjum tilraunaplásturútgáfum</string>
+    <string name="patch_source_dialog_pre_release_hint">Fær snemmbúinn aðgang að nýjum tilraunaútgáfum plástra</string>
     <string name="patch_source_dialog_error_name_required">Nafn er nauðsynlegt</string>
     <string name="patch_source_dialog_error_invalid_url">Sláðu inn gilda GitHub eða GitLab slóð</string>
     <string name="patch_source_dialog_error_invalid_file">Veldu gilda .mpp skrá</string>
@@ -591,7 +594,7 @@
     <string name="patch_source_dialog_file_button">Skrá</string>
     <string name="patch_source_dialog_picker_select_file">Veldu .mpp skrá</string>
     <string name="patch_source_dialog_picker_select_folder">Veldu möppu (nýjasta .mpp er notuð)</string>
-    <string name="patch_source_dialog_folder_hint">Veldu möppu til að alltaf hlaða nýjustu .mpp innan hennar - handhægt þegar plástrar eru endurbyggðir</string>
+    <string name="patch_source_dialog_folder_hint">Hentugt þegar plástrar eru endurbyggðir</string>
     <!-- Device Indicator -->
     <string name="device_indicator_adb_off">ADB slökkt</string>
     <string name="device_indicator_checking">Athuga…</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB fannst ekki</string>
     <string name="device_indicator_adb_not_found_subtitle">Settu upp Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Engin tæki greindust</string>
-    <string name="device_indicator_no_devices_subtitle">Tengdu tæki með USB-villuleit virka</string>
+    <string name="device_indicator_no_devices_subtitle">Tengdu tæki með USB eða Wi-Fi debugging virkt</string>
     <string name="device_indicator_enable_debugging_title">Virkjaðu USB-villuleit</string>
     <string name="device_indicator_enable_debugging_subtitle">Stillingar → Þróunarvalkostir → USB-villuleit</string>
     <string name="device_indicator_status_connected">Tengt</string>
@@ -627,7 +630,7 @@
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Opin hugbúnaðarleyfi</string>
     <string name="licenses_dialog_empty_failed">// mistókst að hlaða leyfum</string>
-    <string name="licenses_dialog_empty_no_matches">// engar samsvörun</string>
+    <string name="licenses_dialog_empty_no_matches">// engin samsvörun</string>
     <string name="licenses_dialog_footer_matched">%1$d / %2$d passuðu</string>
     <string name="licenses_search_placeholder">Leitaðu í bókasöfnum, SPDX-id, uniqueId…</string>
     <string name="licenses_row_authors_label">Höfundar</string>
@@ -652,19 +655,21 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Tungumál</string>
     <string name="settings_language_current_title">Núverandi tungumál</string>
-    <string name="settings_language_community_translation_hint">Þýðingar fyrir sum tungumál geta vantað eða verið ófullnægjandi. Til að þýða ný tungumál eða bæta núverandi þýðingar, farðu á %1$s</string>
     <string name="settings_language_dialog_title">Tungumál forrits</string>
+    <string name="settings_language_translate_title">Hjálpaðu við þýðingu Morphe</string>
     <string name="settings_language_search_no_results">Engar niðurstöður fundust</string>
     <string name="settings_section_theme">Þema</string>
     <string name="settings_appearance_theme_mode">Útlitsstilling</string>
+    <string name="settings_appearance_theme_mode_description">Skipta á milli ljóss, dökks, hreins svarts eða kerfisþema</string>
     <string name="settings_theme_light">Ljóst</string>
     <string name="settings_theme_dark">Dökkt</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Litastíll</string>
+    <string name="settings_appearance_color_style_description">Lituð Morphe litaþáttur eða grágrátt einlitastíl</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Einlitur</string>
-    <string name="settings_toggle_sharp_corners_label">Hvöss horn</string>
-    <string name="settings_toggle_sharp_corners_desc">Gera spjöld, glugga og hnappa ferlaga</string>
+    <string name="settings_toggle_sharp_corners_label">Skarpar horn</string>
+    <string name="settings_toggle_sharp_corners_desc">Gera spjöld, glugga og hnappa ferhyrnda</string>
     <string name="settings_section_accent_color">Áherslulitur</string>
     <string name="settings_accent_clear_description">Hreinsa áherslulit</string>
     <string name="settings_accent_custom_description">Sérsniðinn áherslulitur</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">Forritsspjöld</string>
     <string name="settings_app_cards_color_all">Litur fyrir hvert spjald</string>
     <string name="settings_app_cards_color_all_desc">Spjöld sem þú hefur sérsniðið hvert fyrir sig halda sínum lit</string>
-    <string name="settings_section_background_animation">Bakgrunnshreyfimynd</string>
+    <string name="settings_toggle_app_icons_label">Tákni appa</string>
+    <string name="settings_toggle_app_icons_desc">Sýnir tákn hvers apps, dregin úr staðbundnum APK-um eða tengdu tækinu</string>
+    <string name="settings_appearance_more_apps_card">Kort yfir fleiri forrit</string>
+    <string name="settings_appearance_more_apps_card_description">Sýnir kort undir forritum sem leiðir til samfélagsbótapakkanna</string>
+    <string name="settings_section_effects">Áhrif</string>
+    <string name="settings_appearance_background_animation">Bakgrunnshreyfing</string>
+    <string name="settings_appearance_background_animation_description">Hreyfingarmyndin sem spilarst aftan við skjái forritsins</string>
     <string name="settings_background_circles">Hringir</string>
     <string name="settings_background_rings">Baugar</string>
     <string name="settings_background_mesh">Möskvi</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Expert ham</string>
     <string name="settings_toggle_expert_mode_desc">Full stjórn yfir vali og stillingum plástra</string>
+    <string name="settings_expert_mode_disabled_in_flow">Farðu til baka á heimasíðuna til að breyta ham</string>
     <string name="settings_toggle_route_links_label">Beina tenglum á plástrað forrit</string>
     <string name="settings_toggle_route_links_desc">Eftir uppsetningu í gegnum ADB, láttu plástraða forritið opna studda veftengla sína í stað vafrans eða upprunalega/sjálfgefna forritsins</string>
     <string name="settings_toggle_disable_stock_links_label">Gera tengla upprunalega forritsins óvirka</string>
@@ -697,18 +709,18 @@
     <string name="settings_toggle_developer_options_label">Þróunarvalkostir</string>
     <string name="settings_toggle_developer_options_desc">Fyrir plásturhönnuði. Opnar sett af verkflæðisvalkostum til að byggja og prófa plástra (sjá skjölin fyrir fullan lista). Sem stendur er það að benda staðværri heimild á möppu svo Morphe hleður alltaf nýjustu .mpp hennar</string>
     <string name="settings_dev_bytecode_mode_label">Bytecode-hamur</string>
-    <string name="settings_dev_bytecode_mode_desc">Breytingahama beitt á DEX bytecode við patching</string>
+    <string name="settings_dev_bytecode_mode_desc">Umbreytingarhamur beitt á DEX bytecode við plástrun</string>
     <string name="settings_dev_bytecode_mode_strip_fast">Hraður</string>
     <string name="settings_dev_bytecode_mode_strip_safe">Öruggur</string>
     <string name="settings_dev_bytecode_mode_full">Fullur</string>
     <string name="settings_dev_validate_label">Staðfesting á fingrafori</string>
-    <string name="settings_dev_validate_desc">Staðfesta að hvert match() samsvari að einu aðferð (hægari patching, fyrir prófanir á patchum)</string>
+    <string name="settings_dev_validate_desc">Staðfestir að hvert match() passi við eina aðferð (hægari plástrun, fyrir prófanir á breytistillingum)</string>
     <string name="settings_dev_verify_sdk_label">Staðfesting á Android SDK</string>
     <string name="settings_dev_verify_sdk_desc">Staðfestu lagaða DEX og APK með Android SDK tólum (d8, zipalign). Getur gefið rangar já-svör</string>
-    <string name="settings_dev_sdk_path_label">Android SDK vinnslumöppul</string>
+    <string name="settings_dev_sdk_path_label">Android SDK-mappa</string>
     <string name="settings_dev_sdk_path_auto">Sjálfkrafa greint</string>
-    <string name="settings_dev_sdk_not_found">Android SDK fannst ekki. Stilltu ANDROID_HOME eða leitaðu að SDK vinnslumöppul</string>
-    <string name="settings_dev_sdk_picker_title">Veldu Android SDK vinnslumöppul</string>
+    <string name="settings_dev_sdk_not_found">Android SDK fannst ekki. Stilltu ANDROID_HOME eða veldu SDK-möppu</string>
+    <string name="settings_dev_sdk_picker_title">Veldu Android SDK-möppu</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Sjálfvirk hreinsun tímabundinna skráa</string>
     <string name="settings_toggle_auto_cleanup_desc">Eyða tímabundnum skrám eftir plástrun</string>
@@ -723,20 +735,36 @@
     <string name="settings_output_folder_not_found">Mappa fannst ekki, verður búin til við næstu plástrun</string>
     <string name="settings_toggle_auto_start_adb_label">Ræsa ADB sjálfkrafa</string>
     <string name="settings_toggle_auto_start_adb_desc">Ræstu ADB-þjóninn við ræsingu svo tengd tæki séu vöktuð. Þegar slökkt er, ræsir Morphe aldrei þjóninn og uppsetningar/sendingaraðgerðir eru óvirkar</string>
-    <string name="settings_section_storage">Geymsla &amp; önnuminkni</string>
-    <string name="settings_cache_summary">Cache: %1$s (pöttar + skrár)</string>
-    <string name="settings_cache_clear_button">Hreinsa cache</string>
-    <string name="settings_cache_cleared">Cache hreinsuð</string>
-    <string name="settings_cache_clear_failed">Hreinsun mislaðist</string>
-    <string name="settings_cache_confirm_title">Hreinsa cache?</string>
-    <string name="settings_cache_confirm_message">Þetta mun eyðastalnum pöttum og skrár. Pöttum verður hlaðið aftur þegar það er nauðsynlegt</string>
+    <string name="settings_section_storage">Geymsla &amp; skyndiminni</string>
+    <string name="settings_cache_clear_all_title">Hreinsa allan vistivörunni</string>
+    <string name="settings_cache_category_patches">Páttar</string>
+    <string name="settings_cache_category_logs">Skráir</string>
+    <string name="settings_cache_category_temp">Tímabundnar skrár</string>
+    <string name="settings_cache_category_avatars">Vistaðar myndir</string>
+    <string name="settings_cache_category_app_icons">Cache fyrir tákn appa</string>
+    <string name="settings_cache_confirm_patches_title">Hreinsa uppfærslur?</string>
+    <string name="settings_cache_confirm_patches_message">Þetta eyðir herunteraðum uppfærsluskrám. Uppfærslur verða herunteraðar aftur þegar þær þast</string>
+    <string name="settings_cache_confirm_logs_title">Hreinsa skráir?</string>
+    <string name="settings_cache_confirm_logs_message">Þetta eyðir öllum skráum forritsins og logcat útdrættum tækisins</string>
+    <string name="settings_cache_confirm_temp_title">Hreinsa burstraunarskráir?</string>
+    <string name="settings_cache_confirm_temp_message">Þetta eyðir burstraunarskrám og vinnuskráum</string>
+    <string name="settings_cache_confirm_avatars_title">Hreinsa vistaðar myndir?</string>
+    <string name="settings_cache_confirm_avatars_message">Þetta eyðir öllum vistaðum myndum af notendum frá netinu</string>
+    <string name="settings_cache_confirm_app_icons_title">Hreinsa cache fyrir tákn appa?</string>
+    <string name="settings_cache_confirm_app_icons_message">Þetta eyðir öllum táknum appa sem dregin voru úr APK-um og tækjum</string>
+    <string name="settings_cache_category_cleared">%1$s hreinsað</string>
+    <string name="settings_cache_category_clear_failed">Mistókst að hreinsa %1$s</string>
+    <string name="settings_cache_cleared">Skyndiminni hreinsað</string>
+    <string name="settings_cache_clear_failed">Ekki tókst að hreinsa</string>
+    <string name="settings_cache_confirm_title">Hreinsa skyndiminni?</string>
+    <string name="settings_cache_confirm_message">Þetta mun eyðast hlaðnum uppfærslum, skrárínum og tímabundnum skrám. Uppfærslur verða hlaðnar aftur þegar þær eru nauðsynlegar</string>
     <string name="settings_storage_open_app_data_button">Opna gögn appsins</string>
-    <string name="settings_storage_open_logs_button">Opna skrár</string>
+    <string name="settings_storage_open_logs_button">Opna logga</string>
     <string name="settings_section_about">Um</string>
     <string name="settings_about_version">Útgáfa %1$s</string>
     <string name="settings_about_changelogs_title">Skoða breytingaskrár</string>
     <string name="settings_about_changelogs_desc">Skoðaðu nýjustu breytingarnar í þessari uppfærslu</string>
-    <string name="settings_about_licenses_title">Leyfissamningar opnaðs kóða</string>
+    <string name="settings_about_licenses_title">Leyfi opins hugbúnaðar</string>
     <string name="settings_about_licenses_desc">Skoða leyfissamninga þriðja aðila</string>
     <string name="settings_about_documentation_title">Skjöl</string>
     <string name="settings_about_documentation_desc">Leiðbeiningar um plástrun, heimildir og bilanaleit</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">Keyrsluannálar plástraðs forrits</string>
     <string name="settings_runtime_logs_desc">Fanga annála frá símanum þínum eftir að plástrað forrit hrynur eða hegðar sér illa. Hreinsaðu áður en þú endurskapar villuna, vistaðu síðan síaða úttakið til að hengja við villuskýrslu</string>
     <string name="settings_runtime_logs_device_info">Tæki: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Ekkert tæki tengt. Tengdu símann þinn með USB-villuleit virka</string>
+    <string name="settings_runtime_logs_no_device">Engt tæki tengt. Tengdu símann þinn með USB eða Wi-Fi debugging virkt</string>
     <string name="settings_runtime_logs_clearing">Hreinsa…</string>
     <string name="settings_runtime_logs_clear_button">Hreinsa annála tækis</string>
     <string name="settings_runtime_logs_failed_to_clear">Mistókst að hreinsa annála</string>
@@ -818,7 +846,7 @@
     <string name="changelog_not_available">Breytingaskrá ekki tiltæk</string>
     <string name="changelog_section_app_support">Stuðningur við forrit</string>
     <string name="changelog_section_fixes">Leiðréttingar</string>
-    <string name="changelog_section_improvements">Bætir</string>
+    <string name="changelog_section_improvements">Endurbætur</string>
     <string name="changelog_section_new">Nýtt</string>
     <string name="changelog_section_other">Breytingar</string>
     <string name="changelog_section_performance">Afköst</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Uppsprettur</string>
     <string name="nav_apps">Forrit</string>
+    <string name="nav_settings">Stillingar</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Leita í stillingar</string>
+    <string name="settings_search_no_results">Engar viðeigandi stillingar</string>
+    <string name="settings_back_to_about">Til baka í Um</string>
+    <string name="licenses_back_to_list">Til baka í leyfisnýtingu</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Fleiri forrit</string>
+    <string name="home_more_apps_subtitle">Samfélagsbótapakkar</string>
+    <string name="community_patches_notice_title">Bótapakkar frá þriðja aðila</string>
+    <string name="community_patches_notice_message">Bótapakkar samfélagsins eru gerðir og viðhalðnir af höfundum þeirra. Morphe fer ekki yfir né staðfestir bótapakka frá þriðja aðila og ber ekki ábyrgð á efni þeirra eða því sem þeir gera á tækinu þínu.</string>
 </resources>

@@ -30,7 +30,7 @@
     <string name="error_drop_valid_apk">कृपया वैध .apk, .apkm, .xapk, किंवा .apks फाईल ड्रॉप करा</string>
     <string name="status_saving">सेव्ह होत आहे…</string>
     <string name="installed_on">%1$s वर इंस्टॉल केले</string>
-    <string name="device_default">डिवाइस</string>
+    <string name="device_default">डिव्हाइस</string>
     <string name="unknown">अज्ञात</string>
     <string name="installing">इंस्टॉल होत आहे…</string>
     <string name="folder">फोल्डर</string>
@@ -57,9 +57,9 @@
     <string name="filter_apps_hint">अ‍ॅप्स फिल्टर करा…</string>
     <string name="version">आवृत्ती</string>
     <string name="version_label_stable">स्थिर</string>
-    <string name="version_label_prerelease">प्रिरिलीज</string>
+    <string name="version_label_prerelease">प्री-रिलीझ</string>
     <string name="version_label_experimental">प्रायोगिक</string>
-    <string name="version_label_latest_stable">ताज्या स्थिर आवृत्ती</string>
+    <string name="version_label_latest_stable">नवीनतम स्थिर आवृत्ती</string>
     <string name="version_label_recommended">सुचवलेले</string>
     <string name="version_label_supported">समर्थित</string>
     <string name="app_info_arch_label">आर्किटेक्चर</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">अज्ञात कारणास्तव पॅचिंग अयशस्वी झाले</string>
     <string name="error_log_label">एरर लॉग</string>
     <string name="back">मागे</string>
+    <string name="open">उघडा</string>
     <string name="open_folder">फोल्डर उघडा</string>
     <string name="temporary_files_label">तात्पुरत्या फाईल्स</string>
     <string name="size_can_be_freed_label">%1$s मोकळे केले जाऊ शकते</string>
@@ -127,8 +128,8 @@
     <string name="adb_error_verification_failure">पॅकेज पडताळणी अयशस्वी झाली</string>
     <string name="adb_error_generic">इंस्टॉलेशन अयशस्वी: %1$s</string>
     <string name="adb_error_not_found">ADB आढळला नाही. कृपया Android SDK Platform Tools इंस्टॉल करा</string>
-    <string name="adb_error_unauthorized">डिव्हाइस कनेक्ट केले आहे परंतु अधिकृत नाही. कृपया तुमच्या डिव्हाइसवरील USB डीबगिंग प्रॉम्प्ट स्वीकारा</string>
-    <string name="adb_error_no_devices">कोणतेही डिव्हाइस कनेक्ट केलेले नाही. कृपया USB डीबगिंग सक्षम करून तुमचे Android डिव्हाइस कनेक्ट करा</string>
+    <string name="adb_error_unauthorized">डिव्हाइस कनेक्ट केले आहे, पण त्याला अधिकृतता नाही. कृपया तुमच्या डिव्हाइसवरील USB डीबगिंग प्रॉम्प्ट स्वीकारा</string>
+    <string name="adb_error_no_devices">कोणतेही डिव्हाइस कनेक्ट केलेले नाही. कृपया USB किंवा Wi-Fi डीबगिंग सक्षम करून तुमचे Android डिव्हाइस कनेक्ट करा</string>
     <string name="adb_error_device_not_found">डिव्हाइस %1$s आढळले नाही</string>
     <string name="adb_error_multiple_devices">अनेक डिव्हाइसेस कनेक्ट झाले आहेत. कृपया एक निवडा</string>
     <string name="adb_error_apk_not_found">APK फाईल सापडली नाही: %1$s</string>
@@ -141,12 +142,12 @@
     <string name="adb_error_run_command">कमांड चालवण्यात अयशस्वी: %1$s</string>
     <string name="adb_error_pm_list_packages">pm list packages अयशस्वी: %1$s</string>
     <string name="adb_status_routing_links">%1$s कडे लिंक्स रूट करत आहे…</string>
-    <string name="adb_status_restoring_links">डिफॉल्ट लिंक हँडलिंग रिस्टोर करत आहे…</string>
-    <string name="adb_status_disabling_links">%1$s मधील लिंक्स डिसेबल करत आहे…</string>
-    <string name="adb_status_enabling_links">%1$s मधील लिंक्स पुन्हा इनेबल करत आहे…</string>
+    <string name="adb_status_restoring_links">डिफॉल्ट लिंक हँडलिंग पुनर्संचयित करत आहे…</string>
+    <string name="adb_status_disabling_links">%1$s मधील लिंक्स अक्षम करत आहे…</string>
+    <string name="adb_status_enabling_links">%1$s मधील लिंक्स पुन्हा सक्षम करत आहे…</string>
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
     <string name="version_status_checksum_mismatch">चेकसम जुळत नाही</string>
-    <string name="version_status_checksum_corrupted">फाईल करप्ट असू शकते, APKMirror वरून पुन्हा डाउनलोड करा</string>
+    <string name="version_status_checksum_corrupted">फाईल खराब असू शकते, APKMirror वरून पुन्हा डाउनलोड करा</string>
     <string name="version_status_checksum_failed">चेकसम पडताळणी अयशस्वी झाली</string>
     <string name="version_status_checksum_matches">चेकसम APKMirror शी जुळते</string>
     <string name="version_status_newer_stable_available">नवीन स्थिर v%1$s उपलब्ध आहे</string>
@@ -178,7 +179,7 @@
     <string name="home_validation_parse_failed">APK पार्स करता आला नाही. फाईल दूषित असू शकते किंवा वैध APK नसू शकते</string>
     <!-- Home Screen - ApkInfoCard -->
     <string name="home_apk_info_remove_description">APK काढून टाका</string>
-    <string name="home_apk_info_limited_info_warning">या APK चा मॅनिफेस्ट पूर्णपणे वाचता आला नाही (स्प्लिट बंडलसाठी सामान्य आहे). खालील तपशील अंदाजे आहेत, पॅचिंग तरीही कार्य करावे</string>
+    <string name="home_apk_info_limited_info_warning">या APK चा मॅनिफेस्ट पूर्णपणे वाचता आला नाही (स्प्लिट बंडलसाठी सामान्य आहे). खालील तपशील अंदाजे आहेत, तरीही पॅचिंग काम करेल</string>
     <string name="home_apk_info_unsupported_app_warning">या ॲपसाठी कोणतेही सुसंगत पॅचेस आढळले नाहीत. तुम्ही तरीही पुढे जाऊ शकता, परंतु पॅचिंगचा कोणताही परिणाम होणार नाही</string>
     <string name="home_apk_info_unsupported_app_simple_warning">या ॲपसाठी कोणतेही सुसंगत पॅचेस आढळले नाहीत</string>
     <string name="home_apk_info_build_label">बिल्ड</string>
@@ -255,9 +256,9 @@
     <string name="home_detail_using_label">वापरत आहे</string>
     <string name="home_detail_apk_origin_sub">ज्या APK मधून या ॲपला पॅच केले गेले आहे</string>
     <string name="home_detail_reading_chosen_bundle">निवडलेले बंडल वाचत आहे...</string>
-    <string name="home_detail_bundle_not_downloaded_warning">खालील आवृत्त्या %1$s सपोर्ट करते. तुम्ही %2$s निवडले आहे, जे डाउनलोड केलेले नाही, त्यामुळे ते काय सपोर्ट करते हे अज्ञात आहे</string>
+    <string name="home_detail_bundle_not_downloaded_warning">खालील आवृत्त्या %1$s सपोर्ट करतात. तुम्ही %2$s निवडले आहे, जे डाउनलोड केलेले नाही, त्यामुळे ते काय सपोर्ट करते हे अज्ञात आहे</string>
     <string name="home_detail_bundle_does_not_support_warning">%1$s हे %2$s ला सपोर्ट करत नाही. त्याऐवजी यापैकी एक निवडा</string>
-    <string name="home_detail_versions_what_bundle_supports">खालील आवृत्त्या %1$s सपोर्ट करते</string>
+    <string name="home_detail_versions_what_bundle_supports">खालील आवृत्त्या %1$s सपोर्ट करतात</string>
     <string name="home_detail_choose_apk_button">APK निवडा</string>
     <string name="home_detail_select_apk_title">पॅच करण्यासाठी APK निवडा</string>
     <string name="home_detail_new_source_button">नवीन स्रोत</string>
@@ -281,7 +282,7 @@
     <string name="home_detail_source_disabled_alternatives_sub">मूळ स्त्रोत अक्षम आहे. पर्यायी स्त्रोत निवडा किंवा स्त्रोतांमध्ये तो पुन्हा सक्षम करा</string>
     <string name="home_detail_no_compatible_source">कोणताही सुसंगत स्त्रोत सक्षम नाही</string>
     <string name="home_detail_choose_source">पॅच स्त्रोत निवडा</string>
-    <string name="home_advice_unsupported_by_patches">v%1$s ला आता नवीनतम पॅचेद्वारे समर्थन दिले जात नाही</string>
+    <string name="home_advice_unsupported_by_patches">v%1$s ला आता नवीनतम पॅचेसद्वारे समर्थन दिले जात नाही</string>
     <string name="home_date_today">आज</string>
     <string name="home_date_yesterday">काल</string>
     <string name="home_date_days_ago">%1$d दिवसांपूर्वी</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">अयशस्वी पॅचेस: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB बंद आहे · इंस्टॉल करण्यासाठी सक्षम करा</string>
-    <string name="result_adb_connect_device_hint">ADB द्वारे इंस्टॉल करण्यासाठी USB वापरून डिव्हाइस कनेक्ट करा</string>
+    <string name="result_adb_connect_device_hint">ADB द्वारे इंस्टॉल करण्यासाठी USB किंवा Wi-Fi द्वारे डिव्हाइस कनेक्ट करा</string>
     <string name="result_screen_patch_another_button">दुसरे पॅच करा</string>
     <string name="result_screen_install_on_device_label">%1$s वर इंस्टॉल करा</string>
     <string name="result_screen_links_routed_label">लिंक्स पॅच केलेल्या ॲपवर रूट केल्या आहेत</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">%1$s वरून अनमाउंट होत आहे…</string>
     <string name="result_adb_root_not_detected">%1$s वर रूट ॲक्सेस आढळला नाही. Magisk/KernelSU/APatch इंस्टॉल केले आहे आणि su परवानगी दिली आहे याची खात्री करा</string>
     <string name="result_adb_stock_app_not_installed">स्टॉक ॲप %1$s हे %2$s वर इंस्टॉल केलेले नाही. माउंट करण्यापूर्वी कृपया अधिकृत ॲप इंस्टॉल करा</string>
+    <string name="result_adb_mount_version_mismatch">%3$s वरील स्टॉक ॲप v%1$s आहे, परंतु पॅच केलेला APK v%2$s आहे. रूट माऊंटसाठी जुळणाऱ्या आवृत्त्यांची आवश्यकता असते</string>
+    <string name="result_adb_mount_abi_mismatch">डिव्हाइस %3$s हे %1$s आहे, परंतु APK मध्ये फक्त [%2$s] आहे. नेटिव्ह लायब्ररी लोड करण्यात अडथळा येईल</string>
     <string name="result_link_default_restored">डिफॉल्ट लिंक हँडलिंग पुनर्संचयित केले</string>
     <string name="result_link_routed_stock_disabled">लिंक्स पॅच केलेल्या ॲपवर रूट केल्या आहेत, स्टॉक अक्षम केले</string>
     <string name="result_adb_not_found_hint">ADB सापडले नाही. थेट इंस्टॉलेशन सक्षम करण्यासाठी Android SDK Platform Tools इंस्टॉल करा</string>
     <string name="result_adb_section_title">ADB इंस्टॉल</string>
     <string name="result_adb_no_devices">कोणतेही डिव्हाइसेस कनेक्ट केलेले नाहीत</string>
-    <string name="result_adb_connect_hint">USB डीबगिंग सक्षम करून USB द्वारे कनेक्ट करा</string>
+    <string name="result_adb_connect_hint">USB किंवा Wi-Fi डीबगिंगद्वारे कनेक्ट करा</string>
     <string name="result_device_status_unauth">अनऑथ</string>
     <string name="result_adb_update_button">%1$s वर अपडेट करा</string>
     <string name="result_adb_select_device_button">डिव्हाइस निवडा</string>
@@ -533,15 +536,15 @@
     <string name="source_error_local_not_found">स्थानिक पॅच पाथ सापडला नाही: %1$s</string>
     <string name="source_error_local_no_mpp">फोल्डरमध्ये कोणतीही .mpp फाईल्स सापडली नाहीत: %1$s</string>
     <string name="source_error_no_repository">स्त्रोतासाठी कोणतेही रिपॉझिटरी कॉन्फिगर केलेले नाही</string>
-    <string name="source_error_fetch_releases">रिलीजेस मिळवता आले नाहीत</string>
+    <string name="source_error_fetch_releases">रिलीझ मिळवता आले नाहीत</string>
     <string name="source_error_failed_to_load">लोड करण्यात अयशस्वी</string>
     <string name="source_error_github_pat_required">पुल रिक्वेस्ट सोर्सेस डाउनलोड करण्यासाठी GitHub PAT आवश्यक आहे</string>
     <string name="source_error_pr_no_artifact">पुल रिक्वेस्टसाठी कोणतेही आर्टिफॅक्ट्स सापडले नाहीत</string>
     <string name="source_error_patcher_incompatible">हे सोर्स %1$s पॅचरसाठी बनवले आहे, परंतु Morphe %2$s मध्ये पॅचर %3$s समाविष्ट आहे. ते वापरण्यासाठी Morphe अपडेट करा</string>
     <string name="version_label_local">याच फोनमधील</string>
     <string name="source_sheet_remote_label">बाहेरून</string>
-    <string name="add_source">मूळ जोडा</string>
-    <string name="source_sheet_title">सुधारणांची मुळे</string>
+    <string name="add_source">स्रोत जोडा</string>
+    <string name="source_sheet_title">पॅच स्रोत</string>
     <string name="source_sheet_reload_description">पॅचेस रीलोड करा</string>
     <string name="source_sheet_multi_mode_hint">कोणतेही संयोजन सक्षम/अक्षम करा. सर्व सक्षम सोर्समधील पॅचेस एकत्रित केले जातात</string>
     <string name="source_sheet_done_button">पूर्ण झाले</string>
@@ -575,7 +578,7 @@
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo किंवा gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">GitHub, GitLab, किंवा morphe.software/add-source लिंक स्वीकारते</string>
     <string name="patch_source_dialog_pre_release_title">प्री-रिलीज पॅचेस</string>
-    <string name="patch_source_dialog_pre_release_hint">नवीन प्रायोगिक सुधारणा सर्वांच्या आधी वापरा</string>
+    <string name="patch_source_dialog_pre_release_hint">नवीन प्रायोगिक पॅच आवृत्त्यांमध्ये सर्वात आधी प्रवेश मिळवा</string>
     <string name="patch_source_dialog_error_name_required">नाव आवश्यक आहे</string>
     <string name="patch_source_dialog_error_invalid_url">वैध GitHub किंवा GitLab URL प्रविष्ट करा</string>
     <string name="patch_source_dialog_error_invalid_file">वैध .mpp फाईल निवडा</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB सापडले नाही</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Tools इंस्टॉल करा</string>
     <string name="device_indicator_no_devices_title">कोणतेही डिव्हाइस आढळले नाही</string>
-    <string name="device_indicator_no_devices_subtitle">USB डीबगिंग सक्षम असलेले डिव्हाइस कनेक्ट करा</string>
+    <string name="device_indicator_no_devices_subtitle">USB किंवा Wi-Fi डीबगिंग सक्षम असलेले डिव्हाइस कनेक्ट करा</string>
     <string name="device_indicator_enable_debugging_title">USB डीबगिंग सक्षम करा</string>
     <string name="device_indicator_enable_debugging_subtitle">सेटिंग्ज → डेव्हलपर ऑप्शन्स → USB डीबगिंग</string>
     <string name="device_indicator_status_connected">कनेक्ट झाले</string>
@@ -632,7 +635,7 @@
     <string name="licenses_search_placeholder">लायब्ररीज, SPDX id, uniqueId शोधा…</string>
     <string name="licenses_row_authors_label">लेखक</string>
     <string name="licenses_row_org_label">संस्था</string>
-    <string name="licenses_row_link_source">मूळ</string>
+    <string name="licenses_row_link_source">स्रोत</string>
     <string name="licenses_notice_button">सूचना</string>
     <string name="licenses_notice_title">Morphe सूचना</string>
     <string name="licenses_notice_subtitle">आवश्यक श्रेय &amp; वॉरंटी विधान (GPLv3 §7)</string>
@@ -648,19 +651,21 @@
     <string name="settings_dialog_reset_button">रीसेट करा</string>
     <string name="settings_theme_system">सिस्टम</string>
     <string name="settings_search_languages_placeholder">भाषा शोधा</string>
-    <string name="settings_dialog_resolves_to_message">रिझोल्हज टू: %1$s</string>
+    <string name="settings_dialog_resolves_to_message">यावर रिझॉल्व्ह होते: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">भाषा</string>
     <string name="settings_language_current_title">सध्याची भाषा</string>
-    <string name="settings_language_community_translation_hint">काही भाषांसाठी भाषांतरे गहाळ किंवा अपूर्ण असू शकतात. नवीन भाषांचे भाषांतर करण्यासाठी किंवा विद्यमान भाषांतरे सुधारण्यासाठी, %1$s ला भेट द्या</string>
     <string name="settings_language_dialog_title">अॅपची भाषा</string>
+    <string name="settings_language_translate_title">Morphe चे भाषांतर करण्यास मदत करा</string>
     <string name="settings_language_search_no_results">कोणतेही निकाल आढळले नाहीत</string>
     <string name="settings_section_theme">थीम</string>
     <string name="settings_appearance_theme_mode">थीम मोड</string>
+    <string name="settings_appearance_theme_mode_description">लाईट, डार्क, प्युअर ब्लॅक किंवा सिस्टम थीममध्ये स्विच करा</string>
     <string name="settings_theme_light">लाईट</string>
     <string name="settings_theme_dark">डार्क</string>
     <string name="settings_theme_amoled">अमोलेड</string>
     <string name="settings_appearance_color_style">रंग शैली</string>
+    <string name="settings_appearance_color_style_description">टिंटेड Morphe पॅलेट किंवा ग्रेस्केल मोनोक्रोम शैली</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">मोनोक्रोम</string>
     <string name="settings_toggle_sharp_corners_label">शार्प कॉर्नर्स</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">ॲप कार्ड्स</string>
     <string name="settings_app_cards_color_all">प्रत्येक कार्डसाठी रंग</string>
     <string name="settings_app_cards_color_all_desc">तुम्ही वैयक्तिकरित्या कस्टमाइझ केलेल्या कार्ड्सचा स्वतःचा रंग कायम राहील</string>
-    <string name="settings_section_background_animation">बॅकग्राउंड ॲनिमेशन</string>
+    <string name="settings_toggle_app_icons_label">अॅप आयकॉन्स</string>
+    <string name="settings_toggle_app_icons_desc">स्थानिक APKs किंवा कनेक्ट केलेल्या डिव्हाइसमधून काढलेले प्रत्येक अॅपचे आयकॉन दाखवते</string>
+    <string name="settings_appearance_more_apps_card">अधिक ॲप्स कार्ड</string>
+    <string name="settings_appearance_more_apps_card_description">ॲप्सच्या खाली एक कार्ड दर्शवते जे कम्युनिटी पॅचेजकडे घेऊन जाते</string>
+    <string name="settings_section_effects">इफेक्ट्स</string>
+    <string name="settings_appearance_background_animation">पार्श्वभूमी ॲनिमेशन</string>
+    <string name="settings_appearance_background_animation_description">ॲप स्क्रीनच्या मागे चालणारे ॲनिमेशन</string>
     <string name="settings_background_circles">वर्तुळे</string>
     <string name="settings_background_rings">वलये</string>
     <string name="settings_background_mesh">मेश</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">एक्सपर्ट मोड</string>
     <string name="settings_toggle_expert_mode_desc">पॅच निवड आणि कॉन्फिगरेशनवर पूर्ण नियंत्रण</string>
+    <string name="settings_expert_mode_disabled_in_flow">मोड बदलण्यासाठी होमवर परत जा</string>
     <string name="settings_toggle_route_links_label">लिंक्स पॅच केलेल्या ॲपवर रूट करा</string>
     <string name="settings_toggle_route_links_desc">ADB द्वारे इंस्टॉल केल्यानंतर, पॅच केलेले ॲप ब्राउझर किंवा स्टॉक/डिफॉल्ट ॲपऐवजी त्याच्या समर्थित वेब लिंक्स उघडेल याची खात्री करा</string>
     <string name="settings_toggle_disable_stock_links_label">स्टॉक ॲपच्या लिंक्स अक्षम करा</string>
@@ -722,14 +734,30 @@
     <string name="settings_output_folder_picker_title">आउटपुट फोल्डर निवडा</string>
     <string name="settings_output_folder_not_found">फोल्डर सापडले नाही, पुढील पॅचवर तयार केले जाईल</string>
     <string name="settings_toggle_auto_start_adb_label">ADB ऑटो-स्टार्ट करा</string>
-    <string name="settings_toggle_auto_start_adb_desc">लॉन्चवर ADB डेमन स्पॉन करा जेणेकरून कनेक्ट केलेल्या उपकरणांवर लक्ष ठेवले जाईल. जेव्हा हे बंद असते, तेव्हा Morphe कधीही सर्व्हर सुरू करत नाही आणि इंस्टॉल/पुश फीचर्स अक्षम केले जातात</string>
+    <string name="settings_toggle_auto_start_adb_desc">लॉन्चवर ADB डेमन सुरू करा, जेणेकरून कनेक्ट केलेल्या डिव्हाइसेसवर लक्ष ठेवले जाईल. बंद असताना, Morphe कधीही सर्व्हर सुरू करत नाही आणि इंस्टॉल/पुश फीचर्स अक्षम केले जातात</string>
     <string name="settings_section_storage">स्टोरेज आणि कॅशे</string>
-    <string name="settings_cache_summary">कॅशे: %1$s (पॅचेस + लॉग्स)</string>
-    <string name="settings_cache_clear_button">कॅशे साफ करा</string>
+    <string name="settings_cache_clear_all_title">सर्व कॅशे साफ करा</string>
+    <string name="settings_cache_category_patches">अनेक सुधारणा</string>
+    <string name="settings_cache_category_logs">लॉग्स</string>
+    <string name="settings_cache_category_temp">तात्पुरत्या फायली</string>
+    <string name="settings_cache_category_avatars">अवतार कॅशे</string>
+    <string name="settings_cache_category_app_icons">अॅप आयकॉन कॅशे</string>
+    <string name="settings_cache_confirm_patches_title">पॅचेस हटवायचे आहेत?</string>
+    <string name="settings_cache_confirm_patches_message">यामुळे डाउनलोड केलेल्या पॅच फायली हटवल्या जातील. गरज पडल्यास पॅचेस पुन्हा डाउनलोड केले जातील</string>
+    <string name="settings_cache_confirm_logs_title">लॉग्स हटवायचे आहेत?</string>
+    <string name="settings_cache_confirm_logs_message">यामुळे सर्व ॲप्लिकेशन लॉग फायली आणि डिव्हाइस लॉगकॅट डम्प्स हटवले जातील</string>
+    <string name="settings_cache_confirm_temp_title">तात्पुरत्या फायली हटवायच्या आहेत?</string>
+    <string name="settings_cache_confirm_temp_message">यामुळे तात्पुरत्या स्क्रॅच आणि वर्कस्पेस फायली हटवल्या जातील</string>
+    <string name="settings_cache_confirm_avatars_title">अवतार कॅशे हटवायचा आहे?</string>
+    <string name="settings_cache_confirm_avatars_message">यामुळे सर्व कॅश केलेल्या रिमोट अवतार प्रतिमा हटवल्या जातील</string>
+    <string name="settings_cache_confirm_app_icons_title">अॅप आयकॉन कॅशे क्लिअर करायचा आहे का?</string>
+    <string name="settings_cache_confirm_app_icons_message">यामुळे APKs आणि डिव्हाइसेसमधून काढलेले सर्व अॅप आयकॉन्स हटवले जातील</string>
+    <string name="settings_cache_category_cleared">%1$s हटवले</string>
+    <string name="settings_cache_category_clear_failed">%1$s क्लिअर करण्यात अयशस्वी</string>
     <string name="settings_cache_cleared">कॅशे साफ केला</string>
     <string name="settings_cache_clear_failed">साफ करणे अयशस्वी झाले</string>
     <string name="settings_cache_confirm_title">कॅशे साफ करायचा आहे का?</string>
-    <string name="settings_cache_confirm_message">यामुळे डाउनलोड केलेले पॅचेस आणि लॉग फाइल्स हटवल्या जातील. गरजेनुसार पॅचेस पुन्हा डाउनलोड केले जातील</string>
+    <string name="settings_cache_confirm_message">यामुळे डाउनलोड केलेले पॅचेस, लॉग फाइल्स आणि तात्पुरत्या फाइल्स डिलीट केल्या जातील. आवश्यकतेनुसार पॅचेस पुन्हा डाउनलोड केले जातील</string>
     <string name="settings_storage_open_app_data_button">ॲप डेटा उघडा</string>
     <string name="settings_storage_open_logs_button">लॉग्स उघडा</string>
     <string name="settings_section_about">बद्दल</string>
@@ -760,7 +788,7 @@
     <string name="settings_signing_key_alias_label">की एलियास</string>
     <string name="settings_signing_key_password_label">की पासवर्ड</string>
     <string name="settings_signing_password_hide">लपवा</string>
-    <string name="settings_signing_password_show">दाखा</string>
+    <string name="settings_signing_password_show">दाखवा</string>
     <string name="settings_signing_verify_button">क्रेडेंशियल्स सत्यापित करा</string>
     <string name="settings_signing_verify_could_not_open">कीस्टोअर उघडता आले नाही, कीस्टोअर पासवर्ड तपासा</string>
     <string name="settings_signing_verify_valid">क्रेडेंशियल्स वैध आहेत</string>
@@ -775,7 +803,7 @@
     <!-- Settings - Keystore Info Dialog -->
     <string name="settings_cert_info_title">प्रमाणपत्र माहिती</string>
     <string name="settings_cert_info_alias">टोपणनाव</string>
-    <string name="settings_cert_info_issuer">निघळणारे</string>
+    <string name="settings_cert_info_issuer">जारीकर्ता</string>
     <string name="settings_cert_info_valid_from">यापासून वैध</string>
     <string name="settings_cert_info_valid_until">यापर्यंत वैध</string>
     <string name="settings_cert_info_sha256">SHA-256 फिंगरप्रिंट</string>
@@ -786,10 +814,10 @@
     <!-- Settings - Runtime Logs -->
     <string name="settings_runtime_logs_title">पॅच केलेल्या ॲपचे रनटाइम लॉग्स</string>
     <string name="settings_runtime_logs_desc">पॅच केलेले ॲप क्रॅश झाल्यावर किंवा चुकीचे वर्तन केल्यावर तुमच्या फोनमधून लॉग्स कॅप्चर करा. बग पुन्हा निर्माण करण्यापूर्वी लॉग्स क्लिअर करा, त्यानंतर बग रिपोर्टला जोडण्यासाठी फिल्टर केलेले आउटपुट सेव्ह करा</string>
-    <string name="settings_runtime_logs_device_info">डिवाइस: %1$s</string>
-    <string name="settings_runtime_logs_no_device">कोणतेही डिवाइस कनेक्ट केलेले नाही. USB डीबगिंग सुरू करून तुमचा फोन प्लग इन करा</string>
+    <string name="settings_runtime_logs_device_info">डिव्हाइस: %1$s</string>
+    <string name="settings_runtime_logs_no_device">कोणतेही डिव्हाइस कनेक्ट केलेले नाही. USB किंवा Wi-Fi डीबगिंग सक्षम करून तुमचा फोन कनेक्ट करा</string>
     <string name="settings_runtime_logs_clearing">क्लिअर करत आहे…</string>
-    <string name="settings_runtime_logs_clear_button">डिवाइस लॉग्स क्लिअर करा</string>
+    <string name="settings_runtime_logs_clear_button">डिव्हाइस लॉग्स क्लिअर करा</string>
     <string name="settings_runtime_logs_failed_to_clear">लॉग्स साफ करण्यात अयशस्वी</string>
     <string name="settings_runtime_logs_save_button">डिव्हाइस लॉग्स सेव्ह करा</string>
     <string name="settings_runtime_logs_failed_to_save">लॉग्स सेव्ह करण्यात अयशस्वी</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">स्रोत</string>
     <string name="nav_apps">अ‍ॅप्स</string>
+    <string name="nav_settings">सेटिंग्ज</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">सेटिंग्ज शोधा</string>
+    <string name="settings_search_no_results">जुळणाऱ्या कोणत्याही सेटिंग्ज नाहीत</string>
+    <string name="settings_back_to_about">'About' वर परत जा</string>
+    <string name="licenses_back_to_list">परवान्यांच्या सूचीवर परत जा</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">अधिक ॲप्स</string>
+    <string name="home_more_apps_subtitle">कम्युनिटी पॅचेज</string>
+    <string name="community_patches_notice_title">तृतीय-पक्ष पॅच स्रोत</string>
+    <string name="community_patches_notice_message">कम्युनिटी पॅच स्रोत त्यांच्या स्वतःच्या लेखकांकडून तयार आणितःरित केले जातात. Morphe तृतीय-पक्ष पॅचेसचे पुनरावलोकन किंवा पडताळणी करत नाही आणि त्यांच्या मजकुरासाठी किंवा ते तुमच्या डिव्हाइसवर काय करतात यासाठी जबाबदार नाही.</string>
 </resources>

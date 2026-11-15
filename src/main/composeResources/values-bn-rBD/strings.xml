@@ -22,7 +22,7 @@
     <string name="error_could_not_load_patches">কোনো প্যাচ লোড করা যায়নি</string>
     <string name="error_network_timeout">নেটওয়ার্ক টাইমআউট, আপনার সংযোগ পরীক্ষা করে আবার চেষ্টা করুন</string>
     <string name="error_could_not_reach_patch_server">প্যাচ সার্ভারে পৌঁছানো যায়নি, আপনার সংযোগ পরীক্ষা করুন</string>
-    <string name="error_github_rate_limit">GitHub রেট লিমিট আঘাত করেছে, কয়েক মিনিট অপেক্ষা করে আবার চেষ্টা করুন</string>
+    <string name="error_github_rate_limit">GitHub-এর রেট লিমিট ছাড়িয়ে গেছে, কয়েক মিনিট অপেক্ষা করে আবার চেষ্টা করুন</string>
     <string name="error_connection_dropped">ডাউনলোডের সময় সংযোগ বিচ্ছিন্ন হয়েছে, আবার চেষ্টা করুন</string>
     <string name="error_network_loading_patches">প্যাচ লোড করার সময় নেটওয়ার্ক ত্রুটি</string>
     <string name="error_patch_file_not_found">প্যাচ ফাইল পাওয়া যায়নি: %1$s</string>
@@ -55,9 +55,9 @@
     <string name="status_offline">অফলাইন</string>
     <string name="status_ready">প্রস্তুত</string>
     <string name="filter_apps_hint">অ্যাপ ফিল্টার করুন…</string>
-    <string name="version">ভার্সন</string>
+    <string name="version">সংস্করণ</string>
     <string name="version_label_stable">স্থিতিশীল</string>
-    <string name="version_label_prerelease">প্রিরিলিজ</string>
+    <string name="version_label_prerelease">প্রি-রিলিজ</string>
     <string name="version_label_experimental">পরীক্ষামূলক</string>
     <string name="version_label_latest_stable">সর্বশেষ স্থিতিশীল</string>
     <string name="version_label_recommended">সুপারিশকৃত</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">অজানা কারণে প্যাচিং ব্যর্থ হয়েছে</string>
     <string name="error_log_label">ত্রুটি লগ</string>
     <string name="back">পেছনে</string>
+    <string name="open">খুলুন</string>
     <string name="open_folder">ফোল্ডার খুলুন</string>
     <string name="temporary_files_label">অস্থায়ী ফাইল</string>
     <string name="size_can_be_freed_label">%1$s মুক্ত করা যেতে পারে</string>
@@ -82,7 +83,7 @@
     <string name="output_file_label">আউটপুট ফাইল</string>
     <string name="color_picker_saved">সংরক্ষিত</string>
     <string name="dropdown_search_placeholder">অনুসন্ধান…</string>
-    <string name="custom_color">কাস্টম রঙ</string>
+    <string name="custom_color">কাস্টম রং</string>
     <string name="gradient_linear">রৈখিক</string>
     <string name="gradient_radial">রেডিয়াল</string>
     <string name="gradient_conic">কোনিক</string>
@@ -95,7 +96,7 @@
     <string name="card_fill_mode_default">ডিফল্ট</string>
     <string name="card_fill_mode_default_blurb">প্যাচ বান্ডেলের সাথে আসা রং</string>
     <string name="card_fill_mode_accent">অ্যাকসেন্ট</string>
-    <string name="card_fill_mode_accent_blurb">অ্যাকসেন্ট রং অনুসরণ করে, যখন পরিবর্তন হয় তখন পরিবর্তিত হয়</string>
+    <string name="card_fill_mode_accent_blurb">অ্যাকসেন্ট রং অনুসরণ করে এবং সেটি বদলালে নিজেও বদলায়</string>
     <string name="card_fill_mode_gradient">গ্রেডিয়েন্ট</string>
     <string name="card_fill_mode_gradient_blurb">যেকোনো সংখ্যক স্টপ, রৈখিক, রেডিয়াল বা কোনিক</string>
     <string name="card_fill_mode_solid">সলিড</string>
@@ -128,17 +129,17 @@
     <string name="adb_error_generic">ইনস্টলেশন ব্যর্থ হয়েছে: %1$s</string>
     <string name="adb_error_not_found">ADB পাওয়া যায়নি। অনুগ্রহ করে Android SDK Platform Tools ইনস্টল করুন</string>
     <string name="adb_error_unauthorized">ডিভাইস সংযুক্ত কিন্তু অনুমোদিত নয়। অনুগ্রহ করে আপনার ডিভাইসে USB ডিবাগিং প্রম্পট গ্রহণ করুন</string>
-    <string name="adb_error_no_devices">কোনো ডিভাইস সংযুক্ত নেই। অনুগ্রহ করে USB ডিবাগিং সক্ষম করে আপনার Android ডিভাইস সংযুক্ত করুন</string>
+    <string name="adb_error_no_devices">কোনো ডিভাইস সংযুক্ত নেই। অনুগ্রহ করে USB অথবা Wi-Fi ডিবাগিং সক্ষম করে আপনার অ্যান্ড্রয়েড ডিভাইসটি সংযুক্ত করুন</string>
     <string name="adb_error_device_not_found">ডিভাইস %1$s পাওয়া যায়নি</string>
     <string name="adb_error_multiple_devices">একাধিক ডিভাইস সংযুক্ত। একটি নির্বাচন করুন</string>
     <string name="adb_error_apk_not_found">APK ফাইল পাওয়া যায়নি: %1$s</string>
-    <string name="adb_error_start_server">ADB সার্ভার শুরু করা ব্যর্থ হয়েছে: %1$s</string>
-    <string name="adb_error_kill_server">ADB সার্ভার বন্ধ করা ব্যর্থ হয়েছে: %1$s</string>
-    <string name="adb_error_get_devices">ডিভাইস পাওয়া ব্যর্থ হয়েছে: %1$s</string>
+    <string name="adb_error_start_server">ADB সার্ভার শুরু করতে ব্যর্থ হয়েছে: %1$s</string>
+    <string name="adb_error_kill_server">ADB সার্ভার বন্ধ করতে ব্যর্থ হয়েছে: %1$s</string>
+    <string name="adb_error_get_devices">ডিভাইস পেতে ব্যর্থ হয়েছে: %1$s</string>
     <string name="adb_error_uninstall">আনইনস্টল ব্যর্থ হয়েছে: %1$s</string>
-    <string name="adb_error_clear_logs">লগ পরিষ্কার করা ব্যর্থ হয়েছে: %1$s</string>
-    <string name="adb_error_capture_logs">লগ ক্যাপচার করা ব্যর্থ হয়েছে: %1$s</string>
-    <string name="adb_error_run_command">কমান্ড চালানো ব্যর্থ হয়েছে: %1$s</string>
+    <string name="adb_error_clear_logs">লগ পরিষ্কার করতে ব্যর্থ হয়েছে: %1$s</string>
+    <string name="adb_error_capture_logs">লগ ক্যাপচার করতে ব্যর্থ হয়েছে: %1$s</string>
+    <string name="adb_error_run_command">কমান্ড চালাতে ব্যর্থ হয়েছে: %1$s</string>
     <string name="adb_error_pm_list_packages">pm list packages ব্যর্থ হয়েছে: %1$s</string>
     <string name="adb_status_routing_links">%1$s-এ লিংক রাউটিং হচ্ছে…</string>
     <string name="adb_status_restoring_links">ডিফল্ট লিংক হ্যান্ডলিং পুনরুদ্ধার করা হচ্ছে…</string>
@@ -163,7 +164,7 @@
     <string name="version_warning_experiment_title">আপনি কি পরীক্ষা করতে চান? 🧪</string>
     <string name="version_warning_latest_experimental_message">বর্তমান: v%1$s\n\nএই সংস্করণটিতে প্রাথমিক পরীক্ষামূলক সমর্থন রয়েছে\n\n🔧 অ্যাপের অদ্ভুত আচরণ বা অজ্ঞাত বাগ আশা করুন, কারণ প্যাচগুলো এই অ্যাপ সংস্করণের জন্য পরিমার্জিত হচ্ছে।</string>
     <string name="version_warning_unsupported_message">বর্তমান: v%1$s\n\nএটি আনুষ্ঠানিকভাবে সমর্থিত সংস্করণ নয়। প্যাচগুলো সম্ভবত ব্যর্থ হবে।</string>
-    <string name="version_warning_notice_message">V%1$s দিয়ে চালিয়ে যাবেন?</string>
+    <string name="version_warning_notice_message">v%1$s দিয়ে চালিয়ে যাবেন?</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK ফাইল নির্বাচন করুন</string>
     <string name="home_could_not_resolve_patch_files">প্যাচ ফাইলগুলো সমাধান করা যায়নি</string>
@@ -187,7 +188,7 @@
     <string name="home_apk_info_from_label">থেকে</string>
     <string name="home_stage_change_apk">APK পরিবর্তন করুন</string>
     <string name="home_stage_continue">এগিয়ে যান</string>
-    <string name="home_stage_patch">টি প্যাচ</string>
+    <string name="home_stage_patch">প্যাচ</string>
     <string name="home_stage_analyzing_title">বিশ্লেষণ করা হচ্ছে</string>
     <string name="home_stage_reading_metadata">অ্যাপ মেটাডেটা পড়া হচ্ছে…</string>
     <!-- Home Screen - Dialogs -->
@@ -197,8 +198,8 @@
     <string name="home_dialog_forget_title">%1$s ভুলে যাবেন?</string>
     <string name="home_dialog_forget_message">এটি আপনার প্যাচ করা অ্যাপের ইতিহাস থেকে %1$s সরিয়ে দেয়। এটি কোনো ফাইল স্পর্শ করে না - অ্যাপটি পুনরায় প্যাচ করলে এটি ফিরে আসে</string>
     <string name="home_dialog_uninstall_title">%1$s আনইনস্টল করবেন?</string>
-    <string name="home_dialog_uninstall_message">এটি সংযুক্ত ডিভাইস থেকে %1$s সরিয়ে দেয়। ডিস্কে প্যাচ করা APK এবং আপনার ইতিহাস রাখা হয়, নিচে আপনি অন্যথা না চয়ন করলে</string>
-    <string name="home_dialog_uninstall_also_forget">আপনার অ্যাপ থেকে সরান</string>
+    <string name="home_dialog_uninstall_message">এটি সংযুক্ত ডিভাইস থেকে %1$s সরিয়ে দেয়। নিচে অন্য কিছু বেছে না নিলে ডিস্কে থাকা প্যাচ করা APK এবং আপনার ইতিহাস রাখা হয়</string>
+    <string name="home_dialog_uninstall_also_forget">আপনার অ্যাপ থেকেও সরান</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">সোর্স পরিচালনা করুন</string>
     <string name="home_header_multi_source_hint">প্রতিটি সক্রিয় সোর্সের প্যাচগুলো একত্রিত হয়। উপরের সোর্স বাটন থেকে পরিচালনা করুন</string>
@@ -234,7 +235,7 @@
     <string name="home_filter_all_apps">সব অ্যাপ</string>
     <string name="home_filter_your_apps">আপনার অ্যাপ</string>
     <string name="home_banner_view">দেখুন</string>
-    <string name="home_your_apps_install_ready">ইনস্টল প্রস্তুত</string>
+    <string name="home_your_apps_install_ready">ইনস্টলের জন্য প্রস্তুত</string>
     <string name="home_action_install_to_device">ডিভাইসে ইনস্টল করুন</string>
     <string name="home_action_installing">ইনস্টল করা হচ্ছে…</string>
     <string name="home_action_preparing">প্রস্তুত হচ্ছে…</string>
@@ -244,7 +245,7 @@
     <string name="home_detail_source_apk_label">সোর্স APK</string>
     <string name="home_detail_patch_bundle_label">প্যাচ বান্ডেল</string>
     <string name="home_detail_no_sources_enabled">কোনো সোর্স সক্রিয় নেই</string>
-    <string name="home_detail_enable_or_add_source">নিচে একটি সক্রিয় বা যোগ করুন</string>
+    <string name="home_detail_enable_or_add_source">নিচে একটি সক্রিয় করুন বা যোগ করুন</string>
     <string name="home_detail_the_loaded_bundle">লোড করা বান্ডেল</string>
     <string name="home_detail_error_download_bundle">%1$s %2$s ডাউনলোড করা যায়নি: %3$s</string>
     <string name="home_detail_downloading_patch">%1$s ডাউনলোড হচ্ছে</string>
@@ -275,7 +276,7 @@
     <string name="home_detail_sha256_label">SHA-256</string>
     <string name="home_detail_ready_device_version">v%1$s প্রস্তুত · ডিভাইসে v%2$s</string>
     <string name="home_detail_ready_no_repatch">v%1$s প্রস্তুত, পুনরায় প্যাচের প্রয়োজন নেই</string>
-    <string name="home_detail_source_disabled">বন্ধ রাখুন</string>
+    <string name="home_detail_source_disabled">নিষ্ক্রিয়</string>
     <string name="home_detail_source_removed">সরানো হয়েছে</string>
     <string name="home_detail_source_disabled_sub">সোর্সগুলোতে সোর্সটি নিষ্ক্রিয় করা হয়েছে। পুনরায় প্যাচ করতে এটি সক্রিয় করুন</string>
     <string name="home_detail_source_disabled_alternatives_sub">মূল সোর্সটি নিষ্ক্রিয় করা হয়েছে। একটি বিকল্প সোর্স নির্বাচন করুন অথবা সোর্সগুলোতে এটি পুনরায় সক্রিয় করুন</string>
@@ -306,9 +307,9 @@
     <string name="patches_export_json">JSON এক্সপোর্ট করুন</string>
     <string name="patches_local_patch_file">লোকাল প্যাচ ফাইল</string>
     <string name="patches_error_local_file_not_found">লোকাল প্যাচ ফাইল পাওয়া যায়নি: %1$s</string>
-    <string name="patches_error_failed_to_load_releases">রিলিজ লোড করা ব্যর্থ হয়েছে</string>
-    <string name="patches_error_failed_to_download_patches">প্যাচ ডাউনলোড করা ব্যর্থ হয়েছে</string>
-    <string name="patches_error_failed_to_export_options">বিকল্প এক্সপোর্ট করা ব্যর্থ হয়েছে: %1$s</string>
+    <string name="patches_error_failed_to_load_releases">রিলিজ লোড করতে ব্যর্থ হয়েছে</string>
+    <string name="patches_error_failed_to_download_patches">প্যাচ ডাউনলোড করতে ব্যর্থ হয়েছে</string>
+    <string name="patches_error_failed_to_export_options">বিকল্প এক্সপোর্ট করতে ব্যর্থ হয়েছে: %1$s</string>
     <!-- Patch Selection Screen -->
     <string name="patch_selection_error_title">প্যাচ লোড করতে ত্রুটি</string>
     <string name="patch_selection_title">প্যাচ নির্বাচন করুন</string>
@@ -318,7 +319,7 @@
     <string name="patch_selection_continue_on_error_tooltip">একটি প্যাচ ব্যর্থ হলেও প্যাচিং চালিয়ে যান</string>
     <string name="patch_selection_continue_on_error_description">ত্রুটিতে চালিয়ে যান</string>
     <string name="patch_selection_no_patches_found">কোনো প্যাচ পাওয়া যায়নি</string>
-    <string name="patch_selection_no_source_patches_for_app">আপনার সক্রিয় সোর্সগুলোর কোনোটি এই অ্যাপের জন্য প্যাচ নেই</string>
+    <string name="patch_selection_no_source_patches_for_app">আপনার সক্রিয় সোর্সগুলোর কোনোটিতেই এই অ্যাপের জন্য প্যাচ নেই</string>
     <string name="patch_selection_no_search_matches">আপনার অনুসন্ধানের সাথে মেলে এমন কোনো প্যাচ নেই</string>
     <string name="patch_selection_action_patch">প্যাচ (%1$d)</string>
     <string name="patch_selection_filter_selected">নির্বাচিত</string>
@@ -352,12 +353,12 @@
     <string name="patch_selection_arch_not_in_apk">APK-তে নেই</string>
     <string name="patch_selection_no_matches_in_bundle">এই বান্ডেলে কোনো মিল নেই</string>
     <string name="patch_selection_error_patches_file_missing">প্যাচ ফাইল অনুপস্থিত এবং ডাউনলোড করা যায়নি: %1$s</string>
-    <string name="patch_selection_error_failed_to_list_patches">প্যাচ তালিকা করা ব্যর্থ হয়েছে: %1$s</string>
+    <string name="patch_selection_error_failed_to_list_patches">প্যাচ তালিকাভুক্ত করতে ব্যর্থ হয়েছে: %1$s</string>
     <string name="patch_selection_cmd_preview_tooltip">সমতুল্য CLI কমান্ড প্রিভিউ করুন</string>
     <string name="patch_selection_run_info_tooltip">এই রানের জন্য ব্যবহৃত APK এবং প্যাচ বান্ডেল</string>
     <string name="patch_selection_run_info_description">রান তথ্য</string>
     <string name="patch_selection_badge_new">নতুন</string>
-    <string name="patch_selection_option_required">এই বিকল্পটি প্রয়োজনীয়</string>
+    <string name="patch_selection_option_required">এই বিকল্পটি আবশ্যক</string>
     <string name="patch_selection_option_expected">প্রত্যাশিত %1$s</string>
     <string name="patch_selection_option_hint_list">কমা দ্বারা পৃথক তালিকা, প্রতিটি %1$s</string>
     <string name="patch_selection_option_hint_value">মান</string>
@@ -393,7 +394,7 @@
     <string name="patching_completed_loading_result">প্যাচিং সম্পন্ন, ফলাফল লোড হচ্ছে…</string>
     <string name="patching_cancelled_loading_result">প্যাচিং বাতিল করা হয়েছে, ফলাফল লোড হচ্ছে…</string>
     <string name="patching_failed_loading_result">প্যাচিং ব্যর্থ, ফলাফল লোড হচ্ছে…</string>
-    <string name="patching_log_viewer_failed_to_read">লগ ফাইল পড়া ব্যর্থ হয়েছে: %1$s</string>
+    <string name="patching_log_viewer_failed_to_read">লগ ফাইল পড়তে ব্যর্থ হয়েছে: %1$s</string>
     <string name="patching_log_viewer_title">লগ ফাইল</string>
     <string name="patching_log_viewer_copy_all">সব কপি করুন</string>
     <string name="patching_step_all_done">সব সম্পন্ন!</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">ব্যর্থ প্যাচ: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB বন্ধ · ইনস্টল করতে চালু করুন</string>
-    <string name="result_adb_connect_device_hint">ADB-এর মাধ্যমে ইনস্টল করতে USB-র মাধ্যমে একটি ডিভাইস সংযুক্ত করুন</string>
+    <string name="result_adb_connect_device_hint">ADB-র মাধ্যমে ইনস্টল করতে USB অথবা Wi-Fi-র মাধ্যমে একটি ডিভাইস সংযুক্ত করুন</string>
     <string name="result_screen_patch_another_button">আরেকটি প্যাচ</string>
     <string name="result_screen_install_on_device_label">%1$s-এ ইনস্টল করুন</string>
     <string name="result_screen_links_routed_label">প্যাচ করা অ্যাপে লিংক রাউট করা হয়েছে</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">%1$s থেকে আনমাউন্ট করা হচ্ছে…</string>
     <string name="result_adb_root_not_detected">%1$s-এ রুট অ্যাক্সেস শনাক্ত করা যায়নি। নিশ্চিত করুন যে Magisk/KernelSU/APatch ইনস্টল করা আছে এবং su পারমিশন দেওয়া হয়েছে</string>
     <string name="result_adb_stock_app_not_installed">স্টক অ্যাপ %1$s, %2$s-এ ইনস্টল করা নেই। মাউন্ট করার আগে প্রথমে অফিসিয়াল অ্যাপটি ইনস্টল করুন</string>
+    <string name="result_adb_mount_version_mismatch">%3$s-এ স্টক অ্যাপটি হলো v%1$s, কিন্তু প্যাচ করা APK হলো v%2$s। রুট মাউন্টের জন্য ভার্সনগুলো একই হওয়া প্রয়োজন</string>
+    <string name="result_adb_mount_abi_mismatch">ডিভাইস %3$s হলো %1$s, কিন্তু APK-তে শুধুমাত্র [%2$s] আছে। নেটিভ লাইব্রেরি লোড হতে ব্যর্থ হবে</string>
     <string name="result_link_default_restored">ডিফল্ট লিংক হ্যান্ডলিং পুনরুদ্ধার করা হয়েছে</string>
     <string name="result_link_routed_stock_disabled">প্যাচ করা অ্যাপে লিংক রাউট করা হয়েছে, স্টক নিষ্ক্রিয়</string>
     <string name="result_adb_not_found_hint">ADB পাওয়া যায়নি। সরাসরি ইনস্টল সক্ষম করতে Android SDK Platform Tools ইনস্টল করুন</string>
     <string name="result_adb_section_title">ADB ইনস্টল</string>
     <string name="result_adb_no_devices">কোনো ডিভাইস সংযুক্ত নেই</string>
-    <string name="result_adb_connect_hint">USB ডিবাগিং সক্ষম করে USB-এর মাধ্যমে সংযুক্ত হন</string>
+    <string name="result_adb_connect_hint">USB অথবা Wi-Fi ডিবাগিং-এর মাধ্যমে সংযুক্ত করুন</string>
     <string name="result_device_status_unauth">অননুমোদিত</string>
     <string name="result_adb_update_button">%1$s-এ আপডেট</string>
     <string name="result_adb_select_device_button">একটি ডিভাইস নির্বাচন করুন</string>
@@ -507,7 +510,7 @@
     <string name="icon_studio_add_image_button">ছবি</string>
     <string name="icon_studio_add_text_button">টেক্সট</string>
     <string name="icon_studio_add_shape_button">আকৃতি</string>
-    <string name="icon_studio_foreground_hint">আপনার লোগো, নিরাপদ অঞ্চলে স্তরিত। থিমড &amp; নোটিফিকেশন আইকন চালায়</string>
+    <string name="icon_studio_foreground_hint">আপনার লোগো, নিরাপদ অঞ্চলে স্তরিত। থিমড &amp; নোটিফিকেশন আইকন এখান থেকে তৈরি হয়</string>
     <string name="icon_studio_no_foreground_hint">এখনও কোনো ফোরগ্রাউন্ড নেই - একটি লেয়ার যোগ করুন (ছবি / টেক্সট / আকৃতি)। থিমড &amp; নোটিফিকেশন আইকন ফোরগ্রাউন্ড থেকে আসে, তাই শুধুমাত্র ব্যাকগ্রাউন্ডযুক্ত একটি আইকন সেখানে কিছুই দেখায় না (আমরা পুরো আইকনে ফিরে যাই)</string>
     <string name="icon_studio_replace_icon_button">আইকন প্রতিস্থাপন করুন</string>
     <string name="icon_studio_text_label">টেক্সট</string>
@@ -537,7 +540,7 @@
     <string name="source_error_failed_to_load">লোড ব্যর্থ হয়েছে</string>
     <string name="source_error_github_pat_required">পুল রিকোয়েস্টের সোর্স ডাউনলোড করতে একটি GitHub PAT প্রয়োজন</string>
     <string name="source_error_pr_no_artifact">পুল রিকোয়েস্টের জন্য কোনো আর্টিফ্যাক্ট পাওয়া যায়নি</string>
-    <string name="source_error_patcher_incompatible">এই সোর্সটি patcher %1$s-এর জন্য তৈরি করা হয়েছে, কিন্তু Morphe %2$s-এ patcher %3$s অন্তর্ভুক্ত রয়েছে। এটি ব্যবহার করতে Morphe আপডেট করুন</string>
+    <string name="source_error_patcher_incompatible">এই সোর্সটি প্যাচার %1$s-এর জন্য তৈরি করা হয়েছে, কিন্তু Morphe %2$s-এ প্যাচার %3$s অন্তর্ভুক্ত রয়েছে। এটি ব্যবহার করতে Morphe আপডেট করুন</string>
     <string name="version_label_local">লোকাল</string>
     <string name="source_sheet_remote_label">রিমোট</string>
     <string name="add_source">সোর্স যোগ করুন</string>
@@ -559,9 +562,9 @@
     <string name="source_sheet_remove_pattern_description">প্যাটার্ন সরান</string>
     <string name="sources_management_signed_by">স্বাক্ষরিত</string>
     <string name="sources_management_signing_key_changed_badge">কী পরিবর্তিত হয়েছে</string>
-    <string name="sources_management_signing_key_changed_hint">সাইনিং কি পরিবর্তিত হয়েছে। এটি পর্যালোচনা করতে ক্লিক করুন</string>
+    <string name="sources_management_signing_key_changed_hint">সাইনিং কী পরিবর্তিত হয়েছে। এটি পর্যালোচনা করতে ক্লিক করুন</string>
     <!-- Signing Key Trust Dialog -->
-    <string name="sources_signing_key_changed_named">'%1$s' আপডেট করা হয়নি কারণ এর সর্বশেষ রিলিজটি আগে ব্যবহৃত কি দ্বারা স্বাক্ষরিত নয়</string>
+    <string name="sources_signing_key_changed_named">'%1$s' আপডেট করা হয়নি কারণ এর সর্বশেষ রিলিজটি আগে ব্যবহৃত কী দ্বারা স্বাক্ষরিত নয়</string>
     <string name="sources_signing_key_new">নতুন কী</string>
     <string name="sources_signing_key_trust_message">সর্বশেষ রিলিজটি একটি ভিন্ন কী দ্বারা স্বাক্ষরিত। হয় ডেভেলপার তাদের কী পরিবর্তন করেছেন, অথবা অন্য কেউ এই রিলিজটি প্রকাশ করেছেন। ডেভেলপার নতুন কী-র কথা ঘোষণা করলে তবেই এটি বিশ্বাস করুন</string>
     <string name="sources_signing_key_trust_message_unsigned">সর্বশেষ রিলিজটি স্বাক্ষরিত নয়। হয় ডেভেলপার রিলিজ স্বাক্ষর করা বন্ধ করেছেন, অথবা অন্য কেউ এই রিলিজটি প্রকাশ করেছেন। ডেভেলপার এটি ঘোষণা করলে তবেই বিশ্বাস করুন</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB পাওয়া যায়নি</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Tools ইনস্টল করুন</string>
     <string name="device_indicator_no_devices_title">কোনো ডিভাইস সনাক্ত করা যায়নি</string>
-    <string name="device_indicator_no_devices_subtitle">USB ডিবাগিং সক্ষম করে একটি ডিভাইস সংযুক্ত করুন</string>
+    <string name="device_indicator_no_devices_subtitle">USB অথবা Wi-Fi ডিবাগিং সক্ষম করে একটি ডিভাইস সংযুক্ত করুন</string>
     <string name="device_indicator_enable_debugging_title">USB ডিবাগিং সক্রিয় করুন</string>
     <string name="device_indicator_enable_debugging_subtitle">সেটিংস → ডেভেলপার অপশন → USB ডিবাগিং</string>
     <string name="device_indicator_status_connected">সংযুক্ত</string>
@@ -623,10 +626,10 @@
     <string name="update_banner_from_version_crosses">v%1$s থেকে · ডেভ → স্থিতিশীল</string>
     <string name="update_banner_from_version">v%1$s থেকে</string>
     <string name="update_banner_later_button">পরে</string>
-    <string name="update_banner_skip_button">V%1$s এড়িয়ে যান</string>
+    <string name="update_banner_skip_button">v%1$s এড়িয়ে যান</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ওপেন সোর্স লাইসেন্স</string>
-    <string name="licenses_dialog_empty_failed">// লাইসেন্স লোড করা ব্যর্থ হয়েছে</string>
+    <string name="licenses_dialog_empty_failed">// লাইসেন্স লোড করতে ব্যর্থ হয়েছে</string>
     <string name="licenses_dialog_empty_no_matches">// কোনো মিল নেই</string>
     <string name="licenses_dialog_footer_matched">%1$d / %2$d মিলেছে</string>
     <string name="licenses_search_placeholder">লাইব্রেরি, SPDX আইডি, uniqueId অনুসন্ধান করুন…</string>
@@ -645,22 +648,24 @@
     <string name="settings_nav_advanced">উন্নত</string>
     <string name="settings_nav_system">সিস্টেম</string>
     <string name="settings_dialog_open_logs_button">লগ খুলুন</string>
-    <string name="settings_dialog_reset_button">আবার সেট করুন</string>
+    <string name="settings_dialog_reset_button">রিসেট</string>
     <string name="settings_theme_system">সিস্টেম</string>
     <string name="settings_search_languages_placeholder">ভাষা অনুসন্ধান করুন</string>
     <string name="settings_dialog_resolves_to_message">%1$s-এ সমাধান হয়</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ভাষা</string>
     <string name="settings_language_current_title">বর্তমান ভাষা</string>
-    <string name="settings_language_community_translation_hint">কিছু ভাষার অনুবাদ অনুপস্থিত বা অসম্পূর্ণ হতে পারে। নতুন ভাষা অনুবাদ করতে বা বিদ্যমান অনুবাদ উন্নত করতে, %1$s দেখুন</string>
     <string name="settings_language_dialog_title">অ্যাপ্লিকেশনের ভাষা</string>
+    <string name="settings_language_translate_title">Morphe অনুবাদ করতে সাহায্য করুন</string>
     <string name="settings_language_search_no_results">কোনো ফলাফল পাওয়া যায়নি</string>
     <string name="settings_section_theme">থিম</string>
     <string name="settings_appearance_theme_mode">থিম মোড</string>
+    <string name="settings_appearance_theme_mode_description">লাইট, ডার্ক, পিওর ব্ল্যাক বা সিস্টেম থিমের মধ্যে পরিবর্তন করুন</string>
     <string name="settings_theme_light">হালকা</string>
     <string name="settings_theme_dark">গাঢ়</string>
     <string name="settings_theme_amoled">অ্যামোলেড</string>
     <string name="settings_appearance_color_style">কালার স্টাইল</string>
+    <string name="settings_appearance_color_style_description">টিন্টেড Morphe প্যালেট অথবা গ্রেস্কেল মনোক্রোম স্টাইল</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">মনোক্রোম</string>
     <string name="settings_toggle_sharp_corners_label">ধারালো কোণ</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">অ্যাপ কার্ড</string>
     <string name="settings_app_cards_color_all">প্রতিটি কার্ডের রং</string>
     <string name="settings_app_cards_color_all_desc">আপনি যে কার্ডগুলো পৃথকভাবে কাস্টমাইজ করেছেন সেগুলো তাদের নিজস্ব রং রাখে</string>
-    <string name="settings_section_background_animation">ব্যাকগ্রাউন্ড অ্যানিমেশন</string>
+    <string name="settings_toggle_app_icons_label">অ্যাপ আইকন</string>
+    <string name="settings_toggle_app_icons_desc">লোকাল APK বা সংযুক্ত ডিভাইস থেকে সংগৃহীত প্রতিটি অ্যাপের আইকন দেখায়</string>
+    <string name="settings_appearance_more_apps_card">আরও অ্যাপ কার্ড</string>
+    <string name="settings_appearance_more_apps_card_description">অ্যাপগুলোর নিচে একটি কার্ড দেখায় যা কমিউনিটি প্যাচের দিকে নিয়ে যায়</string>
+    <string name="settings_section_effects">ইফেক্টস</string>
+    <string name="settings_appearance_background_animation">ব্যাকগ্রাউন্ড অ্যানিমেশন</string>
+    <string name="settings_appearance_background_animation_description">অ্যাপ স্ক্রিনগুলোর পেছনে যে অ্যানিমেশনটি চলে</string>
     <string name="settings_background_circles">বৃত্ত</string>
     <string name="settings_background_rings">রিং</string>
     <string name="settings_background_mesh">মেশ</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">এক্সপার্ট মোড</string>
     <string name="settings_toggle_expert_mode_desc">প্যাচ নির্বাচন এবং কনফিগারেশনের উপর সম্পূর্ণ নিয়ন্ত্রণ</string>
+    <string name="settings_expert_mode_disabled_in_flow">মোড পরিবর্তন করতে হোমে ফিরে যান</string>
     <string name="settings_toggle_route_links_label">প্যাচ করা অ্যাপে লিংক রাউট করুন</string>
     <string name="settings_toggle_route_links_desc">ADB-এর মাধ্যমে ইনস্টল করার পর, প্যাচ করা অ্যাপটিকে ব্রাউজার বা স্টক/ডিফল্ট অ্যাপের পরিবর্তে এর সমর্থিত ওয়েব লিংক খুলতে দিন</string>
     <string name="settings_toggle_disable_stock_links_label">স্টক অ্যাপের লিংক নিষ্ক্রিয় করুন</string>
@@ -724,15 +736,31 @@
     <string name="settings_toggle_auto_start_adb_label">ADB স্বয়ংক্রিয়-শুরু</string>
     <string name="settings_toggle_auto_start_adb_desc">লঞ্চে ADB ডেমন স্পন করুন যাতে সংযুক্ত ডিভাইসগুলো পর্যবেক্ষণ করা হয়। বন্ধ থাকলে, Morphe কখনও সার্ভার শুরু করে না, এবং ইনস্টল/পুশ বৈশিষ্ট্য নিষ্ক্রিয় থাকে</string>
     <string name="settings_section_storage">স্টোরেজ এবং ক্যাশ</string>
-    <string name="settings_cache_summary">ক্যাশ: %1$s (প্যাচ + লগ)</string>
-    <string name="settings_cache_clear_button">ক্যাশ সাফ করুন</string>
+    <string name="settings_cache_clear_all_title">সব ক্যাশ পরিষ্কার করুন</string>
+    <string name="settings_cache_category_patches">টি প্যাচ</string>
+    <string name="settings_cache_category_logs">লগস</string>
+    <string name="settings_cache_category_temp">অস্থায়ী ফাইল</string>
+    <string name="settings_cache_category_avatars">অ্যাভাতার ক্যাশে</string>
+    <string name="settings_cache_category_app_icons">অ্যাপ আইকন ক্যাশ</string>
+    <string name="settings_cache_confirm_patches_title">প্যাচগুলি সাফ করবেন?</string>
+    <string name="settings_cache_confirm_patches_message">এটি ডাউনলোড করা প্যাচ ফাইলগুলি মুছে ফেলবে। প্রয়োজন হলে প্যাচগুলি পুনরায় ডাউনলোড করা হবে</string>
+    <string name="settings_cache_confirm_logs_title">লগগুলি সাফ করবেন?</string>
+    <string name="settings_cache_confirm_logs_message">এটি সমস্ত অ্যাপ্লিকেশন লগ ফাইল এবং ডিভাইসের লগক্যাট ডাম্প মুছে ফেলবে</string>
+    <string name="settings_cache_confirm_temp_title">অস্থায়ী ফাইলগুলি সাফ করবেন?</string>
+    <string name="settings_cache_confirm_temp_message">এটি অস্থায়ী স্ক্র্যাচ এবং ওয়ার্কস্পেস ফাইলগুলি মুছে ফেলবে</string>
+    <string name="settings_cache_confirm_avatars_title">অ্যাভাতার ক্যাশে সাফ করবেন?</string>
+    <string name="settings_cache_confirm_avatars_message">এটি সমস্ত ক্যাশ করা রিমোট অবতার ইমেজ মুছে ফেলবে</string>
+    <string name="settings_cache_confirm_app_icons_title">অ্যাপ আইকন ক্যাশ মুছে ফেলবেন?</string>
+    <string name="settings_cache_confirm_app_icons_message">এটি APK এবং ডিভাইস থেকে সংগৃহীত সমস্ত অ্যাপ আইকন মুছে ফেলবে</string>
+    <string name="settings_cache_category_cleared">%1$s সাফ করা হয়েছে</string>
+    <string name="settings_cache_category_clear_failed">%1$s সাফ করতে ব্যর্থ হয়েছে</string>
     <string name="settings_cache_cleared">ক্যাশ সাফ করা হয়েছে</string>
     <string name="settings_cache_clear_failed">সাফ করা ব্যর্থ হয়েছে</string>
     <string name="settings_cache_confirm_title">ক্যাশ সাফ করবেন?</string>
-    <string name="settings_cache_confirm_message">এর ফলে ডাউনলোড করা প্যাচ এবং লগ ফাইলগুলো মুছে যাবে। প্রয়োজন হলে প্যাচগুলো পুনরায় ডাউনলোড করা হবে</string>
+    <string name="settings_cache_confirm_message">এটি ডাউনলোড করা প্যাচ, লগ ফাইল এবং সাময়িক ফাইল মুছে ফেলবে। প্রয়োজন হলে প্যাচগুলো পুনরায় ডাউনলোড করা হবে</string>
     <string name="settings_storage_open_app_data_button">অ্যাপ ডেটা খুলুন</string>
     <string name="settings_storage_open_logs_button">লগ খুলুন</string>
-    <string name="settings_section_about">মর্ফ সম্পর্কে</string>
+    <string name="settings_section_about">সম্পর্কে</string>
     <string name="settings_about_version">সংস্করণ %1$s</string>
     <string name="settings_about_changelogs_title">চেঞ্জলগ দেখুন</string>
     <string name="settings_about_changelogs_desc">এই আপডেটের সর্বশেষ পরিবর্তনগুলো দেখুন</string>
@@ -752,7 +780,7 @@
     <string name="settings_signing_desc">প্যাচ করা APK সাইন করতে ব্যবহৃত কিস্টোর</string>
     <string name="settings_signing_default_keystore">ডিফল্ট (স্বয়ংক্রিয়-উত্পন্ন)</string>
     <string name="settings_signing_picker_title">কিস্টোর নির্বাচন করুন</string>
-    <string name="settings_signing_not_found">কিস্টোর পাওয়া যায়নি, আপনি এটি পুনরুদ্ধার, অন্য একটি বাছাই বা রিসেট না করা পর্যন্ত প্যাচিং ব্যর্থ হবে</string>
+    <string name="settings_signing_not_found">কিস্টোর পাওয়া যায়নি। আপনি এটি পুনরুদ্ধার, অন্য একটি বেছে নেওয়া বা রিসেট করা পর্যন্ত প্যাচিং ব্যর্থ হবে</string>
     <string name="settings_signing_invalid_file_type">অবৈধ ফাইল প্রকার। প্রত্যাশিত: %1$s</string>
     <string name="settings_signing_using_default">%1$s-এ Morphe-এর ডিফল্ট কিস্টোর ব্যবহার করা হচ্ছে</string>
     <string name="settings_signing_will_create_default">%1$s-এ Morphe-এর ডিফল্ট কিস্টোর তৈরি করবে</string>
@@ -765,7 +793,7 @@
     <string name="settings_signing_verify_could_not_open">কিস্টোর খোলা যায়নি, কিস্টোর পাসওয়ার্ড পরীক্ষা করুন</string>
     <string name="settings_signing_verify_valid">শংসাপত্র বৈধ</string>
     <string name="settings_signing_picker_save_keystore">কিস্টোর সংরক্ষণ করুন</string>
-    <string name="settings_signing_failed_to_generate">উত্পন্ন করা ব্যর্থ হয়েছে: %1$s</string>
+    <string name="settings_signing_failed_to_generate">তৈরি করতে ব্যর্থ হয়েছে: %1$s</string>
     <string name="settings_signing_generated_button">কিস্টোর উত্পন্ন হয়েছে</string>
     <string name="settings_signing_generate_button">কিস্টোর উত্পন্ন করুন</string>
     <string name="settings_signing_uses_credentials_hint">উপরে প্রবেশ করা শংসাপত্র ব্যবহার করে</string>
@@ -787,12 +815,12 @@
     <string name="settings_runtime_logs_title">প্যাচ করা অ্যাপ রানটাইম লগ</string>
     <string name="settings_runtime_logs_desc">প্যাচ করা অ্যাপ ক্র্যাশ বা খারাপ আচরণ করলে আপনার ফোন থেকে লগ ক্যাপচার করুন। বাগটি পুনরুত্পাদন করার আগে পরিষ্কার করুন, তারপর বাগ রিপোর্টে সংযুক্ত করতে ফিল্টার করা আউটপুট সংরক্ষণ করুন</string>
     <string name="settings_runtime_logs_device_info">ডিভাইস: %1$s</string>
-    <string name="settings_runtime_logs_no_device">কোনো ডিভাইস সংযুক্ত নেই। USB ডিবাগিং সক্ষম করে আপনার ফোন প্লাগ ইন করুন</string>
+    <string name="settings_runtime_logs_no_device">কোনো ডিভাইস সংযুক্ত নেই। USB বা Wi-Fi ডিবাগিং সক্রিয় করে আপনার ফোনটি সংযুক্ত করুন</string>
     <string name="settings_runtime_logs_clearing">পরিষ্কার করা হচ্ছে…</string>
     <string name="settings_runtime_logs_clear_button">ডিভাইস লগ পরিষ্কার করুন</string>
-    <string name="settings_runtime_logs_failed_to_clear">লগ পরিষ্কার করা ব্যর্থ হয়েছে</string>
+    <string name="settings_runtime_logs_failed_to_clear">লগ পরিষ্কার করতে ব্যর্থ হয়েছে</string>
     <string name="settings_runtime_logs_save_button">ডিভাইস লগ সংরক্ষণ করুন</string>
-    <string name="settings_runtime_logs_failed_to_save">লগ সংরক্ষণ করা ব্যর্থ হয়েছে</string>
+    <string name="settings_runtime_logs_failed_to_save">লগ সংরক্ষণ করতে ব্যর্থ হয়েছে</string>
     <string name="settings_runtime_logs_cleared_success">ডিভাইসে লগ পরিষ্কার হয়েছে</string>
     <string name="settings_runtime_logs_nothing_captured">এখনও কিছু ক্যাপচার হয়নি। আপনার ফোনে প্যাচ করা অ্যাপ চালান, তারপর আবার সংরক্ষণ করুন</string>
     <!-- Settings - GitHub PAT -->
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">সোর্সসমূহ</string>
     <string name="nav_apps">অ্যাপস</string>
+    <string name="nav_settings">সেটিংস</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">সেটিংস অনুসন্ধান করুন</string>
+    <string name="settings_search_no_results">কোনো মিল থাকা সেটিংস পাওয়া যায়নি</string>
+    <string name="settings_back_to_about">About-এ ফিরে যান</string>
+    <string name="licenses_back_to_list">লাইসেন্স তালিকায় ফিরে যান</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">আরও অ্যাপ</string>
+    <string name="home_more_apps_subtitle">কমিউনিটি প্যাচ</string>
+    <string name="community_patches_notice_title">তৃতীয়-পক্ষের প্যাচ উৎস</string>
+    <string name="community_patches_notice_message">কমিউনিটি প্যাচ উৎসগুলো তাদের নিজস্ব লেখকদের দ্বারা তৈরি এবং রক্ষণাবেক্ষণ করা হয়। Morphe তৃতীয়-পক্ষের প্যাচগুলো পর্যালোচনা বা যাচাই করে না এবং তাদের বিষয়বস্তু বা আপনার ডিভাইসে তারা যা করে তার জন্য দায়ী নয়।</string>
 </resources>

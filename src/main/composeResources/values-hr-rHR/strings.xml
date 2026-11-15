@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Primjena zakrpa nije uspjela iz nepoznatog razloga</string>
     <string name="error_log_label">Zapisnici pogrešaka</string>
     <string name="back">Natrag</string>
+    <string name="open">Otvori</string>
     <string name="open_folder">Otvori mapu</string>
     <string name="temporary_files_label">Privremene datoteke</string>
     <string name="size_can_be_freed_label">%1$s se može osloboditi</string>
@@ -99,12 +100,12 @@
     <string name="card_fill_mode_gradient">Gradijent</string>
     <string name="card_fill_mode_gradient_blurb">Bilo koji broj točaka: linearni, radijalni ili konusni</string>
     <string name="card_fill_mode_solid">Puna</string>
-    <string name="card_fill_mode_solid_blurb">Jedna jednobojna boja</string>
+    <string name="card_fill_mode_solid_blurb">Jedna puna boja</string>
     <string name="adb_install_on_button">Instaliraj na %1$s</string>
     <!-- Patcher Steps -->
     <string name="patching_step_loading_patches">Učitavanje patcheva</string>
-    <string name="patching_step_merging_split_apk">Spajanje razdvojenih aplikacija</string>
-    <string name="patching_step_read_apk">Pročitaj aplikaciju</string>
+    <string name="patching_step_merging_split_apk">Spajanje podijeljenog APK-a</string>
+    <string name="patching_step_read_apk">Čitanje APK datoteke</string>
     <string name="patching_step_applying_patches">Primjenjivanje patcheva</string>
     <string name="patching_step_writing_apk">Pisanje patchane aplikacije</string>
     <string name="patching_step_signing">Potpisivanje patchane aplikacije</string>
@@ -120,7 +121,7 @@
     <string name="adb_error_downgrade">Nije moguće vratiti se na stariju verziju jer je instalirana novija. Prvo deinstaliraj postojeću aplikaciju</string>
     <string name="adb_error_already_exists">Aplikacija već postoji. Pokušajte je prvo deinstalirati</string>
     <string name="adb_error_storage">Nema dovoljno prostora za pohranu na uređaju</string>
-    <string name="adb_error_invalid_apk">Nevažeća aplikacija</string>
+    <string name="adb_error_invalid_apk">Nevažeći APK</string>
     <string name="adb_error_no_certificates">APK nije ispravno potpisan</string>
     <string name="adb_error_update_incompatible">Nekompatibilno ažuriranje, potpisi se ne podudaraju. Prvo deinstaliraj postojeću aplikaciju</string>
     <string name="adb_error_user_restricted">Instalacija je ograničena korisničkim postavkama</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Instalacija nije uspjela: %1$s</string>
     <string name="adb_error_not_found">ADB nije pronađen. Instalirajte Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Uređaj je povezan, ali nije autoriziran. Prihvatite upit za USB ispravljanje pogrešaka na svom uređaju</string>
-    <string name="adb_error_no_devices">Nema povezanih uređaja. Povežite svoj Android uređaj s omogućenim USB ispravljanjem pogrešaka</string>
+    <string name="adb_error_no_devices">Nijedan uređaj nije povezan. Povežite svoj Android uređaj s omogućenim USB-om ili Wi-Fi ispravljanjem</string>
     <string name="adb_error_device_not_found">Uređaj %1$s nije pronađen</string>
     <string name="adb_error_multiple_devices">Povezano je više uređaja. Odaberite jedan</string>
     <string name="adb_error_apk_not_found">APK datoteka nije pronađena: %1$s</string>
@@ -197,9 +198,9 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="home_stage_analyzing_title">Analiza</string>
     <string name="home_stage_reading_metadata">Čitanje metapodataka aplikacije…</string>
     <!-- Home Screen - Dialogs -->
-    <string name="home_dialog_forget_button">Zaboravite</string>
+    <string name="home_dialog_forget_button">Zaboravi</string>
     <string name="home_dialog_uninstall_button">Deinstaliraj</string>
-    <string name="home_dialog_continue_anyway">Svejedno nastavite</string>
+    <string name="home_dialog_continue_anyway">Ipak nastavi</string>
     <string name="home_dialog_forget_title">Zaboraviti %1$s?</string>
     <string name="home_dialog_forget_message">Ovo uklanja %1$s iz tvoje povijesti zakrpanih aplikacija. Ne dira nijednu datoteku - ponovnim zakrpanjem aplikacije vratit će je</string>
     <string name="home_dialog_uninstall_title">Deinstalirati %1$s?</string>
@@ -241,14 +242,14 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="home_filter_your_apps">Vaše aplikacije</string>
     <string name="home_banner_view">Prikaži</string>
     <string name="home_your_apps_install_ready">Spremno za instalaciju</string>
-    <string name="home_action_install_to_device">Instalirajte na uređaj</string>
+    <string name="home_action_install_to_device">Instaliraj na uređaj</string>
     <string name="home_action_installing">Instaliranje…</string>
     <string name="home_action_preparing">Priprema…</string>
     <string name="home_action_update">Ažuriraj</string>
     <string name="home_action_repatch">Ponovno patchaj</string>
     <string name="home_action_uninstalling">Deinstalacija…</string>
     <string name="home_detail_source_apk_label">Izvorni APK</string>
-    <string name="home_detail_patch_bundle_label">Paket nadopuna</string>
+    <string name="home_detail_patch_bundle_label">Paket zakrpa</string>
     <string name="home_detail_no_sources_enabled">Nema omogućenih izvora</string>
     <string name="home_detail_enable_or_add_source">omogućite ili dodajte jedan u nastavku</string>
     <string name="home_detail_the_loaded_bundle">učitani paket</string>
@@ -265,7 +266,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="home_detail_bundle_does_not_support_warning">%1$s ne podržava %2$s. Odaberite jednu od ovih umjesto toga</string>
     <string name="home_detail_versions_what_bundle_supports">Verzije u nastavku su one koje %1$s podržava</string>
     <string name="home_detail_choose_apk_button">Odaberite APK</string>
-    <string name="home_detail_select_apk_title">Odaberite APK za krpanje</string>
+    <string name="home_detail_select_apk_title">Odaberite APK za patchanje</string>
     <string name="home_detail_new_source_button">Novi izvor</string>
     <string name="home_detail_local_mpp_button">Lokalni .mpp</string>
     <string name="home_detail_select_patch_bundle_title">Odaberite paket zakrpa</string>
@@ -382,7 +383,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="patch_selection_run_info_app_group">Aplikacija</string>
     <string name="patch_selection_run_info_bundles_group">Paketi patcheva</string>
     <string name="patch_selection_run_info_no_bundles">Nema razriješenih paketa</string>
-    <string name="patch_selection_run_info_dev_group">Opcije za razvojnim programere</string>
+    <string name="patch_selection_run_info_dev_group">Opcije za programere</string>
     <string name="patch_selection_run_info_bytecode_mode">Način bajtkoda: %1$s</string>
     <string name="patch_selection_run_info_validate">Validacija otiska prsta: %1$s</string>
     <string name="patch_selection_run_info_verify_sdk">Provjera Android SDK-a: %1$s</string>
@@ -416,7 +417,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="patching_banner_no">Ne</string>
     <string name="patching_banner_desktop">Radna površina</string>
     <string name="patching_banner_patcher">Patcher</string>
-    <string name="patching_banner_runtime">Trajanje</string>
+    <string name="patching_banner_runtime">Vrijeme izvođenja</string>
     <string name="patching_banner_native_libs">Izvorne biblioteke</string>
     <string name="patching_banner_os">OS</string>
     <string name="patching_banner_arch">Arhitektura</string>
@@ -434,7 +435,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="patching_error_failed_patches">Neuspjele zakrpe: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB isključen · Omogućite za instalaciju</string>
-    <string name="result_adb_connect_device_hint">Povežite uređaj putem USB-a za instalaciju putem ADB-a</string>
+    <string name="result_adb_connect_device_hint">Povežite uređaj putem USB-a ili Wi-Fi-ja za instalaciju putem ADB-a</string>
     <string name="result_screen_patch_another_button">Zakrpi drugu</string>
     <string name="result_screen_install_on_device_label">Instaliraj na %1$s</string>
     <string name="result_screen_links_routed_label">Poveznice preusmjerene na zakrpenu aplikaciju</string>
@@ -448,14 +449,16 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="result_adb_mount_su_prompt_hint">Mountanje na %1$s… Provjerite svoj uređaj kako biste odobrili Superuser dopuštenje ako budete zatraženi</string>
     <string name="result_adb_unmount_button">Unmountaj s %1$s</string>
     <string name="result_adb_unmounting_on_device">Unmountanje s %1$s…</string>
-    <string name="result_adb_root_not_detected">Root pristup nije detektiran na %1$s. Provjerite je li Magisk/KernelSU/APatch instaliran i jesu li su dopuštenja dodijeljena</string>
+    <string name="result_adb_root_not_detected">Root pristup nije detektiran na %1$s. Provjerite je li Magisk/KernelSU/APatch instaliran i je li dopuštenje za su odobreno</string>
     <string name="result_adb_stock_app_not_installed">Zatična aplikacija %1$s nije instalirana na %2$s. Prvo instalirajte službenu aplikaciju prije mountanja</string>
+    <string name="result_adb_mount_version_mismatch">Zatvrsna aplikacija na %3$s je v%1$s, ali zakrpljeni APK je v%2$s. Root mount zahtijeva podudarne verzije</string>
+    <string name="result_adb_mount_abi_mismatch">Uređaj %3$s je %1$s, ali APK sadrži samo [%2$s]. Native knjižnice se neće moći učitati</string>
     <string name="result_link_default_restored">Vraćeno je zadano upravljanje poveznicama</string>
     <string name="result_link_routed_stock_disabled">Poveznice preusmjerene na zakrpenu aplikaciju, izvorna onemogućena</string>
     <string name="result_adb_not_found_hint">ADB nije pronađen. Instaliraj Android SDK Platform Tools za omogućavanje izravne instalacije.</string>
     <string name="result_adb_section_title">Instalacija putem ADB-a</string>
     <string name="result_adb_no_devices">Nema povezanih uređaja</string>
-    <string name="result_adb_connect_hint">Poveži se putem USB-a s omogućenim USB debuggingom</string>
+    <string name="result_adb_connect_hint">Povežite se putem USB-a ili Wi-Fi ispravljanja</string>
     <string name="result_device_status_unauth">Neautoriziran</string>
     <string name="result_adb_update_button">Ažuriraj na %1$s</string>
     <string name="result_adb_select_device_button">Odaberi uređaj</string>
@@ -485,7 +488,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="icon_studio_redo_button">Ponovi</string>
     <string name="icon_studio_templates">Predlošci</string>
     <string name="icon_studio_template_badge">Bedž</string>
-    <string name="icon_studio_preview_adaptive">Prilagodljive</string>
+    <string name="icon_studio_preview_adaptive">Prilagodljiva</string>
     <string name="icon_studio_preview_monochrome">Monokromatski</string>
     <string name="icon_studio_preview_shapes">Pregled oblika</string>
     <string name="icon_studio_preview_shapes_hint">Svaki pokretač odabire svoj oblik, kliknite za pregled kako će biti obrezan.</string>
@@ -545,7 +548,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="source_error_pr_no_artifact">Nisu pronađeni artefakti za pull request.</string>
     <string name="source_error_patcher_incompatible">Ovaj izvorni kod je napravljen za patcher %1$s, ali Morphe %2$s uključuje patcher %3$s. Ažurirajte Morphe da biste ga koristili.</string>
     <string name="version_label_local">Lokalno</string>
-    <string name="source_sheet_remote_label">Daljnji</string>
+    <string name="source_sheet_remote_label">Udaljeni</string>
     <string name="add_source">Dodajte izvor</string>
     <string name="source_sheet_title">Izvori patcheva</string>
     <string name="source_sheet_reload_description">Ponovno učitaj zakrpe</string>
@@ -569,8 +572,8 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <!-- Signing Key Trust Dialog -->
     <string name="sources_signing_key_changed_named">'%1$s' nije ažuriran jer njegovo najnovije izdanje nije potpisano ključem koji je koristio ranije</string>
     <string name="sources_signing_key_new">Novi ključ</string>
-    <string name="sources_signing_key_trust_message">Najnovije izdanje je potpisano drugim ključem. Razvijčac je zamijenio svoj ključ ili je ovo izdanje objavio netko drugi. Vjerujte mu samo ako je razvijčac najavio novi ključ</string>
-    <string name="sources_signing_key_trust_message_unsigned">Najnovije izdanje nije potpisano. Razvijčac je prestao potpisivati izdanja ili je ovo izdanje objavio netko drugi. Vjerujte mu samo ako je razvijčac to najavio</string>
+    <string name="sources_signing_key_trust_message">Najnovije izdanje je potpisano drugim ključem. Programer je zamijenio svoj ključ ili je ovo izdanje objavio netko drugi. Vjerujte mu samo ako je programer najavio novi ključ</string>
+    <string name="sources_signing_key_trust_message_unsigned">Najnovije izdanje nije potpisano. Programer je prestao potpisivati izdanja ili je ovo izdanje objavio netko drugi. Vjerujte mu samo ako je programer to najavio</string>
     <string name="sources_signing_key_trust_title">Vjerujete li novom ključu?</string>
     <string name="sources_signing_key_trusted">Povjerljiv ključ</string>
     <!-- Patch Source Dialogs -->
@@ -609,7 +612,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="device_indicator_adb_not_found_title">ADB nije pronađen</string>
     <string name="device_indicator_adb_not_found_subtitle">Instaliraj Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Nema otkrivenih uređaja</string>
-    <string name="device_indicator_no_devices_subtitle">Poveži uređaj s omogućenim USB debuggingom</string>
+    <string name="device_indicator_no_devices_subtitle">Povežite uređaj s omogućenim USB-om ili Wi-Fi ispravljanjem</string>
     <string name="device_indicator_enable_debugging_title">Omogući USB debugging</string>
     <string name="device_indicator_enable_debugging_subtitle">Postavke → Opcije za programere → USB debugging</string>
     <string name="device_indicator_status_connected">Povezano</string>
@@ -658,15 +661,17 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Jezik</string>
     <string name="settings_language_current_title">Trenutni jezik</string>
-    <string name="settings_language_community_translation_hint">Prijevodi za neke jezike mogu nedostajati ili biti nepotpuni. Za prijevod novih jezika ili poboljšanje postojećih prijevoda posjeti %1$s</string>
     <string name="settings_language_dialog_title">Jezik aplikacije</string>
+    <string name="settings_language_translate_title">Pomozite u prijevodu aplikacije Morphe</string>
     <string name="settings_language_search_no_results">Nema pronađenih rezultata</string>
     <string name="settings_section_theme">Tema</string>
     <string name="settings_appearance_theme_mode">Način teme</string>
+    <string name="settings_appearance_theme_mode_description">Prebacite između svijetle, tamne, potpuno crne ili sistemske teme</string>
     <string name="settings_theme_light">Svijetla</string>
     <string name="settings_theme_dark">Tamna</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Stil boje</string>
+    <string name="settings_appearance_color_style_description">Obojena Morphe paleta ili grayscale monokromni stil</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monokromatski</string>
     <string name="settings_toggle_sharp_corners_label">Oštri kutovi</string>
@@ -678,7 +683,13 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="settings_section_app_cards">Kartice aplikacija</string>
     <string name="settings_app_cards_color_all">Boja za svaku karticu</string>
     <string name="settings_app_cards_color_all_desc">Kartice koje su pojedinačno prilagođene zadržavaju vlastitu boju</string>
-    <string name="settings_section_background_animation">Pozadinska animacija</string>
+    <string name="settings_toggle_app_icons_label">Ikone aplikacija</string>
+    <string name="settings_toggle_app_icons_desc">Prikazuje ikonu svake aplikacije, izvučenu iz lokalnih APK datoteka ili povezanog uređaja</string>
+    <string name="settings_appearance_more_apps_card">Kartica Više aplikacija</string>
+    <string name="settings_appearance_more_apps_card_description">Prikazuje karticu ispod aplikacija koja vodi do zakrpa zajednice</string>
+    <string name="settings_section_effects">Efekti</string>
+    <string name="settings_appearance_background_animation">Pozadinska animacija</string>
+    <string name="settings_appearance_background_animation_description">Animacija koja se reproducira u pozadini zaslona aplikacije</string>
     <string name="settings_background_circles">Krugovi</string>
     <string name="settings_background_rings">Prstenovi</string>
     <string name="settings_background_mesh">Mreža</string>
@@ -694,6 +705,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Napredni način</string>
     <string name="settings_toggle_expert_mode_desc">Potpuna kontrola nad odabirom i konfiguracijom zakrpa</string>
+    <string name="settings_expert_mode_disabled_in_flow">Vratite se na početni zaslon za promjenu načina rada</string>
     <string name="settings_toggle_route_links_label">Preusmjeri poveznice na zakrpanu aplikaciju</string>
     <string name="settings_toggle_route_links_desc">Nakon instalacije putem ADB-a, omogući da zakrpana aplikacija otvara svoje podržane web poveznice umjesto preglednika ili izvorne/zadane aplikacije</string>
     <string name="settings_toggle_disable_stock_links_label">Onemogući poveznice izvorne aplikacije</string>
@@ -730,12 +742,28 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="settings_toggle_auto_start_adb_label">Automatsko pokretanje ADB-a</string>
     <string name="settings_toggle_auto_start_adb_desc">Pokreće ADB demona pri pokretanju kako bi povezani uređaji bili nadzirani. Kad je isključeno, Morphe nikada ne pokreće poslužitelj, a mogućnosti instalacije/prijenosa su onemogućene</string>
     <string name="settings_section_storage">Skladište &amp; predmemorija</string>
-    <string name="settings_cache_summary">Predmemorija: %1$s (zakrpe + zapisnici)</string>
-    <string name="settings_cache_clear_button">Očisti predmemoriju</string>
+    <string name="settings_cache_clear_all_title">Izbriši svu predmemoriju</string>
+    <string name="settings_cache_category_patches">Patchevi</string>
+    <string name="settings_cache_category_logs">Zapisnici</string>
+    <string name="settings_cache_category_temp">Privremene datoteke</string>
+    <string name="settings_cache_category_avatars">Predmemorija avatara</string>
+    <string name="settings_cache_category_app_icons">Predmemorija ikona aplikacija</string>
+    <string name="settings_cache_confirm_patches_title">Obriši patcheve?</string>
+    <string name="settings_cache_confirm_patches_message">Ovim će biti izbrisane preuzete datoteke patcheva. Patchevi će biti ponovno preuzeti kada budu potrebni</string>
+    <string name="settings_cache_confirm_logs_title">Obriši zapise?</string>
+    <string name="settings_cache_confirm_logs_message">Ovim će biti izbrisane sve datoteke zapisa aplikacije i logcat izvuci uređaja</string>
+    <string name="settings_cache_confirm_temp_title">Obriši privremene datoteke?</string>
+    <string name="settings_cache_confirm_temp_message">Ovim će biti izbrisane privremene radne datoteke i datoteke radnog prostora</string>
+    <string name="settings_cache_confirm_avatars_title">Obriši predmemoriju avatara?</string>
+    <string name="settings_cache_confirm_avatars_message">Ovim će biti izbrisane sve predmemorirane udaljene slike avatara</string>
+    <string name="settings_cache_confirm_app_icons_title">Obrisati predmemoriju ikona aplikacija?</string>
+    <string name="settings_cache_confirm_app_icons_message">Ovim će biti izbrisane sve ikone aplikacija izvučene iz APK datoteka i uređaja</string>
+    <string name="settings_cache_category_cleared">%1$s je izbrisano</string>
+    <string name="settings_cache_category_clear_failed">Nije uspjelo brisanje %1$s</string>
     <string name="settings_cache_cleared">Predmemorija je očišćena</string>
     <string name="settings_cache_clear_failed">Čišćenje nije uspjelo</string>
     <string name="settings_cache_confirm_title">Očistiti predmemoriju?</string>
-    <string name="settings_cache_confirm_message">Ovim će biti izbrisane preuzete zakrpe i datoteke zapisnika. Zakrpe će biti ponovno preuzete kada budu potrebne</string>
+    <string name="settings_cache_confirm_message">Ovim će biti izbrisane preuzete zakrpe, datoteke zapisnika i privremene datoteke. Zakrpe će biti ponovno preuzete kada budu potrebne</string>
     <string name="settings_storage_open_app_data_button">Otvori podatke aplikacije</string>
     <string name="settings_storage_open_logs_button">Otvori zapisnike</string>
     <string name="settings_section_about">O aplikaciji</string>
@@ -793,7 +821,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="settings_runtime_logs_title">Zapisnici izvođenja zakrpane aplikacije</string>
     <string name="settings_runtime_logs_desc">Snimi zapisnike sa svog telefona nakon što se zakrpana aplikacija sruši ili počne neispravno raditi. Očisti ih prije ponavljanja greške, a zatim spremi filtrirani izlaz za prilaganje izvješću o grešci</string>
     <string name="settings_runtime_logs_device_info">Uređaj: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Nijedan uređaj nije povezan. Priključi svoj telefon s omogućenim USB debuggingom</string>
+    <string name="settings_runtime_logs_no_device">Nijedan uređaj nije povezan. Povežite svoj telefon s uključenim USB-om ili Wi-Fi debugiranjem</string>
     <string name="settings_runtime_logs_clearing">Čišćenje…</string>
     <string name="settings_runtime_logs_clear_button">Očisti zapisnike uređaja</string>
     <string name="settings_runtime_logs_failed_to_clear">Čišćenje zapisnika nije uspjelo</string>
@@ -834,4 +862,15 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <!-- Navigation Pill -->
     <string name="nav_sources">Izvori</string>
     <string name="nav_apps">Aplikacije</string>
+    <string name="nav_settings">Postavke</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Postavke pretraživanja</string>
+    <string name="settings_search_no_results">Nema podudarajućih postavki</string>
+    <string name="settings_back_to_about">Povratak na Prema više</string>
+    <string name="licenses_back_to_list">Povratak na licence</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Više aplikacija</string>
+    <string name="home_more_apps_subtitle">Patchevi zajednice</string>
+    <string name="community_patches_notice_title">Izvori patcheva trećih strana</string>
+    <string name="community_patches_notice_message">Izvorne kodove patcheva zajednice izrađuju i održavaju njihovi vlastiti autori. Morphe ne pregledava niti provjerava patcheve trećih strana te nije odgovoran za njihov sadržaj ili za ono što rade na vašem uređaju.</string>
 </resources>

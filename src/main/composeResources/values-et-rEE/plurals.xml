@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="home_header_sources_failed">
-        <item quantity="one">%1$d plaastri allikas ei laaditud. Kasutatakse neid, mis laaditi edukalt</item>
+        <item quantity="one">%1$d paiga allika laadimine nurjus. Kasutatakse neid, mis laaditi edukalt.</item>
         <item quantity="other">%1$d plaastri allikast ei laaditud. Kasutatakse neid, mis laaditi edukalt</item>
     </plurals>
     <plurals name="home_banner_update_available">
         <item quantity="one">%1$d plaastritud rakenduse jaoks on saadaval uuendus</item>
-        <item quantity="other">%1$d plaastritud rakenduse jaoks on saadaval uuendused</item>
+        <item quantity="other">%1$d paigatud rakenduse jaoks on saadaval uuendus</item>
     </plurals>
     <plurals name="settings_runtime_logs_saved_success">
         <item quantity="one">Salvestatud %1$d rida faili %2$s</item>
@@ -17,20 +17,20 @@
         <item quantity="other">%1$d allikat</item>
     </plurals>
     <plurals name="licenses_dialog_footer_count">
-        <item quantity="one">%1$d raamatukogu</item>
-        <item quantity="other">%1$d raamatukogu</item>
+        <item quantity="one">%1$d teek</item>
+        <item quantity="other">%1$d teeki</item>
     </plurals>
     <plurals name="patch_selection_selected_count">
-        <item quantity="one">valitud %1$d %2$d-st</item>
-        <item quantity="other">valitud %1$d %2$d-st</item>
+        <item quantity="one">%1$d/%2$d valitud</item>
+        <item quantity="other">%1$d/%2$d valitud</item>
     </plurals>
     <plurals name="patch_selection_group_patch_count">
-        <item quantity="one">%1$d lapp</item>
-        <item quantity="other">%1$d lappa</item>
+        <item quantity="one">%1$d paik</item>
+        <item quantity="other">%1$d paika</item>
     </plurals>
     <plurals name="settings_app_cards_override_count">
-        <item quantity="one">%1$d kaart asendab selle</item>
-        <item quantity="other">%1$d kaart asendavad selle</item>
+        <item quantity="one">%1$d kaart alistab selle</item>
+        <item quantity="other">%1$d kaarti alistavad selle</item>
     </plurals>
     <plurals name="home_detail_download_bundles">
         <item quantity="one">Laadi alla %1$d pakett</item>
@@ -53,11 +53,19 @@
         <item quantity="other">%1$d funktsiooni</item>
     </plurals>
     <plurals name="changelog_fix_count">
-        <item quantity="one">%1$d tõend</item>
-        <item quantity="other">%1$d tõendit</item>
+        <item quantity="one">%1$d parandus</item>
+        <item quantity="other">%1$d parandust</item>
     </plurals>
     <plurals name="changelog_performance_count">
-        <item quantity="one">%1$d optimeering</item>
-        <item quantity="other">%1$d optimeeringit</item>
+        <item quantity="one">%1$d optimeerimine</item>
+        <item quantity="other">%1$d optimeerimist</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d fail)</item>
+        <item quantity="other">%1$s (%2$d faili)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Kokku: %1$s (%2$d fail)</item>
+        <item quantity="other">Kokku: %1$s (%2$d faili)</item>
     </plurals>
 </resources>

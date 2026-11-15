@@ -46,7 +46,7 @@
     <string name="enable_adb_button">Включить ADB</string>
     <string name="drag_to_reorder">Перетащите для изменения порядка</string>
     <string name="off">Выключено</string>
-    <string name="on">Вкл</string>
+    <string name="on">Включено</string>
     <string name="browse">Обзор</string>
     <string name="save">Сохранить</string>
     <string name="select_folder">Выбрать папку</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">Патчинг не удался по неизвестной причине</string>
     <string name="error_log_label">Журнал ошибок</string>
     <string name="back">Назад</string>
+    <string name="open">Открыть</string>
     <string name="open_folder">Открыть папку</string>
     <string name="temporary_files_label">Временные файлы</string>
     <string name="size_can_be_freed_label">Можно освободить %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Установка не удалась: %1$s</string>
     <string name="adb_error_not_found">ADB не найден. Установите Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Устройство подключено, но не авторизовано. Примите запрос на отладку по USB на устройстве</string>
-    <string name="adb_error_no_devices">Нет подключенных устройств. Подключите устройство Android с включённой отладкой по USB</string>
+    <string name="adb_error_no_devices">Устройства не подключены. Пожалуйста, подключите ваше Android-устройство с включенной отладкой по USB или Wi-Fi</string>
     <string name="adb_error_device_not_found">Устройство %1$s не найдено</string>
     <string name="adb_error_multiple_devices">Подключено несколько устройств. Выберите одно</string>
     <string name="adb_error_apk_not_found">APK-файл не найден: %1$s</string>
@@ -192,7 +193,7 @@
     <string name="home_stage_reading_metadata">Чтение метаданных приложения…</string>
     <!-- Home Screen - Dialogs -->
     <string name="home_dialog_forget_button">Забыть</string>
-    <string name="home_dialog_uninstall_button">Деинсталяция</string>
+    <string name="home_dialog_uninstall_button">Удалить</string>
     <string name="home_dialog_continue_anyway">Всё равно продолжить</string>
     <string name="home_dialog_forget_title">Забыть %1$s?</string>
     <string name="home_dialog_forget_message">Это удалит %1$s из истории пропатченных приложений. Это не затрагивает файлы - повторный патчинг приложения вернёт его</string>
@@ -225,7 +226,7 @@
     <string name="home_sort_name_asc_desc">По алфавиту</string>
     <string name="home_sort_name_desc">Имя (Я-А)</string>
     <string name="home_sort_name_desc_desc">В обратном алфавитном порядке</string>
-    <string name="home_sort_updates_first">Сначала обновите патчи</string>
+    <string name="home_sort_updates_first">Сначала обновления патчей</string>
     <string name="home_sort_updates_first_desc">Сначала приложения с обновлением патча, затем рекомендованные</string>
     <string name="home_sort_recently_patched">Недавно пропатченные</string>
     <string name="home_sort_recently_patched_desc">Сначала недавно патченные</string>
@@ -238,7 +239,7 @@
     <string name="home_action_install_to_device">Установить на устройство</string>
     <string name="home_action_installing">Установка…</string>
     <string name="home_action_preparing">Подготовка…</string>
-    <string name="home_action_update">Обновление</string>
+    <string name="home_action_update">Обновить</string>
     <string name="home_action_repatch">Повторно применить патчи</string>
     <string name="home_action_uninstalling">Удаление…</string>
     <string name="home_detail_source_apk_label">Исходный APK</string>
@@ -391,7 +392,7 @@
     <string name="patching_status_preparing">Подготовка к патчингу</string>
     <string name="patching_status_in_progress">Применение патчей</string>
     <string name="patching_completed_loading_result">Патчинг завершён, загрузка результата…</string>
-    <string name="patching_cancelled_loading_result">Исправление отменено, загрузка результата…</string>
+    <string name="patching_cancelled_loading_result">Патчинг отменён, загрузка результата…</string>
     <string name="patching_failed_loading_result">Патчинг не удался, загрузка результата…</string>
     <string name="patching_log_viewer_failed_to_read">Не удалось прочитать файл журнала: %1$s</string>
     <string name="patching_log_viewer_title">Файл журнала</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">Неудачные патчи: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB выкл. · Включите для установки</string>
-    <string name="result_adb_connect_device_hint">Подключите устройство через USB для установки с помощью ADB</string>
+    <string name="result_adb_connect_device_hint">Подключите устройство через USB или Wi-Fi для установки с помощью ADB</string>
     <string name="result_screen_patch_another_button">Патчить другое</string>
     <string name="result_screen_install_on_device_label">Установить на %1$s</string>
     <string name="result_screen_links_routed_label">Ссылки перенаправлены на пропатченное приложение</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">Размонтирование с %1$s…</string>
     <string name="result_adb_root_not_detected">Root-доступ на %1$s не обнаружен. Убедитесь, что установлен Magisk/KernelSU/APatch и предоставлено разрешение su</string>
     <string name="result_adb_stock_app_not_installed">Стандартное приложение %1$s не установлено на %2$s. Сначала установите официальное приложение, прежде чем выполнять монтирование</string>
+    <string name="result_adb_mount_version_mismatch">Версия стокового приложения на %3$s — v%1$s, но версия пропатченного APK — v%2$s. Для Root-монтирования требуются совпадающие версии</string>
+    <string name="result_adb_mount_abi_mismatch">Устройство %3$s имеет архитектуру %1$s, но APK содержит только [%2$s]. Нативные библиотеки не будут загружены</string>
     <string name="result_link_default_restored">Обработка ссылок по умолчанию восстановлена</string>
     <string name="result_link_routed_stock_disabled">Ссылки перенаправлены на пропатченное приложение, стандартное отключено</string>
     <string name="result_adb_not_found_hint">ADB не найден. Установите Android SDK Platform Tools для включения прямой установки</string>
     <string name="result_adb_section_title">Установка через ADB</string>
     <string name="result_adb_no_devices">Нет подключенных устройств</string>
-    <string name="result_adb_connect_hint">Подключитесь через USB с включённой отладкой по USB</string>
+    <string name="result_adb_connect_hint">Подключитесь через отладку по USB или Wi-Fi</string>
     <string name="result_device_status_unauth">Не авторизовано</string>
     <string name="result_adb_update_button">Обновить на %1$s</string>
     <string name="result_adb_select_device_button">Выберите устройство</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB не найден</string>
     <string name="device_indicator_adb_not_found_subtitle">Установите Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">Устройства не обнаружены</string>
-    <string name="device_indicator_no_devices_subtitle">Подключите устройство с включённой отладкой по USB</string>
+    <string name="device_indicator_no_devices_subtitle">Подключите устройство с включенной отладкой по USB или Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">Включите отладку по USB</string>
     <string name="device_indicator_enable_debugging_subtitle">Настройки → Параметры разработчика → Отладка по USB</string>
     <string name="device_indicator_status_connected">Подключено</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Язык</string>
     <string name="settings_language_current_title">Текущий язык</string>
-    <string name="settings_language_community_translation_hint">Переводы для некоторых языков могут отсутствовать или быть неполными. Чтобы перевести новые языки или улучшить существующие переводы, посетите %1$s</string>
     <string name="settings_language_dialog_title">Язык приложения</string>
+    <string name="settings_language_translate_title">Помогите перевести Morphe</string>
     <string name="settings_language_search_no_results">Результаты не найдены</string>
     <string name="settings_section_theme">Тема</string>
     <string name="settings_appearance_theme_mode">Режим темы</string>
+    <string name="settings_appearance_theme_mode_description">Переключение между светлой, темной, глубоко черной или системной темой</string>
     <string name="settings_theme_light">Светлая</string>
     <string name="settings_theme_dark">Тёмная</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Цветовой стиль</string>
+    <string name="settings_appearance_color_style_description">Цветная палитра Morphe или монохромный стиль в оттенках серого</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Монохромный</string>
     <string name="settings_toggle_sharp_corners_label">Острые углы</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">Карточки приложений</string>
     <string name="settings_app_cards_color_all">Цвет для каждой карточки</string>
     <string name="settings_app_cards_color_all_desc">Карточки, настроенные индивидуально, сохраняют свой цвет</string>
-    <string name="settings_section_background_animation">Анимация фона</string>
+    <string name="settings_toggle_app_icons_label">Значки приложений</string>
+    <string name="settings_toggle_app_icons_desc">Показывает иконку каждого приложения, извлеченную из локальных APK или подключенного устройства</string>
+    <string name="settings_appearance_more_apps_card">Карточка «Больше приложений»</string>
+    <string name="settings_appearance_more_apps_card_description">Показывает карточку под списком приложений, ведущую к патчам сообщества</string>
+    <string name="settings_section_effects">Эффекты</string>
+    <string name="settings_appearance_background_animation">Фоновая анимация</string>
+    <string name="settings_appearance_background_animation_description">Анимация, которая воспроизводится на заднем плане экранов приложения</string>
     <string name="settings_background_circles">Круги</string>
     <string name="settings_background_rings">Кольца</string>
     <string name="settings_background_mesh">Сетка</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Режим эксперта</string>
     <string name="settings_toggle_expert_mode_desc">Полный контроль над выбором и настройкой патчей</string>
+    <string name="settings_expert_mode_disabled_in_flow">Вернитесь на главный экран, чтобы изменить режим</string>
     <string name="settings_toggle_route_links_label">Перенаправлять ссылки на пропатченное приложение</string>
     <string name="settings_toggle_route_links_desc">После установки через ADB заставьте пропатченное приложение открывать поддерживаемые веб-ссылки вместо браузера или стандартного приложения</string>
     <string name="settings_toggle_disable_stock_links_label">Отключить ссылки стандартного приложения</string>
@@ -724,12 +736,28 @@
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускать демон ADB при запуске, чтобы отслеживать подключенные устройства. Когда выключено, Morphe никогда не запускает сервер, и функции установки/отправки отключены</string>
     <string name="settings_section_storage">Хранилище &amp; кеш</string>
-    <string name="settings_cache_summary">Кеш: %1$s (патчи + журналы)</string>
-    <string name="settings_cache_clear_button">Очистить кеш</string>
+    <string name="settings_cache_clear_all_title">Очистить весь кэш</string>
+    <string name="settings_cache_category_patches">Патчи</string>
+    <string name="settings_cache_category_logs">Журналы</string>
+    <string name="settings_cache_category_temp">Временные файлы</string>
+    <string name="settings_cache_category_avatars">Кэш аватаров</string>
+    <string name="settings_cache_category_app_icons">Кэш иконок приложений</string>
+    <string name="settings_cache_confirm_patches_title">Очистить патчи?</string>
+    <string name="settings_cache_confirm_patches_message">Это удалит загруженные файлы патчей. Патчи будут загружены снова при необходимости</string>
+    <string name="settings_cache_confirm_logs_title">Очистить журналы?</string>
+    <string name="settings_cache_confirm_logs_message">Это удалит все файлы журналов приложения и дампы logcat устройства</string>
+    <string name="settings_cache_confirm_temp_title">Очистить временные файлы?</string>
+    <string name="settings_cache_confirm_temp_message">Это удалит временные черновики и файлы рабочего пространства</string>
+    <string name="settings_cache_confirm_avatars_title">Очистить кэш аватаров?</string>
+    <string name="settings_cache_confirm_avatars_message">Это удалит все кэшированные изображения удаленных аватаров</string>
+    <string name="settings_cache_confirm_app_icons_title">Очистить кэш иконок приложений?</string>
+    <string name="settings_cache_confirm_app_icons_message">Это удалит все иконки приложений, извлеченные из APK и устройств</string>
+    <string name="settings_cache_category_cleared">%1$s очищено</string>
+    <string name="settings_cache_category_clear_failed">Не удалось очистить %1$s</string>
     <string name="settings_cache_cleared">Кеш очищен</string>
     <string name="settings_cache_clear_failed">Ошибка очистки</string>
     <string name="settings_cache_confirm_title">Очистить кеш?</string>
-    <string name="settings_cache_confirm_message">Это удалит загруженные патчи и файлы журналов. Патчи будут загружены снова при необходимости</string>
+    <string name="settings_cache_confirm_message">Это удалит загруженные патчи, файлы журналов и временные файлы. Патчи будут загружены снова при необходимости</string>
     <string name="settings_storage_open_app_data_button">Открыть данные приложения</string>
     <string name="settings_storage_open_logs_button">Открыть журналы</string>
     <string name="settings_section_about">О приложении</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">Журналы выполнения пропатченного приложения</string>
     <string name="settings_runtime_logs_desc">Захватывайте журналы с телефона после сбоя или неправильного поведения пропатченного приложения. Очистите перед воспроизведением ошибки, затем сохраните отфильтрованный вывод для прикрепления к отчёту об ошибке</string>
     <string name="settings_runtime_logs_device_info">Устройство: %1$s</string>
-    <string name="settings_runtime_logs_no_device">Нет подключенного устройства. Подключите телефон с включённой отладкой по USB</string>
+    <string name="settings_runtime_logs_no_device">Устройство не подключено. Подключите телефон с включенной отладкой по USB или Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">Очистка…</string>
     <string name="settings_runtime_logs_clear_button">Очистить журналы устройства</string>
     <string name="settings_runtime_logs_failed_to_clear">Не удалось очистить журналы</string>
@@ -822,10 +850,21 @@
     <string name="changelog_section_new">Новые</string>
     <string name="changelog_section_other">Изменения</string>
     <string name="changelog_section_performance">Производительность</string>
-    <string name="changelog_show_all">Показать все ({0, plural, one{один} few{#} many{#} other{#}} %1$d)</string>
+    <string name="changelog_show_all">Показать все (%1$d)</string>
     <string name="changelog_show_less">Показать меньше</string>
     <string name="changelog_view_on_github_button">Смотреть на GitHub</string>
     <!-- Navigation Pill -->
     <string name="nav_sources">Источники</string>
     <string name="nav_apps">Приложения</string>
+    <string name="nav_settings">Настройки</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Поиск настроек</string>
+    <string name="settings_search_no_results">Подходящих настроек не найдено</string>
+    <string name="settings_back_to_about">Назад к разделу «О приложении»</string>
+    <string name="licenses_back_to_list">Назад к лицензиям</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Больше приложений</string>
+    <string name="home_more_apps_subtitle">Патчи сообщества</string>
+    <string name="community_patches_notice_title">Сторонние источники патчей</string>
+    <string name="community_patches_notice_message">Источники патчей сообщества создаются и поддерживаются их авторами. Morphe не проверяет и не верифицирует сторонние патчи и не несет ответственности за их содержимое или за их действия на вашем устройстве.</string>
 </resources>

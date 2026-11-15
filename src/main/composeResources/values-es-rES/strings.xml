@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">El parcheo falló por una razón desconocida</string>
     <string name="error_log_label">Registro de errores</string>
     <string name="back">Atrás</string>
+    <string name="open">Abrir</string>
     <string name="open_folder">Abrir carpeta</string>
     <string name="temporary_files_label">Archivos temporales</string>
     <string name="size_can_be_freed_label">Se pueden liberar %1$s</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">Error de instalación: %1$s</string>
     <string name="adb_error_not_found">ADB no encontrado. Instala las herramientas de plataforma del SDK de Android</string>
     <string name="adb_error_unauthorized">Dispositivo conectado pero no autorizado. Acepta el aviso de depuración USB en tu dispositivo</string>
-    <string name="adb_error_no_devices">No hay dispositivos conectados. Conecta tu dispositivo Android con la depuración USB activada</string>
+    <string name="adb_error_no_devices">No hay dispositivos conectados. Por favor, conecta tu dispositivo Android con la depuración USB o Wi-Fi activada</string>
     <string name="adb_error_device_not_found">Dispositivo %1$s no encontrado</string>
     <string name="adb_error_multiple_devices">Hay varios dispositivos conectados. Selecciona uno</string>
     <string name="adb_error_apk_not_found">Archivo APK no encontrado: %1$s</string>
@@ -434,7 +435,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patching_error_failed_patches">Parches fallidos: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB desactivado · Actívalo para instalar</string>
-    <string name="result_adb_connect_device_hint">Conecta un dispositivo por USB para instalar con ADB</string>
+    <string name="result_adb_connect_device_hint">Conecta un dispositivo por USB o Wi-Fi para instalar con ADB</string>
     <string name="result_screen_patch_another_button">Parchear otra</string>
     <string name="result_screen_install_on_device_label">Instalar en %1$s</string>
     <string name="result_screen_links_routed_label">Enlaces redirigidos a la aplicación parcheada</string>
@@ -449,13 +450,15 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="result_adb_unmount_button">Desmontar de %1$s</string>
     <string name="result_adb_unmounting_on_device">Desmontando de %1$s…</string>
     <string name="result_adb_root_not_detected">No se detectó acceso root en %1$s. Asegúrate de que Magisk/KernelSU/APatch esté instalado y se haya concedido el permiso su</string>
-    <string name="result_adb_stock_app_not_installed">La aplicación de fábrica %1$s no está instalada en %2$s. Instale primero la aplicación oficial antes de montar</string>
+    <string name="result_adb_stock_app_not_installed">La aplicación de fábrica %1$s no está instalada en %2$s. Instala primero la aplicación oficial antes de montar</string>
+    <string name="result_adb_mount_version_mismatch">La aplicación de stock en %3$s es v%1$s, pero el APK parcheado es v%2$s. El montaje de root requiere versiones coincidentes</string>
+    <string name="result_adb_mount_abi_mismatch">El dispositivo %3$s es %1$s, pero el APK solo contiene [%2$s]. Las librerías nativas no se cargarán</string>
     <string name="result_link_default_restored">Manejo de enlaces predeterminado restaurado</string>
     <string name="result_link_routed_stock_disabled">Enlaces redirigidos a la aplicación parcheada; aplicación original desactivada</string>
     <string name="result_adb_not_found_hint">ADB no encontrado. Instala las herramientas de plataforma del SDK de Android para habilitar la instalación directa</string>
     <string name="result_adb_section_title">Instalación por ADB</string>
     <string name="result_adb_no_devices">No hay dispositivos conectados</string>
-    <string name="result_adb_connect_hint">Conecta por USB con la depuración USB activada</string>
+    <string name="result_adb_connect_hint">Conecta mediante depuración USB o Wi-Fi</string>
     <string name="result_device_status_unauth">Sin autorizar</string>
     <string name="result_adb_update_button">Actualizar en %1$s</string>
     <string name="result_adb_select_device_button">Selecciona un dispositivo</string>
@@ -580,7 +583,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patch_source_dialog_repo_url_label">URL del repositorio</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">Acepta enlaces de GitHub, GitLab o morphe.software/add-source</string>
-    <string name="patch_source_dialog_pre_release_title">Parches pre-lanzamiento</string>
+    <string name="patch_source_dialog_pre_release_title">Parches de prelanzamiento</string>
     <string name="patch_source_dialog_pre_release_hint">Recibe acceso anticipado a nuevas versiones experimentales de parches</string>
     <string name="patch_source_dialog_error_name_required">El nombre es obligatorio</string>
     <string name="patch_source_dialog_error_invalid_url">Introduce una URL válida de GitHub o GitLab</string>
@@ -609,7 +612,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="device_indicator_adb_not_found_title">ADB no encontrado</string>
     <string name="device_indicator_adb_not_found_subtitle">Instala las herramientas de plataforma del SDK de Android</string>
     <string name="device_indicator_no_devices_title">No se detectaron dispositivos</string>
-    <string name="device_indicator_no_devices_subtitle">Conecta un dispositivo con la depuración USB activada</string>
+    <string name="device_indicator_no_devices_subtitle">Conecta un dispositivo con la depuración USB o Wi-Fi activada</string>
     <string name="device_indicator_enable_debugging_title">Activa la depuración USB</string>
     <string name="device_indicator_enable_debugging_subtitle">Ajustes → Opciones de desarrollador → Depuración USB</string>
     <string name="device_indicator_status_connected">Conectado</string>
@@ -658,15 +661,17 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Idioma</string>
     <string name="settings_language_current_title">Idioma actual</string>
-    <string name="settings_language_community_translation_hint">Las traducciones de algunos idiomas pueden faltar o estar incompletas. Para traducir nuevos idiomas o mejorar las traducciones existentes, visita %1$s</string>
     <string name="settings_language_dialog_title">Idioma de la aplicación</string>
+    <string name="settings_language_translate_title">Ayudar a traducir Morphe</string>
     <string name="settings_language_search_no_results">No se encontraron resultados</string>
     <string name="settings_section_theme">Tema</string>
     <string name="settings_appearance_theme_mode">Modo del tema</string>
+    <string name="settings_appearance_theme_mode_description">Cambia entre el tema claro, oscuro, negro puro o del sistema</string>
     <string name="settings_theme_light">Claro</string>
     <string name="settings_theme_dark">Oscuro</string>
     <string name="settings_theme_amoled">AMOLED</string>
     <string name="settings_appearance_color_style">Estilo de color</string>
+    <string name="settings_appearance_color_style_description">Paleta Morphe tintada o estilo monocromo en escala de grises</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monocromático</string>
     <string name="settings_toggle_sharp_corners_label">Esquinas rectas</string>
@@ -678,7 +683,13 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_section_app_cards">Tarjetas de aplicaciones</string>
     <string name="settings_app_cards_color_all">Color para todas las tarjetas</string>
     <string name="settings_app_cards_color_all_desc">Las tarjetas que hayas personalizado individualmente conservan su propio color</string>
-    <string name="settings_section_background_animation">Animación de fondo</string>
+    <string name="settings_toggle_app_icons_label">Iconos de apps</string>
+    <string name="settings_toggle_app_icons_desc">Muestra el icono de cada aplicación, extraído de los APK locales o del dispositivo conectado</string>
+    <string name="settings_appearance_more_apps_card">Tarjeta de Más aplicaciones</string>
+    <string name="settings_appearance_more_apps_card_description">Muestra una tarjeta debajo de las aplicaciones que lleva a los parches de la comunidad</string>
+    <string name="settings_section_effects">Efectos</string>
+    <string name="settings_appearance_background_animation">Animación de fondo</string>
+    <string name="settings_appearance_background_animation_description">La animación que se reproduce detrás de las pantallas de la aplicación</string>
     <string name="settings_background_circles">Círculos</string>
     <string name="settings_background_rings">Anillos</string>
     <string name="settings_background_mesh">Malla</string>
@@ -694,6 +705,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Modo Experto</string>
     <string name="settings_toggle_expert_mode_desc">Control total sobre la selección y configuración de parches</string>
+    <string name="settings_expert_mode_disabled_in_flow">Vuelve al inicio para cambiar el modo</string>
     <string name="settings_toggle_route_links_label">Redirigir enlaces a la aplicación parcheada</string>
     <string name="settings_toggle_route_links_desc">Tras instalar por ADB, hace que la aplicación parcheada abra sus enlaces web compatibles en lugar del navegador o la aplicación original/predeterminada</string>
     <string name="settings_toggle_disable_stock_links_label">Desactivar enlaces de la aplicación original</string>
@@ -713,7 +725,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_dev_verify_sdk_desc">Verificar el DEX y el APK parcheados con las herramientas del Android SDK (d8, zipalign). Puede informar falsos positivos</string>
     <string name="settings_dev_sdk_path_label">Directorio del Android SDK</string>
     <string name="settings_dev_sdk_path_auto">Detectado automáticamente</string>
-    <string name="settings_dev_sdk_not_found">Android SDK no encontrado. Establezca ANDROID_HOME o busque el directorio del SDK</string>
+    <string name="settings_dev_sdk_not_found">Android SDK no encontrado. Establece ANDROID_HOME o busca el directorio del SDK</string>
     <string name="settings_dev_sdk_picker_title">Seleccionar el directorio del Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Limpiar archivos temporales automáticamente</string>
@@ -730,12 +742,28 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_toggle_auto_start_adb_label">Iniciar ADB automáticamente</string>
     <string name="settings_toggle_auto_start_adb_desc">Inicia el servicio de ADB al arrancar para supervisar los dispositivos conectados. Si está desactivado, Morphe nunca inicia el servidor y las funciones de instalación/envío quedan deshabilitadas</string>
     <string name="settings_section_storage">Almacenamiento &amp; caché</string>
-    <string name="settings_cache_summary">Caché: %1$s (parches + registros)</string>
-    <string name="settings_cache_clear_button">Borrar caché</string>
+    <string name="settings_cache_clear_all_title">Borrar toda la caché</string>
+    <string name="settings_cache_category_patches">Parches</string>
+    <string name="settings_cache_category_logs">Registros</string>
+    <string name="settings_cache_category_temp">Archivos temporales</string>
+    <string name="settings_cache_category_avatars">Caché de avatares</string>
+    <string name="settings_cache_category_app_icons">Caché de iconos de apps</string>
+    <string name="settings_cache_confirm_patches_title">¿Limpiar los parches?</string>
+    <string name="settings_cache_confirm_patches_message">Esto eliminará los archivos de parches descargados. Los parches se volverán a descargar cuando sea necesario</string>
+    <string name="settings_cache_confirm_logs_title">¿Limpiar los registros?</string>
+    <string name="settings_cache_confirm_logs_message">Esto eliminará todos los archivos de registro de la aplicación y los volcados de logcat del dispositivo</string>
+    <string name="settings_cache_confirm_temp_title">¿Limpiar los archivos temporales?</string>
+    <string name="settings_cache_confirm_temp_message">Esto eliminará los archivos temporales de trabajo y del espacio de trabajo</string>
+    <string name="settings_cache_confirm_avatars_title">¿Limpiar la caché de avatares?</string>
+    <string name="settings_cache_confirm_avatars_message">Esto eliminará todas las imágenes de avatares remotos almacenadas en caché</string>
+    <string name="settings_cache_confirm_app_icons_title">¿Borrar caché de iconos de apps?</string>
+    <string name="settings_cache_confirm_app_icons_message">Esto eliminará todos los iconos de aplicaciones extraídos de APK y dispositivos</string>
+    <string name="settings_cache_category_cleared">%1$s limpiado</string>
+    <string name="settings_cache_category_clear_failed">No se pudo limpiar %1$s</string>
     <string name="settings_cache_cleared">Caché borrada</string>
     <string name="settings_cache_clear_failed">Error al limpiar</string>
     <string name="settings_cache_confirm_title">¿Borrar la caché?</string>
-    <string name="settings_cache_confirm_message">Esto eliminará los parches descargados y los archivos de registro. Los parches se volverán a descargar cuando haga falta</string>
+    <string name="settings_cache_confirm_message">Esto eliminará los parches descargados, los archivos de registro y los archivos temporales. Los parches se volverán a descargar cuando sea necesario</string>
     <string name="settings_storage_open_app_data_button">Abrir datos de la aplicación</string>
     <string name="settings_storage_open_logs_button">Abrir registros</string>
     <string name="settings_section_about">Acerca de</string>
@@ -793,7 +821,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_runtime_logs_title">Registros de ejecución de la aplicación parcheada</string>
     <string name="settings_runtime_logs_desc">Captura registros de tu teléfono cuando una aplicación parcheada falle o se comporte mal. Limpia antes de reproducir el fallo y luego guarda la salida filtrada para adjuntarla a un informe de error</string>
     <string name="settings_runtime_logs_device_info">Dispositivo: %1$s</string>
-    <string name="settings_runtime_logs_no_device">No hay ningún dispositivo conectado. Conecta tu teléfono con la depuración USB activada</string>
+    <string name="settings_runtime_logs_no_device">No hay ningún dispositivo conectado. Conecta tu teléfono con la depuración USB o Wi-Fi activada</string>
     <string name="settings_runtime_logs_clearing">Limpiando…</string>
     <string name="settings_runtime_logs_clear_button">Borrar registros del dispositivo</string>
     <string name="settings_runtime_logs_failed_to_clear">Error al borrar los registros</string>
@@ -817,7 +845,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Instalada</string>
     <string name="changelog_badge_latest">Última</string>
-    <string name="changelog_badge_prerelease">Pre-lanzamiento</string>
+    <string name="changelog_badge_prerelease">Prelanzamiento</string>
     <string name="changelog_date_today">Hoy</string>
     <string name="changelog_date_yesterday">Ayer</string>
     <string name="changelog_dialog_title">Ver registro de cambios</string>
@@ -834,4 +862,15 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <!-- Navigation Pill -->
     <string name="nav_sources">Fuentes</string>
     <string name="nav_apps">Apps</string>
+    <string name="nav_settings">Ajustes</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Buscar ajustes</string>
+    <string name="settings_search_no_results">No hay ajustes coincidentes</string>
+    <string name="settings_back_to_about">Volver a Acerca de</string>
+    <string name="licenses_back_to_list">Volver a licencias</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">Más aplicaciones</string>
+    <string name="home_more_apps_subtitle">Parches de la comunidad</string>
+    <string name="community_patches_notice_title">Fuentes de parches de terceros</string>
+    <string name="community_patches_notice_message">Las fuentes de parches de la comunidad las crean y mantienen sus propios autores. Morphe no revisa ni verifica los parches de terceros y no se hace responsable de su contenido ni de lo que hagan en tu dispositivo.</string>
 </resources>

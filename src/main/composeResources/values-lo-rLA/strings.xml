@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">ການ Patch ລົ້ມເຫຼວດ້ວຍເຫດຜົນທີ່ບໍ່ຮູ້</string>
     <string name="error_log_label">ບັນທຶກຂໍ້ຜິດພາດ</string>
     <string name="back">ກັບຄືນ</string>
+    <string name="open">ເປີດ</string>
     <string name="open_folder">ເປີດໂຟນເດີ</string>
     <string name="temporary_files_label">ໄຟລ໌ຊົ່ວຄາວ</string>
     <string name="size_can_be_freed_label">%1$s ສາມາດຄລາຍເນື້ອທີ່ໄດ້</string>
@@ -83,7 +84,7 @@
     <string name="color_picker_saved">ບັນທຶກແລ້ວ</string>
     <string name="dropdown_search_placeholder">ຄົ້ນຫາ…</string>
     <string name="custom_color">ສີທີ່ກຳນົດເອງ</string>
-    <string name="gradient_linear">ເຊັ້ນຊື່</string>
+    <string name="gradient_linear">ເສັ້ນຊື່</string>
     <string name="gradient_radial">ວົງມົນ</string>
     <string name="gradient_conic">ໂຄນິກ</string>
     <string name="gradient_add_stop">ເພີ່ມຈຸດຢຸດ</string>
@@ -97,7 +98,7 @@
     <string name="card_fill_mode_accent">ສີເນັ້ນ</string>
     <string name="card_fill_mode_accent_blurb">ຕິດຕາມສີເນັ້ນ, ປ່ຽນແປງເມື່ອສີນັ້ນປ່ຽນ</string>
     <string name="card_fill_mode_gradient">ສີໄລ່ລະດັບ</string>
-    <string name="card_fill_mode_gradient_blurb">ຈຸດຢຸດຈໍານວນໃດກໍ່ໄດ້, ແບບເສັ້ນຊື່, ແບບວົງມົນ ຫຼື ແບບໂຄນ</string>
+    <string name="card_fill_mode_gradient_blurb">ຈຸດຢຸດຈໍານວນໃດກໍ່ໄດ້, ແບບເສັ້ນຊື່, ແບບວົງມົນ ຫຼື ແບບໂຄນິກ</string>
     <string name="card_fill_mode_solid">ສີທຶບ</string>
     <string name="card_fill_mode_solid_blurb">ສີພຽງສີດຽວ</string>
     <string name="adb_install_on_button">ຕິດຕັ້ງໃນ %1$s</string>
@@ -122,13 +123,13 @@
     <string name="adb_error_storage">ພື້ນທີ່ຈັດເກັບຂໍ້ມູນໃນອຸປະກອນບໍ່ພຽງພໍ</string>
     <string name="adb_error_invalid_apk">ໄຟລ໌ APK ບໍ່ຖືກຕ້ອງ</string>
     <string name="adb_error_no_certificates">APK ບໍ່ໄດ້ຖືກເຊັນຢ່າງຖືກຕ້ອງ</string>
-    <string name="adb_error_update_incompatible">ການອັບເດດບໍ່ເຂົ້າກັນ, ລາຍເຊັນບໍ່ຕົງກັນ. ຖອນການຕິດຕັ້ງແອັບທີ່ມີຢູ່ກ່ອນ</string>
+    <string name="adb_error_update_incompatible">ການອັບເດດບໍ່ເຂົ້າກັນ, ລາຍເຊັນບໍ່ກົງກັນ. ຖອນການຕິດຕັ້ງແອັບທີ່ມີຢູ່ກ່ອນ</string>
     <string name="adb_error_user_restricted">ການຕິດຕັ້ງຖືກຈຳກັດໂດຍການຕັ້ງຄ່າຂອງຜູ້ໃຊ້</string>
     <string name="adb_error_verification_failure">ການກວດສອບແພັກເກັດລົ້ມເຫຼວ</string>
     <string name="adb_error_generic">ການຕິດຕັ້ງລົ້ມເຫຼວ: %1$s</string>
     <string name="adb_error_not_found">ບໍ່ພົບ ADB. ກະລຸນາຕິດຕັ້ງ Android SDK Platform Tools</string>
-    <string name="adb_error_unauthorized">ອຸປະກອນເຊື່ອມຕໍ່ແລ້ວ ແຕ່ບໍ່ໄດ້ຮັບອະນຸຍາດ. ກະລຸນົາຍອມຮັບຄຳຮ້ອງການດີບັກ USB ໃນອຸປະກອນຂອງທ່ານ</string>
-    <string name="adb_error_no_devices">ບໍ່ມີອຸປະກອນເຊື່ອມຕໍ່. ກະລຸນາເຊື່ອມຕໍ່ອຸປະກອນ Android ຂອງທ່ານ ໂດຍເປີດໃຊ້ງານການດີບັກ USB</string>
+    <string name="adb_error_unauthorized">ອຸປະກອນເຊື່ອມຕໍ່ແລ້ວ ແຕ່ບໍ່ໄດ້ຮັບອະນຸຍາດ. ກະລຸນາຍອມຮັບຄຳຮ້ອງການດີບັກ USB ໃນອຸປະກອນຂອງທ່ານ</string>
+    <string name="adb_error_no_devices">ບໍ່ມີອຸປະກອນເຊື່ອມຕໍ່. ກະລຸນາເຊື່ອມຕໍ່ອຸປະກອນ Android ຂອງທ່ານດ້ວຍ USB ຫຼື ເປີດການດີບັກ Wi-Fi</string>
     <string name="adb_error_device_not_found">ບໍ່ພົບອຸປະກອນ %1$s</string>
     <string name="adb_error_multiple_devices">ມີການເຊື່ອມຕໍ່ຫຼາຍອຸປະກອນ. ກະລຸນາເລືອກອັນໃດອັນໜຶ່ງ</string>
     <string name="adb_error_apk_not_found">ບໍ່ພົບໄຟລ໌ APK: %1$s</string>
@@ -156,11 +157,11 @@
     <string name="version_status_unsupported">ເວີຊັນທີ່ບໍ່ຮອງຮັບ</string>
     <string name="version_status_build_unsupported">ບໍ່ຮອງຮັບ Build ນີ້</string>
     <string name="version_status_build_unsupported_detail">ເວີຊັນນີ້ໄດ້ຮັບການຮອງຮັບ, ແຕ່ Build ນີ້ບໍ່ໄດ້ຮັບການຮອງຮັບ. ກະລຸນາໃຊ້ Build ທີ່ Patch ເປົ້າໝາຍຮອງຮັບ</string>
-    <string name="version_status_build_unsupported_with_code">ແພັດຊ໌ຕ້ອງການບິລດ໌ %1$s</string>
+    <string name="version_status_build_unsupported_with_code">patches ຕ້ອງການ build %1$s</string>
     <!-- Version Warning Dialogs -->
     <string name="version_warning_notice_title">ແຈ້ງເຕືອນເວີຊັນ</string>
     <string name="version_warning_build_unsupported_message">ປັດຈຸບັນ: v%1$s (build %2$s)\nBuild ທີ່ຕ້ອງການ: %3$s\n\nນີ້ແມ່ນ build ທີ່ແຕກຕ່າງກັນຂອງເວີຊັນດຽວກັນ. ຕົວ patch ຕ້ອງການ build ທີ່ສະເພາະເຈາະຈົງ.</string>
-    <string name="version_warning_experiment_title">ທ່ານຕ້ອງການທົດລອງບໍ່? 🧪</string>
+    <string name="version_warning_experiment_title">ທ່ານຕ້ອງການທົດລອງຫຼືບໍ່? 🧪</string>
     <string name="version_warning_latest_experimental_message">ປັດຈຸບັນ: v%1$s\n\nເວີຊັນນີ້ມີການຮອງຮັບແບບທົດລອງໃນໄລຍະເລີ່ມຕົ້ນ\n\n🔧 ອາດຈະພົບພຶດຕິກຳທີ່ຜິດປົກກະຕິຂອງແອັບ ຫຼື ບັກທີ່ຍັງບໍ່ທັນລະບຸ ໃນຂະນະທີ່ Patch ພວມຖືກປັບປຸງໃຫ້ເໝາະສົມກັບເວີຊັນຂອງແອັບນີ້</string>
     <string name="version_warning_unsupported_message">ປັດຈຸບັນ: v%1$s\n\nນີ້ບໍ່ແມ່ນເວີຊັນທີ່ໄດ້ຮັບການຮອງຮັບຢ່າງເປັນທາງການ. Patch ມີແນວໂນ້ມທີ່ຈະລົງບໍ່ສຳເລັດ</string>
     <string name="version_warning_notice_message">ດຳເນີນການຕໍ່ດ້ວຍ v%1$s ຫຼື ບໍ່?</string>
@@ -193,7 +194,7 @@
     <!-- Home Screen - Dialogs -->
     <string name="home_dialog_forget_button">ລຶບອອກ</string>
     <string name="home_dialog_uninstall_button">ຖອນການຕິດຕັ້ງ</string>
-    <string name="home_dialog_continue_anyway">ດຳເນີນການຕໍ່ໄປທັງໝົດ</string>
+    <string name="home_dialog_continue_anyway">ດຳເນີນການຕໍ່ຢ່າງໃດກໍ່ຕາມ</string>
     <string name="home_dialog_forget_title">ລຶບ %1$s ອອກບໍ?</string>
     <string name="home_dialog_forget_message">ການເຮັດແບບນີ້ຈະລຶບ %1$s ອອກຈາກປະຫວັດແອັບທີ່ຖືກປັບແກ້ຂອງທ່ານ. ມັນຈະບໍ່ລຶບໄຟລ໌ໃດໆ - ການປັບແກ້ແອັບໃໝ່ຈະເພີ່ມມັນກັບຄືນມາ</string>
     <string name="home_dialog_uninstall_title">ຖອນການຕິດຕັ້ງ %1$s ບໍ?</string>
@@ -251,7 +252,7 @@
     <string name="home_detail_resolving_patch_files">ກຳລັງແກ້ໄຂໄຟລ໌ patch</string>
     <string name="home_detail_downloading_percent">ກຳລັງດາວໂຫລດ %1$d%</string>
     <string name="home_detail_details_title">ລາຍລະອຽດ</string>
-    <string name="home_detail_output_path_label">ເສັ້ນທາງເອົາoutFile</string>
+    <string name="home_detail_output_path_label">ເສັ້ນທາງຜົນລັດ</string>
     <string name="home_detail_using_label">ກຳລັງໃຊ້</string>
     <string name="home_detail_apk_origin_sub">APK ທີ່ແອັບນີ້ຖືກ patch ມາ</string>
     <string name="home_detail_reading_chosen_bundle">ກຳລັງອ່ານ bundle ທີ່ເລືອກ…</string>
@@ -296,8 +297,8 @@
     <string name="patches_no_releases_found">ບໍ່ພົບເວີຊັນທີ່ປ່ອຍອອກມາ</string>
     <string name="patches_export_options_title">ສົ່ງອອກ options.json</string>
     <string name="patches_latest_badge">ຫຼ້າສຸດ</string>
-    <string name="patches_cached_badge">ເຈັບໄວ້ໃນແຄັດຊ໌</string>
-    <string name="patches_date_cached">ເຈັບໄວ້ໃນແຄັດຊ໌: %1$s</string>
+    <string name="patches_cached_badge">ແຄຊແລ້ວ</string>
+    <string name="patches_date_cached">ບັນທຶກໄວ້ໃນແຄຊ: %1$s</string>
     <string name="patches_date_published">ເຜີຍແຜ່: %1$s</string>
     <string name="patches_hide_notes">ເຊື່ອງໝາຍເຫດ</string>
     <string name="patches_patch_notes">ໝາຍເຫດການແປຕິບັດ</string>
@@ -313,7 +314,7 @@
     <string name="patch_selection_error_title">ເກີດຂໍ້ຜິດພາດໃນການໂຫຼດ patches</string>
     <string name="patch_selection_title">ເລືອກ patches</string>
     <string name="patch_selection_cmd_preview">ຕົວຢ່າງຄຳສັ່ງ</string>
-    <string name="patch_selection_root_mode_description">ໂໝດການມោນທ໌ Root</string>
+    <string name="patch_selection_root_mode_description">ໂໝດ Root mount</string>
     <string name="patch_selection_lock_unavailable">ບໍ່ສາມາດໃຊ້ງານໄດ້ສຳລັບ root mount</string>
     <string name="patch_selection_continue_on_error_tooltip">ດຳເນີນການ patch ຕໍ່ໄປ ເຖິງແມ່ນວ່າ patch ບາງອັນຈະຜິດພາດ</string>
     <string name="patch_selection_continue_on_error_description">ດຳເນີນການຕໍ່ເມື່ອມີຂໍ້ຜິດພາດ</string>
@@ -348,7 +349,7 @@
     <string name="patch_selection_strip_will_strip_detail">ເກັບໄວ້ສະເພາະ arch ທີ່ລະບຸໄວ້ເທົ່ານັ້ນ</string>
     <string name="patch_selection_strip_settings_hint">· ການຕັ້ງຄ່າ → Strip libs</string>
     <string name="patch_selection_arch_keep">ເກັບໄວ້</string>
-    <string name="patch_selection_arch_strip">ແຖບ</string>
+    <string name="patch_selection_arch_strip">ຕັດອອກ</string>
     <string name="patch_selection_arch_not_in_apk">ບໍ່ມີໃນ apk</string>
     <string name="patch_selection_no_matches_in_bundle">ບໍ່ມີຂໍ້ມູນທີ່ກົງກັນໃນຊຸດນີ້</string>
     <string name="patch_selection_error_patches_file_missing">ໄຟລ໌ Patches ຫາຍໄປ ແລະ ບໍ່ສາມາດດາວໂຫຼດໄດ້: %1$s</string>
@@ -391,8 +392,8 @@
     <string name="patching_status_preparing">ກຳລັງກຽມການ Patch</string>
     <string name="patching_status_in_progress">ກຳລັງນຳໃຊ້ patch</string>
     <string name="patching_completed_loading_result">ການ Patch ສຳເລັດແລ້ວ, ກຳລັງໂຫລດຜົນລັດ…</string>
-    <string name="patching_cancelled_loading_result">ການປັບປຸງຖືກຍົກເລີກ, ກຳລັງໂຫຼດຜົນລັດ…</string>
-    <string name="patching_failed_loading_result">ການປັບປຸງລົ້ມເຫຼວ, ກຳລັງໂຫຼດຜົນລັດ…</string>
+    <string name="patching_cancelled_loading_result">ການ Patch ຖືກຍົກເລີກ, ກຳລັງໂຫຼດຜົນລັດ…</string>
+    <string name="patching_failed_loading_result">ການ Patch ລົ້ມເຫຼວ, ກຳລັງໂຫຼດຜົນລັດ…</string>
     <string name="patching_log_viewer_failed_to_read">ອ່ານໄຟລ໌ບັນທຶກບໍ່ສຳເລັດ: %1$s</string>
     <string name="patching_log_viewer_title">ໄຟລ໌ບັນທຶກ</string>
     <string name="patching_log_viewer_copy_all">ຄັດລອກທັງໝົດ</string>
@@ -428,14 +429,14 @@
     <string name="patching_error_failed_patches">Patch ທີ່ລົ້ມເຫຼວ: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB ປິດຢູ່ · ເປີດເພື່ອຕິດຕັ້ງ</string>
-    <string name="result_adb_connect_device_hint">ເຊື່ອມຕໍ່ອຸປະກອນຜ່ານ USB ເພື່ອຕິດຕັ້ງດ້ວຍ ADB</string>
+    <string name="result_adb_connect_device_hint">ເຊື່ອມຕໍ່ອຸປະກອນຜ່ານ USB ຫຼື Wi-Fi ເພື່ອຕິດຕັ້ງດ້ວຍ ADB</string>
     <string name="result_screen_patch_another_button">Patch ອັນອື່ນ</string>
     <string name="result_screen_install_on_device_label">ຕິດຕັ້ງໃນ %1$s</string>
     <string name="result_screen_links_routed_label">ລິ້ງຖືກສົ່ງໄປຍັງແອັບທີ່ຖືກ patch ແລ້ວ</string>
     <string name="result_adb_updating_on_device">ກຳລັງອັບເດດໃນ %1$s…</string>
     <string name="result_adb_update_successful">ອັບເດດສຳເລັດແລ້ວ!</string>
     <string name="result_adb_install_successful">ຕິດຕັ້ງສຳເລັດແລ້ວ!</string>
-    <string name="result_adb_badge_root_mount">ການທິດທາງຣູທ (Root mount)</string>
+    <string name="result_adb_badge_root_mount">Root mount</string>
     <string name="result_adb_mount_button">Mount ຢູ່ %1$s</string>
     <string name="result_adb_mounting_on_device">ກຳລັງ Mounting ຢູ່ %1$s…</string>
     <string name="result_adb_mount_successful">Mounting ສຳເລັດແລ້ວ!</string>
@@ -443,13 +444,15 @@
     <string name="result_adb_unmount_button">Unmount ຈາກ %1$s</string>
     <string name="result_adb_unmounting_on_device">ກຳລັງ Unmounting ຈາກ %1$s…</string>
     <string name="result_adb_root_not_detected">ບໍ່ພົບການເຂົ້າເຖິງ Root ຢູ່ %1$s. ກະລຸນາໃຫ້ແນ່ໃຈວ່າໄດ້ຕິດຕັ້ງ Magisk/KernelSU/APatch ແລະ ໄດ້ໃຫ້ອະນຸຍາດ su ແລ້ວ</string>
-    <string name="result_adb_stock_app_not_installed">ແອັບຫຼັກ %1$s ບໍ່ໄດ້ຖືກຕິດຕັ້ງຢູ່ໃນ %2$s. ກະລຸນາຕິດຕັ້ງແອັບທາງການກ່ອນທີ່ຈະทำการ mount</string>
+    <string name="result_adb_stock_app_not_installed">ແອັບຫຼັກ %1$s ບໍ່ໄດ້ຖືກຕິດຕັ້ງຢູ່ໃນ %2$s. ກະລຸນາຕິດຕັ້ງແອັບທາງການກ່ອນທີ່ຈະ mount</string>
+    <string name="result_adb_mount_version_mismatch">ແອັບຫຼັກໃນ %3$s ແມ່ນ v%1$s, ແຕ່ APK ທີ່ຖືກ patch ແມ່ນ v%2$s. ການ mount root ຮຽກຮ້ອງໃຫ້ເວີຊັນກົງກັນ</string>
+    <string name="result_adb_mount_abi_mismatch">ອຸປະກອນ %3$s ແມ່ນ %1$s, ແຕ່ APK ມີພຽງແຕ່ [%2$s]. ໄລບຣາຣີ Native ຈະໂຫຼດບໍ່ສຳເລັດ</string>
     <string name="result_link_default_restored">ຄືນຄ່າການຈັດການລິ້ງເລີ່ມຕົ້ນແລ້ວ</string>
     <string name="result_link_routed_stock_disabled">ລິ້ງຖືກສົ່ງໄປຍັງແອັບທີ່ປັບແກ້ແລ້ວ, ປິດການໃຊ້ງານຕົວເລືອກເລີ່ມຕົ້ນ</string>
     <string name="result_adb_not_found_hint">ບໍ່ພົບ ADB. ກະລຸນາຕິດຕັ້ງ Android SDK Platform Tools ເພື່ອເປີດໃຊ້ການຕິດຕັ້ງໂດຍກົງ</string>
     <string name="result_adb_section_title">ຕິດຕັ້ງ ADB</string>
     <string name="result_adb_no_devices">ບໍ່ມີອຸປະກອນເຊື່ອມຕໍ່</string>
-    <string name="result_adb_connect_hint">ເຊື່ອມຕໍ່ຜ່ານ USB ໂດຍເປີດໃຊ້ USB debugging</string>
+    <string name="result_adb_connect_hint">ເຊື່ອມຕໍ່ຜ່ານ USB ຫຼື ການດີບັກ Wi-Fi</string>
     <string name="result_device_status_unauth">ບໍ່ໄດ້ຮັບອະນຸຍາດ</string>
     <string name="result_adb_update_button">ອັບເດດໃນ %1$s</string>
     <string name="result_adb_select_device_button">ເລືອກອຸປະກອນ</string>
@@ -514,7 +517,7 @@
     <string name="icon_studio_toggle_bold">ໂຕເຂັ້ມ</string>
     <string name="icon_studio_toggle_italic">ໂຕເນັ້ນ</string>
     <string name="icon_studio_toggle_underline">ຂີດກ້ອງ</string>
-    <string name="icon_studio_toggle_strike">ຂີດຄີງ</string>
+    <string name="icon_studio_toggle_strike">ຂີດຂ້າມ</string>
     <string name="icon_studio_adjust_spacing">ໄລຍະຫ່າງ</string>
     <string name="icon_studio_default_font">ຟອນມາດຕະຖານ</string>
     <string name="icon_studio_add_file_button">ເພີ່ມໄຟລ໌</string>
@@ -539,7 +542,7 @@
     <string name="source_error_pr_no_artifact">ບໍ່ພົບ artifacts ສຳລັບ pull request</string>
     <string name="source_error_patcher_incompatible">ແຫຼ່ງຂໍ້ມູນນີ້ຖືກສ້າງຂຶ້ນສຳລັບ patcher %1$s, ແຕ່ Morphe %2$s ປະກອບມີ patcher %3$s. ອັບເດດ Morphe ເພື່ອໃຊ້ງານມັນ</string>
     <string name="version_label_local">ທ້ອງຖິ່ນ</string>
-    <string name="source_sheet_remote_label">ໄລຍະໄກ</string>
+    <string name="source_sheet_remote_label">ຣີໂມດ</string>
     <string name="add_source">ເພີ່ມແຫຼ່ງຂໍ້ມູນ</string>
     <string name="source_sheet_title">ແຫຼ່ງຂໍ້ມູນ Patch</string>
     <string name="source_sheet_reload_description">ໂຫລດ patches ຄືນໃໝ່</string>
@@ -553,7 +556,7 @@
     <string name="source_sheet_move_up_description">ຍ້າຍຂຶ້ນເທິງ</string>
     <string name="source_sheet_move_down_description">ຍ້າຍລົງລຸ່ມ</string>
     <string name="source_sheet_ignored_mpp_title">ຮູບແບບ .mpp ທີ່ຖືກລະເວັ້ນ</string>
-    <string name="source_sheet_ignored_mpp_hint">ມີຜົນກະທົບສະເພາະແຫຼ່ງຂໍ້ມູນໂຟນເດີ, ເຊິ່ງຈະໂຫຼດ .mpp ຫຼ້າສຸດໃນໂຟນເດີໂດຍອັດຕະໂນມັດ. ເມື່ອເລືອກບິລທີ່ໃໝ່ທີ່ສຸດນັ້ນ, ໄຟລ໌ທີ່ມີຊື່ກົງກັບຮູບແບບທີ່ນີ້ຈະຖືກຂ້າມ. ຄຳສັບທຳມະດາຈະກົງກັບໄຟລ໌ໃດກໍ່ໄດ້ທີ່ມີຄຳນັ້ນ (ຕົວຢ່າງ: debug). ໃຊ້ * ສຳລັບ globs (ຕົວຢ່າງ: *-debug.mpp). *-sources.mpp ແລະ *-javadoc.mpp ຈະຖືກລະເວັ້ນສະເໝີ</string>
+    <string name="source_sheet_ignored_mpp_hint">ມີຜົນກະທົບສະເພາະແຫຼ່ງຂໍ້ມູນໂຟນເດີ, ເຊິ່ງຈະໂຫຼດ .mpp ຫຼ້າສຸດໃນໂຟນເດີໂດຍອັດຕະໂນມັດ. ເມື່ອເລືອກ build ທີ່ໃໝ່ທີ່ສຸດນັ້ນ, ໄຟລ໌ທີ່ມີຊື່ກົງກັບຮູບແບບທີ່ນີ້ຈະຖືກຂ້າມ. ຄຳສັບທຳມະດາຈະກົງກັບໄຟລ໌ໃດກໍ່ໄດ້ທີ່ມີຄຳນັ້ນ (ຕົວຢ່າງ: debug). ໃຊ້ * ສຳລັບ globs (ຕົວຢ່າງ: *-debug.mpp). *-sources.mpp ແລະ *-javadoc.mpp ຈະຖືກລະເວັ້ນສະເໝີ</string>
     <string name="source_sheet_ignored_mpp_placeholder">ຕົວຢ່າງ: debug ຫຼື *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">ເພີ່ມຮູບແບບ</string>
     <string name="source_sheet_remove_pattern_description">ລຶບຮູບແບບ</string>
@@ -574,8 +577,8 @@
     <string name="patch_source_dialog_repo_url_label">URL ຂອງ Repository</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ຫຼື gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">ຍອມຮັບລິ້ງ GitHub, GitLab, ຫຼື morphe.software/add-source</string>
-    <string name="patch_source_dialog_pre_release_title">ແພັດຊ໌ເວີຊັນ Pre-release</string>
-    <string name="patch_source_dialog_pre_release_hint">ໄດ້ຮັບສິດໃນການເຂົ້າເຖິງເວີຊັນແພັດຊ໌ທົດລອງໃໝ່ກ່ອນໃຜ</string>
+    <string name="patch_source_dialog_pre_release_title">Patches ເວີຊັນ Pre-release</string>
+    <string name="patch_source_dialog_pre_release_hint">ໄດ້ຮັບ patches ທົດລອງໃໝ່ກ່ອນໃຜ</string>
     <string name="patch_source_dialog_error_name_required">ຈຳເປັນຕ້ອງໃສ່ຊື່</string>
     <string name="patch_source_dialog_error_invalid_url">ກະລຸນາປ້ອນ URL ຂອງ GitHub ຫຼື GitLab ທີ່ຖືກຕ້ອງ</string>
     <string name="patch_source_dialog_error_invalid_file">ກະລຸນາເລືອກໄຟລ໌ .mpp ທີ່ຖືກຕ້ອງ</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ບໍ່ພົບ ADB</string>
     <string name="device_indicator_adb_not_found_subtitle">ຕິດຕັ້ງ Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">ບໍ່ພົບອຸປະກອນ</string>
-    <string name="device_indicator_no_devices_subtitle">ເຊື່ອມຕໍ່ອຸປະກອນທີ່ເປີດໃຊ້ USB debugging</string>
+    <string name="device_indicator_no_devices_subtitle">ເຊື່ອມຕໍ່ອຸປະກອນທີ່ເປີດການດີບັກ USB ຫຼື Wi-Fi</string>
     <string name="device_indicator_enable_debugging_title">ເປີດໃຊ້ USB debugging</string>
     <string name="device_indicator_enable_debugging_subtitle">ການຕັ້ງຄ່າ → ຕົວເລືອກນັກພັດທະນາ → USB Debugging</string>
     <string name="device_indicator_status_connected">ເຊື່ອມຕໍ່ແລ້ວ</string>
@@ -618,14 +621,14 @@
     <string name="error_dialog_disk_full">ພື້ນທີ່ໃນດິສກ໌ບໍ່ພຽງພໍ. ກະລຸນາລຶບຂໍ້ມູນບາງສ່ວນອອກ ແລະ ລອງໃໝ່ອີກຄັ້ງ</string>
     <string name="error_dialog_exit_code">ຂະບວນການປັບປຸງເກີດຂໍ້ຜິດພາດ. ກວດສອບບັນທຶກສຳລັບລາຍລະອຽດ</string>
     <!-- Banners -->
-    <string name="offline_banner_text">ອອຟລາຍ, ກຳລັງໃຊ້ການປັບປຸງທີ່ເກັບໄວ້ໃນແຄຊ</string>
+    <string name="offline_banner_text">ອອບລາຍ, ກຳລັງໃຊ້ patches ທີ່ເກັບໄວ້ໃນແຄຊ</string>
     <string name="update_banner_available">ມີເວີຊັນໃໝ່ໃຫ້ອັບເດດ · v%1$s</string>
     <string name="update_banner_from_version_crosses">ຈາກ v%1$s · dev → stable</string>
     <string name="update_banner_from_version">ຈາກ v%1$s</string>
     <string name="update_banner_later_button">ພາຍຫຼັງ</string>
     <string name="update_banner_skip_button">ຂ້າມ v%1$s</string>
     <!-- Licenses Dialog -->
-    <string name="licenses_dialog_title">ອະນຸຍາດ Open Source</string>
+    <string name="licenses_dialog_title">ໃບອະນຸຍາດ Open Source</string>
     <string name="licenses_dialog_empty_failed">// ໂຫຼດອະນຸຍາດບໍ່ສຳເລັດ</string>
     <string name="licenses_dialog_empty_no_matches">// ບໍ່ມີຂໍ້ມູນທີ່ກົງກັນ</string>
     <string name="licenses_dialog_footer_matched">ກົງກັນ %1$d / %2$d</string>
@@ -638,7 +641,7 @@
     <string name="licenses_notice_subtitle">ຂໍ້ຄວາມການໃຫ້ສິດ &amp; ການຮັບປະກັນທີ່ຈຳເປັນ (GPLv3 §7)</string>
     <string name="licenses_text_not_bundled">// ຂໍ້ຄວາມອະນຸຍາດແບບເຕັມບໍ່ໄດ້ຖືກລວມເຂົ້າໄວ້</string>
     <string name="licenses_text_open_canonical">ເປີດຂໍ້ຄວາມອະນຸຍາດຫຼັກ:</string>
-    <string name="licenses_text_open_license_button">ເປີດການອະນຸຍາດ</string>
+    <string name="licenses_text_open_license_button">ເປີດໃບອະນຸຍາດ</string>
     <!-- Settings -->
     <string name="settings_dialog_title">ການຕັ້ງຄ່າ</string>
     <string name="settings_nav_appearance">ຮູບລັກສະນະ</string>
@@ -648,19 +651,21 @@
     <string name="settings_dialog_reset_button">ຣີເຊັດ</string>
     <string name="settings_theme_system">ລະບົບ</string>
     <string name="settings_search_languages_placeholder">ຄົ້ນຫາພາສາ</string>
-    <string name="settings_dialog_resolves_to_message">ແປງເປັນ: %1$s</string>
+    <string name="settings_dialog_resolves_to_message">ແກ້ໄຂເປັນ: %1$s</string>
     <!-- Settings - Appearance -->
     <string name="settings_section_language">ພາສາ</string>
     <string name="settings_language_current_title">ພາສາປັດຈຸບັນ</string>
-    <string name="settings_language_community_translation_hint">ການແປສຳລັບບາງພາສາອາດຈະຂາດຫາຍ ຫຼື ບໍ່ສົມບູນ. ເພື່ອແປພາສາໃໝ່ ຫຼື ປັບປຸງການແປທີ່ມີຢູ່, ໃຫ້ໄປທີ່ %1$s</string>
     <string name="settings_language_dialog_title">ພາສາຂອງແອັບ</string>
+    <string name="settings_language_translate_title">ຊ່ວຍແປ Morphe</string>
     <string name="settings_language_search_no_results">ບໍ່ພົບຜົນລັດ</string>
     <string name="settings_section_theme">ຮູບແບບ</string>
     <string name="settings_appearance_theme_mode">ໂໝດຂອງຮູບແບບ</string>
+    <string name="settings_appearance_theme_mode_description">ສະຫຼັບລະຫວ່າງ ໂໝດແຈ້ງ, ມືດ, ດຳສະນິດ, ຫຼື ໂໝດລະບົບ</string>
     <string name="settings_theme_light">ສີອ່ອນ</string>
     <string name="settings_theme_dark">ສີເຂັ້ມ</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">ຮູບແບບສີ</string>
+    <string name="settings_appearance_color_style_description">ຈານສີ Morphe ຫຼື ຮູບແບບສີຂາວດຳ</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">ສີຂາວດຳ</string>
     <string name="settings_toggle_sharp_corners_label">ມຸມແຫຼມ</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">ບັດແອັບ</string>
     <string name="settings_app_cards_color_all">ສີສຳລັບທຸກບັດ</string>
     <string name="settings_app_cards_color_all_desc">ບັດທີ່ທ່ານປັບແຕ່ງເປັນລາຍບຸກຄົນຈະຍັງຄົງໃຊ້ສີຂອງຕົນເອງ</string>
-    <string name="settings_section_background_animation">ແອນິເມຊັນພື້ນຫຼັງ</string>
+    <string name="settings_toggle_app_icons_label">ໄອຄອນແອັບ</string>
+    <string name="settings_toggle_app_icons_desc">ສະແດງໄອຄອນຂອງແຕ່ລະແອັບ, ທີ່ຖືກດຶງມາຈາກ APK ທ້ອງຖິ່ນ ຫຼື ອຸປະກອນທີ່ເຊື່ອມຕໍ່</string>
+    <string name="settings_appearance_more_apps_card">ບັດແອັບເພີ່ມເຕີມ</string>
+    <string name="settings_appearance_more_apps_card_description">ສະແດງບັດພາຍໃຕ້ແອັບທີ່ນຳໄປສູ່ແພັດຊ໌ຊຸມຊົນ</string>
+    <string name="settings_section_effects">ເອັບເຟັກ</string>
+    <string name="settings_appearance_background_animation">ແອນິເມຊັນພື້ນຫຼັງ</string>
+    <string name="settings_appearance_background_animation_description">ແອນິເມຊັນທີ່ຫຼິ້ນຢູ່ທາງຫຼັງໜ້າຈໍຂອງແອັບ</string>
     <string name="settings_background_circles">ວົງມົນ</string>
     <string name="settings_background_rings">ວົງແຫວນ</string>
     <string name="settings_background_mesh">ຕາໜ່າງ</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">ໂໝດຊ່ຽວຊານ</string>
     <string name="settings_toggle_expert_mode_desc">ຄວບຄຸມການເລືອກ ແລະ ການກຳນົດຄ່າ patch ໄດ້ຢ່າງເຕັມທີ່</string>
+    <string name="settings_expert_mode_disabled_in_flow">ກັບຄືນໄປໜ້າຫຼັກເພື່ອປ່ຽນໂໝດ</string>
     <string name="settings_toggle_route_links_label">ສົ່ງລິ້ງໄປຍັງແອັບທີ່ຖືກ patch</string>
     <string name="settings_toggle_route_links_desc">ຫຼັງຈາກຕິດຕັ້ງຜ່ານ ADB, ເຮັດໃຫ້ແອັບທີ່ຖືກ patch ເປີດລິ້ງເວັບທີ່ຮອງຮັບ ແທນທີ່ຈະເປັນບຣາວເຊີ ຫຼື ແອັບຫຼັກ/ເລີ່ມຕົ້ນ</string>
     <string name="settings_toggle_disable_stock_links_label">ປິດການໃຊ້ງານລິ້ງຂອງແອັບຫຼັກ</string>
@@ -705,10 +717,10 @@
     <string name="settings_dev_validate_desc">ກວດສອບວ່າແຕ່ລະ match() ກົງກັບພຽງ method ດຽວເທົ່ານັ້ນ (ການ patch ຈະຊ້າລົງ, ສຳລັບການທົດສອບ patch)</string>
     <string name="settings_dev_verify_sdk_label">ການຢືນຢັນ Android SDK</string>
     <string name="settings_dev_verify_sdk_desc">ກວດສອບ DEX ແລະ APK ທີ່ຖືກປັບແກ້ດ້ວຍເຄື່ອງມື Android SDK (d8, zipalign). ອາດຈະມີການລາຍງານຜົນບວກປອມ</string>
-    <string name="settings_dev_sdk_path_label"> répertoire ຂອງ Android SDK</string>
+    <string name="settings_dev_sdk_path_label">ໂຟນເດີ Android SDK</string>
     <string name="settings_dev_sdk_path_auto">ກວດພົບໂດຍອັດຕະໂນມັດ</string>
-    <string name="settings_dev_sdk_not_found">ບໍ່ພົບ Android SDK. ກຳນົດ ANDROID_HOME ຫຼື ຄົ້ນຫາ répertoire ຂອງ SDK</string>
-    <string name="settings_dev_sdk_picker_title">ເລືອກ répertoire ຂອງ Android SDK</string>
+    <string name="settings_dev_sdk_not_found">ບໍ່ພົບ Android SDK. ກຳນົດ ANDROID_HOME ຫຼື ຄົ້ນຫາໂຟນເດີ SDK</string>
+    <string name="settings_dev_sdk_picker_title">ເລືອກໂຟນເດີ Android SDK</string>
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">ລຶບໄຟລ໌ຊົ່ວຄາວອັດຕະໂນມັດ</string>
     <string name="settings_toggle_auto_cleanup_desc">ລຶບໄຟລ໌ຊົ່ວຄາວຫຼັງຈາກການປັບປຸງ</string>
@@ -719,25 +731,41 @@
     <string name="settings_section_output_folder">ໂຟນເດີຜົນໄດ້ຮັບ</string>
     <string name="settings_output_folder_desc">ບ່ອນທີ່ບັນທຶກ APK ທີ່ຖືກ patch ໄວ້. ໂຟນເດີຍ່ອຍສຳລັບແຕ່ລະແອັບຈະຖືກສ້າງຂຶ້ນພາຍໃນ</string>
     <string name="settings_output_folder_default">ໂຟນເດີ APK (ຄ່າເລີ່ມຕົ້ນ)</string>
-    <string name="settings_output_folder_picker_title">ເລືອກໂຟນເດີເອົາresultados</string>
+    <string name="settings_output_folder_picker_title">ເລືອກໂຟນເດີຜົນໄດ້ຮັບ</string>
     <string name="settings_output_folder_not_found">ບໍ່ພົບໂຟນເດີ, ຈະຖືກສ້າງຂຶ້ນໃນການປັບປຸງຄັ້ງຕໍ່ໄປ</string>
     <string name="settings_toggle_auto_start_adb_label">ເລີ່ມ ADB ອັດຕະໂນມັດ</string>
     <string name="settings_toggle_auto_start_adb_desc">ເປີດ ADB daemon ເມື່ອເລີ່ມຕົ້ນ ເພື່ອໃຫ້ອຸປະກອນທີ່ເຊື່ອມຕໍ່ຖືກຕິດຕາມ. ເມື່ອປິດ, Morphe ຈະບໍ່ເລີ່ມເຊີບເວີເລີຍ, ແລະ ຄຸນສົມບັດການຕິດຕັ້ງ/push ຈະຖືກປິດການໃຊ້ງານ</string>
     <string name="settings_section_storage">ບ່ອນເກັບຂໍ້ມູນ &amp; ແຄຊ</string>
-    <string name="settings_cache_summary">ແຄຊ: %1$s (ແພັດຊ໌ + ບັນທຶກ)</string>
-    <string name="settings_cache_clear_button">ລຶບແຄຊ</string>
+    <string name="settings_cache_clear_all_title">ລຶບຄແຊທັງໝົດ</string>
+    <string name="settings_cache_category_patches">ແພັດສ໌</string>
+    <string name="settings_cache_category_logs">ບັນທຶກ</string>
+    <string name="settings_cache_category_temp">ໄຟລ໌ຊົ່ວຄາວ</string>
+    <string name="settings_cache_category_avatars">ແຄຊຮູບໂປຣໄຟລ໌</string>
+    <string name="settings_cache_category_app_icons">ແຄຊໄອຄອນແອັບ</string>
+    <string name="settings_cache_confirm_patches_title">ລຶບແພັດຊ໌ບໍ?</string>
+    <string name="settings_cache_confirm_patches_message">ການດຳເນີນການນີ້ຈະລຶບໄຟລ໌ແພັດຊ໌ທີ່ດາວໂຫຼດມາ. ແພັດຊ໌ຈະຖືກດາວໂຫຼດໃໝ່ເມື່ອຈຳເປັນ</string>
+    <string name="settings_cache_confirm_logs_title">ລຶບບັນທຶກບໍ?</string>
+    <string name="settings_cache_confirm_logs_message">ການດຳເນີນການນີ້ຈະລຶບໄຟລ໌ບັນທຶກຂອງແອັບພລິເຄຊັນທັງໝົດ ແລະ ຂໍ້ມູນ logcat ຂອງອຸປະກອນ</string>
+    <string name="settings_cache_confirm_temp_title">ລຶບໄຟລ໌ຊົ່ວຄາວບໍ?</string>
+    <string name="settings_cache_confirm_temp_message">ການດຳເນີນການນີ້ຈະລຶບໄຟລ໌ຊົ່ວຄາວ ແລະ ໄຟລ໌ພື້ນທີ່ເຮັດວຽກ</string>
+    <string name="settings_cache_confirm_avatars_title">ລຶບແຄຊຮູບໂປຣໄຟລ໌ບໍ?</string>
+    <string name="settings_cache_confirm_avatars_message">ການດຳເນີນການນີ້ຈະລຶບຮູບໂປຣໄຟລ໌ຈາກໄລຍະໄກທີ່ຖືກເກັບໄວ້ໃນແຄຊທັງໝົດ</string>
+    <string name="settings_cache_confirm_app_icons_title">ລ້າງແຄຊໄອຄອນແອັບບໍ?</string>
+    <string name="settings_cache_confirm_app_icons_message">ສິ່ງນີ້ຈະລົບໄອຄອນແອັບທັງໝົດທີ່ຖືກດຶງມາຈາກ APK ແລະ ອຸປະກອນ</string>
+    <string name="settings_cache_category_cleared">ລຶບ %1$s ແລ້ວ</string>
+    <string name="settings_cache_category_clear_failed">ລຶບ %1$s ບໍ່ສຳເລັດ</string>
     <string name="settings_cache_cleared">ລຶບແຄຊແລ້ວ</string>
     <string name="settings_cache_clear_failed">ລຶບບໍ່ສຳເລັດ</string>
     <string name="settings_cache_confirm_title">ລຶບແຄຊບໍ?</string>
-    <string name="settings_cache_confirm_message">ການດຳເນີນການນີ້ຈະລຶບແພັດຊ໌ທີ່ດາວໂຫຼດມາ ແລະ ໄຟລ໌ບັນທຶກ. ແພັດຊ໌ຈະຖືກດາວໂຫຼດຄືນໃໝ່ເມື່ອຈຳເປັນ</string>
+    <string name="settings_cache_confirm_message">ການດຳເນີນການນີ້ຈະລຶບແພັດຊ໌ທີ່ດາວໂຫຼດມາ, ໄຟລ໌ບັນທຶກ ແລະ ໄຟລ໌ຊົ່ວຄາວ. ແພັດຊ໌ຈະຖືກດາວໂຫຼດໃໝ່ເມື່ອມີຄວາມຈຳເປັນ</string>
     <string name="settings_storage_open_app_data_button">ເປີດຂໍ້ມູນແອັບ</string>
     <string name="settings_storage_open_logs_button">ເປີດບັນທຶກ</string>
     <string name="settings_section_about">ກ່ຽວກັບ</string>
     <string name="settings_about_version">ເວີຊັນ %1$s</string>
     <string name="settings_about_changelogs_title">ເບິ່ງບັນທຶກການປ່ຽນແປງ</string>
     <string name="settings_about_changelogs_desc">ກວດເບິ່ງການປ່ຽນແປງຫຼ້າສຸດໃນການອັບເດດນີ້</string>
-    <string name="settings_about_licenses_title">ອະນຸຍາດ Open Source</string>
-    <string name="settings_about_licenses_desc">ເບິ່ງອະນຸຍາດຂອງໄລບຣາຣີພາກສ່ວນທີສາມ</string>
+    <string name="settings_about_licenses_title">ໃບອະນຸຍາດ Open Source</string>
+    <string name="settings_about_licenses_desc">ເບິ່ງໃບອະນຸຍາດຂອງໄລບຣາຣີພາກສ່ວນທີສາມ</string>
     <string name="settings_about_documentation_title">ເອກະສານຄູ່ມື</string>
     <string name="settings_about_documentation_desc">ຄຳແນະນຳສຳລັບການ patch, ແຫຼ່ງຂໍ້ມູນ ແລະ ການແກ້ໄຂບັນຫາ</string>
     <string name="settings_about_website_title">ເຂົ້າເບິ່ງເວັບໄຊທ໌</string>
@@ -752,7 +780,7 @@
     <string name="settings_signing_desc">Keystore ທີ່ໃຊ້ເພື່ອເຊັນ APK ທີ່ຖືກ patch ແລ້ວ</string>
     <string name="settings_signing_default_keystore">ຄ່າເລີ່ມຕົ້ນ (ສ້າງໂດຍອັດຕະໂນມັດ)</string>
     <string name="settings_signing_picker_title">ເລືອກ keystore</string>
-    <string name="settings_signing_not_found">ບໍ່ພົບ Keystore, ການປັບປຸງຈະລົ້ມເຫຼວຈົນກວ່າທ່ານຈະກູ້ຄືນ, ເລືອກອັນ lain, ຫຼື ຣີເຊັດ</string>
+    <string name="settings_signing_not_found">ບໍ່ພົບ Keystore, ການ Patch ຈະລົ້ມເຫຼວຈົນກວ່າທ່ານຈະກູ້ຄືນ, ເລືອກອັນອື່ນ, ຫຼື ຣີເຊັດ</string>
     <string name="settings_signing_invalid_file_type">ປະເພດໄຟລ໌ບໍ່ຖືກຕ້ອງ. ຄາດຫວັງ: %1$s</string>
     <string name="settings_signing_using_default">ກຳລັງໃຊ້ keystore ເລີ່ມຕົ້ນຂອງ Morphe ຢູ່ທີ່ %1$s</string>
     <string name="settings_signing_will_create_default">ຈະສ້າງ keystore ເລີ່ມຕົ້ນຂອງ Morphe ຢູ່ທີ່ %1$s</string>
@@ -776,8 +804,8 @@
     <string name="settings_cert_info_title">ຂໍ້ມູນໃບຢັ້ງຢືນ</string>
     <string name="settings_cert_info_alias">ນາມແທນ</string>
     <string name="settings_cert_info_issuer">ຜູ້ອອກໃບຢັ້ງຢືນ</string>
-    <string name="settings_cert_info_valid_from">ມີຜົນຕັ້ງແຕ່ວັນທີ</string>
-    <string name="settings_cert_info_valid_until">ໝົດອາຍຸວັນທີ</string>
+    <string name="settings_cert_info_valid_from">ໃຊ້ໄດ້ນັບແຕ່ວັນທີ</string>
+    <string name="settings_cert_info_valid_until">ໝົດອາຍຸຮອດວັນທີ</string>
     <string name="settings_cert_info_sha256">ລາຍລັກສະນະ SHA-256</string>
     <string name="settings_cert_info_sha1">ລາຍລັກສະນະ SHA-1</string>
     <string name="settings_cert_info_could_not_read">ບໍ່ສາມາດອ່ານ keystore ໄດ້. ກະລຸນາກວດສອບລະຫັດຜ່ານ ແລະ ນາມແທນ</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">ບັນທຶກ runtime ຂອງແອັບທີ່ຖືກ patch ແລ້ວ</string>
     <string name="settings_runtime_logs_desc">ບັນທຶກ logs ຈາກໂທລະສັບຂອງທ່ານ ຫຼັງຈາກທີ່ແອັບທີ່ຖືກ patch ແລ້ວມີການ crash ຫຼື ເຮັດວຽກຜິດປົກກະຕິ. ລຶບຂໍ້ມູນກ່ອນທີ່ຈະເຮັດໃຫ້ເກີດ bug ຄືນໃໝ່, ຈາກນັ້ນບັນທຶກຜົນລັດທີ່ຖືກກັ່ນຕອງແລ້ວເພື່ອຄັດຕິດໄປກັບບົດລາຍງານ bug</string>
     <string name="settings_runtime_logs_device_info">ອຸປະກອນ: %1$s</string>
-    <string name="settings_runtime_logs_no_device">ບໍ່ມີອຸປະກອນເຊື່ອມຕໍ່. ກະລຸນາສຽບໂທລະສັບຂອງທ່ານໂດຍເປີດໃຊ້ USB debugging</string>
+    <string name="settings_runtime_logs_no_device">ບໍ່ມີອຸປະກອນເຊື່ອມຕໍ່. ເຊື່ອມຕໍ່ໂທລະສັບຂອງທ່ານດ້ວຍ USB ຫຼື ເປີດການດີບັກ Wi-Fi</string>
     <string name="settings_runtime_logs_clearing">ກຳລັງລຶບ…</string>
     <string name="settings_runtime_logs_clear_button">ລຶບ logs ຂອງອຸປະກອນ</string>
     <string name="settings_runtime_logs_failed_to_clear">ລຶບ logs ບໍ່ສຳເລັດ</string>
@@ -804,7 +832,7 @@
     <string name="app_info_version_gui">GUI: %1$s</string>
     <string name="app_info_version_patcher">Patcher: v%1$s</string>
     <string name="app_info_version_library">Library: v%1$s</string>
-    <string name="app_info_description">ໂຄງການ open-source ສໍາລັບການ patch ແອັບ Android ທີ່ນິຍົມໃນຮູບແບບທີ່ທັນສະໄໝ ແລະ ຄ່ອງຕົວ, ຂັບເຄື່ອນໂດຍຄໍາຄິດເຫັນ ແລະ ການປະກອບສ່ວນຂອງຊຸມຊົນ</string>
+    <string name="app_info_description">ໂຄງການ open-source ສຳລັບການ patch ແອັບ Android ທີ່ນິຍົມໃນຮູບແບບທີ່ທັນສະໄໝ ແລະ ຄ່ອງຕົວ, ຂັບເຄື່ອນໂດຍຄຳຄິດເຫັນ ແລະ ການປະກອບສ່ວນຂອງຊຸມຊົນ</string>
     <string name="app_info_link_changelog">ບັນທຶກການປ່ຽນແປງ</string>
     <string name="app_info_link_reddit">Reddit</string>
     <string name="app_info_link_translate">ແປພາສາ</string>
@@ -828,4 +856,15 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">ແຫຼ່ງທີ່ມາ</string>
     <string name="nav_apps">ແອັບ</string>
+    <string name="nav_settings">ການຕັ້ງຄ່າ</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">ຄົ້ນຫາການຕັ້ງຄ່າ</string>
+    <string name="settings_search_no_results">ບໍ່ມີການຕັ້ງຄ່າທີ່ກົງກັນ</string>
+    <string name="settings_back_to_about">ກັບຄືນໄປທີ່ ກ່ຽວກັບ</string>
+    <string name="licenses_back_to_list">ກັບຄືນໄປທີ່ ໃບອະນຸຍາດ</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">ແອັບເພີ່ມເຕີມ</string>
+    <string name="home_more_apps_subtitle">ແພັດຊ໌ຊຸມຊົນ</string>
+    <string name="community_patches_notice_title">ແຫຼ່ງແພັດຊ໌ຈາກບຸກຄົນທີສາມ</string>
+    <string name="community_patches_notice_message">ແຫຼ່ງແພັດຊ໌ຊຸມຊົນຖືກສ້າງ ແລະ ບຳລຸງຮັກສາໂດຍຜູ້ຂຽນຂອງພວກເຂົາເອງ. Morphe ບໍ່ໄດ້ກວດສອບ ຫຼື ຢືນຢັນແພັດຊ໌ຈາກບຸກຄົນທີສາມ, ແລະ ບໍ່ຮັບຜິດຊອບຕໍ່ເນື້ອຫາ ຫຼື ສິ່ງທີ່ພວກມັນເຮັດໃນອຸປະກອນຂອງທ່ານ.</string>
 </resources>

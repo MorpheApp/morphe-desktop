@@ -12,7 +12,7 @@
     <string name="collapse">समेटें</string>
     <string name="expand">फैलाएं</string>
     <string name="cancel">रद्द करें</string>
-    <string name="close">बंद करे</string>
+    <string name="close">बंद करें</string>
     <string name="trust">भरोसा</string>
     <string name="delete">हटाएँ</string>
     <string name="disabled_while_patching">पैचिंग के दौरान उपलब्ध नहीं</string>
@@ -75,6 +75,7 @@
     <string name="error_patching_unknown">अज्ञात कारण से पैचिंग विफल</string>
     <string name="error_log_label">त्रुटि लॉग</string>
     <string name="back">पीछे</string>
+    <string name="open">खोलें</string>
     <string name="open_folder">फ़ोल्डर खोलें</string>
     <string name="temporary_files_label">अस्थायी फ़ाइलें</string>
     <string name="size_can_be_freed_label">%1$s मुक्त किया जा सकता है</string>
@@ -128,7 +129,7 @@
     <string name="adb_error_generic">इंस्टॉलेशन विफल: %1$s</string>
     <string name="adb_error_not_found">ADB नहीं मिला। कृपया Android SDK Platform Tools इंस्टॉल करें</string>
     <string name="adb_error_unauthorized">डिवाइस कनेक्ट है लेकिन अधिकृत नहीं है। कृपया अपने डिवाइस पर USB डिबगिंग प्रॉम्प्ट स्वीकार करें</string>
-    <string name="adb_error_no_devices">कोई डिवाइस कनेक्ट नहीं। कृपया USB डिबगिंग सक्षम के साथ अपना Android डिवाइस कनेक्ट करें</string>
+    <string name="adb_error_no_devices">कोई डिवाइस कनेक्ट नहीं है। कृपया USB या Wi-Fi डिबगिंग सक्षम करके अपने Android डिवाइस को कनेक्ट करें</string>
     <string name="adb_error_device_not_found">डिवाइस %1$s नहीं मिला</string>
     <string name="adb_error_multiple_devices">कई डिवाइस कनेक्ट हैं। कृपया एक चुनें</string>
     <string name="adb_error_apk_not_found">APK फ़ाइल नहीं मिली: %1$s</string>
@@ -163,7 +164,7 @@
     <string name="version_warning_experiment_title">क्या आप प्रयोग करना चाहते हैं? 🧪</string>
     <string name="version_warning_latest_experimental_message">वर्तमान: v%1$s\n\nइस संस्करण में प्रारंभिक प्रयोगात्मक समर्थन है\n\n🔧 पैच इस ऐप संस्करण के लिए परिष्कृत होने पर विचित्र ऐप व्यवहार या अज्ञात बग की उम्मीद करें।</string>
     <string name="version_warning_unsupported_message">वर्तमान: v%1$s\n\nयह आधिकारिक रूप से समर्थित संस्करण नहीं है। पैच शायद विफल होंगे।</string>
-    <string name="version_warning_notice_message">V%1$s के साथ जारी रखें?</string>
+    <string name="version_warning_notice_message">v%1$s के साथ जारी रखें?</string>
     <!-- Home Screen -->
     <string name="home_select_apk_file">APK फ़ाइल चुनें</string>
     <string name="home_could_not_resolve_patch_files">पैच फ़ाइलें हल नहीं कर सके</string>
@@ -240,7 +241,7 @@
     <string name="home_action_preparing">तैयार हो रहा है…</string>
     <string name="home_action_update">अपडेट</string>
     <string name="home_action_repatch">पुनः पैच करें</string>
-    <string name="home_action_uninstalling">अन्स्टॉल हो रहा हे</string>
+    <string name="home_action_uninstalling">अनइंस्टॉल हो रहा है…</string>
     <string name="home_detail_source_apk_label">स्रोत APK</string>
     <string name="home_detail_patch_bundle_label">पैच बंडल</string>
     <string name="home_detail_no_sources_enabled">कोई स्रोत सक्षम नहीं</string>
@@ -277,8 +278,8 @@
     <string name="home_detail_ready_no_repatch">v%1$s तैयार, कोई पुनः पैच आवश्यक नहीं</string>
     <string name="home_detail_source_disabled">बंद किया गया</string>
     <string name="home_detail_source_removed">हटाया गया</string>
-    <string name="home_detail_source_disabled_sub">सोर्स, 'सोर्स' में अक्षम है। पुन: पैच करने के लिए इसे सक्षम करें</string>
-    <string name="home_detail_source_disabled_alternatives_sub">मूल स्रोत अक्षम है। कोई वैकल्पिक स्रोत चुनें या इसे Sources में फिर से सक्षम करें</string>
+    <string name="home_detail_source_disabled_sub">स्रोत अक्षम है। पुनः पैच करने के लिए इसे स्रोत सूची में सक्षम करें</string>
+    <string name="home_detail_source_disabled_alternatives_sub">मूल स्रोत अक्षम है। कोई वैकल्पिक स्रोत चुनें या इसे स्रोत सूची में फिर से सक्षम करें</string>
     <string name="home_detail_no_compatible_source">कोई संगत स्रोत सक्षम नहीं है</string>
     <string name="home_detail_choose_source">पैच स्रोत चुनें</string>
     <string name="home_advice_unsupported_by_patches">v%1$s अब नवीनतम पैच द्वारा समर्थित नहीं है</string>
@@ -384,7 +385,7 @@
     <string name="patch_selection_group_ungrouped">असमूहीकृत</string>
     <string name="patch_selection_group_selected_count">%1$d चयनित</string>
     <!-- Patching Screen -->
-    <string name="patching_start_over_button">शुरू से खेलें</string>
+    <string name="patching_start_over_button">फिर से शुरू करें</string>
     <string name="patching_patches_count">%1$d / %2$d पैच</string>
     <string name="patching_slow_warning">इसमें सामान्य से अधिक समय लग रहा है। कृपया प्रतीक्षा करें…</string>
     <string name="patching_status_ready">पैच करने के लिए तैयार</string>
@@ -428,7 +429,7 @@
     <string name="patching_error_failed_patches">विफल पैच: %1$s</string>
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB बंद है · इंस्टॉल करने के लिए सक्षम करें</string>
-    <string name="result_adb_connect_device_hint">ADB के साथ इंस्टॉल करने के लिए USB के माध्यम से डिवाइस कनेक्ट करें</string>
+    <string name="result_adb_connect_device_hint">ADB के साथ इंस्टॉल करने के लिए USB या Wi-Fi के माध्यम से एक डिवाइस कनेक्ट करें</string>
     <string name="result_screen_patch_another_button">दूसरा पैच करें</string>
     <string name="result_screen_install_on_device_label">%1$s पर इंस्टॉल करें</string>
     <string name="result_screen_links_routed_label">लिंक पैच किए गए ऐप पर रूट किए गए</string>
@@ -444,12 +445,14 @@
     <string name="result_adb_unmounting_on_device">%1$s से अनमाउंट किया जा रहा है…</string>
     <string name="result_adb_root_not_detected">%1$s पर रूट एक्सेस नहीं मिला। सुनिश्चित करें कि Magisk/KernelSU/APatch इंस्टॉल है और su अनुमति दी गई है</string>
     <string name="result_adb_stock_app_not_installed">स्टॉक ऐप %1$s, %2$s पर इंस्टॉल नहीं है। माउंट करने से पहले आधिकारिक ऐप इंस्टॉल करें</string>
+    <string name="result_adb_mount_version_mismatch">%3$s पर स्टॉक ऐप v%1$s है, लेकिन पैच किया गया APK v%2$s है। रूट माउंट के लिए मिलान वाले संस्करण आवश्यक हैं</string>
+    <string name="result_adb_mount_abi_mismatch">डिवाइस %3$s %1$s है, लेकिन APK में केवल [%2$s] शामिल है। नेटिव लाइब्रेरी लोड होने में विफल रहेंगी</string>
     <string name="result_link_default_restored">डिफ़ॉल्ट लिंक हैंडलिंग पुनर्स्थापित</string>
     <string name="result_link_routed_stock_disabled">लिंक पैच किए गए ऐप पर रूट किए गए, स्टॉक अक्षम</string>
     <string name="result_adb_not_found_hint">ADB नहीं मिला। प्रत्यक्ष इंस्टॉलेशन सक्षम करने के लिए Android SDK Platform Tools इंस्टॉल करें</string>
     <string name="result_adb_section_title">ADB इंस्टॉल</string>
     <string name="result_adb_no_devices">कोई डिवाइस कनेक्ट नहीं</string>
-    <string name="result_adb_connect_hint">USB डिबगिंग सक्षम के साथ USB के माध्यम से कनेक्ट करें</string>
+    <string name="result_adb_connect_hint">USB या Wi-Fi डिबगिंग के माध्यम से कनेक्ट करें</string>
     <string name="result_device_status_unauth">अनधिकृत</string>
     <string name="result_adb_update_button">%1$s पर अपडेट करें</string>
     <string name="result_adb_select_device_button">एक डिवाइस चुनें</string>
@@ -558,15 +561,15 @@
     <string name="source_sheet_add_pattern_description">पैटर्न जोड़ें</string>
     <string name="source_sheet_remove_pattern_description">पैटर्न हटाएँ</string>
     <string name="sources_management_signed_by">द्वारा हस्ताक्षरित</string>
-    <string name="sources_management_signing_key_changed_badge">की बदल गई</string>
-    <string name="sources_management_signing_key_changed_hint">साइनिंग की बदल गई है। इसकी समीक्षा करने के लिए क्लिक करें</string>
+    <string name="sources_management_signing_key_changed_badge">कुंजी बदली गई</string>
+    <string name="sources_management_signing_key_changed_hint">साइनिंग कुंजी बदल गई है। इसकी समीक्षा करने के लिए क्लिक करें</string>
     <!-- Signing Key Trust Dialog -->
-    <string name="sources_signing_key_changed_named">'%1$s' अपडेट नहीं किया गया क्योंकि इसका नवीनतम रिलीज़ उस key द्वारा साइन नहीं किया गया है जिसका उपयोग इसने पहले किया था</string>
-    <string name="sources_signing_key_new">नई की</string>
-    <string name="sources_signing_key_trust_message">नवीनतम रिलीज़ एक अलग key द्वारा साइन किया गया है। या तो डेवलपर ने अपनी key बदल दी है, या किसी और ने यह रिलीज़ प्रकाशित किया है। इसे केवल तभी ट्रस्ट करें यदि डेवलपर ने नई key की घोषणा की हो</string>
+    <string name="sources_signing_key_changed_named">'%1$s' अपडेट नहीं किया गया क्योंकि इसका नवीनतम रिलीज़ उस कुंजी से साइन नहीं है जिसका इसने पहले उपयोग किया था</string>
+    <string name="sources_signing_key_new">नई कुंजी</string>
+    <string name="sources_signing_key_trust_message">नवीनतम रिलीज़ एक अलग कुंजी से साइन किया गया है। या तो डेवलपर ने अपनी कुंजी बदल दी है, या किसी और ने यह रिलीज़ प्रकाशित किया है। इसे केवल तभी भरोसा करें जब डेवलपर ने नई कुंजी की घोषणा की हो</string>
     <string name="sources_signing_key_trust_message_unsigned">नवीनतम रिलीज़ साइन नहीं किया गया है। या तो डेवलपर ने रिलीज़ साइन करना बंद कर दिया है, या किसी और ने यह रिलीज़ प्रकाशित किया है। इसे केवल तभी ट्रस्ट करें यदि डेवलपर ने इसकी घोषणा की हो</string>
-    <string name="sources_signing_key_trust_title">नई key पर भरोसा करें?</string>
-    <string name="sources_signing_key_trusted">ट्रस्टेड की</string>
+    <string name="sources_signing_key_trust_title">नई कुंजी पर भरोसा करें?</string>
+    <string name="sources_signing_key_trusted">भरोसेमंद कुंजी</string>
     <!-- Patch Source Dialogs -->
     <string name="patch_source_dialog_local_file_label">स्थानीय फ़ाइल</string>
     <string name="patch_source_dialog_name_label">नाम</string>
@@ -603,7 +606,7 @@
     <string name="device_indicator_adb_not_found_title">ADB नहीं मिला</string>
     <string name="device_indicator_adb_not_found_subtitle">Android SDK Platform Tools इंस्टॉल करें</string>
     <string name="device_indicator_no_devices_title">कोई डिवाइस पहचाना नहीं गया</string>
-    <string name="device_indicator_no_devices_subtitle">USB डिबगिंग सक्षम एक डिवाइस कनेक्ट करें</string>
+    <string name="device_indicator_no_devices_subtitle">USB या Wi-Fi डिबगिंग सक्षम करके एक डिवाइस कनेक्ट करें</string>
     <string name="device_indicator_enable_debugging_title">USB डिबगिंग सक्षम करें</string>
     <string name="device_indicator_enable_debugging_subtitle">सेटिंग्स → डेवलपर विकल्प → USB डिबगिंग</string>
     <string name="device_indicator_status_connected">कनेक्टेड</string>
@@ -623,7 +626,7 @@
     <string name="update_banner_from_version_crosses">v%1$s से · dev → stable</string>
     <string name="update_banner_from_version">v%1$s से</string>
     <string name="update_banner_later_button">बाद में</string>
-    <string name="update_banner_skip_button">V%1$s छोड़ें</string>
+    <string name="update_banner_skip_button">v%1$s छोड़ें</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ओपन सोर्स लाइसेंस</string>
     <string name="licenses_dialog_empty_failed">// लाइसेंस लोड करने में विफल</string>
@@ -652,15 +655,17 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">भाषा</string>
     <string name="settings_language_current_title">वर्तमान भाषा</string>
-    <string name="settings_language_community_translation_hint">कुछ भाषाओं के अनुवाद गायब या अधूरे हो सकते हैं। नई भाषाओं का अनुवाद करने या मौजूदा अनुवादों को बेहतर बनाने के लिए, %1$s पर जाएँ</string>
     <string name="settings_language_dialog_title">ऐप भाषा</string>
+    <string name="settings_language_translate_title">Morphe का अनुवाद करने में मदद करें</string>
     <string name="settings_language_search_no_results">कोई परिणाम नहीं मिला</string>
     <string name="settings_section_theme">थीम</string>
     <string name="settings_appearance_theme_mode">थीम मोड</string>
+    <string name="settings_appearance_theme_mode_description">लाइट, डार्क, प्योर ब्लैक या सिस्टम थीम के बीच स्विच करें</string>
     <string name="settings_theme_light">लाइट</string>
     <string name="settings_theme_dark">डार्क</string>
     <string name="settings_theme_amoled">एमोलेड</string>
     <string name="settings_appearance_color_style">कलर स्टाइल</string>
+    <string name="settings_appearance_color_style_description">Tinted Morphe पैलेट या ग्रेस्केल मोनोक्रोम स्टाइल</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">एक रंग का</string>
     <string name="settings_toggle_sharp_corners_label">नुकीले कोने</string>
@@ -672,7 +677,13 @@
     <string name="settings_section_app_cards">ऐप कार्ड</string>
     <string name="settings_app_cards_color_all">हर कार्ड के लिए रंग</string>
     <string name="settings_app_cards_color_all_desc">जिन कार्डों को आपने व्यक्तिगत रूप से अनुकूलित किया है वे अपना रंग बनाए रखते हैं</string>
-    <string name="settings_section_background_animation">पृष्ठभूमि एनिमेशन</string>
+    <string name="settings_toggle_app_icons_label">ऐप आइकन</string>
+    <string name="settings_toggle_app_icons_desc">प्रत्येक ऐप का आइकन दिखाता है, जिसे स्थानीय APKs या जुड़े हुए डिवाइस से निकाला गया है</string>
+    <string name="settings_appearance_more_apps_card">अधिक ऐप्स कार्ड</string>
+    <string name="settings_appearance_more_apps_card_description">ऐप्स के नीचे एक कार्ड दिखाता है जो कम्युनिटी पैच की ओर ले जाता है</string>
+    <string name="settings_section_effects">इफेक्ट्स</string>
+    <string name="settings_appearance_background_animation">बैकग्राउंड एनीमेशन</string>
+    <string name="settings_appearance_background_animation_description">ऐप की स्क्रीन के पीछे चलने वाला एनीमेशन</string>
     <string name="settings_background_circles">वृत्त</string>
     <string name="settings_background_rings">रिंग</string>
     <string name="settings_background_mesh">मेश</string>
@@ -688,6 +699,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">एक्सपर्ट मोड</string>
     <string name="settings_toggle_expert_mode_desc">पैच चयन और कॉन्फ़िगरेशन पर पूर्ण नियंत्रण</string>
+    <string name="settings_expert_mode_disabled_in_flow">मोड बदलने के लिए होम पर वापस जाएं</string>
     <string name="settings_toggle_route_links_label">लिंक को पैच किए गए ऐप पर रूट करें</string>
     <string name="settings_toggle_route_links_desc">ADB के माध्यम से इंस्टॉल करने के बाद, ब्राउज़र या स्टॉक/डिफ़ॉल्ट ऐप के बजाय पैच किए गए ऐप को अपने समर्थित वेब लिंक खोलने दें</string>
     <string name="settings_toggle_disable_stock_links_label">स्टॉक ऐप के लिंक अक्षम करें</string>
@@ -704,7 +716,7 @@
     <string name="settings_dev_validate_label">फिंगरप्रिंट सत्यापन</string>
     <string name="settings_dev_validate_desc">सत्यापित करें कि प्रत्येक match() केवल एक मेथड से मेल खाता है (धीमी पैचिंग, पैच टेस्टिंग के लिए)</string>
     <string name="settings_dev_verify_sdk_label">Android SDK सत्यापन</string>
-    <string name="settings_dev_verify_sdk_desc">Android SDK टूल्स (d8, zipalign) के साथ पैच किए गए DEX और APK को सत्यापित करें। यह false positives रिपोर्ट कर सकता है</string>
+    <string name="settings_dev_verify_sdk_desc">Android SDK टूल्स (d8, zipalign) से पैच किए गए DEX और APK सत्यापित करें। इससे गलत अलार्म भी आ सकते हैं</string>
     <string name="settings_dev_sdk_path_label">Android SDK निर्देशिका</string>
     <string name="settings_dev_sdk_path_auto">स्वचालित रूप से पता लगाया गया</string>
     <string name="settings_dev_sdk_not_found">Android SDK नहीं मिला। ANDROID_HOME सेट करें या SDK निर्देशिका खोजें</string>
@@ -724,12 +736,28 @@
     <string name="settings_toggle_auto_start_adb_label">ADB ऑटो-स्टार्ट</string>
     <string name="settings_toggle_auto_start_adb_desc">लॉन्च पर ADB डेमॉन स्पॉन करें ताकि कनेक्टेड डिवाइसों की निगरानी हो। बंद होने पर, Morphe कभी सर्वर प्रारंभ नहीं करता, और इंस्टॉल/पुश सुविधाएँ अक्षम होती हैं</string>
     <string name="settings_section_storage">स्टोरेज और कैश</string>
-    <string name="settings_cache_summary">कैश: %1$s (पैच + लॉग)</string>
-    <string name="settings_cache_clear_button">कैश साफ़ करें</string>
+    <string name="settings_cache_clear_all_title">सभी कैश साफ़ करें</string>
+    <string name="settings_cache_category_patches">पैच</string>
+    <string name="settings_cache_category_logs">लॉग्स</string>
+    <string name="settings_cache_category_temp">अस्थायी फाइलें</string>
+    <string name="settings_cache_category_avatars">अवतार कैश</string>
+    <string name="settings_cache_category_app_icons">ऐप आइकन कैश</string>
+    <string name="settings_cache_confirm_patches_title">पैच साफ़ करें?</string>
+    <string name="settings_cache_confirm_patches_message">इससे डाउनलोड की गई पैच फाइलें हटा दी जाएंगी। ज़रूरत पड़ने पर पैच फिर से डाउनलोड किए जाएंगे</string>
+    <string name="settings_cache_confirm_logs_title">लॉग्स साफ़ करें?</string>
+    <string name="settings_cache_confirm_logs_message">इससे सभी एप्लिकेशन लॉग फाइलें और डिवाइस लॉगकैट डंप हटा दिए जाएंगे</string>
+    <string name="settings_cache_confirm_temp_title">अस्थायी फाइलें साफ़ करें?</string>
+    <string name="settings_cache_confirm_temp_message">इससे अस्थायी स्क्रैच और वर्कस्पेस फाइलें हटा दी जाएंगी</string>
+    <string name="settings_cache_confirm_avatars_title">अवतार कैश साफ़ करें?</string>
+    <string name="settings_cache_confirm_avatars_message">इससे सभी कैश किए गए रिमोट अवतार चित्र हटा दिए जाएंगे</string>
+    <string name="settings_cache_confirm_app_icons_title">ऐप आइकन कैश साफ़ करें?</string>
+    <string name="settings_cache_confirm_app_icons_message">इससे APKs और डिवाइस से निकाले गए सभी ऐप आइकन हटा दिए जाएंगे</string>
+    <string name="settings_cache_category_cleared">%1$s साफ़ कर दिया गया</string>
+    <string name="settings_cache_category_clear_failed">%1$s को साफ़ करने में विफल</string>
     <string name="settings_cache_cleared">कैश साफ़ कर दिया गया</string>
     <string name="settings_cache_clear_failed">साफ़ करने में विफल रहा</string>
     <string name="settings_cache_confirm_title">कैश साफ़ करें?</string>
-    <string name="settings_cache_confirm_message">इससे डाउनलोड किए गए पैच और लॉग फ़ाइलें हट जाएंगी। ज़रूरत पड़ने पर पैच फिर से डाउनलोड किए जाएंगे</string>
+    <string name="settings_cache_confirm_message">इससे डाउनलोड किए गए पैच, लॉग फ़ाइलें और अस्थायी फ़ाइलें हटा दी जाएंगी। आवश्यकता पड़ने पर पैच फिर से डाउनलोड किए जाएंगे</string>
     <string name="settings_storage_open_app_data_button">ऐप डेटा खोलें</string>
     <string name="settings_storage_open_logs_button">लॉग खोलें</string>
     <string name="settings_section_about">इसके बारे में</string>
@@ -757,8 +785,8 @@
     <string name="settings_signing_using_default">Morphe के डिफ़ॉल्ट कीस्टोर का उपयोग %1$s पर कर रहे हैं</string>
     <string name="settings_signing_will_create_default">Morphe का डिफ़ॉल्ट कीस्टोर %1$s पर बनाएगा</string>
     <string name="settings_signing_keystore_password_label">कीस्टोर पासवर्ड</string>
-    <string name="settings_signing_key_alias_label">की उपनाम</string>
-    <string name="settings_signing_key_password_label">की पासवर्ड</string>
+    <string name="settings_signing_key_alias_label">कुंजी उपनाम</string>
+    <string name="settings_signing_key_password_label">कुंजी पासवर्ड</string>
     <string name="settings_signing_password_hide">छुपायें</string>
     <string name="settings_signing_password_show">दिखाएँ</string>
     <string name="settings_signing_verify_button">क्रेडेंशियल सत्यापित करें</string>
@@ -787,7 +815,7 @@
     <string name="settings_runtime_logs_title">पैच किए गए ऐप रनटाइम लॉग</string>
     <string name="settings_runtime_logs_desc">पैच किए गए ऐप के क्रैश होने या गलत व्यवहार करने के बाद अपने फोन से लॉग कैप्चर करें। बग को दोहराने से पहले साफ़ करें, फिर बग रिपोर्ट में संलग्न करने के लिए फ़िल्टर किए गए आउटपुट को सहेजें</string>
     <string name="settings_runtime_logs_device_info">डिवाइस: %1$s</string>
-    <string name="settings_runtime_logs_no_device">कोई डिवाइस कनेक्ट नहीं। USB डिबगिंग सक्षम के साथ अपना फोन प्लग इन करें</string>
+    <string name="settings_runtime_logs_no_device">कोई डिवाइस कनेक्ट नहीं है। USB या Wi-Fi डिबगिंग सक्षम करके अपना फ़ोन कनेक्ट करें</string>
     <string name="settings_runtime_logs_clearing">साफ़ हो रहा है…</string>
     <string name="settings_runtime_logs_clear_button">डिवाइस लॉग साफ़ करें</string>
     <string name="settings_runtime_logs_failed_to_clear">लॉग साफ़ करने में विफल</string>
@@ -822,10 +850,21 @@
     <string name="changelog_section_new">नया</string>
     <string name="changelog_section_other">बदलाव</string>
     <string name="changelog_section_performance">परफॉरमेंस</string>
-    <string name="changelog_show_all">{one,सभी दिखाएँ (1), other,सभी दिखाएँ (%1$d)}</string>
+    <string name="changelog_show_all">सभी दिखाएँ (%1$d)</string>
     <string name="changelog_show_less">कम दिखाएँ</string>
     <string name="changelog_view_on_github_button">GitHub पर देखें</string>
     <!-- Navigation Pill -->
     <string name="nav_sources">स्रोत</string>
     <string name="nav_apps">ऐप्स</string>
+    <string name="nav_settings">सेटिंग्स</string>
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">सेटिंग्स खोजें</string>
+    <string name="settings_search_no_results">कोई मिलते-जुलते सेटिंग नहीं मिले</string>
+    <string name="settings_back_to_about">About पर वापस जाएँ</string>
+    <string name="licenses_back_to_list">लाइसेंस पर वापस जाएँ</string>
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">अधिक ऐप्स</string>
+    <string name="home_more_apps_subtitle">कम्युनिटी पैच</string>
+    <string name="community_patches_notice_title">थर्ड-पार्टी पैच स्रोत</string>
+    <string name="community_patches_notice_message">कम्युनिटी पैच स्रोत उनके अपने लेखकों द्वारा बनाए और रखरखाव किए जाते हैं। Morphe थर्ड-पार्टी पैच की समीक्षा या सत्यापन नहीं करता है, और उनकी सामग्री या आपके डिवाइस पर उनके द्वारा किए गए कार्यों के लिए जिम्मेदार नहीं है।</string>
 </resources>
