@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">Vienspalvė</string>
     <string name="settings_toggle_sharp_corners_label">Aštrūs kampai</string>
     <string name="settings_toggle_sharp_corners_desc">Suteikti kortelėms, dialogams ir mygtukams stačius kampus</string>
+    <string name="settings_toggle_outlines_label">Kontūrai</string>
+    <string name="settings_toggle_outlines_desc">Nubrėžia ploną kraštą aplink korteles, skydelius ir mygtukus</string>
     <string name="settings_section_accent_color">Akcento spalva</string>
     <string name="settings_accent_clear_description">Pašalinti akcento spalvą</string>
     <string name="settings_accent_custom_description">Pasirinktinė akcento spalva</string>

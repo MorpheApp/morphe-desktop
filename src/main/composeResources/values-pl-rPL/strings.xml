@@ -671,6 +671,8 @@
     <string name="settings_appearance_monochrome">Monochromatyczny</string>
     <string name="settings_toggle_sharp_corners_label">Ostre narożniki</string>
     <string name="settings_toggle_sharp_corners_desc">Usuwa zaokrąglenia kart, okien dialogowych i przycisków</string>
+    <string name="settings_toggle_outlines_label">Obramowania</string>
+    <string name="settings_toggle_outlines_desc">Dodaje cienką obwódkę wokół kart, paneli i przycisków</string>
     <string name="settings_section_accent_color">Kolor akcentu</string>
     <string name="settings_accent_clear_description">Wyczyść kolor akcentu</string>
     <string name="settings_accent_custom_description">Własny kolor akcentu</string>

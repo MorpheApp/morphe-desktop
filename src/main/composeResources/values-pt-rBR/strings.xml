@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monocromático</string>
     <string name="settings_toggle_sharp_corners_label">Cantos retos</string>
     <string name="settings_toggle_sharp_corners_desc">Deixar cartões, diálogos e botões com cantos retos</string>
+    <string name="settings_toggle_outlines_label">Contornos</string>
+    <string name="settings_toggle_outlines_desc">Desenha uma borda fina ao redor de cartões, painéis e botões</string>
     <string name="settings_section_accent_color">Cor de destaque</string>
     <string name="settings_accent_clear_description">Limpar cor de destaque</string>
     <string name="settings_accent_custom_description">Cor de destaque personalizada</string>

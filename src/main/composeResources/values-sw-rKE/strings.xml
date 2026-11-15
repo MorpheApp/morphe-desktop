@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Rangi moja</string>
     <string name="settings_toggle_sharp_corners_label">Pembe kali</string>
     <string name="settings_toggle_sharp_corners_desc">Fanya kadi, dialogi na vitufe kuwa vya mraba</string>
+    <string name="settings_toggle_outlines_label">Mistari ya nje</string>
+    <string name="settings_toggle_outlines_desc">Huchora ukingo mwembamba kuzunguka kadi, paneli na vitufe</string>
     <string name="settings_section_accent_color">Rangi ya mkazo</string>
     <string name="settings_accent_clear_description">Futa rangi ya mkazo</string>
     <string name="settings_accent_custom_description">Rangi ya mkazo maalum</string>

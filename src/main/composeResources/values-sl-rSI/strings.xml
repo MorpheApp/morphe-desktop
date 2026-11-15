@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Enobarvno</string>
     <string name="settings_toggle_sharp_corners_label">Ostri vogali</string>
     <string name="settings_toggle_sharp_corners_desc">Kartice, pogovorna okna in gumbe naredi pravo kotne</string>
+    <string name="settings_toggle_outlines_label">Obrobe</string>
+    <string name="settings_toggle_outlines_desc">Nariše tanek rob okoli kartic, polovic in gumbov</string>
     <string name="settings_section_accent_color">Barva poudarkov</string>
     <string name="settings_accent_clear_description">Počisti barvo poudarka</string>
     <string name="settings_accent_custom_description">Barva poudarka po meri</string>

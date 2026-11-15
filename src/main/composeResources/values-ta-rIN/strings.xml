@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">ஒற்றை நிறம்</string>
     <string name="settings_toggle_sharp_corners_label">கூர்மையான மூலைகள்</string>
     <string name="settings_toggle_sharp_corners_desc">கார்டுகள், உரையாடல்கள் மற்றும் பொத்தான்களை சதுரமாக்குங்கள்</string>
+    <string name="settings_toggle_outlines_label">வெளிக்கோடுகள்</string>
+    <string name="settings_toggle_outlines_desc">கார்டுகள், பேனல்கள் மற்றும் பொத்தான்களைச் சுற்றி ஒரு மெல்லிய விளிம்பை வரையும்</string>
     <string name="settings_section_accent_color">முக்கிய நிறம்</string>
     <string name="settings_accent_clear_description">முக்கிய நிறத்தை நீக்குங்கள்</string>
     <string name="settings_accent_custom_description">தனிப்பயன் முக்கிய நிறம்</string>

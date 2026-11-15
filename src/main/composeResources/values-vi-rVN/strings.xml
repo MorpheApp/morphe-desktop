@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Đơn sắc</string>
     <string name="settings_toggle_sharp_corners_label">Góc vuông</string>
     <string name="settings_toggle_sharp_corners_desc">Vuông hóa các thẻ, hộp thoại và nút</string>
+    <string name="settings_toggle_outlines_label">Đường viền</string>
+    <string name="settings_toggle_outlines_desc">Vẽ một đường viền mỏng xung quanh các thẻ, bảng và nút</string>
     <string name="settings_section_accent_color">Màu nổi bật</string>
     <string name="settings_accent_clear_description">Xóa màu nhấn</string>
     <string name="settings_accent_custom_description">Màu nhấn tùy chỉnh</string>

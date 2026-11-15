@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">Einfarbig</string>
     <string name="settings_toggle_sharp_corners_label">Scharfe Ecken</string>
     <string name="settings_toggle_sharp_corners_desc">Karten, Dialoge und Schaltflächen eckig machen</string>
+    <string name="settings_toggle_outlines_label">Umrisse</string>
+    <string name="settings_toggle_outlines_desc">Zeichnet eine dünne Linie um Karten, Panels und Schaltflächen</string>
     <string name="settings_section_accent_color">Akzentfarbe</string>
     <string name="settings_accent_clear_description">Akzentfarbe entfernen</string>
     <string name="settings_accent_custom_description">Benutzerdefinierte Akzentfarbe</string>

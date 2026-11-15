@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Einlitur</string>
     <string name="settings_toggle_sharp_corners_label">Skarpar horn</string>
     <string name="settings_toggle_sharp_corners_desc">Gera spjöld, glugga og hnappa ferhyrnda</string>
+    <string name="settings_toggle_outlines_label">Útlínur</string>
+    <string name="settings_toggle_outlines_desc">Teiknar þunnan ramma kring kort, rakka og hnappa</string>
     <string name="settings_section_accent_color">Áherslulitur</string>
     <string name="settings_accent_clear_description">Hreinsa áherslulit</string>
     <string name="settings_accent_custom_description">Sérsniðinn áherslulitur</string>

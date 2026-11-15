@@ -67,6 +67,9 @@
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
     <string name="app_info_shared_label">App info</string>
+    <string name="form_factor_tv">TV</string>
+    <string name="form_factor_wearable" translatable="false">Wear OS</string>
+    <string name="form_factor_automotive">Automotive</string>
     <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Search patches…</string>
     <string name="status_patching_completed">Patching completed</string>

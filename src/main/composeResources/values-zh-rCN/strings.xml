@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">单色</string>
     <string name="settings_toggle_sharp_corners_label">锐利边角</string>
     <string name="settings_toggle_sharp_corners_desc">将卡片、对话框和按钮变为方形</string>
+    <string name="settings_toggle_outlines_label">轮廓线</string>
+    <string name="settings_toggle_outlines_desc">在卡片、面板和按钮周围绘制细边框</string>
     <string name="settings_section_accent_color">强调色</string>
     <string name="settings_accent_clear_description">清除强调色</string>
     <string name="settings_accent_custom_description">自定义强调色</string>

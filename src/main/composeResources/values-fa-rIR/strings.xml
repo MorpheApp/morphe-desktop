@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">تک‌رنگ</string>
     <string name="settings_toggle_sharp_corners_label">گوشه‌های تیز</string>
     <string name="settings_toggle_sharp_corners_desc">کارت‌ها، دیالوگ‌ها و دکمه‌ها را چهارگوش کنید</string>
+    <string name="settings_toggle_outlines_label">خطوط دور</string>
+    <string name="settings_toggle_outlines_desc">یک لبه نازک دور کارت‌ها، پنل‌ها و دکمه‌ها رسم می‌کند</string>
     <string name="settings_section_accent_color">رنگ تأکیدی</string>
     <string name="settings_accent_clear_description">پاک کردن رنگ تأکید</string>
     <string name="settings_accent_custom_description">رنگ تأکید سفارشی</string>

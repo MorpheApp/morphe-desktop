@@ -668,6 +668,8 @@
     <string name="settings_appearance_monochrome">Монохромды</string>
     <string name="settings_toggle_sharp_corners_label">Өткір бұрыштар</string>
     <string name="settings_toggle_sharp_corners_desc">Карточкалар, диалогтар мен батырмаларды шаршы пішінге келтіру</string>
+    <string name="settings_toggle_outlines_label">Контурлар</string>
+    <string name="settings_toggle_outlines_desc">Карточкалар, панельдер және түймелердің айналасына жіңішке жиек сызады</string>
     <string name="settings_section_accent_color">Акценттік түс</string>
     <string name="settings_accent_clear_description">Акценттік түсті тазалау</string>
     <string name="settings_accent_custom_description">Жеке акценттік түс</string>

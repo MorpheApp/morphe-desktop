@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monokrom</string>
     <string name="settings_toggle_sharp_corners_label">Kuncên tûj</string>
     <string name="settings_toggle_sharp_corners_desc">Kart, daxwaz û bişkokan bike çargoşê</string>
+    <string name="settings_toggle_outlines_label">Têr</string>
+    <string name="settings_toggle_outlines_desc">Li derdorê kartan, panelan û bişkoşan xeta tûkî xêz dike</string>
     <string name="settings_section_accent_color">Rengê sereke</string>
     <string name="settings_accent_clear_description">Rengê sereke paqij bike</string>
     <string name="settings_accent_custom_description">Rengê sereke yê taybet</string>

@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">Monocrom</string>
     <string name="settings_toggle_sharp_corners_label">Cantonades vives</string>
     <string name="settings_toggle_sharp_corners_desc">Cantonades quadrades a les targetes, els diàlegs i els botons</string>
+    <string name="settings_toggle_outlines_label">Contorns</string>
+    <string name="settings_toggle_outlines_desc">Dibuixa una vora fina al voltant de les targetes, els panells i els botons</string>
     <string name="settings_section_accent_color">Color d'accentuació</string>
     <string name="settings_accent_clear_description">Netejar el color d'accentuació</string>
     <string name="settings_accent_custom_description">Color d'accentuació personalitzat</string>

@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">Monokromoa</string>
     <string name="settings_toggle_sharp_corners_label">Angleak zorrotzak</string>
     <string name="settings_toggle_sharp_corners_desc">Karta, elkarrizketak eta botoiak karratu egin</string>
+    <string name="settings_toggle_outlines_label">Ertzak</string>
+    <string name="settings_toggle_outlines_desc">Ertz mehe bat marraztu karten, panelen eta botoien inguruan</string>
     <string name="settings_section_accent_color">Accent kolorea</string>
     <string name="settings_accent_clear_description">Garbitu accent kolorea</string>
     <string name="settings_accent_custom_description">Accent kolore pertsonalizatua</string>

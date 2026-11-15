@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">單色</string>
     <string name="settings_toggle_sharp_corners_label">方角</string>
     <string name="settings_toggle_sharp_corners_desc">將卡片、對話框和按鈕變成方角</string>
+    <string name="settings_toggle_outlines_label">輪廓線</string>
+    <string name="settings_toggle_outlines_desc">在卡片、面板和按鈕周圍繪製細邊</string>
     <string name="settings_section_accent_color">強調色</string>
     <string name="settings_accent_clear_description">清除強調色</string>
     <string name="settings_accent_custom_description">自訂強調色</string>

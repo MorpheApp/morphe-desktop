@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monokromi</string>
     <string name="settings_toggle_sharp_corners_label">Terävät kulmat</string>
     <string name="settings_toggle_sharp_corners_desc">Tee korteista, valintaikkunoista ja painikkeista kulmikkaita</string>
+    <string name="settings_toggle_outlines_label">Ääriviivat</string>
+    <string name="settings_toggle_outlines_desc">Piirtää ohuen reunan korttien, paneelien ja painikkeiden ympärille</string>
     <string name="settings_section_accent_color">Korostusväri</string>
     <string name="settings_accent_clear_description">Tyhjennä korostusväri</string>
     <string name="settings_accent_custom_description">Mukautettu korostusväri</string>

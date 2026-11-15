@@ -671,6 +671,8 @@
     <string name="settings_appearance_monochrome">Tek Renk</string>
     <string name="settings_toggle_sharp_corners_label">Keskin köşeler</string>
     <string name="settings_toggle_sharp_corners_desc">Kartları, iletişim kutularını ve düğmeleri köşeli yap</string>
+    <string name="settings_toggle_outlines_label">Anahatlar</string>
+    <string name="settings_toggle_outlines_desc">Kartların, panellerin ve düğmelerin etrafına ince bir kenarlık çizer</string>
     <string name="settings_section_accent_color">Vurgu rengi</string>
     <string name="settings_accent_clear_description">Vurgu rengini temizle</string>
     <string name="settings_accent_custom_description">Özel vurgu rengi</string>
@@ -861,8 +863,8 @@
     <!-- Settings - Search & Inline Views -->
     <string name="settings_search_placeholder">Ayarları ara</string>
     <string name="settings_search_no_results">Eşleşen ayar bulunamadı</string>
-    <string name="settings_back_to_about">Hakkında kısmına dön</string>
-    <string name="licenses_back_to_list">Lisanslar listesine dön</string>
+    <string name="settings_back_to_about">Hakkındaya dön</string>
+    <string name="licenses_back_to_list">Lisanslara dön</string>
     <!-- More apps card & community patches -->
     <string name="home_more_apps_title">Daha fazla uygulama</string>
     <string name="home_more_apps_subtitle">Topluluk yamaları</string>

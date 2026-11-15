@@ -181,6 +181,7 @@ internal fun SupportedAppsListPane(
                 deviceAppInfo = deviceAppInfo,
                 updateInfoByPackage = updateInfoByPackage,
                 appIconColorByPackage = supportedApps.associate { it.packageName to (it.appIconColor ?: "") }.filterValues { it.isNotEmpty() },
+                formFactorByPackage = supportedApps.mapNotNull { app -> app.formFactor?.let { app.packageName to it } }.toMap(),
                 onShowDetail = onShowDetail,
                 paneMaxHeight = paneMaxHeight,
                 showSearch = activeCount > 4,

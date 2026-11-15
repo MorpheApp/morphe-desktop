@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monokróm</string>
     <string name="settings_toggle_sharp_corners_label">Éles sarkok</string>
     <string name="settings_toggle_sharp_corners_desc">Kártyák, párbeszédablakok és gombok sarkainak négyszögletesítése</string>
+    <string name="settings_toggle_outlines_label">Körvonalak</string>
+    <string name="settings_toggle_outlines_desc">Vékony szegélyt rajzol a kártyák, panelek és gombok köré</string>
     <string name="settings_section_accent_color">Kiemelőszín</string>
     <string name="settings_accent_clear_description">Kiemelő szín törlése</string>
     <string name="settings_accent_custom_description">Egyéni kiemelő szín</string>

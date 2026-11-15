@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">एक रंग का</string>
     <string name="settings_toggle_sharp_corners_label">नुकीले कोने</string>
     <string name="settings_toggle_sharp_corners_desc">कार्ड, डायलॉग और बटन को चौकोर करें</string>
+    <string name="settings_toggle_outlines_label">आउटलाइन</string>
+    <string name="settings_toggle_outlines_desc">कार्ड, पैनल और बटन के चारों ओर एक पतली किनारी बनाता है</string>
     <string name="settings_section_accent_color">एक्सेंट रंग</string>
     <string name="settings_accent_clear_description">एक्सेंट रंग साफ़ करें</string>
     <string name="settings_accent_custom_description">कस्टम एक्सेंट रंग</string>

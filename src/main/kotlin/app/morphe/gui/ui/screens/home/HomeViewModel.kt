@@ -56,6 +56,7 @@ import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.patchSourceHeaders
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.dex.BytecodeMode
+import app.morphe.patcher.patch.FormFactor
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -231,6 +232,7 @@ class HomeViewModel(
                 originalPackageName = apkInfo.packageName,
                 displayName = apkInfo.appName,
                 appVersion = apkInfo.versionName,
+                formFactor = apkInfo.formFactor,
                 sourcesSnapshot = sourcesSnapshot,
             ),
         )
@@ -324,6 +326,10 @@ class HomeViewModel(
                 originalPackageName = record.packageName,
                 displayName = record.displayName,
                 appVersion = record.apkVersion,
+                formFactor = _uiState.value.supportedApps
+                    .firstOrNull { it.packageName == record.packageName }
+                    ?.formFactor
+                    ?: record.formFactor,
                 sourcesSnapshot = sourcesSnapshot,
             ),
         )
@@ -1430,7 +1436,8 @@ class HomeViewModel(
                 versionStatus = versionStatus,
                 requiredBuildCodes = versionResolution.requiredBuildCodes,
                 checksumStatus = checksumStatus,
-                isUnsupportedApp = !isSupported
+                isUnsupportedApp = !isSupported,
+                formFactor = dynamicSupportedApp?.formFactor,
             )
         } catch (e: CancellationException) {
             throw e
@@ -1488,6 +1495,7 @@ class HomeViewModel(
             checksumStatus = ChecksumStatus.NotConfigured,
             isUnsupportedApp = matched == null,
             hasLimitedInfo = true,
+            formFactor = matched?.formFactor,
         )
     }
 
@@ -1644,6 +1652,7 @@ data class ApkInfo(
     val isUnsupportedApp: Boolean = false,
     /** True if manifest parsing fell back to heuristics, producing approximate details. */
     val hasLimitedInfo: Boolean = false,
+    val formFactor: FormFactor? = null,
 )
 
 data class ApkValidationResult(

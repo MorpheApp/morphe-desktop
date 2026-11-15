@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monocromatico</string>
     <string name="settings_toggle_sharp_corners_label">Angoli netti</string>
     <string name="settings_toggle_sharp_corners_desc">Rendi squadrate card, finestre di dialogo e pulsanti</string>
+    <string name="settings_toggle_outlines_label">Contorni</string>
+    <string name="settings_toggle_outlines_desc">Disegna un bordo sottile attorno a schede, pannelli e pulsanti</string>
     <string name="settings_section_accent_color">Tonalità in risalto</string>
     <string name="settings_accent_clear_description">Cancella colore di accento</string>
     <string name="settings_accent_custom_description">Colore di accento personalizzato</string>

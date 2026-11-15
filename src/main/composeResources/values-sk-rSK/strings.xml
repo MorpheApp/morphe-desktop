@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">Monochromatický</string>
     <string name="settings_toggle_sharp_corners_label">Ostré rohy</string>
     <string name="settings_toggle_sharp_corners_desc">Karty, dialógy a tlačidlá budú hranaté</string>
+    <string name="settings_toggle_outlines_label">Obrysy</string>
+    <string name="settings_toggle_outlines_desc">Kreslí tenký okraj okolo kariet, panelov a tlačidiel</string>
     <string name="settings_section_accent_color">Akcentová farba</string>
     <string name="settings_accent_clear_description">Vyčistiť akcentovú farbu</string>
     <string name="settings_accent_custom_description">Vlastná akcentová farba</string>

@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monoxrom</string>
     <string name="settings_toggle_sharp_corners_label">O'tkir burchaklar</string>
     <string name="settings_toggle_sharp_corners_desc">Kartochkalar, dialoglar va tugmalarni kvadrat shakliga keltirish</string>
+    <string name="settings_toggle_outlines_label">Konturlar</string>
+    <string name="settings_toggle_outlines_desc">Karta, panel va tugmalar atrofida ingichka chegara chizadi</string>
     <string name="settings_section_accent_color">Urg'u rangi</string>
     <string name="settings_accent_clear_description">Urg'u rangini tozalash</string>
     <string name="settings_accent_custom_description">Maxsus urg'u rangi</string>

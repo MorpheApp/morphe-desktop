@@ -667,6 +667,8 @@
     <string name="settings_appearance_monochrome">Монохром</string>
     <string name="settings_toggle_sharp_corners_label">Курчтуу бурчтар</string>
     <string name="settings_toggle_sharp_corners_desc">Карточкаларды, диалогдорду жана баскычтарды тик бурчтуу кылуу</string>
+    <string name="settings_toggle_outlines_label">Контурлар</string>
+    <string name="settings_toggle_outlines_desc">Карточкалардын, панелдердин жана баскычтардын тегерегине ичке сызыктарды тартат</string>
     <string name="settings_section_accent_color">Акцент түсү</string>
     <string name="settings_accent_clear_description">Акцент түсүн тазалоо</string>
     <string name="settings_accent_custom_description">Ыңгайлаштырылган акцент түсү</string>

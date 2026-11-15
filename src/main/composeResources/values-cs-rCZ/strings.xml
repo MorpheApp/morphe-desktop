@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monochromatický</string>
     <string name="settings_toggle_sharp_corners_label">Ostré rohy</string>
     <string name="settings_toggle_sharp_corners_desc">Rohy karet, dialogů a tlačítek budou pravoúhlé</string>
+    <string name="settings_toggle_outlines_label">Obrysy</string>
+    <string name="settings_toggle_outlines_desc">Kreslí tenkou hranici kolem karet, panelů a tlaítek</string>
     <string name="settings_section_accent_color">Barva zvýraznění</string>
     <string name="settings_accent_clear_description">Vymazat zvýrazněnou barvu</string>
     <string name="settings_accent_custom_description">Vlastní zvýrazněná barva</string>

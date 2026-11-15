@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Монохромно</string>
     <string name="settings_toggle_sharp_corners_label">Оштри углови</string>
     <string name="settings_toggle_sharp_corners_desc">Зашиљује картице, дијалоге и дугмад</string>
+    <string name="settings_toggle_outlines_label">Контури</string>
+    <string name="settings_toggle_outlines_desc">Црта танку ивицу око картица, панела и дугмади</string>
     <string name="settings_section_accent_color">Акцентна боја</string>
     <string name="settings_accent_clear_description">Очисти акцентну боју</string>
     <string name="settings_accent_custom_description">Прилагођена акцентна боја</string>

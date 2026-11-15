@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monokrom</string>
     <string name="settings_toggle_sharp_corners_label">Sudut tajam</string>
     <string name="settings_toggle_sharp_corners_desc">Membuat kartu, dialog, dan tombol menjadi persegi</string>
+    <string name="settings_toggle_outlines_label">Garis tepi</string>
+    <string name="settings_toggle_outlines_desc">Menggambar tepian tipis di sekeliling kartu, panel, dan tombol</string>
     <string name="settings_section_accent_color">Warna aksen</string>
     <string name="settings_accent_clear_description">Hapus warna aksen</string>
     <string name="settings_accent_custom_description">Warna aksen kustom</string>

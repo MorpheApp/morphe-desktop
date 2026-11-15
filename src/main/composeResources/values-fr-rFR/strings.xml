@@ -672,6 +672,8 @@
     <string name="settings_appearance_monochrome">Monochrome</string>
     <string name="settings_toggle_sharp_corners_label">Coins pointus</string>
     <string name="settings_toggle_sharp_corners_desc">Rendre carrés les cartes, les boîtes de dialogue et les boutons</string>
+    <string name="settings_toggle_outlines_label">Contours</string>
+    <string name="settings_toggle_outlines_desc">Dessine un fin contour autour des cartes, des panneaux et des boutons</string>
     <string name="settings_section_accent_color">Couleur d'accentuation</string>
     <string name="settings_accent_clear_description">Effacer la couleur d'accentuation</string>
     <string name="settings_accent_custom_description">Couleur d'accent personnalisée</string>

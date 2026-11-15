@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Μονόχρωμο</string>
     <string name="settings_toggle_sharp_corners_label">Αιχμηρές γωνίες</string>
     <string name="settings_toggle_sharp_corners_desc">Κάντε τετράγωνες τις κάρτες, τα παράθυρα διαλόγου και τα κουμπιά</string>
+    <string name="settings_toggle_outlines_label">Περιγράμματα</string>
+    <string name="settings_toggle_outlines_desc">Σχεδιάζει ένα λεπτό περίγραμμα γύρω από κάρτες, πάνελ και κουμπιά</string>
     <string name="settings_section_accent_color">Χρώμα έμφασης</string>
     <string name="settings_accent_clear_description">Καθαρισμός χρώματος έμφασης</string>
     <string name="settings_accent_custom_description">Προσαρμοσμένο χρώμα έμφασης</string>

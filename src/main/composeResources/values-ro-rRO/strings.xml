@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monocrom</string>
     <string name="settings_toggle_sharp_corners_label">Colțuri ascuțite</string>
     <string name="settings_toggle_sharp_corners_desc">Pătrați cardurile, dialogurile și butoanele</string>
+    <string name="settings_toggle_outlines_label">Contururi</string>
+    <string name="settings_toggle_outlines_desc">Desenează o margine subțire în jurul cardurilor, panourilor și butoanelor</string>
     <string name="settings_section_accent_color">Culoare accent</string>
     <string name="settings_accent_clear_description">Șterge culoarea de accent</string>
     <string name="settings_accent_custom_description">Culoare de accent personalizată</string>
