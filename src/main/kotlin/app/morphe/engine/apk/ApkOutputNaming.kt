@@ -65,8 +65,8 @@ object ApkOutputNaming {
         patchesVersionRegex.find(patchesFileName)?.groupValues?.get(1)
 
     /**
-     * Reads literal app label from the APK manifest.
-     * Returns null if missing or defined as a resource reference (`@string/...`).
+     * Reads the app label from the APK manifest, resolving `@string/...` references.
+     * Returns null if missing or unresolvable.
      */
     fun resolveAppDisplayName(apkFile: File): String? =
         ApkInspector.inspect(apkFile)?.applicationLabel?.takeIf { it.isNotBlank() }
