@@ -25,6 +25,8 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
+private val LeadingGap = 10.dp
+
 @Composable
 internal fun PatchesHeader(
     title: String,
@@ -33,7 +35,8 @@ internal fun PatchesHeader(
     isLoading: Boolean,
     onBackClick: () -> Unit,
     onRefreshClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    leading: (@Composable () -> Unit)? = null,
 ) {
     val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
 
@@ -60,6 +63,11 @@ internal fun PatchesHeader(
         )
 
         Spacer(modifier = Modifier.width(14.dp))
+
+        if (leading != null) {
+            leading()
+            Spacer(modifier = Modifier.width(LeadingGap))
+        }
 
         Column(modifier = Modifier.weight(1f)) {
             Text(

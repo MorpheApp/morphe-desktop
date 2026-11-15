@@ -5,9 +5,7 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +34,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineStroke
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.Res
 import app.morphe.morphe_desktop.generated.resources.close
 import org.jetbrains.compose.resources.stringResource
@@ -72,7 +72,7 @@ fun MorpheDialogSurface(
     Surface(
         shape = MorpheTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceContainer,
-        border = BorderStroke(HairlineWidth, MaterialTheme.colorScheme.outlineVariant),
+        border = outlineStroke(MaterialTheme.colorScheme.outlineVariant, HairlineWidth),
         modifier = modifier,
     ) {
         Column(
@@ -111,7 +111,7 @@ fun MorpheDialog(
                 .widthIn(min = minWidth, max = maxWidth)
                 .clip(shape)
                 .background(scheme.surfaceContainer)
-                .border(HairlineWidth, accent?.copy(alpha = MorpheTheme.alphas.borderDefault) ?: scheme.outlineVariant, shape),
+                .outlineBorder(accent?.copy(alpha = MorpheTheme.alphas.borderDefault) ?: scheme.outlineVariant, shape, HairlineWidth),
         ) {
             if (hasHeader) {
                 Row(
@@ -201,7 +201,7 @@ private fun DialogIconTile(icon: ImageVector, tint: Color) {
             .size(IconTileSize)
             .clip(shape)
             .background(tint.copy(alpha = TILE_FILL_ALPHA))
-            .border(HairlineWidth, tint.copy(alpha = TILE_BORDER_ALPHA), shape),
+            .outlineBorder(tint.copy(alpha = TILE_BORDER_ALPHA), shape, HairlineWidth),
         contentAlignment = Alignment.Center,
     ) {
         Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(MorpheTheme.dimens.iconLarge))

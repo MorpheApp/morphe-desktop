@@ -233,6 +233,13 @@ private val MorpheDarkColorScheme = darkColorScheme(
     onError = Color(0xFF690005),
     errorContainer = Color(0xFF93000A),
     onErrorContainer = Color(0xFFFFDAD6),
+    surfaceContainerLowest = Color(0xFF0F1113),
+    surfaceContainerLow = Color(0xFF1A1C1E),
+    surfaceContainer = Color(0xFF1E2023),
+    surfaceContainerHigh = Color(0xFF282A2D),
+    surfaceContainerHighest = Color(0xFF333538),
+    surfaceDim = Color(0xFF121416),
+    surfaceBright = Color(0xFF38393C),
 )
 
 private val MorpheAmoledColorScheme = MorpheDarkColorScheme.copy(
@@ -240,6 +247,13 @@ private val MorpheAmoledColorScheme = MorpheDarkColorScheme.copy(
     surface = Color.Black,
     surfaceVariant = Color.Black,
     onSurfaceVariant = Color(0xFFB0B0B0),
+    surfaceContainerLowest = Color(0xFF000000),
+    surfaceContainerLow = Color(0xFF0A0A0B),
+    surfaceContainer = Color(0xFF0F1011),
+    surfaceContainerHigh = Color(0xFF18191B),
+    surfaceContainerHighest = Color(0xFF222325),
+    surfaceDim = Color(0xFF000000),
+    surfaceBright = Color(0xFF2A2B2D),
 )
 
 private val MorpheLightColorScheme = lightColorScheme(
@@ -267,6 +281,13 @@ private val MorpheLightColorScheme = lightColorScheme(
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
     onErrorContainer = Color(0xFF410002),
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFF7F8FB),
+    surfaceContainer = Color(0xFFF1F2F6),
+    surfaceContainerHigh = Color(0xFFEBECF0),
+    surfaceContainerHighest = Color(0xFFE5E6EA),
+    surfaceDim = Color(0xFFDADBDF),
+    surfaceBright = Color(0xFFFDFCFF),
 )
 
 private val MonochromeDarkColorScheme = darkColorScheme(
@@ -294,6 +315,13 @@ private val MonochromeDarkColorScheme = darkColorScheme(
     onError = Color(0xFF690005),
     errorContainer = Color(0xFF93000A),
     onErrorContainer = Color(0xFFFFDAD6),
+    surfaceContainerLowest = Color(0xFF0B0C10),
+    surfaceContainerLow = Color(0xFF131418),
+    surfaceContainer = Color(0xFF17181C),
+    surfaceContainerHigh = Color(0xFF202126),
+    surfaceContainerHighest = Color(0xFF2A2B30),
+    surfaceDim = Color(0xFF0B0C10),
+    surfaceBright = Color(0xFF303136),
 )
 
 private val MonochromeAmoledColorScheme = MonochromeDarkColorScheme.copy(
@@ -301,6 +329,13 @@ private val MonochromeAmoledColorScheme = MonochromeDarkColorScheme.copy(
     surface = Color.Black,
     surfaceVariant = Color.Black,
     onSurfaceVariant = Color(0xFFB0B0B0),
+    surfaceContainerLowest = Color(0xFF000000),
+    surfaceContainerLow = Color(0xFF0A0A0A),
+    surfaceContainer = Color(0xFF0F0F10),
+    surfaceContainerHigh = Color(0xFF18181A),
+    surfaceContainerHighest = Color(0xFF222224),
+    surfaceDim = Color(0xFF000000),
+    surfaceBright = Color(0xFF2A2A2C),
 )
 
 private val MonochromeLightColorScheme = lightColorScheme(
@@ -328,6 +363,13 @@ private val MonochromeLightColorScheme = lightColorScheme(
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
     onErrorContainer = Color(0xFF410002),
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFFBFBFD),
+    surfaceContainer = Color(0xFFF4F5F9),
+    surfaceContainerHigh = Color(0xFFEEEFF4),
+    surfaceContainerHighest = Color(0xFFE8E9EF),
+    surfaceDim = Color(0xFFDCDDE3),
+    surfaceBright = Color(0xFFFFFFFF),
 )
 
 private val MonochromeDarkAccents = MorpheAccentColors(

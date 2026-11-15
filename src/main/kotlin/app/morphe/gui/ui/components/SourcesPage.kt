@@ -109,15 +109,8 @@ fun SourcesPage(
         if (draggingId == null) workingOrder = sources.map { it.id }
     }
     val canReorder = enabled && sources.size > 1
+    val enabledCount = sources.count { it.enabled }
     val ordered = workingOrder.mapNotNull { sourcesById[it] }
-
-    fun move(id: String, by: Int) {
-        val from = workingOrder.indexOf(id)
-        val to = from + by
-        if (from < 0 || to !in workingOrder.indices) return
-        workingOrder = workingOrder.toMutableList().apply { add(to, removeAt(from)) }
-        onReorder(workingOrder)
-    }
 
     val uriHandler = LocalUriHandler.current
     val scroll = rememberScrollState()
@@ -159,6 +152,7 @@ fun SourcesPage(
                                 signingKey = sourceSigningKeys[id],
                                 signerChanged = sourceSignerChanged.containsKey(id),
                                 isLoading = isLoading && source.enabled,
+                                isLastEnabled = enabledCount == 1,
                             )
                             val actions = SourceCardActions(
                                 onToggleEnabled = { onToggleEnabled(id, it) },
@@ -172,8 +166,6 @@ fun SourcesPage(
                                 onRetry = onRefresh,
                                 onReviewSigner = { trustingSourceId = id },
                                 onShowInFolder = { showInFolder(source) },
-                                onMoveUp = if (canReorder && index > 0) ({ move(id, -1) }) else null,
-                                onMoveDown = if (canReorder && index < ordered.lastIndex) ({ move(id, 1) }) else null,
                             )
                             SourceCard(
                                 model = model,
@@ -406,14 +398,15 @@ private fun SourceGrid(minCellWidth: Dp, gap: Dp, content: @Composable () -> Uni
         val cellWidth = (width - gapPx * (columns - 1)) / columns
         val rows = measurables.chunked(columns).map { row ->
             val height = row.maxOf { it.maxIntrinsicHeight(cellWidth) }
-            row.map { it.measure(Constraints.fixed(cellWidth, height)) }
+            row.map { it.measure(Constraints(minWidth = cellWidth, maxWidth = cellWidth, maxHeight = height)) }
         }
-        val height = rows.sumOf { it.first().height } + gapPx * (rows.size - 1).coerceAtLeast(0)
+        val rowHeights = rows.map { row -> row.maxOf { it.height } }
+        val height = rowHeights.sum() + gapPx * (rows.size - 1).coerceAtLeast(0)
         layout(width, height) {
             var y = 0
-            rows.forEach { row ->
+            rows.forEachIndexed { r, row ->
                 row.forEachIndexed { i, placeable -> placeable.place(i * (cellWidth + gapPx), y) }
-                y += row.first().height + gapPx
+                y += rowHeights[r] + gapPx
             }
         }
     }

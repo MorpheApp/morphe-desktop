@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.patches.components.patches
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.hoverable
@@ -79,6 +78,7 @@ import app.morphe.gui.ui.screens.home.components.humanSize
 import app.morphe.gui.ui.screens.home.components.relativeOrShortDate
 import app.morphe.gui.ui.screens.patches.PatchesUiState
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.cardFill
 import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.morphe_desktop.generated.resources.*
@@ -86,7 +86,7 @@ import java.time.Instant
 import org.jetbrains.compose.resources.stringResource
 
 private val VersionRailWidth = 320.dp
-private val RailInset = 8.dp
+private val RailInset = 12.dp
 private val RailElevation = 8.dp
 private val RailPadding = 16.dp
 private val RailSectionGap = 10.dp
@@ -178,7 +178,7 @@ internal fun VersionRail(
             .width(VersionRailWidth)
             .shadow(RailElevation, MorpheTheme.shapes.large)
             .background(cardFill)
-            .border(HairlineWidth, MaterialTheme.colorScheme.outlineVariant, MorpheTheme.shapes.large)
+            .outlineBorder(MaterialTheme.colorScheme.outlineVariant, MorpheTheme.shapes.large, HairlineWidth)
             .padding(top = RailPadding),
         verticalArrangement = Arrangement.spacedBy(RailSectionGap),
     ) {

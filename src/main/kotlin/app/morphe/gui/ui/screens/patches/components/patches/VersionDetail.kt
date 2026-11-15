@@ -64,8 +64,8 @@ import org.jetbrains.compose.resources.stringResource
 
 private const val PERCENT = 100
 private val HeroCompactWidth = 720.dp
-private val DetailPaddingHorizontal = 40.dp
-private val DetailPaddingVertical = 28.dp
+private val DetailPaddingHorizontal = 16.dp
+private val DetailPaddingVertical = 16.dp
 private val SectionGap = 32.dp
 private val SectionHeaderGap = 12.dp
 private val HeroLineGap = 8.dp
@@ -150,7 +150,7 @@ private fun Hero(
             ) {
                 Text(
                     text = release.tagName,
-                    style = typography.material.displaySmall.copy(fontFamily = typography.codeSmall.fontFamily),
+                    style = typography.material.displayLarge.copy(fontFamily = typography.codeSmall.fontFamily),
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 if (release.tagName in state.cachedReleaseVersions) {

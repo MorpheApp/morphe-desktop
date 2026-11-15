@@ -17,8 +17,10 @@ import app.morphe.gui.ui.components.MorpheBanners
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
+import app.morphe.gui.ui.components.MorpheIconButtonSize
 import app.morphe.gui.ui.components.OfflineBanner
 import app.morphe.gui.ui.components.ScreenErrorDialog
+import app.morphe.gui.ui.components.sources.SourceLogo
 import app.morphe.gui.ui.screens.home.components.releaseUrl
 import app.morphe.gui.ui.screens.patches.components.patches.*
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -67,7 +69,10 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
             isLocalSource = uiState.isLocalSource,
             isLoading = uiState.isLoading,
             onBackClick = { navController.popBackStack() },
-            onRefreshClick = { viewModel.loadReleases() }
+            onRefreshClick = { viewModel.loadReleases() },
+            leading = uiState.source?.let { source ->
+                { SourceLogo(source, MorpheIconButtonSize.TOP_BAR.size) }
+            },
         )
 
         when {

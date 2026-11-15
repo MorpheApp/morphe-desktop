@@ -5,6 +5,7 @@
 
 package app.morphe.gui.ui.screens.patches.components.patches
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
@@ -72,6 +73,8 @@ import app.morphe.gui.ui.screens.home.components.DisclosureEnter
 import app.morphe.gui.ui.screens.home.components.DisclosureExit
 import app.morphe.gui.ui.screens.patches.BundleContents
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.cardFill
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.rememberAppIcon
@@ -82,6 +85,7 @@ import org.jetbrains.compose.resources.stringResource
 private const val APP_COLUMN_WEIGHT = 1.1f
 private const val VERSIONS_COLUMN_WEIGHT = 1.7f
 private const val UNIVERSAL_KEY = "universal"
+private const val CELL_BORDER_ALPHA = 0.5f
 private val RecommendedColumnWidth = 120.dp
 private val PatchesColumnWidth = 84.dp
 private val CellGap = 16.dp
@@ -96,7 +100,8 @@ private val PanelIndent = 56.dp
 private val PanelGap = 10.dp
 private val PatchListMaxHeight = 360.dp
 private val PatchCellMinWidth = 300.dp
-private val PatchCellPadding = 10.dp
+private val PatchCellPadding = 12.dp
+private val PatchRowGap = 8.dp
 private val PatchCellGap = 4.dp
 private val PatchColumnGap = 12.dp
 private val PatchSearchMaxWidth = 320.dp
@@ -397,7 +402,7 @@ private fun PatchPanel(row: AppRowModel, baseTag: String?, initialQuery: String)
                     columns = GridCells.Adaptive(PatchCellMinWidth),
                     state = gridState,
                     horizontalArrangement = Arrangement.spacedBy(PatchColumnGap),
-                    verticalArrangement = Arrangement.spacedBy(PatchCellGap),
+                    verticalArrangement = Arrangement.spacedBy(PatchRowGap),
                     contentPadding = PaddingValues(end = scrollbar.thickness + PatchColumnGap),
                 ) {
                     items(shown, key = { patch -> patchKey(patch, row) }) { patch ->
@@ -433,12 +438,19 @@ private fun PatchCell(
     var showOptions by remember(patch.name) { mutableStateOf(false) }
     val hover = remember { MutableInteractionSource() }
     val hovered by hover.collectIsHoveredAsState()
+    val shape = MorpheTheme.shapes.small
+    val highlighted = hasOptions && (hovered || showOptions)
+    val border by animateColorAsState(
+        if (highlighted) scheme.outlineVariant else scheme.outlineVariant.copy(alpha = CELL_BORDER_ALPHA),
+        animationSpec = MorpheMotion.fastTween(),
+    )
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(MorpheTheme.shapes.small)
-            .background(if (hasOptions && hovered) scheme.onSurface.copy(alpha = MorpheTheme.alphas.hover) else Color.Transparent)
+            .clip(shape)
+            .background(if (highlighted) MorpheTheme.colors.primary.copy(alpha = MorpheTheme.alphas.hover) else Color.Transparent)
+            .outlineBorder(border, shape)
             .then(
                 if (hasOptions) {
                     Modifier

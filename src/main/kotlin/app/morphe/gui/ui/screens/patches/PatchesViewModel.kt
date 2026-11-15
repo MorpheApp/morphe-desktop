@@ -92,6 +92,7 @@ class PatchesViewModel(
 
             val source = patchSourceManager?.getActiveSource()
             activeSource = source
+            _uiState.update { it.withSource(source) }
             val pref = source?.id?.let { configRepository.getSourceVersionPrefs()[it] }
             val usePreRelease = source?.usePreRelease == true
 
@@ -111,7 +112,7 @@ class PatchesViewModel(
                                 .filter { r -> PatchCache.getCachedFile(patchRepository.repoPath, r) != null }
                                 .map { r -> r.tagName }
                                 .toSet(),
-                        ).withSource(source?.name, source?.url).withInUse(inUse, pref)
+                        ).withSource(source).withInUse(inUse, pref)
                     }
                     Logger.info("Loaded ${stable.size} stable and ${dev.size} dev releases, in use=${inUse?.tagName}")
                 },
@@ -140,7 +141,7 @@ class PatchesViewModel(
                                 offlineReleases = offline,
                                 cachedReleaseVersions = offline.map { r -> r.tagName }.toSet(),
                                 error = null,
-                            ).withSource(source?.name, source?.url).withInUse(inUse, pref)
+                            ).withSource(source).withInUse(inUse, pref)
                         }
                         Logger.info("Offline, found ${offline.size} cached release(s), in use=${inUse.tagName}")
                     }
@@ -165,8 +166,8 @@ class PatchesViewModel(
         return pinned ?: followed ?: dev.firstOrNull()
     }
 
-    private fun PatchesUiState.withSource(name: String?, url: String?) =
-        copy(sourceName = name.orEmpty(), sourceUrl = url)
+    private fun PatchesUiState.withSource(source: PatchSource?) =
+        copy(source = source, sourceName = source?.name.orEmpty(), sourceUrl = source?.url)
 
     private fun PatchesUiState.withInUse(inUse: Release?, pref: SourceVersionPref?) = copy(
         inUseTag = inUse?.tagName,
@@ -351,6 +352,7 @@ data class PatchesUiState(
     val isLoading: Boolean = false,
     val isOffline: Boolean = false,
     val isLocalSource: Boolean = false,
+    val source: PatchSource? = null,
     val sourceName: String = "",
     val sourceUrl: String? = null,
     val offlineReleases: List<Release> = emptyList(),

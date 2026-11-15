@@ -15,8 +15,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -51,13 +49,8 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
@@ -87,18 +80,16 @@ import app.morphe.gui.ui.components.MorpheOverflowMenu
 import app.morphe.gui.ui.components.MorphePopupSurface
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.channelColor
-import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.SourceApp
 import app.morphe.gui.util.SourceDetails
 import app.morphe.morphe_desktop.generated.resources.*
-import io.ktor.client.HttpClient
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Immutable
 data class SourceCardModel(
@@ -113,6 +104,7 @@ data class SourceCardModel(
     val signingKey: String?,
     val signerChanged: Boolean,
     val isLoading: Boolean,
+    val isLastEnabled: Boolean = false,
 ) {
     val isPullRequest: Boolean =
         source.url?.let { RemotePatchSourceFactory.parse(it)?.provider == PatchProvider.GITHUB_PR } == true
@@ -131,8 +123,6 @@ class SourceCardActions(
     val onRetry: () -> Unit,
     val onReviewSigner: () -> Unit,
     val onShowInFolder: () -> Unit,
-    val onMoveUp: (() -> Unit)?,
-    val onMoveDown: (() -> Unit)?,
 )
 
 private val CardPadding = 18.dp
@@ -164,13 +154,7 @@ fun SourceCard(
     val hovered by hover.collectIsHoveredAsState()
 
     val avatar = rememberSourceAvatar(source)
-    val dark = scheme.background.luminance() < 0.5f
-    val accent = when {
-        source.type == PatchSourceType.LOCAL -> colors.secondary
-        avatar.accentHue != null -> hueColor(avatar.accentHue, avatar.accentSaturation, dark)
-        avatar.bitmap == null -> hueColor(hashHue(sourceOwner(source) ?: source.name), 0.55f, dark)
-        else -> colors.primary
-    }
+    val accent = sourceAccent(source, avatar)
 
     val border by animateColorAsState(
         when {
@@ -189,7 +173,7 @@ fun SourceCard(
         modifier = modifier
             .clip(shapes.large)
             .background(cardBg)
-            .border(1.dp, border, shapes.large)
+            .outlineBorder(border, shapes.large, enabled = isDragging || failed || MorpheTheme.outlines)
             .hoverable(hover),
     ) {
         Row(
@@ -228,15 +212,18 @@ fun SourceCard(
                 SourceLink(source)
             }
             val switchLabel = stringResource(Res.string.source_card_enable_description, source.name)
-            MorpheSwitch(
-                checked = on,
-                onCheckedChange = actions.onToggleEnabled,
-                accentColor = accent,
-                enabled = enabled,
-                modifier = Modifier
-                    .scale(0.8f)
-                    .semantics { contentDescription = switchLabel },
-            )
+            val locked = on && model.isLastEnabled
+            MorpheTooltip(text = stringResource(Res.string.source_card_last_enabled), enabled = locked) {
+                MorpheSwitch(
+                    checked = on,
+                    onCheckedChange = actions.onToggleEnabled,
+                    accentColor = accent,
+                    enabled = enabled && !locked,
+                    modifier = Modifier
+                        .scale(0.8f)
+                        .semantics { contentDescription = switchLabel },
+                )
+            }
             SourceMenuButton(model = model, actions = actions, enabled = enabled)
         }
 
@@ -261,12 +248,14 @@ fun SourceCard(
             }
         }
 
-        Spacer(Modifier.weight(1f).heightIn(min = 16.dp))
-        Box(Modifier.alpha(contentAlpha)) {
-            ChannelRow(model, enabled = enabled && on && !model.isLoading, onChange = actions.onChannelChange)
+        if (on) {
+            Spacer(Modifier.weight(1f).heightIn(min = 16.dp))
+            ChannelRow(model, enabled = enabled && !model.isLoading, onChange = actions.onChannelChange)
+            Spacer(Modifier.height(16.dp))
+            Footer(model, actions, enabled)
+        } else {
+            Spacer(Modifier.height(CardPadding))
         }
-        Spacer(Modifier.height(16.dp))
-        Footer(model, actions, enabled)
     }
 }
 
@@ -279,7 +268,7 @@ private fun Tag(text: String, color: Color? = null) {
             .height(19.dp)
             .clip(pill())
             .then(if (color != null) Modifier.background(c.copy(alpha = 0.1f)) else Modifier)
-            .border(1.dp, c.copy(alpha = if (color != null) 0.4f else 0.25f), pill())
+            .outlineBorder(c.copy(alpha = if (color != null) 0.4f else 0.25f), pill(), enabled = color == null || MorpheTheme.outlines)
             .padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -334,32 +323,6 @@ private fun SourceLink(source: PatchSource) {
     }
 }
 
-private class SourceAvatarState(val bitmap: ImageBitmap?, val accentHue: Float?, val accentSaturation: Float)
-
-@Composable
-private fun rememberSourceAvatar(source: PatchSource): SourceAvatarState {
-    val url = remember(source.type, source.url) { avatarUrl(source) }
-    if (url == null) return SourceAvatarState(null, null, 0f)
-    val httpClient: HttpClient = koinInject()
-    var state by remember(url) { mutableStateOf(SourceAvatarState(null, null, 0f)) }
-    LaunchedEffect(url) {
-        val bmp = AvatarLoader.loadAvatar(url, httpClient) ?: return@LaunchedEffect
-        val (hue, sat) = dominantHue(bmp) ?: (null to 0f)
-        state = SourceAvatarState(bmp, hue, sat)
-    }
-    return state
-}
-
-private fun avatarUrl(source: PatchSource): String? = when (source.type) {
-    PatchSourceType.LOCAL -> null
-    PatchSourceType.DEFAULT -> AvatarLoader.resolveAvatarUrl(source.copy(type = PatchSourceType.GITHUB))
-    else -> AvatarLoader.resolveAvatarUrl(source)
-}
-
-private fun sourceOwner(source: PatchSource): String? = source.url?.let {
-    AvatarLoader.extractGitHubOwner(it) ?: AvatarLoader.extractGitLabOwner(it)
-}
-
 @Composable
 private fun SourceAvatar(
     source: PatchSource,
@@ -382,26 +345,10 @@ private fun SourceAvatar(
                 .alpha(if (muted) 0.5f else 1f)
                 .clip(shape)
                 .background(tint.copy(alpha = 0.1f))
-                .border(1.dp, tint.copy(alpha = 0.45f), shape),
+                .outlineBorder(tint.copy(alpha = 0.45f), shape),
             contentAlignment = Alignment.Center,
         ) {
-            when {
-                avatar.bitmap != null -> Image(
-                    bitmap = avatar.bitmap,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    colorFilter = if (muted) ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }) else null,
-                    modifier = Modifier.fillMaxSize(),
-                )
-                source.type == PatchSourceType.LOCAL -> Icon(
-                    MorpheIcons.Folder, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp),
-                )
-                else -> Text(
-                    text = source.name.trim().firstOrNull()?.uppercase() ?: "?",
-                    style = MorpheTheme.typography.titleMedium,
-                    color = tint,
-                )
-            }
+            SourceAvatarContent(source, avatar, tint, muted)
         }
         PriorityBadge(position, ringColor, Modifier.align(Alignment.BottomEnd).offset(6.dp, 6.dp))
     }
@@ -774,7 +721,7 @@ private fun AppTile(app: SourceApp) {
                 .size(20.dp)
                 .clip(RoundedCornerShape(if (MorpheTheme.corners.isSharp) 2.dp else 6.dp))
                 .background(tint.copy(alpha = 0.16f))
-                .border(1.dp, tint.copy(alpha = 0.45f), RoundedCornerShape(if (MorpheTheme.corners.isSharp) 2.dp else 6.dp)),
+                .outlineBorder(tint.copy(alpha = 0.45f), RoundedCornerShape(if (MorpheTheme.corners.isSharp) 2.dp else 6.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -830,7 +777,7 @@ private fun Notice(text: String, icon: ImageVector) {
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
             .background(colors.danger.copy(alpha = 0.08f))
-            .border(1.dp, colors.danger.copy(alpha = 0.3f), MorpheTheme.shapes.medium)
+            .outlineBorder(colors.danger.copy(alpha = 0.3f), MorpheTheme.shapes.medium)
             .padding(12.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
@@ -981,22 +928,17 @@ private fun FooterIcon(
 
 @Composable
 private fun SourceMenuButton(model: SourceCardModel, actions: SourceCardActions, enabled: Boolean) {
+    val canBrowse = actions.onOpenPatches != null && model.error == null && model.source.enabled
+    if (!canBrowse && !model.source.deletable) return
     MorpheOverflowMenu(
         contentDescription = stringResource(Res.string.source_card_more_description),
         enabled = enabled,
     ) { close ->
-        if (actions.onOpenPatches != null && model.error == null && model.source.enabled) {
-            MorpheMenuItem(MorpheIcons.MenuBook, stringResource(Res.string.source_card_browse_patches)) { close(); actions.onOpenPatches.invoke() }
+        if (canBrowse) {
+            MorpheMenuItem(MorpheIcons.MenuBook, stringResource(Res.string.source_card_browse_patches)) { close(); actions.onOpenPatches?.invoke() }
         }
         if (model.source.deletable) {
             MorpheMenuItem(MorpheIcons.Edit, stringResource(Res.string.source_sheet_edit_description)) { close(); actions.onEdit() }
-            MorpheMenuDivider()
-        }
-        MorpheMenuItem(MorpheIcons.KeyboardArrowUp, stringResource(Res.string.source_card_raise_priority), enabled = actions.onMoveUp != null) {
-            close(); actions.onMoveUp?.invoke()
-        }
-        MorpheMenuItem(MorpheIcons.KeyboardArrowDown, stringResource(Res.string.source_card_lower_priority), enabled = actions.onMoveDown != null) {
-            close(); actions.onMoveDown?.invoke()
         }
         if (actions.onRemove != null) {
             MorpheMenuDivider()
@@ -1063,37 +1005,3 @@ internal fun hashHue(key: String): Float =
 
 internal fun hueColor(hue: Float, saturation: Float, dark: Boolean): Color =
     Color.hsl(hue, saturation.coerceIn(0.35f, 0.7f), if (dark) 0.72f else 0.42f)
-
-private fun dominantHue(bitmap: ImageBitmap): Pair<Float, Float>? {
-    val pixels = runCatching { bitmap.toPixelMap() }.getOrNull() ?: return null
-    val step = maxOf(1, minOf(bitmap.width, bitmap.height) / 24)
-    val buckets = HashMap<Int, Pair<Int, Float>>()
-    var y = 0
-    while (y < bitmap.height) {
-        var x = 0
-        while (x < bitmap.width) {
-            val c = pixels[x, y]
-            val max = maxOf(c.red, c.green, c.blue)
-            val min = minOf(c.red, c.green, c.blue)
-            val l = (max + min) / 2f
-            val s = if (max == min) 0f else (max - min) / (1f - kotlin.math.abs(2 * l - 1))
-            if (c.alpha > 0.5f && s >= 0.3f && l in 0.15f..0.9f) {
-                val d = max - min
-                var h = when (max) {
-                    c.red -> ((c.green - c.blue) / d) % 6f
-                    c.green -> (c.blue - c.red) / d + 2f
-                    else -> (c.red - c.green) / d + 4f
-                } * 60f
-                if (h < 0) h += 360f
-                val bucket = (h / 20f).toInt()
-                val (n, sum) = buckets[bucket] ?: (0 to 0f)
-                buckets[bucket] = (n + 1) to (sum + s)
-            }
-            x += step
-        }
-        y += step
-    }
-    val best = buckets.maxByOrNull { it.value.first } ?: return null
-    if (best.value.first < 12) return null
-    return (best.key * 20f + 10f) to (best.value.second / best.value.first)
-}

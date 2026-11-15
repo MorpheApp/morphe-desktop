@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
@@ -51,6 +50,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineStroke
 
 private val PopupGap = 4.dp
 private val PopupPadding = 4.dp
@@ -86,7 +86,7 @@ fun MorphePopupSurface(
         Surface(
             shape = MorpheTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            border = BorderStroke(HairlineWidth, MaterialTheme.colorScheme.outlineVariant),
+            border = outlineStroke(MaterialTheme.colorScheme.outlineVariant, HairlineWidth),
             shadowElevation = PopupElevation,
             modifier = Modifier.width(width),
         ) {

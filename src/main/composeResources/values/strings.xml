@@ -591,6 +591,7 @@
     <string name="source_card_loads_newest">Newest .mpp in the folder</string>
     <string name="source_card_loads_pr">Newest build of the pull request</string>
     <string name="source_card_disabled">Turn this source on to load it.</string>
+    <string name="source_card_last_enabled">At least one source has to stay on</string>
     <string name="source_card_retry">Try again</string>
     <string name="source_card_review_key">Review signing key</string>
     <string name="source_card_open_pull_request">Open pull request</string>
@@ -601,8 +602,6 @@
     <string name="source_card_show_in_folder">Show in folder</string>
     <string name="source_card_more_description">More actions</string>
     <string name="source_card_browse_patches">Browse patches</string>
-    <string name="source_card_raise_priority">Raise priority</string>
-    <string name="source_card_lower_priority">Lower priority</string>
     <string name="source_card_priority">Priority %1$d</string>
     <string name="source_card_open_link">Open %1$s in browser</string>
     <string name="source_card_enable_description">Enable %1$s</string>
