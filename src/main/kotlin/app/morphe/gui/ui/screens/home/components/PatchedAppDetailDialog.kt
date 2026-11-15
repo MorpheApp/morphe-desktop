@@ -286,7 +286,13 @@ fun PatchedAppDetailDialog(
             contentPadding = PaddingValues(0.dp),
             verticalArrangement = Arrangement.spacedBy(0.dp),
         ) {
-                IdentityBand(record, state, deviceInfo, updateInfo)
+                IdentityBand(
+                    record = record,
+                    state = state,
+                    deviceInfo = deviceInfo,
+                    updateInfo = updateInfo,
+                    formFactor = supportedApp?.formFactor ?: record.formFactor,
+                )
                 BandDivider()
 
                 Column(

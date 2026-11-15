@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.FormFactorBadge
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
@@ -32,6 +33,7 @@ import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.patch.FormFactor
 import org.jetbrains.compose.resources.stringResource
 
 /** Compact summary row displaying a previously patched application. */
@@ -43,6 +45,7 @@ fun YourAppRow(
     updateInfo: RecallUpdateInfo?,
     onClick: () -> Unit,
     appIconColorHex: String? = null,
+    formFactor: FormFactor? = record.formFactor,
 ) {
     val cardFills = LocalCardFills.current
 
@@ -98,12 +101,19 @@ fun YourAppRow(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                Text(
-                    text = record.displayName,
-                    style = MorpheTheme.typography.titleSmall.copy(color = cardColors.title),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Text(
+                        text = record.displayName,
+                        style = MorpheTheme.typography.titleSmall.copy(color = cardColors.title),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    FormFactorBadge(formFactor = formFactor, onGradient = true)
+                }
                 Text(
                     text = subtitle,
                     style = MorpheTheme.typography.labelSmall.copy(color = cardColors.subtitle),

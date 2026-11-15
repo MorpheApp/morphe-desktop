@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.VersionStatus
+import app.morphe.gui.ui.components.FormFactorBadge
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
@@ -99,13 +100,20 @@ fun ApkInfoCard(
                 Spacer(Modifier.width(14.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = apkInfo.appName,
-                        style = MorpheTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Text(
+                            text = apkInfo.appName,
+                            style = MorpheTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false),
+                        )
+                        FormFactorBadge(formFactor = apkInfo.formFactor, onGradient = false)
+                    }
                     Spacer(Modifier.height(2.dp))
                     Text(
                         text = apkInfo.packageName,
@@ -115,6 +123,8 @@ fun ApkInfoCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+
+                Spacer(Modifier.width(12.dp))
 
                 MorpheIconButton(
                     icon = MorpheIcons.Close,
