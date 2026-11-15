@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">ສີຂາວດຳ</string>
     <string name="settings_toggle_sharp_corners_label">ມຸມແຫຼມ</string>
     <string name="settings_toggle_sharp_corners_desc">ປັບໃຫ້ບັດ, ປ່ອງຢ້ຽມ ແລະ ປຸ່ມເປັນຮູບສີ່ຫຼ່ຽມ</string>
+    <string name="settings_toggle_outlines_label">ເສັ້ນຂອບ</string>
+    <string name="settings_toggle_outlines_desc">ແຕ້ມເສັ້ນຂອບບາງໆ ອ້ອມຮອບບັດ, ແຜງຄວບຄຸມ ແລະ ປຸ່ມ</string>
     <string name="settings_section_accent_color">ສີເນັ້ນ</string>
     <string name="settings_accent_clear_description">ລ້າງສີເນັ້ນ</string>
     <string name="settings_accent_custom_description">ສີເນັ້ນແບບກຳນົດເອງ</string>

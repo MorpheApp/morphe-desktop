@@ -667,6 +667,8 @@
     <string name="settings_appearance_monochrome">Monohroma</string>
     <string name="settings_toggle_sharp_corners_label">Asi stūri</string>
     <string name="settings_toggle_sharp_corners_desc">Izveidot kartes, dialogus un pogas kvadrātveidīgas</string>
+    <string name="settings_toggle_outlines_label">Kontūras</string>
+    <string name="settings_toggle_outlines_desc">Zīmē plānu malu ap kartēm, paneļiem un pogām</string>
     <string name="settings_section_accent_color">Akcentkrāsa</string>
     <string name="settings_accent_clear_description">Notīrīt akcentkrāsu</string>
     <string name="settings_accent_custom_description">Pielāgota akcentkrāsa</string>

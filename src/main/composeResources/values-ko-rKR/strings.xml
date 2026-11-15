@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">흑백</string>
     <string name="settings_toggle_sharp_corners_label">날카로운 모서리</string>
     <string name="settings_toggle_sharp_corners_desc">카드, 대화 상자, 버튼의 모서리를 각지게 만듭니다</string>
+    <string name="settings_toggle_outlines_label">윤곽선</string>
+    <string name="settings_toggle_outlines_desc">카드, 패널 및 버튼의 가장자리에 얇은 테두리를 표시합니다</string>
     <string name="settings_section_accent_color">강조 색상</string>
     <string name="settings_accent_clear_description">강조 색상 지우기</string>
     <string name="settings_accent_custom_description">사용자 지정 강조 색상</string>

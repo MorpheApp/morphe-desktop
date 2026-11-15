@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Манахромны</string>
     <string name="settings_toggle_sharp_corners_label">Вострыя куты</string>
     <string name="settings_toggle_sharp_corners_desc">Зрабіць куты карткі, дыялогаў і кнопак прамымі</string>
+    <string name="settings_toggle_outlines_label">Контуры</string>
+    <string name="settings_toggle_outlines_desc">Малюе тонкую graded лінію вакол карт, панэляў і кнопак</string>
     <string name="settings_section_accent_color">Акцэнтны колер</string>
     <string name="settings_accent_clear_description">Ачысціць акцэнтны колер</string>
     <string name="settings_accent_custom_description">Свой акцэнтны колер</string>

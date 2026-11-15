@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">โมโนโครม</string>
     <string name="settings_toggle_sharp_corners_label">มุมเหลี่ยม</string>
     <string name="settings_toggle_sharp_corners_desc">ทำการ์ด ไดอะล็อก และปุ่มให้เหลี่ยม</string>
+    <string name="settings_toggle_outlines_label">เส้นขอบ</string>
+    <string name="settings_toggle_outlines_desc">วาดเส้นขอบบางๆ รอบการ์ด แผงควบคุม และปุ่ม</string>
     <string name="settings_section_accent_color">สีเน้น</string>
     <string name="settings_accent_clear_description">ล้างสีเน้น</string>
     <string name="settings_accent_custom_description">สีเน้นกำหนดเอง</string>

@@ -674,6 +674,8 @@
     <string name="settings_appearance_monochrome">Монохром</string>
     <string name="settings_toggle_sharp_corners_label">Остри ъгли</string>
     <string name="settings_toggle_sharp_corners_desc">Прави ъглите на картите, диалозите и бутоните квадратни</string>
+    <string name="settings_toggle_outlines_label">Контури</string>
+    <string name="settings_toggle_outlines_desc">Чертае тънък контур около карти, панели и бутони</string>
     <string name="settings_section_accent_color">Акцентен цвят</string>
     <string name="settings_accent_clear_description">Изчистване на акцентния цвят</string>
     <string name="settings_accent_custom_description">Персонализиран акцентен цвят</string>

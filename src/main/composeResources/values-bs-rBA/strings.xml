@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">Monohromatski</string>
     <string name="settings_toggle_sharp_corners_label">Oštri uglovi</string>
     <string name="settings_toggle_sharp_corners_desc">Učini kartice, dijaloge i dugmad kvadratnim</string>
+    <string name="settings_toggle_outlines_label">Konture</string>
+    <string name="settings_toggle_outlines_desc">Crta tanku ivicu oko kartica, panela i dugmadi</string>
     <string name="settings_section_accent_color">Akcentna boja</string>
     <string name="settings_accent_clear_description">Očisti akcentnu boju</string>
     <string name="settings_accent_custom_description">Prilagođena akcentna boja</string>

@@ -671,6 +671,8 @@
     <string name="settings_appearance_monochrome">モノクロ</string>
     <string name="settings_toggle_sharp_corners_label">角を直角に</string>
     <string name="settings_toggle_sharp_corners_desc">カード、ダイアログ、ボタンの角を直角にする</string>
+    <string name="settings_toggle_outlines_label">アウトライン</string>
+    <string name="settings_toggle_outlines_desc">カードやパネル、ボタンに細い枠線を表示します</string>
     <string name="settings_section_accent_color">アクセントカラー</string>
     <string name="settings_accent_clear_description">アクセントカラーをクリア</string>
     <string name="settings_accent_custom_description">カスタム アクセント カラー</string>

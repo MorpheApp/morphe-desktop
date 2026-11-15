@@ -676,6 +676,8 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="settings_appearance_monochrome">Monokromatski</string>
     <string name="settings_toggle_sharp_corners_label">Oštri kutovi</string>
     <string name="settings_toggle_sharp_corners_desc">Učini kartice, dijaloške prozore i gumbe četvrtastima</string>
+    <string name="settings_toggle_outlines_label">Konture</string>
+    <string name="settings_toggle_outlines_desc">Crtaj tanki rub oko kartica, panela i gumba</string>
     <string name="settings_section_accent_color">Akcentna boja</string>
     <string name="settings_accent_clear_description">Ukloni akcentnu boju</string>
     <string name="settings_accent_custom_description">Prilagođena akcentna boja</string>

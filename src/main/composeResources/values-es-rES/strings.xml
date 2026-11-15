@@ -676,6 +676,8 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_appearance_monochrome">Monocromático</string>
     <string name="settings_toggle_sharp_corners_label">Esquinas rectas</string>
     <string name="settings_toggle_sharp_corners_desc">Hace que las tarjetas, los diálogos y los botones tengan esquinas rectas</string>
+    <string name="settings_toggle_outlines_label">Contornos</string>
+    <string name="settings_toggle_outlines_desc">Dibuja un borde fino alrededor de las tarjetas, los paneles y los botones</string>
     <string name="settings_section_accent_color">Color de acento</string>
     <string name="settings_accent_clear_description">Borrar color de acento</string>
     <string name="settings_accent_custom_description">Color de acento personalizado</string>

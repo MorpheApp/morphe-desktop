@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monokroomne</string>
     <string name="settings_toggle_sharp_corners_label">Teravad nurgad</string>
     <string name="settings_toggle_sharp_corners_desc">Muuda kaardid, dialoogid ja nupud nurkades teravaks</string>
+    <string name="settings_toggle_outlines_label">Piirjooned</string>
+    <string name="settings_toggle_outlines_desc">Joonistab kaartide, paneelide ja nuppude ümber õhukese äärise</string>
     <string name="settings_section_accent_color">Aktsentsvärv</string>
     <string name="settings_accent_clear_description">Tühjenda aktsentsvärv</string>
     <string name="settings_accent_custom_description">Kohandatud aktsentsvärv</string>

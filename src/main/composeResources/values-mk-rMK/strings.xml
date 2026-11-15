@@ -668,6 +668,8 @@
     <string name="settings_appearance_monochrome">Монохромно</string>
     <string name="settings_toggle_sharp_corners_label">Остри агли</string>
     <string name="settings_toggle_sharp_corners_desc">Направете ги картичките, дијалозите и копчињата квадратни</string>
+    <string name="settings_toggle_outlines_label">Контури</string>
+    <string name="settings_toggle_outlines_desc">Црта тенок раб околу картичките, панелите и копчињата</string>
     <string name="settings_section_accent_color">Акцентна боја</string>
     <string name="settings_accent_clear_description">Исчисти ја акцентната боја</string>
     <string name="settings_accent_custom_description">Прилагодена акцентна боја</string>

@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monochroom</string>
     <string name="settings_toggle_sharp_corners_label">Scherpe hoeken</string>
     <string name="settings_toggle_sharp_corners_desc">Maak kaarten, dialoogvensters en knoppen vierkant</string>
+    <string name="settings_toggle_outlines_label">Omtrekken</string>
+    <string name="settings_toggle_outlines_desc">Tekt een dunne rand rond kaarten, panelen en knoppen</string>
     <string name="settings_section_accent_color">Accentkleur</string>
     <string name="settings_accent_clear_description">Accentkleur wissen</string>
     <string name="settings_accent_custom_description">Aangepaste accentkleur</string>

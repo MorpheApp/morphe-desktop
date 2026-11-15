@@ -669,6 +669,8 @@
     <string name="settings_appearance_monochrome">Միագույն</string>
     <string name="settings_toggle_sharp_corners_label">Սուր անկյուններ</string>
     <string name="settings_toggle_sharp_corners_desc">Դարձնել քարտերի, երկխոսությունների և կոճակների անկյունները ուղղանկյուն</string>
+    <string name="settings_toggle_outlines_label">Կոնտուրներ</string>
+    <string name="settings_toggle_outlines_desc">Գծում է բարակ եզր քարտերի, վահանակների և կոճակների շուրջ</string>
     <string name="settings_section_accent_color">Շեշտադրվող գույն</string>
     <string name="settings_accent_clear_description">Մաքրել շեշտադրվող գույնը</string>
     <string name="settings_accent_custom_description">Շեշտադրվող անհատական գույն</string>

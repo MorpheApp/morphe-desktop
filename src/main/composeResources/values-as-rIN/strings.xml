@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">মনোখ্ৰোম</string>
     <string name="settings_toggle_sharp_corners_label">তীক্ষ্ণ কোণ</string>
     <string name="settings_toggle_sharp_corners_desc">কাৰ্ড, ডায়লগ আৰু বুটামবোৰৰ কোণবোৰ চোকা কৰক</string>
+    <string name="settings_toggle_outlines_label">আউটলাইনসমূহ</string>
+    <string name="settings_toggle_outlines_desc">কাৰ্ড, পেনেল আৰু বুটামবোৰৰ চাৰিওফালে এটা পাতল প্ৰান্তৰেখা আঁকে</string>
     <string name="settings_section_accent_color">একচেন্ট ৰং</string>
     <string name="settings_accent_clear_description">একচেন্ট ৰং মচি পেলাওক</string>
     <string name="settings_accent_custom_description">কষ্টম একচেন্ট ৰং</string>

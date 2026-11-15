@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Imbala eyodwa</string>
     <string name="settings_toggle_sharp_corners_label">Izona eziqine</string>
     <string name="settings_toggle_sharp_corners_desc">Yenza amakhadi, amadayilogi nezinkinobho abe yizikwele</string>
+    <string name="settings_toggle_outlines_label">Imilando</string>
+    <string name="settings_toggle_outlines_desc">Idweba imingcele emincane ezicishini, ema-panels kanye nezinkinobho</string>
     <string name="settings_section_accent_color">Umbala ogqamile</string>
     <string name="settings_accent_clear_description">Sula umbala ogqamile</string>
     <string name="settings_accent_custom_description">Umbala ogqamile oyi-custom</string>

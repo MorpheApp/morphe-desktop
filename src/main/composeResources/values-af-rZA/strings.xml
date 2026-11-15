@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monochroom</string>
     <string name="settings_toggle_sharp_corners_label">Skerp hoeke</string>
     <string name="settings_toggle_sharp_corners_desc">Maak kaarte, dialoogvensters en knoppies vierkantig</string>
+    <string name="settings_toggle_outlines_label">Omlyne</string>
+    <string name="settings_toggle_outlines_desc">Trek 'n dun rand om kaarte, panele en knoppies</string>
     <string name="settings_section_accent_color">Aksentkleur</string>
     <string name="settings_accent_clear_description">Maak aksentkleur skoon</string>
     <string name="settings_accent_custom_description">Aangepaste aksentkleur</string>

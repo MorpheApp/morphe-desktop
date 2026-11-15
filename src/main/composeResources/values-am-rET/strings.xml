@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">ሞኖክሮም</string>
     <string name="settings_toggle_sharp_corners_label">ሹል ማዕዘኖች</string>
     <string name="settings_toggle_sharp_corners_desc">ካርዶችን፣ የንግግር ሳጥኖችን እና ቁልፎችን ካሬ ማድረግ</string>
+    <string name="settings_toggle_outlines_label">አውትላይኖች</string>
+    <string name="settings_toggle_outlines_desc">በካርዶች፣ በፓነሎች እና በቁልፎች ዙሪያ ቀጭን ጠርዝ ይስላል</string>
     <string name="settings_section_accent_color">የጎላ ቀለም</string>
     <string name="settings_accent_clear_description">የጎላ ቀለምን አጥፋ</string>
     <string name="settings_accent_custom_description">የተቀየረ የጎላ ቀለም</string>

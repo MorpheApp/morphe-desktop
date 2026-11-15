@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">मोनोक्रोम</string>
     <string name="settings_toggle_sharp_corners_label">शार्प कॉर्नर्स</string>
     <string name="settings_toggle_sharp_corners_desc">कार्ड्स, डायलॉग्स आणि बटन्सचे कोपरे चौकोनी करा</string>
+    <string name="settings_toggle_outlines_label">आउटलाईन्स</string>
+    <string name="settings_toggle_outlines_desc">कार्ड्स, पॅनेल आणि बटणांभोवती एक बारीक कडा रेखाटते</string>
     <string name="settings_section_accent_color">ॲक्सेंट रंग</string>
     <string name="settings_accent_clear_description">ॲक्सेंट रंग काढून टाका</string>
     <string name="settings_accent_custom_description">कस्टम ॲक्सेंट रंग</string>

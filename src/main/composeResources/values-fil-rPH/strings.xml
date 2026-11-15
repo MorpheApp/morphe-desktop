@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monokromo</string>
     <string name="settings_toggle_sharp_corners_label">Matalim na mga sulok</string>
     <string name="settings_toggle_sharp_corners_desc">Gawing parisukat ang mga card, dialog at button</string>
+    <string name="settings_toggle_outlines_label">Mga Outline</string>
+    <string name="settings_toggle_outlines_desc">Nagdodrowing ng manipis na gilid sa paligid ng mga card, panel at button</string>
     <string name="settings_section_accent_color">Accent na kulay</string>
     <string name="settings_accent_clear_description">I-clear ang accent color</string>
     <string name="settings_accent_custom_description">Custom na accent color</string>

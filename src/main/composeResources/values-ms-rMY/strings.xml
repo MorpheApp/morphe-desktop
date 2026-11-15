@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Monokrom</string>
     <string name="settings_toggle_sharp_corners_label">Bucu tajam</string>
     <string name="settings_toggle_sharp_corners_desc">Jadikan kad, dialog dan butang berbentuk segi empat</string>
+    <string name="settings_toggle_outlines_label">Garis Luar</string>
+    <string name="settings_toggle_outlines_desc">Melukis garis tepi nipis di sekeliling kad, panel dan butang</string>
     <string name="settings_section_accent_color">Warna aksen</string>
     <string name="settings_accent_clear_description">Kosongkan warna aksen</string>
     <string name="settings_accent_custom_description">Warna aksen tersuai</string>

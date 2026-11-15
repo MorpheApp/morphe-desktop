@@ -670,6 +670,8 @@
     <string name="settings_appearance_monochrome">Монохром</string>
     <string name="settings_toggle_sharp_corners_label">Хурц булангуй</string>
     <string name="settings_toggle_sharp_corners_desc">Картууд, диалог болон товчнуудын булангуудыг хурц болгох</string>
+    <string name="settings_toggle_outlines_label">Гадна хүрээ</string>
+    <string name="settings_toggle_outlines_desc">Карт, панел, товчлуурнуудын эргэн тойронд нарийн хүрээ зурна</string>
     <string name="settings_section_accent_color">Акцентын өнгө</string>
     <string name="settings_accent_clear_description">Акцентын өнгийг цэвэрлэх</string>
     <string name="settings_accent_custom_description">Захиалгат акцентын өнгө</string>
