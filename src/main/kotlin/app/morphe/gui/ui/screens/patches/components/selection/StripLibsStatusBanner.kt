@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.patches.components.selection
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +22,7 @@ import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeVariant
 import app.morphe.gui.ui.screens.patches.StripLibsStatus
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -66,7 +66,7 @@ internal fun StripLibsStatusBanner(
             .defaultMinSize(minHeight = MorpheTheme.dimens.controlHeight)
             .clip(MorpheTheme.shapes.small)
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MorpheTheme.shapes.small)
+            .outlineBorder(MaterialTheme.colorScheme.outlineVariant, MorpheTheme.shapes.small)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         contentAlignment = Alignment.CenterStart,
     ) {

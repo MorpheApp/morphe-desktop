@@ -120,4 +120,20 @@
         <item quantity="many">%1$d تحسينًا</item>
         <item quantity="other">%1$d تحسينًا</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="zero">%1$s (%2$d ملف)</item>
+        <item quantity="one">%1$s (%2$d ملف)</item>
+        <item quantity="two">%1$s (%2$d ملف)</item>
+        <item quantity="few">%1$s (%2$d ملف)</item>
+        <item quantity="many">%1$s (%2$d ملف)</item>
+        <item quantity="other">%1$s (%2$d ملف)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="zero">الإجمالي: %1$s (%2$d ملف)</item>
+        <item quantity="one">الإجمالي: %1$s (%2$d ملف)</item>
+        <item quantity="two">الإجمالي: %1$s (%2$d ملف)</item>
+        <item quantity="few">الإجمالي: %1$s (%2$d ملف)</item>
+        <item quantity="many">الإجمالي: %1$s (%2$d ملف)</item>
+        <item quantity="other">الإجمالي: %1$s (%2$d ملف)</item>
+    </plurals>
 </resources>

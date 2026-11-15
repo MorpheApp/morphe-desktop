@@ -6,7 +6,9 @@
 package app.morphe.desktop.command.utility
 
 import app.morphe.engine.CacheManager
+import app.morphe.engine.MorpheData
 import app.morphe.engine.util.Logger
+import app.morphe.engine.workspace.WorkspaceManager
 import java.util.concurrent.Callable
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -21,29 +23,86 @@ internal object ClearCacheCommand : Callable<Int> {
 
     @Option(
         names = ["--info"],
-        description = ["Show a per-category breakdown of what was cleared and how much space was freed."],
+        description = ["Show current cache usage breakdown without clearing."],
     )
     private var info: Boolean = false
 
+    @Option(
+        names = ["--patches"],
+        description = ["Target only cached patch bundles."],
+    )
+    private var patchesOnly: Boolean = false
+
+    @Option(
+        names = ["--logs"],
+        description = ["Target only log files."],
+    )
+    private var logsOnly: Boolean = false
+
+    @Option(
+        names = ["--temp"],
+        description = ["Target only temporary scratch files."],
+    )
+    private var tempOnly: Boolean = false
+
+    @Option(
+        names = ["--avatars"],
+        description = ["Target only cached remote avatars."],
+    )
+    private var avatarsOnly: Boolean = false
+
+    @Option(
+        names = ["--app-icons"],
+        description = ["Target only cached app icons."],
+    )
+    private var appIconsOnly: Boolean = false
+
     override fun call(): Int {
-        val result = CacheManager.clearCaches()
+        val anyCategorySelected = patchesOnly || logsOnly || tempOnly || avatarsOnly || appIconsOnly
 
         if (info) {
+            val categories = buildList {
+                if (!anyCategorySelected || patchesOnly) add("Patches" to MorpheData.patchesDir)
+                if (!anyCategorySelected || logsOnly) add("Logs" to MorpheData.logsDir)
+                if (!anyCategorySelected || tempOnly) add("Temp" to WorkspaceManager.scratchDir)
+                if (!anyCategorySelected || avatarsOnly) add("Avatars" to MorpheData.avatarsDir)
+                if (!anyCategorySelected || appIconsOnly) add("App icons" to MorpheData.appIconsDir)
+            }
+            var totalBytes = 0L
+            var totalFiles = 0
+
             Logger.info(
                 buildString {
-                    appendLine("Cache cleared:")
-                    result.perDirectory.forEach { dir ->
+                    appendLine("Cache status:")
+                    categories.forEach { (label, dir) ->
+                        val stats = CacheManager.getDirectoryStats(dir)
+                        totalBytes += stats.bytes
+                        totalFiles += stats.fileCount
                         appendLine(
-                            "  ${dir.label.padEnd(8)} ${humanReadable(dir.bytesFreed).padStart(9)}" +
-                                "  (${dir.filesDeleted} file${if (dir.filesDeleted == 1) "" else "s"})"
+                            "  ${label.padEnd(9)} ${humanReadable(stats.bytes).padStart(9)}" +
+                                "  (${stats.fileCount} file${if (stats.fileCount == 1) "" else "s"})"
                         )
                     }
-                    append("  ${"Total".padEnd(8)} ${humanReadable(result.bytesFreed).padStart(9)}")
+                    append("  ${"Total".padEnd(9)} ${humanReadable(totalBytes).padStart(9)}  ($totalFiles file${if (totalFiles == 1) "" else "s"})")
                 }
             )
-        } else {
-            Logger.info("Cache cleared.")
+            return EXIT_CODE_SUCCESS
         }
+
+        val result = if (anyCategorySelected) {
+            val results = buildList {
+                if (patchesOnly) add(CacheManager.clearDirectoryContents("Patches", MorpheData.patchesDir))
+                if (logsOnly) add(CacheManager.clearDirectoryContents("Logs", MorpheData.logsDir))
+                if (tempOnly) add(WorkspaceManager.clearScratch())
+                if (avatarsOnly) add(CacheManager.clearDirectoryContents("Avatars", MorpheData.avatarsDir))
+                if (appIconsOnly) add(CacheManager.clearDirectoryContents("App icons", MorpheData.appIconsDir))
+            }
+            CacheManager.ClearResult(results)
+        } else {
+            CacheManager.clearCaches()
+        }
+
+        Logger.info("Cache cleared.")
 
         // Deletion failures always shown, even without --info.
         return if (result.success) {

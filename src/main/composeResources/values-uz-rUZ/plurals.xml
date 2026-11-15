@@ -60,4 +60,12 @@
         <item quantity="one">%1$d ta optimallashtirish</item>
         <item quantity="other">%1$d ta optimallashtirish</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d ta fayl)</item>
+        <item quantity="other">%1$s (%2$d ta fayl)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Jami: %1$s (%2$d ta fayl)</item>
+        <item quantity="other">Jami: %1$s (%2$d ta fayl)</item>
+    </plurals>
 </resources>

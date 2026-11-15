@@ -60,4 +60,12 @@
         <item quantity="one">%1$d अनुकूलन</item>
         <item quantity="other">%1$d अनुकूलन</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d फ़ाइल)</item>
+        <item quantity="other">%1$s (%2$d फ़ाइलें)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">कुल: %1$s (%2$d फ़ाइल)</item>
+        <item quantity="other">कुल: %1$s (%2$d फ़ाइलें)</item>
+    </plurals>
 </resources>

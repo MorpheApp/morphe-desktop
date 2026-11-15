@@ -46,6 +46,8 @@ fun AdbErrorCode.toStringResource(): StringResource = when (this) {
     AdbErrorCode.ROOT_MOUNT_FAILED -> Res.string.adb_error_generic
     AdbErrorCode.NO_ROOT_PERMISSION -> Res.string.result_adb_root_not_detected
     AdbErrorCode.STOCK_APP_NOT_INSTALLED -> Res.string.result_adb_stock_app_not_installed
+    AdbErrorCode.ROOT_MOUNT_VERSION_MISMATCH -> Res.string.result_adb_mount_version_mismatch
+    AdbErrorCode.ROOT_MOUNT_ABI_MISMATCH -> Res.string.result_adb_mount_abi_mismatch
     AdbErrorCode.UNINSTALL_FAILED,
     AdbErrorCode.ROOT_UNMOUNT_FAILED -> Res.string.adb_error_uninstall
     AdbErrorCode.CLEAR_LOGS_FAILED -> Res.string.adb_error_clear_logs

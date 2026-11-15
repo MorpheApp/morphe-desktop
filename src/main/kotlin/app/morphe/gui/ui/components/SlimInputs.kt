@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -182,7 +183,12 @@ internal fun SlimSearchField(
             .height(dimens.controlHeight)
             .clip(MorpheTheme.shapes.small)
             .background(searchBg)
-            .border(borderWidth, borderColor, MorpheTheme.shapes.small),
+            .outlineBorder(
+                color = borderColor,
+                shape = MorpheTheme.shapes.small,
+                width = borderWidth,
+                enabled = isFocused || MorpheTheme.outlines,
+            ),
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier

@@ -60,4 +60,12 @@
         <item quantity="one">%1$d βελτιστοποίηση</item>
         <item quantity="other">%1$d βελτιστοποιήσεις</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d αρχείο)</item>
+        <item quantity="other">%1$s (%2$d αρχεία)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Σύνολο: %1$s (%2$d αρχείο)</item>
+        <item quantity="other">Σύνολο: %1$s (%2$d αρχεία)</item>
+    </plurals>
 </resources>

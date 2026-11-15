@@ -60,4 +60,12 @@
         <item quantity="one">%1$d optimization</item>
         <item quantity="other">%1$d optimizations</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d file)</item>
+        <item quantity="other">%1$s (%2$d files)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Total: %1$s (%2$d file)</item>
+        <item quantity="other">Total: %1$s (%2$d files)</item>
+    </plurals>
 </resources>

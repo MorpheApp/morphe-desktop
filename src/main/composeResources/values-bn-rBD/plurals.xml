@@ -60,4 +60,12 @@
         <item quantity="one">%1$d টি অপ্টিমাইজেশন</item>
         <item quantity="other">%1$d টি অপ্টিমাইজেশন</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$dটি ফাইল)</item>
+        <item quantity="other">%1$s (%2$dটি ফাইল)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">মোট: %1$s (%2$dটি ফাইল)</item>
+        <item quantity="other">মোট: %1$s (%2$dটি ফাইল)</item>
+    </plurals>
 </resources>

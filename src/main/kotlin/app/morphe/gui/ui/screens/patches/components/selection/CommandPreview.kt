@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.patches.components.selection
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -27,6 +26,7 @@ import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
@@ -57,8 +57,7 @@ internal fun CommandPreview(
         modifier = modifier
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.small)
-            .border(
-                1.dp,
+            .outlineBorder(
                 terminalAccent.copy(alpha = 0.15f),
                 MorpheTheme.shapes.small
             )

@@ -58,6 +58,7 @@ internal fun HomeSplitLayout(
                 patchedRecords = uiState.patchedRecords,
                 deviceAppInfo = uiState.deviceAppInfo,
                 updateInfoByPackage = uiState.updateInfoByPackage,
+                selectedApk = uiState.apkInfo,
                 sortMode = uiState.sortMode,
                 onSortModeChange = onSortModeChange,
                 onShowDetail = onShowDetail,

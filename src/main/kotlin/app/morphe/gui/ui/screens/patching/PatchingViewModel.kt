@@ -28,6 +28,7 @@ import com.sun.management.OperatingSystemMXBean
 import java.io.File
 import java.lang.management.ManagementFactory
 import java.util.Locale
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -42,11 +43,64 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
 
+/** Snapshot of the active patching run shared across screens (e.g. while Settings is open). */
+data class PatchingSessionSnapshot(
+    val runId: String? = null,
+    val status: PatchingStatus = PatchingStatus.IDLE,
+    val outputPath: String? = null,
+    val isMount: Boolean = false,
+    val hasAutoNavigated: Boolean = false,
+) {
+    val isInProgress: Boolean
+        get() = status == PatchingStatus.PREPARING || status == PatchingStatus.PATCHING
+}
+
+/** App-scoped tracker keeping patching progress and completion state visible outside [PatchingScreen]. */
+class PatchingSessionTracker {
+    private val _state = MutableStateFlow(PatchingSessionSnapshot())
+    val state: StateFlow<PatchingSessionSnapshot> = _state.asStateFlow()
+
+    fun update(
+        runId: String,
+        status: PatchingStatus,
+        outputPath: String? = null,
+        isMount: Boolean = false,
+        hasAutoNavigated: Boolean = false,
+    ) {
+        _state.update { current ->
+            val settled = hasAutoNavigated || (current.runId == runId && current.hasAutoNavigated)
+            PatchingSessionSnapshot(
+                runId = runId,
+                status = status,
+                outputPath = outputPath,
+                isMount = isMount,
+                hasAutoNavigated = settled,
+            )
+        }
+    }
+
+    fun markAutoNavigated(runId: String?) {
+        if (runId == null) return
+        _state.update { current ->
+            if (current.runId == runId) current.copy(hasAutoNavigated = true) else current
+        }
+    }
+
+    fun clear(runId: String) {
+        _state.update { current ->
+            if (current.runId == runId) PatchingSessionSnapshot() else current
+        }
+    }
+}
+
 class PatchingViewModel(
     private val config: PatchEngine.Config,
     private val configRepository: ConfigRepository,
     private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
+    private val sessionTracker: PatchingSessionTracker = PatchingSessionTracker(),
 ) : ViewModel() {
+
+    private val runId = UUID.randomUUID().toString()
 
     private var allConfiguredSources: List<PatchSource> = emptyList()
     private val initialSnapshot = config.historyMetadata?.sourcesSnapshot
@@ -77,7 +131,31 @@ class PatchingViewModel(
 
     init {
         viewModelScope.launch {
-            val sources = runCatching { configRepository.loadConfig().patchSource }.getOrDefault(emptyList())
+            uiState.collect { state ->
+                sessionTracker.update(
+                    runId = runId,
+                    status = state.status,
+                    outputPath = state.outputPath,
+                    isMount = config.mount,
+                    hasAutoNavigated = state.hasAutoNavigated,
+                )
+            }
+        }
+        viewModelScope.launch {
+            sessionTracker.state.collect { snapshot ->
+                if (snapshot.runId == runId && snapshot.hasAutoNavigated && !_uiState.value.hasAutoNavigated) {
+                    _uiState.update { it.copy(hasAutoNavigated = true) }
+                }
+            }
+        }
+        viewModelScope.launch {
+            val sources = try {
+                configRepository.loadConfig().patchSource
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                emptyList()
+            }
             allConfiguredSources = sources
             val resolvedName = when {
                 initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let {
@@ -95,10 +173,17 @@ class PatchingViewModel(
 
     fun markAutoNavigated() {
         _uiState.update { it.copy(hasAutoNavigated = true) }
+        sessionTracker.markAutoNavigated(runId)
+    }
+
+    override fun onCleared() {
+        sessionTracker.clear(runId)
+        super.onCleared()
     }
 
     fun startPatching() {
         if (_uiState.value.status != PatchingStatus.IDLE) return
+        _uiState.update { it.copy(status = PatchingStatus.PREPARING) }
 
         patchingJob = viewModelScope.launch {
             isCancelledByUser = false

@@ -62,7 +62,7 @@ fun ResultScreen(
                 .fillMaxSize()
                 .background(screenScrim)
         ) {
-            SimpleTopBar(isPatching = false)
+            SimpleTopBar()
             SimpleResultContent(
                 outputPath = outputPath,
                 onPatchAnother = { navController.popBackStack(HomeScreenRoute, inclusive = false) },

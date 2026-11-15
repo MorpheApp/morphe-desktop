@@ -145,8 +145,14 @@ fun List<PatchBundle>.findMatchingBundle(sourceFiles: Set<File>): PatchBundle? {
     if (size == 1) return single()
     val currentSha256 = sha256ForFiles(sourceFiles)
     val sourceName = sourceFiles.joinToString(", ") { it.name }
-    return find { currentSha256 != null && it.meta.sha256 == currentSha256 }
-        ?: find { it.meta.source == sourceName }
+    return findMatchingBundle(PatchBundleMeta(source = sourceName, sha256 = currentSha256))
+}
+
+private fun List<PatchBundle>.findMatchingBundle(meta: PatchBundleMeta): PatchBundle? {
+    if (isEmpty()) return null
+    if (size == 1) return single()
+    return find { meta.sha256 != null && it.meta.sha256 == meta.sha256 }
+        ?: find { it.meta.source == meta.source }
         ?: firstOrNull()
 }
 
@@ -281,9 +287,8 @@ fun updateOptionsFileFromSnapshots(file: File, snapshots: List<PatchBundle>) {
 
     var updatedBundles = existingBundles
     snapshots.forEach { snapshot ->
-        val sourceFile = snapshot.meta.source?.let { File(it) }
-        val existing = if (sourceFile != null) {
-            updatedBundles.findMatchingBundle(setOf(sourceFile))
+        val existing = if (snapshot.meta.source != null) {
+            updatedBundles.findMatchingBundle(snapshot.meta)
         } else null
         val updated = snapshot.mergeWith(existing)
         updatedBundles = updatedBundles.withUpdatedBundle(updated)

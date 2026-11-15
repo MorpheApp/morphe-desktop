@@ -106,6 +106,26 @@ open class ConfigRepository {
         saveConfig(current.copy(useSharpCorners = enabled))
     }
 
+    suspend fun setUseOutlines(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(useOutlines = enabled))
+    }
+
+    suspend fun setShowAppIcons(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(showAppIcons = enabled))
+    }
+
+    suspend fun setShowMoreAppsCard(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(showMoreAppsCard = enabled))
+    }
+
+    suspend fun setCommunityNoticeAcknowledged(acknowledged: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(communityNoticeAcknowledged = acknowledged))
+    }
+
     suspend fun setHomeAppSortMode(mode: String) {
         val current = loadConfig()
         saveConfig(current.copy(homeAppSortMode = mode))
@@ -222,13 +242,6 @@ open class ConfigRepository {
     suspend fun setUseSimpleMode(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(useSimpleMode = enabled))
-    }
-
-    /** Persists the expanded state of a settings section. */
-    suspend fun setCollapsibleSectionExpanded(id: String, expanded: Boolean) {
-        val current = loadConfig()
-        val updated = current.collapsibleSectionStates + (id to expanded)
-        saveConfig(current.copy(collapsibleSectionStates = updated))
     }
 
     /** Returns the currently active patch source. */

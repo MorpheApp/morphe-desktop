@@ -20,6 +20,7 @@ import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.home.HomeViewModel
 import app.morphe.gui.ui.screens.patches.PatchSelectionViewModel
 import app.morphe.gui.ui.screens.patches.PatchesViewModel
+import app.morphe.gui.ui.screens.patching.PatchingSessionTracker
 import app.morphe.gui.ui.screens.patching.PatchingViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
@@ -53,6 +54,7 @@ val appModule = module {
     single { UpdateCheckRepository(get()) }
     single { ChangelogRepository(get()) }
     single { PatchedAppStore.shared }
+    single { PatchingSessionTracker() }
 
     viewModel {
         HomeViewModel(get(), get(), get(), get(), get())
@@ -93,6 +95,7 @@ val appModule = module {
         PatchingViewModel(
             params.get(),
             get(),
+            sessionTracker = get(),
         )
     }
 }

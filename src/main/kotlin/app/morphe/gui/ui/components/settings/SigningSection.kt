@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components.settings
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,6 +35,7 @@ import app.morphe.gui.ui.components.SlimTextField
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.apk.ApkUtils
@@ -59,9 +58,6 @@ internal fun SigningSection(
     onCredentialsChange: (password: String?, alias: String, entryPassword: String) -> Unit,
     borderColor: Color,
     enabled: Boolean = true,
-    expanded: Boolean = false,
-    icon: ImageVector? = null,
-    onExpandedChange: (Boolean) -> Unit = {}
 ) {
     val dimens = MorpheTheme.dimens
     val alpha = if (enabled) 1f else 0.4f
@@ -80,17 +76,10 @@ internal fun SigningSection(
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        CollapsibleSection(
-            title = stringResource(Res.string.settings_section_signing),
-            expanded = expanded,
-            icon = icon,
-            onExpandedChange = onExpandedChange
-        ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = if (!enabled) stringResource(Res.string.disabled_while_patching)
                    else stringResource(Res.string.settings_signing_desc),
-            style = MorpheTheme.typography.labelSmall,
+            style = MorpheTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
         )
 
@@ -106,7 +95,7 @@ internal fun SigningSection(
                     .weight(1f)
                     .fillMaxHeight()
                     .clip(MorpheTheme.shapes.small)
-                    .border(1.dp, borderColor, MorpheTheme.shapes.small)
+                    .outlineBorder(borderColor, MorpheTheme.shapes.small)
                     .padding(horizontal = 10.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -475,8 +464,6 @@ internal fun SigningSection(
                 size = MorpheButtonSize.DEFAULT,
                 modifier = Modifier.weight(1f),
             )
-        }
-        }
         }
     }
 

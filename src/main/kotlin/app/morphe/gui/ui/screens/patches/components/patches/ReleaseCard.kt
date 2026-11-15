@@ -8,7 +8,6 @@ package app.morphe.gui.ui.screens.patches.components.patches
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -32,6 +31,7 @@ import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
@@ -79,7 +79,12 @@ internal fun ReleaseCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
-            .border(borderWidth, borderColor, MorpheTheme.shapes.medium)
+            .outlineBorder(
+                borderColor,
+                MorpheTheme.shapes.medium,
+                width = borderWidth,
+                enabled = isSelected || MorpheTheme.outlines,
+            )
             .background(baseBg)
             .background(tintColor)
             .hoverable(interactionSource)

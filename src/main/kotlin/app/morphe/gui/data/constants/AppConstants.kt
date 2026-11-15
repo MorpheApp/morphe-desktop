@@ -24,6 +24,7 @@ object AppConstants {
     }
 
     const val WEBSITE_URL = "https://morphe.software"
+    const val COMMUNITY_PATCHES_URL = "https://morphe-patches.software"
     /** True if the running version is a prerelease or unpackaged development build. */
     val IS_DEV_BUILD: Boolean by lazy { APP_VERSION == "dev" || APP_VERSION.contains('-') }
 

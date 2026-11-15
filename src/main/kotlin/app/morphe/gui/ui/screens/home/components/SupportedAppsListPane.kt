@@ -12,7 +12,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,24 +22,36 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
+import app.morphe.gui.LocalShowMoreAppsCard
+import app.morphe.gui.data.constants.AppConstants
+import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.SlimSearchField
+import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.util.AppIconSource
+import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.rememberAppIcon
 import app.morphe.gui.ui.components.MorpheDropdown
 import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.morphe_desktop.generated.resources.*
+import java.io.File
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 /** Pane displaying a searchable, sortable list of supported applications. */
 @Composable
@@ -50,6 +61,7 @@ internal fun SupportedAppsListPane(
     patchedRecords: List<PatchedAppRecord> = emptyList(),
     deviceAppInfo: Map<String, DeviceAppInfo> = emptyMap(),
     updateInfoByPackage: Map<String, RecallUpdateInfo> = emptyMap(),
+    selectedApk: ApkInfo? = null,
     onShowDetail: (PatchedAppRecord) -> Unit = {},
     filter: AppListFilter = AppListFilter.ALL,
     onFilterChange: (AppListFilter) -> Unit = {},
@@ -65,6 +77,12 @@ internal fun SupportedAppsListPane(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expandedPackage by remember { mutableStateOf<String?>(null) }
+    var showCommunityNoticeDialog by remember { mutableStateOf(false) }
+
+    val configRepo: ConfigRepository = koinInject()
+    val uriHandler = LocalUriHandler.current
+    val coroutineScope = rememberCoroutineScope()
+    val showMoreAppsCard = LocalShowMoreAppsCard.current.value
 
     val matching = remember(searchQuery, supportedApps) {
         if (searchQuery.isBlank()) supportedApps
@@ -79,6 +97,10 @@ internal fun SupportedAppsListPane(
     val patchedAtByPackage = remember(patchedRecords) {
         patchedRecords.associate { it.packageName to it.patchedAt }
     }
+    val inputApkByPackage = remember(patchedRecords) {
+        patchedRecords.associate { it.packageName to File(it.inputApkPath) }
+    }
+    val deviceId = DeviceMonitor.state.collectAsState().value.selectedDevice?.takeIf { it.isReady }?.id
     val order = remember(sortMode) { sortMode.comparator() }
     val filtered = remember(matching, order, patchedStates, installedPackages, patchedAtByPackage) {
         matching.sortedWith(
@@ -253,7 +275,31 @@ internal fun SupportedAppsListPane(
                                 patchSourceNames = sourceNamesByPackage[app.packageName] ?: emptyList(),
                                 patchedState = patchedStates[app.packageName] ?: PatchedAppState.NEVER_PATCHED,
                                 deviceInfo = deviceAppInfo[app.packageName],
+                                icon = rememberAppIcon(
+                                    listOfNotNull(
+                                        selectedApk?.takeIf { it.packageName == app.packageName }?.let { AppIconSource.Apk(File(it.filePath)) },
+                                        inputApkByPackage[app.packageName]?.let { AppIconSource.Apk(it) },
+                                        deviceId?.let { AppIconSource.Device(it, app.packageName) },
+                                    ),
+                                    packageName = app.packageName,
+                                ),
                             )
+                        }
+                        if (showMoreAppsCard && searchQuery.isBlank()) {
+                            item(key = "more_apps_card") {
+                                MoreAppsCard(
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            val config = configRepo.loadConfig()
+                                            if (config.communityNoticeAcknowledged) {
+                                                uriHandler.openUri(AppConstants.COMMUNITY_PATCHES_URL)
+                                            } else {
+                                                showCommunityNoticeDialog = true
+                                            }
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                     Box(
@@ -270,6 +316,19 @@ internal fun SupportedAppsListPane(
             }
         }
       }
+    }
+
+    if (showCommunityNoticeDialog) {
+        CommunityPatchesNoticeDialog(
+            onDismiss = { showCommunityNoticeDialog = false },
+            onConfirm = {
+                showCommunityNoticeDialog = false
+                coroutineScope.launch {
+                    configRepo.setCommunityNoticeAcknowledged(true)
+                    uriHandler.openUri(AppConstants.COMMUNITY_PATCHES_URL)
+                }
+            }
+        )
     }
 }
 
@@ -297,7 +356,7 @@ internal fun SkeletonAppRow(
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
             .background(cardBg)
-            .border(1.dp, outline, MorpheTheme.shapes.medium)
+            .outlineBorder(outline, MorpheTheme.shapes.medium)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {

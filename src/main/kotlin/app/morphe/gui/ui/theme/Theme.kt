@@ -5,6 +5,8 @@
 
 package app.morphe.gui.ui.theme
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -147,7 +151,9 @@ data class MorpheAlphas(
 
 val LocalMorpheAlphas = compositionLocalOf { MorpheAlphas() }
 
-/** Design system accessors for typography, colors, shapes, dimensions, and alphas. */
+val LocalMorpheOutlines = compositionLocalOf { true }
+
+/** Design system accessors for typography, colors, shapes, dimensions, alphas, and outlines. */
 object MorpheTheme {
     val typography: MorpheTypography
         @Composable
@@ -178,6 +184,11 @@ object MorpheTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalMorpheAlphas.current
+
+    val outlines: Boolean
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheOutlines.current
 }
 
 /** Panel background fill color. */
@@ -214,6 +225,7 @@ private val MorpheDarkColorScheme = darkColorScheme(
     surfaceVariant = Color(0xFF43474E),
     onSurfaceVariant = Color(0xFFC3C6CF),
     outline = Color(0xFF8D9199),
+    outlineVariant = Color(0xFF43474E),
     error = Color(0xFFFFB4AB),
     onError = Color(0xFF690005),
     errorContainer = Color(0xFF93000A),
@@ -247,6 +259,7 @@ private val MorpheLightColorScheme = lightColorScheme(
     surfaceVariant = Color(0xFFDFE2EB),
     onSurfaceVariant = Color(0xFF43474E),
     outline = Color(0xFF73777F),
+    outlineVariant = Color(0xFFC3C6CF),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
@@ -273,6 +286,7 @@ private val MonochromeDarkColorScheme = darkColorScheme(
     surfaceVariant = Color(0xFF444852),
     onSurfaceVariant = Color(0xFFC5C9D2),
     outline = Color(0xFF8E929C),
+    outlineVariant = Color(0xFF43474E),
     error = Color(0xFFFFB4AB),
     onError = Color(0xFF690005),
     errorContainer = Color(0xFF93000A),
@@ -306,6 +320,7 @@ private val MonochromeLightColorScheme = lightColorScheme(
     surfaceVariant = Color(0xFFE7EAF1),
     onSurfaceVariant = Color(0xFF444852),
     outline = Color(0xFF747984),
+    outlineVariant = Color(0xFFC3C6CF),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
@@ -355,6 +370,7 @@ fun MorpheTheme(
     themeStyle: ThemeStyle = ThemeStyle.MORPHE,
     customAccentColorArgb: Int? = null,
     useSharpCorners: Boolean = false,
+    useOutlines: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val baseColorScheme = when (themeStyle) {
@@ -442,6 +458,7 @@ fun MorpheTheme(
         LocalMorpheAccents provides accents,
         LocalMorpheDimens provides MorpheDimens(),
         LocalMorpheAlphas provides MorpheAlphas(),
+        LocalMorpheOutlines provides useOutlines,
         LocalMorpheTypography provides typography,
     ) {
         MaterialTheme(
@@ -455,6 +472,24 @@ fun MorpheTheme(
         }
     }
 }
+
+/** Returns a [BorderStroke] when [enabled] is true, or `null` when outlines are disabled. */
+@Composable
+@ReadOnlyComposable
+fun outlineStroke(
+    color: Color,
+    width: Dp = 1.dp,
+    enabled: Boolean = MorpheTheme.outlines,
+): BorderStroke? = if (enabled) BorderStroke(width, color) else null
+
+/** Applies a thin outline border when [enabled] is true, leaving the modifier unchanged otherwise. */
+@Composable
+fun Modifier.outlineBorder(
+    color: Color,
+    shape: Shape = MorpheTheme.shapes.small,
+    width: Dp = 1.dp,
+    enabled: Boolean = MorpheTheme.outlines,
+): Modifier = if (enabled) border(width, color, shape) else this
 
 fun Color.shiftLightness(delta: Float): Color {
     val hsl = FloatArray(3)

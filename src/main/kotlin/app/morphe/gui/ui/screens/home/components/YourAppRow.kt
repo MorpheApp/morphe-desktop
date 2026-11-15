@@ -91,6 +91,7 @@ fun YourAppRow(
                 name = record.displayName,
                 size = MorpheAvatarSize.MEDIUM,
                 onGradient = !cardColors.isMonochrome,
+                icon = rememberPatchedAppIcon(record, deviceInfo),
             )
             Spacer(Modifier.width(12.dp))
             Column(

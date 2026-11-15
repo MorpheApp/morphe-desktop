@@ -60,4 +60,12 @@
         <item quantity="one">ukuthuthukiswa okukodwa (%1$d)</item>
         <item quantity="other">izithuthukiso ezi-%1$d</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d ifayili)</item>
+        <item quantity="other">%1$s (%2$d amafayili)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Isihloko: %1$s (%2$d ifayili)</item>
+        <item quantity="other">Isihloko: %1$s (%2$d amafayili)</item>
+    </plurals>
 </resources>
