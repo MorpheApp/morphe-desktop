@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -169,7 +168,7 @@ private fun Hero(
                 Status(state = state, release = release, onSelect = actions.onSelect, modifier = Modifier.weight(1f))
                 if (!compact) HeroActions(state = state, release = release, actions = actions)
             }
-            MetaLine(state = state, release = release, contents = contents, base = base)
+            MetaLine(release = release, contents = contents, base = base)
             if (compact) HeroActions(state = state, release = release, actions = actions)
         }
     }
@@ -286,10 +285,8 @@ private fun HeroActions(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MetaLine(
-    state: PatchesUiState,
     release: Release,
     contents: BundleContents?,
     base: BundleContents?,

@@ -196,7 +196,7 @@ fun MorpheDialogText(text: String) {
 
 /** Standard dialog footer button pair with a ghost cancel button and compact confirm action. */
 @Composable
-fun RowScope.MorpheDialogActions(
+fun MorpheDialogActions(
     confirmLabel: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,

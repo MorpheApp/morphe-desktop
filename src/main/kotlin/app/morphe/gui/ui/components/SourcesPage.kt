@@ -58,6 +58,7 @@ import app.morphe.gui.util.openInFolder
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlin.math.max
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -426,7 +427,7 @@ private fun Modifier.animatePlacement(enabled: Boolean): Modifier = composed {
 private fun Modifier.staggeredEntrance(index: Int): Modifier = composed {
     val progress = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
-        delay(80L + index * 40L)
+        delay((80L + index * 40L).milliseconds)
         progress.animateTo(1f, spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessMediumLow))
     }
     graphicsLayer {

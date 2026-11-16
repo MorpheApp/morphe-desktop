@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.components.sources
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
@@ -30,15 +29,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import app.morphe.gui.ui.components.MorpheChannelSwitch
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.SlimSearchField
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,8 +52,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -65,8 +59,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.engine.patches.RemotePatchSourceFactory
@@ -947,7 +939,7 @@ private fun SourceMenuButton(model: SourceCardModel, actions: SourceCardActions,
         enabled = enabled,
     ) { close ->
         if (canBrowse) {
-            MorpheMenuItem(MorpheIcons.MenuBook, stringResource(Res.string.source_card_browse_patches)) { close(); actions.onOpenPatches?.invoke() }
+            MorpheMenuItem(MorpheIcons.MenuBook, stringResource(Res.string.source_card_browse_patches)) { close(); actions.onOpenPatches.invoke() }
         }
         if (model.source.deletable) {
             MorpheMenuItem(MorpheIcons.Edit, stringResource(Res.string.source_sheet_edit_description)) { close(); actions.onEdit() }

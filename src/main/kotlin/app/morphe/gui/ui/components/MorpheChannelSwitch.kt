@@ -70,12 +70,11 @@ fun MorpheChannelSwitch(
 ) {
     val scheme = MaterialTheme.colorScheme
     val shape = if (MorpheTheme.corners.isSharp) MorpheTheme.shapes.extraSmall else RoundedCornerShape(PILL_PERCENT)
-    val picked = preRelease
     val fraction by animateFloatAsState(
-        if (picked) 1f else 0f,
+        if (preRelease) 1f else 0f,
         spring(dampingRatio = THUMB_DAMPING, stiffness = Spring.StiffnessMediumLow),
     )
-    val fill by animateColorAsState(channelColor(if (picked) Channel.PRERELEASE else Channel.STABLE))
+    val fill by animateColorAsState(channelColor(if (preRelease) Channel.PRERELEASE else Channel.STABLE))
     var width by remember { mutableStateOf(0) }
     Box(
         modifier = modifier
@@ -100,7 +99,7 @@ fun MorpheChannelSwitch(
                 Triple(false, Res.string.version_label_stable, stableCount),
                 Triple(true, Res.string.version_label_prerelease, preReleaseCount),
             ).forEach { (pre, label, count) ->
-                val selected = picked == pre
+                val selected = preRelease == pre
                 val hover = remember { MutableInteractionSource() }
                 val hovered by hover.collectIsHoveredAsState()
                 val textColor by animateColorAsState(
