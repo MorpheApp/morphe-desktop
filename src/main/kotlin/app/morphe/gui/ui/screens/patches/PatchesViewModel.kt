@@ -18,7 +18,6 @@ import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PullRequestPatchSource
 import app.morphe.engine.patches.SupportedAppCatalog
-import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.PatchSourceHeaders
 import app.morphe.engine.util.newerRelease
@@ -27,9 +26,10 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
+import app.morphe.gui.util.followChannelPref
+import app.morphe.gui.util.openInFolder
 import app.morphe.gui.util.patchSourceHeaders
 import app.morphe.morphe_desktop.generated.resources.*
-import java.awt.Desktop
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +43,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 
 class PatchesViewModel(
-    private val apkName: String,
+    apkName: String,
     private val patchRepository: PatchRepository,
     private val configRepository: ConfigRepository,
     private val localPatchFilePath: String? = null,
@@ -262,10 +262,10 @@ class PatchesViewModel(
             pendingOwnSourceUpdates++
             psm.updateSource(source.copy(usePreRelease = followsPrerelease))
         }
-        val pref = when {
-            !follow -> SourceVersionPref(mode = FollowMode.PINNED, pinnedTag = release.tagName)
-            followsPrerelease -> SourceVersionPref(mode = FollowMode.FOLLOW_DEV)
-            else -> SourceVersionPref(mode = FollowMode.FOLLOW_STABLE)
+        val pref = if (!follow) {
+            SourceVersionPref(mode = FollowMode.PINNED, pinnedTag = release.tagName)
+        } else {
+            followChannelPref(followsPrerelease)
         }
         configRepository.setSourceVersionPref(source.id, pref)
         _uiState.update { it.copy(inUseTag = release.tagName, isFollowing = follow) }
@@ -281,7 +281,7 @@ class PatchesViewModel(
         viewModelScope.launch {
             val contents = try {
                 withContext(Dispatchers.IO) {
-                    val patches = PatchBundleLoader.loadFlat(setOf(file)).map { it.toMetadata() }
+                    val patches = SupportedAppCatalog.loadPatches(file)
                     BundleContents(
                         patches = patches.sortedBy { it.name.lowercase() },
                         apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(patches)
@@ -311,15 +311,13 @@ class PatchesViewModel(
         activeSource?.let { patchSourceHeaders(listOf(it to _uiState.value.selectedRelease?.tagName)) }
 
     fun showInFolder() {
-        val dir = _uiState.value.downloadedPatchFile?.parentFile ?: return
-        runCatching { if (dir.exists()) Desktop.getDesktop().open(dir) }
+        openInFolder(_uiState.value.downloadedPatchFile)
     }
 
     fun exportOptionsJson(outputFile: File) {
         val patchFile = _uiState.value.downloadedPatchFile ?: return
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isExporting = true) }
             try {
                 withContext(Dispatchers.IO) {
                     val patches = PatchBundleLoader.loadFlat(setOf(patchFile))
@@ -334,13 +332,9 @@ class PatchesViewModel(
                     it.copy(error = getString(Res.string.patches_error_failed_to_export_options, e.message ?: ""))
                 }
                 Logger.error("Failed to export options JSON", e)
-            } finally {
-                _uiState.update { it.copy(isExporting = false) }
             }
         }
     }
-
-    fun getApkName(): String = apkName
 }
 
 data class BundleContents(
@@ -370,7 +364,6 @@ data class PatchesUiState(
     val cachedReleaseVersions: Set<String> = emptySet(),
     val contents: Map<String, BundleContents> = emptyMap(),
     val loadingContents: Set<String> = emptySet(),
-    val isExporting: Boolean = false,
     val error: String? = null
 ) {
     val allReleases: List<Release>

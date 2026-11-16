@@ -11,8 +11,6 @@ import app.morphe.gui.data.repository.LanguageRepository
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.LocalDate
-import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatterBuilder
@@ -102,29 +100,8 @@ object FormatUtils {
         false
     }
 
-    /** Formats an ISO-8601 date string into localized date/time. */
-    fun formatIsoDateTime(isoDate: String?, locale: Locale = Locale.getDefault()): String {
-        if (isoDate.isNullOrBlank()) return ""
-        return try {
-            val date = try {
-                Date.from(OffsetDateTime.parse(isoDate).toInstant())
-            } catch (_: Exception) {
-                try {
-                    Date.from(Instant.parse(isoDate))
-                } catch (_: Exception) {
-                    val localDate = LocalDate.parse(isoDate)
-                    Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-                }
-            }
-            if (isoDate.contains("T")) {
-                formatDateTime(date, locale)
-            } else {
-                formatDate(date, locale)
-            }
-        } catch (_: Exception) {
-            isoDate
-        }
-    }
+    /** Formats a signed integer delta with an explicit leading `+` when positive. */
+    fun formatSignedDelta(delta: Int): String = if (delta > 0) "+$delta" else delta.toString()
 
     /** Formats a count as the reader writes numbers, with the grouping of their language. */
     fun formatCount(count: Long, locale: Locale = Locale.getDefault()): String =

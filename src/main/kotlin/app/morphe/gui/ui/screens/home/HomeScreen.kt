@@ -53,7 +53,6 @@ import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
-import app.morphe.gui.util.sourceChannelMap
 import app.morphe.gui.util.sourceDetailsMap
 import app.morphe.gui.util.sourceErrorMap
 import app.morphe.gui.util.sourceSignerChangedMap
@@ -485,7 +484,6 @@ fun HomeScreenContent(
                                         onChannelChange = { source, preRelease -> viewModel.setSourceChannel(source, preRelease) },
                                         onFollowLatest = { source -> viewModel.followLatest(source) },
                                         sourceVersions = snapshot.sourceVersionMap(),
-                                        sourceChannels = snapshot.sourceChannelMap(),
                                         sourceUpdates = snapshot.sourceUpdateMap(),
                                         sourceErrors = snapshot.sourceErrorMap(),
                                         sourceSigningKeyFingerprints = snapshot.sourceSigningKeyFingerprintMap(),
@@ -523,7 +521,6 @@ fun HomeScreenContent(
                                             }
                                         },
                                         onOpenPatches = if (isSimple) null else openSourceScreen,
-                                        onOpenVersions = if (isSimple) null else openSourceScreen,
                                         onRefresh = { viewModel.retryLoadPatches(forceRefresh = true) },
                                         enabled = !uiState.isAnalyzing,
                                         modifier = Modifier.fillMaxSize(),

@@ -17,7 +17,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -83,13 +82,16 @@ import app.morphe.gui.ui.components.MorpheOverflowMenu
 import app.morphe.gui.ui.components.MorphePopupSurface
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.components.fullDate
+import app.morphe.gui.ui.screens.home.components.humanSize
 import app.morphe.gui.ui.screens.home.components.relativeOrShortDate
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.cardFill
 import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.channelColor
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.SourceApp
 import app.morphe.gui.util.SourceDetails
+import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.rememberAppIcon
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Toolkit
@@ -103,7 +105,6 @@ data class SourceCardModel(
     val source: PatchSource,
     val position: Int,
     val version: String?,
-    val channel: Channel?,
     val updateVersion: String?,
     val error: String?,
     val details: SourceDetails?,
@@ -115,7 +116,6 @@ data class SourceCardModel(
 ) {
     val isPullRequest: Boolean =
         source.url?.let { RemotePatchSourceFactory.parse(it)?.provider == PatchProvider.GITHUB_PR } == true
-    val isRemote: Boolean = source.type != PatchSourceType.LOCAL
 }
 
 class SourceCardActions(
@@ -124,7 +124,6 @@ class SourceCardActions(
     val onEdit: () -> Unit,
     val onRemove: (() -> Unit)?,
     val onOpenPatches: (() -> Unit)?,
-    val onOpenVersions: (() -> Unit)?,
     val onOpenPullRequest: () -> Unit,
     val onFollowLatest: () -> Unit,
     val onRetry: () -> Unit,
@@ -375,63 +374,6 @@ private fun SourceLink(source: PatchSource) {
     }
 }
 
-@Composable
-private fun SourceAvatar(
-    source: PatchSource,
-    avatar: SourceAvatarState,
-    tint: Color,
-    position: Int,
-    round: Boolean,
-    muted: Boolean,
-    ringColor: Color,
-) {
-    val corner by animateDpAsState(
-        if (round) 22.dp else MorpheTheme.shapes.mediumDp,
-        spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessMediumLow),
-    )
-    val shape = RoundedCornerShape(corner)
-    Box {
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .alpha(if (muted) 0.5f else 1f)
-                .clip(shape)
-                .background(tint.copy(alpha = 0.1f))
-                .outlineBorder(tint.copy(alpha = 0.45f), shape),
-            contentAlignment = Alignment.Center,
-        ) {
-            SourceAvatarContent(source, avatar, tint, muted)
-        }
-        PriorityBadge(position, ringColor, Modifier.align(Alignment.BottomEnd).offset(6.dp, 6.dp))
-    }
-}
-
-@Composable
-private fun PriorityBadge(position: Int, ringColor: Color, modifier: Modifier) {
-    val scheme = MaterialTheme.colorScheme
-    val label = stringResource(Res.string.source_card_priority, position)
-    MorpheTooltip(text = label, modifier = modifier) {
-        Box(
-            modifier = Modifier
-                .border(2.dp, ringColor, pill())
-                .padding(2.dp)
-                .defaultMinSize(minWidth = 17.dp)
-                .height(17.dp)
-                .clip(pill())
-                .background(scheme.surfaceContainerHighest)
-                .padding(horizontal = 4.dp)
-                .semantics { contentDescription = label },
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = position.toString(),
-                style = MorpheTheme.typography.labelSmall.copy(fontSize = 10.5.sp, fontWeight = FontWeight.SemiBold),
-                color = scheme.onSurface,
-            )
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun VersionBlock(model: SourceCardModel, busy: Boolean) {
@@ -570,14 +512,14 @@ private fun Facts(model: SourceCardModel, busy: Boolean, onOpenPatches: (() -> U
                 tip = stringResource(Res.string.source_card_browse_patches_tip),
                 trailing = MorpheIcons.KeyboardArrowRight,
             ) {
-                if (details == null) Shimmer() else FactValue(FormatUtils.formatCount(details.patchCount.toLong()))
+                if (details == null) Shimmer() else FactValue(FormatUtils.formatCount(details.patchCount.toLong(), currentLocale()))
             }
             VerticalDivider()
             Fact(label = stringResource(Res.string.source_card_size)) {
                 when {
                     details == null -> Shimmer()
                     details.sizeBytes == null -> FactValue("—")
-                    else -> FactValue(FormatUtils.formatFileSize(details.sizeBytes))
+                    else -> FactValue(humanSize(details.sizeBytes))
                 }
             }
             VerticalDivider()
@@ -861,7 +803,7 @@ private fun Footer(model: SourceCardModel, actions: SourceCardActions, enabled: 
     val source = model.source
     val colors = MorpheTheme.colors
     val on = source.enabled
-    val versions = actions.onOpenVersions
+    val versions = actions.onOpenPatches
     val hasUpdate = on && model.updateVersion != null && !model.isLoading
     val hasAction = source.type == PatchSourceType.LOCAL || (on && (model.signerChanged || model.error != null)) ||
         model.isPullRequest || hasUpdate || versions != null
@@ -1056,11 +998,8 @@ internal fun Shimmer(width: Dp = 56.dp, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun pill() = if (MorpheTheme.corners.isSharp) RoundedCornerShape(2.dp) else RoundedCornerShape(50)
-
-@Composable
 private fun ColorScheme.surfaceColorAtElevationCompat(level: Int): Color =
-    if (level >= 2) surfaceContainer else surfaceContainerLow
+    if (level >= 2) surfaceContainer else cardFill
 
 private fun monogram(name: String): String =
     name.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }.take(2).joinToString("") { it.first().uppercase() }.ifEmpty { "?" }
@@ -1069,9 +1008,3 @@ private fun shortenHome(path: String): String {
     val home = System.getProperty("user.home") ?: return path
     return if (path.startsWith(home)) "~" + path.removePrefix(home) else path
 }
-
-internal fun hashHue(key: String): Float =
-    (key.fold(7L) { h, c -> (h * 31 + c.code) and 0xFFFFFFFFL } % 360).toFloat()
-
-internal fun hueColor(hue: Float, saturation: Float, dark: Boolean): Color =
-    Color.hsl(hue, saturation.coerceIn(0.35f, 0.7f), if (dark) 0.72f else 0.42f)

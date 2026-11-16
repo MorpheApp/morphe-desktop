@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.Release
+import app.morphe.engine.model.patchAssetSize
 import app.morphe.engine.model.publishedMillis
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.ui.components.MorpheBadge
@@ -59,6 +60,7 @@ import app.morphe.gui.ui.screens.patches.PatchesUiState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.cardFill
 import app.morphe.gui.ui.theme.channelColor
+import app.morphe.gui.util.FormatUtils
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -190,7 +192,7 @@ private fun Status(
     ) {
         if (release.tagName == inUse.tagName) {
             MorpheBadge(text = stringResource(Res.string.versions_in_use), tone = MorpheBadgeTone.Primary, variant = MorpheBadgeVariant.FILLED)
-            IconBadge(text = mode, icon = modeIcon, tone = MorpheBadgeTone.Primary, variant = MorpheBadgeVariant.OUTLINED)
+            MorpheBadge(text = mode, icon = modeIcon, tone = MorpheBadgeTone.Primary, variant = MorpheBadgeVariant.OUTLINED)
         } else {
             val channel = state.channelReleases(state.selectedChannel)
             val steps = if (release.isDevRelease() == inUse.isDevRelease()) {
@@ -330,7 +332,7 @@ private fun CountWithDelta(text: String, delta: Int?) {
         Text(text, style = MorpheTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurface)
         if (delta != null && delta != 0) {
             MorpheBadge(
-                text = if (delta > 0) "+$delta" else delta.toString(),
+                text = FormatUtils.formatSignedDelta(delta),
                 tone = if (delta > 0) MorpheBadgeTone.Success else MorpheBadgeTone.Neutral,
             )
         }

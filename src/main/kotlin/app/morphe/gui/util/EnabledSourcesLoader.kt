@@ -20,6 +20,7 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.morphe_desktop.generated.resources.*
+import java.awt.Desktop
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -221,10 +222,6 @@ object EnabledSourcesLoader {
 fun EnabledSourcesLoader.Result?.sourceVersionMap(): Map<String, String?> =
     this?.resolved?.associate { it.source.id to it.resolvedVersion } ?: emptyMap()
 
-/** Maps source IDs to resolved release channels. */
-fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, PatchResolver.Channel?> =
-    this?.resolved?.associate { it.source.id to it.channel } ?: emptyMap()
-
 /** Maps source IDs to pinned signing key fingerprints. */
 fun EnabledSourcesLoader.Result?.sourceSigningKeyFingerprintMap(): Map<String, String> =
     this?.resolved?.mapNotNull { r ->
@@ -327,4 +324,15 @@ fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> 
             releasedAtMillis = r.releasedAtMillis,
         )
     }.toMap()
+}
+
+/** Builds a [SourceVersionPref] that follows the given release channel. */
+fun followChannelPref(preRelease: Boolean): SourceVersionPref =
+    SourceVersionPref(mode = if (preRelease) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE)
+
+/** Opens [file]'s directory (or [file] itself if it is a directory) in the desktop file manager. */
+fun openInFolder(file: File?) {
+    val target = file ?: return
+    val dir = if (target.isDirectory) target else target.parentFile ?: return
+    runCatching { if (dir.exists()) Desktop.getDesktop().open(dir) }
 }

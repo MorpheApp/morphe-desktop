@@ -266,22 +266,14 @@ internal fun StorageSection(
             accent = MorpheTheme.colors.danger,
             title = stringResource(Res.string.settings_cache_confirm_title),
             content = {
-                Text(
-                    stringResource(Res.string.settings_cache_confirm_message),
-                    style = MorpheTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                MorpheDialogText(stringResource(Res.string.settings_cache_confirm_message))
             },
             actions = {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    onClick = { showClearAllConfirm = false },
-                    variant = MorpheButtonVariant.GHOST,
-                    size = MorpheButtonSize.COMPACT,
-                )
-                MorpheButton(
-                    label = stringResource(Res.string.clear),
-                    onClick = {
+                MorpheDialogActions(
+                    confirmLabel = stringResource(Res.string.clear),
+                    confirmVariant = MorpheButtonVariant.DANGER,
+                    onDismiss = { showClearAllConfirm = false },
+                    onConfirm = {
                         showClearAllConfirm = false
                         scope.launch {
                             withContext(NonCancellable) {
@@ -299,8 +291,6 @@ internal fun StorageSection(
                             }
                         }
                     },
-                    variant = MorpheButtonVariant.DANGER,
-                    size = MorpheButtonSize.COMPACT,
                 )
             },
         )
@@ -320,22 +310,14 @@ internal fun StorageSection(
             accent = MorpheTheme.colors.danger,
             title = stringResource(titleRes),
             content = {
-                Text(
-                    stringResource(messageRes),
-                    style = MorpheTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                MorpheDialogText(stringResource(messageRes))
             },
             actions = {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    onClick = { categoryConfirm = null },
-                    variant = MorpheButtonVariant.GHOST,
-                    size = MorpheButtonSize.COMPACT,
-                )
-                MorpheButton(
-                    label = stringResource(Res.string.clear),
-                    onClick = {
+                MorpheDialogActions(
+                    confirmLabel = stringResource(Res.string.clear),
+                    confirmVariant = MorpheButtonVariant.DANGER,
+                    onDismiss = { categoryConfirm = null },
+                    onConfirm = {
                         categoryConfirm = null
                         scope.launch {
                             withContext(NonCancellable) {
@@ -375,8 +357,6 @@ internal fun StorageSection(
                             }
                         }
                     },
-                    variant = MorpheButtonVariant.DANGER,
-                    size = MorpheButtonSize.COMPACT,
                 )
             },
         )

@@ -5,11 +5,20 @@
 
 package app.morphe.gui.ui.components.sources
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,22 +30,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.ui.components.MorpheTooltip
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.colorToHSL
 import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.AvatarLoader
+import app.morphe.morphe_desktop.generated.resources.Res
+import app.morphe.morphe_desktop.generated.resources.source_card_priority
 import io.ktor.client.HttpClient
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 private const val FALLBACK_SATURATION = 0.55f
@@ -96,21 +117,103 @@ internal fun SourceAvatarContent(source: PatchSource, avatar: SourceAvatarState,
 }
 
 @Composable
-fun SourceLogo(source: PatchSource, size: Dp, modifier: Modifier = Modifier) {
-    val avatar = rememberSourceAvatar(source)
-    val tint = sourceAccent(source, avatar)
-    val shape = MorpheTheme.shapes.medium
+private fun SourceAvatarBox(
+    source: PatchSource,
+    avatar: SourceAvatarState,
+    tint: Color,
+    size: Dp,
+    shape: Shape,
+    muted: Boolean = false,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier
             .size(size)
+            .alpha(if (muted) 0.5f else 1f)
             .clip(shape)
             .background(tint.copy(alpha = LOGO_FILL_ALPHA))
             .outlineBorder(tint.copy(alpha = LOGO_BORDER_ALPHA), shape),
         contentAlignment = Alignment.Center,
     ) {
-        SourceAvatarContent(source, avatar, tint)
+        SourceAvatarContent(source, avatar, tint, muted)
     }
 }
+
+@Composable
+internal fun SourceAvatar(
+    source: PatchSource,
+    avatar: SourceAvatarState,
+    tint: Color,
+    position: Int,
+    round: Boolean,
+    muted: Boolean,
+    ringColor: Color,
+) {
+    val corner by animateDpAsState(
+        if (round) 22.dp else MorpheTheme.shapes.mediumDp,
+        spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessMediumLow),
+    )
+    Box {
+        SourceAvatarBox(
+            source = source,
+            avatar = avatar,
+            tint = tint,
+            size = 44.dp,
+            shape = RoundedCornerShape(corner),
+            muted = muted,
+        )
+        PriorityBadge(position, ringColor, Modifier.align(Alignment.BottomEnd).offset(6.dp, 6.dp))
+    }
+}
+
+@Composable
+private fun PriorityBadge(position: Int, ringColor: Color, modifier: Modifier) {
+    val scheme = MaterialTheme.colorScheme
+    val label = stringResource(Res.string.source_card_priority, position)
+    MorpheTooltip(text = label, modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .border(2.dp, ringColor, pill())
+                .padding(2.dp)
+                .defaultMinSize(minWidth = 17.dp)
+                .height(17.dp)
+                .clip(pill())
+                .background(scheme.surfaceContainerHighest)
+                .padding(horizontal = 4.dp)
+                .semantics { contentDescription = label },
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = position.toString(),
+                style = MorpheTheme.typography.labelSmall.copy(fontSize = 10.5.sp, fontWeight = FontWeight.SemiBold),
+                color = scheme.onSurface,
+            )
+        }
+    }
+}
+
+@Composable
+fun SourceLogo(source: PatchSource, size: Dp, modifier: Modifier = Modifier) {
+    val avatar = rememberSourceAvatar(source)
+    val tint = sourceAccent(source, avatar)
+    SourceAvatarBox(
+        source = source,
+        avatar = avatar,
+        tint = tint,
+        size = size,
+        shape = MorpheTheme.shapes.medium,
+        modifier = modifier,
+    )
+}
+
+@Composable
+internal fun pill() = if (MorpheTheme.corners.isSharp) RoundedCornerShape(2.dp) else RoundedCornerShape(50)
+
+internal fun hashHue(key: String): Float =
+    (key.fold(7L) { h, c -> (h * 31 + c.code) and 0xFFFFFFFFL } % 360).toFloat()
+
+internal fun hueColor(hue: Float, saturation: Float, dark: Boolean): Color =
+    Color.hsl(hue, saturation.coerceIn(0.35f, 0.7f), if (dark) 0.72f else 0.42f)
 
 internal fun sourceOwner(source: PatchSource): String? = source.url?.let {
     AvatarLoader.extractGitHubOwner(it) ?: AvatarLoader.extractGitLabOwner(it)
@@ -126,26 +229,21 @@ private fun dominantHue(bitmap: ImageBitmap): Pair<Float, Float>? {
     val pixels = runCatching { bitmap.toPixelMap() }.getOrNull() ?: return null
     val step = maxOf(1, minOf(bitmap.width, bitmap.height) / 24)
     val buckets = HashMap<Int, Pair<Int, Float>>()
+    val hsl = FloatArray(3)
     var y = 0
     while (y < bitmap.height) {
         var x = 0
         while (x < bitmap.width) {
             val c = pixels[x, y]
-            val max = maxOf(c.red, c.green, c.blue)
-            val min = minOf(c.red, c.green, c.blue)
-            val l = (max + min) / 2f
-            val s = if (max == min) 0f else (max - min) / (1f - kotlin.math.abs(2 * l - 1))
-            if (c.alpha > 0.5f && s >= 0.3f && l in 0.15f..0.9f) {
-                val d = max - min
-                var h = when (max) {
-                    c.red -> ((c.green - c.blue) / d) % 6f
-                    c.green -> (c.blue - c.red) / d + 2f
-                    else -> (c.red - c.green) / d + 4f
-                } * 60f
-                if (h < 0) h += 360f
-                val bucket = (h / 20f).toInt()
-                val (n, sum) = buckets[bucket] ?: (0 to 0f)
-                buckets[bucket] = (n + 1) to (sum + s)
+            if (c.alpha > 0.5f) {
+                colorToHSL(c, hsl)
+                val s = hsl[1]
+                val l = hsl[2]
+                if (s >= 0.3f && l in 0.15f..0.9f) {
+                    val bucket = (hsl[0] / 20f).toInt() % 18
+                    val (n, sum) = buckets[bucket] ?: (0 to 0f)
+                    buckets[bucket] = (n + 1) to (sum + s)
+                }
             }
             x += step
         }

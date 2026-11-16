@@ -37,6 +37,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineStroke
 import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.Res
+import app.morphe.morphe_desktop.generated.resources.cancel
 import app.morphe.morphe_desktop.generated.resources.close
 import org.jetbrains.compose.resources.stringResource
 
@@ -190,6 +191,31 @@ fun MorpheDialogText(text: String) {
         text = text,
         style = MorpheTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/** Standard dialog footer button pair with a ghost cancel button and compact confirm action. */
+@Composable
+fun RowScope.MorpheDialogActions(
+    confirmLabel: String,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    dismissLabel: String = stringResource(Res.string.cancel),
+    confirmVariant: MorpheButtonVariant = MorpheButtonVariant.PRIMARY,
+    customConfirmColor: Color? = null,
+) {
+    MorpheButton(
+        label = dismissLabel,
+        variant = MorpheButtonVariant.GHOST,
+        size = MorpheButtonSize.COMPACT,
+        onClick = onDismiss,
+    )
+    MorpheButton(
+        label = confirmLabel,
+        variant = confirmVariant,
+        size = MorpheButtonSize.COMPACT,
+        customColor = customConfirmColor,
+        onClick = onConfirm,
     )
 }
 

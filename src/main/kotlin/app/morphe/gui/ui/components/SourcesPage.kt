@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.zIndex
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.patches.PatchBundleSignerChangedException
-import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.ui.components.sources.SourceCard
@@ -55,8 +54,8 @@ import app.morphe.gui.ui.components.sources.SourceCardModel
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.SourceDetails
+import app.morphe.gui.util.openInFolder
 import app.morphe.morphe_desktop.generated.resources.*
-import java.awt.Desktop
 import java.io.File
 import kotlin.math.max
 import kotlinx.coroutines.delay
@@ -74,12 +73,10 @@ fun SourcesPage(
     onChannelChange: (source: PatchSource, preRelease: Boolean) -> Unit,
     onFollowLatest: (PatchSource) -> Unit,
     onOpenPatches: ((sourceId: String) -> Unit)? = null,
-    onOpenVersions: ((sourceId: String) -> Unit)? = null,
     onRefresh: () -> Unit = {},
     onReorder: (orderedIds: List<String>) -> Unit = {},
     enabled: Boolean = true,
     sourceVersions: Map<String, String?> = emptyMap(),
-    sourceChannels: Map<String, Channel?> = emptyMap(),
     sourceUpdates: Map<String, String> = emptyMap(),
     sourceDetails: Map<String, SourceDetails> = emptyMap(),
     totalPatches: Int = 0,
@@ -144,7 +141,6 @@ fun SourcesPage(
                                 source = source,
                                 position = index + 1,
                                 version = sourceVersions[id],
-                                channel = sourceChannels[id],
                                 updateVersion = sourceUpdates[id],
                                 error = sourceErrors[id],
                                 details = sourceDetails[id],
@@ -160,12 +156,13 @@ fun SourcesPage(
                                 onEdit = { editingSource = source },
                                 onRemove = if (source.deletable) ({ removingSource = source }) else null,
                                 onOpenPatches = onOpenPatches?.let { open -> { open(id) } },
-                                onOpenVersions = onOpenVersions?.let { open -> { open(id) } },
                                 onOpenPullRequest = { source.url?.let { runCatching { uriHandler.openUri(it) } } },
                                 onFollowLatest = { onFollowLatest(source) },
                                 onRetry = onRefresh,
                                 onReviewSigner = { trustingSourceId = id },
-                                onShowInFolder = { showInFolder(source) },
+                                onShowInFolder = {
+                                    openInFolder(source.filePath?.takeIf { source.type == PatchSourceType.LOCAL }?.let(::File))
+                                },
                             )
                             SourceCard(
                                 model = model,
@@ -265,17 +262,11 @@ fun SourcesPage(
             icon = MorpheIcons.Warning,
             accent = warnColor,
             actions = {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    variant = MorpheButtonVariant.GHOST,
-                    size = MorpheButtonSize.COMPACT,
-                    onClick = { confirmingPrerelease = null },
-                )
-                MorpheButton(
-                    label = stringResource(Res.string.source_prerelease_confirm),
-                    size = MorpheButtonSize.COMPACT,
-                    customColor = warnColor,
-                    onClick = {
+                MorpheDialogActions(
+                    confirmLabel = stringResource(Res.string.source_prerelease_confirm),
+                    customConfirmColor = warnColor,
+                    onDismiss = { confirmingPrerelease = null },
+                    onConfirm = {
                         onChannelChange(src, true)
                         confirmingPrerelease = null
                     },
@@ -294,17 +285,11 @@ fun SourcesPage(
             title = stringResource(Res.string.source_remove_title, src.name),
             content = { MorpheDialogText(stringResource(Res.string.source_remove_body)) },
             actions = {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    variant = MorpheButtonVariant.GHOST,
-                    size = MorpheButtonSize.COMPACT,
-                    onClick = { removingSource = null },
-                )
-                MorpheButton(
-                    label = stringResource(Res.string.remove),
-                    variant = MorpheButtonVariant.DANGER,
-                    size = MorpheButtonSize.COMPACT,
-                    onClick = {
+                MorpheDialogActions(
+                    confirmLabel = stringResource(Res.string.remove),
+                    confirmVariant = MorpheButtonVariant.DANGER,
+                    onDismiss = { removingSource = null },
+                    onConfirm = {
                         onRemove(src.id)
                         removingSource = null
                     },
@@ -452,13 +437,6 @@ private fun Modifier.staggeredEntrance(index: Int): Modifier = composed {
         scaleX = scale
         scaleY = scale
     }
-}
-
-private fun showInFolder(source: PatchSource) {
-    if (source.type != PatchSourceType.LOCAL) return
-    val file = source.filePath?.let(::File) ?: return
-    val dir = if (file.isDirectory) file else file.parentFile ?: return
-    runCatching { if (dir.exists()) Desktop.getDesktop().open(dir) }
 }
 
 @Composable

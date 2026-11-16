@@ -31,7 +31,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,10 +64,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.ReleaseChannel
 import app.morphe.engine.model.Release
+import app.morphe.engine.model.patchAssetSize
 import app.morphe.engine.model.publishedMillis
-import app.morphe.gui.ui.components.MorpheBadge
-import app.morphe.gui.ui.components.MorpheBadgeTone
-import app.morphe.gui.ui.components.MorpheBadgeVariant
 import app.morphe.gui.ui.components.MorpheChannelSwitch
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.MorpheTooltip
@@ -557,24 +554,6 @@ internal fun DownloadedMark(size: Dp = MorpheTheme.dimens.iconStandard) {
         )
     }
 }
-
-@Composable
-internal fun IconBadge(
-    text: String,
-    icon: ImageVector?,
-    tone: MorpheBadgeTone,
-    variant: MorpheBadgeVariant = MorpheBadgeVariant.SUBTLE,
-    modifier: Modifier = Modifier,
-) {
-    MorpheBadge(modifier = modifier, tone = tone, variant = variant) {
-        if (icon != null) {
-            Icon(icon, contentDescription = null, tint = LocalContentColor.current, modifier = Modifier.size(MorpheTheme.dimens.iconSmall))
-        }
-        Text(text = text, style = MorpheTheme.typography.labelSmall, color = LocalContentColor.current)
-    }
-}
-
-internal fun Release.patchAssetSize(): Long? = assets.firstOrNull { it.isPatchFile() }?.size?.takeIf { it > 0 }
 
 private fun railEntries(shown: List<Release>, all: List<Release>, inUseTag: String?): List<RailEntry> {
     val inUseIndex = all.indexOfFirst { it.tagName == inUseTag }

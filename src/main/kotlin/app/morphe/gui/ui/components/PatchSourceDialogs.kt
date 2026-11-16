@@ -110,23 +110,18 @@ internal fun AddPatchSourceDialog(
             }
         },
         actions = {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                onClick = onDismiss,
-                variant = MorpheButtonVariant.GHOST,
-                size = MorpheButtonSize.COMPACT,
-            )
             val errInvalidUrl = stringResource(Res.string.patch_source_dialog_error_invalid_url)
             val errInvalidFile = stringResource(Res.string.patch_source_dialog_error_invalid_file)
-            MorpheButton(
-                label = stringResource(Res.string.patch_source_dialog_add_button),
-                onClick = {
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.patch_source_dialog_add_button),
+                onDismiss = onDismiss,
+                onConfirm = {
                     when (sourceType) {
                         PatchSourceType.GITHUB -> {
                             // Resolve actual provider (GitHub vs GitLab) from the entered URL.
                             val resolved = resolveRemoteSourceUrl(form.url.trim())
                             if (resolved == null) {
-                                form.error = errInvalidUrl; return@MorpheButton
+                                form.error = errInvalidUrl; return@MorpheDialogActions
                             }
                             val resolvedName = form.name.trim().ifBlank {
                                 PatchSourceNaming.suggestNameFromUrl(form.url.trim()) ?: "Unnamed"
@@ -139,11 +134,11 @@ internal fun AddPatchSourceDialog(
                                 deletable = true,
                                 usePreRelease = form.usePreRelease
                             ))
-                            return@MorpheButton
+                            return@MorpheDialogActions
                         }
                         PatchSourceType.LOCAL -> {
                             if (form.filePath.isBlank() || !File(form.filePath).exists()) {
-                                form.error = errInvalidFile; return@MorpheButton
+                                form.error = errInvalidFile; return@MorpheDialogActions
                             }
                             val localFile = File(form.filePath)
                             scope.launch {
@@ -165,8 +160,6 @@ internal fun AddPatchSourceDialog(
                         else -> {}
                     }
                 },
-                variant = MorpheButtonVariant.PRIMARY,
-                size = MorpheButtonSize.COMPACT,
             )
         },
     )
@@ -266,25 +259,20 @@ internal fun EditPatchSourceDialog(
             }
         },
         actions = {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                onClick = onDismiss,
-                variant = MorpheButtonVariant.GHOST,
-                size = MorpheButtonSize.COMPACT,
-            )
             val errNameRequired = stringResource(Res.string.patch_source_dialog_error_name_required)
             val errInvalidUrl = stringResource(Res.string.patch_source_dialog_error_invalid_url)
             val errInvalidFile = stringResource(Res.string.patch_source_dialog_error_invalid_file)
-            MorpheButton(
-                label = stringResource(Res.string.save),
-                onClick = {
-                    if (form.name.isBlank()) { form.error = errNameRequired; return@MorpheButton }
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.save),
+                onDismiss = onDismiss,
+                onConfirm = {
+                    if (form.name.isBlank()) { form.error = errNameRequired; return@MorpheDialogActions }
                     when (source.type) {
                         PatchSourceType.GITHUB, PatchSourceType.GITLAB -> {
                             // Re-resolve provider from URL in case the host was edited.
                             val resolved = resolveRemoteSourceUrl(form.url.trim())
                             if (resolved == null) {
-                                form.error = errInvalidUrl; return@MorpheButton
+                                form.error = errInvalidUrl; return@MorpheDialogActions
                             }
                             onSave(source.copy(
                                 name = form.name.trim(),
@@ -292,11 +280,11 @@ internal fun EditPatchSourceDialog(
                                 url = resolved.canonicalUrl,
                                 usePreRelease = form.usePreRelease
                             ))
-                            return@MorpheButton
+                            return@MorpheDialogActions
                         }
                         PatchSourceType.LOCAL -> {
                             if (form.filePath.isBlank() || !File(form.filePath).exists()) {
-                                form.error = errInvalidFile; return@MorpheButton
+                                form.error = errInvalidFile; return@MorpheDialogActions
                             }
                         }
                         else -> {}
@@ -307,8 +295,6 @@ internal fun EditPatchSourceDialog(
                         usePreRelease = form.usePreRelease
                     ))
                 },
-                variant = MorpheButtonVariant.PRIMARY,
-                size = MorpheButtonSize.COMPACT,
             )
         },
     )

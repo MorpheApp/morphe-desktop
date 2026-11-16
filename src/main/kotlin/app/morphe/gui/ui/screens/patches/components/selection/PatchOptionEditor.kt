@@ -101,17 +101,11 @@ private fun IconStudioOption(
             icon = MorpheIcons.Delete,
             accent = MorpheTheme.colors.danger,
             actions = {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    variant = MorpheButtonVariant.GHOST,
-                    size = MorpheButtonSize.COMPACT,
-                    onClick = { showDeleteConfirm = false },
-                )
-                MorpheButton(
-                    label = stringResource(Res.string.delete),
-                    variant = MorpheButtonVariant.DANGER,
-                    size = MorpheButtonSize.COMPACT,
-                    onClick = {
+                MorpheDialogActions(
+                    confirmLabel = stringResource(Res.string.delete),
+                    confirmVariant = MorpheButtonVariant.DANGER,
+                    onDismiss = { showDeleteConfirm = false },
+                    onConfirm = {
                         scope.launch {
                             withContext(Dispatchers.IO) {
                                 runCatching { IconExporter.projectDir(packageName).deleteRecursively() }

@@ -547,7 +547,7 @@ fun Color.contrastingForeground(): Color {
     return if (this.luminance() > 0.5f) Color.Black else Color.White
 }
 
-private fun colorToHSL(color: Color, hsl: FloatArray) {
+internal fun colorToHSL(color: Color, hsl: FloatArray) {
     val r = color.red
     val g = color.green
     val b = color.blue

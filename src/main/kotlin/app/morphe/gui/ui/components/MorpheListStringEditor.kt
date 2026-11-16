@@ -155,16 +155,10 @@ fun MorpheListStringDialog(
         onDismiss = onDismiss,
         title = title,
         actions = {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                variant = MorpheButtonVariant.GHOST,
-                size = MorpheButtonSize.COMPACT,
-                onClick = onDismiss,
-            )
-            MorpheButton(
-                label = stringResource(Res.string.save),
-                size = MorpheButtonSize.COMPACT,
-                onClick = { onSave(currentItems.toList()) },
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.save),
+                onDismiss = onDismiss,
+                onConfirm = { onSave(currentItems.toList()) },
             )
         },
     ) {

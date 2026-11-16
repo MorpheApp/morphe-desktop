@@ -15,10 +15,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.VersionStatus
-import app.morphe.gui.ui.components.MorpheButton
-import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheDialog
+import app.morphe.gui.ui.components.MorpheDialogActions
 import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -52,17 +51,11 @@ internal fun VersionWarningDialog(
         icon = MorpheIcons.Warning,
         accent = warnColor,
         actions = {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                variant = MorpheButtonVariant.GHOST,
-                size = MorpheButtonSize.COMPACT,
-                onClick = onDismiss,
-            )
-            MorpheButton(
-                label = stringResource(Res.string.home_dialog_continue_anyway),
-                size = MorpheButtonSize.COMPACT,
-                customColor = warnColor,
-                onClick = onConfirm,
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.home_dialog_continue_anyway),
+                onDismiss = onDismiss,
+                onConfirm = onConfirm,
+                customConfirmColor = warnColor,
             )
         },
     ) {
@@ -83,8 +76,9 @@ internal fun ForgetConfirmDialog(
         icon = MorpheIcons.Delete,
         accent = MorpheTheme.colors.danger,
         actions = {
-            DangerDialogActions(
+            MorpheDialogActions(
                 confirmLabel = stringResource(Res.string.home_dialog_forget_button),
+                confirmVariant = MorpheButtonVariant.DANGER,
                 onDismiss = onDismiss,
                 onConfirm = onConfirm,
             )
@@ -112,8 +106,9 @@ internal fun UninstallConfirmDialog(
         icon = MorpheIcons.Delete,
         accent = dangerColor,
         actions = {
-            DangerDialogActions(
+            MorpheDialogActions(
                 confirmLabel = stringResource(Res.string.home_dialog_uninstall_button),
+                confirmVariant = MorpheButtonVariant.DANGER,
                 onDismiss = onDismiss,
                 onConfirm = onConfirm,
             )
@@ -145,25 +140,5 @@ internal fun UninstallConfirmDialog(
             )
         }
     }
-}
-
-@Composable
-private fun DangerDialogActions(
-    confirmLabel: String,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-) {
-    MorpheButton(
-        label = stringResource(Res.string.cancel),
-        variant = MorpheButtonVariant.GHOST,
-        size = MorpheButtonSize.COMPACT,
-        onClick = onDismiss,
-    )
-    MorpheButton(
-        label = confirmLabel,
-        variant = MorpheButtonVariant.DANGER,
-        size = MorpheButtonSize.COMPACT,
-        onClick = onConfirm,
-    )
 }
 

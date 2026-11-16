@@ -23,10 +23,8 @@ import app.morphe.gui.ui.components.AppCard
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
-import app.morphe.gui.ui.components.MorpheButton
-import app.morphe.gui.ui.components.MorpheButtonSize
-import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.components.MorpheDialog
+import app.morphe.gui.ui.components.MorpheDialogActions
 import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.appCardColors
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -94,16 +92,10 @@ internal fun CommunityPatchesNoticeDialog(
         title = stringResource(Res.string.community_patches_notice_title),
         icon = MorpheIcons.Info,
         actions = {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                variant = MorpheButtonVariant.GHOST,
-                size = MorpheButtonSize.COMPACT,
-                onClick = onDismiss,
-            )
-            MorpheButton(
-                label = stringResource(Res.string.open),
-                size = MorpheButtonSize.COMPACT,
-                onClick = onConfirm,
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.open),
+                onDismiss = onDismiss,
+                onConfirm = onConfirm,
             )
         },
     ) {

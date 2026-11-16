@@ -137,17 +137,10 @@ fun AppCardFillDialog(
             }
         },
         actions = {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                onClick = onDismiss,
-                variant = MorpheButtonVariant.GHOST,
-                size = MorpheButtonSize.COMPACT,
-            )
-            MorpheButton(
-                label = stringResource(Res.string.save),
-                onClick = { onSave(working) },
-                variant = MorpheButtonVariant.PRIMARY,
-                size = MorpheButtonSize.COMPACT,
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.save),
+                onDismiss = onDismiss,
+                onConfirm = { onSave(working) },
             )
         },
     )

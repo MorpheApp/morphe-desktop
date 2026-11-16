@@ -80,6 +80,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.cardFill
+import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.rememberAppIcon
 import app.morphe.morphe_desktop.generated.resources.*
@@ -327,7 +328,12 @@ private fun AppRow(
                             }
                             dropped.forEach { version ->
                                 MorpheTooltip(stringResource(Res.string.versions_version_dropped_tip, baseTag.orEmpty())) {
-                                    StruckBadge(version, isCode = true)
+                                    MorpheBadge(
+                                        text = version,
+                                        variant = MorpheBadgeVariant.OUTLINED,
+                                        isCode = true,
+                                        strikethrough = true,
+                                    )
                                 }
                             }
                         }
@@ -361,7 +367,7 @@ private fun AppRow(
                 )
                 if (row.patchDelta != 0) {
                     Text(
-                        text = signed(row.patchDelta),
+                        text = FormatUtils.formatSignedDelta(row.patchDelta),
                         style = typography.labelExtraSmall,
                         color = if (row.patchDelta > 0) MorpheTheme.colors.secondary else muted,
                     )
@@ -489,12 +495,16 @@ private fun PatchCell(
             }
             if (isRemoved && baseTag != null) {
                 MorpheTooltip(stringResource(Res.string.versions_patch_removed_tip, baseTag)) {
-                    StruckBadge(stringResource(Res.string.versions_patch_removed), isCode = false)
+                    MorpheBadge(
+                        text = stringResource(Res.string.versions_patch_removed),
+                        variant = MorpheBadgeVariant.OUTLINED,
+                        strikethrough = true,
+                    )
                 }
             }
             if (!patch.isEnabled) {
                 MorpheTooltip(stringResource(Res.string.versions_patch_off_tip)) {
-                    IconBadge(
+                    MorpheBadge(
                         text = stringResource(Res.string.versions_patch_off),
                         icon = MorpheIcons.Lock,
                         tone = MorpheBadgeTone.Warning,
@@ -502,7 +512,7 @@ private fun PatchCell(
                 }
             }
             if (hasOptions) {
-                IconBadge(
+                MorpheBadge(
                     text = pluralStringResource(Res.plurals.versions_option_count, patch.options.size, patch.options.size),
                     icon = MorpheIcons.Tune,
                     tone = if (showOptions) MorpheBadgeTone.Primary else MorpheBadgeTone.Neutral,
@@ -561,20 +571,6 @@ private fun VersionChip(version: String, tone: MorpheBadgeTone, onOpen: () -> Un
         )
     }
 }
-
-@Composable
-private fun StruckBadge(text: String, isCode: Boolean) {
-    MorpheBadge(tone = MorpheBadgeTone.Neutral, variant = MorpheBadgeVariant.OUTLINED, isCode = isCode) {
-        Text(
-            text = text,
-            style = (if (isCode) MorpheTheme.typography.codeSmall else MorpheTheme.typography.labelSmall)
-                .copy(textDecoration = TextDecoration.LineThrough),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
-
-private fun signed(value: Int) = if (value > 0) "+$value" else value.toString()
 
 private fun patchRank(patch: PatchMetadata, row: AppRowModel) = when {
     patch.name in row.added -> 0

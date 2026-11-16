@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,8 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -158,20 +162,23 @@ fun MorpheBadge(
 fun MorpheBadge(
     text: String,
     modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
     tone: MorpheBadgeTone = MorpheBadgeTone.Neutral,
     variant: MorpheBadgeVariant = MorpheBadgeVariant.SUBTLE,
     size: MorpheBadgeSize = MorpheBadgeSize.DEFAULT,
     containerColor: Color? = null,
     contentColor: Color? = null,
     isCode: Boolean = tone == MorpheBadgeTone.Code,
+    strikethrough: Boolean = false,
     onGradient: Boolean = false,
 ) {
     val typography = MorpheTheme.typography
-    val textStyle = when {
+    val baseStyle = when {
         isCode -> typography.codeSmall
         size == MorpheBadgeSize.LARGE -> typography.titleSmall.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp)
         else -> typography.labelSmall
     }
+    val textStyle = if (strikethrough) baseStyle.copy(textDecoration = TextDecoration.LineThrough) else baseStyle
 
     MorpheBadge(
         modifier = modifier,
@@ -183,6 +190,14 @@ fun MorpheBadge(
         onGradient = onGradient,
         isCode = isCode,
     ) {
+        if (icon != null) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = LocalContentColor.current,
+                modifier = Modifier.size(MorpheTheme.dimens.iconSmall),
+            )
+        }
         Text(text = text, style = textStyle, color = LocalContentColor.current)
     }
 }

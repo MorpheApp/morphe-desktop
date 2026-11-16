@@ -49,6 +49,7 @@ import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.PatchSourceNaming
+import app.morphe.gui.util.followChannelPref
 import app.morphe.gui.util.logIfFailed
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
@@ -1237,10 +1238,7 @@ class HomeViewModel(
     }
 
     private suspend fun followChannel(sourceId: String, preRelease: Boolean) {
-        configRepository.setSourceVersionPref(
-            sourceId,
-            SourceVersionPref(mode = if (preRelease) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE),
-        )
+        configRepository.setSourceVersionPref(sourceId, followChannelPref(preRelease))
     }
 
     /** Reloads patches if version preferences changed while on another screen. */
@@ -1678,7 +1676,6 @@ private data class AppCatalogData(
 private fun Map<String, SourceVersionPref>.followingChannels(sources: List<PatchSource>): Map<String, SourceVersionPref> {
     val channels = sources.associate { it.id to it.usePreRelease }
     return mapValues { (id, pref) ->
-        if (pref.mode != FollowMode.PINNED) pref
-        else SourceVersionPref(mode = if (channels[id] == true) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE)
+        if (pref.mode != FollowMode.PINNED) pref else followChannelPref(channels[id] == true)
     }
 }

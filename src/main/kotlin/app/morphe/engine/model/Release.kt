@@ -56,6 +56,10 @@ data class ReleaseAsset(
     fun isPatchFile(): Boolean = name.endsWith(".mpp", ignoreCase = true)
 }
 
+/** Returns the size in bytes of the first `.mpp` asset in this release, or null if absent/unknown. */
+fun Release.patchAssetSize(): Long? =
+    assets.firstOrNull { it.isPatchFile() }?.size?.takeIf { it > 0L }
+
 /** Parses [Release.publishedAt] or [Release.createdAt] (UTC, offset, or offset-less ISO-8601 in UTC) into epoch milliseconds. */
 fun Release.publishedMillis(): Long? =
     (publishedAt ?: createdAt)?.trim()?.takeIf { it.isNotEmpty() }?.let { raw ->
