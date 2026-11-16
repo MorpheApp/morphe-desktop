@@ -66,20 +66,40 @@ object FormatUtils {
     /** Formats a nullable [Date] into short month and day without year. */
     fun formatShortDate(date: Date?, locale: Locale = Locale.getDefault()): String {
         if (date == null) return ""
-        val pattern = try {
-            val shortPattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
-                FormatStyle.SHORT,
-                null,
-                IsoChronology.INSTANCE,
-                locale
-            )
-            val dIdx = shortPattern.indexOf('d')
-            val mIdx = shortPattern.indexOf('M')
-            if (dIdx != -1 && mIdx != -1 && dIdx < mIdx) "d MMM" else "MMM d"
-        } catch (_: Exception) {
-            "MMM d"
-        }
+        val pattern = if (isDayBeforeMonth(locale)) "d MMM" else "MMM d"
         return SimpleDateFormat(pattern, locale).format(date)
+    }
+
+    /** Formats a timestamp with full month name, adding the year when it differs from [nowMillis]'s year. */
+    fun formatFullMonthOrLongDate(
+        millis: Long,
+        locale: Locale = Locale.getDefault(),
+        nowMillis: Long = System.currentTimeMillis(),
+        zoneId: ZoneId = ZoneId.systemDefault(),
+    ): String {
+        val dateYear = Instant.ofEpochMilli(millis).atZone(zoneId).year
+        val currentYear = Instant.ofEpochMilli(nowMillis).atZone(zoneId).year
+        val date = Date(millis)
+        return if (dateYear == currentYear) {
+            val pattern = if (isDayBeforeMonth(locale)) "d MMMM" else "MMMM d"
+            SimpleDateFormat(pattern, locale).format(date)
+        } else {
+            DateFormat.getDateInstance(DateFormat.LONG, locale).format(date)
+        }
+    }
+
+    private fun isDayBeforeMonth(locale: Locale): Boolean = try {
+        val shortPattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
+            FormatStyle.SHORT,
+            null,
+            IsoChronology.INSTANCE,
+            locale
+        )
+        val dIdx = shortPattern.indexOf('d')
+        val mIdx = shortPattern.indexOf('M')
+        dIdx != -1 && mIdx != -1 && dIdx < mIdx
+    } catch (_: Exception) {
+        false
     }
 
     /** Formats an ISO-8601 date string into localized date/time. */

@@ -15,6 +15,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -51,6 +52,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
@@ -59,6 +61,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -79,16 +82,20 @@ import app.morphe.gui.ui.components.MorpheMenuItem
 import app.morphe.gui.ui.components.MorpheOverflowMenu
 import app.morphe.gui.ui.components.MorphePopupSurface
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.screens.home.components.fullDate
+import app.morphe.gui.ui.screens.home.components.relativeOrShortDate
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.channelColor
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.SourceApp
 import app.morphe.gui.util.SourceDetails
+import app.morphe.gui.util.rememberAppIcon
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Immutable
@@ -127,6 +134,7 @@ class SourceCardActions(
 
 private val CardPadding = 18.dp
 private val FactInset = 8.dp
+private val DisabledBodyMinHeight = 140.dp
 private val AppsPopupWidth = 300.dp
 private val AppsPopupInset = 4.dp
 private val AppsPopupGap = 8.dp
@@ -204,8 +212,11 @@ fun SourceCard(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false),
                     )
+                    if (source.type == PatchSourceType.DEFAULT) {
+                        Tag(stringResource(Res.string.source_sheet_builtin))
+                    }
                     when {
-                        source.type == PatchSourceType.DEFAULT -> Tag(stringResource(Res.string.source_sheet_builtin))
+                        !on -> Tag(stringResource(Res.string.source_card_disabled_tag))
                         failed -> Tag(stringResource(Res.string.failed), color = colors.danger)
                     }
                 }
@@ -227,34 +238,75 @@ fun SourceCard(
             SourceMenuButton(model = model, actions = actions, enabled = enabled)
         }
 
-        Column(Modifier.alpha(contentAlpha)) {
-            when {
-                !on -> Text(
-                    text = stringResource(Res.string.source_card_disabled),
-                    style = MorpheTheme.typography.bodySmall,
-                    color = scheme.onSurfaceVariant,
-                    modifier = Modifier.padding(start = CardPadding, end = CardPadding, top = 18.dp),
-                )
-                model.signerChanged -> Notice(
-                    text = stringResource(Res.string.sources_management_signing_key_changed_hint),
-                    icon = MorpheIcons.GppBad,
-                )
-                model.error != null -> Notice(text = model.error, icon = MorpheIcons.Error)
-                else -> {
-                    val busy = model.isLoading || model.details == null
-                    VersionBlock(model, busy)
-                    Facts(model, busy, onOpenPatches = actions.onOpenPatches?.takeIf { enabled })
+        if (on) {
+            Column(Modifier.alpha(contentAlpha)) {
+                when {
+                    model.signerChanged -> Notice(
+                        text = stringResource(Res.string.sources_management_signing_key_changed_hint),
+                        icon = MorpheIcons.GppBad,
+                    )
+                    model.error != null -> Notice(text = model.error, icon = MorpheIcons.Error)
+                    else -> {
+                        val busy = model.isLoading || model.details == null
+                        VersionBlock(model, busy)
+                        Facts(model, busy, onOpenPatches = actions.onOpenPatches?.takeIf { enabled })
+                    }
                 }
             }
+            Spacer(Modifier.weight(1f).heightIn(min = 16.dp))
+        } else {
+            DisabledBody(Modifier.weight(1f).alpha(contentAlpha))
         }
 
+        ChannelRow(
+            model = model,
+            enabled = on && enabled && !model.isLoading,
+            onChange = actions.onChannelChange,
+            modifier = Modifier.alpha(contentAlpha),
+        )
+        Spacer(Modifier.height(16.dp))
         if (on) {
-            Spacer(Modifier.weight(1f).heightIn(min = 16.dp))
-            ChannelRow(model, enabled = enabled && !model.isLoading, onChange = actions.onChannelChange)
-            Spacer(Modifier.height(16.dp))
             Footer(model, actions, enabled)
-        } else {
-            Spacer(Modifier.height(CardPadding))
+        }
+    }
+}
+
+@Composable
+private fun DisabledBody(modifier: Modifier = Modifier) {
+    val scheme = MaterialTheme.colorScheme
+    val shapes = MorpheTheme.shapes
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = CardPadding, end = CardPadding, top = 18.dp, bottom = 16.dp)
+            .heightIn(min = DisabledBodyMinHeight),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(38.dp)
+                    .clip(shapes.medium)
+                    .background(scheme.onSurfaceVariant.copy(alpha = 0.08f))
+                    .outlineBorder(scheme.outlineVariant.copy(alpha = 0.5f), shapes.medium),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    MorpheIcons.PowerSettingsNew,
+                    contentDescription = null,
+                    tint = scheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+            Text(
+                text = stringResource(Res.string.source_card_disabled),
+                style = MorpheTheme.typography.bodySmall,
+                color = scheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
@@ -407,18 +459,46 @@ private fun VersionBlock(model: SourceCardModel, busy: Boolean) {
                 )
             }
         }
-        Box(Modifier.padding(top = 4.dp).height(18.dp), contentAlignment = Alignment.CenterStart) {
-            if (busy) Shimmer(width = 120.dp) else MetaLine(model)
+        val items = if (busy) emptyList() else metaItems(model)
+        if (busy || items.isNotEmpty()) {
+            Box(Modifier.padding(top = 4.dp).height(18.dp), contentAlignment = Alignment.CenterStart) {
+                if (busy) Shimmer(width = 120.dp) else MetaLine(items)
+            }
         }
     }
 }
 
 @Composable
-private fun MetaLine(model: SourceCardModel) {
+private fun metaItems(model: SourceCardModel): List<@Composable () -> Unit> {
+    val scheme = MaterialTheme.colorScheme
     val colors = MorpheTheme.colors
     val details = model.details
-    val items = buildList<@Composable () -> Unit> {
-        add { ChannelLabel(model) }
+    val kind = when {
+        model.source.type == PatchSourceType.LOCAL -> Res.string.version_label_local to Channel.LOCAL
+        model.isPullRequest -> Res.string.source_card_pull_request to Channel.PRERELEASE
+        else -> null
+    }
+    return buildList {
+        if (kind != null) add {
+            Text(
+                stringResource(kind.first),
+                style = metaStyle().copy(fontWeight = FontWeight.Medium),
+                color = channelColor(kind.second),
+                maxLines = 1,
+            )
+        }
+        details?.releasedAtMillis?.let { millis ->
+            add {
+                MorpheTooltip(text = fullDate(millis)) {
+                    Text(
+                        relativeOrShortDate(millis, capitalized = true, compact = false),
+                        style = metaStyle(),
+                        color = scheme.onSurfaceVariant,
+                        maxLines = 1,
+                    )
+                }
+            }
+        }
         if (details?.isPinned == true) add {
             MetaItem(stringResource(Res.string.source_card_pinned), MorpheIcons.PushPin, stringResource(Res.string.source_card_pinned_tip))
         }
@@ -427,6 +507,10 @@ private fun MetaLine(model: SourceCardModel) {
         }
         if (model.signingKeyFingerprint != null) add { SignedItem(model.signingKeyFingerprint, model.signingKey) }
     }
+}
+
+@Composable
+private fun MetaLine(items: List<@Composable () -> Unit>) {
     Row(
         modifier = Modifier.clipToBounds(),
         verticalAlignment = Alignment.CenterVertically,
@@ -437,36 +521,6 @@ private fun MetaLine(model: SourceCardModel) {
             item()
         }
     }
-}
-
-@Composable
-private fun ChannelLabel(model: SourceCardModel) {
-    val source = model.source
-    val (text, color, tip) = when {
-        source.type == PatchSourceType.LOCAL ->
-            Triple(stringResource(Res.string.version_label_local), channelColor(Channel.LOCAL), null)
-        model.isPullRequest ->
-            Triple(stringResource(Res.string.source_card_pull_request), channelColor(Channel.PRERELEASE), null)
-        else -> {
-            val pre = model.channel?.let { it == Channel.PRERELEASE } ?: source.usePreRelease
-            val older = model.updateVersion != null
-            val label = when {
-                pre && older -> Res.string.source_card_older_prerelease
-                pre -> Res.string.source_card_latest_prerelease
-                older -> Res.string.source_card_older_stable
-                else -> Res.string.source_card_latest_stable
-            }
-            Triple(
-                stringResource(label),
-                channelColor(if (pre) Channel.PRERELEASE else Channel.STABLE),
-                model.updateVersion?.let { stringResource(Res.string.source_card_newer_available, it) },
-            )
-        }
-    }
-    val content = @Composable {
-        Text(text, style = metaStyle().copy(fontWeight = FontWeight.Medium), color = color, maxLines = 1)
-    }
-    if (tip != null) MorpheTooltip(text = tip) { content() } else content()
 }
 
 @Composable
@@ -666,7 +720,7 @@ private fun AppsPopupContent(apps: List<SourceApp>) {
             placeholder = stringResource(Res.string.source_card_search_apps, apps.size),
         )
         Row(Modifier.fillMaxWidth().padding(rowPadding), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(stringResource(Res.string.source_card_apps_header, shown.size), style = metaStyle(), color = muted)
+            Text(pluralStringResource(Res.plurals.versions_app_count, shown.size, shown.size), style = metaStyle(), color = muted)
             Text(stringResource(Res.string.source_card_patches), style = metaStyle(), color = muted)
         }
         if (shown.isEmpty()) {
@@ -710,34 +764,50 @@ private fun AppsPopupContent(apps: List<SourceApp>) {
 
 @Composable
 private fun AppTile(app: SourceApp) {
-    val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val fallback = hueColor(hashHue(app.packageName), 0.55f, dark)
-    val tint = parseHexColor(app.iconColorHex, fallback).let { c ->
-        if (dark && c.luminance() < 0.18f) fallback else c
-    }
+    val icon = rememberAppIcon(emptyList(), app.packageName)
+    val shape = RoundedCornerShape(if (MorpheTheme.corners.isSharp) 2.dp else 6.dp)
     MorpheTooltip(text = app.displayName) {
-        Box(
-            modifier = Modifier
-                .size(20.dp)
-                .clip(RoundedCornerShape(if (MorpheTheme.corners.isSharp) 2.dp else 6.dp))
-                .background(tint.copy(alpha = 0.16f))
-                .outlineBorder(tint.copy(alpha = 0.45f), RoundedCornerShape(if (MorpheTheme.corners.isSharp) 2.dp else 6.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                monogram(app.displayName),
-                style = MorpheTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.SemiBold, letterSpacing = (-0.2).sp),
-                color = tint,
+        if (icon.bitmap != null) {
+            Image(
+                bitmap = icon.bitmap,
+                contentDescription = app.displayName,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(20.dp).clip(shape),
             )
+        } else {
+            val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+            val fallback = hueColor(hashHue(app.packageName), 0.55f, dark)
+            val tint = parseHexColor(app.iconColorHex, fallback).let { c ->
+                if (dark && c.luminance() < 0.18f) fallback else c
+            }
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .clip(shape)
+                    .background(tint.copy(alpha = 0.16f))
+                    .outlineBorder(tint.copy(alpha = 0.45f), shape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    monogram(app.displayName),
+                    style = MorpheTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.SemiBold, letterSpacing = (-0.2).sp),
+                    color = tint,
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ChannelRow(model: SourceCardModel, enabled: Boolean, onChange: (Boolean) -> Unit) {
+private fun ChannelRow(
+    model: SourceCardModel,
+    enabled: Boolean,
+    onChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val scheme = MaterialTheme.colorScheme
     Row(
-        modifier = Modifier.padding(horizontal = CardPadding).heightIn(min = 32.dp),
+        modifier = modifier.padding(horizontal = CardPadding).heightIn(min = 32.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(14.dp),
     ) {

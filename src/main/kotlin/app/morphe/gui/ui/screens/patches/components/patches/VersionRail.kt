@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.ReleaseChannel
 import app.morphe.engine.model.Release
+import app.morphe.engine.model.publishedMillis
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
 import app.morphe.gui.ui.components.MorpheBadgeVariant
@@ -82,7 +83,6 @@ import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.cardFill
 import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.morphe_desktop.generated.resources.*
-import java.time.Instant
 import org.jetbrains.compose.resources.stringResource
 
 private val VersionRailWidth = 320.dp
@@ -575,9 +575,6 @@ internal fun IconBadge(
 }
 
 internal fun Release.patchAssetSize(): Long? = assets.firstOrNull { it.isPatchFile() }?.size?.takeIf { it > 0 }
-
-internal fun Release.publishedMillis(): Long? =
-    (publishedAt ?: createdAt)?.let { runCatching { Instant.parse(it).toEpochMilli() }.getOrNull() }
 
 private fun railEntries(shown: List<Release>, all: List<Release>, inUseTag: String?): List<RailEntry> {
     val inUseIndex = all.indexOfFirst { it.tagName == inUseTag }

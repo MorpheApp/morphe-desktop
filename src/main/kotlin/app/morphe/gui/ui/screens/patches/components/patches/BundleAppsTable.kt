@@ -10,6 +10,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -27,16 +28,19 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.v2.ScrollbarAdapter
+import androidx.compose.foundation.v2.maxScrollOffset
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -79,6 +83,8 @@ import app.morphe.gui.ui.theme.cardFill
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.rememberAppIcon
 import app.morphe.morphe_desktop.generated.resources.*
+import kotlin.math.abs
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -102,6 +108,7 @@ private val PatchListMaxHeight = 360.dp
 private val PatchCellMinWidth = 300.dp
 private val PatchCellPadding = 12.dp
 private val PatchRowGap = 8.dp
+private val PatchListBottomClearance = 2.dp
 private val PatchCellGap = 4.dp
 private val PatchColumnGap = 12.dp
 private val PatchSearchMaxWidth = 320.dp
@@ -374,7 +381,7 @@ private fun PatchPanel(row: AppRowModel, baseTag: String?, initialQuery: String)
             .filter { needle.isEmpty() || it.matches(needle) }
             .sortedWith(compareBy<PatchMetadata> { patchRank(it, row) }.thenBy { it.name.lowercase() })
     }
-    val gridState = rememberLazyGridState()
+    val gridState = rememberLazyStaggeredGridState()
     val scrollbar = MorpheScrollbarStyle()
 
     Column(
@@ -398,12 +405,12 @@ private fun PatchPanel(row: AppRowModel, baseTag: String?, initialQuery: String)
             )
         } else {
             Box(Modifier.fillMaxWidth().heightIn(max = PatchListMaxHeight)) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(PatchCellMinWidth),
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Adaptive(PatchCellMinWidth),
                     state = gridState,
                     horizontalArrangement = Arrangement.spacedBy(PatchColumnGap),
-                    verticalArrangement = Arrangement.spacedBy(PatchRowGap),
-                    contentPadding = PaddingValues(end = scrollbar.thickness + PatchColumnGap),
+                    verticalItemSpacing = PatchRowGap,
+                    contentPadding = PaddingValues(end = scrollbar.thickness + PatchColumnGap, bottom = PatchListBottomClearance),
                 ) {
                     items(shown, key = { patch -> patchKey(patch, row) }) { patch ->
                         PatchCell(
@@ -416,7 +423,7 @@ private fun PatchPanel(row: AppRowModel, baseTag: String?, initialQuery: String)
                 }
                 VerticalScrollbar(
                     modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                    adapter = rememberScrollbarAdapter(gridState),
+                    adapter = remember(gridState) { LazyStaggeredGridScrollbarAdapter(gridState) },
                     style = scrollbar,
                 )
             }
@@ -577,6 +584,130 @@ private fun patchRank(patch: PatchMetadata, row: AppRowModel) = when {
 
 private fun patchKey(patch: PatchMetadata, row: AppRowModel) =
     (if (patch in row.removed) "removed:" else "") + patch.uniqueId
+
+internal data class StaggeredLaneItem(
+    val index: Int,
+    val lane: Int,
+    val top: Int,
+    val height: Int,
+)
+
+internal data class StaggeredScrollMetrics(
+    val scrollOffset: Double,
+    val contentSize: Double,
+    val averageLineStep: Double,
+)
+
+internal fun computeStaggeredScrollMetrics(
+    visible: List<StaggeredLaneItem>,
+    totalCount: Int,
+    viewportHeight: Int,
+    beforePadding: Int,
+    afterPadding: Int,
+    spacing: Int,
+    canScrollBackward: Boolean,
+): StaggeredScrollMetrics {
+    if (visible.isEmpty() || totalCount <= 0) {
+        return StaggeredScrollMetrics(scrollOffset = 0.0, contentSize = 0.0, averageLineStep = 0.0)
+    }
+    val lanes = (visible.maxOfOrNull { it.lane + 1 } ?: 1).coerceAtLeast(1)
+    val avgHeight = visible.sumOf { it.height }.toDouble() / visible.size
+    val lineStep = avgHeight + spacing
+    val padding = beforePadding + afterPadding
+
+    if (visible.size == totalCount) {
+        val top = visible.minOf { it.top }
+        val bottom = visible.maxOf { it.top + it.height }
+        val scrolled = if (!canScrollBackward) 0.0 else (beforePadding - top).coerceAtLeast(0).toDouble()
+        val total = (bottom - top + padding).coerceAtLeast(0).toDouble()
+        return StaggeredScrollMetrics(scrollOffset = scrolled, contentSize = total, averageLineStep = lineStep)
+    }
+
+    val scrolledBefore = when {
+        !canScrollBackward -> 0.0
+        visible.first().index == 0 -> (beforePadding - visible.minOf { it.top }).coerceAtLeast(0).toDouble()
+        else -> {
+            val topPerLane = visible.groupBy { it.lane }.values.map { laneItems -> laneItems.minBy { it.index } }
+            val avgEstimate = topPerLane.sumOf { item ->
+                (item.index / lanes) * lineStep - item.top + beforePadding
+            } / topPerLane.size
+            avgEstimate.coerceAtLeast(0.0)
+        }
+    }
+
+    val maxBottom = visible.maxOf { it.top + it.height }
+    val visibleOverflow = (maxBottom + afterPadding - viewportHeight).coerceAtLeast(0).toDouble()
+    val unseenTrailing = (totalCount - 1 - visible.last().index).coerceAtLeast(0)
+    val remainingScroll = if (unseenTrailing == 0) {
+        visibleOverflow
+    } else {
+        val bottomPerLane = visible.groupBy { it.lane }.values.map { laneItems ->
+            laneItems.maxOf { it.top + it.height }
+        }
+        val trailingSpan = (unseenTrailing.toDouble() / lanes) * lineStep
+        val estimatedOverflow = (bottomPerLane.average() + trailingSpan + afterPadding - viewportHeight).coerceAtLeast(0.0)
+        maxOf(visibleOverflow, estimatedOverflow)
+    }
+
+    return StaggeredScrollMetrics(
+        scrollOffset = scrolledBefore,
+        contentSize = scrolledBefore + viewportHeight + remainingScroll,
+        averageLineStep = lineStep,
+    )
+}
+
+/** [ScrollbarAdapter] bridging [LazyStaggeredGridState] for desktop [VerticalScrollbar]. */
+private class LazyStaggeredGridScrollbarAdapter(
+    private val state: LazyStaggeredGridState,
+) : ScrollbarAdapter {
+
+    private val metrics by derivedStateOf {
+        val info = state.layoutInfo
+        computeStaggeredScrollMetrics(
+            visible = info.visibleItemsInfo.map {
+                StaggeredLaneItem(index = it.index, lane = it.lane, top = it.offset.y, height = it.size.height)
+            },
+            totalCount = info.totalItemsCount,
+            viewportHeight = info.viewportSize.height,
+            beforePadding = info.beforeContentPadding,
+            afterPadding = info.afterContentPadding,
+            spacing = info.mainAxisItemSpacing,
+            canScrollBackward = state.canScrollBackward,
+        )
+    }
+
+    override val viewportSize: Double
+        get() = state.layoutInfo.viewportSize.height.toDouble()
+
+    override val scrollOffset: Double
+        get() = metrics.scrollOffset
+
+    override val contentSize: Double
+        get() = metrics.contentSize
+
+    override suspend fun scrollTo(scrollOffset: Double) {
+        val info = state.layoutInfo
+        val items = info.visibleItemsInfo
+        if (items.isEmpty() || info.totalItemsCount == 0) return
+        val target = scrollOffset.coerceIn(0.0, maxScrollOffset)
+        val distance = target - this.scrollOffset
+        if (abs(distance) <= viewportSize) {
+            state.scrollBy(distance.toFloat())
+            return
+        }
+        if (target >= maxScrollOffset - 0.5) {
+            state.scrollToItem(info.totalItemsCount - 1, 0)
+            return
+        }
+        val lineStep = metrics.averageLineStep
+        if (lineStep <= 0.0) return
+        val lanes = (items.maxOfOrNull { it.lane + 1 } ?: 1).coerceAtLeast(1)
+        val lineIndex = (target / lineStep).toInt().coerceAtLeast(0)
+        val itemIndex = (lineIndex * lanes).coerceIn(0, info.totalItemsCount - 1)
+        val itemOffset = (target - lineIndex * lineStep).roundToInt().coerceAtLeast(0)
+        state.scrollToItem(itemIndex, itemOffset)
+    }
+}
 
 private fun buildRows(contents: BundleContents, base: BundleContents?): List<AppRowModel> {
     fun patchesFor(source: BundleContents, packageName: String?) =

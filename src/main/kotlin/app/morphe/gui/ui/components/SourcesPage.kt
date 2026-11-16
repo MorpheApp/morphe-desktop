@@ -114,7 +114,7 @@ fun SourcesPage(
 
     val uriHandler = LocalUriHandler.current
     val scroll = rememberScrollState()
-    Box(modifier.fillMaxSize()) {
+    Box(modifier.fillMaxSize().dragCursor(active = draggingId != null)) {
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(scroll),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -253,7 +253,6 @@ fun SourcesPage(
                 onEdit(it)
                 editingSource = null
             },
-            onRemove = if (src.deletable) ({ editingSource = null; removingSource = src }) else null,
         )
     }
 
@@ -344,47 +343,52 @@ private fun PageHeader(
     onAdd: () -> Unit,
 ) {
     val scheme = MaterialTheme.colorScheme
-    Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Column(Modifier.weight(1f)) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
             Text(
                 stringResource(Res.string.source_sheet_title),
                 style = MorpheTheme.typography.headlineSmall.copy(fontSize = 22.sp, letterSpacing = (-0.2).sp),
                 color = scheme.onSurface,
+                modifier = Modifier.weight(1f),
             )
-            val summary = when {
-                !enabled -> stringResource(Res.string.disabled_while_patching)
-                isLoading -> stringResource(Res.string.sources_page_reloading)
-                else -> null
-            }
-            val counts = stringResource(
-                Res.string.sources_page_summary,
-                sources.count { it.enabled }, sources.size, totalPatches, totalApps,
+            MorpheIconButton(
+                icon = MorpheIcons.Refresh,
+                contentDescription = stringResource(Res.string.source_sheet_reload_description),
+                onClick = onRefresh,
+                enabled = enabled && !isLoading,
+                variant = MorpheIconButtonVariant.OUTLINED,
             )
-            val hint = stringResource(Res.string.sources_page_priority_hint)
-            Text(
-                text = summary?.let { buildAnnotatedString { append(it) } } ?: buildAnnotatedString {
-                    withStyle(SpanStyle(color = scheme.onSurface, fontWeight = FontWeight.Medium)) { append(counts) }
-                    append(" ")
-                    append(hint)
-                },
-                style = MorpheTheme.typography.bodySmall.copy(fontSize = 12.5.sp),
-                color = scheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 6.dp),
+            MorpheButton(
+                label = stringResource(Res.string.add_source),
+                icon = MorpheIcons.Add,
+                variant = MorpheButtonVariant.PRIMARY,
+                enabled = enabled,
+                onClick = onAdd,
             )
         }
-        MorpheIconButton(
-            icon = MorpheIcons.Refresh,
-            contentDescription = stringResource(Res.string.source_sheet_reload_description),
-            onClick = onRefresh,
-            enabled = enabled && !isLoading,
-            variant = MorpheIconButtonVariant.OUTLINED,
+        val summary = when {
+            !enabled -> stringResource(Res.string.disabled_while_patching)
+            isLoading -> stringResource(Res.string.sources_page_reloading)
+            else -> null
+        }
+        val counts = stringResource(
+            Res.string.sources_page_summary,
+            sources.count { it.enabled }, sources.size, totalPatches, totalApps,
         )
-        MorpheButton(
-            label = stringResource(Res.string.add_source),
-            icon = MorpheIcons.Add,
-            variant = MorpheButtonVariant.PRIMARY,
-            enabled = enabled,
-            onClick = onAdd,
+        val hint = stringResource(Res.string.sources_page_priority_hint)
+        Text(
+            text = summary?.let { buildAnnotatedString { append(it) } } ?: buildAnnotatedString {
+                withStyle(SpanStyle(color = scheme.onSurface, fontWeight = FontWeight.Medium)) { append(counts) }
+                append(". ")
+                append(hint)
+            },
+            style = MorpheTheme.typography.bodySmall.copy(fontSize = 12.5.sp),
+            color = scheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 6.dp),
         )
     }
 }
@@ -398,15 +402,14 @@ private fun SourceGrid(minCellWidth: Dp, gap: Dp, content: @Composable () -> Uni
         val cellWidth = (width - gapPx * (columns - 1)) / columns
         val rows = measurables.chunked(columns).map { row ->
             val height = row.maxOf { it.maxIntrinsicHeight(cellWidth) }
-            row.map { it.measure(Constraints(minWidth = cellWidth, maxWidth = cellWidth, maxHeight = height)) }
+            row.map { it.measure(Constraints.fixed(cellWidth, height)) }
         }
-        val rowHeights = rows.map { row -> row.maxOf { it.height } }
-        val height = rowHeights.sum() + gapPx * (rows.size - 1).coerceAtLeast(0)
+        val height = rows.sumOf { it.first().height } + gapPx * (rows.size - 1).coerceAtLeast(0)
         layout(width, height) {
             var y = 0
-            rows.forEachIndexed { r, row ->
+            rows.forEach { row ->
                 row.forEachIndexed { i, placeable -> placeable.place(i * (cellWidth + gapPx), y) }
-                y += rowHeights[r] + gapPx
+                y += row.first().height + gapPx
             }
         }
     }

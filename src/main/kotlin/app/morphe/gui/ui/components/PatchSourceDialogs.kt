@@ -177,7 +177,6 @@ internal fun EditPatchSourceDialog(
     source: PatchSource,
     onDismiss: () -> Unit,
     onSave: (PatchSource) -> Unit,
-    onRemove: (() -> Unit)? = null,
 ) {
     val form = remember(source) {
         PatchSourceFormState(
@@ -267,15 +266,6 @@ internal fun EditPatchSourceDialog(
             }
         },
         actions = {
-            if (onRemove != null) {
-                MorpheButton(
-                    label = stringResource(Res.string.remove),
-                    icon = MorpheIcons.Delete,
-                    onClick = onRemove,
-                    variant = MorpheButtonVariant.DANGER,
-                    size = MorpheButtonSize.COMPACT,
-                )
-            }
             MorpheButton(
                 label = stringResource(Res.string.cancel),
                 onClick = onDismiss,

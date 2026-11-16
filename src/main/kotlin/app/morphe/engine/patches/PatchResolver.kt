@@ -7,6 +7,7 @@ package app.morphe.engine.patches
 
 import app.morphe.engine.GitHubPatMissingException
 import app.morphe.engine.model.Release
+import app.morphe.engine.model.publishedMillis
 import app.morphe.engine.network.sharedHttpClient
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.normalizeVersion
@@ -41,6 +42,7 @@ object PatchResolver {
         val patchFile: File? = null,
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
+        val releasedAtMillis: Long? = null,
         val isOffline: Boolean = false,
         val channel: Channel = Channel.UNKNOWN,
         val error: Error? = null,
@@ -68,6 +70,7 @@ object PatchResolver {
         return ResolutionResult(
             patchFile = file,
             resolvedVersion = manifestVersion ?: file.nameWithoutExtension,
+            releasedAtMillis = file.lastModified().takeIf { it > 0L },
             isOffline = false,
             channel = Channel.LOCAL,
         )
@@ -167,6 +170,7 @@ object PatchResolver {
             } else {
                 if (release.isDevRelease()) latestDevTag else latestStableTag
             },
+            releasedAtMillis = release.publishedMillis(),
             isOffline = false,
             channel = channel,
         )

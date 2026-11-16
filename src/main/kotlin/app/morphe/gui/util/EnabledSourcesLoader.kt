@@ -39,6 +39,7 @@ object EnabledSourcesLoader {
         val patchFile: File? = null,
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
+        val releasedAtMillis: Long? = null,
         val isOffline: Boolean = false,
         val isPinned: Boolean = false,
         val error: String? = null,
@@ -179,6 +180,7 @@ object EnabledSourcesLoader {
             patchFile = patchFile,
             resolvedVersion = resolvedVersion,
             latestAvailableVersion = latestAvailableVersion,
+            releasedAtMillis = releasedAtMillis,
             isOffline = isOffline,
             channel = channel,
             signingKey = signingKey,
@@ -299,6 +301,7 @@ data class SourceDetails(
     val isOffline: Boolean,
     val isPinned: Boolean,
     val fileName: String?,
+    val releasedAtMillis: Long? = null,
 )
 
 fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> {
@@ -321,6 +324,7 @@ fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> 
             isOffline = r.isOffline,
             isPinned = r.isPinned,
             fileName = file.name,
+            releasedAtMillis = r.releasedAtMillis,
         )
     }.toMap()
 }

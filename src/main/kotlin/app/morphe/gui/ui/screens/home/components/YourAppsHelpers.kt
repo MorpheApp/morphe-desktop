@@ -22,6 +22,7 @@ import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.rememberAppIcon
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /** Returns version guidance for a patched app, or null if currently supported. */
@@ -91,14 +92,26 @@ internal fun fullDate(millis: Long): String =
 
 /** Formats a timestamp into a compact relative or short date string. */
 @Composable
-internal fun relativeOrShortDate(millis: Long): String {
+internal fun relativeOrShortDate(
+    millis: Long,
+    capitalized: Boolean = false,
+    compact: Boolean = true,
+): String {
     val now = System.currentTimeMillis()
     val days = ((now - millis) / 86_400_000L).toInt()
     return when {
-        days <= 0 -> stringResource(Res.string.home_date_today)
-        days == 1 -> stringResource(Res.string.home_date_yesterday)
-        days < 7 -> stringResource(Res.string.home_date_days_ago, days)
-        else -> FormatUtils.formatShortDate(millis, currentLocale())
+        days <= 0 -> stringResource(if (capitalized) Res.string.changelog_date_today else Res.string.home_date_today)
+        days == 1 -> stringResource(if (capitalized) Res.string.changelog_date_yesterday else Res.string.home_date_yesterday)
+        days < 7 -> if (compact) {
+            stringResource(Res.string.home_date_days_ago, days)
+        } else {
+            pluralStringResource(Res.plurals.changelog_days_ago, days, days)
+        }
+        else -> if (compact) {
+            FormatUtils.formatShortDate(millis, currentLocale())
+        } else {
+            FormatUtils.formatFullMonthOrLongDate(millis, currentLocale(), nowMillis = now)
+        }
     }
 }
 

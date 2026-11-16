@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.Release
+import app.morphe.engine.model.publishedMillis
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.gui.ui.components.MorpheBadge
 import app.morphe.gui.ui.components.MorpheBadgeTone
@@ -155,6 +156,13 @@ private fun Hero(
                 )
                 if (release.tagName in state.cachedReleaseVersions) {
                     DownloadedMark(size = MorpheTheme.dimens.iconLarge)
+                }
+                if (state.isLatestOfChannel(release)) {
+                    MorpheBadge(
+                        text = stringResource(Res.string.patches_latest_badge),
+                        tone = MorpheBadgeTone.Primary,
+                        variant = MorpheBadgeVariant.SUBTLE,
+                    )
                 }
                 Status(state = state, release = release, onSelect = actions.onSelect, modifier = Modifier.weight(1f))
                 if (!compact) HeroActions(state = state, release = release, actions = actions)
@@ -285,16 +293,10 @@ private fun MetaLine(
     base: BundleContents?,
 ) {
     val isDev = release.isDevRelease()
-    val isLatest = state.isLatestOfChannel(release)
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     val style = MorpheTheme.typography.labelMedium
     val channelLabel = stringResource(
-        when {
-            isLatest && isDev -> Res.string.source_card_latest_prerelease
-            isLatest -> Res.string.source_card_latest_stable
-            isDev -> Res.string.version_label_prerelease
-            else -> Res.string.version_label_stable
-        }
+        if (isDev) Res.string.version_label_prerelease else Res.string.version_label_stable
     )
     val items = buildList<@Composable () -> Unit> {
         add {
@@ -304,7 +306,7 @@ private fun MetaLine(
                 color = channelColor(if (isDev) Channel.PRERELEASE else Channel.STABLE),
             )
         }
-        release.publishedMillis()?.let { millis -> add { Text(relativeOrShortDate(millis), style = style, color = muted) } }
+        release.publishedMillis()?.let { millis -> add { Text(relativeOrShortDate(millis, compact = false), style = style, color = muted) } }
         if (contents != null) {
             add { CountWithDelta(pluralStringResource(Res.plurals.versions_patch_count, contents.patches.size, contents.patches.size), base?.let { contents.patches.size - it.patches.size }) }
             add { CountWithDelta(pluralStringResource(Res.plurals.versions_app_count, contents.apps.size, contents.apps.size), base?.let { contents.apps.size - it.apps.size }) }
