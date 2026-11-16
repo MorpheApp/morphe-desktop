@@ -1,3 +1,11 @@
+# [2.3.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.1...v2.3.0-dev.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* Show real app name without a patch bundle ([#436](https://github.com/MorpheApp/morphe-desktop/issues/436)) ([dc09eb9](https://github.com/MorpheApp/morphe-desktop/commit/dc09eb9e0f71dfa156ada236d00d1a4d60ad29c9))
+* Update morphe-patcher dependency ([8c6faa2](https://github.com/MorpheApp/morphe-desktop/commit/8c6faa2db358778277c60024134c4d2f351a245d))
+
 # [2.3.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0...v2.3.0-dev.1) (2026-11-15)
 
 
