@@ -541,6 +541,8 @@ class HomeViewModel(
     private var lastLoadedVersion: String? = null
     // Pinned version snapshot from the last load used to detect version preference changes.
     private var lastLoadedVersionsBySource: Map<String, SourceVersionPref> = emptyMap()
+    // What each enabled source was last resolved from, to tell which sources a reload changes.
+    private var lastResolveKeys: Map<String, List<Any?>> = emptyMap()
 
     /** Loads patches from all enabled sources and aggregates their supported apps. */
     private fun loadPatchesAndSupportedApps(forceRefresh: Boolean = false) {
@@ -565,6 +567,14 @@ class HomeViewModel(
                 } else {
                     saved
                 }
+                // Only sources whose inputs changed show as reloading; the others keep their data.
+                val resolveKeys = enabled.associate { (source, _) ->
+                    source.id to listOf(source.type, source.url, source.filePath, source.usePreRelease, prefs[source.id])
+                }
+                _uiState.value = _uiState.value.copy(
+                    reloadingSourceIds = if (forceRefresh) resolveKeys.keys
+                        else resolveKeys.filter { (id, key) -> lastResolveKeys[id] != key }.keys,
+                )
                 val result = EnabledSourcesLoader.loadAll(
                     enabled = enabled,
                     prefsBySource = prefs,
@@ -591,6 +601,7 @@ class HomeViewModel(
                     }
                     // Retain snapshot so source management sheet displays failure state.
                     cachedSourcesResult = result
+                    lastResolveKeys = resolveKeys
                     _uiState.value = _uiState.value.copy(
                         isLoadingPatches = false,
                         patchLoadError = friendlyError
@@ -605,6 +616,7 @@ class HomeViewModel(
                 cachedAllPatchFiles = result.resolved.mapNotNull { it.patchFile }
                 lastLoadedVersion = firstResolved?.resolvedVersion
                 cachedSourcesResult = result
+                lastResolveKeys = resolveKeys
 
                 // Reading bundle manifests opens each .mpp; do it off the UI thread.
                 val effectiveNames = withContext(Dispatchers.IO) {
@@ -1592,6 +1604,7 @@ data class HomeUiState(
     val isReady: Boolean = false,
     val isAnalyzing: Boolean = false,
     val isLoadingPatches: Boolean = true,
+    val reloadingSourceIds: Set<String> = emptySet(),
     val isOffline: Boolean = false,
     val isDefaultSource: Boolean = true,
     val supportedApps: List<SupportedApp> = emptyList(),

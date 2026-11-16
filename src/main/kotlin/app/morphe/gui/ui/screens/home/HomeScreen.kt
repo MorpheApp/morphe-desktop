@@ -496,10 +496,10 @@ fun HomeScreenContent(
                                             }
                                         },
                                         isLoading = uiState.isLoadingPatches,
+                                        reloadingSourceIds = uiState.reloadingSourceIds,
                                         onToggleEnabled = { id, enabled ->
                                             coroutineScope.launch {
                                                 patchSourceManager.setSourceEnabled(id, enabled)
-                                                viewModel.retryLoadPatches()
                                             }
                                         },
                                         onAdd = { source ->
@@ -517,7 +517,6 @@ fun HomeScreenContent(
                                         onReorder = { orderedIds ->
                                             coroutineScope.launch {
                                                 patchSourceManager.reorderSources(orderedIds)
-                                                viewModel.retryLoadPatches()
                                             }
                                         },
                                         onOpenPatches = if (isSimple) null else openSourceScreen,

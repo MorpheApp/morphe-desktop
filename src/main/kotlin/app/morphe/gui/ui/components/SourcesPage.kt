@@ -83,6 +83,7 @@ fun SourcesPage(
     totalPatches: Int = 0,
     totalApps: Int = 0,
     isLoading: Boolean = false,
+    reloadingSourceIds: Set<String> = emptySet(),
     sourceErrors: Map<String, String> = emptyMap(),
     sourceSigningKeyFingerprints: Map<String, String> = emptyMap(),
     sourceSigningKeys: Map<String, String> = emptyMap(),
@@ -126,7 +127,7 @@ fun SourcesPage(
                     sources = sources,
                     totalPatches = totalPatches,
                     totalApps = totalApps,
-                    isLoading = isLoading,
+                    isLoading = isLoading && reloadingSourceIds.isNotEmpty(),
                     enabled = enabled,
                     onRefresh = onRefresh,
                     onAdd = { showAddDialog = true },
@@ -148,7 +149,7 @@ fun SourcesPage(
                                 signingKeyFingerprint = sourceSigningKeyFingerprints[id],
                                 signingKey = sourceSigningKeys[id],
                                 signerChanged = sourceSignerChanged.containsKey(id),
-                                isLoading = isLoading && source.enabled,
+                                isLoading = isLoading && source.enabled && id in reloadingSourceIds,
                                 isLastEnabled = enabledCount == 1,
                             )
                             val actions = SourceCardActions(
