@@ -6,6 +6,7 @@
 package app.morphe.engine
 
 import app.morphe.engine.util.Logger
+import app.morphe.engine.util.isNewerVersion
 import java.net.HttpURLConnection
 import java.net.URI
 import java.util.Properties
@@ -20,14 +21,18 @@ data class UpdateInfo(
     val downloadLink: String,
 )
 
+/** Outcome of checking GitHub for a newer Desktop release. */
+sealed interface AppUpdateCheck {
+    data object UpToDate : AppUpdateCheck
+    data class Available(val info: UpdateInfo) : AppUpdateCheck
+    data object Failed : AppUpdateCheck
+}
+
 object UpdateChecker {
     /** Checks GitHub for newer versions on [channel], defaulting to the current build's channel. */
-    fun checkInfo(channel: ReleaseChannel? = null): UpdateInfo? {
+    fun checkStatus(channel: ReleaseChannel? = null): AppUpdateCheck {
         try {
-            val currentVersion = javaClass.getResourceAsStream("/app/morphe/cli/version.properties")
-                ?.use { stream ->
-                    Properties().apply { load(stream) }.getProperty("version")
-                } ?: return null
+            val currentVersion = currentVersion() ?: return AppUpdateCheck.Failed
 
             val isDev = currentVersion.contains("dev")
             val resolvedChannel = channel ?: if (isDev) ReleaseChannel.DEV else ReleaseChannel.STABLE
@@ -48,26 +53,34 @@ object UpdateChecker {
 
             val latestVersion = Properties().apply {
                 load(response.byteInputStream())
-            }.getProperty("version") ?: return null
+            }.getProperty("version") ?: return AppUpdateCheck.Failed
 
-            if (latestVersion == currentVersion) return null
+            if (latestVersion == currentVersion || !isNewerVersion(latestVersion, currentVersion)) {
+                return AppUpdateCheck.UpToDate
+            }
 
             val downloadLink = when (resolvedChannel) {
                 ReleaseChannel.DEV -> "https://github.com/MorpheApp/morphe-desktop/releases/"
                 ReleaseChannel.STABLE -> "https://github.com/MorpheApp/morphe-desktop/releases/latest"
             }
 
-            return UpdateInfo(
-                currentVersion = currentVersion,
-                latestVersion = latestVersion,
-                crossesDevToStable = isDev && !latestVersion.contains("dev"),
-                downloadLink = downloadLink,
+            return AppUpdateCheck.Available(
+                UpdateInfo(
+                    currentVersion = currentVersion,
+                    latestVersion = latestVersion,
+                    crossesDevToStable = isDev && !latestVersion.contains("dev"),
+                    downloadLink = downloadLink,
+                )
             )
         } catch (ex: Exception) {
             Logger.debug("Could not check for CLI update: $ex")
-            return null
+            return AppUpdateCheck.Failed
         }
     }
+
+    /** Checks GitHub for newer versions on [channel], returning [UpdateInfo] only when an update is available. */
+    fun checkInfo(channel: ReleaseChannel? = null): UpdateInfo? =
+        (checkStatus(channel) as? AppUpdateCheck.Available)?.info
 
     /** Reads the current build version from bundled properties, or null if missing. */
     fun currentVersion(): String? = javaClass.getResourceAsStream("/app/morphe/cli/version.properties")

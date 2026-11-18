@@ -7,6 +7,7 @@ package app.morphe.engine
 
 object MorpheConstants {
     const val MORPHE_API_URL = "https://api.morphe.software"
+    const val PEOPLE_URL = "$MORPHE_API_URL/v2/people"
 
     /** User agent of requests to [MORPHE_API_URL]. */
     val MORPHE_USER_AGENT: String by lazy {

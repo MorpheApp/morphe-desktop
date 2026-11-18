@@ -12,16 +12,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.UpdateChannelPreference
-import app.morphe.gui.ui.components.AppInfoDialog
 import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.gui.ui.components.SettingsStateHolder
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -41,10 +36,9 @@ internal data class SystemSearchVisibility(
     val changelog: Boolean,
     val licenses: Boolean,
     val documentation: Boolean,
-    val website: Boolean,
 ) {
     val hasAboutSection: Boolean
-        get() = versionInfo || changelog || licenses || documentation || website
+        get() = versionInfo || changelog || licenses || documentation
     val any: Boolean
         get() = autoCleanup || updateChannel || outputFolder || autoStartAdb || storage || hasAboutSection
 }
@@ -62,7 +56,6 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
             changelog = true,
             licenses = true,
             documentation = true,
-            website = true,
         )
     }
 
@@ -93,8 +86,6 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
     val licensesDesc = stringResource(Res.string.settings_about_licenses_desc)
     val docsTitle = stringResource(Res.string.settings_about_documentation_title)
     val docsDesc = stringResource(Res.string.settings_about_documentation_desc)
-    val websiteTitle = stringResource(Res.string.settings_about_website_title)
-    val websiteDesc = stringResource(Res.string.settings_about_website_desc)
 
     return SystemSearchVisibility(
         autoCleanup = matchesSettingQuery(query, cleanupTitle, cleanupDesc, "cleanup", "temp", "temporary"),
@@ -129,11 +120,27 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
             "logs",
             "disk",
         ),
-        versionInfo = matchesSettingQuery(query, aboutSection, appName, versionText, "version", "patcher", "info"),
+        versionInfo = matchesSettingQuery(
+            query,
+            aboutSection,
+            appName,
+            versionText,
+            "about",
+            "version",
+            "patcher",
+            "info",
+            "donate",
+            "website",
+            "morphe.software",
+            "github",
+            "reddit",
+            "translations",
+            "contributors",
+            "supporters",
+        ),
         changelog = matchesSettingQuery(query, aboutSection, changelogTitle, changelogDesc, "changelog", "release notes"),
         licenses = matchesSettingQuery(query, aboutSection, licensesTitle, licensesDesc, "license", "open source", "notice"),
         documentation = matchesSettingQuery(query, aboutSection, docsTitle, docsDesc, "documentation", "docs", "guide", "help"),
-        website = matchesSettingQuery(query, aboutSection, websiteTitle, websiteDesc, "website", "morphe.software"),
     )
 }
 
@@ -141,6 +148,7 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
 internal fun SystemSection(
     settings: SettingsStateHolder,
     isPatching: Boolean,
+    onOpenAbout: () -> Unit,
     onOpenChangelog: () -> Unit,
     onOpenLicenses: () -> Unit,
     searchQuery: String = "",
@@ -151,7 +159,6 @@ internal fun SystemSection(
     val engineConfig = settings.engineConfig
     val borderColor = rememberSettingsCardBorderColor()
     val uriHandler = LocalUriHandler.current
-    var showAppInfoDialog by remember { mutableStateOf(false) }
 
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
         if (visibility.autoCleanup) {
@@ -259,7 +266,7 @@ internal fun SystemSection(
                         iconTint = MorpheTheme.colors.primary,
                         title = stringResource(Res.string.app_name),
                         description = guiVer,
-                        onClick = { showAppInfoDialog = true },
+                        onClick = onOpenAbout,
                     )
                     actionItem(
                         key = "changelog",
@@ -286,22 +293,9 @@ internal fun SystemSection(
                         onClick = { uriHandler.openUri(AppConstants.DOCUMENTATION_URL) },
                         trailing = { ExternalLinkTrailingIcon() },
                     )
-                    actionItem(
-                        key = "website",
-                        visible = visibility.website,
-                        icon = MorpheIcons.Public,
-                        title = stringResource(Res.string.settings_about_website_title),
-                        description = stringResource(Res.string.settings_about_website_desc),
-                        onClick = { uriHandler.openUri(AppConstants.WEBSITE_URL) },
-                        trailing = { ExternalLinkTrailingIcon() },
-                    )
                 }
             }
         }
-    }
-
-    if (showAppInfoDialog) {
-        AppInfoDialog(onDismiss = { showAppInfoDialog = false })
     }
 }
 

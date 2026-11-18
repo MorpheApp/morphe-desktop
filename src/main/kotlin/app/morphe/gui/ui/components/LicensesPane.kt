@@ -353,7 +353,7 @@ private fun LibraryRow(
                 if (website != null || source != null) {
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         website?.let {
-                            LinkPill(label = stringResource(Res.string.app_info_dialog_link_website), url = it)
+                            LinkPill(label = stringResource(Res.string.website), url = it)
                         }
                         source?.let {
                             LinkPill(label = stringResource(Res.string.licenses_row_link_source), url = it)

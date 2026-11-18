@@ -25,6 +25,14 @@ object AppConstants {
 
     const val WEBSITE_URL = "https://morphe.software"
     const val COMMUNITY_PATCHES_URL = "https://morphe-patches.software"
+    const val GITHUB_HOST = "github.com"
+    const val MORPHE_GITHUB_ORG = "MorpheApp"
+    const val MORPHE_GITHUB_URL = "https://$GITHUB_HOST/$MORPHE_GITHUB_ORG"
+    const val DESKTOP_REPO_URL = "$MORPHE_GITHUB_URL/morphe-desktop"
+    const val DONATE_URL = "$WEBSITE_URL/donate"
+    const val TRANSLATE_URL = "$WEBSITE_URL/translate"
+    const val REDDIT_URL = "https://reddit.com/r/MorpheApp"
+    const val SUPPORTERS_URL = "https://opencollective.com/morpheapp"
     /** True if the running version is a prerelease or unpackaged development build. */
     val IS_DEV_BUILD: Boolean by lazy { APP_VERSION == "dev" || APP_VERSION.contains('-') }
 
