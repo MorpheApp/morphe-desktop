@@ -30,7 +30,6 @@ import app.morphe.morphe_desktop.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 private val ContentInset = 16.dp
 private val LoadingIndicatorSize = 48.dp
@@ -39,8 +38,7 @@ private val EmptyGap = 12.dp
 
 @Composable
 fun PatchesScreen(
-    apkName: String,
-    viewModel: PatchesViewModel = koinViewModel { parametersOf(apkName) }
+    viewModel: PatchesViewModel = koinViewModel()
 ) {
     PatchesScreenContent(viewModel = viewModel)
 }

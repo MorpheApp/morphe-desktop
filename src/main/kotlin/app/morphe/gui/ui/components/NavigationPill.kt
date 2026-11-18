@@ -17,9 +17,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -167,38 +165,6 @@ fun NavigationPill(
                 }
             }
         }
-    }
-}
-
-/** Indicator pill displayed while patch manifests and releases are loading. */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun PatchesLoadingIndicator(
-    modifier: Modifier = Modifier,
-) {
-    val shapes = MorpheTheme.shapes
-    val dimens = MorpheTheme.dimens
-    val (containerColor, borderColor) = rememberPillColors()
-
-    Row(
-        modifier = modifier
-            .height(dimens.controlHeight)
-            .clip(shapes.small)
-            .background(containerColor)
-            .outlineBorder(borderColor, shapes.small)
-            .padding(horizontal = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        LoadingIndicator(
-            modifier = Modifier.size(14.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = stringResource(Res.string.status_loading),
-            style = MorpheTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
 

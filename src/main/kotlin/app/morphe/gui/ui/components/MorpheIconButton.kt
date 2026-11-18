@@ -31,7 +31,6 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineBorder
 
 enum class MorpheIconButtonSize(val size: Dp, val iconSize: Dp) {
-    XLARGE(48.dp, 24.dp),
     LARGE(44.dp, 18.dp),
     DEFAULT(36.dp, 16.dp),
     TOP_BAR(34.dp, 16.dp),

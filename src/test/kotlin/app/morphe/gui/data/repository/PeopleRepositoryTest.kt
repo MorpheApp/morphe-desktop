@@ -65,8 +65,7 @@ class PeopleRepositoryTest {
 
     @Test
     fun `decodes contributors, supporters, supporters_total, and mega flag`() {
-        val http = createHttpClient(json = json)
-        try {
+        createHttpClient(json = json).use { http ->
             val repo = PeopleRepository(http = http, json = json, cacheFileProvider = { cacheFile })
             val parsed = repo.decode(samplePayload())
             assertNotNull(parsed)
@@ -80,19 +79,14 @@ class PeopleRepositoryTest {
             assertTrue(parsed.supporters[0].mega)
             assertFalse(parsed.supporters[1].mega)
             assertEquals(42, parsed.supportersTotal)
-        } finally {
-            http.close()
         }
     }
 
     @Test
     fun `decode returns null on malformed json`() {
-        val http = createHttpClient(json = json)
-        try {
+        createHttpClient(json = json).use { http ->
             val repo = PeopleRepository(http = http, json = json, cacheFileProvider = { cacheFile })
             assertNull(repo.decode("{ invalid json"))
-        } finally {
-            http.close()
         }
     }
 
@@ -101,8 +95,7 @@ class PeopleRepositoryTest {
         cacheFile.writeText(samplePayload())
         cacheFile.setLastModified(System.currentTimeMillis())
 
-        val http = createHttpClient(json = json)
-        try {
+        createHttpClient(json = json).use { http ->
             val repo = PeopleRepository(http = http, json = json, cacheFileProvider = { cacheFile })
             assertNull(repo.people.value)
 
@@ -113,8 +106,6 @@ class PeopleRepositoryTest {
             assertEquals(2, loaded.contributors.size)
             assertEquals(2, loaded.supporters.size)
             assertEquals(42, loaded.supportersTotal)
-        } finally {
-            http.close()
         }
     }
 
@@ -124,8 +115,7 @@ class PeopleRepositoryTest {
         // Age cache beyond the 1-hour refresh threshold so fetch() is attempted.
         cacheFile.setLastModified(System.currentTimeMillis() - 2 * 60 * 60 * 1000L)
 
-        val http = createHttpClient(json = json)
-        try {
+        createHttpClient(json = json).use { http ->
             val repo = PeopleRepository(
                 http = http,
                 json = json,
@@ -135,8 +125,6 @@ class PeopleRepositoryTest {
             val available = repo.refresh()
             assertTrue(available)
             assertEquals(42, repo.people.value?.supportersTotal)
-        } finally {
-            http.close()
         }
     }
 

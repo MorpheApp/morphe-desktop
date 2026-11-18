@@ -43,7 +43,6 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 
 class PatchesViewModel(
-    apkName: String,
     private val patchRepository: PatchRepository,
     private val configRepository: ConfigRepository,
     private val localPatchFilePath: String? = null,

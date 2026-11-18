@@ -473,9 +473,7 @@ fun HomeScreenContent(
                                     val openSourceScreen: (String) -> Unit = { sourceId ->
                                         coroutineScope.launch {
                                             patchSourceManager.switchSource(sourceId)
-                                            navController.navigate(PatchesScreenRoute(
-                                                apkName = uiState.apkInfo?.appName ?: ""
-                                            ))
+                                            navController.navigate(PatchesScreenRoute)
                                         }
                                     }
                                     SourcesPage(
