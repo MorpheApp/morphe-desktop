@@ -68,4 +68,24 @@
         <item quantity="one">Jumla: %1$s (faili %2$d)</item>
         <item quantity="other">Jumla: %1$s (faili %2$d)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">toleo %1$d jipya kuliko</item>
+        <item quantity="other">matoleo %1$d mapya kuliko</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">toleo %1$d la zamani kuliko</item>
+        <item quantity="other">matoleo %1$d ya zamani kuliko</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">marekebisho %1$d</item>
+        <item quantity="other">marekebisho %1$d</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">programu %1$d</item>
+        <item quantity="other">programu %1$d</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">chaguo %1$d</item>
+        <item quantity="other">chaguo %1$d</item>
+    </plurals>
 </resources>

@@ -85,4 +85,29 @@
         <item quantity="one">Kopā: %1$s (%2$d fails)</item>
         <item quantity="other">Kopā: %1$s (%2$d faili)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="zero">%1$d izlaides jaunākas par</item>
+        <item quantity="one">%1$d izlaide jaunāka par</item>
+        <item quantity="other">%1$d izlaides jaunākas par</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="zero">%1$d izlaides vecākas par</item>
+        <item quantity="one">%1$d izlaide vecāka par</item>
+        <item quantity="other">%1$d izlaides vecākas par</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="zero">%1$d lāpījumi</item>
+        <item quantity="one">%1$d lāpījums</item>
+        <item quantity="other">%1$d lāpījumi</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="zero">%1$d lietotnes</item>
+        <item quantity="one">%1$d lietotne</item>
+        <item quantity="other">%1$d lietotnes</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="zero">%1$d opcijas</item>
+        <item quantity="one">%1$d opcija</item>
+        <item quantity="other">%1$d opcijas</item>
+    </plurals>
 </resources>

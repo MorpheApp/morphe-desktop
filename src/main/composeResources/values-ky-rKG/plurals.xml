@@ -68,4 +68,24 @@
         <item quantity="one">Жалпысы: %1$s (%2$d файл)</item>
         <item quantity="other">Жалпысы: %1$s (%2$d файл)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d чыгарылыш жаңыраак</item>
+        <item quantity="other">%1$d чыгарылыш жаңыраак</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d чыгарылыш эски</item>
+        <item quantity="other">%1$d чыгарылыш эски</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d патч</item>
+        <item quantity="other">%1$d патч</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d колдонмо</item>
+        <item quantity="other">%1$d колдонмо</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d вариант</item>
+        <item quantity="other">%1$d вариант</item>
+    </plurals>
 </resources>

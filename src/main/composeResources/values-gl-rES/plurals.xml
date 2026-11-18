@@ -69,4 +69,24 @@
         <item quantity="one">Total: %1$s (%2$d ficheiro)</item>
         <item quantity="other">Total: %1$s (%2$d ficheiros)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d versión máis nova que</item>
+        <item quantity="other">%1$d versións máis novas que</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d versión máis antiga que</item>
+        <item quantity="other">%1$d versións máis antigas que</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d parche</item>
+        <item quantity="other">%1$d parches</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d aplicación</item>
+        <item quantity="other">%1$d aplicacións</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d opción</item>
+        <item quantity="other">%1$d opcións</item>
+    </plurals>
 </resources>

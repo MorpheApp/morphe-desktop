@@ -102,4 +102,34 @@
         <item quantity="many">Celkovo: %1$s (%2$d súborov)</item>
         <item quantity="other">Celkovo: %1$s (%2$d súborov)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d vydanie novšie ako</item>
+        <item quantity="few">%1$d vydania novšie ako</item>
+        <item quantity="many">%1$d vydaní novšie ako</item>
+        <item quantity="other">%1$d vydaní novšie ako</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d vydanie staršie ako</item>
+        <item quantity="few">%1$d vydania staršie ako</item>
+        <item quantity="many">%1$d vydaní staršie ako</item>
+        <item quantity="other">%1$d vydaní staršie ako</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d záplata</item>
+        <item quantity="few">%1$d záplaty</item>
+        <item quantity="many">%1$d záplat</item>
+        <item quantity="other">%1$d záplat</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d aplikácia</item>
+        <item quantity="few">%1$d aplikácie</item>
+        <item quantity="many">%1$d aplikácií</item>
+        <item quantity="other">%1$d aplikácií</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d možnosť</item>
+        <item quantity="few">%1$d možnosti</item>
+        <item quantity="many">%1$d možností</item>
+        <item quantity="other">%1$d možností</item>
+    </plurals>
 </resources>

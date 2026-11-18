@@ -68,4 +68,24 @@
         <item quantity="one">Guztira: %1$s (%2$d fitxategi)</item>
         <item quantity="other">Guztira: %1$s (%2$d fitxategi)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d bertsio berriago</item>
+        <item quantity="other">%1$d bertsio berriago</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d bertsio zahago</item>
+        <item quantity="other">%1$d bertsio zahago</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patchik</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d aplikazio</item>
+        <item quantity="other">%1$d aplikazio</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d aukera</item>
+        <item quantity="other">%1$d aukera</item>
+    </plurals>
 </resources>

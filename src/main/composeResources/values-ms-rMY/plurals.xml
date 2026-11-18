@@ -51,4 +51,19 @@
     <plurals name="settings_cache_clear_all_summary">
         <item quantity="other">Jumlah: %1$s (%2$d fail)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="other">%1$d keluaran lebih baru daripada</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="other">%1$d keluaran lebih lama daripada</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="other">%1$d tampalan</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="other">%1$d aplikasi</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="other">%1$d pilihan</item>
+    </plurals>
 </resources>
