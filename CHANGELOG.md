@@ -1,3 +1,15 @@
+# [2.3.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.2...v2.3.0-dev.3) (2026-11-18)
+
+
+### Bug Fixes
+
+* Update Patcher dependency ([3e7fd0e](https://github.com/MorpheApp/morphe-desktop/commit/3e7fd0e46a0226338273afc528765b0e70a77f1d))
+
+
+### Features
+
+* Rework patch sources and versions screen + Dialog Consolidation ([#433](https://github.com/MorpheApp/morphe-desktop/issues/433)) ([70be7ca](https://github.com/MorpheApp/morphe-desktop/commit/70be7ca458df9999c2b60b5982697e716604fba4))
+
 # [2.3.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.1...v2.3.0-dev.2) (2026-11-16)
 
 
