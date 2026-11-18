@@ -95,22 +95,17 @@ private fun IconStudioOption(
     }
 
     if (showDeleteConfirm) {
-        MorpheDialogCard(onDismiss = { showDeleteConfirm = false }, title = stringResource(Res.string.patch_selection_icon_dialog_delete_title)) {
-            MorpheDialogText(
-                stringResource(Res.string.patch_selection_icon_dialog_delete_message)
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                MorpheButton(
-                    label = stringResource(Res.string.cancel),
-                    modifier = Modifier.weight(1f),
-                    variant = MorpheButtonVariant.OUTLINED,
-                    onClick = { showDeleteConfirm = false },
-                )
-                MorpheButton(
-                    label = stringResource(Res.string.delete),
-                    modifier = Modifier.weight(1f),
-                    variant = MorpheButtonVariant.DANGER,
-                    onClick = {
+        MorpheDialog(
+            onDismiss = { showDeleteConfirm = false },
+            title = stringResource(Res.string.patch_selection_icon_dialog_delete_title),
+            icon = MorpheIcons.Delete,
+            accent = MorpheTheme.colors.danger,
+            actions = {
+                MorpheDialogActions(
+                    confirmLabel = stringResource(Res.string.delete),
+                    confirmVariant = MorpheButtonVariant.DANGER,
+                    onDismiss = { showDeleteConfirm = false },
+                    onConfirm = {
                         scope.launch {
                             withContext(Dispatchers.IO) {
                                 runCatching { IconExporter.projectDir(packageName).deleteRecursively() }
@@ -120,7 +115,11 @@ private fun IconStudioOption(
                         }
                     },
                 )
-            }
+            },
+        ) {
+            MorpheDialogText(
+                stringResource(Res.string.patch_selection_icon_dialog_delete_message)
+            )
         }
     }
 }

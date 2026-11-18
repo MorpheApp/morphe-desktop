@@ -7,6 +7,7 @@ package app.morphe.engine.patches
 
 import app.morphe.engine.GitHubPatMissingException
 import app.morphe.engine.model.Release
+import app.morphe.engine.model.publishedMillis
 import app.morphe.engine.network.sharedHttpClient
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.normalizeVersion
@@ -41,6 +42,7 @@ object PatchResolver {
         val patchFile: File? = null,
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
+        val releasedAtMillis: Long? = null,
         val isOffline: Boolean = false,
         val channel: Channel = Channel.UNKNOWN,
         val error: Error? = null,
@@ -68,6 +70,7 @@ object PatchResolver {
         return ResolutionResult(
             patchFile = file,
             resolvedVersion = manifestVersion ?: file.nameWithoutExtension,
+            releasedAtMillis = file.lastModified().takeIf { it > 0L },
             isOffline = false,
             channel = Channel.LOCAL,
         )
@@ -92,7 +95,7 @@ object PatchResolver {
             val releases = releasesResult.getOrNull()
             if (releases.isNullOrEmpty()) {
                 if (isPrSource) {
-                    return@withContext classifyPrOrFetchError(releasesResult.exceptionOrNull())
+                    return@withContext classifyPrError(releasesResult.exceptionOrNull(), "No artifacts found for pull request", Error::ReleaseFetchFailed)
                 }
                 return@withContext offlinePinnedOrFallback(repo, pinnedTag, strictPin, releasesResult.exceptionOrNull())
             }
@@ -110,7 +113,7 @@ object PatchResolver {
         } else if (isPrSource) {
             val prReleasesResult = repo.fetchReleases(forceRefresh = forceRefresh)
             val prRelease = prReleasesResult.getOrNull()?.firstOrNull()
-                ?: return@withContext classifyPrOrFetchError(prReleasesResult.exceptionOrNull())
+                ?: return@withContext classifyPrError(prReleasesResult.exceptionOrNull(), "No artifacts found for pull request", Error::ReleaseFetchFailed)
             release = prRelease
             latestStableTag = null
             latestDevTag = prRelease.tagName
@@ -145,7 +148,7 @@ object PatchResolver {
                 )
             }
             if (isPrSource) {
-                return@withContext classifyPrOrDownloadError(ex)
+                return@withContext classifyPrError(ex, "", Error::DownloadFailed)
             }
             return@withContext ResolutionResult(
                 error = Error.DownloadFailed(ex?.message ?: "Failed to download patches")
@@ -167,6 +170,7 @@ object PatchResolver {
             } else {
                 if (release.isDevRelease()) latestDevTag else latestStableTag
             },
+            releasedAtMillis = release.publishedMillis(),
             isOffline = false,
             channel = channel,
         )
@@ -235,14 +239,7 @@ object PatchResolver {
     ): ResolutionResult {
         val cachedForTag = PatchCache.findCachedByVersion(repo.repoPath, pinnedTag)
         if (cachedForTag != null) {
-            val isPrSource = repo.remoteSource is PullRequestPatchSource
-            val resolvedVersion = PatchCache.extractVersionLabel(cachedForTag, isPrSource)
-            return ResolutionResult(
-                patchFile = cachedForTag,
-                resolvedVersion = resolvedVersion,
-                latestAvailableVersion = if (isPrSource) resolvedVersion else null,
-                isOffline = true,
-            )
+            return offlineResult(repo, cachedForTag)
         }
         return if (strictPin) {
             ResolutionResult(error = Error.PinnedTagNotFound(pinnedTag, repo.repoPath))
@@ -255,14 +252,7 @@ object PatchResolver {
         val prSource = repo.remoteSource as? PullRequestPatchSource
         val cached = PatchCache.findLatestCachedFile(repo.repoPath, prSource?.prNumber)
         return if (cached != null) {
-            val isPrSource = prSource != null
-            val resolvedVersion = PatchCache.extractVersionLabel(cached, isPrSource)
-            ResolutionResult(
-                patchFile = cached,
-                resolvedVersion = resolvedVersion,
-                latestAvailableVersion = if (isPrSource) resolvedVersion else null,
-                isOffline = true,
-            )
+            offlineResult(repo, cached)
         } else {
             val message = cause?.message?.takeIf { it.isNotBlank() }
                 ?: "Failed to fetch releases for ${repo.repoPath}"
@@ -270,28 +260,31 @@ object PatchResolver {
         }
     }
 
-    private fun classifyPrOrFetchError(ex: Throwable?): ResolutionResult {
-        val msg = ex?.message ?: "No artifacts found for pull request"
-        val err = when {
-            ex is GitHubPatMissingException || msg.contains("A GitHub PAT is required", ignoreCase = true) ->
-                Error.GitHubPatRequired(msg)
-            msg.contains("No artifacts found", ignoreCase = true) ||
-                msg.contains("No GitHub Actions run found", ignoreCase = true) ->
-                Error.PrNoArtifact(msg)
-            else -> Error.ReleaseFetchFailed(msg)
-        }
-        return ResolutionResult(error = err)
+    private fun offlineResult(repo: PatchRepository, cached: File): ResolutionResult {
+        val isPrSource = repo.remoteSource is PullRequestPatchSource
+        val resolvedVersion = PatchCache.extractVersionLabel(cached, isPrSource)
+        return ResolutionResult(
+            patchFile = cached,
+            resolvedVersion = resolvedVersion,
+            latestAvailableVersion = if (isPrSource) resolvedVersion else null,
+            releasedAtMillis = cached.lastModified().takeIf { it > 0L },
+            isOffline = true,
+        )
     }
 
-    private fun classifyPrOrDownloadError(ex: Throwable?): ResolutionResult {
-        val msg = ex?.message ?: ""
+    private fun classifyPrError(
+        ex: Throwable?,
+        defaultMessage: String,
+        fallback: (String) -> Error,
+    ): ResolutionResult {
+        val msg = ex?.message ?: defaultMessage
         val err = when {
             ex is GitHubPatMissingException || msg.contains("A GitHub PAT is required", ignoreCase = true) ->
                 Error.GitHubPatRequired(msg)
             msg.contains("No artifacts found", ignoreCase = true) ||
                 msg.contains("No GitHub Actions run found", ignoreCase = true) ->
                 Error.PrNoArtifact(msg)
-            else -> Error.DownloadFailed(msg)
+            else -> fallback(msg)
         }
         return ResolutionResult(error = err)
     }

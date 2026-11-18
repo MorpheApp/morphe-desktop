@@ -30,10 +30,11 @@ fun AppInfoDialog(
 ) {
     val uriHandler = LocalUriHandler.current
 
-    MorpheAlertDialog(
+    MorpheDialog(
+        maxWidth = MorpheDialogMaxWidth,
         horizontalAlignment = Alignment.CenterHorizontally,
         onDismiss = onDismiss,
-        text = {
+        content = {
             Column(
                 modifier = Modifier.widthIn(min = 340.dp).padding(top = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -124,7 +125,7 @@ fun AppInfoDialog(
                 }
             }
         },
-        confirmButton = {
+        actions = {
             MorpheButton(
                 label = stringResource(Res.string.close),
                 onClick = onDismiss,
@@ -132,6 +133,6 @@ fun AppInfoDialog(
                 variant = MorpheButtonVariant.OUTLINED,
                 size = MorpheButtonSize.LARGE,
             )
-        }
+        },
     )
 }

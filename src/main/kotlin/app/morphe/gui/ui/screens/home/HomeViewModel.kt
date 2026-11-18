@@ -37,6 +37,7 @@ import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.SourceVersionPref
+import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
@@ -48,6 +49,7 @@ import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.PatchSourceNaming
+import app.morphe.gui.util.followChannelPref
 import app.morphe.gui.util.logIfFailed
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
@@ -539,6 +541,8 @@ class HomeViewModel(
     private var lastLoadedVersion: String? = null
     // Pinned version snapshot from the last load used to detect version preference changes.
     private var lastLoadedVersionsBySource: Map<String, SourceVersionPref> = emptyMap()
+    // What each enabled source was last resolved from, to tell which sources a reload changes.
+    private var lastResolveKeys: Map<String, List<Any?>> = emptyMap()
 
     /** Loads patches from all enabled sources and aggregates their supported apps. */
     private fun loadPatchesAndSupportedApps(forceRefresh: Boolean = false) {
@@ -556,9 +560,21 @@ class HomeViewModel(
                     return@launch
                 }
 
-                // Load per-source version preferences.
-                val prefs = configRepository.getSourceVersionPrefs()
-                lastLoadedVersionsBySource = prefs
+                val saved = configRepository.getSourceVersionPrefs()
+                lastLoadedVersionsBySource = saved
+                val prefs = if (patchSourceManager.activeMode.value == ActiveMode.SIMPLE) {
+                    saved.followingChannels(enabled.map { it.first })
+                } else {
+                    saved
+                }
+                // Only sources whose inputs changed show as reloading; the others keep their data.
+                val resolveKeys = enabled.associate { (source, _) ->
+                    source.id to listOf(source.type, source.url, source.filePath, source.usePreRelease, prefs[source.id])
+                }
+                _uiState.value = _uiState.value.copy(
+                    reloadingSourceIds = if (forceRefresh) resolveKeys.keys
+                        else resolveKeys.filter { (id, key) -> lastResolveKeys[id] != key }.keys,
+                )
                 val result = EnabledSourcesLoader.loadAll(
                     enabled = enabled,
                     prefsBySource = prefs,
@@ -585,6 +601,7 @@ class HomeViewModel(
                     }
                     // Retain snapshot so source management sheet displays failure state.
                     cachedSourcesResult = result
+                    lastResolveKeys = resolveKeys
                     _uiState.value = _uiState.value.copy(
                         isLoadingPatches = false,
                         patchLoadError = friendlyError
@@ -599,6 +616,7 @@ class HomeViewModel(
                 cachedAllPatchFiles = result.resolved.mapNotNull { it.patchFile }
                 lastLoadedVersion = firstResolved?.resolvedVersion
                 cachedSourcesResult = result
+                lastResolveKeys = resolveKeys
 
                 // Reading bundle manifests opens each .mpp; do it off the UI thread.
                 val effectiveNames = withContext(Dispatchers.IO) {
@@ -1216,6 +1234,25 @@ class HomeViewModel(
         loadPatchesAndSupportedApps(forceRefresh = forceRefresh)
     }
 
+    fun setSourceChannel(source: PatchSource, preRelease: Boolean) {
+        viewModelScope.launch {
+            followChannel(source.id, preRelease)
+            if (source.usePreRelease != preRelease) patchSourceManager.updateSource(source.copy(usePreRelease = preRelease))
+            else loadPatchesAndSupportedApps()
+        }
+    }
+
+    fun followLatest(source: PatchSource) {
+        viewModelScope.launch {
+            followChannel(source.id, source.usePreRelease)
+            loadPatchesAndSupportedApps()
+        }
+    }
+
+    private suspend fun followChannel(sourceId: String, preRelease: Boolean) {
+        configRepository.setSourceVersionPref(sourceId, followChannelPref(preRelease))
+    }
+
     /** Reloads patches if version preferences changed while on another screen. */
     fun refreshPatchesIfNeeded() {
         viewModelScope.launch {
@@ -1567,6 +1604,7 @@ data class HomeUiState(
     val isReady: Boolean = false,
     val isAnalyzing: Boolean = false,
     val isLoadingPatches: Boolean = true,
+    val reloadingSourceIds: Set<String> = emptySet(),
     val isOffline: Boolean = false,
     val isDefaultSource: Boolean = true,
     val supportedApps: List<SupportedApp> = emptyList(),
@@ -1647,3 +1685,10 @@ private data class AppCatalogData(
     val patchedRecords: List<PatchedAppRecord>,
     val updateInfoByPackage: Map<String, RecallUpdateInfo>,
 )
+
+private fun Map<String, SourceVersionPref>.followingChannels(sources: List<PatchSource>): Map<String, SourceVersionPref> {
+    val channels = sources.associate { it.id to it.usePreRelease }
+    return mapValues { (id, pref) ->
+        if (pref.mode != FollowMode.PINNED) pref else followChannelPref(channels[id] == true)
+    }
+}
