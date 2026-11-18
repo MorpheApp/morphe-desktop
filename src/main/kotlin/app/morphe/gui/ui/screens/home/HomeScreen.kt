@@ -201,6 +201,7 @@ fun HomeScreenContent(
     }
 
     var openChangelogToken by remember { mutableIntStateOf(0) }
+    var isChangelogOpen by remember { mutableStateOf(false) }
 
     detailRecord?.let { record ->
         val recordSources = remember(record, allSources) { viewModel.activePatchSourcesFor(record) }
@@ -444,20 +445,21 @@ fun HomeScreenContent(
                             modifier = Modifier.weight(1f).fillMaxWidth()
                         ) {
                             Column(modifier = Modifier.fillMaxSize()) {
-                        if (uiState.selectedPage != HomePage.SETTINGS) {
-                            HomeBanners(
-                                uiState = uiState,
-                                onDismissUpdateSession = { viewModel.dismissUpdateForSession() },
-                                onDismissUpdateVersion = { viewModel.dismissUpdateForVersion() },
-                                onDismissMultiSourceHint = { viewModel.dismissMultiSourceHint() },
-                                onManageSources = { openPage(HomePage.SOURCES) },
-                                onDismissSourcesFailed = { viewModel.dismissSourcesFailedBanner() },
-                                onShowChangelog = {
-                                    openChangelogToken++
-                                    openPage(HomePage.SETTINGS)
-                                },
-                            )
-                        }
+                        HomeBanners(
+                            uiState = uiState,
+                            hideUpdateBanner = isChangelogOpen && uiState.selectedPage == HomePage.SETTINGS,
+                            onDismissSourceUpdate = { viewModel.dismissSourceUpdateBanner() },
+                            onDismissUpdateSession = { viewModel.dismissUpdateForSession() },
+                            onDismissUpdateVersion = { viewModel.dismissUpdateForVersion() },
+                            onDismissMultiSourceHint = { viewModel.dismissMultiSourceHint() },
+                            onManageSources = { openPage(HomePage.SOURCES) },
+                            onDismissSourcesFailed = { viewModel.dismissSourcesFailedBanner() },
+                            onShowChangelog = {
+                                isChangelogOpen = true
+                                openChangelogToken++
+                                openPage(HomePage.SETTINGS)
+                            },
+                        )
                         HorizontalPager(
                             state = pagerState,
                             userScrollEnabled = false,
@@ -556,6 +558,7 @@ fun HomeScreenContent(
                                     SettingsPage(
                                         showBackHeader = false,
                                         openChangelogToken = openChangelogToken,
+                                        onChangelogVisibleChange = { isChangelogOpen = it },
                                         modifier = Modifier.fillMaxSize(),
                                     )
                                 }

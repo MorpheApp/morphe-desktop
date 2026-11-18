@@ -22,10 +22,13 @@ import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.StringResource
@@ -55,6 +58,13 @@ object EnabledSourcesLoader {
             errorRes?.let { getString(it, *errorArgs.toTypedArray()) } ?: error
     }
 
+    data class SourceLoadProgress(
+        val completed: Int,
+        val total: Int,
+        val activeSource: PatchSource?,
+        val downloadFraction: Float? = null,
+    )
+
     data class Result(
         /** Resolution outcome per source (success or failure). */
         val resolved: List<ResolvedSource>,
@@ -75,11 +85,48 @@ object EnabledSourcesLoader {
         excludedMppPatterns: List<String> = emptyList(),
         onDownloadProgress: ((String, Float) -> Unit)? = null,
         forceRefresh: Boolean = false,
+        onSourceProgress: ((SourceLoadProgress) -> Unit)? = null,
     ): Result = withContext(Dispatchers.IO) { supervisorScope {
+        val total = enabled.size
+        val completedCount = AtomicInteger(0)
+        val activeSources = ConcurrentHashMap<String, PatchSource>().apply {
+            enabled.forEach { (source, _) -> put(source.id, source) }
+        }
+        val downloadFractions = ConcurrentHashMap<String, Float>()
+
+        if (total > 0) {
+            onSourceProgress?.invoke(
+                SourceLoadProgress(
+                    completed = 0,
+                    total = total,
+                    activeSource = enabled.firstOrNull()?.first,
+                    downloadFraction = null,
+                )
+            )
+        }
+
         val resolved = enabled.map { (source, repo) ->
             async(Dispatchers.IO) {
                 try {
-                    val resolvedSource = resolve(source, repo, prefsBySource[source.id], excludedMppPatterns, onDownloadProgress, forceRefresh)
+                    val resolvedSource = resolve(
+                        source = source,
+                        repo = repo,
+                        pref = prefsBySource[source.id],
+                        excludedMppPatterns = excludedMppPatterns,
+                        onDownloadProgress = { name, pct ->
+                            onDownloadProgress?.invoke(name, pct)
+                            downloadFractions[source.id] = pct
+                            onSourceProgress?.invoke(
+                                SourceLoadProgress(
+                                    completed = completedCount.get(),
+                                    total = total,
+                                    activeSource = source,
+                                    downloadFraction = pct.takeIf { it > 0f && it < 1f },
+                                )
+                            )
+                        },
+                        forceRefresh = forceRefresh,
+                    )
                     val file = resolvedSource.patchFile
                     val manifestName = file?.let { PatchBundleLoader.extractName(it) }
                     val effectiveName = manifestName?.takeUnless { it.isBlank() || PatchSourceNaming.isRawOrCorruptedName(it) }
@@ -94,6 +141,21 @@ object EnabledSourcesLoader {
                     throw e
                 } catch (e: Exception) {
                     ResolvedSource(source = source, error = e.message ?: e.javaClass.simpleName)
+                } finally {
+                    activeSources.remove(source.id)
+                    downloadFractions.remove(source.id)
+                    val done = completedCount.incrementAndGet()
+                    if (isActive) {
+                        val nextActive = enabled.firstOrNull { activeSources.containsKey(it.first.id) }?.first
+                        onSourceProgress?.invoke(
+                            SourceLoadProgress(
+                                completed = done,
+                                total = total,
+                                activeSource = nextActive,
+                                downloadFraction = nextActive?.let { downloadFractions[it.id] }?.takeIf { it > 0f && it < 1f },
+                            )
+                        )
+                    }
                 }
             }
         }.awaitAll()
