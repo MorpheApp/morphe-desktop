@@ -42,6 +42,8 @@ import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
+import app.morphe.gui.ui.components.SourceUpdateBannerState
+import app.morphe.gui.ui.components.SourceUpdateStatus
 import app.morphe.gui.ui.screens.home.components.AppListFilter
 import app.morphe.gui.ui.screens.home.components.HomeAppSortMode
 import app.morphe.gui.util.ChangelogParser
@@ -59,15 +61,18 @@ import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.patch.FormFactor
 import java.io.File
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.StringResource
@@ -98,6 +103,7 @@ class HomeViewModel(
     /** All resolved patch files across enabled sources. */
     private var cachedAllPatchFiles: List<File> = emptyList()
     private var loadJob: Job? = null
+    private var sourceUpdateDismissJob: Job? = null
 
     fun getAllResolvedPatchFiles(): List<File> =
         cachedAllPatchFiles.takeIf { it.isNotEmpty() }
@@ -388,12 +394,14 @@ class HomeViewModel(
                 val carriedDismissed = _uiState.value.dismissedUpdateVersion
                 val carriedSelectedPage = _uiState.value.selectedPage
                 val carriedAppListFilter = _uiState.value.appListFilter
+                val carriedSourceUpdateBanner = _uiState.value.sourceUpdateBanner
                 _uiState.value = HomeUiState(
                     isDefaultSource = isDefaultSource,
                     updateInfo = carriedUpdate,
                     dismissedUpdateVersion = carriedDismissed,
                     selectedPage = carriedSelectedPage,
                     appListFilter = carriedAppListFilter,
+                    sourceUpdateBanner = carriedSourceUpdateBanner,
                 )
                 loadPatchesAndSupportedApps()
             }
@@ -433,6 +441,14 @@ class HomeViewModel(
     fun dismissSourcesFailedBanner() {
         sourcesFailedBannerDismissed = true
         _uiState.value = _uiState.value.copy(showSourcesFailedBanner = false)
+    }
+
+    /** Dismisses the source update progress/completion banner. */
+    fun dismissSourceUpdateBanner() {
+        sourceUpdateDismissJob?.cancel()
+        _uiState.update {
+            it.copy(sourceUpdateBanner = it.sourceUpdateBanner.copy(visible = false))
+        }
     }
 
     // Tracks the dismissed failure set; resets when the set of failed sources changes.
@@ -547,16 +563,20 @@ class HomeViewModel(
     /** Loads patches from all enabled sources and aggregates their supported apps. */
     private fun loadPatchesAndSupportedApps(forceRefresh: Boolean = false) {
         loadJob?.cancel()
+        sourceUpdateDismissJob?.cancel()
         loadJob = viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoadingPatches = true, patchLoadError = null, showSourcesFailedBanner = false)
+            _uiState.update { it.copy(isLoadingPatches = true, patchLoadError = null, showSourcesFailedBanner = false) }
 
             try {
                 val enabled = patchSourceManager.getEnabledRepositories()
                 if (enabled.isEmpty()) {
-                    _uiState.value = _uiState.value.copy(
-                        isLoadingPatches = false,
-                        patchLoadError = getString(Res.string.home_no_sources_enabled)
-                    )
+                    _uiState.update {
+                        it.copy(
+                            isLoadingPatches = false,
+                            patchLoadError = getString(Res.string.home_no_sources_enabled),
+                            sourceUpdateBanner = it.sourceUpdateBanner.copy(visible = false),
+                        )
+                    }
                     return@launch
                 }
 
@@ -571,15 +591,38 @@ class HomeViewModel(
                 val resolveKeys = enabled.associate { (source, _) ->
                     source.id to listOf(source.type, source.url, source.filePath, source.usePreRelease, prefs[source.id])
                 }
-                _uiState.value = _uiState.value.copy(
-                    reloadingSourceIds = if (forceRefresh) resolveKeys.keys
-                        else resolveKeys.filter { (id, key) -> lastResolveKeys[id] != key }.keys,
-                )
+                _uiState.update {
+                    it.copy(
+                        reloadingSourceIds = if (forceRefresh) resolveKeys.keys
+                            else resolveKeys.filter { (id, key) -> lastResolveKeys[id] != key }.keys,
+                        sourceUpdateBanner = SourceUpdateBannerState(
+                            visible = true,
+                            status = SourceUpdateStatus.Updating,
+                            completed = 0,
+                            total = enabled.size,
+                            activeSource = enabled.firstOrNull()?.first,
+                        ),
+                    )
+                }
                 val result = EnabledSourcesLoader.loadAll(
                     enabled = enabled,
                     prefsBySource = prefs,
                     excludedMppPatterns = engineConfigRepository.loadConfig().excludedMppPatterns,
                     forceRefresh = forceRefresh,
+                    onSourceProgress = { progress ->
+                        _uiState.update { state ->
+                            state.copy(
+                                sourceUpdateBanner = SourceUpdateBannerState(
+                                    visible = true,
+                                    status = SourceUpdateStatus.Updating,
+                                    completed = progress.completed,
+                                    total = progress.total,
+                                    activeSource = progress.activeSource ?: state.sourceUpdateBanner.activeSource,
+                                    downloadFraction = progress.downloadFraction,
+                                )
+                            )
+                        }
+                    },
                 )
 
                 if (!result.anyLoaded) {
@@ -602,10 +645,13 @@ class HomeViewModel(
                     // Retain snapshot so source management sheet displays failure state.
                     cachedSourcesResult = result
                     lastResolveKeys = resolveKeys
-                    _uiState.value = _uiState.value.copy(
-                        isLoadingPatches = false,
-                        patchLoadError = friendlyError
-                    )
+                    _uiState.update {
+                        it.copy(
+                            isLoadingPatches = false,
+                            patchLoadError = friendlyError,
+                            sourceUpdateBanner = it.sourceUpdateBanner.copy(visible = false),
+                        )
+                    }
                     return@launch
                 }
 
@@ -688,21 +734,43 @@ class HomeViewModel(
                     lastFailedSourceIds = failedSourceIds
                 }
 
-                _uiState.value = _uiState.value.copy(
-                    isLoadingPatches = false,
-                    isOffline = isOffline,
-                    supportedApps = supportedApps,
-                    patchedStates = patchedStates,
-                    patchedRecords = sortedRecords,
-                    updateInfoByPackage = updateInfoMap,
-                    patchesVersion = displayVersion,
-                    patchesChannel = firstResolved?.channel,
-                    patchSourceName = sourceName,
-                    patchLoadError = null,
-                    showSourcesFailedBanner = failedSourceIds.isNotEmpty() && !sourcesFailedBannerDismissed,
-                    failedSourcesCount = failedSourceIds.size,
-                    failedSourceIds = failedSourceIds,
-                )
+                val showSuccessBanner = !isOffline && failedSourceIds.isEmpty()
+                _uiState.update { state ->
+                    state.copy(
+                        isLoadingPatches = false,
+                        isOffline = isOffline,
+                        supportedApps = supportedApps,
+                        patchedStates = patchedStates,
+                        patchedRecords = sortedRecords,
+                        updateInfoByPackage = updateInfoMap,
+                        patchesVersion = displayVersion,
+                        patchesChannel = firstResolved?.channel,
+                        patchSourceName = sourceName,
+                        patchLoadError = null,
+                        showSourcesFailedBanner = failedSourceIds.isNotEmpty() && !sourcesFailedBannerDismissed,
+                        failedSourcesCount = failedSourceIds.size,
+                        failedSourceIds = failedSourceIds,
+                        sourceUpdateBanner = if (showSuccessBanner) {
+                            SourceUpdateBannerState(
+                                visible = true,
+                                status = SourceUpdateStatus.Success,
+                                completed = enabled.size,
+                                total = enabled.size,
+                            )
+                        } else {
+                            state.sourceUpdateBanner.copy(visible = false)
+                        },
+                    )
+                }
+                if (showSuccessBanner) {
+                    sourceUpdateDismissJob?.cancel()
+                    sourceUpdateDismissJob = viewModelScope.launch {
+                        delay(3.seconds)
+                        _uiState.update {
+                            it.copy(sourceUpdateBanner = it.sourceUpdateBanner.copy(visible = false))
+                        }
+                    }
+                }
                 refreshDeviceInfo() // Refresh device layer after records load
                 reanalyzeSelectedApk()
                 eagerlyResolveLatestApps() // Update info against latest patch versions
@@ -712,10 +780,13 @@ class HomeViewModel(
             } catch (e: Throwable) {
                 // Catch Throwable (including LinkageError from newer patchers) to avoid hung loading.
                 Logger.error("Failed to load patches and supported apps", e)
-                _uiState.value = _uiState.value.copy(
-                    isLoadingPatches = false,
-                    patchLoadError = humanizePatchLoadError(e),
-                )
+                _uiState.update {
+                    it.copy(
+                        isLoadingPatches = false,
+                        patchLoadError = humanizePatchLoadError(e),
+                        sourceUpdateBanner = it.sourceUpdateBanner.copy(visible = false),
+                    )
+                }
             }
         }
     }
@@ -1635,14 +1706,21 @@ data class HomeUiState(
     val failedSourcesCount: Int = 0,
     /** Source IDs that failed to load. */
     val failedSourceIds: Set<String> = emptySet(),
+    /** Live source update progress/completion banner state. */
+    val sourceUpdateBanner: SourceUpdateBannerState = SourceUpdateBannerState(),
     /** Preferred patch source name per app package name for Simple mode. */
     val preferredPatchSourceByPackage: Map<String, String> = emptyMap(),
 ) {
+    private val isUpdatingSources: Boolean
+        get() = isLoadingPatches ||
+                (sourceUpdateBanner.visible && sourceUpdateBanner.status == SourceUpdateStatus.Updating)
+
     /** True if an update is available and has not been dismissed for the session or version. */
     val showUpdateBanner: Boolean
         get() = updateInfo != null &&
                 updateInfo.latestVersion != dismissedUpdateVersion &&
-                !updateBannerSessionDismissed
+                !updateBannerSessionDismissed &&
+                !isUpdatingSources
 
 }
 

@@ -26,19 +26,16 @@ fun UpdateBanner(
     val uriHandler = LocalUriHandler.current
 
     MorpheBanner(
-        modifier = modifier,
+        title = stringResource(Res.string.update_banner_available, info.latestVersion),
+        subtitle = if (info.crossesDevToStable) {
+            stringResource(Res.string.update_banner_from_version_crosses, info.currentVersion)
+        } else {
+            stringResource(Res.string.update_banner_from_version, info.currentVersion)
+        },
         tone = MorpheBannerTone.Info,
         icon = MorpheIcons.NewReleases,
+        modifier = modifier,
     ) {
-        MorpheBannerText(text = stringResource(Res.string.update_banner_available, info.latestVersion), emphasis = true)
-        MorpheBannerText(
-            text = if (info.crossesDevToStable) {
-                stringResource(Res.string.update_banner_from_version_crosses, info.currentVersion)
-            } else {
-                stringResource(Res.string.update_banner_from_version, info.currentVersion)
-            },
-            modifier = Modifier.weight(1f),
-        )
         if (onShowChangelog != null) {
             MorpheBannerAction(
                 label = stringResource(Res.string.changelog_dialog_title),
