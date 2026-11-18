@@ -61,6 +61,7 @@ import org.jetbrains.compose.resources.stringResource
 private enum class SettingsSubView {
     NONE,
     LANGUAGE,
+    ABOUT,
     CHANGELOG,
     LICENSES,
 }
@@ -194,6 +195,15 @@ fun SettingsPage(
                             horizontalPadding = PaddingValues(horizontal = 24.dp),
                         )
                     }
+                    SettingsSubView.ABOUT -> SettingsSubViewBox {
+                        key(currentLanguage) {
+                            AboutPane(
+                                onBack = { settingsSubView = SettingsSubView.NONE },
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalPadding = PaddingValues(horizontal = 24.dp),
+                            )
+                        }
+                    }
                     SettingsSubView.CHANGELOG -> SettingsSubViewBox {
                         key(currentLanguage) {
                             ChangelogPane(
@@ -245,6 +255,7 @@ fun SettingsPage(
                                             SettingsCategory.SYSTEM -> SystemSection(
                                                 settings = settings,
                                                 isPatching = isPatching,
+                                                onOpenAbout = { settingsSubView = SettingsSubView.ABOUT },
                                                 onOpenChangelog = { settingsSubView = SettingsSubView.CHANGELOG },
                                                 onOpenLicenses = { settingsSubView = SettingsSubView.LICENSES },
                                             )
@@ -294,6 +305,11 @@ fun SettingsPage(
                                                     SystemSection(
                                                         settings = settings,
                                                         isPatching = isPatching,
+                                                        onOpenAbout = {
+                                                            searchQuery = ""
+                                                            selectedCategory = SettingsCategory.SYSTEM
+                                                            settingsSubView = SettingsSubView.ABOUT
+                                                        },
                                                         onOpenChangelog = {
                                                             searchQuery = ""
                                                             selectedCategory = SettingsCategory.SYSTEM

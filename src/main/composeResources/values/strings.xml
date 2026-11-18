@@ -46,6 +46,7 @@
     <string name="click_to_copy">Click to copy</string>
     <string name="enable_adb_button">Enable ADB</string>
     <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="website">Website</string>
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="browse">Browse</string>
@@ -70,7 +71,6 @@
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_wearable" translatable="false">Wear OS</string>
     <string name="form_factor_automotive">Automotive</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Search patches…</string>
     <string name="status_patching_completed">Patching completed</string>
     <string name="status_patching_failed">Patching failed</string>
@@ -871,8 +871,6 @@
     <string name="settings_about_licenses_desc">View licenses of third-party libraries</string>
     <string name="settings_about_documentation_title">Documentation</string>
     <string name="settings_about_documentation_desc">Guides for patching, sources and troubleshooting</string>
-    <string name="settings_about_website_title">Visit website</string>
-    <string name="settings_about_website_desc">Visit the official Morphe website</string>
 
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Uncheck architectures you don't need. When patching, the output APK will keep only the architectures present in the APK AND in this list. If none overlap, nothing is stripped to avoid broken APKs</string>
@@ -937,14 +935,23 @@
     <string name="settings_github_pat_label">Personal Access Token</string>
 
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Website</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Library: v%1$s</string>
-    <string name="app_info_description">An open-source project for modern, streamlined patching of popular Android apps, driven by community feedback and contributions</string>
-    <string name="app_info_link_changelog">Changelog</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Translate</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_update_available">Update available: %1$s</string>
+    <string name="about_up_to_date">Up to date</string>
+    <string name="about_links">Official links</string>
+    <string name="about_link_donate">Donate</string>
+    <string name="about_link_github" translatable="false">GitHub</string>
+    <string name="about_link_reddit" translatable="false">Reddit</string>
+    <string name="about_link_translations">Translations</string>
+    <string name="contributors">Contributors</string>
+    <string name="contributors_description">Last 12 months</string>
+    <string name="credits_prior_development">Prior development</string>
+    <string name="supporters">Supporters</string>
+    <string name="supporters_description">Backers on Open Collective</string>
+    <string name="supporters_become">Become a supporter</string>
+    <string name="people_more">And %1$s more</string>
+    <string name="people_unavailable">Could not load the list</string>
 
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Installed</string>
