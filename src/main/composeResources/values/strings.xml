@@ -945,7 +945,10 @@
     <string name="about_link_reddit" translatable="false">Reddit</string>
     <string name="about_link_translations">Translations</string>
     <string name="contributors">Contributors</string>
-    <string name="contributors_description">Last 12 months</string>
+    <string name="contributors_ranking">Ranked by contribution</string>
+    <string name="contributors_all_time">All time</string>
+    <string name="contributors_6_months">Last 6 months</string>
+    <string name="contributors_3_months">Last 3 months</string>
     <string name="credits_prior_development">Prior development</string>
     <string name="supporters">Supporters</string>
     <string name="supporters_description">Backers on Open Collective</string>

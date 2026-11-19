@@ -28,7 +28,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 /**
- * Repository for the people behind Morphe: recent contributors and Open Collective supporters,
+ * Repository for the people behind Morphe: contributors (all time, 6 and 3 months) and Open Collective supporters,
  * fetched from the Morphe API and cached on disk so lists render immediately and survive offline use.
  */
 class PeopleRepository(
@@ -101,6 +101,10 @@ class PeopleRepository(
     @Serializable
     data class People(
         val contributors: List<Person> = emptyList(),
+        @SerialName("contributors_6_months")
+        val contributors6Months: List<Person> = emptyList(),
+        @SerialName("contributors_3_months")
+        val contributors3Months: List<Person> = emptyList(),
         val supporters: List<Person> = emptyList(),
         @SerialName("supporters_total")
         val supportersTotal: Int = 0,
