@@ -45,6 +45,7 @@
     <string name="click_to_copy">클릭하여 복사</string>
     <string name="enable_adb_button">ADB 활성화</string>
     <string name="drag_to_reorder">드래그하여 순서를 변경하세요</string>
+    <string name="website">웹사이트</string>
     <string name="off">꺼짐</string>
     <string name="on">켜짐</string>
     <string name="browse">탐색</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">앱 정보</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">오토모티브</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">패치 검색…</string>
     <string name="status_patching_completed">패치 완료</string>
     <string name="status_patching_failed">패치 실패</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s부터</string>
     <string name="update_banner_later_button">나중에</string>
     <string name="update_banner_skip_button">v%1$s 건너뛰기</string>
+    <string name="home_updating_sources">소스를 업데이트하는 중…</string>
+    <string name="home_update_success">소스 업데이트 완료</string>
+    <string name="home_update_success_subtitle">소스가 최신 상태입니다</string>
+    <string name="home_sources_failed_title">일부 패치 소스를 사용할 수 없음</string>
+    <string name="home_multi_source_hint_title">여러 패치 소스가 활성화됨</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">오픈 소스 라이선스</string>
     <string name="licenses_dialog_empty_failed">// 라이선스를 불러오지 못했습니다</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">제3자 라이브러리 라이선스 보기</string>
     <string name="settings_about_documentation_title">문서</string>
     <string name="settings_about_documentation_desc">패치, 소스 및 문제 해결 가이드</string>
-    <string name="settings_about_website_title">웹사이트 방문</string>
-    <string name="settings_about_website_desc">공식 Morphe 웹사이트 방문</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">필요하지 않은 아키텍처를 선택 해제하세요. 패치할 때 출력 APK에는 APK와 이 목록에 모두 있는 아키텍처만 유지됩니다. 겹치는 항목이 없으면 손상된 APK를 방지하기 위해 아무것도 제거되지 않습니다</string>
     <string name="settings_strip_libs_arm64">ARM 64비트(대부분의 최신 휴대폰)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull Request 아티팩트를 다운로드하려면 public_repo 권한 범위가 포함된 GitHub 개인 액세스 토큰(PAT)이 필요합니다. %1$s에서 public_repo 권한 범위로 PAT를 생성하세요</string>
     <string name="settings_github_pat_label">개인 액세스 토큰</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">웹사이트</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">패처: v%1$s</string>
-    <string name="app_info_version_library">라이브러리: v%1$s</string>
-    <string name="app_info_description">커뮤니티 피드백과 기여를 기반으로 인기 있는 Android 앱을 현대적이고 간소화된 방식으로 패치하기 위한 오픈소스 프로젝트입니다</string>
-    <string name="app_info_link_changelog">변경 사항</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">번역</string>
+    <string name="about_component">데스크톱</string>
+    <string name="about_version_patcher_library">패처 v%1$s · 라이브러리 v%2$s</string>
+    <string name="about_update_available">업데이트 가능: %1$s</string>
+    <string name="about_up_to_date">최신 버전</string>
+    <string name="about_links">공식 링크</string>
+    <string name="about_link_donate">후원하기</string>
+    <string name="about_link_translations">번역에 도움주기</string>
+    <string name="contributors">도움을 주신 분들</string>
+    <string name="contributors_description">최근 12개월</string>
+    <string name="credits_prior_development">이전 개발</string>
+    <string name="supporters">후원자</string>
+    <string name="supporters_description">Open Collective 후원자</string>
+    <string name="supporters_become">후원자가 되어보세요</string>
+    <string name="people_more">그 외 %1$s명 더</string>
+    <string name="people_unavailable">목록을 불러올 수 없습니다</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">설치됨</string>
     <string name="changelog_badge_latest">최신</string>

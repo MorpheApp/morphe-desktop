@@ -45,6 +45,7 @@
     <string name="click_to_copy">Fes clic per copiar</string>
     <string name="enable_adb_button">Habilita ADB</string>
     <string name="drag_to_reorder">Arrossega per reordenar</string>
+    <string name="website">Lloc web</string>
     <string name="off">Desactivat</string>
     <string name="on">Activat</string>
     <string name="browse">Explora</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Informació de l'aplicació</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Automoció</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Cerca pegats…</string>
     <string name="status_patching_completed">Aplicació de pegats completada</string>
     <string name="status_patching_failed">Error en l'aplicació del patch</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">des de la v%1$s</string>
     <string name="update_banner_later_button">Més tard</string>
     <string name="update_banner_skip_button">Ometre la v%1$s</string>
+    <string name="home_updating_sources">Actualitzant fonts…</string>
+    <string name="home_update_success">Actualització completada</string>
+    <string name="home_update_success_subtitle">Les teves fonts estan actualitzades</string>
+    <string name="home_sources_failed_title">Algunes sources de patch no estan disponibles</string>
+    <string name="home_multi_source_hint_title">Diverses sources de patch habilitades</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Llicències de codi obert</string>
     <string name="licenses_dialog_empty_failed">// s'ha produït un error en carregar les llicències</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Consulta les llicències de les biblioteques de tercers</string>
     <string name="settings_about_documentation_title">Documentació</string>
     <string name="settings_about_documentation_desc">Guies per a l'aplicació de pegats, les fonts i la resolució de problemes</string>
-    <string name="settings_about_website_title">Visita el lloc web</string>
-    <string name="settings_about_website_desc">Visita el lloc web oficial de Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Desmarca les arquitectures que no necessitis. En retallar, l'APK de sortida conservarà només les arquitectures presents a l'APK i en aquesta llista. Si no n'hi ha cap que coincideixi, no es retalla res per evitar APKs corrupts</string>
     <string name="settings_strip_libs_arm64">ARM de 64 bits (la majoria de telèfons moderns)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Cal un Token d'Accés Personal (PAT) de GitHub amb l'àmbit public_repo per descarregar els artefacts de la sol·licitud d'extracció. Creeu un PAT amb l'àmbit public_repo a %1$s</string>
     <string name="settings_github_pat_label">Token d'Accés Personal</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Lloc web</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Biblioteca: v%1$s</string>
-    <string name="app_info_description">Un projecte de codi obert per a un patxatge modern i optimitzat d'aplicacions populars d'Android, impulsat pels comentaris i contribucions de la comunitat</string>
-    <string name="app_info_link_changelog">Registre de canvis</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Traduir</string>
+    <string name="about_component">Escriptori</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Biblioteca v%2$s</string>
+    <string name="about_update_available">Actualització disponible: %1$s</string>
+    <string name="about_up_to_date">Actualitzat</string>
+    <string name="about_links">Enllaços oficials</string>
+    <string name="about_link_donate">Donar</string>
+    <string name="about_link_translations">Traduccions</string>
+    <string name="contributors">Contributors</string>
+    <string name="contributors_description">Últims 12 mesos</string>
+    <string name="credits_prior_development">Desenvolupament previ</string>
+    <string name="supporters">Patrocinadors</string>
+    <string name="supporters_description">Patrocinadors a Open Collective</string>
+    <string name="supporters_become">Convertiu-vos en patrocinador</string>
+    <string name="people_more">I %1$s més</string>
+    <string name="people_unavailable">No s'ha pogut carregar la llista</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Instal·lat</string>
     <string name="changelog_badge_latest">Últim</string>

@@ -45,6 +45,7 @@
     <string name="click_to_copy">Kattints a másoláshoz</string>
     <string name="enable_adb_button">ADB engedélyezése</string>
     <string name="drag_to_reorder">Húzással rendezheted át</string>
+    <string name="website">Weboldal</string>
     <string name="off">Ki</string>
     <string name="on">Be</string>
     <string name="browse">Tallózás</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Alkalmazásinformáció</string>
     <string name="form_factor_tv">Tévé</string>
     <string name="form_factor_automotive">Autóipari</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Módosítások keresése…</string>
     <string name="status_patching_completed">A javítás befejeződött</string>
     <string name="status_patching_failed">A javítás sikertelen</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s verzióról</string>
     <string name="update_banner_later_button">Később</string>
     <string name="update_banner_skip_button">Hagyd ki a v%1$s verziót</string>
+    <string name="home_updating_sources">Források frissítése…</string>
+    <string name="home_update_success">A források frissítése befejeződött</string>
+    <string name="home_update_success_subtitle">A forrásaid naprakészek</string>
+    <string name="home_sources_failed_title">Egyes módosításforrások nem elérhetők</string>
+    <string name="home_multi_source_hint_title">Több patchforrás van engedélyezve</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Nyílt forráskódú licencek</string>
     <string name="licenses_dialog_empty_failed">// a licencek betöltése sikertelen</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Harmadik féltől származó könyvtárak licencjeinek megtekintése</string>
     <string name="settings_about_documentation_title">Dokumentáció</string>
     <string name="settings_about_documentation_desc">Útmutatók a javításhoz, a forrásokhoz és a hibaelhárításhoz</string>
-    <string name="settings_about_website_title">Weboldal megnyitása</string>
-    <string name="settings_about_website_desc">A hivatalos Morphe weboldal megnyitása</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Távolítsd el a pipát azokról az architektúrákról, amelyekre nincs szükséged. Javításkor a kimeneti APK csak azokat az architektúrákat tartja meg, amelyek az APK-ban ÉS ebben a listában is szerepelnek. Ha nincs átfedés, semmi sem kerül eltávolításra, hogy ne sérüljenek az APK-k</string>
     <string name="settings_strip_libs_arm64">ARM 64 bites (a legtöbb modern telefon)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">A pull request-összeállítások letöltéséhez public_repo hatókörű GitHub Personal Access Tokenre (PAT) van szükség. Hozzon létre egy public_repo hatókörű PAT-ot a(z) %1$s oldalon.</string>
     <string name="settings_github_pat_label">Személyes hozzáférési token</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Weboldal</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Könyvtár: v%1$s</string>
-    <string name="app_info_description">Egy nyílt forráskódú projekt népszerű Android-alkalmazások modern, hatékony módosításához, amelyet a közösség visszajelzései és hozzájárulásai hajtanak</string>
-    <string name="app_info_link_changelog">Változásnapló</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Fordítás</string>
+    <string name="about_component">Asztali</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Könyvtár v%2$s</string>
+    <string name="about_update_available">Frissítés elérhető: %1$s</string>
+    <string name="about_up_to_date">Naprakész</string>
+    <string name="about_links">Hivatalos linkek</string>
+    <string name="about_link_donate">Adományozás</string>
+    <string name="about_link_translations">Fordítások</string>
+    <string name="contributors">Hozzájárulók</string>
+    <string name="contributors_description">Az utolsó 12 hónap</string>
+    <string name="credits_prior_development">Korábbi fejlesztők</string>
+    <string name="supporters">Támogatók</string>
+    <string name="supporters_description">Támogatók az Open Collective-en</string>
+    <string name="supporters_become">Legyen Ön is támogató</string>
+    <string name="people_more">És további %1$s</string>
+    <string name="people_unavailable">A lista nem tölthető be</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Telepítve</string>
     <string name="changelog_badge_latest">Legfrissebb</string>

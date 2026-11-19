@@ -45,6 +45,7 @@
     <string name="click_to_copy">কপি করতে ক্লিক করুন</string>
     <string name="enable_adb_button">ADB সক্রিয় করুন</string>
     <string name="drag_to_reorder">নতুন করে সাজাতে টেনে আনুন</string>
+    <string name="website">ওয়েবসাইট</string>
     <string name="off">বন্ধ</string>
     <string name="on">চালু</string>
     <string name="browse">ব্রাউজ</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">অ্যাপ তথ্য</string>
     <string name="form_factor_tv">টিভি</string>
     <string name="form_factor_automotive">অটোমোটিভ</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">প্যাচ অনুসন্ধান করুন…</string>
     <string name="status_patching_completed">প্যাচিং সম্পন্ন হয়েছে</string>
     <string name="status_patching_failed">প্যাচিং ব্যর্থ হয়েছে</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s থেকে</string>
     <string name="update_banner_later_button">পরে</string>
     <string name="update_banner_skip_button">v%1$s এড়িয়ে যান</string>
+    <string name="home_updating_sources">সোর্স আপডেট হচ্ছে...</string>
+    <string name="home_update_success">সোর্স আপডেট সম্পূর্ণ হয়েছে</string>
+    <string name="home_update_success_subtitle">আপনার সোর্সগুলি আপ-টু-ডেট আছে</string>
+    <string name="home_sources_failed_title">কিছু প্যাচ সোর্স অনুপলব্ধ</string>
+    <string name="home_multi_source_hint_title">একাধিক প্যাচ সোর্স সক্রিয়</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ওপেন সোর্স লাইসেন্স</string>
     <string name="licenses_dialog_empty_failed">// লাইসেন্স লোড করতে ব্যর্থ হয়েছে</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">থার্ড-পার্টি লাইব্রেরির লাইসেন্স দেখুন</string>
     <string name="settings_about_documentation_title">ডকুমেন্টেশন</string>
     <string name="settings_about_documentation_desc">প্যাচিং, সোর্স এবং সমস্যা সমাধানের নির্দেশিকা</string>
-    <string name="settings_about_website_title">ওয়েবসাইট দেখুন</string>
-    <string name="settings_about_website_desc">অফিসিয়াল Morphe ওয়েবসাইট দেখুন</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">আপনার প্রয়োজন নেই এমন আর্কিটেকচার আনচেক করুন। প্যাচিংয়ের সময়, আউটপুট APK শুধুমাত্র APK এবং এই তালিকায় উপস্থিত আর্কিটেকচারগুলো রাখবে। যদি কোনো ওভারল্যাপ না হয়, ভাঙা APK এড়াতে কিছুই স্ট্রিপ করা হবে না</string>
     <string name="settings_strip_libs_arm64">ARM 64-বিট (সবচেয়ে আধুনিক ফোন)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">পুল রিকোয়েস্ট আর্টিফ্যাক্ট ডাউনলোড করতে public_repo স্কোপসহ একটি GitHub ব্যক্তিগত অ্যাক্সেস টোকেন (PAT) প্রয়োজন। %1$s-এ public_repo স্কোপসহ একটি PAT তৈরি করুন।</string>
     <string name="settings_github_pat_label">ব্যক্তিগত অ্যাক্সেস টোকেন</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">ওয়েবসাইট</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">প্যাচার: v%1$s</string>
-    <string name="app_info_version_library">লাইব্রেরি: v%1$s</string>
-    <string name="app_info_description">জনপ্রিয় Android অ্যাপগুলির আধুনিক, সুবিন্যস্ত প্যাচিংয়ের জন্য একটি ওপেন-সোর্স প্রকল্প, যা কমিউনিটি প্রতিক্রিয়া এবং অবদান দ্বারা চালিত</string>
-    <string name="app_info_link_changelog">চেঞ্জলগ</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">অনুবাদ</string>
+    <string name="about_component">ডেস্কটপ</string>
+    <string name="about_version_patcher_library">প্যাচার v%1$s · লাইব্রেরি v%2$s</string>
+    <string name="about_update_available">আপডেট উপলব্ধ: %1$s</string>
+    <string name="about_up_to_date">আপ-টু-ডেট</string>
+    <string name="about_links">অফিশ্যাল লিংকসমূহ</string>
+    <string name="about_link_donate">দান করুন</string>
+    <string name="about_link_translations">অনুবাদ</string>
+    <string name="contributors">অবদানকারী</string>
+    <string name="contributors_description">গত ১২ মাস</string>
+    <string name="credits_prior_development">পূর্ববর্তী উন্নয়ন</string>
+    <string name="supporters">সমর্থক</string>
+    <string name="supporters_description">Open Collective-এ ব্যাককার</string>
+    <string name="supporters_become">সমর্থক হয়ে উঠুন</string>
+    <string name="people_more">এবং আরও %1$s জন</string>
+    <string name="people_unavailable">তালিকাটি লোড করা যায়নি</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">ইনস্টল করা হয়েছে</string>
     <string name="changelog_badge_latest">সর্বশেষ</string>

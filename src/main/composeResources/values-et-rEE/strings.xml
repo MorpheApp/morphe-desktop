@@ -45,6 +45,7 @@
     <string name="click_to_copy">Klõpsa kopeerimiseks</string>
     <string name="enable_adb_button">Lülita ADB sisse</string>
     <string name="drag_to_reorder">Lohista järjekorra muutmiseks</string>
+    <string name="website">Veebisait</string>
     <string name="off">Väljas</string>
     <string name="on">Sees</string>
     <string name="browse">Sirvi</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Rakenduse info</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Auto</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Otsi paiku…</string>
     <string name="status_patching_completed">Paikamine lõpetatud</string>
     <string name="status_patching_failed">Paikamine nurjus</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">versioonist v%1$s</string>
     <string name="update_banner_later_button">Hiljem</string>
     <string name="update_banner_skip_button">Jäta vahele v%1$s</string>
+    <string name="home_updating_sources">Uuendatakse allikaid…</string>
+    <string name="home_update_success">Allikate uuendamine lõpetatud</string>
+    <string name="home_update_success_subtitle">Allikad on uuendatud</string>
+    <string name="home_sources_failed_title">Mõned paigaallikad on kättesaamatud</string>
+    <string name="home_multi_source_hint_title">Lubatud on mitu paigaallikat</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Avatud lähtekoodi litsentsid</string>
     <string name="licenses_dialog_empty_failed">// litsentside laadimine ebaõnnestus</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Vaata kolmandate osapoolte raamatukogude litsentse</string>
     <string name="settings_about_documentation_title">Dokumentatsioon</string>
     <string name="settings_about_documentation_desc">Juhendid paigutamise, allikate ja tõrgete kõrvaldamise kohta</string>
-    <string name="settings_about_website_title">Külasta veebilehte</string>
-    <string name="settings_about_website_desc">Külastage Morphe ametlikku veebilehte</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Võtke märge ära arhitektuurid, mida te ei vaja. Paigutamise ajal säilitab väljund-APK ainult need arhitektuurid, mis on olemas APK-s JA selles loendis. Kui ükski neist ei ühti, ei eemaldata midagi, et vältida rikutud APK-sid</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (enamik kaasaegseid telefone)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull requesti artefaktide allalaadimiseks on vaja GitHubi isiklikku juurdepääsu tokenit (PAT) ulatusega \"public_repo\". Looge PAT token ulatusega public_repo aadressil %1$s</string>
     <string name="settings_github_pat_label">Isiklik juurdepääsu token</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Veebisait</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Raamatukogu: v%1$s</string>
-    <string name="app_info_description">Avatud lähtekoodiga projekt populaarsete Androidi rakenduste kaasaegseks ja tõhuksaks paigutamiseks, mida juhivad kogukonna tagasiside ja panused</string>
-    <string name="app_info_link_changelog">Muudatuste logi</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Tõlkimine</string>
+    <string name="about_component">Töölaud</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Raamatukogu v%2$s</string>
+    <string name="about_update_available">Saadaval on uuendus: %1$s</string>
+    <string name="about_up_to_date">Ajakohane</string>
+    <string name="about_links">Ametlikud lingid</string>
+    <string name="about_link_donate">Annetage</string>
+    <string name="about_link_translations">Tõlked</string>
+    <string name="contributors">Kaastöötajad</string>
+    <string name="contributors_description">Viimased 12 kuud</string>
+    <string name="credits_prior_development">Varasem arendus</string>
+    <string name="supporters">Toetajad</string>
+    <string name="supporters_description">Toetajad Open Collective'is</string>
+    <string name="supporters_become">Saage toetajaks</string>
+    <string name="people_more">Ja veel %1$s</string>
+    <string name="people_unavailable">Loendit ei õnnestunud laadida</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Paigaldatud</string>
     <string name="changelog_badge_latest">Uusim</string>

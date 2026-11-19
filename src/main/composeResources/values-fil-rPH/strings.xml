@@ -45,6 +45,7 @@
     <string name="click_to_copy">I-click upang kopyahin</string>
     <string name="enable_adb_button">I-enable ang ADB</string>
     <string name="drag_to_reorder">I-drag upang muling ayusin</string>
+    <string name="website">Website</string>
     <string name="off">Naka-off</string>
     <string name="on">Naka-on</string>
     <string name="browse">Mag-browse</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Impormasyon ng app</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Automotive</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Maghanap ng mga patch…</string>
     <string name="status_patching_completed">Natapos ang pag-patch</string>
     <string name="status_patching_failed">Nabigo ang pag-patch</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">mula sa v%1$s</string>
     <string name="update_banner_later_button">Mamaya</string>
     <string name="update_banner_skip_button">Laktawan ang v%1$s</string>
+    <string name="home_updating_sources">Ina-update ang mga mapagkukunan…</string>
+    <string name="home_update_success">Nakumpleto ang mga mapagkukunan ng update</string>
+    <string name="home_update_success_subtitle">Napapanahon ang iyong mga mapagkukunan</string>
+    <string name="home_sources_failed_title">May ilang mapagkukunang patch ang hindi available</string>
+    <string name="home_multi_source_hint_title">Maramihang mga mapagkukunang patch ang naka-enable</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Mga Open Source na lisensya</string>
     <string name="licenses_dialog_empty_failed">// nabigo ang pag-load ng mga lisensya</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Tingnan ang mga lisensya ng mga third-party library</string>
     <string name="settings_about_documentation_title">Dokumentasyon</string>
     <string name="settings_about_documentation_desc">Mga gabay para sa pag-patch, mga source at troubleshooting</string>
-    <string name="settings_about_website_title">Bisitahin ang website</string>
-    <string name="settings_about_website_desc">Bisitahin ang opisyal na website ng Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">I-uncheck ang mga architecture na hindi mo kailangan. Kapag nag-patch, ang output APK ay magpapanatili lamang ng mga architecture na nasa APK AT nasa listahang ito. Kung walang mag-overlap, walang aalisin upang maiwasan ang mga sirang APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (karamihan sa mga modernong phone)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Kinakailangan ang GitHub Personal Access Token (PAT) na may saklaw na public_repo upang ma-download ang mga artifact ng pull request. Gumawa ng PAT na may saklaw na public_repo sa %1$s</string>
     <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Website</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Library: v%1$s</string>
-    <string name="app_info_description">Isang open-source na proyekto para sa moderno at streamlined na pag-patch ng mga sikat na Android app, na hinihimok ng feedback at kontribusyon ng komunidad</string>
-    <string name="app_info_link_changelog">Talaan ng mga pagbabago</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Isalin</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_update_available">Magagamit ang update: %1$s</string>
+    <string name="about_up_to_date">Napapanahon na</string>
+    <string name="about_links">Mga opisyal na link</string>
+    <string name="about_link_donate">Magbigay</string>
+    <string name="about_link_translations">Mga Pagsasalin</string>
+    <string name="contributors">Mga Kontribyutor</string>
+    <string name="contributors_description">Huling 12 buwan</string>
+    <string name="credits_prior_development">Naunang pag-develop</string>
+    <string name="supporters">Mga Suportante</string>
+    <string name="supporters_description">Mga backer sa Open Collective</string>
+    <string name="supporters_become">Maging isang suportante</string>
+    <string name="people_more">At %1$s pa</string>
+    <string name="people_unavailable">Hindi ma-load ang listahan</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Na-install</string>
     <string name="changelog_badge_latest">Pinakabago</string>

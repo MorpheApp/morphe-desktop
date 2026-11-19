@@ -45,6 +45,7 @@
     <string name="click_to_copy">Սեղմեք պատճենելու համար</string>
     <string name="enable_adb_button">Միացնել ADB-ն</string>
     <string name="drag_to_reorder">Քաշեք՝ վերադասավորելու համար</string>
+    <string name="website">Կայք</string>
     <string name="off">Անջատված</string>
     <string name="on">Միացված</string>
     <string name="browse">Թերթել</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Հավելվածի տեղեկություն</string>
     <string name="form_factor_tv">Հեռուստացույց</string>
     <string name="form_factor_automotive">Ավտոմոբիլային</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Փնտրել պատչերը…</string>
     <string name="status_patching_completed">Փոփոխումն ավարտված է</string>
     <string name="status_patching_failed">Փոփոխումը ձախողվեց</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">սկսած v%1$s-ից</string>
     <string name="update_banner_later_button">Ավելի ուշ</string>
     <string name="update_banner_skip_button">Բաց թողնել v%1$s-ը</string>
+    <string name="home_updating_sources">Թարմացվում են աղբյուրները…</string>
+    <string name="home_update_success">Աղբյուրների թարմացումն ավարտված է</string>
+    <string name="home_update_success_subtitle">Ձեր աղբյուրները թարմացված են</string>
+    <string name="home_sources_failed_title">Փոփոխման որոշ աղբյուրներ անհասանելի են</string>
+    <string name="home_multi_source_hint_title">Միացված է թարմացումների մի քանի աղբյուր</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Բաց կոդի լիցենզիաներ</string>
     <string name="licenses_dialog_empty_failed">// լիցենզիաների բեռնումը ձախողվեց</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Դիտել երրորդ կողմի գրադարանների լիցենզիաները</string>
     <string name="settings_about_documentation_title">Փաստաթղթեր</string>
     <string name="settings_about_documentation_desc">Ուղեցույցներ փաթեթավորման, աղբյուրների և խնդիրների լուծման համար</string>
-    <string name="settings_about_website_title">Այցելել կայք</string>
-    <string name="settings_about_website_desc">Այցելեք Morphe-ի պաշտոնական կայք</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Հանեք նշումը այն ճարտարապետությունների համար, որոնք ձեզ պետք չեն: Փաթեթավորման ժամանակ արդյունքային APK-ն կպահպանի միայն այն ճարտարապետությունները, որոնք առկա են և՛ APK-ի, և՛ այս ցուցակի մեջ: Եթե համընկնումներ չկան, ոչինչ չի հեռացվի՝ վնասված APK-ներից խուսափելու համար</string>
     <string name="settings_strip_libs_arm64">ARM 64-բիթ (այն հիմնականում ժամանակակից հեռախոսերի համար)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull request-ի արտեֆակտները ներբեռնելու համար անհրաժեշտ է public_repo ոլորությամբ GitHub-ի անձնական հասանելիության տոկեն (PAT): Ստեղծեք PAT՝ public_repo ոլորությամբ %1$s կայքում</string>
     <string name="settings_github_pat_label">Անձնական հասանելիության տոկեն</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Վեբկայք</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Գրադարան: v%1$s</string>
-    <string name="app_info_description">Բաց կոդով նախագիծ՝ հայտնի Android հավելվածների ժամանակակից և օպտիմալ փոփոխումների համար, որը զարգացվում է համայնքի արձագանքների և ներդրումների հիման վրա</string>
-    <string name="app_info_link_changelog">Փոփոխությունների մատյան</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Թարգմանել</string>
+    <string name="about_component">Աշխատասեղան</string>
+    <string name="about_version_patcher_library">Պատչեր v%1$s · Գրադարան v%2$s</string>
+    <string name="about_update_available">Հասանելի է թարմացում՝ %1$s</string>
+    <string name="about_up_to_date">Թարմացված է</string>
+    <string name="about_links">Պաշտոնական հղումներ</string>
+    <string name="about_link_donate">Նվիրաբերություն</string>
+    <string name="about_link_translations">Թարգմանություններ</string>
+    <string name="contributors">Համագործակիցներ</string>
+    <string name="contributors_description">Վերջին 12 ամիսվա ընթացքում</string>
+    <string name="credits_prior_development">Նախնական մշակում</string>
+    <string name="supporters">Աջակիցներ</string>
+    <string name="supporters_description">Աջակիցներ Open Collective-ում</string>
+    <string name="supporters_become">Դարձեք աջակից</string>
+    <string name="people_more">Եվ ևս %1$s</string>
+    <string name="people_unavailable">Չհաջողվեց բեռնել ցուցակը</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Տեղադրված է</string>
     <string name="changelog_badge_latest">Վերջինը</string>

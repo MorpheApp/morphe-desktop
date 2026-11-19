@@ -45,6 +45,7 @@
     <string name="click_to_copy">Κάντε κλικ για αντιγραφή</string>
     <string name="enable_adb_button">Ενεργοποίηση ADB</string>
     <string name="drag_to_reorder">Σύρετε για αναδιάταξη</string>
+    <string name="website">Ιστοσελίδα</string>
     <string name="off">Ανενεργό</string>
     <string name="on">Ενεργό</string>
     <string name="browse">Περιήγηση</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Πληροφορίες εφαρμογής</string>
     <string name="form_factor_tv">Τηλεόραση</string>
     <string name="form_factor_automotive">Αυτοκίνητο</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Αναζήτηση patches…</string>
     <string name="status_patching_completed">Η εφαρμογή patch ολοκληρώθηκε</string>
     <string name="status_patching_failed">Η εφαρμογή patch απέτυχε</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">από v%1$s</string>
     <string name="update_banner_later_button">Αργότερα</string>
     <string name="update_banner_skip_button">Παράβλεψη v%1$s</string>
+    <string name="home_updating_sources">Ενημέρωση πηγών…</string>
+    <string name="home_update_success">Η ενημέρωση πηγών ολοκληρώθηκε</string>
+    <string name="home_update_success_subtitle">Οι πηγές σας είναι ενημερωμένες</string>
+    <string name="home_sources_failed_title">Ορισμένες πηγές τροποποιήσεων δεν είναι διαθέσιμες</string>
+    <string name="home_multi_source_hint_title">Ενεργοποιήθηκαν πολλαπλές πηγές τροποποιήσεων</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Άδειες λογισμικού ανοικτού κώδικα</string>
     <string name="licenses_dialog_empty_failed">// απέτυχε η φόρτωση αδειών</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Προβολή αδειών βιβλιοθηκών τρίτων</string>
     <string name="settings_about_documentation_title">Τεκμηρίωση</string>
     <string name="settings_about_documentation_desc">Οδηγοί για patch, πηγές και αντιμετώπιση προβλημάτων</string>
-    <string name="settings_about_website_title">Επισκεφθείτε τον ιστότοπο</string>
-    <string name="settings_about_website_desc">Επισκεφθείτε τον επίσημο ιστότοπο του Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Αποεπιλέξτε αρχιτεκτονικές που δεν χρειάζεστε. Κατά το patch, το APK εξόδου θα διατηρήσει μόνο τις αρχιτεκτονικές που υπάρχουν στο APK ΚΑΙ σε αυτήν τη λίστα. Αν δεν υπάρχει επικάλυψη, δεν αφαιρείται τίποτα για να αποφευχθούν κατεστραμμένα APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (τα περισσότερα σύγχρονα τηλέφωνα)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Απαιτείται ένα Προσωπικό κωδικό πρόσβασης (PAT) του GitHub με εμβέλεια public_repo για τη λήψη artifacts από pull requests. Δημιουργήστε ένα PAT με εμβέλεια public_repo στο %1$s</string>
     <string name="settings_github_pat_label">Προσωπικός κωδικός πρόσβασης</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Ιστότοπος</string>
-    <string name="app_info_version_gui">Γραφική διεπαφή: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Βιβλιοθήκη: v%1$s</string>
-    <string name="app_info_description">Ένα έργο ανοικτού κώδικα για σύγχρονο, αποτελεσματικό patching δημοφιλών εφαρμογών Android, με γνώμονα τα σχόλια κα ι τις συνε ισφορές της κοινότητας</string>
-    <string name="app_info_link_changelog">Αρχείο αλλαγών</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Μετάφραση</string>
+    <string name="about_component">Επιτραπέζιος</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Βιβλιοθήκη v%2$s</string>
+    <string name="about_update_available">Διαθέσιμη ενημέρωση: %1$s</string>
+    <string name="about_up_to_date">Ενημερωμένο</string>
+    <string name="about_links">Επίσημοι σύνδεσμοι</string>
+    <string name="about_link_donate">Δωρεά</string>
+    <string name="about_link_translations">Μεταφράσεις</string>
+    <string name="contributors">Συνεισφέροντες</string>
+    <string name="contributors_description">Τελευταμμένοι 12 μήνες</string>
+    <string name="credits_prior_development">Προηγούμενη ανάπτυξη</string>
+    <string name="supporters">Υποστηρικτές</string>
+    <string name="supporters_description">Χορηγοί στο Open Collective</string>
+    <string name="supporters_become">Γίνετε υποστηρικτής</string>
+    <string name="people_more">Και %1$s ακόμα</string>
+    <string name="people_unavailable">Δεν ήταν δυνατή η φόρτωση της λίστας</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Εγκατεστημένο</string>
     <string name="changelog_badge_latest">Τελευταίο</string>

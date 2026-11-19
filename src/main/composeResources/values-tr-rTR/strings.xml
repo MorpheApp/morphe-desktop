@@ -45,6 +45,7 @@
     <string name="click_to_copy">Kopyalamak için tıklayın</string>
     <string name="enable_adb_button">ADB'yi aç</string>
     <string name="drag_to_reorder">Yeniden sıralamak için sürükleyin</string>
+    <string name="website">Web sitesi</string>
     <string name="off">Kapalı</string>
     <string name="on">Açık</string>
     <string name="browse">Göz At</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Uygulama bilgisi</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Otomotiv</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Yamaları ara…</string>
     <string name="status_patching_completed">Yamalama tamamlandı</string>
     <string name="status_patching_failed">Yamalama başarısız oldu</string>
@@ -694,6 +694,11 @@
     <string name="update_banner_from_version">v%1$s sürümünden</string>
     <string name="update_banner_later_button">Sonra</string>
     <string name="update_banner_skip_button">v%1$s sürümünü atla</string>
+    <string name="home_updating_sources">Kaynaklar güncelleniyor…</string>
+    <string name="home_update_success">Kaynak güncellemesi tamamlandı</string>
+    <string name="home_update_success_subtitle">Kaynaklarınız güncel</string>
+    <string name="home_sources_failed_title">Bazı yama kaynakları kullanılamıyor</string>
+    <string name="home_multi_source_hint_title">Birden fazla yama kaynağı etkin</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Açık Kaynak lisansları</string>
     <string name="licenses_dialog_empty_failed">// lisanslar yüklenemedi</string>
@@ -837,8 +842,6 @@
     <string name="settings_about_licenses_desc">Üçüncü taraf kütüphanelerin lisanslarını görüntüleyin</string>
     <string name="settings_about_documentation_title">Belgeler</string>
     <string name="settings_about_documentation_desc">Yamalama, kaynaklar ve sorun giderme kılavuzları</string>
-    <string name="settings_about_website_title">Web sitesini ziyaret et</string>
-    <string name="settings_about_website_desc">Resmi Morphe web sitesini ziyaret edin</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">İhtiyacınız olmayan mimarilerin işaretini kaldırın. Yamalama sırasında çıktı APK'sı yalnızca APK'da VE bu listede bulunan mimarileri tutar. Hiçbiri örtüşmezse, bozuk APK'ları önlemek için hiçbir şey kırpılmaz</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (çoğu modern telefon)</string>
@@ -897,14 +900,21 @@
     <string name="settings_github_pat_desc">Çekme isteği yapıtlarını indirmek için public_repo kapsamına sahip bir GitHub Kişisel Erişim Belirteci (PAT) gereklidir. %1$s üzerinde public_repo kapsamına sahip bir PAT oluşturun.</string>
     <string name="settings_github_pat_label">Kişisel Erişim Belirteci</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Web sitesi</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Yamalayıcı: v%1$s</string>
-    <string name="app_info_version_library">Kitaplık: v%1$s</string>
-    <string name="app_info_description">Popüler Android uygulamalarının modern ve verimli şekilde yamalanmasını sağlayan, topluluk geri bildirimleri ve katkılarıyla geliştirilen açık kaynaklı bir proje</string>
-    <string name="app_info_link_changelog">Değişiklik günlüğü</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Çevir</string>
+    <string name="about_component">Masaüstü</string>
+    <string name="about_version_patcher_library">Yamalayıcı v%1$s · Kütüphane v%2$s</string>
+    <string name="about_update_available">Güncelleme mevcut: %1$s</string>
+    <string name="about_up_to_date">Güncel</string>
+    <string name="about_links">Resmî bağlantılar</string>
+    <string name="about_link_donate">Bağış</string>
+    <string name="about_link_translations">Çeviriler</string>
+    <string name="contributors">Katkıda bulunanlar</string>
+    <string name="contributors_description">Son 12 ay</string>
+    <string name="credits_prior_development">Önceki geliştirme</string>
+    <string name="supporters">Destekçiler</string>
+    <string name="supporters_description">Open Collective'deki destekçiler</string>
+    <string name="supporters_become">Destekçi olun</string>
+    <string name="people_more">Ve %1$s daha</string>
+    <string name="people_unavailable">Liste yüklenemedi</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Yüklü</string>
     <string name="changelog_badge_latest">En son</string>

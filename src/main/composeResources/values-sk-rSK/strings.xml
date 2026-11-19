@@ -45,6 +45,7 @@
     <string name="click_to_copy">Kliknite pre kopírovanie</string>
     <string name="enable_adb_button">Povoliť ADB</string>
     <string name="drag_to_reorder">Presuňte pre zmenu poradia</string>
+    <string name="website">Webová stránka</string>
     <string name="off">Vypnuté</string>
     <string name="on">Zapnuté</string>
     <string name="browse">Prehľadávať</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Informácie o aplikácii</string>
     <string name="form_factor_tv">Televízor</string>
     <string name="form_factor_automotive">Automobil</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Hľadať záplaty…</string>
     <string name="status_patching_completed">Záplatovanie dokončené</string>
     <string name="status_patching_failed">Záplatovanie zlyhalo</string>
@@ -691,6 +691,11 @@
     <string name="update_banner_from_version">z v%1$s</string>
     <string name="update_banner_later_button">Neskôr</string>
     <string name="update_banner_skip_button">Preskočiť v%1$s</string>
+    <string name="home_updating_sources">Aktualizácia zdrojov…</string>
+    <string name="home_update_success">Aktualizácia zdrojov dokončená</string>
+    <string name="home_update_success_subtitle">Vaše zdroje sú aktuálne</string>
+    <string name="home_sources_failed_title">Niektoré zdroje záplat sú nedostupné</string>
+    <string name="home_multi_source_hint_title">Sú zapnuté viaceré zdroje záplat</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licencie s otvoreným zdrojovým kódom</string>
     <string name="licenses_dialog_empty_failed">// načítanie licencií zlyhalo</string>
@@ -834,8 +839,6 @@
     <string name="settings_about_licenses_desc">Zobraziť licencie knižníc tretích strán</string>
     <string name="settings_about_documentation_title">Dokumentácia</string>
     <string name="settings_about_documentation_desc">Príručky pre záplatovanie, zdroje a riešenie problémov</string>
-    <string name="settings_about_website_title">Navštíviť webovú stránku</string>
-    <string name="settings_about_website_desc">Navštívte oficiálnu webovú stránku Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Odznačte architektúry, ktoré nepotrebujete. Pri záplatovaní si výstupný APK ponechá len architektúry, ktoré sú v APK a zároveň v tomto zozname. Ak sa neprekrývajú žiadne, nič sa neodstráni, aby nedošlo k poškodeniu APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (väčšina moderných telefónov)</string>
@@ -894,14 +897,21 @@
     <string name="settings_github_pat_desc">Na stiahnutie artefaktov pull requestov sa vyžaduje GitHub Personal Access Token (PAT) s rozsahom public_repo. Vytvorte PAT s rozsahom public_repo na %1$s</string>
     <string name="settings_github_pat_label">Osobný prístupový token</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Webová stránka</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Knižnica: v%1$s</string>
-    <string name="app_info_description">Open-source projekt pre moderné a plynulé záplatovanie populárnych aplikácií pre Android, poháňaný spätnou väzbou a príspevkami komunity</string>
-    <string name="app_info_link_changelog">Zoznam zmien</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Preložiť</string>
+    <string name="about_component">Komputer</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Knihovňa v%2$s</string>
+    <string name="about_update_available">Dostupná aktualizácia: %1$s</string>
+    <string name="about_up_to_date">Aktuálne</string>
+    <string name="about_links">Oficiálne odkazy</string>
+    <string name="about_link_donate">Prispieť</string>
+    <string name="about_link_translations">Preklady</string>
+    <string name="contributors">Prispievatelia</string>
+    <string name="contributors_description">Posledných 12 mesiacov</string>
+    <string name="credits_prior_development">Predchádzajúci vývoj</string>
+    <string name="supporters">Podporovatelia</string>
+    <string name="supporters_description">Kreditory na Open Collective</string>
+    <string name="supporters_become">Staňte sa podporovateľom</string>
+    <string name="people_more">A %1$s ďalších</string>
+    <string name="people_unavailable">Nepodarilo sa načítať zoznam</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Nainštalované</string>
     <string name="changelog_badge_latest">Najnovšie</string>

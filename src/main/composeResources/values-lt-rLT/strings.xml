@@ -45,6 +45,7 @@
     <string name="click_to_copy">Spauskite norint nukopijuoti</string>
     <string name="enable_adb_button">Įjungti ADB</string>
     <string name="drag_to_reorder">Nutempkite norint pertvarkyti</string>
+    <string name="website">Svetainė</string>
     <string name="off">Išjungta</string>
     <string name="on">Įjungta</string>
     <string name="browse">Naršyti</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Programos informacija</string>
     <string name="form_factor_tv">Televizorius</string>
     <string name="form_factor_automotive">Automobilių</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Ieškoti pataisų…</string>
     <string name="status_patching_completed">Taisymas baigtas</string>
     <string name="status_patching_failed">Pataisyti nepavyko</string>
@@ -692,6 +692,11 @@
     <string name="update_banner_from_version">nuo v%1$s</string>
     <string name="update_banner_later_button">Vėliau</string>
     <string name="update_banner_skip_button">Praleisti v%1$s</string>
+    <string name="home_updating_sources">Atnaujinami šaltiniai…</string>
+    <string name="home_update_success">Šaltinių atnaujinimas baigtas</string>
+    <string name="home_update_success_subtitle">Jūsų šaltiniai yra atnaujinti</string>
+    <string name="home_sources_failed_title">Kai kurie patchų šaltiniai neprieGameStateinami</string>
+    <string name="home_multi_source_hint_title">Įjungta keli patchų šaltiniai</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Atvirojo kodo licencijos</string>
     <string name="licenses_dialog_empty_failed">// nepavyko įkelti licencijų</string>
@@ -835,8 +840,6 @@
     <string name="settings_about_licenses_desc">Peržiūrėti trečiųjų šalių bibliotekų licencijas</string>
     <string name="settings_about_documentation_title">Dokumentacija</string>
     <string name="settings_about_documentation_desc">Vadovai apie pataisymą, šaltinius ir trikčių šalinimą</string>
-    <string name="settings_about_website_title">Aplankyti svetainę</string>
-    <string name="settings_about_website_desc">Aplankykite oficialią Morphe svetainę</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Atžymėkite nereikalingas architektūras. Pataisant, išvesties APK faile bus išlaikytos tik tos architektūros, kurios yra ir APK, ir šiame sąraše. Jei nė viena nesutampa, niekas nepašalinama, kad nebūtų sugadintų APK failų</string>
     <string name="settings_strip_libs_arm64">ARM 64 bitų (dauguma šiuolaikinių telefonų)</string>
@@ -895,14 +898,21 @@
     <string name="settings_github_pat_desc">Norint atsisiųsti pull request artefaktus, reikalingas GitHub asmeninis prieigos raktas (PAT), turintis public_repo sritį. Sukurkite PAT su public_repo sritimi adresu %1$s</string>
     <string name="settings_github_pat_label">Asmeninis prieigos raktas</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Svetainė</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Pataisytuvas: v%1$s</string>
-    <string name="app_info_version_library">Biblioteka: v%1$s</string>
-    <string name="app_info_description">Atvirojo kodo projektas, skirtas moderniam ir supaprastintam populiarių Android programėlių pataisymui, pagrįstas bendruomenės atsiliepimais ir įnašais</string>
-    <string name="app_info_link_changelog">Pakeitimų žurnalas</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Versti</string>
+    <string name="about_component">Stalo kompiuteris</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Biblioteka v%2$s</string>
+    <string name="about_update_available">Atnaujinimas prieinamas: %1$s</string>
+    <string name="about_up_to_date">Atnaujinta</string>
+    <string name="about_links">Oficialios nuorodos</string>
+    <string name="about_link_donate">Aukoti</string>
+    <string name="about_link_translations">Vertimai</string>
+    <string name="contributors">Kūrėjai</string>
+    <string name="contributors_description">Pastarieji 12 mėnesiai</string>
+    <string name="credits_prior_development">Ankstesnis kūrimas</string>
+    <string name="supporters">Rėmėjai</string>
+    <string name="supporters_description">Rėmėjai „Open Collective“</string>
+    <string name="supporters_become">Tapkite rėmėju</string>
+    <string name="people_more">Ir dar %1$s</string>
+    <string name="people_unavailable">Nepavyko įkrauti sąrašo</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Įdiegta</string>
     <string name="changelog_badge_latest">Naujausia</string>

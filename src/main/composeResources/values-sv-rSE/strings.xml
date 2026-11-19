@@ -45,6 +45,7 @@
     <string name="click_to_copy">Klicka för att kopiera</string>
     <string name="enable_adb_button">Aktivera ADB</string>
     <string name="drag_to_reorder">Dra för att ändra ordning</string>
+    <string name="website">Webbplats</string>
     <string name="off">Av</string>
     <string name="on">På</string>
     <string name="browse">Bläddra</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Appinformation</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Bil</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Sök efter tillägg …</string>
     <string name="status_patching_completed">Modifieringen är klar</string>
     <string name="status_patching_failed">Modifieringen misslyckades</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">från v%1$s</string>
     <string name="update_banner_later_button">Senare</string>
     <string name="update_banner_skip_button">Hoppa över v%1$s</string>
+    <string name="home_updating_sources">Uppdaterar källor …</string>
+    <string name="home_update_success">Uppdatering av källor är klar</string>
+    <string name="home_update_success_subtitle">Dina källor är uppdaterade</string>
+    <string name="home_sources_failed_title">Vissa tilläggskällor är inte tillgängliga</string>
+    <string name="home_multi_source_hint_title">Flera tilläggskällor är aktiverade</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licenser för öppen källkod</string>
     <string name="licenses_dialog_empty_failed">// det gick inte att läsa in licenser</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Visa licenser för tredjepartsbibliotek</string>
     <string name="settings_about_documentation_title">Dokumentation</string>
     <string name="settings_about_documentation_desc">Guider för patchning, källor och felsökning</string>
-    <string name="settings_about_website_title">Besök webbplatsen</string>
-    <string name="settings_about_website_desc">Besök den officiella Morphe-webbplatsen</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Avmarkera arkitekturer du inte behöver. Vid patchning kommer utdata-APK-filen bara behålla de arkitekturer som finns i APK-filen OCH i listan. Om inga överlappar tas inget bort för att undvika trasiga APK-filer.</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (de flesta moderna telefoner)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">En personlig åtkomsttoken (PAT) från GitHub med scopet public_repo krävs för att ladda ner artefakter från pull requests. Skapa en PAT med scopet public_repo på %1$s</string>
     <string name="settings_github_pat_label">Personlig åtkomsttoken</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Webbplats</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Bibliotek: v%1$s</string>
-    <string name="app_info_description">Ett projekt med öppen källkod för modern, smidig modifiering av populära Android-appar som drivs av feedback och bidrag från communityn</string>
-    <string name="app_info_link_changelog">Ändringslogg</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Översätt</string>
+    <string name="about_component">Skrivbord</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Bibliotek v%2$s</string>
+    <string name="about_update_available">Uppdatering tillgänglig: %1$s</string>
+    <string name="about_up_to_date">Uppdaterat</string>
+    <string name="about_links">Officiella länkar</string>
+    <string name="about_link_donate">Donera</string>
+    <string name="about_link_translations">Översättningar</string>
+    <string name="contributors">Bidragsgivare</string>
+    <string name="contributors_description">Senaste 12 månaderna</string>
+    <string name="credits_prior_development">Tidigare utveckling</string>
+    <string name="supporters">Supportrar</string>
+    <string name="supporters_description">Backers på Open Collective</string>
+    <string name="supporters_become">Bli en supporter</string>
+    <string name="people_more">Och %1$s till</string>
+    <string name="people_unavailable">Kunde inte ladda listan</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Installerad</string>
     <string name="changelog_badge_latest">Senaste</string>

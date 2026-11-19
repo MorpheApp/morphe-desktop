@@ -45,6 +45,7 @@
     <string name="click_to_copy">Кликнете за копирање</string>
     <string name="enable_adb_button">Овозможи ADB</string>
     <string name="drag_to_reorder">Влечете за повторно подредување</string>
+    <string name="website">Веб-страница</string>
     <string name="off">Исклучено</string>
     <string name="on">Вклучено</string>
     <string name="browse">Прегледувај</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Инфо за апликацијата</string>
     <string name="form_factor_tv">ТВ</string>
     <string name="form_factor_automotive">Автомобил</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Пребарај за закрпи…</string>
     <string name="status_patching_completed">Закрпувањето е завршено</string>
     <string name="status_patching_failed">Закрпувањето не успеа</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">од v%1$s</string>
     <string name="update_banner_later_button">Подоцна</string>
     <string name="update_banner_skip_button">Прескокни v%1$s</string>
+    <string name="home_updating_sources">Ажурирање на извори…</string>
+    <string name="home_update_success">Ажурирањето на изворите е завршено</string>
+    <string name="home_update_success_subtitle">Вашите извори се ажурирани</string>
+    <string name="home_sources_failed_title">Некои извори за закрпи се недостапни</string>
+    <string name="home_multi_source_hint_title">Овозможени се повеќе извори за закрпи</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Лиценци за отворен код</string>
     <string name="licenses_dialog_empty_failed">// не успеа вчитувањето на лиценците</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Прегледај ги лиценците на библиотеки од трети страни</string>
     <string name="settings_about_documentation_title">Документација</string>
     <string name="settings_about_documentation_desc">Водичи за закрпување, извори и решавање проблеми</string>
-    <string name="settings_about_website_title">Посетете ја веб-страницата</string>
-    <string name="settings_about_website_desc">Посетете ја официјалната веб-страница на Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Одзначете ги архитектурите што не ви се потребни. При закрпувањето, излезниот APK ќе ги задржи само архитектурите што се присутни во APK-то И во оваа листа. Ако нема преклопување, ништо нема да се отстрани за да се избегнат оштетени APK датотеки</string>
     <string name="settings_strip_libs_arm64">ARM 64-битна (повеќето модерни телефони)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Потребен е GitHub Personal Access Token (PAT) со public_repo опсег за преземање на артефактите од pull request. Креирајте PAT со опсег public_repo на %1$s</string>
     <string name="settings_github_pat_label">Личен токен за пристап</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Веб-страница</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Библиотека: v%1$s</string>
-    <string name="app_info_description">Проект со отворен код за модерен, оптимизиран патчинг на популарни Android апликации, воден од повратните информации и придонесите на заедницата</string>
-    <string name="app_info_link_changelog">Дневник на промени</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Преведи</string>
+    <string name="about_component">Десктоп</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Библиотека v%2$s</string>
+    <string name="about_update_available">Достапно ажурирање: %1$s</string>
+    <string name="about_up_to_date">Најнова верзија</string>
+    <string name="about_links">Официјални линкови</string>
+    <string name="about_link_donate">Донирај</string>
+    <string name="about_link_translations">Преводи</string>
+    <string name="contributors">Придонесувачи</string>
+    <string name="contributors_description">Последните 12 месеци</string>
+    <string name="credits_prior_development">Претходен развој</string>
+    <string name="supporters">Поддржувачи</string>
+    <string name="supporters_description">Поддржувачи на Open Collective</string>
+    <string name="supporters_become">Станете поддржувач</string>
+    <string name="people_more">И уште %1$s</string>
+    <string name="people_unavailable">Не може да се вчита листата</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Инсталиран</string>
     <string name="changelog_badge_latest">Најнов</string>

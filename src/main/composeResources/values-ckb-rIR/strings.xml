@@ -45,6 +45,7 @@
     <string name="click_to_copy">کلیک بکە بۆ کۆپیکردن</string>
     <string name="enable_adb_button">ADB چالاک بکە</string>
     <string name="drag_to_reorder">بکێشه بۆ گۆڕینی ڕیزبەندی</string>
+    <string name="website">وێبسایت</string>
     <string name="off">کوژاوە</string>
     <string name="on">هەڵکراو</string>
     <string name="browse">گەڕان</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">زانیاری ئەپ</string>
     <string name="form_factor_tv">تەلەفزیۆن</string>
     <string name="form_factor_automotive">ئۆتۆمبێل</string>
-    <string name="github_label">گیتھاب</string>
     <string name="patches_search_hint">گەڕان بەدوای پاتچەکان…</string>
     <string name="status_patching_completed">پاتچکردن تەواو بوو</string>
     <string name="status_patching_failed">پاتچکردن سەرکەوتوو نەبوو</string>
@@ -697,6 +697,11 @@
     <string name="update_banner_from_version">لە v%1$s</string>
     <string name="update_banner_later_button">دواتر</string>
     <string name="update_banner_skip_button">تێپەڕاندنی v%1$s</string>
+    <string name="home_updating_sources">نوێکردنەوەی سەرچاوەکان...</string>
+    <string name="home_update_success">نوێکردنەوەی سەرچاوە تەواوبوو</string>
+    <string name="home_update_success_subtitle">سەرچاوەکانت نوێن</string>
+    <string name="home_sources_failed_title">هەندێک سەرچاوەی پاتچ دەردەست نین</string>
+    <string name="home_multi_source_hint_title">چەندین سەرچاوەی پاتچی چالاک کراوە</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">مۆڵەتنامەکانی سەرچاوەی کراوە</string>
     <string name="licenses_dialog_empty_failed">// شکست هێنا لە بارکردنی مۆڵەتەکان</string>
@@ -840,8 +845,6 @@
     <string name="settings_about_licenses_desc">بینینی مۆڵەتەکانی کتێبخانەکانی لایەنی سێیەم</string>
     <string name="settings_about_documentation_title">دۆکیومێنتەیشن</string>
     <string name="settings_about_documentation_desc">ڕێبەران بۆ پاتچکردن، سەرچاوەکان و چارەسەرکردنی کێشەکان</string>
-    <string name="settings_about_website_title">سەردانی ماڵپەڕەکە بکە</string>
-    <string name="settings_about_website_desc">سەردانی ماڵپەڕی فەرمی Morphe بکە</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">ئەو تەلارساتانە کە پێویستتن نین لایان لە نیشانەکە لابەرە. لە کاتی پاتچکردندا، APK-ی دەرەنجام تەنها ئەو تەلارساتانە دەپارێزێت کە هەم لە APK-کەدا هەبن و هەم لەم لیستەدا بن. ئەگەر هیچ هاوشێوەیەک نەبن، هیچ شتێک لانابرێت بۆ ئەوەی APK-کە تێکنەچێت</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (زۆربەی مۆبایلە نوێیەکان)</string>
@@ -900,14 +903,21 @@
     <string name="settings_github_pat_desc">تۆکنی دەسترسی کەسی (PAT)ی GitHub کە مەودای public_repoی هەبێت پێویستە بۆ دابەزاندنی ئارتێفاکتەکانی pull request. PATێک لەگەڵ مەودای public_repo لە %1$s دروست بکە</string>
     <string name="settings_github_pat_label">تۆکنی دەسترسی کەسی</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">وێب سایت</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">پاتچەر: v%1$s</string>
-    <string name="app_info_version_library">لایبرەری: v%1$s</string>
-    <string name="app_info_description">پڕۆژەیەکی سەرچاوە-کراوە بۆ پاتچکردنی سەردەمیی و ڕێکخراوی ئەپڵیکەیشنە باوەکانی ئەندرۆید، کە لەلایەن فیدباک و بەشدارییەکانی کۆمەڵگەوە پشتیوانی دەکرێت</string>
-    <string name="app_info_link_changelog">گۆڕانکارییەکان</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">وەرگێڕان</string>
+    <string name="about_component">دێسکتۆپ</string>
+    <string name="about_version_patcher_library">پاچەر v%1$s · کتێبخانە v%2$s</string>
+    <string name="about_update_available">نوێکردنەوەی بەردەستە: %1$s</string>
+    <string name="about_up_to_date">نوێکراوە</string>
+    <string name="about_links">لینکە فەرمییەکان</string>
+    <string name="about_link_donate">بەخشین</string>
+    <string name="about_link_translations">وەرگێڕانەکان</string>
+    <string name="contributors">بەشدەران</string>
+    <string name="contributors_description">١٢ مانگی ڕابردوو</string>
+    <string name="credits_prior_development">پەرەپێدانی پێشوو</string>
+    <string name="supporters">پشتگیران</string>
+    <string name="supporters_description">پشتگیران لە Open Collective</string>
+    <string name="supporters_become">ببە بە پشتگیر</string>
+    <string name="people_more">و %1$s کەسی تریش</string>
+    <string name="people_unavailable">نەتوانرا لیستەکە باربکرێت</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">دامەزراو</string>
     <string name="changelog_badge_latest">نوێترین</string>

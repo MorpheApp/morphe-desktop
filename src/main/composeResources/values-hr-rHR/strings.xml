@@ -45,6 +45,7 @@
     <string name="click_to_copy">Klikni za kopiranje</string>
     <string name="enable_adb_button">Omogući ADB</string>
     <string name="drag_to_reorder">Povucite za promjenu redoslijeda</string>
+    <string name="website">Web stranica</string>
     <string name="off">Isključeno</string>
     <string name="on">Uključeno</string>
     <string name="browse">Pretraži</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Informacije o aplikaciji</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Automobilska</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Pretraži zakrpe…</string>
     <string name="status_patching_completed">Primjena zakrpa dovršena</string>
     <string name="status_patching_failed">Patchanje nije uspjelo</string>
@@ -699,6 +699,11 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="update_banner_from_version">iz v%1$s</string>
     <string name="update_banner_later_button">Kasnije</string>
     <string name="update_banner_skip_button">Preskoči v%1$s</string>
+    <string name="home_updating_sources">Ažuriranje izvora…</string>
+    <string name="home_update_success">Ažuriranje izvora dovršeno</string>
+    <string name="home_update_success_subtitle">Vaši izvori su ažurirani</string>
+    <string name="home_sources_failed_title">Neki izvori patcha nisu dostupni</string>
+    <string name="home_multi_source_hint_title">Omogućeno više izvora patcheva</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licence otvorenog koda</string>
     <string name="licenses_dialog_empty_failed">// učitavanje licenci nije uspjelo</string>
@@ -842,8 +847,6 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="settings_about_licenses_desc">Pregledajte licence knjižnica trećih strana</string>
     <string name="settings_about_documentation_title">Dokumentacija</string>
     <string name="settings_about_documentation_desc">Vodiči za primjenu zakrpa, izvore i rješavanje problema</string>
-    <string name="settings_about_website_title">Posjeti web stranicu</string>
-    <string name="settings_about_website_desc">Posjeti službenu web stranicu Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Odznači arhitekture koje ti ne trebaju. Prilikom primjene zakrpa, izlazni APK zadržat će samo arhitekture koje su prisutne u APK-u I na ovom popisu. Ako se nijedna ne preklapa, ništa se ne uklanja kako bi se izbjegli neispravni APK-ovi</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (većina modernih telefona)</string>
@@ -902,14 +905,21 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="settings_github_pat_desc">Za preuzimanje artefakata pull requesta potreban je osobni pristupni token (PAT) za GitHub s opsegom public_repo. Stvorite PAT s opsegom public_repo na %1$s.</string>
     <string name="settings_github_pat_label">Osobni pristupni token</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Web stranica</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Biblioteka: v%1$s</string>
-    <string name="app_info_description">Projekt otvorenog koda za moderno, pojednostavljeno ažuriranje popularnih Android aplikacija, potaknut povratnim informacijama i doprinosima zajednice</string>
-    <string name="app_info_link_changelog">Popis promjena</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Prevedi</string>
+    <string name="about_component">Radna površina</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Knjiznica v%2$s</string>
+    <string name="about_update_available">Dostupno je ažuriranje: %1$s</string>
+    <string name="about_up_to_date">Ažurno</string>
+    <string name="about_links">Službene poveznice</string>
+    <string name="about_link_donate">Donirajte</string>
+    <string name="about_link_translations">Prijevodi</string>
+    <string name="contributors">Suradnici</string>
+    <string name="contributors_description">Zadnjih 12 mjeseci</string>
+    <string name="credits_prior_development">Prijašnji razvoj</string>
+    <string name="supporters">Podržavatelji</string>
+    <string name="supporters_description">Donatori na Open Collective</string>
+    <string name="supporters_become">Postani podržavatelj</string>
+    <string name="people_more">I još %1$s</string>
+    <string name="people_unavailable">Popis nije mogao biti učitan</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Instalirano</string>
     <string name="changelog_badge_latest">Najnovije</string>

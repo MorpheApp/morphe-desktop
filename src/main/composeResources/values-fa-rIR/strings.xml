@@ -45,6 +45,7 @@
     <string name="click_to_copy">برای کپی کلیک کنید</string>
     <string name="enable_adb_button">فعال‌سازی ADB</string>
     <string name="drag_to_reorder">برای مرتب‌سازی دوباره بکشید</string>
+    <string name="website">وب‌سایت</string>
     <string name="off">خاموش</string>
     <string name="on">روشن</string>
     <string name="browse">مرور</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">اطلاعات برنامه</string>
     <string name="form_factor_tv">تلویزیون</string>
     <string name="form_factor_automotive">خودرویی</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">جستجوی پچ‌ها…</string>
     <string name="status_patching_completed">پچ کردن کامل شد</string>
     <string name="status_patching_failed">پچ‌کردن ناموفق بود</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">از v%1$s</string>
     <string name="update_banner_later_button">بعداً</string>
     <string name="update_banner_skip_button">رد کردن v%1$s</string>
+    <string name="home_updating_sources">در حال به‌روزرسانی منابع…</string>
+    <string name="home_update_success">به روزرسانی منابع کامل شد</string>
+    <string name="home_update_success_subtitle">منابع شما به‌روز هستند</string>
+    <string name="home_sources_failed_title">برخی منابع پچ در دسترس نیستند</string>
+    <string name="home_multi_source_hint_title">چند منبع پچ فعال شده‌اند</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">مجوزهای متن‌باز</string>
     <string name="licenses_dialog_empty_failed">// بارگذاری مجوزها ناموفق بود</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">مشاهده مجوزهای کتابخانه‌های شخص ثالث</string>
     <string name="settings_about_documentation_title">مستندات</string>
     <string name="settings_about_documentation_desc">راهنماهایی برای پچ‌کردن، منابع و عیب‌یابی</string>
-    <string name="settings_about_website_title">بازدید از وب‌سایت</string>
-    <string name="settings_about_website_desc">بازدید از وب‌سایت رسمی Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">تیک معماری‌هایی را که نیاز ندارید بردارید. هنگام پچ‌کردن، APK خروجی فقط معماری‌هایی را نگه می‌دارد که هم در APK و هم در این فهرست باشند. اگر هیچ اشتراکی وجود نداشته باشد، برای جلوگیری از APKهای خراب، چیزی حذف نمی‌شود</string>
     <string name="settings_strip_libs_arm64">ARM 64 بیتی (بیشتر گوشی‌های مدرن)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">برای دانلود آرتیفکت‌های درخواست کشش، یک توکن دسترسی شخصی گیت‌هاب (PAT) با حوزهٔ دسترسی public_repo الزامی است. یک PAT با حوزهٔ دسترسی public_repo در %1$s ایجاد کنید</string>
     <string name="settings_github_pat_label">توکن دسترسی شخصی</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">وب‌سایت</string>
-    <string name="app_info_version_gui">رابط گرافیکی: %1$s</string>
-    <string name="app_info_version_patcher">پچ‌کننده: v%1$s</string>
-    <string name="app_info_version_library">کتابخانه: v%1$s</string>
-    <string name="app_info_description">پروژه‌ای متن‌باز برای پچ‌کردن مدرن و سادهٔ برنامه‌های محبوب Android که با بازخورد و مشارکت جامعه پیش می‌رود</string>
-    <string name="app_info_link_changelog">تغییرات</string>
-    <string name="app_info_link_reddit">ردیت</string>
-    <string name="app_info_link_translate">ترجمه</string>
+    <string name="about_component">دسکتاپ</string>
+    <string name="about_version_patcher_library">پچر نسخه %1$s · کتابخانه نسخه %2$s</string>
+    <string name="about_update_available">به‌روزرسانی موجود است: %1$s</string>
+    <string name="about_up_to_date">به‌روز است</string>
+    <string name="about_links">پیوندهای رسمی</string>
+    <string name="about_link_donate">کمک مالی</string>
+    <string name="about_link_translations">ترجمه‌ها</string>
+    <string name="contributors">مشارکت‌کنندگان</string>
+    <string name="contributors_description">۱۲ ماه گذشته</string>
+    <string name="credits_prior_development">توسعهٔ پیشین</string>
+    <string name="supporters">حامیان</string>
+    <string name="supporters_description">حمایت‌کنندگان در Open Collective</string>
+    <string name="supporters_become">حامی شوید</string>
+    <string name="people_more">و %1$s نفر دیگر</string>
+    <string name="people_unavailable">بارگذاری لیست امکان‌پذیر نبود</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">نصب‌شده</string>
     <string name="changelog_badge_latest">آخرین</string>

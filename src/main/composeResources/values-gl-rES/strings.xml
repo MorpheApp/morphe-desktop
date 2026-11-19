@@ -45,6 +45,7 @@
     <string name="click_to_copy">Preme para copiar</string>
     <string name="enable_adb_button">Activar ADB</string>
     <string name="drag_to_reorder">Arrastra para reordenar</string>
+    <string name="website">Sitio web</string>
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="browse">Navegar</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Información da aplicación</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Automocíls</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Busca de parches…</string>
     <string name="status_patching_completed">Aplicación de parches completada</string>
     <string name="status_patching_failed">Aplicación de parches completada</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">desde a v%1$s</string>
     <string name="update_banner_later_button">Despois</string>
     <string name="update_banner_skip_button">Saltar v%1$s</string>
+    <string name="home_updating_sources">Actualizando fontes…</string>
+    <string name="home_update_success">Actualización de fontes completa</string>
+    <string name="home_update_success_subtitle">As súas fontes están ao día</string>
+    <string name="home_sources_failed_title">Algunhas fontes de parche non están dispoñibles</string>
+    <string name="home_multi_source_hint_title">Múltiples fontes de parche activadas</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licenzas de código aberto</string>
     <string name="licenses_dialog_empty_failed">// fallou a carga das licenzas</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Ver as licenzas das bibliotecas de terceiros</string>
     <string name="settings_about_documentation_title">Documentación</string>
     <string name="settings_about_documentation_desc">Guías para a aplicación de parches, fontes e resolución de problemas</string>
-    <string name="settings_about_website_title">Visitar sitio web</string>
-    <string name="settings_about_website_desc">Visita o sitio web oficial de Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Desmarca as arquitecturas que non necesites. Ao aplicar o parche, o APK de saída manterá só as arquitecturas presentes no APK E nesta lista. Se non hai coincidencia, non se elimina nada para evitar APKs danados</string>
     <string name="settings_strip_libs_arm64">ARM de 64 bits (maioría dos teléfonos modernos)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">É necesario un Token de Acceso Persoal (PAT) de GitHub co scope public_repo para descargar os artefactos de pull request. Cree un PAT co scope public_repo en %1$s</string>
     <string name="settings_github_pat_label">Token de Acceso Persoal</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Sitio web</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Biblioteca: v%1$s</string>
-    <string name="app_info_description">Un proxecto de código aberto para o parcheo moderno e optimizado de aplicacións populares de Android, impulsado polos comentarios e contribucións da comunidade</string>
-    <string name="app_info_link_changelog">Rexistro de cambios</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Traducir</string>
+    <string name="about_component">Escritorio</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Biblioteca v%2$s</string>
+    <string name="about_update_available">Actualización dispoñible: %1$s</string>
+    <string name="about_up_to_date">Ao día</string>
+    <string name="about_links">Ligazóns oficiais</string>
+    <string name="about_link_donate">Doar</string>
+    <string name="about_link_translations">Traducións</string>
+    <string name="contributors">Contribuidores</string>
+    <string name="contributors_description">Últimos 12 meses</string>
+    <string name="credits_prior_development">Desenvolvemento previo</string>
+    <string name="supporters">Apoiadores</string>
+    <string name="supporters_description">Apoiadores en Open Collective</string>
+    <string name="supporters_become">Converteuse nun apoiador</string>
+    <string name="people_more">E %1$s máis</string>
+    <string name="people_unavailable">Non foi posible cargar a lista</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Instalado</string>
     <string name="changelog_badge_latest">Última</string>

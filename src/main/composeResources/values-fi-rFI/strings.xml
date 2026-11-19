@@ -45,6 +45,7 @@
     <string name="click_to_copy">Napsauta kopioidaksesi</string>
     <string name="enable_adb_button">Ota ADB käyttöön</string>
     <string name="drag_to_reorder">Vedä järjestääksesi uudelleen</string>
+    <string name="website">Verkkosivusto</string>
     <string name="off">Pois</string>
     <string name="on">Päällä</string>
     <string name="browse">Selaa</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Sovelluksen tiedot</string>
     <string name="form_factor_tv">Televisio</string>
     <string name="form_factor_automotive">Ajoneuvo</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Hae paikkauksia…</string>
     <string name="status_patching_completed">Paikkaus valmis</string>
     <string name="status_patching_failed">Paikkaus epäonnistui</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">versiosta v%1$s</string>
     <string name="update_banner_later_button">Myöhemmin</string>
     <string name="update_banner_skip_button">Ohita v%1$s</string>
+    <string name="home_updating_sources">Päivitetään lähteitä…</string>
+    <string name="home_update_success">Lähteiden päivitys valmis</string>
+    <string name="home_update_success_subtitle">Lähteet ovat ajan tasalla</string>
+    <string name="home_sources_failed_title">Jotkin päivityslähteet eivät ole käytettävissä</string>
+    <string name="home_multi_source_hint_title">Useita päivityslähteitä käytössä</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Avoimen lähdekoodin lisenssit</string>
     <string name="licenses_dialog_empty_failed">// lisenssien lataus epäonnistui</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Näytä kolmannen osapuolen kirjastojen lisenssit</string>
     <string name="settings_about_documentation_title">Dokumentaatio</string>
     <string name="settings_about_documentation_desc">Oppaat paikkaukseen, lähteisiin ja vianmääritykseen</string>
-    <string name="settings_about_website_title">Käy verkkosivustolla</string>
-    <string name="settings_about_website_desc">Käy virallisella Morphe-verkkosivustolla</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Poista valinnat arkkitehtuureista, joita et tarvitse. Paikkauksen yhteydessä tulostettu APK säilyttää vain arkkitehtuurit, jotka ovat sekä APK:ssa että tässä listassa. Jos mikään ei ole päällekkäin, mitään ei poisteta, jotta vältytään rikkoutuneilta APK:lta</string>
     <string name="settings_strip_libs_arm64">ARM 64-bittinen (useimmat nykyaikaiset puhelimet)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull request -artefaktien lataamiseen tarvitaan GitHubin henkilökohtainen käyttöoikeustunnus (PAT), jolla on public_repo-oikeus. Luo public_repo-oikeuden sisältävä PAT osoitteessa %1$s</string>
     <string name="settings_github_pat_label">Henkilökohtainen käyttöoikeustunnus</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Verkkosivusto</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Paikkaaja: v%1$s</string>
-    <string name="app_info_version_library">Kirjasto: v%1$s</string>
-    <string name="app_info_description">Avoimen lähdekoodin projekti suosittujen Android-sovellusten moderniin ja suoraviivaiseen muokkaukseen, jota ohjaavat yhteisön palaute ja panokset</string>
-    <string name="app_info_link_changelog">Muutosloki</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Käännä</string>
+    <string name="about_component">Työpöytä</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Kirjasto v%2$s</string>
+    <string name="about_update_available">Päivitys saatavilla: %1$s</string>
+    <string name="about_up_to_date">Ajan tasalla</string>
+    <string name="about_links">Viralliset linkit</string>
+    <string name="about_link_donate">Lahjoita</string>
+    <string name="about_link_translations">Käännökset</string>
+    <string name="contributors">Avustajat</string>
+    <string name="contributors_description">Viimeiset 12 kuukautta</string>
+    <string name="credits_prior_development">Aiempi kehitys</string>
+    <string name="supporters">Tukijat</string>
+    <string name="supporters_description">Tukijat Open Collectivessa</string>
+    <string name="supporters_become">Tule tukijaksi</string>
+    <string name="people_more">Ja %1$s muuta</string>
+    <string name="people_unavailable">Luetteloa ei voitu ladata</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Asennettu</string>
     <string name="changelog_badge_latest">Uusin</string>

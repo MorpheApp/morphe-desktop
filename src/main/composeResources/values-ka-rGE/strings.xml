@@ -45,6 +45,7 @@
     <string name="click_to_copy">დააჭირეთ კოპირებისთვის</string>
     <string name="enable_adb_button">ADB-ის გააქტიურება</string>
     <string name="drag_to_reorder">გადააადგილეთ თანმიმდევრობის შესაცვლელად</string>
+    <string name="website">ვებგვერდი</string>
     <string name="off">გამორთვებული</string>
     <string name="on">ჩართული</string>
     <string name="browse">დათვალიერება</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">აპლიკაციის ინფორმაცია</string>
     <string name="form_factor_tv">ტელევიზორი</string>
     <string name="form_factor_automotive">ავტომობილური</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">პატჩების ძებნა…</string>
     <string name="status_patching_completed">პატჩინგი დასრულებულია</string>
     <string name="status_patching_failed">პატჩინგი ჩაიშალა</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s-დან</string>
     <string name="update_banner_later_button">მოგვიანებით</string>
     <string name="update_banner_skip_button">გამოტოვეთ v%1$s</string>
+    <string name="home_updating_sources">წყაროების განახლება…</string>
+    <string name="home_update_success">წყაროების განახლება დასრულდა</string>
+    <string name="home_update_success_subtitle">თქვენი წყაროები განახლებულია</string>
+    <string name="home_sources_failed_title">პატჩის ზოგიერთი წყარო მიუწვდომელია</string>
+    <string name="home_multi_source_hint_title">ჩართულია პატჩების რამდენიმე წყარო</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ღია კოდის ლიცენზიები</string>
     <string name="licenses_dialog_empty_failed">// ლიცენზიების ჩატვირთვა ვერ მოხერხდა</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">მესამე მხარის ბიბლიოთეკების ლიცენზიების ნახვა</string>
     <string name="settings_about_documentation_title">დოკუმენტაცია</string>
     <string name="settings_about_documentation_desc">გზამკვლევები პატჩინგისთვის, წყაროებისა და პრობლემების მოგვარებისთვის</string>
-    <string name="settings_about_website_title">ვებგვერდზე გადასვლა</string>
-    <string name="settings_about_website_desc">ესტუმრეთ Morphe-ის ოფიციალურ ვებგვერდს</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">გააუქმეთ მონიშვნა იმ არქიტექტურებზე, რომლებიც არ გჭირდებათ. პატჩინგისას, გამომავალი APK შეინარჩუნებს მხოლოდ იმ არქიტექტურებს, რომლებიც არის როგორც APK-ში, ასევე ამ სიაში. თუ ისინი არ ემთხვევა, არაფერი წაიშლება, რათა თავიდან იქნას აცილებული APK-ის დაზიანება</string>
     <string name="settings_strip_libs_arm64">ARM 64-ბიტიანი (უმეტესად თანამედროვე ტელეფონები)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull request-ის არტიფაქტების ჩამოსატვირთად საჭიროა GitHub-ის პერსონალური წვდომის ტოკენი (PAT) public_repo სკოპით. შექმენით PAT public_repo სკოპით %1$s-ზე</string>
     <string name="settings_github_pat_label">პერსონალური წვდომის ტოკენი</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">ვებგვერდი</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">პატჩერი: v%1$s</string>
-    <string name="app_info_version_library">ბიბლიოთეკა: v%1$s</string>
-    <string name="app_info_description">ღია კოდის პროექტი პოპულარული Android აპლიკაციების თანამედროვე და ოპტიმიზირებული პატჩინგისთვის, რომელიც ეფუძნება საზოგადოების უკუკავშირს და წვლილს</string>
-    <string name="app_info_link_changelog">ცვლილებების სია</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">თარგმნა</string>
+    <string name="about_component">სამუშაო მაგიდა</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · ბიბლიოთეკა v%2$s</string>
+    <string name="about_update_available">ხელმისაწვდომია განახლება: %1$s</string>
+    <string name="about_up_to_date">აქტუალურია</string>
+    <string name="about_links">ოფიციალური ბმულები</string>
+    <string name="about_link_donate">დონაცია</string>
+    <string name="about_link_translations">თარგმანები</string>
+    <string name="contributors">კონტრიბუტორები</string>
+    <string name="contributors_description">ბოლო 12 თვე</string>
+    <string name="credits_prior_development">წინა განვითარება</string>
+    <string name="supporters">მხარდამჭერები</string>
+    <string name="supporters_description">მხარდამჭერები Open Collective-ზე</string>
+    <string name="supporters_become">გახდით მხარდამჭერი</string>
+    <string name="people_more">და კიდევ %1$s</string>
+    <string name="people_unavailable">სია ვერ ჩაიტვირთა</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">ინსტალირებული</string>
     <string name="changelog_badge_latest">უახლესი</string>

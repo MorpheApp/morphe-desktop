@@ -45,6 +45,7 @@
     <string name="click_to_copy">Nusxa olish uchun bosing</string>
     <string name="enable_adb_button">ADBni yoqish</string>
     <string name="drag_to_reorder">Tartibni o'zgartirish uchun suring</string>
+    <string name="website">Veb-sayt</string>
     <string name="off">O'chiq</string>
     <string name="on">Yoqilgan</string>
     <string name="browse">Ko'rish</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Ilova ma'lumotlari</string>
     <string name="form_factor_tv">Televizor</string>
     <string name="form_factor_automotive">Avtomobil</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Patchlarni qidirish…</string>
     <string name="status_patching_completed">Patchlash yakunlandi</string>
     <string name="status_patching_failed">Patchlash muvaffaqiyatsiz tugadi</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s dan</string>
     <string name="update_banner_later_button">Keyinroq</string>
     <string name="update_banner_skip_button">v%1$s ni o'tkazib yuborish</string>
+    <string name="home_updating_sources">Manbalar yangilanmoqda…</string>
+    <string name="home_update_success">Manbalar yangilanishi yakunlandi</string>
+    <string name="home_update_success_subtitle">Manbalaringiz yangilandi</string>
+    <string name="home_sources_failed_title"> patch manbalari mavjud emas</string>
+    <string name="home_multi_source_hint_title">Birkatorli patch manbalari yoqilgan</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ochiq kodli litsenziyalar</string>
     <string name="licenses_dialog_empty_failed">// litsenziyalarni yuklab bo'lmadi</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Uchinchi tomon kutubxonalari litsenziyalarini ko'rish</string>
     <string name="settings_about_documentation_title">Hujjatlar</string>
     <string name="settings_about_documentation_desc">Patch qilish, manbalar va muammolarni bartaraf etish bo'yicha qo'llanmalar</string>
-    <string name="settings_about_website_title">Veb-saytga tashrif buyurish</string>
-    <string name="settings_about_website_desc">Morphe rasmiy veb-saytiga tashrif buyuring</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Sizga kerak bo'lmagan arxitekturalarning belgisi olib tashlang. Patch qilishda, natijaviy APK faqat APKda VA ushbu ro'yxatda mavjud bo'lgan arxitekturalarni saqlab qoladi. Agar hech biri mos kelmasa, APK buzilib ketmasligi uchun hech narsa olib tashlanmaydi</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (ko'pgina zamonaviy telefonlar)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull request artefaktlarini yuklab olish uchun public_repo ko'lamiga ega GitHub shaxsiy kirish tokeni (PAT) talab qilinadi. %1$s sahifasida public_repo ko'lamiga ega PAT yarating</string>
     <string name="settings_github_pat_label">Shaxsiy kirish tokeni</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Veb-sayt</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Kutubxona: v%1$s</string>
-    <string name="app_info_description">Ommabop Android ilovalarini zamonaviy va optimallashtirilgan holda patch qilish uchun hamjamiyat fikrlari va hissalari asosida yaratilgan ochiq kodli loyiha</string>
-    <string name="app_info_link_changelog">O'zgarishlar ro'yxati</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Tarjima qilish</string>
+    <string name="about_component">Ish stoli</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Kutubxona v%2$s</string>
+    <string name="about_update_available">Yangilanish mavjud: %1$s</string>
+    <string name="about_up_to_date">Oxirgi versiya</string>
+    <string name="about_links">Rasmiy havolalar</string>
+    <string name="about_link_donate">Donatsiya</string>
+    <string name="about_link_translations">Tarjimalar</string>
+    <string name="contributors">Hissa qo'shganlar</string>
+    <string name="contributors_description">Oxirgi 12 oy</string>
+    <string name="credits_prior_development">Avvalgi ishlanmalar</string>
+    <string name="supporters">Homiylar</string>
+    <string name="supporters_description">Open Collective platformasidagi homiylar</string>
+    <string name="supporters_become">Homiylikka qo'shiling</string>
+    <string name="people_more">Va yana %1$s kishi</string>
+    <string name="people_unavailable">Ro'yxatni yuklab bo'lmadi</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">O'rnatilgan</string>
     <string name="changelog_badge_latest">Oxirgisi</string>

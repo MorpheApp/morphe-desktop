@@ -45,6 +45,7 @@
     <string name="click_to_copy">Klik egin kopiatzeko</string>
     <string name="enable_adb_button">Gaitu ADB</string>
     <string name="drag_to_reorder">Arrastatu ordena berrezartzeko</string>
+    <string name="website">Webgunea</string>
     <string name="off">Itzalita</string>
     <string name="on">Piztuta</string>
     <string name="browse">Arakatu</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Aplikazioaren informazioa</string>
     <string name="form_factor_tv">Telebista</string>
     <string name="form_factor_automotive">Automobila</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Bilatu patchak…</string>
     <string name="status_patching_completed">Patching-a amaieratu da</string>
     <string name="status_patching_failed">Patching-a huts egin du</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s bertsioatik</string>
     <string name="update_banner_later_button">Geroago</string>
     <string name="update_banner_skip_button">Pasatu v%1$s</string>
+    <string name="home_updating_sources">Iturriak eguneratzen ari zaitezke…</string>
+    <string name="home_update_success">Iturrien eguneratzea amaieratu da</string>
+    <string name="home_update_success_subtitle">Zure iturriak eguneratuta daude</string>
+    <string name="home_sources_failed_title">Patch-iturri batzuk ez daude eskuragarri</string>
+    <string name="home_multi_source_hint_title">Patch-iturri anitz aktibatuta</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Iturri Irekiko lizentziak</string>
     <string name="licenses_dialog_empty_failed">// lizentziak kargatu ezin dira</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Ikusi hirugarren aldeko liburutegien lizentziak</string>
     <string name="settings_about_documentation_title">Dokumentazioa</string>
     <string name="settings_about_documentation_desc">Patching, iturri eta arazoen konponbideetarako gidak</string>
-    <string name="settings_about_website_title">Bisitatu webgunea</string>
-    <string name="settings_about_website_desc">Bisitatu Morphe webgune ofiziala</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Desmarkatu behar ez dituzun arkitekturak. Patching egitean, irteerako APK-ak APK-an ETA zerrenda honetan agertzen diren arkitekturak soilik gordeko ditu. Bat ere gainjartzen ez bada, ez da ezer kentzen APK-ak apurtzea saihesteko</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (telefono moderno gehienak)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Public_repo esparrua duen GitHub Access Token pertsonal bat (PAT) behar da pull request artefaktuak deskargatzeko. Sortu public_repo esparrua duen PAT bat %1$s-n</string>
     <string name="settings_github_pat_label">Sarbide-token pertsonala</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Webgunea</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Liburutegia: v%1$s</string>
-    <string name="app_info_description">Android aplikazio ezagunak modu moderno eta eraginkorrean patchatzeko open-source proiektua, komunitatearen iritzi eta ekarpenek bultzatua</string>
-    <string name="app_info_link_changelog">Aldaketa-erregistroa</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Itzuli</string>
+    <string name="about_component">Mahaian</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Liburutegia v%2$s</string>
+    <string name="about_update_available">Eguneratzea eskuragarri: %1$s</string>
+    <string name="about_up_to_date">Eguneratuta</string>
+    <string name="about_links">Esteka ofizialak</string>
+    <string name="about_link_donate">Doatua</string>
+    <string name="about_link_translations">Itzulpenak</string>
+    <string name="contributors">Collaboradoreak</string>
+    <string name="contributors_description">Azken 12 hilabeteetan</string>
+    <string name="credits_prior_development">Aurreko garapena</string>
+    <string name="supporters">Sgetuileak</string>
+    <string name="supporters_description">Open Collective-ko babesleak</string>
+    <string name="supporters_become">Bihurtu laguntzaile batean</string>
+    <string name="people_more">Eta %1$s gehiago</string>
+    <string name="people_unavailable">Ezin izan da zerrenda kargatu</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Instalatua</string>
     <string name="changelog_badge_latest">Azkenena</string>

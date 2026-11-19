@@ -45,6 +45,7 @@
     <string name="click_to_copy">クリックしてコピー</string>
     <string name="enable_adb_button">ADB を有効化</string>
     <string name="drag_to_reorder">ドラッグして並べ替え</string>
+    <string name="website">ウェブサイト</string>
     <string name="off">オフ</string>
     <string name="on">オン</string>
     <string name="browse">参照</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">アプリ情報</string>
     <string name="form_factor_tv">テレビ</string>
     <string name="form_factor_automotive">Automotive</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">パッチを検索…</string>
     <string name="status_patching_completed">パッチ適用が完了しました</string>
     <string name="status_patching_failed">パッチ適用に失敗しました</string>
@@ -694,6 +694,11 @@
     <string name="update_banner_from_version">v%1$s から</string>
     <string name="update_banner_later_button">後で</string>
     <string name="update_banner_skip_button">v%1$s をスキップ</string>
+    <string name="home_updating_sources">ソースを更新中…</string>
+    <string name="home_update_success">ソースの更新が完了しました</string>
+    <string name="home_update_success_subtitle">ソースは最新の状態です</string>
+    <string name="home_sources_failed_title">一部のパッチソースを利用できません</string>
+    <string name="home_multi_source_hint_title">複数のパッチソースが有効になっています</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">オープンソースライセンス</string>
     <string name="licenses_dialog_empty_failed">// ライセンスの読み込みに失敗しました</string>
@@ -837,8 +842,6 @@
     <string name="settings_about_licenses_desc">サードパーティライブラリのライセンスを表示します</string>
     <string name="settings_about_documentation_title">ドキュメント</string>
     <string name="settings_about_documentation_desc">パッチ適用、ソース、トラブルシューティングのガイド</string>
-    <string name="settings_about_website_title">ウェブサイトを表示</string>
-    <string name="settings_about_website_desc">Morphe 公式ウェブサイトを表示</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">不要なアーキテクチャのチェックを外してください。パッチ適用時、出力される APK には、APK に存在し、かつこのリストにも記載されているアーキテクチャのみが保持されます。重複するアーキテクチャがない場合は、APK の破損を防ぐため、何も削除されません</string>
     <string name="settings_strip_libs_arm64">ARM 64ビット（最近のほとんどのスマートフォン）</string>
@@ -897,14 +900,21 @@
     <string name="settings_github_pat_desc">pull request のアーティファクトをダウンロードするには、public_repo スコープの GitHub の個人アクセストークン (PAT) が必要です。%1$s で public_repo スコープの PAT を作成してください。</string>
     <string name="settings_github_pat_label">個人アクセストークン</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">ウェブサイト</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">パッチャー: v%1$s</string>
-    <string name="app_info_version_library">ライブラリ: v%1$s</string>
-    <string name="app_info_description">人気の Android アプリにモダンで効率的にパッチを適用するためのオープンソースプロジェクトです。コミュニティからのフィードバックや貢献によって発展しています</string>
-    <string name="app_info_link_changelog">変更履歴</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">翻訳</string>
+    <string name="about_component">デスクトップ</string>
+    <string name="about_version_patcher_library">パッチャー v%1$s · ライブラリ v%2$s</string>
+    <string name="about_update_available">利用可能な更新があります: %1$s</string>
+    <string name="about_up_to_date">最新の状態です</string>
+    <string name="about_links">公式リンク</string>
+    <string name="about_link_donate">寄付</string>
+    <string name="about_link_translations">翻訳</string>
+    <string name="contributors">貢献者</string>
+    <string name="contributors_description">過去 12 ヶ月</string>
+    <string name="credits_prior_development">過去の開発</string>
+    <string name="supporters">サポーター</string>
+    <string name="supporters_description">Open Collective の支援者</string>
+    <string name="supporters_become">サポーターになる</string>
+    <string name="people_more">他 %1$s 件</string>
+    <string name="people_unavailable">リストを読み込めませんでした</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">インストール済み</string>
     <string name="changelog_badge_latest">最新</string>

@@ -45,6 +45,7 @@
     <string name="click_to_copy">Smelltu til að afrita</string>
     <string name="enable_adb_button">Virkja ADB</string>
     <string name="drag_to_reorder">Dragðu til að endurraða</string>
+    <string name="website">Vefsíða</string>
     <string name="off">Af</string>
     <string name="on">Á</string>
     <string name="browse">Fletta</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Upplýsingar um forrit</string>
     <string name="form_factor_tv">Sjónvarp</string>
     <string name="form_factor_automotive">Bifreiðar</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Leita í plástrum…</string>
     <string name="status_patching_completed">Plástrun lokið</string>
     <string name="status_patching_failed">Plástrun mistókst</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">frá v%1$s</string>
     <string name="update_banner_later_button">Seinna</string>
     <string name="update_banner_skip_button">Sleppa v%1$s</string>
+    <string name="home_updating_sources">Uppfæring á heimildum…</string>
+    <string name="home_update_success">Uppfærsla á heimildum lokið</string>
+    <string name="home_update_success_subtitle">Heimildir þínar eru uppfærðar</string>
+    <string name="home_sources_failed_title">Sumar uppsprettur breytistillinga eru ekki tiltækar</string>
+    <string name="home_multi_source_hint_title">Margar heimildir breytistillinga virkar</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Opin hugbúnaðarleyfi</string>
     <string name="licenses_dialog_empty_failed">// mistókst að hlaða leyfum</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Skoða leyfissamninga þriðja aðila</string>
     <string name="settings_about_documentation_title">Skjöl</string>
     <string name="settings_about_documentation_desc">Leiðbeiningar um plástrun, heimildir og bilanaleit</string>
-    <string name="settings_about_website_title">Heimsækja vefsíðu</string>
-    <string name="settings_about_website_desc">Heimsæktu opinberu vefsíðu Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Taktu hakið af arkitektúrum sem þú þarft ekki. Við plástrun mun úttaks-APK aðeins halda þeim arkitektúrum sem eru í APK OG á þessum lista. Ef enginn skarast er ekkert fjarlægt til að forðast skemmd APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (flest nútíma símar)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Persónulegt aðgangstákn (PAT) með public_repo umfangi er nauðsynlegt til að sækja pull request afurðir. Búðu til PAT með public_repo umfangi á %1$s.</string>
     <string name="settings_github_pat_label">Persónulegt aðgangstákn</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Vefsíða</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Plástrari: v%1$s</string>
-    <string name="app_info_version_library">Bókasafn: v%1$s</string>
-    <string name="app_info_description">Opið hugbúnaðarverkefni fyrir nútímalega, straumlínulagaða plástrun vinsælla Android-forrita, knúið af endurgjöf og framlögum samfélagsins</string>
-    <string name="app_info_link_changelog">Breytingaskrá</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Þýða</string>
+    <string name="about_component">Skálborð</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Bókasafn v%2$s</string>
+    <string name="about_update_available">Uppfærsla í boði: %1$s</string>
+    <string name="about_up_to_date">Uppfært</string>
+    <string name="about_links">Opinber tenglar</string>
+    <string name="about_link_donate">Styrkja</string>
+    <string name="about_link_translations">Þýðingar</string>
+    <string name="contributors">Sameiningar</string>
+    <string name="contributors_description">Síðustu 12 mánuði</string>
+    <string name="credits_prior_development">Fyrri þróun</string>
+    <string name="supporters">Stuðningsmenn</string>
+    <string name="supporters_description">Stuðningsmenn á Open Collective</string>
+    <string name="supporters_become">Verðu stuðningsmaður</string>
+    <string name="people_more">Og %1$s fleiri</string>
+    <string name="people_unavailable">Gat ekki hlaðið listanum</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Uppsett</string>
     <string name="changelog_badge_latest">Nýjasta útgáfa</string>

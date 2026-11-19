@@ -45,6 +45,7 @@
     <string name="click_to_copy">Хуулахын тулд дарна уу</string>
     <string name="enable_adb_button">ADB-г идэвхжүүлэх</string>
     <string name="drag_to_reorder">Дарааллыг өөрчлөхийн тулд чирнэ үү</string>
+    <string name="website">Вэбсайт</string>
     <string name="off">Унтраах</string>
     <string name="on">Асаах</string>
     <string name="browse">Хайх</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Аппликейшны мэдээлэл</string>
     <string name="form_factor_tv">ЗҮРХЭВ</string>
     <string name="form_factor_automotive">Автомашин</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Патч хайх…</string>
     <string name="status_patching_completed">Патчлах ажил дууссан</string>
     <string name="status_patching_failed">Патчлахад алдаа гарлаа</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s-оос</string>
     <string name="update_banner_later_button">Дараа</string>
     <string name="update_banner_skip_button">v%1$s-ийг алгасах</string>
+    <string name="home_updating_sources">Эх сурвалжуудыг шинэчилж байна…</string>
+    <string name="home_update_success">Эх сурвалжуудыг шинэчлэх ажил дууслаа</string>
+    <string name="home_update_success_subtitle">Таны эх сурвалжууд шинэчлэгдсэн байна</string>
+    <string name="home_sources_failed_title">Зарим нөхөх эх сурвалжууд боломжгүй байна</string>
+    <string name="home_multi_source_hint_title">Олон нөхөх эх сурвалж идэвхжсэн байна</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Нээлттэй эх сурвалжийн лицензүүд</string>
     <string name="licenses_dialog_empty_failed">// лицензүүдийг ачаалахад алдаа гарлаа</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Гуравдагч талын сангуудын лицензүүдийг харах</string>
     <string name="settings_about_documentation_title">Баримт бичиг</string>
     <string name="settings_about_documentation_desc">Патчлах, эх сурвалж болон алдааг засах зааврууд</string>
-    <string name="settings_about_website_title">Вэбсайтад зочлох</string>
-    <string name="settings_about_website_desc">Morphe-ийн албан ёсны вэбсайтад зочлоорой</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Танд шаардлагагүй архитектурыг цуцгаана уу. Патч хийх үед гарсан APK нь зөвхөн APK болон энэ жагсаалтад байгаа архитектурыг хадгалах болно. Хэрэв давхцахгүй бол APK-г эвдрэхээс сэргийлж юуг ч устгахгүй</string>
     <string name="settings_strip_libs_arm64">ARM 64-бит (орчин үеийн ихэнх утаснууд)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull request-ийн artifact-уудыг татаж авахын тулд public_repo эрхтэй GitHub Personal Access Token (PAT) шаардлагатай. %1$s дээр public_repo эрхтэй PAT үүсгэнэ үү</string>
     <string name="settings_github_pat_label">Хувийн хандалтын токен (Personal Access Token)</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Вэбсайт</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Сан: v%1$s</string>
-    <string name="app_info_description">Нийгэмлэгийн санал хүсэлт, хувь нэмээлэлд тулгуурлан Android-ийн түгээмэл аппликейшнүүдийг орчин үеийн, оновчтой аргаар патчлах нээлттэй эх сурвалж бүхий төсөл</string>
-    <string name="app_info_link_changelog">Өөрчлөлтийн тэмдэглэл</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Орчуулах</string>
+    <string name="about_component">Ширээ</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Санол v%2$s</string>
+    <string name="about_update_available">Шинэчлэл боломжтой: %1$s</string>
+    <string name="about_up_to_date">Хамгийн сүүлийн хувилбар</string>
+    <string name="about_links">Албан ёсны холбоосууд</string>
+    <string name="about_link_donate">Хандивлах</string>
+    <string name="about_link_translations">Орчуулга</string>
+    <string name="contributors">Зу অবদানулагчид</string>
+    <string name="contributors_description">Сүүлийн 12 сарын хугацаанд</string>
+    <string name="credits_prior_development">Өмнөх хөгжүүлэлт</string>
+    <string name="supporters">Дэмжигчид</string>
+    <string name="supporters_description">Open Collective-ийн дэмжигчид</string>
+    <string name="supporters_become">Дэмжигч болох</string>
+    <string name="people_more">Бас %1$s хүн</string>
+    <string name="people_unavailable">Жагсаалтыг ачаалж чадсангүй</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Суурилуулсан</string>
     <string name="changelog_badge_latest">Хамгийн сүүлийн</string>

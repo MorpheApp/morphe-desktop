@@ -45,6 +45,7 @@
     <string name="click_to_copy">Haz clic para copiar</string>
     <string name="enable_adb_button">Activar ADB</string>
     <string name="drag_to_reorder">Arrastra para reordenar</string>
+    <string name="website">Sitio web</string>
     <string name="off">Desactivado</string>
     <string name="on">Activado</string>
     <string name="browse">Explorar</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Información de la aplicación</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Automóvil</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Buscar parches…</string>
     <string name="status_patching_completed">Parcheo completado</string>
     <string name="status_patching_failed">Parcheo fallido</string>
@@ -699,6 +699,11 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="update_banner_from_version">desde v%1$s</string>
     <string name="update_banner_later_button">Más tarde</string>
     <string name="update_banner_skip_button">Omitir v%1$s</string>
+    <string name="home_updating_sources">Actualizando fuentes…</string>
+    <string name="home_update_success">Actualización de fuentes completada</string>
+    <string name="home_update_success_subtitle">Tus fuentes están al día</string>
+    <string name="home_sources_failed_title">Algunas fuentes de parches no están disponibles</string>
+    <string name="home_multi_source_hint_title">Múltiples fuentes de parches habilitadas</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licencias de código abierto</string>
     <string name="licenses_dialog_empty_failed">// error al cargar las licencias</string>
@@ -842,8 +847,6 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_about_licenses_desc">Ver licencias de bibliotecas de terceros</string>
     <string name="settings_about_documentation_title">Documentación</string>
     <string name="settings_about_documentation_desc">Guías de parcheo, fuentes y solución de problemas</string>
-    <string name="settings_about_website_title">Visitar el sitio web</string>
-    <string name="settings_about_website_desc">Visita el sitio web oficial de Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Desmarca las arquitecturas que no necesites. Al parchear, el APK de salida conservará solo las arquitecturas presentes en el APK Y TAMBIÉN en esta lista. Si no coinciden, no se elimina nada para evitar APK dañados</string>
     <string name="settings_strip_libs_arm64">ARM de 64 bits (la mayoría de teléfonos modernos)</string>
@@ -902,14 +905,21 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_github_pat_desc">Se requiere un token de acceso personal (PAT) de GitHub con el alcance public_repo para descargar artefactos de pull request. Crea un PAT con el alcance public_repo en %1$s</string>
     <string name="settings_github_pat_label">Token de acceso personal</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Sitio web</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Parcheador: v%1$s</string>
-    <string name="app_info_version_library">Biblioteca: v%1$s</string>
-    <string name="app_info_description">Un proyecto de código abierto para parchear aplicaciones populares de Android de forma moderna y eficiente, impulsado por la comunidad con sus comentarios y contribuciones</string>
-    <string name="app_info_link_changelog">Registro de cambios</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Traducir</string>
+    <string name="about_component">Escritorio</string>
+    <string name="about_version_patcher_library">Parcheador v%1$s · Librería v%2$s</string>
+    <string name="about_update_available">Actualización disponible: %1$s</string>
+    <string name="about_up_to_date">Actualizado</string>
+    <string name="about_links">Enlaces oficiales</string>
+    <string name="about_link_donate">Donar</string>
+    <string name="about_link_translations">Traducciones</string>
+    <string name="contributors">Colaboradores</string>
+    <string name="contributors_description">Últimos 12 meses</string>
+    <string name="credits_prior_development">Desarrollo previo</string>
+    <string name="supporters">Patrocinadores</string>
+    <string name="supporters_description">Patrocinadores en Open Collective</string>
+    <string name="supporters_become">Convertirse en patrocinador</string>
+    <string name="people_more">Y %1$s más</string>
+    <string name="people_unavailable">No se ha podido cargar la lista</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Instalada</string>
     <string name="changelog_badge_latest">Última</string>

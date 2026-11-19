@@ -45,6 +45,7 @@
     <string name="click_to_copy">Націсніце, каб скапіяваць</string>
     <string name="enable_adb_button">Уключыць ADB</string>
     <string name="drag_to_reorder">Перацягніце, каб змяніць парадак</string>
+    <string name="website">Вебсайт</string>
     <string name="off">Выкл.</string>
     <string name="on">Укл.</string>
     <string name="browse">Прагляд</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Інфармацыя пра праграму</string>
     <string name="form_factor_tv">ТБ</string>
     <string name="form_factor_automotive">Аўтамабільны</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Пошук патчаў…</string>
     <string name="status_patching_completed">Патчаванне завершана</string>
     <string name="status_patching_failed">Патчаванне не ўдалося</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">з v%1$s</string>
     <string name="update_banner_later_button">Пазней</string>
     <string name="update_banner_skip_button">Прапусціць v%1$s</string>
+    <string name="home_updating_sources">Абнаўленне крыніц…</string>
+    <string name="home_update_success">Абнаўленне крыніц завершана</string>
+    <string name="home_update_success_subtitle">Вашы крыніцы абноўлены</string>
+    <string name="home_sources_failed_title">Некаторыя крыніцы патчаў недаступныя</string>
+    <string name="home_multi_source_hint_title">Уключана некалькі крыніц патчаў</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ліцэнзіі адкрытага кода</string>
     <string name="licenses_dialog_empty_failed">// не ўдалася загрузіць ліцэнзіі</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Прагляд ліцэнзій старонніх бібліятэк</string>
     <string name="settings_about_documentation_title">Дакументацыя</string>
     <string name="settings_about_documentation_desc">Кіраўніцтвы па патчынгу, крыніцах і выпраўленні памылак</string>
-    <string name="settings_about_website_title">Наведаць вебсайт</string>
-    <string name="settings_about_website_desc">Наведаць афіцыйны вебсайт Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Зніміце адзнаку з архітэктур, якія вам не патрэбныя. Пры патчаванні ў выніковым APK застануцца толькі тыя архітэктуры, якія прысутнічаюць і ў APK, і ў гэтым спісе. Калі перасячэння няма, нічога не выдаляецца, каб пазбегнуць паломкі APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-біт (большасць сучасных тэлефонаў)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Для спампоўкі артэфактаў пул-рэквестаў патрабуецца персанальны токен доступу GitHub (PAT) з вобласцю public_repo. Стварыце PAT з вобласцю public_repo на %1$s</string>
     <string name="settings_github_pat_label">Персанальны токен доступу</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Вэбсайт</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Патчар: v%1$s</string>
-    <string name="app_info_version_library">Бібліятэка: v%1$s</string>
-    <string name="app_info_description">Праект з адкрытым кодам для сучаснага і аптымізаванага патчавання папулярных праграм для Android, які развіваецца дзякуючы водгукам і ўнёскам супольнасці</string>
-    <string name="app_info_link_changelog">Спіс змен</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Перакласці</string>
+    <string name="about_component">Настольны</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Бібліятэка v%2$s</string>
+    <string name="about_update_available">Даступна абнаўленне: %1$s</string>
+    <string name="about_up_to_date">Актуальная версія</string>
+    <string name="about_links">Афіцыйныя спасылкі</string>
+    <string name="about_link_donate">Ахвяраваць</string>
+    <string name="about_link_translations">Пераклады</string>
+    <string name="contributors">Укладнікі</string>
+    <string name="contributors_description">За апошнія 12 месяцаў</string>
+    <string name="credits_prior_development">Папярэдняя распрацоўка</string>
+    <string name="supporters">Падтрымліваючыя</string>
+    <string name="supporters_description">Спонсары на Open Collective</string>
+    <string name="supporters_become">Стаць падтрымліваючым</string>
+    <string name="people_more">І яшчэ %1$s</string>
+    <string name="people_unavailable">Не ўдалося загрузіць спіс</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Усталявана</string>
     <string name="changelog_badge_latest">Апошняя</string>

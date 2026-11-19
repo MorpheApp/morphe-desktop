@@ -45,6 +45,7 @@
     <string name="click_to_copy">Bonyeza kunakili</string>
     <string name="enable_adb_button">Washa ADB</string>
     <string name="drag_to_reorder">Buruta ili kupanga upya</string>
+    <string name="website">Tovuti</string>
     <string name="off">Zima</string>
     <string name="on">Washa</string>
     <string name="browse">Tafuta</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Habari za programu</string>
     <string name="form_factor_tv">Runinga</string>
     <string name="form_factor_automotive">Gari</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Tafuta viraka…</string>
     <string name="status_patching_completed">Urekebishaji umekamilika</string>
     <string name="status_patching_failed">Urekebishaji umeshindwa</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">kutoka v%1$s</string>
     <string name="update_banner_later_button">Baadaye</string>
     <string name="update_banner_skip_button">Ruka v%1$s</string>
+    <string name="home_updating_sources">Inasasisha vyanzo…</string>
+    <string name="home_update_success">Sasisho la vyanzo limekamilika</string>
+    <string name="home_update_success_subtitle">Vyanzo vyako viko vya kisasa</string>
+    <string name="home_sources_failed_title">Baadhi ya vyanzo vya patch havipatikani</string>
+    <string name="home_multi_source_hint_title">Vyanzo vingi vya patch vimeidhinishwa</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Leseni za Chanzo Huria</string>
     <string name="licenses_dialog_empty_failed">// imeshindwa kupakia leseni</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Tazama leseni za maktaba za upande wa tatu</string>
     <string name="settings_about_documentation_title">Mwongozo</string>
     <string name="settings_about_documentation_desc">Mwongozo wa kupachika, vyanzo na utatuzi wa matatizo</string>
-    <string name="settings_about_website_title">Tembelea tovuti</string>
-    <string name="settings_about_website_desc">Tembelea tovuti rasmi ya Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Ondoa alama ya tiki kwenye usanifu usiohitajika. Wakati wa kupatch, APK ya toleo itabaki na usanifu uliopo kwenye APK NA katika orodha hii. Ikiwa hakuna yanayofanana, hakuna kitakachoondolewa ili kuepuka APK kuharibika</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (simu nyingi za kisasa)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">GitHub Personal Access Token (PAT) yenye upeo wa public_repo inahitajika ili kupakua artifacts za ombi la mabadiliko. Tengeneza PAT yenye upeo wa public_repo kwenye %1$s</string>
     <string name="settings_github_pat_label">Token ya Upatikanaji Binafsi</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Tovuti</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Maktaba: v%1$s</string>
-    <string name="app_info_description">Mradi wa chanzo wazi kwa ajili ya upachaji wa kisasa na uliorahisishwa wa programu maarufu za Android, unaoendeshwa na maoni na michango ya jamii</string>
-    <string name="app_info_link_changelog">Orodha ya mabadiliko</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Tafsiri</string>
+    <string name="about_component">Kompyuta ya mezani</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Maktaba v%2$s</string>
+    <string name="about_update_available">Sasisho linapatikana: %1$s</string>
+    <string name="about_up_to_date">Imesasishwa</string>
+    <string name="about_links">Viungo rasmi</string>
+    <string name="about_link_donate">Changia</string>
+    <string name="about_link_translations">Tafsiri</string>
+    <string name="contributors">Wachangia</string>
+    <string name="contributors_description">Miezi 12 ya mwisho</string>
+    <string name="credits_prior_development">Uundaji wa awali</string>
+    <string name="supporters">Wafadhili</string>
+    <string name="supporters_description">Wafadhili kwenye Open Collective</string>
+    <string name="supporters_become">Kuwa mfadhili</string>
+    <string name="people_more">Na %1$s zaidi</string>
+    <string name="people_unavailable">Hakuweza kupakiwa orodha</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Imesakinishwa</string>
     <string name="changelog_badge_latest">Ya hivi punde</string>

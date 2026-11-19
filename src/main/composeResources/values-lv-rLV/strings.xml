@@ -45,6 +45,7 @@
     <string name="click_to_copy">Noklikšķiniet, lai kopētu</string>
     <string name="enable_adb_button">Iespējot ADB</string>
     <string name="drag_to_reorder">Velciet, lai mainītu secību</string>
+    <string name="website">Tīmekvārglapa</string>
     <string name="off">Izslēgts</string>
     <string name="on">Ieslēgts</string>
     <string name="browse">Pārlūkot</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Lietotnes info</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Automobilu</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Meklēt patchus…</string>
     <string name="status_patching_completed">Patchošana pabeigta</string>
     <string name="status_patching_failed">Patchošana neizdevās</string>
@@ -691,6 +691,11 @@
     <string name="update_banner_from_version">no v%1$s</string>
     <string name="update_banner_later_button">Vēlāk</string>
     <string name="update_banner_skip_button">Izlaikt v%1$s</string>
+    <string name="home_updating_sources">Atjaunina avotus…</string>
+    <string name="home_update_success">Avoti atjaunināti</string>
+    <string name="home_update_success_subtitle">Jūsu avoti ir aktualizēti</string>
+    <string name="home_sources_failed_title">Daži labojumu avoti nav pieejami</string>
+    <string name="home_multi_source_hint_title">Iespēgti vairāki atlabu avoti</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Atvērtā koda licences</string>
     <string name="licenses_dialog_empty_failed">// neizdevās ielādēt licences</string>
@@ -833,8 +838,6 @@
     <string name="settings_about_licenses_desc">Skatīt trešo pušu bibliotēku licences</string>
     <string name="settings_about_documentation_title">Dokumentācija</string>
     <string name="settings_about_documentation_desc">Rokasgrāmatas lāpīšanai, avotiem un kļūdu novēršanai</string>
-    <string name="settings_about_website_title">Apmeklēt tīmekļa vietni</string>
-    <string name="settings_about_website_desc">Apmeklēt oficiālo Morphe tīmekļa vietni</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Atzīmējiet arhitektūras, kas jums nav vajadzīgas. Lāpot APK, izvades APK saglabās tikai tās arhitektūras, kas ir gan APK failā, gan šajā sarakstā. Ja nav nevienas sakritības, nekas netiek izņemts, lai izvairītos no bojātiem APK failiem</string>
     <string name="settings_strip_libs_arm64">ARM 64 bitu (lielākā daļa mūsdienīgo tālruņu)</string>
@@ -893,14 +896,21 @@
     <string name="settings_github_pat_desc">Lai lejupielādētu pull request artefaktus, ir nepieciešams GitHub Personīgā piekļuves tokenis (PAT) ar public_repo scope. Izveidojiet PAT ar scope public_repo vietnē %1$s</string>
     <string name="settings_github_pat_label">Personīgā piekļuves tokenis</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Tīmekļa vietne</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Lāpīšanas programma: v%1$s</string>
-    <string name="app_info_version_library">Bibliotēka: v%1$s</string>
-    <string name="app_info_description">Atvērtā pirmkoda projekts populāru Android lietotņu modernai un vienkāršotai lāpīšanai, ko virza kopienas atsauksmes un ieguldījums</string>
-    <string name="app_info_link_changelog">Izmaiņu saraksts</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Tulkot</string>
+    <string name="about_component">Galddators</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Bibliotēka v%2$s</string>
+    <string name="about_update_available">Pieejams atjauninājums: %1$s</string>
+    <string name="about_up_to_date">Aktuāli</string>
+    <string name="about_links">Oficiālās saites</string>
+    <string name="about_link_donate">Ziedot</string>
+    <string name="about_link_translations">Tulkojumi</string>
+    <string name="contributors">Veiksmīgiem līdzdarbotājiem</string>
+    <string name="contributors_description">Pēdējais 12 mēneši</string>
+    <string name="credits_prior_development">Iepriekšējā izstrāde</string>
+    <string name="supporters">Atbalstītāji</string>
+    <string name="supporters_description">Atbalstītāji Open Collective</string>
+    <string name="supporters_become">Kļūvi par atbalstītāju</string>
+    <string name="people_more">Un vēl %1$s</string>
+    <string name="people_unavailable">Neizdevās ielādēt sarakstu</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Uzstādīta</string>
     <string name="changelog_badge_latest">Jaunākā</string>

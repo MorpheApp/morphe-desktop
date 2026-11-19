@@ -45,6 +45,7 @@
     <string name="click_to_copy">點擊以複製</string>
     <string name="enable_adb_button">啟用 ADB 偵錯</string>
     <string name="drag_to_reorder">拖曳以重新排序</string>
+    <string name="website">網站</string>
     <string name="off">關閉</string>
     <string name="on">開啟</string>
     <string name="browse">瀏覽</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">應用程式資訊</string>
     <string name="form_factor_tv">電視</string>
     <string name="form_factor_automotive">汽車</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">搜尋修補檔……</string>
     <string name="status_patching_completed">修補完成</string>
     <string name="status_patching_failed">修補失敗</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">從 v%1$s</string>
     <string name="update_banner_later_button">稍後</string>
     <string name="update_banner_skip_button">略過 v%1$s</string>
+    <string name="home_updating_sources">正在更新來源…</string>
+    <string name="home_update_success">來源更新完成</string>
+    <string name="home_update_success_subtitle">來源已是最新狀態</string>
+    <string name="home_sources_failed_title">部份修補程式來源無法使用</string>
+    <string name="home_multi_source_hint_title">已啟用多個修補來源</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">開放原始碼授權</string>
     <string name="licenses_dialog_empty_failed">// 載入授權失敗</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">查看第三方程式庫的授權</string>
     <string name="settings_about_documentation_title">文件</string>
     <string name="settings_about_documentation_desc">修補、來源和故障排除的指南</string>
-    <string name="settings_about_website_title">瀏覽網站</string>
-    <string name="settings_about_website_desc">瀏覽Morphe官方網站</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">取消勾選您不需要的架構。修補時，輸出 APK 只會保留同時存在於 APK 和此清單中的架構。若兩者沒有重疊，則不會剝離任何內容，以避免 APK 損毀</string>
     <string name="settings_strip_libs_arm64">ARM 64 位元（大多數現代手機）</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">下載拉取請求成品需要具有 public_repo 範圍的 GitHub 個人存取權杖 (PAT)。在 %1$s 上建立範圍為 public_repo 的 PAT</string>
     <string name="settings_github_pat_label">個人存取權杖</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">網站</string>
-    <string name="app_info_version_gui">GUI：%1$s</string>
-    <string name="app_info_version_patcher">修補器：v%1$s</string>
-    <string name="app_info_version_library">程式庫：v%1$s</string>
-    <string name="app_info_description">這是一個開源專案，用於對熱門的 Android 應用程式進行現代、簡化的修補，並由社群的意見回饋和貢獻所驅動</string>
-    <string name="app_info_link_changelog">變更日誌</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">翻譯</string>
+    <string name="about_component">桌面</string>
+    <string name="about_version_patcher_library">修補程式 v%1$s · 函式庫 v%2$s</string>
+    <string name="about_update_available">可用更新：%1$s</string>
+    <string name="about_up_to_date">已追上</string>
+    <string name="about_links">官方連結</string>
+    <string name="about_link_donate">捐贈</string>
+    <string name="about_link_translations">翻譯</string>
+    <string name="contributors">貢獻者</string>
+    <string name="contributors_description">過去 12 個月</string>
+    <string name="credits_prior_development">先前開發</string>
+    <string name="supporters">支持者</string>
+    <string name="supporters_description">Open Collective 上的贊助者</string>
+    <string name="supporters_become">成為支持者</string>
+    <string name="people_more">以及另外 %1$s 位</string>
+    <string name="people_unavailable">無法載入清單</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">已安裝</string>
     <string name="changelog_badge_latest">最新</string>

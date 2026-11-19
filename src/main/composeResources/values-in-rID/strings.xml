@@ -45,6 +45,7 @@
     <string name="click_to_copy">Klik untuk menyalin</string>
     <string name="enable_adb_button">Aktifkan ADB</string>
     <string name="drag_to_reorder">Seret untuk mengurutkan ulang</string>
+    <string name="website">Situs Web</string>
     <string name="off">Nonaktif</string>
     <string name="on">Aktif</string>
     <string name="browse">Jelajahi</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Info aplikasi</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Otomotif</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Cari tambalan…</string>
     <string name="status_patching_completed">Penambalan selesai</string>
     <string name="status_patching_failed">Penambalan gagal</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">dari v%1$s</string>
     <string name="update_banner_later_button">Nanti</string>
     <string name="update_banner_skip_button">Lewati v%1$s</string>
+    <string name="home_updating_sources">Memperbarui sumber…</string>
+    <string name="home_update_success">Pembaruan sumber selesai</string>
+    <string name="home_update_success_subtitle">Sumber Anda sudah yang terbaru</string>
+    <string name="home_sources_failed_title">Beberapa sumber tambalan tidak tersedia</string>
+    <string name="home_multi_source_hint_title">Beberapa sumber tambalan diaktifkan</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Lisensi Sumber Terbuka</string>
     <string name="licenses_dialog_empty_failed">// gagal memuat lisensi</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Lihat lisensi pustaka pihak ketiga</string>
     <string name="settings_about_documentation_title">Dokumentasi</string>
     <string name="settings_about_documentation_desc">Panduan untuk menambal, sumber, dan pemecahan masalah</string>
-    <string name="settings_about_website_title">Kunjungi situs web</string>
-    <string name="settings_about_website_desc">Kunjungi situs web resmi Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Hapus centang arsitektur yang tidak Anda perlukan. Saat menambal, APK keluaran hanya akan menyimpan arsitektur yang ada di APK DAN di daftar ini. Jika tidak ada yang cocok, tidak ada yang di-strip untuk menghindari APK rusak</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (kebanyakan ponsel modern)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Token Akses Pribadi GitHub (PAT) dengan cakupan public_repo diperlukan untuk mengunduh artefak pull request. Buat PAT dengan cakupan public_repo di %1$s.</string>
     <string name="settings_github_pat_label">Token Akses Pribadi</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Situs web</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Pustaka: v%1$s</string>
-    <string name="app_info_description">Proyek sumber terbuka untuk penambalan aplikasi Android populer yang modern dan efisien, didorong oleh masukan dan kontribusi komunitas</string>
-    <string name="app_info_link_changelog">Catatan perubahan</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Terjemahkan</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_update_available">Tersedia pembaruan: %1$s</string>
+    <string name="about_up_to_date">Terbaru</string>
+    <string name="about_links">Tautan resmi</string>
+    <string name="about_link_donate">Donasi</string>
+    <string name="about_link_translations">Terjemahan</string>
+    <string name="contributors">Kontributor</string>
+    <string name="contributors_description">12 bulan terakhir</string>
+    <string name="credits_prior_development">Pengembangan sebelumnya</string>
+    <string name="supporters">Pendukung</string>
+    <string name="supporters_description">Donatur di Open Collective</string>
+    <string name="supporters_become">Jadi pendukung</string>
+    <string name="people_more">Dan %1$s lainnya</string>
+    <string name="people_unavailable">Tidak dapat memuat daftar</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Terpasang</string>
     <string name="changelog_badge_latest">Terbaru</string>

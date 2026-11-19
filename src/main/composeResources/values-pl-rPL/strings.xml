@@ -45,6 +45,7 @@
     <string name="click_to_copy">Kliknij, aby skopiować</string>
     <string name="enable_adb_button">Włącz ADB</string>
     <string name="drag_to_reorder">Przeciągnij, aby zmienić kolejność</string>
+    <string name="website">Strona internetowa</string>
     <string name="off">Wyłączone</string>
     <string name="on">Włączone</string>
     <string name="browse">Przeglądaj</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Informacje o aplikacji</string>
     <string name="form_factor_tv">Telewizor</string>
     <string name="form_factor_automotive">Samochód</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Szukaj modyfikacji...</string>
     <string name="status_patching_completed">Modyfikowanie ukończone</string>
     <string name="status_patching_failed">Błąd modyfikacji</string>
@@ -694,6 +694,11 @@
     <string name="update_banner_from_version">z v%1$s</string>
     <string name="update_banner_later_button">Później</string>
     <string name="update_banner_skip_button">Pomiń v%1$s</string>
+    <string name="home_updating_sources">Aktualizowanie źródeł…</string>
+    <string name="home_update_success">Aktualizacja źródeł zakończona</string>
+    <string name="home_update_success_subtitle">Źródła są aktualne</string>
+    <string name="home_sources_failed_title">Niektóre źródła modyfikacji są niedostępne</string>
+    <string name="home_multi_source_hint_title">Włączono wiele źródeł modyfikacji</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licencje otwartoźródłowe</string>
     <string name="licenses_dialog_empty_failed">// nie udało się wczytać licencji</string>
@@ -837,8 +842,6 @@
     <string name="settings_about_licenses_desc">Wyświetl licencje zewnętrznych bibliotek</string>
     <string name="settings_about_documentation_title">Dokumentacja</string>
     <string name="settings_about_documentation_desc">Poradniki dotyczące modyfikowania, źródeł i rozwiązywania problemów</string>
-    <string name="settings_about_website_title">Odwiedź stronę</string>
-    <string name="settings_about_website_desc">Odwiedź oficjalną stronę Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Odznacz architektury, których nie potrzebujesz. Podczas modyfikowania wyjściowy plik APK zachowa tylko te architektury, które są obecne zarówno w pliku APK, jak i na tej liście. Jeśli żadne się nie pokrywają, nic nie zostanie usunięte, aby zapobiec uszkodzeniu pliku APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (większość nowoczesnych telefonów)</string>
@@ -897,14 +900,21 @@
     <string name="settings_github_pat_desc">Osobisty token dostępu GitHub (PAT) z zakresem public_repo jest wymagany do pobierania artefaktów z pull requestów. Utwórz PAT z zakresem public_repo na %1$s</string>
     <string name="settings_github_pat_label">Osobisty token dostępu</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Strona internetowa</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Modyfikator: v%1$s</string>
-    <string name="app_info_version_library">Biblioteka: v%1$s</string>
-    <string name="app_info_description">Projekt otwartoźródłowy służący do nowoczesnego i sprawnego modyfikowania popularnych aplikacji na Androida, rozwijany dzięki opiniom i zaangażowaniu społeczności</string>
-    <string name="app_info_link_changelog">Lista zmian</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Przetłumacz</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Modyfikator v%1$s · Biblioteka v%2$s</string>
+    <string name="about_update_available">Dostępna aktualizacja: %1$s</string>
+    <string name="about_up_to_date">Aktualny</string>
+    <string name="about_links">Oficjalne linki</string>
+    <string name="about_link_donate">Wesprzyj</string>
+    <string name="about_link_translations">Tłumaczenia</string>
+    <string name="contributors">Współtwórcy</string>
+    <string name="contributors_description">Ostatnie 12 miesięcy</string>
+    <string name="credits_prior_development">Poprzedni twórcy</string>
+    <string name="supporters">Wspierający</string>
+    <string name="supporters_description">Darczyńcy na Open Collective</string>
+    <string name="supporters_become">Zostań wspierającym</string>
+    <string name="people_more">Oraz %1$s więcej</string>
+    <string name="people_unavailable">Nie udało się wczytać listy</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Zainstalowano</string>
     <string name="changelog_badge_latest">Najnowsza</string>

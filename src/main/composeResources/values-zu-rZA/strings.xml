@@ -45,6 +45,7 @@
     <string name="click_to_copy">Chofoza ukuze ukopishe</string>
     <string name="enable_adb_button">Vula i-ADB</string>
     <string name="drag_to_reorder">Kudonswa ukuze kuhlelwe kabusha</string>
+    <string name="website">Iwebhusayithi</string>
     <string name="off">Thisha</string>
     <string name="on">Vula</string>
     <string name="browse">Bheka</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Ulwazi lwe-App</string>
     <string name="form_factor_tv">iTV</string>
     <string name="form_factor_automotive">Ezimotweni</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Funa ama-patches…</string>
     <string name="status_patching_completed">Uku-patchi kuqedile</string>
     <string name="status_patching_failed">Uku-patchi kuhleleke</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">kusuka ku-v%1$s</string>
     <string name="update_banner_later_button">Emva kwesikhathi</string>
     <string name="update_banner_skip_button">Yishiye i-v%1$s</string>
+    <string name="home_updating_sources">Kuvuselelwa imithombo…</string>
+    <string name="home_update_success">Ukubuyekeza kwemithombo kuphothulwe</string>
+    <string name="home_update_success_subtitle">Imithombo yakho isesimweni sakamuva</string>
+    <string name="home_sources_failed_title">Kukhona imithombo yama-patch engatholakali</string>
+    <string name="home_multi_source_hint_title">Imithombo yama-patch eminingi isebenza</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ama-license we-Open Source</string>
     <string name="licenses_dialog_empty_failed">// kuhlulekile ukuloda ama-license</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Buka ama-laisense ama-library wesithathu</string>
     <string name="settings_about_documentation_title">Imibhalo yokusebenzisa</string>
     <string name="settings_about_documentation_desc">Imilayezo yokulungisa, imithombo nokuxazulula izinkinga</string>
-    <string name="settings_about_website_title">Vakashela iwebhusayithi</string>
-    <string name="settings_about_website_desc">Vakashela iwebhusayithi esemthethweni ye-Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Khipha utshwayo ezakhiweni ongazidingi. Lapho kulungiswa, i-APK yokuphuma izogcina izakhiwo ezikhona ku-APK NAkuleli luhlu. Uma kungekho okufanayo, akukho okusulwa ukuze kugwenywe ama-APK awonakele</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (izifoni zasemajonana eziningi)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Kudingeka i-GitHub Personal Access Token (PAT) enohlobo lwe-public_repo ukuze ulandele imikhiqizo ye-pull request. Yakha i-PAT enohlobo lwe-public_repo ku-%1$s</string>
     <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Iwebhusayithi</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">I-Patcher: v%1$s</string>
-    <string name="app_info_version_library">Ilayibrari: v%1$s</string>
-    <string name="app_info_description">Iphrojekthi evulekile yezinhlelo zokulungisa ezisezingeni lesimanje zezinhlelo zokusebenza ze-Android ezidumile, eqhutshwa imibono neminikelo yomphakathi</string>
-    <string name="app_info_link_changelog">Uhlu lwezinguquko</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Hhumusha</string>
+    <string name="about_component">Ideskithopu</string>
+    <string name="about_version_patcher_library">IPatcher v%1$s · ILibrary v%2$s</string>
+    <string name="about_update_available">Ukubuyekezwa kutholakala: %1$s</string>
+    <string name="about_up_to_date">Sekuvuselelwe</string>
+    <string name="about_links">Izixhumelo ezisemthethweni</string>
+    <string name="about_link_donate">Nikela</string>
+    <string name="about_link_translations">Ukuhumusha</string>
+    <string name="contributors">Abahambisana nathi</string>
+    <string name="contributors_description">Izinyanga ezingu-12 ezidlulile</string>
+    <string name="credits_prior_development">Ukuthuthukiswa kwangaphambilini</string>
+    <string name="supporters">Abaseki</string>
+    <string name="supporters_description">Abaseki ku-Open Collective</string>
+    <string name="supporters_become">Ba baba usekile</string>
+    <string name="people_more">Kanye nezinye ezi-%1$s</string>
+    <string name="people_unavailable">Akukwazanga ukulayisha uhlu</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Ifakwe</string>
     <string name="changelog_badge_latest">Okusezingeni lokugcina</string>

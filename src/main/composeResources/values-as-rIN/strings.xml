@@ -45,6 +45,7 @@
     <string name="click_to_copy">কপি কৰিবলৈ ক্লিক কৰক</string>
     <string name="enable_adb_button">ADB সক্ৰিয় কৰক</string>
     <string name="drag_to_reorder">পুনৰ্বিন্যাস কৰিবলৈ টানি লওক</string>
+    <string name="website">ৱেবছাইট</string>
     <string name="off">বন্ধ</string>
     <string name="on">চালু</string>
     <string name="browse">ব্ৰাউজ কৰক</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">এপৰ তথ্য</string>
     <string name="form_factor_tv">টিভী</string>
     <string name="form_factor_automotive">অট’মোটিভ</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">পেচবোৰ বিচাৰক…</string>
     <string name="status_patching_completed">পেচিং সম্পূৰ্ণ হৈছে</string>
     <string name="status_patching_failed">পেচিং বিফল হৈছে</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s-ৰ পৰা</string>
     <string name="update_banner_later_button">পিছত</string>
     <string name="update_banner_skip_button">v%1$s বাদ দিয়ক</string>
+    <string name="home_updating_sources">উৎসসমূহ আপডেট কৰি থকা হৈছে…</string>
+    <string name="home_update_success">উৎসসমূহ আপডেট সম্পূৰ্ণ হ'ল</string>
+    <string name="home_update_success_subtitle">আপোনাৰ উৎসসমূহ আপ-টু-ডেট হৈ আছে</string>
+    <string name="home_sources_failed_title">কিছুমান পেচৰ উৎস উপলব্ধ নহয়</string>
+    <string name="home_multi_source_hint_title">একাধিক পেচ উৎস সক্ৰিয় কৰা হৈছে</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">মুক্ত উৎসৰ লাইচেন্সসমূহ</string>
     <string name="licenses_dialog_empty_failed">// লাইচেন্সসমূহ লোড কৰাত ব্যৰ্থ হ'ল</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">তৃতীয় পক্ষৰ লাইব্ৰেৰীৰ লাইচেন্সসমূহ চাওক</string>
     <string name="settings_about_documentation_title">নথিপত্ৰ</string>
     <string name="settings_about_documentation_desc">প্যাচিং, উৎস আৰু সমস্যা সমাধানৰ বাবে গাইডসমূহ</string>
-    <string name="settings_about_website_title">ৱেবছাইট চাওক</string>
-    <string name="settings_about_website_desc">আধিকাৰিক Morphe ৱেবছাইট ভ্ৰমণ কৰক</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">আপোনাৰ প্ৰয়োজন নথকা আৰ্কিটেকচাৰসমূহ আনচেক কৰক। যেতিয়া পেচিং কৰা হয়, আউটপুট APK-টোত কেৱল APK আৰু এই তালিকাত থকা আৰ্কিটেকচাৰসমূহ থাকিব। যদি কোনো মিল নাথাকে, তেন্তে APK বিকল হোৱাৰ পৰা ৰক্ষা কৰিবলৈ একো আঁতৰ কৰা নহয়</string>
     <string name="settings_strip_libs_arm64">ARM 64-বিট (বেছিভাগ আধুনিক ফোন)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">পুল ৰিকুৱেষ্ট আৰ্টিফেক্টসমূহ ডাউনলোড কৰিবলৈ public_repo স্কোপ থকা এটা GitHub ব্যক্তিগত এক্সেছ টোকেন (PAT)ৰ প্ৰয়োজন। %1$s ত public_repo স্কোপৰ সৈতে এটা PAT সৃষ্টি কৰক</string>
     <string name="settings_github_pat_label">ব্যক্তিগত এক্সেছ টোকেন</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">ৱেবছাইট</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">প্যাচাৰ: v%1$s</string>
-    <string name="app_info_version_library">লাইব্ৰেৰী: v%1$s</string>
-    <string name="app_info_description">জনপ্ৰিয় Android এপবোৰৰ আধুনিক, সুবিন্যস্ত পেচিংৰ বাবে এটা মুকলি উৎসৰ প্ৰকল্প, যিটো সম্প্ৰদায়ৰ মতামত আৰু অৱদানৰ দ্বাৰা পৰিচালিত</string>
-    <string name="app_info_link_changelog">চেঞ্জলগ</string>
-    <string name="app_info_link_reddit">ৰেডিট</string>
-    <string name="app_info_link_translate">অনুবাদ কৰক</string>
+    <string name="about_component">ডেস্কটপ</string>
+    <string name="about_version_patcher_library">প্যাচাৰ v%1$s · লাইব্ৰেৰী v%2$s</string>
+    <string name="about_update_available">আপডেট উপলব্ধ: %1$s</string>
+    <string name="about_up_to_date">আপ-টু-ডেট</string>
+    <string name="about_links">আধিকাৰিক লিংকসমূহ</string>
+    <string name="about_link_donate">দান কৰক</string>
+    <string name="about_link_translations">অনুবাদ</string>
+    <string name="contributors">অংশগ্রহণকাৰী</string>
+    <string name="contributors_description">ৰাজকীয় ১২ মাহ</string>
+    <string name="credits_prior_development">পূৰ্বৰ উন্নয়ন</string>
+    <string name="supporters">সমৰ্থকসকল</string>
+    <string name="supporters_description">Open Collective ৰ সমৰ্থকসকল</string>
+    <string name="supporters_become">এজন সমৰ্থক হওক</string>
+    <string name="people_more">আৰু %1$s জন</string>
+    <string name="people_unavailable">তালিকাত লোড কৰিব পৰা নগ'ল</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">ইনষ্টল হৈছে</string>
     <string name="changelog_badge_latest">নৱতম</string>

@@ -45,6 +45,7 @@
     <string name="click_to_copy">कॉपी करने के लिए क्लिक करें</string>
     <string name="enable_adb_button">ADB चालू करें</string>
     <string name="drag_to_reorder">क्रम बदलने के लिए खींचें</string>
+    <string name="website">वेबसाइट</string>
     <string name="off">बंद</string>
     <string name="on">चालू</string>
     <string name="browse">ब्राउज़ करें</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">ऐप जानकारी</string>
     <string name="form_factor_tv">टीवी</string>
     <string name="form_factor_automotive">ऑटोमोटिव</string>
-    <string name="github_label">गिटहब</string>
     <string name="patches_search_hint">पैच खोजें…</string>
     <string name="status_patching_completed">पैचिंग पूर्ण हुई</string>
     <string name="status_patching_failed">पैचिंग विफल</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s से</string>
     <string name="update_banner_later_button">बाद में</string>
     <string name="update_banner_skip_button">v%1$s छोड़ें</string>
+    <string name="home_updating_sources">सोर्स अपडेट हो रहे हैं…</string>
+    <string name="home_update_success">सोर्स अपडेट पूरा हुआ</string>
+    <string name="home_update_success_subtitle">आपके स्रोत अप टू डेट हैं</string>
+    <string name="home_sources_failed_title">कुछ पैच सोर्स अनुपलब्ध हैं</string>
+    <string name="home_multi_source_hint_title">कई पैच स्रोत सक्षम हैं</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ओपन सोर्स लाइसेंस</string>
     <string name="licenses_dialog_empty_failed">// लाइसेंस लोड करने में विफल</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">थर्ड-पार्टी लाइब्रेरी के लाइसेंस देखें</string>
     <string name="settings_about_documentation_title">दस्तावेज़ीकरण</string>
     <string name="settings_about_documentation_desc">पैचिंग, स्रोत और समस्या निवारण के लिए मार्गदर्शिकाएँ</string>
-    <string name="settings_about_website_title">वेबसाइट देखें</string>
-    <string name="settings_about_website_desc">आधिकारिक Morphe वेबसाइट देखें</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">जिन आर्किटेक्चर की आपको आवश्यकता नहीं है उन्हें अनचेक करें। पैचिंग करते समय, आउटपुट APK केवल उन आर्किटेक्चर को रखेगा जो APK और इस सूची में मौजूद हैं। यदि कोई ओवरलैप नहीं है, तो टूटे हुए APK से बचने के लिए कुछ भी स्ट्रिप नहीं किया जाता</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (अधिकांश आधुनिक फोन)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">पुल रिक्वेस्ट आर्टिफैक्ट्स डाउनलोड करने के लिए public_repo स्कोप वाले GitHub Personal Access Token (PAT) की आवश्यकता होती है। %1$s पर public_repo स्कोप के साथ एक PAT बनाएँ।</string>
     <string name="settings_github_pat_label">व्यक्तिगत एक्सेस टोकन</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">वेबसाइट</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">पैचर: v%1$s</string>
-    <string name="app_info_version_library">लाइब्रेरी: v%1$s</string>
-    <string name="app_info_description">लोकप्रिय Android ऐप्स के आधुनिक, सुव्यवस्थित पैचिंग के लिए एक ओपन-सोर्स परियोजना, जो सामुदायिक प्रतिक्रिया और योगदान से संचालित है</string>
-    <string name="app_info_link_changelog">चेंजलॉग</string>
-    <string name="app_info_link_reddit">रेडिट</string>
-    <string name="app_info_link_translate">अनुवाद करें</string>
+    <string name="about_component">डेस्कटॉप</string>
+    <string name="about_version_patcher_library">पॅचर v%1$s · लाइब्रेरी v%2$s</string>
+    <string name="about_update_available">अपडेट उपलब्ध है: %1$s</string>
+    <string name="about_up_to_date">अप-टू-डेट</string>
+    <string name="about_links">आधिकारिक लिंक</string>
+    <string name="about_link_donate">दान करें</string>
+    <string name="about_link_translations">अनुवाद</string>
+    <string name="contributors">योगदानकर्ता</string>
+    <string name="contributors_description">पिछले 12 महीने</string>
+    <string name="credits_prior_development">पूर्व विकास</string>
+    <string name="supporters">समर्थक</string>
+    <string name="supporters_description">ओपन कलेक्टिव पर बैकर्स</string>
+    <string name="supporters_become">समर्थक बनें</string>
+    <string name="people_more">और %1$s और</string>
+    <string name="people_unavailable">सूची लोड नहीं की जा सकी</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">इंस्टॉल किया गया</string>
     <string name="changelog_badge_latest">नवीनतम</string>

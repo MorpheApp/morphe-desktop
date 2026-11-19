@@ -45,6 +45,7 @@
     <string name="click_to_copy">Kliknite za kopiranje</string>
     <string name="enable_adb_button">Omogoči ADB</string>
     <string name="drag_to_reorder">Povleci za preurejanje</string>
+    <string name="website">Spletno mesto</string>
     <string name="off">Izklopljeno</string>
     <string name="on">Vklopljeno</string>
     <string name="browse">Prebrskaj</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Podatki o aplikaciji</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Avtomobilska</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Išči popravke…</string>
     <string name="status_patching_completed">Popravljanje je končano</string>
     <string name="status_patching_failed">Popravljanje ni uspelo</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">iz v%1$s</string>
     <string name="update_banner_later_button">Pozneje</string>
     <string name="update_banner_skip_button">Preskoči v%1$s</string>
+    <string name="home_updating_sources">Posodabljanje virov...</string>
+    <string name="home_update_success">Posodabljanje virov končano</string>
+    <string name="home_update_success_subtitle">Viri so posodobljeni</string>
+    <string name="home_sources_failed_title">Nekateri viri popravkov niso na voljo</string>
+    <string name="home_multi_source_hint_title">Om defaults več virov popravkov</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Odprtokodne licence</string>
     <string name="licenses_dialog_empty_failed">// nalaganje licenc ni uspelo</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Oglejte si licence knjižnic tretjih ponudnikov</string>
     <string name="settings_about_documentation_title">Dokumentacija</string>
     <string name="settings_about_documentation_desc">Vodniki za popravljanje, vire in odpravljanje težav</string>
-    <string name="settings_about_website_title">Obiščite spletno stran</string>
-    <string name="settings_about_website_desc">Obiščite uradno spletno stran Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Odkljukajte arhitekture, ki jih ne potrebujete. Pri popravljanju bo izhodna datoteka APK ohranila samo arhitekture, ki so prisotne v APK in na tem seznamu. Če ni prekrivanja, se nič ne odstrani, da bi se izognili pokvarjenim datotekam APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (večina sodobnih telefonov)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Za prenos artefaktov pull requestov je potreben GitHub osebni dostopni žeton (PAT) z obsegom public_repo. Ustvarite PAT z obsegom public_repo na %1$s.</string>
     <string name="settings_github_pat_label">Osebni dostopni žeton</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Spletna stran</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Knjižnica: v%1$s</string>
-    <string name="app_info_description">Odprtokodni projekt za sodobno in prilagodljivo popravljanje priljubljenih aplikacij za Android, ki ga gonijo povratne informacije in prispevki skupnosti</string>
-    <string name="app_info_link_changelog">Dnevnik sprememb</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Prevedi</string>
+    <string name="about_component">Namizni računalnik</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Knjižnica v%2$s</string>
+    <string name="about_update_available">Na voljo je posodobitev: %1$s</string>
+    <string name="about_up_to_date">Posodobljeno</string>
+    <string name="about_links">Uradne povezave</string>
+    <string name="about_link_donate">Doniraj</string>
+    <string name="about_link_translations">Prevodi</string>
+    <string name="contributors">Prispevalci</string>
+    <string name="contributors_description">Zadnjih 12 mesecev</string>
+    <string name="credits_prior_development">Dosedanji razvoj</string>
+    <string name="supporters">Podporniki</string>
+    <string name="supporters_description">Podporniki na Open Collective</string>
+    <string name="supporters_become">Postani podpornik</string>
+    <string name="people_more">In še %1$s</string>
+    <string name="people_unavailable">Seznama ni bilo mogoče naložiti</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Nameščeno</string>
     <string name="changelog_badge_latest">Najnovejša</string>

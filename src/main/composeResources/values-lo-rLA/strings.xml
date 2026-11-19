@@ -45,6 +45,7 @@
     <string name="click_to_copy">ຄລິກເພື່ອຄັດລອກ</string>
     <string name="enable_adb_button">ເປີດໃຊ້ງານ ADB</string>
     <string name="drag_to_reorder">ລາກເພື່ອຈັດລຽງໃໝ່</string>
+    <string name="website">ເວັບໄຊທ໌</string>
     <string name="off">ປິດ</string>
     <string name="on">ເປີດ</string>
     <string name="browse">ຊອກຫາ</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">ຂໍ້ມູນແອັບ</string>
     <string name="form_factor_tv">ທີວີ</string>
     <string name="form_factor_automotive">ຍານຍົນ</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">ຄົ້ນຫາ patch…</string>
     <string name="status_patching_completed">ການ Patch ສຳເລັດແລ້ວ</string>
     <string name="status_patching_failed">ການ Patch ລົ້ມເຫຼວ</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">ຈາກ v%1$s</string>
     <string name="update_banner_later_button">ພາຍຫຼັງ</string>
     <string name="update_banner_skip_button">ຂ້າມ v%1$s</string>
+    <string name="home_updating_sources">ກຳລັງອັບເດດແຫຼ່ງຂໍ້ມູນ…</string>
+    <string name="home_update_success">ອັບເດດແຫຼ່ງຂໍ້ມູນສຳເລັດແລ້ວ</string>
+    <string name="home_update_success_subtitle">ແຫຼ່ງຂໍ້ມູນຂອງທ່ານເປັນເວີຊັນຫຼ້າສຸດແລ້ວ</string>
+    <string name="home_sources_failed_title">ບາງແຫຼ່ງຂໍ້ມູນແພັດຊ໌ບໍ່ສາມາດນຳໃຊ້ໄດ້</string>
+    <string name="home_multi_source_hint_title">ເປີດໃຊ້ງານແຫຼ່ງຂໍ້ມູນແພັດຊ໌ຫຼາຍແຫຼ່ງ</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ໃບອະນຸຍາດ Open Source</string>
     <string name="licenses_dialog_empty_failed">// ໂຫຼດອະນຸຍາດບໍ່ສຳເລັດ</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">ເບິ່ງໃບອະນຸຍາດຂອງໄລບຣາຣີພາກສ່ວນທີສາມ</string>
     <string name="settings_about_documentation_title">ເອກະສານຄູ່ມື</string>
     <string name="settings_about_documentation_desc">ຄຳແນະນຳສຳລັບການ patch, ແຫຼ່ງຂໍ້ມູນ ແລະ ການແກ້ໄຂບັນຫາ</string>
-    <string name="settings_about_website_title">ເຂົ້າເບິ່ງເວັບໄຊທ໌</string>
-    <string name="settings_about_website_desc">ເຂົ້າເບິ່ງເວັບໄຊທ໌ທາງການຂອງ Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">ຍົກເລີກການໝາຍເອົາສະຖາປັດຕະຍະກຳທີ່ທ່ານບໍ່ຕ້ອງການ. ເມື່ອເຮັດການ patching, ໄຟລ໌ APK ທີ່ໄດ້ຈະເກັບໄວ້ພຽງແຕ່ສະຖາປັດຕະຍະກຳທີ່ມີຢູ່ໃນ APK ແລະ ໃນລາຍການນີ້. ຖ້າບໍ່ມີອັນໃດກົງກັນ, ຈະບໍ່ມີຫຍັງຖືກລຶບອອກເພື່ອຫຼີກເວັ້ນບໍ່ໃຫ້ APK ເສຍຫາຍ</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (ໂທລະສັບທັນສະໄໝສ່ວນໃຫຍ່)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">ຕ້ອງມີ GitHub Personal Access Token (PAT) ທີ່ມີຂອບເຂດ public_repo ເພື່ອດາວໂຫລດ pull request artifacts. ສ້າງ PAT ທີ່ມີຂອບເຂດ public_repo ຢູ່ %1$s</string>
     <string name="settings_github_pat_label">ໂທເຄັນການເຂົ້າເຖິງສ່ວນຕົວ (Personal Access Token)</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">ເວັບໄຊທ໌</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Library: v%1$s</string>
-    <string name="app_info_description">ໂຄງການ open-source ສຳລັບການ patch ແອັບ Android ທີ່ນິຍົມໃນຮູບແບບທີ່ທັນສະໄໝ ແລະ ຄ່ອງຕົວ, ຂັບເຄື່ອນໂດຍຄຳຄິດເຫັນ ແລະ ການປະກອບສ່ວນຂອງຊຸມຊົນ</string>
-    <string name="app_info_link_changelog">ບັນທຶກການປ່ຽນແປງ</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">ແປພາສາ</string>
+    <string name="about_component">ເດັສທັອບ</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · ຫໍສະໝຸດ v%2$s</string>
+    <string name="about_update_available">ມີການອັບເດດ: %1$s</string>
+    <string name="about_up_to_date">ເປັນເວີຊັນຫຼ້າສຸດແລ້ວ</string>
+    <string name="about_links">ລິ້ງທາງການ</string>
+    <string name="about_link_donate">ບໍລິຈາກ</string>
+    <string name="about_link_translations">ການແປພາສາ</string>
+    <string name="contributors">ຜູ້ປະກອບສ່ວນ</string>
+    <string name="contributors_description">12 ເດືອນທີ່ຜ່ານມາ</string>
+    <string name="credits_prior_development">ການພັດທະນາກ່ອນໜ້ານີ້</string>
+    <string name="supporters">ຜູ້ສະໜັບສະໜູນ</string>
+    <string name="supporters_description">ຜູ້ສະໜັບສະໜູນໃນ Open Collective</string>
+    <string name="supporters_become">ກາຍເປັນຜູ້ສະໜັບສະໜູນ</string>
+    <string name="people_more">ແລະ ອີກ %1$s ຄົນ</string>
+    <string name="people_unavailable">ບໍ່ສາມາດໂຫຼດລາຍການໄດ້</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">ຕິດຕັ້ງແລ້ວ</string>
     <string name="changelog_badge_latest">ຫຼ້າສຸດ</string>

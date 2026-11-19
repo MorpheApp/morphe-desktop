@@ -45,6 +45,7 @@
     <string name="click_to_copy">Klik om te kopiëren</string>
     <string name="enable_adb_button">ADB inschakelen</string>
     <string name="drag_to_reorder">Sleep om te herschikken</string>
+    <string name="website">Website</string>
     <string name="off">Uit</string>
     <string name="on">Aan</string>
     <string name="browse">Bladeren</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">App-info</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Auto</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Patches zoeken…</string>
     <string name="status_patching_completed">Patchen voltooid</string>
     <string name="status_patching_failed">Patchen mislukt</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">van v%1$s</string>
     <string name="update_banner_later_button">Later</string>
     <string name="update_banner_skip_button">Overslaan v%1$s</string>
+    <string name="home_updating_sources">Bronnen worden bijgewerkt…</string>
+    <string name="home_update_success">Bronnen zijn bijgewerkt</string>
+    <string name="home_update_success_subtitle">Je bronnen zijn up-to-date</string>
+    <string name="home_sources_failed_title">Sommige patchbronnen zijn niet beschikbaar</string>
+    <string name="home_multi_source_hint_title">Meerdere patchbronnen ingeschakeld</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Open Source-licenties</string>
     <string name="licenses_dialog_empty_failed">// licenties laden mislukt</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Bekijk licenties van bibliotheken van derden</string>
     <string name="settings_about_documentation_title">Documentatie</string>
     <string name="settings_about_documentation_desc">Handleidingen voor patchen, bronnen en probleemoplossing</string>
-    <string name="settings_about_website_title">Website bezoeken</string>
-    <string name="settings_about_website_desc">Bezoek de officiële Morphe-website</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Schakel architecturen uit die je niet nodig hebt. Tijdens het patchen zal de uitvoer-APK alleen de architecturen behouden die aanwezig zijn in de APK EN in deze lijst. Als er geen overlap is, wordt er niets gestript om kapotte APK's te voorkomen</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (meeste moderne telefoons)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Er is een GitHub Personal Access Token (PAT) met de scope public_repo vereist om pull request-artefacten te downloaden. Maak op %1$s een PAT met de scope public_repo.</string>
     <string name="settings_github_pat_label">Persoonlijke toegangstoken</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Website</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Bibliotheek: v%1$s</string>
-    <string name="app_info_description">Een open-source project voor modern, gestroomlijnd patchen van populaire Android-apps, gedreven door community-feedback en -bijdragen</string>
-    <string name="app_info_link_changelog">Changelog</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Vertalen</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Bibliotheek v%2$s</string>
+    <string name="about_update_available">Update beschikbaar: %1$s</string>
+    <string name="about_up_to_date">Up to date</string>
+    <string name="about_links">Officiële links</string>
+    <string name="about_link_donate">Doneren</string>
+    <string name="about_link_translations">Vertalingen</string>
+    <string name="contributors">Bijdragers</string>
+    <string name="contributors_description">Afgelopen 12 maanden</string>
+    <string name="credits_prior_development">Eerdere ontwikkeling</string>
+    <string name="supporters">Supporters</string>
+    <string name="supporters_description">Backers op Open Collective</string>
+    <string name="supporters_become">Word een supporter</string>
+    <string name="people_more">En %1$s meer</string>
+    <string name="people_unavailable">Kon de lijst niet laden</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Geïnstalleerd</string>
     <string name="changelog_badge_latest">Nieuwste</string>

@@ -45,6 +45,7 @@
     <string name="click_to_copy">לחץ להעתקה</string>
     <string name="enable_adb_button">הפעל ADB</string>
     <string name="drag_to_reorder">גרור כדי לשנות סדר</string>
+    <string name="website">אתר אינטרנט</string>
     <string name="off">כבוי</string>
     <string name="on">דלוק</string>
     <string name="browse">עיין</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">מידע על האפליקציה</string>
     <string name="form_factor_tv">טלוויזיה</string>
     <string name="form_factor_automotive">רכב</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">חפש טלאים…</string>
     <string name="status_patching_completed">התיקון הושלם</string>
     <string name="status_patching_failed">התיקון נכשל</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">מ-v%1$s</string>
     <string name="update_banner_later_button">מאוחר יותר</string>
     <string name="update_banner_skip_button">דלג על v%1$s</string>
+    <string name="home_updating_sources">מעדכן מקורות…</string>
+    <string name="home_update_success">עדכון המקורות הושלם</string>
+    <string name="home_update_success_subtitle">המקורות שלך מעודכנים</string>
+    <string name="home_sources_failed_title">חלק ממקורות הטלאים אינם זמינים</string>
+    <string name="home_multi_source_hint_title">מספר מקורות טלאים מופעלים</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">רישיונות קוד פתוח</string>
     <string name="licenses_dialog_empty_failed">// טעינת הרישיונות נכשלה</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">צפה ברישיונות של ספריות צד שלישי</string>
     <string name="settings_about_documentation_title">תיעוד</string>
     <string name="settings_about_documentation_desc">מדריכים להטלאה, מקורות ופתרון תקלות</string>
-    <string name="settings_about_website_title">בקר באתר</string>
-    <string name="settings_about_website_desc">בקר באתר הרשמי של Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">בטל סימון של אדריכלויות שאינך צריך. בעת ההטלאה, APK הפלט ישמור רק על האדריכלויות שנמצאות ב-APK וגם ברשימה זו. אם אין חפיפה, שום דבר לא יוסר כדי למנוע APK שבורים</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (רוב הטלפונים המודרניים)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">כדי להוריד קבצי pull request, נדרש אסימון גישה אישי (PAT) של GitHub עם היקף public_repo. צור PAT עם היקף public_repo ב-%1$s</string>
     <string name="settings_github_pat_label">אסימון גישה אישי</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">אתר</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">מתקן: v%1$s</string>
-    <string name="app_info_version_library">ספרייה: v%1$s</string>
-    <string name="app_info_description">פרויקט קוד פתוח להטלאה מודרנית ויעילה של אפליקציות אנדרואיד פופולריות, המונע על ידי משוב ותרומות של הקהילה</string>
-    <string name="app_info_link_changelog">יומן שינויים</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">תרגם</string>
+    <string name="about_component">שולחן עבודה</string>
+    <string name="about_version_patcher_library">Patcher גרסה %1$s · ספרייה גרסה %2$s</string>
+    <string name="about_update_available">עדכון זמין: %1$s</string>
+    <string name="about_up_to_date">מעודכן</string>
+    <string name="about_links">קישורים רשמיים</string>
+    <string name="about_link_donate">תרומה</string>
+    <string name="about_link_translations">תרגומים</string>
+    <string name="contributors">תורמים</string>
+    <string name="contributors_description">12 החודשים האחרונים</string>
+    <string name="credits_prior_development">פיתוח קודם</string>
+    <string name="supporters">תומכים</string>
+    <string name="supporters_description">תומכים ב-Open Collective</string>
+    <string name="supporters_become">הפוך לתומך</string>
+    <string name="people_more">ועוד %1$s אנשים</string>
+    <string name="people_unavailable">לא ניתן היה לטעון את הרשימה</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">מותקן</string>
     <string name="changelog_badge_latest">העדכני ביותר</string>

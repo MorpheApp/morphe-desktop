@@ -45,6 +45,7 @@
     <string name="click_to_copy">Кликнете, за да копирате</string>
     <string name="enable_adb_button">Активирайте ADB</string>
     <string name="drag_to_reorder">Влачете, за да пренаредите</string>
+    <string name="website">Уебсайт</string>
     <string name="off">Изключено</string>
     <string name="on">Включено</string>
     <string name="browse">Разглеждане</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Информация за приложението</string>
     <string name="form_factor_tv">ТВ</string>
     <string name="form_factor_automotive">Автомобилен</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Търсене на кръпки…</string>
     <string name="status_patching_completed">Пачването завърши</string>
     <string name="status_patching_failed">Пачването се провали</string>
@@ -697,6 +697,11 @@
     <string name="update_banner_from_version">от v%1$s</string>
     <string name="update_banner_later_button">По-късно</string>
     <string name="update_banner_skip_button">Пропусни v%1$s</string>
+    <string name="home_updating_sources">Обновяване на източници…</string>
+    <string name="home_update_success">Източниците са актуализирани</string>
+    <string name="home_update_success_subtitle">Вашите източници са актуални</string>
+    <string name="home_sources_failed_title">Някои източници на пачове не са достъпни</string>
+    <string name="home_multi_source_hint_title">Активирани са множество източници на пачове</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Лицензи с отворен код</string>
     <string name="licenses_dialog_empty_failed">// неуспешно зареждане на лицензи</string>
@@ -840,8 +845,6 @@
     <string name="settings_about_licenses_desc">Преглеждане на лицензите на библиотеките на трети страни</string>
     <string name="settings_about_documentation_title">Документация</string>
     <string name="settings_about_documentation_desc">Ръководства за пачване, източници и отстраняване на проблеми</string>
-    <string name="settings_about_website_title">Посетете уебсайта</string>
-    <string name="settings_about_website_desc">Посетете официалния уебсайт на Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Премахнете отметките от архитектурите, от които не се нуждаете. При пачване изходният APK ще запази само архитектурите, присъстващи в APK И в този списък. Ако няма припокриване, нищо не се премахва, за да се избегнат счупени APK.</string>
     <string name="settings_strip_libs_arm64">ARM 64-битова (повечето съвременни телефони)</string>
@@ -900,14 +903,21 @@
     <string name="settings_github_pat_desc">За изтегляне на артефакти от pull request е необходим GitHub Personal Access Token (PAT) с обхват public_repo. Създайте PAT с обхват public_repo на %1$s</string>
     <string name="settings_github_pat_label">Личен токен за достъп</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Уебсайт</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Пачер: v%1$s</string>
-    <string name="app_info_version_library">Библиотека: v%1$s</string>
-    <string name="app_info_description">Проект с отворен код за съвременно и рационализирано пачване на популярни Android приложения, воден от отзивите и приносите на общността.</string>
-    <string name="app_info_link_changelog">Списък на промените</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Превод</string>
+    <string name="about_component">Настолно</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Библиотека v%2$s</string>
+    <string name="about_update_available">Достигна достъпно обновление: %1$s</string>
+    <string name="about_up_to_date">Актуален</string>
+    <string name="about_links">Официални линкове</string>
+    <string name="about_link_donate">Дарение</string>
+    <string name="about_link_translations">Преводи</string>
+    <string name="contributors">Приносители</string>
+    <string name="contributors_description">Последните 12 месеца</string>
+    <string name="credits_prior_development">Предишна разработка</string>
+    <string name="supporters">Поддържащи</string>
+    <string name="supporters_description">Споноси в Open Collective</string>
+    <string name="supporters_become">Станете поддържащ</string>
+    <string name="people_more">И още %1$s</string>
+    <string name="people_unavailable">Списъкът не можа да бъде зареден</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Инсталирано</string>
     <string name="changelog_badge_latest">Най-нова</string>

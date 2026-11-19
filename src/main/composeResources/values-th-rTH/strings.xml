@@ -45,6 +45,7 @@
     <string name="click_to_copy">คลิกเพื่อคัดลอก</string>
     <string name="enable_adb_button">เปิดใช้ ADB</string>
     <string name="drag_to_reorder">ลากเพื่อจัดลำดับ</string>
+    <string name="website">เว็บไซต์</string>
     <string name="off">ปิด</string>
     <string name="on">เปิด</string>
     <string name="browse">เรียกดู</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">ข้อมูลแอป</string>
     <string name="form_factor_tv">ทีวี</string>
     <string name="form_factor_automotive">ยานยนต์</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">ค้นหาแพตช์…</string>
     <string name="status_patching_completed">แพตช์เสร็จสมบูรณ์</string>
     <string name="status_patching_failed">การแพตช์ล้มเหลว</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">จาก v%1$s</string>
     <string name="update_banner_later_button">ทีหลัง</string>
     <string name="update_banner_skip_button">ข้าม v%1$s</string>
+    <string name="home_updating_sources">กำลังอัปเดตแหล่งที่มา…</string>
+    <string name="home_update_success">อัปเดตแหล่งที่มาเสร็จสมบูรณ์</string>
+    <string name="home_update_success_subtitle">แหล่งทีมาของคุณเป็นเวอร์ชันล่าสุดแล้ว</string>
+    <string name="home_sources_failed_title">บางแหล่งแพตช์ไม่สามารถใช้งานได้</string>
+    <string name="home_multi_source_hint_title">เปิดใช้งานหลายแหล่งที่มาแพตช์</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">ใบอนุญาตโอเพนซอร์ส</string>
     <string name="licenses_dialog_empty_failed">// โหลดใบอนุญาตไม่สำเร็จ</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">ดูใบอนุญาตของไลบรารีบุคคลที่สาม</string>
     <string name="settings_about_documentation_title">เอกสาร</string>
     <string name="settings_about_documentation_desc">คำแนะนำสำหรับการแพตช์ แหล่งที่มา และการแก้ปัญหา</string>
-    <string name="settings_about_website_title">เยี่ยมชมเว็บไซต์</string>
-    <string name="settings_about_website_desc">เยี่ยมชมเว็บไซต์อย่างเป็นทางการของ Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">ยกเลิกการเลือกสถาปัตยกรรมที่ไม่ต้องการ เมื่อแพตช์ APK เอาต์พุตจะเก็บเฉพาะสถาปัตยกรรมที่มีใน APK และในรายการนี้ หากไม่มีการซ้อนทับจะไม่ตัดอะไรทิ้งเพื่อหลีกเลี่ยง APK ที่เสียหาย</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (โทรศัพท์สมัยใหม่ส่วนใหญ่)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">จำเป็นต้องมี GitHub Personal Access Token (PAT) ที่มีสิทธิ์ public_repo เพื่อดาวน์โหลดอาร์ติแฟกต์ของ pull request. สร้าง PAT ที่มีสิทธิ์ public_repo บน %1$s</string>
     <string name="settings_github_pat_label">โทเค็นการเข้าถึงส่วนบุคคล</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">เว็บไซต์</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">ตัวแพตช์: v%1$s</string>
-    <string name="app_info_version_library">ไลบรารี: v%1$s</string>
-    <string name="app_info_description">โปรเจกต์โอเพนซอร์สสำหรับการแพตช์แอป Android ยอดนิยมอย่างทันสมัยและมีประสิทธิภาพ ขับเคลื่อนโดยความคิดเห็นและการมีส่วนร่วมจากชุมชน</string>
-    <string name="app_info_link_changelog">บันทึกการเปลี่ยนแปลง</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">แปลภาษา</string>
+    <string name="about_component">เดสก์ท็อป</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_update_available">มีการอัปเดตพร้อมใช้งาน: %1$s</string>
+    <string name="about_up_to_date">เป็นเวอร์ชันล่าสุดแล้ว</string>
+    <string name="about_links">ลิงก์อย่างเป็นทางการ</string>
+    <string name="about_link_donate">บริจาค</string>
+    <string name="about_link_translations">การแปล</string>
+    <string name="contributors">ผู้สนับสนุน</string>
+    <string name="contributors_description">12 เดือนล่าสุด</string>
+    <string name="credits_prior_development">การพัฒนาในก่อนหน้านี้</string>
+    <string name="supporters">ผู้สนับสนุน</string>
+    <string name="supporters_description">ผู้สนับสนุนบน Open Collective</string>
+    <string name="supporters_become">ร่วมเป็นผู้สนับสนุน</string>
+    <string name="people_more">และอีก %1$s คน</string>
+    <string name="people_unavailable">ไม่สามารถโหลดรายการได้</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">ติดตั้งแล้ว</string>
     <string name="changelog_badge_latest">ล่าสุด</string>

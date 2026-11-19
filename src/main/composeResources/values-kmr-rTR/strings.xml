@@ -45,6 +45,7 @@
     <string name="click_to_copy">Ji bo kopyekirinê bitikîne</string>
     <string name="enable_adb_button">ADB çalak bike</string>
     <string name="drag_to_reorder">Ji bo guhertina rêzê bikişîne</string>
+    <string name="website">Malper</string>
     <string name="off">Dabe</string>
     <string name="on">Bo</string>
     <string name="browse">Gerok</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Agahiyên aplikasyonê</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Otomotîv</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Li patchan bigere…</string>
     <string name="status_patching_completed">Patching bi ser ket</string>
     <string name="status_patching_failed">Patching bi ser neket</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">ji v%1$s</string>
     <string name="update_banner_later_button">Paşê</string>
     <string name="update_banner_skip_button">V%1$s derbas bike</string>
+    <string name="home_updating_sources">Çavkaniyan tên nûvekirin…</string>
+    <string name="home_update_success">Nûkirina çavkaniyan qediya</string>
+    <string name="home_update_success_subtitle">Çavkaniyên we nû ne</string>
+    <string name="home_sources_failed_title">Hinek çavkaniyên patchê ne berdest in</string>
+    <string name="home_multi_source_hint_title">Çend çavkaniyên patchê hatin çalakkirin</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Lîsansên Çavkaniya Vekirî</string>
     <string name="licenses_dialog_empty_failed">// barkirina lîsansan bi ser neket</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Lisansên librariyên ownîyên sêyemîn bibîne</string>
     <string name="settings_about_documentation_title">Belgekirin</string>
     <string name="settings_about_documentation_desc">Rêberên ji bo patching, çavkaniyan û çareserkirina pirsgirêkan</string>
-    <string name="settings_about_website_title">Serdana malperê bike</string>
-    <string name="settings_about_website_desc">Serdana malpera fermî ya Morphe bike</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Arkîtekturên ku hûn pêdivî nînin jê bikişînin. Demê patching tê kirin, APK ya derketî tenê arkîtekturên ku di APK-yê de Û di vê lîstê de hene diparêze. Ger tu neheman hebin, ji bo ku APK-yên xera nebin, tiştek nayê jêbirin</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (piraniya telefonên nû)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Ji bo daxistina artifactên pull request, Tokenekî Vegava ya Keskeş (PAT) a GitHub bi scope-a public_repo pêwîst e. Li ser %1$s PATek bi scope-a public_repo çêbike</string>
     <string name="settings_github_pat_label">Tokenê Vegava yê Keskeş</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Malper</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Library: v%1$s</string>
-    <string name="app_info_description">Projeyekî çavkaniya vekirî ji bo patchkirina nûjen û hêsan a appên Android ên populer, ku bi piştevaniya civakê tê meşandin</string>
-    <string name="app_info_link_changelog">Guherîn</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Wergerîne</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_update_available">Nûvekirin heye: %1$s</string>
+    <string name="about_up_to_date">Heta roja îro nûye</string>
+    <string name="about_links">Girêdanên fermî</string>
+    <string name="about_link_donate">Bexşîn</string>
+    <string name="about_link_translations">Werger</string>
+    <string name="contributors">Karker</string>
+    <string name="contributors_description">12 mehanên dawî</string>
+    <string name="credits_prior_development">Pêşdebirina berê</string>
+    <string name="supporters">Piştgir</string>
+    <string name="supporters_description">Piştgirên li ser Open Collective</string>
+    <string name="supporters_become">Bibe piştgir</string>
+    <string name="people_more">Û %1$s din</string>
+    <string name="people_unavailable">Lîste nehat barkirin</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Hatiye sazkirin</string>
     <string name="changelog_badge_latest">Herî dawî</string>

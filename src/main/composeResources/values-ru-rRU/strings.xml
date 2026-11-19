@@ -45,6 +45,7 @@
     <string name="click_to_copy">Нажмите, чтобы скопировать</string>
     <string name="enable_adb_button">Включить ADB</string>
     <string name="drag_to_reorder">Перетащите для изменения порядка</string>
+    <string name="website">Веб-сайт</string>
     <string name="off">Выключено</string>
     <string name="on">Включено</string>
     <string name="browse">Обзор</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Информация о приложении</string>
     <string name="form_factor_tv">ТВ</string>
     <string name="form_factor_automotive">Автомобильный</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Поиск патчей…</string>
     <string name="status_patching_completed">Патчинг завершён</string>
     <string name="status_patching_failed">Патчинг не удался</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">с v%1$s</string>
     <string name="update_banner_later_button">Позже</string>
     <string name="update_banner_skip_button">Пропустить v%1$s</string>
+    <string name="home_updating_sources">Обновление источников…</string>
+    <string name="home_update_success">Обновление источников завершено</string>
+    <string name="home_update_success_subtitle">Ваши источники обновлены</string>
+    <string name="home_sources_failed_title">Некоторые источники патчей недоступны</string>
+    <string name="home_multi_source_hint_title">Включено несколько источников патчей</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Лицензии с открытым исходным кодом</string>
     <string name="licenses_dialog_empty_failed">// не удалось загрузить лицензии</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Просмотр лицензий сторонних библиотек</string>
     <string name="settings_about_documentation_title">Документация</string>
     <string name="settings_about_documentation_desc">Руководства по патчингу, источникам и устранению неполадок</string>
-    <string name="settings_about_website_title">Посетить веб-сайт</string>
-    <string name="settings_about_website_desc">Посетите официальный веб-сайт Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Снимите флажки с ненужных архитектур. При патчинге выходной APK будет содержать только те архитектуры, которые есть в APK И в этом списке. Если нет совпадений, ничего не удаляется, чтобы избежать повреждённых APK</string>
     <string name="settings_strip_libs_arm64">ARM 64-бит (большинство современных телефонов)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Для скачивания артефактов pull request требуется личный токен доступа GitHub (PAT) с областью public_repo. Создайте PAT с областью public_repo на %1$s</string>
     <string name="settings_github_pat_label">Личный токен доступа</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Веб-сайт</string>
-    <string name="app_info_version_gui">Графический интерфейс: %1$s</string>
-    <string name="app_info_version_patcher">Патчер: v%1$s</string>
-    <string name="app_info_version_library">Библиотека: v%1$s</string>
-    <string name="app_info_description">Проект с открытым исходным кодом для современного, упрощенного патчинга популярных Android-приложений, развиваемый на основе отзывов и вкладов сообщества</string>
-    <string name="app_info_link_changelog">Список изменений</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Перевести</string>
+    <string name="about_component">Настольный компьютер</string>
+    <string name="about_version_patcher_library">Патчер v%1$s · Библиотека v%2$s</string>
+    <string name="about_update_available">Доступное обновление: %1$s</string>
+    <string name="about_up_to_date">В актуальном состоянии</string>
+    <string name="about_links">Официальные ссылки</string>
+    <string name="about_link_donate">Пожертвовать</string>
+    <string name="about_link_translations">Переводы</string>
+    <string name="contributors">Контрибьюторы</string>
+    <string name="contributors_description">За последние 12 месяцев</string>
+    <string name="credits_prior_development">Предыдущая разработка</string>
+    <string name="supporters">Сторонники</string>
+    <string name="supporters_description">Спонсоры на Open Collective</string>
+    <string name="supporters_become">Стать сторонником</string>
+    <string name="people_more">И %1$s более</string>
+    <string name="people_unavailable">Не удалось загрузить список</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Установлено</string>
     <string name="changelog_badge_latest">Последняя версия</string>

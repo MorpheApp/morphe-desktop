@@ -45,6 +45,7 @@
     <string name="click_to_copy">Faceți clic pentru a copia</string>
     <string name="enable_adb_button">Activează ADB</string>
     <string name="drag_to_reorder">Trageți pentru a reordona</string>
+    <string name="website">Website</string>
     <string name="off">Oprit</string>
     <string name="on">Pornit</string>
     <string name="browse">Răsfoiți</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Informații aplicație</string>
     <string name="form_factor_tv">Televizor</string>
     <string name="form_factor_automotive">Automobil</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Căutați patch-uri…</string>
     <string name="status_patching_completed">Aplicarea patch-urilor a fost finalizată</string>
     <string name="status_patching_failed">Patch-area a eșuat</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">de la v%1$s</string>
     <string name="update_banner_later_button">Mai târziu</string>
     <string name="update_banner_skip_button">Sari peste v%1$s</string>
+    <string name="home_updating_sources">Se actualizează sursele…</string>
+    <string name="home_update_success">Actualizarea surselor finalizată</string>
+    <string name="home_update_success_subtitle">Sursele tale sunt la zi</string>
+    <string name="home_sources_failed_title">Unele surse de patch-uri sunt indisponibile</string>
+    <string name="home_multi_source_hint_title">Mai multe surse de patch-uri activate</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Licențe Open Source</string>
     <string name="licenses_dialog_empty_failed">// eroare la încărcarea licențelor</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Vizualizați licențele bibliotecilor terțe</string>
     <string name="settings_about_documentation_title">Documentație</string>
     <string name="settings_about_documentation_desc">Ghiduri pentru patch-uri, surse și depanare</string>
-    <string name="settings_about_website_title">Vizitează site-ul web</string>
-    <string name="settings_about_website_desc">Vizitează site-ul web oficial Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Debifează arhitecturile de care nu ai nevoie. La patch, APK rezultat va păstra doar arhitecturile prezente în APK și în această listă. Dacă nu se suprapun, nu se elimină nimic pentru a evita APK defecte.</string>
     <string name="settings_strip_libs_arm64">ARM 64 de biți (cele mai moderne telefoane)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Este necesar un Personal Access Token (PAT) GitHub cu scopul public_repo pentru a descărca artefactele cererilor de pull. Creați un PAT cu scopul public_repo pe %1$s.</string>
     <string name="settings_github_pat_label">Token de acces personal</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Site web</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Bibliotecă: v%1$s</string>
-    <string name="app_info_description">Un proiect open-source pentru patch-uri moderne și simplificate ale aplicațiilor Android populare, bazat pe feedback-ul și contribuțiile comunității</string>
-    <string name="app_info_link_changelog">Jurnal de modificări</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Tradu</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Librărie v%2$s</string>
+    <string name="about_update_available">Există actualizări disponibile: %1$s</string>
+    <string name="about_up_to_date">La zi</string>
+    <string name="about_links">Link-uri oficiale</string>
+    <string name="about_link_donate">Donează</string>
+    <string name="about_link_translations">Traduceri</string>
+    <string name="contributors">Contribuitori</string>
+    <string name="contributors_description">Ultimele 12 luni</string>
+    <string name="credits_prior_development">Dezvoltare anterioară</string>
+    <string name="supporters">Susținători</string>
+    <string name="supporters_description">Sponsori pe Open Collective</string>
+    <string name="supporters_become">Devino un susținător</string>
+    <string name="people_more">Și încă %1$s</string>
+    <string name="people_unavailable">Lista nu a putut fi încărcată</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Instalat</string>
     <string name="changelog_badge_latest">Ultima versiune</string>

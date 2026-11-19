@@ -45,6 +45,7 @@
     <string name="click_to_copy">انقر للنسخ</string>
     <string name="enable_adb_button">تفعيل ADB</string>
     <string name="drag_to_reorder">اسحب لإعادة الترتيب</string>
+    <string name="website">الموقع الإلكتروني</string>
     <string name="off">متوقف</string>
     <string name="on">تشغيل</string>
     <string name="browse">استعراض</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">معلومات التطبيق</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Automotive</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">البحث عن التعديلات</string>
     <string name="status_patching_completed">اكتمل التصحيح</string>
     <string name="status_patching_failed">فشل التصحيح</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">من v%1$s</string>
     <string name="update_banner_later_button">لاحقًا</string>
     <string name="update_banner_skip_button">تخطي v%1$s</string>
+    <string name="home_updating_sources">جارٍ تحديث المصادر…</string>
+    <string name="home_update_success">اكتمل تحديث المصادر</string>
+    <string name="home_update_success_subtitle">تم تحديث المصادر</string>
+    <string name="home_sources_failed_title">بعض مصادر التعديل غير متوفرة</string>
+    <string name="home_multi_source_hint_title">تم تمكين مصادر تعديل متعددة</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">تراخيص المصدر المفتوح</string>
     <string name="licenses_dialog_empty_failed">// تعذّر تحميل التراخيص</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">عرض تراخيص مكتبات الطرف الثالث</string>
     <string name="settings_about_documentation_title">الوثائق</string>
     <string name="settings_about_documentation_desc">أدلة التصحيح والمصادر واستكشاف الأخطاء وإصلاحها</string>
-    <string name="settings_about_website_title">زيارة الموقع</string>
-    <string name="settings_about_website_desc">زيارة موقع Morphe الرسمي</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">قم بإلغاء تحديد البنى التي لا تحتاجها. عند التصحيح، سيحتفظ APK الناتج فقط بالبنى الموجودة في APK وفي هذه القائمة. إذا لم تتطابق أي منها، فلن تتم إزالة أي شيء لتجنب APK معطلة</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (معظم الهواتف الحديثة)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">مطلوب رمز الوصول الشخصي لـ GitHub (PAT) بنطاق public_repo لتنزيل عناصر طلب السحب. أنشئ رمز PAT بنطاق public_repo على %1$s</string>
     <string name="settings_github_pat_label">رمز الوصول الشخصي</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">الموقع الإلكتروني</string>
-    <string name="app_info_version_gui">الواجهة الرسومية: %1$s</string>
-    <string name="app_info_version_patcher">المصحح: v%1$s</string>
-    <string name="app_info_version_library">المكتبة: v%1$s</string>
-    <string name="app_info_description">مشروع مفتوح المصدر يهدف إلى توفير طريقة حديثة ومبسطة لتصحيح تطبيقات Android الشهيرة، مستندًا إلى ملاحظات المستخدمين ومساهمات المجتمع</string>
-    <string name="app_info_link_changelog">سجل التغييرات</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">ترجمة</string>
+    <string name="about_component">سطح المكتب</string>
+    <string name="about_version_patcher_library">أداة التعديل v%1$s · المكتبة v%2$s</string>
+    <string name="about_update_available">تحديث متاح: %1$s</string>
+    <string name="about_up_to_date">محدَّث</string>
+    <string name="about_links">الروابط الرسمية</string>
+    <string name="about_link_donate">تبرع</string>
+    <string name="about_link_translations">الترجمات</string>
+    <string name="contributors">المساهمون</string>
+    <string name="contributors_description">آخر 12 شهرًا</string>
+    <string name="credits_prior_development">التطوير السابق</string>
+    <string name="supporters">الداعمون</string>
+    <string name="supporters_description">الداعمون على Open Collective</string>
+    <string name="supporters_become">كن داعمًا</string>
+    <string name="people_more"> و %1$s أخرى</string>
+    <string name="people_unavailable">تعذر تحميل القائمة</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">مثبت</string>
     <string name="changelog_badge_latest">الأحدث</string>

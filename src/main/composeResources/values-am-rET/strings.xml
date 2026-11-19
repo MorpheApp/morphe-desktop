@@ -45,6 +45,7 @@
     <string name="click_to_copy">ለመቅዳት ይጫኑ</string>
     <string name="enable_adb_button">ADB ያብሩ</string>
     <string name="drag_to_reorder">ለመቀየር ይጎትቱ</string>
+    <string name="website">ድረ-ገጽ</string>
     <string name="off">ጠፍቷል</string>
     <string name="on">በርቷል</string>
     <string name="browse">ያስሱ</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">የመተግበሪያ መረጃ</string>
     <string name="form_factor_tv">ቲቪ</string>
     <string name="form_factor_automotive">የአውቶሞቲቭ</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">ፓቾችን ፈልግ…</string>
     <string name="status_patching_completed">ፓቺንግ ተጠናቋል</string>
     <string name="status_patching_failed">ፓቺንግ አልተሳካም</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">ከ v%1$s ጀምሮ</string>
     <string name="update_banner_later_button">ቆይ</string>
     <string name="update_banner_skip_button">v%1$sን ዝለለው</string>
+    <string name="home_updating_sources">ምንጮች እየተዘመኑ ነው…</string>
+    <string name="home_update_success">የምንጭ ማሻሻያ ተጠናቅቋል</string>
+    <string name="home_update_success_subtitle">ምንጮችዎ ወቅታዊ ናቸው</string>
+    <string name="home_sources_failed_title">አንዳንድ የፓች ምንጮች አይገኙም</string>
+    <string name="home_multi_source_hint_title">በርካታ የፓች ምንጮች አገልግሎት ላይ ናቸው</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">የክፍት ምንጭ ፈቃዶች</string>
     <string name="licenses_dialog_empty_failed">// ፈቃዶችን ለመጫን አልተቻለም</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">የሶስተኛ ወገን ላይብረሪዎችን ፈቃዶች ተመልከት</string>
     <string name="settings_about_documentation_title">ሰነዶች</string>
     <string name="settings_about_documentation_desc">ለፓቺንግ፣ ለምንጮች እና ለችግር አፈታት የሚረዱ መመሪያዎች</string>
-    <string name="settings_about_website_title">ድረ-ገጹን ይጎብኙ</string>
-    <string name="settings_about_website_desc">ይፋዊውን የ Morphe ድረ-ገጽ ይጎብኙ</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">የማያስፈልጉዎትን አርክቴክቸሮች ምልክት ያጥፉ። በፓቺንግ ጊዜ፣ የሚወጣው APK በዚህ ዝርዝር ውስጥ እና በ APK ውስጥ ያሉትን አርክቴክቸሮች ብቻ ይይዛል። ምንም የሚመሳሰል ነገር ከሌለ፣ የተበላሹ APKዎችን ለማስወገድ ምንም ነገር አይቀነስም</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (አብዛኛዎቹ ዘመናዊ ስልኮች)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">የፑል ሪኩዌስት አርቲፋክቶችን ለማውረድ public_repo ስኮፕ ያለው የGitHub Personal Access Token (PAT) ያስፈልጋል። በ %1$s ላይ public_repo ስኮፕ ያለው PAT ይፍጠሩ</string>
     <string name="settings_github_pat_label">የግል መዳረሻ ቶከን</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">ድረ-ገጽ</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">ፓቸር: v%1$s</string>
-    <string name="app_info_version_library">ላይብረሪ: v%1$s</string>
-    <string name="app_info_description">በማህበረሰቡ አስተያየት እና አስተዋጽኦ የሚመራ፣ ታዋቂ የAndroid መተግበሪያዎችን ዘመናዊ እና ቀልጣፋ በሆነ መንገድ ለማስተካከል የተዘጋጀ ክፍት የሶፍትዌር ፕሮጀክት ነው</string>
-    <string name="app_info_link_changelog">የለውጥ ዝርዝር</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">ተርጉም</string>
+    <string name="about_component">ዴስክቶፕ</string>
+    <string name="about_version_patcher_library">ፓቸር v%1$s · ላይብረሪ v%2$s</string>
+    <string name="about_update_available">ማዘመኛ ይገኛል: %1$s</string>
+    <string name="about_up_to_date">የዘመነ</string>
+    <string name="about_links">ኦፊሴላዊ ሊንኮች</string>
+    <string name="about_link_donate">ልገሳ</string>
+    <string name="about_link_translations">ትርጉሞች</string>
+    <string name="contributors">አበርካቾች</string>
+    <string name="contributors_description">ላለፉት 12 ወራት</string>
+    <string name="credits_prior_development">የቀድሞ ልማት</string>
+    <string name="supporters">ደጋፊዎች</string>
+    <string name="supporters_description">በ Open Collective ላይ ያሉ ደጋፊዎች</string>
+    <string name="supporters_become">ደጋፊ ይሁኑ</string>
+    <string name="people_more">እና %1$s ተጨማሪ</string>
+    <string name="people_unavailable">ዝርዝሩን መጫን አልተቻለም</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">የተጫነ</string>
     <string name="changelog_badge_latest">የቅርብ ጊዜ</string>

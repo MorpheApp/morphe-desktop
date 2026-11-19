@@ -45,6 +45,7 @@
     <string name="click_to_copy">Көчүрүү үчүн басыңыз</string>
     <string name="enable_adb_button">ADB'ни иштетүү</string>
     <string name="drag_to_reorder">Тартып, тартибин өзгөртүңүз</string>
+    <string name="website">Вебсайт</string>
     <string name="off">Өчүк</string>
     <string name="on">Күйүк</string>
     <string name="browse">Кароо</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Тиркеме жөнүндө</string>
     <string name="form_factor_tv">Телевизор</string>
     <string name="form_factor_automotive">Автомобильдик</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Патчтарды издөө…</string>
     <string name="status_patching_completed">Патчтоо аяктады</string>
     <string name="status_patching_failed">Патчтоо ишке ашпай калды</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">v%1$s версиясынан</string>
     <string name="update_banner_later_button">Кийинчерээк</string>
     <string name="update_banner_skip_button">v%1$s версиясын өткөрүп жиберүү</string>
+    <string name="home_updating_sources">Булактар жаңыртылууда…</string>
+    <string name="home_update_success">Булактарды жаңыртуу аяктады</string>
+    <string name="home_update_success_subtitle">Сиздин булактарыңыз жаңыртылды</string>
+    <string name="home_sources_failed_title">Кээ бир патч булактары жеткиликсиз</string>
+    <string name="home_multi_source_hint_title">Бир нече патч булактары активдештирилген</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ачык булак лицензиялары</string>
     <string name="licenses_dialog_empty_failed">// лицензияларды жүктөө мүмкүн болбоду</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Үчүнчү тараптын китепканаларынын лицензияларын көрүү</string>
     <string name="settings_about_documentation_title">Документация</string>
     <string name="settings_about_documentation_desc">Патчилөө, булактар жана каталарды жөнгө салуу боюнча колдонмолор</string>
-    <string name="settings_about_website_title">Веб-сайтты көрүү</string>
-    <string name="settings_about_website_desc">Morphe расмий веб-сайтына кириңиз</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Сизге керек эмес архитектуралардын белгисин алып салыңыз. Патчинг учурунда, жыйынтык APK APK-да ЖАНА бул тизмеде бар архитектураларды гана сактайт. Эгерде эч бир окшоштук жок болсо, APK бузулуп кетпеши үчүн эч нерсе өчүрүлбөйт</string>
     <string name="settings_strip_libs_arm64">ARM 64-бит (көпчүлүк заманбап телефондор)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Pull request artefact-терин жүктөө үчүн public_repo чөйрөсүнө ээ болгон GitHub жеке кирүү токени (PAT) талап кылынат. %1$s сайтында public_repo чөйрөсү менен PAT түзүңүз</string>
     <string name="settings_github_pat_label">Жеке кирүү токени</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Веб-сайт</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Патчер: v%1$s</string>
-    <string name="app_info_version_library">Китепкана: v%1$s</string>
-    <string name="app_info_description">Популярдуу Android тиркемелерин заманбап жана оптималдаштырылган ыкма менен патчилөө үчүн коомчулуктун кайтарымдары жана салымы менен түзүлгөн ачык булактуу долбоор</string>
-    <string name="app_info_link_changelog">Өзгөртүүлөр журналы</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Котормо</string>
+    <string name="about_component">Иш столу</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Китепкана v%2$s</string>
+    <string name="about_update_available">Жаңыртуу бар: %1$s</string>
+    <string name="about_up_to_date">Актуалдуу</string>
+    <string name="about_links">Расмий шилтемелер</string>
+    <string name="about_link_donate">Донорлук</string>
+    <string name="about_link_translations">Котормолор</string>
+    <string name="contributors">Салым кошкондор</string>
+    <string name="contributors_description">Акыркы 12 ай</string>
+    <string name="credits_prior_development">Мурунку иштеп чыгуу</string>
+    <string name="supporters">Колдоочулар</string>
+    <string name="supporters_description">Open Collective платформасындагы колдоочулар</string>
+    <string name="supporters_become">Колдоочу болуңуз</string>
+    <string name="people_more">Жана дагы %1$s адам</string>
+    <string name="people_unavailable">Тизмени жүктөө мүмкүн болгон жок</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Орундоштурулган</string>
     <string name="changelog_badge_latest">Акыркы</string>

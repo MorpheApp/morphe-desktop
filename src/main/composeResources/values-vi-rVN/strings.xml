@@ -45,6 +45,7 @@
     <string name="click_to_copy">Bấm để sao chép</string>
     <string name="enable_adb_button">Bật ADB</string>
     <string name="drag_to_reorder">Kéo để sắp xếp lại</string>
+    <string name="website">Trang web</string>
     <string name="off">Tắt</string>
     <string name="on">Bật</string>
     <string name="browse">Duyệt</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Thông tin ứng dụng</string>
     <string name="form_factor_tv">TV</string>
     <string name="form_factor_automotive">Màn hình ô tô</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Tìm bản vá…</string>
     <string name="status_patching_completed">Vá hoàn tất</string>
     <string name="status_patching_failed">Vá thất bại</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">từ v%1$s</string>
     <string name="update_banner_later_button">Để sau</string>
     <string name="update_banner_skip_button">Bỏ qua v%1$s</string>
+    <string name="home_updating_sources">Đang cập nhật mã nguồn…</string>
+    <string name="home_update_success">Cập nhật mã nguồn hoàn tất</string>
+    <string name="home_update_success_subtitle">Đã cập nhật tất cả nguồn lên mới nhất</string>
+    <string name="home_sources_failed_title">Một số nguồn vá không khả dụng</string>
+    <string name="home_multi_source_hint_title">Đã bật nhiều nguồn vá</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Giấy phép Mã nguồn Mở</string>
     <string name="licenses_dialog_empty_failed">// không thể tải giấy phép</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Xem giấy phép của các thư viện bên thứ ba</string>
     <string name="settings_about_documentation_title">Tài liệu</string>
     <string name="settings_about_documentation_desc">Hướng dẫn vá, nguồn và khắc phục sự cố</string>
-    <string name="settings_about_website_title">Truy cập trang web</string>
-    <string name="settings_about_website_desc">Truy cập trang web chính thức của Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Bỏ chọn các kiến trúc bạn không cần. Khi vá, APK đầu ra sẽ chỉ giữ các kiến trúc có trong APK VÀ trong danh sách này. Nếu không có kiến trúc nào trùng nhau, sẽ không tách bỏ gì để tránh tạo APK lỗi</string>
     <string name="settings_strip_libs_arm64">ARM 64-bit (hầu hết điện thoại hiện đại)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Cần có Mã thông báo truy cập cá nhân GitHub (PAT) với phạm vi public_repo để tải xuống các artifact của pull request. Tạo PAT với phạm vi public_repo tại %1$s</string>
     <string name="settings_github_pat_label">Mã thông báo truy cập cá nhân</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Trang web</string>
-    <string name="app_info_version_gui">Giao diện: %1$s</string>
-    <string name="app_info_version_patcher">Trình vá: v%1$s</string>
-    <string name="app_info_version_library">Thư viện: v%1$s</string>
-    <string name="app_info_description">Một dự án mã nguồn mở để vá các ứng dụng Android phổ biến một cách hiện đại và tinh gọn, được thúc đẩy bởi phản hồi và đóng góp từ cộng đồng</string>
-    <string name="app_info_link_changelog">Nhật ký thay đổi</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Dịch</string>
+    <string name="about_component">Máy tính để bàn</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Thư viện v%2$s</string>
+    <string name="about_update_available">Đã có bản cập nhật: %1$s</string>
+    <string name="about_up_to_date">Đã cập nhật</string>
+    <string name="about_links">Liên kết chính chủ</string>
+    <string name="about_link_donate">Ủng hộ</string>
+    <string name="about_link_translations">Dịch thuật</string>
+    <string name="contributors">Người đóng góp</string>
+    <string name="contributors_description">12 tháng qua</string>
+    <string name="credits_prior_development">Trước đây</string>
+    <string name="supporters">Người ủng hộ</string>
+    <string name="supporters_description">Người đóng góp trên Open Collective</string>
+    <string name="supporters_become">Trở thành người ủng hộ</string>
+    <string name="people_more">Và %1$s người khác</string>
+    <string name="people_unavailable">Không thể tải danh sách</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Đã cài đặt</string>
     <string name="changelog_badge_latest">Mới nhất</string>

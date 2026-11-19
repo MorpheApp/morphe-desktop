@@ -45,6 +45,7 @@
     <string name="click_to_copy">Cliceáil chun cóipeáil</string>
     <string name="enable_adb_button">Cumasaigh ADB</string>
     <string name="drag_to_reorder">Tarraing chun athordú</string>
+    <string name="website">Suíomh Gréasáin</string>
     <string name="off">As</string>
     <string name="on">Ar</string>
     <string name="browse">Brabhsáil</string>
@@ -68,7 +69,6 @@
     <string name="app_info_shared_label">Eolas faoin aip</string>
     <string name="form_factor_tv">Teilifís</string>
     <string name="form_factor_automotive">Feithicleach</string>
-    <string name="github_label">GitHub</string>
     <string name="patches_search_hint">Cuardaigh paistí…</string>
     <string name="status_patching_completed">Críochnaíodh an paisteáil</string>
     <string name="status_patching_failed">Theip ar an bpaitseáil</string>
@@ -693,6 +693,11 @@
     <string name="update_banner_from_version">ó v%1$s</string>
     <string name="update_banner_later_button">Níos déanaí</string>
     <string name="update_banner_skip_button">Scipeáil v%1$s</string>
+    <string name="home_updating_sources">Ag nuashonrú na foinsí…</string>
+    <string name="home_update_success">Foinsí nuashonraithe críochnaithe</string>
+    <string name="home_update_success_subtitle">Tá do fhoinsí suas chun dáta</string>
+    <string name="home_sources_failed_title">Níl roinnt foinsí páistí ar fáil</string>
+    <string name="home_multi_source_hint_title">Cumasaithe paiste ilfhoinsí</string>
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Ceadúnais Foinse Oscailte</string>
     <string name="licenses_dialog_empty_failed">// theip ar cheadúnais a lódáil</string>
@@ -836,8 +841,6 @@
     <string name="settings_about_licenses_desc">Féach ar cheadúnais leabharlanna tríú páirtí</string>
     <string name="settings_about_documentation_title">Doiciméadú</string>
     <string name="settings_about_documentation_desc">Treoracha maidir le paisteáil, foinsí agus fabhtcheartú</string>
-    <string name="settings_about_website_title">Tabhair cuairt ar an suíomh gréasáin</string>
-    <string name="settings_about_website_desc">Tabhair cuairt ar shuíomh gréasáin oifigiúil Morphe</string>
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Díroghnaigh ailtireachtaí nach bhfuil uait. Agus an paiste á chur i bhfeidhm, ní choimeádfaidh an comhad APK aschuir ach na hailtireachtaí atá i láthair sa chomhad APK *agus* sa liosta seo. Mura bhfuil aon cheann acu i gcoiteann, ní bhainfear aon rud amach, chun a chinntiú nach mbeidh an comhad APK lochtach dá bharr</string>
     <string name="settings_strip_libs_arm64">ARM 64-giotán (an chuid is mó de fhóin nua-aimseartha)</string>
@@ -896,14 +899,21 @@
     <string name="settings_github_pat_desc">Tá gá le Comhartha Rochtana Pearsanta GitHub (PAT) a bhfuil raon public_repo aige chun sainghnéithe a íoslódáil ó iarratais tarraingthe. Cruthaigh PAT le raon public_repo ar %1$s</string>
     <string name="settings_github_pat_label">Comhartha Rochtana Pearsanta</string>
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Suíomh Gréasáin</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Paisteálaí: v%1$s</string>
-    <string name="app_info_version_library">Leabharlann: v%1$s</string>
-    <string name="app_info_description">Tionscadal foinse oscailte le haghaidh paisteáil nua-aimseartha, sruthlínithe ar aipeanna coitianta Android, á thiomáint ag aiseolas agus ranníocaíochtaí ón bpobal.</string>
-    <string name="app_info_link_changelog">Loga Athruithe</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Aistrigh</string>
+    <string name="about_component">Deasc</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Leabharlann v%2$s</string>
+    <string name="about_update_available">Nuashonrú ar fáil: %1$s</string>
+    <string name="about_up_to_date">Suas chun dáta</string>
+    <string name="about_links">Naisc oifigiúla</string>
+    <string name="about_link_donate">Tabhair Síntiús</string>
+    <string name="about_link_translations">Aistriúcháin</string>
+    <string name="contributors">Rannpháirtithe</string>
+    <string name="contributors_description">Le 12 mhí anuas</string>
+    <string name="credits_prior_development">Forbairt roimhe seo</string>
+    <string name="supporters">Tacadóirí</string>
+    <string name="supporters_description">Tacaitheoirí ar Open Collective</string>
+    <string name="supporters_become">Bí i do thacadóir</string>
+    <string name="people_more">Agus %1$s eile</string>
+    <string name="people_unavailable">Níorbh fhéidir an liosta a luchtú</string>
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Suiteáilte</string>
     <string name="changelog_badge_latest">Is déanaí</string>
