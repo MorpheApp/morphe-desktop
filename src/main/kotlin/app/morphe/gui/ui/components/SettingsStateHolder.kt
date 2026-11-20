@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.gui.data.constants.AppConstants
@@ -138,6 +139,11 @@ class SettingsStateHolder(
     fun setAutoCleanupTempFiles(enabled: Boolean) {
         engineConfig = engineConfig.copy(autoCleanupTempFiles = enabled)
         scope.launch { engineConfigRepository.setAutoCleanupTempFiles(enabled) }
+    }
+
+    fun setSaveOriginalApkMode(mode: SaveOriginalApk?) {
+        engineConfig = engineConfig.copy(saveOriginalApks = mode != null, moveOriginalApks = mode == SaveOriginalApk.MOVE)
+        scope.launch { engineConfigRepository.setSaveOriginalApkMode(mode) }
     }
 
     fun setUpdateChannel(pref: UpdateChannelPreference) {

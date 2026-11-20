@@ -67,6 +67,9 @@ internal fun VersionWarningDialog(
 @Composable
 internal fun ForgetConfirmDialog(
     record: PatchedAppRecord,
+    hasKeptOriginal: Boolean,
+    deleteOriginal: Boolean,
+    onDeleteOriginalChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
@@ -87,6 +90,13 @@ internal fun ForgetConfirmDialog(
         MorpheDialogText(
             stringResource(Res.string.home_dialog_forget_message, record.displayName)
         )
+        if (hasKeptOriginal) {
+            DialogCheckboxRow(
+                checked = deleteOriginal,
+                onCheckedChange = onDeleteOriginalChange,
+                label = stringResource(Res.string.home_dialog_also_delete_original),
+            )
+        }
     }
 }
 
@@ -96,6 +106,9 @@ internal fun UninstallConfirmDialog(
     record: PatchedAppRecord,
     alsoForget: Boolean,
     onAlsoForgetChange: (Boolean) -> Unit,
+    hasKeptOriginal: Boolean,
+    deleteOriginal: Boolean,
+    onDeleteOriginalChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
@@ -117,28 +130,49 @@ internal fun UninstallConfirmDialog(
         MorpheDialogText(
             stringResource(Res.string.home_dialog_uninstall_message, record.displayName)
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(MorpheTheme.shapes.small)
-                .handCursor()
-                .clickable { onAlsoForgetChange(!alsoForget) }
-                .padding(vertical = 4.dp),
-        ) {
-            Checkbox(
-                checked = alsoForget,
-                onCheckedChange = onAlsoForgetChange,
-                colors = CheckboxDefaults.colors(checkedColor = dangerColor),
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = stringResource(Res.string.home_dialog_uninstall_also_forget),
-                style = MorpheTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
+        DialogCheckboxRow(
+            checked = alsoForget,
+            onCheckedChange = onAlsoForgetChange,
+            label = stringResource(Res.string.home_dialog_uninstall_also_forget),
+        )
+        if (hasKeptOriginal) {
+            DialogCheckboxRow(
+                checked = deleteOriginal,
+                onCheckedChange = onDeleteOriginalChange,
+                label = stringResource(Res.string.home_dialog_also_delete_original),
             )
         }
+    }
+}
+
+/** A checkbox with its label under a destructive dialog's message, toggled by clicking anywhere on the row. */
+@Composable
+private fun DialogCheckboxRow(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    label: String,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MorpheTheme.shapes.small)
+            .handCursor()
+            .clickable { onCheckedChange(!checked) }
+            .padding(vertical = 4.dp),
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(checkedColor = MorpheTheme.colors.danger),
+            modifier = Modifier.size(20.dp),
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = label,
+            style = MorpheTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
     }
 }
 

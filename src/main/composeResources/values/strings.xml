@@ -208,7 +208,8 @@
     <string name="home_dialog_uninstall_button">Uninstall</string>
     <string name="home_dialog_continue_anyway">Continue anyway</string>
     <string name="home_dialog_forget_title">Forget %1$s?</string>
-    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. It doesn't touch any files - repatching the app adds it back</string>
+    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. The patched APK stays on disk, repatching the app adds it back</string>
+    <string name="home_dialog_also_delete_original">Also delete its kept original APK</string>
     <string name="home_dialog_uninstall_title">Uninstall %1$s?</string>
     <string name="home_dialog_uninstall_message">This removes %1$s from the connected device. The patched APK on disk and your history are kept unless you choose otherwise below</string>
     <string name="home_dialog_uninstall_also_forget">Also remove from Your apps</string>
@@ -836,6 +837,17 @@
     <string name="settings_output_folder_default">APK's folder (default)</string>
     <string name="settings_output_folder_picker_title">Select output folder</string>
     <string name="settings_output_folder_not_found">Folder not found, will be created on next patch</string>
+    <string name="settings_section_original_apks">Original APKs</string>
+    <string name="settings_original_apks_mode_label">Keep original APKs</string>
+    <string name="settings_original_apks_mode_copy">Copy</string>
+    <string name="settings_original_apks_mode_move">Move</string>
+    <string name="settings_original_apks_mode_desc_copy">Copies each app's original APK after patching, so it can be repatched later. Only the latest version of each app is kept</string>
+    <string name="settings_original_apks_mode_desc_move">Moves each app's original APK after patching, removing it from where you picked it. Only the latest version of each app is kept</string>
+    <string name="settings_original_apks_mode_desc_off">Original APKs are not kept. Repatching needs the APK you picked to still be there</string>
+    <string name="settings_original_apks_kept_title">Kept original APKs</string>
+    <string name="settings_original_apks_open_button">Open folder</string>
+    <string name="settings_original_apks_confirm_title">Delete kept original APKs?</string>
+    <string name="settings_original_apks_confirm_message">This will delete every original APK Morphe has kept. Repatching an app will need its APK again</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-start ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spawn the ADB daemon on launch so connected devices are monitored. When off, Morphe never starts the server, and install/push features are disabled</string>
     <string name="settings_section_storage">Storage &amp; cache</string>
