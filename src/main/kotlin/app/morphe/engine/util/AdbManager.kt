@@ -560,16 +560,16 @@ class AdbManager {
             val mountScriptContent = buildMountScript(packageName, basePath, stockPath)
 
             val installCommands = $$"""
+                stock="$$stockPath"; base="$$basePath";
                 mkdir -p /data/adb/morphe &&
                 mkdir -p /data/adb/service.d &&
-                mv "$$remoteTmp" "$$basePath" &&
-                chmod 644 "$$basePath" &&
-                chown system:system "$$basePath" &&
-                chcon u:object_r:apk_data_file:s0 "$$basePath" &&
-                umount -l "$$stockPath" 2>/dev/null;
-                for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m umount -l "$$stockPath" 2>/dev/null; done;
-                mount -o bind "$$basePath" "$$stockPath" &&
-                for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m mount -o bind "$$basePath" "$$stockPath" 2>/dev/null; done;
+                mv "$$remoteTmp" "$base" &&
+                chmod 644 "$base" &&
+                chown system:system "$base" &&
+                chcon u:object_r:apk_data_file:s0 "$base" ||
+                { rm -f "$$remoteTmp"; echo "Could not move the patched APK into place"; exit 1; };
+                $$unmountAllLayersShell
+                $$bindMountShell
                 am force-stop "$$packageName" &&
                 am start -S "$$packageName"
             """.trimIndent().replace("\n", " ")
@@ -588,12 +588,6 @@ class AdbManager {
             }
 
             deployBootScript(adb, targetDevice.id, bootScript, mountScriptContent)
-
-            val verifyCmd = "grep -F '$basePath' /proc/mounts || grep -F '$stockPath' /proc/mounts"
-            val verifyResult = executeSuCommand(adb, targetDevice.id, verifyCmd)
-            if (verifyResult.isFailure || verifyResult.getOrNull().isNullOrBlank()) {
-                Logger.warn("Active mount not found in /proc/mounts on ${targetDevice.id}")
-            }
 
             Logger.info("Mounted $packageName on ${targetDevice.id}")
             Result.success(Unit)
@@ -638,7 +632,7 @@ class AdbManager {
             val bootScript = "/data/adb/service.d/mount_morphe_$packageName.sh"
 
             val unmountStock = if (!stockPath.isNullOrBlank()) {
-                $$"""umount -l "$$stockPath" 2>/dev/null; for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m umount -l "$$stockPath" 2>/dev/null; done; """
+                "stock=\"$stockPath\"; $unmountAllLayersShell"
             } else {
                 ""
             }
@@ -647,7 +641,7 @@ class AdbManager {
                 $$unmountStock
                 grep -F '$$packageName' /proc/mounts 2>/dev/null | cut -d ' ' -f 2 | while read -r m; do
                     [ -n "$m" ] && umount -l "$m" 2>/dev/null;
-                    for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m umount -l "$m" 2>/dev/null; done;
+                    for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m -- umount -l "$m" 2>/dev/null; done;
                 done;
                 rm -f '$$basePath' '$$bootScript' &&
                 am force-stop '$$packageName'
@@ -735,37 +729,57 @@ class AdbManager {
         )
     }
 
+    /**
+     * Lazily unmounts all mounts on `$stock` in `self` and every `zygote` namespace, since zygote can
+     * hold stale mounts that `self` doesn't see (or that would hide a new mount underneath).
+     * `--` is required because toybox `nsenter` otherwise parses `umount`'s `-l` flag as its own.
+     */
+    private val unmountAllLayersShell = $$"""
+        for ns in self $(pidof zygote zygote64 2>/dev/null); do
+            n=0;
+            while [ $n -lt 10 ] && grep -qsF " $stock " /proc/$ns/mountinfo; do
+                if [ $ns = self ]; then umount -l "$stock"; else nsenter -t $ns -m -- umount -l "$stock"; fi;
+                n=$((n + 1));
+            done;
+            grep -qsF " $stock " /proc/$ns/mountinfo && { echo "Could not remove old mounts from $stock"; exit 1; };
+        done;
+    """.trimIndent()
+
+    /** Shell that bind-mounts `$base` over `$stock` and fails unless every zygote then sees `$base`. */
+    private val bindMountShell = $$"""
+        mount -o bind "$base" "$stock" || { echo "Bind mount over $stock failed"; exit 1; };
+        for z in $(pidof zygote zygote64 2>/dev/null); do
+            [ "$(stat -L -c %d:%i /proc/$z/root$stock)" = "$(stat -c %d:%i "$base")" ] ||
+                nsenter -t $z -m -- mount -o bind "$base" "$stock";
+            [ "$(stat -L -c %d:%i /proc/$z/root$stock)" = "$(stat -c %d:%i "$base")" ] ||
+                { echo "Zygote $z still sees the old APK at $stock"; exit 1; };
+        done;
+    """.trimIndent()
+
     private fun buildMountScript(packageName: String, basePath: String, fallbackStockPath: String): String =
-        $$"""
-        #!/system/bin/sh
-        until [ "$( getprop sys.boot_completed )" = 1 ]; do sleep 3; done
-        until [ -d "/sdcard/Android" ]; do sleep 1; done
+        listOf(
+            $$"""
+            #!/system/bin/sh
+            until [ "$( getprop sys.boot_completed )" = 1 ]; do sleep 3; done
+            until [ -d "/sdcard/Android" ]; do sleep 1; done
 
-        base_path="$$basePath"
-        stock_path=$( pm path $$packageName | grep base | head -n 1 | sed 's/package://g' | tr -d '\r' )
-        [ -z "$stock_path" ] && stock_path=$( pm path $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
-        [ -z "$stock_path" ] && stock_path=$( pm path --user 0 $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
-        [ -z "$stock_path" ] && stock_path="$$fallbackStockPath"
+            base="$$basePath"
+            stock=$( pm path $$packageName | grep base | head -n 1 | sed 's/package://g' | tr -d '\r' )
+            [ -z "$stock" ] && stock=$( pm path $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
+            [ -z "$stock" ] && stock=$( pm path --user 0 $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
+            [ -z "$stock" ] && stock="$$fallbackStockPath"
 
-        if [ -z "$stock_path" ] || [ ! -f "$base_path" ]; then
-            exit 1
-        fi
+            if [ -z "$stock" ] || [ ! -f "$base" ]; then
+                exit 1
+            fi
 
-        chcon u:object_r:apk_data_file:s0 "$base_path"
+            chcon u:object_r:apk_data_file:s0 "$base"
 
-        umount -l "$stock_path" 2>/dev/null
-        for pid in $(pidof zygote zygote64 2>/dev/null); do
-            nsenter -t $pid -m umount -l "$stock_path" 2>/dev/null
-        done
-
-        mount -o bind "$base_path" "$stock_path"
-
-        for pid in $(pidof zygote zygote64 2>/dev/null); do
-            nsenter -t $pid -m mount -o bind "$base_path" "$stock_path" 2>/dev/null
-        done
-
-        am force-stop "$$packageName"
-        """.trimIndent()
+            """.trimIndent(),
+            unmountAllLayersShell,
+            bindMountShell,
+            "am force-stop \"$packageName\"",
+        ).joinToString("\n")
 
     private suspend fun deployBootScript(
         adb: String,
