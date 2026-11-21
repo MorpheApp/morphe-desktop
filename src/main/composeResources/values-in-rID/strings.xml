@@ -907,7 +907,10 @@
     <string name="about_link_donate">Donasi</string>
     <string name="about_link_translations">Terjemahan</string>
     <string name="contributors">Kontributor</string>
-    <string name="contributors_description">12 bulan terakhir</string>
+    <string name="contributors_ranking">Diurutkan berdasarkan kontribusi</string>
+    <string name="contributors_all_time">Sepanjang waktu</string>
+    <string name="contributors_6_months">6 bulan terakhir</string>
+    <string name="contributors_3_months">3 bulan terakhir</string>
     <string name="credits_prior_development">Pengembangan sebelumnya</string>
     <string name="supporters">Pendukung</string>
     <string name="supporters_description">Donatur di Open Collective</string>

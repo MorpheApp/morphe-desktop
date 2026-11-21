@@ -908,7 +908,10 @@
     <string name="about_link_donate">寄付</string>
     <string name="about_link_translations">翻訳</string>
     <string name="contributors">貢献者</string>
-    <string name="contributors_description">過去 12 ヶ月</string>
+    <string name="contributors_ranking">貢献度順</string>
+    <string name="contributors_all_time">全期間</string>
+    <string name="contributors_6_months">過去 6 ヶ月</string>
+    <string name="contributors_3_months">過去 3 ヶ月</string>
     <string name="credits_prior_development">過去の開発</string>
     <string name="supporters">サポーター</string>
     <string name="supporters_description">Open Collective の支援者</string>

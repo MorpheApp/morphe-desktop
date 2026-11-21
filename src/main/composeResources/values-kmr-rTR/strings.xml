@@ -907,7 +907,10 @@
     <string name="about_link_donate">Bexşîn</string>
     <string name="about_link_translations">Werger</string>
     <string name="contributors">Karker</string>
-    <string name="contributors_description">12 mehanên dawî</string>
+    <string name="contributors_ranking">Li gorî pejandina kontribûsyonê</string>
+    <string name="contributors_all_time">Hemû dem</string>
+    <string name="contributors_6_months">6 mehanên dawî</string>
+    <string name="contributors_3_months">3 mehanên dawî</string>
     <string name="credits_prior_development">Pêşdebirina berê</string>
     <string name="supporters">Piştgir</string>
     <string name="supporters_description">Piştgirên li ser Open Collective</string>

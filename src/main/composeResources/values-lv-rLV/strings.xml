@@ -904,7 +904,10 @@
     <string name="about_link_donate">Ziedot</string>
     <string name="about_link_translations">Tulkojumi</string>
     <string name="contributors">Veiksmīgiem līdzdarbotājiem</string>
-    <string name="contributors_description">Pēdējais 12 mēneši</string>
+    <string name="contributors_ranking">Kārtots pēc ieguldījuma</string>
+    <string name="contributors_all_time">Visu laiku</string>
+    <string name="contributors_6_months">Pēdējie 6 mēneši</string>
+    <string name="contributors_3_months">Pēdējie 3 mēneši</string>
     <string name="credits_prior_development">Iepriekšējā izstrāde</string>
     <string name="supporters">Atbalstītāji</string>
     <string name="supporters_description">Atbalstītāji Open Collective</string>

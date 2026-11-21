@@ -907,7 +907,10 @@
     <string name="about_link_donate">Changia</string>
     <string name="about_link_translations">Tafsiri</string>
     <string name="contributors">Wachangia</string>
-    <string name="contributors_description">Miezi 12 ya mwisho</string>
+    <string name="contributors_ranking">Imepangwa kwa mchango</string>
+    <string name="contributors_all_time">Muda wote</string>
+    <string name="contributors_6_months">Miezi 6 iliyopita</string>
+    <string name="contributors_3_months">Miezi 3 iliyopita</string>
     <string name="credits_prior_development">Uundaji wa awali</string>
     <string name="supporters">Wafadhili</string>
     <string name="supporters_description">Wafadhili kwenye Open Collective</string>

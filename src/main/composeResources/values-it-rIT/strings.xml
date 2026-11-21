@@ -907,7 +907,10 @@
     <string name="about_link_donate">Dona</string>
     <string name="about_link_translations">Traduzioni</string>
     <string name="contributors">Collaboratori</string>
-    <string name="contributors_description">Ultimi 12 mesi</string>
+    <string name="contributors_ranking">Classifica per contributo</string>
+    <string name="contributors_all_time">Di sempre</string>
+    <string name="contributors_6_months">Ultimi 6 mesi</string>
+    <string name="contributors_3_months">Ultimi 3 mesi</string>
     <string name="credits_prior_development">Sviluppo precedente</string>
     <string name="supporters">Sostenitori</string>
     <string name="supporters_description">Sostenitori su Open Collective</string>

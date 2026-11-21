@@ -907,7 +907,10 @@
     <string name="about_link_donate">Derma</string>
     <string name="about_link_translations">Terjemahan</string>
     <string name="contributors">Penyumbang</string>
-    <string name="contributors_description">12 bulan terakhir</string>
+    <string name="contributors_ranking">Kedudukan mengikut sumbangan</string>
+    <string name="contributors_all_time">Sepanjang masa</string>
+    <string name="contributors_6_months">6 bulan terakhir</string>
+    <string name="contributors_3_months">3 bulan terakhir</string>
     <string name="credits_prior_development">Pembangunan terdahulu</string>
     <string name="supporters">Penyokong</string>
     <string name="supporters_description">Penyokong di Open Collective</string>

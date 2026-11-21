@@ -907,7 +907,10 @@
     <string name="about_link_donate">Nikela</string>
     <string name="about_link_translations">Ukuhumusha</string>
     <string name="contributors">Abahambisana nathi</string>
-    <string name="contributors_description">Izinyanga ezingu-12 ezidlulile</string>
+    <string name="contributors_ranking">Hlelwe ngokusekelwe ekufakeni</string>
+    <string name="contributors_all_time">Isikhathi sonke</string>
+    <string name="contributors_6_months">Izinyanga ezingu-6 zodwa ezidlule</string>
+    <string name="contributors_3_months">Izinyanga ezingu-3 zodwa ezidlule</string>
     <string name="credits_prior_development">Ukuthuthukiswa kwangaphambilini</string>
     <string name="supporters">Abaseki</string>
     <string name="supporters_description">Abaseki ku-Open Collective</string>

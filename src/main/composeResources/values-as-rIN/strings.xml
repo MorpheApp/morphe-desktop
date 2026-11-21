@@ -907,7 +907,10 @@
     <string name="about_link_donate">দান কৰক</string>
     <string name="about_link_translations">অনুবাদ</string>
     <string name="contributors">অংশগ্রহণকাৰী</string>
-    <string name="contributors_description">ৰাজকীয় ১২ মাহ</string>
+    <string name="contributors_ranking">অৱদানৰ দ্বাৰা ৰেংকিং কৰা হৈছে</string>
+    <string name="contributors_all_time">সৰ্বকালৰ</string>
+    <string name="contributors_6_months">যোৱা ৬ মাহ</string>
+    <string name="contributors_3_months">যোৱা ৩ মাহ</string>
     <string name="credits_prior_development">পূৰ্বৰ উন্নয়ন</string>
     <string name="supporters">সমৰ্থকসকল</string>
     <string name="supporters_description">Open Collective ৰ সমৰ্থকসকল</string>

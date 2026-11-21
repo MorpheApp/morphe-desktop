@@ -907,7 +907,10 @@
     <string name="about_link_donate">کمک مالی</string>
     <string name="about_link_translations">ترجمه‌ها</string>
     <string name="contributors">مشارکت‌کنندگان</string>
-    <string name="contributors_description">۱۲ ماه گذشته</string>
+    <string name="contributors_ranking">رتبه‌بندی بر اساس مشارکت</string>
+    <string name="contributors_all_time">کل زمان</string>
+    <string name="contributors_6_months">۶ ماه اخیر</string>
+    <string name="contributors_3_months">۳ ماه اخیر</string>
     <string name="credits_prior_development">توسعهٔ پیشین</string>
     <string name="supporters">حامیان</string>
     <string name="supporters_description">حمایت‌کنندگان در Open Collective</string>

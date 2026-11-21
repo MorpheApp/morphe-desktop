@@ -907,7 +907,10 @@
     <string name="about_link_donate">Adományozás</string>
     <string name="about_link_translations">Fordítások</string>
     <string name="contributors">Hozzájárulók</string>
-    <string name="contributors_description">Az utolsó 12 hónap</string>
+    <string name="contributors_ranking">Hozzájárulás szerint rangsorolva</string>
+    <string name="contributors_all_time">Összes időszak</string>
+    <string name="contributors_6_months">Utolsó 6 hónap</string>
+    <string name="contributors_3_months">Utolsó 3 hónap</string>
     <string name="credits_prior_development">Korábbi fejlesztők</string>
     <string name="supporters">Támogatók</string>
     <string name="supporters_description">Támogatók az Open Collective-en</string>

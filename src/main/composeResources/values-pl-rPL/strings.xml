@@ -908,7 +908,10 @@
     <string name="about_link_donate">Wesprzyj</string>
     <string name="about_link_translations">Tłumaczenia</string>
     <string name="contributors">Współtwórcy</string>
-    <string name="contributors_description">Ostatnie 12 miesięcy</string>
+    <string name="contributors_ranking">Ranking według wkładu</string>
+    <string name="contributors_all_time">Cały okres</string>
+    <string name="contributors_6_months">Ostatnie 6 miesięcy</string>
+    <string name="contributors_3_months">Ostatnie 3 miesięcy</string>
     <string name="credits_prior_development">Poprzedni twórcy</string>
     <string name="supporters">Wspierający</string>
     <string name="supporters_description">Darczyńcy na Open Collective</string>

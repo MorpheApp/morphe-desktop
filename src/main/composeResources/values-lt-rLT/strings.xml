@@ -906,7 +906,10 @@
     <string name="about_link_donate">Aukoti</string>
     <string name="about_link_translations">Vertimai</string>
     <string name="contributors">Kūrėjai</string>
-    <string name="contributors_description">Pastarieji 12 mėnesiai</string>
+    <string name="contributors_ranking">Rūšiuojama pagal prisidėjimą</string>
+    <string name="contributors_all_time">Viso laikotarpio</string>
+    <string name="contributors_6_months">Pastarieji 6 mėnesiai</string>
+    <string name="contributors_3_months">Pastarieji 3 mėnesiai</string>
     <string name="credits_prior_development">Ankstesnis kūrimas</string>
     <string name="supporters">Rėmėjai</string>
     <string name="supporters_description">Rėmėjai „Open Collective“</string>

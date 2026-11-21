@@ -907,7 +907,10 @@
     <string name="about_link_donate">Donează</string>
     <string name="about_link_translations">Traduceri</string>
     <string name="contributors">Contribuitori</string>
-    <string name="contributors_description">Ultimele 12 luni</string>
+    <string name="contributors_ranking">Clasate după contribuție</string>
+    <string name="contributors_all_time">Tot timpul</string>
+    <string name="contributors_6_months">Ultimele 6 luni</string>
+    <string name="contributors_3_months">Ultimele 3 luni</string>
     <string name="credits_prior_development">Dezvoltare anterioară</string>
     <string name="supporters">Susținători</string>
     <string name="supporters_description">Sponsori pe Open Collective</string>

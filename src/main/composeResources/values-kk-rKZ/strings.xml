@@ -907,7 +907,10 @@
     <string name="about_link_donate">Қайырымдылық</string>
     <string name="about_link_translations">Аудармалар</string>
     <string name="contributors">Үлес қосқандар</string>
-    <string name="contributors_description">Соңғы 12 ай</string>
+    <string name="contributors_ranking">Үлестері бойынша рейтингтелген</string>
+    <string name="contributors_all_time">Барлық уақыт бойы</string>
+    <string name="contributors_6_months">Соңғы 6 ай</string>
+    <string name="contributors_3_months">Соңғы 3 ай</string>
     <string name="credits_prior_development">Алдыңғы әзірлеу</string>
     <string name="supporters">Қолдаушылар</string>
     <string name="supporters_description">Open Collective платформасындағы қолдаушылар</string>

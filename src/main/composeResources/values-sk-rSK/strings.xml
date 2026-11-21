@@ -905,7 +905,10 @@
     <string name="about_link_donate">Prispieť</string>
     <string name="about_link_translations">Preklady</string>
     <string name="contributors">Prispievatelia</string>
-    <string name="contributors_description">Posledných 12 mesiacov</string>
+    <string name="contributors_ranking">Zoradené podľa príspevkov</string>
+    <string name="contributors_all_time">Za celý čas</string>
+    <string name="contributors_6_months">Posledných 6 mesiacov</string>
+    <string name="contributors_3_months">Posledných 3 mesiace</string>
     <string name="credits_prior_development">Predchádzajúci vývoj</string>
     <string name="supporters">Podporovatelia</string>
     <string name="supporters_description">Kreditory na Open Collective</string>

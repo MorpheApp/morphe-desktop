@@ -907,7 +907,10 @@
     <string name="about_link_donate">İanə et</string>
     <string name="about_link_translations">Tərcümələr</string>
     <string name="contributors">Töhfəçilər</string>
-    <string name="contributors_description">Son 12 ay</string>
+    <string name="contributors_ranking">Töhfəyə görə sıralanıb</string>
+    <string name="contributors_all_time">Bütün vaxt</string>
+    <string name="contributors_6_months">Son 6 ay</string>
+    <string name="contributors_3_months">Son 3 ay</string>
     <string name="credits_prior_development">Əvvəlki inkişaf</string>
     <string name="supporters">Dəstəkçilər</string>
     <string name="supporters_description">Open Collective-də Dəstəkçilər</string>

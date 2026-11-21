@@ -907,7 +907,10 @@
     <string name="about_link_donate">บริจาค</string>
     <string name="about_link_translations">การแปล</string>
     <string name="contributors">ผู้สนับสนุน</string>
-    <string name="contributors_description">12 เดือนล่าสุด</string>
+    <string name="contributors_ranking">จัดลำดับตามการมีส่วนร่วม</string>
+    <string name="contributors_all_time">ตลอดกาล</string>
+    <string name="contributors_6_months">6 เดือนที่ผ่านมา</string>
+    <string name="contributors_3_months">3 เดือนที่ผ่านมา</string>
     <string name="credits_prior_development">การพัฒนาในก่อนหน้านี้</string>
     <string name="supporters">ผู้สนับสนุน</string>
     <string name="supporters_description">ผู้สนับสนุนบน Open Collective</string>

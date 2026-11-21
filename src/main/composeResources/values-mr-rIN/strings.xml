@@ -907,7 +907,10 @@
     <string name="about_link_donate">देणगी द्या</string>
     <string name="about_link_translations">भाषांतरे</string>
     <string name="contributors">योगदानकर्ते</string>
-    <string name="contributors_description">मागील १२ महिने</string>
+    <string name="contributors_ranking">योगदानाच्या आधारे क्रमवारी</string>
+    <string name="contributors_all_time">सर्वकाळातील</string>
+    <string name="contributors_6_months">मागील ६ महिने</string>
+    <string name="contributors_3_months">मागील ३ महिने</string>
     <string name="credits_prior_development">पूर्व विकास</string>
     <string name="supporters">समर्थक</string>
     <string name="supporters_description">ओपन कलेक्टिव्हवरील बॅकर्स</string>
