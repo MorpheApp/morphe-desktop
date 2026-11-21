@@ -37,8 +37,6 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -370,9 +368,15 @@ object AppIconLoader {
     }
 }
 
-/** State holder for an app icon bitmap and its loading state. */
+/**
+ * State holder for an app icon bitmap. [fadeIn] is set for an icon that had to be fetched from the
+ * network while nothing was shown, so it fades in rather than pops in.
+ */
 @Immutable
-data class AppIconState(val bitmap: ImageBitmap? = null, val isLoading: Boolean = false)
+data class AppIconState(
+    val bitmap: ImageBitmap? = null,
+    val fadeIn: Boolean = false,
+)
 
 /**
  * Asynchronously loads and remembers an app icon from [sources]. With [packageName], the icon is
@@ -394,16 +398,15 @@ fun rememberAppIcon(sources: List<AppIconSource>, packageName: String? = null): 
             value = AppIconState(bitmap = saved ?: packageName?.let { AppIconLoader.keptPlayStoreIcon(it) })
         }
 
-        // Cache hits finish in milliseconds; only show the spinner for real extractions.
-        val showSpinner = launch {
-            delay(300.milliseconds)
-            value = value.copy(isLoading = true)
+        val icon = AppIconLoader.load(sources, packageName) ?: saved
+        value = if (icon != null || packageName == null) {
+            AppIconState(bitmap = icon)
+        } else {
+            // With nothing shown yet, a Play Store icon found now was fetched rather than kept
+            val shown = value.bitmap
+            val storeIcon = AppIconLoader.playStoreIcon(packageName)
+            AppIconState(bitmap = storeIcon, fadeIn = shown == null && storeIcon != null)
         }
-        val icon = AppIconLoader.load(sources, packageName)
-            ?: saved
-            ?: packageName?.let { AppIconLoader.playStoreIcon(it) }
-        value = AppIconState(bitmap = icon)
-        showSpinner.cancel()
     }
     return state
 }

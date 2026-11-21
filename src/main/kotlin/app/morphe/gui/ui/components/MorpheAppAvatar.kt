@@ -5,23 +5,31 @@
 
 package app.morphe.gui.ui.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.morphe.gui.ui.theme.Defaults
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.AppIconState
@@ -33,7 +41,7 @@ enum class MorpheAvatarSize(val size: Dp) {
     SMALL(28.dp),
 }
 
-/** Avatar badge displaying the app [icon], a spinner while it is extracted, or the app initial when there is none. */
+/** Avatar badge displaying the app [icon], or the app initial when there is none. */
 @Composable
 fun MorpheAppAvatar(
     name: String = "",
@@ -48,7 +56,8 @@ fun MorpheAppAvatar(
 ) {
     val shapes = MorpheTheme.shapes
     val bitmap = icon.bitmap
-    if (bitmap != null) {
+    val fadeIn = rememberAppIconFadeIn(icon)
+    if (bitmap != null && !fadeIn.isFading) {
         Image(
             bitmap = bitmap,
             contentDescription = name,
@@ -58,6 +67,39 @@ fun MorpheAppAvatar(
         return
     }
 
+    // A fetched icon fades in over the placeholder
+    if (bitmap != null) {
+        Box(modifier = modifier.size(size.size), contentAlignment = Alignment.Center) {
+            AppAvatarPlaceholder(name, initial, size, accent, accentColor, onGradient, vectorIcon)
+            Image(
+                bitmap = bitmap,
+                contentDescription = name,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(size.size)
+                    .clip(shapes.small)
+                    .graphicsLayer { alpha = fadeIn.alpha },
+            )
+        }
+        return
+    }
+
+    AppAvatarPlaceholder(name, initial, size, accent, accentColor, onGradient, vectorIcon, modifier)
+}
+
+/** Placeholder of [MorpheAppAvatar]: the vector icon or the app initial. */
+@Composable
+private fun AppAvatarPlaceholder(
+    name: String,
+    initial: String?,
+    size: MorpheAvatarSize,
+    accent: Color?,
+    accentColor: Color?,
+    onGradient: Boolean,
+    vectorIcon: ImageVector?,
+    modifier: Modifier = Modifier,
+) {
+    val shapes = MorpheTheme.shapes
     val colors = MorpheTheme.colors
     val typography = MorpheTheme.typography
     val tint = accentColor ?: accent ?: colors.primary
@@ -82,13 +124,7 @@ fun MorpheAppAvatar(
             .background(bgColor),
         contentAlignment = Alignment.Center,
     ) {
-        if (icon.isLoading) {
-            CircularProgressIndicator(
-                color = textColor,
-                strokeWidth = 2.dp,
-                modifier = Modifier.size(size.size * 0.45f),
-            )
-        } else if (vectorIcon != null) {
+        if (vectorIcon != null) {
             Icon(
                 imageVector = vectorIcon,
                 contentDescription = name,
@@ -102,5 +138,31 @@ fun MorpheAppAvatar(
                 color = textColor,
             )
         }
+    }
+}
+
+/**
+ * Fades in an app icon that had to be fetched (see [AppIconState.fadeIn]), at the same speed
+ * Morphe Manager fades in its icons. Any other icon shows at once.
+ */
+@Composable
+fun rememberAppIconFadeIn(icon: AppIconState): AppIconFadeIn {
+    val fadeIn = remember(icon.bitmap) { AppIconFadeIn(icon.fadeIn) }
+    LaunchedEffect(fadeIn) { fadeIn.run() }
+    return fadeIn
+}
+
+@Stable
+class AppIconFadeIn(fadeIn: Boolean) {
+    private val progress = Animatable(if (fadeIn) 0f else 1f)
+
+    /** Opacity to draw the icon at. Read it while drawing, so the fade does not recompose. */
+    val alpha: Float get() = progress.value
+
+    /** Whether the icon is still fading in, so the placeholder stays under it. */
+    val isFading: Boolean by derivedStateOf { progress.value < 1f }
+
+    suspend fun run() {
+        progress.animateTo(1f, tween(Defaults.ANIMATION_DURATION))
     }
 }
