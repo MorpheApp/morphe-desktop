@@ -11,22 +11,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import app.morphe.engine.MorpheConstants
 import app.morphe.engine.MorpheData
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.BundleFormats
+import app.morphe.engine.network.sharedHttpClient
 import app.morphe.engine.util.AdbManager
 import app.morphe.engine.util.Logger
 import app.morphe.gui.LocalShowAppIcons
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.statement.bodyAsBytes
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.isSuccess
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 import java.util.Properties
 import java.util.concurrent.ConcurrentHashMap
 import java.util.zip.ZipFile
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -72,15 +82,33 @@ object AppIconLoader {
     /** Extraction loads whole resource tables into memory, so only one runs at a time. */
     private val extractLock = Mutex()
 
+    /** How long a Play Store icon is kept before it is fetched again, as long as the service says. */
+    private val PLAY_STORE_ICON_MAX_AGE = 30.days
+
+    /** How long an app the Play Store does not have is kept before it is asked about again. */
+    private val PLAY_STORE_MISSING_MAX_AGE = 1.days
+
+    /** How long a package waits after a failed fetch (offline, rate limited) before it is tried again. */
+    private val PLAY_STORE_RETRY_AFTER = 10.minutes
+
+    /** Play Store icons already shown this session, by package name. */
+    private val playStoreIcons = ConcurrentHashMap<String, ImageBitmap>()
+
+    /** Packages whose Play Store icon fetch failed this session, with the time it failed. */
+    private val playStoreFailures = ConcurrentHashMap<String, Long>()
+
     /** Returns an icon already in memory for any of [sources] or for [packageName], without loading anything. */
     fun cachedIcon(sources: List<AppIconSource>, packageName: String? = null): ImageBitmap? =
-        sources.firstNotNullOfOrNull { memoryCache[it] } ?: packageName?.let { savedIcons[it] }
+        sources.firstNotNullOfOrNull { memoryCache[it] }
+            ?: packageName?.let { savedIcons[it] ?: playStoreIcons[it] }
 
     /** Clears the in-memory icon cache. Call after the cache folder has been emptied. */
     fun clearMemoryCache() {
         memoryCache.clear()
         savedIcons.clear()
         packageIndex.clear()
+        playStoreIcons.clear()
+        playStoreFailures.clear()
     }
 
     /** Returns the icon last loaded for [packageName], or null if there is none. */
@@ -110,6 +138,100 @@ object AppIconLoader {
             return@withContext icon
         }
         null
+    }
+
+    /** Returns the Play Store icon of [packageName] kept on disk, however old, without fetching it. */
+    suspend fun keptPlayStoreIcon(packageName: String): ImageBitmap? = withContext(Dispatchers.IO) {
+        playStoreIcons[packageName]?.let { return@withContext it }
+        // An empty file stands for an app the Play Store does not have
+        playStoreIconFile(packageName).takeIf { it.length() > 0 }
+            ?.let { readCacheFile(it) }
+            ?.also { playStoreIcons[packageName] = it }
+    }
+
+    /**
+     * Returns the Play Store icon of [packageName], for an app with no icon from an APK or a
+     * device. Fetched when the one kept on disk is older than [PLAY_STORE_ICON_MAX_AGE], and the
+     * kept one is still returned when that fetch fails.
+     */
+    suspend fun playStoreIcon(packageName: String): ImageBitmap? = withContext(Dispatchers.IO) {
+        val file = playStoreIconFile(packageName)
+        val maxAge = if (file.length() > 0) PLAY_STORE_ICON_MAX_AGE else PLAY_STORE_MISSING_MAX_AGE
+        val fresh = file.isFile && (System.currentTimeMillis() - file.lastModified()).milliseconds < maxAge
+        val failedAt = playStoreFailures[packageName]
+        val retryLater = failedAt != null && (System.currentTimeMillis() - failedAt).milliseconds < PLAY_STORE_RETRY_AFTER
+        if (fresh || retryLater) return@withContext keptPlayStoreIcon(packageName)
+
+        when (val fetched = fetchPlayStoreIcon(packageName)) {
+            is PlayStoreIcon.Found -> {
+                writeAtomically(file, fetched.bytes)
+                playStoreFailures.remove(packageName)
+                playStoreIcons[packageName] = fetched.bitmap
+                fetched.bitmap
+            }
+            PlayStoreIcon.Missing -> {
+                writeAtomically(file, ByteArray(0))
+                playStoreFailures.remove(packageName)
+                playStoreIcons.remove(packageName)
+                null
+            }
+            PlayStoreIcon.Failed -> {
+                playStoreFailures[packageName] = System.currentTimeMillis()
+                keptPlayStoreIcon(packageName)
+            }
+        }
+    }
+
+    /** What the Play Store icon service answered for a package. */
+    private sealed interface PlayStoreIcon {
+        class Found(val bytes: ByteArray, val bitmap: ImageBitmap) : PlayStoreIcon
+
+        /** The Play Store has no app of that name. */
+        data object Missing : PlayStoreIcon
+
+        /** Not reached, rate limited or another error, so worth asking again later. */
+        data object Failed : PlayStoreIcon
+    }
+
+    private suspend fun fetchPlayStoreIcon(packageName: String): PlayStoreIcon = try {
+        // Follows the redirect to the icon itself
+        val response = sharedHttpClient.get("${MorpheConstants.PLAY_STORE_ICON_URL}/$packageName") {
+            header(HttpHeaders.UserAgent, MorpheConstants.MORPHE_USER_AGENT)
+        }
+        when {
+            response.status.isSuccess() -> {
+                val bytes = response.bodyAsBytes()
+                PlayStoreIcon.Found(bytes, Image.makeFromEncoded(bytes).toComposeImageBitmap())
+            }
+            // 400 is a name that cannot be a package
+            response.status == HttpStatusCode.NotFound || response.status == HttpStatusCode.BadRequest -> {
+                PlayStoreIcon.Missing
+            }
+            else -> {
+                Logger.debug("Play Store icon of $packageName not available: ${response.status}")
+                PlayStoreIcon.Failed
+            }
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Logger.debug("Play Store icon fetch failed for $packageName: ${e.message ?: e::class.simpleName}")
+        PlayStoreIcon.Failed
+    }
+
+    private fun playStoreIconFile(packageName: String): File =
+        File(MorpheData.appIconsDir, "play-${sha256(packageName)}.webp")
+
+    /** Writes beside [file] and moves into place, so an interrupted write never leaves a broken icon. */
+    private fun writeAtomically(file: File, bytes: ByteArray) {
+        val temp = File(file.parentFile, "${file.name}.tmp")
+        try {
+            temp.writeBytes(bytes)
+            Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+        } catch (e: Exception) {
+            Logger.warn("Failed to keep the Play Store icon in ${file.name}", e)
+            temp.delete()
+        }
     }
 
     /** Makes sure the icon of the APK or bundle [file] is cached on disk, and returns its cache file. */
@@ -246,13 +368,20 @@ object AppIconLoader {
     }
 }
 
-/** State holder for an app icon bitmap and its loading state. */
+/**
+ * State holder for an app icon bitmap. [fadeIn] is set for an icon that had to be fetched from the
+ * network while nothing was shown, so it fades in rather than pops in.
+ */
 @Immutable
-data class AppIconState(val bitmap: ImageBitmap? = null, val isLoading: Boolean = false)
+data class AppIconState(
+    val bitmap: ImageBitmap? = null,
+    val fadeIn: Boolean = false,
+)
 
 /**
  * Asynchronously loads and remembers an app icon from [sources]. With [packageName], the icon is
- * also remembered for that app and shown when none of the sources are available.
+ * also remembered for that app and shown when none of the sources are available, and where it
+ * never had one, the icon of the app on the Play Store is shown instead.
  */
 @Composable
 fun rememberAppIcon(sources: List<AppIconSource>, packageName: String? = null): AppIconState {
@@ -265,15 +394,19 @@ fun rememberAppIcon(sources: List<AppIconSource>, packageName: String? = null): 
         }
         // Show the saved icon straight away, then refresh it from the sources.
         val saved = packageName?.let { AppIconLoader.savedIcon(it) }
-        if (value.bitmap == null) value = AppIconState(bitmap = saved)
-
-        // Cache hits finish in milliseconds; only show the spinner for real extractions.
-        val showSpinner = launch {
-            delay(300.milliseconds)
-            value = value.copy(isLoading = true)
+        if (value.bitmap == null) {
+            value = AppIconState(bitmap = saved ?: packageName?.let { AppIconLoader.keptPlayStoreIcon(it) })
         }
-        value = AppIconState(bitmap = AppIconLoader.load(sources, packageName) ?: saved)
-        showSpinner.cancel()
+
+        val icon = AppIconLoader.load(sources, packageName) ?: saved
+        value = if (icon != null || packageName == null) {
+            AppIconState(bitmap = icon)
+        } else {
+            // With nothing shown yet, a Play Store icon found now was fetched rather than kept
+            val shown = value.bitmap
+            val storeIcon = AppIconLoader.playStoreIcon(packageName)
+            AppIconState(bitmap = storeIcon, fadeIn = shown == null && storeIcon != null)
+        }
     }
     return state
 }

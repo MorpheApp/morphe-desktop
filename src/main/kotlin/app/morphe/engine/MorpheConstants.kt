@@ -15,6 +15,12 @@ object MorpheConstants {
         "Morphe-Desktop/${version ?: "dev"}"
     }
 
+    /**
+     * Redirects /<package name> to the Play Store icon of the app, for apps with no icon from an
+     * APK or a device. Found icons say to keep them for 30 days and missing apps for a day.
+     */
+    const val PLAY_STORE_ICON_URL = "https://publicmetadata.co.uk"
+
     val FALLBACK_PACKAGES = listOf(
         "com.google.android.youtube",
         "com.google.android.apps.youtube.music",

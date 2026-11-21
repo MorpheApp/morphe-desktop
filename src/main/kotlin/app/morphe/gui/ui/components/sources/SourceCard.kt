@@ -45,6 +45,8 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -68,6 +70,7 @@ import app.morphe.gui.ui.components.MorpheSwitch
 import app.morphe.gui.ui.components.MorpheTooltip
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.components.parseHexColor
+import app.morphe.gui.ui.components.rememberAppIconFadeIn
 import app.morphe.gui.ui.components.MorpheMenuDivider
 import app.morphe.gui.ui.components.MorpheMenuItem
 import app.morphe.gui.ui.components.MorpheOverflowMenu
@@ -699,36 +702,47 @@ private fun AppsPopupContent(apps: List<SourceApp>) {
 @Composable
 private fun AppTile(app: SourceApp) {
     val icon = rememberAppIcon(emptyList(), app.packageName)
+    val fadeIn = rememberAppIconFadeIn(icon)
     val shape = RoundedCornerShape(if (MorpheTheme.corners.isSharp) 2.dp else 6.dp)
     MorpheTooltip(text = app.displayName) {
-        if (icon.bitmap != null) {
-            Image(
-                bitmap = icon.bitmap,
-                contentDescription = app.displayName,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(20.dp).clip(shape),
-            )
-        } else {
-            val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-            val fallback = hueColor(hashHue(app.packageName), 0.55f, dark)
-            val tint = parseHexColor(app.iconColorHex, fallback).let { c ->
-                if (dark && c.luminance() < 0.18f) fallback else c
-            }
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .clip(shape)
-                    .background(tint.copy(alpha = 0.16f))
-                    .outlineBorder(tint.copy(alpha = 0.45f), shape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    monogram(app.displayName),
-                    style = MorpheTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.SemiBold, letterSpacing = (-0.2).sp),
-                    color = tint,
+        Box(contentAlignment = Alignment.Center) {
+            // A fetched icon fades in over the monogram
+            if (icon.bitmap == null || fadeIn.isFading) AppTileMonogram(app, shape)
+            if (icon.bitmap != null) {
+                Image(
+                    bitmap = icon.bitmap,
+                    contentDescription = app.displayName,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clip(shape)
+                        .graphicsLayer { alpha = fadeIn.alpha },
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun AppTileMonogram(app: SourceApp, shape: Shape) {
+    val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val fallback = hueColor(hashHue(app.packageName), 0.55f, dark)
+    val tint = parseHexColor(app.iconColorHex, fallback).let { c ->
+        if (dark && c.luminance() < 0.18f) fallback else c
+    }
+    Box(
+        modifier = Modifier
+            .size(20.dp)
+            .clip(shape)
+            .background(tint.copy(alpha = 0.16f))
+            .outlineBorder(tint.copy(alpha = 0.45f), shape),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            monogram(app.displayName),
+            style = MorpheTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.SemiBold, letterSpacing = (-0.2).sp),
+            color = tint,
+        )
     }
 }
 
