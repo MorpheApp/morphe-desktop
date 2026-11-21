@@ -62,7 +62,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -501,15 +500,20 @@ private fun PersonAvatar(
     httpClient: HttpClient = koinInject(),
 ) {
     val megaColor = MorpheTheme.colors.warning
-    var picture by remember(person.avatar) { mutableStateOf<ImageBitmap?>(null) }
+    // Cells are reused positionally, so a period change hands this slot a different person.
+    // Start from the memory cache so an already loaded picture shows on the first frame
+    // instead of fading in again.
+    val cachedPicture = remember(person.avatar) { person.avatar?.let(AvatarLoader::cachedAvatar) }
+    var picture by remember(person.avatar) { mutableStateOf(cachedPicture) }
     LaunchedEffect(person.avatar) {
-        picture = person.avatar?.let { AvatarLoader.loadAvatar(it, httpClient) }
+        if (picture == null) {
+            picture = person.avatar?.let { AvatarLoader.loadAvatar(it, httpClient) }
+        }
     }
-    val pictureAlpha by animateFloatAsState(
-        targetValue = if (picture != null) 1f else 0f,
-        animationSpec = tween(AVATAR_ANIMATION_MILLIS),
-        label = "avatarPicture",
-    )
+    val pictureAlpha = remember(person.avatar) { Animatable(if (cachedPicture != null) 1f else 0f) }
+    LaunchedEffect(picture) {
+        pictureAlpha.animateTo(if (picture != null) 1f else 0f, tween(AVATAR_ANIMATION_MILLIS))
+    }
     var entered by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(Unit) { entered = true }
     val entrance by animateFloatAsState(
@@ -544,7 +548,7 @@ private fun PersonAvatar(
             .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)),
         contentAlignment = Alignment.Center,
     ) {
-        if (pictureAlpha < 1f) {
+        if (pictureAlpha.value < 1f) {
             Text(
                 text = person.name.take(1).uppercase(),
                 style = MorpheTheme.typography.titleMedium,
@@ -559,7 +563,7 @@ private fun PersonAvatar(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .matchParentSize()
-                    .graphicsLayer { alpha = pictureAlpha },
+                    .graphicsLayer { alpha = pictureAlpha.value },
             )
         }
     }

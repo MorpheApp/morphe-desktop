@@ -32,6 +32,9 @@ object AvatarLoader {
         memoryCache.clear()
     }
 
+    /** Returns the avatar for [url] if it is already in memory, without any disk or network access. */
+    fun cachedAvatar(url: String): ImageBitmap? = memoryCache[url]
+
     /** Resolves avatar URL for a given patch source. */
     fun resolveAvatarUrl(source: PatchSource): String? {
         val endpoint = source.url?.trim()?.takeIf { it.isNotEmpty() } ?: return null
