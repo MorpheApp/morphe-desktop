@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -118,5 +119,5 @@ internal fun relativeOrShortDate(
 @Composable
 internal fun humanSize(bytes: Long): String {
     if (bytes <= 0) return "-"
-    return FormatUtils.formatFileSize(bytes, currentLocale())
+    return formatFileSize(bytes, currentLocale())
 }

@@ -16,6 +16,7 @@ import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.Logger
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
@@ -197,7 +198,7 @@ class PatchingViewModel(
                 val osArch = System.getProperty("os.arch") ?: "Unknown Arch"
                 val maxMemoryMb = (Runtime.getRuntime().maxMemory() / (1024 * 1024)).toInt()
                 val inputApkFile = config.inputApk
-                val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), loc) else "?"
+                val apkSizeMb = if (inputApkFile.exists()) formatFileSize(inputApkFile.length(), loc) else "?"
                 
                 val appVersion = config.historyMetadata?.appVersion
                     ?: ApkInspector.inspect(inputApkFile)?.versionName
@@ -216,14 +217,14 @@ class PatchingViewModel(
                 val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
                 
                 val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
-                val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, loc)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, loc)}"
+                val storageFreeInfo = "${formatFileSize(parentFile.usableSpace, loc)} / ${formatFileSize(parentFile.totalSpace, loc)}"
 
                 val desktopVersion = UpdateChecker.currentVersion() ?: "?"
                 val patcherVersion = MorpheComponents.patcherVersion ?: "?"
                 val nativeLibs = if (config.architecturesToKeep.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
 
                 val osBean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
-                val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, loc)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, loc)}"
+                val ramFreeInfo = "${formatFileSize(osBean.freeMemorySize, loc)} / ${formatFileSize(osBean.totalMemorySize, loc)}"
 
                 val cpu = CpuUsageSampler()
                 val io = IoUsageSampler()
@@ -321,7 +322,7 @@ class PatchingViewModel(
             if (engineResult.success) {
                 val elapsedMs = System.currentTimeMillis() - startTime
                 val outputApkFile = config.outputApk ?: File(engineResult.outputPath)
-                val outSizeMb = if (outputApkFile.exists()) FormatUtils.formatFileSize(outputApkFile.length(), locale) else "?"
+                val outSizeMb = if (outputApkFile.exists()) formatFileSize(outputApkFile.length(), locale) else "?"
 
                 _uiState.value = _uiState.value.copy(
                     status = PatchingStatus.COMPLETED,

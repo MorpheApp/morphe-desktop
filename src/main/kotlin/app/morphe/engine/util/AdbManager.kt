@@ -7,6 +7,8 @@ package app.morphe.engine.util
 
 import app.morphe.engine.apk.AndroidArchitectures
 import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.config.EngineConfig
+import app.morphe.engine.model.PatchedAppRecord
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -1029,6 +1031,24 @@ class AdbManager {
                 (if (stockChanged) " (stock $stockPackage toggled)" else "")
         )
         Result.success(LinkHandlingResult(patchedChanged = true, stockChanged = stockChanged))
+    }
+
+    /**
+     * After [record]'s patched app was installed on [deviceId], routes its web links to it when
+     * [config] turns that on, also taking them from the stock app when [config] says to.
+     */
+    suspend fun routeLinksAfterInstall(
+        deviceId: String,
+        record: PatchedAppRecord,
+        config: EngineConfig,
+    ) {
+        if (!config.autoRouteLinksAfterInstall) return
+        setLinkHandling(
+            deviceId = deviceId,
+            patchedPackage = record.installedPackageName,
+            stockPackage = if (config.disableStockLinksAfterInstall) record.packageName else null,
+            enable = true,
+        )
     }
 
     /** Runs a sequence of ADB shell commands, stopping on first failure. */

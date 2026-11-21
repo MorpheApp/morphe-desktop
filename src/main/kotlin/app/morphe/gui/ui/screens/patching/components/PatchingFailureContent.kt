@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.Logger
+import app.morphe.engine.util.formatFileSize
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
@@ -34,7 +35,6 @@ import app.morphe.gui.ui.screens.patching.PatchingUiState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
-import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
@@ -44,10 +44,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
-
-@Composable
-private fun formatFileSize(bytes: Long): String =
-    FormatUtils.formatFileSize(bytes, currentLocale())
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -237,7 +233,7 @@ internal fun ExpertFailureContent(
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = stringResource(Res.string.size_can_be_freed_label, formatFileSize(tempFilesSize)),
+                        text = stringResource(Res.string.size_can_be_freed_label, formatFileSize(tempFilesSize, currentLocale())),
                         style = MorpheTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

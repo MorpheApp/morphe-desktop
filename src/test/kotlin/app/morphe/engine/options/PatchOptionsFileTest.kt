@@ -5,6 +5,7 @@
 
 package app.morphe.engine.options
 
+import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.util.FileChecksum
 import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.option
@@ -196,6 +197,81 @@ class PatchOptionsFileTest {
         assertEquals(1, result.patches.size)
         assertEquals(false, result.patches["Theme"]!!.enabled)
         assertNull(result.patches["AdBlocker"])
+    }
+
+    @Test
+    fun `updateOptionsFileFromBundles keeps user values and other bundles`() {
+        val directory = kotlin.io.path.createTempDirectory().toFile()
+        try {
+            val mpp = directory.resolve("a.mpp").apply { writeText("a") }
+            val file = directory.resolve("options.json")
+            val other = PatchBundle(
+                meta = PatchBundleMeta(source = "b.mpp", sha256 = "b-hash"),
+                patches = mapOf("Other" to PatchEntry(true)),
+            )
+            writePatchBundles(
+                file,
+                listOf(
+                    PatchBundle(
+                        meta = PatchBundleMeta(source = "a.mpp", sha256 = FileChecksum.sha256(mpp)),
+                        patches = mapOf(
+                            "Theme" to PatchEntry(false, mapOf("color" to JsonPrimitive("dark"))),
+                            "Gone" to PatchEntry(true),
+                        ),
+                    ),
+                    other,
+                ),
+            )
+            val theme = patch(name = "Theme", default = true) {
+                option<String>(key = "color", default = "light")
+            }
+            val added = patch(name = "Added", default = true) {
+                compatibleWith(Compatibility("com.example.app", "Example"))
+            }
+
+            updateOptionsFileFromBundles(file, listOf(LoadedBundle(mpp, setOf(theme, added))))
+
+            val updated = readPatchBundles(file)
+            assertEquals(2, updated.size)
+            assertEquals(
+                mapOf(
+                    "Theme" to PatchEntry(false, mapOf("color" to JsonPrimitive("dark"))),
+                    "Added" to PatchEntry(true),
+                ),
+                updated.first().patches,
+            )
+            assertEquals(other, updated.last())
+        } finally {
+            directory.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `updateOptionsFileFromBundles filters by package and replaces invalid JSON`() {
+        val directory = kotlin.io.path.createTempDirectory().toFile()
+        try {
+            val mpp = directory.resolve("a.mpp").apply { writeText("a") }
+            val file = directory.resolve("options.json").apply { writeText("not json") }
+            val matching = patch(name = "Matching") {
+                compatibleWith(Compatibility("com.example.app", "Example"))
+            }
+            val otherApp = patch(name = "Other app") {
+                compatibleWith(Compatibility("com.other.app", "Other"))
+            }
+            val universal = patch(name = "Universal") {}
+
+            updateOptionsFileFromBundles(
+                file,
+                listOf(LoadedBundle(mpp, setOf(matching, otherApp, universal))),
+                packageName = "com.example.app",
+            )
+
+            val updated = readPatchBundles(file).single()
+            assertEquals(setOf("Matching", "Universal"), updated.patches.keys)
+            assertEquals("a.mpp", updated.meta.source)
+        } finally {
+            directory.deleteRecursively()
+        }
     }
 
     @Test
