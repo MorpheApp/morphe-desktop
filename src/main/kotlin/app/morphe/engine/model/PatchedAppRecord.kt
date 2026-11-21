@@ -19,7 +19,7 @@ data class PatchedAppRecord(
     val apkVersionCode: Int? = null,
     val formFactor: FormFactor? = null,
 
-    /** Input APK path used. May no longer exist on disk. */
+    /** Input APK path used, or its copy in the original APK store when kept. May no longer exist on disk. */
     val inputApkPath: String,
     val outputApkPath: String,
 

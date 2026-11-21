@@ -7,6 +7,7 @@ package app.morphe.engine.config
 
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.apk.AndroidArchitectures
 import app.morphe.engine.util.AndroidSdkLocator
 import app.morphe.engine.util.PortablePaths
@@ -28,6 +29,8 @@ data class EngineConfig(
     val autoRouteLinksAfterInstall: Boolean = false,
     val disableStockLinksAfterInstall: Boolean = false,
     val autoCleanupTempFiles: Boolean = true,
+    val saveOriginalApks: Boolean? = null,
+    val moveOriginalApks: Boolean = false,
     val developerOptions: Boolean = false,
     val excludedMppPatterns: List<String> = emptyList(),
     val lastLocalPatchDir: String? = null,
@@ -48,6 +51,12 @@ data class EngineConfig(
     fun resolvedAndroidSdkPath(): File? {
         if (!verifyWithSdk) return null
         return resolvedCustomAndroidSdkPath() ?: AndroidSdkLocator.detectSdkPath()
+    }
+
+    fun saveOriginalApkMode(saveByDefault: Boolean = true): SaveOriginalApk? = when {
+        !(saveOriginalApks ?: saveByDefault) -> null
+        moveOriginalApks -> SaveOriginalApk.MOVE
+        else -> SaveOriginalApk.COPY
     }
 
     fun resolvedBytecodeMode(): BytecodeMode =

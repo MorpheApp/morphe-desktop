@@ -140,13 +140,20 @@ fun HomeScreenContent(
     }
 
     var forgetConfirm by remember { mutableStateOf<PatchedAppRecord?>(null) }
-    val onForget: (String) -> Unit = { pkg -> forgetConfirm = viewModel.getPatchedRecord(pkg) }
+    var forgetDeleteOriginal by remember { mutableStateOf(false) }
+    val onForget: (String) -> Unit = { pkg ->
+        forgetDeleteOriginal = false
+        forgetConfirm = viewModel.getPatchedRecord(pkg)
+    }
     forgetConfirm?.let { record ->
         ForgetConfirmDialog(
             record = record,
+            hasKeptOriginal = remember(record) { viewModel.keptOriginalOf(record) != null },
+            deleteOriginal = forgetDeleteOriginal,
+            onDeleteOriginalChange = { forgetDeleteOriginal = it },
             onDismiss = { forgetConfirm = null },
             onConfirm = {
-                viewModel.forgetPatchedApp(record.packageName)
+                viewModel.forgetPatchedApp(record.packageName, deleteOriginal = forgetDeleteOriginal)
                 forgetConfirm = null
             },
         )
@@ -154,8 +161,10 @@ fun HomeScreenContent(
 
     var uninstallConfirm by remember { mutableStateOf<PatchedAppRecord?>(null) }
     var uninstallAlsoForget by remember { mutableStateOf(false) }
+    var uninstallDeleteOriginal by remember { mutableStateOf(false) }
     val onUninstall: (String) -> Unit = { pkg ->
         uninstallAlsoForget = false
+        uninstallDeleteOriginal = false
         uninstallConfirm = viewModel.getPatchedRecord(pkg)
     }
     uninstallConfirm?.let { record ->
@@ -163,9 +172,16 @@ fun HomeScreenContent(
             record = record,
             alsoForget = uninstallAlsoForget,
             onAlsoForgetChange = { uninstallAlsoForget = it },
+            hasKeptOriginal = remember(record) { viewModel.keptOriginalOf(record) != null },
+            deleteOriginal = uninstallDeleteOriginal,
+            onDeleteOriginalChange = { uninstallDeleteOriginal = it },
             onDismiss = { uninstallConfirm = null },
             onConfirm = {
-                viewModel.uninstallPatchedApp(record.packageName, alsoForget = uninstallAlsoForget)
+                viewModel.uninstallPatchedApp(
+                    record.packageName,
+                    alsoForget = uninstallAlsoForget,
+                    deleteOriginal = uninstallDeleteOriginal,
+                )
                 uninstallConfirm = null
             },
         )
@@ -293,6 +309,7 @@ fun HomeScreenContent(
     val currentEntry by navController.currentBackStackEntryAsState()
     LaunchedEffect(currentEntry) {
         viewModel.refreshPatchesIfNeeded()
+        viewModel.clearSelectionIfMissing()
     }
 
     FullScreenDropZone(
