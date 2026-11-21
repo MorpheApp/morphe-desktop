@@ -20,11 +20,15 @@
     <!-- Result Screen -->
     <!-- Icon Studio -->
     <!-- Source Management Sheet -->
+    <string name="source_card_disabled_tag">បានផ្ដាច់</string>
     <!-- Signing Key Trust Dialog -->
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
     <!-- Error Dialog -->
     <!-- Banners -->
+    <string name="home_updating_sources">កំពុងអាប់ដេតប្រភព…</string>
+    <string name="home_update_success">អាប់ដេតប្រភពបានបញ្ចប់</string>
+    <string name="home_update_success_subtitle">ប្រភពរបស់អ្នកទាន់សម័យហើយ</string>
     <!-- Licenses Dialog -->
     <!-- Settings -->
     <!-- Settings - Appearance -->

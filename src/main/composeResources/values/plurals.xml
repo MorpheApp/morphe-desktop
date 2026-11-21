@@ -68,4 +68,24 @@
         <item quantity="one">Total: %1$s (%2$d file)</item>
         <item quantity="other">Total: %1$s (%2$d files)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d release newer than</item>
+        <item quantity="other">%1$d releases newer than</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d release older than</item>
+        <item quantity="other">%1$d releases older than</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patches</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d app</item>
+        <item quantity="other">%1$d apps</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d option</item>
+        <item quantity="other">%1$d options</item>
+    </plurals>
 </resources>

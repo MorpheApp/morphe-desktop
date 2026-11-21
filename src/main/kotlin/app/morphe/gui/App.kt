@@ -75,9 +75,7 @@ import org.koin.dsl.koinConfiguration
 data object HomeScreenRoute
 
 @Serializable
-data class PatchesScreenRoute(
-    val apkName: String,
-)
+data object PatchesScreenRoute
 
 @Serializable
 data object PatchSelectionScreenRoute
@@ -482,9 +480,8 @@ private fun appContent(
                                             composable<HomeScreenRoute> {
                                                 HomeScreen()
                                             }
-                                            composable<PatchesScreenRoute> { backStackEntry ->
-                                                val route = backStackEntry.toRoute<PatchesScreenRoute>()
-                                                PatchesScreen(apkName = route.apkName)
+                                            composable<PatchesScreenRoute> {
+                                                PatchesScreen()
                                             }
                                             composable<PatchSelectionScreenRoute> { backStackEntry ->
                                                 val params = backStackEntry.getComplexArg<PatchSelectionParams>()

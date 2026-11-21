@@ -68,4 +68,24 @@
         <item quantity="one">Totaal: %1$s (%2$d lêer)</item>
         <item quantity="other">Totaal: %1$s (%2$d lêers)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d vrystelling nuuter as</item>
+        <item quantity="other">%1$d vrystellings nuuter as</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d vrystelling ouer as</item>
+        <item quantity="other">%1$d vrystellings ouer as</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d verandering</item>
+        <item quantity="other">%1$d veranderinge</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d toepassing</item>
+        <item quantity="other">%1$d toepassings</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d opsie</item>
+        <item quantity="other">%1$d opsies</item>
+    </plurals>
 </resources>

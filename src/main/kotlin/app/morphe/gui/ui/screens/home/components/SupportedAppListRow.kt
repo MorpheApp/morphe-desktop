@@ -24,6 +24,7 @@ import app.morphe.gui.util.AppIconState
 import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.ui.components.AppCard
+import app.morphe.gui.ui.components.FormFactorBadge
 import app.morphe.gui.ui.components.LocalCardFills
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
@@ -86,12 +87,19 @@ fun SupportedAppListRow(
             )
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = app.displayName,
-                    style = MorpheTheme.typography.titleMedium.copy(color = cardColors.title),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Text(
+                        text = app.displayName,
+                        style = MorpheTheme.typography.titleMedium.copy(color = cardColors.title),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    FormFactorBadge(formFactor = app.formFactor, onGradient = true)
+                }
                 Text(
                     text = app.packageName,
                     style = MorpheTheme.typography.labelSmall.copy(color = cardColors.subtitle),

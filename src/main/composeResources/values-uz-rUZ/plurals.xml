@@ -68,4 +68,24 @@
         <item quantity="one">Jami: %1$s (%2$d ta fayl)</item>
         <item quantity="other">Jami: %1$s (%2$d ta fayl)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d ta versiya yangiroq</item>
+        <item quantity="other">%1$d ta versiya yangiroq</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d ta versiya eskiroq</item>
+        <item quantity="other">%1$d ta versiya eskiroq</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d ta patch</item>
+        <item quantity="other">%1$d ta patch</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d ta ilova</item>
+        <item quantity="other">%1$d ta ilova</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d ta variant</item>
+        <item quantity="other">%1$d ta variant</item>
+    </plurals>
 </resources>

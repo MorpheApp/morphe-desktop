@@ -68,4 +68,24 @@
         <item quantity="one">Kokku: %1$s (%2$d fail)</item>
         <item quantity="other">Kokku: %1$s (%2$d faili)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d versioon uuem kui</item>
+        <item quantity="other">%1$d versiooni uuema kui</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d versioon vanem kui</item>
+        <item quantity="other">%1$d versiooni vanema kui</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d paik</item>
+        <item quantity="other">%1$d paika</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d rakendus</item>
+        <item quantity="other">%1$d rakendust</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d valik</item>
+        <item quantity="other">%1$d valikut</item>
+    </plurals>
 </resources>

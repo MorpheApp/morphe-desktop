@@ -5,8 +5,22 @@
 
 package app.morphe.engine.patches
 
+import app.morphe.patcher.patch.FormFactor
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.SupportedAbi
+
+data class CompatiblePackageDisplay(
+    val packageName: String?,
+    val formFactor: FormFactor?,
+    val versions: List<String>,
+)
+
+fun FormFactor?.displayLabel(): String? = when (this) {
+    FormFactor.TV -> "TV"
+    FormFactor.WEARABLE -> "Wear OS"
+    FormFactor.AUTOMOTIVE -> "Automotive"
+    FormFactor.MOBILE, null -> null
+}
 
 fun Patch.versionCodesFor(
     packageName: String?,
@@ -60,13 +74,17 @@ fun Patch.supportedVersionsFor(packageName: String): List<String>? {
 
 fun Patch.compatibleVersionsForDisplay(
     includeExperimental: Boolean,
-): List<Pair<String?, List<String>>> {
+): List<CompatiblePackageDisplay> {
     val compat = compatibility ?: return emptyList()
 
     return compat.map { entry ->
         val versions = entry.targets
             .filter { includeExperimental || !it.isExperimental }
             .mapNotNull { it.version }
-        entry.packageName to versions
+        CompatiblePackageDisplay(
+            packageName = entry.packageName,
+            formFactor = entry.formFactor,
+            versions = versions,
+        )
     }
 }

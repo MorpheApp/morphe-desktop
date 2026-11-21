@@ -15,9 +15,18 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 
 /** Loads patches in parallel from multiple patch bundle files. */
 object MultiSourceLoader {
+
+    /**
+     * Parsed patches per source ID, reused while the bundle file is unchanged, so a reload
+     * after a change to the source list does not read every bundle again.
+     */
+    private val parsedCache = ConcurrentHashMap<String, Pair<String, Set<Patch>>>()
+
+    private fun stampOf(file: File) = "${file.absolutePath}:${file.length()}:${file.lastModified()}"
 
     data class SourceInput(
         val sourceId: String,
@@ -62,9 +71,19 @@ object MultiSourceLoader {
     }
 
     private suspend fun loadOne(input: SourceInput): LoadedSource = withContext(Dispatchers.IO) {
+        val stamp = stampOf(input.patchFile)
+        parsedCache[input.sourceId]?.takeIf { it.first == stamp }?.let { (_, patches) ->
+            Logger.info("MultiSourceLoader: reused ${patches.size} parsed patches for '${input.sourceName}'")
+            return@withContext LoadedSource(
+                sourceId = input.sourceId,
+                sourceName = input.sourceName,
+                patches = patches,
+            )
+        }
         val tempCopy = WorkspaceManager.createShadowCopy(input.patchFile, prefix = "morphe-mp-${input.sourceId}")
         try {
             val patches = loadPatchesFromJar(setOf(tempCopy))
+            parsedCache[input.sourceId] = stamp to patches
             Logger.info("MultiSourceLoader: loaded ${patches.size} patches from '${input.sourceName}'")
             LoadedSource(
                 sourceId = input.sourceId,

@@ -46,6 +46,7 @@
     <string name="click_to_copy">Click to copy</string>
     <string name="enable_adb_button">Enable ADB</string>
     <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="website">Website</string>
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="browse">Browse</string>
@@ -58,7 +59,7 @@
     <string name="filter_apps_hint">Filter apps…</string>
     <string name="version">Version</string>
     <string name="version_label_stable">Stable</string>
-    <string name="version_label_prerelease">Prerelease</string>
+    <string name="version_label_prerelease">Pre-release</string>
     <string name="version_label_experimental">Experimental</string>
     <string name="version_label_latest_stable">Latest Stable</string>
     <string name="version_label_recommended">Recommended</string>
@@ -67,7 +68,9 @@
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
     <string name="app_info_shared_label">App info</string>
-    <string name="github_label">GitHub</string>
+    <string name="form_factor_tv">TV</string>
+    <string name="form_factor_wearable" translatable="false">Wear OS</string>
+    <string name="form_factor_automotive">Automotive</string>
     <string name="patches_search_hint">Search patches…</string>
     <string name="status_patching_completed">Patching completed</string>
     <string name="status_patching_failed">Patching failed</string>
@@ -311,14 +314,6 @@
     <string name="patches_no_releases_found">No releases found</string>
     <string name="patches_export_options_title">Export options.json</string>
     <string name="patches_latest_badge">Latest</string>
-    <string name="patches_cached_badge">Cached</string>
-    <string name="patches_date_cached">Cached: %1$s</string>
-    <string name="patches_date_published">Published: %1$s</string>
-    <string name="patches_hide_notes">Hide notes</string>
-    <string name="patches_patch_notes">Patch notes</string>
-    <string name="patches_downloading">Downloading…</string>
-    <string name="patches_select">Select</string>
-    <string name="patches_export_json">Export JSON</string>
     <string name="patches_local_patch_file">Local patch file</string>
     <string name="patches_error_local_file_not_found">Local patch file not found: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Failed to load releases</string>
@@ -561,27 +556,101 @@
     <string name="source_error_pr_no_artifact">No artifacts found for pull request</string>
     <string name="source_error_patcher_incompatible">This source is built for patcher %1$s, but Morphe %2$s includes patcher %3$s. Update Morphe to use it</string>
     <string name="version_label_local">Local</string>
-    <string name="source_sheet_remote_label">Remote</string>
     <string name="add_source">Add source</string>
     <string name="source_sheet_title">Patch sources</string>
     <string name="source_sheet_reload_description">Reload patches</string>
-    <string name="source_sheet_multi_mode_hint">Enable/Disable any combination. Patches from all enabled sources are unioned</string>
-    <string name="source_sheet_done_button">Done</string>
-    <string name="source_sheet_type_preinstalled">Pre-installed</string>
     <string name="source_sheet_builtin">Built-in</string>
-    <string name="source_sheet_gitlab_label">GitLab</string>
     <string name="source_sheet_status_resolving">Resolving…</string>
     <string name="source_sheet_edit_description">Edit</string>
-    <string name="source_sheet_move_up_description">Move up</string>
-    <string name="source_sheet_move_down_description">Move down</string>
     <string name="source_sheet_ignored_mpp_title">Ignored .mpp patterns</string>
     <string name="source_sheet_ignored_mpp_hint">Only affects folder sources, which autoload the newest .mpp in a folder. When picking that newest build, files whose name matches a pattern here are skipped. A plain word matches any file containing it (e.g. debug). Use * for globs (e.g. *-debug.mpp). *-sources.mpp and *-javadoc.mpp are always ignored</string>
     <string name="source_sheet_ignored_mpp_placeholder">e.g. debug or *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Add pattern</string>
     <string name="source_sheet_remove_pattern_description">Remove pattern</string>
-    <string name="sources_management_signed_by">Signed by</string>
-    <string name="sources_management_signing_key_changed_badge">Key changed</string>
     <string name="sources_management_signing_key_changed_hint">Signing key changed. Click to review it</string>
+    <string name="sources_page_summary">%1$d of %2$d enabled, %3$d patches across %4$d apps</string>
+    <string name="sources_page_priority_hint">Drag sources to set priority. Lower numbers take priority when two sources include the same patch</string>
+    <string name="sources_page_reloading">Reloading sources…</string>
+    <string name="source_card_version">Version</string>
+    <string name="source_card_pull_request">Pull request</string>
+    <string name="source_card_pinned">Pinned</string>
+    <string name="source_card_pinned_tip">Pinned in All versions</string>
+    <string name="source_card_cached">Cached</string>
+    <string name="source_card_cached_tip">Could not reach this source. Using the downloaded copy</string>
+    <string name="source_card_patches">Patches</string>
+    <string name="source_card_browse_patches_tip">Browse patches</string>
+    <string name="source_card_size">Size</string>
+    <string name="source_card_apps">Apps</string>
+    <string name="source_card_search_apps">Search %1$d apps</string>
+    <string name="source_card_channel">Channel</string>
+    <string name="source_card_updates">Updates</string>
+    <string name="source_card_updates_manual">Manual (replace file)</string>
+    <string name="source_card_loads_newest">Newest .mpp in folder</string>
+    <string name="source_card_loads_pr">Latest pull request build</string>
+    <string name="source_card_disabled">This source is disabled. Enable it to load patches</string>
+    <string name="source_card_disabled_tag">Disabled</string>
+    <string name="source_card_last_enabled">At least one source must remain enabled</string>
+    <string name="source_card_retry">Retry</string>
+    <string name="source_card_review_key">Review signing key</string>
+    <string name="source_card_open_pull_request">Open pull request</string>
+    <string name="source_card_signed">Signed</string>
+    <string name="source_card_signed_tip">Signed by %1$s. Click to copy key</string>
+    <string name="source_card_all_versions">All versions</string>
+    <string name="source_card_update_to">Update to %1$s</string>
+    <string name="source_card_show_in_folder">Show in folder</string>
+    <string name="source_card_more_description">More actions</string>
+    <string name="source_card_browse_patches">Browse patches</string>
+    <string name="source_card_priority">Priority %1$d</string>
+    <string name="source_card_open_link">Open %1$s in browser</string>
+    <string name="source_card_enable_description">Enable %1$s</string>
+    <string name="versions_search_hint">Search versions</string>
+    <string name="versions_in_use">In use</string>
+    <string name="versions_downloaded">Downloaded</string>
+    <string name="versions_following_stable">Following stable</string>
+    <string name="versions_following_prerelease">Following pre-release</string>
+    <string name="versions_you_are_on">Currently using</string>
+    <string name="versions_go_to_in_use">Go to version in use</string>
+    <string name="versions_auto_update">Auto-update</string>
+    <string name="versions_auto_update_tip_stable">Automatically updates to new stable releases</string>
+    <string name="versions_auto_update_tip_prerelease">Automatically updates to new pre-release builds</string>
+    <string name="versions_pin_tip">Stays on this version until changed</string>
+    <string name="versions_use">Use %1$s</string>
+    <string name="versions_downloading_progress">Downloading… %1$d%</string>
+    <string name="versions_download_only">Download only</string>
+    <string name="versions_open_release_page">Open release page</string>
+    <string name="versions_apps_and_patches">Apps and patches</string>
+    <string name="versions_column_app">App</string>
+    <string name="versions_column_supported">Supported versions</string>
+    <string name="versions_any_version">Works with any version</string>
+    <string name="versions_universal">Universal patches</string>
+    <string name="versions_universal_scope">Any app</string>
+    <string name="versions_new_app">New app</string>
+    <string name="versions_search_apps_and_patches">Search apps and patches</string>
+    <string name="versions_search_patches">Search %1$d patches</string>
+    <string name="versions_patch_removed">Removed</string>
+    <string name="versions_patch_off">Off by default</string>
+    <string name="versions_patch_off_tip">Disabled by default unless enabled manually</string>
+    <string name="versions_patch_new_tip">Not included in %1$s (in use)</string>
+    <string name="versions_patch_removed_tip">Included in %1$s (in use), removed in this release</string>
+    <string name="versions_version_new_tip">Not supported in %1$s (in use)</string>
+    <string name="versions_version_dropped_tip">Supported in %1$s (in use), removed in this release</string>
+    <string name="versions_locked">Download this release to view its apps and patches</string>
+    <string name="versions_reading">Reading patches…</string>
+    <string name="versions_whats_new">What's new</string>
+    <string name="versions_column_released">Released</string>
+    <string name="versions_group_newer">Newer</string>
+    <string name="versions_group_older">Older</string>
+    <string name="source_remove_title">Remove %1$s?</string>
+    <string name="source_remove_body">Its patches will no longer be available. You can add this source again later</string>
+    <string name="source_prerelease_title">Enable pre-release patches?</string>
+    <string name="source_prerelease_body">Pre-release builds are still in development. Patches may fail or break the app, and features can change without warning</string>
+    <string name="source_prerelease_confirm">Enable</string>
+    <string name="patch_source_dialog_kind_repository">Remote</string>
+    <string name="patch_source_dialog_kind_local">Local</string>
+    <string name="patch_source_dialog_valid_github">GitHub repository</string>
+    <string name="patch_source_dialog_valid_gitlab">GitLab repository</string>
+    <string name="patch_source_dialog_valid_pr">Pull request #%1$s on %2$s. Always uses the latest build from this PR</string>
+    <string name="patch_source_dialog_builtin_note">This is the built-in patch source. Its name and location cannot be changed. Switch between stable and pre-release on its card</string>
 
     <!-- Signing Key Trust Dialog -->
     <string name="sources_signing_key_changed_named">'%1$s' was not updated because its latest release is not signed by the key it used before</string>
@@ -598,8 +667,6 @@
     <string name="patch_source_dialog_repo_url_label">Repository URL</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo or gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">Accepts GitHub, GitLab, or morphe.software/add-source link</string>
-    <string name="patch_source_dialog_pre_release_title">Pre-release patches</string>
-    <string name="patch_source_dialog_pre_release_hint">Receives early access to new experimental patch versions</string>
     <string name="patch_source_dialog_error_name_required">Name is required</string>
     <string name="patch_source_dialog_error_invalid_url">Enter a valid GitHub or GitLab URL</string>
     <string name="patch_source_dialog_error_invalid_file">Select a valid .mpp file</string>
@@ -651,6 +718,11 @@
     <string name="update_banner_from_version">from v%1$s</string>
     <string name="update_banner_later_button">Later</string>
     <string name="update_banner_skip_button">Skip v%1$s</string>
+    <string name="home_updating_sources">Updating sources…</string>
+    <string name="home_update_success">Update sources complete</string>
+    <string name="home_update_success_subtitle">Your sources are up to date</string>
+    <string name="home_sources_failed_title">Some patch sources are unavailable</string>
+    <string name="home_multi_source_hint_title">Multiple patch sources enabled</string>
 
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Open Source licenses</string>
@@ -799,8 +871,6 @@
     <string name="settings_about_licenses_desc">View licenses of third-party libraries</string>
     <string name="settings_about_documentation_title">Documentation</string>
     <string name="settings_about_documentation_desc">Guides for patching, sources and troubleshooting</string>
-    <string name="settings_about_website_title">Visit website</string>
-    <string name="settings_about_website_desc">Visit the official Morphe website</string>
 
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Uncheck architectures you don't need. When patching, the output APK will keep only the architectures present in the APK AND in this list. If none overlap, nothing is stripped to avoid broken APKs</string>
@@ -865,14 +935,26 @@
     <string name="settings_github_pat_label">Personal Access Token</string>
 
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Website</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Library: v%1$s</string>
-    <string name="app_info_description">An open-source project for modern, streamlined patching of popular Android apps, driven by community feedback and contributions</string>
-    <string name="app_info_link_changelog">Changelog</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Translate</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_update_available">Update available: %1$s</string>
+    <string name="about_up_to_date">Up to date</string>
+    <string name="about_links">Official links</string>
+    <string name="about_link_donate">Donate</string>
+    <string name="about_link_github" translatable="false">GitHub</string>
+    <string name="about_link_reddit" translatable="false">Reddit</string>
+    <string name="about_link_translations">Translations</string>
+    <string name="contributors">Contributors</string>
+    <string name="contributors_ranking">Ranked by contribution</string>
+    <string name="contributors_all_time">All time</string>
+    <string name="contributors_6_months">Last 6 months</string>
+    <string name="contributors_3_months">Last 3 months</string>
+    <string name="credits_prior_development">Prior development</string>
+    <string name="supporters">Supporters</string>
+    <string name="supporters_description">Backers on Open Collective</string>
+    <string name="supporters_become">Become a supporter</string>
+    <string name="people_more">And %1$s more</string>
+    <string name="people_unavailable">Could not load the list</string>
 
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Installed</string>

@@ -102,4 +102,34 @@
         <item quantity="many">Łącznie: %1$s (%2$d plików)</item>
         <item quantity="other">Łącznie: %1$s (%2$d plików)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d wydanie nowsze niż</item>
+        <item quantity="few">%1$d wydania nowsze niż</item>
+        <item quantity="many">%1$d wydań nowszych niż</item>
+        <item quantity="other">%1$d wydań nowszych niż</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d wydanie starsze niż</item>
+        <item quantity="few">%1$d wydania starsze niż</item>
+        <item quantity="many">%1$d wydań starszych niż</item>
+        <item quantity="other">%1$d wydań starszych niż</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d modyfikacja</item>
+        <item quantity="few">%1$d modyfikacje</item>
+        <item quantity="many">%1$d modyfikacji</item>
+        <item quantity="other">%1$d modyfikacji</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d aplikacja</item>
+        <item quantity="few">%1$d aplikacje</item>
+        <item quantity="many">%1$d aplikacji</item>
+        <item quantity="other">%1$d aplikacji</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d opcja</item>
+        <item quantity="few">%1$d opcje</item>
+        <item quantity="many">%1$d opcji</item>
+        <item quantity="other">%1$d opcji</item>
+    </plurals>
 </resources>

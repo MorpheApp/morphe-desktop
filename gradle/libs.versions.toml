@@ -7,7 +7,7 @@ kotlin = "2.4.21"
 picocli = "4.7.7"
 # Keep in step with morphe-patcher: Gradle ships only one of the two, picked by comparing hashes as versions
 arsclib = "50418a07a8"
-morphe-patcher = "2.4.0"
+morphe-patcher = "2.5.0"
 morphe-library = "1.4.0"
 
 # Compose Desktop
@@ -25,7 +25,7 @@ navigation = "2.10.0"
 
 # Async / Serialization
 coroutines = "1.11.0"
-kotlinx-serialization = "1.12.0"
+kotlinx-serialization = "1.13.0"
 
 # JNA (Windows DWM title bar tinting)
 jna = "5.19.1"

@@ -25,14 +25,18 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
+private val LeadingGap = 10.dp
+
 @Composable
 internal fun PatchesHeader(
-    apkName: String,
+    title: String,
+    subtitle: String,
     isLocalSource: Boolean,
     isLoading: Boolean,
     onBackClick: () -> Unit,
     onRefreshClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    leading: (@Composable () -> Unit)? = null,
 ) {
     val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
 
@@ -60,15 +64,20 @@ internal fun PatchesHeader(
 
         Spacer(modifier = Modifier.width(14.dp))
 
+        if (leading != null) {
+            leading()
+            Spacer(modifier = Modifier.width(LeadingGap))
+        }
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(Res.string.patches_title_select_bundle_version),
+                text = title,
                 style = MorpheTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            if (apkName.isNotBlank()) {
+            if (subtitle.isNotBlank()) {
                 Text(
-                    text = apkName,
+                    text = subtitle,
                     style = MorpheTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,

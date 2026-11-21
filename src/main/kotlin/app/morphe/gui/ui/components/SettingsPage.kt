@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -60,6 +61,7 @@ import org.jetbrains.compose.resources.stringResource
 private enum class SettingsSubView {
     NONE,
     LANGUAGE,
+    ABOUT,
     CHANGELOG,
     LICENSES,
 }
@@ -69,15 +71,20 @@ fun SettingsPage(
     showBackHeader: Boolean = false,
     onBack: () -> Unit = {},
     openChangelogToken: Int = 0,
+    onChangelogVisibleChange: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val settings = LocalSettingsState.current
     val isPatching by LocalIsPatching.current
     val currentLanguage = LocalLanguageState.current.current
 
-    var selectedCategory by remember { mutableStateOf(SettingsCategory.APPEARANCE) }
+    var selectedCategory by remember {
+        mutableStateOf(if (openChangelogToken > 0) SettingsCategory.SYSTEM else SettingsCategory.APPEARANCE)
+    }
     var searchQuery by remember { mutableStateOf("") }
-    var settingsSubView by remember { mutableStateOf(SettingsSubView.NONE) }
+    var settingsSubView by remember {
+        mutableStateOf(if (openChangelogToken > 0) SettingsSubView.CHANGELOG else SettingsSubView.NONE)
+    }
 
     val detailScroll = rememberScrollState()
 
@@ -161,6 +168,13 @@ fun SettingsPage(
 
             val trimmedQuery = searchQuery.trim()
             val activeSubView = if (trimmedQuery.isEmpty()) settingsSubView else SettingsSubView.NONE
+            val isChangelogOpen = activeSubView == SettingsSubView.CHANGELOG
+            LaunchedEffect(isChangelogOpen) {
+                onChangelogVisibleChange(isChangelogOpen)
+            }
+            DisposableEffect(Unit) {
+                onDispose { onChangelogVisibleChange(false) }
+            }
 
             AnimatedContent(
                 targetState = activeSubView,
@@ -180,6 +194,15 @@ fun SettingsPage(
                             modifier = Modifier.fillMaxSize(),
                             horizontalPadding = PaddingValues(horizontal = 24.dp),
                         )
+                    }
+                    SettingsSubView.ABOUT -> SettingsSubViewBox {
+                        key(currentLanguage) {
+                            AboutPane(
+                                onBack = { settingsSubView = SettingsSubView.NONE },
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalPadding = PaddingValues(horizontal = 24.dp),
+                            )
+                        }
                     }
                     SettingsSubView.CHANGELOG -> SettingsSubViewBox {
                         key(currentLanguage) {
@@ -232,6 +255,7 @@ fun SettingsPage(
                                             SettingsCategory.SYSTEM -> SystemSection(
                                                 settings = settings,
                                                 isPatching = isPatching,
+                                                onOpenAbout = { settingsSubView = SettingsSubView.ABOUT },
                                                 onOpenChangelog = { settingsSubView = SettingsSubView.CHANGELOG },
                                                 onOpenLicenses = { settingsSubView = SettingsSubView.LICENSES },
                                             )
@@ -281,6 +305,11 @@ fun SettingsPage(
                                                     SystemSection(
                                                         settings = settings,
                                                         isPatching = isPatching,
+                                                        onOpenAbout = {
+                                                            searchQuery = ""
+                                                            selectedCategory = SettingsCategory.SYSTEM
+                                                            settingsSubView = SettingsSubView.ABOUT
+                                                        },
                                                         onOpenChangelog = {
                                                             searchQuery = ""
                                                             selectedCategory = SettingsCategory.SYSTEM

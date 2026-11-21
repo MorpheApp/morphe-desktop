@@ -43,6 +43,7 @@ import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
 import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.ui.components.FormFactorBadge
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheButton
@@ -65,6 +66,7 @@ import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.patch.FormFactor
 import java.io.File
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
@@ -76,6 +78,7 @@ internal fun IdentityBand(
     state: PatchedAppState,
     deviceInfo: DeviceAppInfo?,
     updateInfo: RecallUpdateInfo?,
+    formFactor: FormFactor? = null,
 ) {
     val accents = MorpheTheme.colors
     Column(
@@ -94,13 +97,20 @@ internal fun IdentityBand(
             )
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
-                Text(
-                    text = record.displayName,
-                    style = MorpheTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Text(
+                        text = record.displayName,
+                        style = MorpheTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    FormFactorBadge(formFactor = formFactor, onGradient = false)
+                }
                 Text(
                     text = record.installedPackageName,
                     style = MorpheTheme.typography.labelSmall,

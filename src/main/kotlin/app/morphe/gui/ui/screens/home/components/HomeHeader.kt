@@ -18,15 +18,12 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.components.MorpheBanner
 import app.morphe.gui.ui.components.MorpheBannerAction
-import app.morphe.gui.ui.components.MorpheBannerDismiss
-import app.morphe.gui.ui.components.MorpheBannerText
 import app.morphe.gui.ui.components.MorpheBannerTone
 import app.morphe.gui.ui.components.MorpheIconButton
 import app.morphe.gui.ui.components.MorpheIconButtonSize
 import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.components.NavigationPill
 import app.morphe.gui.ui.components.OfflineBadge
-import app.morphe.gui.ui.components.PatchesLoadingIndicator
 import app.morphe.gui.ui.components.TopBarRow
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.icons.autoMirrored
@@ -78,9 +75,7 @@ internal fun HeaderBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(trailingSpacing),
             ) {
-                if (uiState.isLoadingPatches && uiState.supportedApps.isEmpty()) {
-                    PatchesLoadingIndicator()
-                } else if (uiState.isOffline && !uiState.isLoadingPatches) {
+                if (uiState.isOffline && !uiState.isLoadingPatches) {
                     OfflineBadge(onRetry = onRetry)
                 }
 
@@ -188,13 +183,14 @@ internal fun MultiSourceHintBanner(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    MorpheBanner(modifier = modifier, tone = MorpheBannerTone.Info) {
-        MorpheBannerText(
-            text = stringResource(Res.string.home_header_multi_source_hint),
-            modifier = Modifier.weight(1f),
-        )
-        MorpheBannerDismiss(onClick = onDismiss)
-    }
+    MorpheBanner(
+        title = stringResource(Res.string.home_multi_source_hint_title),
+        subtitle = stringResource(Res.string.home_header_multi_source_hint),
+        tone = MorpheBannerTone.Info,
+        icon = MorpheIcons.Info,
+        onDismiss = onDismiss,
+        modifier = modifier,
+    )
 }
 
 /** Warning banner displayed when one or more patch sources fail to load. */
@@ -206,16 +202,17 @@ internal fun SourcesFailedBanner(
     modifier: Modifier = Modifier,
 ) {
     MorpheBanner(
-        modifier = modifier,
+        title = stringResource(Res.string.home_sources_failed_title),
+        subtitle = pluralStringResource(Res.plurals.home_header_sources_failed, count, count),
         tone = MorpheBannerTone.Error,
         icon = MorpheIcons.Warning,
+        onDismiss = onDismiss,
+        modifier = modifier,
     ) {
-        MorpheBannerText(
-            text = pluralStringResource(Res.plurals.home_header_sources_failed, count, count),
-            modifier = Modifier.weight(1f),
+        MorpheBannerAction(
+            label = stringResource(Res.string.home_header_manage_sources_button),
+            onClick = onManageSources,
         )
-        MorpheBannerAction(label = stringResource(Res.string.home_header_manage_sources_button), onClick = onManageSources)
-        MorpheBannerDismiss(onClick = onDismiss)
     }
 }
 

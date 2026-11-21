@@ -12,6 +12,7 @@ import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
+import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
@@ -19,11 +20,15 @@ import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.model.SourceVersionPref
 import app.morphe.morphe_desktop.generated.resources.*
+import java.awt.Desktop
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.StringResource
@@ -38,7 +43,9 @@ object EnabledSourcesLoader {
         val patchFile: File? = null,
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
+        val releasedAtMillis: Long? = null,
         val isOffline: Boolean = false,
+        val isPinned: Boolean = false,
         val error: String? = null,
         val channel: PatchResolver.Channel = PatchResolver.Channel.UNKNOWN,
         val errorRes: StringResource? = null,
@@ -50,6 +57,13 @@ object EnabledSourcesLoader {
         suspend fun getUserErrorMessage(): String? =
             errorRes?.let { getString(it, *errorArgs.toTypedArray()) } ?: error
     }
+
+    data class SourceLoadProgress(
+        val completed: Int,
+        val total: Int,
+        val activeSource: PatchSource?,
+        val downloadFraction: Float? = null,
+    )
 
     data class Result(
         /** Resolution outcome per source (success or failure). */
@@ -71,11 +85,48 @@ object EnabledSourcesLoader {
         excludedMppPatterns: List<String> = emptyList(),
         onDownloadProgress: ((String, Float) -> Unit)? = null,
         forceRefresh: Boolean = false,
+        onSourceProgress: ((SourceLoadProgress) -> Unit)? = null,
     ): Result = withContext(Dispatchers.IO) { supervisorScope {
+        val total = enabled.size
+        val completedCount = AtomicInteger(0)
+        val activeSources = ConcurrentHashMap<String, PatchSource>().apply {
+            enabled.forEach { (source, _) -> put(source.id, source) }
+        }
+        val downloadFractions = ConcurrentHashMap<String, Float>()
+
+        if (total > 0) {
+            onSourceProgress?.invoke(
+                SourceLoadProgress(
+                    completed = 0,
+                    total = total,
+                    activeSource = enabled.firstOrNull()?.first,
+                    downloadFraction = null,
+                )
+            )
+        }
+
         val resolved = enabled.map { (source, repo) ->
             async(Dispatchers.IO) {
                 try {
-                    val resolvedSource = resolve(source, repo, prefsBySource[source.id], excludedMppPatterns, onDownloadProgress, forceRefresh)
+                    val resolvedSource = resolve(
+                        source = source,
+                        repo = repo,
+                        pref = prefsBySource[source.id],
+                        excludedMppPatterns = excludedMppPatterns,
+                        onDownloadProgress = { name, pct ->
+                            onDownloadProgress?.invoke(name, pct)
+                            downloadFractions[source.id] = pct
+                            onSourceProgress?.invoke(
+                                SourceLoadProgress(
+                                    completed = completedCount.get(),
+                                    total = total,
+                                    activeSource = source,
+                                    downloadFraction = pct.takeIf { it > 0f && it < 1f },
+                                )
+                            )
+                        },
+                        forceRefresh = forceRefresh,
+                    )
                     val file = resolvedSource.patchFile
                     val manifestName = file?.let { PatchBundleLoader.extractName(it) }
                     val effectiveName = manifestName?.takeUnless { it.isBlank() || PatchSourceNaming.isRawOrCorruptedName(it) }
@@ -90,6 +141,21 @@ object EnabledSourcesLoader {
                     throw e
                 } catch (e: Exception) {
                     ResolvedSource(source = source, error = e.message ?: e.javaClass.simpleName)
+                } finally {
+                    activeSources.remove(source.id)
+                    downloadFractions.remove(source.id)
+                    val done = completedCount.incrementAndGet()
+                    if (isActive) {
+                        val nextActive = enabled.firstOrNull { activeSources.containsKey(it.first.id) }?.first
+                        onSourceProgress?.invoke(
+                            SourceLoadProgress(
+                                completed = done,
+                                total = total,
+                                activeSource = nextActive,
+                                downloadFraction = nextActive?.let { downloadFractions[it.id] }?.takeIf { it > 0f && it < 1f },
+                            )
+                        )
+                    }
                 }
             }
         }.awaitAll()
@@ -161,7 +227,9 @@ object EnabledSourcesLoader {
                 }
             }
         }
-        engineResult.toResolvedSource(source, repo)
+        engineResult.toResolvedSource(source, repo).let {
+            if (source.type != PatchSourceType.LOCAL && pref?.mode == FollowMode.PINNED) it.copy(isPinned = true) else it
+        }
     }
 
     private fun PatchResolver.ResolutionResult.toResolvedSource(
@@ -175,6 +243,7 @@ object EnabledSourcesLoader {
             patchFile = patchFile,
             resolvedVersion = resolvedVersion,
             latestAvailableVersion = latestAvailableVersion,
+            releasedAtMillis = releasedAtMillis,
             isOffline = isOffline,
             channel = channel,
             signingKey = signingKey,
@@ -214,10 +283,6 @@ object EnabledSourcesLoader {
 /** sourceId to resolved version label (e.g. "v1.27.0-dev.2"). */
 fun EnabledSourcesLoader.Result?.sourceVersionMap(): Map<String, String?> =
     this?.resolved?.associate { it.source.id to it.resolvedVersion } ?: emptyMap()
-
-/** Maps source IDs to resolved release channels. */
-fun EnabledSourcesLoader.Result?.sourceChannelMap(): Map<String, PatchResolver.Channel?> =
-    this?.resolved?.associate { it.source.id to it.channel } ?: emptyMap()
 
 /** Maps source IDs to pinned signing key fingerprints. */
 fun EnabledSourcesLoader.Result?.sourceSigningKeyFingerprintMap(): Map<String, String> =
@@ -279,4 +344,57 @@ fun EnabledSourcesLoader.Result.logIfFailed(prefix: String = "") {
     } else {
         Logger.warn(logMessage)
     }
+}
+
+data class SourceApp(
+    val packageName: String,
+    val displayName: String,
+    val patchCount: Int,
+    val iconColorHex: String?,
+)
+
+data class SourceDetails(
+    val patchCount: Int,
+    val sizeBytes: Long?,
+    val apps: List<SourceApp>,
+    val isOffline: Boolean,
+    val isPinned: Boolean,
+    val fileName: String?,
+    val releasedAtMillis: Long? = null,
+)
+
+fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> {
+    val snapshot = this ?: return emptyMap()
+    return snapshot.resolved.mapNotNull { r ->
+        val file = r.patchFile ?: return@mapNotNull null
+        val patches = snapshot.patchesBySource[r.source.id] ?: return@mapNotNull null
+        val apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(patches).map { app ->
+            SourceApp(
+                packageName = app.packageName,
+                displayName = app.displayName,
+                patchCount = patches.count { p -> p.compatiblePackages.any { it.name == app.packageName } },
+                iconColorHex = app.appIconColor,
+            )
+        }.sortedWith(compareByDescending<SourceApp> { it.patchCount }.thenBy { it.displayName })
+        r.source.id to SourceDetails(
+            patchCount = patches.size,
+            sizeBytes = file.takeIf { it.isFile }?.length(),
+            apps = apps,
+            isOffline = r.isOffline,
+            isPinned = r.isPinned,
+            fileName = file.name,
+            releasedAtMillis = r.releasedAtMillis,
+        )
+    }.toMap()
+}
+
+/** Builds a [SourceVersionPref] that follows the given release channel. */
+fun followChannelPref(preRelease: Boolean): SourceVersionPref =
+    SourceVersionPref(mode = if (preRelease) FollowMode.FOLLOW_DEV else FollowMode.FOLLOW_STABLE)
+
+/** Opens [file]'s directory (or [file] itself if it is a directory) in the desktop file manager. */
+fun openInFolder(file: File?) {
+    val target = file ?: return
+    val dir = if (target.isDirectory) target else target.parentFile ?: return
+    runCatching { if (dir.exists()) Desktop.getDesktop().open(dir) }
 }

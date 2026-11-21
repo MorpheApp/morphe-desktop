@@ -102,4 +102,34 @@
         <item quantity="many">Всего: %1$s (%2$d файлов)</item>
         <item quantity="other">Всего: %1$s (%2$d файла)</item>
     </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d релиз новее чем</item>
+        <item quantity="few">%1$d релиза новее чем</item>
+        <item quantity="many">%1$d релизов новее чем</item>
+        <item quantity="other">%1$d релизов новее чем</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d релиз старее чем</item>
+        <item quantity="few">%1$d релиза старее чем</item>
+        <item quantity="many">%1$d релизов старее чем</item>
+        <item quantity="other">%1$d релизов старее чем</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d патч</item>
+        <item quantity="few">%1$d патчей</item>
+        <item quantity="many">%1$d патчи</item>
+        <item quantity="other">%1$d патчи</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d приложение</item>
+        <item quantity="few">%1$d приложения</item>
+        <item quantity="many">%1$d приложений</item>
+        <item quantity="other">%1$d приложения</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d опция</item>
+        <item quantity="few">%1$d опции</item>
+        <item quantity="many">%1$d опций</item>
+        <item quantity="other">%1$d опций</item>
+    </plurals>
 </resources>
