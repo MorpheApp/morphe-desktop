@@ -908,7 +908,10 @@
     <string name="about_link_donate">Bağış</string>
     <string name="about_link_translations">Çeviriler</string>
     <string name="contributors">Katkıda bulunanlar</string>
-    <string name="contributors_description">Son 12 ay</string>
+    <string name="contributors_ranking">Katkıya göre sıralandı</string>
+    <string name="contributors_all_time">Tüm zamanlar</string>
+    <string name="contributors_6_months">Son 6 ay</string>
+    <string name="contributors_3_months">Son 3 ay</string>
     <string name="credits_prior_development">Önceki geliştirme</string>
     <string name="supporters">Destekçiler</string>
     <string name="supporters_description">Open Collective'deki destekçiler</string>

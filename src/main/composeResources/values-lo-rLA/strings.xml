@@ -907,7 +907,10 @@
     <string name="about_link_donate">ບໍລິຈາກ</string>
     <string name="about_link_translations">ການແປພາສາ</string>
     <string name="contributors">ຜູ້ປະກອບສ່ວນ</string>
-    <string name="contributors_description">12 ເດືອນທີ່ຜ່ານມາ</string>
+    <string name="contributors_ranking">ຈັດລຳດັບຕາມການປະກອບສ່ວນ</string>
+    <string name="contributors_all_time">ທັງໝົດ</string>
+    <string name="contributors_6_months">6 ເດືອນຜ່ານມາ</string>
+    <string name="contributors_3_months">3 ເດືອນຜ່ານມາ</string>
     <string name="credits_prior_development">ການພັດທະນາກ່ອນໜ້ານີ້</string>
     <string name="supporters">ຜູ້ສະໜັບສະໜູນ</string>
     <string name="supporters_description">ຜູ້ສະໜັບສະໜູນໃນ Open Collective</string>

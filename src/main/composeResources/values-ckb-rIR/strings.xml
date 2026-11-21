@@ -911,7 +911,10 @@
     <string name="about_link_donate">بەخشین</string>
     <string name="about_link_translations">وەرگێڕانەکان</string>
     <string name="contributors">بەشدەران</string>
-    <string name="contributors_description">١٢ مانگی ڕابردوو</string>
+    <string name="contributors_ranking">بەپێی بەشداری ڕیزکراوە</string>
+    <string name="contributors_all_time">هەموو کاتەکان</string>
+    <string name="contributors_6_months">٦ مانگی ڕابردو</string>
+    <string name="contributors_3_months">٣ مانگی ڕابردو</string>
     <string name="credits_prior_development">پەرەپێدانی پێشوو</string>
     <string name="supporters">پشتگیران</string>
     <string name="supporters_description">پشتگیران لە Open Collective</string>

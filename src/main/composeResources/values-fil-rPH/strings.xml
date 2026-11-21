@@ -907,7 +907,10 @@
     <string name="about_link_donate">Magbigay</string>
     <string name="about_link_translations">Mga Pagsasalin</string>
     <string name="contributors">Mga Kontribyutor</string>
-    <string name="contributors_description">Huling 12 buwan</string>
+    <string name="contributors_ranking">Inaayos ayon sa kontribusyon</string>
+    <string name="contributors_all_time">Sa lahat ng panahon</string>
+    <string name="contributors_6_months">Huling 6 na buwan</string>
+    <string name="contributors_3_months">Huling 3 na buwan</string>
     <string name="credits_prior_development">Naunang pag-develop</string>
     <string name="supporters">Mga Suportante</string>
     <string name="supporters_description">Mga backer sa Open Collective</string>

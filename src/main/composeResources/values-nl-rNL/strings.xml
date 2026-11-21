@@ -907,7 +907,10 @@
     <string name="about_link_donate">Doneren</string>
     <string name="about_link_translations">Vertalingen</string>
     <string name="contributors">Bijdragers</string>
-    <string name="contributors_description">Afgelopen 12 maanden</string>
+    <string name="contributors_ranking">Gerangschikt op bijdrage</string>
+    <string name="contributors_all_time">Altijd</string>
+    <string name="contributors_6_months">Afgelopen 6 maanden</string>
+    <string name="contributors_3_months">Afgelopen 3 maanden</string>
     <string name="credits_prior_development">Eerdere ontwikkeling</string>
     <string name="supporters">Supporters</string>
     <string name="supporters_description">Backers op Open Collective</string>

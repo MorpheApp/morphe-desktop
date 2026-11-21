@@ -907,7 +907,10 @@
     <string name="about_link_donate">Støtt</string>
     <string name="about_link_translations">Oversettelser</string>
     <string name="contributors">Bidragsytere</string>
-    <string name="contributors_description">Siste 12 måneder</string>
+    <string name="contributors_ranking">Rangert etter bidrag</string>
+    <string name="contributors_all_time">Hele perioden</string>
+    <string name="contributors_6_months">Siste 6 måneder</string>
+    <string name="contributors_3_months">Siste 3 måneder</string>
     <string name="credits_prior_development">Tidligere utvikling</string>
     <string name="supporters">Støttespillere</string>
     <string name="supporters_description">Bidragsytere på Open Collective</string>

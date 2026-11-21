@@ -907,7 +907,10 @@
     <string name="about_link_donate">Donatsiya</string>
     <string name="about_link_translations">Tarjimalar</string>
     <string name="contributors">Hissa qo'shganlar</string>
-    <string name="contributors_description">Oxirgi 12 oy</string>
+    <string name="contributors_ranking">Hissalar bo\"yicha reyting</string>
+    <string name="contributors_all_time">Barcha vaqtlar uchun</string>
+    <string name="contributors_6_months">Oxirgi 6 oy</string>
+    <string name="contributors_3_months">Oxirgi 3 oy</string>
     <string name="credits_prior_development">Avvalgi ishlanmalar</string>
     <string name="supporters">Homiylar</string>
     <string name="supporters_description">Open Collective platformasidagi homiylar</string>

@@ -907,7 +907,10 @@
     <string name="about_link_donate">दान करें</string>
     <string name="about_link_translations">अनुवाद</string>
     <string name="contributors">योगदानकर्ता</string>
-    <string name="contributors_description">पिछले 12 महीने</string>
+    <string name="contributors_ranking">योगदान के आधार पर रैंक किया गया</string>
+    <string name="contributors_all_time">अब तक का</string>
+    <string name="contributors_6_months">पिछले 6 महीने</string>
+    <string name="contributors_3_months">पिछले 3 महीने</string>
     <string name="credits_prior_development">पूर्व विकास</string>
     <string name="supporters">समर्थक</string>
     <string name="supporters_description">ओपन कलेक्टिव पर बैकर्स</string>

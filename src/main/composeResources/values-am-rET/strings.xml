@@ -907,7 +907,10 @@
     <string name="about_link_donate">ልገሳ</string>
     <string name="about_link_translations">ትርጉሞች</string>
     <string name="contributors">አበርካቾች</string>
-    <string name="contributors_description">ላለፉት 12 ወራት</string>
+    <string name="contributors_ranking">በአስተዋጽኦ ደረጃ የተደረደረ</string>
+    <string name="contributors_all_time">የሁልጊዜ</string>
+    <string name="contributors_6_months">የመጨረሻዎቹ 6 ወራት</string>
+    <string name="contributors_3_months">የመጨረሻዎቹ 3 ወራት</string>
     <string name="credits_prior_development">የቀድሞ ልማት</string>
     <string name="supporters">ደጋፊዎች</string>
     <string name="supporters_description">በ Open Collective ላይ ያሉ ደጋፊዎች</string>

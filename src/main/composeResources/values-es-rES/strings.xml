@@ -913,7 +913,10 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="about_link_donate">Donar</string>
     <string name="about_link_translations">Traducciones</string>
     <string name="contributors">Colaboradores</string>
-    <string name="contributors_description">Últimos 12 meses</string>
+    <string name="contributors_ranking">Clasificado por contribución</string>
+    <string name="contributors_all_time">Todo el tiempo</string>
+    <string name="contributors_6_months">Últimos 6 meses</string>
+    <string name="contributors_3_months">Últimos 3 meses</string>
     <string name="credits_prior_development">Desarrollo previo</string>
     <string name="supporters">Patrocinadores</string>
     <string name="supporters_description">Patrocinadores en Open Collective</string>

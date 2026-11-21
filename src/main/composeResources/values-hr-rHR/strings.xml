@@ -913,7 +913,10 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="about_link_donate">Donirajte</string>
     <string name="about_link_translations">Prijevodi</string>
     <string name="contributors">Suradnici</string>
-    <string name="contributors_description">Zadnjih 12 mjeseci</string>
+    <string name="contributors_ranking">Rangirano prema doprinosu</string>
+    <string name="contributors_all_time">Svo vrijeme</string>
+    <string name="contributors_6_months">Zadnjih 6 mjeseci</string>
+    <string name="contributors_3_months">Zadnjih 3 mjeseca</string>
     <string name="credits_prior_development">Prijašnji razvoj</string>
     <string name="supporters">Podržavatelji</string>
     <string name="supporters_description">Donatori na Open Collective</string>

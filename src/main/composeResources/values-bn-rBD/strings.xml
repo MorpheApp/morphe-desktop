@@ -907,7 +907,10 @@
     <string name="about_link_donate">দান করুন</string>
     <string name="about_link_translations">অনুবাদ</string>
     <string name="contributors">অবদানকারী</string>
-    <string name="contributors_description">গত ১২ মাস</string>
+    <string name="contributors_ranking">অবদানের ভিত্তিতে র‍্যাঙ্ক করা হয়েছে</string>
+    <string name="contributors_all_time">সর্বকালের</string>
+    <string name="contributors_6_months">গত ৬ মাস</string>
+    <string name="contributors_3_months">গত ৩ মাস</string>
     <string name="credits_prior_development">পূর্ববর্তী উন্নয়ন</string>
     <string name="supporters">সমর্থক</string>
     <string name="supporters_description">Open Collective-এ ব্যাককার</string>

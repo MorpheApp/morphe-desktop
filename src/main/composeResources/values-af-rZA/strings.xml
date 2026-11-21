@@ -907,7 +907,10 @@
     <string name="about_link_donate">Skenk</string>
     <string name="about_link_translations">Vertalings</string>
     <string name="contributors">Bydraers</string>
-    <string name="contributors_description">Laaste 12 maande</string>
+    <string name="contributors_ranking">Gerangskik volgens bydrae</string>
+    <string name="contributors_all_time">Alle tye</string>
+    <string name="contributors_6_months">Laaste 6 maande</string>
+    <string name="contributors_3_months">Laaste 3 maande</string>
     <string name="credits_prior_development">Vorige ontwikkeling</string>
     <string name="supporters">Ondersteuners</string>
     <string name="supporters_description">Ondersteuners op Open Collective</string>

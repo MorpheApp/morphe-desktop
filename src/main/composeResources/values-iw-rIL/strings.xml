@@ -907,7 +907,10 @@
     <string name="about_link_donate">תרומה</string>
     <string name="about_link_translations">תרגומים</string>
     <string name="contributors">תורמים</string>
-    <string name="contributors_description">12 החודשים האחרונים</string>
+    <string name="contributors_ranking">מדורג לפי תרומה</string>
+    <string name="contributors_all_time">כל הזמן</string>
+    <string name="contributors_6_months">6 החודשים האחרונים</string>
+    <string name="contributors_3_months">3 החודשים האחרונים</string>
     <string name="credits_prior_development">פיתוח קודם</string>
     <string name="supporters">תומכים</string>
     <string name="supporters_description">תומכים ב-Open Collective</string>

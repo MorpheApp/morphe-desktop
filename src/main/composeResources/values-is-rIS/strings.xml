@@ -907,7 +907,10 @@
     <string name="about_link_donate">Styrkja</string>
     <string name="about_link_translations">Þýðingar</string>
     <string name="contributors">Sameiningar</string>
-    <string name="contributors_description">Síðustu 12 mánuði</string>
+    <string name="contributors_ranking">Röðuð eftir framlagi</string>
+    <string name="contributors_all_time">Allan tíma</string>
+    <string name="contributors_6_months">Síðustu 6 mánuðir</string>
+    <string name="contributors_3_months">Síðustu 3 mánuðir</string>
     <string name="credits_prior_development">Fyrri þróun</string>
     <string name="supporters">Stuðningsmenn</string>
     <string name="supporters_description">Stuðningsmenn á Open Collective</string>

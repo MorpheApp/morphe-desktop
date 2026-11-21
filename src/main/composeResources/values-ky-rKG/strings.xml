@@ -907,7 +907,10 @@
     <string name="about_link_donate">Донорлук</string>
     <string name="about_link_translations">Котормолор</string>
     <string name="contributors">Салым кошкондор</string>
-    <string name="contributors_description">Акыркы 12 ай</string>
+    <string name="contributors_ranking">Салымдары боюнча рейтинг</string>
+    <string name="contributors_all_time">Бардык убакыт бою</string>
+    <string name="contributors_6_months">Акыркы 6 ай</string>
+    <string name="contributors_3_months">Акыркы 3 ай</string>
     <string name="credits_prior_development">Мурунку иштеп чыгуу</string>
     <string name="supporters">Колдоочулар</string>
     <string name="supporters_description">Open Collective платформасындагы колдоочулар</string>

@@ -907,7 +907,10 @@
     <string name="about_link_donate">დონაცია</string>
     <string name="about_link_translations">თარგმანები</string>
     <string name="contributors">კონტრიბუტორები</string>
-    <string name="contributors_description">ბოლო 12 თვე</string>
+    <string name="contributors_ranking">დალაგებულია წვლილის მიხედვით</string>
+    <string name="contributors_all_time">მთელი პერიოდი</string>
+    <string name="contributors_6_months">ბოლო 6 თვე</string>
+    <string name="contributors_3_months">ბოლო 3 თვე</string>
     <string name="credits_prior_development">წინა განვითარება</string>
     <string name="supporters">მხარდამჭერები</string>
     <string name="supporters_description">მხარდამჭერები Open Collective-ზე</string>

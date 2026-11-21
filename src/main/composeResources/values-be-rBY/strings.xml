@@ -907,7 +907,10 @@
     <string name="about_link_donate">Ахвяраваць</string>
     <string name="about_link_translations">Пераклады</string>
     <string name="contributors">Укладнікі</string>
-    <string name="contributors_description">За апошнія 12 месяцаў</string>
+    <string name="contributors_ranking">Рэйцінг па ўнёску</string>
+    <string name="contributors_all_time">За ўвесь час</string>
+    <string name="contributors_6_months">Апошнія 6 месяцаў</string>
+    <string name="contributors_3_months">Апошнія 3 месяцы</string>
     <string name="credits_prior_development">Папярэдняя распрацоўка</string>
     <string name="supporters">Падтрымліваючыя</string>
     <string name="supporters_description">Спонсары на Open Collective</string>

@@ -907,7 +907,10 @@
     <string name="about_link_donate">Doniraj</string>
     <string name="about_link_translations">Prijevodi</string>
     <string name="contributors">Pridonošitelji</string>
-    <string name="contributors_description">Zadnjih 12 mjeseci</string>
+    <string name="contributors_ranking">Rangirano po doprinosu</string>
+    <string name="contributors_all_time">Svo vrijeme</string>
+    <string name="contributors_6_months">Posljednjih 6 mjeseci</string>
+    <string name="contributors_3_months">Posljednjih 3 mjeseca</string>
     <string name="credits_prior_development">Prethodni razvoj</string>
     <string name="supporters">Podršivači</string>
     <string name="supporters_description">Donatori na Open Collective</string>

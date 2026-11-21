@@ -907,7 +907,10 @@
     <string name="about_link_donate">Doatua</string>
     <string name="about_link_translations">Itzulpenak</string>
     <string name="contributors">Collaboradoreak</string>
-    <string name="contributors_description">Azken 12 hilabeteetan</string>
+    <string name="contributors_ranking">Ekarpenen arabera ordenatuta</string>
+    <string name="contributors_all_time">Denbora guztian</string>
+    <string name="contributors_6_months">Azken 6 hilabeteak</string>
+    <string name="contributors_3_months">Azken 3 hilabeteak</string>
     <string name="credits_prior_development">Aurreko garapena</string>
     <string name="supporters">Sgetuileak</string>
     <string name="supporters_description">Open Collective-ko babesleak</string>

@@ -907,7 +907,10 @@
     <string name="about_link_donate">Донирај</string>
     <string name="about_link_translations">Преводи</string>
     <string name="contributors">Доприносиоци</string>
-    <string name="contributors_description">Последњих 12 месеци</string>
+    <string name="contributors_ranking">Рангирано по доприносу</string>
+    <string name="contributors_all_time">Све време</string>
+    <string name="contributors_6_months">Последњих 6 месеца</string>
+    <string name="contributors_3_months">Последњих 3 месеца</string>
     <string name="credits_prior_development">Претходни развој</string>
     <string name="supporters">Подржаваоци</string>
     <string name="supporters_description">Подржаваоци на Open Collective</string>

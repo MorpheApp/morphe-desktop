@@ -907,7 +907,10 @@
     <string name="about_link_donate">Նվիրաբերություն</string>
     <string name="about_link_translations">Թարգմանություններ</string>
     <string name="contributors">Համագործակիցներ</string>
-    <string name="contributors_description">Վերջին 12 ամիսվա ընթացքում</string>
+    <string name="contributors_ranking">Դասավորված է ըստ ներդրման</string>
+    <string name="contributors_all_time">Ամբողջ ընթացքում</string>
+    <string name="contributors_6_months">Վերջին 6 ամիսը</string>
+    <string name="contributors_3_months">Վերջին 3 ամիսը</string>
     <string name="credits_prior_development">Նախնական մշակում</string>
     <string name="supporters">Աջակիցներ</string>
     <string name="supporters_description">Աջակիցներ Open Collective-ում</string>

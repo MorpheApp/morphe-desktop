@@ -907,7 +907,10 @@
     <string name="about_link_donate">Ủng hộ</string>
     <string name="about_link_translations">Dịch thuật</string>
     <string name="contributors">Người đóng góp</string>
-    <string name="contributors_description">12 tháng qua</string>
+    <string name="contributors_ranking">Xếp hạng theo đóng góp</string>
+    <string name="contributors_all_time">Mọi thời đại</string>
+    <string name="contributors_6_months">6 tháng qua</string>
+    <string name="contributors_3_months">3 tháng qua</string>
     <string name="credits_prior_development">Trước đây</string>
     <string name="supporters">Người ủng hộ</string>
     <string name="supporters_description">Người đóng góp trên Open Collective</string>

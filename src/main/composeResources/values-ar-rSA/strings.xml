@@ -907,7 +907,10 @@
     <string name="about_link_donate">تبرع</string>
     <string name="about_link_translations">الترجمات</string>
     <string name="contributors">المساهمون</string>
-    <string name="contributors_description">آخر 12 شهرًا</string>
+    <string name="contributors_ranking">مرتب حسب المساهمة</string>
+    <string name="contributors_all_time">كل الوقت</string>
+    <string name="contributors_6_months">آخر 6 شهرًا</string>
+    <string name="contributors_3_months">آخر 3 شهرًا</string>
     <string name="credits_prior_development">التطوير السابق</string>
     <string name="supporters">الداعمون</string>
     <string name="supporters_description">الداعمون على Open Collective</string>

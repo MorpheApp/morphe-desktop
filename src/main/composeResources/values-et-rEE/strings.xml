@@ -907,7 +907,10 @@
     <string name="about_link_donate">Annetage</string>
     <string name="about_link_translations">Tõlked</string>
     <string name="contributors">Kaastöötajad</string>
-    <string name="contributors_description">Viimased 12 kuud</string>
+    <string name="contributors_ranking">Reastatud panuse järgi</string>
+    <string name="contributors_all_time">Kogu aeg</string>
+    <string name="contributors_6_months">Viimased 6 kuud</string>
+    <string name="contributors_3_months">Viimased 3 kuud</string>
     <string name="credits_prior_development">Varasem arendus</string>
     <string name="supporters">Toetajad</string>
     <string name="supporters_description">Toetajad Open Collective'is</string>

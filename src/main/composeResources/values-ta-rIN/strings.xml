@@ -906,7 +906,10 @@
     <string name="about_link_donate">நன்கொடை அளிக்கவும்</string>
     <string name="about_link_translations">மொழிபெயர்ப்புகள்</string>
     <string name="contributors">பங்களிப்பாளர்கள்</string>
-    <string name="contributors_description">கடந்த 12 மாதங்கள்</string>
+    <string name="contributors_ranking">பங்களிப்பு அடிப்படையில் வரிசைப்படுத்தப்பட்டது</string>
+    <string name="contributors_all_time">எப்போதும்</string>
+    <string name="contributors_6_months">கடந்த 6 மாதங்கள்</string>
+    <string name="contributors_3_months">கடந்த 3 மாதங்கள்</string>
     <string name="credits_prior_development">முந்தைய மேம்பாடு</string>
     <string name="supporters">ஆதரவாளர்கள்</string>
     <string name="supporters_description">Open Collective-ல் ஆதரவாளர்கள்</string>

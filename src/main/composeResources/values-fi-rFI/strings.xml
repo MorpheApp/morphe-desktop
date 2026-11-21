@@ -907,7 +907,10 @@
     <string name="about_link_donate">Lahjoita</string>
     <string name="about_link_translations">Käännökset</string>
     <string name="contributors">Avustajat</string>
-    <string name="contributors_description">Viimeiset 12 kuukautta</string>
+    <string name="contributors_ranking">Järjestetty panoksen mukaan</string>
+    <string name="contributors_all_time">Kaikki ajat</string>
+    <string name="contributors_6_months">Viimeiset 6 kuukautta</string>
+    <string name="contributors_3_months">Viimeiset 3 kuukautta</string>
     <string name="credits_prior_development">Aiempi kehitys</string>
     <string name="supporters">Tukijat</string>
     <string name="supporters_description">Tukijat Open Collectivessa</string>

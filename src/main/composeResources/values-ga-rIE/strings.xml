@@ -907,7 +907,10 @@
     <string name="about_link_donate">Tabhair Síntiús</string>
     <string name="about_link_translations">Aistriúcháin</string>
     <string name="contributors">Rannpháirtithe</string>
-    <string name="contributors_description">Le 12 mhí anuas</string>
+    <string name="contributors_ranking">Rangailte araon de réir curleasa</string>
+    <string name="contributors_all_time">Gach am</string>
+    <string name="contributors_6_months">Le 6 mhí anuas</string>
+    <string name="contributors_3_months">Le 3 mhí anuas</string>
     <string name="credits_prior_development">Forbairt roimhe seo</string>
     <string name="supporters">Tacadóirí</string>
     <string name="supporters_description">Tacaitheoirí ar Open Collective</string>

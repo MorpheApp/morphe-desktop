@@ -907,7 +907,10 @@
     <string name="about_link_donate">Пожертвовать</string>
     <string name="about_link_translations">Переводы</string>
     <string name="contributors">Контрибьюторы</string>
-    <string name="contributors_description">За последние 12 месяцев</string>
+    <string name="contributors_ranking">Рейтинг по вкладу</string>
+    <string name="contributors_all_time">За все время</string>
+    <string name="contributors_6_months">Последние 6 месяцев</string>
+    <string name="contributors_3_months">Последние 3 месяца</string>
     <string name="credits_prior_development">Предыдущая разработка</string>
     <string name="supporters">Сторонники</string>
     <string name="supporters_description">Спонсоры на Open Collective</string>

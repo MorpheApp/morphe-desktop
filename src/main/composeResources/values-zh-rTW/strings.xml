@@ -907,7 +907,10 @@
     <string name="about_link_donate">捐贈</string>
     <string name="about_link_translations">翻譯</string>
     <string name="contributors">貢獻者</string>
-    <string name="contributors_description">過去 12 個月</string>
+    <string name="contributors_ranking">按貢獻排序</string>
+    <string name="contributors_all_time">所有時間</string>
+    <string name="contributors_6_months">過去 6 個月</string>
+    <string name="contributors_3_months">過去 3 個月</string>
     <string name="credits_prior_development">先前開發</string>
     <string name="supporters">支持者</string>
     <string name="supporters_description">Open Collective 上的贊助者</string>

@@ -907,7 +907,10 @@
     <string name="about_link_donate">Donar</string>
     <string name="about_link_translations">Traduccions</string>
     <string name="contributors">Contributors</string>
-    <string name="contributors_description">Últims 12 mesos</string>
+    <string name="contributors_ranking">Classificat per contribució</string>
+    <string name="contributors_all_time">De tot el temps</string>
+    <string name="contributors_6_months">Els últims 6 mesos</string>
+    <string name="contributors_3_months">Els últims 3 mesos</string>
     <string name="credits_prior_development">Desenvolupament previ</string>
     <string name="supporters">Patrocinadors</string>
     <string name="supporters_description">Patrocinadors a Open Collective</string>

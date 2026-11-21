@@ -907,7 +907,10 @@
     <string name="about_link_donate">후원하기</string>
     <string name="about_link_translations">번역에 도움주기</string>
     <string name="contributors">도움을 주신 분들</string>
-    <string name="contributors_description">최근 12개월</string>
+    <string name="contributors_ranking">기여도순 정렬</string>
+    <string name="contributors_all_time">전체 기간</string>
+    <string name="contributors_6_months">최근 6개월</string>
+    <string name="contributors_3_months">최근 3개월</string>
     <string name="credits_prior_development">이전 개발</string>
     <string name="supporters">후원자</string>
     <string name="supporters_description">Open Collective 후원자</string>

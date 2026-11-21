@@ -907,7 +907,10 @@
     <string name="about_link_donate">Δωρεά</string>
     <string name="about_link_translations">Μεταφράσεις</string>
     <string name="contributors">Συνεισφέροντες</string>
-    <string name="contributors_description">Τελευταμμένοι 12 μήνες</string>
+    <string name="contributors_ranking">Κατατάχθηκαν με βάση τη συνεισφορά</string>
+    <string name="contributors_all_time">Όλος ο χρόνος</string>
+    <string name="contributors_6_months">Τελευταίοι 6 μήνες</string>
+    <string name="contributors_3_months">Τελευταίοι 3 μήνες</string>
     <string name="credits_prior_development">Προηγούμενη ανάπτυξη</string>
     <string name="supporters">Υποστηρικτές</string>
     <string name="supporters_description">Χορηγοί στο Open Collective</string>

@@ -907,7 +907,10 @@
     <string name="about_link_donate">Хандивлах</string>
     <string name="about_link_translations">Орчуулга</string>
     <string name="contributors">Зу অবদানулагчид</string>
-    <string name="contributors_description">Сүүлийн 12 сарын хугацаанд</string>
+    <string name="contributors_ranking">Хувь нэмэрээр эрэмбэлэх</string>
+    <string name="contributors_all_time">Бүх цаг хугацааны</string>
+    <string name="contributors_6_months">Сүүлийн 6 сар</string>
+    <string name="contributors_3_months">Сүүлийн 3 сар</string>
     <string name="credits_prior_development">Өмнөх хөгжүүлэлт</string>
     <string name="supporters">Дэмжигчид</string>
     <string name="supporters_description">Open Collective-ийн дэмжигчид</string>
