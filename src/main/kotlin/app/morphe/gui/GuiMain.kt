@@ -6,10 +6,15 @@
 package app.morphe.gui
 
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -22,11 +27,13 @@ import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.ui.components.LocalFrameWindowScope
 import app.morphe.gui.util.DeviceMonitor
+import app.morphe.gui.util.X11UiScale
 import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import java.awt.Taskbar
 import javax.imageio.ImageIO
 import javax.swing.UIManager
+import kotlin.math.roundToInt
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
@@ -54,6 +61,10 @@ fun launchGui(args: Array<String>) {
 
     val appIcon = loadAppIcon()
 
+    // OpenJDK only scales X11/XWayland windows by whole numbers, so apply the rest of the desktop scale here.
+    var uiScale by mutableFloatStateOf(X11UiScale.extraScale() ?: 1f)
+    X11UiScale.watch { uiScale = it }
+
     try {
         if (Taskbar.isTaskbarSupported()) {
             val stream = Thread.currentThread().contextClassLoader
@@ -78,7 +89,7 @@ fun launchGui(args: Array<String>) {
     }
 
     val windowState = rememberWindowState(
-        size = DpSize(1024.dp, 768.dp),
+        size = DpSize(1024.dp, 768.dp) * uiScale,
         position = WindowPosition(Alignment.Center)
     )
 
@@ -89,7 +100,7 @@ fun launchGui(args: Array<String>) {
         icon = appIcon
     ) {
         // Minimum dimensions to preserve side-by-side layout readability.
-        window.minimumSize = Dimension(900, 500)
+        window.minimumSize = Dimension((900 * uiScale).roundToInt(), (500 * uiScale).roundToInt())
 
         // Configure transparent title bar for custom macOS rendering.
         remember {
@@ -101,7 +112,11 @@ fun launchGui(args: Array<String>) {
             }
         }
 
-        CompositionLocalProvider(LocalFrameWindowScope provides this) {
+        val density = LocalDensity.current
+        CompositionLocalProvider(
+            LocalFrameWindowScope provides this,
+            LocalDensity provides Density(density.density * uiScale, density.fontScale),
+        ) {
             app(initialSimplifiedMode = initialSimplifiedMode)
         }
     }
