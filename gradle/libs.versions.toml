@@ -31,14 +31,14 @@ kotlinx-serialization = "1.13.0"
 jna = "5.19.1"
 
 # FileKit (native file/folder pickers across Win/macOS/Linux)
-filekit = "0.17.0"
+filekit = "0.17.1"
 
 # Logging
 slf4j = "2.0.20"
 
 # Libraries
 about-libraries = "15.3.0"
-oshi = "7.7.3"
+oshi = "7.8.0"
 
 [libraries]
 # Morphe Core
