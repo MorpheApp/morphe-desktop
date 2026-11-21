@@ -135,6 +135,8 @@ object PatchEngine {
         val optionsFile: File? = null,
         val updateOptions: Boolean = false,
         val recordHistory: Boolean = true,
+        /** How a successful run keeps [inputApk] in the [OriginalApkStore], null to leave it out. Needs [recordHistory]. */
+        val saveOriginalApk: SaveOriginalApk? = null,
         val appDisplayName: String? = null,
         val historyMetadata: HistoryMetadata? = null,
     ) {
@@ -191,6 +193,7 @@ object PatchEngine {
             ApkOutputNaming.outputApkPath(
                 inputApk = config.inputApk,
                 patchesFile = primaryPatchesFile,
+                baseOutputDir = OriginalApkStore.shared.outputBaseFor(config.inputApk),
                 appDisplayName = displayName,
             )
         }
@@ -233,6 +236,8 @@ object PatchEngine {
             val tempDir = session.root
             var mergedApkToCleanup: File? = null
             var obbDirToCleanup: File? = null
+            // The input APK a move kept in the store, deleted once the patcher no longer holds it open
+            var movedOriginalApk: File? = null
             // The OBB files of the bundle, which patches read from the package metadata
             var obbFiles: Map<String, File> = emptyMap()
             val stepResults = mutableListOf<StepResult>()
@@ -701,6 +706,20 @@ object PatchEngine {
                         val originalPkg = config.historyMetadata?.originalPackageName?.takeIf { it.isNotBlank() } ?: packageName
                         val resolvedFormFactor = config.historyMetadata?.formFactor
                             ?: SupportedAppCatalog.extractFormFactors(allPatchesForLookup)[originalPkg]
+                        // The record points at the kept original, so a repatch still finds it
+                        val keptOriginalApk = config.saveOriginalApk?.takeIf { config.inputApk.isFile }?.let { mode ->
+                            try {
+                                OriginalApkStore.shared.save(config.inputApk, originalPkg, packageVersion)?.also { kept ->
+                                    info("Kept original APK at ${kept.absolutePath}")
+                                    if (mode == SaveOriginalApk.MOVE) movedOriginalApk = config.inputApk
+                                }
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                warn("Failed to keep original APK: ${e.message ?: e::class.simpleName}")
+                                null
+                            }
+                        }
                         val record = PatchedAppRecord(
                             packageName = originalPkg,
                             currentPackageName = manifest?.packageName,
@@ -710,7 +729,7 @@ object PatchEngine {
                             apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: packageVersion,
                             apkVersionCode = manifest?.versionCode,
                             formFactor = resolvedFormFactor,
-                            inputApkPath = config.inputApk.absolutePath,
+                            inputApkPath = (keptOriginalApk ?: config.inputApk).absolutePath,
                             outputApkPath = finalOutputApk.absolutePath,
                             outputApkSha256 = sha,
                             outputApkSize = if (size > 0L) size else finalOutputApk.length(),
@@ -769,6 +788,10 @@ object PatchEngine {
             if (!session.retain) {
                 mergedApkToCleanup?.delete()
                 obbDirToCleanup?.deleteRecursively()
+            }
+
+            movedOriginalApk?.let { apk ->
+                if (!apk.delete()) Logger.warn("Kept the original APK, but could not delete ${apk.absolutePath}")
             }
 
             if (config.optionsFile != null && config.updateOptions && patchesSnapshotForFinally.isNotEmpty()) {

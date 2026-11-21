@@ -7,6 +7,7 @@ package app.morphe.gui.ui.screens.patches
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.morphe.engine.OriginalApkStore
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
@@ -616,7 +617,8 @@ class PatchSelectionViewModel(
         val outputFile = ApkOutputNaming.outputApkPath(
             inputApk = inputFile,
             patchesFile = File(actualPatchesFilePath),
-            baseOutputDir = defaultOutputDirectory?.let { File(it) },
+            baseOutputDir = defaultOutputDirectory?.let { File(it) }
+                ?: runBlocking { OriginalApkStore.shared.outputBaseFor(inputFile) },
             appDisplayName = apkName,
             appVersion = apkVersion,
         )
@@ -672,6 +674,7 @@ class PatchSelectionViewModel(
             sdkToolsPath = if (devMode) engineCfg.resolvedAndroidSdkPath() else null,
             disablePurge = !autoCleanupTempFiles,
             recordHistory = true,
+            saveOriginalApk = engineCfg.saveOriginalApkMode(),
             appDisplayName = apkName,
             historyMetadata = PatchEngine.HistoryMetadata(
                 originalPackageName = packageName,

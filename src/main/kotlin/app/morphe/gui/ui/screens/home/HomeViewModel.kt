@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.morphe.engine.MorpheConstants
 import app.morphe.engine.MultiSourceLoader
+import app.morphe.engine.OriginalApkStore
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.UpdateInfo
@@ -161,7 +162,8 @@ class HomeViewModel(
         val outputPath = ApkOutputNaming.outputApkPath(
             inputApk = inputFile,
             patchesFile = primaryPatchFile,
-            baseOutputDir = engineConfigData.resolvedDefaultOutputDirectory(),
+            baseOutputDir = engineConfigData.resolvedDefaultOutputDirectory()
+                ?: OriginalApkStore.shared.outputBaseFor(inputFile),
             appDisplayName = apkInfo.appName,
             appVersion = apkInfo.versionName,
         )
@@ -234,6 +236,7 @@ class HomeViewModel(
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
             recordHistory = true,
+            saveOriginalApk = engineConfigData.saveOriginalApkMode(),
             appDisplayName = apkInfo.appName,
             historyMetadata = PatchEngine.HistoryMetadata(
                 originalPackageName = apkInfo.packageName,
@@ -259,7 +262,8 @@ class HomeViewModel(
         val outputPath = ApkOutputNaming.outputApkPath(
             inputApk = inputFile,
             patchesFile = primaryPatchFile,
-            baseOutputDir = engineConfigData.resolvedDefaultOutputDirectory(),
+            baseOutputDir = engineConfigData.resolvedDefaultOutputDirectory()
+                ?: OriginalApkStore.shared.outputBaseFor(inputFile),
             appDisplayName = record.displayName,
             appVersion = record.apkVersion,
         )
@@ -328,6 +332,7 @@ class HomeViewModel(
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
             recordHistory = true,
+            saveOriginalApk = engineConfigData.saveOriginalApkMode(),
             appDisplayName = record.displayName,
             historyMetadata = PatchEngine.HistoryMetadata(
                 originalPackageName = record.packageName,
@@ -490,9 +495,10 @@ class HomeViewModel(
 
     /**
      * Uninstalls the patched app for [packageName] from the selected device.
-     * When [alsoForget] is true, deletes its history record as well.
+     * When [alsoForget] is true, deletes its history record as well, and with [deleteOriginal] its
+     * kept original APK, both only once the uninstall succeeded.
      */
-    fun uninstallPatchedApp(packageName: String, alsoForget: Boolean) {
+    fun uninstallPatchedApp(packageName: String, alsoForget: Boolean, deleteOriginal: Boolean = false) {
         val record = patchedRecordsByPackage[packageName] ?: return
         val device = DeviceMonitor.state.value.selectedDevice ?: return
         if (!device.isReady || _uiState.value.uninstallingPackage != null) return
@@ -502,6 +508,7 @@ class HomeViewModel(
             if (result.isSuccess && alsoForget) {
                 patchedAppStore.delete(packageName)
             }
+            if (result.isSuccess && deleteOriginal) deleteKeptOriginal(record)
             val uninstallError = result.exceptionOrNull()?.let {
                 (it as? AdbException)?.getUserMessage() ?: getString(Res.string.home_uninstall_failed, it.message ?: "")
             } ?: _uiState.value.error
@@ -899,9 +906,21 @@ class HomeViewModel(
         }
     }
 
-    /** Removes [packageName] from patched app history and updates state. */
-    fun forgetPatchedApp(packageName: String) {
-        viewModelScope.launch { patchedAppStore.delete(packageName) }
+    /** The kept original APK [record] was patched from, or null when it has none in the store. */
+    fun keptOriginalOf(record: PatchedAppRecord): File? =
+        File(record.inputApkPath).takeIf { OriginalApkStore.shared.contains(it) && it.isFile }
+
+    /** Deletes the history record of [packageName], and with [deleteOriginal] its kept original APK too. */
+    fun forgetPatchedApp(packageName: String, deleteOriginal: Boolean = false) {
+        viewModelScope.launch {
+            val record = patchedAppStore.get(packageName)
+            patchedAppStore.delete(packageName)
+            if (deleteOriginal && record != null) deleteKeptOriginal(record)
+        }
+    }
+
+    private suspend fun deleteKeptOriginal(record: PatchedAppRecord) = withContext(Dispatchers.IO) {
+        keptOriginalOf(record)?.let(OriginalApkStore.shared::delete)
     }
 
     /** Refreshes patched state and device status from cache without reloading patches. */
@@ -1395,6 +1414,10 @@ class HomeViewModel(
             isAnalyzing = false
         )
         Logger.info("APK selection cleared")
+    }
+
+    fun clearSelectionIfMissing() {
+        if (_uiState.value.selectedApk?.exists() == false) clearSelection()
     }
 
     fun showError(message: String) {

@@ -12,6 +12,7 @@ import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.UpdateChecker
 import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.config.EngineConfigRepository
@@ -229,6 +230,25 @@ internal object PatchCommand : Callable<Int> {
         showDefaultValue = ALWAYS,
     )
     private var disablePurge: Boolean = false
+
+    private var saveOriginal: SaveOriginalOption? = null
+    @CommandLine.Option(
+        names = ["--save-original"],
+        description = ["Keep the input APK in the data folder's original-apks directory after a successful patch, " +
+            "replacing the copy kept of an earlier version of the app. Valid options are COPY, MOVE, and OFF. " +
+            "Defaults to the GUI's Keep original APKs setting when it has been set, else OFF."],
+    )
+    @Suppress("unused")
+    private fun setSaveOriginal(desiredSaveOriginal: String) {
+        this.saveOriginal = try {
+            SaveOriginalOption.valueOf(desiredSaveOriginal)
+        } catch (e: IllegalArgumentException) {
+            throw CommandLine.ParameterException(
+                spec.commandLine(),
+                "Invalid value \"$desiredSaveOriginal\" in --save-original. Valid values are: COPY, MOVE, OFF",
+            )
+        }
+    }
 
     @CommandLine.Parameters(
         description = ["APK file to patch."],
@@ -476,6 +496,9 @@ internal object PatchCommand : Callable<Int> {
             optionsFile = optionsFilePath,
             updateOptions = updateOptions,
             recordHistory = true,
+            saveOriginalApk = saveOriginal.let { option ->
+                if (option != null) option.mode else savedConfig.saveOriginalApkMode(saveByDefault = false)
+            },
         )
 
         try {
@@ -527,6 +550,13 @@ internal object PatchCommand : Callable<Int> {
             updateCheck.get()?.let { Logger.info(it) }
         }
     }
+}
+
+/** What `--save-original` does with the input APK. */
+internal enum class SaveOriginalOption(val mode: SaveOriginalApk?) {
+    COPY(SaveOriginalApk.COPY),
+    MOVE(SaveOriginalApk.MOVE),
+    OFF(null),
 }
 
 class OptionKeyConverter : CommandLine.ITypeConverter<String> {

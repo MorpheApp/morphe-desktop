@@ -15,6 +15,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.model.UpdateChannelPreference
 import app.morphe.gui.ui.components.MorpheDropdownItem
@@ -30,6 +31,7 @@ internal data class SystemSearchVisibility(
     val autoCleanup: Boolean,
     val updateChannel: Boolean,
     val outputFolder: Boolean,
+    val originalApks: Boolean,
     val autoStartAdb: Boolean,
     val storage: Boolean,
     val versionInfo: Boolean,
@@ -40,7 +42,7 @@ internal data class SystemSearchVisibility(
     val hasAboutSection: Boolean
         get() = versionInfo || changelog || licenses || documentation
     val any: Boolean
-        get() = autoCleanup || updateChannel || outputFolder || autoStartAdb || storage || hasAboutSection
+        get() = autoCleanup || updateChannel || outputFolder || originalApks || autoStartAdb || storage || hasAboutSection
 }
 
 @Composable
@@ -50,6 +52,7 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
             autoCleanup = true,
             updateChannel = true,
             outputFolder = true,
+            originalApks = true,
             autoStartAdb = true,
             storage = true,
             versionInfo = true,
@@ -68,6 +71,10 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
     val channelOffDesc = stringResource(Res.string.settings_channel_desc_off)
     val outputTitle = stringResource(Res.string.settings_section_output_folder)
     val outputDesc = stringResource(Res.string.settings_output_folder_desc)
+    val originalSection = stringResource(Res.string.settings_section_original_apks)
+    val keepOriginalTitle = stringResource(Res.string.settings_original_apks_mode_label)
+    val keepOriginalCopyDesc = stringResource(Res.string.settings_original_apks_mode_desc_copy)
+    val keepOriginalMoveDesc = stringResource(Res.string.settings_original_apks_mode_desc_move)
     val adbTitle = stringResource(Res.string.settings_toggle_auto_start_adb_label)
     val adbDesc = stringResource(Res.string.settings_toggle_auto_start_adb_desc)
     val storageSection = stringResource(Res.string.settings_section_storage)
@@ -104,6 +111,20 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
             "release",
         ),
         outputFolder = matchesSettingQuery(query, outputTitle, outputDesc, "output", "folder", "directory", "save"),
+        originalApks = matchesSettingQuery(
+            query,
+            originalSection,
+            keepOriginalTitle,
+            keepOriginalCopyDesc,
+            keepOriginalMoveDesc,
+            "original",
+            "apk",
+            "keep",
+            "copy",
+            "move",
+            "backup",
+            "repatch",
+        ),
         autoStartAdb = matchesSettingQuery(query, adbTitle, adbDesc, "adb", "daemon", "usb", "install"),
         storage = matchesSettingQuery(
             query,
@@ -221,6 +242,40 @@ internal fun SystemSection(
             }
         }
 
+        if (visibility.originalApks) {
+            SettingsSection(
+                title = stringResource(Res.string.settings_section_original_apks),
+                icon = MorpheIcons.Save,
+            ) {
+                SettingsGroup {
+                    val currentMode = engineConfig.saveOriginalApkMode()
+                    dropdownItem(
+                        key = "save_original_apks",
+                        icon = MorpheIcons.DownloadDone,
+                        title = stringResource(Res.string.settings_original_apks_mode_label),
+                        description = when {
+                            isPatching -> stringResource(Res.string.disabled_while_patching)
+                            currentMode == SaveOriginalApk.COPY -> stringResource(Res.string.settings_original_apks_mode_desc_copy)
+                            currentMode == SaveOriginalApk.MOVE -> stringResource(Res.string.settings_original_apks_mode_desc_move)
+                            else -> stringResource(Res.string.settings_original_apks_mode_desc_off)
+                        },
+                        enabled = !isPatching,
+                        selectedLabel = originalApkModeLabel(currentMode),
+                        items = listOf(SaveOriginalApk.COPY, SaveOriginalApk.MOVE, null).map { mode ->
+                            MorpheDropdownItem(
+                                label = originalApkModeLabel(mode),
+                                selected = currentMode == mode,
+                                onClick = { settings.setSaveOriginalApkMode(mode) },
+                            )
+                        },
+                    )
+                    blockItem(key = "original_apks_storage") {
+                        OriginalApksSection(enabled = !isPatching)
+                    }
+                }
+            }
+        }
+
         if (visibility.autoStartAdb) {
             SettingsGroup {
                 toggleItem(
@@ -297,6 +352,13 @@ internal fun SystemSection(
             }
         }
     }
+}
+
+@Composable
+private fun originalApkModeLabel(mode: SaveOriginalApk?): String = when (mode) {
+    SaveOriginalApk.COPY -> stringResource(Res.string.settings_original_apks_mode_copy)
+    SaveOriginalApk.MOVE -> stringResource(Res.string.settings_original_apks_mode_move)
+    null -> stringResource(Res.string.off)
 }
 
 @Composable
