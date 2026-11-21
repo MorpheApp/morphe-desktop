@@ -1,3 +1,17 @@
+# [2.3.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.3...v2.3.0-dev.4) (2026-11-21)
+
+
+### Bug Fixes
+
+* Show the Play Store icon for uninstalled apps ([#444](https://github.com/MorpheApp/morphe-desktop/issues/444)) ([84e80d2](https://github.com/MorpheApp/morphe-desktop/commit/84e80d242aa64db20cacd6852b5d75273209e0da))
+
+
+### Features
+
+* Rework About into Settings subpage ([#441](https://github.com/MorpheApp/morphe-desktop/issues/441)) ([8450c6f](https://github.com/MorpheApp/morphe-desktop/commit/8450c6f76b62ad8b0483289098518a36825f1fd9))
+* Rework status banners and add source update banner ([#440](https://github.com/MorpheApp/morphe-desktop/issues/440)) ([e4d111a](https://github.com/MorpheApp/morphe-desktop/commit/e4d111a89514bdcbd5e42aff32a9f2c25b777b30))
+* Show contributors and supporters in settings about screen ([#442](https://github.com/MorpheApp/morphe-desktop/issues/442)) ([7b42de6](https://github.com/MorpheApp/morphe-desktop/commit/7b42de63c5054450bc2dd771a2ed31eb3b489fbf))
+
 # [2.3.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.2...v2.3.0-dev.3) (2026-11-18)
 
 
