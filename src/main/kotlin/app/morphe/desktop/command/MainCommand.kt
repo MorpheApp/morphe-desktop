@@ -6,24 +6,14 @@
 package app.morphe.desktop.command
 
 import app.morphe.desktop.command.utility.UtilityCommand
-import java.util.Properties
+import app.morphe.engine.UpdateChecker
 import org.jetbrains.annotations.VisibleForTesting
 import picocli.CommandLine.Command
 import picocli.CommandLine.IVersionProvider
 
 private object CLIVersionProvider : IVersionProvider {
     override fun getVersion() =
-        arrayOf(
-            MainCommand::class.java.getResourceAsStream(
-                "/app/morphe/cli/version.properties",
-            )?.use { stream ->
-                Properties().apply {
-                    load(stream)
-                }.let {
-                    "Morphe Desktop v${it.getProperty("version")}"
-                }
-            } ?: "Morphe Desktop",
-        )
+        arrayOf(UpdateChecker.currentVersion()?.let { "Morphe Desktop v$it" } ?: "Morphe Desktop")
 }
 
 @Command(

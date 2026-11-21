@@ -11,8 +11,7 @@ import app.morphe.engine.ReleaseChannel
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.SupportedApp
-import app.morphe.engine.options.toPatchBundle
-import app.morphe.engine.options.writePatchBundles
+import app.morphe.engine.options.updateOptionsFileFromBundles
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchCache
 import app.morphe.engine.patches.PatchRepository
@@ -319,9 +318,7 @@ class PatchesViewModel(
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    val patches = PatchBundleLoader.loadFlat(setOf(patchFile))
-                    val bundle = patches.toPatchBundle(sourceFiles = setOf(patchFile))
-                    writePatchBundles(outputFile, listOf(bundle))
+                    updateOptionsFileFromBundles(outputFile, PatchBundleLoader.loadEach(setOf(patchFile)))
                 }
                 Logger.info("Exported ${patchFile.name} options to ${outputFile.path}")
             } catch (e: CancellationException) {

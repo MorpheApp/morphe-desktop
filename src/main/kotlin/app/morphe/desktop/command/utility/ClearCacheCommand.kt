@@ -6,9 +6,8 @@
 package app.morphe.desktop.command.utility
 
 import app.morphe.engine.CacheManager
-import app.morphe.engine.MorpheData
 import app.morphe.engine.util.Logger
-import app.morphe.engine.workspace.WorkspaceManager
+import app.morphe.engine.util.formatFileSize
 import java.util.concurrent.Callable
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -58,49 +57,37 @@ internal object ClearCacheCommand : Callable<Int> {
     private var appIconsOnly: Boolean = false
 
     override fun call(): Int {
-        val anyCategorySelected = patchesOnly || logsOnly || tempOnly || avatarsOnly || appIconsOnly
+        val categories = buildList {
+            if (patchesOnly) add(CacheManager.Category.PATCHES)
+            if (logsOnly) add(CacheManager.Category.LOGS)
+            if (tempOnly) add(CacheManager.Category.TEMP)
+            if (avatarsOnly) add(CacheManager.Category.AVATARS)
+            if (appIconsOnly) add(CacheManager.Category.APP_ICONS)
+        }.ifEmpty { CacheManager.Category.entries }
 
         if (info) {
-            val categories = buildList {
-                if (!anyCategorySelected || patchesOnly) add("Patches" to MorpheData.patchesDir)
-                if (!anyCategorySelected || logsOnly) add("Logs" to MorpheData.logsDir)
-                if (!anyCategorySelected || tempOnly) add("Temp" to WorkspaceManager.scratchDir)
-                if (!anyCategorySelected || avatarsOnly) add("Avatars" to MorpheData.avatarsDir)
-                if (!anyCategorySelected || appIconsOnly) add("App icons" to MorpheData.appIconsDir)
-            }
             var totalBytes = 0L
             var totalFiles = 0
 
             Logger.info(
                 buildString {
                     appendLine("Cache status:")
-                    categories.forEach { (label, dir) ->
-                        val stats = CacheManager.getDirectoryStats(dir)
+                    categories.forEach { category ->
+                        val stats = CacheManager.getDirectoryStats(category.dir)
                         totalBytes += stats.bytes
                         totalFiles += stats.fileCount
                         appendLine(
-                            "  ${label.padEnd(9)} ${humanReadable(stats.bytes).padStart(9)}" +
+                            "  ${category.label.padEnd(9)} ${formatFileSize(stats.bytes).padStart(9)}" +
                                 "  (${stats.fileCount} file${if (stats.fileCount == 1) "" else "s"})"
                         )
                     }
-                    append("  ${"Total".padEnd(9)} ${humanReadable(totalBytes).padStart(9)}  ($totalFiles file${if (totalFiles == 1) "" else "s"})")
+                    append("  ${"Total".padEnd(9)} ${formatFileSize(totalBytes).padStart(9)}  ($totalFiles file${if (totalFiles == 1) "" else "s"})")
                 }
             )
             return EXIT_CODE_SUCCESS
         }
 
-        val result = if (anyCategorySelected) {
-            val results = buildList {
-                if (patchesOnly) add(CacheManager.clearDirectoryContents("Patches", MorpheData.patchesDir))
-                if (logsOnly) add(CacheManager.clearDirectoryContents("Logs", MorpheData.logsDir))
-                if (tempOnly) add(WorkspaceManager.clearScratch())
-                if (avatarsOnly) add(CacheManager.clearDirectoryContents("Avatars", MorpheData.avatarsDir))
-                if (appIconsOnly) add(CacheManager.clearDirectoryContents("App icons", MorpheData.appIconsDir))
-            }
-            CacheManager.ClearResult(results)
-        } else {
-            CacheManager.clearCaches()
-        }
+        val result = CacheManager.ClearResult(categories.map { it.clear() })
 
         Logger.info("Cache cleared.")
 
@@ -111,11 +98,5 @@ internal object ClearCacheCommand : Callable<Int> {
             Logger.warn("${result.failedFiles} file(s) could not be deleted (may be locked)")
             EXIT_CODE_ERROR
         }
-    }
-
-    private fun humanReadable(bytes: Long): String = when {
-        bytes < 1024 -> "$bytes B"
-        bytes < 1024 * 1024 -> "%.1f KB".format(bytes / 1024.0)
-        else -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
     }
 }

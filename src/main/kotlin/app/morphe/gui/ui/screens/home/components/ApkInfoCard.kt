@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.VersionStatus
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.ui.components.FormFactorBadge
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
@@ -37,7 +38,6 @@ import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.AppIconSource
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.StatusColorType
 import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.resolveStatusColorType
@@ -230,7 +230,7 @@ fun ApkInfoCard(
                 }
                 TechDataCell(
                     label = stringResource(Res.string.home_apk_info_size_label),
-                    value = FormatUtils.formatFileSize(apkInfo.fileSize, currentLocale()),
+                    value = formatFileSize(apkInfo.fileSize, currentLocale()),
                     modifier = Modifier.weight(1f)
                 )
                 if (apkInfo.minSdk != null) {

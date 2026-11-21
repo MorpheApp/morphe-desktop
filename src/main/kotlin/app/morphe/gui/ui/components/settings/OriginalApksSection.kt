@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.CacheManager
 import app.morphe.engine.MorpheData
 import app.morphe.engine.util.Logger
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.MorpheTheme
-import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
@@ -71,7 +71,7 @@ internal fun OriginalApksSection(enabled: Boolean) {
                     else -> pluralStringResource(
                         Res.plurals.settings_cache_category_summary,
                         stats.fileCount,
-                        FormatUtils.formatFileSize(stats.bytes, currentLocale()),
+                        formatFileSize(stats.bytes, currentLocale()),
                         stats.fileCount,
                     )
                 },

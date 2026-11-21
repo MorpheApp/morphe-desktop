@@ -6,6 +6,7 @@
 package app.morphe.gui.util
 
 import androidx.compose.runtime.Composable
+import app.morphe.engine.util.toLatinDigitsLocale
 import app.morphe.gui.LocalLanguageState
 import app.morphe.gui.data.repository.LanguageRepository
 import java.text.DateFormat
@@ -28,15 +29,6 @@ object FormatUtils {
             Locale.forLanguageTag(languageCode)
         }
         return toLatinDigitsLocale(baseLocale)
-    }
-
-    /** Ensures [locale] uses Western digits (0-9) via Unicode "nu-latn" extension. */
-    fun toLatinDigitsLocale(locale: Locale): Locale {
-        return try {
-            Locale.Builder().setLocale(locale).setUnicodeLocaleKeyword("nu", "latn").build()
-        } catch (_: Exception) {
-            locale
-        }
     }
 
     /** Formats a nullable [Date] in medium localized style. */
@@ -106,18 +98,6 @@ object FormatUtils {
     /** Formats a count as the reader writes numbers, with the grouping of their language. */
     fun formatCount(count: Long, locale: Locale = Locale.getDefault()): String =
         String.format(toLatinDigitsLocale(locale), "%,d", count)
-
-    /** Formats a byte count into a localized human-readable file size string. */
-    fun formatFileSize(bytes: Long, locale: Locale = Locale.getDefault()): String {
-        val latnLocale = toLatinDigitsLocale(locale)
-        return when {
-            bytes <= 0 -> "0 B"
-            bytes < 1024 -> "$bytes B"
-            bytes < 1024 * 1024 -> String.format(latnLocale, "%.1f KB", bytes / 1024.0)
-            bytes < 1024 * 1024 * 1024 -> String.format(latnLocale, "%.1f MB", bytes / (1024.0 * 1024.0))
-            else -> String.format(latnLocale, "%.2f GB", bytes / (1024.0 * 1024.0 * 1024.0))
-        }
-    }
 
     /** Formats data transfer speed in KB/s into a localized string. */
     fun formatTransferRate(kbPerSec: Int, locale: Locale = Locale.getDefault()): String {

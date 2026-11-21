@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.CacheManager
 import app.morphe.engine.MorpheData
 import app.morphe.engine.util.Logger
-import app.morphe.engine.workspace.WorkspaceManager
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.ui.components.*
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -27,7 +27,6 @@ import app.morphe.gui.ui.theme.MorpheColors
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.AppIconLoader
 import app.morphe.gui.util.AvatarLoader
-import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
@@ -35,12 +34,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-private enum class CategoryType { PATCHES, LOGS, TEMP, AVATARS, APP_ICONS }
-private data class CategoryConfirm(val type: CategoryType, val title: String)
+private data class CategoryConfirm(val type: CacheManager.Category, val title: String)
+
+private val CacheManager.Category.icon: ImageVector
+    get() = when (this) {
+        CacheManager.Category.PATCHES -> MorpheIcons.DeployedCode
+        CacheManager.Category.LOGS -> MorpheIcons.Description
+        CacheManager.Category.TEMP -> MorpheIcons.LayersClear
+        CacheManager.Category.AVATARS -> MorpheIcons.Circle
+        CacheManager.Category.APP_ICONS -> MorpheIcons.Image
+    }
+
+private val CacheManager.Category.titleRes: StringResource
+    get() = when (this) {
+        CacheManager.Category.PATCHES -> Res.string.settings_cache_category_patches
+        CacheManager.Category.LOGS -> Res.string.settings_cache_category_logs
+        CacheManager.Category.TEMP -> Res.string.settings_cache_category_temp
+        CacheManager.Category.AVATARS -> Res.string.settings_cache_category_avatars
+        CacheManager.Category.APP_ICONS -> Res.string.settings_cache_category_app_icons
+    }
 
 @Composable
 internal fun StorageSection(
@@ -51,11 +68,7 @@ internal fun StorageSection(
     val patchSourceManager: PatchSourceManager = koinInject()
     val scope = rememberCoroutineScope()
 
-    var patchesStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
-    var logsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
-    var tempStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
-    var avatarsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
-    var appIconsStats by remember { mutableStateOf(CacheManager.DirStats(0L, 0)) }
+    var categoryStats by remember { mutableStateOf(emptyMap<CacheManager.Category, CacheManager.DirStats>()) }
 
     var showClearAllConfirm by remember { mutableStateOf(false) }
     var categoryConfirm by remember { mutableStateOf<CategoryConfirm?>(null) }
@@ -67,32 +80,18 @@ internal fun StorageSection(
     var failedCategory by remember { mutableStateOf<String?>(null) }
 
     suspend fun refreshAllStats() {
-        val p = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.patchesDir) }
-        val l = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.logsDir) }
-        val t = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(WorkspaceManager.scratchDir) }
-        val a = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.avatarsDir) }
-        val i = withContext(Dispatchers.IO) { CacheManager.getDirectoryStats(MorpheData.appIconsDir) }
-        patchesStats = p
-        logsStats = l
-        tempStats = t
-        avatarsStats = a
-        appIconsStats = i
+        categoryStats = withContext(Dispatchers.IO) {
+            CacheManager.Category.entries.associateWith { CacheManager.getDirectoryStats(it.dir) }
+        }
     }
 
     LaunchedEffect(Unit) {
         refreshAllStats()
     }
 
-    val totalBytes = patchesStats.bytes + logsStats.bytes + tempStats.bytes + avatarsStats.bytes + appIconsStats.bytes
-    val totalFiles = patchesStats.fileCount + logsStats.fileCount + tempStats.fileCount + avatarsStats.fileCount +
-        appIconsStats.fileCount
+    val totalBytes = categoryStats.values.sumOf { it.bytes }
+    val totalFiles = categoryStats.values.sumOf { it.fileCount }
     val alpha = if (enabled) 1f else 0.5f
-
-    val patchesTitle = stringResource(Res.string.settings_cache_category_patches)
-    val logsTitle = stringResource(Res.string.settings_cache_category_logs)
-    val tempTitle = stringResource(Res.string.settings_cache_category_temp)
-    val avatarsTitle = stringResource(Res.string.settings_cache_category_avatars)
-    val appIconsTitle = stringResource(Res.string.settings_cache_category_app_icons)
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(
@@ -115,7 +114,7 @@ internal fun StorageSection(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
                     )
                     Spacer(Modifier.height(2.dp))
-                    val cacheSize = formatCacheSize(totalBytes)
+                    val cacheSize = formatFileSize(totalBytes, currentLocale())
                     Text(
                         text = when {
                             !enabled -> stringResource(Res.string.disabled_while_patching)
@@ -149,65 +148,20 @@ internal fun StorageSection(
             )
         }
 
-        CacheRow(
-            icon = MorpheIcons.DeployedCode,
-            title = patchesTitle,
-            stats = patchesStats,
-            enabled = enabled,
-            isCleared = clearedCategory == patchesTitle,
-            isClearFailed = failedCategory == patchesTitle,
-            onClearClick = {
-                categoryConfirm = CategoryConfirm(CategoryType.PATCHES, patchesTitle)
-            }
-        )
-
-        CacheRow(
-            icon = MorpheIcons.Description,
-            title = logsTitle,
-            stats = logsStats,
-            enabled = enabled,
-            isCleared = clearedCategory == logsTitle,
-            isClearFailed = failedCategory == logsTitle,
-            onClearClick = {
-                categoryConfirm = CategoryConfirm(CategoryType.LOGS, logsTitle)
-            }
-        )
-
-        CacheRow(
-            icon = MorpheIcons.LayersClear,
-            title = tempTitle,
-            stats = tempStats,
-            enabled = enabled,
-            isCleared = clearedCategory == tempTitle,
-            isClearFailed = failedCategory == tempTitle,
-            onClearClick = {
-                categoryConfirm = CategoryConfirm(CategoryType.TEMP, tempTitle)
-            }
-        )
-
-        CacheRow(
-            icon = MorpheIcons.Circle,
-            title = avatarsTitle,
-            stats = avatarsStats,
-            enabled = enabled,
-            isCleared = clearedCategory == avatarsTitle,
-            isClearFailed = failedCategory == avatarsTitle,
-            onClearClick = {
-                categoryConfirm = CategoryConfirm(CategoryType.AVATARS, avatarsTitle)
-            }
-        )
-
-        CacheRow(
-            icon = MorpheIcons.Image,
-            title = appIconsTitle,
-            stats = appIconsStats,
-            enabled = enabled,
-            isCleared = clearedCategory == appIconsTitle,
-            isClearFailed = failedCategory == appIconsTitle,
-            onClearClick = {
-                categoryConfirm = CategoryConfirm(CategoryType.APP_ICONS, appIconsTitle)
-            }
-        )
+        CacheManager.Category.entries.forEach { category ->
+            val title = stringResource(category.titleRes)
+            CacheRow(
+                icon = category.icon,
+                title = title,
+                stats = categoryStats[category] ?: CacheManager.DirStats(0L, 0),
+                enabled = enabled,
+                isCleared = clearedCategory == title,
+                isClearFailed = failedCategory == title,
+                onClearClick = {
+                    categoryConfirm = CategoryConfirm(category, title)
+                }
+            )
+        }
 
         Spacer(Modifier.height(2.dp))
 
@@ -298,11 +252,11 @@ internal fun StorageSection(
 
     categoryConfirm?.let { item ->
         val (titleRes, messageRes) = when (item.type) {
-            CategoryType.PATCHES -> Res.string.settings_cache_confirm_patches_title to Res.string.settings_cache_confirm_patches_message
-            CategoryType.LOGS -> Res.string.settings_cache_confirm_logs_title to Res.string.settings_cache_confirm_logs_message
-            CategoryType.TEMP -> Res.string.settings_cache_confirm_temp_title to Res.string.settings_cache_confirm_temp_message
-            CategoryType.AVATARS -> Res.string.settings_cache_confirm_avatars_title to Res.string.settings_cache_confirm_avatars_message
-            CategoryType.APP_ICONS -> Res.string.settings_cache_confirm_app_icons_title to Res.string.settings_cache_confirm_app_icons_message
+            CacheManager.Category.PATCHES -> Res.string.settings_cache_confirm_patches_title to Res.string.settings_cache_confirm_patches_message
+            CacheManager.Category.LOGS -> Res.string.settings_cache_confirm_logs_title to Res.string.settings_cache_confirm_logs_message
+            CacheManager.Category.TEMP -> Res.string.settings_cache_confirm_temp_title to Res.string.settings_cache_confirm_temp_message
+            CacheManager.Category.AVATARS -> Res.string.settings_cache_confirm_avatars_title to Res.string.settings_cache_confirm_avatars_message
+            CacheManager.Category.APP_ICONS -> Res.string.settings_cache_confirm_app_icons_title to Res.string.settings_cache_confirm_app_icons_message
         }
         MorpheDialog(
             onDismiss = { categoryConfirm = null },
@@ -322,26 +276,18 @@ internal fun StorageSection(
                         scope.launch {
                             withContext(NonCancellable) {
                                 val result = withContext(Dispatchers.IO) {
+                                    val r = item.type.clear()
                                     when (item.type) {
-                                        CategoryType.PATCHES -> {
-                                            val r = CacheManager.clearDirectoryContents("Patches", MorpheData.patchesDir)
+                                        CacheManager.Category.PATCHES -> {
                                             patchSourceManager.notifyCacheCleared()
                                             onCacheCleared()
-                                            r
                                         }
-                                        CategoryType.LOGS -> CacheManager.clearDirectoryContents("Logs", MorpheData.logsDir)
-                                        CategoryType.TEMP -> WorkspaceManager.clearScratch()
-                                        CategoryType.AVATARS -> {
-                                            val r = CacheManager.clearDirectoryContents("Avatars", MorpheData.avatarsDir)
-                                            AvatarLoader.clearMemoryCache()
-                                            r
-                                        }
-                                        CategoryType.APP_ICONS -> {
-                                            val r = CacheManager.clearDirectoryContents("App icons", MorpheData.appIconsDir)
-                                            AppIconLoader.clearMemoryCache()
-                                            r
-                                        }
+                                        CacheManager.Category.AVATARS -> AvatarLoader.clearMemoryCache()
+                                        CacheManager.Category.APP_ICONS -> AppIconLoader.clearMemoryCache()
+                                        CacheManager.Category.LOGS,
+                                        CacheManager.Category.TEMP -> Unit
                                     }
+                                    r
                                 }
                                 val ok = result.failedFiles == 0
                                 if (ok) {
@@ -394,7 +340,7 @@ private fun CacheRow(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha),
                 )
                 Spacer(Modifier.height(2.dp))
-                val formattedSize = formatCacheSize(stats.bytes)
+                val formattedSize = formatFileSize(stats.bytes, currentLocale())
                 Text(
                     text = when {
                         !enabled -> stringResource(Res.string.disabled_while_patching)
@@ -428,10 +374,6 @@ private fun CacheRow(
         )
     }
 }
-
-@Composable
-private fun formatCacheSize(totalSize: Long): String =
-    FormatUtils.formatFileSize(totalSize, currentLocale())
 
 private fun clearAllCache(): Boolean {
     val result = CacheManager.clearCaches()

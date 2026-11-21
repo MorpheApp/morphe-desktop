@@ -59,7 +59,6 @@ import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.humanizePatchLoadError
 import app.morphe.gui.util.patchSourceHeaders
 import app.morphe.morphe_desktop.generated.resources.*
-import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.patch.FormFactor
 import java.io.File
 import kotlin.time.Duration.Companion.seconds
@@ -230,9 +229,6 @@ class HomeViewModel(
             exclusiveMode = false,
             forceCompatibility = true,
             failOnError = true,
-            bytecodeMode = if (engineConfigData.developerOptions) engineConfigData.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
-            validate = engineConfigData.developerOptions && engineConfigData.validateFingerprints,
-            sdkToolsPath = if (engineConfigData.developerOptions) engineConfigData.resolvedAndroidSdkPath() else null,
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
             recordHistory = true,
@@ -326,9 +322,6 @@ class HomeViewModel(
             exclusiveMode = false,
             forceCompatibility = true,
             failOnError = true,
-            bytecodeMode = if (engineConfigData.developerOptions) engineConfigData.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
-            validate = engineConfigData.developerOptions && engineConfigData.validateFingerprints,
-            sdkToolsPath = if (engineConfigData.developerOptions) engineConfigData.resolvedAndroidSdkPath() else null,
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
             recordHistory = true,
@@ -471,15 +464,7 @@ class HomeViewModel(
 
             // Configure app link routing if enabled.
             if (result.isSuccess) {
-                val engineConfig = engineConfigRepository.loadConfig()
-                if (engineConfig.autoRouteLinksAfterInstall) {
-                    adbManager.setLinkHandling(
-                        deviceId = device.id,
-                        patchedPackage = record.installedPackageName,
-                        stockPackage = if (engineConfig.disableStockLinksAfterInstall) record.packageName else null,
-                        enable = true,
-                    )
-                }
+                adbManager.routeLinksAfterInstall(device.id, record, engineConfigRepository.loadConfig())
             }
 
             val installError = result.exceptionOrNull()?.let {

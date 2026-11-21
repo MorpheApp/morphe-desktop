@@ -33,7 +33,6 @@ import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
-import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.patch.InstallerType
 import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.coroutines.runBlocking
@@ -654,7 +653,6 @@ class PatchSelectionViewModel(
         }
 
         val engineCfg = currentEngineConfig ?: runBlocking { engineConfigRepository.loadConfig() }
-        val devMode = engineCfg.developerOptions
 
         return PatchEngine.Config(
             inputApk = inputFile,
@@ -669,9 +667,6 @@ class PatchSelectionViewModel(
             forceCompatibility = true,
             architecturesToKeep = keepArches,
             failOnError = !continueOnError,
-            bytecodeMode = if (devMode) engineCfg.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
-            validate = devMode && engineCfg.validateFingerprints,
-            sdkToolsPath = if (devMode) engineCfg.resolvedAndroidSdkPath() else null,
             disablePurge = !autoCleanupTempFiles,
             recordHistory = true,
             saveOriginalApk = engineCfg.saveOriginalApkMode(),

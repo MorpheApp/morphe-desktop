@@ -5,7 +5,7 @@
 
 package app.morphe.gui.data.constants
 
-import java.util.Properties
+import app.morphe.engine.UpdateChecker
 
 /** Application-level constants and version metadata. */
 object AppConstants {
@@ -13,13 +13,7 @@ object AppConstants {
     private val pkg by lazy { AppConstants::class.java.`package` }
 
     val APP_VERSION: String by lazy {
-        val resourceVersion = AppConstants::class.java
-            .getResourceAsStream("/app/morphe/cli/version.properties")
-            ?.use { stream ->
-                Properties().apply { load(stream) }.getProperty("version")
-            }
-
-        val resolvedVersion = resourceVersion ?: pkg?.implementationVersion
+        val resolvedVersion = UpdateChecker.currentVersion() ?: pkg?.implementationVersion
         resolvedVersion?.let { "v$it" } ?: "dev"
     }
 
