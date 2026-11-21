@@ -6,6 +6,7 @@
 package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseOutBack
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -13,6 +14,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.VerticalScrollbar
@@ -35,6 +37,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -47,6 +50,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,20 +62,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.data.constants.AppConstants
 import app.morphe.gui.data.repository.PeopleRepository
+import app.morphe.gui.data.repository.PeopleRepository.People
 import app.morphe.gui.data.repository.PeopleRepository.Person
 import app.morphe.gui.ui.components.settings.SettingsGroup
 import app.morphe.gui.ui.components.settings.SettingsGroupBuilder
@@ -83,6 +89,7 @@ import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.morphe_desktop.generated.resources.*
 import io.ktor.client.HttpClient
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -90,6 +97,15 @@ import org.koin.compose.koinInject
 enum class PeopleList {
     CONTRIBUTORS,
     SUPPORTERS,
+}
+
+private enum class ContributorPeriod(
+    val label: StringResource,
+    val contributors: (People) -> List<Person>,
+) {
+    ALL_TIME(Res.string.contributors_all_time, People::contributors),
+    SIX_MONTHS(Res.string.contributors_6_months, People::contributors6Months),
+    THREE_MONTHS(Res.string.contributors_3_months, People::contributors3Months),
 }
 
 private data class Project(
@@ -138,6 +154,13 @@ private const val STAGGERED_ROWS = 8
 private const val AVATAR_ENTRANCE_SCALE = 0.6f
 private const val AVATAR_ANIMATION_MILLIS = 220
 
+private val PersonRowGap = 12.dp
+private val PersonColumnGap = 4.dp
+private val PeriodDropdownWidth = 160.dp
+private const val PERIOD_MOVE_WINDOW_NANOS = 600_000_000L
+private const val PERIOD_MOVE_MAX_ROWS = 6
+private val PeriodMoveSpring = spring<Float>(stiffness = 400f, dampingRatio = 0.8f)
+
 @Composable
 fun PeoplePane(
     list: PeopleList,
@@ -155,10 +178,22 @@ fun PeoplePane(
         unavailable = !peopleRepository.refresh()
     }
 
+    val periods = people?.takeIf { list == PeopleList.CONTRIBUTORS }
+        ?.let { loaded -> ContributorPeriod.entries.filter { it.contributors(loaded).isNotEmpty() } }
+        .orEmpty()
+    var pickedPeriod by rememberSaveable { mutableStateOf(ContributorPeriod.ALL_TIME) }
+    val period = pickedPeriod.takeIf { it in periods } ?: ContributorPeriod.ALL_TIME
+
     val persons = when (list) {
-        PeopleList.CONTRIBUTORS -> people?.contributors
+        PeopleList.CONTRIBUTORS -> people?.let(period.contributors)
         PeopleList.SUPPORTERS -> people?.supporters
     }
+    val shownPlaces = remember { ShownPlaces() }
+    SideEffect {
+        shownPlaces.places = persons.orEmpty().withIndex().associate { (place, person) -> person.url to place }
+    }
+    val periodChange = remember(period) { PeriodChange(shownPlaces.places) }
+
     val count = when (list) {
         PeopleList.CONTRIBUTORS -> persons?.size
         PeopleList.SUPPORTERS -> people?.supportersTotal
@@ -171,10 +206,17 @@ fun PeoplePane(
     )
     val summary = stringResource(
         when (list) {
-            PeopleList.CONTRIBUTORS -> Res.string.contributors_description
+            PeopleList.CONTRIBUTORS -> Res.string.contributors_ranking
             PeopleList.SUPPORTERS -> Res.string.supporters_description
         }
     )
+    val periodItems = periods.map { option ->
+        MorpheDropdownItem(
+            label = stringResource(option.label),
+            selected = option == period,
+            onClick = { pickedPeriod = option },
+        )
+    }
     val headerTitle = listOfNotNull(titleText, count?.takeIf { it > 0 }?.toString()).joinToString(" · ")
 
     val startPad = horizontalPadding.calculateStartPadding(layoutDirection)
@@ -186,18 +228,31 @@ fun PeoplePane(
             backDescription = stringResource(Res.string.settings_back_to_about),
             onBack = onBack,
             modifier = Modifier.padding(horizontalPadding),
-            trailing = if (list == PeopleList.SUPPORTERS) {
-                {
-                    MorpheButton(
-                        label = stringResource(Res.string.supporters_become),
-                        icon = MorpheIcons.Favorite,
-                        onClick = { uriHandler.openUri(AppConstants.DONATE_URL) },
-                        variant = MorpheButtonVariant.PRIMARY,
-                        size = MorpheButtonSize.COMPACT,
-                    )
+            trailing = when {
+                list == PeopleList.SUPPORTERS -> {
+                    {
+                        MorpheButton(
+                            label = stringResource(Res.string.supporters_become),
+                            icon = MorpheIcons.Favorite,
+                            onClick = { uriHandler.openUri(AppConstants.DONATE_URL) },
+                            variant = MorpheButtonVariant.PRIMARY,
+                            size = MorpheButtonSize.COMPACT,
+                        )
+                    }
                 }
-            } else {
-                null
+
+                periodItems.size > 1 -> {
+                    {
+                        MorpheDropdown(
+                            label = stringResource(period.label),
+                            items = periodItems,
+                            leadingIcon = MorpheIcons.DateRange,
+                            modifier = Modifier.width(PeriodDropdownWidth),
+                        )
+                    }
+                }
+
+                else -> null
             },
         )
 
@@ -228,7 +283,7 @@ fun PeoplePane(
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(PersonRowGap),
                     contentPadding = PaddingValues(start = startPad, end = endPad, top = 4.dp, bottom = 24.dp),
                 ) {
                     if (persons.isNullOrEmpty() && unavailable) {
@@ -243,6 +298,7 @@ fun PeoplePane(
                         people = persons.orEmpty(),
                         columns = columns,
                         onOpen = { uriHandler.openUri(it) },
+                        periodChange = periodChange.takeIf { list == PeopleList.CONTRIBUTORS },
                     )
 
                     when (list) {
@@ -314,22 +370,68 @@ private fun LazyListScope.peopleGrid(
     people: List<Person>,
     columns: Int,
     onOpen: (String) -> Unit,
+    periodChange: PeriodChange?,
 ) {
     val rows = people.chunked(columns)
     itemsIndexed(items = rows, key = { index, _ -> "row_$index" }) { index, row ->
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(PersonColumnGap),
         ) {
             row.forEachIndexed { column, person ->
                 PersonCell(
                     person = person,
                     entranceOrder = if (index < STAGGERED_ROWS) index + column else column,
                     onClick = { onOpen(person.url) },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .then(
+                            periodChange
+                                ?.let { Modifier.movesOnPeriodChange(it, person, index * columns + column, columns) }
+                                ?: Modifier
+                        ),
                 )
             }
             repeat(columns - row.size) { Spacer(modifier = Modifier.weight(1f)) }
+        }
+    }
+}
+
+private class ShownPlaces {
+    var places: Map<String, Int> = emptyMap()
+}
+
+private class PeriodChange(val places: Map<String, Int>) {
+    val atNanos = System.nanoTime()
+}
+
+@Composable
+private fun Modifier.movesOnPeriodChange(change: PeriodChange, person: Person, place: Int, columns: Int): Modifier {
+    val from = change.places[person.url]
+    val remaining = remember(change) {
+        val moves = change.places.isNotEmpty() && from != place &&
+            System.nanoTime() - change.atNanos < PERIOD_MOVE_WINDOW_NANOS
+        Animatable(if (moves) 1f else 0f)
+    }
+    LaunchedEffect(change) { remaining.animateTo(0f, PeriodMoveSpring) }
+
+    val mirrored = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val density = LocalDensity.current
+    val rowGap = with(density) { PersonRowGap.toPx() }
+    val columnGap = with(density) { PersonColumnGap.toPx() }
+    return graphicsLayer {
+        val left = remaining.value
+        if (left == 0f) return@graphicsLayer
+        if (from == null) {
+            val shown = (1f - left).coerceIn(0f, 1f)
+            alpha = shown
+            scaleX = AVATAR_ENTRANCE_SCALE + (1f - AVATAR_ENTRANCE_SCALE) * shown
+            scaleY = scaleX
+        } else {
+            val columnShift = from % columns - place % columns
+            val rowShift = (from / columns - place / columns).coerceIn(-PERIOD_MOVE_MAX_ROWS, PERIOD_MOVE_MAX_ROWS)
+            translationX = columnShift * (size.width + columnGap) * left * if (mirrored) -1 else 1
+            translationY = rowShift * (size.height + rowGap) * left
         }
     }
 }
@@ -398,15 +500,20 @@ private fun PersonAvatar(
     httpClient: HttpClient = koinInject(),
 ) {
     val megaColor = MorpheTheme.colors.warning
-    var picture by remember(person.avatar) { mutableStateOf<ImageBitmap?>(null) }
+    // Cells are reused positionally, so a period change hands this slot a different person.
+    // Start from the memory cache so an already loaded picture shows on the first frame
+    // instead of fading in again.
+    val cachedPicture = remember(person.avatar) { person.avatar?.let(AvatarLoader::cachedAvatar) }
+    var picture by remember(person.avatar) { mutableStateOf(cachedPicture) }
     LaunchedEffect(person.avatar) {
-        picture = person.avatar?.let { AvatarLoader.loadAvatar(it, httpClient) }
+        if (picture == null) {
+            picture = person.avatar?.let { AvatarLoader.loadAvatar(it, httpClient) }
+        }
     }
-    val pictureAlpha by animateFloatAsState(
-        targetValue = if (picture != null) 1f else 0f,
-        animationSpec = tween(AVATAR_ANIMATION_MILLIS),
-        label = "avatarPicture",
-    )
+    val pictureAlpha = remember(person.avatar) { Animatable(if (cachedPicture != null) 1f else 0f) }
+    LaunchedEffect(picture) {
+        pictureAlpha.animateTo(if (picture != null) 1f else 0f, tween(AVATAR_ANIMATION_MILLIS))
+    }
     var entered by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(Unit) { entered = true }
     val entrance by animateFloatAsState(
@@ -441,7 +548,7 @@ private fun PersonAvatar(
             .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)),
         contentAlignment = Alignment.Center,
     ) {
-        if (pictureAlpha < 1f) {
+        if (pictureAlpha.value < 1f) {
             Text(
                 text = person.name.take(1).uppercase(),
                 style = MorpheTheme.typography.titleMedium,
@@ -456,7 +563,7 @@ private fun PersonAvatar(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .matchParentSize()
-                    .graphicsLayer { alpha = pictureAlpha },
+                    .graphicsLayer { alpha = pictureAlpha.value },
             )
         }
     }
