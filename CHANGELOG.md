@@ -1,3 +1,21 @@
+# [2.4.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0...v2.4.0-dev.1) (2026-11-22)
+
+
+### Bug Fixes
+
+* Stop root mount from keeping the old patched APK ([97be3df](https://github.com/MorpheApp/morphe-desktop/commit/97be3df70f3d90ea6304d09f6494024fbe58e419))
+* Support fractional scaling on X11 and XWayland ([#446](https://github.com/MorpheApp/morphe-desktop/issues/446)) ([edfe717](https://github.com/MorpheApp/morphe-desktop/commit/edfe717d39456e26ffb6e2cd0a18fca2b2b73e8c))
+
+
+### Features
+
+* Add option to keep original APKs for repatching ([#445](https://github.com/MorpheApp/morphe-desktop/issues/445)) ([4c8659b](https://github.com/MorpheApp/morphe-desktop/commit/4c8659b25f9320993c4a405a20dda49399c76cc6))
+
+
+### Performance Improvements
+
+* Speed up startup and loading of apps and patch options ([#454](https://github.com/MorpheApp/morphe-desktop/issues/454)) ([9683a7d](https://github.com/MorpheApp/morphe-desktop/commit/9683a7d82fb5b1c9dc010d2228f213bddf7b1481))
+
 # [2.3.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0...v2.3.0) (2026-11-21)
 
 
