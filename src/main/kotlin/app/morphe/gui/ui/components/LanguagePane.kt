@@ -237,7 +237,7 @@ private fun LanguageOptionCard(
 ) {
     val isSystem = option.code == LanguageRepository.SYSTEM_CODE
     val primaryLabel = if (isSystem) systemLabel else option.displayName
-    val secondaryLabel = if (isSystem) systemLabel else option.nativeName
+    val secondaryLabel = languageSecondaryLabel(option)
     val badgeBorderColor by animateColorAsState(
         targetValue = if (isSelected) MorpheTheme.colors.primary else rememberSettingsCardBorderColor(),
         animationSpec = MorpheMotion.fastTween(),
@@ -284,13 +284,15 @@ private fun LanguageOptionCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Text(
-                text = secondaryLabel,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (secondaryLabel != null) {
+                Text(
+                    text = secondaryLabel,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
@@ -359,6 +361,13 @@ private fun LanguageCardContainer(
         )
     }
 }
+
+private fun languageSecondaryLabel(option: LanguageOption): String? =
+    if (option.code == LanguageRepository.SYSTEM_CODE) {
+        null
+    } else {
+        option.nativeName.takeIf { it.isNotBlank() && it != option.displayName }
+    }
 
 private fun isLanguageSelected(optionCode: String, currentLanguageCode: String): Boolean =
     optionCode.equals(currentLanguageCode, ignoreCase = true) ||
