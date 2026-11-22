@@ -5,6 +5,8 @@
 
 package app.morphe.engine
 
+import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
 import app.morphe.engine.util.Logger
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.patcher.patch.Patch
@@ -20,13 +22,29 @@ import java.util.concurrent.ConcurrentHashMap
 /** Loads patches in parallel from multiple patch bundle files. */
 object MultiSourceLoader {
 
+    /** A bundle's parsed patches, with their metadata converted on first use. */
+    private class Parsed(val stamp: String, val patches: Set<Patch>) {
+        val metadata: List<PatchMetadata> by lazy { patches.map { it.toMetadata() } }
+    }
+
     /**
      * Parsed patches per source ID, reused while the bundle file is unchanged, so a reload
      * after a change to the source list does not read every bundle again.
      */
-    private val parsedCache = ConcurrentHashMap<String, Pair<String, Set<Patch>>>()
+    private val parsedCache = ConcurrentHashMap<String, Parsed>()
 
     private fun stampOf(file: File) = "${file.absolutePath}:${file.length()}:${file.lastModified()}"
+
+    /** [source]'s patches as [PatchMetadata], converted once per parsed bundle. */
+    fun metadataOf(source: LoadedSource): List<PatchMetadata> =
+        parsedCache[source.sourceId]?.takeIf { it.patches === source.patches }?.metadata
+            ?: source.patches.map { it.toMetadata() }
+
+    /** Metadata of [file] if a source has it parsed and it is unchanged since, so screens skip loading it again. */
+    fun cachedMetadata(file: File): List<PatchMetadata>? {
+        val stamp = stampOf(file)
+        return parsedCache.values.firstOrNull { it.stamp == stamp }?.metadata
+    }
 
     data class SourceInput(
         val sourceId: String,
@@ -72,7 +90,7 @@ object MultiSourceLoader {
 
     private suspend fun loadOne(input: SourceInput): LoadedSource = withContext(Dispatchers.IO) {
         val stamp = stampOf(input.patchFile)
-        parsedCache[input.sourceId]?.takeIf { it.first == stamp }?.let { (_, patches) ->
+        parsedCache[input.sourceId]?.takeIf { it.stamp == stamp }?.patches?.let { patches ->
             Logger.info("MultiSourceLoader: reused ${patches.size} parsed patches for '${input.sourceName}'")
             return@withContext LoadedSource(
                 sourceId = input.sourceId,
@@ -83,7 +101,7 @@ object MultiSourceLoader {
         val tempCopy = WorkspaceManager.createShadowCopy(input.patchFile, prefix = "morphe-mp-${input.sourceId}")
         try {
             val patches = loadPatchesFromJar(setOf(tempCopy))
-            parsedCache[input.sourceId] = stamp to patches
+            parsedCache[input.sourceId] = Parsed(stamp, patches)
             Logger.info("MultiSourceLoader: loaded ${patches.size} patches from '${input.sourceName}'")
             LoadedSource(
                 sourceId = input.sourceId,

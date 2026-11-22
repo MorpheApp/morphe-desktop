@@ -49,6 +49,7 @@ import app.morphe.gui.ui.screens.home.components.handleContinue
 import app.morphe.gui.ui.screens.home.components.openFilePicker
 import app.morphe.gui.ui.screens.home.components.proceedToPatching
 import app.morphe.gui.ui.theme.Defaults
+import app.morphe.gui.ui.theme.backgrounds.startBackgroundMotion
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.PatchException
 import app.morphe.gui.util.getUserMessage
@@ -68,6 +69,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+
+// Whether the home body has shown in this run; its first showing skips the enter animation.
+private var homeBodyShown = false
 
 @Composable
 fun HomeScreen(
@@ -446,10 +450,15 @@ fun HomeScreenContent(
                         onSelectPage = openPage,
                     )
 
-                    key(currentEntry) {
-                        var contentVisible by remember { mutableStateOf(false) }
+                    // Until the back stack state arrives, key on the entry already showing, so the
+                    // body is not built a second time on startup.
+                    key(currentEntry ?: navController.currentBackStackEntry) {
+                        // The first showing appears at once; coming back to this screen fades it in.
+                        var contentVisible by remember { mutableStateOf(!homeBodyShown) }
                         LaunchedEffect(Unit) {
                             contentVisible = true
+                            homeBodyShown = true
+                            startBackgroundMotion()
                         }
 
                         AnimatedVisibility(
