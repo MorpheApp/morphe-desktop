@@ -5,6 +5,7 @@
 
 package app.morphe.engine.patches
 
+import app.morphe.engine.MultiSourceLoader
 import app.morphe.engine.model.CompatiblePackage
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.model.SupportedApp
@@ -244,7 +245,8 @@ object SupportedAppCatalog {
         if (!patchFile.exists()) {
             throw FileNotFoundException("Patch file not found: ${patchFile.absolutePath}")
         }
-        val patches = PatchBundleLoader.loadFlat(setOf(patchFile)).map { it.toMetadata() }
+        val patches = MultiSourceLoader.cachedMetadata(patchFile)
+            ?: PatchBundleLoader.loadFlat(setOf(patchFile)).map { it.toMetadata() }
         if (packageName.isNullOrBlank()) return patches
         return patches.filter { patch ->
             patch.isUniversal || patch.compatiblePackages.any { it.name == packageName }

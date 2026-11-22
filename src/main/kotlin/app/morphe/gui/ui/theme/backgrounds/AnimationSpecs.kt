@@ -17,7 +17,22 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import kotlin.math.PI
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+
+// Backgrounds hold still until the first screen has drawn, as each moving frame redraws the
+// whole window on the UI thread that is still building that screen.
+private val motionStarted = mutableStateOf(false)
+
+/** Lets the backgrounds start moving, once the first screen has drawn. */
+fun startBackgroundMotion() {
+    motionStarted.value = true
+}
+
+/** Suspends until [startBackgroundMotion] is called. */
+suspend fun awaitBackgroundMotion() {
+    snapshotFlow { motionStarted.value }.first { it }
+}
 
 /** Frame-based time accumulator scaled by [speedMultiplier] without resetting on changes. */
 @Composable
@@ -28,6 +43,7 @@ fun rememberAnimatedTime(speedMultiplier: Float): State<Float> {
     SideEffect { targetSpeed.floatValue = speedMultiplier }
 
     LaunchedEffect(Unit) {
+        awaitBackgroundMotion()
         var lastFrameMs = withInfiniteAnimationFrameMillis { it }
         var currentSpeed = targetSpeed.floatValue
         while (true) {

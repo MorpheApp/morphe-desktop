@@ -52,6 +52,7 @@ import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.PatchSourceNaming
+import app.morphe.gui.util.SourceSnapshots
 import app.morphe.gui.util.followChannelPref
 import app.morphe.gui.util.logIfFailed
 import app.morphe.gui.util.PatchException
@@ -340,72 +341,6 @@ class HomeViewModel(
         )
     }
 
-    init {
-        viewModelScope.launch {
-            val config = configRepository.loadConfig()
-            val info = updateCheckRepository.getUpdateInfo()
-            val dismissed = config.dismissedUpdateVersion
-            val multiSourceShouldShow = !config.multiSourceHintDismissed &&
-                    patchSourceManager.getEnabledSourcesSync().size > 1
-            _uiState.value = _uiState.value.copy(
-                updateInfo = info,
-                dismissedUpdateVersion = dismissed,
-                showMultiSourceHint = multiSourceShouldShow,
-                appListFilter = runCatching {
-                    AppListFilter.valueOf(config.homeAppListFilter)
-                }.getOrDefault(AppListFilter.ALL),
-                sortMode = HomeAppSortMode.fromPreference(config.homeAppSortMode),
-                preferredPatchSourceByPackage = config.preferredPatchSourceByPackage,
-            )
-        }
-
-        // Refresh badges and device state when history changes.
-        viewModelScope.launch {
-            patchedAppStore.changes.collect { refreshPatchedState() }
-        }
-
-        // Refresh installed status for patched apps when the selected ADB device changes.
-        viewModelScope.launch {
-            DeviceMonitor.state
-                .map { it.selectedDevice?.id to (it.selectedDevice?.isReady == true) }
-                .distinctUntilChanged()
-                .collect { refreshDeviceInfo() }
-        }
-
-        // Load patches on startup and whenever mode changes.
-        viewModelScope.launch {
-            patchSourceManager.activeMode.collect {
-                loadPatchesAndSupportedApps()
-            }
-        }
-
-        viewModelScope.launch {
-            patchSourceManager.sourceVersion.drop(1).collect {
-                Logger.info("HomeVM: Source changed, reloading patches...")
-                patchRepository = patchSourceManager.getActiveRepositorySync()
-                localPatchFilePath = patchSourceManager.getLocalFilePath()
-                isDefaultSource = patchSourceManager.isDefaultSource()
-                lastLoadedVersion = null
-                cachedPatchesFile = null
-                // Preserve update banner and navigation state across source changes.
-                val carriedUpdate = _uiState.value.updateInfo
-                val carriedDismissed = _uiState.value.dismissedUpdateVersion
-                val carriedSelectedPage = _uiState.value.selectedPage
-                val carriedAppListFilter = _uiState.value.appListFilter
-                val carriedSourceUpdateBanner = _uiState.value.sourceUpdateBanner
-                _uiState.value = HomeUiState(
-                    isDefaultSource = isDefaultSource,
-                    updateInfo = carriedUpdate,
-                    dismissedUpdateVersion = carriedDismissed,
-                    selectedPage = carriedSelectedPage,
-                    appListFilter = carriedAppListFilter,
-                    sourceUpdateBanner = carriedSourceUpdateBanner,
-                )
-                loadPatchesAndSupportedApps()
-            }
-        }
-    }
-
     /** Re-checks for updates; called after settings channel changes. */
     fun refreshUpdateCheck() {
         Logger.info("HomeVM: refreshUpdateCheck() called")
@@ -596,6 +531,12 @@ class HomeViewModel(
                         ),
                     )
                 }
+                val snapshotKeys = resolveKeys.mapValues { it.value.toString() }
+                // Nothing is shown yet, so show what the sources loaded last time while they refresh.
+                if (!forceRefresh && cachedSourcesResult == null) {
+                    withContext(Dispatchers.IO) { SourceSnapshots.read(enabled, snapshotKeys) }
+                        ?.let { showSnapshot(it) }
+                }
                 val result = EnabledSourcesLoader.loadAll(
                     enabled = enabled,
                     prefsBySource = prefs,
@@ -637,6 +578,7 @@ class HomeViewModel(
                     // Retain snapshot so source management sheet displays failure state.
                     cachedSourcesResult = result
                     lastResolveKeys = resolveKeys
+                    viewModelScope.launch(Dispatchers.IO) { SourceSnapshots.write(result, snapshotKeys) }
                     _uiState.update {
                         it.copy(
                             isLoadingPatches = false,
@@ -655,6 +597,7 @@ class HomeViewModel(
                 lastLoadedVersion = firstResolved?.resolvedVersion
                 cachedSourcesResult = result
                 lastResolveKeys = resolveKeys
+                viewModelScope.launch(Dispatchers.IO) { SourceSnapshots.write(result, snapshotKeys) }
 
                 // Reading bundle manifests opens each .mpp; do it off the UI thread.
                 val effectiveNames = withContext(Dispatchers.IO) {
@@ -673,13 +616,7 @@ class HomeViewModel(
                     }
                 }
 
-                val (supportedApps, patchedStates, sortedRecords, updateInfoMap) = withContext(Dispatchers.IO) {
-                    val apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(result.unionPatches)
-                    val states = computePatchedStates(apps)
-                    val records = sortedPatchedRecords()
-                    val updates = buildUpdateInfoMap(apps)
-                    AppCatalogData(apps, states, records, updates)
-                }
+                val (supportedApps, patchedStates, sortedRecords, updateInfoMap) = buildCatalog(result.unionPatches)
 
                 Logger.info(
                     "Loaded ${supportedApps.size} supported apps from " +
@@ -691,12 +628,7 @@ class HomeViewModel(
                 val resolvedSources = result.resolved.filter { it.patchFile != null }
                 val isOffline = resolvedSources.isNotEmpty() && resolvedSources.all { it.isOffline }
                 val displayVersion = firstResolved?.resolvedVersion
-                val sourceName = if (result.resolved.size == 1) {
-                    firstResolved?.source?.name ?: patchSourceManager.getActiveSourceName()
-                } else {
-                    val count = result.resolved.count { it.patchFile != null }
-                    getPluralString(Res.plurals.count_sources, count, count)
-                }
+                val sourceName = sourceLabel(result)
 
                 latestResolvedApps = null // Invalidate eager-resolved apps cache
 
@@ -782,6 +714,49 @@ class HomeViewModel(
             }
         }
     }
+
+    /** Shows a [SourceSnapshots] load, keeping the update banner up while the sources refresh. */
+    private suspend fun showSnapshot(snapshot: EnabledSourcesLoader.Result) {
+        val first = snapshot.resolved.firstOrNull()
+        cachedPatches = snapshot.unionPatches
+        cachedPatchesFile = first?.patchFile
+        cachedAllPatchFiles = snapshot.resolved.mapNotNull { it.patchFile }
+        cachedSourcesResult = snapshot
+        val catalog = buildCatalog(snapshot.unionPatches)
+        val sourceName = sourceLabel(snapshot)
+        Logger.info("Showing ${catalog.supportedApps.size} supported apps from the last load while sources refresh")
+        _uiState.update {
+            it.copy(
+                isLoadingPatches = false,
+                supportedApps = catalog.supportedApps,
+                patchedStates = catalog.patchedStates,
+                patchedRecords = catalog.patchedRecords,
+                updateInfoByPackage = catalog.updateInfoByPackage,
+                patchesVersion = first?.resolvedVersion,
+                patchesChannel = first?.channel,
+                patchSourceName = sourceName,
+            )
+        }
+        refreshDeviceInfo()
+    }
+
+    /** Supported apps of [patches] with each one's patched state and update info. */
+    private suspend fun buildCatalog(patches: List<PatchMetadata>): AppCatalogData = withContext(Dispatchers.IO) {
+        val apps = SupportedAppCatalog.extractSupportedAppsFromMetadata(patches)
+        val states = computePatchedStates(apps)
+        val records = sortedPatchedRecords()
+        val updates = buildUpdateInfoMap(apps)
+        AppCatalogData(apps, states, records, updates)
+    }
+
+    /** The header label for [result]: its source's name, or how many sources it loaded. */
+    private suspend fun sourceLabel(result: EnabledSourcesLoader.Result): String =
+        if (result.resolved.size == 1) {
+            result.resolved.firstOrNull { it.patchFile != null }?.source?.name ?: patchSourceManager.getActiveSourceName()
+        } else {
+            val count = result.resolved.count { it.patchFile != null }
+            getPluralString(Res.plurals.count_sources, count, count)
+        }
 
     /** Last-loaded patched-app records keyed by package. */
     private var patchedRecordsByPackage: Map<String, PatchedAppRecord> = emptyMap()
@@ -1593,6 +1568,75 @@ class HomeViewModel(
     //     file: File, packageName: String, version: String,
     //     architectures: List<String>, recommendedVersion: String?
     // ): app.morphe.gui.util.ChecksumStatus { ... }
+
+    // Kotlin runs property initializers and init blocks in declaration order, and these
+    // coroutines can run synchronously up to their first suspension, so this block must
+    // stay below every property they touch.
+    init {
+        viewModelScope.launch {
+            val config = configRepository.loadConfig()
+            val info = updateCheckRepository.getUpdateInfo()
+            val dismissed = config.dismissedUpdateVersion
+            val multiSourceShouldShow = !config.multiSourceHintDismissed &&
+                    patchSourceManager.getEnabledSourcesSync().size > 1
+            _uiState.value = _uiState.value.copy(
+                updateInfo = info,
+                dismissedUpdateVersion = dismissed,
+                showMultiSourceHint = multiSourceShouldShow,
+                appListFilter = runCatching {
+                    AppListFilter.valueOf(config.homeAppListFilter)
+                }.getOrDefault(AppListFilter.ALL),
+                sortMode = HomeAppSortMode.fromPreference(config.homeAppSortMode),
+                preferredPatchSourceByPackage = config.preferredPatchSourceByPackage,
+            )
+        }
+
+        // Refresh badges and device state when history changes.
+        viewModelScope.launch {
+            patchedAppStore.changes.collect { refreshPatchedState() }
+        }
+
+        // Refresh installed status for patched apps when the selected ADB device changes.
+        viewModelScope.launch {
+            DeviceMonitor.state
+                .map { it.selectedDevice?.id to (it.selectedDevice?.isReady == true) }
+                .distinctUntilChanged()
+                .collect { refreshDeviceInfo() }
+        }
+
+        // Load patches on startup and whenever mode changes.
+        viewModelScope.launch {
+            patchSourceManager.activeMode.collect {
+                loadPatchesAndSupportedApps()
+            }
+        }
+
+        viewModelScope.launch {
+            patchSourceManager.sourceVersion.drop(1).collect {
+                Logger.info("HomeVM: Source changed, reloading patches...")
+                patchRepository = patchSourceManager.getActiveRepositorySync()
+                localPatchFilePath = patchSourceManager.getLocalFilePath()
+                isDefaultSource = patchSourceManager.isDefaultSource()
+                lastLoadedVersion = null
+                cachedPatchesFile = null
+                // Preserve update banner and navigation state across source changes.
+                val carriedUpdate = _uiState.value.updateInfo
+                val carriedDismissed = _uiState.value.dismissedUpdateVersion
+                val carriedSelectedPage = _uiState.value.selectedPage
+                val carriedAppListFilter = _uiState.value.appListFilter
+                val carriedSourceUpdateBanner = _uiState.value.sourceUpdateBanner
+                _uiState.value = HomeUiState(
+                    isDefaultSource = isDefaultSource,
+                    updateInfo = carriedUpdate,
+                    dismissedUpdateVersion = carriedDismissed,
+                    selectedPage = carriedSelectedPage,
+                    appListFilter = carriedAppListFilter,
+                    sourceUpdateBanner = carriedSourceUpdateBanner,
+                )
+                loadPatchesAndSupportedApps()
+            }
+        }
+    }
 
 }
 

@@ -13,7 +13,6 @@ import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
-import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.PatchSource
@@ -183,11 +182,12 @@ object EnabledSourcesLoader {
             MultiSourceLoader.load(inputs)
         }
 
-        val unionPatches = loaded.allPatches.map { it.toMetadata() }
         val patchesBySource: Map<String, List<PatchMetadata>> =
             loaded.perSource.associate { src ->
-                src.sourceId to src.patches.map { it.toMetadata() }
+                src.sourceId to MultiSourceLoader.metadataOf(src)
             }
+        // Patches compare by identity, so the union holds every source's patches in turn.
+        val unionPatches = loaded.perSource.flatMap { patchesBySource.getValue(it.sourceId) }
 
         Result(
             resolved = resolved,
