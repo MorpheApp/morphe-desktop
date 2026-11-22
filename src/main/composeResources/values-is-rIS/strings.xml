@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Fjarlægja</string>
     <string name="home_dialog_continue_anyway">Halda samt áfram</string>
     <string name="home_dialog_forget_title">Gleyma %1$s?</string>
-    <string name="home_dialog_forget_message">Þetta fjarlægir %1$s úr plástraða-forritasögu þinni. Það snertir engar skrár - að plástra forritið aftur bætir því við aftur</string>
+    <string name="home_dialog_forget_message">Þetta fjarlægir %1$s úr sögulegu yfirliti yfir breyttar forrit. Breytt APK skráin varðveist á disknum og ef forritinu er breytt aftur bætist hún aftur til</string>
+    <string name="home_dialog_also_delete_original">Eyða einnig upprunalegri APK skrá</string>
     <string name="home_dialog_uninstall_title">Fjarlægja %1$s?</string>
     <string name="home_dialog_uninstall_message">Þetta fjarlægir %1$s af tengda tækinu. Plástraða APK á diski og saga þín eru geymd nema þú veljir annað hér að neðan</string>
     <string name="home_dialog_uninstall_also_forget">Fjarlægja einnig úr „Forritin þín“</string>
@@ -806,6 +807,17 @@
     <string name="settings_output_folder_default">APK-mappa (sjálfgefið)</string>
     <string name="settings_output_folder_picker_title">Veldu úttaksmöppu</string>
     <string name="settings_output_folder_not_found">Mappa fannst ekki, verður búin til við næstu plástrun</string>
+    <string name="settings_section_original_apks">Upprunalegar APK skrár</string>
+    <string name="settings_original_apks_mode_label">Geyma upprunalegum APK-skráum</string>
+    <string name="settings_original_apks_mode_copy">Afrita</string>
+    <string name="settings_original_apks_mode_move">Færa</string>
+    <string name="settings_original_apks_mode_desc_copy">Gerir afrit af upprunalegri APK-skrá hverrar forrits eftir lagningu, svo hægt sé að lagga hana aftur síðar. Aðeins nýjasta útgáfan af hverju forriti er geymd</string>
+    <string name="settings_original_apks_mode_desc_move">Færir upprunalega APK-skráu hverrar forrits eftir lagningu og fjarlegir hana þaðan og þú valdir hana. Aðeins nýjasta útgáfan af hverju forriti er geymd</string>
+    <string name="settings_original_apks_mode_desc_off">Upprunalegar APK-skrár eru ekki geymdar. Til að lagga aftur þarf APK-skrána sem þú valdir að vera enn til stað</string>
+    <string name="settings_original_apks_kept_title">Geymdar upprunalegar APK-skrár</string>
+    <string name="settings_original_apks_open_button">Opna möppu</string>
+    <string name="settings_original_apks_confirm_title">Eyða vistuðum uppruna APK-um?</string>
+    <string name="settings_original_apks_confirm_message">Þetta mun eyða öllum uppruna APK-um sem Morphe hefur geymt. Til að endurpatcha app verður þörf á APK-inu aftur</string>
     <string name="settings_toggle_auto_start_adb_label">Ræsa ADB sjálfkrafa</string>
     <string name="settings_toggle_auto_start_adb_desc">Ræstu ADB-þjóninn við ræsingu svo tengd tæki séu vöktuð. Þegar slökkt er, ræsir Morphe aldrei þjóninn og uppsetningar/sendingaraðgerðir eru óvirkar</string>
     <string name="settings_section_storage">Geymsla &amp; skyndiminni</string>

@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">আনইনস্টল</string>
     <string name="home_dialog_continue_anyway">তবুও চালিয়ে যান</string>
     <string name="home_dialog_forget_title">%1$s ভুলে যাবেন?</string>
-    <string name="home_dialog_forget_message">এটি আপনার প্যাচ করা অ্যাপের ইতিহাস থেকে %1$s সরিয়ে দেয়। এটি কোনো ফাইল স্পর্শ করে না - অ্যাপটি পুনরায় প্যাচ করলে এটি ফিরে আসে</string>
+    <string name="home_dialog_forget_message">এটি আপনার প্যাচ করা অ্যাপের ইতিহাস থেকে %1$s সরিয়ে ফেলবে। প্যাচ করা APK ডিস্কে থেকে যাবে, অ্যাপটি পুনরায় প্যাচ করলে এটি আবার যুক্ত হবে</string>
+    <string name="home_dialog_also_delete_original">এর সংরক্ষিত অরিজিনাল APK-টিও মুছে ফেলুন</string>
     <string name="home_dialog_uninstall_title">%1$s আনইনস্টল করবেন?</string>
     <string name="home_dialog_uninstall_message">এটি সংযুক্ত ডিভাইস থেকে %1$s সরিয়ে দেয়। নিচে অন্য কিছু বেছে না নিলে ডিস্কে থাকা প্যাচ করা APK এবং আপনার ইতিহাস রাখা হয়</string>
     <string name="home_dialog_uninstall_also_forget">আপনার অ্যাপ থেকেও সরান</string>
@@ -806,6 +807,17 @@
     <string name="settings_output_folder_default">APK-এর ফোল্ডার (ডিফল্ট)</string>
     <string name="settings_output_folder_picker_title">আউটপুট ফোল্ডার নির্বাচন করুন</string>
     <string name="settings_output_folder_not_found">ফোল্ডার পাওয়া যায়নি, পরবর্তী প্যাচে তৈরি হবে</string>
+    <string name="settings_section_original_apks">মূল APK সমূহ</string>
+    <string name="settings_original_apks_mode_label">মূল APK গুলো সংরক্ষণ করুন</string>
+    <string name="settings_original_apks_mode_copy">অনুলিপি করুন</string>
+    <string name="settings_original_apks_mode_move">সরিয়ে নিন</string>
+    <string name="settings_original_apks_mode_desc_copy">প্যাচ করার পর প্রতিটি অ্যাপের মূল APK কপি করে রাখে, যাতে পরবর্তীতে পুনরায় প্যাচ করা যায়। প্রতিটি অ্যাপের শুধুমাত্র সর্বশেষ সংস্করণটি রাখা হয়</string>
+    <string name="settings_original_apks_mode_desc_move">প্যাচ করার পর প্রতিটি অ্যাপের মূল APK সরিয়ে নেয় এবং আপনি যেখান থেকে এটি নিয়েছিলেন সেখান থেকে মুছে ফেলে। প্রতিটি অ্যাপের শুধুমাত্র সর্বশেষ সংস্করণটি রাখা হয়</string>
+    <string name="settings_original_apks_mode_desc_off">মূল APK গুলো সংরক্ষণ করা হয় না। পুনরায় প্যাচ করার জন্য আপনার নির্বাচিত APK টি সেখানে থাকা প্রয়োজন</string>
+    <string name="settings_original_apks_kept_title">সংরক্ষিত মূল APK-গুলি</string>
+    <string name="settings_original_apks_open_button">ফোল্ডার খুলুন</string>
+    <string name="settings_original_apks_confirm_title">সংরক্ষিত মূল APK-গুলি মুছে ফেলতে চান?</string>
+    <string name="settings_original_apks_confirm_message">এটি Morphe দ্বারা সংরক্ষিত প্রতিটি মূল APK মুছে ফেলবে। অ্যাপটি পুনরায় প্যাচ করতে এর APK-টি আবার প্রয়োজন হবে</string>
     <string name="settings_toggle_auto_start_adb_label">ADB স্বয়ংক্রিয়-শুরু</string>
     <string name="settings_toggle_auto_start_adb_desc">লঞ্চে ADB ডেমন স্পন করুন যাতে সংযুক্ত ডিভাইসগুলো পর্যবেক্ষণ করা হয়। বন্ধ থাকলে, Morphe কখনও সার্ভার শুরু করে না, এবং ইনস্টল/পুশ বৈশিষ্ট্য নিষ্ক্রিয় থাকে</string>
     <string name="settings_section_storage">স্টোরেজ এবং ক্যাশ</string>

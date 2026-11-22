@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">حذف</string>
     <string name="home_dialog_continue_anyway">به هر حال ادامه دهید</string>
     <string name="home_dialog_forget_title">«%1$s» فراموش شود؟</string>
-    <string name="home_dialog_forget_message">این کار %1$s را از تاریخچهٔ برنامه‌های پچ‌شده حذف می‌کند. به هیچ فایلی دست نمی‌زند - پچ کردن دوبارهٔ برنامه، آن را برمی‌گرداند</string>
+    <string name="home_dialog_forget_message">این مورد %1$s را از تاریخچه برنامه‌های پچ‌شده شما حذف می‌کند. APK پچ‌شده روی دیسک باقی می‌ماند و با پچ کردن مجدد برنامه، دوباره به لیست اضافه می‌شود</string>
+    <string name="home_dialog_also_delete_original">همچنین APK اصلی ذخیره‌شده را حذف کن</string>
     <string name="home_dialog_uninstall_title">«%1$s» حذف نصب شود؟</string>
     <string name="home_dialog_uninstall_message">این کار %1$s را از دستگاه متصل حذف می‌کند. APK پچ‌شده روی دیسک و تاریخچهٔ شما حفظ می‌شوند، مگر اینکه در ادامه طور دیگری انتخاب کنید</string>
     <string name="home_dialog_uninstall_also_forget">همچنین از «برنامههای شما» حذف شود</string>
@@ -806,6 +807,17 @@
     <string name="settings_output_folder_default">پوشهٔ APK (پیش‌فرض)</string>
     <string name="settings_output_folder_picker_title">انتخاب پوشهٔ خروجی</string>
     <string name="settings_output_folder_not_found">پوشهٔ خروجی پیدا نشد؛ در پچ بعدی ساخته خواهد شد</string>
+    <string name="settings_section_original_apks">APKهای اصلی</string>
+    <string name="settings_original_apks_mode_label">نگه‌داشتن APKهای اصلی</string>
+    <string name="settings_original_apks_mode_copy">کپی</string>
+    <string name="settings_original_apks_mode_move">انتقال</string>
+    <string name="settings_original_apks_mode_desc_copy">پس از پچ کردن، یک کپی از APK اصلی هر برنامه گرفته می‌شود تا بعداً بتوان دوباره آن را پچ کرد. فقط آخرین نسخه از هر برنامه نگه داشته می‌شود</string>
+    <string name="settings_original_apks_mode_desc_move">پس از پچ کردن، APK اصلی هر برنامه منتقل شده و از جایی که آن را انتخاب کرده‌اید حذف می‌شود. فقط آخرین نسخه از هر برنامه نگه داشته می‌شود</string>
+    <string name="settings_original_apks_mode_desc_off">APKهای اصلی نگه داشته نمی‌شوند. برای پچ کردن مجدد، APK انتخابی شما باید همچنان در جای خود باشد</string>
+    <string name="settings_original_apks_kept_title">APKهای اصلی نگه داشته شده</string>
+    <string name="settings_original_apks_open_button">باز کردن پوشه</string>
+    <string name="settings_original_apks_confirm_title">APKهای اصلی ذخیره‌شده حذف شوند؟</string>
+    <string name="settings_original_apks_confirm_message">این کار تمام APKهای اصلی که Morphe ذخیره کرده است را حذف می‌کند. برای 패چ کردن مجدد یک برنامه، دوباره به APK آن نیاز خواهد بود</string>
     <string name="settings_toggle_auto_start_adb_label">شروع خودکار ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">هنگام راه‌اندازی، سرویس پس‌زمینهٔ ADB اجرا می‌شود تا دستگاه‌های متصل پایش شوند. وقتی خاموش باشد، Morphe هرگز سرور را شروع نمی‌کند و قابلیت‌های نصب/ارسال غیرفعال هستند</string>
     <string name="settings_section_storage">ذخیره‌سازی و حافظه پنهان</string>

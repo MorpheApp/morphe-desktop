@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Desinstalar</string>
     <string name="home_dialog_continue_anyway">Continuar de todas formas</string>
     <string name="home_dialog_forget_title">Esquecer %1$s?</string>
-    <string name="home_dialog_forget_message">Isto elimina %1$s do seu historial de aplicacións parcheadas. Non toca ningún ficheiro: volver parchear a aplicación engádao de novo</string>
+    <string name="home_dialog_forget_message">Isto elimina %1$s do seu historial de aplicacións parcheadas. O APK parcheado permanece no disco; volver parchear a aplicación engadíceo de novo</string>
+    <string name="home_dialog_also_delete_original">Borrar tamén o seu APK orixinal gardado</string>
     <string name="home_dialog_uninstall_title">Desinstalar %1$s?</string>
     <string name="home_dialog_uninstall_message">Isto elimina %1$s do dispositivo conectado. O APK parcheado no disco e o seu historial mantéñense a menos que elixa o contrario abaixo</string>
     <string name="home_dialog_uninstall_also_forget">Tamén eliminar de As túas aplicacións</string>
@@ -806,6 +807,17 @@
     <string name="settings_output_folder_default">Cartafol de APKs (predeterminado)</string>
     <string name="settings_output_folder_picker_title">Seleccionar cartafol de saída</string>
     <string name="settings_output_folder_not_found">Carpeta non atopada, será creada no próximo parche</string>
+    <string name="settings_section_original_apks">APKs orixinais</string>
+    <string name="settings_original_apks_mode_label">Gardar os APKs orixinais</string>
+    <string name="settings_original_apks_mode_copy">Copiar</string>
+    <string name="settings_original_apks_mode_move">Mover</string>
+    <string name="settings_original_apks_mode_desc_copy">Copia o APK orixinal de cada aplicación despois do parcheo, para que poida ser parcheada de novo máis tarde. Só se garda a última versión de cada aplicación</string>
+    <string name="settings_original_apks_mode_desc_move">Move o APK orixinal de cada aplicación despois do parcheo, eliminándoo de onde o escolleu. Só se garda a última versión de cada aplicación</string>
+    <string name="settings_original_apks_mode_desc_off">Non se gardan os APKs orixinais. Para volver parchear, o APK que escolleu debe seguir estando alí</string>
+    <string name="settings_original_apks_kept_title">APKs orixinais gardados</string>
+    <string name="settings_original_apks_open_button">Abrir cartafol</string>
+    <string name="settings_original_apks_confirm_title">Eliminar os APKs orixinais gardados?</string>
+    <string name="settings_original_apks_confirm_message">Isto eliminará todos os APKs orixinais que Morphe gardou. Para volver parchear unha aplicación, será necesario o seu APK de novo</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-iniciar ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Executar o daemon de ADB ao iniciar para que se monitoricen os dispositivos conectados. Cando está desactivado, Morphe nunca inicia o servidor e as funcións de instalación/envío quedan desactivadas</string>
     <string name="settings_section_storage">Almacenamento &amp; caché</string>

@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Gỡ</string>
     <string name="home_dialog_continue_anyway">Vẫn tiếp tục</string>
     <string name="home_dialog_forget_title">Quên %1$s?</string>
-    <string name="home_dialog_forget_message">Thao tác này xóa %1$s khỏi lịch sử ứng dụng đã vá của bạn. Nó không đụng đến bất kỳ tệp nào - vá lại ứng dụng sẽ thêm nó trở lại</string>
+    <string name="home_dialog_forget_message">Thao tác này sẽ xóa %1$s khỏi lịch sử ứng dụng đã vá của bạn. Tệp APK đã vá vẫn còn trên ổ đĩa, việc vá lại ứng dụng sẽ thêm nó trở lại</string>
+    <string name="home_dialog_also_delete_original">Đồng thời xóa tệp APK gốc được lưu giữ</string>
     <string name="home_dialog_uninstall_title">Gỡ cài đặt %1$s?</string>
     <string name="home_dialog_uninstall_message">Thao tác này xóa %1$s khỏi thiết bị đã kết nối. APK đã vá trên đĩa và lịch sử của bạn vẫn được giữ trừ khi bạn chọn khác bên dưới</string>
     <string name="home_dialog_uninstall_also_forget">Cũng xóa khỏi Ứng dụng của bạn</string>
@@ -806,6 +807,17 @@
     <string name="settings_output_folder_default">Thư mục của APK (mặc định)</string>
     <string name="settings_output_folder_picker_title">Chọn thư mục đầu ra</string>
     <string name="settings_output_folder_not_found">Không tìm thấy thư mục, sẽ được tạo ở lần vá tới</string>
+    <string name="settings_section_original_apks">Các tệp APK gốc</string>
+    <string name="settings_original_apks_mode_label">Giữ lại APK gốc</string>
+    <string name="settings_original_apks_mode_copy">Sao chép</string>
+    <string name="settings_original_apks_mode_move">Di chuyển</string>
+    <string name="settings_original_apks_mode_desc_copy">Sao chép APK gốc của mỗi ứng dụng sau khi vá, để có thể vá lại sau này. Chỉ giữ lại phiên bản mới nhất của mỗi ứng dụng</string>
+    <string name="settings_original_apks_mode_desc_move">Di chuyển APK gốc của mỗi ứng dụng sau khi vá, xóa nó khỏi nơi bạn đã chọn. Chỉ giữ lại phiên bản mới nhất của mỗi ứng dụng</string>
+    <string name="settings_original_apks_mode_desc_off">Các APK gốc không được giữ lại. Việc vá lại yêu cầu APK bạn đã chọn vẫn còn ở đó</string>
+    <string name="settings_original_apks_kept_title">Các APK gốc đã giữ lại</string>
+    <string name="settings_original_apks_open_button">Mở thư mục</string>
+    <string name="settings_original_apks_confirm_title">Xóa các APK gốc đã lưu?</string>
+    <string name="settings_original_apks_confirm_message">Thao tác này sẽ xóa mọi APK gốc mà Morphe đã lưu. Việc vá lại ứng dụng sẽ cần APK đó một lần nữa</string>
     <string name="settings_toggle_auto_start_adb_label">Tự động khởi động ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Khởi chạy daemon ADB khi mở ứng dụng để theo dõi các thiết bị đã kết nối. Khi tắt, Morphe không bao giờ khởi động máy chủ và các tính năng cài đặt/đẩy tệp bị vô hiệu hóa</string>
     <string name="settings_section_storage">Bộ nhớ &amp; bộ nhớ đệm</string>
