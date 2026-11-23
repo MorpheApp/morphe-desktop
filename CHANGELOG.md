@@ -1,3 +1,13 @@
+# [2.4.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.1...v2.4.0-dev.2) (2026-11-23)
+
+
+### Bug Fixes
+
+* Correct Strip libs and output naming ([7a59d00](https://github.com/MorpheApp/morphe-desktop/commit/7a59d0060050a2e1fdc816046544b73ce036354c))
+* Hide language subtext when it matches the title ([b5c5ae8](https://github.com/MorpheApp/morphe-desktop/commit/b5c5ae89f657ceed8ad6ad620f0f5383621a2d32))
+* Prevent concurrent writes from corrupting config ([6e0fb6c](https://github.com/MorpheApp/morphe-desktop/commit/6e0fb6c6afb7a0098132e97b41b479c9b4831ce4))
+* Show update badge only when relevant patches are available ([#455](https://github.com/MorpheApp/morphe-desktop/issues/455)) ([4c9a3b8](https://github.com/MorpheApp/morphe-desktop/commit/4c9a3b8f972bf7ac22418258776b25e6f3146508))
+
 # [2.4.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0...v2.4.0-dev.1) (2026-11-22)
 
 
