@@ -54,6 +54,7 @@ data class BundlePatches(
     val patches: List<PatchMetadata>,
     val sourceType: PatchSourceType = PatchSourceType.DEFAULT,
     val avatarUrl: String? = null,
+    val patchesFilePath: String? = null,
 )
 
 class PatchSelectionViewModel(
@@ -329,6 +330,7 @@ class PatchSelectionViewModel(
                 patches = patches.sortedBy { it.name.lowercase() },
                 sourceType = sourceType,
                 avatarUrl = avatarUrl,
+                patchesFilePath = path,
             )
         }
 
@@ -610,12 +612,19 @@ class PatchSelectionViewModel(
 
     fun createPatchConfig(continueOnError: Boolean = false): PatchEngine.Config {
         saveCurrentSelection()
+        val state = _uiState.value
+
+        // Name the output after the first bundle with selected patches, not the first enabled source.
+        val namingPatchesFilePath = state.bundles
+            .firstOrNull { state.selectedByBundle[it.bundleId].orEmpty().isNotEmpty() }
+            ?.patchesFilePath
+            ?: actualPatchesFilePath
 
         // Resolve output APK file destination.
         val inputFile = File(apkPath)
         val outputFile = ApkOutputNaming.outputApkPath(
             inputApk = inputFile,
-            patchesFile = File(actualPatchesFilePath),
+            patchesFile = File(namingPatchesFilePath),
             baseOutputDir = defaultOutputDirectory?.let { File(it) }
                 ?: runBlocking { OriginalApkStore.shared.outputBaseFor(inputFile) },
             appDisplayName = apkName,
@@ -625,14 +634,9 @@ class PatchSelectionViewModel(
         // Flatten selections across bundles for patch engine execution.
         val (selectedPatchNames, disabledPatchNames) = flattenSelection()
 
-        val keepArches = (uiState.value.stripLibsStatus as? StripLibsStatus.WillStrip)
-            ?.keeping
-            ?.mapNotNull { CpuArchitecture.valueOfOrNull(it) }
-            ?.toSet()
-            ?: emptySet()
+        val keepArches = state.stripLibsStatus.architecturesToKeep()
 
         // Capture selection and source snapshots for history tracking.
-        val state = _uiState.value
         val selectionByBundle = state.bundles.associate { bundle ->
             bundle.bundleName to state.selectedByBundle[bundle.bundleId].orEmpty()
         }
@@ -1050,3 +1054,11 @@ internal fun computeStripLibsStatus(
         )
     }
 }
+
+/** Architectures for [PatchEngine.Config.architecturesToKeep], empty keeps all of them. */
+internal fun StripLibsStatus.architecturesToKeep(): Set<CpuArchitecture> =
+    (this as? StripLibsStatus.WillStrip)
+        ?.keeping
+        ?.mapNotNull { CpuArchitecture.valueOfOrNull(it) }
+        ?.toSet()
+        ?: emptySet()

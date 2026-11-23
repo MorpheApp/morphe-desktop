@@ -14,6 +14,7 @@ import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
 import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.options.parseCliOptionValue
@@ -474,7 +475,12 @@ internal object PatchCommand : Callable<Int> {
         }
 
         val effectiveArchitectures = keepArchitectures.ifEmpty {
-            savedConfig.keepArchitectures.mapNotNull { CpuArchitecture.valueOfOrNull(it) }.toSet()
+            val saved = savedConfig.keepArchitectures
+            if (ApkInspector.extractArchitectures(apk).none { it in saved }) {
+                emptySet()
+            } else {
+                saved.mapNotNull { CpuArchitecture.valueOfOrNull(it) }.toSet()
+            }
         }
 
         val engineConfig = PatchEngine.Config(

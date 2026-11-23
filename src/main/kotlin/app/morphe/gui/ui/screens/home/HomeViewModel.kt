@@ -47,6 +47,8 @@ import app.morphe.gui.ui.components.SourceUpdateBannerState
 import app.morphe.gui.ui.components.SourceUpdateStatus
 import app.morphe.gui.ui.screens.home.components.AppListFilter
 import app.morphe.gui.ui.screens.home.components.HomeAppSortMode
+import app.morphe.gui.ui.screens.patches.architecturesToKeep
+import app.morphe.gui.ui.screens.patches.computeStripLibsStatus
 import app.morphe.gui.util.ChangelogParser
 import app.morphe.gui.util.ChecksumStatus
 import app.morphe.gui.util.DeviceMonitor
@@ -229,6 +231,8 @@ class HomeViewModel(
             disabledPatches = emptySet(),
             exclusiveMode = false,
             forceCompatibility = true,
+            architecturesToKeep = computeStripLibsStatus(apkInfo.architectures, engineConfigData.keepArchitectures)
+                .architecturesToKeep(),
             failOnError = true,
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
@@ -254,6 +258,7 @@ class HomeViewModel(
     ): PatchEngine.Config {
         val inputFile = File(apkPath)
         val engineConfigData = engineConfigRepository.loadConfig()
+        val apkArchitectures = withContext(Dispatchers.IO) { ApkInspector.extractArchitectures(inputFile).toList() }
         val primaryPatchFile = patchFiles.firstOrNull() ?: cachedPatchesFile ?: inputFile
 
         val outputPath = ApkOutputNaming.outputApkPath(
@@ -322,6 +327,8 @@ class HomeViewModel(
             flatPatchOptions = if (isDifferentSource) emptyMap() else record.patchOptionValues,
             exclusiveMode = false,
             forceCompatibility = true,
+            architecturesToKeep = computeStripLibsStatus(apkArchitectures, engineConfigData.keepArchitectures)
+                .architecturesToKeep(),
             failOnError = true,
             disablePurge = !engineConfigData.autoCleanupTempFiles,
             keystoreDetails = engineConfigData.toKeyStoreDetails(),
