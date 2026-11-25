@@ -59,9 +59,6 @@ val bootstrapDependencies = configurations.create("bootstrapDependencies") {
 dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
-    implementation(libs.morphe.library) {
-        exclude(group = "app.morphe", module = "jadb")
-    }
     implementation(libs.picocli)
     implementation(libs.bundles.compose.desktop)
     implementation(libs.compose.components.resources)

@@ -13,10 +13,9 @@ plugins {
 
 rootProject.name = "morphe-desktop"
 
-// Include morphe-patcher and morphe-library as composite builds if they exist locally
+// Include morphe-patcher as composite builds if they exist locally
 mapOf(
-    "morphe-patcher" to "app.morphe:morphe-patcher",
-    "morphe-library" to "app.morphe:morphe-library",
+    "morphe-patcher" to "app.morphe:morphe-patcher"
 ).forEach { (libraryPath, libraryName) ->
     val libDir = file("../$libraryPath")
     if (libDir.exists()) {
