@@ -1,3 +1,10 @@
+# [2.4.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.2...v2.4.0-dev.3) (2026-11-25)
+
+
+### Bug Fixes
+
+* Update Patcher and ARSCLib dependency ([683899a](https://github.com/MorpheApp/morphe-desktop/commit/683899a9f2bcb531a3998de8ee3396dd6237f720))
+
 # [2.4.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.1...v2.4.0-dev.2) (2026-11-23)
 
 
