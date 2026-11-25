@@ -588,6 +588,7 @@ class AdbManager {
             val bootScript = "/data/adb/service.d/mount_morphe_$packageName.sh"
             val mountScriptContent = buildMountScript(packageName, basePath, stockPath)
 
+            // The app is compiled again before it starts, see recompileShell
             val installCommands = $$"""
                 stock="$$stockPath"; base="$$basePath";
                 mkdir -p /data/adb/morphe &&
@@ -599,6 +600,7 @@ class AdbManager {
                 { rm -f "$$remoteTmp"; echo "Could not move the patched APK into place"; exit 1; };
                 $$unmountAllLayersShell
                 $$bindMountShell
+                $${recompileShell(packageName)}
                 am force-stop "$$packageName" &&
                 am start -S "$$packageName"
             """.trimIndent().replace("\n", " ")
@@ -673,7 +675,8 @@ class AdbManager {
                     for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m -- umount -l "$m" 2>/dev/null; done;
                 done;
                 rm -f '$$basePath' '$$bootScript' &&
-                am force-stop '$$packageName'
+                am force-stop '$$packageName';
+                $${recompileShell(packageName)}
             """.trimIndent().replace("\n", " ")
 
             val result = executeSuCommand(adb, targetDevice.id, unmountCmds)
@@ -773,6 +776,13 @@ class AdbManager {
             grep -qsF " $stock " /proc/$ns/mountinfo && { echo "Could not remove old mounts from $stock"; exit 1; };
         done;
     """.trimIndent()
+
+    /**
+     * Shell that compiles [packageName] again as a fresh install would. Code compiled for the APK that was
+     * under the stock path before no longer matches it, so ART would run the app uncompiled until the device
+     * next compiles apps while idle. A failure leaves the app running from its APK, so it is not checked.
+     */
+    private fun recompileShell(packageName: String) = "pm compile --reset \"$packageName\" >/dev/null 2>&1;"
 
     /** Shell that bind-mounts `$base` over `$stock` and fails unless every zygote then sees `$base`. */
     private val bindMountShell = $$"""
