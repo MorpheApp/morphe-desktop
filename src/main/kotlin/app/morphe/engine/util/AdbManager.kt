@@ -670,12 +670,12 @@ class AdbManager {
 
             val unmountCmds = $$"""
                 $$unmountStock
-                grep -F '$$packageName' /proc/mounts 2>/dev/null | cut -d ' ' -f 2 | while read -r m; do
+                grep -F "$$packageName" /proc/mounts 2>/dev/null | cut -d " " -f 2 | while read -r m; do
                     [ -n "$m" ] && umount -l "$m" 2>/dev/null;
                     for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m -- umount -l "$m" 2>/dev/null; done;
                 done;
-                rm -f '$$basePath' '$$bootScript' &&
-                am force-stop '$$packageName';
+                rm -f "$$basePath" "$$bootScript" &&
+                am force-stop "$$packageName";
                 $${recompileShell(packageName)}
             """.trimIndent().replace("\n", " ")
 
@@ -837,7 +837,7 @@ class AdbManager {
                 executeSuCommand(
                     adb,
                     deviceId,
-                    "mkdir -p /data/adb/service.d && mv '$remoteTmp' '$remoteScriptPath' && chmod 755 '$remoteScriptPath'",
+                    "mkdir -p /data/adb/service.d && mv \"$remoteTmp\" \"$remoteScriptPath\" && chmod 755 \"$remoteScriptPath\"",
                 )
             }
         } catch (e: CancellationException) {
@@ -849,6 +849,10 @@ class AdbManager {
         }
     }
 
+    /**
+     * Runs [command] as root. It goes inside the single quotes of `su -c`, so it quotes with double quotes
+     * only: a single quote in it would end the argument, and the device shell would expand the rest itself.
+     */
     private suspend fun executeSuCommand(
         adb: String,
         deviceId: String,
