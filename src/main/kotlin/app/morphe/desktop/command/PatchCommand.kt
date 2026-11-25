@@ -305,7 +305,7 @@ internal object PatchCommand : Callable<Int> {
     private var bytecodeMode: BytecodeMode = BytecodeMode.STRIP_FAST
     @CommandLine.Option(
         names = ["--bytecode-mode"],
-        description = ["Set bytecode mode. Valid options are FULL, STRIP_SAFE, and STRIP_FAST (the default)."],
+        description = ["Set bytecode mode. Valid options are STRIP_SAFE and STRIP_FAST (the default)."],
         showDefaultValue = ALWAYS,
     )
     @Suppress("unused")
@@ -315,7 +315,7 @@ internal object PatchCommand : Callable<Int> {
         } catch (e: IllegalArgumentException) {
             throw CommandLine.ParameterException(
                 spec.commandLine(),
-                "Invalid bytecode mode \"$desiredBytecodeMode\" in --bytecode-mode. Valid values are: FULL, STRIP_SAFE, STRIP_FAST",
+                "Invalid bytecode mode \"$desiredBytecodeMode\" in --bytecode-mode. Valid values are: STRIP_SAFE, STRIP_FAST",
             )
         }
     }

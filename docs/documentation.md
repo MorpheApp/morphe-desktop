@@ -630,7 +630,7 @@ Here is a quick lookup for all the flags under this subcommand:
 | `--disable-purge`              | Keep this run's scratch files (deleted after patching by default)                  |
 | `--save-original`              | Keep the input APK in `morphe-data/original-apks/`: `COPY`, `MOVE`, or `OFF`        |
 | `--striplibs`                  | Architectures to keep, comma-separated (e.g.`arm64-v8a,x86`)                       |
-| `--bytecode-mode`              | Bytecode mode: `FULL`, `STRIP_SAFE`, or `STRIP_FAST`                                |
+| `--bytecode-mode`              | Bytecode mode: `STRIP_SAFE` or `STRIP_FAST`                                        |
 | `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                    |
 | `--validate`                   | Verify each fingerprint `match()` matches only one method    |
 | `--continue-on-error`          | Continue patching if a patch fails                                                 |
@@ -1044,19 +1044,15 @@ Controls how Morphe processes the APK's bytecode (DEX) during patching. Trade-of
 
 | Value        | Description                                                                                                                  |
 |--------------|------------------------------------------------------------------------------------------------------------------------------|
-| `FULL`       | Rebuilds and includes all bytecode. Largest output, slowest, safest - use if you hit runtime issues with the stripped modes. |
 | `STRIP_SAFE` | Strips bytecode that is provably unused, while keeping anything reachable via reflection or dynamic loading.                 |
 | `STRIP_FAST` | Default. Aggressively strips unused bytecode for the smallest, fastest build. May break apps that rely on reflection.        |
 
 ```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --bytecode-mode FULL your_app.apk
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --bytecode-mode STRIP_SAFE your_app.apk
 ```
 
 > [!TIP]
-> If a patched app crashes at startup or has odd missing-class errors, switch to `STRIP_SAFE` or `FULL` and see if it fixes things.
-
-> [!NOTE]
-> On Windows, Morphe currently forces bytecode mode to `FULL` regardless of what you pass to this flag (workaround for a platform-specific issue). The flag still works as expected on macOS and Linux.
+> If a patched app crashes at startup or has odd missing-class errors, switch to `STRIP_SAFE` and see if it fixes things.
 
 #### `--verify-with-sdk`:
 

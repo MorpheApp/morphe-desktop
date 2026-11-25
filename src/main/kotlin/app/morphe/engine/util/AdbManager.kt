@@ -9,9 +9,11 @@ import app.morphe.engine.apk.AndroidArchitectures
 import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.config.EngineConfig
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.patcher.profile.DexMetadata
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.nio.file.Files
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -363,15 +365,23 @@ class AdbManager {
             installerPackage
         }
 
+        val dexMetadata = dexMetadataFile(adb, targetDevice.id, apkFile)
+
         // Retries install without '-i' if the device rejects unknown installer packages.
-        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
-            val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
+        fun runInstall(withInstaller: Boolean, metadata: File?): Result<Unit> {
+            // A session pairs the dex metadata with the APK of the same name, which plain install cannot send
+            val command = if (metadata != null) {
+                mutableListOf(adb, "-s", targetDevice.id, "install-multiple", "--no-incremental", "-r")
+            } else {
+                mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
+            }
             if (allowDowngrade) command.add("-d") // Allow downgrade
             if (withInstaller && !effectiveInstaller.isNullOrBlank()) {
                 command.add("-i") // Record installer source (blocks Play auto-update)
                 command.add(effectiveInstaller)
             }
             command.add(apkPath)
+            metadata?.let { command.add(it.absolutePath) }
 
             Logger.info("Running: ${command.joinToString(" ")}")
 
@@ -411,17 +421,34 @@ class AdbManager {
             }
         }
 
+        // The dex metadata only spares the app running uncompiled, so an install that fails with it, as on a
+        // system that requires fs-verity on it or with an adb too old for its options, goes on without it
+        var sendDexMetadata = dexMetadata != null
+        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
+            if (sendDexMetadata) {
+                val result = runInstall(withInstaller, dexMetadata)
+                if ((result.exceptionOrNull() as? AdbException)?.errorCode != AdbErrorCode.INSTALL_GENERIC) return result
+                Logger.info("Install with dex metadata failed; retrying without it")
+                sendDexMetadata = false
+            }
+            return runInstall(withInstaller, metadata = null)
+        }
+
         val withInstaller = !effectiveInstaller.isNullOrBlank()
-        val first = attemptInstall(withInstaller = withInstaller)
-        val finalResult = if (
-            first.isFailure &&
-            withInstaller &&
-            (first.exceptionOrNull() as? AdbException)?.errorCode == AdbErrorCode.INSTALL_GENERIC
-        ) {
-            Logger.info("Install with '-i $effectiveInstaller' failed; retrying without installer attribution")
-            attemptInstall(withInstaller = false)
-        } else {
-            first
+        val finalResult = try {
+            val first = attemptInstall(withInstaller = withInstaller)
+            if (
+                first.isFailure &&
+                withInstaller &&
+                (first.exceptionOrNull() as? AdbException)?.errorCode == AdbErrorCode.INSTALL_GENERIC
+            ) {
+                Logger.info("Install with '-i $effectiveInstaller' failed; retrying without installer attribution")
+                attemptInstall(withInstaller = false)
+            } else {
+                first
+            }
+        } finally {
+            dexMetadata?.parentFile?.deleteRecursively()
         }
         finalResult.onFailure { e ->
             if (e is AdbException && e.cause == null) {
@@ -561,6 +588,7 @@ class AdbManager {
             val bootScript = "/data/adb/service.d/mount_morphe_$packageName.sh"
             val mountScriptContent = buildMountScript(packageName, basePath, stockPath)
 
+            // The app is compiled again before it starts, see recompileShell
             val installCommands = $$"""
                 stock="$$stockPath"; base="$$basePath";
                 mkdir -p /data/adb/morphe &&
@@ -572,6 +600,7 @@ class AdbManager {
                 { rm -f "$$remoteTmp"; echo "Could not move the patched APK into place"; exit 1; };
                 $$unmountAllLayersShell
                 $$bindMountShell
+                $${recompileShell(packageName)}
                 am force-stop "$$packageName" &&
                 am start -S "$$packageName"
             """.trimIndent().replace("\n", " ")
@@ -646,7 +675,8 @@ class AdbManager {
                     for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m -- umount -l "$m" 2>/dev/null; done;
                 done;
                 rm -f '$$basePath' '$$bootScript' &&
-                am force-stop '$$packageName'
+                am force-stop '$$packageName';
+                $${recompileShell(packageName)}
             """.trimIndent().replace("\n", " ")
 
             val result = executeSuCommand(adb, targetDevice.id, unmountCmds)
@@ -746,6 +776,13 @@ class AdbManager {
             grep -qsF " $stock " /proc/$ns/mountinfo && { echo "Could not remove old mounts from $stock"; exit 1; };
         done;
     """.trimIndent()
+
+    /**
+     * Shell that compiles [packageName] again as a fresh install would. Code compiled for the APK that was
+     * under the stock path before no longer matches it, so ART would run the app uncompiled until the device
+     * next compiles apps while idle. A failure leaves the app running from its APK, so it is not checked.
+     */
+    private fun recompileShell(packageName: String) = "pm compile --reset \"$packageName\" >/dev/null 2>&1;"
 
     /** Shell that bind-mounts `$base` over `$stock` and fails unless every zygote then sees `$base`. */
     private val bindMountShell = $$"""
@@ -1239,24 +1276,35 @@ class AdbManager {
             }
     }
 
-    /** Reads product model property from device. */
-    private fun getDeviceName(adbPath: String, deviceId: String): String? {
-        return try {
-            val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", "ro.product.model")
-                .redirectErrorStream(true)
-                .start()
-            val result = process.inputStream.bufferedReader().readText().trim()
-            process.waitFor()
-            if (process.exitValue() == 0 && result.isNotBlank()) result else null
-        } catch (_: Exception) {
+    /**
+     * Writes the dex metadata of [apk] for [deviceId] to a temporary directory, under the name adb pairs
+     * with the APK, or returns null if there is none. With it the device compiles the app with its baseline
+     * profile at install, instead of running it uncompiled until it next compiles apps while idle.
+     */
+    private fun dexMetadataFile(adbPath: String, deviceId: String, apk: File): File? {
+        val sdk = getDeviceProperty(adbPath, deviceId, "ro.build.version.sdk")?.toIntOrNull() ?: return null
+        val metadata = try {
+            DexMetadata.of(apk, sdk)
+        } catch (e: Exception) {
+            Logger.warn("No dex metadata for ${apk.name}", e)
             null
-        }
+        } ?: return null
+        val directory = Files.createTempDirectory("morphe-dex-metadata").toFile()
+        return directory.resolve("${apk.nameWithoutExtension}.dm").apply { writeBytes(metadata) }
     }
 
+    /** Reads product model property from device. */
+    private fun getDeviceName(adbPath: String, deviceId: String) =
+        getDeviceProperty(adbPath, deviceId, "ro.product.model")
+
     /** Reads CPU ABI property from device. */
-    private fun getDeviceArchitecture(adbPath: String, deviceId: String): String? {
+    private fun getDeviceArchitecture(adbPath: String, deviceId: String) =
+        getDeviceProperty(adbPath, deviceId, "ro.product.cpu.abi")
+
+    /** Reads the system property [name] from the device, or null if it is not set or cannot be read. */
+    private fun getDeviceProperty(adbPath: String, deviceId: String, name: String): String? {
         return try {
-            val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", "ro.product.cpu.abi")
+            val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", name)
                 .redirectErrorStream(true)
                 .start()
             val result = process.inputStream.bufferedReader().readText().trim()
