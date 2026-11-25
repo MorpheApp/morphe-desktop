@@ -27,6 +27,9 @@
     <plurals name="home_detail_download_bundles">
         <item quantity="other">ດາວໂຫຼດ %1$d ບັນເດິລ</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="other">%1$d ຄໍ</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="other">%1$d ການປ່ຽນແປງ</item>
     </plurals>
@@ -41,5 +44,26 @@
     </plurals>
     <plurals name="changelog_performance_count">
         <item quantity="other">%1$d ການປັບປຸງໃຫ້ດີຂຶ້ນ</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="other">%1$s (%2$d ໄຟລ໌)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="other">ທັງໝົດ: %1$s (%2$d ໄຟລ໌)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="other">%1$d ເວີຊັນທີ່ໃໝ່ກວ່າ</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="other">%1$d ເວີຊັນທີ່ເກົ່າກວ່າ</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="other">%1$d ແພັດຊ໌</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="other">%1$d ແອັບ</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="other">%1$d ຕົວເລືອກ</item>
     </plurals>
 </resources>

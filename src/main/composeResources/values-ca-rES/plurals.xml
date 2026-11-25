@@ -56,4 +56,36 @@
         <item quantity="one">%1$d correcció</item>
         <item quantity="other">%1$d correccions</item>
     </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimització</item>
+        <item quantity="other">%1$d optimitzacions</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d fitxer)</item>
+        <item quantity="other">%1$s (%2$d fitxers)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Total: %1$s (%2$d fitxer)</item>
+        <item quantity="other">Total: %1$s (%2$d fitxers)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d versió més recent que</item>
+        <item quantity="other">%1$d versions més recents que</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d versió més antiga que</item>
+        <item quantity="other">%1$d versions més antigues que</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d pedaç</item>
+        <item quantity="other">%1$d pedaços</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d app</item>
+        <item quantity="other">%1$d apps</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d opció</item>
+        <item quantity="other">%1$d opcions</item>
+    </plurals>
 </resources>

@@ -36,6 +36,10 @@
         <item quantity="one">%1$d ta paketni yuklab olish</item>
         <item quantity="other">%1$d ta paketni yuklab olish</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d yadro</item>
+        <item quantity="other">%1$d yadro</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="one">%1$d o\"zgarish</item>
         <item quantity="other">%1$d ta o\"zgarish</item>
@@ -55,5 +59,33 @@
     <plurals name="changelog_performance_count">
         <item quantity="one">%1$d ta optimallashtirish</item>
         <item quantity="other">%1$d ta optimallashtirish</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d ta fayl)</item>
+        <item quantity="other">%1$s (%2$d ta fayl)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Jami: %1$s (%2$d ta fayl)</item>
+        <item quantity="other">Jami: %1$s (%2$d ta fayl)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d ta versiya yangiroq</item>
+        <item quantity="other">%1$d ta versiya yangiroq</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d ta versiya eskiroq</item>
+        <item quantity="other">%1$d ta versiya eskiroq</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d ta patch</item>
+        <item quantity="other">%1$d ta patch</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d ta ilova</item>
+        <item quantity="other">%1$d ta ilova</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d ta variant</item>
+        <item quantity="other">%1$d ta variant</item>
     </plurals>
 </resources>

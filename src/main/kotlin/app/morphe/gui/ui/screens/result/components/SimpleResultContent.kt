@@ -153,19 +153,9 @@ internal fun SimpleResultContent(
                                     result.fold(
                                         onSuccess = {
                                             installSuccess = true
-                                            val config = engineConfigRepository.loadConfig()
-                                            if (config.autoRouteLinksAfterInstall) {
-                                                val record = PatchedAppStore.shared.getAll()
-                                                    .firstOrNull { it.outputApkPath == outputPath }
-                                                record?.let {
-                                                    adbManager.setLinkHandling(
-                                                        deviceId = device.id,
-                                                        patchedPackage = it.installedPackageName,
-                                                        stockPackage = if (config.disableStockLinksAfterInstall) it.packageName else null,
-                                                        enable = true,
-                                                    )
-                                                }
-                                            }
+                                            PatchedAppStore.shared.getAll()
+                                                .firstOrNull { it.outputApkPath == outputPath }
+                                                ?.let { adbManager.routeLinksAfterInstall(device.id, it, engineConfigRepository.loadConfig()) }
                                         },
                                         onFailure = { installError = (it as? AdbException)?.getUserMessage() ?: it.message }
                                     )

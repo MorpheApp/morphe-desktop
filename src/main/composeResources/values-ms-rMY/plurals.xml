@@ -27,6 +27,9 @@
     <plurals name="home_detail_download_bundles">
         <item quantity="other">Muat turun %1$d bundle</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="other">%1$d teras</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="other">%1$d perubahan</item>
     </plurals>
@@ -41,5 +44,26 @@
     </plurals>
     <plurals name="changelog_performance_count">
         <item quantity="other">%1$d pengoptimuman</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="other">%1$s (%2$d fail)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="other">Jumlah: %1$s (%2$d fail)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="other">%1$d keluaran lebih baru daripada</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="other">%1$d keluaran lebih lama daripada</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="other">%1$d tampalan</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="other">%1$d aplikasi</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="other">%1$d pilihan</item>
     </plurals>
 </resources>

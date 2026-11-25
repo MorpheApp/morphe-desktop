@@ -75,4 +75,39 @@
         <item quantity="few">%1$d оптимизације</item>
         <item quantity="other">%1$d оптимизација</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d датотека)</item>
+        <item quantity="few">%1$s (%2$d датотеке)</item>
+        <item quantity="other">%1$s (%2$d датотека)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Укупно: %1$s (%2$d датотека)</item>
+        <item quantity="few">Укупно: %1$s (%2$d датотеке)</item>
+        <item quantity="other">Укупно: %1$s (%2$d датотека)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d издање новије од</item>
+        <item quantity="few">%1$d издања новија од</item>
+        <item quantity="other">%1$d издања новија од</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d издање старије од</item>
+        <item quantity="few">%1$d издања старија од</item>
+        <item quantity="other">%1$d издања старија од</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d исправка</item>
+        <item quantity="few">%1$d исправка</item>
+        <item quantity="other">%1$d исправка</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d апликација</item>
+        <item quantity="few">%1$d апликације</item>
+        <item quantity="other">%1$d апликација</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d опција</item>
+        <item quantity="few">%1$d опције</item>
+        <item quantity="other">%1$d опција</item>
+    </plurals>
 </resources>

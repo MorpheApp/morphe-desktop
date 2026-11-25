@@ -70,4 +70,44 @@
         <item quantity="few">%1$d corecții</item>
         <item quantity="other">%1$d corecții</item>
     </plurals>
+    <plurals name="changelog_performance_count">
+        <item quantity="one">%1$d optimizare</item>
+        <item quantity="few">%1$d optimizări</item>
+        <item quantity="other">%1$d optimizări</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d fișier)</item>
+        <item quantity="few">%1$s (%2$d fișiere)</item>
+        <item quantity="other">%1$s (%2$d fișiere)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Total: %1$s (%2$d fișier)</item>
+        <item quantity="few">Total: %1$s (%2$d fișiere)</item>
+        <item quantity="other">Total: %1$s (%2$d fișiere)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d versiune mai nouă decât</item>
+        <item quantity="few">%1$d versiuni mai noi decât</item>
+        <item quantity="other">%1$d versiuni mai noi decât</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d versiune mai veche decât</item>
+        <item quantity="few">%1$d versiuni mai vechi decât</item>
+        <item quantity="other">%1$d versiuni mai vechi decât</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="few">%1$d patch-uri</item>
+        <item quantity="other">%1$d de patch-uri</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d aplicație</item>
+        <item quantity="few">%1$d aplicații</item>
+        <item quantity="other">%1$d aplicații</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d opțiune</item>
+        <item quantity="few">%1$d opțiuni</item>
+        <item quantity="other">%1$d opțiuni</item>
+    </plurals>
 </resources>

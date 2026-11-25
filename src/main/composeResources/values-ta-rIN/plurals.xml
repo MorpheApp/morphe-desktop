@@ -52,4 +52,32 @@
         <item quantity="one">%1$d சரிசெய்தல்</item>
         <item quantity="other">%1$d சரிசெய்தல்கள்</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d கோப்பு)</item>
+        <item quantity="other">%1$s (%2$d கோப்புகள்)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">மொத்தம்: %1$s (%2$d கோப்பு)</item>
+        <item quantity="other">மொத்தம்: %1$s (%2$d கோப்புகள்)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d வெளியீடு இதைக் காட்டிலும் புதியது</item>
+        <item quantity="other">%1$d வெளியீடுகள் இதைக் காட்டிலும் புதியவை</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d வெளியீடு இதைக் காட்டிலும் பழையது</item>
+        <item quantity="other">%1$d வெளியீடுகள் இதைக் காட்டிலும் பழையவை</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d பேட்ச்</item>
+        <item quantity="other">%1$d பேட்ச்கள்</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d செயலி</item>
+        <item quantity="other">%1$d செயலிகள்</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d விருப்பம்</item>
+        <item quantity="other">%1$d விருப்பங்கள்</item>
+    </plurals>
 </resources>

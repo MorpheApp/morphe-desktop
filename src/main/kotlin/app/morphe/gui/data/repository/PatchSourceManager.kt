@@ -62,14 +62,14 @@ class PatchSourceManager(
     }
 
     /**
-     * Switch the active source, persist it, and signal the UI.
+     * Switch the active source and persist it. Only screens created afterwards read it, and the
+     * enabled set is unchanged, so [sourceVersion] is not bumped (that would reload every source).
      */
     suspend fun switchSource(id: String) {
         configRepository.setActivePatchSource(id)
         val source = configRepository.getActivePatchSource()
         cachedActiveSource = source
         cachedActiveRepo = getRepositoryForSource(source)
-        _sourceVersion.value++
         Logger.info("Switched active patch source to '${source.name}' (type=${source.type})")
     }
 

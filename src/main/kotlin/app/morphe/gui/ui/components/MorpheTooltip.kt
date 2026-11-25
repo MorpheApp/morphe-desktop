@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineStroke
 
 /** Positions popup above anchor, flipping below if space is insufficient. */
 private class AboveAnchor(private val gap: Int) : PopupPositionProvider {
@@ -64,7 +64,7 @@ fun MorpheTooltip(
                 Surface(
                     shape = MorpheTheme.shapes.small,
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MorpheTheme.colors.primary.copy(alpha = 0.35f)),
+                    border = outlineStroke(MorpheTheme.colors.primary.copy(alpha = 0.35f)),
                     shadowElevation = 8.dp,
                 ) {
                     Text(

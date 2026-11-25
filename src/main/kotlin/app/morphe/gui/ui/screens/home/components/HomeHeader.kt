@@ -14,22 +14,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.components.MorpheBanner
 import app.morphe.gui.ui.components.MorpheBannerAction
-import app.morphe.gui.ui.components.MorpheBannerDismiss
-import app.morphe.gui.ui.components.MorpheBannerText
 import app.morphe.gui.ui.components.MorpheBannerTone
+import app.morphe.gui.ui.components.MorpheIconButton
+import app.morphe.gui.ui.components.MorpheIconButtonSize
+import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.components.NavigationPill
 import app.morphe.gui.ui.components.OfflineBadge
-import app.morphe.gui.ui.components.PatchesLoadingIndicator
 import app.morphe.gui.ui.components.TopBarRow
-import app.morphe.gui.ui.components.rememberSymmetricPadding
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.autoMirrored
 import app.morphe.gui.ui.screens.home.HomePage
 import app.morphe.gui.ui.screens.home.HomeUiState
 import app.morphe.gui.ui.theme.LocalThemeState
+import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -40,14 +41,13 @@ import org.jetbrains.compose.resources.stringResource
 internal fun HeaderBar(
     uiState: HomeUiState,
     onRetry: () -> Unit,
-    onUpdateChannelChanged: () -> Unit = {},
     selectedPage: HomePage = uiState.selectedPage,
     onSelectPage: (HomePage) -> Unit = {},
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
-    val paddingState = rememberSymmetricPadding()
+    val trailingSpacing = if (MorpheTheme.shapes.smallDp >= 8.dp) 12.dp else 6.dp
 
-    Box(
+    Layout(
         modifier = Modifier
             .fillMaxWidth()
             .drawBehind {
@@ -58,60 +58,63 @@ internal fun HeaderBar(
                     strokeWidth = 1f
                 )
             }
-            .padding(vertical = 8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 12.dp)
-                .onSizeChanged { paddingState.leadingWidthPx = it.width }
-        ) {
-            BrandingSection(isCompact = true)
-        }
+            .padding(vertical = 8.dp),
+        content = {
+            Box(modifier = Modifier.padding(start = 12.dp)) {
+                BrandingSection(isCompact = true)
+            }
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(horizontal = paddingState.centerSidePadding)
-        ) {
+            NavigationPill(
+                selectedPage = selectedPage,
+                onSelectPage = onSelectPage,
+                enabled = !uiState.isAnalyzing,
+            )
+
             Row(
+                modifier = Modifier.padding(end = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.spacedBy(trailingSpacing),
             ) {
-                if (uiState.isLoadingPatches && uiState.supportedApps.isEmpty()) {
-                    PatchesLoadingIndicator()
-                } else {
-                    NavigationPill(
-                        selectedPage = selectedPage,
-                        onSelectPage = onSelectPage,
-                        enabled = !uiState.isAnalyzing,
-                    )
-                }
-
                 if (uiState.isOffline && !uiState.isLoadingPatches) {
-                    Spacer(modifier = Modifier.width(12.dp))
                     OfflineBadge(onRetry = onRetry)
                 }
+
+                TopBarRow(
+                    showSettingsButton = false,
+                )
             }
         }
+    ) { measurables, constraints ->
+        val relaxed = constraints.copy(minWidth = 0, minHeight = 0)
+        val leading = measurables[0].measure(relaxed)
+        val trailing = measurables[2].measure(relaxed)
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 12.dp)
-                .onSizeChanged { paddingState.trailingWidthPx = it.width }
-        ) {
-            TopBarRow(
-                onUpdateChannelChanged = onUpdateChannelChanged,
-            )
+        val minGapPx = 16.dp.roundToPx()
+        val maxCenterWidth = (constraints.maxWidth - leading.width - trailing.width - minGapPx * 2)
+            .coerceAtLeast(0)
+        val center = measurables[1].measure(relaxed.copy(maxWidth = maxCenterWidth))
+
+        val width = constraints.maxWidth
+        val height = maxOf(leading.height, center.height, trailing.height)
+        val idealCenterX = (width - center.width) / 2
+        val minCenterX = leading.width + minGapPx
+        val maxCenterX = (width - trailing.width - minGapPx - center.width).coerceAtLeast(minCenterX)
+        val centerX = idealCenterX.coerceIn(minCenterX, maxCenterX)
+
+        layout(width, height) {
+            leading.placeRelative(0, (height - leading.height) / 2)
+            center.placeRelative(centerX, (height - center.height) / 2)
+            trailing.placeRelative(width - trailing.width, (height - trailing.height) / 2)
         }
     }
 }
 
-/** Top bar displayed during patching and results with navigation hidden. */
+/** Top bar displayed during patching, results, and pushed Settings with main navigation hidden. */
 @Composable
 fun SimpleTopBar(
-    isPatching: Boolean = false,
+    title: String? = null,
+    onBack: (() -> Unit)? = null,
+    showSettingsButton: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -134,7 +137,32 @@ fun SimpleTopBar(
                 .align(Alignment.CenterStart)
                 .padding(start = 12.dp)
         ) {
-            BrandingSection(isCompact = true)
+            if (onBack != null || title != null) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    if (onBack != null) {
+                        MorpheIconButton(
+                            icon = MorpheIcons.ArrowBack,
+                            iconModifier = Modifier.autoMirrored(),
+                            contentDescription = stringResource(Res.string.back),
+                            size = MorpheIconButtonSize.TOP_BAR,
+                            variant = MorpheIconButtonVariant.SURFACE,
+                            onClick = onBack,
+                        )
+                    }
+                    if (title != null) {
+                        Text(
+                            text = title,
+                            style = MorpheTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                }
+            } else {
+                BrandingSection(isCompact = true)
+            }
         }
 
         Box(
@@ -143,7 +171,7 @@ fun SimpleTopBar(
                 .padding(end = 12.dp)
         ) {
             TopBarRow(
-                isPatching = isPatching,
+                showSettingsButton = showSettingsButton,
             )
         }
     }
@@ -155,13 +183,14 @@ internal fun MultiSourceHintBanner(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    MorpheBanner(modifier = modifier, tone = MorpheBannerTone.Info) {
-        MorpheBannerText(
-            text = stringResource(Res.string.home_header_multi_source_hint),
-            modifier = Modifier.weight(1f),
-        )
-        MorpheBannerDismiss(onClick = onDismiss)
-    }
+    MorpheBanner(
+        title = stringResource(Res.string.home_multi_source_hint_title),
+        subtitle = stringResource(Res.string.home_header_multi_source_hint),
+        tone = MorpheBannerTone.Info,
+        icon = MorpheIcons.Info,
+        onDismiss = onDismiss,
+        modifier = modifier,
+    )
 }
 
 /** Warning banner displayed when one or more patch sources fail to load. */
@@ -173,16 +202,17 @@ internal fun SourcesFailedBanner(
     modifier: Modifier = Modifier,
 ) {
     MorpheBanner(
-        modifier = modifier,
+        title = stringResource(Res.string.home_sources_failed_title),
+        subtitle = pluralStringResource(Res.plurals.home_header_sources_failed, count, count),
         tone = MorpheBannerTone.Error,
         icon = MorpheIcons.Warning,
+        onDismiss = onDismiss,
+        modifier = modifier,
     ) {
-        MorpheBannerText(
-            text = pluralStringResource(Res.plurals.home_header_sources_failed, count, count),
-            modifier = Modifier.weight(1f),
+        MorpheBannerAction(
+            label = stringResource(Res.string.home_header_manage_sources_button),
+            onClick = onManageSources,
         )
-        MorpheBannerAction(label = stringResource(Res.string.home_header_manage_sources_button), onClick = onManageSources)
-        MorpheBannerDismiss(onClick = onDismiss)
     }
 }
 

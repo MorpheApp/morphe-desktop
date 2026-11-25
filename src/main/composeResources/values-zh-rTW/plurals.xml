@@ -45,4 +45,25 @@
     <plurals name="changelog_performance_count">
         <item quantity="other">%1$d 項最佳化</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="other">%1$s (%2$d 個檔案)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="other">總計：%1$s (%2$d 個檔案)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="other">比...更新的 %1$d 個版本</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="other">比...更舊的 %1$d 個版本</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="other">%1$d 個修補程式</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="other">%1$d 個應用程式</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="other">%1$d 個選項</item>
+    </plurals>
 </resources>

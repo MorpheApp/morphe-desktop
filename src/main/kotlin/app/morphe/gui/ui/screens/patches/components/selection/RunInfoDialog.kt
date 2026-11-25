@@ -72,6 +72,29 @@ internal fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
                 if (info.bundles.isEmpty()) RunInfoDetail(stringResource(Res.string.patch_selection_run_info_no_bundles))
             }
 
+            info.developerOptions?.let { dev ->
+                RunInfoGroup(
+                    label = stringResource(Res.string.patch_selection_run_info_dev_group),
+                    color = primaryColor,
+                ) {
+                    val modeLabel = when (dev.bytecodeMode) {
+                        "STRIP_FAST" -> stringResource(Res.string.settings_dev_bytecode_mode_strip_fast)
+                        "STRIP_SAFE" -> stringResource(Res.string.settings_dev_bytecode_mode_strip_safe)
+                        "FULL" -> stringResource(Res.string.settings_dev_bytecode_mode_full)
+                        else -> dev.bytecodeMode
+                    }
+                    RunInfoDetail(stringResource(Res.string.patch_selection_run_info_bytecode_mode, modeLabel))
+                    val validateText = if (dev.validateFingerprints) stringResource(Res.string.on) else stringResource(Res.string.off)
+                    RunInfoDetail(stringResource(Res.string.patch_selection_run_info_validate, validateText))
+                    val sdkText = when {
+                        !dev.verifyWithSdk -> stringResource(Res.string.off)
+                        dev.sdkPath != null -> "${stringResource(Res.string.on)} (${dev.sdkPath})"
+                        else -> stringResource(Res.string.on)
+                    }
+                    RunInfoDetail(stringResource(Res.string.patch_selection_run_info_verify_sdk, sdkText))
+                }
+            }
+
             Row(modifier = Modifier.fillMaxWidth()) {
                 MorpheButton(
                     label = stringResource(Res.string.close),

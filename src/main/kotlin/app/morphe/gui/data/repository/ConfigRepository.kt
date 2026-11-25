@@ -20,6 +20,8 @@ import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.ui.theme.ThemeStyle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -37,6 +39,7 @@ open class ConfigRepository {
     }
 
     private var cachedConfig: AppConfig? = null
+    private val loadMutex = Mutex()
 
     /**
      * Load config from file, or return default if not exists.
@@ -44,30 +47,35 @@ open class ConfigRepository {
     open suspend fun loadConfig(): AppConfig = withContext(Dispatchers.IO) {
         cachedConfig?.let { return@withContext it }
 
-        // One-time migration from the legacy per-OS app-data path to the
-        // unified morphe-data location. Runs once and is a no-op thereafter.
-        ConfigMigration.runIfNeeded()
+        // Callers race here at startup; the lock lets the later ones take the config the first one read.
+        loadMutex.withLock {
+            cachedConfig?.let { return@withLock it }
 
-        val configFile = MorpheData.configFile
+            // One-time migration from the legacy per-OS app-data path to the
+            // unified morphe-data location. Runs once and is a no-op thereafter.
+            ConfigMigration.runIfNeeded()
 
-        try {
-            if (configFile.exists()) {
-                val content = configFile.readText()
-                val config = json.decodeFromString<AppConfig>(content)
-                cachedConfig = config
-                Logger.info("Config loaded from ${configFile.absolutePath}")
-                config
-            } else {
-                Logger.info("No config file found, using defaults")
-                val default = AppConfig()
-                saveConfig(default)
-                default
+            val configFile = MorpheData.configFile
+
+            try {
+                if (configFile.exists()) {
+                    val content = configFile.readText()
+                    val config = json.decodeFromString<AppConfig>(content)
+                    cachedConfig = config
+                    Logger.info("Config loaded from ${configFile.absolutePath}")
+                    config
+                } else {
+                    Logger.info("No config file found, using defaults")
+                    val default = AppConfig()
+                    saveConfig(default)
+                    default
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Logger.error("Failed to load config, using defaults", e)
+                AppConfig()
             }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Logger.error("Failed to load config, using defaults", e)
-            AppConfig()
         }
     }
 
@@ -104,6 +112,26 @@ open class ConfigRepository {
     suspend fun setUseSharpCorners(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(useSharpCorners = enabled))
+    }
+
+    suspend fun setUseOutlines(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(useOutlines = enabled))
+    }
+
+    suspend fun setShowAppIcons(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(showAppIcons = enabled))
+    }
+
+    suspend fun setShowMoreAppsCard(enabled: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(showMoreAppsCard = enabled))
+    }
+
+    suspend fun setCommunityNoticeAcknowledged(acknowledged: Boolean) {
+        val current = loadConfig()
+        saveConfig(current.copy(communityNoticeAcknowledged = acknowledged))
     }
 
     suspend fun setHomeAppSortMode(mode: String) {
@@ -222,13 +250,6 @@ open class ConfigRepository {
     suspend fun setUseSimpleMode(enabled: Boolean) {
         val current = loadConfig()
         saveConfig(current.copy(useSimpleMode = enabled))
-    }
-
-    /** Persists the expanded state of a settings section. */
-    suspend fun setCollapsibleSectionExpanded(id: String, expanded: Boolean) {
-        val current = loadConfig()
-        val updated = current.collapsibleSectionStates + (id to expanded)
-        saveConfig(current.copy(collapsibleSectionStates = updated))
     }
 
     /** Returns the currently active patch source. */

@@ -6,13 +6,12 @@
 package app.morphe.gui.util
 
 import androidx.compose.runtime.Composable
+import app.morphe.engine.util.toLatinDigitsLocale
 import app.morphe.gui.LocalLanguageState
 import app.morphe.gui.data.repository.LanguageRepository
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.LocalDate
-import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatterBuilder
@@ -30,15 +29,6 @@ object FormatUtils {
             Locale.forLanguageTag(languageCode)
         }
         return toLatinDigitsLocale(baseLocale)
-    }
-
-    /** Ensures [locale] uses Western digits (0-9) via Unicode "nu-latn" extension. */
-    fun toLatinDigitsLocale(locale: Locale): Locale {
-        return try {
-            Locale.Builder().setLocale(locale).setUnicodeLocaleKeyword("nu", "latn").build()
-        } catch (_: Exception) {
-            locale
-        }
     }
 
     /** Formats a nullable [Date] in medium localized style. */
@@ -66,61 +56,48 @@ object FormatUtils {
     /** Formats a nullable [Date] into short month and day without year. */
     fun formatShortDate(date: Date?, locale: Locale = Locale.getDefault()): String {
         if (date == null) return ""
-        val pattern = try {
-            val shortPattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
-                FormatStyle.SHORT,
-                null,
-                IsoChronology.INSTANCE,
-                locale
-            )
-            val dIdx = shortPattern.indexOf('d')
-            val mIdx = shortPattern.indexOf('M')
-            if (dIdx != -1 && mIdx != -1 && dIdx < mIdx) "d MMM" else "MMM d"
-        } catch (_: Exception) {
-            "MMM d"
-        }
+        val pattern = if (isDayBeforeMonth(locale)) "d MMM" else "MMM d"
         return SimpleDateFormat(pattern, locale).format(date)
     }
 
-    /** Formats an ISO-8601 date string into localized date/time. */
-    fun formatIsoDateTime(isoDate: String?, locale: Locale = Locale.getDefault()): String {
-        if (isoDate.isNullOrBlank()) return ""
-        return try {
-            val date = try {
-                Date.from(OffsetDateTime.parse(isoDate).toInstant())
-            } catch (_: Exception) {
-                try {
-                    Date.from(Instant.parse(isoDate))
-                } catch (_: Exception) {
-                    val localDate = LocalDate.parse(isoDate)
-                    Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-                }
-            }
-            if (isoDate.contains("T")) {
-                formatDateTime(date, locale)
-            } else {
-                formatDate(date, locale)
-            }
-        } catch (_: Exception) {
-            isoDate
+    /** Formats a timestamp with full month name, adding the year when it differs from [nowMillis]'s year. */
+    fun formatFullMonthOrLongDate(
+        millis: Long,
+        locale: Locale = Locale.getDefault(),
+        nowMillis: Long = System.currentTimeMillis(),
+        zoneId: ZoneId = ZoneId.systemDefault(),
+    ): String {
+        val dateYear = Instant.ofEpochMilli(millis).atZone(zoneId).year
+        val currentYear = Instant.ofEpochMilli(nowMillis).atZone(zoneId).year
+        val date = Date(millis)
+        return if (dateYear == currentYear) {
+            val pattern = if (isDayBeforeMonth(locale)) "d MMMM" else "MMMM d"
+            SimpleDateFormat(pattern, locale).format(date)
+        } else {
+            DateFormat.getDateInstance(DateFormat.LONG, locale).format(date)
         }
     }
+
+    private fun isDayBeforeMonth(locale: Locale): Boolean = try {
+        val shortPattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
+            FormatStyle.SHORT,
+            null,
+            IsoChronology.INSTANCE,
+            locale
+        )
+        val dIdx = shortPattern.indexOf('d')
+        val mIdx = shortPattern.indexOf('M')
+        dIdx != -1 && mIdx != -1 && dIdx < mIdx
+    } catch (_: Exception) {
+        false
+    }
+
+    /** Formats a signed integer delta with an explicit leading `+` when positive. */
+    fun formatSignedDelta(delta: Int): String = if (delta > 0) "+$delta" else delta.toString()
 
     /** Formats a count as the reader writes numbers, with the grouping of their language. */
     fun formatCount(count: Long, locale: Locale = Locale.getDefault()): String =
         String.format(toLatinDigitsLocale(locale), "%,d", count)
-
-    /** Formats a byte count into a localized human-readable file size string. */
-    fun formatFileSize(bytes: Long, locale: Locale = Locale.getDefault()): String {
-        val latnLocale = toLatinDigitsLocale(locale)
-        return when {
-            bytes <= 0 -> "0 B"
-            bytes < 1024 -> "$bytes B"
-            bytes < 1024 * 1024 -> String.format(latnLocale, "%.1f KB", bytes / 1024.0)
-            bytes < 1024 * 1024 * 1024 -> String.format(latnLocale, "%.1f MB", bytes / (1024.0 * 1024.0))
-            else -> String.format(latnLocale, "%.2f GB", bytes / (1024.0 * 1024.0 * 1024.0))
-        }
-    }
 
     /** Formats data transfer speed in KB/s into a localized string. */
     fun formatTransferRate(kbPerSec: Int, locale: Locale = Locale.getDefault()): String {
@@ -130,6 +107,13 @@ object FormatUtils {
         } else {
             "$kbPerSec KB/s"
         }
+    }
+
+    /** Formats an application version with its targeted build code (if any), showing at most one build code. */
+    fun formatVersionWithBuild(version: String, buildCodes: Set<Int>): String {
+        if (buildCodes.isEmpty()) return version
+        val primaryCode = buildCodes.first()
+        return "$version ($primaryCode)"
     }
 }
 

@@ -17,14 +17,12 @@ fun OfflineBanner(
     modifier: Modifier = Modifier,
 ) {
     MorpheBanner(
-        modifier = modifier,
-        tone = MorpheBannerTone.Error,
+        title = stringResource(Res.string.status_offline),
+        subtitle = stringResource(Res.string.offline_banner_text),
+        tone = MorpheBannerTone.Warning,
         icon = MorpheIcons.WifiOff,
+        modifier = modifier,
     ) {
-        MorpheBannerText(
-            text = stringResource(Res.string.offline_banner_text),
-            modifier = Modifier.weight(1f),
-        )
         MorpheBannerAction(
             label = stringResource(Res.string.retry),
             icon = MorpheIcons.Refresh,

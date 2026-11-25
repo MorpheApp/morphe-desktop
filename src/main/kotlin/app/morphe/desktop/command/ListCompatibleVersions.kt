@@ -9,6 +9,7 @@ import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.VersionMap
+import app.morphe.engine.patches.displayLabel
 import app.morphe.engine.patches.versionCodesFor
 import app.morphe.engine.util.Logger
 import java.io.File
@@ -102,10 +103,13 @@ internal class ListCompatibleVersions : Runnable {
             }
         }
 
+        val formFactors = SupportedAppCatalog.extractFormFactors(patches)
+
         fun buildString(entry: Map.Entry<String, VersionMap>) =
             buildString {
                 val (name, versions) = entry
                 appendLine("Package name: $name")
+                formFactors[name]?.displayLabel()?.let { appendLine("Form factor: $it") }
                 appendLine("Most common compatible versions:")
                 appendLine(versions.buildVersionsString(name).prependIndent("\t"))
             }

@@ -60,4 +60,32 @@
         <item quantity="one">%1$d optimalizálás</item>
         <item quantity="other">%1$d optimalizálás</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d fájl)</item>
+        <item quantity="other">%1$s (%2$d fájl)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Összesen: %1$s (%2$d fájl)</item>
+        <item quantity="other">Összesen: %1$s (%2$d fájl)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d kiadás újabb, mint</item>
+        <item quantity="other">%1$d kiadás újabb, mint</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d kiadás régebbi, mint</item>
+        <item quantity="other">%1$d kiadás régebbi, mint</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d módosítás</item>
+        <item quantity="other">%1$d módosítás</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d alkalmazás</item>
+        <item quantity="other">%1$d alkalmazás</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d opció</item>
+        <item quantity="other">%1$d opció</item>
+    </plurals>
 </resources>

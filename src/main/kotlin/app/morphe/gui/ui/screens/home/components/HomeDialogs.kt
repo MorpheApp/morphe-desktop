@@ -15,9 +15,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.VersionStatus
-import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonVariant
-import app.morphe.gui.ui.components.MorpheDialogCard
+import app.morphe.gui.ui.components.MorpheDialog
+import app.morphe.gui.ui.components.MorpheDialogActions
 import app.morphe.gui.ui.components.MorpheDialogText
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -45,29 +45,21 @@ internal fun VersionWarningDialog(
     )
     val warnColor = warningContent.colorType.toColor()
 
-    MorpheDialogCard(onDismiss = onDismiss, title = warningContent.title) {
-        Icon(
-            imageVector = MorpheIcons.Warning,
-            contentDescription = null,
-            tint = warnColor,
-            modifier = Modifier.size(28.dp),
-        )
+    MorpheDialog(
+        onDismiss = onDismiss,
+        title = warningContent.title,
+        icon = MorpheIcons.Warning,
+        accent = warnColor,
+        actions = {
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.home_dialog_continue_anyway),
+                onDismiss = onDismiss,
+                onConfirm = onConfirm,
+                customConfirmColor = warnColor,
+            )
+        },
+    ) {
         MorpheDialogText(warningContent.message)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            MorpheButton(
-                label = stringResource(Res.string.cancel),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.OUTLINED,
-                onClick = onDismiss,
-            )
-            MorpheButton(
-                label = stringResource(Res.string.home_dialog_continue_anyway),
-                modifier = Modifier.weight(1f),
-                variant = MorpheButtonVariant.FILLED,
-                customColor = warnColor,
-                onClick = onConfirm,
-            )
-        }
     }
 }
 
@@ -75,18 +67,36 @@ internal fun VersionWarningDialog(
 @Composable
 internal fun ForgetConfirmDialog(
     record: PatchedAppRecord,
+    hasKeptOriginal: Boolean,
+    deleteOriginal: Boolean,
+    onDeleteOriginalChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    MorpheDialogCard(onDismiss = onDismiss, title = stringResource(Res.string.home_dialog_forget_title, record.displayName)) {
+    MorpheDialog(
+        onDismiss = onDismiss,
+        title = stringResource(Res.string.home_dialog_forget_title, record.displayName),
+        icon = MorpheIcons.Delete,
+        accent = MorpheTheme.colors.danger,
+        actions = {
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.home_dialog_forget_button),
+                confirmVariant = MorpheButtonVariant.DANGER,
+                onDismiss = onDismiss,
+                onConfirm = onConfirm,
+            )
+        },
+    ) {
         MorpheDialogText(
             stringResource(Res.string.home_dialog_forget_message, record.displayName)
         )
-        DangerDialogActionRow(
-            confirmLabel = stringResource(Res.string.home_dialog_forget_button),
-            onDismiss = onDismiss,
-            onConfirm = onConfirm,
-        )
+        if (hasKeptOriginal) {
+            DialogCheckboxRow(
+                checked = deleteOriginal,
+                onCheckedChange = onDeleteOriginalChange,
+                label = stringResource(Res.string.home_dialog_also_delete_original),
+            )
+        }
     }
 }
 
@@ -96,65 +106,72 @@ internal fun UninstallConfirmDialog(
     record: PatchedAppRecord,
     alsoForget: Boolean,
     onAlsoForgetChange: (Boolean) -> Unit,
+    hasKeptOriginal: Boolean,
+    deleteOriginal: Boolean,
+    onDeleteOriginalChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
     val dangerColor = MorpheTheme.colors.danger
-    MorpheDialogCard(
+    MorpheDialog(
         onDismiss = onDismiss,
         title = stringResource(Res.string.home_dialog_uninstall_title, record.displayName),
+        icon = MorpheIcons.Delete,
+        accent = dangerColor,
+        actions = {
+            MorpheDialogActions(
+                confirmLabel = stringResource(Res.string.home_dialog_uninstall_button),
+                confirmVariant = MorpheButtonVariant.DANGER,
+                onDismiss = onDismiss,
+                onConfirm = onConfirm,
+            )
+        },
     ) {
         MorpheDialogText(
             stringResource(Res.string.home_dialog_uninstall_message, record.displayName)
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(MorpheTheme.shapes.small)
-                .handCursor()
-                .clickable { onAlsoForgetChange(!alsoForget) }
-                .padding(vertical = 4.dp),
-        ) {
-            Checkbox(
-                checked = alsoForget,
-                onCheckedChange = onAlsoForgetChange,
-                colors = CheckboxDefaults.colors(checkedColor = dangerColor),
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = stringResource(Res.string.home_dialog_uninstall_also_forget),
-                style = MorpheTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
+        DialogCheckboxRow(
+            checked = alsoForget,
+            onCheckedChange = onAlsoForgetChange,
+            label = stringResource(Res.string.home_dialog_uninstall_also_forget),
+        )
+        if (hasKeptOriginal) {
+            DialogCheckboxRow(
+                checked = deleteOriginal,
+                onCheckedChange = onDeleteOriginalChange,
+                label = stringResource(Res.string.home_dialog_also_delete_original),
             )
         }
-        DangerDialogActionRow(
-            confirmLabel = stringResource(Res.string.home_dialog_uninstall_button),
-            onDismiss = onDismiss,
-            onConfirm = onConfirm,
-        )
     }
 }
 
+/** A checkbox with its label under a destructive dialog's message, toggled by clicking anywhere on the row. */
 @Composable
-private fun DangerDialogActionRow(
-    confirmLabel: String,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
+private fun DialogCheckboxRow(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    label: String,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-        MorpheButton(
-            label = stringResource(Res.string.cancel),
-            modifier = Modifier.weight(1f),
-            variant = MorpheButtonVariant.OUTLINED,
-            onClick = onDismiss,
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MorpheTheme.shapes.small)
+            .handCursor()
+            .clickable { onCheckedChange(!checked) }
+            .padding(vertical = 4.dp),
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(checkedColor = MorpheTheme.colors.danger),
+            modifier = Modifier.size(20.dp),
         )
-        MorpheButton(
-            label = confirmLabel,
-            modifier = Modifier.weight(1f),
-            variant = MorpheButtonVariant.DANGER,
-            onClick = onConfirm,
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = label,
+            style = MorpheTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

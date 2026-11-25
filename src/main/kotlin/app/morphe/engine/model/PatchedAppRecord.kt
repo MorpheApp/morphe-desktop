@@ -5,6 +5,7 @@
 
 package app.morphe.engine.model
 
+import app.morphe.patcher.patch.FormFactor
 import kotlinx.serialization.Serializable
 
 /** History record for a patched app, keyed by original [packageName]. */
@@ -16,8 +17,9 @@ data class PatchedAppRecord(
     val displayName: String,
     val apkVersion: String,
     val apkVersionCode: Int? = null,
+    val formFactor: FormFactor? = null,
 
-    /** Input APK path used. May no longer exist on disk. */
+    /** Input APK path used, or its copy in the original APK store when kept. May no longer exist on disk. */
     val inputApkPath: String,
     val outputApkPath: String,
 

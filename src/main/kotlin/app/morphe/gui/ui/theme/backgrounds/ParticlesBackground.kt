@@ -76,6 +76,7 @@ fun ParticlesBackground(
 
     // Frame-rate physics update loop.
     LaunchedEffect(Unit) {
+        awaitBackgroundMotion()
         var lastFrameMs = withInfiniteAnimationFrameMillis { it }
         var currentSpeed = targetSpeedState.floatValue
         while (true) {

@@ -14,12 +14,14 @@ import app.morphe.engine.util.Logger
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
+import app.morphe.gui.data.repository.PeopleRepository
 import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.screens.home.HomeViewModel
 import app.morphe.gui.ui.screens.patches.PatchSelectionViewModel
 import app.morphe.gui.ui.screens.patches.PatchesViewModel
+import app.morphe.gui.ui.screens.patching.PatchingSessionTracker
 import app.morphe.gui.ui.screens.patching.PatchingViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
@@ -52,15 +54,16 @@ val appModule = module {
     single { PatchSourceManager(get(), get()) }
     single { UpdateCheckRepository(get()) }
     single { ChangelogRepository(get()) }
+    single { PeopleRepository(get(), get()) }
     single { PatchedAppStore.shared }
+    single { PatchingSessionTracker() }
 
     viewModel {
         HomeViewModel(get(), get(), get(), get(), get())
     }
-    viewModel { params ->
+    viewModel {
         val psm = get<PatchSourceManager>()
         PatchesViewModel(
-            params.get(),
             psm.getActiveRepositorySync(),
             get(),
             psm.getLocalFilePath(),
@@ -93,6 +96,7 @@ val appModule = module {
         PatchingViewModel(
             params.get(),
             get(),
+            sessionTracker = get(),
         )
     }
 }

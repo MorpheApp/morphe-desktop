@@ -1,3 +1,303 @@
+# [2.4.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.2...v2.4.0-dev.3) (2026-11-25)
+
+
+### Bug Fixes
+
+* Update Patcher and ARSCLib dependency ([683899a](https://github.com/MorpheApp/morphe-desktop/commit/683899a9f2bcb531a3998de8ee3396dd6237f720))
+
+# [2.4.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.1...v2.4.0-dev.2) (2026-11-23)
+
+
+### Bug Fixes
+
+* Correct Strip libs and output naming ([7a59d00](https://github.com/MorpheApp/morphe-desktop/commit/7a59d0060050a2e1fdc816046544b73ce036354c))
+* Hide language subtext when it matches the title ([b5c5ae8](https://github.com/MorpheApp/morphe-desktop/commit/b5c5ae89f657ceed8ad6ad620f0f5383621a2d32))
+* Prevent concurrent writes from corrupting config ([6e0fb6c](https://github.com/MorpheApp/morphe-desktop/commit/6e0fb6c6afb7a0098132e97b41b479c9b4831ce4))
+* Show update badge only when relevant patches are available ([#455](https://github.com/MorpheApp/morphe-desktop/issues/455)) ([4c9a3b8](https://github.com/MorpheApp/morphe-desktop/commit/4c9a3b8f972bf7ac22418258776b25e6f3146508))
+
+# [2.4.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0...v2.4.0-dev.1) (2026-11-22)
+
+
+### Bug Fixes
+
+* Stop root mount from keeping the old patched APK ([97be3df](https://github.com/MorpheApp/morphe-desktop/commit/97be3df70f3d90ea6304d09f6494024fbe58e419))
+* Support fractional scaling on X11 and XWayland ([#446](https://github.com/MorpheApp/morphe-desktop/issues/446)) ([edfe717](https://github.com/MorpheApp/morphe-desktop/commit/edfe717d39456e26ffb6e2cd0a18fca2b2b73e8c))
+
+
+### Features
+
+* Add option to keep original APKs for repatching ([#445](https://github.com/MorpheApp/morphe-desktop/issues/445)) ([4c8659b](https://github.com/MorpheApp/morphe-desktop/commit/4c8659b25f9320993c4a405a20dda49399c76cc6))
+
+
+### Performance Improvements
+
+* Speed up startup and loading of apps and patch options ([#454](https://github.com/MorpheApp/morphe-desktop/issues/454)) ([9683a7d](https://github.com/MorpheApp/morphe-desktop/commit/9683a7d82fb5b1c9dc010d2228f213bddf7b1481))
+
+# [2.3.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0...v2.3.0) (2026-11-21)
+
+
+### Bug Fixes
+
+* Show real app name without a patch bundle ([#436](https://github.com/MorpheApp/morphe-desktop/issues/436)) ([dc09eb9](https://github.com/MorpheApp/morphe-desktop/commit/dc09eb9e0f71dfa156ada236d00d1a4d60ad29c9))
+* Show the Play Store icon for uninstalled apps ([#444](https://github.com/MorpheApp/morphe-desktop/issues/444)) ([84e80d2](https://github.com/MorpheApp/morphe-desktop/commit/84e80d242aa64db20cacd6852b5d75273209e0da))
+* Update morphe-patcher dependency ([8c6faa2](https://github.com/MorpheApp/morphe-desktop/commit/8c6faa2db358778277c60024134c4d2f351a245d))
+* Update Patcher dependency ([3e7fd0e](https://github.com/MorpheApp/morphe-desktop/commit/3e7fd0e46a0226338273afc528765b0e70a77f1d))
+
+
+### Features
+
+* Rework About into Settings subpage ([#441](https://github.com/MorpheApp/morphe-desktop/issues/441)) ([8450c6f](https://github.com/MorpheApp/morphe-desktop/commit/8450c6f76b62ad8b0483289098518a36825f1fd9))
+* Rework patch sources and versions screen + Dialog Consolidation ([#433](https://github.com/MorpheApp/morphe-desktop/issues/433)) ([70be7ca](https://github.com/MorpheApp/morphe-desktop/commit/70be7ca458df9999c2b60b5982697e716604fba4))
+* Rework status banners and add source update banner ([#440](https://github.com/MorpheApp/morphe-desktop/issues/440)) ([e4d111a](https://github.com/MorpheApp/morphe-desktop/commit/e4d111a89514bdcbd5e42aff32a9f2c25b777b30))
+* Show app form factors in GUI and CLI ([#435](https://github.com/MorpheApp/morphe-desktop/issues/435)) ([3a41067](https://github.com/MorpheApp/morphe-desktop/commit/3a41067a67f9d30946075302cfdde5db2eb69be9))
+* Show contributors and supporters in settings about screen ([#442](https://github.com/MorpheApp/morphe-desktop/issues/442)) ([7b42de6](https://github.com/MorpheApp/morphe-desktop/commit/7b42de63c5054450bc2dd771a2ed31eb3b489fbf))
+
+# [2.3.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.3...v2.3.0-dev.4) (2026-11-21)
+
+
+### Bug Fixes
+
+* Show the Play Store icon for uninstalled apps ([#444](https://github.com/MorpheApp/morphe-desktop/issues/444)) ([84e80d2](https://github.com/MorpheApp/morphe-desktop/commit/84e80d242aa64db20cacd6852b5d75273209e0da))
+
+
+### Features
+
+* Rework About into Settings subpage ([#441](https://github.com/MorpheApp/morphe-desktop/issues/441)) ([8450c6f](https://github.com/MorpheApp/morphe-desktop/commit/8450c6f76b62ad8b0483289098518a36825f1fd9))
+* Rework status banners and add source update banner ([#440](https://github.com/MorpheApp/morphe-desktop/issues/440)) ([e4d111a](https://github.com/MorpheApp/morphe-desktop/commit/e4d111a89514bdcbd5e42aff32a9f2c25b777b30))
+* Show contributors and supporters in settings about screen ([#442](https://github.com/MorpheApp/morphe-desktop/issues/442)) ([7b42de6](https://github.com/MorpheApp/morphe-desktop/commit/7b42de63c5054450bc2dd771a2ed31eb3b489fbf))
+
+# [2.3.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.2...v2.3.0-dev.3) (2026-11-18)
+
+
+### Bug Fixes
+
+* Update Patcher dependency ([3e7fd0e](https://github.com/MorpheApp/morphe-desktop/commit/3e7fd0e46a0226338273afc528765b0e70a77f1d))
+
+
+### Features
+
+* Rework patch sources and versions screen + Dialog Consolidation ([#433](https://github.com/MorpheApp/morphe-desktop/issues/433)) ([70be7ca](https://github.com/MorpheApp/morphe-desktop/commit/70be7ca458df9999c2b60b5982697e716604fba4))
+
+# [2.3.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0-dev.1...v2.3.0-dev.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* Show real app name without a patch bundle ([#436](https://github.com/MorpheApp/morphe-desktop/issues/436)) ([dc09eb9](https://github.com/MorpheApp/morphe-desktop/commit/dc09eb9e0f71dfa156ada236d00d1a4d60ad29c9))
+* Update morphe-patcher dependency ([8c6faa2](https://github.com/MorpheApp/morphe-desktop/commit/8c6faa2db358778277c60024134c4d2f351a245d))
+
+# [2.3.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0...v2.3.0-dev.1) (2026-11-15)
+
+
+### Features
+
+* Show app form factors in GUI and CLI ([#435](https://github.com/MorpheApp/morphe-desktop/issues/435)) ([3a41067](https://github.com/MorpheApp/morphe-desktop/commit/3a41067a67f9d30946075302cfdde5db2eb69be9))
+
+# [2.2.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.1...v2.2.0) (2026-11-15)
+
+
+### Bug Fixes
+
+* Apply options when patch name capitalization differs ([#425](https://github.com/MorpheApp/morphe-desktop/issues/425)) ([f77a10f](https://github.com/MorpheApp/morphe-desktop/commit/f77a10f99d6e5489961225bee8d5e205d9748260))
+* Handle app names that aren't valid in file names ([eaa3e1d](https://github.com/MorpheApp/morphe-desktop/commit/eaa3e1ddd2138d3da0a086172542386959c7d8cc))
+* Native root mount implementation and pre-mount checks ([#423](https://github.com/MorpheApp/morphe-desktop/issues/423)) ([03ed5b5](https://github.com/MorpheApp/morphe-desktop/commit/03ed5b58519bd916055587d174e1336c9db8fb40))
+* Send the build code and form factor to apk web-search ([6084ecf](https://github.com/MorpheApp/morphe-desktop/commit/6084ecf763638bec9d2651c22de6c39a5fa2f447))
+* Show device status on phones with Secure Folder ([#429](https://github.com/MorpheApp/morphe-desktop/issues/429)) ([36dec7a](https://github.com/MorpheApp/morphe-desktop/commit/36dec7affdb67394e40cef5a7e95e434e77fa679))
+* Update morphe-patcher dependency ([1c50c41](https://github.com/MorpheApp/morphe-desktop/commit/1c50c41f04165c1fcc16078ca87a430d8a89770f))
+* Update multi-bundle options outside the bundle directory ([#427](https://github.com/MorpheApp/morphe-desktop/issues/427)) ([e2971b1](https://github.com/MorpheApp/morphe-desktop/commit/e2971b1b4f4d43c06c8c8372da84e4dc7a42cf03))
+* Update Patcher dependency ([3485898](https://github.com/MorpheApp/morphe-desktop/commit/34858987bc1971d5aef4650e096121a6fc402429))
+* Update Patcher dependency ([d0dded5](https://github.com/MorpheApp/morphe-desktop/commit/d0dded51e89cfe1b14083b8f3ccc0dad97a5640a))
+* Update Patcher dependency ([9116676](https://github.com/MorpheApp/morphe-desktop/commit/9116676d54d308d69f4c1081e27ca720e347ecfe))
+* Update to latest Patcher ([19d9483](https://github.com/MorpheApp/morphe-desktop/commit/19d948358d6f2b3785ffb860fafaf85a51bf2038))
+* Update to latest Patcher and ARSCLib ([2800436](https://github.com/MorpheApp/morphe-desktop/commit/2800436d1d2ca249c8a3a9a3988bc700014dc0d7))
+
+
+### Features
+
+* Add "More apps" app card ([760abbc](https://github.com/MorpheApp/morphe-desktop/commit/760abbcb0f2ba83937b9316654d33cad74d314ca))
+* Add `Outlines` toggle ([#434](https://github.com/MorpheApp/morphe-desktop/issues/434)) ([9fbf79a](https://github.com/MorpheApp/morphe-desktop/commit/9fbf79a4a2695e43682ae4303a8c1058577a2d38))
+* Display required build number on version chips ([#412](https://github.com/MorpheApp/morphe-desktop/issues/412)) ([aa572ff](https://github.com/MorpheApp/morphe-desktop/commit/aa572ff6cec46b8a90c8131e4ab7c79de1c32988))
+* Expand cache management and granular clearing ([#411](https://github.com/MorpheApp/morphe-desktop/issues/411)) ([01295c9](https://github.com/MorpheApp/morphe-desktop/commit/01295c939f80cb68448f8014613908d0ba9339ae))
+* Pass the OBB files of a bundle to patches ([#422](https://github.com/MorpheApp/morphe-desktop/issues/422)) ([e8b92d9](https://github.com/MorpheApp/morphe-desktop/commit/e8b92d9a9793f2731eff63886fa048c587ce88f2))
+* Redesign settings as integrated page ([#430](https://github.com/MorpheApp/morphe-desktop/issues/430)) ([2de3ed9](https://github.com/MorpheApp/morphe-desktop/commit/2de3ed91515ffa48150c9ee9365cda878888f00c))
+* Show app icons on application cards ([#428](https://github.com/MorpheApp/morphe-desktop/issues/428)) ([31df643](https://github.com/MorpheApp/morphe-desktop/commit/31df643b0b6123d0b8859c91ea05a5e50755242d))
+
+# [2.2.0-dev.19](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.18...v2.2.0-dev.19) (2026-11-15)
+
+
+### Bug Fixes
+
+* Update Patcher dependency ([3485898](https://github.com/MorpheApp/morphe-desktop/commit/34858987bc1971d5aef4650e096121a6fc402429))
+
+# [2.2.0-dev.18](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.17...v2.2.0-dev.18) (2026-11-14)
+
+
+### Features
+
+* Add `Outlines` toggle ([#434](https://github.com/MorpheApp/morphe-desktop/issues/434)) ([9fbf79a](https://github.com/MorpheApp/morphe-desktop/commit/9fbf79a4a2695e43682ae4303a8c1058577a2d38))
+
+# [2.2.0-dev.17](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.16...v2.2.0-dev.17) (2026-11-14)
+
+
+### Bug Fixes
+
+* Update Patcher dependency ([d0dded5](https://github.com/MorpheApp/morphe-desktop/commit/d0dded51e89cfe1b14083b8f3ccc0dad97a5640a))
+
+# [2.2.0-dev.16](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.15...v2.2.0-dev.16) (2026-11-14)
+
+
+### Features
+
+* Redesign settings as integrated page ([#430](https://github.com/MorpheApp/morphe-desktop/issues/430)) ([2de3ed9](https://github.com/MorpheApp/morphe-desktop/commit/2de3ed91515ffa48150c9ee9365cda878888f00c))
+
+# [2.2.0-dev.15](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.14...v2.2.0-dev.15) (2026-11-14)
+
+
+### Bug Fixes
+
+* Update Patcher dependency ([9116676](https://github.com/MorpheApp/morphe-desktop/commit/9116676d54d308d69f4c1081e27ca720e347ecfe))
+
+# [2.2.0-dev.14](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.13...v2.2.0-dev.14) (2026-11-13)
+
+
+### Bug Fixes
+
+* Send the build code and form factor to apk web-search ([6084ecf](https://github.com/MorpheApp/morphe-desktop/commit/6084ecf763638bec9d2651c22de6c39a5fa2f447))
+
+# [2.2.0-dev.13](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.12...v2.2.0-dev.13) (2026-11-13)
+
+
+### Bug Fixes
+
+* Update morphe-patcher dependency ([1c50c41](https://github.com/MorpheApp/morphe-desktop/commit/1c50c41f04165c1fcc16078ca87a430d8a89770f))
+
+# [2.2.0-dev.12](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.11...v2.2.0-dev.12) (2026-11-10)
+
+
+### Bug Fixes
+
+* Show device status on phones with Secure Folder ([#429](https://github.com/MorpheApp/morphe-desktop/issues/429)) ([36dec7a](https://github.com/MorpheApp/morphe-desktop/commit/36dec7affdb67394e40cef5a7e95e434e77fa679))
+
+# [2.2.0-dev.11](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.10...v2.2.0-dev.11) (2026-11-09)
+
+
+### Features
+
+* Add "More apps" app card ([760abbc](https://github.com/MorpheApp/morphe-desktop/commit/760abbcb0f2ba83937b9316654d33cad74d314ca))
+
+# [2.2.0-dev.10](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.9...v2.2.0-dev.10) (2026-11-09)
+
+
+### Bug Fixes
+
+* Update to latest Patcher and ARSCLib ([2800436](https://github.com/MorpheApp/morphe-desktop/commit/2800436d1d2ca249c8a3a9a3988bc700014dc0d7))
+
+# [2.2.0-dev.9](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.8...v2.2.0-dev.9) (2026-11-09)
+
+
+### Bug Fixes
+
+* Handle app names that aren't valid in file names ([eaa3e1d](https://github.com/MorpheApp/morphe-desktop/commit/eaa3e1ddd2138d3da0a086172542386959c7d8cc))
+
+# [2.2.0-dev.8](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.7...v2.2.0-dev.8) (2026-11-09)
+
+
+### Features
+
+* Show app icons on application cards ([#428](https://github.com/MorpheApp/morphe-desktop/issues/428)) ([31df643](https://github.com/MorpheApp/morphe-desktop/commit/31df643b0b6123d0b8859c91ea05a5e50755242d))
+
+# [2.2.0-dev.7](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.6...v2.2.0-dev.7) (2026-11-09)
+
+
+### Bug Fixes
+
+* Update multi-bundle options outside the bundle directory ([#427](https://github.com/MorpheApp/morphe-desktop/issues/427)) ([e2971b1](https://github.com/MorpheApp/morphe-desktop/commit/e2971b1b4f4d43c06c8c8372da84e4dc7a42cf03))
+
+# [2.2.0-dev.6](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.5...v2.2.0-dev.6) (2026-11-08)
+
+
+### Bug Fixes
+
+* Apply options when patch name capitalization differs ([#425](https://github.com/MorpheApp/morphe-desktop/issues/425)) ([f77a10f](https://github.com/MorpheApp/morphe-desktop/commit/f77a10f99d6e5489961225bee8d5e205d9748260))
+
+# [2.2.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.4...v2.2.0-dev.5) (2026-11-08)
+
+
+### Bug Fixes
+
+* Native root mount implementation and pre-mount checks ([#423](https://github.com/MorpheApp/morphe-desktop/issues/423)) ([03ed5b5](https://github.com/MorpheApp/morphe-desktop/commit/03ed5b58519bd916055587d174e1336c9db8fb40))
+
+# [2.2.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.3...v2.2.0-dev.4) (2026-11-08)
+
+
+### Features
+
+* Pass the OBB files of a bundle to patches ([#422](https://github.com/MorpheApp/morphe-desktop/issues/422)) ([e8b92d9](https://github.com/MorpheApp/morphe-desktop/commit/e8b92d9a9793f2731eff63886fa048c587ce88f2))
+
+# [2.2.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-11-07)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([19d9483](https://github.com/MorpheApp/morphe-desktop/commit/19d948358d6f2b3785ffb860fafaf85a51bf2038))
+
+# [2.2.0-dev.2](https://github.com/MorpheApp/morphe-desktop/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-11-07)
+
+
+### Features
+
+* Display required build number on version chips ([#412](https://github.com/MorpheApp/morphe-desktop/issues/412)) ([aa572ff](https://github.com/MorpheApp/morphe-desktop/commit/aa572ff6cec46b8a90c8131e4ab7c79de1c32988))
+
+# [2.2.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.1...v2.2.0-dev.1) (2026-11-06)
+
+
+### Features
+
+* Expand cache management and granular clearing ([#411](https://github.com/MorpheApp/morphe-desktop/issues/411)) ([01295c9](https://github.com/MorpheApp/morphe-desktop/commit/01295c939f80cb68448f8014613908d0ba9339ae))
+
+## [2.1.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0...v2.1.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* Resolve relative input path when staging split bundles ([edcdccb](https://github.com/MorpheApp/morphe-desktop/commit/edcdccb00efafeb906be4bb70c106ef708775786))
+
+## [2.1.1-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0...v2.1.1-dev.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* Resolve relative input path when staging split bundles ([edcdccb](https://github.com/MorpheApp/morphe-desktop/commit/edcdccb00efafeb906be4bb70c106ef708775786))
+
+# [2.1.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.0.0...v2.1.0) (2026-11-06)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([faf97a5](https://github.com/MorpheApp/morphe-desktop/commit/faf97a50f754745cc53eba8c491becbf50eb7d65))
+
+
+### Features
+
+* Add root mounting support to GUI ([#404](https://github.com/MorpheApp/morphe-desktop/issues/404)) ([5280710](https://github.com/MorpheApp/morphe-desktop/commit/52807105b090c1e07eb6b9dfe5bba1b027d333cb))
+* Expose developer options in GUI settings ([#408](https://github.com/MorpheApp/morphe-desktop/issues/408)) ([48fb66f](https://github.com/MorpheApp/morphe-desktop/commit/48fb66f7851b3e8f7ac40b7f224f5ca71f6b074b))
+* Move `Tools` into `Settings` dialog ([#407](https://github.com/MorpheApp/morphe-desktop/issues/407)) ([36f3f2d](https://github.com/MorpheApp/morphe-desktop/commit/36f3f2de660726e99826617a67941865f241c335))
+* Show patching progress as the patcher reports it ([b3aa432](https://github.com/MorpheApp/morphe-desktop/commit/b3aa43247e3d3c238308f4dfe04954b45cae8bc7))
+
+# [2.1.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0-dev.4...v2.1.0-dev.5) (2026-11-06)
+
+
+### Features
+
+* Expose developer options in GUI settings ([#408](https://github.com/MorpheApp/morphe-desktop/issues/408)) ([48fb66f](https://github.com/MorpheApp/morphe-desktop/commit/48fb66f7851b3e8f7ac40b7f224f5ca71f6b074b))
+
+# [2.1.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0-dev.3...v2.1.0-dev.4) (2026-11-05)
+
+
+### Bug Fixes
+
+* Update to latest Patcher ([faf97a5](https://github.com/MorpheApp/morphe-desktop/commit/faf97a50f754745cc53eba8c491becbf50eb7d65))
+
 # [2.1.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.1.0-dev.2...v2.1.0-dev.3) (2026-11-05)
 
 

@@ -5,7 +5,7 @@
 
 package app.morphe.gui.data.constants
 
-import java.util.Properties
+import app.morphe.engine.UpdateChecker
 
 /** Application-level constants and version metadata. */
 object AppConstants {
@@ -13,17 +13,20 @@ object AppConstants {
     private val pkg by lazy { AppConstants::class.java.`package` }
 
     val APP_VERSION: String by lazy {
-        val resourceVersion = AppConstants::class.java
-            .getResourceAsStream("/app/morphe/cli/version.properties")
-            ?.use { stream ->
-                Properties().apply { load(stream) }.getProperty("version")
-            }
-
-        val resolvedVersion = resourceVersion ?: pkg?.implementationVersion
+        val resolvedVersion = UpdateChecker.currentVersion() ?: pkg?.implementationVersion
         resolvedVersion?.let { "v$it" } ?: "dev"
     }
 
     const val WEBSITE_URL = "https://morphe.software"
+    const val COMMUNITY_PATCHES_URL = "https://morphe-patches.software"
+    const val GITHUB_HOST = "github.com"
+    const val MORPHE_GITHUB_ORG = "MorpheApp"
+    const val MORPHE_GITHUB_URL = "https://$GITHUB_HOST/$MORPHE_GITHUB_ORG"
+    const val DESKTOP_REPO_URL = "$MORPHE_GITHUB_URL/morphe-desktop"
+    const val DONATE_URL = "$WEBSITE_URL/donate"
+    const val TRANSLATE_URL = "$WEBSITE_URL/translate"
+    const val REDDIT_URL = "https://reddit.com/r/MorpheApp"
+    const val SUPPORTERS_URL = "https://opencollective.com/morpheapp"
     /** True if the running version is a prerelease or unpackaged development build. */
     val IS_DEV_BUILD: Boolean by lazy { APP_VERSION == "dev" || APP_VERSION.contains('-') }
 

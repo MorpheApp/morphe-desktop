@@ -90,4 +90,46 @@
         <item quantity="many">%1$d аптымізацый</item>
         <item quantity="other">%1$d аптымізацый</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d файл)</item>
+        <item quantity="few">%1$s (%2$d файлы)</item>
+        <item quantity="many">%1$s (%2$d файлаў)</item>
+        <item quantity="other">%1$s (%2$d файлаў)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Усяго: %1$s (%2$d файл)</item>
+        <item quantity="few">Усяго: %1$s (%2$d файлы)</item>
+        <item quantity="many">Усяго: %1$s (%2$d файлаў)</item>
+        <item quantity="other">Усяго: %1$s (%2$d файлаў)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d рэліз новейшы за</item>
+        <item quantity="few">%1$d рэлізы новейшыя за</item>
+        <item quantity="many">%1$d рэлізаў новейшых за</item>
+        <item quantity="other">%1$d рэлізаў новейшых за</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d рэліз старэйшы за</item>
+        <item quantity="few">%1$d рэлізы старэйшыя за</item>
+        <item quantity="many">%1$d рэлізаў старэйшых за</item>
+        <item quantity="other">%1$d рэлізаў старэйшых за</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d патч</item>
+        <item quantity="few">%1$d патчы</item>
+        <item quantity="many">%1$d патчы</item>
+        <item quantity="other">%1$d патчы</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d праграма</item>
+        <item quantity="few">%1$d праграмы</item>
+        <item quantity="many">%1$d праграм</item>
+        <item quantity="other">%1$d праграм</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d варыянт</item>
+        <item quantity="few">%1$d варыянты</item>
+        <item quantity="many">%1$d варыянтоў</item>
+        <item quantity="other">%1$d варыянтаў</item>
+    </plurals>
 </resources>

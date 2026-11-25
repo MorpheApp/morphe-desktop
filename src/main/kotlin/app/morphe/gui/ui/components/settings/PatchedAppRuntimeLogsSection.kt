@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.MorpheData
 import app.morphe.engine.util.AdbException
@@ -50,9 +49,6 @@ private sealed interface RuntimeLogsStatus {
 internal fun PatchedAppRuntimeLogsSection(
     borderColor: Color,
     enabled: Boolean = true,
-    expanded: Boolean = false,
-    icon: ImageVector? = null,
-    onExpandedChange: (Boolean) -> Unit = {}
 ) {
     val monitorState by DeviceMonitor.state.collectAsState()
     val selectedDevice = monitorState.selectedDevice
@@ -60,35 +56,31 @@ internal fun PatchedAppRuntimeLogsSection(
     val adbManager = remember { AdbManager() }
     var status by remember { mutableStateOf<RuntimeLogsStatus>(RuntimeLogsStatus.Idle) }
 
+    val alpha = if (enabled) 1f else 0.4f
     val isWorking = status is RuntimeLogsStatus.Clearing || status is RuntimeLogsStatus.Saving
     val deviceReady = selectedDevice?.isReady == true
     val canAct = enabled && deviceReady && !isWorking
 
-    CollapsibleSection(
-        title = stringResource(Res.string.settings_runtime_logs_title),
-        expanded = expanded,
-        icon = icon,
-        onExpandedChange = onExpandedChange
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(
-                text = stringResource(Res.string.settings_runtime_logs_desc),
-                style = MorpheTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = if (!enabled) stringResource(Res.string.disabled_while_patching)
+            else stringResource(Res.string.settings_runtime_logs_desc),
+            style = MorpheTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
+        )
 
             if (deviceReady) {
                 val deviceInfo = "${selectedDevice.displayName}${selectedDevice.architecture?.let { " ($it)" } ?: ""}"
                 Text(
                     text = stringResource(Res.string.settings_runtime_logs_device_info, deviceInfo),
                     style = MorpheTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
                 )
             } else {
                 Text(
                     text = stringResource(Res.string.settings_runtime_logs_no_device),
                     style = MorpheTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha)
                 )
             }
 
@@ -182,5 +174,4 @@ internal fun PatchedAppRuntimeLogsSection(
                 )
             }
         }
-    }
 }

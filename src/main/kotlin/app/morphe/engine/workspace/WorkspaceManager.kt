@@ -13,6 +13,8 @@ import java.io.IOException
 
 /** Manages session workspaces, scratch files, and shadow bundle copies. */
 object WorkspaceManager {
+    private const val MAX_WORKSPACE_AGE_MS = 12 * 3600 * 1000L
+
     val scratchDir: File get() = MorpheData.tmpDir
     private val shadowDir: File get() = File(scratchDir, "shadow").also { it.mkdirs() }
 
@@ -77,21 +79,21 @@ object WorkspaceManager {
     fun clearScratch(): CacheManager.DirResult =
         CacheManager.clearDirectoryContents("Temp", scratchDir)
 
-    /** Deletes orphaned session directories and shadow files older than [maxAgeMs]. */
-    fun reapStaleWorkspaces(maxAgeMs: Long = 12 * 3600 * 1000L): Int {
+    /** Deletes orphaned session directories and shadow files older than [MAX_WORKSPACE_AGE_MS]. */
+    fun reapStaleWorkspaces(): Int {
         val now = System.currentTimeMillis()
         var reaped = 0
         scratchDir.listFiles()?.forEach { entry ->
             if (entry.isDirectory) {
                 if (entry.name == "shadow") {
                     entry.listFiles()?.forEach { shadowFile ->
-                        if (now - shadowFile.lastModified() > maxAgeMs) {
+                        if (now - shadowFile.lastModified() > MAX_WORKSPACE_AGE_MS) {
                             if (shadowFile.delete()) reaped++
                         }
                     }
                 } else if (entry.name.startsWith("patching-")) {
                     val timestamp = entry.name.removePrefix("patching-").toLongOrNull()
-                    if (timestamp != null && (now - timestamp > maxAgeMs)) {
+                    if (timestamp != null && (now - timestamp > MAX_WORKSPACE_AGE_MS)) {
                         if (entry.deleteRecursivelyInParallel()) reaped++
                     }
                 }

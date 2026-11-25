@@ -36,6 +36,10 @@
         <item quantity="one">%1$d bundle daxine</item>
         <item quantity="other">%1$d bundle daxine</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="one">%1$d navend</item>
+        <item quantity="other">%1$d navend</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="one">%1$d guherîn</item>
         <item quantity="other">%1$d guherîn</item>
@@ -55,5 +59,33 @@
     <plurals name="changelog_performance_count">
         <item quantity="one">%1$d optimîzasyon</item>
         <item quantity="other">%1$d optimîzasyon</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d pel)</item>
+        <item quantity="other">%1$s (%2$d pel)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Toplam: %1$s (%2$d pel)</item>
+        <item quantity="other">Toplam: %1$s (%2$d pel)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d release nûtir ji</item>
+        <item quantity="other">%1$d release nûtir ji</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d release kevnir ji</item>
+        <item quantity="other">%1$d release kevnir ji</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patch</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d app</item>
+        <item quantity="other">%1$d app</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d vebijark</item>
+        <item quantity="other">%1$d vebijark</item>
     </plurals>
 </resources>

@@ -22,6 +22,7 @@ import app.morphe.engine.options.toPatchBundle
 import app.morphe.engine.options.updateOptionsFileFromSnapshots
 import app.morphe.engine.options.writePatchBundles
 import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.supportedVersionsFor
 import app.morphe.engine.util.FileChecksum
 import app.morphe.engine.util.Logger
@@ -36,6 +37,7 @@ import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.dex.NoOpDexVerifier
 import app.morphe.patcher.dex.SdkDexVerifier
 import app.morphe.patcher.logging.toMorpheLogger
+import app.morphe.patcher.patch.FormFactor
 import app.morphe.patcher.patch.Patch
 import app.morphe.patcher.patch.setOptions
 import app.morphe.patcher.resource.CpuArchitecture
@@ -79,12 +81,29 @@ object PatchEngine {
         val disabledPatchIndices: Set<Int> = emptySet(),
         val patchOptions: Map<String, Map<String, Any?>> = emptyMap(),
         val patchOptionIndices: Map<Int, Map<String, Any?>> = emptyMap(),
-    )
+    ) {
+        internal fun resolveOptions(patches: List<Patch>): Map<String, Map<String, Any?>> {
+            val resolved = patchOptions.entries.associate { (name, options) ->
+                val declaredName = patches.firstOrNull { it.name.equals(name, ignoreCase = true) }?.name ?: name
+                declaredName to options
+            }.toMutableMap()
+            patchOptionIndices.forEach { (index, options) ->
+                if (index in patches.indices) {
+                    val name = patches[index].name
+                    if (name != null) {
+                        resolved[name] = resolved[name].orEmpty() + options
+                    }
+                }
+            }
+            return resolved
+        }
+    }
 
     data class HistoryMetadata(
         val originalPackageName: String? = null,
         val displayName: String? = null,
         val appVersion: String? = null,
+        val formFactor: FormFactor? = null,
         val patchSelectionByBundle: Map<String, Set<String>> = emptyMap(),
         val patchOptionValues: Map<String, String> = emptyMap(),
         val sourcesSnapshot: List<PatchedAppRecord.PatchedSourceSnapshot> = emptyList(),
@@ -116,6 +135,8 @@ object PatchEngine {
         val optionsFile: File? = null,
         val updateOptions: Boolean = false,
         val recordHistory: Boolean = true,
+        /** How a successful run keeps [inputApk] in the [OriginalApkStore], null to leave it out. Needs [recordHistory]. */
+        val saveOriginalApk: SaveOriginalApk? = null,
         val appDisplayName: String? = null,
         val historyMetadata: HistoryMetadata? = null,
     ) {
@@ -172,6 +193,7 @@ object PatchEngine {
             ApkOutputNaming.outputApkPath(
                 inputApk = config.inputApk,
                 patchesFile = primaryPatchesFile,
+                baseOutputDir = OriginalApkStore.shared.outputBaseFor(config.inputApk),
                 appDisplayName = displayName,
             )
         }
@@ -213,6 +235,11 @@ object PatchEngine {
         ) { session ->
             val tempDir = session.root
             var mergedApkToCleanup: File? = null
+            var obbDirToCleanup: File? = null
+            // The input APK a move kept in the store, deleted once the patcher no longer holds it open
+            var movedOriginalApk: File? = null
+            // The OBB files of the bundle, which patches read from the package metadata
+            var obbFiles: Map<String, File> = emptyMap()
             val stepResults = mutableListOf<StepResult>()
             val appliedPatches = mutableListOf<String>()
             val failedPatches = mutableListOf<FailedPatch>()
@@ -260,38 +287,47 @@ object PatchEngine {
                 val actualInputApk = if (PatchStep.MERGING_SPLITS in config.steps) {
                     report(PatchEvent.StepStarted(PatchStep.MERGING_SPLITS))
                     info("Merging split APK bundle...")
-                    val mergedApk = File(tempDir, "${config.inputApk.nameWithoutExtension}-merged.apk")
-                    val stagedBundle = if (config.inputApk.parentFile?.canonicalFile == tempDir.canonicalFile) {
-                        config.inputApk
+                    val inputApk = config.inputApk.absoluteFile
+                    val mergedApk = File(tempDir, "${inputApk.nameWithoutExtension}-merged.apk")
+                    val stagedBundle = if (inputApk.parentFile?.canonicalFile == tempDir.canonicalFile) {
+                        inputApk
                     } else {
-                        File(tempDir, config.inputApk.name).also { staged ->
+                        File(tempDir, inputApk.name).also { staged ->
                             Files.deleteIfExists(staged.toPath())
                             try {
-                                Files.createSymbolicLink(staged.toPath(), config.inputApk.toPath())
+                                Files.createSymbolicLink(staged.toPath(), inputApk.toPath())
                             } catch (_: Exception) {
                                 try {
-                                    Files.createLink(staged.toPath(), config.inputApk.toPath())
+                                    Files.createLink(staged.toPath(), inputApk.toPath())
                                 } catch (_: Exception) {
-                                    config.inputApk.copyTo(staged, overwrite = true)
+                                    inputApk.copyTo(staged, overwrite = true)
                                 }
                             }
                         }
                     }
 
                     try {
-                        ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger()).merge(
+                        val merger = ApkMerger(JulLogger.getLogger("app.morphe.patcher.ApkMerger").toMorpheLogger())
+                        merger.merge(
                             inputFile = stagedBundle,
                             outputFile = mergedApk,
                             cleanMetaInf = false,
                         )
+
+                        val obbDir = File(tempDir, "obb")
+                        obbDirToCleanup = obbDir
+                        obbFiles = merger.extractObbFiles(inputApk, obbDir)
+                        if (obbFiles.isNotEmpty()) {
+                            info("Extracted ${obbFiles.size} OBB file(s) from the bundle")
+                        }
                     } finally {
-                        if (stagedBundle != config.inputApk) {
+                        if (stagedBundle != inputApk) {
                             runCatching { Files.deleteIfExists(stagedBundle.toPath()) }
                         }
                         tempDir.listFiles()?.filter { it.name.startsWith("tmp_") }?.forEach {
                             it.deleteRecursivelyInParallel()
                         }
-                        cleanupLegacyBundleTmp(config.inputApk)
+                        cleanupLegacyBundleTmp(inputApk)
                     }
                     mergedApkToCleanup = mergedApk
                     mergedApk
@@ -320,6 +356,7 @@ object PatchEngine {
                 progress = { task, done, total ->
                     if (scopeContext.isActive) onEvent(PatchEvent.TaskProgress(task, done, total))
                 },
+                obbFiles = obbFiles,
             )
 
             report(PatchEvent.StepStarted(PatchStep.LOADING_PATCHES))
@@ -344,6 +381,7 @@ object PatchEngine {
                 )
 
                 val finalPatches = mutableSetOf<Patch>()
+                var allPatchesForLookup: Iterable<Patch> = config.patches
 
                 val effectiveBundleScopes = if (config.bundleScopes.isNotEmpty()) {
                     config.bundleScopes
@@ -422,6 +460,7 @@ object PatchEngine {
                     }
 
                     val allLoadedPatches = loadedBundles.flatMap { it.patches }.toSet()
+                    allPatchesForLookup = allLoadedPatches
                     val flatResolvedOpts = if (config.flatPatchOptions.isNotEmpty()) {
                         resolveFlatPatchOptions(
                             patches = allLoadedPatches,
@@ -438,16 +477,7 @@ object PatchEngine {
                         val jsonOpts = jsonOptionsByFile[lb.sourceFile] ?: emptyMap()
 
                         val patchesList = lb.patches.toList()
-                        val resolvedScopeOptions = scope.patchOptions.toMutableMap()
-                        scope.patchOptionIndices.forEach { (idx, opts) ->
-                            if (idx in patchesList.indices) {
-                                val name = patchesList[idx].name
-                                if (name != null) {
-                                    val existing = resolvedScopeOptions[name] ?: emptyMap()
-                                    resolvedScopeOptions[name] = existing + opts
-                                }
-                            }
-                        }
+                        val resolvedScopeOptions = scope.resolveOptions(patchesList)
 
                         val effectiveEnabledNames = scope.enabledPatchNames.ifEmpty { config.enabledPatches }
                         val effectiveDisabledNames = scope.disabledPatchNames.ifEmpty { config.disabledPatches }
@@ -673,15 +703,33 @@ object PatchEngine {
                     try {
                         val (sha, size) = FileChecksum.fingerprintOrNull(finalOutputApk.absolutePath)
                         val manifest = runCatching { ApkInspector.inspect(finalOutputApk) }.getOrNull()
+                        val originalPkg = config.historyMetadata?.originalPackageName?.takeIf { it.isNotBlank() } ?: packageName
+                        val resolvedFormFactor = config.historyMetadata?.formFactor
+                            ?: SupportedAppCatalog.extractFormFactors(allPatchesForLookup)[originalPkg]
+                        // The record points at the kept original, so a repatch still finds it
+                        val keptOriginalApk = config.saveOriginalApk?.takeIf { config.inputApk.isFile }?.let { mode ->
+                            try {
+                                OriginalApkStore.shared.save(config.inputApk, originalPkg, packageVersion)?.also { kept ->
+                                    info("Kept original APK at ${kept.absolutePath}")
+                                    if (mode == SaveOriginalApk.MOVE) movedOriginalApk = config.inputApk
+                                }
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                warn("Failed to keep original APK: ${e.message ?: e::class.simpleName}")
+                                null
+                            }
+                        }
                         val record = PatchedAppRecord(
-                            packageName = config.historyMetadata?.originalPackageName?.takeIf { it.isNotBlank() } ?: packageName,
+                            packageName = originalPkg,
                             currentPackageName = manifest?.packageName,
                             displayName = config.appDisplayName?.takeIf { it.isNotBlank() }
                                 ?: config.historyMetadata?.displayName?.takeIf { it.isNotBlank() }
                                 ?: packageName,
                             apkVersion = manifest?.versionName?.takeIf { it.isNotBlank() } ?: packageVersion,
                             apkVersionCode = manifest?.versionCode,
-                            inputApkPath = config.inputApk.absolutePath,
+                            formFactor = resolvedFormFactor,
+                            inputApkPath = (keptOriginalApk ?: config.inputApk).absolutePath,
                             outputApkPath = finalOutputApk.absolutePath,
                             outputApkSha256 = sha,
                             outputApkSize = if (size > 0L) size else finalOutputApk.length(),
@@ -739,6 +787,11 @@ object PatchEngine {
             patcherLogger.useParentHandlers = prevUseParentHandlers
             if (!session.retain) {
                 mergedApkToCleanup?.delete()
+                obbDirToCleanup?.deleteRecursively()
+            }
+
+            movedOriginalApk?.let { apk ->
+                if (!apk.delete()) Logger.warn("Kept the original APK, but could not delete ${apk.absolutePath}")
             }
 
             if (config.optionsFile != null && config.updateOptions && patchesSnapshotForFinally.isNotEmpty()) {

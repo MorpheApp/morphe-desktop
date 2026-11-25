@@ -62,6 +62,7 @@ import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.GraphicsEnvironment
@@ -406,7 +407,7 @@ fun IconStudioDialog(
                             Row(
                                 Modifier.fillMaxWidth().clip(shapes.small)
                                     .background(colors.danger.copy(alpha = 0.12f))
-                                    .border(1.dp, colors.danger.copy(alpha = 0.4f), shapes.small)
+                                    .outlineBorder(colors.danger.copy(alpha = 0.4f), shapes.small)
                                     .padding(10.dp),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top,
                             ) {
@@ -531,7 +532,7 @@ private fun LayersPanel(
         if (display.isEmpty()) {
             Row(
                 Modifier.fillMaxWidth().clip(shapes.small).background(colors.primary.copy(alpha = 0.08f))
-                    .border(1.dp, colors.primary.copy(alpha = 0.25f), shapes.small).padding(8.dp),
+                    .outlineBorder(colors.primary.copy(alpha = 0.25f), shapes.small).padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Icon(MorpheIcons.Info, contentDescription = null, tint = colors.primary.copy(alpha = 0.8f), modifier = Modifier.size(13.dp))
@@ -551,7 +552,11 @@ private fun LayersPanel(
                         .graphicsLayer { translationY = if (isDragging) dragDy else 0f }
                         .clip(shapes.small)
                         .background(if (isDragging) colors.primary.copy(alpha = 0.25f) else if (sel) colors.primary.copy(alpha = 0.15f) else Color.Transparent)
-                        .border(1.dp, colors.primary.copy(alpha = if (sel || isDragging) 0.5f else 0.15f), shapes.small)
+                        .outlineBorder(
+                            colors.primary.copy(alpha = if (sel || isDragging) 0.5f else 0.15f),
+                            shapes.small,
+                            enabled = sel || isDragging || MorpheTheme.outlines,
+                        )
                         .clickable { onSelect(layer.id) }.padding(horizontal = 6.dp, vertical = 5.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -789,7 +794,7 @@ private fun StatusBarPreview(silhouette: ImageBitmap?) {
     val onSurface = MaterialTheme.colorScheme.onSurface
     Box(Modifier.fillMaxWidth().height(40.dp).clip(shapes.medium)
         .background(MaterialTheme.colorScheme.surfaceVariant)
-        .border(1.dp, onSurface.copy(alpha = 0.1f), shapes.medium)
+        .outlineBorder(onSurface.copy(alpha = 0.1f), shapes.medium)
         .padding(horizontal = 14.dp)) {
         Row(Modifier.align(Alignment.CenterStart), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(

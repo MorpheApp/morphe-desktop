@@ -5,7 +5,6 @@
 
 package app.morphe.gui.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineStroke
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
@@ -53,16 +53,11 @@ fun SigningKeyTrustDialog(
 
     val isUnsigned = actualFingerprint == null
 
-    MorpheAlertDialog(
+    MorpheDialog(
+        maxWidth = MorpheDialogMaxWidth,
         onDismiss = onDismiss,
-        title = {
-            Text(
-                text = stringResource(Res.string.sources_signing_key_trust_title),
-                style = MorpheTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        },
-        text = {
+        title = stringResource(Res.string.sources_signing_key_trust_title),
+        content = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -91,7 +86,7 @@ fun SigningKeyTrustDialog(
                         MorphePanel(
                             modifier = Modifier.fillMaxWidth(),
                             color = MorpheTheme.colors.primary.copy(alpha = 0.08f),
-                            border = BorderStroke(1.dp, MorpheTheme.colors.primary.copy(alpha = 0.35f)),
+                            border = outlineStroke(MorpheTheme.colors.primary.copy(alpha = 0.35f)),
                         ) {
                             Column(
                                 modifier = Modifier
@@ -136,7 +131,7 @@ fun SigningKeyTrustDialog(
                                 } else Modifier
                             ),
                         color = MorpheTheme.colors.danger.copy(alpha = 0.08f),
-                        border = BorderStroke(1.dp, MorpheTheme.colors.danger.copy(alpha = 0.35f)),
+                        border = outlineStroke(MorpheTheme.colors.danger.copy(alpha = 0.35f)),
                     ) {
                         Column(
                             modifier = Modifier
@@ -190,15 +185,13 @@ fun SigningKeyTrustDialog(
                 }
             }
         },
-        dismissButton = {
+        actions = {
             MorpheButton(
                 label = stringResource(Res.string.cancel),
                 variant = MorpheButtonVariant.GHOST,
                 size = MorpheButtonSize.DEFAULT,
                 onClick = onDismiss,
             )
-        },
-        confirmButton = {
             MorpheButton(
                 label = stringResource(Res.string.trust),
                 variant = MorpheButtonVariant.PRIMARY,

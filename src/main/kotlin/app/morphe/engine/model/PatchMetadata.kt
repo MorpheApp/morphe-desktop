@@ -8,8 +8,10 @@ package app.morphe.engine.model
 import app.morphe.engine.options.PatchOption
 import app.morphe.patcher.patch.ApkArchitecture
 import app.morphe.patcher.patch.AvailabilityResolver
+import app.morphe.patcher.patch.FormFactor
 import app.morphe.patcher.patch.InstallerType
 import app.morphe.patcher.patch.PatchAvailability
+import app.morphe.patcher.patch.SupportedAbi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -60,7 +62,11 @@ data class CompatiblePackage(
     val versions: List<String> = emptyList(),
     val experimentalVersions: List<String> = emptyList(),
     val appIconColor: String? = null,
-    val versionBuildCodes: Map<String, Set<Int>> = emptyMap()
+    val versionBuildCodes: Map<String, Set<Int>> = emptyMap(),
+    /** The build code of each ABI per version, for the versions that declare them. */
+    val versionAbiBuildCodes: Map<String, Map<SupportedAbi, Int>> = emptyMap(),
+    /** Device form factor of the app. Null when the bundle does not say, which is a phone app. */
+    val formFactor: FormFactor? = null,
 )
 
 /** UI-facing lock state derived from a patch's availability resolver for the current install target. */

@@ -9,8 +9,14 @@ import app.morphe.engine.util.deleteRecursivelyInParallel
 import app.morphe.engine.workspace.WorkspaceManager
 import java.io.File
 
-/** Manages cache sizing and deletion across patches, logs, and workspace scratch. */
+/** Manages cache sizing and deletion across patches, logs, avatars, app icons, and workspace scratch. */
 object CacheManager {
+
+    /** Summary of files and byte size for a single directory. */
+    data class DirStats(
+        val bytes: Long,
+        val fileCount: Int,
+    )
 
     /** Summary of files and bytes cleared from a single directory. */
     data class DirResult(
@@ -19,6 +25,27 @@ object CacheManager {
         val filesDeleted: Int,
         val failedFiles: Int,
     )
+
+    /** A cache folder that can be sized and cleared on its own. */
+    enum class Category(val label: String) {
+        PATCHES("Patches"),
+        LOGS("Logs"),
+        TEMP("Temp"),
+        AVATARS("Avatars"),
+        APP_ICONS("App icons");
+
+        val dir: File
+            get() = when (this) {
+                PATCHES -> MorpheData.patchesDir
+                LOGS -> MorpheData.logsDir
+                TEMP -> WorkspaceManager.scratchDir
+                AVATARS -> MorpheData.avatarsDir
+                APP_ICONS -> MorpheData.appIconsDir
+            }
+
+        /** Deletes all files in this category's folder. */
+        fun clear(): DirResult = clearDirectoryContents(label, dir)
+    }
 
     /** Overall outcome of a [clearCaches] run. */
     data class ClearResult(
@@ -29,27 +56,24 @@ object CacheManager {
         val success: Boolean get() = failedFiles == 0
     }
 
-    /** Calculates total byte size across patches, logs, and scratch directories. */
-    fun getCacheSizeBytes(): Long =
-        getDirectorySize(MorpheData.patchesDir) +
-            getDirectorySize(MorpheData.logsDir) +
-            WorkspaceManager.getScratchSize()
-
     /** Computes total byte size of files inside [dir]. */
-    fun getDirectorySize(dir: File): Long = try {
-        dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    fun getDirectorySize(dir: File): Long = getDirectoryStats(dir).bytes
+
+    /** Computes total byte size and file count of files inside [dir]. */
+    fun getDirectoryStats(dir: File): DirStats = try {
+        var bytes = 0L
+        var count = 0
+        dir.walkTopDown().filter { it.isFile }.forEach {
+            bytes += it.length()
+            count++
+        }
+        DirStats(bytes, count)
     } catch (_: Exception) {
-        0L
+        DirStats(0L, 0)
     }
 
-    /** Deletes cached patches, logs, and temporary scratch files. */
-    fun clearCaches(): ClearResult = ClearResult(
-        listOf(
-            clearDirectoryContents("Patches", MorpheData.patchesDir),
-            clearDirectoryContents("Logs", MorpheData.logsDir),
-            WorkspaceManager.clearScratch(),
-        ),
-    )
+    /** Deletes every [Category]: cached patches, logs, temporary scratch files, avatars, and app icons. */
+    fun clearCaches(): ClearResult = ClearResult(Category.entries.map { it.clear() })
 
     /** Deletes all files inside [dir], returning deletion metrics. */
     fun clearDirectoryContents(label: String, dir: File): DirResult {

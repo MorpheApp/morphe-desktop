@@ -34,8 +34,6 @@ import app.morphe.gui.ui.screens.home.components.SimpleTopBar
 import app.morphe.gui.ui.screens.result.components.*
 import app.morphe.gui.ui.theme.*
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FormatUtils
-import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.getUserMessage
 import app.morphe.gui.util.toUserMessage
 import app.morphe.morphe_desktop.generated.resources.*
@@ -62,7 +60,7 @@ fun ResultScreen(
                 .fillMaxSize()
                 .background(screenScrim)
         ) {
-            SimpleTopBar(isPatching = false)
+            SimpleTopBar()
             SimpleResultContent(
                 outputPath = outputPath,
                 onPatchAnother = { navController.popBackStack(HomeScreenRoute, inclusive = false) },
@@ -413,10 +411,6 @@ fun ResultScreenContent(outputPath: String, isMount: Boolean = false) {
         }
     }
 }
-
-@Composable
-internal fun formatFileSize(bytes: Long): String =
-    FormatUtils.formatFileSize(bytes, currentLocale())
 
 private class AsyncActionState {
     var isRunning by mutableStateOf(false)

@@ -60,4 +60,32 @@
         <item quantity="one">%1$d βελτιστοποίηση</item>
         <item quantity="other">%1$d βελτιστοποιήσεις</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d αρχείο)</item>
+        <item quantity="other">%1$s (%2$d αρχεία)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Σύνολο: %1$s (%2$d αρχείο)</item>
+        <item quantity="other">Σύνολο: %1$s (%2$d αρχεία)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d έκδοση νεότερη από</item>
+        <item quantity="other">%1$d εκδόσεις νεότερες από</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d έκδοση παλαιότερη από</item>
+        <item quantity="other">%1$d εκδόσεις παλαιότερες από</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d τροποποίηση</item>
+        <item quantity="other">%1$d τροποποιήσεις</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d εφαρμογή</item>
+        <item quantity="other">%1$d εφαρμογές</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d επιλογή</item>
+        <item quantity="other">%1$d επιλογές</item>
+    </plurals>
 </resources>

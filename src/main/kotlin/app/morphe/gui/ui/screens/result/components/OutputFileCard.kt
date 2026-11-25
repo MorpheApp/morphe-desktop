@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.result.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,12 +18,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
-import app.morphe.gui.ui.screens.result.formatFileSize
+import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
@@ -46,7 +47,7 @@ internal fun OutputFileCard(
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
             .background(panelFill)
-            .border(1.dp, borderColor, MorpheTheme.shapes.medium)
+            .outlineBorder(borderColor, MorpheTheme.shapes.medium)
     ) {
         Column(
             modifier = Modifier
@@ -74,7 +75,7 @@ internal fun OutputFileCard(
                 if (outputFile.exists()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = formatFileSize(outputFile.length()),
+                        text = formatFileSize(outputFile.length(), currentLocale()),
                         style = MorpheTheme.typography.bodySmall,
                         color = MorpheTheme.colors.primary
                     )

@@ -60,4 +60,32 @@
         <item quantity="one">%1$d optimering</item>
         <item quantity="other">%1$d optimeringer</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d fil)</item>
+        <item quantity="other">%1$s (%2$d filer)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">I alt: %1$s (%2$d fil)</item>
+        <item quantity="other">I alt: %1$s (%2$d filer)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d udgivelse nyere end</item>
+        <item quantity="other">%1$d udgivelser nyere end</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d udgivelse ældre end</item>
+        <item quantity="other">%1$d udgivelser ældre end</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d patch</item>
+        <item quantity="other">%1$d patches</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d app</item>
+        <item quantity="other">%1$d apps</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d valgmulighed</item>
+        <item quantity="other">%1$d valgmuligheder</item>
+    </plurals>
 </resources>

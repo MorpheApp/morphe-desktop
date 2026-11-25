@@ -46,6 +46,7 @@
     <string name="click_to_copy">Click to copy</string>
     <string name="enable_adb_button">Enable ADB</string>
     <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="website">Website</string>
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="browse">Browse</string>
@@ -58,7 +59,7 @@
     <string name="filter_apps_hint">Filter apps…</string>
     <string name="version">Version</string>
     <string name="version_label_stable">Stable</string>
-    <string name="version_label_prerelease">Prerelease</string>
+    <string name="version_label_prerelease">Pre-release</string>
     <string name="version_label_experimental">Experimental</string>
     <string name="version_label_latest_stable">Latest Stable</string>
     <string name="version_label_recommended">Recommended</string>
@@ -67,7 +68,9 @@
     <string name="app_info_min_sdk_label">Min SDK</string>
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
     <string name="app_info_shared_label">App info</string>
-    <string name="github_label">GitHub</string>
+    <string name="form_factor_tv">TV</string>
+    <string name="form_factor_wearable" translatable="false">Wear OS</string>
+    <string name="form_factor_automotive">Automotive</string>
     <string name="patches_search_hint">Search patches…</string>
     <string name="status_patching_completed">Patching completed</string>
     <string name="status_patching_failed">Patching failed</string>
@@ -76,6 +79,7 @@
     <string name="error_patching_unknown">Patching failed for an unknown reason</string>
     <string name="error_log_label">Error log</string>
     <string name="back">Back</string>
+    <string name="open">Open</string>
     <string name="open_folder">Open folder</string>
     <string name="temporary_files_label">Temporary files</string>
     <string name="size_can_be_freed_label">%1$s can be freed</string>
@@ -132,7 +136,7 @@
     <string name="adb_error_generic">Installation failed: %1$s</string>
     <string name="adb_error_not_found">ADB not found. Please install Android SDK Platform Tools</string>
     <string name="adb_error_unauthorized">Device connected but not authorized. Please accept the USB debugging prompt on your device</string>
-    <string name="adb_error_no_devices">No devices connected. Please connect your Android device with USB debugging enabled</string>
+    <string name="adb_error_no_devices">No devices connected. Please connect your Android device with USB or Wi-Fi debugging enabled</string>
     <string name="adb_error_device_not_found">Device %1$s not found</string>
     <string name="adb_error_multiple_devices">Multiple devices connected. Please select one</string>
     <string name="adb_error_apk_not_found">APK file not found: %1$s</string>
@@ -204,7 +208,8 @@
     <string name="home_dialog_uninstall_button">Uninstall</string>
     <string name="home_dialog_continue_anyway">Continue anyway</string>
     <string name="home_dialog_forget_title">Forget %1$s?</string>
-    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. It doesn't touch any files - repatching the app adds it back</string>
+    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. The patched APK stays on disk, repatching the app adds it back</string>
+    <string name="home_dialog_also_delete_original">Also delete its kept original APK</string>
     <string name="home_dialog_uninstall_title">Uninstall %1$s?</string>
     <string name="home_dialog_uninstall_message">This removes %1$s from the connected device. The patched APK on disk and your history are kept unless you choose otherwise below</string>
     <string name="home_dialog_uninstall_also_forget">Also remove from Your apps</string>
@@ -310,14 +315,6 @@
     <string name="patches_no_releases_found">No releases found</string>
     <string name="patches_export_options_title">Export options.json</string>
     <string name="patches_latest_badge">Latest</string>
-    <string name="patches_cached_badge">Cached</string>
-    <string name="patches_date_cached">Cached: %1$s</string>
-    <string name="patches_date_published">Published: %1$s</string>
-    <string name="patches_hide_notes">Hide notes</string>
-    <string name="patches_patch_notes">Patch notes</string>
-    <string name="patches_downloading">Downloading…</string>
-    <string name="patches_select">Select</string>
-    <string name="patches_export_json">Export JSON</string>
     <string name="patches_local_patch_file">Local patch file</string>
     <string name="patches_error_local_file_not_found">Local patch file not found: %1$s</string>
     <string name="patches_error_failed_to_load_releases">Failed to load releases</string>
@@ -391,6 +388,10 @@
     <string name="patch_selection_run_info_app_group">App</string>
     <string name="patch_selection_run_info_bundles_group">Patch bundles</string>
     <string name="patch_selection_run_info_no_bundles">No bundles resolved</string>
+    <string name="patch_selection_run_info_dev_group">Developer options</string>
+    <string name="patch_selection_run_info_bytecode_mode">Bytecode mode: %1$s</string>
+    <string name="patch_selection_run_info_validate">Fingerprint validation: %1$s</string>
+    <string name="patch_selection_run_info_verify_sdk">Android SDK verification: %1$s</string>
     <string name="patch_selection_group_universal">Universal</string>
     <string name="patch_selection_group_ungrouped">Ungrouped</string>
     <string name="patch_selection_group_selected_count">%1$d selected</string>
@@ -441,7 +442,7 @@
 
     <!-- Result Screen -->
     <string name="result_adb_off_button">ADB off · Enable to install</string>
-    <string name="result_adb_connect_device_hint">Connect a device via USB to install with ADB</string>
+    <string name="result_adb_connect_device_hint">Connect a device via USB or Wi-Fi to install with ADB</string>
     <string name="result_screen_patch_another_button">Patch another</string>
     <string name="result_screen_install_on_device_label">Install on %1$s</string>
     <string name="result_screen_links_routed_label">Links routed to patched app</string>
@@ -457,12 +458,14 @@
     <string name="result_adb_unmounting_on_device">Unmounting from %1$s…</string>
     <string name="result_adb_root_not_detected">Root access was not detected on %1$s. Ensure Magisk/KernelSU/APatch is installed and su permission is granted</string>
     <string name="result_adb_stock_app_not_installed">Stock app %1$s is not installed on %2$s. Install the official app first before mounting</string>
+    <string name="result_adb_mount_version_mismatch">Stock app on %3$s is v%1$s, but patched APK is v%2$s. Root mount requires matching versions</string>
+    <string name="result_adb_mount_abi_mismatch">Device %3$s is %1$s, but APK only contains [%2$s]. Native libraries will fail to load</string>
     <string name="result_link_default_restored">Default link handling restored</string>
     <string name="result_link_routed_stock_disabled">Links routed to patched app, stock disabled</string>
     <string name="result_adb_not_found_hint">ADB not found. Install Android SDK Platform Tools to enable direct installation</string>
     <string name="result_adb_section_title">ADB install</string>
     <string name="result_adb_no_devices">No devices connected</string>
-    <string name="result_adb_connect_hint">Connect via USB with USB debugging enabled</string>
+    <string name="result_adb_connect_hint">Connect via USB or Wi-Fi debugging</string>
     <string name="result_device_status_unauth">Unauth</string>
     <string name="result_adb_update_button">Update on %1$s</string>
     <string name="result_adb_select_device_button">Select a device</string>
@@ -554,27 +557,101 @@
     <string name="source_error_pr_no_artifact">No artifacts found for pull request</string>
     <string name="source_error_patcher_incompatible">This source is built for patcher %1$s, but Morphe %2$s includes patcher %3$s. Update Morphe to use it</string>
     <string name="version_label_local">Local</string>
-    <string name="source_sheet_remote_label">Remote</string>
     <string name="add_source">Add source</string>
     <string name="source_sheet_title">Patch sources</string>
     <string name="source_sheet_reload_description">Reload patches</string>
-    <string name="source_sheet_multi_mode_hint">Enable/Disable any combination. Patches from all enabled sources are unioned</string>
-    <string name="source_sheet_done_button">Done</string>
-    <string name="source_sheet_type_preinstalled">Pre-installed</string>
     <string name="source_sheet_builtin">Built-in</string>
-    <string name="source_sheet_gitlab_label">GitLab</string>
     <string name="source_sheet_status_resolving">Resolving…</string>
     <string name="source_sheet_edit_description">Edit</string>
-    <string name="source_sheet_move_up_description">Move up</string>
-    <string name="source_sheet_move_down_description">Move down</string>
     <string name="source_sheet_ignored_mpp_title">Ignored .mpp patterns</string>
     <string name="source_sheet_ignored_mpp_hint">Only affects folder sources, which autoload the newest .mpp in a folder. When picking that newest build, files whose name matches a pattern here are skipped. A plain word matches any file containing it (e.g. debug). Use * for globs (e.g. *-debug.mpp). *-sources.mpp and *-javadoc.mpp are always ignored</string>
     <string name="source_sheet_ignored_mpp_placeholder">e.g. debug or *-debug.mpp</string>
     <string name="source_sheet_add_pattern_description">Add pattern</string>
     <string name="source_sheet_remove_pattern_description">Remove pattern</string>
-    <string name="sources_management_signed_by">Signed by</string>
-    <string name="sources_management_signing_key_changed_badge">Key changed</string>
     <string name="sources_management_signing_key_changed_hint">Signing key changed. Click to review it</string>
+    <string name="sources_page_summary">%1$d of %2$d enabled, %3$d patches across %4$d apps</string>
+    <string name="sources_page_priority_hint">Drag sources to set priority. Lower numbers take priority when two sources include the same patch</string>
+    <string name="sources_page_reloading">Reloading sources…</string>
+    <string name="source_card_version">Version</string>
+    <string name="source_card_pull_request">Pull request</string>
+    <string name="source_card_pinned">Pinned</string>
+    <string name="source_card_pinned_tip">Pinned in All versions</string>
+    <string name="source_card_cached">Cached</string>
+    <string name="source_card_cached_tip">Could not reach this source. Using the downloaded copy</string>
+    <string name="source_card_patches">Patches</string>
+    <string name="source_card_browse_patches_tip">Browse patches</string>
+    <string name="source_card_size">Size</string>
+    <string name="source_card_apps">Apps</string>
+    <string name="source_card_search_apps">Search %1$d apps</string>
+    <string name="source_card_channel">Channel</string>
+    <string name="source_card_updates">Updates</string>
+    <string name="source_card_updates_manual">Manual (replace file)</string>
+    <string name="source_card_loads_newest">Newest .mpp in folder</string>
+    <string name="source_card_loads_pr">Latest pull request build</string>
+    <string name="source_card_disabled">This source is disabled. Enable it to load patches</string>
+    <string name="source_card_disabled_tag">Disabled</string>
+    <string name="source_card_last_enabled">At least one source must remain enabled</string>
+    <string name="source_card_retry">Retry</string>
+    <string name="source_card_review_key">Review signing key</string>
+    <string name="source_card_open_pull_request">Open pull request</string>
+    <string name="source_card_signed">Signed</string>
+    <string name="source_card_signed_tip">Signed by %1$s. Click to copy key</string>
+    <string name="source_card_all_versions">All versions</string>
+    <string name="source_card_update_to">Update to %1$s</string>
+    <string name="source_card_show_in_folder">Show in folder</string>
+    <string name="source_card_more_description">More actions</string>
+    <string name="source_card_browse_patches">Browse patches</string>
+    <string name="source_card_priority">Priority %1$d</string>
+    <string name="source_card_open_link">Open %1$s in browser</string>
+    <string name="source_card_enable_description">Enable %1$s</string>
+    <string name="versions_search_hint">Search versions</string>
+    <string name="versions_in_use">In use</string>
+    <string name="versions_downloaded">Downloaded</string>
+    <string name="versions_following_stable">Following stable</string>
+    <string name="versions_following_prerelease">Following pre-release</string>
+    <string name="versions_you_are_on">Currently using</string>
+    <string name="versions_go_to_in_use">Go to version in use</string>
+    <string name="versions_auto_update">Auto-update</string>
+    <string name="versions_auto_update_tip_stable">Automatically updates to new stable releases</string>
+    <string name="versions_auto_update_tip_prerelease">Automatically updates to new pre-release builds</string>
+    <string name="versions_pin_tip">Stays on this version until changed</string>
+    <string name="versions_use">Use %1$s</string>
+    <string name="versions_downloading_progress">Downloading… %1$d%</string>
+    <string name="versions_download_only">Download only</string>
+    <string name="versions_open_release_page">Open release page</string>
+    <string name="versions_apps_and_patches">Apps and patches</string>
+    <string name="versions_column_app">App</string>
+    <string name="versions_column_supported">Supported versions</string>
+    <string name="versions_any_version">Works with any version</string>
+    <string name="versions_universal">Universal patches</string>
+    <string name="versions_universal_scope">Any app</string>
+    <string name="versions_new_app">New app</string>
+    <string name="versions_search_apps_and_patches">Search apps and patches</string>
+    <string name="versions_search_patches">Search %1$d patches</string>
+    <string name="versions_patch_removed">Removed</string>
+    <string name="versions_patch_off">Off by default</string>
+    <string name="versions_patch_off_tip">Disabled by default unless enabled manually</string>
+    <string name="versions_patch_new_tip">Not included in %1$s (in use)</string>
+    <string name="versions_patch_removed_tip">Included in %1$s (in use), removed in this release</string>
+    <string name="versions_version_new_tip">Not supported in %1$s (in use)</string>
+    <string name="versions_version_dropped_tip">Supported in %1$s (in use), removed in this release</string>
+    <string name="versions_locked">Download this release to view its apps and patches</string>
+    <string name="versions_reading">Reading patches…</string>
+    <string name="versions_whats_new">What's new</string>
+    <string name="versions_column_released">Released</string>
+    <string name="versions_group_newer">Newer</string>
+    <string name="versions_group_older">Older</string>
+    <string name="source_remove_title">Remove %1$s?</string>
+    <string name="source_remove_body">Its patches will no longer be available. You can add this source again later</string>
+    <string name="source_prerelease_title">Enable pre-release patches?</string>
+    <string name="source_prerelease_body">Pre-release builds are still in development. Patches may fail or break the app, and features can change without warning</string>
+    <string name="source_prerelease_confirm">Enable</string>
+    <string name="patch_source_dialog_kind_repository">Remote</string>
+    <string name="patch_source_dialog_kind_local">Local</string>
+    <string name="patch_source_dialog_valid_github">GitHub repository</string>
+    <string name="patch_source_dialog_valid_gitlab">GitLab repository</string>
+    <string name="patch_source_dialog_valid_pr">Pull request #%1$s on %2$s. Always uses the latest build from this PR</string>
+    <string name="patch_source_dialog_builtin_note">This is the built-in patch source. Its name and location cannot be changed. Switch between stable and pre-release on its card</string>
 
     <!-- Signing Key Trust Dialog -->
     <string name="sources_signing_key_changed_named">'%1$s' was not updated because its latest release is not signed by the key it used before</string>
@@ -591,8 +668,6 @@
     <string name="patch_source_dialog_repo_url_label">Repository URL</string>
     <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo or gitlab.com/owner/repo</string>
     <string name="patch_source_dialog_repo_hint">Accepts GitHub, GitLab, or morphe.software/add-source link</string>
-    <string name="patch_source_dialog_pre_release_title">Pre-release patches</string>
-    <string name="patch_source_dialog_pre_release_hint">Receives early access to new experimental patch versions</string>
     <string name="patch_source_dialog_error_name_required">Name is required</string>
     <string name="patch_source_dialog_error_invalid_url">Enter a valid GitHub or GitLab URL</string>
     <string name="patch_source_dialog_error_invalid_file">Select a valid .mpp file</string>
@@ -621,7 +696,7 @@
     <string name="device_indicator_adb_not_found_title">ADB not found</string>
     <string name="device_indicator_adb_not_found_subtitle">Install Android SDK Platform Tools</string>
     <string name="device_indicator_no_devices_title">No devices detected</string>
-    <string name="device_indicator_no_devices_subtitle">Connect a device with USB debugging enabled</string>
+    <string name="device_indicator_no_devices_subtitle">Connect a device with USB or Wi-Fi debugging enabled</string>
     <string name="device_indicator_enable_debugging_title">Enable USB debugging</string>
     <string name="device_indicator_enable_debugging_subtitle">Settings → Developer Options → USB Debugging</string>
     <string name="device_indicator_status_connected">Connected</string>
@@ -644,6 +719,11 @@
     <string name="update_banner_from_version">from v%1$s</string>
     <string name="update_banner_later_button">Later</string>
     <string name="update_banner_skip_button">Skip v%1$s</string>
+    <string name="home_updating_sources">Updating sources…</string>
+    <string name="home_update_success">Update sources complete</string>
+    <string name="home_update_success_subtitle">Your sources are up to date</string>
+    <string name="home_sources_failed_title">Some patch sources are unavailable</string>
+    <string name="home_multi_source_hint_title">Multiple patch sources enabled</string>
 
     <!-- Licenses Dialog -->
     <string name="licenses_dialog_title">Open Source licenses</string>
@@ -675,19 +755,23 @@
     <!-- Settings - Appearance -->
     <string name="settings_section_language">Language</string>
     <string name="settings_language_current_title">Current language</string>
-    <string name="settings_language_community_translation_hint">Translations for some languages may be missing or incomplete. To translate new languages or improve the existing translations, visit %1$s</string>
     <string name="settings_language_dialog_title">App language</string>
+    <string name="settings_language_translate_title">Help translate Morphe</string>
     <string name="settings_language_search_no_results">No results found</string>
     <string name="settings_section_theme">Theme</string>
     <string name="settings_appearance_theme_mode">Theme mode</string>
+    <string name="settings_appearance_theme_mode_description">Switch between light, dark, pure black, or system theme</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Color style</string>
+    <string name="settings_appearance_color_style_description">Tinted Morphe palette or grayscale monochrome style</string>
     <string name="settings_appearance_style_morphe">Morphe</string>
     <string name="settings_appearance_monochrome">Monochrome</string>
     <string name="settings_toggle_sharp_corners_label">Sharp corners</string>
     <string name="settings_toggle_sharp_corners_desc">Square off cards, dialogs and buttons</string>
+    <string name="settings_toggle_outlines_label">Outlines</string>
+    <string name="settings_toggle_outlines_desc">Draws a thin edge around cards, panels and buttons</string>
     <string name="settings_section_accent_color">Accent color</string>
     <string name="settings_accent_clear_description">Clear accent color</string>
     <string name="settings_accent_custom_description">Custom accent color</string>
@@ -695,7 +779,13 @@
     <string name="settings_section_app_cards">App cards</string>
     <string name="settings_app_cards_color_all">Color for every card</string>
     <string name="settings_app_cards_color_all_desc">Cards you have customized individually keep their own color</string>
-    <string name="settings_section_background_animation">Background animation</string>
+    <string name="settings_toggle_app_icons_label">App icons</string>
+    <string name="settings_toggle_app_icons_desc">Shows each app's icon, extracted from local APKs or the connected device</string>
+    <string name="settings_appearance_more_apps_card">More apps card</string>
+    <string name="settings_appearance_more_apps_card_description">Shows a card under the apps leading to community patches</string>
+    <string name="settings_section_effects">Effects</string>
+    <string name="settings_appearance_background_animation">Background animation</string>
+    <string name="settings_appearance_background_animation_description">The animation that plays behind the app screens</string>
     <string name="settings_background_circles">Circles</string>
     <string name="settings_background_rings">Rings</string>
     <string name="settings_background_mesh">Mesh</string>
@@ -712,6 +802,7 @@
     <!-- Settings - Advanced -->
     <string name="settings_toggle_expert_mode_label">Expert mode</string>
     <string name="settings_toggle_expert_mode_desc">Full control over patch selection and configuration</string>
+    <string name="settings_expert_mode_disabled_in_flow">Return home to change mode</string>
     <string name="settings_toggle_route_links_label">Route links to patched app</string>
     <string name="settings_toggle_route_links_desc">After installing via ADB, make the patched app open its supported web links instead of the browser or the stock/default app</string>
     <string name="settings_toggle_disable_stock_links_label">Disable stock app's links</string>
@@ -720,6 +811,19 @@
     <string name="settings_section_strip_libs">Strip libs</string>
     <string name="settings_toggle_developer_options_label">Developer options</string>
     <string name="settings_toggle_developer_options_desc">For patch developers. Unlocks a suite of workflow options for building and testing patches (see the documentation for the full list). For now, that's pointing a local source at a folder so Morphe always loads its newest .mpp</string>
+    <string name="settings_dev_bytecode_mode_label">Bytecode mode</string>
+    <string name="settings_dev_bytecode_mode_desc">Transformation mode applied to DEX bytecode during patching</string>
+    <string name="settings_dev_bytecode_mode_strip_fast">Fast</string>
+    <string name="settings_dev_bytecode_mode_strip_safe">Safe</string>
+    <string name="settings_dev_bytecode_mode_full">Full</string>
+    <string name="settings_dev_validate_label">Fingerprint validation</string>
+    <string name="settings_dev_validate_desc">Validate that each match() matches only one method (slower patching, for patch testing)</string>
+    <string name="settings_dev_verify_sdk_label">Android SDK verification</string>
+    <string name="settings_dev_verify_sdk_desc">Verify patched DEX and APK with Android SDK tools (d8, zipalign). May report false positives</string>
+    <string name="settings_dev_sdk_path_label">Android SDK directory</string>
+    <string name="settings_dev_sdk_path_auto">Auto-detected</string>
+    <string name="settings_dev_sdk_not_found">Android SDK not found. Set ANDROID_HOME or browse for the SDK directory</string>
+    <string name="settings_dev_sdk_picker_title">Select Android SDK directory</string>
 
     <!-- Settings - System -->
     <string name="settings_toggle_auto_cleanup_label">Auto-cleanup temp files</string>
@@ -733,15 +837,42 @@
     <string name="settings_output_folder_default">APK's folder (default)</string>
     <string name="settings_output_folder_picker_title">Select output folder</string>
     <string name="settings_output_folder_not_found">Folder not found, will be created on next patch</string>
+    <string name="settings_section_original_apks">Original APKs</string>
+    <string name="settings_original_apks_mode_label">Keep original APKs</string>
+    <string name="settings_original_apks_mode_copy">Copy</string>
+    <string name="settings_original_apks_mode_move">Move</string>
+    <string name="settings_original_apks_mode_desc_copy">Copies each app's original APK after patching, so it can be repatched later. Only the latest version of each app is kept</string>
+    <string name="settings_original_apks_mode_desc_move">Moves each app's original APK after patching, removing it from where you picked it. Only the latest version of each app is kept</string>
+    <string name="settings_original_apks_mode_desc_off">Original APKs are not kept. Repatching needs the APK you picked to still be there</string>
+    <string name="settings_original_apks_kept_title">Kept original APKs</string>
+    <string name="settings_original_apks_open_button">Open folder</string>
+    <string name="settings_original_apks_confirm_title">Delete kept original APKs?</string>
+    <string name="settings_original_apks_confirm_message">This will delete every original APK Morphe has kept. Repatching an app will need its APK again</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-start ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spawn the ADB daemon on launch so connected devices are monitored. When off, Morphe never starts the server, and install/push features are disabled</string>
     <string name="settings_section_storage">Storage &amp; cache</string>
-    <string name="settings_cache_summary">Cache: %1$s (patches + logs)</string>
-    <string name="settings_cache_clear_button">Clear cache</string>
+    <string name="settings_cache_clear_all_title">Clear all cache</string>
+    <string name="settings_cache_category_patches">Patches</string>
+    <string name="settings_cache_category_logs">Logs</string>
+    <string name="settings_cache_category_temp">Temporary files</string>
+    <string name="settings_cache_category_avatars">Avatar cache</string>
+    <string name="settings_cache_category_app_icons">App icon cache</string>
+    <string name="settings_cache_confirm_patches_title">Clear patches?</string>
+    <string name="settings_cache_confirm_patches_message">This will delete downloaded patch files. Patches will be re-downloaded when needed</string>
+    <string name="settings_cache_confirm_logs_title">Clear logs?</string>
+    <string name="settings_cache_confirm_logs_message">This will delete all application log files and device logcat dumps</string>
+    <string name="settings_cache_confirm_temp_title">Clear temporary files?</string>
+    <string name="settings_cache_confirm_temp_message">This will delete temporary scratch and workspace files</string>
+    <string name="settings_cache_confirm_avatars_title">Clear avatar cache?</string>
+    <string name="settings_cache_confirm_avatars_message">This will delete all cached remote avatar images</string>
+    <string name="settings_cache_confirm_app_icons_title">Clear app icon cache?</string>
+    <string name="settings_cache_confirm_app_icons_message">This will delete all app icons extracted from APKs and devices</string>
+    <string name="settings_cache_category_cleared">%1$s cleared</string>
+    <string name="settings_cache_category_clear_failed">Failed to clear %1$s</string>
     <string name="settings_cache_cleared">Cache cleared</string>
     <string name="settings_cache_clear_failed">Clear failed</string>
     <string name="settings_cache_confirm_title">Clear cache?</string>
-    <string name="settings_cache_confirm_message">This will delete downloaded patches and log files. Patches will be re-downloaded when needed</string>
+    <string name="settings_cache_confirm_message">This will delete downloaded patches, log files, and temporary files. Patches will be re-downloaded when needed</string>
     <string name="settings_storage_open_app_data_button">Open app data</string>
     <string name="settings_storage_open_logs_button">Open logs</string>
     <string name="settings_section_about">About</string>
@@ -752,8 +883,6 @@
     <string name="settings_about_licenses_desc">View licenses of third-party libraries</string>
     <string name="settings_about_documentation_title">Documentation</string>
     <string name="settings_about_documentation_desc">Guides for patching, sources and troubleshooting</string>
-    <string name="settings_about_website_title">Visit website</string>
-    <string name="settings_about_website_desc">Visit the official Morphe website</string>
 
     <!-- Settings - Strip Libs -->
     <string name="settings_strip_libs_desc">Uncheck architectures you don't need. When patching, the output APK will keep only the architectures present in the APK AND in this list. If none overlap, nothing is stripped to avoid broken APKs</string>
@@ -803,7 +932,7 @@
     <string name="settings_runtime_logs_title">Patched app runtime logs</string>
     <string name="settings_runtime_logs_desc">Capture logs from your phone after a patched app crashes or misbehaves. Clear before reproducing the bug, then save the filtered output to attach to a bug report</string>
     <string name="settings_runtime_logs_device_info">Device: %1$s</string>
-    <string name="settings_runtime_logs_no_device">No device connected. Plug in your phone with USB debugging enabled</string>
+    <string name="settings_runtime_logs_no_device">No device connected. Connect your phone with USB or Wi-Fi debugging enabled</string>
     <string name="settings_runtime_logs_clearing">Clearing…</string>
     <string name="settings_runtime_logs_clear_button">Clear device logs</string>
     <string name="settings_runtime_logs_failed_to_clear">Failed to clear logs</string>
@@ -818,14 +947,26 @@
     <string name="settings_github_pat_label">Personal Access Token</string>
 
     <!-- App Info Dialog -->
-    <string name="app_info_dialog_link_website">Website</string>
-    <string name="app_info_version_gui">GUI: %1$s</string>
-    <string name="app_info_version_patcher">Patcher: v%1$s</string>
-    <string name="app_info_version_library">Library: v%1$s</string>
-    <string name="app_info_description">An open-source project for modern, streamlined patching of popular Android apps, driven by community feedback and contributions</string>
-    <string name="app_info_link_changelog">Changelog</string>
-    <string name="app_info_link_reddit">Reddit</string>
-    <string name="app_info_link_translate">Translate</string>
+    <string name="about_component">Desktop</string>
+    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_update_available">Update available: %1$s</string>
+    <string name="about_up_to_date">Up to date</string>
+    <string name="about_links">Official links</string>
+    <string name="about_link_donate">Donate</string>
+    <string name="about_link_github" translatable="false">GitHub</string>
+    <string name="about_link_reddit" translatable="false">Reddit</string>
+    <string name="about_link_translations">Translations</string>
+    <string name="contributors">Contributors</string>
+    <string name="contributors_ranking">Ranked by contribution</string>
+    <string name="contributors_all_time">All time</string>
+    <string name="contributors_6_months">Last 6 months</string>
+    <string name="contributors_3_months">Last 3 months</string>
+    <string name="credits_prior_development">Prior development</string>
+    <string name="supporters">Supporters</string>
+    <string name="supporters_description">Backers on Open Collective</string>
+    <string name="supporters_become">Become a supporter</string>
+    <string name="people_more">And %1$s more</string>
+    <string name="people_unavailable">Could not load the list</string>
 
     <!-- Changelog Dialog -->
     <string name="changelog_badge_installed">Installed</string>
@@ -848,4 +989,17 @@
     <!-- Navigation Pill -->
     <string name="nav_sources">Sources</string>
     <string name="nav_apps">Apps</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Settings - Search & Inline Views -->
+    <string name="settings_search_placeholder">Search settings</string>
+    <string name="settings_search_no_results">No matching settings</string>
+    <string name="settings_back_to_about">Back to About</string>
+    <string name="licenses_back_to_list">Back to licenses</string>
+
+    <!-- More apps card & community patches -->
+    <string name="home_more_apps_title">More apps</string>
+    <string name="home_more_apps_subtitle">Community patches</string>
+    <string name="community_patches_notice_title">Third-party patch sources</string>
+    <string name="community_patches_notice_message">Community patch sources are made and maintained by their own authors. Morphe does not review or verify third-party patches, and is not responsible for their content or for what they do on your device.</string>
 </resources>

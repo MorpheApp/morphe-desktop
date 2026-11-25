@@ -16,6 +16,7 @@ import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.Logger
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.util.FormatUtils
@@ -28,6 +29,7 @@ import com.sun.management.OperatingSystemMXBean
 import java.io.File
 import java.lang.management.ManagementFactory
 import java.util.Locale
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -42,11 +44,64 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import oshi.SystemInfo
 
+/** Snapshot of the active patching run shared across screens (e.g. while Settings is open). */
+data class PatchingSessionSnapshot(
+    val runId: String? = null,
+    val status: PatchingStatus = PatchingStatus.IDLE,
+    val outputPath: String? = null,
+    val isMount: Boolean = false,
+    val hasAutoNavigated: Boolean = false,
+) {
+    val isInProgress: Boolean
+        get() = status == PatchingStatus.PREPARING || status == PatchingStatus.PATCHING
+}
+
+/** App-scoped tracker keeping patching progress and completion state visible outside [PatchingScreen]. */
+class PatchingSessionTracker {
+    private val _state = MutableStateFlow(PatchingSessionSnapshot())
+    val state: StateFlow<PatchingSessionSnapshot> = _state.asStateFlow()
+
+    fun update(
+        runId: String,
+        status: PatchingStatus,
+        outputPath: String? = null,
+        isMount: Boolean = false,
+        hasAutoNavigated: Boolean = false,
+    ) {
+        _state.update { current ->
+            val settled = hasAutoNavigated || (current.runId == runId && current.hasAutoNavigated)
+            PatchingSessionSnapshot(
+                runId = runId,
+                status = status,
+                outputPath = outputPath,
+                isMount = isMount,
+                hasAutoNavigated = settled,
+            )
+        }
+    }
+
+    fun markAutoNavigated(runId: String?) {
+        if (runId == null) return
+        _state.update { current ->
+            if (current.runId == runId) current.copy(hasAutoNavigated = true) else current
+        }
+    }
+
+    fun clear(runId: String) {
+        _state.update { current ->
+            if (current.runId == runId) PatchingSessionSnapshot() else current
+        }
+    }
+}
+
 class PatchingViewModel(
     private val config: PatchEngine.Config,
     private val configRepository: ConfigRepository,
     private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
+    private val sessionTracker: PatchingSessionTracker = PatchingSessionTracker(),
 ) : ViewModel() {
+
+    private val runId = UUID.randomUUID().toString()
 
     private var allConfiguredSources: List<PatchSource> = emptyList()
     private val initialSnapshot = config.historyMetadata?.sourcesSnapshot
@@ -77,7 +132,31 @@ class PatchingViewModel(
 
     init {
         viewModelScope.launch {
-            val sources = runCatching { configRepository.loadConfig().patchSource }.getOrDefault(emptyList())
+            uiState.collect { state ->
+                sessionTracker.update(
+                    runId = runId,
+                    status = state.status,
+                    outputPath = state.outputPath,
+                    isMount = config.mount,
+                    hasAutoNavigated = state.hasAutoNavigated,
+                )
+            }
+        }
+        viewModelScope.launch {
+            sessionTracker.state.collect { snapshot ->
+                if (snapshot.runId == runId && snapshot.hasAutoNavigated && !_uiState.value.hasAutoNavigated) {
+                    _uiState.update { it.copy(hasAutoNavigated = true) }
+                }
+            }
+        }
+        viewModelScope.launch {
+            val sources = try {
+                configRepository.loadConfig().patchSource
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                emptyList()
+            }
             allConfiguredSources = sources
             val resolvedName = when {
                 initialSnapshot.isNullOrEmpty() -> config.patchFiles.firstOrNull()?.let {
@@ -95,10 +174,17 @@ class PatchingViewModel(
 
     fun markAutoNavigated() {
         _uiState.update { it.copy(hasAutoNavigated = true) }
+        sessionTracker.markAutoNavigated(runId)
+    }
+
+    override fun onCleared() {
+        sessionTracker.clear(runId)
+        super.onCleared()
     }
 
     fun startPatching() {
         if (_uiState.value.status != PatchingStatus.IDLE) return
+        _uiState.update { it.copy(status = PatchingStatus.PREPARING) }
 
         patchingJob = viewModelScope.launch {
             isCancelledByUser = false
@@ -112,7 +198,7 @@ class PatchingViewModel(
                 val osArch = System.getProperty("os.arch") ?: "Unknown Arch"
                 val maxMemoryMb = (Runtime.getRuntime().maxMemory() / (1024 * 1024)).toInt()
                 val inputApkFile = config.inputApk
-                val apkSizeMb = if (inputApkFile.exists()) FormatUtils.formatFileSize(inputApkFile.length(), loc) else "?"
+                val apkSizeMb = if (inputApkFile.exists()) formatFileSize(inputApkFile.length(), loc) else "?"
                 
                 val appVersion = config.historyMetadata?.appVersion
                     ?: ApkInspector.inspect(inputApkFile)?.versionName
@@ -131,14 +217,14 @@ class PatchingViewModel(
                 val isSplit = BundleFormats.isBundle(inputApkFile) || inputApkFile.isDirectory
                 
                 val parentFile = config.outputApk?.parentFile ?: config.inputApk.parentFile ?: File(System.getProperty("user.home"))
-                val storageFreeInfo = "${FormatUtils.formatFileSize(parentFile.usableSpace, loc)} / ${FormatUtils.formatFileSize(parentFile.totalSpace, loc)}"
+                val storageFreeInfo = "${formatFileSize(parentFile.usableSpace, loc)} / ${formatFileSize(parentFile.totalSpace, loc)}"
 
                 val desktopVersion = UpdateChecker.currentVersion() ?: "?"
                 val patcherVersion = MorpheComponents.patcherVersion ?: "?"
                 val nativeLibs = if (config.architecturesToKeep.isNotEmpty()) getString(Res.string.patching_banner_native_libs_kept) else getString(Res.string.patching_banner_native_libs_stripped)
 
                 val osBean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
-                val ramFreeInfo = "${FormatUtils.formatFileSize(osBean.freeMemorySize, loc)} / ${FormatUtils.formatFileSize(osBean.totalMemorySize, loc)}"
+                val ramFreeInfo = "${formatFileSize(osBean.freeMemorySize, loc)} / ${formatFileSize(osBean.totalMemorySize, loc)}"
 
                 val cpu = CpuUsageSampler()
                 val io = IoUsageSampler()
@@ -199,13 +285,15 @@ class PatchingViewModel(
                 runningTask = null
             )
 
-            // Pass user-configured keystore if present; otherwise use default.
-            val userKeystoreDetails = engineConfigRepository.loadConfig().toKeyStoreDetails()
-            val engineConfig = if (config.keystoreDetails == null && userKeystoreDetails != null) {
-                config.copy(keystoreDetails = userKeystoreDetails)
-            } else {
-                config
-            }
+            // Pass user-configured keystore and developer options if present.
+            val appConfig = engineConfigRepository.loadConfig()
+            val userKeystoreDetails = appConfig.toKeyStoreDetails()
+            val engineConfig = config.copy(
+                keystoreDetails = config.keystoreDetails ?: userKeystoreDetails,
+                bytecodeMode = if (appConfig.developerOptions) appConfig.resolvedBytecodeMode() else config.bytecodeMode,
+                validate = if (appConfig.developerOptions) appConfig.validateFingerprints else config.validate,
+                sdkToolsPath = if (appConfig.developerOptions) appConfig.resolvedAndroidSdkPath() else config.sdkToolsPath,
+            )
 
             val engineResult = try {
                 PatchEngine.patch(
@@ -234,7 +322,7 @@ class PatchingViewModel(
             if (engineResult.success) {
                 val elapsedMs = System.currentTimeMillis() - startTime
                 val outputApkFile = config.outputApk ?: File(engineResult.outputPath)
-                val outSizeMb = if (outputApkFile.exists()) FormatUtils.formatFileSize(outputApkFile.length(), locale) else "?"
+                val outSizeMb = if (outputApkFile.exists()) formatFileSize(outputApkFile.length(), locale) else "?"
 
                 _uiState.value = _uiState.value.copy(
                     status = PatchingStatus.COMPLETED,

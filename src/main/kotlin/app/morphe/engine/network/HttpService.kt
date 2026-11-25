@@ -90,11 +90,11 @@ class HttpService(
         val part = File(saveLocation.parentFile, "${saveLocation.name}.part")
         try {
             withRetry("download ${saveLocation.name}") {
-                FileOutputStream(part, false).use { out ->
-                    http.prepareGet(url) { builder() }.execute { response ->
-                        response.throwIfError(url)
-                        val contentLength = response.headers[HttpHeaders.ContentLength]?.toLongOrNull()
-                        withContext(Dispatchers.IO) {
+                http.prepareGet(url) { builder() }.execute { response ->
+                    response.throwIfError(url)
+                    val contentLength = response.headers[HttpHeaders.ContentLength]?.toLongOrNull()
+                    withContext(Dispatchers.IO) {
+                        FileOutputStream(part, false).use { out ->
                             response.bodyAsChannel().toInputStream().use { input ->
                                 copyStreaming(input, out, contentLength, onProgress)
                             }
@@ -187,19 +187,19 @@ class HttpService(
         val part = File(saveLocation.parentFile, "${saveLocation.name}.part")
         try {
             withRetry("download PR artifact ${saveLocation.name}") {
-                FileOutputStream(part, false).use { out ->
-                    http.prepareGet(url) {
-                        headers {
-                            append(HttpHeaders.Authorization, "Bearer $pat")
-                            append(HttpHeaders.Accept, "application/vnd.github+json")
-                        }
-                    }.execute { response ->
-                        response.throwIfError(url)
-                        val contentType = response.headers[HttpHeaders.ContentType] ?: ""
-                        val contentLength = response.headers[HttpHeaders.ContentLength]?.toLongOrNull()
-                        val isZip = contentType.contains("zip", ignoreCase = true) || url.endsWith(".zip", ignoreCase = true)
+                http.prepareGet(url) {
+                    headers {
+                        append(HttpHeaders.Authorization, "Bearer $pat")
+                        append(HttpHeaders.Accept, "application/vnd.github+json")
+                    }
+                }.execute { response ->
+                    response.throwIfError(url)
+                    val contentType = response.headers[HttpHeaders.ContentType] ?: ""
+                    val contentLength = response.headers[HttpHeaders.ContentLength]?.toLongOrNull()
+                    val isZip = contentType.contains("zip", ignoreCase = true) || url.endsWith(".zip", ignoreCase = true)
 
-                        withContext(Dispatchers.IO) {
+                    withContext(Dispatchers.IO) {
+                        FileOutputStream(part, false).use { out ->
                             if (isZip) {
                                 val zis = ZipInputStream(response.bodyAsChannel().toInputStream())
                                 zis.use { zip ->

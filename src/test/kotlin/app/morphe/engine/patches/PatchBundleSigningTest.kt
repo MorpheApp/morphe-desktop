@@ -49,6 +49,7 @@ class PatchBundleSigningTest {
         override val repoPath: String,
         val files: MutableMap<String, File> = mutableMapOf()
     ) : RemotePatchSource {
+        var downloadCount = 0
         override val provider: PatchProvider = PatchProvider.GITHUB
         override suspend fun listReleases(): Result<List<Release>> = Result.success(emptyList())
         override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> =
@@ -59,6 +60,7 @@ class PatchBundleSigningTest {
             targetFile: File,
             onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)?
         ): Result<File> {
+            downloadCount++
             val source = files[asset.name] ?: return Result.failure(Exception("File not found: ${asset.name}"))
             targetFile.parentFile?.mkdirs()
             source.copyTo(targetFile, overwrite = true)
@@ -140,33 +142,20 @@ class PatchBundleSigningTest {
         repo.downloadPatches(release1)
 
         val bundle2 = createBundle("b2", 2, OTHER_KEY)
-        var downloadCount = 0
-        val trackingRemote = object : RemotePatchSource by remote1 {
-            override suspend fun downloadAsset(
-                asset: ReleaseAsset,
-                targetFile: File,
-                onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)?
-            ): Result<File> {
-                downloadCount++
-                targetFile.parentFile?.mkdirs()
-                bundle2.copyTo(targetFile, overwrite = true)
-                return Result.success(targetFile)
-            }
-        }
-        val (release2, _) = releaseWithAsset("v2.0.0", "patches-2.mpp", bundle2)
-        val repo2 = PatchRepository(trackingRemote)
+        val (release2, remote2) = releaseWithAsset("v2.0.0", "patches-2.mpp", bundle2)
+        val repo2 = PatchRepository(remote2)
 
         // First attempt downloads and records refusal
         val firstResult = repo2.downloadPatches(release2)
         assertTrue(firstResult.isFailure)
-        assertEquals(1, downloadCount)
+        assertEquals(1, remote2.downloadCount)
 
         // Second attempt fails immediately from cache without calling downloadAsset
         val secondResult = repo2.downloadPatches(release2)
         assertTrue(secondResult.isFailure)
         val ex = assertIs<PatchBundleSignerChangedException>(secondResult.exceptionOrNull())
         assertEquals(OTHER_PUBLIC_KEY, ex.signer)
-        assertEquals(1, downloadCount, "Should not re-download a release already refused for its signer")
+        assertEquals(1, remote2.downloadCount, "Should not re-download a release already refused for its signer")
     }
 
     @Test

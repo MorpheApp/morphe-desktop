@@ -19,12 +19,14 @@
     <!-- Result Screen -->
     <!-- Icon Studio -->
     <!-- Source Management Sheet -->
+    <string name="source_card_apps">యాప్లు</string>
+    <string name="source_card_disabled_tag">నిలిపివే</string>
     <!-- Signing Key Trust Dialog -->
     <!-- Patch Source Dialogs -->
     <!-- Device Indicator -->
     <!-- Error Dialog -->
     <!-- Banners -->
-    <!-- Tools Dialog -->
+    <string name="home_sources_failed_title">కొన్ని ప్యాచు మూలాలు అందుబాటులోలేవు</string>
     <!-- Licenses Dialog -->
     <!-- Settings -->
     <!-- Settings - Appearance -->
@@ -38,4 +40,7 @@
     <!-- App Info Dialog -->
     <!-- Changelog Dialog -->
     <!-- Navigation Pill -->
+    <string name="nav_settings">సెట్టింగ్లు</string>
+    <!-- Settings - Search & Inline Views -->
+    <!-- More apps card & community patches -->
 </resources>

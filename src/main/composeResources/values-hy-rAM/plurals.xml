@@ -60,4 +60,32 @@
         <item quantity="one">%1$d օպտիմիզացիա</item>
         <item quantity="other">%1$d օպտիմիզացիա</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d ֆայլ)</item>
+        <item quantity="other">%1$s (%2$d ֆայլ)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Ընդամենը՝ %1$s (%2$d ֆայլ)</item>
+        <item quantity="other">Ընդամենը՝ %1$s (%2$d ֆայլ)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d թողարկում ավելի նոր է, քան</item>
+        <item quantity="other">%1$d թողարկում ավելի նոր են, քան</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d թողարկում ավելի հին է, քան</item>
+        <item quantity="other">%1$d թողարկում ավելի հին են, քան</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d պատչ</item>
+        <item quantity="other">%1$d պատչ</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d հավելված</item>
+        <item quantity="other">%1$d հավելված</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d տարբերակ</item>
+        <item quantity="other">%1$d տարբերակ</item>
+    </plurals>
 </resources>

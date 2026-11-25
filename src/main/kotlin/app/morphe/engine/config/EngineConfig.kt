@@ -7,9 +7,12 @@ package app.morphe.engine.config
 
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.apk.AndroidArchitectures
+import app.morphe.engine.util.AndroidSdkLocator
 import app.morphe.engine.util.PortablePaths
 import app.morphe.patcher.apk.ApkUtils
+import app.morphe.patcher.dex.BytecodeMode
 import java.io.File
 import kotlinx.serialization.Serializable
 
@@ -26,15 +29,38 @@ data class EngineConfig(
     val autoRouteLinksAfterInstall: Boolean = false,
     val disableStockLinksAfterInstall: Boolean = false,
     val autoCleanupTempFiles: Boolean = true,
+    val saveOriginalApks: Boolean? = null,
+    val moveOriginalApks: Boolean = false,
     val developerOptions: Boolean = false,
     val excludedMppPatterns: List<String> = emptyList(),
     val lastLocalPatchDir: String? = null,
+    val bytecodeMode: String = "STRIP_FAST",
+    val validateFingerprints: Boolean = false,
+    val verifyWithSdk: Boolean = false,
+    val customAndroidSdkPath: String? = null,
 ) {
     fun resolvedDefaultOutputDirectory(): File? =
         defaultOutputDirectory?.let(PortablePaths::resolve)
 
     fun resolvedKeystorePath(): File? =
         keystorePath?.let(PortablePaths::resolve)
+
+    fun resolvedCustomAndroidSdkPath(): File? =
+        customAndroidSdkPath?.let(PortablePaths::resolve)?.takeIf { it.isDirectory }
+
+    fun resolvedAndroidSdkPath(): File? {
+        if (!verifyWithSdk) return null
+        return resolvedCustomAndroidSdkPath() ?: AndroidSdkLocator.detectSdkPath()
+    }
+
+    fun saveOriginalApkMode(saveByDefault: Boolean = true): SaveOriginalApk? = when {
+        !(saveOriginalApks ?: saveByDefault) -> null
+        moveOriginalApks -> SaveOriginalApk.MOVE
+        else -> SaveOriginalApk.COPY
+    }
+
+    fun resolvedBytecodeMode(): BytecodeMode =
+        runCatching { BytecodeMode.valueOf(bytecodeMode) }.getOrDefault(BytecodeMode.STRIP_FAST)
 
     fun toKeyStoreDetails(): ApkUtils.KeyStoreDetails? {
         val ks = resolvedKeystorePath() ?: return null

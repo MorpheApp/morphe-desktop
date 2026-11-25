@@ -45,4 +45,25 @@
     <plurals name="changelog_performance_count">
         <item quantity="other">%1$d tối ưu hoá</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="other">%1$s (%2$d tệp)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="other">Tổng cộng: %1$s (%2$d tệp)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="other">%1$d bản phát hành mới hơn</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="other">%1$d bản phát hành cũ hơn</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="other">%1$d bản vá</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="other">%1$d ứng dụng</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="other">%1$d tùy chọn</item>
+    </plurals>
 </resources>

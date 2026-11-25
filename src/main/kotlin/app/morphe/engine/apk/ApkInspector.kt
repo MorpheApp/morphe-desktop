@@ -6,7 +6,9 @@
 package app.morphe.engine.apk
 
 import app.morphe.engine.util.Logger
+import com.reandroid.arsc.chunk.TableBlock
 import com.reandroid.arsc.chunk.xml.AndroidManifestBlock
+import com.reandroid.arsc.value.DataType
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.util.zip.ZipEntry
@@ -86,7 +88,9 @@ object ApkInspector {
                 versionName = block.versionName,
                 versionCode = block.versionCode,
                 minSdkVersion = block.minSdkVersion,
-                applicationLabel = block.applicationLabelString,
+                applicationLabel = resolveApplicationLabel(block, file) {
+                    zip.getEntry(TableBlock.FILE_NAME)?.let { entry -> zip.getInputStream(entry).use { TableBlock.load(it) } }
+                },
                 architectures = architectures,
                 isBundle = false,
             )
@@ -101,6 +105,7 @@ object ApkInspector {
             }
 
             var manifestBlock: AndroidManifestBlock? = null
+            var resourcesBytes: ByteArray? = null
             val baseEmbeddedArchs = mutableSetOf<String>()
 
             // Stream base.apk directly in memory without writing to disk
@@ -111,6 +116,8 @@ object ApkInspector {
                         if (innerEntry.name == "AndroidManifest.xml") {
                             val manifestBytes = innerZip.readBytes()
                             manifestBlock = AndroidManifestBlock.load(ByteArrayInputStream(manifestBytes))
+                        } else if (innerEntry.name == TableBlock.FILE_NAME) {
+                            resourcesBytes = innerZip.readBytes()
                         } else if (innerEntry.name.startsWith("lib/")) {
                             val parts = innerEntry.name.split("/")
                             if (parts.size >= 2 && parts[1].isNotBlank()) {
@@ -141,8 +148,9 @@ object ApkInspector {
                 .map { it.name }
                 .filter { it.endsWith(".apk", ignoreCase = true) }
                 .forEach { name ->
-                    val normalized = name.replace("_", "-")
-                    AndroidArchitectures.ALL.filter { arch -> normalized.contains(arch) }
+                    val normalized = name.replace("-", "_")
+                    AndroidArchitectures.ALL
+                        .filter { arch -> Regex("(?<![a-z0-9])${arch.replace("-", "_")}(?![a-z0-9_])").containsMatchIn(normalized) }
                         .forEach { architectures.add(it) }
                 }
 
@@ -158,14 +166,38 @@ object ApkInspector {
                 versionName = block.versionName,
                 versionCode = block.versionCode,
                 minSdkVersion = block.minSdkVersion,
-                applicationLabel = block.applicationLabelString,
+                applicationLabel = resolveApplicationLabel(block, file) {
+                    resourcesBytes?.let { TableBlock.load(ByteArrayInputStream(it)) }
+                },
                 architectures = finalArchitectures,
                 isBundle = true,
             )
         }
     }
 
-    private fun findBaseApkEntry(zip: ZipFile): ZipEntry? {
+    /**
+     * Returns the app label, following a `@string/...` reference into the resources table from
+     * [loadResources] when the manifest has one.
+     */
+    private fun resolveApplicationLabel(
+        manifest: AndroidManifestBlock,
+        file: File,
+        loadResources: () -> TableBlock?,
+    ): String? {
+        manifest.applicationLabelString?.let { return it }
+        val labelId = manifest.applicationLabelReference ?: return null
+
+        // A broken resources table must not fail the whole inspection, the label is optional.
+        return try {
+            val value = loadResources()?.getResource(labelId)?.resolveReference()?.get()?.resValue
+            value?.takeIf { it.dataType == DataType.STRING }?.dataAsPoolString?.get()
+        } catch (e: Exception) {
+            Logger.warn("Failed to resolve app label of ${file.name}: ${e.message ?: e::class.simpleName}")
+            null
+        }
+    }
+
+    internal fun findBaseApkEntry(zip: ZipFile): ZipEntry? {
         // 1. APKM / standard bundle convention
         zip.getEntry("base.apk")?.let { return it }
 

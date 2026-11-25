@@ -5,6 +5,8 @@
 
 package app.morphe.gui.ui.theme
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -147,7 +151,9 @@ data class MorpheAlphas(
 
 val LocalMorpheAlphas = compositionLocalOf { MorpheAlphas() }
 
-/** Design system accessors for typography, colors, shapes, dimensions, and alphas. */
+val LocalMorpheOutlines = compositionLocalOf { true }
+
+/** Design system accessors for typography, colors, shapes, dimensions, alphas, and outlines. */
 object MorpheTheme {
     val typography: MorpheTypography
         @Composable
@@ -178,11 +184,19 @@ object MorpheTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalMorpheAlphas.current
+
+    val outlines: Boolean
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMorpheOutlines.current
 }
 
 /** Panel background fill color. */
 val panelFill: Color
     @Composable get() = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+
+val cardFill: Color
+    @Composable get() = MaterialTheme.colorScheme.surfaceContainerLow
 
 /** Background scrim color for screens with dense text content. */
 val screenScrim: Color
@@ -214,10 +228,18 @@ private val MorpheDarkColorScheme = darkColorScheme(
     surfaceVariant = Color(0xFF43474E),
     onSurfaceVariant = Color(0xFFC3C6CF),
     outline = Color(0xFF8D9199),
+    outlineVariant = Color(0xFF43474E),
     error = Color(0xFFFFB4AB),
     onError = Color(0xFF690005),
     errorContainer = Color(0xFF93000A),
     onErrorContainer = Color(0xFFFFDAD6),
+    surfaceContainerLowest = Color(0xFF0F1113),
+    surfaceContainerLow = Color(0xFF1A1C1E),
+    surfaceContainer = Color(0xFF1E2023),
+    surfaceContainerHigh = Color(0xFF282A2D),
+    surfaceContainerHighest = Color(0xFF333538),
+    surfaceDim = Color(0xFF121416),
+    surfaceBright = Color(0xFF38393C),
 )
 
 private val MorpheAmoledColorScheme = MorpheDarkColorScheme.copy(
@@ -225,6 +247,13 @@ private val MorpheAmoledColorScheme = MorpheDarkColorScheme.copy(
     surface = Color.Black,
     surfaceVariant = Color.Black,
     onSurfaceVariant = Color(0xFFB0B0B0),
+    surfaceContainerLowest = Color(0xFF000000),
+    surfaceContainerLow = Color(0xFF0A0A0B),
+    surfaceContainer = Color(0xFF0F1011),
+    surfaceContainerHigh = Color(0xFF18191B),
+    surfaceContainerHighest = Color(0xFF222325),
+    surfaceDim = Color(0xFF000000),
+    surfaceBright = Color(0xFF2A2B2D),
 )
 
 private val MorpheLightColorScheme = lightColorScheme(
@@ -247,10 +276,18 @@ private val MorpheLightColorScheme = lightColorScheme(
     surfaceVariant = Color(0xFFDFE2EB),
     onSurfaceVariant = Color(0xFF43474E),
     outline = Color(0xFF73777F),
+    outlineVariant = Color(0xFFC3C6CF),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
     onErrorContainer = Color(0xFF410002),
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFF7F8FB),
+    surfaceContainer = Color(0xFFF1F2F6),
+    surfaceContainerHigh = Color(0xFFEBECF0),
+    surfaceContainerHighest = Color(0xFFE5E6EA),
+    surfaceDim = Color(0xFFDADBDF),
+    surfaceBright = Color(0xFFFDFCFF),
 )
 
 private val MonochromeDarkColorScheme = darkColorScheme(
@@ -273,10 +310,18 @@ private val MonochromeDarkColorScheme = darkColorScheme(
     surfaceVariant = Color(0xFF444852),
     onSurfaceVariant = Color(0xFFC5C9D2),
     outline = Color(0xFF8E929C),
+    outlineVariant = Color(0xFF43474E),
     error = Color(0xFFFFB4AB),
     onError = Color(0xFF690005),
     errorContainer = Color(0xFF93000A),
     onErrorContainer = Color(0xFFFFDAD6),
+    surfaceContainerLowest = Color(0xFF0B0C10),
+    surfaceContainerLow = Color(0xFF131418),
+    surfaceContainer = Color(0xFF17181C),
+    surfaceContainerHigh = Color(0xFF202126),
+    surfaceContainerHighest = Color(0xFF2A2B30),
+    surfaceDim = Color(0xFF0B0C10),
+    surfaceBright = Color(0xFF303136),
 )
 
 private val MonochromeAmoledColorScheme = MonochromeDarkColorScheme.copy(
@@ -284,6 +329,13 @@ private val MonochromeAmoledColorScheme = MonochromeDarkColorScheme.copy(
     surface = Color.Black,
     surfaceVariant = Color.Black,
     onSurfaceVariant = Color(0xFFB0B0B0),
+    surfaceContainerLowest = Color(0xFF000000),
+    surfaceContainerLow = Color(0xFF0A0A0A),
+    surfaceContainer = Color(0xFF0F0F10),
+    surfaceContainerHigh = Color(0xFF18181A),
+    surfaceContainerHighest = Color(0xFF222224),
+    surfaceDim = Color(0xFF000000),
+    surfaceBright = Color(0xFF2A2A2C),
 )
 
 private val MonochromeLightColorScheme = lightColorScheme(
@@ -306,10 +358,18 @@ private val MonochromeLightColorScheme = lightColorScheme(
     surfaceVariant = Color(0xFFE7EAF1),
     onSurfaceVariant = Color(0xFF444852),
     outline = Color(0xFF747984),
+    outlineVariant = Color(0xFFC3C6CF),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
     onErrorContainer = Color(0xFF410002),
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFFBFBFD),
+    surfaceContainer = Color(0xFFF4F5F9),
+    surfaceContainerHigh = Color(0xFFEEEFF4),
+    surfaceContainerHighest = Color(0xFFE8E9EF),
+    surfaceDim = Color(0xFFDCDDE3),
+    surfaceBright = Color(0xFFFFFFFF),
 )
 
 private val MonochromeDarkAccents = MorpheAccentColors(
@@ -355,6 +415,7 @@ fun MorpheTheme(
     themeStyle: ThemeStyle = ThemeStyle.MORPHE,
     customAccentColorArgb: Int? = null,
     useSharpCorners: Boolean = false,
+    useOutlines: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val baseColorScheme = when (themeStyle) {
@@ -442,6 +503,7 @@ fun MorpheTheme(
         LocalMorpheAccents provides accents,
         LocalMorpheDimens provides MorpheDimens(),
         LocalMorpheAlphas provides MorpheAlphas(),
+        LocalMorpheOutlines provides useOutlines,
         LocalMorpheTypography provides typography,
     ) {
         MaterialTheme(
@@ -456,6 +518,24 @@ fun MorpheTheme(
     }
 }
 
+/** Returns a [BorderStroke] when [enabled] is true, or `null` when outlines are disabled. */
+@Composable
+@ReadOnlyComposable
+fun outlineStroke(
+    color: Color,
+    width: Dp = 1.dp,
+    enabled: Boolean = MorpheTheme.outlines,
+): BorderStroke? = if (enabled) BorderStroke(width, color) else null
+
+/** Applies a thin outline border when [enabled] is true, leaving the modifier unchanged otherwise. */
+@Composable
+fun Modifier.outlineBorder(
+    color: Color,
+    shape: Shape = MorpheTheme.shapes.small,
+    width: Dp = 1.dp,
+    enabled: Boolean = MorpheTheme.outlines,
+): Modifier = if (enabled) border(width, color, shape) else this
+
 fun Color.shiftLightness(delta: Float): Color {
     val hsl = FloatArray(3)
     colorToHSL(this, hsl)
@@ -467,7 +547,7 @@ fun Color.contrastingForeground(): Color {
     return if (this.luminance() > 0.5f) Color.Black else Color.White
 }
 
-private fun colorToHSL(color: Color, hsl: FloatArray) {
+internal fun colorToHSL(color: Color, hsl: FloatArray) {
     val r = color.red
     val g = color.green
     val b = color.blue

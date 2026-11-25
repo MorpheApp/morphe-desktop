@@ -12,7 +12,9 @@ import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_SIGNER_NAME
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.UpdateChecker
+import app.morphe.engine.apk.ApkInspector
 import app.morphe.engine.apk.ApkOutputNaming
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.options.parseCliOptionValue
@@ -20,6 +22,7 @@ import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.util.AdbErrorCode
 import app.morphe.engine.util.AdbException
 import app.morphe.engine.util.AdbManager
+import app.morphe.engine.util.AndroidSdkLocator
 import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.Logger
 import app.morphe.patcher.apk.ApkUtils
@@ -28,6 +31,7 @@ import app.morphe.patcher.resource.CpuArchitecture
 import java.io.File
 import java.util.Locale
 import java.util.concurrent.Callable
+import java.util.concurrent.FutureTask
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -228,6 +232,25 @@ internal object PatchCommand : Callable<Int> {
     )
     private var disablePurge: Boolean = false
 
+    private var saveOriginal: SaveOriginalOption? = null
+    @CommandLine.Option(
+        names = ["--save-original"],
+        description = ["Keep the input APK in the data folder's original-apks directory after a successful patch, " +
+            "replacing the copy kept of an earlier version of the app. Valid options are COPY, MOVE, and OFF. " +
+            "Defaults to the GUI's Keep original APKs setting when it has been set, else OFF."],
+    )
+    @Suppress("unused")
+    private fun setSaveOriginal(desiredSaveOriginal: String) {
+        this.saveOriginal = try {
+            SaveOriginalOption.valueOf(desiredSaveOriginal)
+        } catch (e: IllegalArgumentException) {
+            throw CommandLine.ParameterException(
+                spec.commandLine(),
+                "Invalid value \"$desiredSaveOriginal\" in --save-original. Valid values are: COPY, MOVE, OFF",
+            )
+        }
+    }
+
     @CommandLine.Parameters(
         description = ["APK file to patch."],
         arity = "1",
@@ -316,33 +339,11 @@ internal object PatchCommand : Callable<Int> {
             return
         }
 
-        // Try environment variables first.
-        val envPath = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
-        if (envPath != null) {
-            val envDir = File(envPath)
-            if (envDir.isDirectory) {
-                this.sdkToolsPath = envDir
-                return
-            }
-        }
-
-        // Infer default path based on OS.
-        val userHome = System.getProperty("user.home")
-        val osName = System.getProperty("os.name").lowercase()
-        val defaultPath = when {
-            osName.contains("win") -> File("$userHome/AppData/Local/Android/Sdk")
-            osName.contains("mac") -> File("$userHome/Library/Android/sdk")
-            else -> File("$userHome/Android/Sdk")
-        }
-
-        if (defaultPath.isDirectory) {
-            this.sdkToolsPath = defaultPath
-        } else {
-            throw CommandLine.ParameterException(
+        this.sdkToolsPath = AndroidSdkLocator.detectSdkPath()
+            ?: throw CommandLine.ParameterException(
                 spec.commandLine(),
                 "Could not find Android SDK. Set ANDROID_HOME or pass a path to --verify-with-sdk.",
             )
-        }
     }
     private var sdkToolsPath: File? = null
 
@@ -379,8 +380,9 @@ internal object PatchCommand : Callable<Int> {
     private var updateOptions: Boolean = false
 
     override fun call(): Int {
-        // Check for any newer version
-        UpdateChecker.check()?.let { Logger.info(it) }
+        // Check for any newer version while patching, and show it at the end.
+        val updateCheck = FutureTask(UpdateChecker::check)
+        Thread(updateCheck, "Update check").apply { isDaemon = true }.start()
 
         val adbManager = if (deviceSerial != null) AdbManager() else null
         val targetDeviceId = if (deviceSerial != null) {
@@ -473,7 +475,12 @@ internal object PatchCommand : Callable<Int> {
         }
 
         val effectiveArchitectures = keepArchitectures.ifEmpty {
-            savedConfig.keepArchitectures.mapNotNull { CpuArchitecture.valueOfOrNull(it) }.toSet()
+            val saved = savedConfig.keepArchitectures
+            if (ApkInspector.extractArchitectures(apk).none { it in saved }) {
+                emptySet()
+            } else {
+                saved.mapNotNull { CpuArchitecture.valueOfOrNull(it) }.toSet()
+            }
         }
 
         val engineConfig = PatchEngine.Config(
@@ -495,6 +502,9 @@ internal object PatchCommand : Callable<Int> {
             optionsFile = optionsFilePath,
             updateOptions = updateOptions,
             recordHistory = true,
+            saveOriginalApk = saveOriginal.let { option ->
+                if (option != null) option.mode else savedConfig.saveOriginalApkMode(saveByDefault = false)
+            },
         )
 
         try {
@@ -543,8 +553,16 @@ internal object PatchCommand : Callable<Int> {
             adbManager?.let {
                 runBlocking { it.killServerIfOwned() }
             }
+            updateCheck.get()?.let { Logger.info(it) }
         }
     }
+}
+
+/** What `--save-original` does with the input APK. */
+internal enum class SaveOriginalOption(val mode: SaveOriginalApk?) {
+    COPY(SaveOriginalApk.COPY),
+    MOVE(SaveOriginalApk.MOVE),
+    OFF(null),
 }
 
 class OptionKeyConverter : CommandLine.ITypeConverter<String> {

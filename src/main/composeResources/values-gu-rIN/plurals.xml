@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d પેચ</item>
+        <item quantity="other">%1$d પેચો</item>
+    </plurals>
+</resources>

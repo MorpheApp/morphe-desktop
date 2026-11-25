@@ -60,4 +60,32 @@
         <item quantity="one">ukuthuthukiswa okukodwa (%1$d)</item>
         <item quantity="other">izithuthukiso ezi-%1$d</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d ifayili)</item>
+        <item quantity="other">%1$s (%2$d amafayili)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Isihloko: %1$s (%2$d ifayili)</item>
+        <item quantity="other">Isihloko: %1$s (%2$d amafayili)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d ukukhishwa okusha kunalokhu</item>
+        <item quantity="other">%1$d ukukhishwa okusha kunalokhu</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d ukukhishwa okudala kunalokhu</item>
+        <item quantity="other">%1$d ukukhishwa okudala kunalokhu</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d iphetshi</item>
+        <item quantity="other">%1$d amaphetshi</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d ihlelo</item>
+        <item quantity="other">%1$d izinhlelo</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d inketho</item>
+        <item quantity="other">%1$d izinketho</item>
+    </plurals>
 </resources>

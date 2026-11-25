@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -43,6 +42,8 @@ import app.morphe.engine.apk.BundleFormats
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.util.DownloadUrlResolver.openUrlAndFollowRedirects
+import app.morphe.gui.util.FormatUtils
+import app.morphe.gui.ui.components.FormFactorBadge
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheButton
@@ -61,9 +62,11 @@ import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.LocalPatchSourceHeader
 import app.morphe.gui.util.MorpheFilePicker
 import app.morphe.morphe_desktop.generated.resources.*
+import app.morphe.patcher.patch.FormFactor
 import java.io.File
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
@@ -75,6 +78,7 @@ internal fun IdentityBand(
     state: PatchedAppState,
     deviceInfo: DeviceAppInfo?,
     updateInfo: RecallUpdateInfo?,
+    formFactor: FormFactor? = null,
 ) {
     val accents = MorpheTheme.colors
     Column(
@@ -89,16 +93,24 @@ internal fun IdentityBand(
                 name = record.displayName,
                 size = MorpheAvatarSize.ROW,
                 onGradient = false,
+                icon = rememberPatchedAppIcon(record, deviceInfo),
             )
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
-                Text(
-                    text = record.displayName,
-                    style = MorpheTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Text(
+                        text = record.displayName,
+                        style = MorpheTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    FormFactorBadge(formFactor = formFactor, onGradient = false)
+                }
                 Text(
                     text = record.installedPackageName,
                     style = MorpheTheme.typography.labelSmall,
@@ -233,6 +245,8 @@ internal fun ApkSourceSection(
             versions = app.supportedVersions,
             packageName = app.packageName,
             onOpenUrl = uriHandler::openUri,
+            requiredBuildCodesFor = app::requiredBuildCodes,
+            downloadUrlFor = app::downloadUrl,
         )
         VersionChipGroup(
             label = stringResource(Res.string.version_label_experimental),
@@ -240,6 +254,8 @@ internal fun ApkSourceSection(
             versions = app.experimentalVersions,
             packageName = app.packageName,
             onOpenUrl = uriHandler::openUri,
+            requiredBuildCodesFor = app::requiredBuildCodes,
+            downloadUrlFor = app::downloadUrl,
         )
     }
 
@@ -322,8 +338,7 @@ internal fun PatchSourceSection(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .border(
-                1.dp,
+            .outlineBorder(
                 MaterialTheme.colorScheme.outline.copy(alpha = if (enabled) 0.22f else 0.10f),
                 shape,
             )
@@ -461,10 +476,10 @@ internal fun ChoiceRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .border(
-                1.dp,
+            .outlineBorder(
                 tint.copy(alpha = if (selected) 0.45f else if (isHovered) 0.3f else 0.12f),
                 shape,
+                enabled = selected || MorpheTheme.outlines,
             )
             .background(tint.copy(alpha = if (selected) 0.10f else 0f))
             .hoverable(hover)
@@ -503,6 +518,8 @@ private fun VersionChipGroup(
     versions: List<String>,
     packageName: String,
     onOpenUrl: (String) -> Unit,
+    requiredBuildCodesFor: (String) -> Set<Int> = { emptySet() },
+    downloadUrlFor: (String) -> String? = { SupportedApp.getDownloadUrl(packageName, it) },
 ) {
     if (versions.isEmpty()) return
     val patchSourceHeader = LocalPatchSourceHeader.current
@@ -512,10 +529,14 @@ private fun VersionChipGroup(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         versions.forEach { v ->
-            val url = remember(v) { SupportedApp.getDownloadUrl(packageName, v) }
+            val url = remember(v) { downloadUrlFor(v) }
+            val buildCodes = remember(v) { requiredBuildCodesFor(v) }
+            val chipText = remember(v, buildCodes) { FormatUtils.formatVersionWithBuild(v, buildCodes) }
+            val tooltip = if (buildCodes.size > 1) "$v (${buildCodes.joinToString(", ")})" else null
             MorpheCardChip(
-                text = v,
+                text = chipText,
                 icon = if (url != null) MorpheIcons.OpenInNew else null,
+                tooltip = tooltip,
                 onCard = false,
                 // Followed here rather than by the browser, which cannot send the patch source header
                 onClick = { url?.let { openUrlAndFollowRedirects(it, patchSourceHeader(packageName), onOpenUrl) } },

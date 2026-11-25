@@ -7,7 +7,6 @@ package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,6 +63,7 @@ import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemeStyle
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
@@ -286,7 +286,13 @@ fun PatchedAppDetailDialog(
             contentPadding = PaddingValues(0.dp),
             verticalArrangement = Arrangement.spacedBy(0.dp),
         ) {
-                IdentityBand(record, state, deviceInfo, updateInfo)
+                IdentityBand(
+                    record = record,
+                    state = state,
+                    deviceInfo = deviceInfo,
+                    updateInfo = updateInfo,
+                    formFactor = supportedApp?.formFactor ?: record.formFactor,
+                )
                 BandDivider()
 
                 Column(
@@ -297,8 +303,7 @@ fun PatchedAppDetailDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(MorpheTheme.shapes.small)
-                            .border(
-                                1.dp,
+                            .outlineBorder(
                                 MaterialTheme.colorScheme.outline.copy(alpha = 0.22f),
                                 MorpheTheme.shapes.small,
                             ),

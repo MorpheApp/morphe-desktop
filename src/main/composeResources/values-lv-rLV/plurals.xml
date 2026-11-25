@@ -45,6 +45,11 @@
         <item quantity="one">Lejupielādēt %1$d saieni</item>
         <item quantity="other">Lejupielādēt %1$d saienes</item>
     </plurals>
+    <plurals name="patching_graph_cpu_cores_detail">
+        <item quantity="zero">%1$d kodoli</item>
+        <item quantity="one">%1$d kodols</item>
+        <item quantity="other">%1$d kodoli</item>
+    </plurals>
     <plurals name="changelog_change_count">
         <item quantity="zero">%1$d izmaiņas</item>
         <item quantity="one">%1$d izmaiņa</item>
@@ -69,5 +74,40 @@
         <item quantity="zero">%1$d optimizācija</item>
         <item quantity="one">%1$d optimizācija</item>
         <item quantity="other">%1$d optimizācijas</item>
+    </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="zero">%1$s (%2$d faili)</item>
+        <item quantity="one">%1$s (%2$d fails)</item>
+        <item quantity="other">%1$s (%2$d faili)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="zero">Kopā: %1$s (%2$d faili)</item>
+        <item quantity="one">Kopā: %1$s (%2$d fails)</item>
+        <item quantity="other">Kopā: %1$s (%2$d faili)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="zero">%1$d izlaides jaunākas par</item>
+        <item quantity="one">%1$d izlaide jaunāka par</item>
+        <item quantity="other">%1$d izlaides jaunākas par</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="zero">%1$d izlaides vecākas par</item>
+        <item quantity="one">%1$d izlaide vecāka par</item>
+        <item quantity="other">%1$d izlaides vecākas par</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="zero">%1$d lāpījumi</item>
+        <item quantity="one">%1$d lāpījums</item>
+        <item quantity="other">%1$d lāpījumi</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="zero">%1$d lietotnes</item>
+        <item quantity="one">%1$d lietotne</item>
+        <item quantity="other">%1$d lietotnes</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="zero">%1$d opcijas</item>
+        <item quantity="one">%1$d opcija</item>
+        <item quantity="other">%1$d opcijas</item>
     </plurals>
 </resources>

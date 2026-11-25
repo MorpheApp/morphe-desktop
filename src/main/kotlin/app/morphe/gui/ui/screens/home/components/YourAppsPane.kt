@@ -30,9 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.patcher.patch.FormFactor
 import app.morphe.gui.ui.components.MorpheBanner
 import app.morphe.gui.ui.components.MorpheBannerAction
-import app.morphe.gui.ui.components.MorpheBannerText
+import app.morphe.gui.ui.components.MorpheBannerTone
 import app.morphe.gui.ui.components.MorpheChoiceChip
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.icons.MorpheIcons
@@ -80,13 +81,11 @@ fun AppListFilterChips(
 @Composable
 fun PatchedUpdatesBanner(count: Int, onView: () -> Unit) {
     MorpheBanner(
-        modifier = Modifier.padding(end = 12.dp, bottom = 8.dp),
+        title = pluralStringResource(Res.plurals.home_banner_update_available, count, count),
+        tone = MorpheBannerTone.Info,
         icon = MorpheIcons.Refresh,
+        modifier = Modifier.padding(end = 12.dp, bottom = 8.dp),
     ) {
-        MorpheBannerText(
-            text = pluralStringResource(Res.plurals.home_banner_update_available, count, count),
-            modifier = Modifier.weight(1f),
-        )
         MorpheBannerAction(label = stringResource(Res.string.home_banner_view), onClick = onView)
     }
 }
@@ -101,6 +100,7 @@ internal fun YourAppsListBody(
     deviceAppInfo: Map<String, DeviceAppInfo>,
     updateInfoByPackage: Map<String, RecallUpdateInfo>,
     appIconColorByPackage: Map<String, String>,
+    formFactorByPackage: Map<String, FormFactor>,
     onShowDetail: (PatchedAppRecord) -> Unit,
     paneMaxHeight: Dp,
     showSearch: Boolean,
@@ -135,6 +135,7 @@ internal fun YourAppsListBody(
                             updateInfo = updateInfoByPackage[record.packageName],
                             onClick = { onShowDetail(record) },
                             appIconColorHex = appIconColorByPackage[record.packageName],
+                            formFactor = formFactorByPackage[record.packageName] ?: record.formFactor,
                         )
                     }
                 }

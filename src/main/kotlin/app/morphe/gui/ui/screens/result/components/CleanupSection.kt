@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.result.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,12 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
-import app.morphe.gui.ui.screens.result.formatFileSize
+import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.util.currentLocale
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -44,10 +45,9 @@ internal fun CleanupSection(
             .widthIn(max = 520.dp)
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.medium)
-            .border(
-                1.dp,
+            .outlineBorder(
                 if (tempFilesCleared) MorpheTheme.colors.secondary.copy(alpha = 0.2f) else borderColor,
-                MorpheTheme.shapes.medium
+                MorpheTheme.shapes.medium,
             )
             .background(
                 if (tempFilesCleared) {
@@ -71,8 +71,8 @@ internal fun CleanupSection(
             Text(
                 text = when {
                     tempFilesCleared && autoCleanupEnabled -> stringResource(Res.string.result_cleanup_auto_enabled)
-                    tempFilesCleared -> stringResource(Res.string.result_cleanup_freed, formatFileSize(tempFilesSize))
-                    else -> stringResource(Res.string.size_can_be_freed_label, formatFileSize(tempFilesSize))
+                    tempFilesCleared -> stringResource(Res.string.result_cleanup_freed, formatFileSize(tempFilesSize, currentLocale()))
+                    else -> stringResource(Res.string.size_can_be_freed_label, formatFileSize(tempFilesSize, currentLocale()))
                 },
                 style = MorpheTheme.typography.labelSmall,
                 color = if (tempFilesCleared) MorpheTheme.colors.secondary

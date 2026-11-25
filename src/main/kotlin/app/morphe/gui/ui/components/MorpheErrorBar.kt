@@ -7,7 +7,6 @@ package app.morphe.gui.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -36,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.morphe.gui.ui.theme.MorpheMotion
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -54,7 +54,7 @@ fun MorpheErrorBar(
         modifier = modifier
             .fillMaxWidth()
             .clip(MorpheTheme.shapes.small)
-            .border(1.dp, borderCol, MorpheTheme.shapes.small)
+            .outlineBorder(borderCol, MorpheTheme.shapes.small)
             .background(MaterialTheme.colorScheme.surface)
             .background(accentColor.copy(alpha = 0.10f))
             .drawBehind {

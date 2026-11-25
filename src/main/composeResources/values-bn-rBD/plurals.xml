@@ -60,4 +60,32 @@
         <item quantity="one">%1$d টি অপ্টিমাইজেশন</item>
         <item quantity="other">%1$d টি অপ্টিমাইজেশন</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$dটি ফাইল)</item>
+        <item quantity="other">%1$s (%2$dটি ফাইল)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">মোট: %1$s (%2$dটি ফাইল)</item>
+        <item quantity="other">মোট: %1$s (%2$dটি ফাইল)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d টি রিলিজ এর চেয়ে নতুন</item>
+        <item quantity="other">%1$d টি রিলিজ এর চেয়ে নতুন</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d টি রিলিজ এর চেয়ে পুরনো</item>
+        <item quantity="other">%1$d টি রিলিজ এর চেয়ে পুরনো</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d টি প্যাচ</item>
+        <item quantity="other">%1$d টি প্যাচ</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d টি অ্যাপ</item>
+        <item quantity="other">%1$d টি অ্যাপ</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d টি বিকল্প</item>
+        <item quantity="other">%1$d টি বিকল্প</item>
+    </plurals>
 </resources>

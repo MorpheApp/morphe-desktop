@@ -6,7 +6,6 @@
 package app.morphe.gui.ui.screens.home.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -21,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.VersionStatus
+import app.morphe.engine.util.formatFileSize
+import app.morphe.gui.ui.components.FormFactorBadge
 import app.morphe.gui.ui.components.MorpheAppAvatar
 import app.morphe.gui.ui.components.MorpheAvatarSize
 import app.morphe.gui.ui.components.MorpheBadge
@@ -33,15 +34,18 @@ import app.morphe.gui.ui.components.MorpheIconButtonVariant
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.outlineBorder
 import app.morphe.gui.ui.theme.panelFill
+import app.morphe.gui.util.AppIconSource
 import app.morphe.gui.util.DeviceMonitor
-import app.morphe.gui.util.FormatUtils
 import app.morphe.gui.util.StatusColorType
 import app.morphe.gui.util.currentLocale
 import app.morphe.gui.util.resolveStatusColorType
+import app.morphe.gui.util.rememberAppIcon
 import app.morphe.gui.util.resolveVersionStatusDisplay
 import app.morphe.gui.util.toColor
 import app.morphe.morphe_desktop.generated.resources.*
+import java.io.File
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -75,7 +79,7 @@ fun ApkInfoCard(
             .fillMaxWidth()
             .clip(cardShape)
             .background(panelFill)
-            .border(1.dp, borderColor, cardShape)
+            .outlineBorder(borderColor, cardShape)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -90,18 +94,26 @@ fun ApkInfoCard(
                     name = apkInfo.appName,
                     size = MorpheAvatarSize.LARGE,
                     accent = accentColor,
+                    icon = rememberAppIcon(listOf(AppIconSource.Apk(File(apkInfo.filePath))), packageName = apkInfo.packageName),
                 )
 
                 Spacer(Modifier.width(14.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = apkInfo.appName,
-                        style = MorpheTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Text(
+                            text = apkInfo.appName,
+                            style = MorpheTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false),
+                        )
+                        FormFactorBadge(formFactor = apkInfo.formFactor, onGradient = false)
+                    }
                     Spacer(Modifier.height(2.dp))
                     Text(
                         text = apkInfo.packageName,
@@ -111,6 +123,8 @@ fun ApkInfoCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+
+                Spacer(Modifier.width(12.dp))
 
                 MorpheIconButton(
                     icon = MorpheIcons.Close,
@@ -216,7 +230,7 @@ fun ApkInfoCard(
                 }
                 TechDataCell(
                     label = stringResource(Res.string.home_apk_info_size_label),
-                    value = FormatUtils.formatFileSize(apkInfo.fileSize, currentLocale()),
+                    value = formatFileSize(apkInfo.fileSize, currentLocale()),
                     modifier = Modifier.weight(1f)
                 )
                 if (apkInfo.minSdk != null) {

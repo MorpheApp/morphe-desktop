@@ -60,4 +60,32 @@
         <item quantity="one">%1$d optimizasyon</item>
         <item quantity="other">%1$d optimizasyon</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d dosya)</item>
+        <item quantity="other">%1$s (%2$d dosya)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">Toplam: %1$s (%2$d dosya)</item>
+        <item quantity="other">Toplam: %1$s (%2$d dosya)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d sürüm daha yeni</item>
+        <item quantity="other">%1$d sürüm daha yeni</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d sürüm daha eski</item>
+        <item quantity="other">%1$d sürüm daha eski</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d yama</item>
+        <item quantity="other">%1$d yama</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d uygulama</item>
+        <item quantity="other">%1$d uygulama</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d seçenek</item>
+        <item quantity="other">%1$d seçenek</item>
+    </plurals>
 </resources>

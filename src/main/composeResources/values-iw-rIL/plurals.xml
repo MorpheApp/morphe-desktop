@@ -75,4 +75,39 @@
         <item quantity="two">%1$d מיטובים</item>
         <item quantity="other">%1$d מיטובים</item>
     </plurals>
+    <plurals name="settings_cache_category_summary">
+        <item quantity="one">%1$s (%2$d קובץ)</item>
+        <item quantity="two">%1$s (%2$d קבצים)</item>
+        <item quantity="other">%1$s (%2$d קבצים)</item>
+    </plurals>
+    <plurals name="settings_cache_clear_all_summary">
+        <item quantity="one">סה\"כ: %1$s (%2$d קובץ)</item>
+        <item quantity="two">סה\"כ: %1$s (%2$d קבצים)</item>
+        <item quantity="other">סה\"כ: %1$s (%2$d קבצים)</item>
+    </plurals>
+    <plurals name="versions_newer_than">
+        <item quantity="one">%1$d גרסה חדשה יותר מ-</item>
+        <item quantity="two">%1$d גרסאות חדשות יותר מ-</item>
+        <item quantity="other">%1$d גרסאות חדשות יותר מ-</item>
+    </plurals>
+    <plurals name="versions_older_than">
+        <item quantity="one">%1$d גרסה ישנה יותר מ-</item>
+        <item quantity="two">%1$d גרסאות ישנות יותר מ-</item>
+        <item quantity="other">%1$d גרסאות ישנות יותר מ-</item>
+    </plurals>
+    <plurals name="versions_patch_count">
+        <item quantity="one">%1$d תיקון</item>
+        <item quantity="two">%1$d תיקונים</item>
+        <item quantity="other">%1$d תיקונים</item>
+    </plurals>
+    <plurals name="versions_app_count">
+        <item quantity="one">%1$d אפליקציה</item>
+        <item quantity="two">%1$d אפליקציות</item>
+        <item quantity="other">%1$d אפליקציות</item>
+    </plurals>
+    <plurals name="versions_option_count">
+        <item quantity="one">%1$d אפשרות</item>
+        <item quantity="two">%1$d אפשרויות</item>
+        <item quantity="other">%1$d אפשרויות</item>
+    </plurals>
 </resources>

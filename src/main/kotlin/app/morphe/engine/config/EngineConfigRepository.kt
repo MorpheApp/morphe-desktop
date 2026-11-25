@@ -6,10 +6,17 @@
 package app.morphe.engine.config
 
 import app.morphe.engine.MorpheData
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.PortablePaths
 import java.io.File
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -23,6 +30,8 @@ open class EngineConfigRepository(
 ) {
     private val mutex = Mutex()
     private var cachedConfig: EngineConfig? = null
+    private val _configFlow = MutableStateFlow<EngineConfig?>(null)
+    val configFlow: StateFlow<EngineConfig?> = _configFlow.asStateFlow()
 
     private val json = Json {
         prettyPrint = true
@@ -32,20 +41,28 @@ open class EngineConfigRepository(
 
     open suspend fun loadConfig(): EngineConfig = withContext(Dispatchers.IO) {
         mutex.withLock {
-            cachedConfig?.let { return@withContext it }
+            cachedConfig?.let {
+                _configFlow.value = it
+                return@withContext it
+            }
             if (!configFile.exists()) {
                 val default = EngineConfig()
                 cachedConfig = default
+                _configFlow.value = default
                 return@withContext default
             }
             try {
                 val element = json.parseToJsonElement(configFile.readText())
                 val config = json.decodeFromJsonElement<EngineConfig>(element)
                 cachedConfig = config
+                _configFlow.value = config
                 config
             } catch (e: Exception) {
                 Logger.warn("Failed to parse engine config from ${configFile.absolutePath}: ${e.message}")
-                EngineConfig()
+                val fallback = EngineConfig()
+                cachedConfig = fallback
+                _configFlow.value = fallback
+                fallback
             }
         }
     }
@@ -62,6 +79,7 @@ open class EngineConfigRepository(
             val engineObj = json.encodeToJsonElement(EngineConfig.serializer(), updated).jsonObject
             mergeAndSaveJsonObject(configFile, json, engineObj)
             cachedConfig = updated
+            _configFlow.value = updated
         }
     }
 
@@ -91,6 +109,9 @@ open class EngineConfigRepository(
     suspend fun setAutoCleanupTempFiles(enabled: Boolean) =
         saveConfig { it.copy(autoCleanupTempFiles = enabled) }
 
+    suspend fun setSaveOriginalApkMode(mode: SaveOriginalApk?) =
+        saveConfig { it.copy(saveOriginalApks = mode != null, moveOriginalApks = mode == SaveOriginalApk.MOVE) }
+
     suspend fun setAutoStartAdb(enabled: Boolean) =
         saveConfig { it.copy(autoStartAdb = enabled) }
 
@@ -103,6 +124,18 @@ open class EngineConfigRepository(
     suspend fun setDeveloperOptions(enabled: Boolean) =
         saveConfig { it.copy(developerOptions = enabled) }
 
+    suspend fun setBytecodeMode(mode: String) =
+        saveConfig { it.copy(bytecodeMode = mode) }
+
+    suspend fun setValidateFingerprints(enabled: Boolean) =
+        saveConfig { it.copy(validateFingerprints = enabled) }
+
+    suspend fun setVerifyWithSdk(enabled: Boolean) =
+        saveConfig { it.copy(verifyWithSdk = enabled) }
+
+    suspend fun setCustomAndroidSdkPath(path: String?) =
+        saveConfig { it.copy(customAndroidSdkPath = path?.let(PortablePaths::storableForm)) }
+
     suspend fun setLastLocalPatchDir(path: String?) =
         saveConfig { it.copy(lastLocalPatchDir = path) }
 
@@ -114,19 +147,33 @@ open class EngineConfigRepository(
     }
 }
 
+/** GUI and engine settings share one file, so all their read-merge-writes go through this one lock. */
+private val configFileLock = Any()
+
 internal fun mergeAndSaveJsonObject(
     configFile: File,
     json: Json,
     newEntries: JsonObject,
 ) {
-    val existingObj = if (configFile.exists()) {
-        runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
-    } else JsonObject(emptyMap())
+    synchronized(configFileLock) {
+        val existingObj = if (configFile.exists()) {
+            runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
+        } else JsonObject(emptyMap())
 
-    val mergedMap = existingObj.toMutableMap()
-    newEntries.forEach { (k, v) -> mergedMap[k] = v }
-    val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
+        val mergedMap = existingObj.toMutableMap()
+        newEntries.forEach { (k, v) -> mergedMap[k] = v }
+        val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
 
-    configFile.parentFile?.mkdirs()
-    configFile.writeText(mergedJson)
+        configFile.parentFile?.mkdirs()
+        // Write to a temporary file before moving so readers never see a half-written file.
+        val tmp = File(configFile.parentFile, "${configFile.name}.tmp")
+        tmp.writeText(mergedJson)
+        try {
+            Files.move(tmp.toPath(), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+        } catch (_: IOException) {
+            // ATOMIC_MOVE is unsupported here, or (on Windows) a reader has the file open; write in place under the lock.
+            tmp.delete()
+            configFile.writeText(mergedJson)
+        }
+    }
 }

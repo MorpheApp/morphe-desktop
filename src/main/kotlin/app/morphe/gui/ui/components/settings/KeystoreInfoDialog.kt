@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import app.morphe.engine.util.KeystoreInspectionResult
 import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.KeystoreWarning
-import app.morphe.gui.ui.components.MorpheAlertDialog
+import app.morphe.gui.ui.components.MorpheDialog
+import app.morphe.gui.ui.components.MorpheDialogMaxWidth
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
@@ -53,15 +54,11 @@ internal fun KeystoreInfoDialog(
         }
     }
 
-    MorpheAlertDialog(
+    MorpheDialog(
+        maxWidth = MorpheDialogMaxWidth,
         onDismiss = onDismiss,
-        title = {
-            Text(
-                stringResource(Res.string.settings_cert_info_title),
-                style = MorpheTheme.typography.titleMedium,
-            )
-        },
-        text = {
+        title = stringResource(Res.string.settings_cert_info_title),
+        content = {
             val certInfo = info
             if (certInfo != null) {
                 Column(
@@ -113,14 +110,14 @@ internal fun KeystoreInfoDialog(
                 )
             }
         },
-        confirmButton = {
+        actions = {
             MorpheButton(
                 label = stringResource(Res.string.close),
                 variant = MorpheButtonVariant.OUTLINED,
                 size = MorpheButtonSize.COMPACT,
                 onClick = onDismiss
             )
-        }
+        },
     )
 }
 

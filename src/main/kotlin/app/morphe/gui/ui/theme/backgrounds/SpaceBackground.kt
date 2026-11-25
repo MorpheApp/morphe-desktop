@@ -62,6 +62,7 @@ fun SpaceBackground(
 
     // Frame-based star animation loop.
     LaunchedEffect(Unit) {
+        awaitBackgroundMotion()
         var lastFrameMs = withInfiniteAnimationFrameMillis { it }
         var currentSpeed = targetSpeedState.floatValue
         while (true) {
