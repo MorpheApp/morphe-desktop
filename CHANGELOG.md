@@ -1,3 +1,15 @@
+# [2.4.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.3...v2.4.0-dev.4) (2026-11-25)
+
+
+### Bug Fixes
+
+* Unmount root mounted apps with the whole command ([#460](https://github.com/MorpheApp/morphe-desktop/issues/460)) ([547f1f5](https://github.com/MorpheApp/morphe-desktop/commit/547f1f52558b85f850b2890b5760de01e8e5f40b))
+
+
+### Features
+
+* Install patched apps compiled with their baseline profile ([#459](https://github.com/MorpheApp/morphe-desktop/issues/459)) ([5950617](https://github.com/MorpheApp/morphe-desktop/commit/5950617dfff3f286821c068c9d9d416612291b42))
+
 # [2.4.0-dev.3](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.2...v2.4.0-dev.3) (2026-11-25)
 
 
